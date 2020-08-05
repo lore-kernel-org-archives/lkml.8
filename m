@@ -2,117 +2,115 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA081C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F802075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6825020842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oziJJooK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fz3cZWAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgHET1y (ORCPT
+        id S1726262AbgHET22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:27:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgHERLn (ORCPT
+        Wed, 5 Aug 2020 15:28:28 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33062 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728608AbgHERLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:11:43 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B86C061757;
-        Wed,  5 Aug 2020 10:11:43 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id x9so48587344ljc.5;
-        Wed, 05 Aug 2020 10:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wXACrCF85ppHwQuHqdOjCkc1N78NkRlSijLNjTow210=;
-        b=oziJJooKYyQ5sG761r04I5LKIuXOAb4zkqQY0rWC/xo2s+cTYTs9U7RyQWnqJ5pq1v
-         Nbi4cMvrIp/CIcHu8pIr+eoqlm0BvwqSZf/j11GWMus1IVdOI8eFA+JP3OpxAqxrqH8K
-         4U3LrHkbnbOlDfybyMuly/WmuqEo0ptHsHBq2XUlda4WU2cHiLw7ZD+AnmV8uuOJ/jgu
-         3gjhgLG0ATcZI4I3fwTk7ZEPoMTcfQVSsz4xqNOlCB6RK7j7M3zBxlIMpYdsF8DV3rrq
-         yNVU9YFhsTtYiIivGSgzfm9XcHZ9fq/Ugzzwuzkf0diKBR/hJ5MKs2YpE9NsOoFGUM2c
-         kG+Q==
+        Wed, 5 Aug 2020 13:11:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596647489;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uT4MZK/WmjMO9Hf3gYa75MOY3iZoVd/8WD7Av4sgX3M=;
+        b=fz3cZWATFlooZQq0MXjZPzUUlnPn1W/B76XD9gBoyELEwI/A8mfkQPHIE43y3G3dU/tH8y
+        o3VEz+J3zcBlxU1fjUNSkt2VHzX+/K/yhlhgAFfpPLVX9H0CRfCCohfFpYSI6wEB+jTl/Y
+        aP6+1QNNxyC+54ymBPbvrC2vl/3IMSE=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-pVxkJcPEOW-nlrg5iMJx1Q-1; Wed, 05 Aug 2020 09:43:37 -0400
+X-MC-Unique: pVxkJcPEOW-nlrg5iMJx1Q-1
+Received: by mail-wm1-f69.google.com with SMTP id u144so2739965wmu.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:43:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wXACrCF85ppHwQuHqdOjCkc1N78NkRlSijLNjTow210=;
-        b=fy2+1n+7THDOEOMfrVeJoNVXeUqTWB47Cc5jeeq3qV6qII/TPZkzjoM5F1zwN39SH7
-         sJ9f4arOEr8QeMfM6ndrmRgQjA8pAsRkiBk269x2RFtnqX7vOaHgkpbfSK884linWLTX
-         Q6LD9UEeZWg5R2weVdDlFCxgMhc66yJ88KgWHxOcTxPNtMvW8aGuR1WdczwUt/LFXiBx
-         GZtQPgsyOV6Q933OBKv1D53VoUPs2u0gvM6fg3RomCgZ8ZYiDVCE0MiyCRcKY26cyUjJ
-         n1XCVadQ6UvT+0vhUC9orPSvP9R8Hr/tcAkV0iIeOxPeimdtsCpVSaWCpUjG0P4+V7Ji
-         +Bmw==
-X-Gm-Message-State: AOAM533MjCaGTP9PVtFlKGkuWRVb4n3t+wyPMSIgeiiDRUMSvpo07Xwr
-        dUNSKEd2lTISYT0l4kE0KfrqOQqNYUbaI3c/oGk=
-X-Google-Smtp-Source: ABdhPJwaicIhf8YdyAekvXwX7eOOzcHPiY2LvmIo6u440HJ6sOevFi0lA9FP0nbD1iVE8pjbKUmnQK8GBjMj1kpsXT0=
-X-Received: by 2002:a2e:b814:: with SMTP id u20mr1829339ljo.202.1596647501750;
- Wed, 05 Aug 2020 10:11:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uT4MZK/WmjMO9Hf3gYa75MOY3iZoVd/8WD7Av4sgX3M=;
+        b=WZc2EICH8XbdaKrr0eKGPxdKzt4fOJyBYrVw+x712xY8x9t3LTxjSTAMASVYaYqgmO
+         Dc5btFMBppKfb1os7EqHnIpHpqXywrDQrR3dY3P0nwZhUyHvBTY9lKNNxNAMpkanUIZJ
+         LbPhQYe4b5807OzKG7GWOMKv+AIIxvzIWK49SXl7m4bZRzguFrQpYvUQZUkhqKUjOxD7
+         FO3RJGETcID1/rIF6nVV0GJV62j+ZYqv85lQ/WXJUJxwWOGuNYkuT1ijFKkr14JQPno0
+         O9YsP3Eim7Gokv/S1o1LSe6uxFq+uGZPoB7UzTe+wNuHxydSPg6m9NG7VYz4SbnfFCZd
+         webA==
+X-Gm-Message-State: AOAM533ZFaf5yXFsb8kA4EZiEGYpFxCAodp7GMTSNFxNo4MOJhvsoxkP
+        //yLQn2JHvoH5CAdgWHsEfFl3dltu5UyYRpA0PeNSmJgtEuGyi9mLicaY7rnsPfT4fSvLSONGfD
+        F0ndmzEXOFXYYUkJ3LwquEDkK
+X-Received: by 2002:adf:b302:: with SMTP id j2mr2859690wrd.294.1596635016393;
+        Wed, 05 Aug 2020 06:43:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzITs/miouKXFVmBFtcFlH4aNnnt5FWqtlGH9JkX5pGWDGOgygL5Olr/ps3r5ZDSsC1a6fhYg==
+X-Received: by 2002:adf:b302:: with SMTP id j2mr2859668wrd.294.1596635016220;
+        Wed, 05 Aug 2020 06:43:36 -0700 (PDT)
+Received: from redhat.com ([192.117.173.58])
+        by smtp.gmail.com with ESMTPSA id z15sm2842664wrn.89.2020.08.05.06.43.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 06:43:35 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:43:33 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Cornelia Huck <cohuck@redhat.com>, Amit Shah <amit@kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 07/38] virtio_console: correct tags for config space fields
+Message-ID: <20200805134226.1106164-8-mst@redhat.com>
+References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
-References: <20200802163601.8189-1-rppt@kernel.org> <20200802163601.8189-17-rppt@kernel.org>
-In-Reply-To: <20200802163601.8189-17-rppt@kernel.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 5 Aug 2020 19:11:30 +0200
-Message-ID: <CANiq72k-hZwbnttADQhi3+NrHkLDVe95jxLAPvLbvSOW41+HaQ@mail.gmail.com>
-Subject: Re: [PATCH v2 16/17] memblock: implement for_each_reserved_mem_region()
- using __next_mem_region()
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
-        sparclinux@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805134226.1106164-1-mst@redhat.com>
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 6:40 PM Mike Rapoport <rppt@kernel.org> wrote:
->
->  .clang-format                    |  2 +-
+Tag config space fields as having virtio endian-ness.
 
-The .clang-format bit:
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+---
+ include/uapi/linux/virtio_console.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+diff --git a/include/uapi/linux/virtio_console.h b/include/uapi/linux/virtio_console.h
+index b7fb108c9310..7e6ec2ff0560 100644
+--- a/include/uapi/linux/virtio_console.h
++++ b/include/uapi/linux/virtio_console.h
+@@ -45,13 +45,13 @@
+ 
+ struct virtio_console_config {
+ 	/* colums of the screens */
+-	__u16 cols;
++	__virtio16 cols;
+ 	/* rows of the screens */
+-	__u16 rows;
++	__virtio16 rows;
+ 	/* max. number of ports this device can hold */
+-	__u32 max_nr_ports;
++	__virtio32 max_nr_ports;
+ 	/* emergency write register */
+-	__u32 emerg_wr;
++	__virtio32 emerg_wr;
+ } __attribute__((packed));
+ 
+ /*
+-- 
+MST
 
-Cheers,
-Miguel
