@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0FBC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC41022BF3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D54322CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="FoBuz7+2"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IxZtwhvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgHEHDY (ORCPT
+        id S1728308AbgHEHDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:03:24 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:52727 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgHEHDW (ORCPT
+        Wed, 5 Aug 2020 03:03:35 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59114 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgHEHDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:03:22 -0400
+        Wed, 5 Aug 2020 03:03:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596611002; x=1628147002;
+  t=1596611013; x=1628147013;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=qEyO3NjOJgBbi06zZ5Eyf5uiQGCDh0wt+SIXSMbxXjs=;
-  b=FoBuz7+2lJp0E7qAp5oKkZdnfS7Di8nRhkp5YiqWjk1mDv3QGgrJ7E5B
-   RpTF6ODoSnBIuHFBJx70Z2wu2D3Q/4Kpiye0LBG+Wac9CYtY9L3sButTZ
-   lMAw3d7h7tGilJuYeR75Q1zifNP/zufQt5IjZbo/1AlY0lzRReN+4Rx+o
-   w=;
-IronPort-SDR: +oMl3lt0gfbUgWw/YdBcmZv1+Cp4lWhZOkuJP030jhL5YT/5WTvhaaVsbCnA44++IV+bR4e9SP
- NMyzFlBxDkeA==
+  bh=SDTWTIuns68067ycCo53gHcSzqHDZT2Wd+5vAeZKPQU=;
+  b=IxZtwhvOWVZzMkISnuBrMjszsPeCA3nFrIndmZOsn63zcp1yKTym94ds
+   UxrMlza8q0dqkpy4SZKCugWaapyYhQC1/rcKJOUoTNgIVQADUhFOqlMhF
+   ave6fegdwkC8qrjOGRuVAR9Gqoz3nXqUfkWF4jwJDMiHJMQ7O65D4ZjWt
+   o=;
+IronPort-SDR: QMK5LcNseUorcF1JmclcIFRIzUsIaWvOLOM2nbo82TSPlY9nSU46rYmZJAMzI2PNYZfQZFmL+T
+ vevD+PezMdCQ==
 X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
-   d="scan'208";a="46228955"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Aug 2020 07:03:21 +0000
+   d="scan'208";a="47558917"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 05 Aug 2020 07:03:32 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id BE137A21BF;
-        Wed,  5 Aug 2020 07:03:09 +0000 (UTC)
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id CBFA2A235B;
+        Wed,  5 Aug 2020 07:03:29 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 07:03:08 +0000
+ id 15.0.1497.2; Wed, 5 Aug 2020 07:03:29 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 07:02:51 +0000
+ id 15.0.1497.2; Wed, 5 Aug 2020 07:03:12 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -68,9 +69,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v6 07/10] mm/damon/debugfs: Support physical memory monitoring
-Date:   Wed, 5 Aug 2020 08:59:48 +0200
-Message-ID: <20200805065951.18221-8-sjpark@amazon.com>
+Subject: [RFC v6 08/10] tools/damon/record: Support physical memory monitoring
+Date:   Wed, 5 Aug 2020 08:59:49 +0200
+Message-ID: <20200805065951.18221-9-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200805065951.18221-1-sjpark@amazon.com>
 References: <20200805065951.18221-1-sjpark@amazon.com>
@@ -86,65 +87,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit makes the debugfs interface to support the physical memory
-monitoring, in addition to the virtual memory monitoring.
-
-Users can do the physical memory monitoring by writing a special
-keyword, 'paddr\n' to the 'pids' debugfs file.  Then, DAMON will check
-the special keyword and configure the callbacks of the monitoring
-context for the debugfs user for physical memory.  This will internally
-add one fake monitoring target process, which has pid as -1.
-
-Unlike the virtual memory monitoring, DAMON debugfs will not
-automatically set the monitoring target region.  Therefore, users should
-also set the monitoring target address region using the 'init_regions'
-debugfs file.  While doing this, the 'pid' in the input should be '-1'.
-
-Finally, the physical memory monitoring will not automatically
-terminated because it has fake monitoring target process.  The user
-should explicitly turn off the monitoring by writing 'off' to the
-'monitor_on' debugfs file.
+This commit allows users to record the data accesses on physical memory
+address space by passing 'paddr' as target to 'damo-record'.  If the
+init regions are given, the regions will be monitored.  Else, it will
+monitor biggest conitguous 'System RAM' region in '/proc/iomem' and
+monitor the region.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- mm/damon.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ tools/damon/_damon.py |  2 ++
+ tools/damon/record.py | 29 ++++++++++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/mm/damon.c b/mm/damon.c
-index c8d834ce188d..0b6960f62ae9 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -2035,9 +2035,27 @@ static ssize_t debugfs_target_ids_write(struct file *file,
- 		return PTR_ERR(kbuf);
+diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
+index a22ec3777c16..cf14a0d59b94 100644
+--- a/tools/damon/_damon.py
++++ b/tools/damon/_damon.py
+@@ -27,6 +27,8 @@ def set_target(tid, init_regions=[]):
+     if not os.path.exists(debugfs_init_regions):
+         return 0
  
- 	nrs = kbuf;
--	if (!strncmp(kbuf, "pidfd ", 6)) {
--		received_pidfds = true;
--		nrs = &kbuf[6];
-+	if (!strncmp(kbuf, "paddr\n", count)) {
-+		/* Configure the context for physical memory monitoring */
-+		ctx->init_target_regions = kdamond_init_phys_regions;
-+		ctx->update_target_regions = kdamond_update_phys_regions;
-+		ctx->prepare_access_checks = kdamond_prepare_phys_access_checks;
-+		ctx->check_accesses = kdamond_check_phys_accesses;
-+		ctx->target_valid = NULL;
++    if tid == 'paddr':
++        tid = -1
+     string = ' '.join(['%s %d %d' % (tid, r[0], r[1]) for r in init_regions])
+     return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
+             shell=True, executable='/bin/bash')
+diff --git a/tools/damon/record.py b/tools/damon/record.py
+index 11fd54001472..6fd0b59c73e0 100644
+--- a/tools/damon/record.py
++++ b/tools/damon/record.py
+@@ -101,6 +101,29 @@ def set_argparser(parser):
+     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
+             default='damon.data', help='output file path')
+ 
++def default_paddr_region():
++    "Largest System RAM region becomes the default"
++    ret = []
++    with open('/proc/iomem', 'r') as f:
++        # example of the line: '100000000-42b201fff : System RAM'
++        for line in f:
++            fields = line.split(':')
++            if len(fields) != 2:
++                continue
++            name = fields[1].strip()
++            if name != 'System RAM':
++                continue
++            addrs = fields[0].split('-')
++            if len(addrs) != 2:
++                continue
++            start = int(addrs[0], 16)
++            end = int(addrs[1], 16)
 +
-+		/* target id is meaningless here, but we set it just for fun */
-+		snprintf(kbuf, count, "-1    ");
-+	} else {
-+		/* Configure the context for virtual memory monitoring */
-+		ctx->init_target_regions = kdamond_init_vm_regions;
-+		ctx->update_target_regions = kdamond_update_vm_regions;
-+		ctx->prepare_access_checks = kdamond_prepare_vm_access_checks;
-+		ctx->check_accesses = kdamond_check_vm_accesses;
-+		ctx->target_valid = kdamond_vm_target_valid;
-+		if (!strncmp(kbuf, "pidfd ", 6)) {
-+			received_pidfds = true;
-+			nrs = &kbuf[6];
-+		}
- 	}
++            sz_region = end - start
++            if not ret or sz_region > (ret[1] - ret[0]):
++                ret = [start, end]
++    return ret
++
+ def main(args=None):
+     global orig_attrs
+     if not args:
+@@ -122,7 +145,11 @@ def main(args=None):
+     target = args.target
  
- 	targets = str_to_target_ids(nrs, ret, &nr_targets);
+     target_fields = target.split()
+-    if not subprocess.call('which %s &> /dev/null' % target_fields[0],
++    if target == 'paddr':   # physical memory address space
++        if not init_regions:
++            init_regions = [default_paddr_region()]
++        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
++    elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
+             shell=True, executable='/bin/bash'):
+         do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
+     else:
 -- 
 2.17.1
 
