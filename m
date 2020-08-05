@@ -2,139 +2,223 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB63C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E81C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 663DC22CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D1322CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZ+Ob5Uw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgHESYq (ORCPT
+        id S1729231AbgHESYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:24:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40077 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729203AbgHESXm (ORCPT
+        Wed, 5 Aug 2020 14:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729114AbgHESKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:23:42 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3O4i-0007Vq-H5; Wed, 05 Aug 2020 18:23:40 +0000
-Subject: ACK: [PATCH] spelling.txt: Remove some duplicate entries
-To:     Joe Perches <joe@perches.com>, Jiri Kosina <trivial@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <91ea17761845500f161ab343ea6e3415d3564d7b.camel@perches.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <331cef86-fef3-cdb3-c04d-5457e730e7d0@canonical.com>
-Date:   Wed, 5 Aug 2020 19:23:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 14:10:12 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD28AC0617A2;
+        Wed,  5 Aug 2020 11:09:38 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id e4so5006882pjd.0;
+        Wed, 05 Aug 2020 11:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3uItQaxawuJpK5je/oUH/UET1q9rEg6Zl2yCHgObWaU=;
+        b=AZ+Ob5UwDYRFspLaKbnD3yYh2qZsQKHrcZDLyvODYGY1YbkFdqYvUpnWs+STSiKBit
+         WLz2kwHe+aE4KxOc7yBn6ML9QYCd1mGW2siMD2WhuF/q9YMMA4dquWeum7W973iiC2YV
+         X1u0h6MRWU2/yNBeQAjyu+4MW5mPWkvLREPJ1FzwtTQIezg31a3imnvvrKmTR12u9f5Y
+         ueaIfnxZgNw4QSD1onlwxzEvBGGcMOek4BTA6qbPo+b8eO1x3SNxStKvABVAhIcpcVDb
+         r/gcMW4yBFwRb4oRr6EeUXKxmKQ2qSLzJzytfLwwSm8M418t+2GulbS2UlAJoMrhdD1e
+         l1Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3uItQaxawuJpK5je/oUH/UET1q9rEg6Zl2yCHgObWaU=;
+        b=QRBpLyAL2hVCP9qb37tevrY2qK/UxdRV3B8zfeCJZetAJXRggzwaAy3xDvEOUPZ1OS
+         g4niOP1e3Iw6atTt9Nykij1zfzfOm38qt9kLz8I51HHRfw2wISDOWtntGm89xIrEBtm3
+         ndxEKfyTWAbJiRHNrkxt7F8L6KQmExx+hrsolQ1m30QX3C2ehoAwQIWyCd5jxKNP8Soe
+         sv1FUdjzKoxaC42SJvdHg4o52fT7aWAwQvkOIKx8LSJh2wve5fiJ3sjuoIMFw31q8N2O
+         usWWx8onYknRQdEDilmPuJgUeEw3cblj1MCHmzg2H60t2qrP0asfiK2VhkWePzaYuSK0
+         g68w==
+X-Gm-Message-State: AOAM530AREdGw3uoofvOE5s+LFss0miVyqgkmEieI+T7ZBtW6Jpp/cHr
+        jAYqg9DPPAdgImy4lr87KqA=
+X-Google-Smtp-Source: ABdhPJzmv6N0E9VbwZH7UnXkgxlJLDvMP70umANYnnNhbgOzcfqOc8j7WNngIOLBGMiismfsUWErjw==
+X-Received: by 2002:a17:90a:f192:: with SMTP id bv18mr4155781pjb.21.1596650978416;
+        Wed, 05 Aug 2020 11:09:38 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.09.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 11:09:38 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andres Salomon <dilinger@queued.net>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1 03/12] fbdev: via-core: use generic power management
+Date:   Wed,  5 Aug 2020 23:37:13 +0530
+Message-Id: <20200805180722.244008-4-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
+References: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <91ea17761845500f161ab343ea6e3415d3564d7b.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2020 19:14, Joe Perches wrote:
-> Found when Colin King fixed a typo for falied/failed
-> and a git grep showed 2 entries in this file.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
-> 
->  scripts/spelling.txt | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-> index f253681e7e2a..b703e4fd51e8 100644
-> --- a/scripts/spelling.txt
-> +++ b/scripts/spelling.txt
-> @@ -596,7 +596,6 @@ extenstion||extension
->  extracter||extractor
->  faied||failed
->  faield||failed
-> -falied||failed
->  faild||failed
->  failded||failed
->  failer||failure
-> @@ -793,7 +792,6 @@ interrup||interrupt
->  interrups||interrupts
->  interruptted||interrupted
->  interupted||interrupted
-> -interupt||interrupt
->  intial||initial
->  intialisation||initialisation
->  intialised||initialised
-> @@ -968,7 +966,6 @@ occurd||occurred
->  occured||occurred
->  occurence||occurrence
->  occure||occurred
-> -occured||occurred
->  occuring||occurring
->  offser||offset
->  offet||offset
-> @@ -1437,7 +1434,6 @@ udpate||update
->  uesd||used
->  uknown||unknown
->  usccess||success
-> -usupported||unsupported
->  uncommited||uncommitted
->  uncompatible||incompatible
->  unconditionaly||unconditionally
-> 
-> 
-Ah, good catch. My bad.
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
-Acked-by: Colin Ian King <colin.king@canonical.com>
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions, as through
+the generic framework PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/video/fbdev/via/via-core.c | 39 ++++++++++++------------------
+ include/linux/via-core.h           |  2 --
+ 2 files changed, 16 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/video/fbdev/via/via-core.c b/drivers/video/fbdev/via/via-core.c
+index 703ddee9a244..89d75079b730 100644
+--- a/drivers/video/fbdev/via/via-core.c
++++ b/drivers/video/fbdev/via/via-core.c
+@@ -558,9 +558,8 @@ static void via_teardown_subdevs(void)
+ /*
+  * Power management functions
+  */
+-#ifdef CONFIG_PM
+-static LIST_HEAD(viafb_pm_hooks);
+-static DEFINE_MUTEX(viafb_pm_hooks_lock);
++static __maybe_unused LIST_HEAD(viafb_pm_hooks);
++static __maybe_unused DEFINE_MUTEX(viafb_pm_hooks_lock);
+ 
+ void viafb_pm_register(struct viafb_pm_hooks *hooks)
+ {
+@@ -580,12 +579,10 @@ void viafb_pm_unregister(struct viafb_pm_hooks *hooks)
+ }
+ EXPORT_SYMBOL_GPL(viafb_pm_unregister);
+ 
+-static int via_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused via_suspend(struct device *dev)
+ {
+ 	struct viafb_pm_hooks *hooks;
+ 
+-	if (state.event != PM_EVENT_SUSPEND)
+-		return 0;
+ 	/*
+ 	 * "I've occasionally hit a few drivers that caused suspend
+ 	 * failures, and each and every time it was a driver bug, and
+@@ -600,24 +597,13 @@ static int via_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		hooks->suspend(hooks->private);
+ 	mutex_unlock(&viafb_pm_hooks_lock);
+ 
+-	pci_save_state(pdev);
+-	pci_disable_device(pdev);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+ 	return 0;
+ }
+ 
+-static int via_resume(struct pci_dev *pdev)
++static int __maybe_unused via_resume(struct device *dev)
+ {
+ 	struct viafb_pm_hooks *hooks;
+ 
+-	/* Get the bus side powered up */
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	if (pci_enable_device(pdev))
+-		return 0;
+-
+-	pci_set_master(pdev);
+-
+ 	/* Now bring back any subdevs */
+ 	mutex_lock(&viafb_pm_hooks_lock);
+ 	list_for_each_entry(hooks, &viafb_pm_hooks, list)
+@@ -626,7 +612,6 @@ static int via_resume(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#endif /* CONFIG_PM */
+ 
+ static int via_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+@@ -712,15 +697,23 @@ static const struct pci_device_id via_pci_table[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, via_pci_table);
+ 
++static const struct dev_pm_ops via_pm_ops = {
++#ifdef CONFIG_PM_SLEEP
++	.suspend	= via_suspend,
++	.resume		= via_resume,
++	.freeze		= NULL,
++	.thaw		= via_resume,
++	.poweroff	= NULL,
++	.restore	= via_resume,
++#endif
++};
++
+ static struct pci_driver via_driver = {
+ 	.name		= "viafb",
+ 	.id_table	= via_pci_table,
+ 	.probe		= via_pci_probe,
+ 	.remove		= via_pci_remove,
+-#ifdef CONFIG_PM
+-	.suspend	= via_suspend,
+-	.resume		= via_resume,
+-#endif
++	.driver.pm	= &via_pm_ops,
+ };
+ 
+ static int __init via_core_init(void)
+diff --git a/include/linux/via-core.h b/include/linux/via-core.h
+index 9e802deedb2d..8737599b9148 100644
+--- a/include/linux/via-core.h
++++ b/include/linux/via-core.h
+@@ -47,7 +47,6 @@ struct via_port_cfg {
+ /*
+  * Allow subdevs to register suspend/resume hooks.
+  */
+-#ifdef CONFIG_PM
+ struct viafb_pm_hooks {
+ 	struct list_head list;
+ 	int (*suspend)(void *private);
+@@ -57,7 +56,6 @@ struct viafb_pm_hooks {
+ 
+ void viafb_pm_register(struct viafb_pm_hooks *hooks);
+ void viafb_pm_unregister(struct viafb_pm_hooks *hooks);
+-#endif /* CONFIG_PM */
+ 
+ /*
+  * This is the global viafb "device" containing stuff needed by
+-- 
+2.27.0
+
