@@ -2,119 +2,149 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65089C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A98222CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFDC20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:58:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="s4mcYasz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgHET6j (ORCPT
+        id S1725730AbgHET6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:58:39 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:41933 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727039AbgHEQmY (ORCPT
+        Wed, 5 Aug 2020 15:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbgHEQmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:42:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R541e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U4paFMA_1596632569;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4paFMA_1596632569)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 05 Aug 2020 21:02:49 +0800
-Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        Wed, 5 Aug 2020 12:42:12 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A780C03461A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 05:50:35 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id h12so13004739pgf.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 05:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pxHZlGFs7n3hLhzw5QUyYbZXnsLYTvT69Yo2dhG5PnE=;
+        b=s4mcYaszZB72uzAiUc1f6UxgpxOUVAK+bqa8bpBtpi4bAsVpiuMKN77nWwmHFGx6xu
+         /aJCTtRlsTUOuOUSp9LdjxuecSIYwISApjdBOMMEYW67l/kzMq95fbtpJ5D0Bnw/B4FK
+         WF6SO5eghuT6axWjy0u2JVJyCxIneYDL5u7OZKIKClodsGDMeirU4Q/r0WkaxWDSs6BC
+         iNMGM5fOmMmKM4akmwx7idL7u4YkdsAOHrRxWUTDy+TEXU0ANzuTk0dmdQfoPa2RK9UQ
+         W7WehElPojoe5rRSjM2qZypZ7Es1UB0SZK/aR1PpN6IdsSlmTuZe9BLzhJZRGLKQmFFM
+         UikQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pxHZlGFs7n3hLhzw5QUyYbZXnsLYTvT69Yo2dhG5PnE=;
+        b=PRTbEPQI8xmkDTaQCtSN+SkH2G7PECA1pwJ02rf9q8dJG+2z+juEcv8cD1oNukYAgo
+         fpti/5s2c08GbPVrCpzz3dz1mS+JeVRq8YpxjKvF11jY2NSbba+vhXXFSyI4Gj9DksE/
+         Xjt0ZPNeGm1YuLuVNUhBjV6TkapgJueqv3tWcSlKmDlZ/4kWYf2FRontYuvEWBwrv7hg
+         Uxu3xVEPyCSKEWTkiCQHnx22UsZ54tmQB4E3f5O4VoyiTwu8nDW16WADDIirizyEejQL
+         qICBwcE7gforZANcuSVGlBtjTG5q59ElGRAZWsnVtw4eYe/8emRxpQvoDKoLEemC0aXZ
+         he/w==
+X-Gm-Message-State: AOAM5323h4rSAsxKInA/j3OyPJYwj3YRhjBVtgfboxMSmbtGnceaTvI3
+        f/JXzIR7cA51m2QQY0wQZ2LajIlG4To=
+X-Google-Smtp-Source: ABdhPJzOcIElnG1OKuAwYY+GNfFtXM3ZLcXTRiuliXNpSfqW+BynlCZ/gdnSW61DbVIUXDJycMEtjA==
+X-Received: by 2002:aa7:8f0d:: with SMTP id x13mr3175421pfr.193.1596631834158;
+        Wed, 05 Aug 2020 05:50:34 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id e14sm3576167pfh.108.2020.08.05.05.50.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 05:50:33 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in loop_rw_iter()
+To:     Guoyu Huang <hgy5945@gmail.com>, viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200731151655.GB491801@cmpxchg.org>
- <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
- <20200803081815.GD5174@dhcp22.suse.cz>
- <bd61e672-b997-c4cd-2047-fca9dc11cc4c@linux.alibaba.com>
- <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
-Message-ID: <5622ef68-5e70-d1a9-d1be-b45411b6be5c@linux.alibaba.com>
-Date:   Wed, 5 Aug 2020 21:02:30 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+References: <20200805110247.GA103385@ubuntu>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b3cc7c68-a76d-8efd-4d2d-bd4c06efe177@kernel.dk>
+Date:   Wed, 5 Aug 2020 06:50:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
+In-Reply-To: <20200805110247.GA103385@ubuntu>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/8/5 下午8:28, Alex Shi 写道:
-> The last patch has a problem on define. this version could fix it.
+On 8/5/20 5:02 AM, Guoyu Huang wrote:
+> loop_rw_iter() does not check whether the file has a read or
+> write function. This can lead to NULL pointer dereference
+> when the user passes in a file descriptor that does not have
+> read or write function.
 > 
-> BTW, I see some !memcg happens when MEMCG compilered but disabled by cgroup_disable
+> The crash log looks like this:
 > 
-> 
-> [   94.657666] ---[ end trace f1f34bfc3b32ed2f ]---
-> [   95.138995] anon flags: 0x5005b48008000d(locked|uptodate|dirty|swapbacked)
-> [   95.146220] raw: 005005b48008000d dead000000000100 dead000000000122 ffff8897c7c76ad1
-> [   95.154549] raw: 0000000000000022 0000000000000000 0000000200000000 0000000000000000
-> [   95.162876] page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
-> 
-> 
+> [   99.834071] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> [   99.835364] #PF: supervisor instruction fetch in kernel mode
+> [   99.836522] #PF: error_code(0x0010) - not-present page
+> [   99.837771] PGD 8000000079d62067 P4D 8000000079d62067 PUD 79d8c067 PMD 0
+> [   99.839649] Oops: 0010 [#2] SMP PTI
+> [   99.840591] CPU: 1 PID: 333 Comm: io_wqe_worker-0 Tainted: G      D           5.8.0 #2
+> [   99.842622] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
+> [   99.845140] RIP: 0010:0x0
+> [   99.845840] Code: Bad RIP value.
+> [   99.846672] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
+> [   99.848018] RAX: 0000000000000000 RBX: ffff92363bd67300 RCX: ffff92363d461208
+> [   99.849854] RDX: 0000000000000010 RSI: 00007ffdbf696bb0 RDI: ffff92363bd67300
+> [   99.851743] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
+> [   99.853394] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
+> [   99.855148] R13: 0000000000000000 R14: ffff92363d461208 R15: ffffa1c7c01ebc68
+> [   99.856914] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
+> [   99.858651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   99.860032] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
+> [   99.861979] Call Trace:
+> [   99.862617]  loop_rw_iter.part.0+0xad/0x110
+> [   99.863838]  io_write+0x2ae/0x380
+> [   99.864644]  ? kvm_sched_clock_read+0x11/0x20
+> [   99.865595]  ? sched_clock+0x9/0x10
+> [   99.866453]  ? sched_clock_cpu+0x11/0xb0
+> [   99.867326]  ? newidle_balance+0x1d4/0x3c0
+> [   99.868283]  io_issue_sqe+0xd8f/0x1340
+> [   99.869216]  ? __switch_to+0x7f/0x450
+> [   99.870280]  ? __switch_to_asm+0x42/0x70
+> [   99.871254]  ? __switch_to_asm+0x36/0x70
+> [   99.872133]  ? lock_timer_base+0x72/0xa0
+> [   99.873155]  ? switch_mm_irqs_off+0x1bf/0x420
+> [   99.874152]  io_wq_submit_work+0x64/0x180
+> [   99.875192]  ? kthread_use_mm+0x71/0x100
+> [   99.876132]  io_worker_handle_work+0x267/0x440
+> [   99.877233]  io_wqe_worker+0x297/0x350
+> [   99.878145]  kthread+0x112/0x150
+> [   99.878849]  ? __io_worker_unuse+0x100/0x100
+> [   99.879935]  ? kthread_park+0x90/0x90
+> [   99.880874]  ret_from_fork+0x22/0x30
+> [   99.881679] Modules linked in:
+> [   99.882493] CR2: 0000000000000000
+> [   99.883324] ---[ end trace 4453745f4673190b ]---
+> [   99.884289] RIP: 0010:0x0
+> [   99.884837] Code: Bad RIP value.
+> [   99.885492] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
+> [   99.886851] RAX: 0000000000000000 RBX: ffff92363acd7f00 RCX: ffff92363d461608
+> [   99.888561] RDX: 0000000000000010 RSI: 00007ffe040d9e10 RDI: ffff92363acd7f00
+> [   99.890203] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
+> [   99.891907] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
+> [   99.894106] R13: 0000000000000000 R14: ffff92363d461608 R15: ffffa1c7c01ebc68
+> [   99.896079] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
+> [   99.898017] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   99.899197] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
 
-The following patch may helpful.
+Thanks, applied (slightly modified for current -git), and marked with the right
+fixes tag and stable CC'ed.
 
-From 8bfb26a2e37e08dc61d20212bcfa5812a367ba94 Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Wed, 5 Aug 2020 20:32:12 +0800
-Subject: [PATCH] mm/memcg: don't try charge swap if memcg disabled
-
-If we disabled memcg by cgroup_disable=memory, the swap charges are
-still called. Let's return from the funcs earlier and keep WARN_ON
-monitor.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/memcontrol.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index cb07a48d53aa..65f2b42d25af 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -7163,6 +7163,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
- 	VM_BUG_ON_PAGE(page_count(page), page);
- 
-+	if (mem_cgroup_disabled())
-+		return;
-+
- 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
- 		return;
- 
-@@ -7228,6 +7231,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
- 	struct mem_cgroup *memcg;
- 	unsigned short oldid;
- 
-+	if (mem_cgroup_disabled())
-+		return 0;
-+
- 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
- 		return 0;
- 
 -- 
-1.8.3.1
+Jens Axboe
 
