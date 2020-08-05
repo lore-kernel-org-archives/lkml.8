@@ -2,298 +2,245 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18151C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0452173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35F4206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596620347;
-	bh=aR2aK4F6SiByl0ZPXfuINMTORa2+lEaNE5dfjVj97Dk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0PWS4Vf6XbkSGi715HWY9f0n6kKWxBwFHjEPMeBkDVegOwRWPjMBEBsNFMypPv+qc
-	 bG8u0rmo1uyM+C9p+tfb2Epk2G2zx9NcI9dR3ZXbIplW2DhjThx33NDtq/CO5GcZVL
-	 vLN8O+imRoasJ0BHQUQEGNH02cGn0Bg5NUnRkxMM=
+	s=default; t=1596620816;
+	bh=5ty3xhBsiVWRK8fnohCpiXYdrOIgvzG5fBAaTE8TGIM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OQCfWszGPPfCIJMQv2p0F84Ab0FEjub6TGOqaOH7V+9l5Fqh4n+e41kaswrn/2yIR
+	 n0+HSdpZRudNsGMDagyUIZ8fQ/8wOZf+KaQfodCAIRf0sjNZQKgzn2Fsnzm3oxBF/I
+	 H6NSN6fFBV8x8jZqpN5QDim/CnqqgoR4vktkeYoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgHEJit convert rfc822-to-8bit (ORCPT
+        id S1728259AbgHEJqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:38:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22451 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728392AbgHEJfU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:35:20 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-BXxWHwaaMvKuPfWteNPJRw-1; Wed, 05 Aug 2020 05:35:12 -0400
-X-MC-Unique: BXxWHwaaMvKuPfWteNPJRw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Aug 2020 05:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726209AbgHEJpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:45:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5589718C63C1;
-        Wed,  5 Aug 2020 09:35:10 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.194.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94E4988F0C;
-        Wed,  5 Aug 2020 09:35:06 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        =?UTF-8?q?Genevi=C3=A8ve=20Bastien?= <gbastien@versatic.net>,
-        Wang Nan <wangnan0@huawei.com>,
-        Jeremie Galarneau <jgalar@efficios.com>
-Subject: [PATCH v2 5/7] perf tools: Add support to store time of day in CTF data conversion
-Date:   Wed,  5 Aug 2020 11:34:42 +0200
-Message-Id: <20200805093444.314999-6-jolsa@kernel.org>
-In-Reply-To: <20200805093444.314999-1-jolsa@kernel.org>
-References: <20200805093444.314999-1-jolsa@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FBB2206B6;
+        Wed,  5 Aug 2020 09:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596620739;
+        bh=5ty3xhBsiVWRK8fnohCpiXYdrOIgvzG5fBAaTE8TGIM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iULkHLC9ah6+5Y3NhGEMXRudO6a8ckzZPwUEqxT4FYsBGBaQR9ITQkiZ4Y7qZvJxw
+         VbXOu6Vkk3AfZ0YgA+auL+o6whFkZjlrT0eB4I6hpbZOj28xY2K+BdoFiZ5CR9Ne1v
+         2wmR7ZQJltmTeJ/fES8YPqs25AWLx09lM2t3ANwA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 4.14.192
+Date:   Wed,  5 Aug 2020 11:45:55 +0200
+Message-Id: <15966207552249@kroah.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding support to convert and store time of day in CTF
-data conversion for 'perf data convert' subcommand.
+I'm announcing the release of the 4.14.192 kernel.
 
-The perf.data used for conversion needs to have clock data
-information - must be recorded with -k/--clockid option).
+All users of the 4.14 kernel series must upgrade.
 
-New --tod option is added to 'perf data convert' subcommand
-to convert data with timestamps converted to wall clock time.
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Record data with clockid set:
-  # perf record -k CLOCK_MONOTONIC kill
-  kill: not enough arguments
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.033 MB perf.data (8 samples) ]
+thanks,
 
-Convert data with TOD timestamps:
-  # perf data convert --tod --to-ctf ./ctf
-  [ perf data convert: Converted 'perf.data' into CTF data './ctf' ]
-  [ perf data convert: Converted and wrote 0.000 MB (8 samples) ]
+greg k-h
 
-Display data in perf script:
-  # perf script -F+tod --ns
-            perf 262150 2020-07-13 18:38:50.097678523 153633.958246159:          1 cycles: ...
-            perf 262150 2020-07-13 18:38:50.097682941 153633.958250577:          1 cycles: ...
-            perf 262150 2020-07-13 18:38:50.097684997 153633.958252633:          7 cycles: ...
-  ...
+------------
 
-Display data in babeltrace:
-  # babeltrace --clock-date  ./ctf
-  [2020-07-13 18:38:50.097678523] (+?.?????????) cycles: { cpu_id = 0 }, { perf_ip = 0xFFF ...
-  [2020-07-13 18:38:50.097682941] (+0.000004418) cycles: { cpu_id = 0 }, { perf_ip = 0xFFF ...
-  [2020-07-13 18:38:50.097684997] (+0.000002056) cycles: { cpu_id = 0 }, { perf_ip = 0xFFF ...
-  ...
+ Makefile                                                      |    2 
+ arch/arm/kernel/hw_breakpoint.c                               |   27 +++-
+ arch/arm64/include/asm/alternative.h                          |    4 
+ arch/arm64/include/asm/checksum.h                             |    5 
+ arch/parisc/include/asm/cmpxchg.h                             |    2 
+ arch/parisc/lib/bitops.c                                      |   12 +
+ arch/sh/kernel/entry-common.S                                 |    6 
+ arch/x86/kernel/i8259.c                                       |    2 
+ arch/x86/kernel/unwind_orc.c                                  |    8 -
+ arch/x86/kernel/vmlinux.lds.S                                 |    3 
+ arch/x86/kvm/lapic.c                                          |    2 
+ arch/x86/kvm/x86.c                                            |    3 
+ drivers/crypto/ccp/ccp-ops.c                                  |    3 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c                       |    3 
+ drivers/gpu/drm/drm_gem.c                                     |   10 -
+ drivers/i2c/busses/i2c-cadence.c                              |    9 -
+ drivers/iio/imu/adis16400_buffer.c                            |    5 
+ drivers/media/pci/cx23885/cx23888-ir.c                        |    5 
+ drivers/net/ethernet/chelsio/cxgb4/sge.c                      |    1 
+ drivers/net/ethernet/ibm/ibmvnic.c                            |    2 
+ drivers/net/ethernet/mellanox/mlx4/main.c                     |    2 
+ drivers/net/ethernet/mellanox/mlxsw/core.c                    |    8 -
+ drivers/net/ethernet/qlogic/qed/qed_int.c                     |    3 
+ drivers/net/ethernet/renesas/ravb_main.c                      |   26 +++-
+ drivers/net/phy/mdio-bcm-unimac.c                             |    2 
+ drivers/net/usb/hso.c                                         |    5 
+ drivers/net/usb/lan78xx.c                                     |    6 
+ drivers/net/wireless/ath/ath9k/htc_hst.c                      |    3 
+ drivers/net/wireless/ath/ath9k/wmi.c                          |    1 
+ drivers/net/xen-netfront.c                                    |   64 ++++++----
+ drivers/nfc/s3fwrn5/core.c                                    |    1 
+ drivers/pci/quirks.c                                          |   13 ++
+ drivers/scsi/libsas/sas_ata.c                                 |    1 
+ drivers/scsi/libsas/sas_discover.c                            |   32 ++---
+ drivers/scsi/libsas/sas_expander.c                            |    8 -
+ drivers/scsi/libsas/sas_internal.h                            |    1 
+ drivers/scsi/libsas/sas_port.c                                |    3 
+ fs/f2fs/dir.c                                                 |   12 +
+ fs/xfs/xfs_log.c                                              |    9 -
+ include/asm-generic/vmlinux.lds.h                             |    5 
+ include/scsi/libsas.h                                         |    3 
+ include/scsi/scsi_transport_sas.h                             |    1 
+ include/uapi/linux/wireless.h                                 |    5 
+ kernel/bpf/hashtab.c                                          |   12 +
+ net/9p/trans_fd.c                                             |   32 +++--
+ net/mac80211/cfg.c                                            |    1 
+ net/mac80211/mesh_pathtbl.c                                   |    1 
+ net/rds/recv.c                                                |    3 
+ net/x25/x25_subr.c                                            |    6 
+ tools/testing/selftests/networking/timestamping/rxtimestamp.c |    3 
+ 50 files changed, 276 insertions(+), 110 deletions(-)
 
-It's available only for recording with clockid specified,
-because it's the only case where we can get reference time
-to wallclock time. It's can't do that with perf clock yet.
+Andrea Righi (1):
+      xen-netfront: fix potential deadlock in xennet_remove()
 
-Error is display if you want to use --tod on data without
-clockid specified:
+Andrii Nakryiko (1):
+      bpf: Fix map leak in HASH_OF_MAPS map
 
-  # perf data convert --tod --to-ctf ./ctf
-  Can't provide --tod time, missing clock data. Please record with -k/--clockid option.
-  Failed to setup CTF writer.
-  Error during conversion setup.
+Dominique Martinet (1):
+      9p/trans_fd: abort p9_read_work if req status changed
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/Documentation/perf-data.txt |  3 ++
- tools/perf/builtin-data.c              |  1 +
- tools/perf/util/data-convert-bt.c      | 57 +++++++++++++++++---------
- tools/perf/util/data-convert.h         |  1 +
- 4 files changed, 42 insertions(+), 20 deletions(-)
+Geert Uytterhoeven (1):
+      usb: hso: Fix debug compile warning on sparc32
 
-diff --git a/tools/perf/Documentation/perf-data.txt b/tools/perf/Documentation/perf-data.txt
-index c87180764829..726b9bc9e1a7 100644
---- a/tools/perf/Documentation/perf-data.txt
-+++ b/tools/perf/Documentation/perf-data.txt
-@@ -27,6 +27,9 @@ OPTIONS for 'convert'
- --to-ctf::
- 	Triggers the CTF conversion, specify the path of CTF data directory.
- 
-+--tod::
-+	Convert time to wall clock time.
-+
- -i::
- 	Specify input perf data file path.
- 
-diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
-index ca2fb44874e4..8d23b8d6ee8e 100644
---- a/tools/perf/builtin-data.c
-+++ b/tools/perf/builtin-data.c
-@@ -65,6 +65,7 @@ static int cmd_data_convert(int argc, const char **argv)
- 		OPT_STRING('i', "input", &input_name, "file", "input file name"),
- #ifdef HAVE_LIBBABELTRACE_SUPPORT
- 		OPT_STRING(0, "to-ctf", &to_ctf, NULL, "Convert to CTF format"),
-+		OPT_BOOLEAN(0, "tod", &opts.tod, "Convert time to wall clock time"),
- #endif
- 		OPT_BOOLEAN('f', "force", &opts.force, "don't complain, do it"),
- 		OPT_BOOLEAN(0, "all", &opts.all, "Convert all events"),
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 5f36fc6a5578..27c5fef9ad54 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -31,6 +31,9 @@
- #include "config.h"
- #include <linux/ctype.h>
- #include <linux/err.h>
-+#include <linux/time64.h>
-+#include "util.h"
-+#include "clockid.h"
- 
- #define pr_N(n, fmt, ...) \
- 	eprintf(n, debug_data_convert, fmt, ##__VA_ARGS__)
-@@ -1381,11 +1384,26 @@ do {									\
- 	return 0;
- }
- 
--static int ctf_writer__setup_clock(struct ctf_writer *cw)
-+static int ctf_writer__setup_clock(struct ctf_writer *cw,
-+				   struct perf_session *session,
-+				   bool tod)
- {
- 	struct bt_ctf_clock *clock = cw->clock;
-+	const char *desc = "perf clock";
-+	int64_t offset = 0;
- 
--	bt_ctf_clock_set_description(clock, "perf clock");
-+	if (tod) {
-+		struct perf_env *env = &session->header.env;
-+
-+		if (!env->clock.enabled) {
-+			pr_err("Can't provide --tod time, missing clock data. "
-+			       "Please record with -k/--clockid option.\n");
-+			return -1;
-+		}
-+
-+		desc   = clockid_name(env->clock.clockid);
-+		offset = env->clock.tod_ns - env->clock.clockid_ns;
-+	}
- 
- #define SET(__n, __v)				\
- do {						\
-@@ -1394,8 +1412,8 @@ do {						\
- } while (0)
- 
- 	SET(frequency,   1000000000);
--	SET(offset_s,    0);
--	SET(offset,      0);
-+	SET(offset,      offset);
-+	SET(description, desc);
- 	SET(precision,   10);
- 	SET(is_absolute, 0);
- 
-@@ -1481,7 +1499,8 @@ static void ctf_writer__cleanup(struct ctf_writer *cw)
- 	memset(cw, 0, sizeof(*cw));
- }
- 
--static int ctf_writer__init(struct ctf_writer *cw, const char *path)
-+static int ctf_writer__init(struct ctf_writer *cw, const char *path,
-+			    struct perf_session *session, bool tod)
- {
- 	struct bt_ctf_writer		*writer;
- 	struct bt_ctf_stream_class	*stream_class;
-@@ -1505,7 +1524,7 @@ static int ctf_writer__init(struct ctf_writer *cw, const char *path)
- 
- 	cw->clock = clock;
- 
--	if (ctf_writer__setup_clock(cw)) {
-+	if (ctf_writer__setup_clock(cw, session, tod)) {
- 		pr("Failed to setup CTF clock.\n");
- 		goto err_cleanup;
- 	}
-@@ -1613,17 +1632,15 @@ int bt_convert__perf2ctf(const char *input, const char *path,
- 	if (err)
- 		return err;
- 
--	/* CTF writer */
--	if (ctf_writer__init(cw, path))
--		return -1;
--
- 	err = -1;
- 	/* perf.data session */
- 	session = perf_session__new(&data, 0, &c.tool);
--	if (IS_ERR(session)) {
--		err = PTR_ERR(session);
--		goto free_writer;
--	}
-+	if (IS_ERR(session))
-+		return PTR_ERR(session);
-+
-+	/* CTF writer */
-+	if (ctf_writer__init(cw, path, session, opts->tod))
-+		goto free_session;
- 
- 	if (c.queue_size) {
- 		ordered_events__set_alloc_size(&session->ordered_events,
-@@ -1632,17 +1649,17 @@ int bt_convert__perf2ctf(const char *input, const char *path,
- 
- 	/* CTF writer env/clock setup  */
- 	if (ctf_writer__setup_env(cw, session))
--		goto free_session;
-+		goto free_writer;
- 
- 	/* CTF events setup */
- 	if (setup_events(cw, session))
--		goto free_session;
-+		goto free_writer;
- 
- 	if (opts->all && setup_non_sample_events(cw, session))
--		goto free_session;
-+		goto free_writer;
- 
- 	if (setup_streams(cw, session))
--		goto free_session;
-+		goto free_writer;
- 
- 	err = perf_session__process_events(session);
- 	if (!err)
-@@ -1670,10 +1687,10 @@ int bt_convert__perf2ctf(const char *input, const char *path,
- 
- 	return err;
- 
--free_session:
--	perf_session__delete(session);
- free_writer:
- 	ctf_writer__cleanup(cw);
-+free_session:
-+	perf_session__delete(session);
- 	pr_err("Error during conversion setup.\n");
- 	return err;
- }
-diff --git a/tools/perf/util/data-convert.h b/tools/perf/util/data-convert.h
-index af90b6076c06..feab5f114e37 100644
---- a/tools/perf/util/data-convert.h
-+++ b/tools/perf/util/data-convert.h
-@@ -5,6 +5,7 @@
- struct perf_data_convert_opts {
- 	bool force;
- 	bool all;
-+	bool tod;
- };
- 
- #endif /* __DATA_CONVERT_H */
--- 
-2.25.4
+Greg Kroah-Hartman (1):
+      Linux 4.14.192
+
+Ido Schimmel (2):
+      mlxsw: core: Increase scope of RCU read-side critical section
+      mlxsw: core: Free EMAD transactions using kfree_rcu()
+
+Jaegeuk Kim (1):
+      f2fs: check memory boundary by insane namelen
+
+Jakub Kicinski (1):
+      mlx4: disable device on shutdown
+
+Jason Yan (1):
+      scsi: libsas: direct call probe and destruct
+
+Joerg Roedel (1):
+      x86, vmlinux.lds: Page-align end of ..page_aligned sections
+
+Johan Hovold (2):
+      net: lan78xx: add missing endpoint sanity check
+      net: lan78xx: fix transfer-buffer memory leak
+
+Josh Poimboeuf (1):
+      x86/unwind/orc: Fix ORC for newly forked tasks
+
+Laurence Oberman (1):
+      qed: Disable "MFW indication via attention" SPAM every 5 minutes
+
+Liam Beguin (1):
+      parisc: add support for cmpxchg on u8 pointers
+
+Michael Karcher (1):
+      sh: Fix validation of system call number
+
+Navid Emamdoost (6):
+      crypto: ccp - Release all allocated memory if sha type is invalid
+      media: rc: prevent memory leak in cx23888_ir_probe
+      ath9k_htc: release allocated buffer if timed out
+      ath9k: release allocated buffer if timed out
+      nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
+      cxgb4: add missing release on skb in uld_send()
+
+Peilin Ye (2):
+      drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
+      rds: Prevent kernel-infoleak in rds_notify_queue_get()
+
+Pi-Hsun Shih (1):
+      wireless: Use offsetof instead of custom macro.
+
+Raviteja Narayanam (1):
+      Revert "i2c: cadence: Fix the hold bit setting"
+
+Remi Pommarel (2):
+      mac80211: mesh: Free ie data when leaving mesh
+      mac80211: mesh: Free pending skb when destroying a mpath
+
+Rik van Riel (1):
+      xfs: fix missed wakeup on l_flush_wait
+
+Robert Hancock (1):
+      PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
+
+Robin Murphy (1):
+      arm64: csum: Fix handling of bad packets
+
+Sami Tolvanen (2):
+      x86/build/lto: Fix truncated .bss with -fdata-sections
+      arm64/alternatives: move length validation inside the subsection
+
+Sasha Levin (2):
+      iio: imu: adis16400: fix memory leak
+      x86/kvm: Be careful not to clear KVM_VCPU_FLUSH_TLB bit
+
+Sheng Yong (1):
+      f2fs: check if file namelen exceeds max value
+
+Steve Cohen (1):
+      drm: hold gem reference until object is no longer accessed
+
+Tanner Love (1):
+      selftests/net: rxtimestamp: fix clang issues for target arch PowerPC
+
+Thomas Falcon (1):
+      ibmvnic: Fix IRQ mapping disposal in error path
+
+Thomas Gleixner (1):
+      x86/i8259: Use printk_deferred() to prevent deadlock
+
+Wang Hai (1):
+      9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
+
+Wanpeng Li (1):
+      KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
+
+Wei Yongjun (1):
+      net: phy: mdio-bcm-unimac: fix potential NULL dereference in unimac_mdio_probe()
+
+Will Deacon (1):
+      ARM: 8986/1: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints
+
+Xiyu Yang (1):
+      net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+
+Yoshihiro Shimoda (1):
+      net: ethernet: ravb: exit if re-initialization fails in tx timeout
+
+YueHaibing (1):
+      net/x25: Fix null-ptr-deref in x25_disconnect
 
