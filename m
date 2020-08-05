@@ -2,88 +2,117 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE03C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8F422CF8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04C721D95
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:59:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZFCELN3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgHEU4o (ORCPT
+        id S1727105AbgHEU7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:56:44 -0400
-Received: from gate.crashing.org ([63.228.1.57]:39741 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgHEU4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:56:43 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 075KtxCR012156;
-        Wed, 5 Aug 2020 15:55:59 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 075KtuFg012155;
-        Wed, 5 Aug 2020 15:55:56 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Wed, 5 Aug 2020 15:55:56 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        anton@ozlabs.org, linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        vincenzo.frascino@arm.com, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v10 2/5] powerpc/vdso: Prepare for switching VDSO to generic C implementation.
-Message-ID: <20200805205556.GR6753@gate.crashing.org>
-References: <cover.1596611196.git.christophe.leroy@csgroup.eu> <348528c33cd4007f3fee7fe643ef160843d09a6c.1596611196.git.christophe.leroy@csgroup.eu> <20200805140307.GO6753@gate.crashing.org> <7d409421-6396-8eba-8250-b6c9ff8232d9@csgroup.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d409421-6396-8eba-8250-b6c9ff8232d9@csgroup.eu>
-User-Agent: Mutt/1.4.2.3i
+        Wed, 5 Aug 2020 16:59:30 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46154 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725920AbgHEU72 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:59:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596661167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=jAIXysMz+ztRK+9IphGR8JksjwMIkYoVzpw6WZkH4eA=;
+        b=ZFCELN3r8CfGVKMCC6xm4dmTk3B7ZmFqDPU9ETeLF/YZ/wL6PCIouvPMN71ZWHzlaQqzc/
+        samppKUp+Hhe/Yot0vQGT1uaV4UPbz8Y408fGD8HL8Eo5cNvFSyICjVpywSxCX0JlWwkSU
+        ZNrNjMw3gOK0/jhD4oL033wI1OXTNn0=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-0kcvxPAVNCOxW5vtBbPMYQ-1; Wed, 05 Aug 2020 16:59:23 -0400
+X-MC-Unique: 0kcvxPAVNCOxW5vtBbPMYQ-1
+Received: by mail-qk1-f197.google.com with SMTP id 3so31961510qkv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:59:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jAIXysMz+ztRK+9IphGR8JksjwMIkYoVzpw6WZkH4eA=;
+        b=dFWcr81grE7kDg0Na5rOk3EggRS4KntWElqLxSDjnX4TmZ7D6I6/7bdjwKCpHqtCSs
+         u3MycoYAQH5GXmVHdfIKs1s7diE+oRsB6cjSwkgCGBJGcnhMlqqFt7MaOyhXpmsrOqHz
+         XUY9RGwvb6K0u4YPjFiCM9fjwNCiWLnUl054FTD4iuUixZmxKkl4HyHByRs0XsIvi72M
+         lCg5+adfx/ZBirp8zT8MFteXboM656tI4KtCJGJSVuP5On3hUsqVhj/LbB/XlotBgXF/
+         ox6NcQXnayImrDi/9YSjJ3h3eH87ft/cNBYlXKlWL5v5B/SclIBiq+m4YfT/TxrhRipc
+         lhXw==
+X-Gm-Message-State: AOAM5300DShFbtOvDcNbN4acQ1g0j5Aa1Chz1Zd40nj/VKK2W/rO4/ue
+        oEsMyV55t0APyQUT0tnT3fBfXYxdLTGQFlwvr92EYspBUilc8pIPb7e4Z9y+e0c6UJZ0uSkI5P5
+        70+NiXBuDWEHsxJOHuvco0VSw
+X-Received: by 2002:a37:84c:: with SMTP id 73mr5330200qki.464.1596661163155;
+        Wed, 05 Aug 2020 13:59:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxMeglqrJbSFSxjPBAaJs2BV5HNNaqoHH3sQfpvvAW+bLdrzYALcTYC6CF/kqo4ivso2fbfUg==
+X-Received: by 2002:a37:84c:: with SMTP id 73mr5330186qki.464.1596661162880;
+        Wed, 05 Aug 2020 13:59:22 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id c21sm2346084qka.9.2020.08.05.13.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 13:59:22 -0700 (PDT)
+From:   trix@redhat.com
+To:     patrik.r.jakobsson@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        airlied@redhat.com, yakui.zhao@intel.com, alan@linux.intel.com
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] drm/gma500: fix error check
+Date:   Wed,  5 Aug 2020 13:59:11 -0700
+Message-Id: <20200805205911.20927-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: Tom Rix <trix@redhat.com>
 
-On Wed, Aug 05, 2020 at 06:51:44PM +0200, Christophe Leroy wrote:
-> Le 05/08/2020 à 16:03, Segher Boessenkool a écrit :
-> >On Wed, Aug 05, 2020 at 07:09:23AM +0000, Christophe Leroy wrote:
-> >>+/*
-> >>+ * The macros sets two stack frames, one for the caller and one for the 
-> >>callee
-> >>+ * because there are no requirement for the caller to set a stack frame 
-> >>when
-> >>+ * calling VDSO so it may have omitted to set one, especially on PPC64
-> >>+ */
-> >
-> >If the caller follows the ABI, there always is a stack frame.  So what
-> >is going on?
-> 
-> Looks like it is not the case. See discussion at 
-> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr/
-> 
-> Seems like GCC uses the redzone and doesn't set a stack frame. I guess 
-> it doesn't know that the inline assembly contains a function call so it 
-> doesn't set the frame.
+Reviewing this block of code in cdv_intel_dp_init()
 
-Yes, that is the problem.  See
-https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Extended-Asm.html#AssemblerTemplate
-where this is (briefly) discussed:
-  "Accessing data from C programs without using input/output operands
-  (such as by using global symbols directly from the assembler
-  template) may not work as expected. Similarly, calling functions
-  directly from an assembler template requires a detailed understanding
-  of the target assembler and ABI."
+ret = cdv_intel_dp_aux_native_read(gma_encoder, DP_DPCD_REV, ...
 
-I don't know of a good way to tell GCC some function needs a frame (that
-is, one that doesn't result in extra code other than to set up the
-frame).  I'll think about it.
+cdv_intel_edp_panel_vdd_off(gma_encoder);
+if (ret == 0) {
+	/* if this fails, presume the device is a ghost */
+	DRM_INFO("failed to retrieve link info, disabling eDP\n");
+	drm_encoder_cleanup(encoder);
+	cdv_intel_dp_destroy(connector);
+	goto err_priv;
+} else {
 
+The (ret == 0) is not strict enough.
+cdv_intel_dp_aux_native_read() returns > 0 on success
+otherwise it is failure.
 
-Segher
+So change to <=
+
+Fixes: d112a8163f83 ("gma500/cdv: Add eDP support")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/gpu/drm/gma500/cdv_intel_dp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+index f41cbb753bb4..720a767118c9 100644
+--- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
++++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+@@ -2078,7 +2078,7 @@ cdv_intel_dp_init(struct drm_device *dev, struct psb_intel_mode_device *mode_dev
+ 					       intel_dp->dpcd,
+ 					       sizeof(intel_dp->dpcd));
+ 		cdv_intel_edp_panel_vdd_off(gma_encoder);
+-		if (ret == 0) {
++		if (ret <= 0) {
+ 			/* if this fails, presume the device is a ghost */
+ 			DRM_INFO("failed to retrieve link info, disabling eDP\n");
+ 			drm_encoder_cleanup(encoder);
+-- 
+2.18.1
+
