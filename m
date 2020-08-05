@@ -2,83 +2,104 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7954C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C8422B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596614154;
-	bh=7UQJZZcTdJI13BKFL++btdNL+mH6JhjxG2J2M0fuJS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D2Ky/7PNZmlDHZakcbGyYRF03j6eVpc+VA5lK5G2RMb2JZdstRI6zyvAOq7lQcEaH
-	 K0Jg6lNW0UcEQSBotAgvC9Zgn3vcrX5vsZjK6vhMUK3XFL9+bKQ4j/ctJftpTRUgGi
-	 QZV1A5yHfZRWKpO99nSZYe85YhRC0CUwR7/n///M=
+	by mail.kernel.org (Postfix) with ESMTP id 3593822B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHEHzx (ORCPT
+        id S1728037AbgHEH5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 03:57:06 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41212 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgHEHzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:55:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E571021744;
-        Wed,  5 Aug 2020 07:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596614147;
-        bh=7UQJZZcTdJI13BKFL++btdNL+mH6JhjxG2J2M0fuJS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KtTzy4t4SFk/N1hNFRYPbB+PGd85GSy2svPpor664q2lPfYpQYOLam8LE2sQjAhSI
-         L/ClP2w6M7u4w8s5Qemo57xNdBpiyvfE/nFecweHsem60fE6wDRkooZMVL2pX52Pme
-         bgloTAQwSdzlNsCiuTSCSNdAGheoIT5BF9qXa89c=
-Date:   Wed, 5 Aug 2020 09:56:04 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dongdong Yang <contribute.kernel@gmail.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        devel@driverdev.osuosl.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yangdongdong@xiaomi.com,
-        yanziily@xiaomi.com, rocking@linux.alibaba.com
-Subject: Re: [PATCH v5] sched: Provide USF for the portable equipment.
-Message-ID: <20200805075604.GA635696@kroah.com>
-References: <cover.1596612536.git.yangdongdong@xiaomi.com>
- <3bbd9a487176a05588e33ff660d4e58efa1fdb10.1596612536.git.yangdongdong@xiaomi.com>
+        id S1726980AbgHEH5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:57:00 -0400
+IronPort-SDR: uds12QRwwSPT3JLfbFWOjajMo2QJAEOrWY94TLXF+8D6g/DBy1N81sHR9jsLiiBQ/4OkL6qt6C
+ rs2Cm+HDi/1Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="132047052"
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="132047052"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 00:57:00 -0700
+IronPort-SDR: j5lv7mJNN8SZ/0Y4oelgcCirF5HrweytE33Vc+SQFdp+JbwgQIbRAC7WzcU65IFRQLqitRleZ7
+ B96+iMPaCdPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="396842529"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Aug 2020 00:57:00 -0700
+Received: from [10.249.227.101] (abudanko-mobl.ccr.corp.intel.com [10.249.227.101])
+        by linux.intel.com (Postfix) with ESMTP id 1C23A580713;
+        Wed,  5 Aug 2020 00:56:57 -0700 (PDT)
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v1] perf/core: take over CAP_SYS_PTRACE creds to CAP_PERFMON
+ cap
+Organization: Intel Corp.
+Message-ID: <6e8392ff-4732-0012-2949-e1587709f0f6@linux.intel.com>
+Date:   Wed, 5 Aug 2020 10:56:56 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3bbd9a487176a05588e33ff660d4e58efa1fdb10.1596612536.git.yangdongdong@xiaomi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 03:36:21PM +0800, Dongdong Yang wrote:
-> --- /dev/null
-> +++ b/kernel/sched/usf.c
-> @@ -0,0 +1,314 @@
-> +/*
-> + * Copyright (C) 2020 XiaoMi Inc.
-> + * Author: Yang Dongdong <yangdongdong@xiaomi.com>
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-> + * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
-> + */
 
-You did not run checkpatch.pl on this patch, nor listen to my request to
-drop the boilerplate license text and just use a SPDX line :(
+Open access to per-process monitoring for CAP_PERFMON only
+privileged processes [1]. Extend ptrace_may_access() check
+in perf_events subsystem with perfmon_capable() to simplify
+user experience and make monitoring more secure by reducing
+attack surface.
 
-greg k-h
+[1] https://lore.kernel.org/lkml/7776fa40-6c65-2aa6-1322-eb3a01201000@linux.intel.com/
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ kernel/events/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 856d98c36f56..f50d528af444 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11587,7 +11587,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 			goto err_task;
+ 
+ 		/*
+-		 * Reuse ptrace permission checks for now.
++		 * Preserve ptrace permission check for backwards compatibility.
+ 		 *
+ 		 * We must hold exec_update_mutex across this and any potential
+ 		 * perf_install_in_context() call for this new event to
+@@ -11595,7 +11595,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		 * perf_event_exit_task() that could imply).
+ 		 */
+ 		err = -EACCES;
+-		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
++		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
+ 			goto err_cred;
+ 	}
+ 
+-- 
+2.24.1
+
