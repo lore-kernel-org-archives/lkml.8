@@ -2,102 +2,160 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61198C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B12C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F64C22D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8036B2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gVqWoW0G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C0cYsA4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgHEQlj (ORCPT
+        id S1726350AbgHEQmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:41:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52080 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgHEQii (ORCPT
+        Wed, 5 Aug 2020 12:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgHEQkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:38:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075BS1Fh028001;
-        Wed, 5 Aug 2020 11:34:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=7pIsLGqMjIgL87suiIaeNB75q2taIqw/jMzR5b9gh7E=;
- b=gVqWoW0GUND4SXsTdTj42hKtT0Igc/eqPZHKXy9+Scve/pr7PhCMgzFgeQI5cpBodBpv
- 9kDGVgtNjb5MQCGBVcPm1yOR16evziikZafORHUebh4NXuNDy/zcWyx45GA72fWeMtkP
- 80mlyaQRUR+Bvz1kVB6AB7NI+8F/1o5vrLQl5IkMQkb9SPt4pnU3s4irs7nb2eP7jjw4
- SDHe2I5M0ATO2MW3KMNrJqQg/Jyjc8FFepZotFa3aK5K/TGExTwZ0ThJ2W2Iw1aG3hTg
- NTgV/wRElZ0Ils+pFAPXe0vnrNxKtp43x+54g8EJWhWxn/otPhiQDpQYgfKEvJvvKsad Ow== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 32qnd41rw0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 05 Aug 2020 11:34:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075BSswc034976;
-        Wed, 5 Aug 2020 11:34:08 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 32pdnt2jk4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Aug 2020 11:34:07 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 075BY3U2012723;
-        Wed, 5 Aug 2020 11:34:03 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 05 Aug 2020 04:34:02 -0700
-Date:   Wed, 5 Aug 2020 14:33:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Dongdong Yang <contribute.kernel@gmail.com>, juri.lelli@redhat.com,
-        peterz@infradead.org, bsegall@google.com, gulinghua@xiaomi.com,
-        duhui@xiaomi.com, rocking@linux.alibaba.com,
-        devel@driverdev.osuosl.org, vincent.guittot@linaro.org,
-        tanggeliang@xiaomi.com, mingo@redhat.com, yangdongdong@xiaomi.com,
-        mgorman@suse.de, linux-pm@vger.kernel.org, rostedt@goodmis.org,
-        fengwei@xiaomi.com, taojun@xiaomi.com, dietmar.eggemann@arm.com,
-        huangqiwu@xiaomi.com, gregkh@linuxfoundation.org,
-        rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
-        zhangguoquan@xiaomi.com
-Subject: Re: [PATCH v3] Provide USF for the portable equipment.
-Message-ID: <20200805113351.GE1793@kadam>
-References: <cover.1596464894.git.yangdongdong@xiaomi.com>
- <20200804054728.ojudxu5fmd54lar5@vireshk-mac-ubuntu>
+        Wed, 5 Aug 2020 12:40:07 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F66AC0A888B
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 06:49:36 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w14so17922771ljj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JQapRFN5NnXQ3j6nhvaneguoE0rre3sj3XHy1JRT4ss=;
+        b=C0cYsA4zOCivuhLcnAa/hXcHaA4cqHJIyCzMnE8R9D9xV4aiUjFIAWtdnzO5rAOatH
+         Xj0RZyBRPODrykxHzD4aj5bHgYh6uAC2hM1Nx0vbhQWHSpWU7Ps0zG9/Konnur6taL8x
+         sjItooKO85Lse8Rxw6ZHjSL7NTQGLK4f25eWv1xliQJAjS2Y5XUm8GqVgy1z1y6PZz6W
+         eLIbMwWEBhQQP42dFnXX3KSaJV2AtGOgNCTavqtZyivcpmm3e8AD61Oa16Ul0pfDs9gF
+         Ak/oHDAE5mgc1d1LQJIzioUc0mRtThJwviRDDRlD2b+PQ2+Lnu/FML91ulodGISzqOi4
+         QJEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JQapRFN5NnXQ3j6nhvaneguoE0rre3sj3XHy1JRT4ss=;
+        b=bGbU9QmEMV7clMPWvWLYQwJNb4oIbIx58vmZeW13us1LSWAWXLYwaLqZ//ydjDQ4rJ
+         lqHrfWtnHz06IEFZISZ07pwQeoC66TxS8jc1519SrUq/2VIauS+Vgj1x+fB3v8LpN4z4
+         MfC16F+DKyhdKaR79rgVJoO2DbOp2w02L4oAhPCmFboI5yFxCWij8RLshA3VfVj295xi
+         n4BGFGgLaF6t2U0lWFoHxVGIR1JDy/lq+xlSY3ccjlcX1OacLyTjm5RxZuRNnki/zNY6
+         bVK17wls7onEJkRu3OnI2B7ltTJM7TixcZqqApoyADA/GwKa5mjlHdvpw072WNp/AtFK
+         8cwQ==
+X-Gm-Message-State: AOAM533sKynzCVh+x1oYBCZtcQaO2d1PTwLrugUflrtP3bRd1MtKTHpL
+        DOXDmyNSfm1Hd3AmfaV4yrFMfzu5PIIkQzcJaR9jtTKCWDI=
+X-Google-Smtp-Source: ABdhPJx3AX+qVfOBTzo7irvlIIsyKx5rNGh29b8e478CtBquVMfDMxeyTo6zPw8l7obuWxKViTt4wTxZFzPwjb+NTZ0=
+X-Received: by 2002:a05:651c:294:: with SMTP id b20mr1417834ljo.4.1596635375036;
+ Wed, 05 Aug 2020 06:49:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804054728.ojudxu5fmd54lar5@vireshk-mac-ubuntu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=987
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 clxscore=1015 mlxscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 bulkscore=0 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050096
+References: <20200723084622.31134-1-jorge@foundries.io> <20200723084622.31134-2-jorge@foundries.io>
+ <CAFA6WYPQ3GGYostoHU=6qg4c_LqoqOZVbZ8gbQbGkNfyGydQjQ@mail.gmail.com> <20200724142305.GA24164@trex>
+In-Reply-To: <20200724142305.GA24164@trex>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Wed, 5 Aug 2020 19:19:23 +0530
+Message-ID: <CAFA6WYOGu4DPzd93h-yFLJvLmRH=ZroN70+ZNY6xCOOM+TJOSA@mail.gmail.com>
+Subject: Re: [PATCHv2 2/2] hwrng: optee: fix wait use case
+To:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, ricardo@foundries.io,
+        Michael Scott <mike@foundries.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        op-tee@lists.trustedfirmware.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 11:17:28AM +0530, Viresh Kumar wrote:
-> Sending updated patchset for this isn't going to help you my friend. You need
-> people (maintainers) to agree on the idea here first.
+Apologies for my delayed response as I was busy with some other tasks
+along with holidays.
 
-It doesn't take much work to make the code look nice.  Writing pretty
-code is always a good idea because then people assume you know what
-you're doing.
+On Fri, 24 Jul 2020 at 19:53, Jorge Ramirez-Ortiz, Foundries
+<jorge@foundries.io> wrote:
+>
+> On 24/07/20, Sumit Garg wrote:
+> > On Thu, 23 Jul 2020 at 14:16, Jorge Ramirez-Ortiz <jorge@foundries.io> wrote:
+> > >
+> > > The current code waits for data to be available before attempting a
+> > > second read. However the second read would not be executed as the
+> > > while loop exits.
+> > >
+> > > This fix does not wait if all data has been read and reads a second
+> > > time if only partial data was retrieved on the first read.
+> > >
+> > > This fix also does not attempt to read if not data is requested.
+> >
+> > I am not sure how this is possible, can you elaborate?
+>
+> currently, if the user sets max 0, get_optee_rng_data will regardless
+> issuese a call to the secure world requesting 0 bytes from the RNG
+>
 
-regards,
-dan carpenter
+This case is already handled by core API: rng_dev_read().
 
+> with this patch, this request is avoided.
+>
+> >
+> > >
+> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> > > ---
+> > >  v2: tidy up the while loop to avoid reading when no data is requested
+> > >
+> > >  drivers/char/hw_random/optee-rng.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/char/hw_random/optee-rng.c b/drivers/char/hw_random/optee-rng.c
+> > > index 5bc4700c4dae..a99d82949981 100644
+> > > --- a/drivers/char/hw_random/optee-rng.c
+> > > +++ b/drivers/char/hw_random/optee-rng.c
+> > > @@ -122,14 +122,14 @@ static int optee_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+> > >         if (max > MAX_ENTROPY_REQ_SZ)
+> > >                 max = MAX_ENTROPY_REQ_SZ;
+> > >
+> > > -       while (read == 0) {
+> > > +       while (read < max) {
+> > >                 rng_size = get_optee_rng_data(pvt_data, data, (max - read));
+> > >
+> > >                 data += rng_size;
+> > >                 read += rng_size;
+> > >
+> > >                 if (wait && pvt_data->data_rate) {
+> > > -                       if (timeout-- == 0)
+> > > +                       if ((timeout-- == 0) || (read == max))
+> >
+> > If read == max, would there be any sleep?
+>
+> no but I see no reason why there should be a wait since we already have
+> all the data that we need; the msleep is only required when we need to
+> wait for the RNG to generate entropy for the number of bytes we are
+> requesting. if we are requesting 0 bytes, the entropy is already
+> available. at leat this is what makes sense to me.
+>
+
+Wouldn't it lead to a call as msleep(0); that means no wait as well?
+
+-Sumit
+
+>
+> >
+> > -Sumit
+> >
+> > >                                 return read;
+> > >                         msleep((1000 * (max - read)) / pvt_data->data_rate);
+> > >                 } else {
+> > > --
+> > > 2.17.1
+> > >
