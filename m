@@ -2,166 +2,386 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CDE22D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:02:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="TcYCkFin"
+	by mail.kernel.org (Postfix) with ESMTP id A4D0322D00
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgHERCd (ORCPT
+        id S1728225AbgHERCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:02:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48918 "EHLO
+        Wed, 5 Aug 2020 13:02:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728329AbgHERAT (ORCPT
+        with ESMTP id S1727827AbgHERAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 13:00:19 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3A9C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:00:18 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h12so13400517pgf.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G4DbSMP4s0KjqjCan6W9KS0glhbgg9IjBH8ScNTbzmc=;
-        b=TcYCkFinQMAmeGEbggt+P/zVipBJP9sUzymkh/0UP7qWpBP0wJxrUmmpwnZkwKfCQs
-         1ZTu1iB15ld0Bhyrq87BeyrwUclEJzRw8XYHcOhGxIrzfMkYboWY+oFCCzhSMexuEvHR
-         kUqbqgJULFZlvUvwMfQ4YQ5A662brkmIo/NGcoxMmQ1RMan9EySwSx+qwQ3A6EhusfTC
-         2PpK8fj5TgtrqBvA1adGDdtwm62MLhVb9PASfqcPX/cAc8jBIAOPQwbtV71D6kEFWUSX
-         pEHLs/MsocS7WJ9o6KomQqb+wODk/8MeK36XlG0sqT/PApoyC+U7nN8vGWw0RsfgNV0p
-         Vqnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G4DbSMP4s0KjqjCan6W9KS0glhbgg9IjBH8ScNTbzmc=;
-        b=Yk2kzldkNSBqQMOnmwE/W94KXrclbgleJNjFvDJUU6JTag457RRl+4YN6APDkJ79eG
-         IisPHUjH5CwH7aDLK6MDCsWVQdTAxLTMe+3r//NkPjzYNiXWBY0cTZcEkPlMWDMWo7iT
-         VcojgvKSlUUj3xv1GOm2nfmtTqAAoqWTNmCnOcBZDQNhX1ZE8mqE4XS/XbHljRpHJX3N
-         /LBeER1/0SW78b+8NWquDXC13mUkb1/7XslSO6+CVRyeYHnIAfA5DrJygYVdUiOiP66D
-         LRNP2MNY5ITOXGTr5OF7XZp0QCi6O4fy6myWXIcDeTogZnd5P7B4grwgYqXFOoH3rlVk
-         c9Tg==
-X-Gm-Message-State: AOAM530TOcmNbWRRtv7dvYMB/eUE063oT0m/A4LYJyaq1ZztNZ/ihmnX
-        /pz75zY102/kN3UqZugrVVI/i6w5gQcWYfkqnsAaCg==
-X-Google-Smtp-Source: ABdhPJxyrDwOYA4hiJxh0WZeOnWjCsjtUjmSKRmwF8SWkAGXvKq4kBpieblfCx/y1SmwwZt8QYpg8abb4dQVxRCVJyk=
-X-Received: by 2002:aa7:8a4d:: with SMTP id n13mr4581156pfa.143.1596646817583;
- Wed, 05 Aug 2020 10:00:17 -0700 (PDT)
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA044C0F26C8;
+        Wed,  5 Aug 2020 08:24:12 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id E7AA6292E4F
+Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to use
+ the same sensor
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        kieran.bingham@ideasonboard.com,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+ <20200724121521.GA2705690@oden.dyn.berto.se>
+ <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
+ <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
+ <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
+ <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
+ <3a9ac970-77b8-1bc5-536a-5b4f2bd60745@collabora.com>
+ <b5fd3811-2f0e-7563-13fa-bb1e32189814@collabora.com>
+ <f2fc6d81-16a6-206b-6bb2-fb99d5a84f65@ideasonboard.com>
+ <cd1d18ef-d4ff-8240-e9dd-2d9f9c7c5a45@collabora.com>
+ <a2ae2dba-6076-0abc-f620-9047a52b513c@ideasonboard.com>
+ <5faeed28-75b2-48d8-4a48-c38418fd89f2@collabora.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <506b930a-8d34-f180-0ca2-51c21248b409@collabora.com>
+Date:   Wed, 5 Aug 2020 12:18:41 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200805162713.16386-1-songmuchun@bytedance.com> <20200805125056.1dfe74b5@oasis.local.home>
-In-Reply-To: <20200805125056.1dfe74b5@oasis.local.home>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Thu, 6 Aug 2020 00:59:41 +0800
-Message-ID: <CAMZfGtW2LJTUB6OaixF-V0tVPXt5kEzVvUvOSbO551r0vvZGbg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v2] kprobes: fix NULL pointer dereference
- at kprobe_ftrace_handler
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, sfr@canb.auug.org.au, mingo@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5faeed28-75b2-48d8-4a48-c38418fd89f2@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 12:51 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu,  6 Aug 2020 00:27:13 +0800
-> Muchun Song <songmuchun@bytedance.com> wrote:
->
-> > We found a case of kernel panic on our server. The stack trace is as
-> > follows(omit some irrelevant information):
-> >
-> >   BUG: kernel NULL pointer dereference, address: 0000000000000080
-> >   RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
-> >   RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
-> >   RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
-> >   RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
-> >   RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
-> >   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> >   R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
-> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >   CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
-> >   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >   Call Trace:
-> >    <IRQ>
-> >    ftrace_ops_assist_func+0x56/0xe0
-> >    ftrace_call+0x5/0x34
-> >    tcpa_statistic_send+0x5/0x130 [ttcp_engine]
-> >
-> > The tcpa_statistic_send is the function being kprobed. After analysis,
-> > the root cause is that the fourth parameter regs of kprobe_ftrace_handler
-> > is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
-> >
-> >   crash> dis tcpa_statistic_send -r
-> >          <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
-> >
-> > The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
-> > So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
-> > is NULL. In theory, we should call the ftrace_regs_caller instead of the
-> > ftrace_caller. After in-depth analysis, we found a reproducible path.
-> >
-> >   Writing a simple kernel module which starts a periodic timer. The
-> >   timer's handler is named 'kprobe_test_timer_handler'. The module
-> >   name is kprobe_test.ko.
-> >
-> >   1) insmod kprobe_test.ko
-> >   2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-> >   3) echo 0 > /proc/sys/kernel/ftrace_enabled
-> >   4) rmmod kprobe_test
-> >   5) stop step 2) kprobe
-> >   6) insmod kprobe_test.ko
-> >   7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-> >
-> > We mark the kprobe as GONE but not disarm the kprobe in the step 4).
-> > The step 5) also do not disarm the kprobe when unregister kprobe. So
-> > we do not remove the ip from the filter. In this case, when the module
-> > loads again in the step 6), we will replace the code to ftrace_caller
-> > via the ftrace_module_enable(). When we register kprobe again, we will
-> > not replace ftrace_caller to ftrace_regs_caller because the ftrace is
-> > disabled in the step 3). So the step 7) will trigger kernel panic. Fix
-> > this problem by disarming the kprobe when the module is going away.
-> >
-> > Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-> > Acked-by: Song Liu <songliubraving@fb.com>
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
-> > Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> > ---
-> > changelogs in v2:
-> >  1) fix compiler warning for !CONFIG_KPROBES_ON_FTRACE.
->
-> The original patch has already been pulled into the queue and tested.
-> Please make a new patch that adds this update, as if your original
-> patch has already been accepted.
+Hi,
 
-Will do, thanks!
+On 7/29/20 12:24 PM, Dafna Hirschfeld wrote:
+> 
+> 
+> On 29.07.20 15:27, Kieran Bingham wrote:
+>> Hi Dafna, Kaaira,
+>>
+>> On 29/07/2020 14:16, Dafna Hirschfeld wrote:
+>>>
+>>>
+>>> On 29.07.20 15:05, Kieran Bingham wrote:
+>>>> Hi Dafna,
+>>>>
+>>>> On 28/07/2020 15:00, Dafna Hirschfeld wrote:
+>>>>>
+>>>>>
+>>>>> On 28.07.20 14:07, Dafna Hirschfeld wrote:
+>>>>>> Hi
+>>>>>>
+>>>>>> On 28.07.20 13:39, Kaaira Gupta wrote:
+>>>>>>> On Mon, Jul 27, 2020 at 02:54:30PM -0300, Helen Koike wrote:
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On 7/27/20 11:31 AM, Kieran Bingham wrote:
+>>>>>>>>> Hi all,
+>>>>>>>>>
+>>>>>>>>> +Dafna for the thread discussion, as she's missed from the to/cc
+>>>>>>>>> list.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> On 24/07/2020 13:21, Kaaira Gupta wrote:
+>>>>>>>>>> On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
+>>>>>>>>>> Hi,
+>>>>>>>>>>
+>>>>>>>>>>> Hi Kaaira,
+>>>>>>>>>>>
+>>>>>>>>>>> Thanks for your work.
+>>>>>>>>>>
+>>>>>>>>>> Thanks for yours :D
+>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
+>>>>>>>>>>>> This is version 2 of the patch series posted by Niklas for
+>>>>>>>>>>>> allowing
+>>>>>>>>>>>> multiple streams in VIMC.
+>>>>>>>>>>>> The original series can be found here:
+>>>>>>>>>>>> https://patchwork.kernel.org/cover/10948831/
+>>>>>>>>>>>>
+>>>>>>>>>>>> This series adds support for two (or more) capture devices to be
+>>>>>>>>>>>> connected to the same sensors and run simultaneously. Each
+>>>>>>>>>>>> capture device
+>>>>>>>>>>>> can be started and stopped independent of each other.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Patch 1/3 and 2/3 deals with solving the issues that arises once
+>>>>>>>>>>>> two
+>>>>>>>>>>>> capture devices can be part of the same pipeline. While 3/3
+>>>>>>>>>>>> allows for
+>>>>>>>>>>>> two capture devices to be part of the same pipeline and thus
+>>>>>>>>>>>> allows for
+>>>>>>>>>>>> simultaneously use.
+>>>>>>
+>>>>>> I wonder if these two patches are enough, since each vimc entity also
+>>>>>> have
+>>>>>> a 'process_frame' callback, but only one allocated frame. That means
+>>>>>> that the 'process_frame' can be called concurrently by two different
+>>>>>> streams
+>>>>>> on the same frame and cause corruption.
+>>>>>>
+>>>>>
+>>>>> I think we should somehow change the vimc-stream.c code so that we have
+>>>>> only
+>>>>> one stream process per pipe. So if one capture is already streaming,
+>>>>> then the new
+>>>>> capture that wants to stream uses the same thread so we don't have two
+>>>>> threads
+>>>>> both calling 'process_frame'.
+>>>>
+>>>>
+>>>> Yes, I think it looks and sounds like there are two threads running when
+>>>> there are two streams.
+>>>>
+>>>> so in effect, although they 'share a pipe', aren't they in effect just
+>>>> sending two separate buffers through their stream-path?
+>>>>
+>>>> If that's the case, then I don't think there's any frame corruption,
+>>>> because they would both have grabbed their own frame separately.
+>>>
+>>> But each entity allocates just one buffer. So the same buffer is used for
+>>> both stream.
+>>
+>> Aha, ok, I hadn't realised there was only a single buffer available in
+>> the pipeline for each entity. Indeed there is a risk of corruption in
+>> that case.
+>>
+>>> What for example can happen is that the debayer of one stream can read the
+>>> sensor's buffer while the sensor itself writes to the buffer for the other
+>>> stream.
+>>
+>>
+>> So, In that case, we have currently got a scenario where each 'stream'
+>> really is operating it's own pipe (even though all components are reused).
+>>
+>> Two questions:
+>>
+>> Is this acceptable, and we should just use a mutex to ensure the buffers
+>> are not corrupted, but essentially each stream is a separate temporal
+>> capture?
+>>
+>>
+>> Or B:
+>>
+>> Should we refactor to make sure that there is a single thread, and the
+>> code which calls process_frame on each entity should become aware of the
+>> potential for multiple paths at the point of the sensor.
+>>
+>>
+>> I suspect option B is really the 'right' path to take, but it is more
+>> complicated of course.
+> 
+> I also think option B is preferable.
 
->
-> Feel free to base it off of:
->
->  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git  for-next
->
-> -- Steve
+With this options we would force both stream to the
+same frame rate, which I guess it make sense, since the sensor is producing frames
+in a given pixel rate, the rest of the pipeline follows.
+
+> 
+> Maybe we can add a bool field 'is_streaming' to struct 'vimc_ent_device'
+> The stream thread can do a BFS scan from the sensor up to the captures
+> and call the 'process_frame' for each entity if 'is_streaming == true'.
+> When a new capture wants to stream it sets 'is_streaming = true'
+> on the entities on his streaming path.
+
+I agree, we can have a BFS scan to build the array stream->ved_pipeline[]
+in vimc_streamer_pipeline_init() with all the entities in the connected graph.
+
+Or, if it is easier to implement, it doesn't need to be a BFS search, it could be one
+pipe after the other from a join point, E.g.:
+
+      /->e3->e4
+e1->e2
+      \->e5->e6
+
+then ved_pipeline[] = [e1, e2, e3, e4, e5, e6]
+Or ved_pipeline[] = [e1, e2, e5, e6, e3, e4]
+
+Anyway would work.
+
+Then you can check use_count (from patch 1/3)  to decide to call ".process_frame()" or not
+on that entity.
+
+So, if you start the stream on e4 only, you would have:
+e1 - use_count = 1
+e2 - use_count = 1
+e3 - use_count = 1
+e4 - use_count = 1
+e5 - use_count = 0
+e6 - use_count = 0
+
+And if you start the stream on e6 later, all "use_count"s would be greater then 0,
+so you just call .process_frame() when "use_count" > 0
+
+You'll probably need to add a ".get_frame()" callback for each entity, and "process_frame()"
+can call the "get_frame()" from the entity connected in its sink pad, so you don't need to
+pass one frame from one entity to the next inside the thread as a parameter for .process_frame().
+
+So I suggest:
+
+- Refactor .process_frame to call .get_frame() from it's sink pad, instead of receiving the
+frame as parameter (we are assuming we won't have an entity with more then one enabled sink pad).
+- Update patch 1/3 to put the use_count on struct vimc_ent_device
+- Update vimc_streamer_thread() to only call .process_frame() when use_count > 0
+- Refactor vimc_streamer_pipeline_init() to build a proper ved_pipeline[] array with all the
+entities in a pipe
 
 
+What do you think?
 
--- 
-Yours,
-Muchun
+Regards,
+Helen
+
+> 
+> Thanks,
+> Dafna
+> 
+> 
+>>
+>> -- 
+>> Kieran
+>>
+>>
+>>
+>>
+>>> Thanks,
+>>> Dafna
+>>>
+>>>>
+>>>>
+>>>> I don't think that's a good example of the hardware though, as that
+>>>> doesn't reflect what 'should' happen where the TPG runs once to generate
+>>>> a frame at the sensor, which is then read by both the debayer entity and
+>>>> the RAW capture device when there are two streams...
+>>>>
+>>>>
+>>>> So I suspect trying to move to a single thread is desirable, but that
+>>>> might be a fair bit of work also.
+>>>>
+>>>> -- 
+>>>> Kieran
+>>>>
+>>>>
+>>>>
+>>>>> The second capture that wants to stream should iterate the topology
+>>>>> downwards until
+>>>>> reaching an entity that already belong to the stream path of the other
+>>>>> streaming capture
+>>>>> and tell the streamer it wants to read the frames this entity
+>>>>> produces.
+>>>>>
+>>>>> Thanks,
+>>>>> Dafna
+>>>>>
+>>>>>> Thanks,
+>>>>>> Dafna
+>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> I'm just curious if you are aware of this series? It would
+>>>>>>>>>>> replace the
+>>>>>>>>>>> need for 1/3 and 2/3 of this series right?
+>>>>>>>>>>
+>>>>>>>>>> v3 of this series replaces the need for 1/3, but not the current
+>>>>>>>>>> version
+>>>>>>>>>> (ie v4). v4 of patch 2/5 removes the stream_counter that is
+>>>>>>>>>> needed to
+>>>>>>>>>> keep count of the calls to s_stream. Hence 1/3 becomes relevant
+>>>>>>>>>> again.
+>>>>>>>>>
+>>>>>>>>> So the question really is, how do we best make use of the two
+>>>>>>>>> current
+>>>>>>>>> series, to achieve our goal of supporting multiple streams.
+>>>>>>>>>
+>>>>>>>>> Having not parsed Dafna's series yet, do we need to combine
+>>>>>>>>> elements of
+>>>>>>>>> both ? Or should we work towards starting with this series and get
+>>>>>>>>> dafna's patches built on top ?
+>>>>>>>>>
+>>>>>>>>> Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
+>>>>>>>>>
+>>>>>>>>> (It might be noteworthy to say that Kaaira has reported successful
+>>>>>>>>> multiple stream operation from /this/ series and her development
+>>>>>>>>> branch
+>>>>>>>>> on libcamera).
+>>>>>>>>
+>>>>>>>> Dafna's patch seems still under discussion, but I don't want to
+>>>>>>>> block progress in Vimc either.
+>>>>>>>>
+>>>>>>>> So I was wondering if we can move forward with Vimc support for
+>>>>>>>> multistreaming,
+>>>>>>>> without considering Dafna's patchset, and we can do the clean up
+>>>>>>>> later once we solve that.
+>>>>>>>>
+>>>>>>>> What do you think?
+>>>>>>>
+>>>>>>> I agree with supporting multiple streams with VIMC with this patchset,
+>>>>>>> and then we can refactor the counters for s_stream in VIMC later (over
+>>>>>>> this series) if dafna includes them in subsequent version of her
+>>>>>>> patchset.
+>>>>>>>
+>>>>>>
+>>>>>> I also think that adding support in the code will take much longer and
+>>>>>> should not
+>>>>>> stop us from supporting vimc independently.
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Dafna
+>>>>>>
+>>>>>>>>
+>>>>>>>> Regards,
+>>>>>>>> Helen
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>> 1.
+>>>>>>>>>>> https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Changes since v1:
+>>>>>>>>>>>>       - All three patches rebased on latest media-tree.
+>>>>>>>>>>>>       Patch 3:
+>>>>>>>>>>>>       - Search for an entity with a non-NULL pipe instead of
+>>>>>>>>>>>> searching
+>>>>>>>>>>>>         for sensor. This terminates the search at output itself.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Kaaira Gupta (3):
+>>>>>>>>>>>>      media: vimc: Add usage count to subdevices
+>>>>>>>>>>>>      media: vimc: Serialize vimc_streamer_s_stream()
+>>>>>>>>>>>>      media: vimc: Join pipeline if one already exists
+>>>>>>>>>>>>
+>>>>>>>>>>>>     .../media/test-drivers/vimc/vimc-capture.c    | 35
+>>>>>>>>>>>> ++++++++++++++++++-
+>>>>>>>>>>>>     .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
+>>>>>>>>>>>>     drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
+>>>>>>>>>>>>     drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
+>>>>>>>>>>>>     .../media/test-drivers/vimc/vimc-streamer.c   | 23
+>>>>>>>>>>>> +++++++-----
+>>>>>>>>>>>>     5 files changed, 73 insertions(+), 10 deletions(-)
+>>>>>>>>>>>>
+>>>>>>>>>>>> -- 
+>>>>>>>>>>>> 2.17.1
+>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> -- 
+>>>>>>>>>>> Regards,
+>>>>>>>>>>> Niklas Söderlund
+>>>>>>>>>
+>>>>
+>>
