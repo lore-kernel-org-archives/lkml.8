@@ -2,136 +2,146 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D01C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D82C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70C9B21744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100CD22B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgHEGRa (ORCPT
+        id S1727979AbgHEGR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:17:30 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:50500 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgHEGRX (ORCPT
+        Wed, 5 Aug 2020 02:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgHEGR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:17:23 -0400
-Received: by mail-il1-f197.google.com with SMTP id a15so8242214iln.17
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:17:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=di6vgA1QwvKcuaK4zAt5UtCoArB7tUveaatpD9fjTvM=;
-        b=uDOst+J72mj7+ex/OrDPybkvOjqV+FWd8doZ02l54pBUBpIsc04nFTlvxR6MRFAlws
-         RSs0bNxc0g80r30HfNsdgkskXknYQlfmp2p7WR8Y5/pcsAjTrsLGLz017BrAslVgv6Le
-         BXxtHBFog7kZdWO87rl7gNTwEHfa1d1Umpa6+Z5Oh9gh2tjouNHXNfRYwM65iU8Fk4aL
-         I3JNm4KlL4NjcUFzxN9RZI005++ma/Lq0onvxwmlL4EcdinoFRGeEFJASeuDG0G7zeAP
-         lY/rg85NVQoA1tRnNXeF81TlE9cUXyii0eJWdDPtZGIKRiMJlOMPIXTv7hXBnA/8bm1d
-         /gpQ==
-X-Gm-Message-State: AOAM531M49a3e6kTd+TfFuLELzpcALNDb5Rx5uIs+kUhJsvc9AqW9vx4
-        gouRBQQEMAivdhWDLbCP8sG4iTD3tNWYQrMNxSrxtNGD2Kmq
-X-Google-Smtp-Source: ABdhPJw7CeR8FScCQjTke99M/QZIjT4CWXzYncIR8c+ldAl42UTk0q7UGzeqpI+NBgeN3NmNaEMNkenJVSxmswwfEb6X1QBIHAn5
+        Wed, 5 Aug 2020 02:17:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61898C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:17:58 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3CkM-0002qN-Kt; Wed, 05 Aug 2020 08:17:54 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3CkL-0004TT-LN; Wed, 05 Aug 2020 08:17:53 +0200
+Date:   Wed, 5 Aug 2020 08:17:53 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Thorsten Scherer <t.scherer@eckelmann.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
+Message-ID: <20200805061753.5o63zu4ionhgjab4@pengutronix.de>
+References: <20200804091603.541-1-a.fatoum@pengutronix.de>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1313:: with SMTP id r19mr2355385jad.60.1596608242876;
- Tue, 04 Aug 2020 23:17:22 -0700 (PDT)
-Date:   Tue, 04 Aug 2020 23:17:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000029856f05ac1b5335@google.com>
-Subject: WARNING: locking bug in hci_dev_reset
-From:   syzbot <syzbot+f456fc1d58a1f67c401f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="scljatgkl7jdtay7"
+Content-Disposition: inline
+In-Reply-To: <20200804091603.541-1-a.fatoum@pengutronix.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+--scljatgkl7jdtay7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
 Hello,
 
-syzbot found the following issue on:
+[adding tglx for irq expertise to Cc]
 
-HEAD commit:    ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=10887792900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c0cfcf935bcc94d2
-dashboard link: https://syzkaller.appspot.com/bug?extid=f456fc1d58a1f67c401f
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123baf04900000
+On Tue, Aug 04, 2020 at 11:16:03AM +0200, Ahmad Fatoum wrote:
+> Generic GPIO consumers like gpio-keys use request_any_context_irq()
+> to request a threaded handler if irq_settings_is_nested_thread() =3D=3D
+> true or a hardirq handler otherwise.
+>=20
+> Drivers using handle_nested_irq() must be sure that the nested
+> IRQs were requested with threaded handlers, because the IRQ
+> is handled by calling action->thread_fn().
+>=20
+> The gpio-siox driver dispatches IRQs via handle_nested_irq,
+> but has irq_settings_is_nested_thread() =3D=3D false.
+>=20
+> Set gpio_irq_chip::threaded to remedy this.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f456fc1d58a1f67c401f@syzkaller.appspotmail.com
+Sounds reasonable, but I have to keep this for others to judge if this
+is indeed how the irq stuff works.
 
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 0 PID: 22435 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:183 [inline]
-WARNING: CPU: 0 PID: 22435 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:172 [inline]
-WARNING: CPU: 0 PID: 22435 at kernel/locking/lockdep.c:183 check_wait_context kernel/locking/lockdep.c:4054 [inline]
-WARNING: CPU: 0 PID: 22435 at kernel/locking/lockdep.c:183 __lock_acquire+0x1629/0x56e0 kernel/locking/lockdep.c:4330
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 22435 Comm: syz-executor.2 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-RIP: 0010:hlock_class kernel/locking/lockdep.c:183 [inline]
-RIP: 0010:hlock_class kernel/locking/lockdep.c:172 [inline]
-RIP: 0010:check_wait_context kernel/locking/lockdep.c:4054 [inline]
-RIP: 0010:__lock_acquire+0x1629/0x56e0 kernel/locking/lockdep.c:4330
-Code: 08 84 d2 0f 85 bd 35 00 00 8b 35 a2 a2 55 09 85 f6 0f 85 cc fa ff ff 48 c7 c6 20 b0 4b 88 48 c7 c7 20 ab 4b 88 e8 b9 44 eb ff <0f> 0b e9 b2 fa ff ff e8 3b a0 8e 06 85 c0 0f 84 ed fa ff ff 48 c7
-RSP: 0018:ffffc90002a17810 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-RDX: ffff8880949044c0 RSI: ffffffff815d4ef7 RDI: fffff52000542ef4
-RBP: ffff888094904db8 R08: 0000000000000000 R09: ffffffff89bb5c23
-R10: 0000000000000aea R11: 0000000000000001 R12: ffff8880949044c0
-R13: 00000000000006d9 R14: ffff88809487c138 R15: 0000000000040000
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- flush_workqueue+0x110/0x13e0 kernel/workqueue.c:2780
- drain_workqueue+0x1a5/0x3c0 kernel/workqueue.c:2945
- hci_dev_do_reset net/bluetooth/hci_core.c:1864 [inline]
- hci_dev_reset+0x23e/0x450 net/bluetooth/hci_core.c:1907
- hci_sock_ioctl+0x510/0x800 net/bluetooth/hci_sock.c:1036
- sock_do_ioctl+0xcb/0x2d0 net/socket.c:1048
- sock_ioctl+0x3b8/0x730 net/socket.c:1199
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cce9
-Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fab01629c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 000000000001d300 RCX: 000000000045cce9
-RDX: 0000000000000000 RSI: 00000000400448cb RDI: 0000000000000006
-RBP: 000000000078c120 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078c0ec
-R13: 00007ffc2d1075ff R14: 00007fab0162a9c0 R15: 000000000078c0ec
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+> ---
+> I am writing a driver similar to gpio-siox and I ran into a null pointer
+> dereference, because ->threaded wasn't set. I didn't test this on actual
+> SIOX hardware.
+>=20
+> This patch doesn't fix the case were are driver explicitly calls
+> request_irq and is combined with a driver that does handle_nested_irq.
+>=20
+> Is there a flag, such drivers should additionally set or should we
+> check action->thread_fn before calling it inside handle_nested_irq?
 
+If gpio_irq_chip::threaded being set means that this problem happens
+IMHO the driver is fine and something in the generic gpio code should do
+the right thing here.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Best regards and thanks for caring,
+Uwe
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> ---
+>  drivers/gpio/gpio-siox.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
+> index 26e1fe092304..f8c5e9fc4bac 100644
+> --- a/drivers/gpio/gpio-siox.c
+> +++ b/drivers/gpio/gpio-siox.c
+> @@ -245,6 +245,7 @@ static int gpio_siox_probe(struct siox_device *sdevic=
+e)
+>  	girq->chip =3D &ddata->ichip;
+>  	girq->default_type =3D IRQ_TYPE_NONE;
+>  	girq->handler =3D handle_level_irq;
+> +	girq->threaded =3D true;
+> =20
+>  	ret =3D devm_gpiochip_add_data(dev, &ddata->gchip, NULL);
+>  	if (ret)
+> --=20
+> 2.28.0
+>=20
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--scljatgkl7jdtay7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8qTw4ACgkQwfwUeK3K
+7AlrUAf+IghLO1gMP9U0E33gkqS45ybfOZWgLa1og560LyTFT3AZWWsjHwCeDp9x
+X3hGtJ3ExmfLLb6K9Y5q91RGhR3yy9rAXqHZeyqv9F4MWCnzDv1riYawIpcbzdv3
+dJ8t0KpPb49Cmto7HmVqYN+61fczDaVrjo3z1j+mH/4keQfubjGI/kFN3+ujzdU1
+tLdSaMOO+/B+V8IGCB5ssf1vX67ZqBmVc0z8cPTM5Kj/nm7hzaP0wMqUkubTSpe+
+HL++JO/VAwj1IoxwYnmzHi+9uCKx1RTHYBX+uSieajscYNHPPdTIM/mFVHazg9BO
+e6i20gEDBdFnAC1hnsWTIHV4sOJC/g==
+=4D8H
+-----END PGP SIGNATURE-----
+
+--scljatgkl7jdtay7--
