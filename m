@@ -2,137 +2,153 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF23C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350C82076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6D822CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LOq++iuh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnrfV5sD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHEWso (ORCPT
+        id S1726676AbgHEWuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 18:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46570 "EHLO
+        Wed, 5 Aug 2020 18:50:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgHEWsl (ORCPT
+        with ESMTP id S1726130AbgHEWuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:48:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A9DC061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 15:48:41 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t6so25611403pgq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 15:48:41 -0700 (PDT)
+        Wed, 5 Aug 2020 18:50:19 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0304C061574;
+        Wed,  5 Aug 2020 15:50:19 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id x6so10420718pgx.12;
+        Wed, 05 Aug 2020 15:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2f0chzsU8plamndGAVa0L+UE4xurrF8AKN1ix/elzeo=;
-        b=LOq++iuhI8DCPBmvAeXeK/R4Egf9sXfsO+JT+/SfxSso00VNm7Owtu/33R1IS0Wdeg
-         5cgE+2K4leqV8LFpAL8zTtFMcgIOH1TEuj2VQguyDAXEa0Fn1TvGiD5vMj9rq10q3ukx
-         xTNbJJ62lXn8Aog2ut6XDKkljIOiYrE58r4Ps=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vj9AUo1zpNQ5RuH9pFdCoBk8bA+DrgMBZZmQXR9xOD8=;
+        b=MnrfV5sDmox75nbL/EDwsBfnjbjk4wXfaW38MnNMWcBe/rvK0oLdauM3j4zaPvRezZ
+         V2z86kueOxOfTJh5eQIZ/xtfs4AidyIAwpzIJv5DxVn9IZMMnNeRZa6PucxRepTLw5XG
+         fRz0eaYQ60VEfilOViLIaNcKlxkqwrWsaoL2Fpii1kIB9ltrVGagU51uh386AQu0nHOL
+         1bwo1DZc2Dhch3cVLdEmdXSjJ2a5YhnR4Ch6JAgtWwmboNqv8HGxlKwAgu2lCoStwCnD
+         b8P0gb7mgVkVNdEzhbR1MMTwdGJYjLIFWaWmSWS15K3m1+WaTnIX2kFJBHgrefcH8BU/
+         I82Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2f0chzsU8plamndGAVa0L+UE4xurrF8AKN1ix/elzeo=;
-        b=EPFNAkFa7MIDjV+3nLENrqsblTz+zBp8f3eWfiThEIl9raeQzumkoIVMqizlh3WXr8
-         6pS1bN2Aa4lVYjaTGWQ+dABxpsA0/2vJz0+3EvL/83ED8nbW6GVOFOFg41vALF9Wbz+Q
-         qxZYDg6VnMGpv2ikUzT0Czs3tWCBSZ8sh88dz0PZ3Ksc9dqVi3MTJ+jqQphNbe8yvlHq
-         O6ZdjdZcEVx9+BV2m3o/fBUgeX8sxiCa/i83vrvIOiusgIo8KrCLzSn5t8Ue+Mts7M86
-         N9YwSwdUOxtTDSHIUb1IyBn02Fx/s0gD/JGgtIM4UqEwlSN6iEsZjwr452E8C6o1j2DT
-         z80A==
-X-Gm-Message-State: AOAM531c9bhKKOL5SA3UAB72Tl05XLBlT488CU5MPS0KrjSts46fpO+P
-        U6VjrPhPRK+8p4GXQW96QdYVEyPcS3aMxy2EQNnuw8ZFnyYnpmD3lQ/0Lfw/PY7buBg2IOgL/Jk
-        vdd1SFU5zTML+UKvVNIrzAkyyYOhJnxTCmFfdkGqk6/IQkeARgX53+zdZA4WVXYheagmfhu1inO
-        4cIGU=
-X-Google-Smtp-Source: ABdhPJyC+rZ3Bjtr0TdW+a+bIzEPmblHyS5UqJfZswoqNuslOCgYSdiV2Xf7kGGECmLcSIkxYh4bpA==
-X-Received: by 2002:a63:5349:: with SMTP id t9mr5210648pgl.204.1596667718770;
-        Wed, 05 Aug 2020 15:48:38 -0700 (PDT)
-Received: from [10.230.182.181] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id f3sm5378263pfj.206.2020.08.05.15.48.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 15:48:37 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] PCI: iproc: Set affinity mask on MSI interrupts
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        helgaas@kernel.org, sbranden@broadcom.com, f.fainelli@gmail.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <00166b29-f284-984c-81c2-54d5c1e3343a@broadcom.com>
-Date:   Wed, 5 Aug 2020 15:48:36 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vj9AUo1zpNQ5RuH9pFdCoBk8bA+DrgMBZZmQXR9xOD8=;
+        b=jfGEkPKNy3IAeMYAx320QmgHq4Y0FI1015lW9Jt60LenwAozt96zHSKsSqpsbCcBll
+         VWqBWArqDXH750qhER/D7PFSxN3Wk+XNdITQ37feE+S7szpnfTeA8VaSLhE7zjTAKfJa
+         AoOFkMmKJE29aNaSJCHRn6bx6ANHZHfAH6pbcgVjGwkD641FP83uhxwTPyxJBJWLKy6U
+         Nt3KrL/KuS4NCGI3aoQ0uGgGyX+04MQWXY1TCEp2fS2QlpjTr5Y6UgVae6MfxDlr5tZy
+         7mEcE/U3XsjZm4z5cEkiuk103eTk1C7zz6d1h7yvLJm8C3hYaKGasrQzH02QVpndSM3p
+         H3gg==
+X-Gm-Message-State: AOAM533a4LZf/bvLDm/doLkLUGK/n80n6VPUqSPzVJa7EAnRLM6Drfev
+        4REyepdFA6RxpIe2/uxng88=
+X-Google-Smtp-Source: ABdhPJxBt3cAwNTqbiQptRNm2RKUT8txQ2j3cJfjVsGIP+XbaA3iJlUnkY1SCFLE8odILc2Q4V82Zw==
+X-Received: by 2002:a63:ec06:: with SMTP id j6mr4752828pgh.328.1596667818628;
+        Wed, 05 Aug 2020 15:50:18 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:634])
+        by smtp.gmail.com with ESMTPSA id a17sm4489949pgi.26.2020.08.05.15.50.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 15:50:17 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 15:50:15 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs.
+ user_prog
+Message-ID: <20200805225015.kd4tx6w3wh67oara@ast-mbp.dhcp.thefacebook.com>
+References: <20200801084721.1812607-1-songliubraving@fb.com>
+ <20200801084721.1812607-6-songliubraving@fb.com>
+ <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
+ <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
+ <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
+ <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com>
+ <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
+ <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
+ <20200805171639.tsqjmifd7eb3htou@ast-mbp.dhcp.thefacebook.com>
+ <31754A5F-AD12-44D2-B80A-36638684C2CE@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <31754A5F-AD12-44D2-B80A-36638684C2CE@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 05, 2020 at 06:56:26PM +0000, Song Liu wrote:
+> 
+> 
+> > On Aug 5, 2020, at 10:16 AM, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > 
+> > On Wed, Aug 05, 2020 at 04:47:30AM +0000, Song Liu wrote:
+> >> 
+> >> Being able to trigger BPF program on a different CPU could enable many
+> >> use cases and optimizations. The use case I am looking at is to access
+> >> perf_event and percpu maps on the target CPU. For example:
+> >> 	0. trigger the program
+> >> 	1. read perf_event on cpu x;
+> >> 	2. (optional) check which process is running on cpu x;
+> >> 	3. add perf_event value to percpu map(s) on cpu x. 
+> > 
+> > If the whole thing is about doing the above then I don't understand why new
+> > prog type is needed.
+> 
+> I was under the (probably wrong) impression that adding prog type is not
+> that big a deal. 
 
+Not a big deal when it's necessary.
 
-On 8/2/2020 8:52 PM, Mark Tomlinson wrote:
-> The core interrupt code expects the irq_set_affinity call to update the
-> effective affinity for the interrupt. This was not being done, so update
-> iproc_msi_irq_set_affinity() to do so.
+> > Can prog_test_run support existing BPF_PROG_TYPE_KPROBE?
 > 
-> Fixes: 3bc2b2348835 ("PCI: iproc: Add iProc PCIe MSI support")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
-> changes in v2:
->  - Patch 1/2 Added Fixes tag
->  - Patch 2/2 Replace original change with change suggested by Bjorn
->    Helgaas.
+> I haven't looked into all the details, but I bet this is possible.
 > 
-> changes in v3:
->  - Use bitfield rather than bool to save memory.
+> > "enable many use cases" sounds vague. I don't think folks reading
+> > the patches can guess those "use cases".
+> > "Testing existing kprobe bpf progs" would sound more convincing to me.
+> > If the test_run framework can be extended to trigger kprobe with correct pt_regs.
+> > As part of it test_run would trigger on a given cpu with $ip pointing
+> > to some test fuction in test_run.c. For local test_run the stack trace
+> > would include bpf syscall chain. For IPI the stack trace would include
+> > the corresponding kernel pieces where top is our special test function.
+> > Sort of like pseudo kprobe where there is no actual kprobe logic,
+> > since kprobe prog doesn't care about mechanism. It needs correct
+> > pt_regs only as input context.
+> > The kprobe prog output (return value) has special meaning though,
+> > so may be kprobe prog type is not a good fit.
+> > Something like fentry/fexit may be better, since verifier check_return_code()
+> > enforces 'return 0'. So their return value is effectively "void".
+> > Then prog_test_run would need to gain an ability to trigger
+> > fentry/fexit prog on a given cpu.
 > 
->  drivers/pci/controller/pcie-iproc-msi.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-> index 3176ad3ab0e5..908475d27e0e 100644
-> --- a/drivers/pci/controller/pcie-iproc-msi.c
-> +++ b/drivers/pci/controller/pcie-iproc-msi.c
-> @@ -209,15 +209,20 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
->  	struct iproc_msi *msi = irq_data_get_irq_chip_data(data);
->  	int target_cpu = cpumask_first(mask);
->  	int curr_cpu;
-> +	int ret;
->  
->  	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
->  	if (curr_cpu == target_cpu)
-> -		return IRQ_SET_MASK_OK_DONE;
-> +		ret = IRQ_SET_MASK_OK_DONE;
-> +	else {
-> +		/* steer MSI to the target CPU */
-> +		data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
-> +		ret = IRQ_SET_MASK_OK;
-> +	}
->  
-> -	/* steer MSI to the target CPU */
-> -	data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
-> +	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
->  
-> -	return IRQ_SET_MASK_OK;
-> +	return ret;
->  }
->  
->  static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
-> 
+> Maybe we add a new attach type for BPF_PROG_TYPE_TRACING, which is in 
+> parallel with BPF_TRACE_FENTRY and BPF_TRACE_EXIT? Say BPF_TRACE_USER? 
+> (Just realized I like this name :-D, it matches USDT...). Then we can 
+> enable test_run for most (if not all) tracing programs, including
+> fentry/fexit. 
 
-Looks good with the Fixes tag added. Thanks.
-
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Why new hook? Why prog_test_run cmd cannot be made to work
+BPF_PROG_TYPE_TRACING when it's loaded as BPF_TRACE_FENTRY and attach_btf_id
+points to special test function?
+The test_run cmd will trigger execution of that special function.
+Devil is in details of course. How attach, trampoline, etc going to work
+that all needs to be figured out. Parallel test_run cmd ideally shouldn't
+affect each other, etc.
