@@ -2,93 +2,131 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7864A22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A931822B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658125;
-	bh=jWj0WeLI2bTZqXoSzm4YiO4duySDXE/ANme0mZDkCFY=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=PYRK/GhYYvyHVvjfAbrwNqcZWTH08TESL4LEfKkq9CB6+vRvSd96KMl37+BHpDiVg
-	 iF/hsSiqnXdwmpqyR9DJvg9AVU/TuGjDAFqvCPGhZGbp4Q+t2bfln4tuB7W3dv7KK8
-	 NGdzBXlj7eMGskHSbrMDSUEG0a/+sBp/YA1o2bJg=
+	s=default; t=1596658139;
+	bh=3MsIB79zBI0fO6hFED+2PELXN5lzdVBWP95KH0wBH9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dIgEpE3l1oXQIbeilgv9vEzf6boNsXZr3L5HKC9ZnmeU4qupHzCsxyWgO+lo8RcQi
+	 +5WNbGLGRQ2o+f1YZaEAOVANgHobwlfhgeaJujKxo4zVvLsBMkqPfdvc2b3kySmiTh
+	 +9docc4Y205M3T6zYXAEk7XT9YMsIw+Cu0umqYd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbgHEUIo (ORCPT
+        id S1729662AbgHEUI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:08:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727054AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:32:34 -0400
-Received: from localhost.localdomain (unknown [194.230.155.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FE192245C;
-        Wed,  5 Aug 2020 15:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEA822D75;
+        Wed,  5 Aug 2020 13:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642663;
-        bh=jWj0WeLI2bTZqXoSzm4YiO4duySDXE/ANme0mZDkCFY=;
-        h=From:To:Subject:Date:From;
-        b=FuyXtPOokL9dq42pPtPfpND3C18XqEmSHiQOVmG3R63oIyrvLDa7yESzWRa/Z071N
-         Fa89RISm272D1o+zizen/LZR8qqA7JH4v4Zu+6b4Y1mwWCEJK23UM/KRQV7/lbifxO
-         /f7VoKAnW8uqTMY3eC33gWgTx9Mgo8r8mPcpuqfY=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] s390/Kconfig: add missing ZCRYPT dependency to VFIO_AP
-Date:   Wed,  5 Aug 2020 17:50:53 +0200
-Message-Id: <20200805155053.3739-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1596633566;
+        bh=3MsIB79zBI0fO6hFED+2PELXN5lzdVBWP95KH0wBH9I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RZK5/PZXQyb5E2xDXei3LEsgNsjsWbhsLQmYNpOCHlPpt0GCwrSwYNqCYvD4kfeIP
+         Hbpk+HWDzMbC0+cK8xnUE31SqMuhCjoSMDTuv+MHlP37YeDKS4CJVRAzciNnNhNaCk
+         ptJnG0ENBNRlSaZjIhOZo9NHqiG1R18UllMX4O+k=
+Date:   Wed, 5 Aug 2020 18:49:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: Use fallthrough pseudo-keyword
+Message-ID: <20200805131922.GZ12965@vkoul-mobl>
+References: <20200727203413.GA6245@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727203413.GA6245@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VFIO_AP uses ap_driver_register() (and deregister) functions
-implemented in ap_bus.c (compiled into ap.o).  However the ap.o will be
-built only if CONFIG_ZCRYPT is selected.
+On 27-07-20, 15:34, Gustavo A. R. Silva wrote:
 
-This was not visible before commit e93a1695d7fb ("iommu: Enable compile
-testing for some of drivers") because the CONFIG_VFIO_AP depends on
-CONFIG_S390_AP_IOMMU which depends on the missing CONFIG_ZCRYPT.  After
-adding COMPILE_TEST, it is possible to select a configuration with
-VFIO_AP and S390_AP_IOMMU but without the ZCRYPT.
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 2c508ee672b9..9b69716172a4 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -1061,16 +1061,16 @@ static bool _start(struct pl330_thread *thrd)
+>  
+>  		if (_state(thrd) == PL330_STATE_KILLING)
+>  			UNTIL(thrd, PL330_STATE_STOPPED)
+> -		/* fall through */
+> +		fallthrough;
+>  
+>  	case PL330_STATE_FAULTING:
+>  		_stop(thrd);
+> -		/* fall through */
+> +		fallthrough;
+>  
+>  	case PL330_STATE_KILLING:
+>  	case PL330_STATE_COMPLETING:
+>  		UNTIL(thrd, PL330_STATE_STOPPED)
+> -		/* fall through */
+> +		fallthrough;
+>  
+>  	case PL330_STATE_STOPPED:
+>  		return _trigger(thrd);
+> @@ -1121,7 +1121,6 @@ static u32 _emit_load(unsigned int dry_run, u8 buf[],
+>  
+>  	switch (direction) {
+>  	case DMA_MEM_TO_MEM:
+> -		/* fall through */
+>  	case DMA_MEM_TO_DEV:
+>  		off += _emit_LD(dry_run, &buf[off], cond);
+>  		break;
+> @@ -1155,7 +1154,6 @@ static inline u32 _emit_store(unsigned int dry_run, u8 buf[],
+>  
+>  	switch (direction) {
+>  	case DMA_MEM_TO_MEM:
+> -		/* fall through */
+>  	case DMA_DEV_TO_MEM:
+>  		off += _emit_ST(dry_run, &buf[off], cond);
+>  		break;
+> @@ -1216,7 +1214,6 @@ static int _bursts(struct pl330_dmac *pl330, unsigned dry_run, u8 buf[],
+>  
+>  	switch (pxs->desc->rqtype) {
+>  	case DMA_MEM_TO_DEV:
+> -		/* fall through */
+>  	case DMA_DEV_TO_MEM:
+>  		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, cyc,
+>  			cond);
+> @@ -1266,7 +1263,6 @@ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
+>  
+>  	switch (pxs->desc->rqtype) {
+>  	case DMA_MEM_TO_DEV:
+> -		/* fall through */
 
-Add proper dependency to the VFIO_AP to fix build errors:
+replacement missed here and above few
 
-ERROR: modpost: "ap_driver_register" [drivers/s390/crypto/vfio_ap.ko] undefined!
-ERROR: modpost: "ap_driver_unregister" [drivers/s390/crypto/vfio_ap.ko] undefined!
-
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/s390/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 8c0b52940165..2a31a5e74e42 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -766,6 +766,7 @@ config VFIO_AP
- 	def_tristate n
- 	prompt "VFIO support for AP devices"
- 	depends on S390_AP_IOMMU && VFIO_MDEV_DEVICE && KVM
-+	depends on ZCRYPT
- 	help
- 		This driver grants access to Adjunct Processor (AP) devices
- 		via the VFIO mediated device interface.
 -- 
-2.17.1
-
+~Vinod
