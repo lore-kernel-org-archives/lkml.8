@@ -2,130 +2,123 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93875C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAC7B22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E13E22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658145;
-	bh=sLKCC1QjgtJmAuERFbBWWP9fB/9Lhbpc7SgboYEp2z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qhGnf1tVjxOiNSsSEE/EfuGzBpcdpaSeCtmq9n22xtwQNPIBRMgJB5OtdIgdw639V
-	 eKYOT9AF+8i4ZxkCAM0d13JDx6Rm3UYoeyqPGsZLpmq1VHnga1eQiJPCslRxASH0Yd
-	 Yq5GpE9piW9jxfCBYXOVd6DBoWSrFJW8OQLBjN9A=
+	s=default; t=1596658148;
+	bh=spc1X6ooR2qi3Jvt+dlx7hBKDUVxVkK3j/CNkkP9+r0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S+VZzJKEvJU23xEd3DVLJq0HVg9/02gyj5ukOKbDCIJzSzMicY8Arm7atpql9g+oR
+	 QqHjpRF9kAGZD0eC6+xX4Mrghvl0MbSTPCUB/j9lP2oJpmLLpfsqh7jgytkZyrHXWC
+	 f4UH9LGPuQ6x+zOxlsTSgdgmOvLzPRKOK8muHCdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgHEUJD (ORCPT
+        id S1729698AbgHEUJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:09:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726762AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:32:34 -0400
-Received: from localhost (unknown [122.171.202.192])
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D03A322D71;
-        Wed,  5 Aug 2020 13:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 816DB2336D;
+        Wed,  5 Aug 2020 15:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596633130;
-        bh=sLKCC1QjgtJmAuERFbBWWP9fB/9Lhbpc7SgboYEp2z8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qa76cu0k9JFT6Ep1vcMTDDSxNDUx8rkcmQTEoTyj2Yfn3MNeejXJcDLWqLr/2eprq
-         LWlVGdOpwZX00VbkLmmoD0MsamOzJ0N9d1L6XIzhRmpVPel5+M9VurA4NaX0HJsSdU
-         Vt1+jO3PBNqZWNu5eQAt9Hp5muY6A1tka5hysA3E=
-Date:   Wed, 5 Aug 2020 18:42:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] dmaengine: iop-adma: Fix -Wint-to-pointer-cast
- build warning
-Message-ID: <20200805131205.GY12965@vkoul-mobl>
-References: <20200803141035.45284-1-yuehaibing@huawei.com>
+        s=default; t=1596642756;
+        bh=spc1X6ooR2qi3Jvt+dlx7hBKDUVxVkK3j/CNkkP9+r0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H8918TWw7QcmUmP6JFo+D2swOSPZafy5XbSNGbGCnl79ADZ9SM3wQMo4tF3zDtxvX
+         15D/rRT693YiEUwSxNEa6cLUZPzVb500I4Xa5HMjUkPuG7SktDz5Q95hGDMqS36qdL
+         JMaJFSEEfDnw7+jBsZt9iWxAOp83l2R9F0W6y0/E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.7 6/6] [PATCH] arm64: Workaround circular dependency in pointer_auth.h
+Date:   Wed,  5 Aug 2020 17:52:33 +0200
+Message-Id: <20200805153507.271067111@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153506.978105994@linuxfoundation.org>
+References: <20200805153506.978105994@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803141035.45284-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-08-20, 22:10, YueHaibing wrote:
-> drivers/dma/iop-adma.c:447:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-> drivers/dma/iop-adma.c:449:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-> drivers/dma/iop-adma.c:1301:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-> 
-> Use void* for dma_desc_pool_virt, dma_addr_t for dma_desc_pool,
-> and use %pad to print dma_addr_t.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/dma/iop-adma.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-> index 3350bffb2e93..8e17e4405959 100644
-> --- a/drivers/dma/iop-adma.c
-> +++ b/drivers/dma/iop-adma.c
-> @@ -415,7 +415,8 @@ static void iop_chan_start_null_xor(struct iop_adma_chan *iop_chan);
->   * */
->  static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
->  {
-> -	char *hw_desc;
-> +	void *hw_desc;
-> +	dma_addr_t dma_desc;
->  	int idx;
->  	struct iop_adma_chan *iop_chan = to_iop_adma_chan(chan);
->  	struct iop_adma_desc_slot *slot = NULL;
-> @@ -436,17 +437,16 @@ static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
->  				" %d descriptor slots", idx);
->  			break;
->  		}
-> -		hw_desc = (char *) iop_chan->device->dma_desc_pool_virt;
-> -		slot->hw_desc = (void *) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-> +		hw_desc = iop_chan->device->dma_desc_pool_virt;
-> +		slot->hw_desc = hw_desc + idx * IOP_ADMA_SLOT_SIZE;
+From: Marc Zyngier <maz@kernel.org>
 
-So you want to pointer arithmetic on a void pointer !
+With the backport of f227e3ec3b5c ("random32: update the net random
+state on interrupt and activity") and its associated fixes, the
+arm64 build explodes early:
 
-Are you sure math is correct here and will work on different compilers?
+In file included from ../include/linux/smp.h:67,
+                  from ../include/linux/percpu.h:7,
+                  from ../include/linux/prandom.h:12,
+                  from ../include/linux/random.h:118,
+                  from ../arch/arm64/include/asm/pointer_auth.h:6,
+                  from ../arch/arm64/include/asm/processor.h:39,
+                  from ../include/linux/mutex.h:19,
+                  from ../include/linux/kernfs.h:12,
+                  from ../include/linux/sysfs.h:16,
+                  from ../include/linux/kobject.h:20,
+                  from ../include/linux/of.h:17,
+                  from ../include/linux/irqdomain.h:35,
+                  from ../include/linux/acpi.h:13,
+                  from ../include/acpi/apei.h:9,
+                  from ../include/acpi/ghes.h:5,
+                  from ../include/linux/arm_sdei.h:8,
+                  from ../arch/arm64/kernel/asm-offsets.c:10:
+../arch/arm64/include/asm/smp.h:100:29: error: field ‘ptrauth_key’ has
+incomplete type
 
->  
->  		dma_async_tx_descriptor_init(&slot->async_tx, chan);
->  		slot->async_tx.tx_submit = iop_adma_tx_submit;
->  		INIT_LIST_HEAD(&slot->tx_list);
->  		INIT_LIST_HEAD(&slot->chain_node);
->  		INIT_LIST_HEAD(&slot->slot_node);
-> -		hw_desc = (char *) iop_chan->device->dma_desc_pool;
-> -		slot->async_tx.phys =
-> -			(dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-> +		dma_desc = iop_chan->device->dma_desc_pool;
-> +		slot->async_tx.phys = dma_desc + idx * IOP_ADMA_SLOT_SIZE;
->  		slot->idx = idx;
->  
->  		spin_lock_bh(&iop_chan->lock);
-> @@ -1296,9 +1296,8 @@ static int iop_adma_probe(struct platform_device *pdev)
->  		goto err_free_adev;
->  	}
->  
-> -	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %p\n",
-> -		__func__, adev->dma_desc_pool_virt,
-> -		(void *) adev->dma_desc_pool);
-> +	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %pad\n",
-> +		__func__, adev->dma_desc_pool_virt, &adev->dma_desc_pool);
->  
->  	adev->id = plat_data->hw_id;
->  
-> -- 
-> 2.17.1
-> 
+This is due to struct ptrauth_keys_kernel not being defined before
+we transitively include asm/smp.h from linux/random.h.
 
--- 
-~Vinod
+Paper over it by moving the inclusion of linux/random.h *after* the
+type has been defined.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/arm64/include/asm/pointer_auth.h |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+--- a/arch/arm64/include/asm/pointer_auth.h
++++ b/arch/arm64/include/asm/pointer_auth.h
+@@ -3,7 +3,6 @@
+ #define __ASM_POINTER_AUTH_H
+ 
+ #include <linux/bitops.h>
+-#include <linux/random.h>
+ 
+ #include <asm/cpufeature.h>
+ #include <asm/memory.h>
+@@ -34,6 +33,13 @@ struct ptrauth_keys_kernel {
+ 	struct ptrauth_key apia;
+ };
+ 
++/*
++ * Only include random.h once ptrauth_keys_* structures are defined
++ * to avoid yet another circular include hell (random.h * ends up
++ * including asm/smp.h, which requires ptrauth_keys_kernel).
++ */
++#include <linux/random.h>
++
+ static inline void ptrauth_keys_init_user(struct ptrauth_keys_user *keys)
+ {
+ 	if (system_supports_address_auth()) {
+
+
