@@ -2,98 +2,156 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6A242177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIlbbKG9"
+	by mail.kernel.org (Postfix) with ESMTP id 6CE732177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgHEDnQ (ORCPT
+        id S1726472AbgHEDsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38070 "EHLO
+        Tue, 4 Aug 2020 23:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEDnP (ORCPT
+        with ESMTP id S1725904AbgHEDsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:43:15 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C673C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 20:43:15 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id l60so3742486pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 20:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iQ39NfCRpC8old6W/LK5W1TFVyUKRmxvr/lOL0aiW4s=;
-        b=qIlbbKG9h9yj25xaWWwslH5pEhAoXFvHvxxdw1Lh1QPQZU8yZgiaKSSZO+XsBwLO3J
-         G9rr6Qo+kjErZl0BXLMensSNIEAHM110mIuipHLfCax3qtPL4K3UOxdHndx4RxuWqTYC
-         u5Lm+wo8vzZeubksd+gF5yl0FATX/WAkjgvQBr8N5sgvFRwkFtjOivoNTaGHqKs/kVS+
-         5ksKFDdTm3OyzEH/RgiiTds8n0fs+AUtam5cKALYneqHx0XA+juoBXXQAc5k2hDdO37d
-         av8tQClndNBX0wGCNWWreOaQJ/aExs5UDhWiK9b1oQO5knq08q+RZZw57834nQAxNvB8
-         R3Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iQ39NfCRpC8old6W/LK5W1TFVyUKRmxvr/lOL0aiW4s=;
-        b=o0yAD7Cu+6O+USHUHZIZp0LhVFNcoONwW+4wjz+1dfuh8SyM57TIkuSpQsfi5DTmWY
-         YSO3s+PxMmT5+4wLRAS+fG0IvWO78d5HRknWlxsqRUWv7J2ORMpAMg76uMoNeQT8kiet
-         kUvxj/fB8s63mqUZEBiSFTokL0xazanYTIvPAjmbf3E90x4WG6GRyjeGOCvDPfpC9GG8
-         UO9k8BUj7bGLTPKj0s7nAJZb1FHbdYqjX2IOoG2tzK3rYk4hGxZUTdkgpxoOJEaxksRX
-         tpCNkgGLsmOOhGQMVXlH83QAbVhjRjWMtOdP9cSTkhFCYgXJ9TRJsmzr/UoDBXQW4BXP
-         n1SQ==
-X-Gm-Message-State: AOAM530CAXpBRp6JfgegRLLYg2VGwQGKt+iXAdYyrlwYieplaB1JwCQB
-        Bmz5xccwiEf/yztFTGLbGPI=
-X-Google-Smtp-Source: ABdhPJxqLYWvll9i8XBUjWuZrkB2d4SKoLlGUSOgZFb5VKeAkUJl9BcJtGw96aePleICT4meo2KXVQ==
-X-Received: by 2002:a17:902:9f85:: with SMTP id g5mr1222539plq.13.1596598994895;
-        Tue, 04 Aug 2020 20:43:14 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id b13sm879344pjl.7.2020.08.04.20.43.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Aug 2020 20:43:14 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 20:43:00 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ASoC: fsl_sai: Clean code for synchronous mode
-Message-ID: <20200805034300.GA10174@Asurada-Nvidia>
-References: <1596594233-13489-1-git-send-email-shengjiu.wang@nxp.com>
- <1596594233-13489-2-git-send-email-shengjiu.wang@nxp.com>
+        Tue, 4 Aug 2020 23:48:21 -0400
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C058C06174A;
+        Tue,  4 Aug 2020 20:48:21 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4BLyJb1zSNzKmR9;
+        Wed,  5 Aug 2020 05:48:15 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id E-94TVlXGldS; Wed,  5 Aug 2020 05:48:10 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 13:47:58 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Lokesh Gidra <lokeshgidra@google.com>
+Cc:     viro@zeniv.linux.org.uk, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, jmorris@namei.org, kaleshsingh@google.com,
+        dancol@dancol.org, surenb@google.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nnk@google.com, jeffv@google.com, calin@google.com,
+        kernel-team@android.com, yanfei.xu@windriver.com,
+        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
+Subject: Re: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and
+ remove O_CLOEXEC
+Message-ID: <20200805034758.lrobunwdcqtknsvz@yavin.dot.cyphar.com>
+References: <20200804203155.2181099-1-lokeshgidra@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jx4te5hbjl6sds64"
 Content-Disposition: inline
-In-Reply-To: <1596594233-13489-2-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200804203155.2181099-1-lokeshgidra@google.com>
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -7.10 / 15.00 / 15.00
+X-Rspamd-Queue-Id: F24341768
+X-Rspamd-UID: 5729ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 10:23:52AM +0800, Shengjiu Wang wrote:
-> Tx synchronous with Rx: The RMR is the word mask register, it is used
-> to mask any word in the frame, it is not relating to clock generation,
-> So it is no need to be changed when Tx is going to be enabled.
-> 
-> Rx synchronous with Tx: The TMR is the word mask register, it is used
-> to mask any word in the frame, it is not relating to clock generation,
-> So it is no need to be changed when Rx is going to be enabled.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Can you rename the PATCH subject to something more specific?
-For example, "Drop TMR/RMR settings for synchronous mode".
+--jx4te5hbjl6sds64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please add this once it's addressed:
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+On 2020-08-04, Lokesh Gidra <lokeshgidra@google.com> wrote:
+> when get_unused_fd_flags returns error, ctx will be freed by
+> userfaultfd's release function, which is indirectly called by fput().
+> Also, if anon_inode_getfile_secure() returns an error, then
+> userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
+>=20
+> Also, the O_CLOEXEC was inadvertently added to the call to
+> get_unused_fd_flags() [1].
+
+I disagree that it is "wrong" to do O_CLOEXEC-by-default (after all,
+it's trivial to disable O_CLOEXEC, but it's non-trivial to enable it on
+an existing file descriptor because it's possible for another thread to
+exec() before you set the flag). Several new syscalls and fd-returning
+facilities are O_CLOEXEC-by-default now (the most obvious being pidfds
+and seccomp notifier fds).
+
+At the very least there should be a new flag added that sets O_CLOEXEC.
+
+> Adding Al Viro's suggested-by, based on [2].
+>=20
+> [1] https://lore.kernel.org/lkml/1f69c0ab-5791-974f-8bc0-3997ab1d61ea@dan=
+col.org/
+> [2] https://lore.kernel.org/lkml/20200719165746.GJ2786714@ZenIV.linux.org=
+=2Euk/
+>=20
+> Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
+> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
+> Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> ---
+>  fs/userfaultfd.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index ae859161908f..e15eb8fdc083 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -2042,24 +2042,18 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+>  		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
+>  		NULL);
+>  	if (IS_ERR(file)) {
+> -		fd =3D PTR_ERR(file);
+> -		goto out;
+> +		userfaultfd_ctx_put(ctx);
+> +		return PTR_ERR(file);
+>  	}
+> =20
+> -	fd =3D get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
+> +	fd =3D get_unused_fd_flags(O_RDONLY);
+>  	if (fd < 0) {
+>  		fput(file);
+> -		goto out;
+> +		return fd;
+>  	}
+> =20
+>  	ctx->owner =3D file_inode(file);
+>  	fd_install(fd, file);
+> -
+> -out:
+> -	if (fd < 0) {
+> -		mmdrop(ctx->mm);
+> -		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
+> -	}
+>  	return fd;
+>  }
+> =20
+> --=20
+> 2.28.0.163.g6104cc2f0b6-goog
+>=20
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--jx4te5hbjl6sds64
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXyor6wAKCRCdlLljIbnQ
+EvlBAP9yT6247DlCIs/Tflt7TprvwpvnjAbnWJ/71XH7JGf3EgEA0OLS0YoSm9zV
+dHgGAW0D6J8tKTslxFA785dqofjTKQ4=
+=l25V
+-----END PGP SIGNATURE-----
+
+--jx4te5hbjl6sds64--
