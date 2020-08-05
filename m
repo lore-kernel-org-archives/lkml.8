@@ -2,108 +2,193 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD52C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F20E722B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658201;
-	bh=2jLFMm+CdiwmOZG/JOnONjoNi2LeTl32WhNCd1CZKsw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C46y7EnYDjaIIsY6W2JBWo025C1SPLosLKl3cKVBIA/b2Qv7MCvJ4XvtiDqZCqJhy
-	 Cl4Z0yx0kaBKmqLaBvoVMNJIw3k7PixOTrHc639etkOtCyNQzbVyZqHqc4nW7qlrFn
-	 H2RUPwfCLdHsx7utq5mzou4XrxYXbsLvOhqgez+g=
+	by mail.kernel.org (Postfix) with ESMTP id BA14520792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Vhtt0A1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgHEUJ6 (ORCPT
+        id S1726422AbgHEUKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:09:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43608 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbgHEQ3G (ORCPT
+        Wed, 5 Aug 2020 16:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgHEQ2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:29:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r21so23270791ota.10;
-        Wed, 05 Aug 2020 09:29:05 -0700 (PDT)
+        Wed, 5 Aug 2020 12:28:43 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14119C008698
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:28:38 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id kr4so4798866pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A43ByyyVzbSptwNygct83mi3n2DzKWgXvNfPebKl6yg=;
+        b=Vhtt0A1Lb+45MJ+Wh1Mnd/6dAyl5W8x4OJgHYPrxVIsTEvhXGbgFbuLoVs9PSI6FVb
+         4+koDTinZDAnktM3XmWYW7oHe5byoeDqkyO3ubwkG+KfRrbD2WMJH0qKf4zNdJGVO8xx
+         /e+WkeJsW8Oiw8Oedhof48VQhF5C8NcxQC8V7xQa+zd9BKfaXQOlnpPjApEQoPPIPADl
+         thisXlmYHDhe2M9jishy6oQJKDq11jKExdFuyCVrsIf0fGx3Nrk9iwaKa1IrCGV07MB8
+         jCflwrMAOiNIa8bWrrpkDC6KlBXWRewwszJNRIvUcfK9Dvz2VLM9OGf6oxYKWsMATv8U
+         OmBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B2Pl0nxbT6UouzIoo2qIhPoj7Bo+fxndZdi1tAY/F2o=;
-        b=evdsFFTQx9K0IFg7PgdGrbOMSQEld9thfsrPXZJwH03tBm4zYVMNRf8kfpDrR0SMOz
-         Vp7hWNLLeib3bZ3y0RIn2y/6d3gwAOjLEDi5yFK8xPGIq2Y74SwikqT+fTf+opgWTsCZ
-         STEYf16frTl1sHxqC4oKPcrVK0yriSLj1CxzH2cRi4CSnqqlzXvEdr1eoT9eXKmzRlC/
-         fvd9DZRrUCg2lvR7E9dEijgr6nyAb5QyT/ZS1mi7cxWbDUL7KWI2Oz8+69YxKExWj9G1
-         VZi8DrBhik2E6mgTA5KVttslVkNaA9KB2+LSBPEbnxQ38DYPidC4xTFH2yJj5GSCYOmC
-         QMOA==
-X-Gm-Message-State: AOAM530e/iFMFhMeEY/MoXMYd6YMmTv1k65lG9OCj4B14GpK3rtaydLz
-        QWGHHOuOc/O/3RhDn3T6MJGmkpJzCRXOjYDBDaE=
-X-Google-Smtp-Source: ABdhPJzOYRjlDWBGFAd8+wHpr++Fx1aamqiZW3DaWfdMtrRewVD42Wv6SvyQfxbhnME5/3h2VMvoUcmBILP+cPAm8MM=
-X-Received: by 2002:a05:6830:1c74:: with SMTP id s20mr3262615otg.167.1596644944989;
- Wed, 05 Aug 2020 09:29:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A43ByyyVzbSptwNygct83mi3n2DzKWgXvNfPebKl6yg=;
+        b=KetS9Lmp7NNiUs07wni62g0zMvMhFMZp5d4fOnnbkpBU6IGxSHD0aCH5I6Kz36WZFd
+         jazcGnn+qOdqg44xpbK1tR1QlLdNVob7bSJr7w6nN61/l5/op3kcDmK0hMjOWc03xphI
+         /PoEF2e5VK25mbwFAdzjnYeZRfBjHHUXZxYHe6b9b8blYK/JcV2eC0iMGa2XCwqIzGa+
+         qnbELeuHpn4H06MymLYvcA1n0zCZkXsbLQ4mkZtPKigzgOkUFtIp2Kow59NmIEGzdYJg
+         6cfKwqTWcJb8ejZP3okq5P+rny2gs6K3laXNoaky9Ka4hGyXSc2lJ0YyCfF0mbR2mNsR
+         vzUQ==
+X-Gm-Message-State: AOAM530Pn9jvLsdLfm2ieH54/xZotb7U6Mh8CP97PntwDy4ThwO9tcMO
+        DnBr7uxx8bB3OxLL1yqs5pb7zA==
+X-Google-Smtp-Source: ABdhPJz8Xblx/0gqLzz6ZElpaAiPlDeIUeBjMLlCp2hzlHJxhui/0ePgefixV57yu+dDZ6yxbRkDVQ==
+X-Received: by 2002:a17:90a:4502:: with SMTP id u2mr3822075pjg.187.1596644918065;
+        Wed, 05 Aug 2020 09:28:38 -0700 (PDT)
+Received: from localhost.localdomain ([103.136.220.70])
+        by smtp.gmail.com with ESMTPSA id 12sm3953119pfn.173.2020.08.05.09.28.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Aug 2020 09:28:37 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, davem@davemloft.net,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        sfr@canb.auug.org.au, mingo@kernel.org, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [PATCH v2] kprobes: fix NULL pointer dereference at kprobe_ftrace_handler
+Date:   Thu,  6 Aug 2020 00:27:13 +0800
+Message-Id: <20200805162713.16386-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>
- <1633168.eVXp6ieOpF@kreacher> <000d01d66a81$59326a50$0b973ef0$@net>
- <CAJZ5v0h7iKvO1-9R_JiVjM8j_a87B=LpTCoaUWRfrhXTRaMMOw@mail.gmail.com> <ff21e71060b589219c21b46b5e26b6c3aca9f951.camel@linux.intel.com>
-In-Reply-To: <ff21e71060b589219c21b46b5e26b6c3aca9f951.camel@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 5 Aug 2020 18:28:51 +0200
-Message-ID: <CAJZ5v0hfoHpBX9-W4B7cMRpoxF6a0Ci-81zJC4pwbxGpd_9fGA@mail.gmail.com>
-Subject: Re: [PATCH v6] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Francisco Jerez <francisco.jerez.plata@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 5:38 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Wed, 2020-08-05 at 11:34 +0200, Rafael J. Wysocki wrote:
-> > Hi Doug,
-> >
-> > On Tue, Aug 4, 2020 at 7:07 PM Doug Smythies <dsmythies@telus.net>
-> > wrote:
-> > > Hi Rafael,
-> > >
-> > >
-> [...]
->
-> > Note that the active mode performance scaling algorithm (which is not
-> > the same as the performance cpufreq governor) sets the EPP to 0 for
-> > all of the CPUs that it is used with and the driver sets the EPP to
-> > 255 in ->stop_cpu.
-> >
-> > That last bit is questionable, but that's the active mode behavior
-> > which is not changed by the $subject patch.
-> You need to set the CPU which is going offline to the lowest perf
-> settings. If not its sibling's performance can never be lowered than
-> offlined CPUs max/min/epp.
+We found a case of kernel panic on our server. The stack trace is as
+follows(omit some irrelevant information):
 
-OK, fair enough.  I'm not going to make this change after all then. :-)
+  BUG: kernel NULL pointer dereference, address: 0000000000000080
+  RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
+  RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
+  RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
+  RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
+  RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   <IRQ>
+   ftrace_ops_assist_func+0x56/0xe0
+   ftrace_call+0x5/0x34
+   tcpa_statistic_send+0x5/0x130 [ttcp_engine]
 
-This behavior is really confusing, though, because if you change the
-status from "active" to "passive" or the other way around, the EPP
-goes to 0xFF on all CPUs and cannot be restored.
+The tcpa_statistic_send is the function being kprobed. After analysis,
+the root cause is that the fourth parameter regs of kprobe_ftrace_handler
+is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
 
-To fix this, we need an extra patch on top of the $subject one to
-introduce ->online and ->offline callbacks so that ->offline sets the
-EPP to 0xFF and either ->online or ->exit can restore it to the
-previous setting.
+  crash> dis tcpa_statistic_send -r
+         <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
 
-Cheers!
+The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
+So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
+is NULL. In theory, we should call the ftrace_regs_caller instead of the
+ftrace_caller. After in-depth analysis, we found a reproducible path.
+
+  Writing a simple kernel module which starts a periodic timer. The
+  timer's handler is named 'kprobe_test_timer_handler'. The module
+  name is kprobe_test.ko.
+
+  1) insmod kprobe_test.ko
+  2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+  3) echo 0 > /proc/sys/kernel/ftrace_enabled
+  4) rmmod kprobe_test
+  5) stop step 2) kprobe
+  6) insmod kprobe_test.ko
+  7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+
+We mark the kprobe as GONE but not disarm the kprobe in the step 4).
+The step 5) also do not disarm the kprobe when unregister kprobe. So
+we do not remove the ip from the filter. In this case, when the module
+loads again in the step 6), we will replace the code to ftrace_caller
+via the ftrace_module_enable(). When we register kprobe again, we will
+not replace ftrace_caller to ftrace_regs_caller because the ftrace is
+disabled in the step 3). So the step 7) will trigger kernel panic. Fix
+this problem by disarming the kprobe when the module is going away.
+
+Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+---
+changelogs in v2:
+ 1) fix compiler warning for !CONFIG_KPROBES_ON_FTRACE.
+
+ kernel/kprobes.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 146c648eb943..d36e2b017588 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1114,9 +1114,20 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
+ 		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
+ }
+ #else	/* !CONFIG_KPROBES_ON_FTRACE */
+-#define prepare_kprobe(p)	arch_prepare_kprobe(p)
+-#define arm_kprobe_ftrace(p)	(-ENODEV)
+-#define disarm_kprobe_ftrace(p)	(-ENODEV)
++static inline int prepare_kprobe(struct kprobe *p)
++{
++	return arch_prepare_kprobe(p);
++}
++
++static inline int arm_kprobe_ftrace(struct kprobe *p)
++{
++	return -ENODEV;
++}
++
++static inline int disarm_kprobe_ftrace(struct kprobe *p)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ /* Arm a kprobe with text_mutex */
+@@ -2148,6 +2159,13 @@ static void kill_kprobe(struct kprobe *p)
+ 	 * the original probed function (which will be freed soon) any more.
+ 	 */
+ 	arch_remove_kprobe(p);
++
++	/*
++	 * The module is going away. We should disarm the kprobe which
++	 * is using ftrace.
++	 */
++	if (kprobe_ftrace(p))
++		disarm_kprobe_ftrace(p);
+ }
+ 
+ /* Disable one kprobe */
+-- 
+2.11.0
+
