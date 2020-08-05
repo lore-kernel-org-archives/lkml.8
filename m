@@ -2,48 +2,73 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C018CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA16BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D8A22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE83922B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PH+mAesa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgHEUMz (ORCPT
+        id S1729714AbgHEUMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42976 "EHLO
+        Wed, 5 Aug 2020 16:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgHEQZe (ORCPT
+        with ESMTP id S1726970AbgHEQZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:25:34 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88938C001FD7;
-        Wed,  5 Aug 2020 09:05:26 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 7A21D299003
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 4024148011B; Wed,  5 Aug 2020 18:05:21 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCHv4 3/4] Input: EXC3000: Add reset gpio support
-Date:   Wed,  5 Aug 2020 18:05:19 +0200
-Message-Id: <20200805160520.456570-4-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805160520.456570-1-sebastian.reichel@collabora.com>
-References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41589C001FE0
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:16:36 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 17so2616034pfw.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yoUWB0P6FTokCu5fDJiOmP1nTkXeVKywh1BuHo0WaYk=;
+        b=PH+mAesaWFdItU17aWsg/FXG5MD1NTJNqiVx4V5E7t/gK1JX24tKMa9SU33PBqiVlW
+         hJnkIvrbxMcLIfI/5vfig4MkwqT8ywcTqOzNQ1/MhO6RK4tW2PMqUofXj0H6dv6+NK9U
+         KmxgLN3iKX4j5mg3wdDNJ9wn2Was1zgft42N8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yoUWB0P6FTokCu5fDJiOmP1nTkXeVKywh1BuHo0WaYk=;
+        b=ILJ3M1goKNBueurKnM2Pb5KUxKhkylNrg0HkBhPs9xw5/MONzEjlN63QwkKJFjdS5G
+         uLcFi12HaJWuYnS5Iyqzpvl+YIUm/RwhOdI73tgR+V3TRMkcsV9/VH7OiOtnU8BQAhgg
+         gvS31pGV7lfmdQUHNb/g5Z/729R7yPN44l5pYs8x+awPNIgcnHsL8uN0wldHoJ2a36jy
+         sHSVZYVqo5szCfjOOJNEHK3yLsDq8c3wVC20nDul2HKDEiWOb27W4tiZdhi8eZTztWQs
+         wUPhmMcG+w154CnnfqA2+AKuhbSGQmMLT1bnD1gajku3DfmJrLWv3lYVpzFyIKHrW3Sj
+         IIwg==
+X-Gm-Message-State: AOAM533NPsFWyal4z4/3V93Eb9fRibh4GzOmK5U7XSZ9Yx9OwMM9YfCc
+        xDSfkFLtMv3zEWXNBVU1izs80Q==
+X-Google-Smtp-Source: ABdhPJyI7n/ZnEwi7VJ7iEODyBwIQasFlmldWO0wkAr5x7dLBPwWfsy76ZCGbBdA4sMgeYeWOSX1XA==
+X-Received: by 2002:a63:1c23:: with SMTP id c35mr3471145pgc.91.1596644195727;
+        Wed, 05 Aug 2020 09:16:35 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id f2sm4259734pfb.184.2020.08.05.09.16.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 09:16:35 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     swboyd@chromium.org, Alex Elder <elder@linaro.org>,
+        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] soc: qcom: aoss: qmp_send() can't handle interruptions so stop pretending
+Date:   Wed,  5 Aug 2020 09:16:11 -0700
+Message-Id: <20200805091141.2.If847565ed7568448c67804f3735d5f8a61eda560@changeid>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+In-Reply-To: <20200805091141.1.I86b3faaecb0d82997b599b1300f879606c71e116@changeid>
+References: <20200805091141.1.I86b3faaecb0d82997b599b1300f879606c71e116@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,78 +76,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic support for an optional reset gpio.
+The function qmp_send() called wait_event_interruptible_timeout() to
+wait for its interrupt.  However, this function did not check for
+-ERESTARTSYS and assumed that any non-zero return value meant that the
+event happened.
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+While we could try to figure out how to handle interruptions by
+figuring out how to cancel and/or undo our transfer in a race-free way
+and then communicating this status back to all of our callers, that
+seems like a whole lot of complexity.  As I understand it the transfer
+should happen rather quickly and if we're really hitting the 1 second
+timeout we're in deep doggy doodoo anyway.  Let's just use the
+non-interruptible version of the function and call it good enough.
+
+Found by code inspection.  No known test cases expose the problem
+described here.
+
+Fixes: 2209481409b7 ("soc: qcom: Add AOSS QMP driver")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- .../input/touchscreen/eeti,exc3000.yaml         |  2 ++
- drivers/input/touchscreen/exc3000.c             | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
-index 7e6e23f8fa00..007adbc89c14 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
-+++ b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
-@@ -22,6 +22,8 @@ properties:
-     const: 0x2a
-   interrupts:
-     maxItems: 1
-+  reset-gpios:
-+    maxItems: 1
-   touchscreen-size-x: true
-   touchscreen-size-y: true
-   touchscreen-inverted-x: true
-diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
-index b497bd2ae41d..203f50acaab7 100644
---- a/drivers/input/touchscreen/exc3000.c
-+++ b/drivers/input/touchscreen/exc3000.c
-@@ -8,7 +8,9 @@
-  */
- 
- #include <linux/bitops.h>
-+#include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/input.h>
- #include <linux/input/mt.h>
-@@ -30,6 +32,9 @@
- 
- #define EXC3000_TIMEOUT_MS		100
- 
-+#define EXC3000_RESET_MS		10
-+#define EXC3000_READY_MS		100
+ drivers/soc/qcom/qcom_aoss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index 818cdf74a267..897f9f1c33ba 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -257,8 +257,8 @@ static int qmp_send(struct qmp *qmp, const void *data, size_t len, bool noirq)
+ 		time_left = readx_poll_timeout_atomic(qmp_message_empty, qmp,
+ 						      is_empty, is_empty, 1U, 1000000U);
+ 	else
+-		time_left = wait_event_interruptible_timeout(qmp->event,
+-							     qmp_message_empty(qmp), HZ);
++		time_left = wait_event_timeout(qmp->event, qmp_message_empty(qmp), HZ);
 +
- static const struct i2c_device_id exc3000_id[];
- 
- struct eeti_dev_info {
-@@ -63,6 +68,7 @@ struct exc3000_data {
- 	const struct eeti_dev_info *info;
- 	struct input_dev *input;
- 	struct touchscreen_properties prop;
-+	struct gpio_desc *reset;
- 	struct timer_list timer;
- 	u8 buf[2 * EXC3000_LEN_FRAME];
- };
-@@ -204,6 +210,17 @@ static int exc3000_probe(struct i2c_client *client)
- 	}
- 	timer_setup(&data->timer, exc3000_timer, 0);
- 
-+	data->reset = devm_gpiod_get_optional(&client->dev, "reset",
-+					      GPIOD_OUT_HIGH);
-+	if (IS_ERR(data->reset))
-+		return PTR_ERR(data->reset);
-+
-+	if (data->reset) {
-+		msleep(EXC3000_RESET_MS);
-+		gpiod_set_value_cansleep(data->reset, 0);
-+		msleep(EXC3000_READY_MS);
-+	}
-+
- 	input = devm_input_allocate_device(&client->dev);
- 	if (!input)
- 		return -ENOMEM;
+ 	if (!time_left) {
+ 		dev_err(qmp->dev, "ucore did not ack channel\n");
+ 		ret = -ETIMEDOUT;
 -- 
-2.27.0
+2.28.0.163.g6104cc2f0b6-goog
 
