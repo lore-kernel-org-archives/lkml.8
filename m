@@ -2,129 +2,159 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3455AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2174D2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130CF2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjUp4EAV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E9cCPwxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgHEJ5R (ORCPT
+        id S1728390AbgHEJ53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgHEJ5L (ORCPT
+        Wed, 5 Aug 2020 05:57:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40024 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgHEJ50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:57:11 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A02C06174A;
-        Wed,  5 Aug 2020 02:57:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c80so5253600wme.0;
-        Wed, 05 Aug 2020 02:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1OAmVtSarOHcu5ZEW1PVzjCPTYGRQAmrkDItGjUPpX8=;
-        b=fjUp4EAV1gNYJf5jNJEPHu/eTAq2ehsmSAeDsPHlO4hKzSThUSJ7U4GfIHYwQSX8b/
-         DFajIrYJoNyhO21WVG2iZdLL8rDz4nCsADns0oGiWk8QIUE3SeenexMDCqOs4ANqa9N2
-         72yWk7/SuyiaLZ7gz2A8rkQT3PQ/+40618j7P6tqA6Bast9aIc0e7RBLWurLhvHcVtHc
-         zNRswRMhv5bBTWJZ7ws0oP06BwsbpzfE2qayfUuS8K+Mvdj44ZsywzcGWIBErUu10MHB
-         WWLAPOapnMB1aHh73c/zgx6WvLgJ/hyAEuFP7V/Dod+6kjy4YfWxT5tlZHBPGYvb7CJn
-         Ij5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1OAmVtSarOHcu5ZEW1PVzjCPTYGRQAmrkDItGjUPpX8=;
-        b=RwKRHWtXlSE5ote94ipaFqHYoFDJlaKC/S8p1OTyTXyjGTyV1ElVlSps6Z9KTajcoQ
-         I+Ok1VHBW2xTMgGXsHt3jgzTsvo6zKY/DdI1gWZVYKjj2fM6enl3LrRtDbbhRVYX0lgy
-         LqWwNcI1pSPM6tt8bTtElzcgS9jVusrNSWjXL1Ft5KN1F1DbYWupOvqRO2D8oVHpkRJY
-         pNiFtDA1SQB1IPjzkdPoA6XTETWfNtBG4/64TTX5/GB8LXnuT6OGX65H1OjGZoiK/9sJ
-         4bK44bc5u1mTwpbpZ2SX0Ta5ANgeoeDx9xSGPmI3VQ+yca77CMd0D5E+ps2pAxfsvUnD
-         keOA==
-X-Gm-Message-State: AOAM531F/eJ24idcYBR4Nk/1eiOb90L9Eq9jS/BF85/wR40X4Fs/XTgX
-        xkks+O4fcli5O87pL14nbQG7JE2DN/laqg==
-X-Google-Smtp-Source: ABdhPJyr4pSazTF5B0tG/B7oKblc6I0+bG+S/lN546VhaOYAv89cbYuDXxavI76P0qEWi3Iaw5tRUg==
-X-Received: by 2002:a1c:24d5:: with SMTP id k204mr2459529wmk.159.1596621429826;
-        Wed, 05 Aug 2020 02:57:09 -0700 (PDT)
-Received: from luca020400-arch.lan ([2001:b07:5d33:19f:d537:6bdb:9442:dd28])
-        by smtp.googlemail.com with ESMTPSA id n24sm2164021wmi.36.2020.08.05.02.57.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 02:57:09 -0700 (PDT)
-From:   Luca Stefani <luca.stefani.ge1@gmail.com>
-Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] RAS/CEC: Fix cec_init prototype
-Date:   Wed,  5 Aug 2020 11:57:08 +0200
-Message-Id: <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805045955.GB9127@nazgul.tnic>
-References: <20200805045955.GB9127@nazgul.tnic>
+        Wed, 5 Aug 2020 05:57:26 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0759q1ue058669;
+        Wed, 5 Aug 2020 09:57:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=RibtCPkve4j2kefMno2VhgrpqtFMrAYMVvhuiwVWbYc=;
+ b=E9cCPwxjESJrVXUFc11fTCBgS9PCfrdNi/4HLVljoXhbjwytwOZfvJcpryNB67i3KjHi
+ UJ/kojGBOQn9cq6d7riX4ZVFnT92FDzz5r6WY4icYu3A/efjwk4QZrxoDHO+ZuGdNd3m
+ Ne+BezfStsVJcdgGpM/LHju2hzWZkSIwOz2IIgNjcXD2zJmrGOT434kPMiuVoUXLENm5
+ YFqfNMYN/0/z3c+brItkGpDMPFXT/WKc6m9PmNhDODI6hFTCn7L+8HykFf/AoWtGHLn9
+ ftnw1/hAqVfPNQMJshKqyRwTr0aJ9vH7kZMOnbHhWFNfkgf4zt17bvA8EMQLw5LjsytS MQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 32qnd41cxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 05 Aug 2020 09:57:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0759rkYW129012;
+        Wed, 5 Aug 2020 09:55:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 32njayderc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Aug 2020 09:55:09 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0759t8eE028911;
+        Wed, 5 Aug 2020 09:55:08 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 05 Aug 2020 02:55:07 -0700
+Date:   Wed, 5 Aug 2020 12:55:01 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Stefan Achatz <erazor_de@users.sourceforge.net>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] HID: roccat: add bounds checking in
+ kone_sysfs_write_settings()
+Message-ID: <20200805095501.GD483832@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 clxscore=1011 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* late_initcall expects a function that returns an integer
-  -> Update the function signature to match.
+In the original code we didn't check if the new value for
+"settings->startup_profile" was within bounds that could possibly
+result in an out of bounds array acccess.  What we did was we checked if
+we could write the data to the firmware and it's possibly the firmware
+checks these values but there is no way to know.  It's safer and easier
+to read if we check it in the kernel as well.
 
-Fixes: 9554bfe403nd ("x86/mce: Convert the CEC to use the MCE notifier")
-Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+I also added a check to ensure that "settings->size" was correct.  The
+comments say that the only valid value is 36 which is sizeof(struct
+kone_settings).
+
+Fixes: 14bf62cde794 ("HID: add driver for Roccat Kone gaming mouse")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/ras/cec.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+This isn't tested.  Checking settings->size seems like a good idea, but
+there is a slight risky because maybe invalid values used to be allowed
+and I don't want to break user space.
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 569d9ad2c594..6939aa5b3dc7 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -553,20 +553,20 @@ static struct notifier_block cec_nb = {
- 	.priority	= MCE_PRIO_CEC,
- };
+ drivers/hid/hid-roccat-kone.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/hid/hid-roccat-kone.c b/drivers/hid/hid-roccat-kone.c
+index 1a6e600197d0..5e8e1517f23c 100644
+--- a/drivers/hid/hid-roccat-kone.c
++++ b/drivers/hid/hid-roccat-kone.c
+@@ -294,31 +294,41 @@ static ssize_t kone_sysfs_write_settings(struct file *fp, struct kobject *kobj,
+ 	struct kone_device *kone = hid_get_drvdata(dev_get_drvdata(dev));
+ 	struct usb_device *usb_dev = interface_to_usbdev(to_usb_interface(dev));
+ 	int retval = 0, difference, old_profile;
++	struct kone_settings *settings = (struct kone_settings *)buf;
  
--static void __init cec_init(void)
-+static int __init cec_init(void)
- {
- 	if (ce_arr.disabled)
--		return;
-+		return -ENODEV;
+ 	/* I need to get my data in one piece */
+ 	if (off != 0 || count != sizeof(struct kone_settings))
+ 		return -EINVAL;
  
- 	ce_arr.array = (void *)get_zeroed_page(GFP_KERNEL);
- 	if (!ce_arr.array) {
- 		pr_err("Error allocating CE array page!\n");
--		return;
-+		return -ENOMEM;
+ 	mutex_lock(&kone->kone_lock);
+-	difference = memcmp(buf, &kone->settings, sizeof(struct kone_settings));
++	difference = memcmp(settings, &kone->settings,
++			    sizeof(struct kone_settings));
+ 	if (difference) {
+-		retval = kone_set_settings(usb_dev,
+-				(struct kone_settings const *)buf);
+-		if (retval) {
+-			mutex_unlock(&kone->kone_lock);
+-			return retval;
++		if (settings->size != sizeof(struct kone_settings) ||
++		    settings->startup_profile < 1 ||
++		    settings->startup_profile > 5) {
++			retval = -EINVAL;
++			goto unlock;
+ 		}
+ 
++		retval = kone_set_settings(usb_dev, settings);
++		if (retval)
++			goto unlock;
++
+ 		old_profile = kone->settings.startup_profile;
+-		memcpy(&kone->settings, buf, sizeof(struct kone_settings));
++		memcpy(&kone->settings, settings, sizeof(struct kone_settings));
+ 
+ 		kone_profile_activated(kone, kone->settings.startup_profile);
+ 
+ 		if (kone->settings.startup_profile != old_profile)
+ 			kone_profile_report(kone, kone->settings.startup_profile);
  	}
++unlock:
+ 	mutex_unlock(&kone->kone_lock);
  
- 	if (create_debugfs_nodes()) {
- 		free_page((unsigned long)ce_arr.array);
--		return;
-+		return -ENOMEM;
- 	}
- 
- 	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
-@@ -575,6 +575,7 @@ static void __init cec_init(void)
- 	mce_register_decode_chain(&cec_nb);
- 
- 	pr_info("Correctable Errors collector initialized.\n");
-+	return 0;
++	if (retval)
++		return retval;
++
+ 	return sizeof(struct kone_settings);
  }
- late_initcall(cec_init);
- 
+ static BIN_ATTR(settings, 0660, kone_sysfs_read_settings,
 -- 
-2.28.0
+2.27.0
 
