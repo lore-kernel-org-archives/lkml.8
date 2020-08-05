@@ -2,92 +2,134 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3972C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA5620656
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA7420656
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWqfthpN"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="cJiqL12y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgHESNx (ORCPT
+        id S1728413AbgHESOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59676 "EHLO
+        Wed, 5 Aug 2020 14:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgHESIy (ORCPT
+        with ESMTP id S1729161AbgHESJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:08:54 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3ADC061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:08:54 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id s15so16741022qvv.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:08:54 -0700 (PDT)
+        Wed, 5 Aug 2020 14:09:08 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83E15C06179E
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:09:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g19so13170748plq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:09:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=TKYRPGPLHCWrMIu7pyuuJy9bkPwY7mqum0/IqDLNX9Q=;
-        b=hWqfthpN1kxgRdozFdigqWZhlrxM3Bq1/DKEB+wrmgW9FCiv+nTg28h85JfxbOgHfC
-         v0ucln+sfvTxDLrxy1ePEG/JlHAlg1qJw55Ug67MVO3aRIoUii7J+1tSAQN6cpRwMvv1
-         mEJ4tOMcLyuUYE73d7ak3ql37HdoU+Mum9Kt7dcX3CgEj7aa8qPDzxVVvkz0IxiTM0PU
-         mRW58XLvYxRYNaw/w8nqo5r8IcG/uXrQHK9FdTkt8tzAIcI+etjkH2HpNR5u1yDxrQCb
-         xk1OdDdHDJa6fVPvt1+f/tHKyZwxgAj0iYv17wCws+h54H8NqPoazwhYXap/HQVax9IN
-         vBhA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=QLQQ3+0etev233V3umPOvDVR32FRU3B4OHKUUP2KCtU=;
+        b=cJiqL12yAVnWOtPxTPDWYZdMhDSWBAVmkAM12MtrQWair/KCdQo04Q3JIQaoAM68oK
+         ktSPgagxplpFLOSivwPxXlyLmZ92ZTz3JVHDcF6/Cz4OlbXaPaTiRZjvjuSzWmWhXBzE
+         yzJ+fL6mCIagoCzT1NECUKisLKh6z4D7js2Hf3U7aCoqSrbYX0WVKFekkz4uJhiiIet7
+         DhXKPeB7VM8W0WHLbH73QWjOPLzuqi7sEOCCSHiYDjdSCrJo1OD5COzxsMXQtU1T0EOw
+         Y2rxz7mQriURh7LCeOKmkx27XTY8t5Uz3lKEJGFq5TO8vbur3wZg1crfB4zhD6bw96lq
+         OkeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=TKYRPGPLHCWrMIu7pyuuJy9bkPwY7mqum0/IqDLNX9Q=;
-        b=CJ2xvdiYre4OAiiKo94+I6vl8aAwj0SzOvs7XDbEHEvJ7rBsqOxXBuiq8uD8hCFzjm
-         w34+jVo/PTRj8CSGhvBBc8MkwgfSlkMbtg+kOfMIvnA9ln5DkKgUrJfviGiAZavLBQVZ
-         T8cF3gqA7amsJS7FQOtiLlSSGWdtwQhMsgHCwC1MwcxjUm1xPzDIIPHnnHdscuS6lyU/
-         kX6WcxpQ5zoGEbYswX0TAuDbRQSQ2MHzNsBEHW3EQeH5svjM5tdrStGG8SIjwADsnMZ5
-         T+SsHn5TA20aGqYgzs+waYGd0T9Ru0EeaymRxFeyGFcyZotDRt52HkrVwyYCLafpV9iJ
-         VmYw==
-X-Gm-Message-State: AOAM532iAaw8/1JRjT3HZxsLm7rPdNDZpN3H9nrsM2zeQSlOegPhM8Pf
-        RxAUw/0mp6gtHmqxembME5o=
-X-Google-Smtp-Source: ABdhPJw0E/iVtQf8MQPZ3yxGZTwFzEI5nzK94oaCcxa5kXq+Gaoi4HeL8nChAJTI+0bZaA1JiLqI+Q==
-X-Received: by 2002:ad4:446d:: with SMTP id s13mr4966591qvt.183.1596650929271;
-        Wed, 05 Aug 2020 11:08:49 -0700 (PDT)
-Received: from LeoBras (179-125-154-168.dynamic.desktop.com.br. [179.125.154.168])
-        by smtp.gmail.com with ESMTPSA id c33sm2744722qtk.40.2020.08.05.11.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 11:08:48 -0700 (PDT)
-Message-ID: <e60591c023173ac04057293962c498a09acc1fc1.camel@gmail.com>
-Subject: Re: [PATCH v5 0/4] Allow bigger 64bit window by removing default
- DMA window
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 05 Aug 2020 15:08:42 -0300
-In-Reply-To: <20200805030455.123024-1-leobras.c@gmail.com>
-References: <20200805030455.123024-1-leobras.c@gmail.com>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=QLQQ3+0etev233V3umPOvDVR32FRU3B4OHKUUP2KCtU=;
+        b=QO3mLhK2PPg0hOxm0at/APNuQD6+P0OH29Ib5qzn2+Phxv+hhkyZGNNajFOrnwiyp/
+         2skyrYmISV3dQnM2oi9a4EF3wKu7yIv7On2gtDpiuP4qrxAAVf2UzreP7tbMoGvWNdRM
+         uS7tuEsohi8koTGiZ7/k9GE9pslYO1qM3HscKrTAWqzn8t8bvrfL16uJTvoayY5H1+2L
+         bnb0XPvgqqvRIEsx8baXFF7b++x/YXjYLhvsEHLEVVFPxxwjv8WfYORtdR020CLvIUpI
+         4qkxLEqSFVcx5KVCtOecGdXnX31opqIzZKO/NbBvC7D/TcQ//WmVx50neU7bcc2iHLzl
+         TPuQ==
+X-Gm-Message-State: AOAM532QCioM7KMnMHbCHbUlwwG3XU9wkcw1muKTiEZg9/utxxfzAOVU
+        yKMA+a0d40YwLrTjr+vPSXwqeoHVjr0=
+X-Google-Smtp-Source: ABdhPJzgLgfCkhTYirh3jlA82isYOiQXoI3I2L0JOH5MsNNl4huINEybPkouEx/HAXGjPugwTQeLcA==
+X-Received: by 2002:a17:902:b686:: with SMTP id c6mr4212408pls.133.1596650947056;
+        Wed, 05 Aug 2020 11:09:07 -0700 (PDT)
+Received: from [10.213.170.159] (fmdmzpr04-ext.fm.intel.com. [192.55.55.39])
+        by smtp.gmail.com with ESMTPSA id fv21sm3722351pjb.16.2020.08.05.11.09.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Aug 2020 11:09:06 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH V2 9/9] PCI/AER: Add RCEC AER error injection support
+Date:   Wed, 05 Aug 2020 11:09:04 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <32674ABF-0189-4477-8BEA-84DA393FD148@intel.com>
+In-Reply-To: <20200805185450.0000512d@Huawei.com>
+References: <20200804194052.193272-1-sean.v.kelley@intel.com>
+ <20200804194052.193272-10-sean.v.kelley@intel.com>
+ <20200805185450.0000512d@Huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Travis reported successful compilation with mpe/merge:
+On 5 Aug 2020, at 10:54, Jonathan Cameron wrote:
 
-https://travis-ci.org/github/LeoBras/linux-ppc/builds/715028857
+> On Tue, 4 Aug 2020 12:40:52 -0700
+> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+>
+>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>
+>> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
+>> and also have the AER capability. So add RCEC support to the current AER
+>> error injection driver.
+>>
+>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>
+> Silly English subtlety inline.
+>
+>> ---
+>>  drivers/pci/pcie/aer_inject.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+>> index c2cbf425afc5..2077dc826fdf 100644
+>> --- a/drivers/pci/pcie/aer_inject.c
+>> +++ b/drivers/pci/pcie/aer_inject.c
+>> @@ -333,8 +333,11 @@ static int aer_inject(struct aer_error_inj *einj)
+>>  	if (!dev)
+>>  		return -ENODEV;
+>>  	rpdev = pcie_find_root_port(dev);
+>> +	/* If Root port not found, try to find an RCEC */
+>> +	if (!rpdev)
+>> +		rpdev = dev->rcec;
+>>  	if (!rpdev) {
+>> -		pci_err(dev, "Root port not found\n");
+>> +		pci_err(dev, "Root port or RCEC not found\n");
+>
+> That is a bit confusing, could be
+>
+> RP | !RCEC
+>
+> "Neither root port nor RCEC found\n" perhaps?
 
+Sounds good to me. Will correct.
+
+Thanks,
+
+Sean
+
+>
+>
+>>  		ret = -ENODEV;
+>>  		goto out_put;
+>>  	}
