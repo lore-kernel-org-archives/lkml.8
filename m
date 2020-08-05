@@ -4,114 +4,211 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5260AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7630F2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1814420792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="kuiJbrdF"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="emx0Gget"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgHEISp (ORCPT
+        id S1727006AbgHEIVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:18:45 -0400
-Received: from mail-eopbgr80052.outbound.protection.outlook.com ([40.107.8.52]:21821
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Wed, 5 Aug 2020 04:21:15 -0400
+Received: from mail-db8eur05on2084.outbound.protection.outlook.com ([40.107.20.84]:42976
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbgHEISm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:18:42 -0400
+        id S1725809AbgHEIVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:21:08 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RmV7/7cqpJEfowfqe96Qz3a2o2t5m/Dsi9paCv5Uz48Mrm4vdb+rkE4Oai0pxCZIO0qEPczvBanG2jio8joKFusdyR6lx0R83e5KCDB6dcOcFpXpe/qERm6yoh3el3RP68VY1INQWK56hrL8wgJVvsnCWY1isGpBbSN7vaYKt1711cGc+98N14ITzQsd65N7zGxaYNzN1zwfcSqJmov9NWZNhqJOdKMusgrXGD+Z3Igpxw2QePdNPiZyiWfstLVex4PiExF8HS77pXjdkGvfDeF1H4UX9d1JH+VUigODlFnOrRC6aoq/zEoJpfYQdW0lmofKWVlGfYzKmfUsjasgkg==
+ b=Buu7KJvxI7A8vwKnpphIW5XGTqwbbl9eChVhSVt5ZmCQhsuMr/ifO6S1w7QRBd5VeeQdEQFLS+Gl9T1fBzBrMNrlsrSrCXxdbYP1mg3EM4J6VmImGHjYIPiJspzWU9fVbV2w1qvOx8yhfrKwziNn3fli2r7hWR35hsAIrio+vpLeB6s7jLmjZSGDaD7SvPVCGlpobKK58T9v6ovnh199XB6Gv6pXUIsvhjf5qpNRxfk3W1Qse+F/y9MXHfgNstjc3y+AshVFJaPQmeXqo5WeD9RLaG6kw9JqUSjnNj58ntjnmUCm3qW+Qea2A/FWPr7TTBIjMOb+atf++7mN1RswLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ySbN9CGJmo/XJtFvGMYhyjeC4zxcgvebMSz2uChAi3U=;
- b=PHK0nH0vCaDWKgyQGt5WiPrb9fzP9prppov6PkMO7JgoQqIkJ6b+HiaUtMzVtyaa4J8stCc7ajSVWIJDkO5wAcquQDxf13j5T50N/6LxtRkUmLAAf2YNF1jCEiQg5ODE9g9HkXkIcABp6Cw8scjF3JKW6tkuksOAh+V0CwGg6f21ZuA0LHYcpK6bkSNTCuzHQBpiJ5ISb9YVs9XxHpti8ZaQkpV0JgvxdLwrmRJvc02G/v1AZVRA/TfC3E9m8yImn/Jcrpgl2Hm3kjHDJoC0zP0td/JWT+tZpQe9CXb835vhxYzRVcfJ9WuYsxR0I7GiER169mTf5Qu8OV2pH4jkOQ==
+ bh=WhtXOVRZifAylnfOyAj2L1SQ4ehEIMRLvdz801PqGZ4=;
+ b=ASZQfwfaLAGIiGNT2JAVOD52GIIMrhQ54AMaPGlQ4Miw6eNwSO4QIc0TTlTUvm5qWt/OReiAmxKS9Zm1ytqB6pfa/X3+PPskKV9BoyWAB0lx6ul2vRCNLckWUjbnyjlqhrS57w/wtkJpAHnMwn38juLv3erx5Jrrbsk01EDhpMgxFz/m3gvV4mMrmOVXH1Gha9bb8UnxTfIf/FMd/NXE+O5YxmiOInT03wcb71+yQhqM8030nI1Y2pjwcb4c1/8UGCkjyXrpo3WFzdAW6vRM8gAPHgV8/cqvHIbwFL2ll5m0x5dYG9Zl1Lp8qH6M6Ggw3iJbi1eV2PK5qWq4ZiCmOw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
  dkim=pass header.d=mellanox.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ySbN9CGJmo/XJtFvGMYhyjeC4zxcgvebMSz2uChAi3U=;
- b=kuiJbrdFc2JRuhhms1ZqZ3DcrzoItdJAxdd3DHrQeE8O0C2Sem382pPAEOOPBxj7u8nCjbKf3xKIn/gyYJahNtjMH7Uyw57cuLqUDR7JzRGI35fHgtj9oQO0s4FAqfUNx6kdMeB9llzC/YEKXHYKg4Q9dHWIf69x1OUmKEbjzQk=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
-Received: from AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
- by AM0PR05MB5715.eurprd05.prod.outlook.com (2603:10a6:208:11e::23) with
+ bh=WhtXOVRZifAylnfOyAj2L1SQ4ehEIMRLvdz801PqGZ4=;
+ b=emx0Gget31BqsOr4rbdZYCsrC4uMMrcjXJ8uSPKAlbw0ogymVzJNeN8Td7uf+JJ5jOOiZmyTfjycsSmgubW/9B+tSbXM6eLROb3L4NTsSK47AVSpR9Y/cE5THt/dNI8PtPqbHia3WswJ1npBQITxS+PdNaKV1CKct0TRJXSfWz4=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com (2603:10a6:208:63::16)
+ by AM0PR05MB5987.eurprd05.prod.outlook.com (2603:10a6:208:130::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Wed, 5 Aug
- 2020 08:18:38 +0000
-Received: from AM0PR05MB4786.eurprd05.prod.outlook.com
- ([fe80::9186:8b7:3cf7:7813]) by AM0PR05MB4786.eurprd05.prod.outlook.com
- ([fe80::9186:8b7:3cf7:7813%7]) with mapi id 15.20.3239.021; Wed, 5 Aug 2020
- 08:18:38 +0000
-Date:   Wed, 5 Aug 2020 11:18:34 +0300
-From:   Eli Cohen <eli@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, shahafs@mellanox.com,
-        saeedm@mellanox.com, parav@mellanox.com
-Subject: Re: [PATCH V4 linux-next 00/12] VDPA support for Mellanox ConnectX
- devices
-Message-ID: <20200805081834.GA116971@mtl-vdi-166.wap.labs.mlnx>
-References: <20200804162048.22587-1-eli@mellanox.com>
- <20200804172726-mutt-send-email-mst@kernel.org>
- <20200805050105.GA5442@nps-server-21.mtl.labs.mlnx>
- <7b4b4944-9428-a6ca-8b94-69bfc2675286@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b4b4944-9428-a6ca-8b94-69bfc2675286@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-ClientProxiedBy: FRYP281CA0010.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::20)
- To AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Wed, 5 Aug
+ 2020 08:21:03 +0000
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f]) by AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f%3]) with mapi id 15.20.3261.018; Wed, 5 Aug 2020
+ 08:21:03 +0000
+Subject: Re: [PATCH net-next RFC 00/13] Add devlink reload level option
+To:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+ <CAACQVJqNXh0B=oe5W7psiMGc6LzNPujNe2sypWi_SvH5sY=F3Q@mail.gmail.com>
+ <a3e20b44-9399-93c1-210f-e3c1172bf60d@intel.com>
+ <CAACQVJo+bAr_k=LjgdTKbOxFEkpbYAsaWbkSDjUepgO7_XQfNA@mail.gmail.com>
+ <7a9c315f-fa29-7bd5-31be-3748b8841b29@mellanox.com>
+ <CAACQVJpZZPfiWszZ36E0Awuo2Ad1w5=4C1rgG=d4qPiWVP609Q@mail.gmail.com>
+ <7fd63d16-f9fa-9d55-0b30-fe190d0fb1cb@mellanox.com>
+ <CAACQVJqXa-8v4TU+M1DWA2Tfv3ayrAobiH9Fajd=5MCgsfAA6A@mail.gmail.com>
+ <da0e4997-73d7-9f3c-d877-f2d3bcc718b9@mellanox.com>
+ <CAACQVJofS2B3y40H=QxBzNaccsa+gNnSqfmoATyML_S686ykfw@mail.gmail.com>
+From:   Moshe Shemesh <moshe@mellanox.com>
+Message-ID: <da7a2f2d-3ff5-0cd1-f166-79d7355f3df0@mellanox.com>
+Date:   Wed, 5 Aug 2020 11:20:59 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <CAACQVJofS2B3y40H=QxBzNaccsa+gNnSqfmoATyML_S686ykfw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::21) To AM0PR05MB4290.eurprd05.prod.outlook.com
+ (2603:10a6:208:63::16)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mtl-vdi-166.wap.labs.mlnx (94.188.199.18) by FRYP281CA0010.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.13 via Frontend Transport; Wed, 5 Aug 2020 08:18:37 +0000
-X-Originating-IP: [94.188.199.18]
+Received: from [192.168.0.105] (31.210.180.3) by FR2P281CA0011.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.13 via Frontend Transport; Wed, 5 Aug 2020 08:21:02 +0000
+X-Originating-IP: [31.210.180.3]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5869927f-bc49-41db-d0f7-08d8391827ea
-X-MS-TrafficTypeDiagnostic: AM0PR05MB5715:
+X-MS-Office365-Filtering-Correlation-Id: a1c799ae-bf62-4db6-d28e-08d839187e08
+X-MS-TrafficTypeDiagnostic: AM0PR05MB5987:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR05MB5715BB9506499E8B9359718DC54B0@AM0PR05MB5715.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <AM0PR05MB5987C1A9CFBE77863B72DF58D94B0@AM0PR05MB5987.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2ltab++I4dOx35dPGvQJUu8RsOWTOiqDjnjQmiLG4Ck0NUDCBr1pf1PG1wbp7xJkA5mpdunkXUoAWzgKQKyGNTjEYJocWV0yjzYvGAYwBpGJ3e5K7wUdAkG4pp+w9U+mNo/J3rgkv+PmzV8J1U/mgy7CCCfUWCrsD4cURMWtPmJxU/BS3Hg4TdJkNzsRRcmwANX5tnIlttmurHq6Llb5em/mamHoa4ggFkwVbJrVosZTCtMF6DMhAieuA+kud0S0hp9LxwewvNDsNuOxCEZKx9PEg/wE+JoUt+s5S7s4MptI51B+3aAYZ6CnBRR2noVX
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4786.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(376002)(39860400002)(396003)(5660300002)(83380400001)(1076003)(6666004)(4744005)(66556008)(66476007)(2906002)(6916009)(8676002)(55016002)(9686003)(33656002)(186003)(86362001)(7696005)(52116002)(956004)(8936002)(66946007)(26005)(16526019)(478600001)(107886003)(4326008)(6506007)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: eC5UJNja8yVxj46IiO4HgOKdxYrjTAJOFbk3zLyT34z7y2+K8hJQr7Z79JlbkuhN6FEdL1r1ZHgprLN7o/aD7c8weqxHqWlyM+4Njiz7/IkYxrciCnwTqsac2Yy051u/LwQ6a1u/mYMxKPXadZt4p13D3LW4IMeh6GAuJe8+a4mJ1J+ZfyzD/zam3j3lQmVRUk2+zM+XVIIGUnehRRx6f6c2Rpza/8fb77N++0HjPc2xdqdecOPW1ehAlrmN0H5pW1QbxF+hOVI32hzLbTST/td/1lQYZCE8YAPrZ/iqQdiwJKcpjSBqye9RWaPW2lKRmk2Vt/oS8y7E4WjmpdX0i4iHxK1i/EPE0i9ve/CEzZg7/WwbCaVJjqtDv4/w462/By2HeTvVqKERWGHIzxi8mV6ExqlZOy5F9C+x3Ncx3He4c1NJlJHhR011o6yMsCrbCihxD72BREDB0ujzfGU3C+LvfL2Hnt1+XSKB//M5OutIYm/JKhGhIwjuocD7HK4olcQjJF2yNaPvwK/ahMXGGRTMEiBv3ZKMW3TzqWFt5/6XDeb6k6bc2z+9p8q+qUec9/rZX2jmkjVJm6a+2A9IAwy4bltns0GYA7uCbR9etS/e4Rm6gkzR5ny8btcFxSlyGpejrSQQLH0GjH/tw+pNdg==
+X-Microsoft-Antispam-Message-Info: xcEBMhib/B5BZx3KqCZuktqYGlcLFUF/+jqNoFl483DCi+xQVEgSGWgxjaTKcbjpH42ddV7dYqacZSfAKo4H6c7VVnTCNqRZbpChL6vfo2lolUT00BJiXADEkw4LsjmWDv+qkoA4/OWKmtsYenaQRyMxPYYeWjhCHSG8Kb0NO2bRmFw6adrueEsbcO4kkJVD/aoKWPQjoSYq7lOeYGFuk7vYn37eOhNXgXLjkQd8Po/rt8dtH9u0WssA0E0TdZ+kZiFQB65NMRTwnAMgPM+jhqByw7F7sfhiysU7f1j0n1SNGjVmEotpupLRDf+MwOuN+sh9frQc+jwZ2sv8y+hXtm1TVSecNzYYnOEDbIorXs+m3RJZd0tkyV+VvuvKbCgF
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4290.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(346002)(396003)(376002)(956004)(2906002)(54906003)(2616005)(26005)(83380400001)(186003)(53546011)(6916009)(86362001)(31696002)(16526019)(316002)(16576012)(6486002)(31686004)(66476007)(66556008)(8936002)(4326008)(478600001)(52116002)(66946007)(8676002)(6666004)(36756003)(5660300002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: o4A7L6DGHar6dWcTWA+N1olseQ4w3n66ucyUIsgUqYCoylssnNNbIUDYWXU/f9nul0XopOPSviqN2nNfr2NFpVqcQsk5TIjRMZsLqs3+81n2ydqqDhNy1n0CsYMs7+DzI3yK8D8PV/tCns2ZVhufXLh4P9IkBmdc/aKF7QhzST0euoyw51d5SAbV0l5VxzgRxQNLq0ZeugF7LeQgCeTRK/IfTNS/5qYHozkPf6ZyC2PepnnXngARKx6wHu7E8+tRW0TvzLEZGc2syz37zXAvfQToNUgczHzOWfARk1N9p/rfmQLmr76u0WLtzaEUBu0WtDtbA8KO9/5BHIeF9pIBM0pMdZYtwokilj9nI8jsOW95H1Z58spVVNQ3Eeu4QcX66xQP0z5kKbFoyLABYVG+U0LtEBxFudh/YRGAOt5GpZTqkqiyd1ED7bEtDm5quzdy40V6YGl5QcMW0tyZXOJc6Aqygp24jLHZJVAkCWbDbJYTO6+UMRbJmJAWXwCLiccE8U/JFeys+unV2+Wxsbh7yH4rpKAL7/l83qN5p2FYs+yvQ9pnTN02hnbff3QO1w4d/iesQgSjtMTcfEeBjhyg4QK6AxyeJgsq5Ry/cHWuGydaLus3cF5V6mc+YRIEwLuHmyrrTAHv6cbbNMp+Jns2UQ==
 X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5869927f-bc49-41db-d0f7-08d8391827ea
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4786.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1c799ae-bf62-4db6-d28e-08d839187e08
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4290.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2020 08:18:38.5673
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2020 08:21:03.1539
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AHpxPp7go56WAuFr+OZnasa8oCCXu0CBbJjF/IO+MO/dYYtSzuXki8U8e7NX5cVLj3UjW1NeeALZVIdNuyIw5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5715
+X-MS-Exchange-CrossTenant-UserPrincipalName: FyTUCNp+0pcVgLOBXPzxUl35BlXPqAXpZOZDe3PQ/ktzRqFRRnVLKkOcveJnLlVwmAV/tUnVAU+ArY8PGe4QoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5987
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 04:12:46PM +0800, Jason Wang wrote:
-> >
-> >BTW, for some reason I did not get all the patches into my mailbox and I
-> >suspect they were not all sent. Did you get all the series 0-13?
-> 
-> 
-> I can see patch 0 to patch 12 but not patch 13 (I guess 12 is all).
-> 
-> Thanks
-> 
 
-Yes, I meant 13 patches 0-12.
+On 8/5/2020 9:55 AM, Vasundhara Volam wrote:
+> On Wed, Aug 5, 2020 at 12:02 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+>>
+>> On 8/4/2020 1:13 PM, Vasundhara Volam wrote:
+>>> On Mon, Aug 3, 2020 at 7:23 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+>>>> On 8/3/2020 3:47 PM, Vasundhara Volam wrote:
+>>>>> On Mon, Aug 3, 2020 at 5:47 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+>>>>>> On 8/3/2020 1:24 PM, Vasundhara Volam wrote:
+>>>>>>> On Tue, Jul 28, 2020 at 10:13 PM Jacob Keller <jacob.e.keller@intel.com> wrote:
+>>>>>>>> On 7/27/2020 10:25 PM, Vasundhara Volam wrote:
+>>>>>>>>> On Mon, Jul 27, 2020 at 4:36 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+>>>>>>>>>> Introduce new option on devlink reload API to enable the user to select the
+>>>>>>>>>> reload level required. Complete support for all levels in mlx5.
+>>>>>>>>>> The following reload levels are supported:
+>>>>>>>>>>       driver: Driver entities re-instantiation only.
+>>>>>>>>>>       fw_reset: Firmware reset and driver entities re-instantiation.
+>>>>>>>>> The Name is a little confusing. I think it should be renamed to
+>>>>>>>>> fw_live_reset (in which both firmware and driver entities are
+>>>>>>>>> re-instantiated).  For only fw_reset, the driver should not undergo
+>>>>>>>>> reset (it requires a driver reload for firmware to undergo reset).
+>>>>>>>>>
+>>>>>>>> So, I think the differentiation here is that "live_patch" doesn't reset
+>>>>>>>> anything.
+>>>>>>> This seems similar to flashing the firmware and does not reset anything.
+>>>>>> The live patch is activating fw change without reset.
+>>>>>>
+>>>>>> It is not suitable for any fw change but fw gaps which don't require reset.
+>>>>>>
+>>>>>> I can query the fw to check if the pending image change is suitable or
+>>>>>> require fw reset.
+>>>>> Okay.
+>>>>>>>>>>       fw_live_patch: Firmware live patching only.
+>>>>>>>>> This level is not clear. Is this similar to flashing??
+>>>>>>>>>
+>>>>>>>>> Also I have a basic query. The reload command is split into
+>>>>>>>>> reload_up/reload_down handlers (Please correct me if this behaviour is
+>>>>>>>>> changed with this patchset). What if the vendor specific driver does
+>>>>>>>>> not support up/down and needs only a single handler to fire a firmware
+>>>>>>>>> reset or firmware live reset command?
+>>>>>>>> In the "reload_down" handler, they would trigger the appropriate reset,
+>>>>>>>> and quiesce anything that needs to be done. Then on reload up, it would
+>>>>>>>> restore and bring up anything quiesced in the first stage.
+>>>>>>> Yes, I got the "reload_down" and "reload_up". Similar to the device
+>>>>>>> "remove" and "re-probe" respectively.
+>>>>>>>
+>>>>>>> But our requirement is a similar "ethtool reset" command, where
+>>>>>>> ethtool calls a single callback in driver and driver just sends a
+>>>>>>> firmware command for doing the reset. Once firmware receives the
+>>>>>>> command, it will initiate the reset of driver and firmware entities
+>>>>>>> asynchronously.
+>>>>>> It is similar to mlx5 case here for fw_reset. The driver triggers the fw
+>>>>>> command to reset and all PFs drivers gets events to handle and do
+>>>>>> re-initialization.  To fit it to the devlink reload_down and reload_up,
+>>>>>> I wait for the event handler to complete and it stops at driver unload
+>>>>>> to have the driver up by devlink reload_up. See patch 8 in this patchset.
+>>>>>>
+>>>>> Yes, I see reload_down is triggering the reset. In our driver, after
+>>>>> triggering the reset through a firmware command, reset is done in
+>>>>> another context as the driver initiates the reset only after receiving
+>>>>> an ASYNC event from the firmware.
+>>>> Same here.
+>>>>
+>>>>> Probably, we have to use reload_down() to send firmware command to
+>>>>> trigger reset and do nothing in reload_up.
+>>>> I had that in previous version, but its wrong to use devlink reload this
+>>>> way, so I added wait with timeout for the event handling to complete
+>>>> before unload_down function ends. See mlx5_fw_wait_fw_reset_done(). Also
+>>>> the event handler stops before load back to have that done by devlink
+>>>> reload_up.
+>>> But "devlink dev reload" will be invoked by the user only on a single
+>>> dev handler and all function drivers will be re-instantiated upon the
+>>> ASYNC event. reload_down and reload_up are invoked only the function
+>>> which the user invoked.
+>>>
+>>> Take an example of a 2-port (PF0 and PF1) adapter on a single host and
+>>> with some VFs loaded on the device. User invokes "devlink dev reload"
+>>> on PF0, ASYNC event is received on 2 PFs and VFs for reset. All the
+>>> function drivers will be re-instantiated including PF0.
+>>>
+>>> If we wait for some time in reload_down() of PF0 and then call load in
+>>> reload_up(), this code will be different from other function drivers.
+>>
+>> I see your point here, but the user run devlink reload command on one
+>> PF, in this case of fw-reset it will influence other PFs, but that's a
+>> result of the fw-reset, the user if asked for params change or namespace
+>> change that was for this PF.
+> Right, if any driver is implementing only fw-reset have to leave
+> reload_up as an empty function.
 
-Thanks
+
+No, its not only up the driver. The netns option is implemented by 
+devlink and its running between reload_down and reload_up.
+
+>>>>>     And returning from reload
+>>>>> does not mean that reset is complete as it is done in another context
+>>>>> and the driver notifies the health reporter once the reset is
+>>>>> complete. devlink framework may have to allow drivers to implement
+>>>>> reload_down only to look more clean or call reload_up only if the
+>>>>> driver notifies the devlink once reset is completed from another
+>>>>> context. Please suggest.
