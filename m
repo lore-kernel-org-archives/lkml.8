@@ -2,102 +2,115 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C593C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0333122D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o4UNyU+E"
+	by mail.kernel.org (Postfix) with ESMTP id 2E52722D00
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgHEQvf (ORCPT
+        id S1728223AbgHEQwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:51:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
+        Wed, 5 Aug 2020 12:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbgHEQsi (ORCPT
+        with ESMTP id S1728078AbgHEQsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:48:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA28C0A8884
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 06:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=llIYIkPywN6VGT1iqwpwmXkEgVsOT9bHfxBPZgYYoF8=; b=o4UNyU+E39IT4QDuCejLtxHLZI
-        thdkTL4uS6ye9ug0ZJAGEmJ0+HVj6nrHtSXGzb+yMCXvbi/09nQDQiaqX4t104slsVHrykO/7ISsd
-        +6OxjB6CNIi/9ssmDwqJa26GxYwv9V7XJUr+LzsEHFrPXMqJHmPLnVBf5WZeAz4es1lhzJ/9Wj4E8
-        TmSoIAKMxdvUUF1HQh7o3iKtENypMXYi7ybnFfBJlZqG810rPcmTz0BcPWNmn9RaKzBOMoptwU1sD
-        chpgZFLM2FhVXGe0Pgz8MspmVNYmSqfy48HzxRysKF+6sUYZEHG8zfd7MHG7WVmnC2s56MQ/m6Rxp
-        FOFRijbg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3JeK-0005Gc-Uv; Wed, 05 Aug 2020 13:40:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0CA653012DC;
-        Wed,  5 Aug 2020 15:40:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C6BBF22B957C1; Wed,  5 Aug 2020 15:40:02 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 15:40:02 +0200
-From:   peterz@infradead.org
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level
- IRQ time accounting
-Message-ID: <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
-References: <877dumbtoi.fsf@kurt>
- <20200729094943.lsmhsqlnl7rlnl6f@skbuf>
- <87mu3ho48v.fsf@kurt>
- <20200730082228.r24zgdeiofvwxijm@skbuf>
- <873654m9zi.fsf@kurt>
- <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
- <20200803114112.mrcuupz4ir5uqlp6@skbuf>
- <87d047n4oh.fsf@nanos.tec.linutronix.de>
- <jhjh7tjivew.mognet@arm.com>
- <875z9zmt4i.fsf@nanos.tec.linutronix.de>
+Received: from magratgarlick.emantor.de (magratgarlick.emantor.de [IPv6:2a01:4f8:c17:c88::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614ADC034606;
+        Wed,  5 Aug 2020 05:40:10 -0700 (PDT)
+Received: by magratgarlick.emantor.de (Postfix, from userid 114)
+        id 19DFB10D018; Wed,  5 Aug 2020 14:25:27 +0200 (CEST)
+Received: from localhost (200116b828fb3e0270a11fb9006029e2.dip.versatel-1u1.de [IPv6:2001:16b8:28fb:3e02:70a1:1fb9:60:29e2])
+        by magratgarlick.emantor.de (Postfix) with ESMTPSA id 241C910D014;
+        Wed,  5 Aug 2020 14:25:24 +0200 (CEST)
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Rouven Czerwinski <r.czerwinski@pengutronix.de>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] net: tls: add compat for get/setsockopt
+Date:   Wed,  5 Aug 2020 14:25:02 +0200
+Message-Id: <20200805122501.4856-1-r.czerwinski@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875z9zmt4i.fsf@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 09:22:53PM +0200, Thomas Gleixner wrote:
+If compat_{s,g}etsockopt for TLS are not implemented, the TLS layer will
+never be called on a system where CONFIG_COMPAT is enabled and userspace
+is 32bit. Implement both to support CONFIG_COMPAT.
 
->    totaltime = irqtime + tasktime
-> 
-> Ignoring irqtime and pretending that totaltime is what the scheduler
-> can control and deal with is naive at best.
+Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+---
+ net/tls/tls_main.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-Well no, that's what we call system overhead and is assumed to be
-included in the 'error margin'.
+diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+index ec10041c6b7d..92c5893fe692 100644
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -450,6 +450,18 @@ static int tls_getsockopt(struct sock *sk, int level, int optname,
+ 	return do_tls_getsockopt(sk, optname, optval, optlen);
+ }
+ 
++static int tls_compat_getsockopt(struct sock *sk, int level, int optname,
++				 char __user *optval, int __user *optlen)
++{
++	struct tls_context *ctx = tls_get_ctx(sk);
++
++	if (level != SOL_TLS)
++		return ctx->sk_proto->compat_getsockopt(sk, level, optname,
++							optval, optlen);
++
++	return do_tls_getsockopt(sk, optname, optval, optlen);
++}
++
+ static int do_tls_setsockopt_conf(struct sock *sk, char __user *optval,
+ 				  unsigned int optlen, int tx)
+ {
+@@ -611,6 +623,18 @@ static int tls_setsockopt(struct sock *sk, int level, int optname,
+ 	return do_tls_setsockopt(sk, optname, optval, optlen);
+ }
+ 
++static int tls_compat_setsockopt(struct sock *sk, int level, int optname,
++				 char __user *optval, unsigned int optlen)
++{
++	struct tls_context *ctx = tls_get_ctx(sk);
++
++	if (level != SOL_TLS)
++		return ctx->sk_proto->compat_setsockopt(sk, level, optname,
++							optval, optlen);
++
++	return do_tls_setsockopt(sk, optname, optval, optlen);
++}
++
+ struct tls_context *tls_ctx_create(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+@@ -660,6 +684,10 @@ static void build_protos(struct proto prot[TLS_NUM_CONFIG][TLS_NUM_CONFIG],
+ 	prot[TLS_BASE][TLS_BASE].setsockopt	= tls_setsockopt;
+ 	prot[TLS_BASE][TLS_BASE].getsockopt	= tls_getsockopt;
+ 	prot[TLS_BASE][TLS_BASE].close		= tls_sk_proto_close;
++#ifdef CONFIG_COMPAT
++	prot[TLS_BASE][TLS_BASE].compat_setsockopt	= tls_compat_setsockopt;
++	prot[TLS_BASE][TLS_BASE].compat_getsockopt	= tls_compat_getsockopt;
++#endif
+ 
+ 	prot[TLS_SW][TLS_BASE] = prot[TLS_BASE][TLS_BASE];
+ 	prot[TLS_SW][TLS_BASE].sendmsg		= tls_sw_sendmsg;
+-- 
+2.27.0
 
-The way things are set up is that we say that, by default, RT tasks can
-consume 95% of cputime and the remaining 5% is sufficient to keep the
-system alive.
-
-Those 5% include all system overhead, IRQs, RCU, !RT workqueues etc..
-
-Obviously IRQ_TIME accounting changes the balance a bit, but that's what
-it is. We can't really do anything better.
-
-Apparently this SoC has significant IRQ time for some reason. Also,
-relying on RT throttling for 'correct' behaviour is also wrong. What
-needs to be done is find who is using all this RT time and why, that
-isn't right.
