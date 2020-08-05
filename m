@@ -2,185 +2,494 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24467C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D344C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDA442250E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7AE621D95
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B1prvCHa";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B1prvCHa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DPBbz/rZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgHETsU (ORCPT
+        id S1729310AbgHETsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:48:20 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:39006 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728145AbgHEQ6y (ORCPT
+        Wed, 5 Aug 2020 15:48:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728298AbgHEQ5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:58:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D79E28EE1DD;
-        Wed,  5 Aug 2020 08:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596639691;
-        bh=5KjscTjJ2rT9ybNg+PHjihmjqEcOr8OKbSKYiE1mN1I=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B1prvCHaxEOP6CSKSR0sHnRVt+H7uKCtNBlJKR80V92AyV4g/UjhOaObGhccE1cxU
-         h67RP5SGz6mKGuFNlGpONxtoRbl7VGSuPWAch2yCZ1IyNcoEJYsxbLlHDD3W5DNw4C
-         EiJrjXIJ5VmBGYjtG0XlF6FaVWV2wOa28tr7BgzY=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FBfBPUShTYhM; Wed,  5 Aug 2020 08:01:31 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 3D9978EE0F8;
-        Wed,  5 Aug 2020 08:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596639691;
-        bh=5KjscTjJ2rT9ybNg+PHjihmjqEcOr8OKbSKYiE1mN1I=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B1prvCHaxEOP6CSKSR0sHnRVt+H7uKCtNBlJKR80V92AyV4g/UjhOaObGhccE1cxU
-         h67RP5SGz6mKGuFNlGpONxtoRbl7VGSuPWAch2yCZ1IyNcoEJYsxbLlHDD3W5DNw4C
-         EiJrjXIJ5VmBGYjtG0XlF6FaVWV2wOa28tr7BgzY=
-Message-ID: <1596639689.3457.17.camel@HansenPartnership.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Cc:     snitzer@redhat.com, zohar@linux.ibm.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com, paul@paul-moore.com,
-        corbet@lwn.net, jmorris@namei.org, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com, jannh@google.com,
-        linux-block@vger.kernel.org, viro@zeniv.linux.org.uk,
-        axboe@kernel.dk, mdsakib@microsoft.com,
-        linux-kernel@vger.kernel.org, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Wed, 05 Aug 2020 08:01:29 -0700
-In-Reply-To: <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-         <20200802143143.GB20261@amd>
-         <1596386606.4087.20.camel@HansenPartnership.com>
-         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+        Wed, 5 Aug 2020 12:57:19 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6431BC0617A3
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:54:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k23so46565921iom.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9yc7/eK2x4oGdVpej8T/jT7xrCyASY98xloaab28wkE=;
+        b=DPBbz/rZtRwCV00q33wWWFIyDeneJzPALqJ8G31Rp9ADuofCLu1xUlPbKvb2hORSXK
+         QR1gUBiKFAJFsJuPxFWyx4OFVjJO18NfHTu7ia1rkmk+i8AQ16xXS9FMg6S99Sfk5e1Y
+         D/Vq6H2M0mPTntbf8V1JePPTwMgRBjm9egB3GviKRD/m2NmsE1A+utAFefg8b+6B/SSN
+         XjDyEWawohyalFKFMwDs1zBLhNATXvcFYhiZIhdb9O3xX8Eai+8J7BXNCYxja7aWK+74
+         xA0PE4EeePgNjN3eIY0ckCMBmvGqg8XEWGjaCh8F1M46cexAPL8tuZ3HOgvbnoo5y2mZ
+         yq0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9yc7/eK2x4oGdVpej8T/jT7xrCyASY98xloaab28wkE=;
+        b=uhA/Xb6sdJHPR/fXjL//j58liAkKoatv1SN3XmL/4ALAVSukQbB38GZB1EJmpchqva
+         zXnwEdATJFmAc2sy+5VKwVWXIkuML1TMY+6zDyrL2TYqbJrbcZiBo7SGmp/At4tsaVPp
+         iX8dyoOKDnImhrXWwp3Hs9XVSm0PoEfsC33/8dQM9CJnU4XqBOPFpuYJ7TrlweVl8gf0
+         INzYknZ4KFYTZniMhaswX60OFsCjxS9W38UPNf3p+bTLyJuxYZmmySbk+3LOGbTHttC3
+         xfuBLOgAQkGfpXCSL++SP7pgYSr5napvAONVfYK7Fq+0/KnpX4D50FsU0KzY3QIjEKKd
+         mVPg==
+X-Gm-Message-State: AOAM531WhGS5+Q4uMQX8OeyGYrfHpgD56DHLTi4PYXnxdaUQuwvnJU/Q
+        1Vg+BrW8Fm6MJG3gcEMJ4eoreh2Cd1h0sVbVjLTH1Q==
+X-Google-Smtp-Source: ABdhPJxxtcC9PzufXnnKQ32mwEQlOF8l0NQYa6nAZJLdalTAbQvrbs6oSKVFBdvxyl6C+zuuwzUe6B39auMZMkQxX+8=
+X-Received: by 2002:a5d:9ac5:: with SMTP id x5mr4452162ion.111.1596646454211;
+ Wed, 05 Aug 2020 09:54:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1596520062.git.sbrivio@redhat.com> <83e5876f589b0071638630dd93fbe0fa6b1b257c.1596520062.git.sbrivio@redhat.com>
+In-Reply-To: <83e5876f589b0071638630dd93fbe0fa6b1b257c.1596520062.git.sbrivio@redhat.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 5 Aug 2020 22:24:03 +0530
+Message-ID: <CA+G9fYsJdoQieVr6=e09nYAvpAjnay5XSmJ3WkZHgMdzJRUYEw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 2/6] tunnels: PMTU discovery support for
+ directly bridged IP packets
+To:     Stefano Brivio <sbrivio@redhat.com>,
+        linux-riscv@lists.infradead.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        David Ahern <dsahern@gmail.com>,
+        Aaron Conole <aconole@redhat.com>,
+        Numan Siddique <nusiddiq@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Lourdes Pedrajas <lu@pplo.net>,
+        Netdev <netdev@vger.kernel.org>, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        lkft-triage@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-04 at 09:07 -0700, Deven Bowers wrote:
-> On 8/2/2020 9:43 AM, James Bottomley wrote:
-> > On Sun, 2020-08-02 at 16:31 +0200, Pavel Machek wrote:
-> > > On Sun 2020-08-02 10:03:00, Sasha Levin wrote:
-> > > > On Sun, Aug 02, 2020 at 01:55:45PM +0200, Pavel Machek wrote:
-> > > > > Hi!
-> > > > > 
-> > > > > > IPE is a Linux Security Module which allows for a
-> > > > > > configurable policy to enforce integrity requirements on
-> > > > > > the whole system. It attempts to solve the issue of Code
-> > > > > > Integrity: that any code being executed (or files being
-> > > > > > read), are identical to the version that was built by a
-> > > > > > trusted source.
-> > > > > 
-> > > > > How is that different from security/integrity/ima?
-> > > > 
-> > > > Maybe if you would have read the cover letter all the way down
-> > > > to the 5th paragraph which explains how IPE is different from
-> > > > IMA we could avoided this mail exchange...
-> > > 
-> > > "
-> > > IPE differs from other LSMs which provide integrity checking (for
-> > > instance, IMA), as it has no dependency on the filesystem
-> > > metadata itself.
-> > > The attributes that IPE checks are deterministic properties that
-> > > exist solely in the kernel. Additionally, IPE provides no
-> > > additional mechanisms of verifying these files (e.g. IMA
-> > > Signatures) - all of the attributes of verifying files are
-> > > existing features within the kernel, such as dm-verity
-> > > or fsverity.
-> > > "
-> > > 
-> > > That is not really helpful.
-> 
-> Perhaps I can explain (and re-word this paragraph) a bit better.
-> 
-> As James indicates, IPE does try to close the gap of the IMA
-> limitation with xattr. I honestly wasn’t familiar with the appended
-> signatures, which seems fine.
-> 
-> Regardless, this isn’t the larger benefit that IPE provides. The
-> larger benefit of this is how IPE separates _mechanisms_ (properties)
-> to enforce integrity requirements, from _policy_. The LSM provides
-> policy, while things like dm-verity provide mechanism.
+On Tue, 4 Aug 2020 at 11:24, Stefano Brivio <sbrivio@redhat.com> wrote:
+>
+> It's currently possible to bridge Ethernet tunnels carrying IP
+> packets directly to external interfaces without assigning them
+> addresses and routes on the bridged network itself: this is the case
+> for UDP tunnels bridged with a standard bridge or by Open vSwitch.
+>
+> PMTU discovery is currently broken with those configurations, because
+> the encapsulation effectively decreases the MTU of the link, and
+> while we are able to account for this using PMTU discovery on the
+> lower layer, we don't have a way to relay ICMP or ICMPv6 messages
+> needed by the sender, because we don't have valid routes to it.
+>
+> On the other hand, as a tunnel endpoint, we can't fragment packets
+> as a general approach: this is for instance clearly forbidden for
+> VXLAN by RFC 7348, section 4.3:
+>
+>    VTEPs MUST NOT fragment VXLAN packets.  Intermediate routers may
+>    fragment encapsulated VXLAN packets due to the larger frame size.
+>    The destination VTEP MAY silently discard such VXLAN fragments.
+>
+> The same paragraph recommends that the MTU over the physical network
+> accomodates for encapsulations, but this isn't a practical option for
+> complex topologies, especially for typical Open vSwitch use cases.
+>
+> Further, it states that:
+>
+>    Other techniques like Path MTU discovery (see [RFC1191] and
+>    [RFC1981]) MAY be used to address this requirement as well.
+>
+> Now, PMTU discovery already works for routed interfaces, we get
+> route exceptions created by the encapsulation device as they receive
+> ICMP Fragmentation Needed and ICMPv6 Packet Too Big messages, and
+> we already rebuild those messages with the appropriate MTU and route
+> them back to the sender.
+>
+> Add the missing bits for bridged cases:
+>
+> - checks in skb_tunnel_check_pmtu() to understand if it's appropriate
+>   to trigger a reply according to RFC 1122 section 3.2.2 for ICMP and
+>   RFC 4443 section 2.4 for ICMPv6. This function is already called by
+>   UDP tunnels
+>
+> - a new function generating those ICMP or ICMPv6 replies. We can't
+>   reuse icmp_send() and icmp6_send() as we don't see the sender as a
+>   valid destination. This doesn't need to be generic, as we don't
+>   cover any other type of ICMP errors given that we only provide an
+>   encapsulation function to the sender
+>
+> While at it, make the MTU check in skb_tunnel_check_pmtu() accurate:
+> we might receive GSO buffers here, and the passed headroom already
+> includes the inner MAC length, so we don't have to account for it
+> a second time (that would imply three MAC headers on the wire, but
+> there are just two).
+>
+> This issue became visible while bridging IPv6 packets with 4500 bytes
+> of payload over GENEVE using IPv4 with a PMTU of 4000. Given the 50
+> bytes of encapsulation headroom, we would advertise MTU as 3950, and
+> we would reject fragmented IPv6 datagrams of 3958 bytes size on the
+> wire. We're exclusively dealing with network MTU here, though, so we
+> could get Ethernet frames up to 3964 octets in that case.
+>
+> v2:
+> - moved skb_tunnel_check_pmtu() to ip_tunnel_core.c (David Ahern)
+> - split IPv4/IPv6 functions (David Ahern)
+>
+> Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+> ---
+>  drivers/net/bareudp.c     |   5 +-
+>  drivers/net/geneve.c      |   5 +-
+>  drivers/net/vxlan.c       |   4 +-
+>  include/net/dst.h         |  10 --
+>  include/net/ip_tunnels.h  |   2 +
+>  net/ipv4/ip_tunnel_core.c | 244 ++++++++++++++++++++++++++++++++++++++
+>  6 files changed, 254 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/net/bareudp.c b/drivers/net/bareudp.c
+> index 3b6664c7e73c..841910f1db65 100644
+> --- a/drivers/net/bareudp.c
+> +++ b/drivers/net/bareudp.c
+> @@ -308,7 +308,7 @@ static int bareudp_xmit_skb(struct sk_buff *skb, stru=
+ct net_device *dev,
+>                 return PTR_ERR(rt);
+>
+>         skb_tunnel_check_pmtu(skb, &rt->dst,
+> -                             BAREUDP_IPV4_HLEN + info->options_len);
+> +                             BAREUDP_IPV4_HLEN + info->options_len, fals=
+e);
+>
+>         sport =3D udp_flow_src_port(bareudp->net, skb,
+>                                   bareudp->sport_min, USHRT_MAX,
+> @@ -369,7 +369,8 @@ static int bareudp6_xmit_skb(struct sk_buff *skb, str=
+uct net_device *dev,
+>         if (IS_ERR(dst))
+>                 return PTR_ERR(dst);
+>
+> -       skb_tunnel_check_pmtu(skb, dst, BAREUDP_IPV6_HLEN + info->options=
+_len);
+> +       skb_tunnel_check_pmtu(skb, dst, BAREUDP_IPV6_HLEN + info->options=
+_len,
+> +                             false);
+>
+>         sport =3D udp_flow_src_port(bareudp->net, skb,
+>                                   bareudp->sport_min, USHRT_MAX,
+> diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+> index 017c13acc911..de86b6d82132 100644
+> --- a/drivers/net/geneve.c
+> +++ b/drivers/net/geneve.c
+> @@ -894,7 +894,7 @@ static int geneve_xmit_skb(struct sk_buff *skb, struc=
+t net_device *dev,
+>                 return PTR_ERR(rt);
+>
+>         skb_tunnel_check_pmtu(skb, &rt->dst,
+> -                             GENEVE_IPV4_HLEN + info->options_len);
+> +                             GENEVE_IPV4_HLEN + info->options_len, false=
+);
+>
+>         sport =3D udp_flow_src_port(geneve->net, skb, 1, USHRT_MAX, true)=
+;
+>         if (geneve->cfg.collect_md) {
+> @@ -955,7 +955,8 @@ static int geneve6_xmit_skb(struct sk_buff *skb, stru=
+ct net_device *dev,
+>         if (IS_ERR(dst))
+>                 return PTR_ERR(dst);
+>
+> -       skb_tunnel_check_pmtu(skb, dst, GENEVE_IPV6_HLEN + info->options_=
+len);
+> +       skb_tunnel_check_pmtu(skb, dst, GENEVE_IPV6_HLEN + info->options_=
+len,
+> +                             false);
+>
+>         sport =3D udp_flow_src_port(geneve->net, skb, 1, USHRT_MAX, true)=
+;
+>         if (geneve->cfg.collect_md) {
+> diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+> index 77658425db8a..1432544da507 100644
+> --- a/drivers/net/vxlan.c
+> +++ b/drivers/net/vxlan.c
+> @@ -2720,7 +2720,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, str=
+uct net_device *dev,
+>                 }
+>
+>                 ndst =3D &rt->dst;
+> -               skb_tunnel_check_pmtu(skb, ndst, VXLAN_HEADROOM);
+> +               skb_tunnel_check_pmtu(skb, ndst, VXLAN_HEADROOM, false);
+>
+>                 tos =3D ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+>                 ttl =3D ttl ? : ip4_dst_hoplimit(&rt->dst);
+> @@ -2760,7 +2760,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, str=
+uct net_device *dev,
+>                                 goto out_unlock;
+>                 }
+>
+> -               skb_tunnel_check_pmtu(skb, ndst, VXLAN6_HEADROOM);
+> +               skb_tunnel_check_pmtu(skb, ndst, VXLAN6_HEADROOM, false);
+>
+>                 tos =3D ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+>                 ttl =3D ttl ? : ip6_dst_hoplimit(ndst);
+> diff --git a/include/net/dst.h b/include/net/dst.h
+> index 852d8fb36ab7..6ae2e625050d 100644
+> --- a/include/net/dst.h
+> +++ b/include/net/dst.h
+> @@ -535,14 +535,4 @@ static inline void skb_dst_update_pmtu_no_confirm(st=
+ruct sk_buff *skb, u32 mtu)
+>                 dst->ops->update_pmtu(dst, NULL, skb, mtu, false);
+>  }
+>
+> -static inline void skb_tunnel_check_pmtu(struct sk_buff *skb,
+> -                                        struct dst_entry *encap_dst,
+> -                                        int headroom)
+> -{
+> -       u32 encap_mtu =3D dst_mtu(encap_dst);
+> -
+> -       if (skb->len > encap_mtu - headroom)
+> -               skb_dst_update_pmtu_no_confirm(skb, encap_mtu - headroom)=
+;
+> -}
+> -
+>  #endif /* _NET_DST_H */
+> diff --git a/include/net/ip_tunnels.h b/include/net/ip_tunnels.h
+> index 36025dea7612..02ccd32542d0 100644
+> --- a/include/net/ip_tunnels.h
+> +++ b/include/net/ip_tunnels.h
+> @@ -420,6 +420,8 @@ void iptunnel_xmit(struct sock *sk, struct rtable *rt=
+, struct sk_buff *skb,
+>                    u8 tos, u8 ttl, __be16 df, bool xnet);
+>  struct metadata_dst *iptunnel_metadata_reply(struct metadata_dst *md,
+>                                              gfp_t flags);
+> +int skb_tunnel_check_pmtu(struct sk_buff *skb, struct dst_entry *encap_d=
+st,
+> +                         int headroom, bool reply);
+>
+>  int iptunnel_handle_offloads(struct sk_buff *skb, int gso_type_mask);
+>
+> diff --git a/net/ipv4/ip_tunnel_core.c b/net/ipv4/ip_tunnel_core.c
+> index f8b419e2475c..9ddee2a0c66d 100644
+> --- a/net/ipv4/ip_tunnel_core.c
+> +++ b/net/ipv4/ip_tunnel_core.c
+> @@ -184,6 +184,250 @@ int iptunnel_handle_offloads(struct sk_buff *skb,
+>  }
+>  EXPORT_SYMBOL_GPL(iptunnel_handle_offloads);
+>
+> +/**
+> + * iptunnel_pmtud_build_icmp() - Build ICMP error message for PMTUD
+> + * @skb:       Original packet with L2 header
+> + * @mtu:       MTU value for ICMP error
+> + *
+> + * Return: length on success, negative error code if message couldn't be=
+ built.
+> + */
+> +static int iptunnel_pmtud_build_icmp(struct sk_buff *skb, int mtu)
+> +{
+> +       const struct iphdr *iph =3D ip_hdr(skb);
+> +       struct icmphdr *icmph;
+> +       struct iphdr *niph;
+> +       struct ethhdr eh;
+> +       int len, err;
+> +
+> +       if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr)))
+> +               return -EINVAL;
+> +
+> +       skb_copy_bits(skb, skb_mac_offset(skb), &eh, ETH_HLEN);
+> +       pskb_pull(skb, ETH_HLEN);
+> +       skb_reset_network_header(skb);
+> +
+> +       err =3D pskb_trim(skb, 576 - sizeof(*niph) - sizeof(*icmph));
+> +       if (err)
+> +               return err;
+> +
+> +       len =3D skb->len + sizeof(*icmph);
+> +       err =3D skb_cow(skb, sizeof(*niph) + sizeof(*icmph) + ETH_HLEN);
+> +       if (err)
+> +               return err;
+> +
+> +       icmph =3D skb_push(skb, sizeof(*icmph));
+> +       *icmph =3D (struct icmphdr) {
+> +               .type                   =3D ICMP_DEST_UNREACH,
+> +               .code                   =3D ICMP_FRAG_NEEDED,
+> +               .checksum               =3D 0,
+> +               .un.frag.__unused       =3D 0,
+> +               .un.frag.mtu            =3D ntohs(mtu),
+> +       };
+> +       icmph->checksum =3D ip_compute_csum(icmph, len);
+> +       skb_reset_transport_header(skb);
+> +
+> +       niph =3D skb_push(skb, sizeof(*niph));
+> +       *niph =3D (struct iphdr) {
+> +               .ihl                    =3D sizeof(*niph) / 4u,
+> +               .version                =3D 4,
+> +               .tos                    =3D 0,
+> +               .tot_len                =3D htons(len + sizeof(*niph)),
+> +               .id                     =3D 0,
+> +               .frag_off               =3D htons(IP_DF),
+> +               .ttl                    =3D iph->ttl,
+> +               .protocol               =3D IPPROTO_ICMP,
+> +               .saddr                  =3D iph->daddr,
+> +               .daddr                  =3D iph->saddr,
+> +       };
+> +       ip_send_check(niph);
+> +       skb_reset_network_header(skb);
+> +
+> +       skb->ip_summed =3D CHECKSUM_NONE;
+> +
+> +       eth_header(skb, skb->dev, htons(eh.h_proto), eh.h_source, eh.h_de=
+st, 0);
+> +       skb_reset_mac_header(skb);
+> +
+> +       return skb->len;
+> +}
+> +
+> +/**
+> + * iptunnel_pmtud_check_icmp() - Trigger ICMP reply if needed and allowe=
+d
+> + * @skb:       Buffer being sent by encapsulation, L2 headers expected
+> + * @mtu:       Network MTU for path
+> + *
+> + * Return: 0 for no ICMP reply, length if built, negative value on error=
+.
+> + */
+> +static int iptunnel_pmtud_check_icmp(struct sk_buff *skb, int mtu)
+> +{
+> +       const struct icmphdr *icmph =3D icmp_hdr(skb);
+> +       const struct iphdr *iph =3D ip_hdr(skb);
+> +
+> +       if (mtu <=3D 576 || iph->frag_off !=3D htons(IP_DF))
+> +               return 0;
+> +
+> +       if (ipv4_is_lbcast(iph->daddr)  || ipv4_is_multicast(iph->daddr) =
+||
+> +           ipv4_is_zeronet(iph->saddr) || ipv4_is_loopback(iph->saddr)  =
+||
+> +           ipv4_is_lbcast(iph->saddr)  || ipv4_is_multicast(iph->saddr))
+> +               return 0;
+> +
+> +       if (iph->protocol =3D=3D IPPROTO_ICMP && icmp_is_err(icmph->type)=
+)
+> +               return 0;
+> +
+> +       return iptunnel_pmtud_build_icmp(skb, mtu);
+> +}
+> +
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +/**
+> + * iptunnel_pmtud_build_icmpv6() - Build ICMPv6 error message for PMTUD
+> + * @skb:       Original packet with L2 header
+> + * @mtu:       MTU value for ICMPv6 error
+> + *
+> + * Return: length on success, negative error code if message couldn't be=
+ built.
+> + */
+> +static int iptunnel_pmtud_build_icmpv6(struct sk_buff *skb, int mtu)
+> +{
+> +       const struct ipv6hdr *ip6h =3D ipv6_hdr(skb);
+> +       struct icmp6hdr *icmp6h;
+> +       struct ipv6hdr *nip6h;
+> +       struct ethhdr eh;
+> +       int len, err;
+> +       __wsum csum;
+> +
+> +       if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr)))
+> +               return -EINVAL;
+> +
+> +       skb_copy_bits(skb, skb_mac_offset(skb), &eh, ETH_HLEN);
+> +       pskb_pull(skb, ETH_HLEN);
+> +       skb_reset_network_header(skb);
+> +
+> +       err =3D pskb_trim(skb, IPV6_MIN_MTU - sizeof(*nip6h) - sizeof(*ic=
+mp6h));
+> +       if (err)
+> +               return err;
+> +
+> +       len =3D skb->len + sizeof(*icmp6h);
+> +       err =3D skb_cow(skb, sizeof(*nip6h) + sizeof(*icmp6h) + ETH_HLEN)=
+;
+> +       if (err)
+> +               return err;
+> +
+> +       icmp6h =3D skb_push(skb, sizeof(*icmp6h));
+> +       *icmp6h =3D (struct icmp6hdr) {
+> +               .icmp6_type             =3D ICMPV6_PKT_TOOBIG,
+> +               .icmp6_code             =3D 0,
+> +               .icmp6_cksum            =3D 0,
+> +               .icmp6_mtu              =3D htonl(mtu),
+> +       };
+> +       skb_reset_transport_header(skb);
+> +
+> +       nip6h =3D skb_push(skb, sizeof(*nip6h));
+> +       *nip6h =3D (struct ipv6hdr) {
+> +               .priority               =3D 0,
+> +               .version                =3D 6,
+> +               .flow_lbl               =3D { 0 },
+> +               .payload_len            =3D htons(len),
+> +               .nexthdr                =3D IPPROTO_ICMPV6,
+> +               .hop_limit              =3D ip6h->hop_limit,
+> +               .saddr                  =3D ip6h->daddr,
+> +               .daddr                  =3D ip6h->saddr,
+> +       };
+> +       skb_reset_network_header(skb);
+> +
+> +       csum =3D csum_partial(icmp6h, len, 0);
+> +       icmp6h->icmp6_cksum =3D csum_ipv6_magic(&nip6h->saddr, &nip6h->da=
+ddr, len,
+> +                                             IPPROTO_ICMPV6, csum);
 
-Colour me confused here, but I thought that's exactly what IMA does. 
-The mechanism is the gates and the policy is simply a list of rules
-which are applied when a gate is triggered.  The policy necessarily has
-to be tailored to the information available at the gate (so the bprm
-exec gate knows filesystem things like the inode for instance) but the
-whole thing looks very extensible.
+Linux next build breaks for riscv architecture defconfig build.
 
-> So to speak, IPE acts as the glue for other mechanisms to leverage a
-> customizable, system-wide policy to enforce. While this initial
-> patchset only onboards dm-verity, there’s also potential for MAC
-> labels, fs-verity, authenticated BTRFS, dm-integrity, etc. IPE
-> leverages existing systems in the kernel, while IMA uses its own.
+    git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
+xt.git
+    target_arch: riscv
+    toolchain: gcc-9
+    git_short_log: d15fe4ec0435 (\Add linux-next specific files for 2020080=
+5\)
+    git_describe: next-20200805
 
-Is this about who does the measurement?  I think there's no reason at
-all why IMA can't leverage existing measurements, it's just nothing to
-leverage existed when it was created.
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-> Another difference is the general coverage. IMA has some difficulties
-> in covering mprotect[1], IPE doesn’t (the MAP_ANONYMOUS indicated by
-> Jann in that thread would be denied as the file struct would be null,
-> with IPE’s current set of supported mechanisms. mprotect would
-> continue to function as expected if you change to PROT_EXEC).
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux ARCH=3Driscv
+CROSS_COMPILE=3Driscv64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
+riscv64-linux-gnu-gcc" O=3Dbuild defconfig
+#
+#
+# make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Driscv
+CROSS_COMPILE=3Driscv64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
+riscv64-linux-gnu-gcc" O=3Dbuild
+#
+../net/ipv4/ip_tunnel_core.c: In function =E2=80=98iptunnel_pmtud_build_icm=
+pv6=E2=80=99:
+../net/ipv4/ip_tunnel_core.c:335:24: error: implicit declaration of
+function =E2=80=98csum_ipv6_magic=E2=80=99; did you mean =E2=80=98csum_tcpu=
+dp_magic=E2=80=99?
+[-Werror=3Dimplicit-function-declaration]
+  335 |  icmp6h->icmp6_cksum =3D csum_ipv6_magic(&nip6h->saddr,
+&nip6h->daddr, len,
+      |                        ^~~~~~~~~~~~~~~
+      |                        csum_tcpudp_magic
+cc1: some warnings being treated as errors
+make[3]: *** [../scripts/Makefile.build:283: net/ipv4/ip_tunnel_core.o] Err=
+or 1
 
-I don't really think a debate over who does what and why is productive
-at this stage.  I just note that IMA policy could be updated to deny
-MAP_ANONYMOUS, but no-one's asked for that (probably because of the
-huge application breakage that would ensue).  The policy is a product
-of the use case and the current use case for IMA is working with
-existing filesystem semantics.
+Full build log link,
+https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/671651045
 
-> > Perhaps the big question is: If we used the existing IMA appended
-> > signature for detached signatures (effectively becoming the
-> > "properties" referred to in the cover letter) and hooked IMA into
-> > device mapper using additional policy terms, would that satisfy all
-> > the requirements this new LSM has?
-> 
-> Well, Mimi, what do you think? Should we integrate all the features
-> of IPE into IMA, or do you think they are sufficiently different in
-> architecture that it would be worth it to keep the code base in
-> separate LSMs?
 
-I'll leave Mimi to answer, but really this is exactly the question that
-should have been asked before writing IPE.  However, since we have the
-cart before the horse, let me break the above down into two specific
-questions.
-
-   1. Could we implement IPE in IMA (as in would extensions to IMA cover
-      everything).  I think the answers above indicate this is a "yes".
-   2. Should we extend IMA to implement it?  This is really whether from a
-      usability standpoint two seperate LSMs would make sense to cover the
-      different use cases.  I've got to say the least attractive thing
-      about separation is the fact that you now both have a policy parser.
-       You've tried to differentiate yours by making it more Kconfig
-      based, but policy has a way of becoming user space supplied because
-      the distros hate config options, so I think you're going to end up
-      with a policy parser very like IMAs.
-
-James
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
