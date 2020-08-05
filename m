@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C6422CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F672067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596645632;
-	bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
+	s=default; t=1596645676;
+	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1T79vs5R2tUzGjqnQHFDHaR3yZu9PPLno0UsOgqSHX70JiiHxUtTXRWvTRxNz/DwM
-	 wUARbuGMOa8SCHYmp88iLGKGx/EOs11UB9JSpqufISWPjRNsMo7R7l0/r3apeSFNZI
-	 /M90ArR4hZbULCmbC1hmngQq0gLwEo4N20Ao77BQ=
+	b=UPc0PDYmXw+h21rdfk6C9WkN8i0NrnQg16aCLzm9wIEiBKGFIbPyBdDxSIJzclf9z
+	 SjxWnMJPazjqLEVoooUb6zEAe4e0U/geJAyDxXqr1dqeBnLWiKIyPc/qsgi5hQlAIB
+	 zoWNThEJrD2ZpRVaE6JRBE3zXUkpeIRjBCZqepXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgHEQk2 (ORCPT
+        id S1727891AbgHEQlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50734 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 12:41:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbgHEQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727815AbgHEQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:36:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5D3923359;
-        Wed,  5 Aug 2020 15:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B30792339F;
+        Wed,  5 Aug 2020 15:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642745;
-        bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
+        s=default; t=1596642792;
+        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEB9vWxKVx75SK2HgWg+TsUma12Z7uFKrRgueSdbbCHriEi9rcMEjSv6yTOza7E7r
-         tAB7FiXWtrNi282O8OMg9P8BVxJDNdy+IHGq1MGTJ9coLTjmFF8spfOYCHOsn1fnI5
-         JW5dTJsYQNZm/tG1pX7pK6DOY2x50rhY32Juoy6w=
+        b=2UfwlHvkookgB6Y2e+b1KMuEgg30sdabQZHiYHQEe2JVaLykjCwTG526jAm4ZymUI
+         XOJbBbSbO7pt6rFjVCjOFd0fro59w03EmlGMNAT32/pdI6/+fpH2Icu7oIGtAy/lKL
+         51WZYPLX+Kvl4Gmyf2LqR0moaTseHksyBZRxuAf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 2/6] ARM: percpu.h: fix build error
-Date:   Wed,  5 Aug 2020 17:52:29 +0200
-Message-Id: <20200805153507.086876812@linuxfoundation.org>
+Subject: [PATCH 4.19 2/6] ARM: percpu.h: fix build error
+Date:   Wed,  5 Aug 2020 17:53:01 +0200
+Message-Id: <20200805153505.599534194@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153506.978105994@linuxfoundation.org>
-References: <20200805153506.978105994@linuxfoundation.org>
+In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
+References: <20200805153505.472594546@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -89,7 +89,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/arm/include/asm/percpu.h
 +++ b/arch/arm/include/asm/percpu.h
-@@ -5,6 +5,8 @@
+@@ -16,6 +16,8 @@
  #ifndef _ASM_ARM_PERCPU_H_
  #define _ASM_ARM_PERCPU_H_
  
