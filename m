@@ -2,116 +2,69 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F724C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C296C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D841722CBE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:03:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p0+e+ASi"
+	by mail.kernel.org (Postfix) with ESMTP id 0D75622CB3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596603914;
+	bh=oefSIkeXgVAS41/cN1uO3ZwcTyaVPhroU76h1xcGD1I=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=uSVHgt+5ODaKvLgGtVcCj80YGOJJBEWuoIJZgULGUfhPnbVWz4x+esyXaHFpieXuG
+	 PILb3Jg7NBJtAb/yhNxl9Dg5iTZjuNo/uorVWqGagl/88R/7EVdr+us6R9c25h46Tm
+	 0bJ3dI+Lc6U8CSp2ZjuCkqb/4xKcrAYOs5zYYgGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgHEFDt (ORCPT
+        id S1726515AbgHEFFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 01:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgHEFDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 01:03:49 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9B0C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 22:03:48 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id k18so32776189qtm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 22:03:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJ+vSUIfqUpR/OfEnitTx0/E2WJkwWGAd7jXaGWXUSE=;
-        b=p0+e+ASizlzhr9HvCBd0RSANYOffAstBixdT/gc+PGRA3WXffZI0bH00pFNrrd3D/9
-         w6BGn++Pxi73MkkbA9k/LteCWLjqk/zey4aZljPqYMdn11ZZmlCGZZxnfdcHwADa7v0h
-         KuvTA7QSAFYYk7YqF8XGS5oBE0hXKUf6e86LOqdF10lzDBSynzGsib+HoGKFawjs6SVV
-         9xs+kulL5aH4Hzo9HNbTvEon7mKwi7R8rfQ0R0UiPIhr9yv49x7blWgxYcRcrduhCv4b
-         gU6IGg4iT0SPgCnXiPoovfgcMbeSAaPwiMVjPDfKRjAqihonMBlgUt6AnWiCxqBjalDQ
-         o1Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJ+vSUIfqUpR/OfEnitTx0/E2WJkwWGAd7jXaGWXUSE=;
-        b=NLSxR/1T4BsCwqLtaKucG6Gp73oi0sGh60qy7dF3Vpi4NL18J77l3123387yPiqmW1
-         NmVjiWI1sQ2VN/MbHwgFlcd1oJ15+hZAhj4WSBNc5SLc9T2AdnVKQ8eQKGsF5PK//da0
-         9eC7OJz3MI31vHtUemF0RbhcesWzmwi1Qz77//BAfa90oZvbjCZ48B1pofJxViUCntMW
-         CQ76EdWsIcMUNQeCYd8+pTRq7Jk+88Pojin5uTJKgsKUE3EKti1bxaVwdJQjiEtonYFh
-         tTeHUfPTfCkwnHxuzcs4TokaR3ohGi0Fuev42Xi40vWsRdRxVRmelYySY5npqjn5VltA
-         iX9w==
-X-Gm-Message-State: AOAM530Qt49s28UX8/S6XtLYL+bKnfGC+zQD/Bt6Uk1GXT2N26oLWM/6
-        9LyfogR6hYhyJHEyrqGWnAC19SgkOSqf1Jp8MxE=
-X-Google-Smtp-Source: ABdhPJxP151f0b2pd7JM99jfAomT13Boin3/gUNf7Zg7iIwdHSVUQNJ4Qya2mEifL2X6+m0qcvOVqpVaIqcCAWtPj9k=
-X-Received: by 2002:ac8:6d0f:: with SMTP id o15mr1533677qtt.121.1596603828149;
- Tue, 04 Aug 2020 22:03:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596594233-13489-1-git-send-email-shengjiu.wang@nxp.com>
- <1596594233-13489-3-git-send-email-shengjiu.wang@nxp.com> <20200805041111.GB10174@Asurada-Nvidia>
-In-Reply-To: <20200805041111.GB10174@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Wed, 5 Aug 2020 13:03:37 +0800
-Message-ID: <CAA+D8ANv-qURC_wu3TzWiiiCAXC88Gc+WGssdjmuWoLPTRm3pA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ASoC: fsl_sai: Refine enable and disable sequence
- for synchronous mode
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 5 Aug 2020 01:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgHEFFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 01:05:09 -0400
+Subject: Re: [GIT pull] x86/entry for v5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596603909;
+        bh=oefSIkeXgVAS41/cN1uO3ZwcTyaVPhroU76h1xcGD1I=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=hjozIQ9ZS4KdVHhGJ84mCNHzkfDPTxKV1iNRM2PC+A2iOMgTZKBEEUn4+K+g/4voK
+         2YsJF+fFQoDEzGW1boJGNvbEtK87LyEH1AiFQ3p7vmrb3hlnu1V1GI/v3cQ+QJm82I
+         NQLZ3Ra32yWnu74n40rM4zimL4/sdQVCT2z8TRFc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <159652931703.11821.10293235307345307460.tglx@nanos.tec.linutronix.de>
+References: <159652931338.11821.6870342948950391828.tglx@nanos.tec.linutronix.de>
+ <159652931703.11821.10293235307345307460.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <159652931703.11821.10293235307345307460.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ x86-entry-2020-08-04
+X-PR-Tracked-Commit-Id: adb334d17858d8b679a41f7f2cd230e5c6accc0a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 125cfa0d4d143416ae217c26a72003baae93233d
+Message-Id: <159660390960.15119.6898239226508160918.pr-tracker-bot@kernel.org>
+Date:   Wed, 05 Aug 2020 05:05:09 +0000
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 12:13 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Wed, Aug 05, 2020 at 10:23:53AM +0800, Shengjiu Wang wrote:
-> > Tx synchronous with Rx:
-> > The TCSR.TE is no need to enabled when only Rx is going to be enabled.
-> > Check if need to disable RSCR.RE before disabling TCSR.TE.
-> >
-> > Rx synchronous with Tx:
-> > The RCSR.RE is no need to enabled when only Tx is going to be enabled.
-> > Check if need to disable TSCR.RE before disabling RCSR.TE.
->
-> Please add to the commit log more context such as what we have
-> discussed: what's the problem of the current driver, and why we
-> _have_to_ apply this change though it's sightly against what RM
-> recommends.
->
-> (If thing is straightforward, it's okay to make the text short.
->  Yet I believe that this change deserves more than these lines.)
->
-> One info that you should mention -- also the main reason why I'm
-> convinced to add this change: trigger() is still in the shape of
-> the early version where we only supported one operation mode --
-> Tx synchronous with Rx. So we need an update for other modes.
->
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
->
-> The git-diff part looks good, please add this in next ver.:
->
-> Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
->
-> Btw, the new fsl_sai_dir_is_synced() can be probably applied to
-> other places with a followup patch.
-Do you mean move it to the beginning of this file?
+The pull request you sent on Tue, 04 Aug 2020 08:21:57 -0000:
 
-best regards
-wang shengjiu
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-entry-2020-08-04
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/125cfa0d4d143416ae217c26a72003baae93233d
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
