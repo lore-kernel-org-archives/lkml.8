@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A272C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C77C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E7922CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEF622D08
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xRxAax2h"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="x0mfk/fN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgHEHF1 (ORCPT
+        id S1728565AbgHEHFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:05:27 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54406 "EHLO
+        Wed, 5 Aug 2020 03:05:44 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6266 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728328AbgHEHEe (ORCPT
+        by vger.kernel.org with ESMTP id S1728137AbgHEHEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:04:34 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07573OoU002361;
-        Wed, 5 Aug 2020 09:04:20 +0200
+        Wed, 5 Aug 2020 03:04:31 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07572Sl6030166;
+        Wed, 5 Aug 2020 09:04:18 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=4O6xDuO64Gg6jGP8uNW6hD+yU28rSUAsUgtFwSr6Vlo=;
- b=xRxAax2hiS5FQkK1SaOFGmlzFUWbvhl0fWuQlB5/kzZP0Wm4BWP/lDDT5A6cK44Tkwsg
- jXt01UY2GVIGGyfSYpHzTzVfko8pHhcQ0ySf37GBK2M3KNGscaHgVacekAbr3vrJH13b
- rx/RX06xZku8q+/YD0HMNhqs4+oPiLZVq928QQLYbP5yRolC6G7ub/gQ5OS3NAteT3SK
- sO29YOfJqMWEnXarADLpEqbfftlR9y4oubAHyDlBEUp3X7iYgk+SazcvqB95zjeK/086
- vwhzFnkJQWaJyedpGai5Qju4XcO31EQyuuIZWg6zl8nQF3ZHKsh/4eMqWHfCqt9Lk1WX Eg== 
+ bh=Z+Hwk1wFql5BmY3WxoJe/xt45cRduaVoj1mAtgDiK3s=;
+ b=x0mfk/fNNqS4WH3ze9ZdPiUGiOs2S0YSHxcklsUNk0FBTNAcQwtN2oi0lZlJNA+H35mR
+ Vb27Xdg0jWV/wflfpQl6/5MTyFgwC0hr2nK2sz0nq9blp+Wc+vElFXc35Vkx1L0OCngj
+ NIVcUtRbEmwJ6ZpiueWXrKNeH+n7fBnonWRYaWL9DcBgxUbeCInMPdWOw600+jRN93GE
+ knIY7rqQ04ztuHPfwhoqYgoqjnqr098nCcc26U/C7TIxyJH+4TVujvhkSKg0eyqRY79e
+ FmxImipedc9T5Ayrd9Jw9FrvvMns51Am8WIYlZqaxMWYI9U/KmXNH5v05sjGloiwALi4 Zg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6knf7e5-1
+        by mx07-00178001.pphosted.com with ESMTP id 32n6hyq7tm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 09:04:20 +0200
+        Wed, 05 Aug 2020 09:04:17 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B796110002A;
-        Wed,  5 Aug 2020 09:04:19 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5CC9110002A;
+        Wed,  5 Aug 2020 09:04:17 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AC9FD2A4D8E;
-        Wed,  5 Aug 2020 09:04:19 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5134F2A4D8E;
+        Wed,  5 Aug 2020 09:04:17 +0200 (CEST)
 Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:19
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:16
  +0200
 From:   Alain Volmat <alain.volmat@st.com>
 To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
@@ -56,16 +56,16 @@ CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
         <alain.volmat@st.com>
-Subject: [PATCH 15/18] spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
-Date:   Wed, 5 Aug 2020 09:02:10 +0200
-Message-ID: <1596610933-32599-16-git-send-email-alain.volmat@st.com>
+Subject: [PATCH 09/18] spi: stm32h7: fix race condition at end of transfer
+Date:   Wed, 5 Aug 2020 09:02:04 +0200
+Message-ID: <1596610933-32599-10-git-send-email-alain.volmat@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
 References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
@@ -74,31 +74,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-Fix spi->clk_rate when it is odd to the nearest lowest even value because
-minimum SPI divider is 2.
+The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
+is waiting for us to call spi_finalize_current_transfer() and will
+eventually schedule a new transfer, if available.
+We should guarantee that the spi controller is really available
+before calling spi_finalize_current_transfer().
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Move the call to spi_finalize_current_transfer() _after_ the call
+to stm32_spi_disable().
+
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
 Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- drivers/spi/spi-stm32.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-stm32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 0aec32538093..2665d8d7f318 100644
+index 6731e3ff0e50..a931c821c280 100644
 --- a/drivers/spi/spi-stm32.c
 +++ b/drivers/spi/spi-stm32.c
-@@ -436,7 +436,8 @@ static int stm32_spi_prepare_mbr(struct stm32_spi *spi, u32 speed_hz,
- {
- 	u32 div, mbrdiv;
+@@ -954,8 +954,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 	spin_unlock_irqrestore(&spi->lock, flags);
  
--	div = DIV_ROUND_UP(spi->clk_rate, speed_hz);
-+	/* Ensure spi->clk_rate is even */
-+	div = DIV_ROUND_UP(spi->clk_rate & ~0x1, speed_hz);
+ 	if (end) {
+-		spi_finalize_current_transfer(master);
+ 		stm32h7_spi_disable(spi);
++		spi_finalize_current_transfer(master);
+ 	}
  
- 	/*
- 	 * SPI framework set xfer->speed_hz to master->max_speed_hz if
+ 	return IRQ_HANDLED;
 -- 
 2.7.4
 
