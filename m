@@ -2,155 +2,102 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F52EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FDA22D04
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737E922B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:25:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="UYk0LJ7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgHEIWl (ORCPT
+        id S1725983AbgHEIY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:22:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50637 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgHEIWb (ORCPT
+        Wed, 5 Aug 2020 04:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgHEIYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:22:31 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3Egt-0007IJ-Di; Wed, 05 Aug 2020 08:22:27 +0000
-Subject: Re: [PATCH] selftests/net: skip msg_zerocopy test if we have less
- than 4 CPUs
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200804123012.378750-1-colin.king@canonical.com>
- <b99004ea-cd9d-bec3-5f9f-82dcb00a6284@gmail.com>
- <CA+FuTSd9K+s1rXUFpb_RWEC-uAgwU1Vz44zaUPaZK0cfsX4kwA@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fc66cf3c-b4be-f098-3a2b-aef36b90835d@canonical.com>
-Date:   Wed, 5 Aug 2020 09:22:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 04:24:44 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03B4C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 01:24:36 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o23so18000663ejr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 01:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YRkoVvZyMZKrXPZJsbTSg0eFnj2VcDca+RKzJ60eyTc=;
+        b=UYk0LJ7zSStHb1U495GvSSdmH6LUhiPYmcg6PAq1rMqY11Eyd7mimZZrA3M0EtvJUe
+         vvHGhC/9MvozJfhIiIgBsFE7xq5Hm++FVNDlJ2kUw02Jto10O7BN/4nzlscTmBPJj7xg
+         U2829Bced+hHMLcR8pAqx46/TL8W7/1KfFh6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YRkoVvZyMZKrXPZJsbTSg0eFnj2VcDca+RKzJ60eyTc=;
+        b=B3/jGfx2duMhj/OToVI1EQ/UFrX9vgI4+nDO1zsLCxLUJK1fGWnBtDRJE/WycQHex9
+         Ow9RtoPLoT7Z5i9VsYBCTeIp8XXrkhwi4mhdy9K0jh7LBF8iFhbyI7teFGBgimxOGYfE
+         c4mFGah+mhVSlNJq8LEykItfL2lIfzzuLoIYE/lNADJDHW/h+69BRF5fDR9lDFduKYxU
+         +lkYm8G9PY5pGseME9b89jEsx3VpPDIk9YUmQx0F61rquw0wQ036fXcbVCIikrKv0GVe
+         ji4O1hXBOcNIVf+s3ika5b23rswdenFJ31tXIUjBvBwbZ1z8r7+0nrdCPH8I5DoMwY1b
+         2IHA==
+X-Gm-Message-State: AOAM532Dt9I00IxRt/mfuuPB+PIoHnpTlVOubyHo88uw5TCY4qnyLbyt
+        CWvFEV1XM2bE437+gmY7a7bDWp7hzLmFFioE80wKiQ==
+X-Google-Smtp-Source: ABdhPJxrLumgFgqYyoKDBG2k5IrM0kpKGeRUM6PbmX2nVN5dA62HAF0gWDOE78RgoqsR4O8I2bJbm1frFluN5es5kOU=
+X-Received: by 2002:a17:906:22c1:: with SMTP id q1mr2028127eja.443.1596615874689;
+ Wed, 05 Aug 2020 01:24:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CA+FuTSd9K+s1rXUFpb_RWEC-uAgwU1Vz44zaUPaZK0cfsX4kwA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net> <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+In-Reply-To: <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 5 Aug 2020 10:24:23 +0200
+Message-ID: <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+Subject: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+To:     Ian Kent <raven@themaw.net>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2020 09:06, Willem de Bruijn wrote:
-> On Wed, Aug 5, 2020 at 2:54 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->>
->>
->>
->> On 8/4/20 5:30 AM, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> The current test will exit with a failure if it cannot set affinity on
->>> specific CPUs which is problematic when running this on single CPU
->>> systems. Add a check for the number of CPUs and skip the test if
->>> the CPU requirement is not met.
->>>
->>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>> ---
->>>  tools/testing/selftests/net/msg_zerocopy.sh | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
->>> index 825ffec85cea..97bc527e1297 100755
->>> --- a/tools/testing/selftests/net/msg_zerocopy.sh
->>> +++ b/tools/testing/selftests/net/msg_zerocopy.sh
->>> @@ -21,6 +21,11 @@ readonly DADDR6='fd::2'
->>>
->>>  readonly path_sysctl_mem="net.core.optmem_max"
->>>
->>> +if [[ $(nproc) -lt 4 ]]; then
->>> +     echo "SKIP: test requires at least 4 CPUs"
->>> +     exit 4
->>> +fi
->>> +
->>>  # No arguments: automated test
->>>  if [[ "$#" -eq "0" ]]; then
->>>       $0 4 tcp -t 1
->>>
->>
->> Test explicitly uses CPU 2 and 3, right ?
->>
->> nproc could be 500, yet cpu 2 or 3 could be offline
->>
->> # cat /sys/devices/system/cpu/cpu3/online
->> 0
->> # echo $(nproc)
->> 71
-> 
-> The cpu affinity is only set to bring some stability across runs.
-> 
-> The test does not actually verify that a run with zerocopy is some
-> factor faster than without, as that factor is hard to choose across
-> all platforms. As a result the automated run mainly gives code coverage.
-> 
-> It's preferable to always run. And on sched_setaffinity failure log a
-> message about possible jitter and continue. I can send that patch, if
-> the approach sounds good.
-> 
-That's sounds preferable to my bad fix for sure :-)
+On Tue, Aug 4, 2020 at 4:36 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-Colin
+> I think we already lost that with the xattr API, that should have been
+> done in a way that fits this philosophy.  But given that we  have "/"
+> as the only special purpose char in filenames, and even repetitions
+> are allowed, it's hard to think of a good way to do that.  Pity.
+
+One way this could be solved is to allow opting into an alternative
+path resolution mode.
+
+E.g.
+  openat(AT_FDCWD, "foo/bar//mnt/info", O_RDONLY | O_ALT);
+
+Yes, the implementation might be somewhat tricky, but that's another
+question.  Also I'm pretty sure that we should be reducing the
+POSIX-ness of anything below "//" to the bare minimum.  No seeking,
+etc....
+
+I think this would open up some nice possibilities beyond the fsinfo thing.
+
+Thanks,
+Miklos
