@@ -2,109 +2,129 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD15C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B85F522D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3122322D2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbdFwCww"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/7XQAnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgHEQ6r (ORCPT
+        id S1728296AbgHEQ7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728352AbgHEQ44 (ORCPT
+        Wed, 5 Aug 2020 12:59:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35232 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728363AbgHEQ56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:56:56 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB546C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:52:46 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id w17so25558138ply.11
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zXZGtsOURmZyHZLbU5fvxhNJ7/uuuH+Jf1Odf6vVQ/Y=;
-        b=LbdFwCwwQ9+ZYyYA91SbJw79q5NmfsQ584hs+WRyh/6ENT1awKjxbLxxdjwZpDO0gW
-         Tr8xIPC0qYpNF56Q/Vts64nXhmUpDrmJLjoqxk/snzwrty3UkfAgqdzR5hinsLeFi6zI
-         R0hscqToNuNUSjBqXpBmkZOBp4sTvJCK+24di3gbiG9OWnxJYYP1bNtXGr9Q30ftrg8q
-         vPn815m/91evw5LuxWkVMSPSZo6J39FiRaqdzSkpKUsghh81J8x/r1EPU6Nb+/hb8iwv
-         nY6iURyZ+psWPW05NKmkzHzYlTDuN6KZ6xlntRf6Sn4Wii2ZfodpTQ2Z15XVy28LdWcO
-         rpow==
+        Wed, 5 Aug 2020 12:57:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596646676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zyd3PzoPVBU8umiKYNKDpmG6iIok/EZRtyPBBz7RY7k=;
+        b=C/7XQAnb6Xty+oPzdAfcYxE1R3XR8clOLe85MFIlribPQqMpck4qBTlsA4gAE9ZCoZ5gLD
+        HANA7B9PdNEkmOK8trkmD/cw1JyUGK7qnw4sxaIXAxniPjgKJRRv9xKZ2z10VoP07/XID9
+        v7XW3Ae24U9O2DCBHKe9GmWnMb0CHqk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-412-GfHkMBVBPhilVqL1dTtTXw-1; Wed, 05 Aug 2020 09:26:54 -0400
+X-MC-Unique: GfHkMBVBPhilVqL1dTtTXw-1
+Received: by mail-wr1-f72.google.com with SMTP id e14so10102035wrr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:26:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zXZGtsOURmZyHZLbU5fvxhNJ7/uuuH+Jf1Odf6vVQ/Y=;
-        b=kGnl9/jCsbFAhpZuSSQWnJMY0Jvr8pgV4L0rjQNOUHZUgoV1rF85SNztAusp/1cOli
-         Co/0XEy0NHqFZNgIwojNxXzd3sE0Bx4OBsJE3gxhZwZMoyW8K3chWP265A6yEpml8Vwf
-         ZWRdMOfor+s1ywmyh8lFwdKE3G6RL1dSZwWdeWPpGojHLJQsjRPm7a/02uppqKyupt2X
-         3NbttArBe3E2Fwiy+XZ8TiNqCL5d5lbTupar/fi+b7SXxM8ApgonVtmFX9L/kQGcmF+6
-         vNxlXA0NamUfROrI+/b7FOAWoMYwWXM7lRGuFEY0Nc4qx1/y+R4CS9rR31PgZlptv+WN
-         4xsQ==
-X-Gm-Message-State: AOAM533z2BGAb9JPRBR9Gv9QUPNjfyMD3ateUzMkj2zZ+67/2wXt3bmD
-        c/vgPwnKYsu+AuyzB8We8PgfjJ01aPG8V7X00sQ=
-X-Google-Smtp-Source: ABdhPJzq2IoaaG/XACuojhMxN71N1xV8rgh0jzB4NCZ3up/DasYj5P+gibCzFgPgwUVAYsmZlRJnUeV8JfW04Jc8fHk=
-X-Received: by 2002:a17:90a:148:: with SMTP id z8mr4414464pje.197.1596646366165;
- Wed, 05 Aug 2020 09:52:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zyd3PzoPVBU8umiKYNKDpmG6iIok/EZRtyPBBz7RY7k=;
+        b=ZtM7+pXY79vCLZSDX0L4XLTbgqKrleE13fhvwh15YBdFhDc9seOqcE6UBdw6UbI1JQ
+         zGMyVejyY4MYySQPs90cZI3gO6gtSfril78mlV3hvWl7mzE7+yCZjsZaLucBU00ATE27
+         lOq8t9iwXHeb9wZJ8ckeAgs56cUrz0QAk0ZpSStrkSR2fcPBSQL0QoXhlQ5zvJVOvJWk
+         MqOKmMDDWODkUP8MkZdR6TN44xqbow6qVSvgx4HmRd7Tcu9wzQhwXVerdECCM58C91GN
+         NODFi4gYuZgC8wz7oMHpiUr+IyW/2bYhkYOPhSV2VLYCZo3vW/L9dLIt4IkSDOUxfLZ2
+         /tYA==
+X-Gm-Message-State: AOAM5326jPxTjjgUuCdwgcYGyBHwM8xPX392LupcmZ7zVYASgtQ7hsha
+        0IcjQlqddsQIda9w/oi4nDfpNvPRVzs2pssAZ8KpqtxxDuou5SqdUPq8sx3SZxAcc9yefafSJF3
+        AxTeJfP/WFDPpClfMJmHurQOO
+X-Received: by 2002:a1c:1b93:: with SMTP id b141mr3365746wmb.150.1596634011543;
+        Wed, 05 Aug 2020 06:26:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwwZAH5oygZ0ZUZzuE41OHF5cCSmEBQ89jkVd4RBBHCf1yH6T/rbTULK4FaN2pLJbGTzixbnQ==
+X-Received: by 2002:a1c:1b93:: with SMTP id b141mr3365734wmb.150.1596634011358;
+        Wed, 05 Aug 2020 06:26:51 -0700 (PDT)
+Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
+        by smtp.gmail.com with ESMTPSA id g18sm2877887wru.27.2020.08.05.06.26.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 06:26:50 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:26:48 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 14/24] virtio_net: correct tags for config space fields
+Message-ID: <20200805092621-mutt-send-email-mst@kernel.org>
+References: <20200803205814.540410-1-mst@redhat.com>
+ <20200803205814.540410-15-mst@redhat.com>
+ <20200804164444.5174452d.cohuck@redhat.com>
 MIME-Version: 1.0
-References: <cover.1594290158.git.vaibhav.sr@gmail.com> <896b8e24d990f2bca5aafaebd26e37095042951e.1594290158.git.vaibhav.sr@gmail.com>
- <7cbc0daa-993f-ffc9-78f4-b1e62fd54304@linaro.org>
-In-Reply-To: <7cbc0daa-993f-ffc9-78f4-b1e62fd54304@linaro.org>
-From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
-Date:   Wed, 5 Aug 2020 22:22:09 +0530
-Message-ID: <CAAs364-PFw2OGGhwBH8RB7jBPD4Xre4puu9G-7P+z6Ur_Ni-yA@mail.gmail.com>
-Subject: Re: [greybus-dev] [PATCH v4 1/7] staging: greybus: audio: Update
- snd_jack FW usage as per new APIs
-To:     Alex Elder <elder@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        devel@driverdev.osuosl.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804164444.5174452d.cohuck@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 6:35 PM Alex Elder <elder@linaro.org> wrote:
->
-> On 7/9/20 5:27 AM, Vaibhav Agarwal wrote:
-> > snd_soc_jack APIs are modified in recent kernel versions. This patch
-> > updates the codec driver to resolve the compilation errors related to
-> > jack framework.
->
-> Greg has already accepted this series so I won't review this now.  But
-> I still wanted to provide this comment.
->
-> It would be helpful in the future to provide a little more information
-> about the nature of the changes to these APIs.  As a reviewer I had to
-> go track them down to get a little more context about what you are doing
-> here.  So you could say something like:
->
->   Audio jacks are now registered at the card level rather than being
->   associated with a CODEC.  The new card-based API allows a jack's pins
->   to be supplied when the jack is first registered.  See: 970939964c26
->   ("ASoC: Allow to register jacks at the card level")
->
-> In other words, don't just say "the APIs changed," say "here is how
-> the APIs have changed."  This kind of introduction can be very helpful
-> and time saving for your reviewers.
->
+On Tue, Aug 04, 2020 at 04:44:44PM +0200, Cornelia Huck wrote:
+> On Mon, 3 Aug 2020 16:59:37 -0400
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> 
+> > Tag config space fields as having virtio endian-ness.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> >  include/uapi/linux/virtio_net.h | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
+> > index 19d23e5baa4e..27d996f29dd1 100644
+> > --- a/include/uapi/linux/virtio_net.h
+> > +++ b/include/uapi/linux/virtio_net.h
+> > @@ -87,19 +87,19 @@ struct virtio_net_config {
+> >  	/* The config defining mac address (if VIRTIO_NET_F_MAC) */
+> >  	__u8 mac[ETH_ALEN];
+> >  	/* See VIRTIO_NET_F_STATUS and VIRTIO_NET_S_* above */
+> > -	__u16 status;
+> > +	__virtio16 status;
+> >  	/* Maximum number of each of transmit and receive queues;
+> >  	 * see VIRTIO_NET_F_MQ and VIRTIO_NET_CTRL_MQ.
+> >  	 * Legal values are between 1 and 0x8000
+> >  	 */
+> > -	__u16 max_virtqueue_pairs;
+> > +	__virtio16 max_virtqueue_pairs;
+> >  	/* Default maximum transmit unit advice */
+> > -	__u16 mtu;
+> > +	__virtio16 mtu;
+> >  	/*
+> >  	 * speed, in units of 1Mb. All values 0 to INT_MAX are legal.
+> >  	 * Any other value stands for unknown.
+> >  	 */
+> > -	__u32 speed;
+> > +	__virtio32 speed;
+> 
+> Hm... VIRTIO_NET_F_SPEED_DUPLEX can only be negotiated if VERSION_1 has
+> also been negotiated; I think this should be __le32?
 
-Thanks for the feedback Alex. I'll take care of the commit message while
-sharing similar patches.
+OK APIs for this are in a separate patch.
+I'll add conversion as a patch on top.
 
---
-vaibhav
+
+> >  	/*
+> >  	 * 0x00 - half duplex
+> >  	 * 0x01 - full duplex
+
