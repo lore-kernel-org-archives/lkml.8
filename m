@@ -2,115 +2,116 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6359C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8F652250E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596656754;
-	bh=N/7riuh0kCfKhos4maGk+jEUgro5VvU/il+Kcj9x3Nc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SmO/iwAnZ643QfPWNkwKwvH/m2yO28UfZYngmtELL+LCG9Xynm9BrnrCP10RMvQjs
-	 WKg6/AEU/3+60lIK2dCbggOXQVQnnp2sFgUm34EVyFVVJU+i5ibnYNRgFAWGaxwIvt
-	 JoZj5tU/bN0dLBuTNUpZULfF+tZ2FbO2aubnlrVo=
+	by mail.kernel.org (Postfix) with ESMTP id 03DA221D95
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0ISPGpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgHETpw (ORCPT
+        id S1729618AbgHETqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46548 "EHLO
+        Wed, 5 Aug 2020 15:46:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbgHETps (ORCPT
+        with ESMTP id S1729019AbgHETpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:45:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486D8C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:45:48 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id x9so49101663ljc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:45:48 -0700 (PDT)
+        Wed, 5 Aug 2020 15:45:06 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DDEC06179E;
+        Wed,  5 Aug 2020 12:38:28 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bh1so12893554plb.12;
+        Wed, 05 Aug 2020 12:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YMknd1+dlXX/Q3YM8+W65fV77VdzsmUF/OU4h6Xq9xE=;
-        b=ZAog/SvHzVeXNMZb2Fj5fRotY3ezW+cicXN46stQ1/EcG2JvDXQPNisMdRpFYwto3Q
-         Dv3M/sBUceZ5Dyhdv1XWGkFmj4MJymVOF7batv5qAvZjxsoQDutBTN4BJSi6RVDxcp3D
-         +gb2PdLmzPW3FgOKTKFIsirWz5+LHUS5bP2gk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5TXcgEgAs4Nu34HXfjY3jbM5apQONV+NnIX864cNQWg=;
+        b=H0ISPGpLRV3y9tQ4W937aoZMWeGxz3wG5Byk04+BMcfetPTwhgVMR7//+YNlxmBPGR
+         Chyn7D6Hd51R/+LTW5MElsg4IUtIBfT7dNVom/CTGrj9xocK0ZmtEpCj4wANYO/Rjqwr
+         k1KMM/MM5xBsFiLKcPsctFreRvhT+efxV80jXwk3o/mcogbdnN5yqe9RQHghMcGsMIO5
+         YZ88bzfzzIeKWCTaGZ/NJJmttlOGkIzHhF8jVVUgNv6U0icjx+Rs61YQ1xGsKX87m+0c
+         hL7YiEJgmsudK2dy/zLWc6lcH+3eKJkIzuTC5tjKvhx/qKkRyflkKumSws07RuWwtRXZ
+         mOcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YMknd1+dlXX/Q3YM8+W65fV77VdzsmUF/OU4h6Xq9xE=;
-        b=USmsfdciSdr11akVF9BYLNoHknZATLM3jBJkVvSN+qkVgf4aerYrMcK0R16dcE3uGO
-         RJKxdPxTT4nfE1tpY8BflLNcT5K0fryo463HlIJmWy7YBIlT60IzqV4XPjOJ3C1Z2x8V
-         kU3qakAp49KSB/UFiOs+w1okro7/moJtC8xuDjJ5dn0CTu3xYF1puoTUuVFK8hRTYHhr
-         stKp6CuMiSNhYKSm4G4vJAqXp6GvDtFi2P6nBEY7iYk6+ZCvhNPS7W3N9ZbwOdlcjRQd
-         tMfzN56koAzxO6ASEmCYBmnGYji0mtfPTHpykMKb6h6iYEpkfFMebz7qdyDOxHaY6CGQ
-         AUqw==
-X-Gm-Message-State: AOAM531K0wdsgKktZ8+M370QVUDyKu0iZiO2TYkCYjkwjOzL92WPdysf
-        fCIY8NlqKUkIOQyBD0OA4dOPJgYG0Ho=
-X-Google-Smtp-Source: ABdhPJxbttMueh0g+FJQJHAU0nMBUlO+pk/KI159Lt0689bPr4sf3zDhDeQzL2MVZHxWRslyCJhDhw==
-X-Received: by 2002:a05:651c:1a7:: with SMTP id c7mr2279863ljn.345.1596656745353;
-        Wed, 05 Aug 2020 12:45:45 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id s4sm1553029lfc.56.2020.08.05.12.45.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 12:45:43 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id j22so19005357lfm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:45:42 -0700 (PDT)
-X-Received: by 2002:ac2:522b:: with SMTP id i11mr2306959lfl.30.1596656741926;
- Wed, 05 Aug 2020 12:45:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5TXcgEgAs4Nu34HXfjY3jbM5apQONV+NnIX864cNQWg=;
+        b=PKxwphHtgF/QSPPykjIsvaE9+Fv4qe9w+FjmC+fvElivSO4w1+t0R3XrwkTeVZoDuS
+         UipHIKMYYstZK9QPGxDfGwKjLgVs/Cx2KhRg2Bjn5OCDL59Qpe6vbCSr/Qiyp3E6LWW/
+         1t/iDDaqWrfnB1K5k2kEa2M6RyTw7JUUBBBYmZF8HvziLI8Ycjud5oC1Ju5hYZpnVFs5
+         La42vhESB4ye7YJqlZDE2xKCtw/FYetLGQJkPC0mQMJlTbNUyCanBjZc8q1kKMm+wvOD
+         SsGYnFdF8xqmoYjd881TWM6XC+OzqddRKpuZAwEq3VUm4HZhCXnBBZQjcilExAUVUNgF
+         i1xQ==
+X-Gm-Message-State: AOAM530yvyo0uDtnZqrO4Fr3uwaiFmPogGPaYiveY+ioRHo/kidRa9Tk
+        f0FmV4hMpMUzkpcFEMMEWh8lPRNB3WT9mA==
+X-Google-Smtp-Source: ABdhPJxpsNBrfC/tIWMSvSdeG5I8GbtN42x6d7YwWee5C39MithTk79rmmNir6Zz8cbOfIUAOW+IOw==
+X-Received: by 2002:a17:90a:3268:: with SMTP id k95mr4854944pjb.153.1596656306933;
+        Wed, 05 Aug 2020 12:38:26 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id f20sm4901764pfk.36.2020.08.05.12.38.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 12:38:26 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v2 0/2] i2c: eg20t: Power management upgrade and clean-ups
+Date:   Thu,  6 Aug 2020 01:06:14 +0530
+Message-Id: <20200805193616.384313-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805165611.GA516242@bjorn-Precision-5520>
+References: <20200805165611.GA516242@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200805153506.978105994@linuxfoundation.org> <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
- <71a132bf-5ddb-a97a-9b65-6767fd806ee9@roeck-us.net> <CAHk-=wi0WGMs6+Jz6rXbQO4mfzf8LGVc3TwmCdz0OwRtj7GgMQ@mail.gmail.com>
- <7e1c9df5-d334-461d-56fc-53625c6ca163@roeck-us.net>
-In-Reply-To: <7e1c9df5-d334-461d-56fc-53625c6ca163@roeck-us.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Aug 2020 12:45:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj1m3VFa6Sz96gxNjKCOH21jDuuODm46-VAukD5YGc1yA@mail.gmail.com>
-Message-ID: <CAHk-=wj1m3VFa6Sz96gxNjKCOH21jDuuODm46-VAukD5YGc1yA@mail.gmail.com>
-Subject: Re: [PATCH 5.7 0/6] 5.7.14-rc1 review
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 12:24 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 8/5/20 11:37 AM, Linus Torvalds wrote:
-> >
-> > Because the trivial fix would be something like the appended, which is
-> > the right thing to do anyway.
->
-> Correct.
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-I'll take that as an Ack, and also remove the crazy reverse include
-from archrandom.h that most definitely shouldn't be there.
+The purpose of this patch series is to upgrade power management in i2c-eg20t
+driver. This has been done by upgrading .suspend() and .resume() callbacks.
 
-It's now commit 585524081ecd ("random: random.h should include
-archrandom.h, not the other way around") in my tree, because a grep
-for "archrandom.h" shows that now the only place it exists is
-<linux/random.h> and a few files that cannot possibly affect arm64
-(because they are on x86 and powerpc, neither of which has that insane
-reverse include).
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-               Linus
+Also, before upgrading PM, some cleanup is required. Both .suspend() and
+.resume() invoke pci_enable_wake() just to disable wakeup. This is not
+required as if .suspend() does not want to enable-wake the device, PCI core
+takes care of the required operations.
+
+v2 : An additional patch had to be added in v1 to drop PCI wakeup calls.
+
+All patches are compile-tested only.
+
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (2):
+  i2c: eg20t: Drop PCI wakeup calls from .suspend/.resume
+  i2c: eg20t: use generic power management
+
+ drivers/i2c/busses/i2c-eg20t.c | 39 ++++++----------------------------
+ 1 file changed, 7 insertions(+), 32 deletions(-)
+
+-- 
+2.27.0
+
