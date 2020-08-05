@@ -2,99 +2,105 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D44DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E66192076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F57D2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596621356;
+	bh=YHxmFzC+i8NL+lLlcDEA7V7cryScK1yFI5iWFnAXZ7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nhEhX4FidvfQxa3b0gw2elP1RWncro0vz4CnpoNFZtSsgVydbM5oN6/dzwh3x4Yx8
+	 4y94BCuhxKe4IckMUf15gqWQVkunOdLh+NOD3M8Pth+xXiNur34tF4BNftxAZ5wrb5
+	 JqqGvMI1X8XtSOQdTg6sXv5uh4kPymn6eXAt5L70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgHEJzp (ORCPT
+        id S1728387AbgHEJzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:55:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:56942 "EHLO foss.arm.com"
+        Wed, 5 Aug 2020 05:55:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgHEJxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:53:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3109AD6E;
-        Wed,  5 Aug 2020 02:53:46 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF4B23F93E;
-        Wed,  5 Aug 2020 02:53:43 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 10:53:41 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dongdong Yang <contribute.kernel@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "yangdongdong@xiaomi.com" <yangdongdong@xiaomi.com>,
-        "yanziily@xiaomi.com" <yanziily@xiaomi.com>,
-        "rocking@linux.alibaba.com" <rocking@linux.alibaba.com>
-Subject: Re: [PATCH v4] sched: Provide USF for the portable equipment.
-Message-ID: <20200805095341.cmoxmy47ts3ntxee@e107158-lin.cambridge.arm.com>
-References: <cover.1596526941.git.yangdongdong@xiaomi.com>
- <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
- <20200804104331.6vphb2iclwz3buig@e107158-lin.cambridge.arm.com>
- <CADhdXfpxWqYEL_cWVtEAxg-3OWgVZuZ5sLzNm6G+k484kG3HRw@mail.gmail.com>
+        id S1727972AbgHEJy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:54:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D37220792;
+        Wed,  5 Aug 2020 09:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596621261;
+        bh=YHxmFzC+i8NL+lLlcDEA7V7cryScK1yFI5iWFnAXZ7g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yLj59uDj6wytOjCdhqd+HC6siugHCSEu23VMBzTdtUZ2EEuXshboHtaSY8l4owDyP
+         RRV3IZR/VcJQC+2VUEqg/wjBdOzqlL/dk8HbXp7xpK4BYLjJkiYKGCPJKIJT3HZKPI
+         nBWmLihJP2ftAFhii9CO7s3GybtPgKavhhEcod+o=
+Date:   Wed, 5 Aug 2020 11:54:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
+Message-ID: <20200805095439.GB1634853@kroah.com>
+References: <20200804072435.385370289@linuxfoundation.org>
+ <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
+ <20200804082130.GA1768075@kroah.com>
+ <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
+ <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADhdXfpxWqYEL_cWVtEAxg-3OWgVZuZ5sLzNm6G+k484kG3HRw@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/20 03:33, Dongdong Yang wrote:
-> Appreciate Qais for your above comments. I believe the clamp is very good for
-> terminal devices per pid or cgroup setting. I really hope it works for the
-> extended scenario, "screen off", although it has a potential side effect on
-> "screen on" response because it needs to be recovered  at high level with
-> latency. I set  "512" to sched_util_clamp_min and max on screen off for our
-> developing device with android kernel5.4. However, it still could not
-> replace sched_usf_non_ux_r from the test result as attachment. The cpufreq
-> could not go down in time. 
-> Screenshot at 2020-08-05 09:56:38.png
+On Tue, Aug 04, 2020 at 10:23:06PM +0100, Marc Zyngier wrote:
+> On 2020-08-04 19:33, Linus Torvalds wrote:
+> > On Tue, Aug 4, 2020 at 1:21 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > 
+> > > So Linus's tree is also broken here.
+> > 
+> > No, there's 835d1c3a9879 ("arm64: Drop unnecessary include from
+> > asm/smp.h") upstream.
+> 
+> My bet is that Greg ended up with this patch backported to
+> 5.7, but doesn't have 62a679cb2825 ("arm64: simplify ptrauth
+> initialization") as the latter isn't a fix.
+> 
+> I don't think any of these two patches are worth backporting,
+> to be honest.
 
-Please fix your email client so that it doesn't send in HTML. LKML will reject
-HTML emails.
+I didn't have either of those patches, so I can try applying them to see
+if the build errors go away.  But if you don't think they should be
+applied, what should I do?
 
-I can't interpret the numbers in the pictures. Can you help explain what am
-I looking at?
+Here's what I did have queued up:
 
-I did see an issue with frequency not capped immediately when the system was
-busy. I am still trying to debug that. I already fixed one problem related to
-iowait boost not honouring uclamp requests, I will be posting a patch for this
-soon. If you have IO heavy workload, then iowait boost will cause schedutil to
-run at high frequency, and uclamp capping is not applied in that path.
+f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+aa54ea903abb ("ARM: percpu.h: fix build error")
+1c9df907da83 ("random: fix circular include dependency on arm64 after addition of percpu.h")
+83bdc7275e62 ("random32: remove net_rand_state from the latent entropy gcc plugin")
+c0842fbc1b18 ("random32: move the pseudo-random 32-bit definitions to prandom.h")
 
-Can you trace what happens inside uclamp_rq_util_with() when it's called from
-sched_cpu_util()? The clamp should be applied quickly, so it's a bug we need to
-fix. In my case I noticed if I ctrl+Z then `fg`, the cap is applied. My hands
-are full to look at this soon. So if you can trace it, that'd be great.
+And that caused the builds to blow up.
 
-Can you expand more on your worry for "screen on"? The only latency I see is
-userspace not being able to set uclamp values quickly. But since it seems you
-already can set sched_usf_non_ux_r from userspace with acceptable results, then
-uclamp should be able to cover the same functionality. What am I missing?
+So, what should I do here?
 
-Thanks
+thanks,
 
---
-Qais Yousef
+greg k-h
