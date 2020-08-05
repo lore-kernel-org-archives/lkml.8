@@ -2,133 +2,94 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16980C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2F22075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E23206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596655331;
-	bh=072fN8XULJ3GnIEr8wRSchi/EZ5F0AyXnHwkMRtM7H0=;
+	s=default; t=1596655345;
+	bh=XtraZqjy+w6iRy+RCIQ5ANLerN6dU4WAvBFMK4YcMJ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yXabkLzUTtPJ+LeAe0RcKa7SsglIaDZG6d3bGj0fz7KJakvyCJzIaO928/uGo3g4q
-	 HGweQOq3vbMU5MMoxMRjkgyoQaX/wfxJaGYj6LHxH51uH9fO8PSj9LAL2CwxmvkbTl
-	 ijejgrRQyq7tYN4+UcQCoCtA7Ncwdxq9rIOiMGUw=
+	b=ZYna5+PgjC9B1+0mYCnw5jBwTwF0o0ILosd4FRKAF1lCMEYwRRPqPzSxg88lqQOqy
+	 xZnFV5o2lVohyUau9+LnCQMkz80051St8zrCfSMM2TBnzLKwNUHuWFQSitni3Yckuo
+	 jxTzsjyTH5yxPyQH/6/t4aBt2tA7VUz/xOn05Zvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgHETWK (ORCPT
+        id S1729019AbgHETWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43122 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 15:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728974AbgHERl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:41:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728971AbgHERl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:41:56 -0400
+Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4278622DA7;
-        Wed,  5 Aug 2020 13:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37FCF22D04;
+        Wed,  5 Aug 2020 11:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596633585;
-        bh=072fN8XULJ3GnIEr8wRSchi/EZ5F0AyXnHwkMRtM7H0=;
+        s=default; t=1596627111;
+        bh=XtraZqjy+w6iRy+RCIQ5ANLerN6dU4WAvBFMK4YcMJ0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ATKVciyP2hiiV/sTIP+/3bRy8Wt+Ss9WmoAhzw03zM+TBYObx72cq9tBLjd2hZuIB
-         /QadkCneyZrKLECnJk6R74hP0T7jrTimV3twXcj/uQyEHSMNoHXCqyG9w3xZ9cQSiZ
-         6ZzUV+yHAU14zeRzkccZlZvwGovCB7FttwBqnBaM=
-Date:   Wed, 5 Aug 2020 15:20:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
-Message-ID: <20200805132003.GE1822283@kroah.com>
-References: <20200804072435.385370289@linuxfoundation.org>
- <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
- <20200804082130.GA1768075@kroah.com>
- <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
- <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
- <20200805095439.GB1634853@kroah.com>
- <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
+        b=HvHo7vZvjQy/hrYGM6L8kySbV9RisC2jj1fDI1wf8EJA48tCUGtjzqBRJMvnmruZX
+         I3tsM+lfGVQbNDkpwU03zw4psFLQUFOHXBqau7x+/UDo5EjkP/+7zG9vMcHQP0rBUP
+         22wdYY0ZsaOjw5Hm3qb9qilXljQPpBQdnMG3ZH3U=
+Date:   Wed, 5 Aug 2020 17:01:46 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Feng Tang <feng.tang@intel.com>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] spi: dw-dma: Add max SG entries burst capability
+ support
+Message-ID: <20200805113146.GW12965@vkoul-mobl>
+References: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731092612.GK3703480@smile.fi.intel.com>
+ <20200731125954.jeeqmccnknqllwxh@mobilestation>
+ <20200804211443.GE5249@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
+In-Reply-To: <20200804211443.GE5249@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 12:19:58PM +0100, Marc Zyngier wrote:
-> On 2020-08-05 10:54, Greg Kroah-Hartman wrote:
-> > On Tue, Aug 04, 2020 at 10:23:06PM +0100, Marc Zyngier wrote:
-> > > On 2020-08-04 19:33, Linus Torvalds wrote:
-> > > > On Tue, Aug 4, 2020 at 1:21 AM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > So Linus's tree is also broken here.
-> > > >
-> > > > No, there's 835d1c3a9879 ("arm64: Drop unnecessary include from
-> > > > asm/smp.h") upstream.
-> > > 
-> > > My bet is that Greg ended up with this patch backported to
-> > > 5.7, but doesn't have 62a679cb2825 ("arm64: simplify ptrauth
-> > > initialization") as the latter isn't a fix.
-> > > 
-> > > I don't think any of these two patches are worth backporting,
-> > > to be honest.
-> > 
-> > I didn't have either of those patches, so I can try applying them to see
-> > if the build errors go away.  But if you don't think they should be
-> > applied, what should I do?
-> > 
-> > Here's what I did have queued up:
-> > 
-> > f227e3ec3b5c ("random32: update the net random state on interrupt and
-> > activity")
-> > aa54ea903abb ("ARM: percpu.h: fix build error")
-> > 1c9df907da83 ("random: fix circular include dependency on arm64 after
-> > addition of percpu.h")
-> > 83bdc7275e62 ("random32: remove net_rand_state from the latent entropy
-> > gcc plugin")
-> > c0842fbc1b18 ("random32: move the pseudo-random 32-bit definitions to
-> > prandom.h")
+On 04-08-20, 22:14, Mark Brown wrote:
+> On Fri, Jul 31, 2020 at 03:59:54PM +0300, Serge Semin wrote:
+> > On Fri, Jul 31, 2020 at 12:26:12PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Jul 31, 2020 at 10:59:45AM +0300, Serge Semin wrote:
 > 
-> Not what I expected, then. I stand corrected.
+> > > > Note since the DMA-engine subsystem in kernel 5.8-rcX doesn't have the
+> > > > max_sg_burst capability supported, this series is intended to be applied
+> > > > only after the "next"-branch of the DMA-engine repository is merged into
+> > > > the mainline repo. Alternatively the series could be merged in through the
+> > > > DMA-engine repo.
 > 
-> > And that caused the builds to blow up.
-> > 
-> > So, what should I do here?
+> > > This needs to be thought through...
 > 
-> OK, this is getting hairy. I solved it by grabbing:
+> > There is nothing to think about: either Mark completes review/accepts the series
+> > and Vinod agrees to merge it in through the DMA-engine repo, or we'll have to
+> > wait until the next merge window is closed and then merge the series in
+> > traditionally through the SPI repo.
 > 
-> d0055da5266a ("arm64: remove ptrauth_keys_install_kernel sync arg")
-> 62a679cb2825 ("arm64: simplify ptrauth initialization")
-> 
-> and at which point you might as well take 835d1c3a9879 despite
-> everything I said earlier. And backporting that further down the
-> line is fraught with danger.
-> 
-> I came up with yet another "quality" hack, which gets the job done,
-> see below. It is obviously much simpler, but also terribly ugly.
+> Well, the merge window is open now so this won't get applied till -rc1
+> anyway.
 
-I like it :)
+Yes and the max_sg_burst capability is in my next and should be in PR to
+Linus this week, so rc1 should have this.
 
-I've taken it for 5.7.y, and modified it a bit for 5.4.y, and don't
-think it's needed on anything older, but let's see what blows up...
-
-thanks!
-
-greg k-h
+-- 
+~Vinod
