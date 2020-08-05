@@ -2,105 +2,205 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CCBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7CA822CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596651746;
-	bh=I1zJy9HVZE3kXlTdCz3NimHrXDTg3aZ0bE9Ft0Nok8s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uHSaIElBOOYkf5XTloOnhldD2iLhr9owOM7mNtywdiW+RfjuRuViYFDW5Zs9kjMKT
-	 3W9ZyhIsZ+NZeeaVgUsykvlB/t5CYp0egtUhfIrLDBxH6v6nUy21w6b/veTrbT7CT6
-	 v7b4PRneoEPVNmnbEhXtXRZQkrwcifnyJQkBvbho=
+	by mail.kernel.org (Postfix) with ESMTP id 7AE3122CA0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gub5BhXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbgHESWZ (ORCPT
+        id S1729184AbgHESWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60152 "EHLO
+        Wed, 5 Aug 2020 14:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728903AbgHESLu (ORCPT
+        with ESMTP id S1728712AbgHESLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:11:50 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D0EC061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:11:48 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id i19so24738415lfj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:11:48 -0700 (PDT)
+        Wed, 5 Aug 2020 14:11:22 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97BCC0617B1;
+        Wed,  5 Aug 2020 11:10:28 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 74so14935607pfx.13;
+        Wed, 05 Aug 2020 11:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uHPd0ivHK9bW5amsgeLfepexH6gYrZPkMtMTrC1KpJc=;
-        b=G6m8qZi+rIjXCmBgPmBj7032K/nQAr3NLRmvf8lYANY8VpHEqkoOUIMmt+d3pIfFAy
-         8S/32NBJn8RJ/n/l2yPIG3zMcmrEYdd6pmDQs2lDLxgnOVDIQ+3AIoH5XEELjwY5dNjh
-         HhXyJvJT3gL+HQyS6+b1R9X52DRdebGwo1/5U=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lTR8Lgo0lTVr30kAgGXldRLjSzJrurZ+/TCCEqZVqLQ=;
+        b=gub5BhXgKIwql1fVHMrX+4usvSKCyg4lEY8j+g0tftBKI6jTK++/xJ98ikhyonQevY
+         DcLYyqAawxEpy1H9uh0ctJVCOSy6DVB6UbVaYPu9jY0G0ktlVkw+X21iaOWak94jrsje
+         YpxQ1fTAdY0T9Q0qSVuWXq6A+0isRy8zZ0NbEA/o/9TfA02w/0zGNY4LVR5gUeAxm3lO
+         8US9cWJrqi3g6NL79G5wBUNN423vu40M3SuAnMfxpaGrVwO3QHs/RrIFY2aILq3cLCZJ
+         2nkBJ7O1LJb9mDA+yk7c7Acv7rxDBePnN5iZBw9YWWV39K2npVI8Oyx0SV3i3w2TrFXu
+         Ejdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uHPd0ivHK9bW5amsgeLfepexH6gYrZPkMtMTrC1KpJc=;
-        b=UvWyUl4yuBOMOtiwI4MaGfhKUPadMfr6yUy4pbwfwSMk4ffrMf3qDdXcAn3Fn2p//N
-         geT5nPf4Opjk/w5QHRc8k/PRlfTyDZ519QQWu0t+esAiBMOh3IH4uJL89RUpPDh41Mux
-         DayfoAglCTeLTzdj6ypnRJMtm9k0Bt1mguIFk0wtioGCOuhbMqNAO+P17OmKk2qv1xD6
-         KEpITbk7OGNwDMMvYbHtw66pfBx3ed1Zy6liu6sjBsD6Uwm1avfNpcrUQjoh+Cf/4U8I
-         cifOSEclvY+T/63naaYguGMLghRo8rkxqU2PO/YjRhEWcB2SDSRmnBsuA4zE4EGiZmiE
-         EEeQ==
-X-Gm-Message-State: AOAM533i3XdvgYtWdnM1YednZlXZl9hykWWw/s3WZpnr623pFoeOZu05
-        VZ5p0CczEua0kez7gJCOhNTnRFnH7QU=
-X-Google-Smtp-Source: ABdhPJzLUWqmZRtU4lgbzg3GXbajzJM0wVcH6H91xI30kqsXDWnOfnMEHK9ZSJPdHHh6vHz1oXN5bQ==
-X-Received: by 2002:ac2:530e:: with SMTP id c14mr2108964lfh.127.1596651106396;
-        Wed, 05 Aug 2020 11:11:46 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id 29sm1276673ljv.72.2020.08.05.11.11.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 11:11:45 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id v9so14283437ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:11:45 -0700 (PDT)
-X-Received: by 2002:a2e:9252:: with SMTP id v18mr1882996ljg.70.1596651104717;
- Wed, 05 Aug 2020 11:11:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lTR8Lgo0lTVr30kAgGXldRLjSzJrurZ+/TCCEqZVqLQ=;
+        b=KXeq+kRb9UeTW13/nwi6eKi/rTaimi58N/PhyG4uPGzBMe9j0qY5LAyvicmbVgc0ps
+         2pGl7NUsNv0i4oSn1IXaUuS1csFJcmROsyX664dfeqIZkiZc2meTmGlWsOUAyi9ThgQv
+         Kmv+ZlIfmBclvfj03J+4fzNeXaYSFeFv1BmREcSRy/QBBZM71ipr6V8e//cgrw4DmjjQ
+         /rQ7Y1XmYNudHFbJ10hSiYLsIQmbwKFdQqxZoESBMnDjo9y8sWlze1qCpUD3pp+4PJZA
+         rCyNQWbTnTKqS4EwUS5ed1U0rnllBEoxlskPCBgzRmGDq4dNtftgG4o2jtEdvPVODe65
+         W4pQ==
+X-Gm-Message-State: AOAM5329q37U+tZrJgNEDdSX0YRmjoBRE3+oI18SvWjUgH+Zu3R2Rp93
+        qcTtPoM/oOZ6YF07fadaEv8=
+X-Google-Smtp-Source: ABdhPJyAAqO7Rx5av7I1iXkiEYPek0iKwQgNUn4/m4VcSnNpdaU7uE7GLjNluwPRQgTfUc24ejyZ3w==
+X-Received: by 2002:a63:330c:: with SMTP id z12mr4150629pgz.46.1596651028426;
+        Wed, 05 Aug 2020 11:10:28 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.10.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 11:10:27 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andres Salomon <dilinger@queued.net>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1 11/12] fbdev: s3fb: use generic power management
+Date:   Wed,  5 Aug 2020 23:37:21 +0530
+Message-Id: <20200805180722.244008-12-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
+References: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-References: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
-In-Reply-To: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Aug 2020 11:11:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
-Message-ID: <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: update phylink/sfp keyword matching
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 7:34 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
->
-> Is this something you're willing to merge directly please?
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
-Done.
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions, as through
+the generic framework PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
 
-That said:
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/video/fbdev/s3fb.c | 39 ++++++++++++++++----------------------
+ 1 file changed, 16 insertions(+), 23 deletions(-)
 
-> -K:     phylink
-> +K:     phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)
+diff --git a/drivers/video/fbdev/s3fb.c b/drivers/video/fbdev/s3fb.c
+index 60c424fae988..5c74253e7b2c 100644
+--- a/drivers/video/fbdev/s3fb.c
++++ b/drivers/video/fbdev/s3fb.c
+@@ -1410,9 +1410,9 @@ static void s3_pci_remove(struct pci_dev *dev)
+ 
+ /* PCI suspend */
+ 
+-static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
++static int __maybe_unused s3_pci_suspend(struct device *dev)
+ {
+-	struct fb_info *info = pci_get_drvdata(dev);
++	struct fb_info *info = dev_get_drvdata(dev);
+ 	struct s3fb_info *par = info->par;
+ 
+ 	dev_info(info->device, "suspend\n");
+@@ -1420,7 +1420,7 @@ static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
+ 	console_lock();
+ 	mutex_lock(&(par->open_lock));
+ 
+-	if ((state.event == PM_EVENT_FREEZE) || (par->ref_count == 0)) {
++	if (par->ref_count == 0) {
+ 		mutex_unlock(&(par->open_lock));
+ 		console_unlock();
+ 		return 0;
+@@ -1428,10 +1428,6 @@ static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
+ 
+ 	fb_set_suspend(info, 1);
+ 
+-	pci_save_state(dev);
+-	pci_disable_device(dev);
+-	pci_set_power_state(dev, pci_choose_state(dev, state));
+-
+ 	mutex_unlock(&(par->open_lock));
+ 	console_unlock();
+ 
+@@ -1441,11 +1437,10 @@ static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
+ 
+ /* PCI resume */
+ 
+-static int s3_pci_resume(struct pci_dev* dev)
++static int __maybe_unused s3_pci_resume(struct device *dev)
+ {
+-	struct fb_info *info = pci_get_drvdata(dev);
++	struct fb_info *info = dev_get_drvdata(dev);
+ 	struct s3fb_info *par = info->par;
+-	int err;
+ 
+ 	dev_info(info->device, "resume\n");
+ 
+@@ -1458,17 +1453,6 @@ static int s3_pci_resume(struct pci_dev* dev)
+ 		return 0;
+ 	}
+ 
+-	pci_set_power_state(dev, PCI_D0);
+-	pci_restore_state(dev);
+-	err = pci_enable_device(dev);
+-	if (err) {
+-		mutex_unlock(&(par->open_lock));
+-		console_unlock();
+-		dev_err(info->device, "error %d enabling device for resume\n", err);
+-		return err;
+-	}
+-	pci_set_master(dev);
+-
+ 	s3fb_set_par(info);
+ 	fb_set_suspend(info, 0);
+ 
+@@ -1478,6 +1462,16 @@ static int s3_pci_resume(struct pci_dev* dev)
+ 	return 0;
+ }
+ 
++static const struct dev_pm_ops s3_pci_pm_ops = {
++#ifdef CONFIG_PM_SLEEP
++	.suspend	= s3_pci_suspend,
++	.resume		= s3_pci_resume,
++	.freeze		= NULL,
++	.thaw		= s3_pci_resume,
++	.poweroff	= s3_pci_suspend,
++	.restore	= s3_pci_resume,
++#endif
++};
+ 
+ /* List of boards that we are trying to support */
+ 
+@@ -1510,8 +1504,7 @@ static struct pci_driver s3fb_pci_driver = {
+ 	.id_table	= s3_devices,
+ 	.probe		= s3_pci_probe,
+ 	.remove		= s3_pci_remove,
+-	.suspend	= s3_pci_suspend,
+-	.resume		= s3_pci_resume,
++	.driver.pm	= &s3_pci_pm_ops,
+ };
+ 
+ /* Parse user specified options */
+-- 
+2.27.0
 
-That's a very awkward pattern. I wonder if there could be better ways
-to express this (ie "only apply this pattern to these files" kind of
-thing)
-
-Isn't the 'F' pattern already complete enough that maybe the K pattern
-isn't even worth it?
-
-Just a thought, no biggie.
-
-           Linus
