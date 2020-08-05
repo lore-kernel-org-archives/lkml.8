@@ -2,213 +2,120 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0627C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D36DF22CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Y5nQ3MyE"
+	by mail.kernel.org (Postfix) with ESMTP id 88BE022B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgHEUK4 (ORCPT
+        id S1729034AbgHEULL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:10:56 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44140 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgHEQ1o (ORCPT
+        Wed, 5 Aug 2020 16:11:11 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:5112 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgHEQ1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:27:44 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7D4B620B4913;
-        Wed,  5 Aug 2020 09:14:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D4B620B4913
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596644092;
-        bh=ibr863Q1D2n0VDtx2GGoUC50igD6fYAc5tUGJtyPIYY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y5nQ3MyEhfx1WFBBzQq6lN5jvrtzeK9gAPkiDtOKOuDmvdZqG4wnQGZYpsHVy75Ik
-         Tm9a+ohvkP3kf1xbFtTN9+jRc0eoYQwjuFN8avpzi9yi7I10krk0vrWJT2kKiOXgKZ
-         2DlkijBG1M+Z9ydMBVfhPJsRuq7R5zw5YKDirkx4=
-Date:   Wed, 5 Aug 2020 11:14:49 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>, zohar@linux.ibm.com,
-        stephen.smalley.work@gmail.com, sashal@kernel.org,
-        jmorris@namei.org, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
-Message-ID: <20200805161449.GC4365@sequoia>
-References: <20200805004331.20652-1-nramas@linux.microsoft.com>
- <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
- <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
- <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
- <20200805154504.GB4365@sequoia>
- <7c7a076b-6ba7-2e8d-409a-b3b4e4738c41@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7c7a076b-6ba7-2e8d-409a-b3b4e4738c41@linux.microsoft.com>
+        Wed, 5 Aug 2020 12:27:43 -0400
+Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 05 Aug 2020 06:34:40 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 05 Aug 2020 06:34:38 -0700
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 05 Aug 2020 19:04:07 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id D31433EBB; Wed,  5 Aug 2020 19:04:07 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org,
+        swboyd@chromium.org, abhinavk@codeaurora.org,
+        ddavenport@chromium.org
+Subject: [v1] drm/msm/dpu: Fix reservation failures in modeset
+Date:   Wed,  5 Aug 2020 19:04:06 +0530
+Message-Id: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-05 09:07:48, Lakshmi Ramasubramanian wrote:
-> On 8/5/20 8:45 AM, Tyler Hicks wrote:
-> > On 2020-08-05 08:36:40, Casey Schaufler wrote:
-> > > On 8/4/2020 6:14 PM, Lakshmi Ramasubramanian wrote:
-> > > > On 8/4/20 6:04 PM, Casey Schaufler wrote:
-> > > > > On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
-> > > > > > Critical data structures of security modules are currently not measured.
-> > > > > > Therefore an attestation service, for instance, would not be able to
-> > > > > > attest whether the security modules are always operating with the policies
-> > > > > > and configuration that the system administrator had setup. The policies
-> > > > > > and configuration for the security modules could be tampered with by
-> > > > > > malware by exploiting kernel vulnerabilities or modified through some
-> > > > > > inadvertent actions on the system. Measuring such critical data would
-> > > > > > enable an attestation service to better assess the state of the system.
-> > > > > 
-> > > > > I still wonder why you're calling this an LSM change/feature when
-> > > > > all the change is in IMA and SELinux. You're not putting anything
-> > > > > into the LSM infrastructure, not are you using the LSM infrastructure
-> > > > > to achieve your ends. Sure, you *could* support other security modules
-> > > > > using this scheme, but you have a configuration dependency on
-> > > > > SELinux, so that's at best going to be messy. If you want this to
-> > > > > be an LSM "feature" you need to use the LSM hooking mechanism.
-> > > > 
-> > > > > 
-> > > > > I'm not objecting to the feature. It adds value. But as you've
-> > > > > implemented it it is either an IMA extension to SELinux, or an
-> > > > > SELiux extension to IMA. Could AppArmor add hooks for this without
-> > > > > changing the IMA code? It doesn't look like it to me.
-> > > > 
-> > > > The check in IMA to allow the new IMA hook func LSM_STATE and LSM_POLICY when SELinux is enabled is just because SELinux is the only security module using these hooks now.
-> > > > 
-> > > > To enable AppArmor, for instance, to use the new IMA hooks to measure state and policy would just require adding the check for CONFIG_SECURITY_APPARMOR. Other than that, there are no IMA changes needed to support AppArmor or other such security modules.
-> > > 
-> > > This is exactly what I'm objecting to. What if a system has both SELinux
-> > > and AppArmor compiled in? What if it has both enabled?
-> > 
-> > The SELinux state and policy would be measured but the AppArmor
-> > state/policy would be silently ignored. This isn't ideal as the IMA
-> > policy author would need to read the kernel code to figure out which
-> > LSMs are going to be measured.
-> 
-> Tyler - I am not sure why AppArmor state\policy would be ignored when both
-> SELinux and AppArmor are enabled. Could you please clarify?
+In TEST_ONLY commit, rm global_state will duplicate the
+object and request for new reservations, once they pass
+then the new state will be swapped with the old and will
+be available for the Atomic Commit.
 
-I think Casey is talking about now (when AppArmor is not supported by
-this feature) and you're talking about the future (when AppArmor may be
-supported by this feature).
+This patch fixes some of missing links in the resource
+reservation sequence mentioned above.
 
-Now, a "measure func=LSM_STATE" rule would be accepted by the IMA policy
-parser but do nothing for the AppArmor LSM. The rule may do something in
-the future but there's no difference in feedback to the IMA policy
-author between now and the future.
+1) Creation of a duplicate state in test_only commit (Rob)
+2) Allow resource release only during crtc_active false.
 
-Tyler
+For #2
+In a modeset operation, swap state happens well before disable.
+Hence clearing reservations in disable will cause failures
+in modeset enable.
 
-> 
-> When both the security modules are enabled, IMA policy validator would look
-> like below:
-> 
-> if (IS_ENABLED(CONFIG_SECURITY_SELINUX) ||
->     IS_ENABLED(CONFIG_SECURITY_APPARMOR)) &&
->     strcmp(args[0].from, "LSM_STATE") == 0)
->                 entry->func = LSM_STATE;
-> 
-> Similar one for LSM_POLICY validation.
-> 
-> Both SELinux and AppArmor can call ima_measure_lsm_state() and
-> ima_measure_lsm_policy() to measure state and policy respectively.
-> 
-> I don't think we should go the route of defining IMA hooks per security
-> module (i.e., SELINUX_STATE, APPARMOR_STATE, SELINUX_POLICY, etc.) Instead
-> keep the hook generic that any SM could use - which is what I have tried to
-> address in this patch series.
-> 
-> > > 
-> > > > 
-> > > > Please see Patch 1/4
-> > > > 
-> > > > +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
-> > > > +                 strcmp(args[0].from, "LSM_STATE") == 0)
-> > > > +                entry->func = LSM_STATE;
-> > > > +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
-> > > > +                 strcmp(args[0].from, "LSM_POLICY") == 0)
-> > > > +                entry->func = LSM_POLICY;
-> > > > 
-> > > > And, if early boot measurement is needed for AppArmor the following change in IMA's Kconfig
-> > > > 
-> > > > Patch 4/4
-> > > > 
-> > > > +config IMA_QUEUE_EARLY_BOOT_DATA
-> > > >       bool
-> > > > +    depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
-> > > >       default y
-> > > > 
-> > > > If you think calling this an "LSM feature" is not appropriate, please suggest a better phrase.
-> > > 
-> > > In the code above you are under CONFIG_SECURITY_SELINUX.
-> > > I would suggest that it's an SELinux feature, so you should
-> > > be using SELINUX_STATE and SELINUX_POLICY, as I suggested
-> > > before. Just because SELinux has state and policy to measure
-> > > doesn't mean that a different module might not have other data,
-> > > such as history, that should be covered as well.
-> 
-> Good point - if other SMs have data besides state and policy, we can define
-> IMA hooks to measure that as well.
-> 
-> But I still think it is not the right approach to call this SELINUX_STATE
-> and SELINUX_POLICY - it will lead to unnecessary code duplication in IMA as
-> more SMs are onboarded, in my opinion. Correct me if I am wrong.
-> 
->  -lakshmi
-> 
-> > 
-> > In addition to SELINUX_STATE and SELINUX_POLICY, we should also consider
-> > the proposed LSM_STATE and LSM_POLICY func values but require an "lsm"
-> > rule conditional.
-> > 
-> > So the current proposed rules:
-> > 
-> >   measure func=LSM_STATE
-> >   measure func=LSM_POLICY
-> > 
-> > Would become:
-> > 
-> >   measure func=LSM_STATE lsm=selinux
-> >   measure func=LSM_POLICY lsm=selinux
-> > 
-> > The following rules would be rejected:
-> > 
-> >   measure func=LSM_STATE
-> >   measure func=LSM_POLICY
-> >   measure func=LSM_STATE lsm=apparmor
-> >   measure func=LSM_POLICY lsm=smack
-> > 
-> > Of course, the apparmor and smack rules could/would be allowed when
-> > proper support is in place.
-> > 
-> 
-> > 
-> > > 
-> > > I realize that IMA already has compile time dependencies to
-> > > determine which xattrs to measure. There's no reason that
-> > > the xattr list couldn't be determined at boot time, with
-> > > each security module providing the XATTR_NAME values it
-> > > uses.
-> > > 
-> > > > 
-> > > > But like I said above, with minimal change in IMA other security modules can be supported to measure STATE and POLICY data.
-> > > > 
-> > > >   -lakshmi
-> > > > 
-> > > > 
+Sequence:
+    Swap state --> old, new
+    modeset disables --> virt disable
+    modeset enable --> virt modeset
+
+Allow reservations to be cleared only when crtc active is false
+as in that case there wont be any modeset enable after disable.
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 63976dc..b85a576 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+ 	dpu_kms = to_dpu_kms(priv->kms);
+ 	mode = &crtc_state->mode;
+ 	adj_mode = &crtc_state->adjusted_mode;
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
++	global_state = dpu_kms_get_global_state(crtc_state->state);
+ 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
+ 
+ 	/*
+@@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 	struct msm_drm_private *priv;
+ 	struct dpu_kms *dpu_kms;
+ 	struct dpu_global_state *global_state;
++	struct drm_crtc_state *crtc_state;
+ 	int i = 0;
+ 
+ 	if (!drm_enc) {
+@@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 	priv = drm_enc->dev->dev_private;
+ 	dpu_kms = to_dpu_kms(priv->kms);
+ 	global_state = dpu_kms_get_existing_global_state(dpu_kms);
++	crtc_state = drm_enc->crtc->state;
+ 
+ 	trace_dpu_enc_disable(DRMID(drm_enc));
+ 
+@@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 
+ 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+ 
+-	dpu_rm_release(global_state, drm_enc);
++	if (crtc_state->active_changed && !crtc_state->active)
++		dpu_rm_release(global_state, drm_enc);
+ 
+ 	mutex_unlock(&dpu_enc->enc_lock);
+ }
+-- 
+1.9.1
+
