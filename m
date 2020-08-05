@@ -2,80 +2,102 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41921C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD692177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5692177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I6zDlSJ5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fb84QEiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgHERUb (ORCPT
+        id S1728531AbgHERUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:20:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52455 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728772AbgHERTC (ORCPT
+        Wed, 5 Aug 2020 13:20:38 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51030 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgHERSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:19:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647941;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kZTBrunrXrFalb8MiTTYY4li8BGfP27s1yfj7FYVgAs=;
-        b=I6zDlSJ5d7gRMIfEL0QprBsn3nu8f6L8PYwyu0mMSgMgmlZo8OfKI7II2eQ0R+eJ2axENV
-        ZXxCyYnWYDOk8OciW0aXwKAGkct/a8OZmIenfspVaixzEMXCd0pH+Mp5SRvhA/dXuBrDN+
-        gM2z52CNIoZq8CxwgGC5BWpc+dSdN2o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-449-Y4-7UuimPtOA66nnqm_UqQ-1; Wed, 05 Aug 2020 13:18:56 -0400
-X-MC-Unique: Y4-7UuimPtOA66nnqm_UqQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A38031B18BCD;
-        Wed,  5 Aug 2020 17:18:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DBA95D9DC;
-        Wed,  5 Aug 2020 17:18:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAKgNAkgYZ4HrFpOW_n8BshbR8d=03wetmxX2zNv7hX4ZmeQPmg@mail.gmail.com>
-References: <CAKgNAkgYZ4HrFpOW_n8BshbR8d=03wetmxX2zNv7hX4ZmeQPmg@mail.gmail.com> <CAKgNAkjyXcXZkEczRz2yvJRFBy2zAwTaNfyiSmskAFWN_3uY1g@mail.gmail.com> <2007335.1595587534@warthog.procyon.org.uk>
-To:     mtk.manpages@gmail.com
-Cc:     dhowells@redhat.com, Petr Vorel <pvorel@suse.cz>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Mount API manual pages
+        Wed, 5 Aug 2020 13:18:40 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075DHV9M072287;
+        Wed, 5 Aug 2020 08:17:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596633451;
+        bh=57yF68qyZ0azOmyzTIEwYs+6yRB7tuKz3qfi5lQTL2Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fb84QEizh1xqIZv4YwwWKBoNcIaWNZdLEhdp8PKXmcuSz5LdjdZudXZ+ZMNZfMHp+
+         I3YuZE1CRruSM+2Cd9D/meA6KiIyju3KG+y7B2dEGuxf4+6NuubBU86ah5a8RLBs36
+         MaqnS51DCQ7/TOyrO0POqJY3nYVUcAdxjSdLfkaA=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 075DHVG9004195
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Aug 2020 08:17:31 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
+ 2020 08:17:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 5 Aug 2020 08:17:30 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075DHSMg035743;
+        Wed, 5 Aug 2020 08:17:28 -0500
+Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring
+ pair request
+To:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     <ssantosh@kernel.org>, <santosh.shilimkar@oracle.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+References: <20200805112746.15475-1-peter.ujfalusi@ti.com>
+ <20200805113237.GX12965@vkoul-mobl>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
+Date:   Wed, 5 Aug 2020 16:17:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2329755.1596647924.1@warthog.procyon.org.uk>
-Date:   Wed, 05 Aug 2020 18:18:44 +0100
-Message-ID: <2329756.1596647924@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200805113237.GX12965@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
 
-> This is just a reminder mail :-).
 
-Yep - I haven't forgotten.  Spent a chunk of time arguing with reinventors and
-arguing with a failing dishwasher.  I have some other manpages that I'm
-sprucing up too for the notifications stuff.
+On 05/08/2020 14:32, Vinod Koul wrote:
+> On 05-08-20, 14:27, Peter Ujfalusi wrote:
+>> The original commit mixed up the forward and completion ring IDs for the
+>> rx flow configuration.
+> 
+> Acked-By: Vinod Koul <vkoul@kernel.org>
+> 
+>>
+>> Fixes: 4927b1ab2047 ("dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair")
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi Santosh, Vinod,
+>>
+>> the offending patch was queued via ti SoC tree.
+>> Santosh, can you pick up this fix also?
 
-David
+Thank you Peter for catching this - it's valid issue.
+but I'd like to note that issue was discovered with private code and
+nothing is broken in Master.
 
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+-- 
+Best regards,
+grygorii
