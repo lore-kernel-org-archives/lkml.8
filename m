@@ -2,144 +2,183 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3306C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC06C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE16A20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D082173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZfjAliDR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VFambJZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgHETOO (ORCPT
+        id S1728903AbgHETOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:14:14 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:57818 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729127AbgHESIN (ORCPT
+        Wed, 5 Aug 2020 15:14:17 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37156 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729032AbgHESHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:08:13 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3F24120B4908;
-        Wed,  5 Aug 2020 11:08:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F24120B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596650892;
-        bh=nmsxVvy9uSl1xEN+jjXmNcxFl8xyf7PQlgsr4N4w3tY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZfjAliDROLZOk0o0RA2eB/39qWP4JJcgS24/LRkShVDpP5hiCcHhbZYGr2WdptVHW
-         sUMFKc/XA5VQE8yTMpCuBMtovTVgF8rjaK72HzsCGnWOyUOIM9pVlXWfIWPPwXUzMX
-         SfNkxA/7bH/HwehmjdTi6UPbBGN/EM1LGhBgvrao=
-Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     stephen.smalley.work@gmail.com, sashal@kernel.org,
-        jmorris@namei.org, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200805004331.20652-1-nramas@linux.microsoft.com>
- <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
- <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
- <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
- <20200805154504.GB4365@sequoia>
- <69810007161e689ac817099fb1c6df21962963e4.camel@linux.ibm.com>
- <9ad079ff-1bd4-1302-e6fb-25a7396ef12f@linux.microsoft.com>
- <ecc97f59-c2cc-0b23-6199-925ba0d6358b@schaufler-ca.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <50f00ace-8d46-01c2-bf0f-d5484aafd95c@linux.microsoft.com>
-Date:   Wed, 5 Aug 2020 11:08:11 -0700
+        Wed, 5 Aug 2020 14:07:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075DS6aw038978;
+        Wed, 5 Aug 2020 13:31:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=wYBFPjXevv4FEJxjfZDQbIVAOxKAPwLvh+4h5JhT3CQ=;
+ b=VFambJZ/EoDlm9yZUQgdDXONHvQkRuftCJ3aGlv07wUIl9YOPpK/myo5dAvWyfPbE7j9
+ Id8w3yFy4v3x+EDQB/OZvXW94e6POr7bHQhQlPuTE1A8BjB3be8VuS05QcNDIESSjGd/
+ Hd8rNH2giPY+QMS4b7defPYUjXf9wfU1Lr1ydfkmEYIgpqRorneUu+MIfjLG3Y8HiWpC
+ FiK9qkn0hyxQNxHiS+ulCz6cR1D4I/S/clcLenMEMAAjDut+izkO8qJMJV747m3jKx7H
+ FvQ8J9bpcecNhnv1dyZbKp6PcoOAFQC6gSDLsOxu4HNAMX6GHIKJAOTkR/1ln+hTDglO dw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 32qnd42b1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 05 Aug 2020 13:31:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075DRlDt170630;
+        Wed, 5 Aug 2020 13:31:32 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 32njayrrum-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Aug 2020 13:31:32 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 075DVPYl024799;
+        Wed, 5 Aug 2020 13:31:25 GMT
+Received: from [10.39.234.166] (/10.39.234.166)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 05 Aug 2020 06:31:25 -0700
+Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend
+ mode
+To:     Anchal Agarwal <anchalag@amazon.com>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        kamatam@amazon.com, konrad.wilk@oracle.com, roger.pau@citrix.com,
+        axboe@kernel.dk, davem@davemloft.net, rjw@rjwysocki.net,
+        len.brown@intel.com, pavel@ucw.cz, peterz@infradead.org,
+        eduval@amazon.com, sblbir@amazon.com,
+        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@kernel.crashing.org
+References: <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com>
+ <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
+ <20200722180229.GA32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <alpine.DEB.2.21.2007221645430.17562@sstabellini-ThinkPad-T480s>
+ <20200723225745.GB32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <alpine.DEB.2.21.2007241431280.17562@sstabellini-ThinkPad-T480s>
+ <66a9b838-70ed-0807-9260-f2c31343a081@oracle.com>
+ <20200730230634.GA17221@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <53b577a3-6af9-5587-7e47-485be38b3653@oracle.com>
+ <20200804234201.GA23820@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <50d0dbe1-533e-792a-6916-8c72d623064a@oracle.com>
+Date:   Wed, 5 Aug 2020 09:31:13 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <ecc97f59-c2cc-0b23-6199-925ba0d6358b@schaufler-ca.com>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
+In-Reply-To: <20200804234201.GA23820@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050111
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/20 10:57 AM, Casey Schaufler wrote:
-> On 8/5/2020 10:25 AM, Lakshmi Ramasubramanian wrote:
->> On 8/5/20 10:03 AM, Mimi Zohar wrote:
->>> On Wed, 2020-08-05 at 10:45 -0500, Tyler Hicks wrote:
->>>
->>>> In addition to SELINUX_STATE and SELINUX_POLICY, we should also consider
->>>> the proposed LSM_STATE and LSM_POLICY func values but require an "lsm"
->>>> rule conditional.
->>>>
->>>> So the current proposed rules:
->>>>
->>>> ? measure func=LSM_STATE
->>>> ? measure func=LSM_POLICY
->>>>
->>>> Would become:
->>>>
->>>> ? measure func=LSM_STATE lsm=selinux
->>>> ? measure func=LSM_POLICY lsm=selinux
->>>>
->>>> The following rules would be rejected:
->>>>
->>>> ? measure func=LSM_STATE
->>>> ? measure func=LSM_POLICY
->>>> ? measure func=LSM_STATE lsm=apparmor
->>>> ? measure func=LSM_POLICY lsm=smack
->>>
->>> Kees is cleaning up the firmware code which differentiated between how
->>> firmware was loaded.?? There will be a single firmware enumeration.
->>>
->>> Similarly, the new IMA hook to measure critical state may be placed in
->>> multiple places.? Is there really a need from a policy perspective for
->>> differentiating the source of the critical state being measurind??? The
->>> data being measured should include some identifying information.
->>
->> Yes Mimi - SELinux is including the identifying information in the "event name" field. Please see a sample measurement of STATE and POLICY for SELinux below:
->>
->> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state-1595389364:287899386 696e697469616c697a65643d313b656e61626c65643d313b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574776f726b5f706565725f636f6e74726f6c733d313b6f70656e5f7065726d733d313b657874656e6465645f736f636b65745f636c6173733d313b616c776179735f636865636b5f6e6574776f726b3d303b6367726f75705f7365636c6162656c3d313b6e6e705f6e6f737569645f7472616e736974696f6e3d313b67656e66735f7365636c6162656c5f73796d6c696e6b733d303
->>
->> 10 f4a7...9408 ima-ng sha256:8d1d...1834 selinux-policy-hash-1595389353:863934271
->>
->>>
->>> I think moving away from the idea that measuring "critical" data should
->>> be limited to LSMs, will clarify this.
->>>
->>
->> Are you suggesting that instead of calling the hooks LSM_STATE and LSM_POLICY, we should keep it more generic so that it can be utilized by any subsystem to measure their "critical data"?
-> 
-> Policy, state, history or whim, it should be up to the security module
-> to determine what data it cares about, and how it should be measured.
-> Smack does not keep its policy in a single blob of data, it uses lists
-> which can be modified at will. Your definition of the behavior for
-> LSM_POLICY wouldn't work for Smack. That doesn't mean that there isn't
-> a viable way to measure the Smack policy, it just means that IMA isn't
-> the place for it. If SELinux wants its data measured, SELinux should be
-> providing the mechanism to do it.
-> 
-> I guess that I'm agreeing with you in part. If you want a generic measurement
-> of "critical data", you don't need to assign a type to it, you have the
-> caller (a security module, a device driver or whatever) identify itself and
-> how it is going to deal with the data. That's very different from what you've
-> done to date.
+On 8/4/20 7:42 PM, Anchal Agarwal wrote:
+>
+> I think this could be done. PM_HIBERNATION_PREPARE could return -ENOTSU=
+PP
+> for arm and pvh dom0 when the notifier call chain is invoked for this c=
+ase
+> in hibernate(). This will then be an empty notifier just for checking t=
+wo
+> usecases.
+> Also, for pvh dom0, the earlier code didn't register any notifier,
+> with this approach you are suggesting setup the notifier for hvm/pvh do=
+m0 and
+> arm but fail during notifier call chain during PM_HIBERNATION_PREPARE ?=
 
-Agree.
 
-Like Stephen had stated earlier, the reason we kept separate hooks 
-(STATE and POLICY) is because the data for state is usually small and 
-therefore we measure the entire data. Whereas, policy data is usually 
-quite large (a few MB) and hence we measure a hash of the policy.
 
-If change to a generic measurement of "critical data", at the least IMA 
-should provide a way to measure "data" and "hash(data)".
+Right.
 
-And, with the caller providing the identifying information, there would 
-be no need to call it "LSM_STATE" or "SELINUX_STATE" or such.
 
-  -lakshmi
+(Although the earlier code did register the notifier:
+xen_setup_pm_notifier() would return an error for !xen_hvm_domain() and
+PVH *is* an HVM domain, so registration would actually happen)
+
+
+>
+> I think still getting rid of suspend mode that was earlier a part of th=
+is
+> notifier is a good idea as it seems redundant as you pointed out earlie=
+r.=20
+
+
+Yes.
+
+
+-boris
 
 
