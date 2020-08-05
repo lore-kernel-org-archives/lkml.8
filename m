@@ -2,122 +2,155 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2415DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0287920792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:22:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HJgUPSMv"
+	by mail.kernel.org (Postfix) with ESMTP id 26FDA22D04
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgHEIWO (ORCPT
+        id S1727976AbgHEIWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:22:14 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47096 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgHEIWK (ORCPT
+        Wed, 5 Aug 2020 04:22:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50637 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgHEIWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:22:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0758M6fX030350;
-        Wed, 5 Aug 2020 03:22:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596615726;
-        bh=A4FbrTg4RJJYRYFb3AzvShS3+TIdKDskAnYyskSZux4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HJgUPSMv9yxMfoQVi8xWQD+H929qq013puOgBUEfb59Bf2mhIchKXuWE3KMIBafbZ
-         CV/aJmbG7118Z+95xoYcJEagaxXkQDM2rISiJPMax2r9BgF6LvPcD3OeNH4nLLn2q+
-         EC6AWwuWKPGdMl6Nm/Fx+JN9AHfKs+Vr4ooVqsxs=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0758M60l095967
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Aug 2020 03:22:06 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
- 2020 03:22:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 5 Aug 2020 03:22:06 -0500
-Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0758M3CC124963;
-        Wed, 5 Aug 2020 03:22:04 -0500
-Subject: Re: [PATCH] mmc: sdhci_am654: Add workaround for card detect debounce
- timer
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>
-References: <20200729234130.25056-1-faiz_abbas@ti.com>
- <2d692a90-0e58-ae69-9b5b-c9eb3ffe21ec@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <75b188ef-2755-b833-4756-79f0f171f8bd@ti.com>
-Date:   Wed, 5 Aug 2020 13:52:02 +0530
+        Wed, 5 Aug 2020 04:22:31 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k3Egt-0007IJ-Di; Wed, 05 Aug 2020 08:22:27 +0000
+Subject: Re: [PATCH] selftests/net: skip msg_zerocopy test if we have less
+ than 4 CPUs
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200804123012.378750-1-colin.king@canonical.com>
+ <b99004ea-cd9d-bec3-5f9f-82dcb00a6284@gmail.com>
+ <CA+FuTSd9K+s1rXUFpb_RWEC-uAgwU1Vz44zaUPaZK0cfsX4kwA@mail.gmail.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <fc66cf3c-b4be-f098-3a2b-aef36b90835d@canonical.com>
+Date:   Wed, 5 Aug 2020 09:22:26 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <2d692a90-0e58-ae69-9b5b-c9eb3ffe21ec@intel.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CA+FuTSd9K+s1rXUFpb_RWEC-uAgwU1Vz44zaUPaZK0cfsX4kwA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
-
-On 05/08/20 1:44 pm, Adrian Hunter wrote:
-> On 30/07/20 2:41 am, Faiz Abbas wrote:
->> There is a one time delay because of a card detect debounce timer in the
->> controller IP. This timer runs as soon as power is applied to the module
->> regardless of whether a card is present or not and any writes to
->> SDHCI_POWER_ON will return 0 before it expires. This timeout has been
->> measured to be about 1 second in am654x and j721e.
+On 05/08/2020 09:06, Willem de Bruijn wrote:
+> On Wed, Aug 5, 2020 at 2:54 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
 >>
->> Write-and-read-back in a loop on SDHCI_POWER_ON for a maximum of
->> 1.5 seconds to make sure that the controller actually powers on.
 >>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  drivers/mmc/host/sdhci_am654.c | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
 >>
->> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
->> index 1718b9e8af63..55cff9de2f3e 100644
->> --- a/drivers/mmc/host/sdhci_am654.c
->> +++ b/drivers/mmc/host/sdhci_am654.c
->> @@ -272,6 +272,7 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
->>  	sdhci_set_clock(host, clock);
->>  }
->>  
->> +#define MAX_POWER_ON_TIMEOUT	1500 /* ms */
->>  static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
->>  {
->>  	unsigned char timing = host->mmc->ios.timing;
->> @@ -291,6 +292,26 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
->>  	}
->>  
->>  	writeb(val, host->ioaddr + reg);
->> +	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON)) {
->> +		/*
->> +		 * Power on will not happen until the card detect debounce
->> +		 * timer expires. Wait at least 1.5 seconds for the power on
->> +		 * bit to be set
->> +		 */
+>> On 8/4/20 5:30 AM, Colin King wrote:
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> The current test will exit with a failure if it cannot set affinity on
+>>> specific CPUs which is problematic when running this on single CPU
+>>> systems. Add a check for the number of CPUs and skip the test if
+>>> the CPU requirement is not met.
+>>>
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>> ---
+>>>  tools/testing/selftests/net/msg_zerocopy.sh | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
+>>> index 825ffec85cea..97bc527e1297 100755
+>>> --- a/tools/testing/selftests/net/msg_zerocopy.sh
+>>> +++ b/tools/testing/selftests/net/msg_zerocopy.sh
+>>> @@ -21,6 +21,11 @@ readonly DADDR6='fd::2'
+>>>
+>>>  readonly path_sysctl_mem="net.core.optmem_max"
+>>>
+>>> +if [[ $(nproc) -lt 4 ]]; then
+>>> +     echo "SKIP: test requires at least 4 CPUs"
+>>> +     exit 4
+>>> +fi
+>>> +
+>>>  # No arguments: automated test
+>>>  if [[ "$#" -eq "0" ]]; then
+>>>       $0 4 tcp -t 1
+>>>
+>>
+>> Test explicitly uses CPU 2 and 3, right ?
+>>
+>> nproc could be 500, yet cpu 2 or 3 could be offline
+>>
+>> # cat /sys/devices/system/cpu/cpu3/online
+>> 0
+>> # echo $(nproc)
+>> 71
 > 
-> Can you use readb_poll_timeout() here?
+> The cpu affinity is only set to bring some stability across runs.
 > 
+> The test does not actually verify that a run with zerocopy is some
+> factor faster than without, as that factor is hard to choose across
+> all platforms. As a result the automated run mainly gives code coverage.
+> 
+> It's preferable to always run. And on sched_setaffinity failure log a
+> message about possible jitter and continue. I can send that patch, if
+> the approach sounds good.
+> 
+That's sounds preferable to my bad fix for sure :-)
 
-The loop is write -> readback -> check for set bit -> write again and so on until timeout
-so poll_timeout() calls will not work.
-
-Thanks,
-Faiz
+Colin
