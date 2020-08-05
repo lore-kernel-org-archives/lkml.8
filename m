@@ -2,131 +2,199 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D74322DA9
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="1p9kECCs"
+	by mail.kernel.org (Postfix) with ESMTP id 2714B2177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596648213;
+	bh=ZbssVGpllyh0qYTSG60hN7rg8nKExPvelIXE1QW1lXM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oUlUW55bLHx1l3XRG8OMbZuvnTSpQ5Dktq0h0lvZOLMQrYlRCLEo2mHYhXpts/si1
+	 4wSq1uW0jM+G89dmQZRTRxpafB4DZo5JJJEn9LJCn4ZXDIE0ir31sIldrZwtmhpG36
+	 qJG3rfMUDS25igcoeAjSK7UACdXQ+HZ8zYLcUEO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgHERXH (ORCPT
+        id S1728544AbgHERXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbgHERVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:21:20 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23CCBC061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:21:12 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id f193so12687236pfa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FbzyMEQueQDY3YDpmwzlLQ7A2LdIlI00oS2N1BmMemo=;
-        b=1p9kECCs2Xu30P/0sAU+cJKXlwibxSqcehh6AyJa4aBU4moLlvMpXPt/tyOryRrF2q
-         33XZM2JlPVoeldKBki9UbuapxrXDnWnTYJWGdd51STCGwlS3vT7D13q4mQdwVyiIE8pP
-         K5/wGPaF37h2DxnFPLpVXsP0q6X7wdW1HsFrJaX+k1AocBq7BF1R4zQyHMxPH+I+2Xeh
-         VnxtaGlErCNqRJkqMJik4ILc/Xw1ksRRpn5m8COXa9VN3Uqbcyckyfw1VxHq5rPnAKca
-         05sUegVB6m5V6ARTNN9vuWcCC2gTsYDe4SisszMj13Evi+Su4zGJTgbttY/H9t92qyfu
-         XfDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FbzyMEQueQDY3YDpmwzlLQ7A2LdIlI00oS2N1BmMemo=;
-        b=m/P7U0uewztA9FUU5YEPuylK8sFpwokQ3lJtULXFIAgDzWlVBLTUKXbcjaR34vj4Lo
-         DizrGxlLEQx8zGe8Z1DxHV6D41+vbjX8vq/TCoYK5G6DvX7HtOUXxvpq7dTBnvadszVH
-         bDCp7dJNrIAptFCd6iF9jrQRvbLui9Y7UYZB+9iUaKzrlXDFIODeyn8VB+jokFrUZFKZ
-         9J3GA7ojcmTGqnyKmxCX8i0kAbvan18VKQMJAS5UC78kJAqQ0qgSKwlQw1NCC8mefSa0
-         erB1eAjiA0XlStRF+tQHf8nrbhCUAVvIHOXZwIP/rs1syv0oPt1PVlUIFSDQuZGVe/PL
-         RIBw==
-X-Gm-Message-State: AOAM530dJaMD9e8N8tNlJwabRYJrTnfn7UCgkivngkKuYIJyp+BKvsHd
-        wIs09unobbqoO06MO2qJp25MshQnBSsWC7wy
-X-Google-Smtp-Source: ABdhPJzIkVaHvoR9tH5K50gUhGmPh+91WufLNUGc3rhmCrQDI0HIHRst5vySfI+LEfznVwHsaMaGmg==
-X-Received: by 2002:aa7:92cb:: with SMTP id k11mr4287827pfa.233.1596648071561;
-        Wed, 05 Aug 2020 10:21:11 -0700 (PDT)
-Received: from localhost.localdomain ([103.136.220.73])
-        by smtp.gmail.com with ESMTPSA id z1sm3709583pjn.34.2020.08.05.10.21.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 10:21:10 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, davem@davemloft.net,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        sfr@canb.auug.org.au, mingo@kernel.org, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] kprobes: fix compiler warning for !CONFIG_KPROBES_ON_FTRACE
-Date:   Thu,  6 Aug 2020 01:20:46 +0800
-Message-Id: <20200805172046.19066-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Wed, 5 Aug 2020 13:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728629AbgHERRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:17:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3899D233E2;
+        Wed,  5 Aug 2020 15:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642802;
+        bh=ZbssVGpllyh0qYTSG60hN7rg8nKExPvelIXE1QW1lXM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aSVj0T1w+Mqr5fBbFHeFZbR4I5zNJG8rjdYwo6scHw8CvxYrvEe1xR2bQM+yTDzSQ
+         76FfIaz1LE4a4sQQC3/DuaT+Sp+708sLe9eun5TrPU9Tiw25Fbms/mRfQIOvMkumkw
+         sPo1MBo7f7NS3V3b3PoZg9unj+4alP8y/voqAHk0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Wang Long <wanglong19@meituan.com>,
+        Jiang Ying <jiangying8582@126.com>
+Subject: [PATCH 4.19 6/6] ext4: fix direct I/O read error
+Date:   Wed,  5 Aug 2020 17:53:05 +0200
+Message-Id: <20200805153505.794820436@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
+References: <20200805153505.472594546@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix compiler warning(as show below) for !CONFIG_KPROBES_ON_FTRACE.
+From: Jiang Ying <jiangying8582@126.com>
 
-kernel/kprobes.c: In function 'kill_kprobe':
-kernel/kprobes.c:1116:33: warning: statement with no effect
-[-Wunused-value]
- 1116 | #define disarm_kprobe_ftrace(p) (-ENODEV)
-      |                                 ^
-kernel/kprobes.c:2154:3: note: in expansion of macro
-'disarm_kprobe_ftrace'
- 2154 |   disarm_kprobe_ftrace(p);
+This patch is used to fix ext4 direct I/O read error when
+the read size is not aligned with block size.
 
-Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
+Then, I will use a test to explain the error.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+(1) Make a file that is not aligned with block size:
+	$dd if=/dev/zero of=./test.jar bs=1000 count=3
+
+(2) I wrote a source file named "direct_io_read_file.c" as following:
+
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <sys/file.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <string.h>
+	#define BUF_SIZE 1024
+
+	int main()
+	{
+		int fd;
+		int ret;
+
+		unsigned char *buf;
+		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
+		if (ret) {
+			perror("posix_memalign failed");
+			exit(1);
+		}
+		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
+		if (fd < 0){
+			perror("open ./test.jar failed");
+			exit(1);
+		}
+
+		do {
+			ret = read(fd, buf, BUF_SIZE);
+			printf("ret=%d\n",ret);
+			if (ret < 0) {
+				perror("write test.jar failed");
+			}
+		} while (ret > 0);
+
+		free(buf);
+		close(fd);
+	}
+
+(3) Compile the source file:
+	$gcc direct_io_read_file.c -D_GNU_SOURCE
+
+(4) Run the test program:
+	$./a.out
+
+	The result is as following:
+	ret=1024
+	ret=1024
+	ret=952
+	ret=-1
+	write test.jar failed: Invalid argument.
+
+I have tested this program on XFS filesystem, XFS does not have
+this problem, because XFS use iomap_dio_rw() to do direct I/O
+read. And the comparing between read offset and file size is done
+in iomap_dio_rw(), the code is as following:
+
+	if (pos < size) {
+		retval = filemap_write_and_wait_range(mapping, pos,
+				pos + iov_length(iov, nr_segs) - 1);
+
+		if (!retval) {
+			retval = mapping->a_ops->direct_IO(READ, iocb,
+						iov, pos, nr_segs);
+		}
+		...
+	}
+
+...only when "pos < size", direct I/O can be done, or 0 will be return.
+
+I have tested the fix patch on Ext4, it is up to the mustard of
+EINVAL in man2(read) as following:
+	#include <unistd.h>
+	ssize_t read(int fd, void *buf, size_t count);
+
+	EINVAL
+		fd is attached to an object which is unsuitable for reading;
+		or the file was opened with the O_DIRECT flag, and either the
+		address specified in buf, the value specified in count, or the
+		current file offset is not suitably aligned.
+
+So I think this patch can be applied to fix ext4 direct I/O error.
+
+However Ext4 introduces direct I/O read using iomap infrastructure
+on kernel 5.5, the patch is commit <b1b4705d54ab>
+("ext4: introduce direct I/O read using iomap infrastructure"),
+then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
+I/O read. So this problem does not exist on kernel 5.5 for Ext4.
+
+>From above description, we can see this problem exists on all the kernel
+versions between kernel 3.14 and kernel 5.4. It will cause the Applications
+to fail to read. For example, when the search service downloads a new full
+index file, the search engine is loading the previous index file and is
+processing the search request, it can not use buffer io that may squeeze
+the previous index file in use from pagecache, so the serch service must
+use direct I/O read.
+
+Please apply this patch on these kernel versions, or please use the method
+on kernel 5.5 to fix this problem.
+
+Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
+Reviewed-by: Jan Kara <jack@suse.cz>
+Co-developed-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Jiang Ying <jiangying8582@126.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/kprobes.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ fs/ext4/inode.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 503add629599..d36e2b017588 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1114,9 +1114,20 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
- 		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
- }
- #else	/* !CONFIG_KPROBES_ON_FTRACE */
--#define prepare_kprobe(p)	arch_prepare_kprobe(p)
--#define arm_kprobe_ftrace(p)	(-ENODEV)
--#define disarm_kprobe_ftrace(p)	(-ENODEV)
-+static inline int prepare_kprobe(struct kprobe *p)
-+{
-+	return arch_prepare_kprobe(p);
-+}
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3848,6 +3848,11 @@ static ssize_t ext4_direct_IO_read(struc
+ 	struct inode *inode = mapping->host;
+ 	size_t count = iov_iter_count(iter);
+ 	ssize_t ret;
++	loff_t offset = iocb->ki_pos;
++	loff_t size = i_size_read(inode);
 +
-+static inline int arm_kprobe_ftrace(struct kprobe *p)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int disarm_kprobe_ftrace(struct kprobe *p)
-+{
-+	return -ENODEV;
-+}
- #endif
++	if (offset >= size)
++		return 0;
  
- /* Arm a kprobe with text_mutex */
--- 
-2.11.0
+ 	/*
+ 	 * Shared inode_lock is enough for us - it protects against concurrent
+
 
