@@ -2,69 +2,56 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27E92177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t4mvxT1U"
+	by mail.kernel.org (Postfix) with ESMTP id 004BA22B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgHEIOb (ORCPT
+        id S1728376AbgHEIPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:14:31 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:64223 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728126AbgHEIOJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:14:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596615248; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=RyvAchXcrO4VTZmCU0JwSFO+inX8hdSk3Y5nuzEwGi8=; b=t4mvxT1Uw5fDipfxdt0FUtsHBhK6WXT/CXMHR5xv2+x/H7AXcM7yDokBYSichO4r9+T01Ijd
- 5oNzUT+qIIY7q6uv3nbJWmzCiADx97XAHGXEiMN9FCkNYFv/EXULI/U8tADlOxwuZnWm1l5g
- vXUqe0WcFajptJFGQ8YAo7NUlRI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5f2a6a4fc86dbb497399862b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 08:14:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 57FDCC433CA; Wed,  5 Aug 2020 08:14:07 +0000 (UTC)
-Received: from [192.168.1.12] (unknown [61.1.228.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96D5DC433C9;
-        Wed,  5 Aug 2020 08:14:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96D5DC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add assigned-performance-states
- for i2c
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
- <1596541616-27688-4-git-send-email-rnayak@codeaurora.org>
- <159660971183.1360974.3826701315718625693@swboyd.mtv.corp.google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <681d8c6f-a04b-dd17-4af9-59f314b7cc60@codeaurora.org>
-Date:   Wed, 5 Aug 2020 13:44:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 5 Aug 2020 04:15:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:22115 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728118AbgHEIO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:14:59 -0400
+IronPort-SDR: wvgw0Q8gQ+1RDGiKDEem0YI1cC5kaCY4hKl0U8EJcXJPKPHYIMSdHm7tUj8c0dkzQ6VpCVe0uB
+ 8C0JFfIuWQcg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="216858170"
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="216858170"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 01:14:58 -0700
+IronPort-SDR: FKAEfpxQvRpAwcmWHM4G3+ACM4fCV8GZe1qflhqIUAodCGG1rOJAXWIHTBCMwE7GEg59IlQONp
+ i7OyQUfH8AoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="493197775"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 01:14:56 -0700
+Subject: Re: [PATCH] mmc: sdhci_am654: Add workaround for card detect debounce
+ timer
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Cc:     ulf.hansson@linaro.org
+References: <20200729234130.25056-1-faiz_abbas@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <2d692a90-0e58-ae69-9b5b-c9eb3ffe21ec@intel.com>
+Date:   Wed, 5 Aug 2020 11:14:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <159660971183.1360974.3826701315718625693@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200729234130.25056-1-faiz_abbas@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,34 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 30/07/20 2:41 am, Faiz Abbas wrote:
+> There is a one time delay because of a card detect debounce timer in the
+> controller IP. This timer runs as soon as power is applied to the module
+> regardless of whether a card is present or not and any writes to
+> SDHCI_POWER_ON will return 0 before it expires. This timeout has been
+> measured to be about 1 second in am654x and j721e.
+> 
+> Write-and-read-back in a loop on SDHCI_POWER_ON for a maximum of
+> 1.5 seconds to make sure that the controller actually powers on.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  drivers/mmc/host/sdhci_am654.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+> index 1718b9e8af63..55cff9de2f3e 100644
+> --- a/drivers/mmc/host/sdhci_am654.c
+> +++ b/drivers/mmc/host/sdhci_am654.c
+> @@ -272,6 +272,7 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
+>  	sdhci_set_clock(host, clock);
+>  }
+>  
+> +#define MAX_POWER_ON_TIMEOUT	1500 /* ms */
+>  static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
+>  {
+>  	unsigned char timing = host->mmc->ios.timing;
+> @@ -291,6 +292,26 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
+>  	}
+>  
+>  	writeb(val, host->ioaddr + reg);
+> +	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON)) {
+> +		/*
+> +		 * Power on will not happen until the card detect debounce
+> +		 * timer expires. Wait at least 1.5 seconds for the power on
+> +		 * bit to be set
+> +		 */
 
-On 8/5/2020 12:11 PM, Stephen Boyd wrote:
-> Quoting Rajendra Nayak (2020-08-04 04:46:56)
->> qup-i2c devices on sc7180 are clocked with a fixed clock (19.2 Mhz)
-> 
-> s/Mhz/MHz/
-> 
->> Though qup-i2c does not support DVFS, it still needs to vote for a
->> performance state on 'cx' to satisfy the 19.2 Mhz clock frequency
-> 
-> Capitalize CX?
-> 
->> requirement.
->>
->> Use 'assigned-performance-states' to pass this information from
->> device tree, and also add the power-domains property to specify
->> the cx power-domain.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
-> 
-> Can you generate this patch with more context? The hunks all look the
-> same so it's really hard to see where they apply.
+Can you use readb_poll_timeout() here?
 
-Sure, will do and also fix the others mentioned above.
+> +		ktime_t timeout = ktime_add_ms(ktime_get(),
+> +					       MAX_POWER_ON_TIMEOUT);
+> +		do {
+> +			if (ktime_compare(ktime_get(), timeout) > 0) {
+> +				dev_warn(mmc_dev(host->mmc),
+> +					 "Power on failed\n");
+> +
+> +				return;
+> +			}
+> +
+> +			writeb(val, host->ioaddr + reg);
+> +			usleep_range(1000, 10000);
+> +		} while (!(readb(host->ioaddr + reg) & SDHCI_POWER_ON));
+> +	}
+>  }
+>  
+>  static int sdhci_am654_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> 
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
