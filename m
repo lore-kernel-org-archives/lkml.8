@@ -2,109 +2,117 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF22BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE124C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73579206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5Eddpxt"
+	by mail.kernel.org (Postfix) with ESMTP id 6ED8922B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596655756;
+	bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Hs4xV12FewxfNelub7NCSUjqt9UUDdpSU5MlHj9qCY1kquUYP7lckuDYj4yzj9TIG
+	 m2PGiUTWY3UYKOuxOlJF86+R/Vi9kbW6xilN9x1Mu2hbDXEpnyufJcY0HMjxZ8Sg4w
+	 a3TV1pjnFcAqj+U8mKjXfJvunNzM2IoByvwG9Trs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgHET3K (ORCPT
+        id S1729072AbgHET3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:29:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31589 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728600AbgHERL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:11:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647485;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WBH1LHbCDthOlF25HB1GNrSGXvGdUkDAo8hvALVyXYI=;
-        b=a5EddpxtHP7+z7ZF57sbRi26q+kBhi5brAZOh7MUltxeXQk+vceBmvs1JmbN7YVkOG+ZhP
-        3cLu/AlY44F8rrllAtiHzAMzPmORhCKQaNTZmJ8ogGEEHN40P1SGY0RWcYLHRNtWWSf+KU
-        NAuL2cS9wnS9fcK9eLgzJdaf/+hVCac=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-GQs2M6jdNSKNYkH-_rLlYA-1; Wed, 05 Aug 2020 09:44:49 -0400
-X-MC-Unique: GQs2M6jdNSKNYkH-_rLlYA-1
-Received: by mail-wr1-f69.google.com with SMTP id r14so1529621wrq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WBH1LHbCDthOlF25HB1GNrSGXvGdUkDAo8hvALVyXYI=;
-        b=Le3E5KG4eYbKqKvK0mu4Dl/njgm1m34Vv2mhxpYtwjyLeKQ/G8KSSRk2+4buU/4JGb
-         hrC92s5Tuw80XEJajKOrmZVIsyWS3yuIqjS+mjV3c9SAOPHtQib0UEGFhJkeY4BfJm+I
-         nr20sEZluApV0jr5jGYSarEJlkUQP8gRY7+FmKWh6S2H9Vm/ZdGCBA1/8dYHj7mR5mQn
-         iONg1S+C0UMpr3hdDm5yaL+a9fb2yoKAuZ8EZWBYZyoZRm+eLCRLlf608WL0Ga/l6krC
-         T50wV9sg1gYm+ITpT4Ps9sgulgx8cdv3IZwD0JlO3bE2dEYWUY4FnhJChg9/prS8T24z
-         cR5w==
-X-Gm-Message-State: AOAM533mX15TlS3DUQXLPZvxw4aKyYupHNGPgjfFGIwA0xFvCdgOOSOA
-        Iwv8APvo9QBnGPOu3K1PQ/ouRWbTjf6fDbemAdAKrEtuiVrcyQVpKreNUQRkZUtPTyiR2zw7Y+l
-        eNUVzMGLtVzYZ4NFKNvhw8Q2C
-X-Received: by 2002:adf:ab0d:: with SMTP id q13mr2728305wrc.134.1596635087919;
-        Wed, 05 Aug 2020 06:44:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxc8ukE7mtzF0Xw22J8QjnJI7RUP7Alfizi2qIlpwN9G61AnzGldaFn2ZneBCQ7Es9dgmyqZg==
-X-Received: by 2002:adf:ab0d:: with SMTP id q13mr2728292wrc.134.1596635087769;
-        Wed, 05 Aug 2020 06:44:47 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id n24sm2989133wmi.36.2020.08.05.06.44.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:44:47 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:44:45 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
+        Wed, 5 Aug 2020 15:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728573AbgHERKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:10:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49949233A0;
+        Wed,  5 Aug 2020 15:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642794;
+        bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sZITPTFLCeHQKjrT23J7ffPjt2xFmiIJVVG+6hOb5c75SwVse5FVZHTK9t6BV7xHk
+         PtNBwjnx+BSXWSh0TZiFtZLxTMA5k87EH2HZD8rxQXlYt9yLnqTIRAd+gP0xqu1D+n
+         upkeZLQaryFjLiNAyXbfcEaWxqSADrI8E8J1PDpI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org
-Subject: [PATCH v3 33/38] virtio_pmem: convert to LE accessors
-Message-ID: <20200805134226.1106164-34-mst@redhat.com>
-References: <20200805134226.1106164-1-mst@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 3/6] random: fix circular include dependency on arm64 after addition of percpu.h
+Date:   Wed,  5 Aug 2020 17:53:02 +0200
+Message-Id: <20200805153505.648662836@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
+References: <20200805153505.472594546@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805134226.1106164-1-mst@redhat.com>
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Virtio pmem is modern-only. Use LE accessors for config space.
+From: Willy Tarreau <w@1wt.eu>
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+commit 1c9df907da83812e4f33b59d3d142c864d9da57f upstream.
+
+Daniel Díaz and Kees Cook independently reported that commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity") broke arm64 due to a circular dependency on include files
+since the addition of percpu.h in random.h.
+
+The correct fix would definitely be to move all the prandom32 stuff out
+of random.h but for backporting, a smaller solution is preferred.
+
+This one replaces linux/percpu.h with asm/percpu.h, and this fixes the
+problem on x86_64, arm64, arm, and mips.  Note that moving percpu.h
+around didn't change anything and that removing it entirely broke
+differently.  When backporting, such options might still be considered
+if this patch fails to help.
+
+[ It turns out that an alternate fix seems to be to just remove the
+  troublesome <asm/pointer_auth.h> remove from the arm64 <asm/smp.h>
+  that causes the circular dependency.
+
+  But we might as well do the whole belt-and-suspenders thing, and
+  minimize inclusion in <linux/random.h> too. Either will fix the
+  problem, and both are good changes.   - Linus ]
+
+Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reported-by: Kees Cook <keescook@chromium.org>
+Tested-by: Marc Zyngier <maz@kernel.org>
+Fixes: f227e3ec3b5c
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvdimm/virtio_pmem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/random.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
-index 5e3d07b47e0c..726c7354d465 100644
---- a/drivers/nvdimm/virtio_pmem.c
-+++ b/drivers/nvdimm/virtio_pmem.c
-@@ -58,9 +58,9 @@ static int virtio_pmem_probe(struct virtio_device *vdev)
- 		goto out_err;
- 	}
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -9,7 +9,7 @@
  
--	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-+	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
- 			start, &vpmem->start);
--	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-+	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
- 			size, &vpmem->size);
+ #include <linux/list.h>
+ #include <linux/once.h>
+-#include <linux/percpu.h>
++#include <asm/percpu.h>
  
- 	res.start = vpmem->start;
--- 
-MST
+ #include <uapi/linux/random.h>
+ 
+
 
