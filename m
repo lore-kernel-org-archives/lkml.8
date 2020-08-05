@@ -2,126 +2,203 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C06C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8792BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AABB82067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6776D206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:27:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="e+cpFn2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgHEQZe (ORCPT
+        id S1726721AbgHEQ11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgHEQX0 (ORCPT
+        Wed, 5 Aug 2020 12:27:27 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:43520 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgHEQX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:23:26 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7119AC001FD5;
-        Wed,  5 Aug 2020 09:05:26 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 730E3298FFF
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 38295480115; Wed,  5 Aug 2020 18:05:21 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv4 0/4] EXC3000 Updates
-Date:   Wed,  5 Aug 2020 18:05:16 +0200
-Message-Id: <20200805160520.456570-1-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 5 Aug 2020 12:23:27 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E630020B490F;
+        Wed,  5 Aug 2020 09:07:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E630020B490F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596643669;
+        bh=vaUisLR9Kht4UfqcTKrNtIIIJRf+vX4y2SvJm7PWt8g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=e+cpFn2dGtKBp/rCWfhHorxZGUmJI/qQGPmC9dLzn2UmWv75lQty7oqUrkOksSCRg
+         bD2QBPct/k8XzlPK7V5YX+8evojo/kYJH1V/CqXWCDArYOXpBvjRfOTNSvksYoAof7
+         3bGs66iTeYBgVYd2p69HCLGt0vDPQ66SqH7sdOOw=
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+ <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+ <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+ <20200805154504.GB4365@sequoia>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <7c7a076b-6ba7-2e8d-409a-b3b4e4738c41@linux.microsoft.com>
+Date:   Wed, 5 Aug 2020 09:07:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200805154504.GB4365@sequoia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 8/5/20 8:45 AM, Tyler Hicks wrote:
+> On 2020-08-05 08:36:40, Casey Schaufler wrote:
+>> On 8/4/2020 6:14 PM, Lakshmi Ramasubramanian wrote:
+>>> On 8/4/20 6:04 PM, Casey Schaufler wrote:
+>>>> On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
+>>>>> Critical data structures of security modules are currently not measured.
+>>>>> Therefore an attestation service, for instance, would not be able to
+>>>>> attest whether the security modules are always operating with the policies
+>>>>> and configuration that the system administrator had setup. The policies
+>>>>> and configuration for the security modules could be tampered with by
+>>>>> malware by exploiting kernel vulnerabilities or modified through some
+>>>>> inadvertent actions on the system. Measuring such critical data would
+>>>>> enable an attestation service to better assess the state of the system.
+>>>>
+>>>> I still wonder why you're calling this an LSM change/feature when
+>>>> all the change is in IMA and SELinux. You're not putting anything
+>>>> into the LSM infrastructure, not are you using the LSM infrastructure
+>>>> to achieve your ends. Sure, you *could* support other security modules
+>>>> using this scheme, but you have a configuration dependency on
+>>>> SELinux, so that's at best going to be messy. If you want this to
+>>>> be an LSM "feature" you need to use the LSM hooking mechanism.
+>>>
+>>>>
+>>>> I'm not objecting to the feature. It adds value. But as you've
+>>>> implemented it it is either an IMA extension to SELinux, or an
+>>>> SELiux extension to IMA. Could AppArmor add hooks for this without
+>>>> changing the IMA code? It doesn't look like it to me.
+>>>
+>>> The check in IMA to allow the new IMA hook func LSM_STATE and LSM_POLICY when SELinux is enabled is just because SELinux is the only security module using these hooks now.
+>>>
+>>> To enable AppArmor, for instance, to use the new IMA hooks to measure state and policy would just require adding the check for CONFIG_SECURITY_APPARMOR. Other than that, there are no IMA changes needed to support AppArmor or other such security modules.
+>>
+>> This is exactly what I'm objecting to. What if a system has both SELinux
+>> and AppArmor compiled in? What if it has both enabled?
+> 
+> The SELinux state and policy would be measured but the AppArmor
+> state/policy would be silently ignored. This isn't ideal as the IMA
+> policy author would need to read the kernel code to figure out which
+> LSMs are going to be measured.
 
-This is PATCHv3 of the EXC80Hxx support patchset.
+Tyler - I am not sure why AppArmor state\policy would be ignored when 
+both SELinux and AppArmor are enabled. Could you please clarify?
 
-Changes since [PATCHv3]:
- - reorder last two patches
- - register 'fw_version' and 'model' sysfs files in i2c device's
-   sysfs node instead of input device
- - Add Reviewed-by from Enric
- - Add Rob Herring and DT mailinglist
- - Drop probe_new API patch (applied)
+When both the security modules are enabled, IMA policy validator would 
+look like below:
 
-Changes since [PATCHv2]:
- - add #include <linux/size.h> for SZ_4K and SZ_16K (kbuild test bot)
- - fw_version_show must be ssize_t (kbuild test bot)
- - rename YAML binding file to include eeti, prefix (Enric)
- - noise from gpio-reset patch (Enric)
- - add comment for the retry loop (Enric, Martin)
- - document sysfs entries (Enric)
+if (IS_ENABLED(CONFIG_SECURITY_SELINUX) ||
+     IS_ENABLED(CONFIG_SECURITY_APPARMOR)) &&
+     strcmp(args[0].from, "LSM_STATE") == 0)
+                 entry->func = LSM_STATE;
 
-Changes since [PATCHv1]:
- - prepend new patch converting binding document to YAML
- - prepend new patch switching to I2C probe_new
- - append new patch adding reset-gpio support
- - use explicit compatible values for the touchscreen chips instead of
-   a wildcast. Since the documentation, that I have is very vague let's
-   use different values for exc80h60 and exc80h84. This avoids wildcard
-   DT entries and means we are prepared when noticing differences
-   between the chips.
- - add accidently removed terminator entry in exc3000_id
- - use device structure with max_xy and name (suggested by Martin)
- - use SZ_4K, SZ_16K defines (suggested by Dmitry)
- - harden event check, so that MT1 and MT2 based chips only allow
-   their own event type.
- - write more detailed commit description in the fw_version/model
-   sysfs patch to explain why the values are not cached and why
-   the simpler read(); sleep(); write() approach has not been used
- - use DEVICE_ATTR_RO() in fw_version/model patch to improve readability
- - fw_version/model: replace memcpy + null termination with strlcpy
- - fw_version/model: increase buffer size for weird firmware versions
- - fw_version/model: use sizeof() instead of hardcoded buffer sizes
- - simplify exc3000_query_interrupt() by moving the complete() call to
-   the exc3000_interrupt().
+Similar one for LSM_POLICY validation.
 
-I think I only ignored one review feedback, that the fw_version and
-model sysfs nodes are attached to the input device instead of the
-i2c device. This was done to avoid being racy:
+Both SELinux and AppArmor can call ima_measure_lsm_state() and 
+ima_measure_lsm_policy() to measure state and policy respectively.
 
-http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
+I don't think we should go the route of defining IMA hooks per security 
+module (i.e., SELINUX_STATE, APPARMOR_STATE, SELINUX_POLICY, etc.) 
+Instead keep the hook generic that any SM could use - which is what I 
+have tried to address in this patch series.
 
-Thanks in advance for looking at the patches,
+>>
+>>>
+>>> Please see Patch 1/4
+>>>
+>>> +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
+>>> +                 strcmp(args[0].from, "LSM_STATE") == 0)
+>>> +                entry->func = LSM_STATE;
+>>> +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
+>>> +                 strcmp(args[0].from, "LSM_POLICY") == 0)
+>>> +                entry->func = LSM_POLICY;
+>>>
+>>> And, if early boot measurement is needed for AppArmor the following change in IMA's Kconfig
+>>>
+>>> Patch 4/4
+>>>
+>>> +config IMA_QUEUE_EARLY_BOOT_DATA
+>>>       bool
+>>> +    depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+>>>       default y
+>>>
+>>> If you think calling this an "LSM feature" is not appropriate, please suggest a better phrase.
+>>
+>> In the code above you are under CONFIG_SECURITY_SELINUX.
+>> I would suggest that it's an SELinux feature, so you should
+>> be using SELINUX_STATE and SELINUX_POLICY, as I suggested
+>> before. Just because SELinux has state and policy to measure
+>> doesn't mean that a different module might not have other data,
+>> such as history, that should be covered as well.
 
--- Sebastian
+Good point - if other SMs have data besides state and policy, we can 
+define IMA hooks to measure that as well.
 
-[PATCHv3] https://lore.kernel.org/linux-input/20200520153936.46869-1-sebastian.reichel@collabora.com/
-[PATCHv2] https://lore.kernel.org/linux-input/20200519182447.73405-1-sebastian.reichel@collabora.com/
-[PATCHv1] https://lore.kernel.org/linux-input/20191107181010.17211-1-sebastian.reichel@collabora.com/
+But I still think it is not the right approach to call this 
+SELINUX_STATE and SELINUX_POLICY - it will lead to unnecessary code 
+duplication in IMA as more SMs are onboarded, in my opinion. Correct me 
+if I am wrong.
 
-Sebastian Reichel (4):
-  dt-bindings: touchscreen: Convert EETI EXC3000 touchscreen to
-    json-schema
-  Input: EXC3000: add EXC80H60 and EXC80H84 support
-  Input: EXC3000: Add reset gpio support
-  Input: EXC3000: Add support to query model and fw_version
+  -lakshmi
 
- .../ABI/testing/sysfs-driver-input-exc3000    |  15 ++
- .../input/touchscreen/eeti,exc3000.yaml       |  58 ++++
- .../bindings/input/touchscreen/exc3000.txt    |  26 --
- drivers/input/touchscreen/exc3000.c           | 249 +++++++++++++++++-
- 4 files changed, 308 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-input-exc3000
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+> 
+> In addition to SELINUX_STATE and SELINUX_POLICY, we should also consider
+> the proposed LSM_STATE and LSM_POLICY func values but require an "lsm"
+> rule conditional.
+> 
+> So the current proposed rules:
+> 
+>   measure func=LSM_STATE
+>   measure func=LSM_POLICY
+> 
+> Would become:
+> 
+>   measure func=LSM_STATE lsm=selinux
+>   measure func=LSM_POLICY lsm=selinux
+> 
+> The following rules would be rejected:
+> 
+>   measure func=LSM_STATE
+>   measure func=LSM_POLICY
+>   measure func=LSM_STATE lsm=apparmor
+>   measure func=LSM_POLICY lsm=smack
+> 
+> Of course, the apparmor and smack rules could/would be allowed when
+> proper support is in place.
+> 
 
--- 
-2.27.0
+> 
+>>
+>> I realize that IMA already has compile time dependencies to
+>> determine which xattrs to measure. There's no reason that
+>> the xattr list couldn't be determined at boot time, with
+>> each security module providing the XATTR_NAME values it
+>> uses.
+>>
+>>>
+>>> But like I said above, with minimal change in IMA other security modules can be supported to measure STATE and POLICY data.
+>>>
+>>>   -lakshmi
+>>>
+>>>
 
