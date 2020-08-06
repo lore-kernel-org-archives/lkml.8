@@ -2,107 +2,133 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2717C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13692C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E33223119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CD023119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0JlCXRl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTazq0sC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgHFRYd (ORCPT
+        id S1729086AbgHFRYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
+        Thu, 6 Aug 2020 13:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729929AbgHFREn (ORCPT
+        with ESMTP id S1729912AbgHFREE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:04:43 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A516C03460C;
-        Thu,  6 Aug 2020 07:22:50 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id 185so41736659ljj.7;
-        Thu, 06 Aug 2020 07:22:50 -0700 (PDT)
+        Thu, 6 Aug 2020 13:04:04 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC65C0A888F;
+        Thu,  6 Aug 2020 07:41:59 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id z17so25520368ill.6;
+        Thu, 06 Aug 2020 07:41:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XByk4zQLeWdVJ99jAPoK52EaFY9Nq96sXFd7ZxTXSZs=;
-        b=T0JlCXRlEg1AKCwQb1Q6HbT/3xfXPI1KwN7z3+S4H2XdoJf5sckRXpOd32Vj99hdZL
-         37mV132mg68iZ3zO5YvGKQBpF4ZmLRSkbzl9rdYzDZZDGFw8O8b+S0Uq9Vq50z6pIVR+
-         7zD4im9G8SYACEta3zEIjft/lAZB1aTVdYmJ+L3Y0S34NidBHYZ7yh9ee/J2ye9CgA3P
-         /lJ5WIpzDneUNMyM1VHVqjwIAPrL0Pxab33D5KBqnh67nkkXTXcLe+46/lNeUrb+LrsA
-         5VQFpXLPhIINuM8eV5bGVSYNijh7laO+zCxpNisCSy8HwtoQkSIowyDIIujk9DMonPW4
-         gdow==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=e+hO/GQg5P+bxQrVbS65C7Iq18WrIeXspRsLAKl6TmY=;
+        b=TTazq0sCZRjto6OkfUWBKf1/2X3NxXYV0alJTRb9iha5CV4YG5RQoIkNcndd1jABiR
+         6arDxJ3PjTvaYsRp6BllbjuvMHvBuTNR+lg4jQNgZ5AVcQMLBVKGZ4UAUBzSxWzbVYg2
+         tTCnPg13nUaa3FAtnSUfhTAaz6PZe1omA4g5kN0i1eII5KKVMcO8E3f9lC8xg0C0jB5J
+         Zyv4OffZSOkiwZ0V+e4ueUrTF9n2C5jfgfZ8t5TfeDmduvFro3ac3U6b0PBCIfSbloiq
+         vgfcxRw9yG6TqBpCInEUWFfmcDx/FTzkyt4QDblpYEgmTXYWO4goZnIgoPEGA2Kxd943
+         fRxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XByk4zQLeWdVJ99jAPoK52EaFY9Nq96sXFd7ZxTXSZs=;
-        b=LsiPdCSSIGezBLwLMm67zLU5h4j/XH/3HNXICixllh2bQwJih88B/4+HMoie+FYAat
-         kPjz35npSDaoyd0v+njcqFdK7FXP4c/n/piP7hjvYU/R8/003cKpo6CPdP0m3MBa4hT5
-         IXQd23k6FVopVTHZLxo/1OmVhuq+qhgrEJ05UxYUjsLpR6gLwEwX48wqfZkmsl2H9dlz
-         2O8v++SH54T/V18McZQLjyYb57U+QAWH7vMGywHMTFPypa0MRncRtStop/lNR7EzBY+5
-         41HU8jmRsd9FL4PjGSZmCpLdwlCLpLD2bZ2Mjmh3dTBlcw/twNkkXB2NRhbc0gAYTXqd
-         CS6Q==
-X-Gm-Message-State: AOAM532aEAxUGSRASymmXM040IztMx4Ikt5XrnZEAokGqrhrYKUTAvvN
-        dbfjGgo1untPtR7UEDivDrA=
-X-Google-Smtp-Source: ABdhPJxA2Tkfxwf/RHpIug+GOl8r/RwGGUhTAJxYzx5jCzoXQ539huOTFz7Djjq2XQjHvs9c2QBk/Q==
-X-Received: by 2002:a2e:3c03:: with SMTP id j3mr3998129lja.397.1596723767006;
-        Thu, 06 Aug 2020 07:22:47 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id h17sm2479535ljj.118.2020.08.06.07.22.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 07:22:45 -0700 (PDT)
-Subject: Re: [Patch v2 2/4] dmaengine: tegra: Add Tegra GPC DMA driver
-To:     Rajesh Gumasta <rgumasta@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
- <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
- <bc7d0d9d-ac7f-b720-64f5-63e0c76e6786@gmail.com>
- <CH2PR12MB41350E273B36463F9B372A52A2480@CH2PR12MB4135.namprd12.prod.outlook.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8fa139f2-685e-9e19-df55-bc7f84ec9a4c@gmail.com>
-Date:   Thu, 6 Aug 2020 17:22:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=e+hO/GQg5P+bxQrVbS65C7Iq18WrIeXspRsLAKl6TmY=;
+        b=PE17qnaI6U7NeC2sVe1T5BRFs9IWbbpsX4sQEVwcHM9aj5HFHexTRCnmza2oAnkPyB
+         v5PqyhdsuBPNQjk1tXowe0wSvBcYagzcGamV+RXWkrtWYL7RgMC7P5uHI+q0+pfujyXY
+         BevgpdGRnwJkxxSC3MQKEI3Mtm1WXcg+5k5fknc97Kpz/YcQNmI+xjAZk64QEWUGSasJ
+         0XLAC3zdFrqr54afaBWGe63Dx7u57u3Mh/kkwKyHQtXKXuTVtRpbsaIMJxuttSwKWkGw
+         La1BlR1+jH6naBss5ugnoN5McKiFnq8mawpfMErScJgi4v48YDUv7BQbHbL30uWG4ChJ
+         ulfQ==
+X-Gm-Message-State: AOAM530GByZIduTZWbb80Yts9UI0R82Tmk7Mw4t/Kaumn1bxEEQW8yyy
+        G9iZQo8ekxj8WT5eBHAHio/8GC081TW2XlGhl6I=
+X-Google-Smtp-Source: ABdhPJyMYILla6HQYNcIPeMni5KOhLnUAjTEmattKCsp0+w1QGXrfuR6V4jG4VzEak6WOHcFfOeQS6f4Hb4mhukcP+E=
+X-Received: by 2002:a92:5b12:: with SMTP id p18mr3323594ilb.95.1596724918389;
+ Thu, 06 Aug 2020 07:41:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CH2PR12MB41350E273B36463F9B372A52A2480@CH2PR12MB4135.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-14-git-send-email-alex.shi@linux.alibaba.com>
+ <9b906469-38fb-8a4e-9a47-d617c7669579@linux.alibaba.com> <CAKgT0Ud1+FkJcTXR0MxZYFxd7mr=opdXfXKTqkmiu4NNMyT4bg@mail.gmail.com>
+ <f9fa46a4-b341-2470-ce18-03379b9ea5c2@linux.alibaba.com>
+In-Reply-To: <f9fa46a4-b341-2470-ce18-03379b9ea5c2@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 6 Aug 2020 07:41:47 -0700
+Message-ID: <CAKgT0Ud-z4PH_d824KVgXtakwGNGXhd3Avvx4drBGmGh0nMcZw@mail.gmail.com>
+Subject: Re: [PATCH v17 13/21] mm/lru: introduce TestClearPageLRU
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.08.2020 16:56, Rajesh Gumasta пишет:
-...
->>> +static const struct __maybe_unused dev_pm_ops
->> tegra_dma_dev_pm_ops = {
->>> +     SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_dma_pm_suspend,
->>> +tegra_dma_pm_resume) };
->>
->> Please explain why this is needed. All DMA should be stopped (not
->> paused) on system's suspend, shouldn't it?
-> I have rechecked with HW verification team and they confirmed that after suspend, csr and channel registers will get reset hence on resume we need to restore back.
-> Also GPCDMA does not support power gate as a unit.
+On Wed, Aug 5, 2020 at 6:54 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+>
+>
+> =E5=9C=A8 2020/8/6 =E4=B8=8A=E5=8D=886:43, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> >> @@ -878,9 +877,8 @@ void release_pages(struct page **pages, int nr)
+> >>                                 spin_lock_irqsave(&locked_pgdat->lru_l=
+ock, flags);
+> >>                         }
+> >>
+> >> -                       lruvec =3D mem_cgroup_page_lruvec(page, locked=
+_pgdat);
+> >> -                       VM_BUG_ON_PAGE(!PageLRU(page), page);
+> >>                         __ClearPageLRU(page);
+> >> +                       lruvec =3D mem_cgroup_page_lruvec(page, locked=
+_pgdat);
+> >>                         del_page_from_lru_list(page, lruvec, page_off_=
+lru(page));
+> >>                 }
+> >>
+> > The more I look at this piece it seems like this change wasn't really
+> > necessary. If anything it seems like it could catch potential bugs as
+> > it was testing for the PageLRU flag before and then clearing it
+> > manually anyway. In addition it doesn't reduce the critical path by
+> > any significant amount so I am not sure these changes are providing
+> > any benefit.
+>
+> Don't know hat kind of bug do you mean here, since the page is no one usi=
+ng, means
+> no one could ClearPageLRU in other place,  so if you like to keep the VM_=
+BUG_ON_PAGE,
+> that should be ok.
 
-But all registers are re-programmed on starting a DMA transfer, hence
-why do you need to save-restore them on suspend-resume?
+You kind of answered your own question. Basically the bug it would
+catch is if another thread were to clear the flag without getting a
+reference to the page first. My preference would be to leave this code
+as is for now. There isn't much value in either moving the lruvec or
+removing the VM_BUG_ON_PAGE call since the critical path size would
+barely be effected as it is only one or two operations anyway. What it
+comes down to is that the less unnecessary changes we make the better.
