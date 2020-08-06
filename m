@@ -7,24 +7,27 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE92C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 823B62173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628BE21744
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IMPKijvw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dDZkm5vh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rzKES9e0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vIRQpDGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHFXkR (ORCPT
+        id S1727773AbgHFXkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:40:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60928 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgHFXiy (ORCPT
+        Thu, 6 Aug 2020 19:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgHFXiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:38:54 -0400
-Date:   Thu, 06 Aug 2020 23:38:51 -0000
+        Thu, 6 Aug 2020 19:38:52 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C43C061575;
+        Thu,  6 Aug 2020 16:38:52 -0700 (PDT)
+Date:   Thu, 06 Aug 2020 23:38:50 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1596757131;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -32,12 +35,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ch/ZbyQPh5zAPHhTTKYTrb8KpxCzGor9HlcTJgHy8tY=;
-        b=IMPKijvwk+rwZOUB7nmyrWvaEE9UHFlNrMjDbiCQNmaX1oOVZIARN6JXl30mudGfcK1UAM
-        afhONUWmF61wv4uzqNrzbip4NyWq8d/C9NYLZtwuDDhQfgRl1bbfXPJ72v9tsRLHR1dsNF
-        5Vo16ux7bwClIJBDpea+fTxJcP+AWvTPRTWqfyRxfUUHl50+m0w9A8hSWR5sGffmUm/Esb
-        VtT/zGGl8hLmm86Nqwx07gomJJXRsJ3lDPD0TMHd02MWvibJngo1g64577leIvZVZZIlhV
-        Td9gl5uXtOCyFhzJ3Oo94+6R5z9HRuWFxq2xphu4w9Fne8gKBEiPq7/WlNkcJA==
+        bh=zDxatrwO+co72myHzmJiVqhEcOcAAOjarE+tDUP3zz0=;
+        b=rzKES9e0H1m5Nm6KXCA6vSDrWrdNJHMtiDPI/5LrnNgOggaF7wIoh74AoT5B65rK1j2YGa
+        WHML9va4Uu+gWnMSVKQSemYzFa9DmsWSuXfeIdfvNYPcT122SI5D2DITvh61kWHpvk8+VB
+        kvB4/+ZqejjuokyUC1/pZSHXKhTQMRL3xiIjjxlzLT7EJriZ5DJENYnfsoiRuIUQkwj0fB
+        qSetmEqbttvWzhy5TE/upOJw2p1A6h4FxiO95Blhko0lod27CPwli9r/qlEd1flr+Iux6n
+        avwM0yk2cMntgUxwUSQdYX7qrXD8Q6IVhpl5gsQtfZcB6xzUXxdUozKEXNrOOQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1596757131;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -45,20 +48,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ch/ZbyQPh5zAPHhTTKYTrb8KpxCzGor9HlcTJgHy8tY=;
-        b=dDZkm5vhH4rD4uT6ZM2Keusr+t7ui3LMJ0wV3srWiD7bu4BNY+01ESe5nvoNDvUC3nvE4W
-        GN0hIAvV6B01mcCA==
+        bh=zDxatrwO+co72myHzmJiVqhEcOcAAOjarE+tDUP3zz0=;
+        b=vIRQpDGmT0wZfMPayECEODhFEAxr/x4RCFzpOqM21Kk/qNBIy57BEcRnpyuxfs2VMBTLUt
+        S4+3ucjKHYtSk3CQ==
 From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kaslr] x86/kaslr: Make local variables 64-bit
+Subject: [tip: x86/kaslr] x86/kaslr: Add a check that the random address is in range
 Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200728225722.67457-21-nivedita@alum.mit.edu>
-References: <20200728225722.67457-21-nivedita@alum.mit.edu>
+In-Reply-To: <20200728225722.67457-22-nivedita@alum.mit.edu>
+References: <20200728225722.67457-22-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Message-ID: <159675713110.3192.165971171564749416.tip-bot2@tip-bot2>
+Message-ID: <159675713045.3192.895736711102672509.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,82 +73,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/kaslr branch of tip:
 
-Commit-ID:     0eb1a8af01d6264cf948d67c8bff15e2eb859355
-Gitweb:        https://git.kernel.org/tip/0eb1a8af01d6264cf948d67c8bff15e2eb859355
+Commit-ID:     f49236ae424d499d02ee3ce35fb9130ddf95b03f
+Gitweb:        https://git.kernel.org/tip/f49236ae424d499d02ee3ce35fb9130ddf95b03f
 Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Tue, 28 Jul 2020 18:57:21 -04:00
+AuthorDate:    Tue, 28 Jul 2020 18:57:22 -04:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 31 Jul 2020 11:08:17 +02:00
 
-x86/kaslr: Make local variables 64-bit
+x86/kaslr: Add a check that the random address is in range
 
-Change the type of local variables/fields that store mem_vector
-addresses to u64 to make it less likely that 32-bit overflow will cause
-issues on 32-bit.
+Check in find_random_phys_addr() that the chosen address is inside the
+range that was required.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200728225722.67457-21-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200728225722.67457-22-nivedita@alum.mit.edu
 ---
- arch/x86/boot/compressed/kaslr.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/boot/compressed/kaslr.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index db8589c..80cdd20 100644
+index 80cdd20..735fcb2 100644
 --- a/arch/x86/boot/compressed/kaslr.c
 +++ b/arch/x86/boot/compressed/kaslr.c
-@@ -461,7 +461,7 @@ static bool mem_avoid_overlap(struct mem_vector *img,
+@@ -803,6 +803,8 @@ static void process_e820_entries(unsigned long minimum,
+ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 					   unsigned long image_size)
  {
- 	int i;
- 	struct setup_data *ptr;
--	unsigned long earliest = img->start + img->size;
-+	u64 earliest = img->start + img->size;
- 	bool is_overlapping = false;
++	u64 phys_addr;
++
+ 	/* Bail out early if it's impossible to succeed. */
+ 	if (minimum + image_size > mem_limit)
+ 		return 0;
+@@ -816,7 +818,15 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 	if (!process_efi_entries(minimum, image_size))
+ 		process_e820_entries(minimum, image_size);
  
- 	for (i = 0; i < MEM_AVOID_MAX; i++) {
-@@ -506,7 +506,7 @@ static bool mem_avoid_overlap(struct mem_vector *img,
+-	return slots_fetch_random();
++	phys_addr = slots_fetch_random();
++
++	/* Perform a final check to make sure the address is in range. */
++	if (phys_addr < minimum || phys_addr + image_size > mem_limit) {
++		warn("Invalid physical address chosen!\n");
++		return 0;
++	}
++
++	return (unsigned long)phys_addr;
  }
  
- struct slot_area {
--	unsigned long addr;
-+	u64 addr;
- 	unsigned long num;
- };
- 
-@@ -537,7 +537,8 @@ static void store_slot_info(struct mem_vector *region, unsigned long image_size)
- static void
- process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
- {
--	unsigned long pud_start, pud_end, gb_huge_pages;
-+	u64 pud_start, pud_end;
-+	unsigned long gb_huge_pages;
- 	struct mem_vector tmp;
- 
- 	if (!IS_ENABLED(CONFIG_X86_64) || !max_gb_huge_pages) {
-@@ -579,7 +580,7 @@ process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
- 	}
- }
- 
--static unsigned long slots_fetch_random(void)
-+static u64 slots_fetch_random(void)
- {
- 	unsigned long slot;
- 	unsigned int i;
-@@ -595,7 +596,7 @@ static unsigned long slots_fetch_random(void)
- 			slot -= slot_areas[i].num;
- 			continue;
- 		}
--		return slot_areas[i].addr + slot * CONFIG_PHYSICAL_ALIGN;
-+		return slot_areas[i].addr + ((u64)slot * CONFIG_PHYSICAL_ALIGN);
- 	}
- 
- 	if (i == slot_area_index)
-@@ -608,7 +609,7 @@ static void __process_mem_region(struct mem_vector *entry,
- 				 unsigned long image_size)
- {
- 	struct mem_vector region, overlap;
--	unsigned long region_end;
-+	u64 region_end;
- 
- 	/* Enforce minimum and memory limit. */
- 	region.start = max_t(u64, entry->start, minimum);
+ static unsigned long find_random_virt_addr(unsigned long minimum,
