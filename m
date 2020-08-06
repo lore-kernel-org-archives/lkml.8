@@ -4,61 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE57C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A8E21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7CE2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aMqoema1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tk5EY1R/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BrhbW8Wo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4IsK0bVO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgHFXkP (ORCPT
+        id S1727811AbgHFXkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:40:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60936 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbgHFXiy (ORCPT
+        Thu, 6 Aug 2020 19:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgHFXir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:38:54 -0400
-Date:   Thu, 06 Aug 2020 23:38:51 -0000
+        Thu, 6 Aug 2020 19:38:47 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D436C061574;
+        Thu,  6 Aug 2020 16:38:46 -0700 (PDT)
+Date:   Thu, 06 Aug 2020 23:38:44 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757132;
+        s=2020; t=1596757124;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CLpJDeFxy+PTx4/tTPkZdjyWW+ZYuXF66k678B1t4rs=;
-        b=aMqoema19u4I+UEZh/OHpX5/t6hc11TnLMeDgv9Mykk5ndN6t0a0D9hb80Rr8TrKzOf4T+
-        M1hKA5DMqC+ByNdKyMeXRVUpj/IbOaeCdQB2QsWVlvJfTx0t+ZHqE+OFC8IoWDx4ETA0M3
-        pJxbrIz9VR8tJ7gFPrkWhKCWseErQo62fRUB6+3ZxZgQeFaRje5J5fJXuhDUnuJb9W2bUl
-        LLPVCtb+yU2Rahqcf1a+471yDc0slYbdm4ff9VC7Mv/bzmDvQcA+cv7OfthIJSllM9WB7h
-        15iuWnlDG0KknkhKQgBBbO3HTvUTC8A8p5JUtggojMZoJYi6XPViNYRehKwd0Q==
+        bh=a/6bN2W+sbKqoMQVXc/N208gzWCrayhuS/+kjHFDvAY=;
+        b=BrhbW8WoN8ZgoiwRKN+ELUA/12D+PrqobcQScAwW2lL69y5LLa+0pJ5EIR0nPp2U+pP/4n
+        WjEnPC3244L5cIqW0TwV6JPoBa7w2k+cvjiOfhiapgukFC2pxZfNxEfQdMHxnGHIwninM3
+        GW+5536t4lZFeaJaRARq5nBfOvCLzeXFosporpf6GNpiES+mBRepGR5U0TtXdBJ7xeWxNQ
+        6jYu6BjxQf+42QqNhfiGTG5QUTfkKqlX2Oy7lE8DK8ag+ICfvihTDW6TxFzvBgduYKWOPa
+        AYHmqxi/qI8ick9nDu5FYggO/ws6aNaF6gYJuI0WCQNpFp0sIBDd3+pIRmigzA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757132;
+        s=2020e; t=1596757124;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CLpJDeFxy+PTx4/tTPkZdjyWW+ZYuXF66k678B1t4rs=;
-        b=Tk5EY1R/kqCQMZVHzBKj/uBDdZc3YcUMe768w0kFwSteOd8CX5tRXVQPPm0Hl1yM/t+XhC
-        1esuHuCd7zLWQJAw==
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+        bh=a/6bN2W+sbKqoMQVXc/N208gzWCrayhuS/+kjHFDvAY=;
+        b=4IsK0bVOvHegUuLCzCxTf5W0k/Oy211XSWpZNnZpU+C1hbFS6aZRurFGSHTZrqBd1Lpi0k
+        uZEQc6mYtkEmZ2BQ==
+From:   "tip-bot2 for Dilip Kota" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kaslr] x86/kaslr: Replace 'unsigned long long' with 'u64'
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200728225722.67457-20-nivedita@alum.mit.edu>
-References: <20200728225722.67457-20-nivedita@alum.mit.edu>
+Subject: [tip: x86/urgent] x86/tsr: Fix tsc frequency enumeration bug on
+ Lightning Mountain SoC
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: =?utf-8?q?=3C211c643ae217604b46cbec43a2c0423946dc7d2d=2E15964?=
+ =?utf-8?q?40057=2Egit=2Eeswara=2Ekota=40linux=2Eintel=2Ecom=3E?=
+References: =?utf-8?q?=3C211c643ae217604b46cbec43a2c0423946dc7d2d=2E159644?=
+ =?utf-8?q?0057=2Egit=2Eeswara=2Ekota=40linux=2Eintel=2Ecom=3E?=
 MIME-Version: 1.0
-Message-ID: <159675713178.3192.13197922720000433482.tip-bot2@tip-bot2>
+Message-ID: <159675712426.3192.11461805237843153362.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -68,98 +75,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/kaslr branch of tip:
+The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     3a066990a35eb289d54036637d2793d4743b8f07
-Gitweb:        https://git.kernel.org/tip/3a066990a35eb289d54036637d2793d4743b8f07
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Tue, 28 Jul 2020 18:57:20 -04:00
+Commit-ID:     7d98585860d845e36ee612832a5ff021f201dbaf
+Gitweb:        https://git.kernel.org/tip/7d98585860d845e36ee612832a5ff021f201dbaf
+Author:        Dilip Kota <eswara.kota@linux.intel.com>
+AuthorDate:    Mon, 03 Aug 2020 15:56:36 +08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 31 Jul 2020 11:08:17 +02:00
+CommitterDate: Fri, 07 Aug 2020 01:32:00 +02:00
 
-x86/kaslr: Replace 'unsigned long long' with 'u64'
+x86/tsr: Fix tsc frequency enumeration bug on Lightning Mountain SoC
 
-No functional change.
+Frequency descriptor of Lightning Mountain SoC doesn't have all the
+frequency entries so resulting in the below failure causing a kernel hang:
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+    Error MSR_FSB_FREQ index 15 is unknown
+    tsc: Fast TSC calibration failed
+
+So, add all the frequency entries in the Lightning Mountain SoC frequency
+descriptor.
+
+Fixes: 0cc5359d8fd45 ("x86/cpu: Update init data for new Airmont CPU model")
+Fixes: 812c2d7506fd ("x86/tsc_msr: Use named struct initializers")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200728225722.67457-20-nivedita@alum.mit.edu
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/211c643ae217604b46cbec43a2c0423946dc7d2d.1596440057.git.eswara.kota@linux.intel.com
 ---
- arch/x86/boot/compressed/kaslr.c | 13 ++++++-------
- arch/x86/boot/compressed/misc.h  |  4 ++--
- 2 files changed, 8 insertions(+), 9 deletions(-)
+ arch/x86/kernel/tsc_msr.c |  9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 3244f5b..db8589c 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -98,7 +98,7 @@ static bool memmap_too_large;
-  * Store memory limit: MAXMEM on 64-bit and KERNEL_IMAGE_SIZE on 32-bit.
-  * It may be reduced by "mem=nn[KMG]" or "memmap=nn[KMG]" command line options.
-  */
--static unsigned long long mem_limit;
-+static u64 mem_limit;
- 
- /* Number of immovable memory regions */
- static int num_immovable_mem;
-@@ -141,8 +141,7 @@ enum parse_mode {
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index 4fec6f3..a654a9b 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -133,10 +133,15 @@ static const struct freq_desc freq_desc_ann = {
+ 	.mask = 0x0f,
  };
  
- static int
--parse_memmap(char *p, unsigned long long *start, unsigned long long *size,
--		enum parse_mode mode)
-+parse_memmap(char *p, u64 *start, u64 *size, enum parse_mode mode)
- {
- 	char *oldp;
- 
-@@ -172,7 +171,7 @@ parse_memmap(char *p, unsigned long long *start, unsigned long long *size,
- 			 */
- 			*size = 0;
- 		} else {
--			unsigned long long flags;
-+			u64 flags;
- 
- 			/*
- 			 * efi_fake_mem=nn@ss:attr the attr specifies
-@@ -211,7 +210,7 @@ static void mem_avoid_memmap(enum parse_mode mode, char *str)
- 
- 	while (str && (i < MAX_MEMMAP_REGIONS)) {
- 		int rc;
--		unsigned long long start, size;
-+		u64 start, size;
- 		char *k = strchr(str, ',');
- 
- 		if (k)
-@@ -612,7 +611,7 @@ static void __process_mem_region(struct mem_vector *entry,
- 	unsigned long region_end;
- 
- 	/* Enforce minimum and memory limit. */
--	region.start = max_t(unsigned long long, entry->start, minimum);
-+	region.start = max_t(u64, entry->start, minimum);
- 	region_end = min(entry->start + entry->size, mem_limit);
- 
- 	/* Give up if slot area array is full. */
-@@ -673,7 +672,7 @@ static bool process_mem_region(struct mem_vector *region,
- 	 * immovable memory and @region.
- 	 */
- 	for (i = 0; i < num_immovable_mem; i++) {
--		unsigned long long start, end, entry_end, region_end;
-+		u64 start, end, entry_end, region_end;
- 		struct mem_vector entry;
- 
- 		if (!mem_overlaps(region, &immovable_mem[i]))
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 726e264..3efce27 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -70,8 +70,8 @@ int cmdline_find_option(const char *option, char *buffer, int bufsize);
- int cmdline_find_option_bool(const char *option);
- 
- struct mem_vector {
--	unsigned long long start;
--	unsigned long long size;
-+	u64 start;
-+	u64 size;
+-/* 24 MHz crystal? : 24 * 13 / 4 = 78 MHz */
++/*
++ * 24 MHz crystal? : 24 * 13 / 4 = 78 MHz
++ * Frequency step for Lightning Mountain SoC is fixed to 78 MHz,
++ * so all the frequency entries are 78000.
++ */
+ static const struct freq_desc freq_desc_lgm = {
+ 	.use_msr_plat = true,
+-	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
++	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000,
++		   78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
+ 	.mask = 0x0f,
  };
  
- #if CONFIG_RANDOMIZE_BASE
