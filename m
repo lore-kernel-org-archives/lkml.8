@@ -2,129 +2,149 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C79CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 139552245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E5921744
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bcQw6mra"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hUKhqieF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbgHFD1h (ORCPT
+        id S1730629AbgHFD2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 23:27:37 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25628 "EHLO
+        Wed, 5 Aug 2020 23:28:18 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24025 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730500AbgHFD1f (ORCPT
+        by vger.kernel.org with ESMTP id S1730582AbgHFD2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 23:27:35 -0400
+        Wed, 5 Aug 2020 23:28:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596684454;
+        s=mimecast20190719; t=1596684481;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yj1ihXQO2M1TsL9VeUKDmXbzc/ApdSgHZZHy2dOrKJk=;
-        b=bcQw6mraHDsF+rsx9l6d783z9bp7TUCV220sotl2PexpvrFbKLjMCBTf2aqZLhAOblvFLc
-        phgvIuZ7S4t2vRO8C84PwetDznfU2L7X89x+c0RVfNlfHgZn+rRsRjBGlbXaxc2eHknoAc
-        gVeZKXfNg9p19+agnfR6PE6yLllkiBk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-346-EWkCYCeNMcm4t8G3QDakkQ-1; Wed, 05 Aug 2020 23:27:33 -0400
-X-MC-Unique: EWkCYCeNMcm4t8G3QDakkQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C0D1106B242;
-        Thu,  6 Aug 2020 03:27:31 +0000 (UTC)
-Received: from [10.72.13.140] (ovpn-13-140.pek2.redhat.com [10.72.13.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E19EA19D81;
-        Thu,  6 Aug 2020 03:27:17 +0000 (UTC)
-Subject: Re: [PATCH 3/4] vdpa: get_iova_range() is mandatory for device
- specific DMA translation
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
-        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200617032947.6371-1-jasowang@redhat.com>
- <20200617032947.6371-4-jasowang@redhat.com>
- <20200805085217-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d371771e-b17a-8ccb-e185-4762b9ac0914@redhat.com>
-Date:   Thu, 6 Aug 2020 11:27:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=fv3CnjYaDNIHTU7CqIhzqNedLZ06zeIgR5EU/DfXL/4=;
+        b=hUKhqieFBa5J57whBZbx609Apal04a/P/dfRsi4TPyyJOROdnKTG0krj/QlI+NMYBcJZku
+        ILY04arSSsf5z1keXUVGPmeCchra49SmxXT7ZAH6Gx5HJ1PSxWAuJ+UsbQFvnfeptZQlSM
+        jBdKWYPy0WXowVn4DW//7+PCSIoLQeQ=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-Lc2dETV0Pz6ttQwf1XgJeg-1; Wed, 05 Aug 2020 23:20:32 -0400
+X-MC-Unique: Lc2dETV0Pz6ttQwf1XgJeg-1
+Received: by mail-pg1-f198.google.com with SMTP id h2so32713083pgc.19
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 20:20:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=fv3CnjYaDNIHTU7CqIhzqNedLZ06zeIgR5EU/DfXL/4=;
+        b=U+/5nbjy1HuG7vnnHzjI5LHIsfL9UJJO+SQgEZoqWsMh39JsJngbLmxG6Lp+aGSVUX
+         pAhqV+Pg4otH/G/UrbU4B0lm/jJgr/LHKHORKMe8xVOKbYbKR2blhCeTMTkRQUvoq/AT
+         APi82vCsK8Unv0TaFVWPv8IGUBA28Wf7P1SCzsmiVumU8bRGUEJBRmvW6y4R5GxPUdrc
+         PlISjG8+yhGwJI9LfgcFNxoRn0U0Ph6khpj2SIRzmYdcVeKXW5wgobDjtEc71peqkpEd
+         wiVqnwzAMY5LPB7NzdNKmgfZM9vWwWfpQUOVc05Og/SEsQvocK0mA8GcDK6tRDSkoS1F
+         COyw==
+X-Gm-Message-State: AOAM530VnLRX/GgUs6D8KndXYAiBjnn3qIlIpizVQHBphDaA0+cw8831
+        Wf5RtH/3kjDUp8SCKT3bDj/WcfDZ7sTFTCrfKea3dzUpqjNo4EBgoWvhXJqVhmA/VpRtCjZ7R6Z
+        J6PIDT5p12phqSK3YxJ5snAr7
+X-Received: by 2002:a17:90a:6d26:: with SMTP id z35mr6170203pjj.164.1596684030848;
+        Wed, 05 Aug 2020 20:20:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw1dO1CoIriHlooHe7iPiLtnA9/a4o5ehfwXRyowc0cEPLGbBaMduX4YaDzusso9AlMTbBwLw==
+X-Received: by 2002:a17:90a:6d26:: with SMTP id z35mr6170176pjj.164.1596684030608;
+        Wed, 05 Aug 2020 20:20:30 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id g4sm4971772pgn.64.2020.08.05.20.20.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 20:20:29 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 11:20:17 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Miao Xie <miaoxie@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Gao Xiang <hsiangkao@redhat.com>
+Subject: [GIT PULL] erofs fixes for 5.9-rc1
+Message-ID: <20200806032017.GA4442@xiangao.remote.csb>
 MIME-Version: 1.0
-In-Reply-To: <20200805085217-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-On 2020/8/5 下午8:55, Michael S. Tsirkin wrote:
-> On Wed, Jun 17, 2020 at 11:29:46AM +0800, Jason Wang wrote:
->> In order to let userspace work correctly, get_iova_range() is a must
->> for the device that has its own DMA translation logic.
-> I guess you mean for a device.
->
-> However in absence of ths op, I don't see what is wrong with just
-> assuming device can access any address.
+Could you consider this pull request for 5.9-rc1?
 
+This cycle mainly addresses an issue out of some extended inode with
+designated location, which can hardly be generated by current mkfs but
+needs to handle at runtime anyway. The others are quite trivial ones.
 
-It's just for safe, if you want, we can assume any address without this op.
+All commits have been tested and have been in linux-next as well.
+This merges cleanly with master.
 
+Thanks,
+Gao Xiang
 
->
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/vdpa/vdpa.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
->> index de211ef3738c..ab7af978ef70 100644
->> --- a/drivers/vdpa/vdpa.c
->> +++ b/drivers/vdpa/vdpa.c
->> @@ -82,6 +82,10 @@ struct vdpa_device *__vdpa_alloc_device(struct device *parent,
->>   	if (!!config->dma_map != !!config->dma_unmap)
->>   		goto err;
->>   
->> +	if ((config->dma_map || config->set_map) &&
->> +	    !config->get_iova_range)
->> +		goto err;
->> +
->>   	err = -ENOMEM;
->>   	vdev = kzalloc(size, GFP_KERNEL);
->>   	if (!vdev)
-> What about devices using an IOMMU for translation?
-> IOMMUs generally have a limited IOVA range too, right?
+The following changes since commit 92ed301919932f777713b9172e525674157e983d:
 
+  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
 
-See patch 4 which query the IOMMU geometry in this case:
+are available in the Git repository at:
 
-+        iommu_domain_get_attr(v->domain,
-+                      DOMAIN_ATTR_GEOMETRY, &geo);
-+        range.start = geo.aperture_start;
-+        range.end = geo.aperture_end;
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.9-rc1
 
-Thanks
+for you to fetch changes up to 0e62ea33ac12ebde876b67eca113630805191a66:
 
+  erofs: remove WQ_CPU_INTENSIVE flag from unbound wq's (2020-08-03 21:04:46 +0800)
 
->
->
->
->> -- 
->> 2.20.1
+----------------------------------------------------------------
+Changes since last update:
+
+ - use HTTPS links instead of insecure HTTP ones;
+
+ - fix crossing page boundary on specific extended inodes;
+
+ - remove useless WQ_CPU_INTENSIVE flag for unbound wq;
+
+ - minor cleanup.
+
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      erofs: Replace HTTP links with HTTPS ones
+
+Gao Xiang (3):
+      erofs: fix extended inode could cross boundary
+      erofs: fold in used-once helper erofs_workgroup_unfreeze_final()
+      erofs: remove WQ_CPU_INTENSIVE flag from unbound wq's
+
+ fs/erofs/compress.h     |   2 +-
+ fs/erofs/data.c         |   2 +-
+ fs/erofs/decompressor.c |   2 +-
+ fs/erofs/dir.c          |   2 +-
+ fs/erofs/erofs_fs.h     |   2 +-
+ fs/erofs/inode.c        | 123 +++++++++++++++++++++++++++++++-----------------
+ fs/erofs/internal.h     |   2 +-
+ fs/erofs/namei.c        |   2 +-
+ fs/erofs/super.c        |   2 +-
+ fs/erofs/utils.c        |  16 ++-----
+ fs/erofs/xattr.c        |   2 +-
+ fs/erofs/xattr.h        |   2 +-
+ fs/erofs/zdata.c        |   6 +--
+ fs/erofs/zdata.h        |   2 +-
+ fs/erofs/zmap.c         |   2 +-
+ fs/erofs/zpvec.h        |   2 +-
+ 16 files changed, 100 insertions(+), 71 deletions(-)
 
