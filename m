@@ -2,127 +2,189 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7918C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16AA823119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1E220786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBJ+xRcZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="feCyacuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgHFQ7y (ORCPT
+        id S1729522AbgHFRAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:59:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728999AbgHFQkk (ORCPT
+        Thu, 6 Aug 2020 13:00:17 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56960 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728862AbgHFQ75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:40:40 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21CA1C002174
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:14:46 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id r4so17213173pls.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E+VfmnxDV498yxI5rDUMFgAbVpKeY5DLzESFio3gnB4=;
-        b=UBJ+xRcZblEVxSJwz/PK+6Kw1nyvUVkSJPh5W3yJfyKUV1zBsLoDfTSVMzPYi0aXAB
-         MoIYnymHlZyzMpW2QDQGcE1yacW3lPSxo41W77F74qUi7yZyaUPg4mZaaTps4uw7arDv
-         MHSZarQlh9DmRRObpE31wn60GWelGoIPB5AylEpEXUq4SI+QeMWpN/xCPgXX1c1h//Sp
-         S9Ey6QXTSzW1azNC4LSOgHLG0DM60r0TB8IOANE/aQ4gxx5NyI3mz9gnPTAW/h9jxKfp
-         0lb+PuigzZbdX2MQNlrcwr4HG7qc6BD+BJ/i/5L79G1rwr7l4ZDWOMuBD7XJZmcLs1MT
-         o4KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E+VfmnxDV498yxI5rDUMFgAbVpKeY5DLzESFio3gnB4=;
-        b=SBwnrenk2TlLHmHqwQdZ9N44NQ2mS85L2DpxBwFRZB77ilnNExoP+VEYN5J0M1Z2Zv
-         +tM2ip3ZuFA4zWqku8hsner9i/80LJKBNpqUhDSsFpNVqwpKkyCSfWJvvGzwwU9T0z5e
-         w4RU33xki2cxtZ83xstkPxC0D4fU/LSKwSc8n/MpiDzC6tBCBRIlE4VOzntu002vdTH2
-         Vn6fcBiMpNxzZZw1BLmlztYeuLXS7BO+wRmRY5WQzDWySNIioB5NnDbzEj7QywLLe67U
-         zg5qoR4RQcrNxXGyw5dxVgg/uLBeuZyioq+GldYdAibwPGOaZxiH9LRtixa+GEM5SItq
-         A6EA==
-X-Gm-Message-State: AOAM5330OeXPq5ZwXtTN/XtgBhYo1U8WMQL1s1C0mN6jD1O7ef20Sfdn
-        9dikICr73SKkc45BxIif9oA=
-X-Google-Smtp-Source: ABdhPJygnoz1mAHZpteX4eA3W25LGEwX06xrCjfRfUvdj+ghvykms+CWaAws1JOdPxRlOy6x95gWgw==
-X-Received: by 2002:a17:90a:e551:: with SMTP id ei17mr9109006pjb.224.1596730485648;
-        Thu, 06 Aug 2020 09:14:45 -0700 (PDT)
-Received: from localhost.localdomain ([112.44.78.113])
-        by smtp.gmail.com with ESMTPSA id x127sm9537245pfd.86.2020.08.06.09.14.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Aug 2020 09:14:44 -0700 (PDT)
-From:   Jiang Biao <benbjiang@gmail.com>
-X-Google-Original-From: Jiang Biao <benbjiang@tencent.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        Jiang Biao <benbjiang@tencent.com>
-Subject: [PATCH RFC v2] sched/fair: simplify the work when reweighting entity
-Date:   Fri,  7 Aug 2020 00:14:06 +0800
-Message-Id: <20200806161406.22629-1-benbjiang@tencent.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 6 Aug 2020 12:59:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 076G4WnY125708;
+        Thu, 6 Aug 2020 11:04:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596729872;
+        bh=ICIS9Sht6UPt8BwrkTEtZAjurj+RzuPZfxYhonfMTBQ=;
+        h=Subject:From:To:References:Date:In-Reply-To;
+        b=feCyacuHlGAmRnLqHVxvPEvYz5TuNd62e1X9qchvYdNPXPm1YsfrgvItZOT22bvr8
+         qPPvJGxytrFr2M7mfhnmFrtTECc+vvuaFW5dvbv2ijNkUQFDmnFQIZjl62D2aYqPSU
+         teu2V9VGS6RX5ZX+gxIC2d0R/vfpy3j77ee5j9uA=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 076G4Wqw111227
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Aug 2020 11:04:32 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
+ 2020 11:04:32 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 6 Aug 2020 11:04:32 -0500
+Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076G4V8G043252;
+        Thu, 6 Aug 2020 11:04:31 -0500
+Subject: Re: [net-next iproute2 PATCH v3 1/2] iplink: hsr: add support for
+ creating PRP device similar to HSR
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
+        <vinicius.gomes@intel.com>, <stephen@networkplumber.org>,
+        <kuznet@ms2.inr.ac.ru>
+References: <20200717152205.826-1-m-karicheri2@ti.com>
+Message-ID: <e6ac459e-b81c-48ee-d82c-36a533e2aa29@ti.com>
+Date:   Thu, 6 Aug 2020 12:04:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200717152205.826-1-m-karicheri2@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiang Biao <benbjiang@tencent.com>
+Hi Stephen, Alexey,
 
-If a se is on_rq when reweighting entity, all we need should be
-updating the load of cfs_rq, other dequeue/enqueue work could be
-redundant, such as,
-* nr_running--/nr_running++
+On 7/17/20 11:22 AM, Murali Karicheri wrote:
+> This patch enhances the iplink command to add a proto parameters to
+> create PRP device/interface similar to HSR. Both protocols are
+> quite similar and requires a pair of Ethernet interfaces. So re-use
+> the existing HSR iplink command to create PRP device/interface as
+> well. Use proto parameter to differentiate the two protocols.
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>   dependent on the series "[net-next PATCH v3 0/7] Add PRP driver"
+>   include/uapi/linux/if_link.h | 12 +++++++++++-
+>   ip/iplink_hsr.c              | 19 +++++++++++++++++--
+>   2 files changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+> index a8901a39a345..fa2e3f642deb 100644
+> --- a/include/uapi/linux/if_link.h
+> +++ b/include/uapi/linux/if_link.h
+> @@ -904,7 +904,14 @@ enum {
+>   #define IFLA_IPOIB_MAX (__IFLA_IPOIB_MAX - 1)
+>   
+>   
+> -/* HSR section */
+> +/* HSR/PRP section, both uses same interface */
+> +
+> +/* Different redundancy protocols for hsr device */
+> +enum {
+> +	HSR_PROTOCOL_HSR,
+> +	HSR_PROTOCOL_PRP,
+> +	HSR_PROTOCOL_MAX,
+> +};
+>   
+>   enum {
+>   	IFLA_HSR_UNSPEC,
+> @@ -914,6 +921,9 @@ enum {
+>   	IFLA_HSR_SUPERVISION_ADDR,	/* Supervision frame multicast addr */
+>   	IFLA_HSR_SEQ_NR,
+>   	IFLA_HSR_VERSION,		/* HSR version */
+> +	IFLA_HSR_PROTOCOL,		/* Indicate different protocol than
+> +					 * HSR. For example PRP.
+> +					 */
+>   	__IFLA_HSR_MAX,
+>   };
+>   
+> diff --git a/ip/iplink_hsr.c b/ip/iplink_hsr.c
+> index 7d9167d4e6a3..6ea138a23cbc 100644
+> --- a/ip/iplink_hsr.c
+> +++ b/ip/iplink_hsr.c
+> @@ -25,7 +25,7 @@ static void print_usage(FILE *f)
+>   {
+>   	fprintf(f,
+>   		"Usage:\tip link add name NAME type hsr slave1 SLAVE1-IF slave2 SLAVE2-IF\n"
+> -		"\t[ supervision ADDR-BYTE ] [version VERSION]\n"
+> +		"\t[ supervision ADDR-BYTE ] [version VERSION] [proto PROTOCOL]\n"
+>   		"\n"
+>   		"NAME\n"
+>   		"	name of new hsr device (e.g. hsr0)\n"
+> @@ -35,7 +35,9 @@ static void print_usage(FILE *f)
+>   		"	0-255; the last byte of the multicast address used for HSR supervision\n"
+>   		"	frames (default = 0)\n"
+>   		"VERSION\n"
+> -		"	0,1; the protocol version to be used. (default = 0)\n");
+> +		"	0,1; the protocol version to be used. (default = 0)\n"
+> +		"PROTOCOL\n"
+> +		"	0 - HSR, 1 - PRP. (default = 0 - HSR)\n");
+>   }
+>   
+>   static void usage(void)
+> @@ -49,6 +51,7 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
+>   	int ifindex;
+>   	unsigned char multicast_spec;
+>   	unsigned char protocol_version;
+> +	unsigned char protocol = HSR_PROTOCOL_HSR;
+>   
+>   	while (argc > 0) {
+>   		if (matches(*argv, "supervision") == 0) {
+> @@ -64,6 +67,13 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
+>   				invarg("version is invalid", *argv);
+>   			addattr_l(n, 1024, IFLA_HSR_VERSION,
+>   				  &protocol_version, 1);
+> +		} else if (matches(*argv, "proto") == 0) {
+> +			NEXT_ARG();
+> +			if (!(get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_HSR ||
+> +			      get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_PRP))
+> +				invarg("protocol is invalid", *argv);
+> +			addattr_l(n, 1024, IFLA_HSR_PROTOCOL,
+> +				  &protocol, 1);
+>   		} else if (matches(*argv, "slave1") == 0) {
+>   			NEXT_ARG();
+>   			ifindex = ll_name_to_index(*argv);
+> @@ -140,6 +150,11 @@ static void hsr_print_opt(struct link_util *lu, FILE *f, struct rtattr *tb[])
+>   					 RTA_PAYLOAD(tb[IFLA_HSR_SUPERVISION_ADDR]),
+>   					 ARPHRD_VOID,
+>   					 b1, sizeof(b1)));
+> +	if (tb[IFLA_HSR_PROTOCOL])
+> +		print_int(PRINT_ANY,
+> +			  "proto",
+> +			  "proto %d ",
+> +			  rta_getattr_u8(tb[IFLA_HSR_PROTOCOL]));
+>   }
+>   
+>   static void hsr_print_help(struct link_util *lu, int argc, char **argv,
+> Sorry, I missed you in my email on this patch set as I didn't realize
+that the maintainers are different than the netdev maintainers. My bad.
+The PRP driver support in kernel is merged by Dave to net-next and this
+iproute2 change has to go with it. So please review and apply this if it
+looks good. The kernel part merged is at
 
-Even though the following dequeue/enqueue path would never be reached
-* account_numa_dequeue/account_numa_enqueue
-* list_del/list_add from/into cfs_tasks
-but it could be a little confusing.
+https://www.spinics.net/lists/linux-api/msg42615.html
 
-Simplifying the logic could be helpful to reduce a litte overhead for
-hot path, and make it cleaner and more readable.
-
-Signed-off-by: Jiang Biao <benbjiang@tencent.com>
----
-v2<-v1: 
-- Amend the commit log.
-
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 04fa8dbcfa4d..18a8fc7bd0de 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3086,7 +3086,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 		/* commit outstanding execution time */
- 		if (cfs_rq->curr == se)
- 			update_curr(cfs_rq);
--		account_entity_dequeue(cfs_rq, se);
-+		update_load_sub(&cfs_rq->load, se->load.weight);
- 	}
- 	dequeue_load_avg(cfs_rq, se);
- 
-@@ -3102,7 +3102,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 
- 	enqueue_load_avg(cfs_rq, se);
- 	if (se->on_rq)
--		account_entity_enqueue(cfs_rq, se);
-+		update_load_add(&cfs_rq->load, se->load.weight);
- 
- }
- 
 -- 
-2.21.0
-
+Murali Karicheri
+Texas Instruments
