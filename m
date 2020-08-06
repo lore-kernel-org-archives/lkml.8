@@ -2,113 +2,114 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C99C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E28C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F089F23117
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FA523117
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596731202;
+	bh=O+Yq62Jpar2u7KQqkWw3dmiGoRjXxGUD+TIIm4JmqPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J8AuCNRErIN2iXP8T5Is9WO0g1HuJG2JFtsTsUJtzB6cx6imRHFgOUld6zAPltXGk
+	 si/h2wjfl2KqgkgFwNPLv58B3hhjptxS3ptD2e2xoiUlbuuxFDw1o888fGz/EHIPF+
+	 6mLMmsvDyEm1lX7cu5ViqlntAfHSB67XZ0iejKsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgHFQYD (ORCPT
+        id S1728288AbgHFQZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43078 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 12:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgHFQRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:17:23 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1727045AbgHFQRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:17:24 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 251B923134;
-        Thu,  6 Aug 2020 15:48:52 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 11:48:50 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     guoren@kernel.org
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Subject: Re: [PATCH] ftrace: Fixup lockdep assert held of text_mutex
-Message-ID: <20200806114850.051f84d0@oasis.local.home>
-In-Reply-To: <1596725454-16245-1-git-send-email-guoren@kernel.org>
-References: <1596725454-16245-1-git-send-email-guoren@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id E66DE22D71;
+        Thu,  6 Aug 2020 12:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596716036;
+        bh=O+Yq62Jpar2u7KQqkWw3dmiGoRjXxGUD+TIIm4JmqPg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UVLTvmkatzujC2ujO9N7gWd52kh2sNsgn5jwQ+uywt+FYWEPpJBsVba/+L3uMReZm
+         63eUsD7dqXhwQ2ECvgg8qWpw/0ZDSTubwwYZUAEirXTLleLjzlzlfRAOUraMbW650E
+         RVkGTvGqJr2ao26DVT9G+MDQ9KjBGWZVD6ZAxpRA=
+Date:   Thu, 6 Aug 2020 13:13:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>, rafael@kernel.org,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH 9/9] mfd: mt6360: Merge different sub-devices I2C
+ read/write
+Message-ID: <20200806121332.GB6442@sirena.org.uk>
+References: <1596558782-3415-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1596558782-3415-11-git-send-email-gene.chen.richtek@gmail.com>
+ <20200805161021.GK5556@sirena.org.uk>
+ <CAE+NS360iKLoGxiiz8NmQqCp2Uge98Eehe4g2sn_N0e-E3DgyQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
+Content-Disposition: inline
+In-Reply-To: <CAE+NS360iKLoGxiiz8NmQqCp2Uge98Eehe4g2sn_N0e-E3DgyQ@mail.gmail.com>
+X-Cookie: Hedonist for hire... no job too easy!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Aug 2020 14:50:54 +0000
-guoren@kernel.org wrote:
 
-> From: Guo Ren <guoren@linux.alibaba.com>
-> 
-> The function ftrace_process_locs() will modify text code, so we
-> should give a text_mutex lock. Because some arch's patch code
-> will assert held of text_mutex even during start_kernel->
-> ftrace_init().
+--s2ZSL+KKDSLx8OML
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-NAK.
+On Thu, Aug 06, 2020 at 11:30:56AM +0800, Gene Chen wrote:
+> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=886=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8812:10=E5=AF=AB=E9=81=93=EF=BC=9A
 
-This looks like a bug in the lockdep_assert_held() in whatever arch
-(riscv) is running.
+> > It's not clear why this isn't just done in the device regmap, there's
+> > exactly one user?
 
-> 
-> backtrace log:
->    assert by lockdep_assert_held(&text_mutex)
-> 0  patch_insn_write (addr=0xffffffe0000010fc <set_reset_devices+10>, insn=0xffffffe001203eb8, len=8) at arch/riscv/kernel/patch.c:63
-> 1  0xffffffe0002042ec in patch_text_nosync (addr=<optimized out>, insns=<optimized out>, len=<optimized out>) at arch/riscv/kernel/patch.c:93
-> 2  0xffffffe00020628e in __ftrace_modify_call (hook_pos=<optimized out>, target=<optimized out>, enable=<optimized out>) at arch/riscv/kernel/ftrace.c:68
-> 3  0xffffffe0002063c0 in ftrace_make_nop (mod=<optimized out>, rec=0xffffffe001221c70 <text_mutex+96>, addr=18446743936272720288) at arch/riscv/kernel/ftrace.c:97
-> 4  0xffffffe0002b13f0 in ftrace_init_nop (rec=<optimized out>, mod=<optimized out>) at ./include/linux/ftrace.h:647
-> 5  ftrace_nop_initialize (rec=<optimized out>, mod=<optimized out>) at kernel/trace/ftrace.c:2619
-> 6  ftrace_update_code (new_pgs=<optimized out>, mod=<optimized out>) at kernel/trace/ftrace.c:3063
-> 7  ftrace_process_locs (mod=<optimized out>, start=<optimized out>, end=<optimized out>) at kernel/trace/ftrace.c:6154
-> 8  0xffffffe00000b6e6 in ftrace_init () at kernel/trace/ftrace.c:6715
-> 9  0xffffffe000001b48 in start_kernel () at init/main.c:888
-> 10 0xffffffe0000010a8 in _start_kernel () at arch/riscv/kernel/head.S:247
-> 
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> ---
->  kernel/trace/ftrace.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 1903b80..4b48b88 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -26,6 +26,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/bsearch.h>
->  #include <linux/module.h>
-> +#include <linux/memory.h>
->  #include <linux/ftrace.h>
->  #include <linux/sysctl.h>
->  #include <linux/slab.h>
-> @@ -6712,9 +6713,11 @@ void __init ftrace_init(void)
+> because I use one regmap to access 4 I2C devices,
 
-ftrace_init() is called before SMP is initialized. Nothing else should
-be running here. That means grabbing a mutex is useless.
+There appears to be only one device here?
 
--- Steve
+> I need change the regmap_bus struct to fit I2C read/write with CRC bit
+> Therefore, MFD reviewer suggests I can move the regmap api to regmap
+> folder such as regmap-ac97.c
 
+AC'97 is an industry standard bus used by a range of devices in
+different subsystems.  You can already have custom operations for a
+device just in a regular regmap using the reg_read() and reg_write()
+operations which are there so devices that individual device support
+doesn't need to be added to the regmap core.
 
->  
->  	last_ftrace_enabled = ftrace_enabled = 1;
->  
-> +	mutex_lock(&text_mutex);
->  	ret = ftrace_process_locs(NULL,
->  				  __start_mcount_loc,
->  				  __stop_mcount_loc);
-> +	mutex_unlock(&text_mutex);
->  
->  	pr_info("ftrace: allocated %ld pages with %ld groups\n",
->  		ftrace_number_of_pages, ftrace_number_of_groups);
+You really also need to write a much clearer changelog, I would be hard
+pressed to tell from the changelog that this was moving things to the
+regmap core rather than shuffling regmaps within the device.
 
+--s2ZSL+KKDSLx8OML
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8r8+sACgkQJNaLcl1U
+h9B2agf7BQ0T2JHp32v4pfLGpKGHkSI9JcjEGjBwSmahI1cX35HCV5U268ZSJX3d
+BLazy73BTK0mInugyZ9eWwpku1FaC3/t7Iof6Vm8rLUkpEPezWLYamGihace/tjc
+qAUXy954H3ad8WHYtHulkoolE9B8YXr5hxMJ+vN8PNOYMkCuCWHlis1hR4ipH6mJ
+9xdU/uD88UEf/E0JjxmKr/szzWQVrdfQ3pN7j1T5cl44fzYFXpyeH21pq+Qjg6tX
+8moEToplBFHmRmrDPDryDbqRLHLhCLknTcfyAfYM8T9aZUysEdcSDDh/A7FQJ7cq
+f2/PfBNJ2N1pmMGhdyZd01U9Qjr41w==
+=qguZ
+-----END PGP SIGNATURE-----
+
+--s2ZSL+KKDSLx8OML--
