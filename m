@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 536BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02301C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9442622C9F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452982224D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ii2xA4EL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsPZzU08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgHFStm (ORCPT
+        id S1729009AbgHFSto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:49:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
+        Thu, 6 Aug 2020 14:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbgHFStj (ORCPT
+        with ESMTP id S1728848AbgHFStm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:49:39 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDCEC061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:49:38 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h12so806357pgm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:49:38 -0700 (PDT)
+        Thu, 6 Aug 2020 14:49:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E67C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:49:41 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e4so7332840pjd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=D4Ndr3lMfGWryT8BpcCBWbkT9Sd7Lw+5S6mzuxOjqm0=;
-        b=ii2xA4EL8TIMLWF54Dp2D3VhPKG3XgrAie0iACmR72fXffFW1cOxQX92MCI/lEdir7
-         aiWKHf1TWBOK6nX9AwY9weAMVgtlamS0j8rv0lEEpCYk8Sx9DtVaF04m+ex66WOfpLOW
-         w+6j1GENJtWtRVPUlYXMuFjA5H93/0mYaVWDByZoRBN2uY/Ovzxc+qOzkh62Qgo5wTJZ
-         9RQF56vRmATSiMczuxW5M1A+M/jVjIBCavXVLmXSSu/L/45HZqZgDfj5CNuZdSz4sQ8X
-         XMEBwWr+27vlQGN1mX3SakuCPv/Xv5RTbd6Weohxn5Fgksuq1k+mBNr6vnr7YwsN38MR
-         M19Q==
+        bh=CvFlC6ki86jyf2poLn8AnY/Z80LUaeq3pjN3kabbpGI=;
+        b=HsPZzU08x/nUjZZL1blwT0m3W0a7waKc5rryRpUTlYyuMNj3Cvpx63kTV6peM+Ux95
+         R+3zUu8yMS1wP2EzY5la+PEhDuaVnLf007d7/G4lfpXIxcv/7GKV/1x8/U6wwO27veU8
+         lyhoy8kv4SXCmEX7ZBxOPgS3m9jqbVtXKFZ0XXMMV6R1rXj8Kl7W9yMnANgmCJm2H6rS
+         LS6BCAQfcfEJj/Vv+UFoCh/zJKwmh3SMP/vz0dJPsfNlG85B1ynwYAPptiQTRMdlE+Yp
+         vFBwfAPz+zn0JANdmuWAUPBFL+QhfNP8x1fsgyTWcY5JUOy3792gCQvl8WZVkMncn4h0
+         GIaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=D4Ndr3lMfGWryT8BpcCBWbkT9Sd7Lw+5S6mzuxOjqm0=;
-        b=Km7PMwOKrYkS9xSkwx5j76LH9L7kM+wSN6U8+mp8/8a6JK0VJa4TNVYeeNk6BljqJV
-         uj0yuvY6iD5HAyOHfETnX3ugz5lgwnXEbJGBqKMnxM2evL9zNiFz9H8tX/pUC7kt9Wq0
-         0uNzmH6QpEfp9ORIf3DI0pAmsrKtSMGTlZ9/Ve/Gr4cX8c9OE/Qkat6LAU0yslU31lrQ
-         AkcdnvTOFr2yboOXpwEtD0w88UrdOnyL8pxO5OW5U3SHWtpfCM/WCFf0Uq2X4Dh/0GIO
-         tFyalWNI4Mf6hggUEjsdpGTh+OeRyG3wmp+J0AJVfgDPSMU/OGYgN41E6TAZluSrW1af
-         WKFA==
-X-Gm-Message-State: AOAM532mkRlFNkKI2i9rBPWxda39L8qU01ZAlz/sT4Zi1bRUzXiegSnE
-        N1WWJnzS1DeBxWPBjythEQ==
-X-Google-Smtp-Source: ABdhPJxXtfyq9aAepqkzQN6GNB2RBi2ndAap+zkgx75ukc39JHhcIPD5iEbccXFxp9BhTTjZ+9wlLw==
-X-Received: by 2002:a63:7746:: with SMTP id s67mr8471318pgc.159.1596739778407;
-        Thu, 06 Aug 2020 11:49:38 -0700 (PDT)
+        bh=CvFlC6ki86jyf2poLn8AnY/Z80LUaeq3pjN3kabbpGI=;
+        b=o33EkwZKedyVyVSlocqoowiIojUVa5edKQI0yzxG3+/lUhaoJVFFOagqnXUDGMAbPF
+         PNP1U834gPk6g/nYRIKR6SMJv3OmbWBpdyqzU2XAqgLR6ZBTBvLpK4gFmeGM5ib6x7l8
+         Ie31XCjXyQjqoZXT5uE04yZHAiXsfZT2BPBWCIFhf6wPSt1ftqFrkTbvJIVSj5yIqnd1
+         83/n65jM/djM0oNsQ26tkgwaVjwLuiHt2ET0naZJdnmGpGhOCRycXxwyWNeNbqdPfiCA
+         q+2BcVknc5YP3aKdq1Klcyq1M9RzHN2pEx8Y4fLwydPfWtFgBbc4IE0XW6eKkpqD/uvi
+         f3Ng==
+X-Gm-Message-State: AOAM530DOFTYbM+F9nM+wvFW3w/Ea+xl0hpWLoSis8/vhG1yZ34cQTzw
+        4XeFXSVGuO4cTDtU+GxzOg==
+X-Google-Smtp-Source: ABdhPJzEEd/8epb1+654jMmftgxgjAAecU9Qg7OIOIb97zqAagBZmdlsIaDzWjyhw8G/Sf1veJwYqg==
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr9032052plp.313.1596739781540;
+        Thu, 06 Aug 2020 11:49:41 -0700 (PDT)
 Received: from ip-172-31-41-194.ap-northeast-1.compute.internal (ec2-52-199-21-241.ap-northeast-1.compute.amazonaws.com. [52.199.21.241])
-        by smtp.gmail.com with ESMTPSA id u24sm9096730pfm.20.2020.08.06.11.49.35
+        by smtp.gmail.com with ESMTPSA id u24sm9096730pfm.20.2020.08.06.11.49.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 11:49:37 -0700 (PDT)
+        Thu, 06 Aug 2020 11:49:41 -0700 (PDT)
 From:   nao.horiguchi@gmail.com
 To:     linux-mm@kvack.org
 Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
@@ -66,9 +66,9 @@ Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
         david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
         zeil@yandex-team.ru, cai@lca.pw, naoya.horiguchi@nec.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 03/12] mm,hwpoison-inject: don't pin for hwpoison_filter
-Date:   Thu,  6 Aug 2020 18:49:14 +0000
-Message-Id: <20200806184923.7007-4-nao.horiguchi@gmail.com>
+Subject: [PATCH v6 04/12] mm,hwpoison: Un-export get_hwpoison_page and make it static
+Date:   Thu,  6 Aug 2020 18:49:15 +0000
+Message-Id: <20200806184923.7007-5-nao.horiguchi@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806184923.7007-1-nao.horiguchi@gmail.com>
 References: <20200806184923.7007-1-nao.horiguchi@gmail.com>
@@ -77,64 +77,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <naoya.horiguchi@nec.com>
+From: Oscar Salvador <osalvador@suse.de>
 
-Another memory error injection interface debugfs:hwpoison/corrupt-pfn
-also takes bogus refcount for hwpoison_filter(). It's justified
-because this does a coarse filter, expecting that memory_failure()
-redoes the check for sure.
+Since get_hwpoison_page is only used in memory-failure code now,
+let us un-export it and make it private to that code.
 
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
 Signed-off-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
-Signed-off-by: Oscar Salvador <osalvador@suse.com>
 ---
- mm/hwpoison-inject.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+ include/linux/mm.h  | 1 -
+ mm/memory-failure.c | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git v5.8-rc7-mmotm-2020-07-27-18-18/mm/hwpoison-inject.c v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/hwpoison-inject.c
-index e488876b168a..1ae1ebc2b9b1 100644
---- v5.8-rc7-mmotm-2020-07-27-18-18/mm/hwpoison-inject.c
-+++ v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/hwpoison-inject.c
-@@ -26,11 +26,6 @@ static int hwpoison_inject(void *data, u64 val)
+diff --git v5.8-rc7-mmotm-2020-07-27-18-18/include/linux/mm.h v5.8-rc7-mmotm-2020-07-27-18-18_patched/include/linux/mm.h
+index 5e76bb4291e6..8f742373a46a 100644
+--- v5.8-rc7-mmotm-2020-07-27-18-18/include/linux/mm.h
++++ v5.8-rc7-mmotm-2020-07-27-18-18_patched/include/linux/mm.h
+@@ -2985,7 +2985,6 @@ extern int memory_failure(unsigned long pfn, int flags);
+ extern void memory_failure_queue(unsigned long pfn, int flags);
+ extern void memory_failure_queue_kick(int cpu);
+ extern int unpoison_memory(unsigned long pfn);
+-extern int get_hwpoison_page(struct page *page);
+ #define put_hwpoison_page(page)	put_page(page)
+ extern int sysctl_memory_failure_early_kill;
+ extern int sysctl_memory_failure_recovery;
+diff --git v5.8-rc7-mmotm-2020-07-27-18-18/mm/memory-failure.c v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/memory-failure.c
+index f8d200417e0f..405c9bef6ffb 100644
+--- v5.8-rc7-mmotm-2020-07-27-18-18/mm/memory-failure.c
++++ v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/memory-failure.c
+@@ -925,7 +925,7 @@ static int page_action(struct page_state *ps, struct page *p,
+  * Return: return 0 if failed to grab the refcount, otherwise true (some
+  * non-zero value.)
+  */
+-int get_hwpoison_page(struct page *page)
++static int get_hwpoison_page(struct page *page)
+ {
+ 	struct page *head = compound_head(page);
  
- 	p = pfn_to_page(pfn);
- 	hpage = compound_head(p);
--	/*
--	 * This implies unable to support free buddy pages.
--	 */
--	if (!get_hwpoison_page(p))
--		return 0;
+@@ -954,7 +954,6 @@ int get_hwpoison_page(struct page *page)
  
- 	if (!hwpoison_filter_enable)
- 		goto inject;
-@@ -40,23 +35,20 @@ static int hwpoison_inject(void *data, u64 val)
- 	 * This implies unable to support non-LRU pages.
- 	 */
- 	if (!PageLRU(hpage) && !PageHuge(p))
--		goto put_out;
-+		return 0;
- 
- 	/*
--	 * do a racy check with elevated page count, to make sure PG_hwpoison
--	 * will only be set for the targeted owner (or on a free page).
-+	 * do a racy check to make sure PG_hwpoison will only be set for
-+	 * the targeted owner (or on a free page).
- 	 * memory_failure() will redo the check reliably inside page lock.
- 	 */
- 	err = hwpoison_filter(hpage);
- 	if (err)
--		goto put_out;
-+		return 0;
- 
- inject:
- 	pr_info("Injecting memory failure at pfn %#lx\n", pfn);
--	return memory_failure(pfn, MF_COUNT_INCREASED);
--put_out:
--	put_hwpoison_page(p);
--	return 0;
-+	return memory_failure(pfn, 0);
+ 	return 0;
  }
+-EXPORT_SYMBOL_GPL(get_hwpoison_page);
  
- static int hwpoison_unpoison(void *data, u64 val)
+ /*
+  * Do all that is necessary to remove user space mappings. Unmap
 -- 
 2.17.1
 
