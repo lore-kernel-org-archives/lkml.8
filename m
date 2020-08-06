@@ -2,116 +2,52 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20172311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Os3fgVnJ"
+	by mail.kernel.org (Postfix) with ESMTP id 644F223119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgHFRJS (ORCPT
+        id S1730194AbgHFRJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
+        Thu, 6 Aug 2020 13:09:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730029AbgHFRGB (ORCPT
+        with ESMTP id S1730025AbgHFRGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:06:01 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C80EC0A3BD0;
-        Thu,  6 Aug 2020 10:00:28 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 2so41464103qkf.10;
-        Thu, 06 Aug 2020 10:00:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1Z5fSMAgfU80dT8D8hmuYu346Oxtx8DJQl6whGIjWhw=;
-        b=Os3fgVnJ6scXpj5/EgxXOxGBSpATTMOfUmm03Cec1/fiQgpB9j138nicy3/BghB2Zl
-         dNDMlGxmMpCu7eC73KpiVbkhCQL6x2IuV9bN24sicJ/SBchboHxOjw3T8+zUZ1tW5ZZr
-         Qgykli1ZUhQaEXca1VLv6c/Y8bZJExU5tEnSCXdDfrMgHfW8ugZdUXGNrqcJCokt9eox
-         k+UAPtuAdqHtKQhCDYRcwMH+mCBNeLVX2LPGuAZkXw6PF5ige3jNg8DUVZHxDpzVRhRa
-         JYZpU94c3ZKgd8ILNPJRWCcQCheE1Dv8lAvPdViMqqU+VWuBSo6Qzm0uOfvQfJqt+H9s
-         NbLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Z5fSMAgfU80dT8D8hmuYu346Oxtx8DJQl6whGIjWhw=;
-        b=EZIJFnOBOooYVEaJor2z+/7NPfV3bYWZhOFn+mT7xQuV7G/H/XiUun9ctYwglVE1IH
-         wan9vuTtnJQkBluK8oNiHMAZmvTcXsO6aNXTJOJS+51R0Na/JqosXr4EtuOgdZbYGbVO
-         kET1tdxevk39wAvtUqxFl7neEsKaBlskhzhMeUQ8C1QjuTDU50vaSxmKykrafLLAP1UV
-         P66hjqWXlr3LLYGhM/A+u68C/P+HzB+cYy+J2jfOklcbKZkEKJVRQbJmW91CCDMTRaM8
-         MZXB8TXSJDxUSTSZdN57YD0K8Y3zgQllVvs883awJMYSCc0an6xkbRIzjHEJQpX4YNeb
-         LW1w==
-X-Gm-Message-State: AOAM531xuuHf7MYkyuLqyaD0xx1rsvgjf512B2ubw5is3HBamcyS5rVI
-        9cGULELGOCgYNQh3ry//LE76a/wG
-X-Google-Smtp-Source: ABdhPJwS8XEe4hwORTMLv+asnKNIB0/3Z3hbF6JNKH4+0bzy8ImZQfKV5yV86CKSqU60CbT1mJZBlQ==
-X-Received: by 2002:a05:620a:20ca:: with SMTP id f10mr9352219qka.0.1596733227427;
-        Thu, 06 Aug 2020 10:00:27 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:7c83:3cd:b611:a456? ([2601:282:803:7700:7c83:3cd:b611:a456])
-        by smtp.googlemail.com with ESMTPSA id a21sm4222575qkg.54.2020.08.06.10.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 10:00:26 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/3] selftests: Add VRF icmp error route lookup test
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        David Ahern <dsa@cumulusnetworks.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Jeanson <mjeanson@efficios.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <42cb74c8-9391-cf4c-9e57-7a1d464f8706@gmail.com>
-Date:   Thu, 6 Aug 2020 11:00:24 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1251C061A12;
+        Thu,  6 Aug 2020 04:59:36 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3eYF-00ATgJ-TW; Thu, 06 Aug 2020 11:59:15 +0000
+Date:   Thu, 6 Aug 2020 12:59:15 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] net: Set fput_needed iff FDPUT_FPUT is set
+Message-ID: <20200806115915.GO1236603@ZenIV.linux.org.uk>
+References: <1596714796-25298-1-git-send-email-linmiaohe@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596714796-25298-1-git-send-email-linmiaohe@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 3:12 PM, Mathieu Desnoyers wrote:
-> From: Michael Jeanson <mjeanson@efficios.com>
+On Thu, Aug 06, 2020 at 07:53:16PM +0800, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
-> The objective is to check that the incoming vrf routing table is selected
-> to send an ICMP error back to the source when the ttl of a packet reaches 1
-> while it is forwarded between different vrfs.
+> We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
+> accordingly.
 > 
-> The first test sends a ping with a ttl of 1 from h1 to h2 and parses the
-> output of the command to check that a ttl expired error is received.
-> 
-> [This may be flaky, I'm open to suggestions of a more robust approch.]
-> 
-> The second test runs traceroute from h1 to h2 and parses the output to check
-> for a hop on r1.
-> 
-> Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
-> Cc: David Ahern <dsa@cumulusnetworks.com>
+> Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
 
-Update the address to dsahern@kernel.org
-
-
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> ---
->  tools/testing/selftests/net/Makefile          |   1 +
->  .../selftests/net/vrf_icmp_error_route.sh     | 461 ++++++++++++++++++
->  2 files changed, 462 insertions(+)
->  create mode 100755 tools/testing/selftests/net/vrf_icmp_error_route.sh
-> 
-
-Test seems fine to me. you copied icmp_redirect.sh which is fine but
-please clean up comments and functions not needed for this test.
+Explain, please.  We are getting it from fdget(); what else can we get in flags there?
