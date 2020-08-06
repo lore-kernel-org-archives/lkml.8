@@ -2,308 +2,168 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66283C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0486722CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B90A22CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWUEZ/NU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dgl/nID4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHFAJJ (ORCPT
+        id S1726695AbgHFAJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 20:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
+        Wed, 5 Aug 2020 20:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgHFAJF (ORCPT
+        with ESMTP id S1725779AbgHFAJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 20:09:05 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAA3C061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 17:09:05 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id f7so5059800plj.16
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 17:09:05 -0700 (PDT)
+        Wed, 5 Aug 2020 20:09:48 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11185C061574;
+        Wed,  5 Aug 2020 17:09:48 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so17102787plr.7;
+        Wed, 05 Aug 2020 17:09:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=H3dGzahstvfIu8LFQ0q2SpynGz08Mul/xIBFXR8P1IE=;
-        b=YWUEZ/NUheQ/iu89kwB+altdcW1jR9ONZ7b/9GuCQRKZXgdQUH14FVN7cLImT0NPzg
-         iebIqNPGy1db1Bp27D8/ZfiqNaNU3NvfpynRuOdQXPfZztcr5reFwn/7PIwTJYZvnOJ+
-         pj5uqXMgU8qoEaN3SD4Zf2vrDoitGNLuncTy2Vy7z9upxqryPUiTdC+Ja2+AXRZRBCAD
-         Sw3yA3nJOU/XeUprSmPPQaYB9oYIprHzrIkaRH6YOFV3WNU3lhHqTabF1e6oK6XYIilT
-         4tCn8El8PGKTiXFMoaM2d1Zsrv+cAEd5xIxxgIDTqoWv1cijDqPtOt3kEwn7YubPnU7b
-         v0xg==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G5p7q0BOMSwMXlCg/AAJgkxy+4ZmlLv8Hy+lqg/sBzg=;
+        b=Dgl/nID46lJMI8RL1w0F7zTulRlWJuQzJqYkCHC+iU5SCdg6SiOWRud36U2NJB6+6W
+         0Yn/TTlWBaVLf2Si3oquiadLGNXpZ4Q5VJ1iT9dFQEXei31P79v7U9F+pyI+N8c6Ai1e
+         EQ3nrb6Z37QZZGgdWEULIiLNdcumkjZshfVqaKJhWCsG8rqiYh22rn3Jmtus20c5QpqK
+         DK3BbVnbNYG1vbk6B9Mt5L38pS83l/0UI7vfT8GSZJQNSHhOzw6sZIjfHWrLHb6R/f8b
+         iG+FYh3zB9EUelXCHQ7lQA/TqTkiokChef+3cw4BIbu9AAu2ksIRXm6xA6s1pAs9KSx0
+         2cjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=H3dGzahstvfIu8LFQ0q2SpynGz08Mul/xIBFXR8P1IE=;
-        b=awSQQ8doOMBWEDy6GkhF2AGdyemmMpK6LT98HRYTPojKxDaLuGy0l6T8WCZQ2Xx6KH
-         1N8f0WUvOo+2bPEwd75sQDcjemQKAC0BTzKQKGyDW5OWjNizESKszZryUPYbYH7JUiK5
-         EEmQFvwSTaq5ex9xGNaRRnY1UgLUDjuM2GcOlX7EQi0NF9va0Ttw1wYR9eAVjHZzM3WE
-         +6wTUkFURZZkIHq6Zrg9XXJ0i1AMSiyNiiyKLsC0Pcx71u7O/ZBewWkGfyeaqRN1h01o
-         0l/r+MkKKyGFy+Y+PArrUZmIyRce1Lg/4aJhyDkPlQeF3Alb0hONS/J4NWptHckxDiP1
-         PtAg==
-X-Gm-Message-State: AOAM5326SX+g9vao7Q5ZMjQc5InWuvjpHBVQl3ojbp/K3CS9VIkbKu5H
-        F5NcBLbkbWTa2xePDp2Rsuu7nLi1
-X-Google-Smtp-Source: ABdhPJw6v62czoy4VBZ+Fn73XSuVLg+9X2Jm4jm89k9K0QzakWancaMB0ZAWYOjhHY7zeQTqzdQ+/mEn
-X-Received: by 2002:a17:902:9a96:: with SMTP id w22mr5387520plp.172.1596672544804;
- Wed, 05 Aug 2020 17:09:04 -0700 (PDT)
-Date:   Wed,  5 Aug 2020 17:08:59 -0700
-In-Reply-To: <20200806000859.160882-1-posk@google.com>
-Message-Id: <20200806000859.160882-2-posk@google.com>
-Mime-Version: 1.0
-References: <20200806000859.160882-1-posk@google.com>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH 2/2] selftests/rseq: test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
-From:   Peter Oskolkov <posk@google.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>,
-        Peter Oskolkov <posk@posk.io>, Peter Oskolkov <posk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=G5p7q0BOMSwMXlCg/AAJgkxy+4ZmlLv8Hy+lqg/sBzg=;
+        b=m7AkEK25gyp2V2IUTWnAJC2yzNRL3FQ91N67On+VPPSyAeREGcXpQrQFJqhVKl2OE7
+         RGBsdBRWxNyP1PvQKIhIYPELq2FIR1KRi7B8qW4R70dSU6lb6qrSL073eYEXtpFEH4tB
+         8WxSx6qlfnWRRaUJfkRa7Cvi9Af+YfNVoIH9vx61V6kPS1PO+1TsdQb+MVcIxXAnjPOG
+         ZfosY9VB2qKx7bQmzOM4fBWFV9judZCMfViBgnDk7dCgOdjKzk1BNGy1JQ8f66OJaXzY
+         HuQhJVB0hQWulGUwJmnZUTutMz5DKKDG0NvHYy8PRFMzgUEGb1mycYYrwK6lW2zsvMk1
+         St8Q==
+X-Gm-Message-State: AOAM530DfJk7eab6/naF0CFkbpvfbMP3/PNNqfPMK0dnBboeK4EQAvvr
+        O1VNWVxKo7bxr2a+wUo16a+sDuZN
+X-Google-Smtp-Source: ABdhPJxQ29ZwfOrkX9iCCwTUQMKVtTnUbrlJx2B7z5iSg0AWrHqmp/bdtQ0zwF3Oq9mm/8EtVk6hpQ==
+X-Received: by 2002:a17:902:b584:: with SMTP id a4mr5284744pls.341.1596672586851;
+        Wed, 05 Aug 2020 17:09:46 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r134sm5038670pfc.1.2020.08.05.17.09.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 17:09:45 -0700 (PDT)
+Subject: Re: [PATCH 5.7 0/6] 5.7.14-rc1 review
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20200805153506.978105994@linuxfoundation.org>
+ <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
+ <71a132bf-5ddb-a97a-9b65-6767fd806ee9@roeck-us.net>
+ <CAHk-=wi0WGMs6+Jz6rXbQO4mfzf8LGVc3TwmCdz0OwRtj7GgMQ@mail.gmail.com>
+ <7e1c9df5-d334-461d-56fc-53625c6ca163@roeck-us.net>
+ <CAHk-=wj1m3VFa6Sz96gxNjKCOH21jDuuODm46-VAukD5YGc1yA@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <7e5014c6-d535-7815-4a7c-527715a1e41b@roeck-us.net>
+Date:   Wed, 5 Aug 2020 17:09:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wj1m3VFa6Sz96gxNjKCOH21jDuuODm46-VAukD5YGc1yA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on Google-internal RSEQ work done by
-Paul Turner and Andrew Hunter.
+On 8/5/20 12:45 PM, Linus Torvalds wrote:
+> On Wed, Aug 5, 2020 at 12:24 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> On 8/5/20 11:37 AM, Linus Torvalds wrote:
+>>>
+>>> Because the trivial fix would be something like the appended, which is
+>>> the right thing to do anyway.
+>>
+>> Correct.
+> 
+> I'll take that as an Ack, and also remove the crazy reverse include
+> from archrandom.h that most definitely shouldn't be there.
+> 
+Thanks, appreciated.
 
-This patch adds a selftest for MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU.
-The test quite often fails without the previous patch in this patchset,
-but consistently passes with it.
+> It's now commit 585524081ecd ("random: random.h should include
+> archrandom.h, not the other way around") in my tree, because a grep
+> for "archrandom.h" shows that now the only place it exists is
+> <linux/random.h> and a few files that cannot possibly affect arm64
+> (because they are on x86 and powerpc, neither of which has that insane
+> reverse include).
+> 
 
-Signed-off-by: Peter Oskolkov <posk@google.com>
----
- .../selftests/rseq/basic_percpu_ops_test.c    | 181 ++++++++++++++++++
- 1 file changed, 181 insertions(+)
+I tried to build arm64 on current mainline, after reverting the dts
+patches which cause the build failures there. Builds fine with both
+gcc 7.4.0 and 9.3.0. 5.7.14-rc2 builds as well with both old and new
+compilers. So hopefully we are fine.
 
-diff --git a/tools/testing/selftests/rseq/basic_percpu_ops_test.c b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-index eb3f6db36d36..147c80deac19 100644
---- a/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-+++ b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-@@ -3,16 +3,21 @@
- #include <assert.h>
- #include <pthread.h>
- #include <sched.h>
-+#include <stdatomic.h>
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <stddef.h>
-+#include <syscall.h>
-+#include <unistd.h>
- 
- #include "rseq.h"
- 
- #define ARRAY_SIZE(arr)	(sizeof(arr) / sizeof((arr)[0]))
- 
-+#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU	(1<<7)
-+
- struct percpu_lock_entry {
- 	intptr_t v;
- } __attribute__((aligned(128)));
-@@ -289,6 +294,180 @@ void test_percpu_list(void)
- 	assert(sum == expected_sum);
- }
- 
-+struct test_membarrier_thread_args {
-+	int stop;
-+	intptr_t percpu_list_ptr;
-+};
-+
-+/* Worker threads modify data in their "active" percpu lists. */
-+void *test_membarrier_worker_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	const int iters = 10 * 1000 * 1000;
-+	int i;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	for (i = 0; i < iters; ++i) {
-+		while (true) {
-+			int cpu, ret;
-+			struct percpu_list *list_ptr = (struct percpu_list *)
-+				atomic_load(&args->percpu_list_ptr);
-+
-+			if (!list_ptr)
-+				continue;  /* Not yet initialized. */
-+
-+			cpu = rseq_cpu_start();
-+			struct percpu_list_node *node = list_ptr->c[cpu].head;
-+			const intptr_t prev = node->data;
-+
-+			ret = rseq_cmpeqv_cmpeqv_storev(&node->data, prev,
-+					&args->percpu_list_ptr,
-+					(intptr_t)list_ptr, prev + 1, cpu);
-+			if (!ret)
-+				break;  /* Success. */
-+		}
-+	}
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+void test_membarrier_init_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	memset(list, 0, sizeof(*list));
-+	for (i = 0; i < CPU_SETSIZE; i++) {
-+		struct percpu_list_node *node;
-+
-+		node = malloc(sizeof(*node));
-+		assert(node);
-+		node->data = 0;
-+		node->next = NULL;
-+		list->c[i].head = node;
-+	}
-+}
-+
-+void test_membarrier_free_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		free(list->c[i].head);
-+}
-+
-+static int sys_membarrier(int cmd, int flags)
-+{
-+	return syscall(__NR_membarrier, cmd, flags);
-+}
-+
-+/*
-+ * The manager thread swaps per-cpu lists that worker threads see,
-+ * and validates that there are no unexpected modifications.
-+ */
-+void *test_membarrier_manager_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	struct percpu_list list_a, list_b;
-+	intptr_t expect_a = 0, expect_b = 0;
-+	int cpu_a = 0, cpu_b = 0;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	/* Init lists. */
-+	test_membarrier_init_percpu_list(&list_a);
-+	test_membarrier_init_percpu_list(&list_b);
-+
-+	atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+
-+	while (!atomic_load(&args->stop)) {
-+		/* list_a is "active". */
-+		cpu_a = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_b is "inactive", we should never see changes
-+		 * to list_b.
-+		 */
-+		if (expect_b != atomic_load(&list_b.c[cpu_b].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_b "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_b);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU, cpu_a);
-+		/*
-+		 * Cpu A should now only modify list_b, so we values
-+		 * in list_a should be stable.
-+		 */
-+		expect_a = atomic_load(&list_a.c[cpu_a].head->data);
-+
-+		cpu_b = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_a is "inactive", we should never see changes
-+		 * to list_a.
-+		 */
-+		if (expect_a != atomic_load(&list_a.c[cpu_a].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_a "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU, cpu_b);
-+		/* Remember a value from list_b. */
-+		expect_b = atomic_load(&list_b.c[cpu_b].head->data);
-+	}
-+
-+	test_membarrier_free_percpu_list(&list_a);
-+	test_membarrier_free_percpu_list(&list_b);
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+/* Test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU membarrier command. */
-+void test_membarrier(void)
-+{
-+	struct test_membarrier_thread_args thread_args;
-+	pthread_t worker_threads[CPU_SETSIZE];
-+	pthread_t manager_thread;
-+	int i;
-+
-+	thread_args.stop = 0;
-+	thread_args.percpu_list_ptr = 0;
-+	pthread_create(&manager_thread, NULL,
-+		       test_membarrier_manager_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_create(&worker_threads[i], NULL,
-+		       test_membarrier_worker_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_join(worker_threads[i], NULL);
-+
-+	atomic_store(&thread_args.stop, 1);
-+	pthread_join(manager_thread, NULL);
-+}
-+
- int main(int argc, char **argv)
- {
- 	if (rseq_register_current_thread()) {
-@@ -300,6 +479,8 @@ int main(int argc, char **argv)
- 	test_percpu_spinlock();
- 	printf("percpu_list\n");
- 	test_percpu_list();
-+	printf("membarrier\n");
-+	test_membarrier();
- 	if (rseq_unregister_current_thread()) {
- 		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
- 			errno, strerror(errno));
--- 
-2.28.0.163.g6104cc2f0b6-goog
-
+Guenter
