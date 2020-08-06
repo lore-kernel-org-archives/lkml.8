@@ -2,109 +2,137 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C3CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF88C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABDB2177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F392177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:27:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VRbLv045"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgHFT0j (ORCPT
+        id S1726096AbgHFT1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:26:39 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47327 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgHFT0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:26:38 -0400
-IronPort-SDR: 83LaL0pXqCO2ulJnk0iaXB67jUYJHqkmJPiv+SP1rZP6yJahu+K4b/CjCIzjHnbGUH2a4zQYoV
- CoXjPfDNKrtQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="132990437"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="132990437"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:26:38 -0700
-IronPort-SDR: dBZabNtMYg4WmnmsghcQq2ljNwJqcGP6+gd4BZC1t7IEktnfXuBISk9F9V3Q8B9djC+MIDE0UN
- 7J9b8wRmI2aA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
-   d="scan'208";a="289379037"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2020 12:26:37 -0700
-Date:   Thu, 6 Aug 2020 12:26:37 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jane Chu <jane.chu@oracle.com>
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, jmoyer@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] libnvdimm/security: ensure sysfs poll thread woke
- up and fetch updated attr
-Message-ID: <20200806192637.GM1573827@iweiny-DESK2.sc.intel.com>
-References: <1596494499-9852-1-git-send-email-jane.chu@oracle.com>
- <1596494499-9852-3-git-send-email-jane.chu@oracle.com>
+        Thu, 6 Aug 2020 15:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgHFT1x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:27:53 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD53C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:27:53 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i92so5142793pje.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:27:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eXpUXCboa1iboXL0krzV2/Rr3Jeb/snQcwOxIp/4Dfc=;
+        b=VRbLv045DWIuz8DLew94VGvDSVErpo6jn4nvSzw0t7K7QnTc3umT6i53NWb1LP/jF0
+         VYzRuv6ew+G0jWbCr06tDw0B0AwLkTE9uV4u7R0p3VhkEcSPWnNxsCZS9qwEThWGqRYf
+         BtImZHYpWLIfRfelG5j1Ui4Z6C2DXjTCalbpY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eXpUXCboa1iboXL0krzV2/Rr3Jeb/snQcwOxIp/4Dfc=;
+        b=rYW+42wGJr0V5TA04Ct0ufsPi2G0vt1ydUwfuoPrrwRzu7DoFs3GDSSmhk3kvXfZDW
+         aYl5OvJQFZEMpjmwAihjt1xRmPIJkB94m9wfJE8CTtG7sIiOPubUmCDu440EZ9dGAUgu
+         z5YdVJLdAMg6S6ZGnKJn1ajggm7Z6DsEzf2wmz8U3UqKH6HZ6k+NlAADRNg0hBD/rGt9
+         7Vki8oNmgPCWKm0Zy/CTS6ZE0R2Pu6qE/0WaMh0Jta7FmzmhBeAmgwVEXwqNGkEpO5OE
+         eV2pAC5k57iRCS5AHipG81W3091UVcIoMPKBIntzLCGmLFfhRA9GaPgzcKu0c1lqc9IM
+         8d2Q==
+X-Gm-Message-State: AOAM532qhMQtzkHAZluj0MpebVzc8DpyePZ0LE2t4PE9U0pSPHGamXMp
+        a9eipmz3GdIk99zyku2hTW2ufA==
+X-Google-Smtp-Source: ABdhPJyGGpXe0mD6tJaO+rovKFGQgiUeb/vs5z8wLn89skFqmXdsz2fgHIgqZ28K2zBb/xj6F/qkZQ==
+X-Received: by 2002:a17:90b:3597:: with SMTP id mm23mr9564700pjb.3.1596742072173;
+        Thu, 06 Aug 2020 12:27:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id gm9sm7733975pjb.12.2020.08.06.12.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 12:27:51 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 12:27:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+Message-ID: <202008061052.DA6F3AA2@keescook>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <20200806153258.GB2131635@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596494499-9852-3-git-send-email-jane.chu@oracle.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200806153258.GB2131635@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 04:41:39PM -0600, Jane Chu wrote:
-> commit 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-> adds a sysfs_notify_dirent() to wake up userspace poll thread when the "overwrite"
-> operation has completed. But the notification is issued before the internal
-> dimm security state and flags have been updated, so the userspace poll thread
-> wakes up and fetches the not-yet-updated attr and falls back to sleep, forever.
-> But if user from another terminal issue "ndctl wait-overwrite nmemX" again,
-> the command returns instantly.
+On Thu, Aug 06, 2020 at 05:32:58PM +0200, Ingo Molnar wrote:
+> * Kristen Carlson Accardi <kristen@linux.intel.com> wrote:
+> > [...]
+> > Performance Impact
+> > ------------------
 > 
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Fixes: 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > * Run time
+> > The performance impact at run-time of function reordering varies by workload.
+> > Using kcbench, a kernel compilation benchmark, the performance of a kernel
+> > build with finer grained KASLR was about 1% slower than a kernel with standard
+> > KASLR. Analysis with perf showed a slightly higher percentage of 
+> > L1-icache-load-misses. Other workloads were examined as well, with varied
+> > results. Some workloads performed significantly worse under FGKASLR, while
+> > others stayed the same or were mysteriously better. In general, it will
+> > depend on the code flow whether or not finer grained KASLR will impact
+> > your workload, and how the underlying code was designed. Because the layout
+> > changes per boot, each time a system is rebooted the performance of a workload
+> > may change.
+> 
+> I'd guess that the biggest performance impact comes from tearing apart 
+> 'groups' of functions that particular workloads are using.
+> 
+> In that sense it might be worthwile to add a '__kaslr_group' function 
+> tag to key functions, which would keep certain performance critical 
+> functions next to each other.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+We kind of already do this manually for things like the scheduler, etc,
+using macros like ".whatever.text", so we might be able to create a more
+generalized approach for those. Right now they require a "section" macro
+usage and a linker script __start* and __end* marker, etc:
 
-> ---
->  drivers/nvdimm/security.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-> index 8f3971c..4b80150 100644
-> --- a/drivers/nvdimm/security.c
-> +++ b/drivers/nvdimm/security.c
-> @@ -450,14 +450,19 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
->  	else
->  		dev_dbg(&nvdimm->dev, "overwrite completed\n");
->  
-> -	if (nvdimm->sec.overwrite_state)
-> -		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-> +	/*
-> +	 * Mark the overwrite work done and update dimm security flags,
-> +	 * then send a sysfs event notification to wake up userspace
-> +	 * poll threads to picked up the changed state.
-> +	 */
->  	nvdimm->sec.overwrite_tmo = 0;
->  	clear_bit(NDD_SECURITY_OVERWRITE, &nvdimm->flags);
->  	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
-> -	put_device(&nvdimm->dev);
->  	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
->  	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
-> +	if (nvdimm->sec.overwrite_state)
-> +		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-> +	put_device(&nvdimm->dev);
->  }
->  
->  void nvdimm_security_overwrite_query(struct work_struct *work)
-> -- 
-> 1.8.3.1
-> 
+#define SCHED_TEXT						\
+                ALIGN_FUNCTION();				\
+                __sched_text_start = .;				\
+                *(.sched.text)					\
+                __sched_text_end = .;
+
+Manually collected each whatever_TEXT define and building out each
+__whatever_start, etc is annoying. It'd be really cool to have linker
+script have wildcard replacements for build a syntax like this, based
+on the presences of matching input sections:
+
+	.%.text : {
+		__%_start = .;
+		*(.%.text.hot)
+		*(.%.text)
+		*(.%.text.*)
+		*(.%.text.unlikely)
+		__%_end = .;
+		}
+
+> I'd also suggest allowing the passing in of a boot-time pseudo-random 
+> generator seed number, which would allow the creation of a 
+> pseudo-randomized but repeatable layout across reboots.
+
+This was present in earlier versions of the series.
+
+-- 
+Kees Cook
