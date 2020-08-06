@@ -2,120 +2,91 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01321C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D441206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B55B2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:11:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPu6mV20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbgHFTIo (ORCPT
+        id S1727985AbgHFTLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:08:44 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35468 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFTIo (ORCPT
+        Thu, 6 Aug 2020 15:11:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgHFTLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:08:44 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id EB4271C0BD2; Thu,  6 Aug 2020 21:08:40 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 21:08:40 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Grant Feng <von81@163.com>, jacek.anaszewski@gmail.com,
-        robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low
- pulse when startup
-Message-ID: <20200806190840.zyovbkqgr2ey7rd6@duo.ucw.cz>
-References: <20200806062130.25187-1-von81@163.com>
- <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
+        Thu, 6 Aug 2020 15:11:49 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F622C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:11:49 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id c16so31121456ejx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:11:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YMctw0ntOGXtEYEmNa4wOmRsQpzdo87we+KhxYWUSKg=;
+        b=tPu6mV20XQtLFZMttNdw3X1s1g+87/8CgjSYPajdnW7ErmnNlNYj+9jTfSf1XySghi
+         WGIDhuaF4U2HzmYAG2ah9UsmzvN/isj2o5MiXyEpdHmmDANVs7OA/ITs+ATGfOn5sL5n
+         89Q0F0GjabIZl/52sKNXqnUqWWibRncuobEa46Jjq/5N3GM5fcE2Xmj6LxK7omEc4Fb3
+         XEQwjSlLudcRFt3IqgCAbFwtSen8r83wAMjjjivkjlcx41D2cg7GVBs4ef1aPD1W5XF7
+         tVSz81/7TfDYRpvapuDo8IFhlobYEx2QSh0UVBDI3fRX7Wqswt0uMzX099WYKSdAqy44
+         8lsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YMctw0ntOGXtEYEmNa4wOmRsQpzdo87we+KhxYWUSKg=;
+        b=NZS4CCchbw2Izsfc5SELawDxkaFKv2s+3Fld5jUkqc+nBRbWvhZHCl/u2C90e6hFvj
+         VeT0FVwnHCeqmuiNJnZuOm4WCtypZvlzQowd4DqVnUrapOHDoblLnz8J6jGsNK57aWOb
+         DO/FryVdLqI6IRwoq9uE7nSK88Nf3MYTfoO2BlMH2R6RnCYDUK3KmGbaMux/8aOuEif5
+         +gH+tF1nqQk3n0gAaJS1ls9OVqIQt84POLDuyCLowpO+oFeDbZ2jUjt0LZZqgexizpaS
+         07CI0wPlmsJMgUrEsjFcBihur/p6cBLWaqVck1veQJ3AEm9UMFNG9M7h2hyW1KU8LnQR
+         TLLw==
+X-Gm-Message-State: AOAM531tVlEuzLdYLQnBw0X3pstv+OJrnKZwqyKcHwXGuMi/6KD4P/wU
+        sX5Ng2V7P8CckLtzJ0kDRnI=
+X-Google-Smtp-Source: ABdhPJyqHA3/6AB5cxfDKtXw62Hbp9nIRpNTiHNkBPfcY/ZRL6O/sbnt/mEt1DaQoxNj6GI6aShZ7Q==
+X-Received: by 2002:a17:906:71d3:: with SMTP id i19mr5741367ejk.459.1596741108245;
+        Thu, 06 Aug 2020 12:11:48 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:a7fb:e200:d567:ec52:e0a5:f485])
+        by smtp.gmail.com with ESMTPSA id b62sm3999408edf.61.2020.08.06.12.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 12:11:47 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 21:11:46 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] OpenRISC header and sparse warning fixes for 5.9
+Message-ID: <20200806191146.36xlfjwehe5lorav@ltop.local>
+References: <20200805210725.310301-1-shorne@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bbh4x4visauhrnzh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200805210725.310301-1-shorne@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 06, 2020 at 06:07:19AM +0900, Stafford Horne wrote:
+> Hello,
+> 
+> Changes since v1:
+>  - in "io: Fixup defines and move include to the end" added a linux/types.h
+>    include as there were compiler failurs pointed out by kbuild.
+> 
+> This a series of fixes for OpenRISC sparse warnings.  The kbuild robots report
+> many issues related to issues with OpenRISC headers having missing or incorrect
+> sparse annotations.
 
---bbh4x4visauhrnzh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The changes look quite good to me (I just add 2 nits for patches 5 & 6).
 
-Hi!
-> On 8/6/20 1:21 AM, Grant Feng wrote:
-> > generate a 5ms low pulse on sdb pin when startup, then the chip
-> > becomes more stable in the complex EM environment.
-> >=20
-> > Signed-off-by: Grant Feng <von81@163.com>
-> > ---
-> >   drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
-> >   1 file changed, 12 insertions(+)
-> >=20
-> > diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl3=
-19x.c
-> > index ca6634b8683c..b4f70002cec9 100644
-> > --- a/drivers/leds/leds-is31fl319x.c
-> > +++ b/drivers/leds/leds-is31fl319x.c
-> > @@ -16,6 +16,8 @@
-> >   #include <linux/of_device.h>
-> >   #include <linux/regmap.h>
-> >   #include <linux/slab.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> >   /* register numbers */
-> >   #define IS31FL319X_SHUTDOWN		0x00
-> > @@ -61,6 +63,7 @@
-> >   struct is31fl319x_chip {
-> >   	const struct is31fl319x_chipdef *cdef;
-> >   	struct i2c_client               *client;
-> > +	struct gpio_desc		*sdb_pin;
-> >   	struct regmap                   *regmap;
-> >   	struct mutex                    lock;
-> >   	u32                             audio_gain_db;
-> > @@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
-> >   		is31->audio_gain_db =3D min(is31->audio_gain_db,
-> >   					  IS31FL319X_AUDIO_GAIN_DB_MAX);
-> > +	is31->sdb_pin =3D gpiod_get(dev, "sdb", GPIOD_ASIS);
->=20
-> Since this is optional maybe use devm_gpiod_get_optional.
->=20
-> If this is required for stability then if the GPIO is not present then the
-> parse_dt should return the error.
->=20
-> And use the devm_gpiod_get call.=A0 Otherwise you are missing the gpiod_p=
-ut
-> when exiting or removing the driver.
-
-Yep, thanks for the review, I dropped it from for-next.
-
-And yes, this should be in series with device tree change, and we need
-Rob 's ack.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bbh4x4visauhrnzh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXyxVOAAKCRAw5/Bqldv6
-8mvbAJ46DdLOlQpYoIX7cBpeV+MXqJF7sACgjhIt85JkN1o3CwQpzvbS95S9rWo=
-=MLCx
------END PGP SIGNATURE-----
-
---bbh4x4visauhrnzh--
+Fell free to add my
+Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
