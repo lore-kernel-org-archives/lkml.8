@@ -2,292 +2,380 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337C7C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8670C433EB
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C91A22D04
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036CE22D06
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596712395;
+	bh=pTEK0v/eMU6Hweu7R4kE7tZQJ1Zz4AzqIfKiYeo5t4E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BYl+dG4PmFOsXOIaSlhoztHEQL0T3nKgtgBmK6beSsD7nAUbCIfAkyvOOJLS6S3yg
+	 rPmYD1LUCjQLXiG9X0TFGYbOHm6YQSa1em12WriBl9SjZeAnx+Botawvx65kG1I/S5
+	 +sRCe7FYU40a5azp0Wvam67LsROqE7qcm0OKrGNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgHFIkN (ORCPT
+        id S1728870AbgHFIo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgHFIkK (ORCPT
+        Thu, 6 Aug 2020 04:44:59 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:35593 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbgHFIo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:40:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A884C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 01:40:10 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3bRW-0002CC-GQ; Thu, 06 Aug 2020 10:40:06 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3bRQ-0007rq-G1; Thu, 06 Aug 2020 10:40:00 +0200
-Date:   Thu, 6 Aug 2020 10:40:00 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
+        Thu, 6 Aug 2020 04:44:58 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0768iVEo005200;
+        Thu, 6 Aug 2020 17:44:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0768iVEo005200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596703472;
+        bh=iLRyjLHDiM1j11Hh0Jt/NFe8uSNpgWQk85B8WTb/cO0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T+NyKf4sLicS3p03PKiijYNYce6IXQMCWayE9017bHx6TrmcxRWQlqRjfMWvkwf2H
+         Pn8W7fEnsOeZcLXN9rlLSwTKceFrxcI9QFRpVlG6LjHFTdaqnB0W0CyOgTbcnXi0YP
+         zm3lKDB2OY0SMwLrIVZBIXWiNNcHxbrZFckSRaE6rNBV0nTr9C2z5NjCywoOgP2t3u
+         poiMLGhY4IJJ+rHYQ8Nggp6nyJwv6cRz7jPaTYie/+vHm2OXleD3cjSEvOAXU3im9o
+         wKrKgEZCW9hcbjH4PTh65GR4E0Nv1jP50aXaODmCjNUm//w5AoG3emVe4JIBeMY/EA
+         fEHME3eeyE4dw==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id g20so10124911uan.7;
+        Thu, 06 Aug 2020 01:44:32 -0700 (PDT)
+X-Gm-Message-State: AOAM532/C3U1KyQNMv50LpGonID9xkOki/TaLbzSRENVmHJ/9h3ji2w4
+        DYA+CAPCUd73Xwpox0PUZKOniu/gamScr0wphqg=
+X-Google-Smtp-Source: ABdhPJzW4S/4EI07UAoDN4Y8J6aSLylUwAnH+TKxjWS+zeCGgdXDb38DMiXnksX1Wuwq9xDSdTCkNpm0osrdg6ktSZA=
+X-Received: by 2002:ab0:41:: with SMTP id 59mr4940875uai.40.1596703471156;
+ Thu, 06 Aug 2020 01:44:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vgnlsgd3pefacvw3"
-Content-Disposition: inline
-In-Reply-To: <20200803093559.12289-7-michael@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com>
+ <20200728004736.3590053-1-nhuck@google.com>
+In-Reply-To: <20200728004736.3590053-1-nhuck@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 6 Aug 2020 17:43:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT-AO9_Y-qunRvPbBYf7GZnoE6bxYKFNtcdKAKV8d_A+w@mail.gmail.com>
+Message-ID: <CAK7LNAT-AO9_Y-qunRvPbBYf7GZnoE6bxYKFNtcdKAKV8d_A+w@mail.gmail.com>
+Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Pirama Arumuga Nainar <pirama@google.com>,
+        Bill Wendling <morbo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---vgnlsgd3pefacvw3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Michael,
-
-I'm nearly happy now; see below.
-
-On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 7dbcf6973d33..a0d50d70c3b9 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -428,6 +428,16 @@ config PWM_SIFIVE
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-sifive.
-> =20
-> +config PWM_SL28CPLD
-> +	tristate "Kontron sl28cpld PWM support"
-> +	select MFD_SIMPLE_MFD_I2C
-
-Is it sensible to present this option to everyone? Maybe
-
-	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
-
-=2E
-
-> +	help
-> +	  Generic PWM framework driver for board management controller
-> +	  found on the Kontron sl28 CPLD.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-sl28cpld.
-> +
->  config PWM_SPEAR
->  	tristate "STMicroelectronics SPEAr PWM support"
->  	depends on PLAT_SPEAR || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 2c2ba0a03557..cbdcd55d69ee 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
->  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
->  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
->  obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
-> +obj-$(CONFIG_PWM_SL28CPLD)	+=3D pwm-sl28cpld.o
->  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
->  obj-$(CONFIG_PWM_SPRD)		+=3D pwm-sprd.o
->  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
-> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+On Tue, Jul 28, 2020 at 9:47 AM Nathan Huckleberry <nhuck@google.com> wrote:
+>
+> This patch adds clang-tidy and the clang static-analyzer as make
+> targets. The goal of this patch is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
+>
+> The current static analysis tools require intimate knowledge of the
+> internal workings of the static analysis. Clang-tidy and the clang
+> static analyzers expose an easy to use api and allow users unfamiliar
+> with clang to write new checks with relative ease.
+>
+> ===Clang-tidy===
+>
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+>
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis. (https://reviews.llvm.org/D65828)
+>
+> ===Clang static analyzer===
+>
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+>
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+>
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+> Changes v6->v7
+> * Fix issues with relative paths
+> * Additional style fixes
+>  MAINTAINERS                                   |  1 +
+>  Makefile                                      |  3 +
+>  scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
+>  scripts/clang-tools/run-clang-tools.py        | 74 +++++++++++++++++++
+>  5 files changed, 101 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/run-clang-tools.py
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1d4aa7f942de..a444564e5572 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4198,6 +4198,7 @@ W:        https://clangbuiltlinux.github.io/
+>  B:     https://github.com/ClangBuiltLinux/linux/issues
+>  C:     irc://chat.freenode.net/clangbuiltlinux
+>  F:     Documentation/kbuild/llvm.rst
+> +F:     scripts/clang-tools/
+>  K:     \b(?i:clang|llvm)\b
+>
+>  CLEANCACHE API
+> diff --git a/Makefile b/Makefile
+> index fe0164a654c7..3e2df010b342 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -747,6 +747,7 @@ KBUILD_CFLAGS       += $(call cc-option,-fno-allow-store-data-races)
+>
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
+>
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1543,6 +1544,8 @@ help:
+>         @echo  '  export_report   - List the usages of all exported symbols'
+>         @echo  '  headerdep       - Detect inclusion cycles in headers'
+>         @echo  '  coccicheck      - Check with Coccinelle'
+> +       @echo  '  clang-analyzer  - Check with clang static analyzer'
+> +       @echo  '  clang-tidy      - Check with clang-tidy'
+>         @echo  ''
+>         @echo  'Tools:'
+>         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
 > new file mode 100644
-> index 000000000000..bb298af36f0b
+> index 000000000000..5c9d76f77595
 > --- /dev/null
-> +++ b/drivers/pwm/pwm-sl28cpld.c
-> @@ -0,0 +1,235 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * sl28cpld PWM driver
-> + *
-> + * Copyright (c) 2020 Michael Walle <michael@walle.cc>
-> + *
-> + * There is no public datasheet available for this PWM core. But it is e=
-asy
-> + * enough to be briefly explained. It consists of one 8-bit counter. The=
- PWM
-> + * supports four distinct frequencies by selecting when to reset the cou=
-nter.
-> + * With the prescaler setting you can select which bit of the counter is=
- used
-> + * to reset it. This implies that the higher the frequency the less rema=
-ining
-> + * bits are available for the actual counter.
-> + *
-> + * Let cnt[7:0] be the counter, clocked at 32kHz:
-> + * +-----------+--------+--------------+-----------+---------------+
-> + * | prescaler |  reset | counter bits | frequency | period length |
-> + * +-----------+--------+--------------+-----------+---------------+
-> + * |         0 | cnt[7] |     cnt[6:0] |    250 Hz |    4000000 ns |
-> + * |         1 | cnt[6] |     cnt[5:0] |    500 Hz |    2000000 ns |
-> + * |         2 | cnt[5] |     cnt[4:0] |     1 kHz |    1000000 ns |
-> + * |         3 | cnt[4] |     cnt[3:0] |     2 kHz |     500000 ns |
-> + * +-----------+--------+--------------+-----------+---------------+
-> + *
-> + * Limitations:
-> + * - The hardware cannot generate a 100% duty cycle if the prescaler is =
-0.
-> + * - The hardware cannot atomically set the prescaler and the counter va=
-lue,
-> + *   which might lead to glitches and inconsistent states if a write fai=
-ls.
-> + * - The counter is not reset if you switch the prescaler which leads
-> + *   to glitches, too.
-> + * - The duty cycle will switch immediately and not after a complete cyc=
-le.
-> + * - Depending on the actual implementation, disabling the PWM might have
-> + *   side effects. For example, if the output pin is shared with a GPIO =
-pin
-> + *   it will automatically switch back to GPIO mode.
-
-Very nice.
-
-> + */
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +PHONY += clang-tidy
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> +else
+> +       $(error clang-tidy requires CC=clang)
+> +endif
 > +
-> +#include <linux/bitfield.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
+> +else
+> +       $(error clang-analyzer requires CC=clang)
+> +endif
+
+
+
+You can unify the almost same two rules.
+
+PHONY += clang-tidy clang-analyzer
+clang-tidy clang-analyzer:
+ifdef CONFIG_CC_IS_CLANG
+        $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+        $(PYTHON3) scripts/clang-tools/run-clang-tools.py $@
+compile_commands.json
+else
+        $(error $@ requires CC=clang)
+endif
+
+
+
+
+But, before we proceed, please tell me
+what this check is intended for.
+
+
+
+
+
+Case 1)
+Build the kernel with CC=clang,
+and then run clang-tidy without CC=clang.
+
+$ make CC=clang defconfig
+$ make CC=clang -j$(nproc)
+$ make clang-tidy
+
+scripts/clang-tools/Makefile.clang-tools:13: *** clang-tidy requires
+CC=clang.  Stop.
+
+
+
+
+Case 2)
+Build the kernel using GCC,
+and then run clang-tidy with CC=clang.
+
+$ make defconfig
+$ make -j$(nproc)
+$ make CC=clang clang-tidy
+
+This patch happily runs clang-tidy
+although compile_commands.json
+contains GCC commands.
+
+
+
+
+
+So, it checks if you have passed CC=clang
+to "make clang-tidy", where I do not see
+any user of the $(CC) variable.
+
+It does not care whether you have built
+the kernel with GCC or Clang.
+
+
+
+What happens if you run clang-tidy against
+compile_commands.json that contains GCC
+commands?
+
+
+I also care about stale commands
+in compile_commands.json.
+
+
+gen_compile_commands.py creates compile_commands.json
+based on *.cmd files it found.
+
+If you rebuild the kernel for various settings
+using GCC/clang without "make clean",
+stale .*.cmd files will grow.
+
+compile_commands.json will pick up commands
+from older compilation, i.e. the end up with
+the mixture of GCC/Clang commands.
+
+So, I'd like to know how clang-tidy handles
+the GCC commands from compile_commands.json
+
+
+
+
+
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+> new file mode 100755
+> index 000000000000..fa7655c7cec0
+> --- /dev/null
+> +++ b/scripts/clang-tools/run-clang-tools.py
+> @@ -0,0 +1,74 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine run clang-tidy and the clang static-analyzer on
+> +compile_commands.json.
+> +"""
 > +
-> +/*
-> + * PWM timer block registers.
-> + */
-> +#define SL28CPLD_PWM_CTRL			0x00
-> +#define   SL28CPLD_PWM_CTRL_ENABLE		BIT(7)
-> +#define   SL28CPLD_PWM_CTRL_PRESCALER_MASK	GENMASK(1, 0)
-> +#define SL28CPLD_PWM_CYCLE			0x01
-> +#define   SL28CPLD_PWM_CYCLE_MAX		GENMASK(6, 0)
+> +import argparse
+> +import json
+> +import multiprocessing
+> +import os
+> +import subprocess
+> +import sys
 > +
-> +#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
-> +#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - (prescaler)))
-> +#define SL28CPLD_PWM_PERIOD(prescaler) \
-> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * SL28CPLD_PWM_MAX_DUTY_CYCLE(prescale=
-r))
 > +
-> +/*
-> + * We calculate the duty cycle like this:
-> + *   duty_cycle_ns =3D pwm_cycle_reg * max_period_ns / max_duty_cycle
-> + *
-> + * With
-> + *   max_period_ns =3D 1 << (7 - prescaler) / pwm_clk * NSEC_PER_SEC
-> + *   max_duty_cycle =3D 1 << (7 - prescaler)
-> + * this then simplifies to:
-> + *   duty_cycle_ns =3D pwm_cycle_reg / pwm_clk * NSEC_PER_SEC
-> + *
-> + * NSEC_PER_SEC and SL28CPLD_PWM_CLK is integer here, so we're not losing
-> + * precision by doing the divison first.
-
-Apart from the grammatical issue (s/is/are/) this is not the relevant
-fact. The relevant thing is that NSEC_PER_SEC / SL28CPLD_PWM_CLK is
-integer.
-
-(In case this is not clear, assume SL28CPLD_PWM_CLK to be 30000 and reg
-0x12345.
-
-Then we have:=20
-
-	NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg) -> 0x94255749
-	NSEC_PER_SEC * (reg) / SL28CPLD_PWM_CLK -> 0x9425b860
-
-=2E)
-
-> + */
-> +#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
-> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
-> +#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
-> +	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
+> +def parse_arguments():
+> +    """Set up and parses command-line arguments.
+> +    Returns:
+> +        args: Dict of parsed args
+> +        Has keys: [path, type]
+> +    """
+> +    usage = """Run clang-tidy or the clang static-analyzer on a
+> +        compilation database."""
+> +    parser = argparse.ArgumentParser(description=usage)
 > +
-> +#define sl28cpld_pwm_read(priv, reg, val) \
-> +	regmap_read((priv)->regmap, (priv)->offset + (reg), (val))
-> +#define sl28cpld_pwm_write(priv, reg, val) \
-> +	regmap_write((priv)->regmap, (priv)->offset + (reg), (val))
+> +    type_help = "Type of analysis to be performed"
+> +    parser.add_argument("type",
+> +                        choices=["clang-tidy", "clang-analyzer"],
+> +                        help=type_help)
+> +    path_help = "Path to the compilation database to parse"
+> +    parser.add_argument("path", type=str, help=path_help)
 > +
-> +struct sl28cpld_pwm {
-> +	struct pwm_chip pwm_chip;
-> +	struct regmap *regmap;
-> +	u32 offset;
-> +};
+> +    return parser.parse_args()
 > +
-> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> +				   struct pwm_device *pwm,
-> +				   struct pwm_state *state)
-> +{
-> +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> +	unsigned int reg;
-> +	int prescaler;
 > +
-> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
+> +def init(l, a):
+> +    global lock
+> +    global args
+> +    lock = l
+> +    args = a
 > +
-> +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
 > +
-> +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
-> +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
+> +def run_analysis(entry):
+> +    # Disable all checks, then re-enable the ones we want
+> +    checks = "-checks=-*,"
+> +    if args.type == "clang-tidy":
+> +        checks += "linuxkernel-*"
+> +    else:
+> +        checks += "clang-analyzer-*"
+> +    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
+> +                       stdout=subprocess.PIPE,
+> +                       stderr=subprocess.STDOUT,
+> +                       cwd=entry["directory"])
+> +    with lock:
+> +        sys.stderr.buffer.write(p.stdout)
 > +
-> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
-> +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
+> +
+> +def main():
+> +    args = parse_arguments()
+> +
+> +    lock = multiprocessing.Lock()
+> +    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args))
+> +    # Read JSON data into the datastore variable
+> +    with open(args.path, "r") as f:
+> +        datastore = json.load(f)
+> +        pool.map(run_analysis, datastore)
+> +
+> +
+> +if __name__ == "__main__":
+> +    main()
+> --
+> 2.28.0.rc0.142.g3c755180ce-goog
+>
 
-Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed that
-the upper bits are zero?
 
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +}
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---vgnlsgd3pefacvw3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8rwd0ACgkQwfwUeK3K
-7AmfeAf9Gjs6d6RYl4cHjGm5WtyaW7dy/H/ZhBTXazWZi9T2vSKNCbP7eDdMWVqK
-mGWH4KuK60xZp0FN7GcX1LLw98U3NVz6SQGyQJKe9YbvFCX8mHsUI3L2R/vPprgb
-xLa89BSlnoaUd/KovXXGa++KHFfEqQ/9jTxBYqiLBnHhKK2TEL9QWVwLnzGo0b9T
-N4xzqBfInTCN10AaDNURikxMx1EmP9DaOp2X2LSLlBIkB47mt9jfsQiUy8SHcoF1
-xAx+Ryx0g3t3iXvbv6y9AbuUxaEteZQ8bn+2hP3PHaAo4NyvnaqPM/BFj/SL6RKj
-7d0IxQE5ptk05VI2zx0zwpDFPjk3ow==
-=OBgf
------END PGP SIGNATURE-----
-
---vgnlsgd3pefacvw3--
+-- 
+Best Regards
+Masahiro Yamada
