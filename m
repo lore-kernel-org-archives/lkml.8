@@ -2,119 +2,63 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6552BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7D12311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XogXsXMR"
+	by mail.kernel.org (Postfix) with ESMTP id 4A83F2311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgHFRXn (ORCPT
+        id S1730134AbgHFRXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Aug 2020 13:23:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44440 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730034AbgHFRXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:23:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26028 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729955AbgHFRE5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:04:57 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076E4BLq037516;
-        Thu, 6 Aug 2020 10:23:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=kmhmWCdm048zOKwXHN42FLNuOm7WrXWJMfUPgkm2BNs=;
- b=XogXsXMRXlfm/JAY1LPooBLT63IRYCp8ojV2ctAf3lkvx5Vw9iebfbHieezthAQNC8c0
- /b1g87Yz1d4zB3k1WmuW66G9PU53U8W4EKMQAt7AIgCI/psb/OtVEE/vgSFef0buG0Z7
- JYYwr4i98hQQjP4LOaXvML4fgtZAkymKXVkOEnyDvVVF2gFiGNfUIeZK/XEjsOlO4vj2
- JabFvOzanHZCzsGRQ9PzVHJrSjmUeuJaEAN0xISsn+fffwArKOrYc5vb2gWSAF6EBLid
- tAJK30i6TKzf/UYtYNXDr7tiutyamSPYWlkM7VKb4hqRKBliSIvFSDVr+n1qfByVXcpS JA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rgnf5y0j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 10:23:10 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076E4iXH040969;
-        Thu, 6 Aug 2020 10:23:10 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rgnf5xyj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 10:23:10 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076EF6Jl029907;
-        Thu, 6 Aug 2020 14:23:07 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 32n0185j5x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 14:23:07 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076EN48J16253204
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 14:23:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CAB55AE059;
-        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 541CFAE04D;
-        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.149.70])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v1 0/1] s390: virtio-ccw: PV needs VIRTIO I/O device protection
-Date:   Thu,  6 Aug 2020 16:23:01 +0200
-Message-Id: <1596723782-12798-1-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_09:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0 mlxscore=0
- phishscore=0 suspectscore=1 clxscore=1015 impostorscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060099
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9939DACC6;
+        Thu,  6 Aug 2020 12:07:56 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 14:07:39 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] samples/livepatch: Add README.rst disclaimer
+Message-ID: <20200806120738.GQ24529@alley>
+References: <20200721161407.26806-1-joe.lawrence@redhat.com>
+ <20200721161407.26806-3-joe.lawrence@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721161407.26806-3-joe.lawrence@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Tue 2020-07-21 12:14:07, Joe Lawrence wrote:
+> The livepatch samples aren't very careful with respect to compiler
+> IPA-optimization of target kernel functions.
+> 
+> Add a quick disclaimer and pointer to the compiler-considerations.rst
+> file to warn readers.
+> 
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> ---
+>  samples/livepatch/README.rst | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 samples/livepatch/README.rst
 
-In another series I proposed to add an architecture specific
-callback to fail feature negociation on architecture need.
+I am not sure if the RST format makes sense here. But it does not
+harm. Either way:
 
-In VIRTIO, we already have an entry to reject the features on the
-transport basis.
+Acked-by: Petr Mladek <pmladek@suse.com>
 
-Transport is not architecture so I send a separate series in which
-we fail the feature negociation inside virtio_ccw_finalize_features,
-the virtio_config_ops.finalize_features for S390 CCW transport,
-when the device do not propose the VIRTIO_F_IOMMU_PLATFORM.
-
-This solves the problem of crashing QEMU when this one is not using
-a CCW device with iommu_platform=on in S390.
-
-Regards,
-Pierre
-
-Regards,
-Pierre
-
-Pierre Morel (1):
-  s390: virtio-ccw: PV needs VIRTIO I/O device protection
-
- drivers/s390/virtio/virtio_ccw.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
-
--- 
-2.25.1
-
+Best Regards,
+Petr
