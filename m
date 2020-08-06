@@ -2,267 +2,105 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B835FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83502C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F82221744
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5662A206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c29IyM4L"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=vfemail.net header.i=@vfemail.net header.b="WkKjeeRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgHFDIy (ORCPT
+        id S1730244AbgHFDUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 23:08:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgHFDIv (ORCPT
+        Wed, 5 Aug 2020 23:20:51 -0400
+Received: from nl101-3.vfemail.net ([149.210.219.33]:30008 "EHLO
+        nl101-3.vfemail.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730228AbgHFDUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 23:08:51 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43161C061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 20:08:51 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id i92so4075380pje.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 20:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CtIFr9V+38JciMu7a09ovCgS+FpJy/RDzZrQx+D8B9s=;
-        b=c29IyM4L87WW6sG/Ob52S/9UIHL8xebG1GTIfoQ1Qj0DoqI3iOS+PKV7zuaZ7Yybc1
-         HGjiIhIoB5Ui27JYMp8HsyNVwW/ck5V7tenY9Dl9Pc/3193y6yV2U5Pc0m1wpORSbs+8
-         XYlFPFDEAsGWkqm9UO+kmct184xR1G+2OjeuE8T1rPoGIuv3+VWXd3nCssiv8iP/XkgO
-         4/hrbRFDjdV/YNRXkud4l3IVMfz6sMEDYRjeUy7IifTNjYQmj7j1KFU1Y0AZXH7HQbBf
-         ES/tK2Dr1SwhiIFv+D4yMvD+pJVqEyGhwLCIcO9UxeREahFKicVlDa6TXc6hgJTQP1i2
-         zJbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CtIFr9V+38JciMu7a09ovCgS+FpJy/RDzZrQx+D8B9s=;
-        b=E9+NYNynLBOrWQA6PRXnDnFtXcw2k9WlOyAUaC+IejuayeFic0onecSjgiTD72KTL5
-         mfcMGDoe11SmixA9a8FCwN7+CGGxCPpV8NtbNg8HRwDlDj0Y5Ia8+ONekkLP0TBNjeck
-         yr9Tb9dHi+kj1aswrvYfV8RC6tQi6nK36llgVzhMCwMjni5EDU6lZI47UMn0r0T30+Eb
-         Eic7HvbSgqSu4XodhN8OGbYk9yQaYdHUF2F7EtID+ZW2i04z3d+RdlL+wR50beKCK+c2
-         oqOcDXap5CtvQEX5pkh0Wv/tnisglb8qKA6yiVLM4hX9sdS01PAsYIdFCS/Rb0D9rMe9
-         /whA==
-X-Gm-Message-State: AOAM533/KaY8VhOf0nmhdnelgzaenlzDho1WQIj08LUgDIRc8iX2OwuR
-        bzvuTEnAcw2sNesQcY/qVgjmdw==
-X-Google-Smtp-Source: ABdhPJy+3yd1Pv+kOu4RYnKe844SAyd0w/HM0uj0IM0CLqUCKuf1HFXbvT5+teukdX+PVTQYOtwPUg==
-X-Received: by 2002:a17:902:a708:: with SMTP id w8mr6020238plq.128.1596683330762;
-        Wed, 05 Aug 2020 20:08:50 -0700 (PDT)
-Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id c139sm5472502pfb.65.2020.08.05.20.08.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Aug 2020 20:08:50 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Wei Li <liwei391@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH RESEND v1 11/11] perf arm-spe: Set sample's data source field
-Date:   Thu,  6 Aug 2020 11:07:27 +0800
-Message-Id: <20200806030727.30267-12-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806030727.30267-1-leo.yan@linaro.org>
-References: <20200806030727.30267-1-leo.yan@linaro.org>
+        Wed, 5 Aug 2020 23:20:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=vfemail.net; h=date:from
+        :to:cc:subject:message-id:in-reply-to:references:mime-version
+        :content-type:content-transfer-encoding; s=2018; bh=Ue08wca4aM0I
+        SmyWal/liLfS8epsmUBIz5UxuAqlMdw=; b=WkKjeeRRzXXMuvvZ7LZy7tuRkHmJ
+        xnuXeUrmIDPlpQT8vqygaTkAIy85owyfpWtBJT7ufwuZ+UOzpNujxMT5hOy3dIhJ
+        dqDp/UBPWqvlCQwSUixUl2k5dtDXXnABZKIAaDUKhVQzeIN2TGSs3PYDisxdH4lL
+        imqJEI7J6fQ2/Ns=
+Received: (qmail 56125 invoked from network); 6 Aug 2020 03:20:47 -0000
+Received: by simscan 1.4.0 ppid: 56117, pid: 56122, t: 0.2011s
+         scanners:none
+Received: from unknown (HELO d3d3MTkyLnZmZW1haWwubmV0) (aGdudGt3aXNAdmZlbWFpbC5uZXQ=@MTkyLjE2OC4xLjE5Mg==)
+  by nl101.vfemail.net with ESMTPA; 6 Aug 2020 03:20:47 -0000
+Date:   Wed, 5 Aug 2020 23:20:38 -0400
+From:   David Niklas <Hgntkwis@vfemail.net>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Is anyone else getting a bad signature from kernel.org's 5.8
+ sources+Greg's sign?
+Message-ID: <20200805232038.7a1767cc@Phenom-II-x6.niklas.com>
+In-Reply-To: <5a943a1f-c5ef-937f-f67e-1c59c04d63fb@infradead.org>
+References: <20200805205924.1f646d45@Phenom-II-x6.niklas.com>
+        <5a943a1f-c5ef-937f-f67e-1c59c04d63fb@infradead.org>
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sample structure contains the field 'data_src' which is used to
-tell the detailed info for data operations, e.g. this field indicates
-the data operation is loading or storing, on which cache level, it's
-snooping or remote accessing, etc.  At the end, the 'data_src' will be
-parsed by perf memory tool to display human readable strings.
+On Wed, 5 Aug 2020 18:36:08 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-This patch is to fill the 'data_src' field in the synthesized samples
-base on different types.  Now support types for Level 1 dcache miss,
-Level 1 dcache hit, Last level cache miss, Last level cache access,
-TLB miss, TLB hit, remote access for other socket.
+> On 8/5/20 5:59 PM, David Niklas wrote:
+> > Hello,
+> > I downloaded the kernel sources from kernel.org using curl, then
+> > opera, and finally lynx (to rule out an html parsing bug). I did the
+> > same with the sign and I keep getting:
+> > 
+> > %  gpg2 --verify linux-5.8.tar.sign linux-5.8.tar.xz
+> > gpg: Signature made Mon Aug  3 00:19:13 2020 EDT
+> > gpg:                using RSA key
+> > 647F28654894E3BD457199BE38DBBDC86092693E gpg: BAD signature from
+> > "Greg Kroah-Hartman <gregkh@linuxfoundation.org>" [unknown]
+> > 
+> > I did refresh all the keys just in case.
+> > I believe this is important so I'm addressing this to the signer and
+> > only CC'ing the list.
+> > 
+> > If I'm made some simple mistake, feel free to send SIG666 to my
+> > terminal. I did re-read the man page just in case.  
+> 
+> It works successfully for me.
+> 
+> 
+> from https://www.kernel.org/category/signatures.html::
+> 
+> 
+> If you get "BAD signature"
+> 
+> If at any time you see "BAD signature" output from "gpg2 --verify",
+> please first check the following first:
+> 
+>     Make sure that you are verifying the signature against the .tar
+> version of the archive, not the compressed (.tar.xz) version. Make sure
+> the the downloaded file is correct and not truncated or otherwise
+> corrupted.
+> 
+> If you repeatedly get the same "BAD signature" output, please email
+> helpdesk@kernel.org, so we can investigate the problem.
+> 
+> 
+> 
 
-Note, current perf tool can display statistics for L1/L2/L3 caches but
-it doesn't support the 'last level cache'.  To fit into current
-implementation, 'data_src' field uses L3 cache for last level cache.
+Many thanks. I've never seen a signature done that way before, but I
+understand why you would do it that way.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/arm-spe.c | 87 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 79 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 74308a72b000..3114f059fc2f 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -259,7 +259,7 @@ arm_spe_deliver_synth_event(struct arm_spe *spe,
- }
- 
- static int arm_spe__synth_mem_sample(struct arm_spe_queue *speq,
--				     u64 spe_events_id)
-+				     u64 spe_events_id, u64 data_src)
- {
- 	struct arm_spe *spe = speq->spe;
- 	struct arm_spe_record *record = &speq->decoder->record;
-@@ -272,6 +272,7 @@ static int arm_spe__synth_mem_sample(struct arm_spe_queue *speq,
- 	sample.stream_id = spe_events_id;
- 	sample.addr = record->addr;
- 	sample.phys_addr = record->phys_addr;
-+	sample.data_src = data_src;
- 
- 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
- }
-@@ -293,21 +294,74 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
- 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
- }
- 
-+static u64 arm_spe__synth_data_source(const struct arm_spe_record *record,
-+				      int type)
-+{
-+	union perf_mem_data_src	data_src = { 0 };
-+
-+	if (record->op == ARM_SPE_LD)
-+		data_src.mem_op = PERF_MEM_OP_LOAD;
-+	else
-+		data_src.mem_op = PERF_MEM_OP_STORE;
-+
-+	switch (type) {
-+	case ARM_SPE_L1D_MISS:
-+		data_src.mem_lvl_num = PERF_MEM_LVLNUM_L1;
-+		data_src.mem_lvl = PERF_MEM_LVL_MISS | PERF_MEM_LVL_L1;
-+		break;
-+	case ARM_SPE_L1D_ACCESS:
-+		data_src.mem_lvl_num = PERF_MEM_LVLNUM_L1;
-+		data_src.mem_lvl = PERF_MEM_LVL_HIT | PERF_MEM_LVL_L1;
-+		break;
-+	case ARM_SPE_LLC_MISS:
-+		data_src.mem_lvl_num = PERF_MEM_LVLNUM_L3;
-+		data_src.mem_lvl = PERF_MEM_LVL_MISS | PERF_MEM_LVL_L3;
-+		break;
-+	case ARM_SPE_LLC_ACCESS:
-+		data_src.mem_lvl_num = PERF_MEM_LVLNUM_L3;
-+		data_src.mem_lvl = PERF_MEM_LVL_HIT | PERF_MEM_LVL_L3;
-+		break;
-+	case ARM_SPE_TLB_MISS:
-+		data_src.mem_dtlb = PERF_MEM_TLB_WK | PERF_MEM_TLB_MISS;
-+		break;
-+	case ARM_SPE_TLB_ACCESS:
-+		data_src.mem_dtlb = PERF_MEM_TLB_WK | PERF_MEM_TLB_HIT;
-+		break;
-+	case ARM_SPE_REMOTE_ACCESS:
-+		data_src.mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-+		data_src.mem_lvl = PERF_MEM_LVL_HIT | PERF_MEM_LVL_REM_CCE1;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return data_src.val;
-+}
-+
- static int arm_spe_sample(struct arm_spe_queue *speq)
- {
- 	const struct arm_spe_record *record = &speq->decoder->record;
- 	struct arm_spe *spe = speq->spe;
-+	u64 data_src;
- 	int err;
- 
- 	if (spe->sample_flc) {
- 		if (record->type & ARM_SPE_L1D_MISS) {
--			err = arm_spe__synth_mem_sample(speq, spe->l1d_miss_id);
-+			data_src = arm_spe__synth_data_source(record,
-+							      ARM_SPE_L1D_MISS);
-+
-+			err = arm_spe__synth_mem_sample(speq, spe->l1d_miss_id,
-+							data_src);
- 			if (err)
- 				return err;
- 		}
- 
- 		if (record->type & ARM_SPE_L1D_ACCESS) {
--			err = arm_spe__synth_mem_sample(speq, spe->l1d_access_id);
-+			data_src = arm_spe__synth_data_source(record,
-+							      ARM_SPE_L1D_ACCESS);
-+
-+			err = arm_spe__synth_mem_sample(speq, spe->l1d_access_id,
-+							data_src);
- 			if (err)
- 				return err;
- 		}
-@@ -315,13 +369,21 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 
- 	if (spe->sample_llc) {
- 		if (record->type & ARM_SPE_LLC_MISS) {
--			err = arm_spe__synth_mem_sample(speq, spe->llc_miss_id);
-+			data_src = arm_spe__synth_data_source(record,
-+							      ARM_SPE_LLC_MISS);
-+
-+			err = arm_spe__synth_mem_sample(speq, spe->llc_miss_id,
-+							data_src);
- 			if (err)
- 				return err;
- 		}
- 
- 		if (record->type & ARM_SPE_LLC_ACCESS) {
--			err = arm_spe__synth_mem_sample(speq, spe->llc_access_id);
-+			data_src = arm_spe__synth_data_source(record,
-+							      ARM_SPE_LLC_ACCESS);
-+
-+			err = arm_spe__synth_mem_sample(speq, spe->llc_access_id,
-+							data_src);
- 			if (err)
- 				return err;
- 		}
-@@ -329,13 +391,19 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 
- 	if (spe->sample_tlb) {
- 		if (record->type & ARM_SPE_TLB_MISS) {
--			err = arm_spe__synth_mem_sample(speq, spe->tlb_miss_id);
-+			data_src = arm_spe__synth_data_source(record,
-+							      ARM_SPE_TLB_MISS);
-+			err = arm_spe__synth_mem_sample(speq, spe->tlb_miss_id,
-+							data_src);
- 			if (err)
- 				return err;
- 		}
- 
- 		if (record->type & ARM_SPE_TLB_ACCESS) {
--			err = arm_spe__synth_mem_sample(speq, spe->tlb_access_id);
-+			data_src = arm_spe__synth_data_source(record,
-+							      ARM_SPE_TLB_ACCESS);
-+			err = arm_spe__synth_mem_sample(speq, spe->tlb_access_id,
-+							data_src);
- 			if (err)
- 				return err;
- 		}
-@@ -349,7 +417,10 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 
- 	if (spe->sample_remote_access &&
- 	    (record->type & ARM_SPE_REMOTE_ACCESS)) {
--		err = arm_spe__synth_mem_sample(speq, spe->remote_access_id);
-+		data_src = arm_spe__synth_data_source(record,
-+						      ARM_SPE_REMOTE_ACCESS);
-+		err = arm_spe__synth_mem_sample(speq, spe->remote_access_id,
-+						data_src);
- 		if (err)
- 			return err;
- 	}
--- 
-2.17.1
-
+David
