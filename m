@@ -2,106 +2,93 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67148C4346D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3504C46466
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE1F22D03
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E062310A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgHFHSQ (ORCPT
+        id S1728347AbgHFGuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:18:16 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8773 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727105AbgHFHSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 03:18:09 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 07FD0DE76A8B34F94D7E;
-        Thu,  6 Aug 2020 15:18:03 +0800 (CST)
-Received: from [127.0.0.1] (10.174.186.173) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 6 Aug 2020
- 15:17:59 +0800
-Subject: Re: [PATCH] arm64: tlb: fix ARM64_TLB_RANGE with LLVM's integrated
- assembler
-To:     Sami Tolvanen <samitolvanen@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-References: <20200805181920.4013059-1-samitolvanen@google.com>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <95156879-d76e-65cc-1469-ae3096aa95e4@huawei.com>
-Date:   Thu, 6 Aug 2020 15:17:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 6 Aug 2020 02:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727800AbgHFGuX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 02:50:23 -0400
+Received: from magratgarlick.emantor.de (magratgarlick.emantor.de [IPv6:2a01:4f8:c17:c88::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E14C8C061574;
+        Wed,  5 Aug 2020 23:50:22 -0700 (PDT)
+Received: by magratgarlick.emantor.de (Postfix, from userid 114)
+        id D7DC510C96B; Thu,  6 Aug 2020 08:50:14 +0200 (CEST)
+Received: from localhost (200116b82871d502e89ff5a9718d1cab.dip.versatel-1u1.de [IPv6:2001:16b8:2871:d502:e89f:f5a9:718d:1cab])
+        by magratgarlick.emantor.de (Postfix) with ESMTPSA id 84D9410C5FB;
+        Thu,  6 Aug 2020 08:50:11 +0200 (CEST)
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     kernel@pengutronix.de,
+        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 net-next] net/tls: allow MSG_CMSG_COMPAT in sendmsg
+Date:   Thu,  6 Aug 2020 08:49:06 +0200
+Message-Id: <20200806064906.14421-1-r.czerwinski@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200805181920.4013059-1-samitolvanen@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.186.173]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Trying to use ktls on a system with 32-bit userspace and 64-bit kernel
+results in a EOPNOTSUPP message during sendmsg:
 
-On 2020/8/6 2:19, Sami Tolvanen wrote:
-> Commit 7c78f67e9bd9 ("arm64: enable tlbi range instructions") breaks
-> LLVM's integrated assembler, because -Wa,-march is only passed to
-> external assemblers and therefore, the new instructions are not enabled
-> when IAS is used.
-> 
+  setsockopt(3, SOL_TLS, TLS_TX, …, 40) = 0
+  sendmsg(3, …, msg_flags=0}, 0) = -1 EOPNOTSUPP (Operation not supported)
 
-I have looked through the discussion on Github issues. The best way to
-solve this problem is try to pass the "-Wa,-march" parameter to clang
-even when IAS is enabled, which may need the cooperation of compilation
-tool chains :(
+The tls_sw implementation does strict flag checking and does not allow
+the MSG_CMSG_COMPAT flag, which is set if the message comes in through
+the compat syscall.
 
-Currently, I think we can solve the problem by passing
-the '-march=armv8.4-a' when using the integrated assembler, just like:
+This patch adds MSG_CMSG_COMPAT to the flag check to allow the usage of
+the TLS SW implementation on systems using the compat syscall path.
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 55bc8546d9c7..e5ce184e98c2 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -91,8 +91,12 @@ KBUILD_CFLAGS += $(branch-prot-flags-y)
+Note that the same check is present in the sendmsg path for the TLS
+device implementation, however the flag hasn't been added there for lack
+of testing hardware.
 
- ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
- # make sure to pass the newest target architecture to -march.
-+ifneq ($(LLVM),)
-+KBUILD_CFLAGS  += -march=armv8.4-a
-+else
- KBUILD_CFLAGS  += -Wa,-march=armv8.4-a
- endif
-+endif
+Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+---
+ net/tls/tls_sw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index 24f64bc0de18..a332ae123bda 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -935,7 +935,8 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+ 	int ret = 0;
+ 	int pending;
+ 
+-	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
++	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
++			       MSG_CMSG_COMPAT))
+ 		return -EOPNOTSUPP;
+ 
+ 	mutex_lock(&tls_ctx->tx_lock);
 
-
-No need to worry about that this might generate instructions that are not
-supported on older hardware, because the 'TLB range' feature is only
-enabled when the hardware support ARMv8.4.
-
-> As binutils doesn't support .arch_extension tlb-rmi, this change adds
-> .arch armv8.4-a to __TLBI_0 and __TLBI_1 to fix the issue with both LLVM
-> IAS and binutils.
-> 
-> Fixes: 7c78f67e9bd9 ("arm64: enable tlbi range instructions")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1106
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-
-Thanks,
-Zhenyu
+base-commit: c1055b76ad00aed0e8b79417080f212d736246b6
+-- 
+2.27.0
 
