@@ -2,369 +2,152 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA6DC2311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA1E2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fMZZkvsC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FY9UKV4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbgHFQtt (ORCPT
+        id S1728926AbgHFQue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:49:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48122 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbgHFQlS (ORCPT
+        Thu, 6 Aug 2020 12:50:34 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19381 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729087AbgHFQlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:41:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076GMLNN144181;
-        Thu, 6 Aug 2020 16:40:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : in-reply-to : references : date : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=bLAwo3t/sI0fgU4hBFxE/B5ggB+vGc0PRdO6iJd4HG4=;
- b=fMZZkvsCh61h9GQZEuHhD0CRMWNQaO3IJFp7ixpZ1PdE2I/wyj4Xo7WUufm9Wy2tHshs
- e6DfsEm0KI3LjAtx5vLRlJgLMMkTruR5D/Y2ZAqC/0FCvzDJhUg6jfvnDjbqPcS/uRd0
- KzySovDMkqSL8buJHJT/tBY8eBwizvghufi5v8LLe3W2ntlQ0lPH9Z9Rkb+ls4XAMzSf
- AMPzvi4S4WSXa/jCjklrD2RKd7oymb22mr7gvcwsOVsXipVebx6vYKWbWbOxWAqVHF3F
- eaXdH73ZoP0WYoI50161JJcaSB5ap7wbhzWfEkbvNtqi614Q1FJ86zRMANHcPdSmXJ75 ig== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 32r6ep44rj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 06 Aug 2020 16:40:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076GO6Bl154050;
-        Thu, 6 Aug 2020 16:40:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 32r6cvrhk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Aug 2020 16:40:45 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 076Gee0f029639;
-        Thu, 6 Aug 2020 16:40:40 GMT
-Received: from starbug-mbp.localdomain (/79.97.215.145)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Aug 2020 09:40:39 -0700
-Received: by starbug-mbp.localdomain (Postfix, from userid 501)
-        id C9C60F09834; Thu,  6 Aug 2020 17:40:19 +0100 (IST)
-From:   Darren Kenny <darren.kenny@oracle.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 14/24] x86/sgx: Add SGX_IOC_ENCLAVE_INIT
-In-Reply-To: <20200716135303.276442-15-jarkko.sakkinen@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-15-jarkko.sakkinen@linux.intel.com>
-Date:   Thu, 06 Aug 2020 17:40:19 +0100
-Message-ID: <m2a6z7ramk.fsf@oracle.com>
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c329f0001>; Thu, 06 Aug 2020 09:41:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 09:41:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Aug 2020 09:41:16 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 16:41:15 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
+Date:   Thu, 6 Aug 2020 09:41:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 mlxscore=0 bulkscore=0
- spamscore=0 adultscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008060113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 bulkscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060113
+In-Reply-To: <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596732063; bh=aSj+An4k0jQSBKE0gQLbkgh8EUdWIyZoOObI+nTFPQ4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=FY9UKV4S6ICiJGg4B7NbEf9KBDsvgca/RcruHvXMwH3vkmJvFd37M9kkd6NUrVePs
+         1AzoPKnCxuaJ55FLoYqhtX5CA/L9MkPR/WyhVndrEy5ivTCcuqIhRZ3NVltDZPUGSu
+         rsP80G+YfJIw0n8sAtFDcVZWKPe/TKgkWkTt3rS4He6ALc/mfL8T/kNqJCwr9RoIHc
+         nDOMWdUubUae1l1/q92P9NlLQ3DcmbWavouObFIbnESHkDSqCOPr2KT8LIaniP9ZGo
+         THX8GSRxcbqrtYIJ/ozDmzwVKYgsvYKUZJOCNpIEzLMqGnqDMfsor5d6bp9E3h7Qx6
+         1CdmL42QEtuQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, 2020-07-16 at 16:52:53 +03, Jarkko Sakkinen wrote:
-> Add an ioctl that performs ENCLS[EINIT], which locks down the measurement
-> and initializes the enclave for entrance. After this, new pages can no
-> longer be added.
->
-> Acked-by: Jethro Beekman <jethro@fortanix.com>
-> Tested-by: Jethro Beekman <jethro@fortanix.com>
-> Tested-by: Haitao Huang <haitao.huang@linux.intel.com>
-> Tested-by: Chunyang Hui <sanqian.hcy@antfin.com>
-> Tested-by: Jordan Hand <jorhand@linux.microsoft.com>
-> Tested-by: Nathaniel McCallum <npmccallum@redhat.com>
-> Tested-by: Seth Moore <sethmo@google.com>
 
-Tested-by: Darren Kenny <darren.kenny@oracle.com>
-Reviewed-by: Darren Kenny <darren.kenny@oracle.com>
+On 8/6/20 9:10 AM, Dmitry Osipenko wrote:
+> 06.08.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>>>> Confirmed from HW designer, calibration FSM to finish takes worst case
+>>>> 72uS so by the time it gets to sensor stream it will be done its
+>>>> sequence and will be waiting for DONE bit.
+>>>>
+>>>> So disabling MIPI CAL clock on sensor stream fails is safe.
+>>> 72us is quite a lot of time, what will happen if LP-11 happens before
+>>> FSM finished calibration?
+>>>
+>>> Maybe the finish_calibration() needs to split into two parts:
+>>>
+>>>  =C2=A0 1. wait for CAL_STATUS_ACTIVE before enabling sensor
+>>>  =C2=A0 2. wait for CAL_STATUS_DONE after enabling sensor
+>> I don't think we need to split for active and done. Active will be 1 as
+>> long as other pads are in calibration as well.
+>>
+>> We cant use active status check for specific pads under calibration.
+>> This is common bit for all pads.
+> Does hardware have a single FSM block shared by all pads or there is FSM
+> per group of pads?
 
-> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Suresh Siddha <suresh.b.siddha@intel.com>
-> Signed-off-by: Suresh Siddha <suresh.b.siddha@intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/include/uapi/asm/sgx.h |  11 ++
->  arch/x86/kernel/cpu/sgx/ioctl.c | 188 ++++++++++++++++++++++++++++++++
->  2 files changed, 199 insertions(+)
+MIPI CAL status register has DONE bits for individual pads status and=20
+single ACTIVE bit.
+
+ACTIVE bit set to 1 indicates auto calibration is active which is the=20
+case even when other pads (other CSI pads from other ports streaming in=20
+case of parallel stream) are under calibration. Also DSI is shared as well.
+
+We do calibration for individual pads. So, we should not rely on ACTIVE bit=
+.
+
+
+MIPI driver checks for condition ACTIVE =3D=3D 1 && DONE =3D=3D 1 from the=
+=20
+beginning.
+
+But I think this also should be fixed as in case of parallel streams=20
+calibration can happen in parallel waiting for ACTIVE to be cleared=20
+makes all calibration callers to wait for longer than needed as ACTIVE=20
+is common for all pads.
+
 >
-> diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-> index c8f199b3fb6f..5edb08ab8fd0 100644
-> --- a/arch/x86/include/uapi/asm/sgx.h
-> +++ b/arch/x86/include/uapi/asm/sgx.h
-> @@ -23,6 +23,8 @@ enum sgx_page_flags {
->  	_IOW(SGX_MAGIC, 0x00, struct sgx_enclave_create)
->  #define SGX_IOC_ENCLAVE_ADD_PAGES \
->  	_IOWR(SGX_MAGIC, 0x01, struct sgx_enclave_add_pages)
-> +#define SGX_IOC_ENCLAVE_INIT \
-> +	_IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
->  
->  /**
->   * struct sgx_enclave_create - parameter structure for the
-> @@ -52,4 +54,13 @@ struct sgx_enclave_add_pages {
->  	__u64	count;
->  };
->  
-> +/**
-> + * struct sgx_enclave_init - parameter structure for the
-> + *                           %SGX_IOC_ENCLAVE_INIT ioctl
-> + * @sigstruct:	address for the SIGSTRUCT data
-> + */
-> +struct sgx_enclave_init {
-> +	__u64 sigstruct;
-> +};
-> +
->  #endif /* _UAPI_ASM_X86_SGX_H */
-> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
-> index c63a51362d14..3444de955191 100644
-> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
-> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-> @@ -16,6 +16,9 @@
->  #include "encl.h"
->  #include "encls.h"
->  
-> +/* A per-cpu cache for the last known values of IA32_SGXLEPUBKEYHASHx MSRs. */
-> +static DEFINE_PER_CPU(u64 [4], sgx_lepubkeyhash_cache);
-> +
->  static u32 sgx_calc_ssa_frame_size(u32 miscselect, u64 xfrm)
->  {
->  	u32 size_max = PAGE_SIZE;
-> @@ -485,6 +488,188 @@ static long sgx_ioc_enclave_add_pages(struct sgx_encl *encl, void __user *arg)
->  	return ret;
->  }
->  
-> +static int __sgx_get_key_hash(struct crypto_shash *tfm, const void *modulus,
-> +			      void *hash)
-> +{
-> +	SHASH_DESC_ON_STACK(shash, tfm);
-> +
-> +	shash->tfm = tfm;
-> +
-> +	return crypto_shash_digest(shash, modulus, SGX_MODULUS_SIZE, hash);
-> +}
-> +
-> +static int sgx_get_key_hash(const void *modulus, void *hash)
-> +{
-> +	struct crypto_shash *tfm;
-> +	int ret;
-> +
-> +	tfm = crypto_alloc_shash("sha256", 0, CRYPTO_ALG_ASYNC);
-> +	if (IS_ERR(tfm))
-> +		return PTR_ERR(tfm);
-> +
-> +	ret = __sgx_get_key_hash(tfm, modulus, hash);
-> +
-> +	crypto_free_shash(tfm);
-> +	return ret;
-> +}
-> +
-> +static void sgx_update_lepubkeyhash_msrs(u64 *lepubkeyhash, bool enforce)
-> +{
-> +	u64 *cache;
-> +	int i;
-> +
-> +	cache = per_cpu(sgx_lepubkeyhash_cache, smp_processor_id());
-> +	for (i = 0; i < 4; i++) {
-> +		if (enforce || (lepubkeyhash[i] != cache[i])) {
-> +			wrmsrl(MSR_IA32_SGXLEPUBKEYHASH0 + i, lepubkeyhash[i]);
-> +			cache[i] = lepubkeyhash[i];
-> +		}
-> +	}
-> +}
-> +
-> +static int sgx_einit(struct sgx_sigstruct *sigstruct, void *token,
-> +		     struct sgx_epc_page *secs, u64 *lepubkeyhash)
-> +{
-> +	int ret;
-> +
-> +	preempt_disable();
-> +	sgx_update_lepubkeyhash_msrs(lepubkeyhash, false);
-> +	ret = __einit(sigstruct, token, sgx_get_epc_addr(secs));
-> +	if (ret == SGX_INVALID_EINITTOKEN) {
-> +		sgx_update_lepubkeyhash_msrs(lepubkeyhash, true);
-> +		ret = __einit(sigstruct, token, sgx_get_epc_addr(secs));
-> +	}
-> +	preempt_enable();
-> +	return ret;
-> +}
-> +
-> +static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct *sigstruct,
-> +			 void *token)
-> +{
-> +	u64 mrsigner[4];
-> +	int ret;
-> +	int i;
-> +	int j;
-> +
-> +	/* Check that the required attributes have been authorized. */
-> +	if (encl->secs_attributes & ~encl->allowed_attributes)
-> +		return -EACCES;
-> +
-> +	ret = sgx_get_key_hash(sigstruct->modulus, mrsigner);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&encl->lock);
-> +
-> +	/*
-> +	 * Periodically, EINIT polls for certain asynchronous events. If such an
-> +	 * event is detected, it completes with SGX_UNMSKED_EVENT.
-> +	 */
-> +	for (i = 0; i < SGX_EINIT_SLEEP_COUNT; i++) {
-> +		for (j = 0; j < SGX_EINIT_SPIN_COUNT; j++) {
-> +			ret = sgx_einit(sigstruct, token, encl->secs.epc_page,
-> +					mrsigner);
-> +			if (ret == SGX_UNMASKED_EVENT)
-> +				continue;
-> +			else
-> +				break;
-> +		}
-> +
-> +		if (ret != SGX_UNMASKED_EVENT)
-> +			break;
-> +
-> +		msleep_interruptible(SGX_EINIT_SLEEP_TIME);
-> +
-> +		if (signal_pending(current)) {
-> +			ret = -ERESTARTSYS;
-> +			goto err_out;
-> +		}
-> +	}
-> +
-> +	if (ret & ENCLS_FAULT_FLAG) {
-> +		if (encls_failed(ret))
-> +			ENCLS_WARN(ret, "EINIT");
-> +
-> +		sgx_encl_destroy(encl);
-> +		ret = -EFAULT;
-> +	} else if (ret) {
-> +		pr_debug("EINIT returned %d\n", ret);
-> +		ret = -EPERM;
-> +	} else {
-> +		atomic_or(SGX_ENCL_INITIALIZED, &encl->flags);
-> +	}
-> +
-> +err_out:
-> +	mutex_unlock(&encl->lock);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * sgx_ioc_enclave_init - handler for %SGX_IOC_ENCLAVE_INIT
-> + *
-> + * @filep:	open file to /dev/sgx
-> + * @arg:	userspace pointer to a struct sgx_enclave_init instance
-> + *
-> + * Flush any outstanding enqueued EADD operations and perform EINIT.  The
-> + * Launch Enclave Public Key Hash MSRs are rewritten as necessary to match
-> + * the enclave's MRSIGNER, which is caculated from the provided sigstruct.
-> + *
-> + * Return:
-> + *   0 on success,
-> + *   SGX error code on EINIT failure,
-> + *   -errno otherwise
-> + */
-> +static long sgx_ioc_enclave_init(struct sgx_encl *encl, void __user *arg)
-> +{
-> +	struct sgx_sigstruct *sigstruct;
-> +	struct sgx_enclave_init einit;
-> +	struct page *initp_page;
-> +	void *token;
-> +	int ret;
-> +
-> +	if ((atomic_read(&encl->flags) & SGX_ENCL_INITIALIZED) ||
-> +	    !(atomic_read(&encl->flags) & SGX_ENCL_CREATED))
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(&einit, arg, sizeof(einit)))
-> +		return -EFAULT;
-> +
-> +	initp_page = alloc_page(GFP_KERNEL);
-> +	if (!initp_page)
-> +		return -ENOMEM;
-> +
-> +	sigstruct = kmap(initp_page);
-> +	token = (void *)((unsigned long)sigstruct + PAGE_SIZE / 2);
-> +	memset(token, 0, SGX_LAUNCH_TOKEN_SIZE);
-> +
-> +	if (copy_from_user(sigstruct, (void __user *)einit.sigstruct,
-> +			   sizeof(*sigstruct))) {
-> +		ret = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * A legacy field used with Intel signed enclaves. These used to mean
-> +	 * regular and architectural enclaves. The CPU only accepts these values
-> +	 * but they do not have any other meaning.
-> +	 *
-> +	 * Thus, reject any other values.
-> +	 */
-> +	if (sigstruct->header.vendor != 0x0000 &&
-> +	    sigstruct->header.vendor != 0x8086) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	ret = sgx_encl_init(encl, sigstruct, token);
-> +
-> +out:
-> +	kunmap(initp_page);
-> +	__free_page(initp_page);
-> +	return ret;
-> +}
-> +
-> +
->  long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
->  {
->  	struct sgx_encl *encl = filep->private_data;
-> @@ -506,6 +691,9 @@ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
->  	case SGX_IOC_ENCLAVE_ADD_PAGES:
->  		ret = sgx_ioc_enclave_add_pages(encl, (void __user *)arg);
->  		break;
-> +	case SGX_IOC_ENCLAVE_INIT:
-> +		ret = sgx_ioc_enclave_init(encl, (void __user *)arg);
-> +		break;
->  	default:
->  		ret = -ENOIOCTLCMD;
->  		break;
-> -- 
-> 2.25.1
+>> Unfortunately HW don't have separate status indicating when sequence is
+>> done to indicate its waiting for LP11.
+>>
+>>
+>> To avoid all this, will remove cancel_calibration() totally and use same
+>> finish calibration even in case of stream failure then.
+>>
+> What about to add 72us delay to the end of start_calibration() in order
+> to ensure that FSM is finished before LP-11?
+
+Why we should add 72uS in start_calibration() when can use same=20
+finish_calibration() for both pass/fail cases?
+
+Only timing loose we see is in case of failure we still wait for 250ms=20
+and as this is failing case I hope should be ok.
+
