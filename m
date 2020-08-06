@@ -2,188 +2,159 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EB8C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4220AC43466
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEDC22D04
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7206122D06
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tdJT0ReO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgHFJnu (ORCPT
+        id S1729046AbgHFJKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:43:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:41644 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgHFJnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:43:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10F511045;
-        Thu,  6 Aug 2020 02:43:14 -0700 (PDT)
-Received: from [10.163.65.54] (unknown [10.163.65.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C8FB3F9AB;
-        Thu,  6 Aug 2020 02:43:10 -0700 (PDT)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, rafael@kernel.org
-From:   Vikas Kumar <vikas.kumar2@arm.com>
-Subject: [LTP-FAIL][02/21] fs: refactor ksys_umount
-Message-ID: <d28d2235-9b1c-0403-59ca-e57ac5d0460e@arm.com>
-Date:   Thu, 6 Aug 2020 15:13:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Thu, 6 Aug 2020 05:10:38 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:22673 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbgHFJKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:10:06 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200806091002epoutp02c180b974a3c896563e9507600863b24c~oor1sNMFO0885008850epoutp02D
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:10:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200806091002epoutp02c180b974a3c896563e9507600863b24c~oor1sNMFO0885008850epoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596705002;
+        bh=+Tk1raV2lX3/B/vawB8miWVvRfhulCe0CC4e8YCxARg=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=tdJT0ReOmN8rcQ8zWbUJZrjkpDTZNjR3wqcjpG3tT7ln08A+5GJt6ZIDlkMx48aMR
+         Jp6qHg3LolXCQeRsiXtyt9I3RLfwDxycLs7B8ybujhcvLPiMd+GSieILsLq98Kx+Ud
+         AcrCVolBCwOxGUHKOybSyiVKTvrlAZhrw9yxYKPo=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200806091001epcas1p2f02484a63395973d98377016db17c142~oor1Owpew2868728687epcas1p23;
+        Thu,  6 Aug 2020 09:10:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v8 1/4] scsi: ufs: Add UFS feature related parameter
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01596705001840.JavaMail.epsvc@epcpadp1>
+Date:   Thu, 06 Aug 2020 18:02:09 +0900
+X-CMS-MailID: 20200806090209epcms2p6ca5658db27f2c2167ea8187bd445858f
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
+References: <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+        <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+This is a patch for parameters to be used for UFS feature and HPB
+module.
 
-We have seen LTP test(utime06 and umount03) failure in Next Master with 
-commit Id 41525f56e256("fs: refactor ksys_umount").
-I didn't analysis root cause of problem, i am reporting this issue.
-
----------------------------------------------
-LTP Testcase    Result    Exit Value
------------------------------------ ---------
-umount03          FAIL           4
-utime06             FAIL           2
---------------------------------------------
-
-LTP utime06 Fail Log:
-/dev/loop0 is mounted; will not make a filesystem here!
-utime06     0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
-utime06     0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra 
-opts=''
-utime06     1  TBROK  :  tst_mkfs.c:102: utime06.c:122: mkfs.ext2 failed 
-with 1
-utime06     2  TBROK  :  tst_mkfs.c:102: Remaining cases broken
-
-LTP umount03 Fail Log:
-tst_device.c:262: INFO: Using test device LTP_DEV='/dev/loop0'
-tst_mkfs.c:89: INFO: Formatting /dev/loop0 with ext2 opts='' extra opts=''
-mke2fs 1.44.5 (15-Dec-2018)
-tst_test.c:1244: INFO: Timeout per run is 0h 05m 00s
-umount03.c:35: PASS: umount() fails as expected: EPERM (1)
-tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 1...
-tst_device.c:387: INFO: Likely gvfsd-trash is probing newly mounted fs, 
-kill it to speed up tests.
-tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 2...
-tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 3...
-tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 48...
-tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 49...
-tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 50...
-tst_device.c:394: WARN: Failed to umount('mntpoint') after 50 retries
-tst_tmpdir.c:336: WARN: tst_rmdir: rmobj(/scratch/ltp-Lnmh7tbxY6/gx0hJU) 
-failed: remove(/scratch/ltp-Lnmh7tbxY6/gx0hJU/mntpoint) failed; 
-errno=16: EBUSY
-
-Regards,
-
-Vikas
-
-
-Below Commit ID 41525f56e256 Bisected for This fail:
-
-     commit 41525f56e2564c2feff4fb2824823900efb3a39f
-     Author: Christoph Hellwig <hch@lst.de>
-     Date:   Tue Jul 21 10:54:34 2020 +0200
-
-     fs: refactor ksys_umount
-
-     Factor out a path_umount helper that takes a struct path * instead 
-of the
-     actual file name.  This will allow to convert the init and devtmpfs 
-code
-     to properly mount based on a kernel pointer instead of relying on the
-     implicit set_fs(KERNEL_DS) during early init.
-
-     Signed-off-by: Christoph Hellwig <hch@lst.de>
-
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Tested-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 ---
-  fs/namespace.c | 40 ++++++++++++++++++----------------------
-  1 file changed, 18 insertions(+), 22 deletions(-)
+ drivers/scsi/ufs/ufs.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 6f8234f74bed90..43834b59eff6c3 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1706,36 +1706,19 @@ static inline bool may_mandlock(void)
-  }
-  #endif
-
--/*
-- * Now umount can handle mount points as well as block devices.
-- * This is important for filesystems which use unnamed block devices.
-- *
-- * We now support a flag for forced unmount like the other 'big iron'
-- * unixes. Our API is identical to OSF/1 to avoid making a mess of AMD
-- */
--
--int ksys_umount(char __user *name, int flags)
-+static int path_umount(struct path *path, int flags)
-  {
--    struct path path;
-      struct mount *mnt;
-      int retval;
--    int lookup_flags = LOOKUP_MOUNTPOINT;
-
-      if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
-          return -EINVAL;
--
-      if (!may_mount())
-          return -EPERM;
-
--    if (!(flags & UMOUNT_NOFOLLOW))
--        lookup_flags |= LOOKUP_FOLLOW;
--
--    retval = user_path_at(AT_FDCWD, name, lookup_flags, &path);
--    if (retval)
--        goto out;
--    mnt = real_mount(path.mnt);
-+    mnt = real_mount(path->mnt);
-      retval = -EINVAL;
--    if (path.dentry != path.mnt->mnt_root)
-+    if (path->dentry != path->mnt->mnt_root)
-          goto dput_and_out;
-      if (!check_mnt(mnt))
-          goto dput_and_out;
-@@ -1748,12 +1731,25 @@ int ksys_umount(char __user *name, int flags)
-      retval = do_umount(mnt, flags);
-  dput_and_out:
-      /* we mustn't call path_put() as that would clear mnt_expiry_mark */
--    dput(path.dentry);
-+    dput(path->dentry);
-      mntput_no_expire(mnt);
--out:
-      return retval;
-  }
-
-+int ksys_umount(char __user *name, int flags)
-+{
-+    int lookup_flags = LOOKUP_MOUNTPOINT;
-+    struct path path;
-+    int ret;
-+
-+    if (!(flags & UMOUNT_NOFOLLOW))
-+        lookup_flags |= LOOKUP_FOLLOW;
-+    ret = user_path_at(AT_FDCWD, name, lookup_flags, &path);
-+    if (ret)
-+        return ret;
-+    return path_umount(&path, flags);
-+}
-+
-SYSCALL_DEFINE2(umount, char __user *, name, int, flags)
-  {
+diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+index f8ab16f30fdc..ae557b8d3eba 100644
+--- a/drivers/scsi/ufs/ufs.h
++++ b/drivers/scsi/ufs/ufs.h
+@@ -122,6 +122,7 @@ enum flag_idn {
+ 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
+ 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
+ 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
++	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
+ };
+ 
+ /* Attribute idn for Query requests */
+@@ -195,6 +196,9 @@ enum unit_desc_param {
+ 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
+ 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
+ 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
++	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
++	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
++	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
+ 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
+ };
+ 
+@@ -235,6 +239,8 @@ enum device_desc_param {
+ 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
+ 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
+ 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
++	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
++	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
+ 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
+ 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
+ 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
+@@ -283,6 +289,10 @@ enum geometry_desc_param {
+ 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
+ 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
+ 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
++	GEOMETRY_DESC_HPB_REGION_SIZE		= 0x48,
++	GEOMETRY_DESC_HPB_NUMBER_LU		= 0x49,
++	GEOMETRY_DESC_HPB_SUBREGION_SIZE	= 0x4A,
++	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
+ 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
+ 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
+ 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
+@@ -327,6 +337,7 @@ enum {
+ 
+ /* Possible values for dExtendedUFSFeaturesSupport */
+ enum {
++	UFS_DEV_HPB_SUPPORT		= BIT(7),
+ 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
+ };
+ 
+@@ -537,6 +548,7 @@ struct ufs_dev_info {
+ 	u8 *model;
+ 	u16 wspecversion;
+ 	u32 clk_gating_wait_us;
++	u8 b_ufs_feature_sup;
+ 	u32 d_ext_ufs_feature_sup;
+ 	u8 b_wb_buffer_type;
+ 	u32 d_wb_alloc_units;
+-- 
+2.17.1
 
 
