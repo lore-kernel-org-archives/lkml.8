@@ -2,71 +2,180 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AA7C38153
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E49C43463
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F35E23128
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092FE22D02
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgHFJhf (ORCPT
+        id S1729001AbgHFJJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:37:35 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:45388 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729128AbgHFJcc (ORCPT
+        Thu, 6 Aug 2020 05:09:06 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60683 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728489AbgHFJJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:32:32 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 02:32:32 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 02:32:31 -0700
-Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 06 Aug 2020 15:02:13 +0530
-Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id A053D219DD; Thu,  6 Aug 2020 15:02:12 +0530 (IST)
-From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     sricharan@codeaurora.org, gokulsri@codeaurora.org
-Subject: [PATCH v2 0/3] Add board support for HK10 board variants
-Date:   Thu,  6 Aug 2020 15:02:09 +0530
-Message-Id: <1596706332-12957-1-git-send-email-gokulsri@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Aug 2020 05:09:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U4ud9kI_1596704940;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0U4ud9kI_1596704940)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 06 Aug 2020 17:09:01 +0800
+Subject: Re: [PATCH] net: core: explicitly call linkwatch_fire_event to speed
+ up the startup of network services
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, xlpang@linux.alibaba.com,
+        caspar@linux.alibaba.com, andrew@lunn.ch, edumazet@google.com,
+        jiri@mellanox.com, leon@kernel.org, jwi@linux.ibm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200801085845.20153-1-wenyang@linux.alibaba.com>
+ <20200804.155831.644663742975051162.davem@davemloft.net>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <41107812-01ba-169e-2f18-69cecec94d8d@linux.alibaba.com>
+Date:   Thu, 6 Aug 2020 17:09:00 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <20200804.155831.644663742975051162.davem@davemloft.net>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for HK10-C1 and HK10-C2 board variants based on IPQ8074 SoC.
-Both these variants support dual QCN9000 PCIe cards that uses MHI communication
-protocol over PCIe. In addition, HK10-C1 support on-chip radio.
-Both these variants slightly differ in clock configuation for ethernet.
 
-This series depends on below series:
-[V2,0/7] Add PCIe support for IPQ8074
-[v7,0/9] remoteproc: qcom: q6v5-wcss: Add support for secure pil
 
-Gokul Sriram Palanisamy (3):
-  dt-bindings: qcom: Add ipq8074 bindings
-  arm64: dts: Add board support for HK10
-  arm64: dts: Enabled mhi device over PCIe
+ÔÚ 2020/8/5 ÉÏÎç6:58, David Miller Ð´µÀ:
+> From: Wen Yang <wenyang@linux.alibaba.com>
+> Date: Sat,  1 Aug 2020 16:58:45 +0800
+> 
+>> diff --git a/net/core/link_watch.c b/net/core/link_watch.c
+>> index 75431ca..6b9d44b 100644
+>> --- a/net/core/link_watch.c
+>> +++ b/net/core/link_watch.c
+>> @@ -98,6 +98,9 @@ static bool linkwatch_urgent_event(struct net_device *dev)
+>>   	if (netif_is_lag_port(dev) || netif_is_lag_master(dev))
+>>   		return true;
+>>   
+>> +	if ((dev->flags & IFF_UP) && dev->operstate == IF_OPER_DOWN)
+>> +		return true;
+>> +
+>>   	return netif_carrier_ok(dev) &&	qdisc_tx_changing(dev);
+>>   }
+>>   
+> 
+> You're bypassing explicitly the logic here:
+> 
+> 	/*
+> 	 * Limit the number of linkwatch events to one
+> 	 * per second so that a runaway driver does not
+> 	 * cause a storm of messages on the netlink
+> 	 * socket.  This limit does not apply to up events
+> 	 * while the device qdisc is down.
+> 	 */
+> 	if (!urgent_only)
+> 		linkwatch_nextevent = jiffies + HZ;
+> 	/* Limit wrap-around effect on delay. */
+> 	else if (time_after(linkwatch_nextevent, jiffies + HZ))
+> 		linkwatch_nextevent = jiffies;
+> 
+> Something about this isn't right.  We need to analyze what you are seeing,
+> what device you are using, and what systemd is doing to figure out what
+> the right place for the fix.
+> 
+> Thank you.
+> 
 
- Documentation/devicetree/bindings/arm/qcom.yaml |   4 +
- arch/arm64/boot/dts/qcom/Makefile               |   2 +
- arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts    |  11 ++
- arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts    |  14 +++
- arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi      | 134 ++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/ipq8074.dtsi           |   8 ++
- 6 files changed, 173 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+Thank you very much for your comments.
+We are using virtio_net and the environment is a microvm similar to 
+firecracker.
 
--- 
-2.7.4
+Let's briefly explain.
+net_device->operstate is assigned through linkwatch_event, and the call 
+stack is as follows:
+process_one_work
+-> linkwatch_event
+  -> __linkwatch_run_queue
+   -> linkwatch_do_dev
+    -> rfc2863_policy
+     -> default_operstate
 
+During the machine startup process, net_device->operstate has the 
+following two-step state changes:
+
+STEP A: virtnet_probe detects the network card and triggers the 
+execution of linkwatch_fire_event.
+Since linkwatch_nextevent is initialized to 0, linkwatch_work will run.
+And since net_device->state is 6 (__LINK_STATE_PRESENT | 
+__LINK_STATE_NOCARRIER), net_device->operstate will be changed from 
+IF_OPER_UNKNOWN to IF_OPER_DOWN:
+eth0 operstate:0 (IF_OPER_UNKNOWN) -> operstate:2 (IF_OPER_DOWN)
+
+virtnet_probe then executes netif_carrier_on to update 
+net_device->state, it will be changed from ¡®__LINK_STATE_PRESENT | 
+__LINK_STATE_NOCARRIER¡¯ to __LINK_STATE_PRESENT:
+eth0 state: 6 (__LINK_STATE_PRESENT | __LINK_STATE_NOCARRIER) -> 2 
+(__LINK_STATE_PRESENT)
+
+STEP B: One second later (because linkwatch_nextevent = jiffies + HZ), 
+linkwatch_work is executed again.
+At this time, since net_device->state is __LINK_STATE_PRESENT, so the 
+net_device->operstate will be changed from IF_OPER_DOWN to IF_OPER_UP:
+eth0 operstate:2 (IF_OPER_DOWN) -> operstate:6 (IF_OPER_UP)
+
+
+The above state change can be completed within 2 seconds.
+Generally, the machine will load the initramfs first, and do some 
+initialization in the initramfs, which takes some time; then switch_root 
+to the system disk and continue the initialization, which will also take 
+some time, and finally start the systemd-networkd service, bringing 
+link, etc.,
+In this way, the linkwatch_work work queue has enough time to run twice, 
+and the state of net_device->operstate is already IF_OPER_UP,
+So bringing link up quickly returns the following information:
+Aug 06 16:35:55.966121 iZuf6h1kfgutxc3el68z2lZ systemd-networkd[580]: 
+eth0: bringing link up
+...
+Aug 06 16:35:55.990461 iZuf6h1kfgutxc3el68z2lZ systemd-networkd[580]: 
+eth0: flags change: +UP +LOWER_UP +RUNNING
+
+But we are now using MicroVM, which requires extreme speed to start, 
+bypassing the initramfs and directly booting the trimmed system on the disk.
+systemd-networkd starts in less than 1 second after booting. the STEP B 
+has not been run yet, so it will wait for several hundred milliseconds 
+here, as follows:
+Jul 20 22:00:47.432552 systemd-networkd[210]: eth0: bringing link up
+...
+Jul 20 22:00:47.446108 systemd-networkd[210]: eth0: flags change: +UP 
++LOWER_UP
+...
+Jul 20 22:00:47.781463 systemd-networkd[210]: eth0: flags change: +RUNNING
+
+
+Note: dhcp pays attention to IFF_RUNNING status, we may refer to:
+https://www.kernel.org/doc/Documentation/networking/operstates.txt
+
+A routing daemon or dhcp client just needs to care for IFF_RUNNING or
+waiting for operstate to go IF_OPER_UP/IF_OPER_UNKNOWN before
+considering the interface / querying a DHCP address.
+
+Finally, the STEP B above only updates the value of operstate based on 
+the known state (operstate/state) on the net_device, without any 
+hardware interaction involved, so it is not very reasonable to wait for 
+1 second there.
+
+By adding:
++	if ((dev->flags & IFF_UP) && dev->operstate == IF_OPER_DOWN)
++		return true;
++
+We hope to improve the linkwatch_urgent_event function a bit.
+
+Hope to get more of your advice and guidance.
+
+Best wishes,
+Wen
