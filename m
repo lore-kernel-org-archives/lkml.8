@@ -2,165 +2,210 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF8123119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB91B23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hvCFPwav"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RZ97opg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgHFR2u (ORCPT
+        id S1730102AbgHFR2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44992 "EHLO
+        Thu, 6 Aug 2020 13:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729777AbgHFRA6 (ORCPT
+        with ESMTP id S1729725AbgHFRA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:00:58 -0400
+        Thu, 6 Aug 2020 13:00:56 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96925C034613
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:16:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EEB6C061A15;
+        Thu,  6 Aug 2020 05:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cOTbQsNE4Og+7v4i6+VKDw9s40FCqKihoprFB/Z7nt8=; b=hvCFPwavzhUN+ZIogP2sMOZQlR
-        ldTroAQ1ISrql6nxZpb0nEf4gN8Fxz94Lc+EK7Cv32LXLhU9UxovKAKLvqDFx577e91UBb9M3Vkc1
-        uhd6LiOkRaw/MadIv8c+2h7qQ6GD7W67I5NCQCYtMbIE45KhgOcKTU3KseZBXf0XKKaYswdd0YWQl
-        sI6Ddf0X27dLDWKYa33hew5wjNxo1fVvwOfS+NMZ3FohiFw0dDcEOr15JDGRAV/AdpsXS0qMwRECs
-        ZpivDAKjhPWCs/nczc8EnzDTjHNcHnpgphZ1mMrLPFyREGDpvAlnHeexNyOSdfs/NgDBnHbnl95Qw
-        w5I8myLQ==;
+        bh=EGNqm2OAGxLKcqDl+GdAdBwWIqcANnBJ4vDsUT0HyC0=; b=RZ97opg7YyhEx3dt2aRYJLyN3x
+        sMcvQavppfwGjG6PNlaXjS36Sq3ScvJf6bnKt3qzer4f3S3Sx95AtBW4LFMR72fd0NlV/kp8vGTPB
+        laZ7kd9VE78v9mtPcE8z5B5fik228y4ZayWvIqcpYVqEC/fCCYv77IHJtdUP0QlkO4g1xTO+fAuPZ
+        JzJCoI1T95ENxYHpdzzy4dOm9Aw7Rbg1Y4bWhLhpqW3EOhlImxGfe7+TxanKtXtXgqwMaBFeXKTCD
+        oXkkciAw+5ENq2rfPqispnr2q376UgbEvwdxMbxW3PBW50Jl4DqH8SHeHv13V5awAq7ItNidFq1K0
+        txEb0Qig==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3fkO-0002VI-16; Thu, 06 Aug 2020 13:15:52 +0000
+        id 1k3edT-0007ez-KY; Thu, 06 Aug 2020 12:04:39 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 99ADE3010D2;
-        Thu,  6 Aug 2020 15:15:47 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2E34301A66;
+        Thu,  6 Aug 2020 14:04:38 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 74607213C48A6; Thu,  6 Aug 2020 15:15:47 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 15:15:47 +0200
+        id 6CCE12123A1E1; Thu,  6 Aug 2020 14:04:38 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 14:04:38 +0200
 From:   peterz@infradead.org
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
-Message-ID: <20200806131547.GC2674@hirez.programming.kicks-ass.net>
-References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
- <20200804104520.GB2657@hirez.programming.kicks-ass.net>
- <20200804121007.GJ24375@linux.vnet.ibm.com>
- <20200804124755.GJ2674@hirez.programming.kicks-ass.net>
- <87ft90z6dy.fsf@mpe.ellerman.id.au>
- <20200806085429.GX2674@hirez.programming.kicks-ass.net>
- <87d044yn9z.fsf@mpe.ellerman.id.au>
+To:     yamada.masahiro@socionext.com
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: [PATCH -v2] scipts/tags.sh: Add custom sort order
+Message-ID: <20200806120438.GG35926@hirez.programming.kicks-ass.net>
+References: <20200805102550.GO2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d044yn9z.fsf@mpe.ellerman.id.au>
+In-Reply-To: <20200805102550.GO2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:25:12PM +1000, Michael Ellerman wrote:
-> peterz@infradead.org writes:
-> > On Thu, Aug 06, 2020 at 03:32:25PM +1000, Michael Ellerman wrote:
-> >
-> >> That brings with it a bunch of problems, such as existing software that
-> >> has been developed/configured for Power8 and expects to see SMT8.
-> >> 
-> >> We also allow LPARs to be live migrated from Power8 to Power9 (and back), so
-> >> maintaining the illusion of SMT8 is considered a requirement to make that work.
-> >
-> > So how does that work if the kernel booted on P9 and demuxed the SMT8
-> > into 2xSMT4? If you migrate that state onto a P8 with actual SMT8 you're
-> > toast again.
-> 
-> The SMT mask would be inaccurate on the P8, rather than the current case
-> where it's inaccurate on the P9.
-> 
-> Which would be our preference, because the backward migration case is
-> not common AIUI.
-> 
-> Or am I missing a reason we'd be even more toast than that?
 
-Well, the scheduler might do a wee bit funny. We just had a patch that
-increase load-balancing opportunities between SMT siblings because they
-all share L1 anyway.
+One long standing annoyance I have with using vim-tags is that our tags
+file is not properly sorted. That is, the sorting exhuberant Ctags does
+is only on the tag itself.
 
-But yeah, nothing terminal.
+The problem with that is that, for example, the tag 'mutex' appears a
+mere 505 times, 492 of those are structure members. However it is _far_
+more likely that someone wants the struct definition when looking for
+the mutex tag than any of those members. However, due to the nature of
+the sorting, the struct definition will not be first.
 
-> Under PowerVM the kernel does know it's being migrated, so we could
-> actually update the mask, but I'm not sure if that's really feasible.
+So add a script that does a custom sort of the tags file, taking the tag
+kind into account.
 
-As long as you get a notification, rebuilding the sched domains isn't
-terribly hard to do, there's more code that does that.
+The kind ordering is roughly: 'type', 'function', 'macro', 'enum', rest.
 
-> >> Yeah I agree the naming is confusing.
-> >> 
-> >> Let's call them "SMT4 cores" and "SMT8 cores"?
-> >
-> > Works for me, thanks!
-> >
-> >> The problem is we are already lying to userspace, because firmware lies to us.
-> >> 
-> >> ie. the firmware on these systems shows us an SMT8 core, and so current kernels
-> >> show SMT8 to userspace. I don't think we can realistically change that fact now,
-> >> as these systems are already out in the field.
-> >> 
-> >> What this patch tries to do is undo some of the mess, and at least give the
-> >> scheduler the right information.
-> >
-> > What a mess... I think it depends on what you do with that P9 to P8
-> > migration case. Does it make sense to have a "p8_compat" boot arg for
-> > the case where you want LPAR migration back onto P8 systems -- in which
-> > case it simply takes the firmware's word as gospel and doesn't untangle
-> > things, because it can actually land on a P8.
-> 
-> We already get told by firmware that we're running in "p8 compat" mode,
-> because we have to pretend to userspace that it's running on a P8. So we
-> could use that as a signal to leave things alone.
-> 
-> But my understanding is most LPARs don't get migrated back and forth,
-> they'll start life on a P8 and only get migrated to a P9 once when the
-> customer gets a P9. They might then run for a long time (months to
-> years) on the P9 in P8 compat mode, not because they ever want to
-> migrate back to a real P8, but because the software in the LPAR is still
-> expecting to be on a P8.
-> 
-> I'm not a real expert on all the Enterprisey stuff though, so someone
-> else might be able to give us a better picture.
-> 
-> But the point of mentioning the migration stuff was mainly just to
-> explain why we feel we need to present SMT8 to userspace even on P9.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+Changes since v1:
+ - removed the need for tags.unsorted by using a pipe
 
-OK, fair enough. The patch wasn't particularly onerous, I was just
-wondering why etc..
+Due to this change 'make tags' is now actually faster than it was before
+due to less sorting.
 
-The case of starting on a P8 and being migrated to a P9 makes sense to
-me; in that case you'd like to rebuild your sched domains, but can't go
-about changing user visible topolofy information.
+ scripts/sort-tags.awk | 79 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ scripts/tags.sh       | 11 +++++--
+ 2 files changed, 87 insertions(+), 3 deletions(-)
 
-I suppose:
-
-Acked-by; Peter Zijlstra (Intel) <peterz@infradead.org>
-
-An updated Changelog that recaps some of this discussion might also be
-nice.
+diff --git a/scripts/sort-tags.awk b/scripts/sort-tags.awk
+new file mode 100755
+index 000000000000..1eb50406c9d3
+--- /dev/null
++++ b/scripts/sort-tags.awk
+@@ -0,0 +1,79 @@
++#!/usr/bin/awk -f
++
++# $ ctags --list-kinds
++# C
++#   c  classes
++#   s  structure names
++#   t  typedefs
++#   g  enumeration names
++#   u  union names
++#   n  namespaces
++
++#   f  function definitions
++#   p  function prototypes [off]
++#   d  macro definitions
++
++#   e  enumerators (values inside an enumeration)
++#   m  class, struct, and union members
++#   v  variable definitions
++
++#   l  local variables [off]
++#   x  external and forward variable declarations [off]
++
++BEGIN {
++	FS = "\t"
++
++	sort = "LC_ALL=C sort"
++
++	# our sort order for C kinds:
++	order["c"] = "A"
++	order["s"] = "B"
++	order["t"] = "C"
++	order["g"] = "D"
++	order["u"] = "E"
++	order["n"] = "F"
++	order["f"] = "G"
++	order["p"] = "H"
++	order["d"] = "I"
++	order["e"] = "J"
++	order["m"] = "K"
++	order["v"] = "L"
++	order["l"] = "M"
++	order["x"] = "N"
++}
++
++# pass through header
++/^!_TAG/ {
++	print $0
++	next
++}
++
++{
++	# find 'kinds'
++	for (i = 1; i <= NF; i++) {
++		if ($i ~ /;"$/) {
++			kind = $(i+1)
++			break;
++		}
++	}
++
++	# create sort key
++	if (order[kind])
++		key = $1 order[kind];
++	else
++		key = $1 "Z";
++
++	# get it sorted
++	print key "\t" $0 |& sort
++}
++
++END {
++	close(sort, "to")
++	while ((sort |& getline) > 0) {
++		# strip key
++		sub(/[^[:space:]]*[[:space:]]*/, "")
++		print $0
++	}
++	close(sort)
++}
++
+diff --git a/scripts/tags.sh b/scripts/tags.sh
+index 4e18ae5282a6..51087c3d8b1e 100755
+--- a/scripts/tags.sh
++++ b/scripts/tags.sh
+@@ -251,8 +251,10 @@ setup_regex()
+ 
+ exuberant()
+ {
++	(
++
+ 	setup_regex exuberant asm c
+-	all_target_sources | xargs $1 -a                        \
++	all_target_sources | xargs $1				\
+ 	-I __initdata,__exitdata,__initconst,__ro_after_init	\
+ 	-I __initdata_memblock					\
+ 	-I __refdata,__attribute,__maybe_unused,__always_unused \
+@@ -266,12 +268,15 @@ exuberant()
+ 	-I DEFINE_TRACE,EXPORT_TRACEPOINT_SYMBOL,EXPORT_TRACEPOINT_SYMBOL_GPL \
+ 	-I static,const						\
+ 	--extra=+fq --c-kinds=+px --fields=+iaS --langmap=c:+.h \
++	--sort=no -o -						\
+ 	"${regex[@]}"
+ 
+ 	setup_regex exuberant kconfig
+-	all_kconfigs | xargs $1 -a                              \
+-	--langdef=kconfig --language-force=kconfig "${regex[@]}"
++	all_kconfigs | xargs $1					\
++	--langdef=kconfig --language-force=kconfig --sort=no	\
++	-o - "${regex[@]}"
+ 
++	) | scripts/sort-tags.awk > tags
+ }
+ 
+ emacs()
