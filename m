@@ -2,71 +2,101 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1322C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36ADA2311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596734441;
-	bh=llGio8NISU1dDiX/k1/v42pGDK10egkgeYA1hXPqBrE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=XjA6T1NXZTJpQQBsDvBxiKDESinvqxPV33dLfJ3NtORt6M8K0d2IU9JjyAJZgQbcF
-	 Ynn7rD8qG+xwbtLudTLrAzTgWpbdiho7bViFrtJ8h3Pg8jMpEu9rZXnlBNKijLBAaF
-	 w0CYRuxGQ/upqnzvGITpxWv6LUBMTsdzJT4gkppY=
+	by mail.kernel.org (Postfix) with ESMTP id C962C23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgHFRUb (ORCPT
+        id S1730471AbgHFRUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:20:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 13:20:49 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51384 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730066AbgHFRT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:19:59 -0400
-Subject: Re: [GIT PULL] Hyper-V commits for 5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596734399;
-        bh=llGio8NISU1dDiX/k1/v42pGDK10egkgeYA1hXPqBrE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=oW/8qgwVMVBvwGY9hoa9QyRwWEaUL2eAe+VSdkN6vgmI8KmKJx71JYNB/pXXApYqa
-         doLPQtVzWZr+bLkoVDwTsml8tmIh9WTQpf762nkBv0cEysWb3mZDeQEPxlvYAwgKpz
-         G724+vEhJ0oVEdgPTeg4PAZmMqGqgwx79R+bv5fE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200804101516.xtytsljxre3wheae@liuwe-devbox-debian-v2>
-References: <20200804101516.xtytsljxre3wheae@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200804101516.xtytsljxre3wheae@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
-X-PR-Tracked-Commit-Id: 7deff7b5b4395784b194bae3631b8333d3423938
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9ab9bc5115c9a1a57ed83a143c601c31488eadd9
-Message-Id: <159673439877.17279.18064274073791934714.pr-tracker-bot@kernel.org>
-Date:   Thu, 06 Aug 2020 17:19:58 +0000
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
+        id S1729326AbgHFRUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:20:23 -0400
+IronPort-SDR: EAsyGwuC2NO1Jx/bw1A2R6TlAqvNKhAe5IawoL+MsH2VmfVDWPG1sD2ozf1P6N9Ytzgxoh7hJJ
+ uqOm2DYihFug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="152745828"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="152745828"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 05:32:45 -0700
+IronPort-SDR: 2aAO8Ggv2nwJsZzTNR+3URxFbkMv5n5zcTn051khE/n9Pk+zyVE+favngvjTASWIVJGr1gBe8P
+ Pysl+v0aYB1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="325366356"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Aug 2020 05:32:43 -0700
+Subject: Re: [PATCH] mmc: sdhci-pci-o2micro: fix spelling mistake "unsupport"
+ -> "unsupported"
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Colin King <colin.king@canonical.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shirley her <shirley.her@bayhubtech.com>
+References: <20200806115059.59241-1-colin.king@canonical.com>
+ <016404fc-fce8-20f5-da6c-1b7ea936cf5a@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <e472589a-99ed-36d4-1f69-583376a5ceaf@intel.com>
+Date:   Thu, 6 Aug 2020 15:32:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <016404fc-fce8-20f5-da6c-1b7ea936cf5a@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 4 Aug 2020 10:15:16 +0000:
+On 6/08/20 3:21 pm, Adrian Hunter wrote:
+> + code author ernest.zhang <ernest.zhang@bayhubtech.com>
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
+That email address bounced, so instead adding
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9ab9bc5115c9a1a57ed83a143c601c31488eadd9
+	shirley her <shirley.her@bayhubtech.com>
 
-Thank you!
+> 
+> On 6/08/20 2:50 pm, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> There is a spelling mistake in a pr_info message. Fix it.
+>>
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  drivers/mmc/host/sdhci-pci-o2micro.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+>> index fa76748d8929..4eca8d2d0599 100644
+>> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+>> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+>> @@ -469,7 +469,7 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_chip *chip,
+>>  
+>>  	ret = pci_find_capability(chip->pdev, PCI_CAP_ID_MSI);
+>>  	if (!ret) {
+>> -		pr_info("%s: unsupport msi, use INTx irq\n",
+>> +		pr_info("%s: unsupported msi, use INTx irq\n",
+> 
+> I think the meaning is more like:
+> 
+> 	MSI is not supported, using INTx IRQ
+> 
+>>  			mmc_hostname(host->mmc));
+>>  		return;
+>>  	}
+>>
+> 
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
