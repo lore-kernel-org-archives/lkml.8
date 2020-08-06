@@ -3,139 +3,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6552BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D65423120
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7D12311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="obXR+Nn3"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XogXsXMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgHFRXd (ORCPT
+        id S1730050AbgHFRXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729799AbgHFRFG (ORCPT
+        Thu, 6 Aug 2020 13:23:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729955AbgHFRE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:05:06 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7139EC08E835;
-        Thu,  6 Aug 2020 06:46:28 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id c15so8840938lfi.3;
-        Thu, 06 Aug 2020 06:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VZnlZHi2pNVM/YMIfXvf/UHbjwYhQmIPewxedOf93xI=;
-        b=obXR+Nn3YxEJAFYj9GjuuDHfWohVA8Ko2EZOZhRZLysgDkBB/zbNM9sFGHsyIalrV4
-         nhWnw+C8JYCh/hhgGGIK+A5QVPoC1u2W0DMy+tbkWLsBhKev24yAyy/CXHDYX/0qelNI
-         H6YkD+SM7NZszlsAWXR0/CDbstrY4mr0yoePvmsFTURovar9kWBpSeOCu85MkyANy7Q6
-         X4JL+qn9lAkd1xlNmY8vQw+M3hRVSK0hzPO5pygND0gWt0pA/NN4wVcb9XGxq5RBRpYe
-         JTk404spywnd3PhejTaIe4KjNw4tEZhg2KJpTx5y2qHI6RDSdq4QOTyX16Kdx2IGoBvo
-         VChg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VZnlZHi2pNVM/YMIfXvf/UHbjwYhQmIPewxedOf93xI=;
-        b=tagaIIRLTt86ZBnBqxL3EzA8poZDsNq1p8gZniw42b//dzB1EnGM2vXudxtyv6Kyvx
-         yvKseGSwmx74kpcgcnsyi06EVjQBa2q45jEfF861Dum6KEK/Y5CGgzATUo7R+phsY1Ev
-         /zF70lW2ufQFP4Y4BO0eeAuIdVQYj6e16YKEipjBVedxM+1OFx5ySmUlIuSvDsibao4I
-         jAdBcf7rPcIAJZTp6xvW2KzwBRkFhYhyvddQtWDcBhlo65eBiTZTmpID0jx54ilP6wXb
-         9tZfOH1Znq6vXKSg2ZyUQAvEVJHG1UvlJaxigwUNDejzi3l3gItK33wWhqhDS3/GYKUr
-         DKNg==
-X-Gm-Message-State: AOAM531EdD8H/9ojGlu3d0RoFXiU+9BxYCphRcMy3YRZpl4ls2ZKoG5i
-        jm011Wmdb8Qbup8XcevxWnw0KwJi
-X-Google-Smtp-Source: ABdhPJw4moAXUF/I/3kTkOQE43bGzwcBxEGZxvffHv+O3d1addRnPEos3MVbxYnblMoeVEBo8DGHhg==
-X-Received: by 2002:a19:4f01:: with SMTP id d1mr3959771lfb.159.1596721576594;
-        Thu, 06 Aug 2020 06:46:16 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id z18sm2402757lja.55.2020.08.06.06.46.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 06:46:15 -0700 (PDT)
-Subject: Re: [Patch v2 2/4] dmaengine: tegra: Add Tegra GPC DMA driver
-To:     Rajesh Gumasta <rgumasta@nvidia.com>, ldewangan@nvidia.com,
-        jonathanh@nvidia.com, vkoul@kernel.org, dan.j.williams@intel.com,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kyarlagadda@nvidia.com, Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
- <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bc7d0d9d-ac7f-b720-64f5-63e0c76e6786@gmail.com>
-Date:   Thu, 6 Aug 2020 16:46:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Aug 2020 13:04:57 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076E4BLq037516;
+        Thu, 6 Aug 2020 10:23:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=kmhmWCdm048zOKwXHN42FLNuOm7WrXWJMfUPgkm2BNs=;
+ b=XogXsXMRXlfm/JAY1LPooBLT63IRYCp8ojV2ctAf3lkvx5Vw9iebfbHieezthAQNC8c0
+ /b1g87Yz1d4zB3k1WmuW66G9PU53U8W4EKMQAt7AIgCI/psb/OtVEE/vgSFef0buG0Z7
+ JYYwr4i98hQQjP4LOaXvML4fgtZAkymKXVkOEnyDvVVF2gFiGNfUIeZK/XEjsOlO4vj2
+ JabFvOzanHZCzsGRQ9PzVHJrSjmUeuJaEAN0xISsn+fffwArKOrYc5vb2gWSAF6EBLid
+ tAJK30i6TKzf/UYtYNXDr7tiutyamSPYWlkM7VKb4hqRKBliSIvFSDVr+n1qfByVXcpS JA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32rgnf5y0j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 10:23:10 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076E4iXH040969;
+        Thu, 6 Aug 2020 10:23:10 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32rgnf5xyj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 10:23:10 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076EF6Jl029907;
+        Thu, 6 Aug 2020 14:23:07 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 32n0185j5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 14:23:07 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076EN48J16253204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 14:23:05 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CAB55AE059;
+        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 541CFAE04D;
+        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.149.70])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v1 0/1] s390: virtio-ccw: PV needs VIRTIO I/O device protection
+Date:   Thu,  6 Aug 2020 16:23:01 +0200
+Message-Id: <1596723782-12798-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_09:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 suspectscore=1 clxscore=1015 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.08.2020 10:30, Rajesh Gumasta пишет:
-...
-> +/*
-> + * Save and restore csr and channel register on pm_suspend
-> + * and pm_resume respectively
-> + */
-> +static int __maybe_unused tegra_dma_pm_suspend(struct device *dev)
-> +{
-> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> +	int i;
-> +
-> +	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
-> +		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> +		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
-> +
-> +		ch_reg->csr = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSR);
-> +		ch_reg->src_ptr = tdc_read(tdc, TEGRA_GPCDMA_CHAN_SRC_PTR);
-> +		ch_reg->dst_ptr = tdc_read(tdc, TEGRA_GPCDMA_CHAN_DST_PTR);
-> +		ch_reg->high_addr_ptr = tdc_read(tdc,
-> +						 TEGRA_GPCDMA_CHAN_HIGH_ADDR_PTR);
-> +		ch_reg->mc_seq = tdc_read(tdc, TEGRA_GPCDMA_CHAN_MCSEQ);
-> +		ch_reg->mmio_seq = tdc_read(tdc, TEGRA_GPCDMA_CHAN_MMIOSEQ);
-> +		ch_reg->wcount = tdc_read(tdc, TEGRA_GPCDMA_CHAN_WCOUNT);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused tegra_dma_pm_resume(struct device *dev)
-> +{
-> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> +	int i;
-> +
-> +	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
-> +		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> +		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
-> +
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_WCOUNT, ch_reg->wcount);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_DST_PTR, ch_reg->dst_ptr);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_SRC_PTR, ch_reg->src_ptr);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_HIGH_ADDR_PTR,
-> +			  ch_reg->high_addr_ptr);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_MMIOSEQ, ch_reg->mmio_seq);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_MCSEQ, ch_reg->mc_seq);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSR,
-> +			  (ch_reg->csr & ~TEGRA_GPCDMA_CSR_ENB));
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct __maybe_unused dev_pm_ops tegra_dma_dev_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_dma_pm_suspend, tegra_dma_pm_resume)
-> +};
+Hi all,
 
-Please explain why this is needed. All DMA should be stopped (not
-paused) on system's suspend, shouldn't it?
+In another series I proposed to add an architecture specific
+callback to fail feature negociation on architecture need.
+
+In VIRTIO, we already have an entry to reject the features on the
+transport basis.
+
+Transport is not architecture so I send a separate series in which
+we fail the feature negociation inside virtio_ccw_finalize_features,
+the virtio_config_ops.finalize_features for S390 CCW transport,
+when the device do not propose the VIRTIO_F_IOMMU_PLATFORM.
+
+This solves the problem of crashing QEMU when this one is not using
+a CCW device with iommu_platform=on in S390.
+
+Regards,
+Pierre
+
+Regards,
+Pierre
+
+Pierre Morel (1):
+  s390: virtio-ccw: PV needs VIRTIO I/O device protection
+
+ drivers/s390/virtio/virtio_ccw.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+
+-- 
+2.25.1
+
