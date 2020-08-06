@@ -2,82 +2,127 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57301C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC64C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58767221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6B7221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgHFULk (ORCPT
+        id S1726388AbgHFUMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:11:40 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3047 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726055AbgHFULj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:11:39 -0400
-Received: from dggeme703-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id EA26DBEDFACB0CA11284;
-        Thu,  6 Aug 2020 19:56:33 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme703-chm.china.huawei.com (10.1.199.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 6 Aug 2020 19:56:33 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Thu, 6 Aug 2020 19:56:33 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Eric Dumazet <edumazet@google.com>
-CC:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        Florian Westphal <fw@strlen.de>,
-        "martin.varghese@nokia.com" <martin.varghese@nokia.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Davide Caratti <dcaratti@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "shmulik@metanetworks.com" <shmulik@metanetworks.com>,
-        "kyk.segfault@gmail.com" <kyk.segfault@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: Fix potential out of bound write in
- skb_try_coalesce()
-Thread-Topic: [PATCH] net: Fix potential out of bound write in
- skb_try_coalesce()
-Thread-Index: AdZqy5NXuDxuQTg3SyGrTCdJ0BYmPg==
-Date:   Thu, 6 Aug 2020 11:56:33 +0000
-Message-ID: <a1516b0e527246ed8e40ede17e69decd@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.177.143]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 6 Aug 2020 16:12:48 -0400
+Received: from 8.mo68.mail-out.ovh.net ([46.105.74.219]:55943 "EHLO
+        8.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHFUMr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 16:12:47 -0400
+X-Greylist: delayed 82257 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 16:12:46 EDT
+Received: from player797.ha.ovh.net (unknown [10.110.171.49])
+        by mo68.mail-out.ovh.net (Postfix) with ESMTP id 4E54A17429C
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 22:12:45 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player797.ha.ovh.net (Postfix) with ESMTPSA id 733BB11028092;
+        Thu,  6 Aug 2020 20:12:39 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-105G0062b87a758-947a-4325-be91-5786992cb203,
+                    9D5F4B8471F7AF6BEF45141B8B52B4DEEC6DEFE4) smtp.auth=steve@sk2.org
+Date:   Thu, 6 Aug 2020 22:12:32 +0200
+From:   Stephen Kitt <steve@sk2.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon/pmbus: use simple i2c probe function
+Message-ID: <20200806221232.278c3878@heffalump.sk2.org>
+In-Reply-To: <5f7b5828-cb7c-127a-e454-6c8b8d98777b@roeck-us.net>
+References: <20200806161645.9437-1-steve@sk2.org>
+        <5f7b5828-cb7c-127a-e454-6c8b8d98777b@roeck-us.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/FbGeJp=0MdtdV4bDqgXCQEv"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 7222929379186658574
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedtgdduhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeeljedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RXJpYyBEdW1hemV0IDxlZHVtYXpldEBnb29nbGUuY29tPiB3cm90ZToNCj5PbiBUdWUsIEF1ZyA0
-LCAyMDIwIGF0IDQ6NDYgQU0gbGlubWlhb2hlIDxsaW5taWFvaGVAaHVhd2VpLmNvbT4gd3JvdGU6
-DQo+Pg0KPj4gRnJvbTogTWlhb2hlIExpbiA8bGlubWlhb2hlQGh1YXdlaS5jb20+DQo+Pg0KPj4g
-VGhlIGhlYWRfZnJhZyBvZiBza2Igd291bGQgb2NjdXB5IG9uZSBleHRyYSBza2JfZnJhZ190LiBU
-YWtlIGl0IGludG8gDQo+PiBhY2NvdW50IG9yIG91dCBvZiBib3VuZCB3cml0ZSB0byBza2IgZnJh
-Z3MgbWF5IGhhcHBlbi4NCj4+DQo+DQo+UGxlYXNlIHNoYXJlIGEgc3RhY2sgdHJhY2UgaWYgdGhp
-cyB3YXMgYSByZWFsIGJ1ZyBzcG90dGVkIGluIHRoZSB3aWxkLg0KPg0KPkkgZG8gbm90IGJlbGll
-dmUgdGhpcyBwYXRjaCBpcyBjb3JyZWN0Lg0KPg0KPmlmIChBICsgQiA+PSBNQVgpICAgaXMgZXF1
-aXZhbGVudCB0byAgaWYgKEEgKyBCICsgMSA+IE1BWCkNCj4NCj5Ob3RlIGhvdyB0aGUgb3RoZXIg
-Y29uZGl0aW9uICh3aGVuIHRoZXJlIGlzIG5vIGJ5dGVzIGluIHNrYiBoZWFkZXIpIGlzIGNvZGVk
-IDoNCj4NCj5pZiAoQSArIEIgPiBNQVgpIHJldHVybiBmYWxzZTsNCj4NCj5JbiBhbnljYXNlLCBw
-bGVhc2UgYWx3YXlzIHByb3ZpZGUgYSBGaXhlczogdGFnIGZvciBhbnkgYnVnIGZpeC4NCj4NCj5U
-aGFua3MuDQoNCk1hbnkgdGhhbmtzIGZvciB5b3VyIHBhdGllbnQgZXhwbGFpbmF0aW9uLiBJIGNv
-bXBhcmVkIChBICsgQiA+PSBNQVgpIHdpdGggKEEgKyBCICsgMSA+IE1BWCkgaW4gc2tiX2dyb19y
-ZWNlaXZlKCksDQpidXQgSSBtaXNzZWQgdGhlICc9Jy4gSXQncyBteSBvdmVyc2lnaHQsIEknYW0g
-cmVhbGx5IHNvcnJ5IGFib3V0IGl0Lg0KDQpUaGFua3MgYWdhaW4uDQoNCg==
+--Sig_/FbGeJp=0MdtdV4bDqgXCQEv
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 6 Aug 2020 12:15:55 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 8/6/20 9:16 AM, Stephen Kitt wrote:
+> > pmbus_do_probe doesn't use the id information provided in its second
+> > argument, so this can be removed, which then allows using the
+> > single-parameter i2c probe function ("probe_new") for probes which
+> > don't use the id information either.
+> >=20
+> > This avoids scanning the identifier tables during probes.
+> >=20
+> > Additionally, in cases where the id information (driver_data) isn't
+> > used, the corresponding declarations are removed from the id_table,
+> > and .name is specified explicitly.
+> >  =20
+>=20
+> The ultimate idea seems to be to remove the "old" i2c probe function
+> entirely. This means we'll have to touch the various drivers again
+> to make that happen if they are not converted to probe_new.
+>=20
+> With that in mind, since we are at it, why not use probe_new() in
+> every driver and call i2c_match_id() in cases where it is actually
+> needed/used ?
+
+Yes, I was planning on doing that in a second phase, but I can do it right
+now (perhaps as a patch series) if that would be better.
+
+> Also, I am not convinced that replacements such as
+>=20
+> -	{ "ipsps1", 0 },
+> +	{ .name =3D "ipsps1" },
+>=20
+> are an improvement. I would suggest to leave that alone for
+> consistency (and to make it easier to add more devices to the
+> various drivers if that happens in the future).
+
+=46rom reading through all the drivers using id_table, it seems to me that we
+could do away with driver_data altogether and move all that to driver-local
+structures, in many cases covering more than just an id. By only initialisi=
+ng
+the elements of the structure that are really needed, I was hoping to (a)
+make it more obvious that driver_data isn=E2=80=99t used, and (b) allow rem=
+oving it
+without touching all the code again.
+
+Regards,
+
+Stephen
+
+--Sig_/FbGeJp=0MdtdV4bDqgXCQEv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl8sZDAACgkQgNMC9Yht
+g5zUtw//T4ogD7rGy/Ecq0wgWYSJcZ7q0mB+9R6Rs3hJ4/NvVTM6U7Bf+nvNIKwC
+TX6RvB1ucbbhxjwZXEzHy/+jOYYBD7/Cy+zDrJkizArvsfAvxcQ15nIBDtEJ/LdT
+zkcInTdWOZxbvPPfsvmkEiYVCaDrch8nN7wpbpWhaaDvMUYPKBPLYBM1YHkUcB6k
+/9t0kUj9vIQzeFQeqPMbVxD8sZH2wmjF9tL9uYhKqMTHH2jeWkOSOf65+khjxYJB
+y5y0sw1O0pRruDGpdjMEq9bw4TQLiElFvjQa3JGoV/VjHnDG3O/4FXb8oJd+Fsso
+W+B+rOp1a/i18CAd1Y+pptxx/t8YWPy4xPjX0zcJ7dcgWBdJng+CkyQdOvi1gQ6E
+2pX6dP7ve2l1n+WFqVZz5RRyEPEnr1ACK4W+MOZpwOmDxDFNOkRIv0+REF7n1qOx
+6XzaNnRt4rzcVQr0y/LdhNu9ZwNoDt9UsceJV6clBes8wrvLHXyTvBXjcIIKrZGW
+4BYhZEB7VzYMndG4VJAtga521ph7HV9J2RD3EbL9Ad+RyZ9vkqYUS5JizECEuvvO
+ofSBEaesYZgkaRVeF+bEaw42BmYR3bjr1K8hY4ZLqV6UPokV5sjL0mn4FfuWl+bA
+oV6cVxwVPirVYd7smYbViflVGmKBFw+nAYH8WFYoMWWAhbJwr/A=
+=1Q6B
+-----END PGP SIGNATURE-----
+
+--Sig_/FbGeJp=0MdtdV4bDqgXCQEv--
