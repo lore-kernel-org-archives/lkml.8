@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5664C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0632D2310F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493C02310F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgHFSdm (ORCPT
+        id S1729092AbgHFSdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:33:42 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:44091 "EHLO
+        Thu, 6 Aug 2020 14:33:46 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:51552 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728350AbgHFScK (ORCPT
+        by vger.kernel.org with ESMTP id S1728488AbgHFScK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:32:10 -0400
 X-IronPort-AV: E=Sophos;i="5.75,441,1589209200"; 
-   d="scan'208";a="53860043"
+   d="scan'208";a="53860050"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 07 Aug 2020 03:32:00 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 07 Aug 2020 03:32:06 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C0C6340062A0;
-        Fri,  7 Aug 2020 03:31:57 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 13638400C0AB;
+        Fri,  7 Aug 2020 03:32:03 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -41,9 +41,9 @@ To:     Geert Uytterhoeven <geert+renesas@glider.be>,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-pwm@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 1/5] ARM: dts: r8a7742-iwg21d-q7: Enable cmt0
-Date:   Thu,  6 Aug 2020 19:31:48 +0100
-Message-Id: <20200806183152.11809-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/5] ARM: dts: r8a7742: Add PWM SoC support
+Date:   Thu,  6 Aug 2020 19:31:50 +0100
+Message-Id: <20200806183152.11809-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -52,29 +52,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable cmt0 support on r8a7742-iwg21d-q7 board.
+Add the definitions for pwm[0123456] to the SoC .dtsi.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/r8a7742.dtsi | 70 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-index f4910e709b87..b3461a61a4bf 100644
---- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-+++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-@@ -131,6 +131,10 @@
- 	};
- };
+diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+index 9743b4242801..41c89e04cf17 100644
+--- a/arch/arm/boot/dts/r8a7742.dtsi
++++ b/arch/arm/boot/dts/r8a7742.dtsi
+@@ -917,6 +917,76 @@
+ 			status = "disabled";
+ 		};
  
-+&cmt0 {
-+	status = "okay";
-+};
++		pwm0: pwm@e6e30000 {
++			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
++			reg = <0 0xe6e30000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
 +
- &hsusb {
- 	pinctrl-0 = <&usb0_pins>;
- 	pinctrl-names = "default";
++		pwm1: pwm@e6e31000 {
++			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
++			reg = <0 0xe6e31000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm2: pwm@e6e32000 {
++			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
++			reg = <0 0xe6e32000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm3: pwm@e6e33000 {
++			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
++			reg = <0 0xe6e33000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm4: pwm@e6e34000 {
++			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
++			reg = <0 0xe6e34000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm5: pwm@e6e35000 {
++			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
++			reg = <0 0xe6e35000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm6: pwm@e6e36000 {
++			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
++			reg = <0 0xe6e36000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
+ 		rcar_sound: sound@ec500000 {
+ 			/*
+ 			 * #sound-dai-cells is required
 -- 
 2.17.1
 
