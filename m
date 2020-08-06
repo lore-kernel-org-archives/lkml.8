@@ -2,54 +2,105 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6368DC4345A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F1322B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABFD23117
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiJgIehP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgHFFtO (ORCPT
+        id S1727081AbgHFFln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:49:14 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49213 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726051AbgHFFtN (ORCPT
+        Thu, 6 Aug 2020 01:41:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgHFFll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 01:49:13 -0400
-Received: from callcc.thunk.org (pool-96-230-252-158.bstnma.fios.verizon.net [96.230.252.158])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 0765mt6s032275
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 6 Aug 2020 01:48:56 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id BCF11420263; Thu,  6 Aug 2020 01:48:55 -0400 (EDT)
-Date:   Thu, 6 Aug 2020 01:48:55 -0400
-From:   tytso@mit.edu
-To:     Xianting Tian <xianting_tian@126.com>
-Cc:     jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] jbd2: fix incorrect code style
-Message-ID: <20200806054855.GM7657@mit.edu>
-References: <1595077057-8048-1-git-send-email-xianting_tian@126.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595077057-8048-1-git-send-email-xianting_tian@126.com>
+        Thu, 6 Aug 2020 01:41:41 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D89AC061574;
+        Wed,  5 Aug 2020 22:41:41 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id y18so30989545ilp.10;
+        Wed, 05 Aug 2020 22:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=HIGPgBL7n98bpEVZBM/4G2APCFecCIPvFc7WiIgCYY0=;
+        b=FiJgIehPKvn2HJA91Zt1bLnAxrIVtSKzm8V2TXidY17vnP9eFbF33heWll62gghlgO
+         XfMOrBzima/hMa6eeD21FBfFGWkNznqaMlpoGEIhvI6RGOWsbYCiu404LXAJnsqhZsI1
+         WFN2Mo/MV6O5TG9DqXjZBcM7xJEsHjZVgvnbmaCOMagFpIm9W6cex5AQj1s5JAqndb03
+         Bi5x+kYXZSSUYKBZajnFd3deR5qcTVmv7GdpyIT1cGJFTclKzRgbq3lgXTfpwe0BTCvN
+         v6N5t+yTKM30fvYyAjJxtOuxbiJG9eHmsM19GAQk9Ur+6dPGjj3c7iKUUrGHR5XdRbTV
+         MgeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=HIGPgBL7n98bpEVZBM/4G2APCFecCIPvFc7WiIgCYY0=;
+        b=Ch5xNxILbM0D9L3WBQForNm0mf9jZRG9ZcHmh4Z3K04Vn1KHYqERY1sGbUxM/zCgI4
+         vpyYmz9065MJe5Igl+GzMy+X2iywAw3SQV1iXaE9TFcs4zNFDthPDLDSbWApT1AHJzlk
+         BeaLmU3vBaXzMcbOXibwltSSdyTMkZ35BOGmuKxxxuIM7BLQDcoSydVdatfVnvcVEunc
+         dTRxJz+K0BfuNagU/RRenrPYMv7oCGjHgE0/WlMy99j1Dp0nGwZDS2GqAF0JaL4Uuo/Y
+         Q97bFpERfduSynkmLFX2A0NDBk6Rq4WI1vVe+WVelbn7uCruWPXI8SpvO4iT6Pn57TX0
+         atpA==
+X-Gm-Message-State: AOAM530wU8jJjQbQ/iHKkxZFsX7zSZl7wpLqH2Y9h8U+YZUn4SvBoluR
+        wH58CgImD2I1m06q/KAgYY8=
+X-Google-Smtp-Source: ABdhPJzfFQrkhxfiSuEnos5KxcjG3hgktUyK5qO7wvdWxUZYYXobmNCqd9eumJE1qTchwrRO1oLRCA==
+X-Received: by 2002:a92:d34c:: with SMTP id a12mr8492912ilh.20.1596692500154;
+        Wed, 05 Aug 2020 22:41:40 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id n10sm2879634ila.2.2020.08.05.22.41.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 22:41:39 -0700 (PDT)
+Date:   Wed, 05 Aug 2020 22:41:30 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Muchun Song <songmuchun@bytedance.com>, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, mhiramat@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, sfr@canb.auug.org.au, mingo@kernel.org,
+        akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>
+Message-ID: <5f2b980abeaad_291f2b27e574e5b82@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200805172046.19066-1-songmuchun@bytedance.com>
+References: <20200805172046.19066-1-songmuchun@bytedance.com>
+Subject: RE: [PATCH] kprobes: fix compiler warning for
+ !CONFIG_KPROBES_ON_FTRACE
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 08:57:37AM -0400, Xianting Tian wrote:
-> Remove unnecessary blank.
+Muchun Song wrote:
+> Fix compiler warning(as show below) for !CONFIG_KPROBES_ON_FTRACE.
 > 
-> Signed-off-by: Xianting Tian <xianting_tian@126.com>
+> kernel/kprobes.c: In function 'kill_kprobe':
+> kernel/kprobes.c:1116:33: warning: statement with no effect
+> [-Wunused-value]
+>  1116 | #define disarm_kprobe_ftrace(p) (-ENODEV)
+>       |                                 ^
+> kernel/kprobes.c:2154:3: note: in expansion of macro
+> 'disarm_kprobe_ftrace'
+>  2154 |   disarm_kprobe_ftrace(p);
+> 
+> Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
 
-Thanks, applied.
-
-						- Ted
+Acked-by: John Fastabend <john.fastabend@gmail.com>
