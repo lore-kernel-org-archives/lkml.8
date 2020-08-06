@@ -2,121 +2,137 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD77C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD94C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C839E20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A200E20748
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kF/rEQ3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgHFW4z (ORCPT
+        id S1726388AbgHFW6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:56:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58284 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgHFW4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:56:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id DFE0CB1B1;
-        Thu,  6 Aug 2020 22:57:10 +0000 (UTC)
-Date:   Fri, 7 Aug 2020 00:56:51 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/mm changes for v5.9
-Message-ID: <20200806225651.GC24304@suse.de>
-References: <20200803190354.GA1293087@gmail.com>
- <20200805110348.GA108872@zx2c4.com>
+        Thu, 6 Aug 2020 18:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgHFW6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:58:32 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C20BC061574;
+        Thu,  6 Aug 2020 15:58:32 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id i26so33003246edv.4;
+        Thu, 06 Aug 2020 15:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VtslGrVU5SAGgzW7ltz0AWj8DRyVUchOuuqr0kZRa5k=;
+        b=kF/rEQ3Upz30sy/q3PWqJOWBXzsQPT5udDoKLn0UMVtp2nGshMNkeBK7y2wl5N0nnp
+         bDp82L6sUeACUxMObpLrF7kPXE9bRfbRGloAUa2dgzSqmy2ajLMpMznJFgWWYrKfLPlr
+         9DvvgK1tvE/32QyHh3JRWLghCgw6rLbD6yz2ILaPOpfI+0Nqdd1w+a8HwMUmlPY3Rdnt
+         kLDyvxpnv11bHNIFVrkAadk8H8pS476mcq4O6zg/vzEwQBCIWLX/txP6gf22EOkPGWOw
+         woblvaqpzUw/7sM/zgEefGKYTAfM5HWFE/ymiPh0shUyjzjIhMxK0ZmE11EH7eivFFbk
+         TdvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VtslGrVU5SAGgzW7ltz0AWj8DRyVUchOuuqr0kZRa5k=;
+        b=hKR2irNR1rW5+fmWjWXoYnNysNYlDvZMK0BOrcTXZhKuKM0gnICBk7WWRPm0BPHtIn
+         +HZwIf1F2Zqh86uOgUMjGoLH7OKTRtt9EM9W0kmi4WudA3SgmprQ54L1p4akzcqMAWwD
+         zAFlUX95LiOg5wxlvMhc+9G4FAhx4VXEInjvDIgdAzLMQqRvm0SYIZEcQj4u9uYxcV+G
+         MexTsBWBI/J3N1JYpAf8SDSOFwuyUh3tqUW1zM9D8k8hzkrvbczOCOpxs1c0MI3VTGHu
+         sYaaHXqGQA8hMHVPMNfJEHex+XOW4rQAByia92lStNuy2lHGOkVGyZ4iqPlEa35N8xCk
+         gG6g==
+X-Gm-Message-State: AOAM532X5SfODJWn2/dPjWPh4UWXsJzY/Lq7QsbQXrRp1i4ExN1UxBXq
+        NZL/3zRvzwCfZ1Ff+sgnbP0wFqsrbyFXoVQtEes=
+X-Google-Smtp-Source: ABdhPJy7M1v3UbuJwCxS7d3k0GfNAu1Z2svSkVIyAj9XiXhqCh18sFq+Q96lb3zshRUkqnjrLeBL4eXChstRAtRq59E=
+X-Received: by 2002:a05:6402:1855:: with SMTP id v21mr6335735edy.355.1596754710231;
+ Thu, 06 Aug 2020 15:58:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805110348.GA108872@zx2c4.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAMdYzYoqKcG+LtFZy+TeYWB=GJo8Ya60r3Los4T5j7j3Okdbtw@mail.gmail.com>
+ <20200806222254.GF1551@shell.armlinux.org.uk>
+In-Reply-To: <20200806222254.GF1551@shell.armlinux.org.uk>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Thu, 6 Aug 2020 18:58:18 -0400
+Message-ID: <CAMdYzYoa52gZ5TdPU366QoaVjGFxPxvjTn15ipyNp428iR_Seg@mail.gmail.com>
+Subject: Re: [PATCH] arm: Add support for ZSTD compressed kernel
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     nolange79@gmail.com, linux-kernel@vger.kernel.org,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 01:03:48PM +0200, Jason A. Donenfeld wrote:
-> BUG: unable to handle page fault for address: ffffe8ffffd00608
+On Thu, Aug 6, 2020 at 6:22 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Thu, Aug 06, 2020 at 05:46:50PM -0400, Peter Geis wrote:
+> > Good Evening,
+> >
+> > I had attempted to get this working as well, but have run into
+> > difficulties with both my implementation and yours as well.
+> > My implementation was almost the same as yours, with the exception of
+> > also changing:
+> > @@ -303,7 +305,7 @@ restart: adr r0, LC1
+> >
+> >  #ifndef CONFIG_ZBOOT_ROM
+> >   /* malloc space is above the relocated stack (64k max) */
+> > - add r10, sp, #0x10000
+> > + add r10, sp, #0x30000
+> >  #else
+> >   /*
+> >   * With ZBOOT_ROM the bss/stack is non relocatable,
+> >
+> > On QEMU this implementation works fine.
+> > However on bare metal tegra30, I get the following error:
+> >
+> > Jumping to kernel at:4861 ms
+> >
+> > C:0x80A000C0-0x8112BA40->0x8152C700-0x81C58080
+> > Uncompressing Linux...
+> >
+> > ZSTD-compressed dstSize is too small
+> >
+> >  -- System halted
+> >
+> > The only difference between the bare metal test and the qemu test is
+> > the zImage with appended dtb is packaged in the android boot format
+> > for the bare metal test.
+> > Otherwise it's exactly the same file.
+>
+> So it's relocating the compressed kernel and decompressor from
+> 0x80A000C0-0x8112BA40 to 0x8152C700-0x81C58080 and then failing.
+> Does the QEMU version also do similar?
 
-Okay, looks like my usage of the page-table macros is bogus, seems I
-don't understand their usage as good as I thought. The p?d_none checks
-in the allocation path are wrong and led to the bug. In fact it caused
-only the first PUD entry to be allocated and in the later iterations of
-the loop it always ended up on the same PUD entry.
+Here is the output from QEMU, note boot doesn't work because this
+image isn't for QEMU:
 
-I still don't fully understand why, but its late here and my head spins.
-So I take another look tomorrow in the hope to understand it better.
-Please remind me to not take vacation again during merge windows :)
+C:0x400100C0-0x4073B1E0->0x4152C600-0x41C57720
+Uncompressing Linux... done, booting the kernel.
 
-Anyway...
+>
+> On the off-hand, I'm not sure why it should fail.  I assume that
+> you've tried the other decompressors and they work fine on the
+> same setups?
 
-Jason, does the attached diff fix the issue in your testing? For me it
-makes all PUD pages correctly allocated.
+Correct, all other compressors work.
+ZSTD is handy for arm because size and speed are both important.
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index c7a47603537f..e4abf73167d0 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -696,6 +696,7 @@ static void __init memory_map_bottom_up(unsigned long map_start,
- static void __init init_trampoline(void)
- {
- #ifdef CONFIG_X86_64
-+
- 	if (!kaslr_memory_enabled())
- 		trampoline_pgd_entry = init_top_pgt[pgd_index(__PAGE_OFFSET)];
- 	else
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index e65b96f381a7..351fac590b02 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1248,27 +1248,23 @@ static void __init preallocate_vmalloc_pages(void)
- 		p4d_t *p4d;
- 		pud_t *pud;
- 
--		p4d = p4d_offset(pgd, addr);
--		if (p4d_none(*p4d)) {
--			/* Can only happen with 5-level paging */
--			p4d = p4d_alloc(&init_mm, pgd, addr);
--			if (!p4d) {
--				lvl = "p4d";
--				goto failed;
--			}
-+		p4d = p4d_alloc(&init_mm, pgd, addr);
-+		if (!p4d) {
-+			lvl = "p4d";
-+			goto failed;
- 		}
- 
- 		if (pgtable_l5_enabled())
- 			continue;
- 
--		pud = pud_offset(p4d, addr);
--		if (pud_none(*pud)) {
--			/* Ends up here only with 4-level paging */
--			pud = pud_alloc(&init_mm, p4d, addr);
--			if (!pud) {
--				lvl = "pud";
--				goto failed;
--			}
-+		/*
-+		 * With 4-level paging the P4D is folded, so allocate a
-+		 * PUD to have one level below PGD present.
-+		 */
-+		pud = pud_alloc(&init_mm, p4d, addr);
-+		if (!pud) {
-+			lvl = "pud";
-+			goto failed;
- 		}
- 	}
- 
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
