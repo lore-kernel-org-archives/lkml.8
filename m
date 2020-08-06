@@ -2,70 +2,117 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8482BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B337DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A9C206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05966206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgHFRt3 (ORCPT
+        id S1730566AbgHFRty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:49:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50454 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbgHFQeJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:34:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3esI-0004GH-HC; Thu, 06 Aug 2020 12:19:58 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ath6kl: fix spelling mistake "initilisation" -> "initialization"
-Date:   Thu,  6 Aug 2020 13:19:58 +0100
-Message-Id: <20200806121958.60700-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 6 Aug 2020 13:49:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49580 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728347AbgHFQdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:33:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 00621ABE4;
+        Thu,  6 Aug 2020 13:35:34 +0000 (UTC)
+Subject: Re: [PATCH v2 4/6] mm/page_isolation: cleanup
+ set_migratetype_isolate()
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <20200730093416.36210-1-david@redhat.com>
+ <20200730093416.36210-5-david@redhat.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <74a25986-87cb-7ab6-e7a9-0c2aefcabe4a@suse.cz>
+Date:   Thu, 6 Aug 2020 15:35:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730093416.36210-5-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 7/30/20 11:34 AM, David Hildenbrand wrote:
+> Let's clean it up a bit, simplifying error handling and getting rid of
+> the label.
 
-There is a spelling mistake in an ath6kl_err error message. Fix it.
+Nit: the label was already removed by patch 1/6?
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/ath/ath6kl/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath6kl/init.c b/drivers/net/wireless/ath/ath6kl/init.c
-index 811fad6d60c0..39bf19686175 100644
---- a/drivers/net/wireless/ath/ath6kl/init.c
-+++ b/drivers/net/wireless/ath/ath6kl/init.c
-@@ -1752,7 +1752,7 @@ static int __ath6kl_init_hw_start(struct ath6kl *ar)
- 
- 	ret = ath6kl_init_service_ep(ar);
- 	if (ret) {
--		ath6kl_err("Endpoint service initilisation failed: %d\n", ret);
-+		ath6kl_err("Endpoint service initialization failed: %d\n", ret);
- 		goto err_cleanup_scatter;
- 	}
- 
--- 
-2.27.0
+> Reviewed-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Michael S. Tsirkin <mst@redhat.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/page_isolation.c | 17 +++++++----------
+>  1 file changed, 7 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index d099aac479601..e65fe5d770849 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -17,12 +17,9 @@
+>  
+>  static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
+>  {
+> -	struct page *unmovable = NULL;
+> -	struct zone *zone;
+> +	struct zone *zone = page_zone(page);
+> +	struct page *unmovable;
+>  	unsigned long flags;
+> -	int ret = -EBUSY;
+> -
+> -	zone = page_zone(page);
+>  
+>  	spin_lock_irqsave(&zone->lock, flags);
+>  
+> @@ -51,13 +48,13 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+>  									NULL);
+>  
+>  		__mod_zone_freepage_state(zone, -nr_pages, mt);
+> -		ret = 0;
+> +		spin_unlock_irqrestore(&zone->lock, flags);
+> +		drain_all_pages(zone);
+> +		return 0;
+>  	}
+>  
+>  	spin_unlock_irqrestore(&zone->lock, flags);
+> -	if (!ret) {
+> -		drain_all_pages(zone);
+> -	} else if ((isol_flags & REPORT_FAILURE) && unmovable) {
+> +	if (isol_flags & REPORT_FAILURE) {
+>  		/*
+>  		 * printk() with zone->lock held will likely trigger a
+>  		 * lockdep splat, so defer it here.
+> @@ -65,7 +62,7 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+>  		dump_page(unmovable, "unmovable page");
+>  	}
+>  
+> -	return ret;
+> +	return -EBUSY;
+>  }
+>  
+>  static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
+> 
 
