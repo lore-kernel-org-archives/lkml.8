@@ -2,107 +2,430 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E92DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D93DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3638B206B5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1qlYIcR"
+	by mail.kernel.org (Postfix) with ESMTP id 59CEB206B5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596738975;
+	bh=e+f3yPZeAyOB2PCkpO7cSJPgxck9xwD2oLZxWzZuO9I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YllRVEDZHF36KqfqMNrxcl+Xz2Ap0HkeBzHVJBroEfw9wbsYSLDSbKbXdJFLX3BxR
+	 9kPvp0Fjiby6dH6AaoekPzG/iKVFwKy3OVZLFMECZAwgmibz+yBD1vFuaYVZ0KAtMe
+	 zl3F2mDo2qVjhsJnU2v6c8wDb6MWYuOe7+xhikNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgHFSgB (ORCPT
+        id S1729339AbgHFSgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbgHFSfB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:35:01 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCE1C06138F;
-        Thu,  6 Aug 2020 11:34:57 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id p4so2080033qkf.0;
-        Thu, 06 Aug 2020 11:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jh0v02DkXyhJNo8LA2UuLAWMIN4MTJgsh7QSpkB1WKs=;
-        b=L1qlYIcRDMj1ceJI2uQgrQwsnjtjYJ51ExbWDz/tiNfSzsuy/hrwPAggThbRufcFHd
-         xAUBElaV8anZXCZmOBu0Diqltb83t16L3ApkuxYqWmeR5IbqEe12i8A+L40PBNcAPTJz
-         kVpchS10zcicFSM5J27FSrAvyEUMfQD8hsDwRB9IlQEBM7Cst+nTxjDFVPzs+yxT2t1g
-         uAbmZvyCmHJ3t3i4L9RUXHe5TbOJ+snI54ukiSsYbRhpbSxsCOVM5oddzYLBroSF0hp2
-         Jd9oOXL6GMbEuuTfoIfydIJb1NjfO1yjtREM9K20xRi2EPznJudFJdK8fHhGrrNB3OS1
-         zQZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jh0v02DkXyhJNo8LA2UuLAWMIN4MTJgsh7QSpkB1WKs=;
-        b=LlSoZOe8b2DT7ZoNaDZz6Tu8XNp8ARZyKTs1Irwc7wMKNfSBhugjtwxZlxBgCrwkBT
-         BSusbXC6R0Fqg3h/gbGGw2JQiukfODTi9f+Th/BqNIplv8fM62A8t/Td4VQQ6UOKz/ZI
-         kutb0AX4vsrgmSxFx4tjjdFqFCZ5Gvd3WgF1ZLcaFN6CdNUK0BoA8xQCEChXrpkMHzwE
-         f/HSxi6wgPxcnsNGVnk0x3LrCdAs6WOPcwFCp6g71CgAAS2LAlCpNFx365jgU4eXG/g0
-         hoLATNZ36NqQj2eIOBbINMPTQk8j10IY73y0PwmSIm1XB9gmarJ0smgwTDyroUAAaRY8
-         6m1Q==
-X-Gm-Message-State: AOAM530Faiw7f9JzryWNQTXx/HFllrqV4U/PhTVNATasM/1drEiwzX/4
-        UM6NoVJHUJXerM5Rc7rrDkdhTbpm
-X-Google-Smtp-Source: ABdhPJz9X8ObvlU7tzbg/LByZlX8nQ9cuidDXjutIiX7L1sw0jslIXMUDCaMiRqUwD52wDtQ1Uj0DQ==
-X-Received: by 2002:a05:620a:889:: with SMTP id b9mr9927270qka.7.1596738896605;
-        Thu, 06 Aug 2020 11:34:56 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id g129sm4857815qkb.39.2020.08.06.11.34.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 11:34:55 -0700 (PDT)
-Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        ray.jui@broadcom.com, helgaas@kernel.org, sbranden@broadcom.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <99c090fb-125c-42b7-1ea3-6840dcfada37@gmail.com>
-Date:   Thu, 6 Aug 2020 11:34:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Aug 2020 14:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729255AbgHFSfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:35:24 -0400
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D6F22DD3;
+        Thu,  6 Aug 2020 18:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596738217;
+        bh=e+f3yPZeAyOB2PCkpO7cSJPgxck9xwD2oLZxWzZuO9I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I7uZya9saq0UqZmwUG8AK0D+IvAmRRHBT9Ne+FEAhZByTUCdpKco8PmJHi2rAc/Zl
+         qr3EoyN74gZKAh5xkjzO48J65bSy9qpeneq3RPw+Z0N5h8zX4C1Wpo8kuvOQpn7V3W
+         WL7dh344esDRop64PE7BPFOfA3wswkn8H4ylJa+A=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        alsa-devel@alsa-project.org
+Subject: [PATCH v2 28/41] ARM: s3c24xx: move iis pinctrl config into boards
+Date:   Thu,  6 Aug 2020 20:20:45 +0200
+Message-Id: <20200806182059.2431-28-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
+References: <20200806181932.2253-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
 
+The s3c_gpio_cfgall_range() function is an internal interface of the
+samsung gpio driver and should not be called directly by drivers, so
+move the iis pin initialization into the boards.
 
-On 8/5/2020 9:14 PM, Mark Tomlinson wrote:
-> For hardware that only supports 32-bit writes to PCI there is the
-> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
-> messages was introduced by fb2659230120, but rate-limiting is not the
-> best choice here. Some devices may not show the warnings they should if
-> another device has just produced a bunch of warnings. Also, the number
-> of messages can be a nuisance on devices which are otherwise working
-> fine.
-> 
-> This patch changes the ratelimit to a single warning per bus. This
-> ensures no bus is 'starved' of emitting a warning and also that there
-> isn't a continuous stream of warnings. It would be preferable to have a
-> warning per device, but the pci_dev structure is not available here, and
-> a lookup from devfn would be far too slow.
-> 
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+This means the pin configuration is only run once at early boot, rather
+than each time the driver binds, but the effect should be the same.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Note that the s3c2412-i2s driver has no boards using it in mainline linux,
+the driver gets selected for the jive machine but is never instantiated.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/mach-s3c24xx/mach-gta02.c    | 4 ++++
+ arch/arm/mach-s3c24xx/mach-h1940.c    | 3 +++
+ arch/arm/mach-s3c24xx/mach-mini2440.c | 5 +++++
+ arch/arm/mach-s3c24xx/mach-n30.c      | 5 +++++
+ arch/arm/mach-s3c24xx/mach-nexcoder.c | 5 +++++
+ arch/arm/mach-s3c24xx/mach-otom.c     | 6 ++++++
+ arch/arm/mach-s3c24xx/mach-qt2410.c   | 3 +++
+ arch/arm/mach-s3c24xx/mach-rx1950.c   | 3 +++
+ arch/arm/mach-s3c24xx/mach-rx3715.c   | 4 ++++
+ arch/arm/mach-s3c24xx/mach-smdk2410.c | 5 +++++
+ arch/arm/mach-s3c24xx/mach-smdk2413.c | 4 ++++
+ arch/arm/mach-s3c24xx/mach-smdk2440.c | 6 +++++-
+ arch/arm/mach-s3c24xx/mach-vstms.c    | 6 +++++-
+ arch/arm/mach-s3c24xx/simtec-audio.c  | 6 ++++++
+ sound/soc/samsung/s3c2412-i2s.c       | 7 -------
+ sound/soc/samsung/s3c24xx-i2s.c       | 7 -------
+ 16 files changed, 63 insertions(+), 16 deletions(-)
+
+diff --git a/arch/arm/mach-s3c24xx/mach-gta02.c b/arch/arm/mach-s3c24xx/mach-gta02.c
+index 46a80fae7056..3c7f2a3d00a5 100644
+--- a/arch/arm/mach-s3c24xx/mach-gta02.c
++++ b/arch/arm/mach-s3c24xx/mach-gta02.c
+@@ -538,6 +538,10 @@ static void __init gta02_machine_init(void)
+ 
+ 	i2c_register_board_info(0, gta02_i2c_devs, ARRAY_SIZE(gta02_i2c_devs));
+ 
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
++
+ 	gpiod_add_lookup_table(&gta02_audio_gpio_table);
+ 	platform_add_devices(gta02_devices, ARRAY_SIZE(gta02_devices));
+ 	pm_power_off = gta02_poweroff;
+diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
+index c7269cd26ba8..1f18ac4e84b2 100644
+--- a/arch/arm/mach-s3c24xx/mach-h1940.c
++++ b/arch/arm/mach-s3c24xx/mach-h1940.c
+@@ -707,6 +707,9 @@ static void __init h1940_init(void)
+ 	s3c24xx_fb_set_platdata(&h1940_fb_info);
+ 	gpiod_add_lookup_table(&h1940_mmc_gpio_table);
+ 	gpiod_add_lookup_table(&h1940_audio_gpio_table);
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	s3c24xx_mci_set_platdata(&h1940_mmc_cfg);
+  	s3c24xx_udc_set_platdata(&h1940_udc_cfg);
+ 	s3c24xx_ts_set_platdata(&h1940_ts_cfg);
+diff --git a/arch/arm/mach-s3c24xx/mach-mini2440.c b/arch/arm/mach-s3c24xx/mach-mini2440.c
+index 65f48094114e..0bd2746f19a6 100644
+--- a/arch/arm/mach-s3c24xx/mach-mini2440.c
++++ b/arch/arm/mach-s3c24xx/mach-mini2440.c
+@@ -714,6 +714,11 @@ static void __init mini2440_init(void)
+ 		s3c_gpio_setpull(mini2440_buttons[i].gpio, S3C_GPIO_PULL_UP);
+ 		s3c_gpio_cfgpin(mini2440_buttons[i].gpio, S3C2410_GPIO_INPUT);
+ 	}
++
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
++
+ 	if (features.lcd_index != -1) {
+ 		int li;
+ 
+diff --git a/arch/arm/mach-s3c24xx/mach-n30.c b/arch/arm/mach-s3c24xx/mach-n30.c
+index 152f09242579..9410fcb82340 100644
+--- a/arch/arm/mach-s3c24xx/mach-n30.c
++++ b/arch/arm/mach-s3c24xx/mach-n30.c
+@@ -36,6 +36,7 @@
+ #include <mach/regs-gpio.h>
+ #include <mach/regs-lcd.h>
+ #include <mach/gpio-samsung.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <asm/mach/arch.h>
+ #include <asm/mach/irq.h>
+@@ -599,6 +600,10 @@ static void __init n30_init(void)
+ 			      S3C2410_MISCCR_USBSUSPND0 |
+ 			      S3C2410_MISCCR_USBSUSPND1, 0x0);
+ 
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
++
+ 	if (machine_is_n30()) {
+ 		/* Turn off suspend on both USB ports, and switch the
+ 		 * selectable USB port to USB device mode. */
+diff --git a/arch/arm/mach-s3c24xx/mach-nexcoder.c b/arch/arm/mach-s3c24xx/mach-nexcoder.c
+index 5385437ef464..ec23b115261e 100644
+--- a/arch/arm/mach-s3c24xx/mach-nexcoder.c
++++ b/arch/arm/mach-s3c24xx/mach-nexcoder.c
+@@ -143,6 +143,11 @@ static void __init nexcoder_init_time(void)
+ static void __init nexcoder_init(void)
+ {
+ 	s3c_i2c0_set_platdata(NULL);
++
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
++
+ 	platform_add_devices(nexcoder_devices, ARRAY_SIZE(nexcoder_devices));
+ };
+ 
+diff --git a/arch/arm/mach-s3c24xx/mach-otom.c b/arch/arm/mach-s3c24xx/mach-otom.c
+index e7eec5ccddb3..1f777ab4ced7 100644
+--- a/arch/arm/mach-s3c24xx/mach-otom.c
++++ b/arch/arm/mach-s3c24xx/mach-otom.c
+@@ -23,6 +23,8 @@
+ #include <asm/mach/irq.h>
+ 
+ #include <mach/regs-gpio.h>
++#include <mach/gpio-samsung.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <plat/cpu.h>
+ #include <plat/devs.h>
+@@ -105,6 +107,10 @@ static void __init otom11_init_time(void)
+ static void __init otom11_init(void)
+ {
+ 	s3c_i2c0_set_platdata(NULL);
++
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	platform_add_devices(otom11_devices, ARRAY_SIZE(otom11_devices));
+ }
+ 
+diff --git a/arch/arm/mach-s3c24xx/mach-qt2410.c b/arch/arm/mach-s3c24xx/mach-qt2410.c
+index 4ac3d0531992..5e33f3da629e 100644
+--- a/arch/arm/mach-s3c24xx/mach-qt2410.c
++++ b/arch/arm/mach-s3c24xx/mach-qt2410.c
+@@ -341,6 +341,9 @@ static void __init qt2410_machine_init(void)
+ 	s3c24xx_udc_set_platdata(&qt2410_udc_cfg);
+ 	s3c_i2c0_set_platdata(NULL);
+ 
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	gpiod_add_lookup_table(&qt2410_spi_gpiod_table);
+ 	s3c_gpio_setpull(S3C2410_GPB(0), S3C_GPIO_PULL_NONE);
+ 	gpiod_add_lookup_table(&qt2410_led_gpio_table);
+diff --git a/arch/arm/mach-s3c24xx/mach-rx1950.c b/arch/arm/mach-s3c24xx/mach-rx1950.c
+index a5461b2227bd..86d348f33972 100644
+--- a/arch/arm/mach-s3c24xx/mach-rx1950.c
++++ b/arch/arm/mach-s3c24xx/mach-rx1950.c
+@@ -828,6 +828,9 @@ static void __init rx1950_init_machine(void)
+ 
+ 	pwm_add_table(rx1950_pwm_lookup, ARRAY_SIZE(rx1950_pwm_lookup));
+ 	gpiod_add_lookup_table(&rx1950_audio_gpio_table);
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	platform_add_devices(rx1950_devices, ARRAY_SIZE(rx1950_devices));
+ 
+ 	i2c_register_board_info(0, rx1950_i2c_devices,
+diff --git a/arch/arm/mach-s3c24xx/mach-rx3715.c b/arch/arm/mach-s3c24xx/mach-rx3715.c
+index 617392de01ac..fc197cee77a0 100644
+--- a/arch/arm/mach-s3c24xx/mach-rx3715.c
++++ b/arch/arm/mach-s3c24xx/mach-rx3715.c
+@@ -38,6 +38,7 @@
+ #include <mach/regs-gpio.h>
+ #include <mach/regs-lcd.h>
+ #include <mach/gpio-samsung.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <plat/cpu.h>
+ #include <plat/devs.h>
+@@ -197,6 +198,9 @@ static void __init rx3715_init_machine(void)
+ 
+ 	s3c_nand_set_platdata(&rx3715_nand_info);
+ 	s3c24xx_fb_set_platdata(&rx3715_fb_info);
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	platform_add_devices(rx3715_devices, ARRAY_SIZE(rx3715_devices));
+ }
+ 
+diff --git a/arch/arm/mach-s3c24xx/mach-smdk2410.c b/arch/arm/mach-s3c24xx/mach-smdk2410.c
+index 1d4d8735f283..c78fe1d8802c 100644
+--- a/arch/arm/mach-s3c24xx/mach-smdk2410.c
++++ b/arch/arm/mach-s3c24xx/mach-smdk2410.c
+@@ -19,6 +19,8 @@
+ #include <linux/serial_s3c.h>
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
++#include <mach/gpio-samsung.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+@@ -92,6 +94,9 @@ static void __init smdk2410_init(void)
+ {
+ 	s3c_i2c0_set_platdata(NULL);
+ 	platform_add_devices(smdk2410_devices, ARRAY_SIZE(smdk2410_devices));
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	smdk_machine_init();
+ }
+ 
+diff --git a/arch/arm/mach-s3c24xx/mach-smdk2413.c b/arch/arm/mach-s3c24xx/mach-smdk2413.c
+index 9782cc3e698c..287bd502a030 100644
+--- a/arch/arm/mach-s3c24xx/mach-smdk2413.c
++++ b/arch/arm/mach-s3c24xx/mach-smdk2413.c
+@@ -37,6 +37,7 @@
+ #include <linux/platform_data/i2c-s3c2410.h>
+ #include <mach/gpio-samsung.h>
+ #include <mach/fb.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <plat/devs.h>
+ #include <plat/cpu.h>
+@@ -118,6 +119,9 @@ static void __init smdk2413_machine_init(void)
+ 
+  	s3c24xx_udc_set_platdata(&smdk2413_udc_cfg);
+ 	s3c_i2c0_set_platdata(NULL);
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 
+ 	platform_add_devices(smdk2413_devices, ARRAY_SIZE(smdk2413_devices));
+ 	smdk_machine_init();
+diff --git a/arch/arm/mach-s3c24xx/mach-smdk2440.c b/arch/arm/mach-s3c24xx/mach-smdk2440.c
+index bd6a35105518..5939372ecec2 100644
+--- a/arch/arm/mach-s3c24xx/mach-smdk2440.c
++++ b/arch/arm/mach-s3c24xx/mach-smdk2440.c
+@@ -28,6 +28,8 @@
+ 
+ #include <mach/regs-gpio.h>
+ #include <mach/regs-lcd.h>
++#include <mach/gpio-samsung.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <mach/fb.h>
+ #include <linux/platform_data/i2c-s3c2410.h>
+@@ -165,7 +167,9 @@ static void __init smdk2440_machine_init(void)
+ {
+ 	s3c24xx_fb_set_platdata(&smdk2440_fb_info);
+ 	s3c_i2c0_set_platdata(NULL);
+-
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	platform_add_devices(smdk2440_devices, ARRAY_SIZE(smdk2440_devices));
+ 	smdk_machine_init();
+ }
+diff --git a/arch/arm/mach-s3c24xx/mach-vstms.c b/arch/arm/mach-s3c24xx/mach-vstms.c
+index f0acbaa6dfd6..c6e777aab24e 100644
+--- a/arch/arm/mach-s3c24xx/mach-vstms.c
++++ b/arch/arm/mach-s3c24xx/mach-vstms.c
+@@ -30,6 +30,8 @@
+ 
+ #include <mach/regs-gpio.h>
+ #include <mach/regs-lcd.h>
++#include <mach/gpio-samsung.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <mach/fb.h>
+ 
+@@ -147,7 +149,9 @@ static void __init vstms_init(void)
+ {
+ 	s3c_i2c0_set_platdata(NULL);
+ 	s3c_nand_set_platdata(&vstms_nand_info);
+-
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
+ 	platform_add_devices(vstms_devices, ARRAY_SIZE(vstms_devices));
+ }
+ 
+diff --git a/arch/arm/mach-s3c24xx/simtec-audio.c b/arch/arm/mach-s3c24xx/simtec-audio.c
+index cfe78bf8cc9b..af87261e6a59 100644
+--- a/arch/arm/mach-s3c24xx/simtec-audio.c
++++ b/arch/arm/mach-s3c24xx/simtec-audio.c
+@@ -13,6 +13,8 @@
+ #include <linux/io.h>
+ 
+ #include <mach/regs-gpio.h>
++#include <mach/gpio-samsung.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include <linux/platform_data/asoc-s3c24xx_simtec.h>
+ #include <plat/devs.h>
+@@ -64,6 +66,10 @@ int __init simtec_audio_add(const char *name, bool has_lr_routing,
+ 	if (has_lr_routing)
+ 		simtec_audio_platdata.startup = simtec_audio_startup_lrroute;
+ 
++	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
++	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
++			      S3C_GPIO_PULL_NONE);
++
+ 	platform_device_register(&s3c_device_iis);
+ 	platform_device_register(&simtec_audio_dev);
+ 	return 0;
+diff --git a/sound/soc/samsung/s3c2412-i2s.c b/sound/soc/samsung/s3c2412-i2s.c
+index edfa9d11d2e5..81f416ac457e 100644
+--- a/sound/soc/samsung/s3c2412-i2s.c
++++ b/sound/soc/samsung/s3c2412-i2s.c
+@@ -19,9 +19,6 @@
+ #include <sound/soc.h>
+ #include <sound/pcm_params.h>
+ 
+-#include <mach/gpio-samsung.h>
+-#include <plat/gpio-cfg.h>
+-
+ #include "dma.h"
+ #include "regs-i2s-v2.h"
+ #include "s3c2412-i2s.h"
+@@ -70,10 +67,6 @@ static int s3c2412_i2s_probe(struct snd_soc_dai *dai)
+ 	if (ret)
+ 		goto err;
+ 
+-	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
+-	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
+-			      S3C_GPIO_PULL_NONE);
+-
+ 	return 0;
+ 
+ err:
+diff --git a/sound/soc/samsung/s3c24xx-i2s.c b/sound/soc/samsung/s3c24xx-i2s.c
+index 60bfaed5f7a6..50c08008aacb 100644
+--- a/sound/soc/samsung/s3c24xx-i2s.c
++++ b/sound/soc/samsung/s3c24xx-i2s.c
+@@ -18,10 +18,7 @@
+ #include <sound/soc.h>
+ #include <sound/pcm_params.h>
+ 
+-#include <mach/gpio-samsung.h>
+-#include <plat/gpio-cfg.h>
+ #include "regs-iis.h"
+-
+ #include "dma.h"
+ #include "s3c24xx-i2s.h"
+ 
+@@ -348,10 +345,6 @@ static int s3c24xx_i2s_probe(struct snd_soc_dai *dai)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Configure the I2S pins (GPE0...GPE4) in correct mode */
+-	s3c_gpio_cfgall_range(S3C2410_GPE(0), 5, S3C_GPIO_SFN(2),
+-			      S3C_GPIO_PULL_NONE);
+-
+ 	writel(S3C2410_IISCON_IISEN, s3c24xx_i2s.regs + S3C2410_IISCON);
+ 
+ 	s3c24xx_snd_txctrl(0);
 -- 
-Florian
+2.17.1
+
