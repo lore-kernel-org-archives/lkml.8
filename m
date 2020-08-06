@@ -2,174 +2,122 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC6DC49EBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D0FC4CC61
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7EFA22CAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6ED523329
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PYkZEwya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgHFIcX (ORCPT
+        id S1728898AbgHFIjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:32:23 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:37830 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727768AbgHFIcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:32:22 -0400
-Received: from [10.130.0.75] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP9wNwCtfckAFAA--.925S3;
-        Thu, 06 Aug 2020 16:32:15 +0800 (CST)
-Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
- <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
-Date:   Thu, 6 Aug 2020 16:32:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 6 Aug 2020 04:39:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35314 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgHFIjC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 04:39:02 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0768W6xm124452;
+        Thu, 6 Aug 2020 08:38:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=lf50GodO0mCylc7OJJLRGIYO+4WAUG7p3sPhgRl0PVk=;
+ b=PYkZEwyaAy97LKM1cBB6joJzabSMnCLElGbAySJCQBIpEie/sXyKzz+E2jmHzrjHYvY/
+ KID+gQXEAER/FuMaNVvv3A3DHZHoINpypTv2g3+rj4pIgbjCXt9BjExRwejzzCxtzYf1
+ Uy3ol5cKz+eAa+vk3oN89OLAx9KtJHNzYfJ2xr490ttUiHoF0XTZpIb4fBqBBVxqc7KD
+ tQuuGOFASV9no9BNU7KevdBpHgNEog5+eKqpftYltlYQTmzbe7ew4HR4D6+AWOzNMK7z
+ w8LUob3ttMME1ccv8QZC3EElvvyPtdr1yXWg816TQ7qnemFcsPBLpsx3QSZ5WD77mFiP +A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 32r6ep1kg3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 06 Aug 2020 08:38:27 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0768X5Mh164119;
+        Thu, 6 Aug 2020 08:36:26 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 32qy8mwhab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Aug 2020 08:36:26 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0768aNQd018198;
+        Thu, 6 Aug 2020 08:36:24 GMT
+Received: from [10.175.60.188] (/10.175.60.188)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Aug 2020 01:36:23 -0700
+Subject: Re: Minor RST rant
+To:     Christoph Hellwig <hch@infradead.org>, peterz@infradead.org
+Cc:     NeilBrown <neilb@suse.de>, Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200724132200.51fd2065@oasis.local.home>
+ <20200724113325.44923f75@lwn.net> <20200724144234.3227b501@oasis.local.home>
+ <877dusv5lc.fsf@notabene.neil.brown.name>
+ <20200729124445.GB2638@hirez.programming.kicks-ass.net>
+ <1e60ff85-4965-92cb-e50b-8ea9ccf6788e@oracle.com>
+ <20200805151230.GT2674@hirez.programming.kicks-ass.net>
+ <20200806064823.GA7292@infradead.org>
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+Message-ID: <d739e7e1-4eca-b927-1df8-dd04bec3b85e@oracle.com>
+Date:   Thu, 6 Aug 2020 10:36:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
+In-Reply-To: <20200806064823.GA7292@infradead.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxP9wNwCtfckAFAA--.925S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFyDCrWkZFyrZFWxJrWrZrb_yoWrJrWUpF
-        WDG3ZxGr4fKr1jyF9xArnFqrWYvrn3AF9xAr1UGr1UZas09r1kKFn2qrWagF4kZryxKa40
-        yFW09FyUKw10y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
-        c2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-        AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280
-        aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
-        ZEXa7IUYbjjPUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 mlxscore=0 mlxlogscore=853 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060059
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ malwarescore=0 clxscore=1011 mlxscore=0 priorityscore=1501 adultscore=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ mlxlogscore=871 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/2020 03:39 PM, Jiaxun Yang wrote:
->
->
-> 在 2020/8/6 下午3:09, Tiezhu Yang 写道:
->> Loongson processors have a writecombine issue that maybe failed to
->> write back framebuffer used with ATI Radeon or AMD GPU at times,
->> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
->> mapping for MIPS"), there exists some errors such as blurred screen
->> and lockup, and so on.
+
+On 2020-08-06 08:48, Christoph Hellwig wrote:
+> On Wed, Aug 05, 2020 at 05:12:30PM +0200, peterz@infradead.org wrote:
+>> On Wed, Aug 05, 2020 at 04:49:50PM +0200, Vegard Nossum wrote:
+>>> FWIW, I *really* like how the extra markup renders in a browser, and I
+>>> don't think I'm the only one.
 >>
->> With this patch, disable writecombine by default for Loongson64 to
->> work well with ATI Radeon or AMD GPU, and it has no influence on the
->> other platforms due to writecombine is enabled by default.
+>> The thing is, I write code in a text editor, not a browser. When a
+>> header file says: read Documentation/foo I do 'gf' and that file gets
+>> opened in a buffer.
 >>
->> Additionally, if it is necessary, writecombine=on can be set manually
->> in the cmdline to enhance the performance for Loongson LS7A integrated
->> graphics in the future.
->>
->> [   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than 
->> 10079msec
->> [   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id 
->> 0x0000000000000112 last fence id 0x000000000000011d on ring 0)
->> [   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than 
->> 10086msec
->> [   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id 
->> 0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
-> Hi Tiezhu,
->
-> Thanks for your patch.
-> Personally I didn't have any issue with writecombine on my test 
-> systems, but there
-> are some complains about unstable graphic card from users. So 
-> generally a cmdline
-> writecombine switch is necessary.
->
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   arch/mips/include/asm/pgtable.h |  4 ++++
->>   arch/mips/kernel/cpu-probe.c    | 19 +++++++++++++++++++
->>   2 files changed, 23 insertions(+)
->>
->> diff --git a/arch/mips/include/asm/pgtable.h 
->> b/arch/mips/include/asm/pgtable.h
->> index dd7a0f5..34869f7 100644
->> --- a/arch/mips/include/asm/pgtable.h
->> +++ b/arch/mips/include/asm/pgtable.h
->> @@ -473,6 +473,10 @@ static inline pgprot_t pgprot_noncached(pgprot_t 
->> _prot)
->>   static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
->>   {
->>       unsigned long prot = pgprot_val(_prot);
->> +    extern bool mips_writecombine;
->> +
->> +    if (!mips_writecombine)
->> +        return pgprot_noncached(_prot);
->
-> You can simply override c->writecombine to _CACHE_UNCACHED in 
-> cpu-probe.c with
-> out this kind of hijack.
->
->>         /* cpu_data[0].writecombine is already shifted by 
->> _CACHE_SHIFT */
->>       prot = (prot & ~_CACHE_MASK) | cpu_data[0].writecombine;
->> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
->> index e2955f1..98777ca 100644
->> --- a/arch/mips/kernel/cpu-probe.c
->> +++ b/arch/mips/kernel/cpu-probe.c
->> @@ -459,6 +459,25 @@ static int __init ftlb_disable(char *s)
->>     __setup("noftlb", ftlb_disable);
->>   +#ifdef CONFIG_MACH_LOONGSON64
->> +bool mips_writecombine; /* initialise to false by default */
->> +#else
->> +bool mips_writecombine = true;
->> +#endif
->> +EXPORT_SYMBOL(mips_writecombine);
-> There is no need to export this symbol, see comment before.
->> +
->> +static int __init writecombine_setup(char *str)
->> +{
->> +    if (strcmp(str, "on") == 0)
->> +        mips_writecombine = true;
->> +    else if (strcmp(str, "off") == 0)
->> +        mips_writecombine = false;
->> +
->> +    return 1;
->> +}
->> +
->> +__setup("writecombine=", writecombine_setup);
->
-> Use early_param here seems more reasonable, it will be probed earlier.
+>> Needing a browser is a fail.
+> 
+> And that is my main problem with all the RST craze.  It optmizes for
+> shiny display in a browser, but copletely messed up the typical
+> developer flow.
+> 
 
-Hi Jiaxun,
+If you are using vim, you can put this in ~/.vim/after/syntax/rst.vim:
 
-Thanks for your suggestion, it looks better.
+   syn region rstInlineLiteral matchgroup=Special start="``" end="``" 
+concealends
+   syn region rstEmphasis matchgroup=Special start="\*\*" end="\*\*" 
+concealends
+   setlocal conceallevel=2
 
-I will modify and test it, then I will send v2 with another
-document patch to explain this cmdline argument.
+This will hide the ``foo`` and **bar** markup on lines that are not
+currently under the cursor.
 
-Thanks,
-Tiezhu
 
->
->> +
->>   /*
->>    * Check if the CPU has per tc perf counters
->>    */
-> Thanks
->
-> - Jiaxun
-
+Vegard
