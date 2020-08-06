@@ -2,153 +2,99 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE44C433FB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 281A822DFB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED9D206B5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="vdAe04pQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="GwQrlQeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbgHFKL6 (ORCPT
+        id S1729403AbgHFKkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 06:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgHFKLP (ORCPT
+        Thu, 6 Aug 2020 06:40:43 -0400
+Received: from [115.28.160.31] ([115.28.160.31]:34530 "EHLO
+        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1729371AbgHFKgY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 06:11:15 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD35C061757
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 03:11:13 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id m15so25150159lfp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 03:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FmHNrmiGc1oEc9Yta/aBuQn+1EulEN2xZuLGLoeLXHQ=;
-        b=vdAe04pQJi4piGZ5+mZ0j2zhjTn6XVtWXoKVvfYvjkZt497I/uZbgq0bCXUw9yqxv1
-         aDwbG4fQLRxllT940g4JJIoLaihdHAzLTznrUByrMW1Sxn0NV4LG6ITrocLkxfQ/UbR8
-         /22r5p3LxUUJDP/bT5Lo9OvmnoXmRxUSyOPo0gH4uKUH+elU8Mn1VlYg4xH7/Swt6AEz
-         woNXvCrI7kpsrhxnMJDhchfVxMGgUKsXYC/i/xUa92sA04Rdaab+RLuwLDiP7hERRYMU
-         MGSXXRnFS4yE+plzwECIlQPOIq5Q9sL11BNdJXjz4h7FpV4jOJJQ0vybui6R3DGZ4y4F
-         e/Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FmHNrmiGc1oEc9Yta/aBuQn+1EulEN2xZuLGLoeLXHQ=;
-        b=Pf2VPNUbwZbwK/lz1ezP0b9NRWzfq9rx9Gz93U43NFbZC3jeOketJOnJYU6QmVhkGw
-         Enb142NzQKekhE2Ba80j+cw5lWW8Bmes/O8c/BV2V2N4a3xhjPnBGAFMTTYIxodk4ueP
-         mndb2iGtU4E2nXg28DndH0ZTR0BSYwEOTSVJEsceZ0SP3dk5c6g5n5oz9DlKN4UOtg8l
-         3J6YU4Bgn+VDYFJiiSJXOrfzMvg/4QX1cMwc/IWnoV23RcixdxP9dYAMUnnh6hP/TFKo
-         rsn+BD46lRbWabKFnPcJmSeaWs+m6ZFr42ZAdNrUvyG56ZyQ7pWb0hIMisuyioV17jeF
-         t3ww==
-X-Gm-Message-State: AOAM5335sfm2Q5hncnCim2d+ioe24pI2P6bSYStbmyCOP34sP9esufUn
-        QMJvu40SDb4tIwsil4LacLsj3w==
-X-Google-Smtp-Source: ABdhPJztxQdmUqdlmLCUV07uqArQbN1pckvCcR5Q9hxz1Dr0Q7jnsmbBT95GM1N8CkcdipmeoNGGIA==
-X-Received: by 2002:a19:70c:: with SMTP id 12mr3611270lfh.207.1596708665300;
-        Thu, 06 Aug 2020 03:11:05 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id v9sm2356183lja.81.2020.08.06.03.11.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 03:11:04 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 92823102E1B; Thu,  6 Aug 2020 13:11:12 +0300 (+03)
-Date:   Thu, 6 Aug 2020 13:11:12 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
-        x86@kernel.org
-Subject: Re: [PATCH v3 1/6] mm: add definition of PMD_PAGE_ORDER
-Message-ID: <20200806101112.bjw4mxu2odpsg2hh@box>
-References: <20200804095035.18778-1-rppt@kernel.org>
- <20200804095035.18778-2-rppt@kernel.org>
+        Thu, 6 Aug 2020 06:36:24 -0400
+Received: from hanazono.local (unknown [58.33.27.210])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 460476006D;
+        Thu,  6 Aug 2020 18:26:53 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
+        t=1596709613; bh=72yqEUWNLfVUrnKtkeWf6AZaFSEy3MP5VW3cQu6vR04=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GwQrlQeGEejtXKU5Qk/mhYtlA2KK7TdnpScCU8cMr1Omj1iuTp94+NJ1d0HaT05aT
+         eA7C1G6GdKEe+vc8Eso6p9kku115jscJqASE2e4kiK9pIyUn0J+90DefZs1E3KldGK
+         It8k1NB8L4UNdOQjbVeNQQ05/9LcpN/46fKeogSg=
+Subject: Re: [PATCH v2] MIPS: Provide Kconfig option for default IEEE 754
+ conformance mode
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     WANG Xuerui <git@xen0n.name>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        Liangliang Huang <huanglllzu@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+References: <20200801061147.1412187-1-jiaxun.yang@flygoat.com>
+ <d03a350c-842c-c041-f11b-017ec68e3de4@flygoat.com>
+From:   WANG Xuerui <kernel@xen0n.name>
+Message-ID: <9823ab9b-1f02-c8af-7d62-80a1d24aaaa3@xen0n.name>
+Date:   Thu, 6 Aug 2020 18:26:52 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:81.0)
+ Gecko/20100101 Thunderbird/81.0a1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804095035.18778-2-rppt@kernel.org>
+In-Reply-To: <d03a350c-842c-c041-f11b-017ec68e3de4@flygoat.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 12:50:30PM +0300, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> The definition of PMD_PAGE_ORDER denoting the number of base pages in the
-> second-level leaf page is already used by DAX and maybe handy in other
-> cases as well.
-> 
-> Several architectures already have definition of PMD_ORDER as the size of
-> second level page table, so to avoid conflict with these definitions use
-> PMD_PAGE_ORDER name and update DAX respectively.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  fs/dax.c                | 10 +++++-----
->  include/linux/pgtable.h |  3 +++
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 11b16729b86f..b91d8c8dda45 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -50,7 +50,7 @@ static inline unsigned int pe_order(enum page_entry_size pe_size)
->  #define PG_PMD_NR	(PMD_SIZE >> PAGE_SHIFT)
->  
->  /* The order of a PMD entry */
-> -#define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
-> +#define PMD_PAGE_ORDER	(PMD_SHIFT - PAGE_SHIFT)
+Hi Jiaxun,
 
-Hm. Wouldn't it conflict with definition in pgtable.h? Or should we
-include it instead?
 
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index 56c1e8eb7bb0..79f8443609e7 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -28,6 +28,9 @@
->  #define USER_PGTABLES_CEILING	0UL
->  #endif
->  
-> +/* Number of base pages in a second level leaf page */
-> +#define PMD_PAGE_ORDER	(PMD_SHIFT - PAGE_SHIFT)
-> +
->  /*
->   * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
->   *
+On 2020/8/5 21:59, Jiaxun Yang wrote:
+>
+>
+> ÔÚ 2020/8/1 14:11, Jiaxun Yang Ð´µÀ:
+>> Requested by downstream distros, a Kconfig option for default
+>> IEEE 754 conformance mode allows them to set their mode to
+>> relaxed by default.
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> Reviewed-by: WANG Xuerui <git@xen0n.name>
+>> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+>> Reviewed-by: Huacai Chen <chenhc@lemote.com>
+>>
+>> -- 
+>> v2: Reword according to Xuerui's suggestion.
+>> ---
+> Hi Thomas,
+>
+> Is it possible to get this patch into 5.9 merge window?
+> I think it have got enough review tag, and the config option was
+> requested
+> by a Debian developer. The next Debian release will take 5.9 lts
+> kernel and
+> they don't want to ship a non-bootable kernel in a major release.
 
--- 
- Kirill A. Shutemov
+I have an idea. Can the downstream packagers make use of the builtin
+command line config options, to inject the "ieee754=relaxed" or whatever
+option necessary? If it is acceptable this patch should not be necessary
+in the short term.
+
+>
+> Thanks.
+>
+> - Jiaxun
