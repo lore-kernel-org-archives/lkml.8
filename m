@@ -2,146 +2,169 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE30CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A419CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 12:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9817222D00
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE12204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 12:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="RiFKf1ZD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1T7PMyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgHFL5A (ORCPT
+        id S1728854AbgHFMO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 07:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
+        Thu, 6 Aug 2020 08:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgHFLRA (ORCPT
+        with ESMTP id S1726596AbgHFLSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 07:17:00 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABC1C0617AB
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 04:06:47 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id m20so25358002eds.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 04:06:47 -0700 (PDT)
+        Thu, 6 Aug 2020 07:18:33 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16F0C0617A4;
+        Thu,  6 Aug 2020 04:17:31 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id v89so11271403ybi.8;
+        Thu, 06 Aug 2020 04:17:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=PYSsCrOysop+Sh0mOiJ6j1B4kZ/DvpynNkFjKlnFTtk=;
-        b=RiFKf1ZDy1QYFqUEaD38cJSlgDMEp2uzQNfOQF28/kHkXz8nwtGrTxRXuMrcxIYUCW
-         i2SyC7q4a+Hlfbov9p/707mge6kYnZcvbb5lGvpuhHnY31qyhnKNTbtuVD2yDg9qiOEk
-         qNaAgDRhdrN8EJBFTY21+UBpZpx4oQr7+6Fvj9CXtFRbGci0z3mOdfwp0aC+9050chrZ
-         LLwgUne6B29yqzjvBmLRuhX/PYNrfZXCRyh0YlNI+DC5W0JzExy464GxzNPr5wtaLEDz
-         Gk7/o17kfdrVqw+JiskeC3yrY8gnyjlwl4LeYXXih14fnlWw37D7OPiB9aJpJevfHU86
-         mDeA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IkZFSPvcY5I31SF4ovGBrfHT1rxg0M171V/0SMIVx2k=;
+        b=W1T7PMyTGM7VIbxN0FUlHyTKpaK0nw8VbeY8YI4ksk9CWWKzLOGNJsuFVpAeVzqEDQ
+         l5jy7ReADQ2WPptC19aMYCiHXKqdoGibvICjZi24Fx59vEVwEvfL4yZTHGzKYmCRL03U
+         RVTRjFq4TV8+2/gTNJkJ/Htgj1Fhq5P1qcxe/eQL/FoLz9bwZG6KJsHhvjn7+xr/6u/A
+         ZwyurJY9E7i7o/VwJb0vYHsxFh1fqfcI6q3MWsQ7MjEBH949S7NP+IoE180+3rUUw9UI
+         +/+wKAisrtczBHnl7YHt8MqtQz67j1T9EoVK3At6moXH+T7btd80HOMRDedl6B5O04Fc
+         C4rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=PYSsCrOysop+Sh0mOiJ6j1B4kZ/DvpynNkFjKlnFTtk=;
-        b=Sd+jE3k8NhB1AwLP2N8MnsV8GN3+rE4Q02Z6Ua2bzaSwYuygqsaLkaA7CeKzXxfOnx
-         p5qbnYZAZUZEQSSFQcsUr8BSB061hvuSZ93ZqUpNVZe5a6PsaKuDG8Yc5aXlx4YH26nq
-         mlXUjJdC3gwVGjlxP/Kp3Z5gf630C9jRpAsjNCeVVI2se8Y3NtjpeODpLtvRPd9+9uRt
-         77TvX8pH5p0oUrRmBG0N0Jp0Fw00Rh4owE+a8GM2uAyWPoP9HhMCKuEBcheJX/98ryVL
-         nZ29CY8fTtRJpdxtpx4Ia1Tp1Yf07k7U4f8LWWxyXO8CX7Oh04jHHu7BJYn9bbHBvdQg
-         2ISA==
-X-Gm-Message-State: AOAM530kZopWXRaFT78nLF74d9jq8B8snxul5v8ZMs7fzGcOf4WFgl/8
-        9egPx/rZglj8SL99AMJnW/jBtQ1xVW1XOnjvUPxrMR545AyHdQMipBIMs5TJX+45wSYsGHhsa/G
-        Quj9qR7Vu/22SLx6fbw==
-X-Google-Smtp-Source: ABdhPJwLqyoWjwRDYILTF5e67AwRbZf7hhQrvTreE0IkPpokDMYDsXaFaI97KW0N6QvK5JTBtuHSbQ==
-X-Received: by 2002:a05:6402:899:: with SMTP id e25mr3435126edy.311.1596712006085;
-        Thu, 06 Aug 2020 04:06:46 -0700 (PDT)
-Received: from tim.froidcoeur.net (ptr-7tznw15pracyli75x11.18120a2.ip6.access.telenet.be. [2a02:1811:50e:f0f0:d05d:939:f42b:f575])
-        by smtp.gmail.com with ESMTPSA id v13sm3597682edl.9.2020.08.06.04.06.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 04:06:45 -0700 (PDT)
-From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
-To:     tim.froidcoeur@tessares.net,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Patrick McHardy <kaber@trash.net>,
-        KOVACS Krisztian <hidden@balabit.hu>
-Cc:     matthieu.baerts@tessares.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 2/2] net: initialize fastreuse on inet_inherit_port
-Date:   Thu,  6 Aug 2020 13:06:31 +0200
-Message-Id: <20200806110631.475855-3-tim.froidcoeur@tessares.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200806110631.475855-1-tim.froidcoeur@tessares.net>
-References: <20200806110631.475855-1-tim.froidcoeur@tessares.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IkZFSPvcY5I31SF4ovGBrfHT1rxg0M171V/0SMIVx2k=;
+        b=g67kPD/j95qTl+nSE82sBYDekoxbS1PiK2Tg09FZoroG9kInTPi/m/ggaM4nk9P9CC
+         iSnd0fPe+8394pPmMrq6GNs8+scxrtN8VyiLjMNFXulPSXoe5KORzJ3zGp3cpIuUiXEC
+         zepQ0ZkznvpuUvLmULR0+Bv5rSUSUejjz6SwMWuA2DKS7B96KlGvchGWcM6HPf+qZIvn
+         AlNWx1iUxAQp1s6JmbdIEFXXwUi2p3RDKrqzNbyW18TGybaFfbuVWz2pabsraTzrSrek
+         nMok3hQbEk44a9wlxHprIzAZvGHtNt3pWgqGwo95Ftofql4Wo6agwTLMeR256HhTh4Tm
+         0WRQ==
+X-Gm-Message-State: AOAM532SNiuhML1IP3RP2/AkmTWejLC4WI6F7qE3KRIy7Cs+sP9H+6rA
+        JYtYPHOnlsV3ojMSpRKIcVpsFUnL7aqd/hl33yA=
+X-Google-Smtp-Source: ABdhPJxC1QZwDQjfBbSfcHd9+nWr/d1KIV+hOzv93X+1QoDGFFoAz1yykeKI4ZMC4cs50cyA5iK5Orky9ZbUh/KQlXM=
+X-Received: by 2002:a25:c743:: with SMTP id w64mr11132228ybe.127.1596712641618;
+ Thu, 06 Aug 2020 04:17:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 6 Aug 2020 12:16:55 +0100
+Message-ID: <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
+Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
-SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
-behaviour or in the incorrect reuse of a bind.
+Hi Geert,
 
-the kernel keeps track for each bind_bucket if all sockets in the
-bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
-These flags allow skipping the costly bind_conflict check when possible
-(meaning when all sockets have the proper SO_REUSE option).
+Thank you for the review.
 
-For every socket added to a bind_bucket, these flags need to be updated.
-As soon as a socket that does not support reuse is added, the flag is
-set to false and will never go back to true, unless the bind_bucket is
-deleted.
+On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> However, before I queue this in renesas-devel for v5.10, I'd like to
+> have some clarification about the issue below.
+>
+> > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+>
+> > +               vin4: video@e6ef4000 {
+> > +                       compatible = "renesas,vin-r8a774e1";
+> > +                       reg = <0 0xe6ef4000 0 0x1000>;
+> > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&cpg CPG_MOD 807>;
+> > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> > +                       resets = <&cpg 807>;
+> > +                       renesas,id = <4>;
+> > +                       status = "disabled";
+> > +
+> > +                       ports {
+> > +                               #address-cells = <1>;
+> > +                               #size-cells = <0>;
+> > +
+> > +                               port@1 {
+> > +                                       #address-cells = <1>;
+> > +                                       #size-cells = <0>;
+>
+> "make dtbs W=1" says:
+>
+>     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
+> (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
+> has single child node 'endpoint@0', #address-cells/#size-cells are not
+> necessary
+>
+> (same for vin5-7 below)
+>
+Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
+VIN endpoint numbering") we definitely need endpoint numbering.
+Probably the driver needs to be fixed to handle such cases.
 
-Note that there is no mechanism to re-evaluate these flags when a socket
-is removed (this might make sense when removing a socket that would not
-allow reuse; this leaves room for a future patch).
+Cheers,
+Prabhakar
 
-For this optimization to work, it is mandatory that these flags are
-properly initialized and updated.
-
-When a child socket is created from a listen socket in
-__inet_inherit_port, the TPROXY case could create a new bind bucket
-without properly initializing these flags, thus preventing the
-optimization to work. Alternatively, a socket not allowing reuse could
-be added to an existing bind bucket without updating the flags, causing
-bind_conflict to never be called as it should.
-
-Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
-a new bind_bucket or use a different bind_bucket than the one of the
-listen socket.
-
-Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
----
- net/ipv4/inet_hashtables.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index 2bbaaf0c7176..006a34b18537 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -163,6 +163,7 @@ int __inet_inherit_port(const struct sock *sk, struct sock *child)
- 				return -ENOMEM;
- 			}
- 		}
-+		inet_csk_update_fastreuse(tb, child);
- 	}
- 	inet_bind_hash(child, tb, port);
- 	spin_unlock(&head->lock);
--- 
-2.25.1
-
-
--- 
-
-
-Disclaimer: https://www.tessares.net/mail-disclaimer/ 
-<https://www.tessares.net/mail-disclaimer/>
-
-
+> > +
+> > +                                       reg = <1>;
+> > +
+> > +                                       vin4csi20: endpoint@0 {
+> > +                                               reg = <0>;
+> > +                                               remote-endpoint = <&csi20vin4>;
+> > +                                       };
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
