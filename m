@@ -2,119 +2,93 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB50C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF5AF22C9F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA21322CAF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="n33x5l1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgHFSh4 (ORCPT
+        id S1729752AbgHFSiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
+        Thu, 6 Aug 2020 14:38:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgHFSfr (ORCPT
+        with ESMTP id S1728678AbgHFSfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:35:47 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C59C0611E2
+        Thu, 6 Aug 2020 14:35:45 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD59C0617A4
         for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:35:25 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3kjS-0004BS-94; Thu, 06 Aug 2020 20:35:14 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3kjR-0007aU-Sj; Thu, 06 Aug 2020 20:35:13 +0200
-Date:   Thu, 6 Aug 2020 20:35:13 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/7] pwm: cros-ec: Accept more error codes from
- cros_ec_cmd_xfer_status
-Message-ID: <20200806183513.nbaeonm5sevjvxkb@pengutronix.de>
-References: <20200806153308.204605-1-linux@roeck-us.net>
- <20200806153308.204605-5-linux@roeck-us.net>
+Received: by mail-ed1-x542.google.com with SMTP id di22so28692509edb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xuh5L///1+6tqkx4SRS1RotcWxk6pfAkKpYSeAk+r38=;
+        b=n33x5l1lnQt4xhfltS+h6aHkFiEpQKoEeN3DjgJEnrmZOtzrI8h41Nsk6jHcBU7xik
+         J/NVfpDtxYJSCVapvIg1v6tK1NEXOH+a51WJKHAy8hfOlwgMz4ietam7OwxMFYQ978n3
+         +aOqhedYCnqrvHP4VHBfvtc2capnSIqaxd7gHLYLG0YE7QRFUV8P57kFaElHWxIO1T7z
+         VIGC97g36bf9X35DK4mJeUK4eMk00yfJCj6CVZKCg61RTbXdQ+R8g/PitHxcRqU+HgeN
+         9o5DEbIlLZyNXCgXdhDMVarwDmOpGFHw4Uil9rnYH5I6lDX5xTZwrrjRDyzEd0cfJFfV
+         gsHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xuh5L///1+6tqkx4SRS1RotcWxk6pfAkKpYSeAk+r38=;
+        b=irliqBxdwWJmH3Tw9B/s2b4k4DmFkX50uYUstSWZnLTZhQU/g7yZmA14WZdSh7Pcl9
+         /k4K9Qp4Ir57cqGXHUELYOnWDUOxep4HFa7Pme0gPVxd0y9yjG18vhreb3i2pS5nZrS3
+         1mGlQsjtB+D7Yg3jQwhPDvajffc3o1to5HlOZoOYrbGENxwYCY4w/NwhNsIMhwPQiwK0
+         e2MVMxFD8ph46cSr3OsmS+SeSw8B6YunEodR0qRmtj5VyhdzlnrEnZJPAaDCMMwQAQ0G
+         5VBPspKWH57+gRKcIg2jAXs6ZUKCRiiXeVU9iW0ian0THoK+M3Womjt7VHTNUL0iiIjD
+         c+RQ==
+X-Gm-Message-State: AOAM533TONQb1Om5VoyquTeajsHBsaMythRmnzcTUY7lfK9kkHODwG+s
+        34wn2mmPTJFetgKQAyzwV/wX6ApZNTVMakOv7C5x
+X-Google-Smtp-Source: ABdhPJzobp3XHFhPQHypcdgsf1CVg1Hjp7fpOVXPXt5WPfkFAmsIZUO5MG4ZWuct7JxXuKpRwr1fkzSlTGifEgIyyd8=
+X-Received: by 2002:a50:93c5:: with SMTP id o63mr5213126eda.31.1596738924215;
+ Thu, 06 Aug 2020 11:35:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="prp6ta2dfdqjn5v6"
-Content-Disposition: inline
-In-Reply-To: <20200806153308.204605-5-linux@roeck-us.net>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200803123439.83400-1-jbi.octave@gmail.com> <20200803123439.83400-3-jbi.octave@gmail.com>
+In-Reply-To: <20200803123439.83400-3-jbi.octave@gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 6 Aug 2020 14:35:13 -0400
+Message-ID: <CAHC9VhQA0JZNLZbfUUecrTbMvnD3S7sRMOAoW5eeeK-jpZeEWw@mail.gmail.com>
+Subject: Re: [RESEND PATCH 2/2] audit: uninitialize variable audit_sig_sid
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Eric Paris <eparis@redhat.com>,
+        "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 3, 2020 at 8:35 AM Jules Irenge <jbi.octave@gmail.com> wrote:
+>
+> Checkpatch tool reports
+>
+> "ERROR: do not initialise globals/statics to 0"
+>
+> To fix this, audit_sig_sid is uninitialized
+> As this is stored in the .bss section,
+> the compiler can initialize the variable automatically.
+>
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  kernel/audit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
---prp6ta2dfdqjn5v6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Similar to patch 1/2, this will need to wait until after the merge
+window closes.
 
-Hello,
-
-On Thu, Aug 06, 2020 at 08:33:05AM -0700, Guenter Roeck wrote:
-> Since commit c5cd2b47b203 ("platform/chrome: cros_ec_proto: Report command
-> not supported") we can no longer assume that cros_ec_cmd_xfer_status()
-> reports -EPROTO for all errors returned by the EC itself. A follow-up
-> patch will change cros_ec_cmd_xfer_status() to report additional errors
-> reported by the EC as distinguished Linux error codes.
->=20
-> Handle this change by no longer assuming that only -EPROTO is used
-> to report all errors returned by the EC itself. Instead, support both
-> the old and the new error codes.
->=20
-> Add a comment describing cros_ec_num_pwms() to explain its functionality.
->=20
-> Cc: Gwendal Grignou <gwendal@chromium.org>
-> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> Cc: Prashant Malani <pmalani@chromium.org>
-> Cc: Brian Norris <briannorris@chromium.org>
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---prp6ta2dfdqjn5v6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8sTV4ACgkQwfwUeK3K
-7Ak7Xwf/bIpQ0ms3aJzAL2lKasQAGjulu7pJpdL40M8US0eyiWsAEWMEbxFoO7Ha
-W2ICAFrAFn6KUTuSPzSOIWOxqcxKE4uDxXKTvh98I9FkFXAY7VKFn32Dbshh+hhZ
-7NxJfdO7YM1evP67JxWrADaNlKbRij0KSGRPFnJ3mzt4XaiDCdUJX3opo9cyDglP
-rX8m/vpdUF8GDgCyh9YjskLqEV56kEzb0WNEVc9jqwkuMEQ6g2silpvtmFnbPpa3
-ZmCPcH2eOqz61dAOdjPdCGAeQmTY7zrXBkw2I4zXWButDK4/9q7yelYOISMMkrO1
-qohHip3HBU5CTDOp52IMtEWlkZauTw==
-=x1Y7
------END PGP SIGNATURE-----
-
---prp6ta2dfdqjn5v6--
+-- 
+paul moore
+www.paul-moore.com
