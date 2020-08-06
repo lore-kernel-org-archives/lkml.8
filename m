@@ -2,159 +2,119 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE83C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB872250E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F371B20823
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="SbMcZbCu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GSa5KQgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHFBjj (ORCPT
+        id S1726846AbgHFBr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 21:39:39 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:44365 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725999AbgHFBjh (ORCPT
+        Wed, 5 Aug 2020 21:47:56 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:33477 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725998AbgHFBry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 21:39:37 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U4t4FRM_1596677972;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4t4FRM_1596677972)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 06 Aug 2020 09:39:32 +0800
-Subject: Re: [PATCH v17 21/21] mm/lru: revise the comments of lru_lock
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jann Horn <jannh@google.com>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-22-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UfpHjBTHvtZz7=WMhZZAunVYuNMpuYBQCiorERb5seFUQ@mail.gmail.com>
- <f34e790f-50e6-112c-622f-d7ab804c6d22@linux.alibaba.com>
- <CAKgT0UckqbmYJDE3L2Bg1Nr=Y=GT0OBx1GEhaZ14EbRTzd8tiw@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <a1c6a3a6-f8e3-7bb5-e881-216a4b57ae84@linux.alibaba.com>
-Date:   Thu, 6 Aug 2020 09:39:12 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 5 Aug 2020 21:47:54 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id B3836D43;
+        Wed,  5 Aug 2020 21:47:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Wed, 05 Aug 2020 21:47:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        U/mBUsHb71A738YQ5oNiB6WYMuEfMjRBkpOFnVl3kck=; b=SbMcZbCujvCFqvMG
+        UYR2zXtt8MdtVE6zCyaBbYKHz6/FBXAFbOgKg02VuGsGEVcRNYpNR7qyAsAkcP+i
+        x5NTNCq90+2Xo0WQXAcOd87Oknpx4mKWlV4ChRhpu1iPox6Hd31qhdTZXabRGFtd
+        Z6mRTpX7sHtoblLP23SoSTczxYxklD1b/JjRWk5ohE3Ljg40DfbsDge0FoByNf6p
+        PSX/Db2HUGV1Ynz4jePO0u1Q5CNScjDSUkINwI7dCgCSnz62hu8wAoikK7JH2c0K
+        xUXLUx7td3ABBIPyrRcdhcxx3KWThrf7eBDVS+ONxkVJtq2eSwlLE+rxvLiChpjc
+        c5or7Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=U/mBUsHb71A738YQ5oNiB6WYMuEfMjRBkpOFnVl3k
+        ck=; b=GSa5KQgndYXvTiLwV902ReZEGcG6iZqZL2q2MA56f91jcSXIr5+9piJ6r
+        HbcMxVP1pb9TmRUIEIQoC4eyFtHQ9LxaXUp2rVhQPv6PvFohFJbklhwl/CRQLS5R
+        i3FBLgCNY/xjscE5bqHOva3pBeqx3ANZcUW0EecigD2hqEQMkOBCdMZtiWJmCIy8
+        kynUr+f0+E9m0AQ2hoeGCCrEI97PgP8HipKrwbGO0CEJQy/GAPDjqu3PiCXJ9w/l
+        bWzXGdv/XCrqbGVt4UmYl91l9tutor6QaMDiMEK1xm4pA7zg9ifooHj1g8mgIPCt
+        20HL7XwAzaDWgWJhy9lXE2t15qhpQ==
+X-ME-Sender: <xms:R2ErX-Ow0TFcTtDZrZeKOB7EXkGcFyJWbTfpwaJoU1lJLKqSgS_eiw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeelgdehvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peduudekrddvtdekrdehvddruddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:R2ErX89ebs4xGXj3osgQqYAy76fviH262DcjF9AhUz5dcG_abpUbRQ>
+    <xmx:R2ErX1SwYO5T_NvB8DU9zVrp31k0l-VE0UPfdhT8i-mESmigYto58A>
+    <xmx:R2ErX-v36Qd5Efi5Q5w8Y-K6ArBRt249ARC-EA4B-pNs2oia7VukoQ>
+    <xmx:SGErX27p6Gko2FlPisZFLjpUCL0wiWWZvxt3AzDh2CqzDPeWIkGwgxjfrs8>
+Received: from mickey.themaw.net (unknown [118.208.52.109])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B32DF328005E;
+        Wed,  5 Aug 2020 21:47:46 -0400 (EDT)
+Message-ID: <25a6f18404b55e3991ffa0874e6bec78eed7463d.camel@themaw.net>
+Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
+ support [ver #21]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 06 Aug 2020 09:47:43 +0800
+In-Reply-To: <CAJfpeguvTspY7pi52n1aznebCF2jYki40hy5idkgu1D2y6C6mg@mail.gmail.com>
+References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+         <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
+         <20200804135641.GE32719@miu.piliscsaba.redhat.com>
+         <94bba6f200bb2bbf83f4945faa2ccb83fd947540.camel@themaw.net>
+         <5078554c6028e29c91d815c63e2af1ffac2ecbbb.camel@themaw.net>
+         <CAJfpegs1NLaamFA12f=EJRN4B3_iC+Uzi2NQKTV-fBSypcufLQ@mail.gmail.com>
+         <e1caad2bff5faf9b24b59fe4ee51df255412cc56.camel@themaw.net>
+         <CAJfpeguvTspY7pi52n1aznebCF2jYki40hy5idkgu1D2y6C6mg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UckqbmYJDE3L2Bg1Nr=Y=GT0OBx1GEhaZ14EbRTzd8tiw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/8/4 下午10:29, Alexander Duyck 写道:
-> On Tue, Aug 4, 2020 at 3:04 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2020/8/4 上午6:37, Alexander Duyck 写道:
->>>>
->>>>  shrink_inactive_list() also diverts any unevictable pages that it finds on the
->>>> -inactive lists to the appropriate zone's unevictable list.
->>>> +inactive lists to the appropriate node's unevictable list.
->>>>
->>>>  shrink_inactive_list() should only see SHM_LOCK'd pages that became SHM_LOCK'd
->>>>  after shrink_active_list() had moved them to the inactive list, or pages mapped
->>> Same here.
->>
->> lruvec is used per memcg per node actually, and it fallback to node if memcg disabled.
->> So the comments are still right.
->>
->> And most of changes just fix from zone->lru_lock to pgdat->lru_lock change.
+On Wed, 2020-08-05 at 13:27 +0200, Miklos Szeredi wrote:
+> On Wed, Aug 5, 2020 at 1:23 PM Ian Kent <raven@themaw.net> wrote:
+> > On Wed, 2020-08-05 at 09:45 +0200, Miklos Szeredi wrote:
+> > > Hmm, what's the other possibility for lost notifications?
+> > 
+> > In user space that is:
+> > 
+> > Multi-threaded application races, single threaded applications and
+> > signal processing races, other bugs ...
 > 
-> Actually in my mind one thing that might work better would be to
-> explain what the lruvec is and where it resides. Then replace zone
-> with lruvec since that is really where the unevictable list resides.
-> Then it would be correct for both the memcg and pgdat case.
+> Okay, let's fix the bugs then.
 
-Could you like to revise the doc as your thought?
-> 
->>>
->>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->>>> index 64ede5f150dc..44738cdb5a55 100644
->>>> --- a/include/linux/mm_types.h
->>>> +++ b/include/linux/mm_types.h
->>>> @@ -78,7 +78,7 @@ struct page {
->>>>                 struct {        /* Page cache and anonymous pages */
->>>>                         /**
->>>>                          * @lru: Pageout list, eg. active_list protected by
->>>> -                        * pgdat->lru_lock.  Sometimes used as a generic list
->>>> +                        * lruvec->lru_lock.  Sometimes used as a generic list
->>>>                          * by the page owner.
->>>>                          */
->>>>                         struct list_head lru;
->>>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->>>> index 8af956aa13cf..c92289a4e14d 100644
->>>> --- a/include/linux/mmzone.h
->>>> +++ b/include/linux/mmzone.h
->>>> @@ -115,7 +115,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
->>>>  struct pglist_data;
->>>>
->>>>  /*
->>>> - * zone->lock and the zone lru_lock are two of the hottest locks in the kernel.
->>>> + * zone->lock and the lru_lock are two of the hottest locks in the kernel.
->>>>   * So add a wild amount of padding here to ensure that they fall into separate
->>>>   * cachelines.  There are very few zone structures in the machine, so space
->>>>   * consumption is not a concern here.
->>> So I don't believe you are using ZONE_PADDING in any way to try and
->>> protect the LRU lock currently. At least you aren't using it in the
->>> lruvec. As such it might make sense to just drop the reference to the
->>> lru_lock here. That reminds me that we still need to review the
->>> placement of the lru_lock and determine if there might be a better
->>> placement and/or padding that might improve performance when under
->>> heavy stress.
->>>
->>
->> Right, is it the following looks better?
->>
->> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->> index ccc76590f823..0ed520954843 100644
->> --- a/include/linux/mmzone.h
->> +++ b/include/linux/mmzone.h
->> @@ -113,8 +113,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
->>  struct pglist_data;
->>
->>  /*
->> - * zone->lock and the lru_lock are two of the hottest locks in the kernel.
->> - * So add a wild amount of padding here to ensure that they fall into separate
->> + * Add a wild amount of padding here to ensure datas fall into separate
->>   * cachelines.  There are very few zone structures in the machine, so space
->>   * consumption is not a concern here.
->>   */
->>
->> Thanks!
->> Alex
-> 
-> I would maybe tweak it to make sure it is clear that we are using this
-> to pad out items that are likely to cause cache thrash such as various
-> hot spinocks and such.
-> 
+It's the the bugs you don't know about that get you, in this case
+the world "is" actually out to get you, ;)
 
-I appreciate if you like to change the doc better. :)
+Ian
 
-Thanks
-Alex
