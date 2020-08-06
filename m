@@ -2,99 +2,87 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF79C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198BD2311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EsDXHSR/"
+	by mail.kernel.org (Postfix) with ESMTP id D2E2A2311B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596732437;
+	bh=Z7TdfRn+l/U2D+R5a5JP0c/lzBH2WD7BitkuHPSAWnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gMWvFOL5DVDOkBwbr25j9h872f2jHeUi82rxjxiYptLPEOVF3mOEM1EMAhLEJAC/h
+	 FzBgOqGyA1IzfzrzCehoxy1rsEAUsE0BijLWLPgipfUl100QN95cA8AmQk95T30/B5
+	 kcISLbApr32N3VMUBOAX6io9M/BvUnP/bSCMqjzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgHFQrF (ORCPT
+        id S1729418AbgHFQrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:47:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30761 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729215AbgHFQpQ (ORCPT
+        Thu, 6 Aug 2020 12:47:12 -0400
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:34074 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728574AbgHFQrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:45:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596732315;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=kQ8/0ag4BCcQ9dWEWrckB6cUtNt8F/dt5Qa3/Yht9h0=;
-        b=EsDXHSR/3LJK4VJZPv04L6DM0XyDfhuzMq59WvMxrltBdjx7PGXA53D5kcR2CjL2+E8Ey/
-        ADXKC8XwfLStAlkOSm5P8/6/waPT1oyQpwV/DtVBAcJzU1X/VE3s+hkJ70QeqrOZvt/0ic
-        JpU1i6/zoUL8guzq/9kX12KbQ82UIr4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-q7zoak4XPlC7eMMKlhdHXw-1; Thu, 06 Aug 2020 12:45:10 -0400
-X-MC-Unique: q7zoak4XPlC7eMMKlhdHXw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3DCDD1005504;
-        Thu,  6 Aug 2020 16:45:09 +0000 (UTC)
-Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F396010023A6;
-        Thu,  6 Aug 2020 16:45:08 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 11:45:07 -0500
-From:   David Teigland <teigland@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] dlm updates for 5.9
-Message-ID: <20200806164507.GC9935@redhat.com>
+        Thu, 6 Aug 2020 12:47:01 -0400
+Received: by mail-pg1-f182.google.com with SMTP id t6so27146974pgq.1;
+        Thu, 06 Aug 2020 09:47:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jhzmlepFdmy2r2HquH9Bg1monL9cuu4aWWWaAK4BuRY=;
+        b=L/OCQO3QVNxIcULL/tzcZgWkmAlzx/5lladJTZs5aN7kLs3VhAtXz8GaLrDp5S9OS+
+         VJ+T4+Kn4m7vJbKSNHadWKzn1AbPXMpjCPqpIOwKsFO6Zww1QgxwLeXgywzU3pVMWFaI
+         tuMasx83vuKzXzb0UUbR7X4+90n5e+eEJrK/x+LLERqkUb+AXl5MZk3MutJaBVerlone
+         bQ0ZxXPaWydj47oNoHzYI3zar2VSXId6q9HofK0/ojpB28BSutknkWu+ErSHrngKNMM0
+         DeOjSkDEp0CD8PQAnbW1/NYbfHGuenfXwpY6D4ayhGYrluvao4ZXeDvwjpiHUIqDoiZ+
+         SRFQ==
+X-Gm-Message-State: AOAM5304k1uyKazE6MCerbxehoTjFCy42+UqjntvBb8utIDdQjxcll/Z
+        bWzsp/IakyU5PcxGy2Bd7eVOTA4=
+X-Google-Smtp-Source: ABdhPJxljR+2BM3+NLxYnTHpAFI/rfqUTIy5+s1RD0u2NtfsfyOfJFOSZ30o8lRm2APyJKjzexiCiA==
+X-Received: by 2002:a92:d985:: with SMTP id r5mr12111148iln.82.1596725393434;
+        Thu, 06 Aug 2020 07:49:53 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l5sm1910747ilj.88.2020.08.06.07.49.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 07:49:52 -0700 (PDT)
+Received: (nullmailer pid 839216 invoked by uid 1000);
+        Thu, 06 Aug 2020 14:49:51 -0000
+Date:   Thu, 6 Aug 2020 08:49:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        kernel@collabora.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, Ahmet Inan <inan@distec.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>
+Subject: Re: [PATCHv4 2/4] Input: EXC3000: add EXC80H60 and EXC80H84 support
+Message-ID: <20200806144951.GA839183@bogus>
+References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+ <20200805160520.456570-3-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.8.3 (2017-05-23)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200805160520.456570-3-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, 05 Aug 2020 18:05:18 +0200, Sebastian Reichel wrote:
+> This adds support for EXC80H60 and EXCH84 controllers, which
+> use a different event type id and have two extra bits for the
+> resolution (so the maximum is 16K instead of 4K).
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../input/touchscreen/eeti,exc3000.yaml       |  5 +-
+>  drivers/input/touchscreen/exc3000.c           | 80 +++++++++++++++----
+>  2 files changed, 70 insertions(+), 15 deletions(-)
+> 
 
-Please pull dlm updates from tag:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/teigland/linux-dlm.git dlm-5.9
-
-This set includes a some improvements to the dlm networking layer:
-improving the ability to trace dlm messages for debugging, and improved
-handling of bad messages or disrupted connections.
-
-Note two unusual things:
-- There is a commit under net that was posted to netdev, which add a
-  socket helper for setting a mark value on a socket.
-- This branch was just rebased to drop a commit that was adding a tuning
-  knob to adjust blocking during recovery; we decided there's not enough
-  evidence it's necessary.
-
-Thanks,
-Dave
-
-Alexander Aring (6):
-      net: sock: add sock_set_mark
-      fs: dlm: set skb mark for listen socket
-      fs: dlm: set skb mark per peer socket
-      fs: dlm: don't close socket on invalid message
-      fs: dlm: change handling of reconnects
-      fs: dlm: implement tcp graceful shutdown
-
-Wang Hai (1):
-      dlm: Fix kobject memleak
-
- fs/dlm/config.c    |  44 +++++++++++++++++++++++++++++
- fs/dlm/config.h    |   2 ++
- fs/dlm/lockspace.c |   6 ++--
- fs/dlm/lowcomms.c  | 131 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
- include/net/sock.h |   1 +
- net/core/sock.c    |   8 ++++++
- 6 files changed, 164 insertions(+), 28 deletions(-)
-
+Acked-by: Rob Herring <robh@kernel.org>
