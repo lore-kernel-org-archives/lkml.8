@@ -2,73 +2,370 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 900D22086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81E72311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgHFQwm (ORCPT
+        id S1729663AbgHFQwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:52:42 -0400
-Received: from elvis.franken.de ([193.175.24.41]:36755 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgHFQwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:52:32 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k3j81-0004MZ-00; Thu, 06 Aug 2020 18:52:29 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 70C2AC0C65; Thu,  6 Aug 2020 18:52:12 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 18:52:12 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
-Message-ID: <20200806165212.GA2754@alpha.franken.de>
-References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
- <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
- <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
- <20200806101733.GA8136@alpha.franken.de>
- <9e563c75-ffaa-45b4-0e99-25a8b1eff828@flygoat.com>
+        Thu, 6 Aug 2020 12:52:50 -0400
+Received: from 20.mo1.mail-out.ovh.net ([188.165.45.168]:41145 "EHLO
+        20.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729231AbgHFQwb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:52:31 -0400
+X-Greylist: delayed 2103 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 12:52:27 EDT
+Received: from player791.ha.ovh.net (unknown [10.110.115.229])
+        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 77EF91CEBB8
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 18:15:19 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player791.ha.ovh.net (Postfix) with ESMTPSA id 9F80915002624;
+        Thu,  6 Aug 2020 16:15:13 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-104R0059bfe411c-1641-46b4-891b-cf95eaa2adb0,
+                    9D5F4B8471F7AF6BEF45141B8B52B4DEEC6DEFE4) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v2] docs: remove the 2.6 "Upgrading I2C Drivers" guide
+Date:   Thu,  6 Aug 2020 18:14:56 +0200
+Message-Id: <20200806161456.8680-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e563c75-ffaa-45b4-0e99-25a8b1eff828@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 3213036861844639109
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedtgddutdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeeluddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 07:56:20PM +0800, Jiaxun Yang wrote:
-> Our current problem is Loongson's writecombine implementation seems buggy.
-> This is our platform issue rather than target hardware issue.
+All the drivers have long since been upgraded, and all the important
+information here is also included in the "Implementing I2C device
+drivers" guide.
 
-ok, so simply clear cpu_data[0].writecombine for the fauly parts
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/i2c/index.rst             |   1 -
+ Documentation/i2c/upgrading-clients.rst | 285 ------------------------
+ 2 files changed, 286 deletions(-)
+ delete mode 100644 Documentation/i2c/upgrading-clients.rst
 
-> And we don't even know which hardware is known to be good. The same graphic
-> card became a different story on different user's hand.
+diff --git a/Documentation/i2c/index.rst b/Documentation/i2c/index.rst
+index fee4744475df..8a2ad3845191 100644
+--- a/Documentation/i2c/index.rst
++++ b/Documentation/i2c/index.rst
+@@ -62,7 +62,6 @@ Legacy documentation
+ .. toctree::
+    :maxdepth: 1
+ 
+-   upgrading-clients
+    old-module-parameters
+ 
+ .. only::  subproject and html
+diff --git a/Documentation/i2c/upgrading-clients.rst b/Documentation/i2c/upgrading-clients.rst
+deleted file mode 100644
+index 1708090d7b8f..000000000000
+--- a/Documentation/i2c/upgrading-clients.rst
++++ /dev/null
+@@ -1,285 +0,0 @@
+-=================================================
+-Upgrading I2C Drivers to the new 2.6 Driver Model
+-=================================================
+-
+-Ben Dooks <ben-linux@fluff.org>
+-
+-Introduction
+-------------
+-
+-This guide outlines how to alter existing Linux 2.6 client drivers from
+-the old to the new binding methods.
+-
+-
+-Example old-style driver
+-------------------------
+-
+-::
+-
+-  struct example_state {
+-	struct i2c_client	client;
+-	....
+-  };
+-
+-  static struct i2c_driver example_driver;
+-
+-  static unsigned short ignore[] = { I2C_CLIENT_END };
+-  static unsigned short normal_addr[] = { OUR_ADDR, I2C_CLIENT_END };
+-
+-  I2C_CLIENT_INSMOD;
+-
+-  static int example_attach(struct i2c_adapter *adap, int addr, int kind)
+-  {
+-	struct example_state *state;
+-	struct device *dev = &adap->dev;  /* to use for dev_ reports */
+-	int ret;
+-
+-	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
+-	if (state == NULL) {
+-		dev_err(dev, "failed to create our state\n");
+-		return -ENOMEM;
+-	}
+-
+-	example->client.addr    = addr;
+-	example->client.flags   = 0;
+-	example->client.adapter = adap;
+-
+-	i2c_set_clientdata(&state->i2c_client, state);
+-	strscpy(client->i2c_client.name, "example", sizeof(client->i2c_client.name));
+-
+-	ret = i2c_attach_client(&state->i2c_client);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to attach client\n");
+-		kfree(state);
+-		return ret;
+-	}
+-
+-	dev = &state->i2c_client.dev;
+-
+-	/* rest of the initialisation goes here. */
+-
+-	dev_info(dev, "example client created\n");
+-
+-	return 0;
+-  }
+-
+-  static int example_detach(struct i2c_client *client)
+-  {
+-	struct example_state *state = i2c_get_clientdata(client);
+-
+-	i2c_detach_client(client);
+-	kfree(state);
+-	return 0;
+-  }
+-
+-  static int example_attach_adapter(struct i2c_adapter *adap)
+-  {
+-	return i2c_probe(adap, &addr_data, example_attach);
+-  }
+-
+-  static struct i2c_driver example_driver = {
+-	.driver		= {
+-		.owner		= THIS_MODULE,
+-		.name		= "example",
+-		.pm		= &example_pm_ops,
+-	},
+-	.attach_adapter = example_attach_adapter,
+-	.detach_client	= example_detach,
+-  };
+-
+-
+-Updating the client
+--------------------
+-
+-The new style binding model will check against a list of supported
+-devices and their associated address supplied by the code registering
+-the busses. This means that the driver .attach_adapter and
+-.detach_client methods can be removed, along with the addr_data,
+-as follows::
+-
+-  - static struct i2c_driver example_driver;
+-
+-  - static unsigned short ignore[] = { I2C_CLIENT_END };
+-  - static unsigned short normal_addr[] = { OUR_ADDR, I2C_CLIENT_END };
+-
+-  - I2C_CLIENT_INSMOD;
+-
+-  - static int example_attach_adapter(struct i2c_adapter *adap)
+-  - {
+-  - 	return i2c_probe(adap, &addr_data, example_attach);
+-  - }
+-
+-    static struct i2c_driver example_driver = {
+-  -	.attach_adapter = example_attach_adapter,
+-  -	.detach_client	= example_detach,
+-    }
+-
+-Add the probe and remove methods to the i2c_driver, as so::
+-
+-   static struct i2c_driver example_driver = {
+-  +	.probe		= example_probe,
+-  +	.remove		= example_remove,
+-   }
+-
+-Change the example_attach method to accept the new parameters
+-which include the i2c_client that it will be working with::
+-
+-  - static int example_attach(struct i2c_adapter *adap, int addr, int kind)
+-  + static int example_probe(struct i2c_client *client,
+-  +			   const struct i2c_device_id *id)
+-
+-Change the name of example_attach to example_probe to align it with the
+-i2c_driver entry names. The rest of the probe routine will now need to be
+-changed as the i2c_client has already been setup for use.
+-
+-The necessary client fields have already been setup before
+-the probe function is called, so the following client setup
+-can be removed::
+-
+-  -	example->client.addr    = addr;
+-  -	example->client.flags   = 0;
+-  -	example->client.adapter = adap;
+-  -
+-  -	strscpy(client->i2c_client.name, "example", sizeof(client->i2c_client.name));
+-
+-The i2c_set_clientdata is now::
+-
+-  -	i2c_set_clientdata(&state->client, state);
+-  +	i2c_set_clientdata(client, state);
+-
+-The call to i2c_attach_client is no longer needed, if the probe
+-routine exits successfully, then the driver will be automatically
+-attached by the core. Change the probe routine as so::
+-
+-  -	ret = i2c_attach_client(&state->i2c_client);
+-  -	if (ret < 0) {
+-  -		dev_err(dev, "failed to attach client\n");
+-  -		kfree(state);
+-  -		return ret;
+-  -	}
+-
+-
+-Remove the storage of 'struct i2c_client' from the 'struct example_state'
+-as we are provided with the i2c_client in our example_probe. Instead we
+-store a pointer to it for when it is needed.
+-
+-::
+-
+-  struct example_state {
+-  -	struct i2c_client	client;
+-  +	struct i2c_client	*client;
+-
+-the new i2c client as so::
+-
+-  -	struct device *dev = &adap->dev;  /* to use for dev_ reports */
+-  + 	struct device *dev = &i2c_client->dev;  /* to use for dev_ reports */
+-
+-And remove the change after our client is attached, as the driver no
+-longer needs to register a new client structure with the core::
+-
+-  -	dev = &state->i2c_client.dev;
+-
+-In the probe routine, ensure that the new state has the client stored
+-in it::
+-
+-  static int example_probe(struct i2c_client *i2c_client,
+-			 const struct i2c_device_id *id)
+-  {
+-	struct example_state *state;
+-	struct device *dev = &i2c_client->dev;
+-	int ret;
+-
+-	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
+-	if (state == NULL) {
+-		dev_err(dev, "failed to create our state\n");
+-		return -ENOMEM;
+-	}
+-
+-  +	state->client = i2c_client;
+-
+-Update the detach method, by changing the name to _remove and
+-to delete the i2c_detach_client call. It is possible that you
+-can also remove the ret variable as it is not needed for any
+-of the core functions.
+-
+-::
+-
+-  - static int example_detach(struct i2c_client *client)
+-  + static int example_remove(struct i2c_client *client)
+-  {
+-	struct example_state *state = i2c_get_clientdata(client);
+-
+-  -	i2c_detach_client(client);
+-
+-And finally ensure that we have the correct ID table for the i2c-core
+-and other utilities::
+-
+-  + struct i2c_device_id example_idtable[] = {
+-  +       { "example", 0 },
+-  +       { }
+-  +};
+-  +
+-  +MODULE_DEVICE_TABLE(i2c, example_idtable);
+-
+-  static struct i2c_driver example_driver = {
+-	.driver		= {
+-		.owner		= THIS_MODULE,
+-		.name		= "example",
+-	},
+-  +	.id_table	= example_ids,
+-
+-
+-Our driver should now look like this::
+-
+-  struct example_state {
+-	struct i2c_client	*client;
+-	....
+-  };
+-
+-  static int example_probe(struct i2c_client *client,
+-			 const struct i2c_device_id *id)
+-  {
+-	struct example_state *state;
+-	struct device *dev = &client->dev;
+-
+-	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
+-	if (state == NULL) {
+-		dev_err(dev, "failed to create our state\n");
+-		return -ENOMEM;
+-	}
+-
+-	state->client = client;
+-	i2c_set_clientdata(client, state);
+-
+-	/* rest of the initialisation goes here. */
+-
+-	dev_info(dev, "example client created\n");
+-
+-	return 0;
+-  }
+-
+-  static int example_remove(struct i2c_client *client)
+-  {
+-	struct example_state *state = i2c_get_clientdata(client);
+-
+-	kfree(state);
+-	return 0;
+-  }
+-
+-  static struct i2c_device_id example_idtable[] = {
+-	{ "example", 0 },
+-	{ }
+-  };
+-
+-  MODULE_DEVICE_TABLE(i2c, example_idtable);
+-
+-  static struct i2c_driver example_driver = {
+-	.driver		= {
+-		.owner		= THIS_MODULE,
+-		.name		= "example",
+-		.pm		= &example_pm_ops,
+-	},
+-	.id_table	= example_idtable,
+-	.probe		= example_probe,
+-	.remove		= example_remove,
+-  };
 
-find out what is broken and add the needed workarounds then.
-
-> I understood what Teizhu thought. For entry-level users, we don't want to
-> trouble
-> them, so we have writecombine disabled by default. However, for advanced
-> user
-> trying to tweak their system, we should leave a switch for them to get it
-> back.
-
-IMHO if we do it that way, we end up with millions of knobs for tweaking
-broken hardware, and nobody knows what's exactly broken. Sorry I won't go
-that way.
-
+base-commit: 2324d50d051ec0f14a548e78554fb02513d6dcef
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.20.1
+
