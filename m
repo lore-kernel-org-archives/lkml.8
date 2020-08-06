@@ -2,147 +2,226 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA0CC35277
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:24 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D68D22D05
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CABC4363A
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:23 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 6104F23329
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bb/cAxUh"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hteQMjsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgHFJ1H (ORCPT
+        id S1729187AbgHFJZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:27:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgHFJZG (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:25:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2874FC061574
-        for <Linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 02:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DKcQQBQJlA+95nyc4B/ghr/B9F2mAty2HjrbxPuzAWQ=; b=Bb/cAxUh4kHkrpPfUunGQ9HQVJ
-        HOhhBKMWGbX7iLIQxhm6oGUQvY9nAbnmjinjvcIbHp5HwdDNo3wZpAJ7lGbqr1XR+YH4HVDlLF/fO
-        eYZOK/+W2pldVk92Z3UdiuWqS21rAPO/NZrTvFhDXzfcAtarVja2q3oRJPjBuc6GSQLJXXAu9lGpj
-        2kvcgLJ4EwgGz3dhEOf2PMPcYgRC0ABAMBUvkY11LU4W1G+8VWuEouJqX7aa27wAG/u7J7UpfbsZl
-        m56eSiYs0//NC82Wz35rfmsn3RcblL/mavPtegrDVRv4Bxn0UEKUppdtj/B+4UjlMr3DOgYhHHrmN
-        BtBzcK8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3c8t-0000gI-KA; Thu, 06 Aug 2020 09:24:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6FF753059DD;
-        Thu,  6 Aug 2020 11:24:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4E3BD23D77450; Thu,  6 Aug 2020 11:24:54 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 11:24:54 +0200
-From:   peterz@infradead.org
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
-Subject: Re: [PATCH v1 2/2] perf/core: Fake regs for leaked kernel samples
-Message-ID: <20200806092454.GE35926@hirez.programming.kicks-ass.net>
-References: <20200731025617.16243-1-yao.jin@linux.intel.com>
- <20200731025617.16243-2-yao.jin@linux.intel.com>
- <20200804114900.GI2657@hirez.programming.kicks-ass.net>
- <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
- <20200805124454.GP2657@hirez.programming.kicks-ass.net>
- <797aa4de-c618-f340-ad7b-cef38c96b035@linux.intel.com>
- <20200806091827.GY2674@hirez.programming.kicks-ass.net>
+        Thu, 6 Aug 2020 05:25:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:38463 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729167AbgHFJYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:24:20 -0400
+X-UUID: 16b02dde48cb49298c8399aeec0b9866-20200806
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=u6ZdwF8JM3tqVC2d724cXdyBA2VhdVfcqYAAPEwk01g=;
+        b=hteQMjspiyvNRm3YgDEgWnvHJGCsKTwbYrp+Ad/lZKR6HkRJ8CiwbB7Q4Xe/zpuTCidHR6Q8S86ZvnlumiWTke5dd2znlLRRNmqUQtJdB6nqoY4F2tMCx19OI+hTl85TuYFV6rfweAZ0SlQ+tV6MFtg4Z7aA+3vlVZVYO25i43c=;
+X-UUID: 16b02dde48cb49298c8399aeec0b9866-20200806
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 34936211; Thu, 06 Aug 2020 17:22:02 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 6 Aug 2020 17:22:00 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 6 Aug 2020 17:22:00 +0800
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+CC:     James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
+Subject: [PATCH v17 09/12] soc: mediatek: Add MT8183 scpsys support
+Date:   Thu, 6 Aug 2020 17:21:52 +0800
+Message-ID: <1596705715-15320-10-git-send-email-weiyi.lu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1596705715-15320-1-git-send-email-weiyi.lu@mediatek.com>
+References: <1596705715-15320-1-git-send-email-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806091827.GY2674@hirez.programming.kicks-ass.net>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 11:18:27AM +0200, peterz@infradead.org wrote:
-> On Thu, Aug 06, 2020 at 10:26:29AM +0800, Jin, Yao wrote:
-> 
-> > > +static struct pt_regs *sanitize_sample_regs(struct perf_event *event, struct pt_regs *regs)
-> > > +{
-> > > +	struct pt_regs *sample_regs = regs;
-> > > +
-> > > +	/* user only */
-> > > +	if (!event->attr.exclude_kernel || !event->attr.exclude_hv ||
-> > > +	    !event->attr.exclude_host   || !event->attr.exclude_guest)
-> > > +		return sample_regs;
-> > > +
-> > 
-> > Is this condition correct?
-> > 
-> > Say counting user event on host, exclude_kernel = 1 and exclude_host = 0. It
-> > will go "return sample_regs" path.
-> 
-> I'm not sure, I'm terminally confused on virt stuff.
+QWRkIHNjcHN5cyBkcml2ZXIgZm9yIE1UODE4Mw0KDQpTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8
+d2VpeWkubHVAbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYnk6IE5pY29sYXMgQm9pY2hhdCA8ZHJp
+bmtjYXRAY2hyb21pdW0ub3JnPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5
+cy5jIHwgMjI5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxl
+IGNoYW5nZWQsIDIyOSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9t
+ZWRpYXRlay9tdGstc2Nwc3lzLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMN
+CmluZGV4IDQ1ODdjZWYuLjlhNjk5YjQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRl
+ay9tdGstc2Nwc3lzLmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1zY3BzeXMuYw0K
+QEAgLTIwLDYgKzIwLDcgQEANCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQ3NjIyLXBv
+d2VyLmg+DQogI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Bvd2VyL210NzYyM2EtcG93ZXIuaD4NCiAj
+aW5jbHVkZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQ4MTczLXBvd2VyLmg+DQorI2luY2x1ZGUgPGR0
+LWJpbmRpbmdzL3Bvd2VyL210ODE4My1wb3dlci5oPg0KIA0KICNkZWZpbmUgTVRLX1BPTExfREVM
+QVlfVVMgICAxMA0KICNkZWZpbmUgTVRLX1BPTExfVElNRU9VVCAgICBVU0VDX1BFUl9TRUMNCkBA
+IC0xMDAsNiArMTAxLDM0IEBADQogI2RlZmluZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VOX01GR19N
+MQkJQklUKDIyKQ0KICNkZWZpbmUgTVQ4MTczX1RPUF9BWElfUFJPVF9FTl9NRkdfU05PT1BfT1VU
+CUJJVCgyMykNCiANCisjZGVmaW5lIE1UODE4M19UT1BfQVhJX1BST1RfRU5fRElTUAkJCShCSVQo
+MTApIHwgQklUKDExKSkNCisjZGVmaW5lIE1UODE4M19UT1BfQVhJX1BST1RfRU5fQ09OTgkJCShC
+SVQoMTMpIHwgQklUKDE0KSkNCisjZGVmaW5lIE1UODE4M19UT1BfQVhJX1BST1RfRU5fTUZHCQkJ
+KEJJVCgyMSkgfCBCSVQoMjIpKQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9DQU0J
+CQlCSVQoMjgpDQorI2RlZmluZSBNVDgxODNfVE9QX0FYSV9QUk9UX0VOX1ZQVV9UT1AJCQlCSVQo
+MjcpDQorI2RlZmluZSBNVDgxODNfVE9QX0FYSV9QUk9UX0VOXzFfRElTUAkJCShCSVQoMTYpIHwg
+QklUKDE3KSkNCisjZGVmaW5lIE1UODE4M19UT1BfQVhJX1BST1RfRU5fMV9NRkcJCQlHRU5NQVNL
+KDIxLCAxOSkNCisjZGVmaW5lIE1UODE4M19UT1BfQVhJX1BST1RfRU5fTU1fSVNQCQkJKEJJVCgz
+KSB8IEJJVCg4KSkNCisjZGVmaW5lIE1UODE4M19UT1BfQVhJX1BST1RfRU5fTU1fSVNQXzJORAkJ
+QklUKDEwKQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9NTV9DQU0JCQkoQklUKDQp
+IHwgQklUKDUpIHwgXA0KKwkJCQkJCQkgQklUKDkpIHwgQklUKDEzKSkNCisjZGVmaW5lIE1UODE4
+M19UT1BfQVhJX1BST1RfRU5fTU1fVlBVX1RPUAkJKEdFTk1BU0soOSwgNikgfCBcDQorCQkJCQkJ
+CSBCSVQoMTIpKQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9NTV9WUFVfVE9QXzJO
+RAkJKEJJVCgxMCkgfCBCSVQoMTEpKQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9N
+TV9DQU1fMk5ECQlCSVQoMTEpDQorI2RlZmluZSBNVDgxODNfVE9QX0FYSV9QUk9UX0VOX01DVV9W
+UFVfQ09SRTBfMk5ECShCSVQoMCkgfCBCSVQoMikgfCBcDQorCQkJCQkJCSBCSVQoNCkpDQorI2Rl
+ZmluZSBNVDgxODNfVE9QX0FYSV9QUk9UX0VOX01DVV9WUFVfQ09SRTFfMk5ECShCSVQoMSkgfCBC
+SVQoMykgfCBcDQorCQkJCQkJCSBCSVQoNSkpDQorI2RlZmluZSBNVDgxODNfVE9QX0FYSV9QUk9U
+X0VOX01DVV9WUFVfQ09SRTAJCUJJVCg2KQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUF9BWElfUFJPVF9F
+Tl9NQ1VfVlBVX0NPUkUxCQlCSVQoNykNCisjZGVmaW5lIE1UODE4M19TTUlfQ09NTU9OX1NNSV9D
+TEFNUF9ESVNQCQlHRU5NQVNLKDcsIDApDQorI2RlZmluZSBNVDgxODNfU01JX0NPTU1PTl9TTUlf
+Q0xBTVBfVkVOQwkJQklUKDEpDQorI2RlZmluZSBNVDgxODNfU01JX0NPTU1PTl9TTUlfQ0xBTVBf
+SVNQCQkJQklUKDIpDQorI2RlZmluZSBNVDgxODNfU01JX0NPTU1PTl9TTUlfQ0xBTVBfQ0FNCQkJ
+KEJJVCgzKSB8IEJJVCg0KSkNCisjZGVmaW5lIE1UODE4M19TTUlfQ09NTU9OX1NNSV9DTEFNUF9W
+UFVfVE9QCQkoQklUKDUpIHwgQklUKDYpKQ0KKyNkZWZpbmUgTVQ4MTgzX1NNSV9DT01NT05fU01J
+X0NMQU1QX1ZERUMJCUJJVCg3KQ0KKw0KICNkZWZpbmUgTUFYX0NMS1MJMw0KICNkZWZpbmUgTUFY
+X1NVQlNZU19DTEtTIDEwDQogDQpAQCAtMTI0Niw2ICsxMjc1LDE5NCBAQCBzdGF0aWMgdm9pZCBt
+dGtfcmVnaXN0ZXJfcG93ZXJfZG9tYWlucyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0K
+IAl7TVQ4MTczX1BPV0VSX0RPTUFJTl9NRkdfMkQsIE1UODE3M19QT1dFUl9ET01BSU5fTUZHfSwN
+CiB9Ow0KIA0KKy8qDQorICogTVQ4MTgzIHBvd2VyIGRvbWFpbiBzdXBwb3J0DQorICovDQorDQor
+c3RhdGljIGNvbnN0IHN0cnVjdCBzY3BfZG9tYWluX2RhdGEgc2NwX2RvbWFpbl9kYXRhX210ODE4
+M1tdID0gew0KKwlbTVQ4MTgzX1BPV0VSX0RPTUFJTl9BVURJT10gPSB7DQorCQkubmFtZSA9ICJh
+dWRpbyIsDQorCQkuc3RhX21hc2sgPSBQV1JfU1RBVFVTX0FVRElPLA0KKwkJLmN0bF9vZmZzID0g
+MHgwMzE0LA0KKwkJLnNyYW1fcGRuX2JpdHMgPSBHRU5NQVNLKDExLCA4KSwNCisJCS5zcmFtX3Bk
+bl9hY2tfYml0cyA9IEdFTk1BU0soMTUsIDEyKSwNCisJCS5iYXNpY19jbGtfbmFtZSA9IHsiYXVk
+aW8iLCAiYXVkaW8xIiwgImF1ZGlvMiJ9LA0KKwl9LA0KKwlbTVQ4MTgzX1BPV0VSX0RPTUFJTl9D
+T05OXSA9IHsNCisJCS5uYW1lID0gImNvbm4iLA0KKwkJLnN0YV9tYXNrID0gUFdSX1NUQVRVU19D
+T05OLA0KKwkJLmN0bF9vZmZzID0gMHgwMzJjLA0KKwkJLnNyYW1fcGRuX2JpdHMgPSAwLA0KKwkJ
+LnNyYW1fcGRuX2Fja19iaXRzID0gMCwNCisJCS5icF90YWJsZSA9IHsNCisJCQlCVVNfUFJPVChJ
+RlJfVFlQRSwgMHgyYTAsIDB4MmE0LCAwLCAweDIyOCwNCisJCQkJTVQ4MTgzX1RPUF9BWElfUFJP
+VF9FTl9DT05OKSwNCisJCX0sDQorCX0sDQorCVtNVDgxODNfUE9XRVJfRE9NQUlOX01GR19BU1lO
+Q10gPSB7DQorCQkubmFtZSA9ICJtZmdfYXN5bmMiLA0KKwkJLnN0YV9tYXNrID0gUFdSX1NUQVRV
+U19NRkdfQVNZTkMsDQorCQkuY3RsX29mZnMgPSAweDAzMzQsDQorCQkuc3JhbV9wZG5fYml0cyA9
+IDAsDQorCQkuc3JhbV9wZG5fYWNrX2JpdHMgPSAwLA0KKwkJLmJhc2ljX2Nsa19uYW1lID0geyJt
+ZmcifSwNCisJfSwNCisJW01UODE4M19QT1dFUl9ET01BSU5fTUZHXSA9IHsNCisJCS5uYW1lID0g
+Im1mZyIsDQorCQkuc3RhX21hc2sgPSBQV1JfU1RBVFVTX01GRywNCisJCS5jdGxfb2ZmcyA9IDB4
+MDMzOCwNCisJCS5zcmFtX3Bkbl9iaXRzID0gR0VOTUFTSyg4LCA4KSwNCisJCS5zcmFtX3Bkbl9h
+Y2tfYml0cyA9IEdFTk1BU0soMTIsIDEyKSwNCisJfSwNCisJW01UODE4M19QT1dFUl9ET01BSU5f
+TUZHX0NPUkUwXSA9IHsNCisJCS5uYW1lID0gIm1mZ19jb3JlMCIsDQorCQkuc3RhX21hc2sgPSBC
+SVQoNyksDQorCQkuY3RsX29mZnMgPSAweDAzNGMsDQorCQkuc3JhbV9wZG5fYml0cyA9IEdFTk1B
+U0soOCwgOCksDQorCQkuc3JhbV9wZG5fYWNrX2JpdHMgPSBHRU5NQVNLKDEyLCAxMiksDQorCX0s
+DQorCVtNVDgxODNfUE9XRVJfRE9NQUlOX01GR19DT1JFMV0gPSB7DQorCQkubmFtZSA9ICJtZmdf
+Y29yZTEiLA0KKwkJLnN0YV9tYXNrID0gQklUKDIwKSwNCisJCS5jdGxfb2ZmcyA9IDB4MDMxMCwN
+CisJCS5zcmFtX3Bkbl9iaXRzID0gR0VOTUFTSyg4LCA4KSwNCisJCS5zcmFtX3Bkbl9hY2tfYml0
+cyA9IEdFTk1BU0soMTIsIDEyKSwNCisJfSwNCisJW01UODE4M19QT1dFUl9ET01BSU5fTUZHXzJE
+XSA9IHsNCisJCS5uYW1lID0gIm1mZ18yZCIsDQorCQkuc3RhX21hc2sgPSBQV1JfU1RBVFVTX01G
+R18yRCwNCisJCS5jdGxfb2ZmcyA9IDB4MDM0OCwNCisJCS5zcmFtX3Bkbl9iaXRzID0gR0VOTUFT
+Syg4LCA4KSwNCisJCS5zcmFtX3Bkbl9hY2tfYml0cyA9IEdFTk1BU0soMTIsIDEyKSwNCisJCS5i
+cF90YWJsZSA9IHsNCisJCQlCVVNfUFJPVChJRlJfVFlQRSwgMHgyYTgsIDB4MmFjLCAwLCAweDI1
+OCwNCisJCQkJTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl8xX01GRyksDQorCQkJQlVTX1BST1QoSUZS
+X1RZUEUsIDB4MmEwLCAweDJhNCwgMCwgMHgyMjgsDQorCQkJCU1UODE4M19UT1BfQVhJX1BST1Rf
+RU5fTUZHKSwNCisJCX0sDQorCX0sDQorCVtNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1BdID0gew0K
+KwkJLm5hbWUgPSAiZGlzcCIsDQorCQkuc3RhX21hc2sgPSBQV1JfU1RBVFVTX0RJU1AsDQorCQku
+Y3RsX29mZnMgPSAweDAzMGMsDQorCQkuc3JhbV9wZG5fYml0cyA9IEdFTk1BU0soOCwgOCksDQor
+CQkuc3JhbV9wZG5fYWNrX2JpdHMgPSBHRU5NQVNLKDEyLCAxMiksDQorCQkuYmFzaWNfY2xrX25h
+bWUgPSB7Im1tIn0sDQorCQkuYnBfdGFibGUgPSB7DQorCQkJQlVTX1BST1QoSUZSX1RZUEUsIDB4
+MmE4LCAweDJhYywgMCwgMHgyNTgsDQorCQkJCU1UODE4M19UT1BfQVhJX1BST1RfRU5fMV9ESVNQ
+KSwNCisJCQlCVVNfUFJPVChJRlJfVFlQRSwgMHgyYTAsIDB4MmE0LCAwLCAweDIyOCwNCisJCQkJ
+TVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9ESVNQKSwNCisJCQlCVVNfUFJPVChTTUlfVFlQRSwgMHgz
+YzQsIDB4M2M4LCAwLCAweDNjMCwNCisJCQkJTVQ4MTgzX1NNSV9DT01NT05fU01JX0NMQU1QX0RJ
+U1ApLA0KKwkJfSwNCisJfSwNCisJW01UODE4M19QT1dFUl9ET01BSU5fQ0FNXSA9IHsNCisJCS5u
+YW1lID0gImNhbSIsDQorCQkuc3RhX21hc2sgPSBCSVQoMjUpLA0KKwkJLmN0bF9vZmZzID0gMHgw
+MzQ0LA0KKwkJLnNyYW1fcGRuX2JpdHMgPSBHRU5NQVNLKDksIDgpLA0KKwkJLnNyYW1fcGRuX2Fj
+a19iaXRzID0gR0VOTUFTSygxMywgMTIpLA0KKwkJLmJhc2ljX2Nsa19uYW1lID0geyJjYW0ifSwN
+CisJCS5icF90YWJsZSA9IHsNCisJCQlCVVNfUFJPVChJRlJfVFlQRSwgMHgyZDQsIDB4MmQ4LCAw
+LCAweDJlYywNCisJCQkJTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9NTV9DQU0pLA0KKwkJCUJVU19Q
+Uk9UKElGUl9UWVBFLCAweDJhMCwgMHgyYTQsIDAsIDB4MjI4LA0KKwkJCQlNVDgxODNfVE9QX0FY
+SV9QUk9UX0VOX0NBTSksDQorCQkJQlVTX1BST1RfSUdOKElGUl9UWVBFLCAweDJkNCwgMHgyZDgs
+IDAsIDB4MmVjLA0KKwkJCQlNVDgxODNfVE9QX0FYSV9QUk9UX0VOX01NX0NBTV8yTkQpLA0KKwkJ
+CUJVU19QUk9UKFNNSV9UWVBFLCAweDNjNCwgMHgzYzgsIDAsIDB4M2MwLA0KKwkJCQlNVDgxODNf
+U01JX0NPTU1PTl9TTUlfQ0xBTVBfQ0FNKSwNCisJCX0sDQorCX0sDQorCVtNVDgxODNfUE9XRVJf
+RE9NQUlOX0lTUF0gPSB7DQorCQkubmFtZSA9ICJpc3AiLA0KKwkJLnN0YV9tYXNrID0gUFdSX1NU
+QVRVU19JU1AsDQorCQkuY3RsX29mZnMgPSAweDAzMDgsDQorCQkuc3JhbV9wZG5fYml0cyA9IEdF
+Tk1BU0soOSwgOCksDQorCQkuc3JhbV9wZG5fYWNrX2JpdHMgPSBHRU5NQVNLKDEzLCAxMiksDQor
+CQkuYmFzaWNfY2xrX25hbWUgPSB7ImlzcCJ9LA0KKwkJLmJwX3RhYmxlID0gew0KKwkJCUJVU19Q
+Uk9UKElGUl9UWVBFLCAweDJkNCwgMHgyZDgsIDAsIDB4MmVjLA0KKwkJCQlNVDgxODNfVE9QX0FY
+SV9QUk9UX0VOX01NX0lTUCksDQorCQkJQlVTX1BST1RfSUdOKElGUl9UWVBFLCAweDJkNCwgMHgy
+ZDgsIDAsIDB4MmVjLA0KKwkJCQlNVDgxODNfVE9QX0FYSV9QUk9UX0VOX01NX0lTUF8yTkQpLA0K
+KwkJCUJVU19QUk9UKFNNSV9UWVBFLCAweDNjNCwgMHgzYzgsIDAsIDB4M2MwLA0KKwkJCQlNVDgx
+ODNfU01JX0NPTU1PTl9TTUlfQ0xBTVBfSVNQKSwNCisJCX0sDQorCX0sDQorCVtNVDgxODNfUE9X
+RVJfRE9NQUlOX1ZERUNdID0gew0KKwkJLm5hbWUgPSAidmRlYyIsDQorCQkuc3RhX21hc2sgPSBC
+SVQoMzEpLA0KKwkJLmN0bF9vZmZzID0gMHgwMzAwLA0KKwkJLnNyYW1fcGRuX2JpdHMgPSBHRU5N
+QVNLKDgsIDgpLA0KKwkJLnNyYW1fcGRuX2Fja19iaXRzID0gR0VOTUFTSygxMiwgMTIpLA0KKwkJ
+LmJwX3RhYmxlID0gew0KKwkJCUJVU19QUk9UKFNNSV9UWVBFLCAweDNjNCwgMHgzYzgsIDAsIDB4
+M2MwLA0KKwkJCQlNVDgxODNfU01JX0NPTU1PTl9TTUlfQ0xBTVBfVkRFQyksDQorCQl9LA0KKwl9
+LA0KKwlbTVQ4MTgzX1BPV0VSX0RPTUFJTl9WRU5DXSA9IHsNCisJCS5uYW1lID0gInZlbmMiLA0K
+KwkJLnN0YV9tYXNrID0gUFdSX1NUQVRVU19WRU5DLA0KKwkJLmN0bF9vZmZzID0gMHgwMzA0LA0K
+KwkJLnNyYW1fcGRuX2JpdHMgPSBHRU5NQVNLKDExLCA4KSwNCisJCS5zcmFtX3Bkbl9hY2tfYml0
+cyA9IEdFTk1BU0soMTUsIDEyKSwNCisJCS5icF90YWJsZSA9IHsNCisJCQlCVVNfUFJPVChTTUlf
+VFlQRSwgMHgzYzQsIDB4M2M4LCAwLCAweDNjMCwNCisJCQkJTVQ4MTgzX1NNSV9DT01NT05fU01J
+X0NMQU1QX1ZFTkMpLA0KKwkJfSwNCisJfSwNCisJW01UODE4M19QT1dFUl9ET01BSU5fVlBVX1RP
+UF0gPSB7DQorCQkubmFtZSA9ICJ2cHVfdG9wIiwNCisJCS5zdGFfbWFzayA9IEJJVCgyNiksDQor
+CQkuY3RsX29mZnMgPSAweDAzMjQsDQorCQkuc3JhbV9wZG5fYml0cyA9IEdFTk1BU0soOCwgOCks
+DQorCQkuc3JhbV9wZG5fYWNrX2JpdHMgPSBHRU5NQVNLKDEyLCAxMiksDQorCQkuYmFzaWNfY2xr
+X25hbWUgPSB7InZwdSIsICJ2cHUxIn0sDQorCQkuYnBfdGFibGUgPSB7DQorCQkJQlVTX1BST1Qo
+SUZSX1RZUEUsIDB4MmQ0LCAweDJkOCwgMCwgMHgyZWMsDQorCQkJCU1UODE4M19UT1BfQVhJX1BS
+T1RfRU5fTU1fVlBVX1RPUCksDQorCQkJQlVTX1BST1QoSUZSX1RZUEUsIDB4MmEwLCAweDJhNCwg
+MCwgMHgyMjgsDQorCQkJCU1UODE4M19UT1BfQVhJX1BST1RfRU5fVlBVX1RPUCksDQorCQkJQlVT
+X1BST1QoSUZSX1RZUEUsIDB4MmQ0LCAweDJkOCwgMCwgMHgyZWMsDQorCQkJCU1UODE4M19UT1Bf
+QVhJX1BST1RfRU5fTU1fVlBVX1RPUF8yTkQpLA0KKwkJCUJVU19QUk9UKFNNSV9UWVBFLCAweDNj
+NCwgMHgzYzgsIDAsIDB4M2MwLA0KKwkJCQlNVDgxODNfU01JX0NPTU1PTl9TTUlfQ0xBTVBfVlBV
+X1RPUCksDQorCQl9LA0KKwl9LA0KKwlbTVQ4MTgzX1BPV0VSX0RPTUFJTl9WUFVfQ09SRTBdID0g
+ew0KKwkJLm5hbWUgPSAidnB1X2NvcmUwIiwNCisJCS5zdGFfbWFzayA9IEJJVCgyNyksDQorCQku
+Y3RsX29mZnMgPSAweDMzYywNCisJCS5zcmFtX3Bkbl9iaXRzID0gR0VOTUFTSygxMSwgOCksDQor
+CQkuc3JhbV9wZG5fYWNrX2JpdHMgPSBHRU5NQVNLKDEzLCAxMiksDQorCQkuYmFzaWNfY2xrX25h
+bWUgPSB7InZwdTIifSwNCisJCS5icF90YWJsZSA9IHsNCisJCQlCVVNfUFJPVChJRlJfVFlQRSwg
+MHgyYzQsIDB4MmM4LCAwLCAweDJlNCwNCisJCQkJTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9NQ1Vf
+VlBVX0NPUkUwKSwNCisJCQlCVVNfUFJPVChJRlJfVFlQRSwgMHgyYzQsIDB4MmM4LCAwLCAweDJl
+NCwNCisJCQkJTVQ4MTgzX1RPUF9BWElfUFJPVF9FTl9NQ1VfVlBVX0NPUkUwXzJORCksDQorCQl9
+LA0KKwkJLmNhcHMgPSBNVEtfU0NQRF9TUkFNX0lTTywNCisJfSwNCisJW01UODE4M19QT1dFUl9E
+T01BSU5fVlBVX0NPUkUxXSA9IHsNCisJCS5uYW1lID0gInZwdV9jb3JlMSIsDQorCQkuc3RhX21h
+c2sgPSBCSVQoMjgpLA0KKwkJLmN0bF9vZmZzID0gMHgwMzQwLA0KKwkJLnNyYW1fcGRuX2JpdHMg
+PSBHRU5NQVNLKDExLCA4KSwNCisJCS5zcmFtX3Bkbl9hY2tfYml0cyA9IEdFTk1BU0soMTMsIDEy
+KSwNCisJCS5iYXNpY19jbGtfbmFtZSA9IHsidnB1MyJ9LA0KKwkJLmJwX3RhYmxlID0gew0KKwkJ
+CUJVU19QUk9UKElGUl9UWVBFLCAweDJjNCwgMHgyYzgsIDAsIDB4MmU0LA0KKwkJCQlNVDgxODNf
+VE9QX0FYSV9QUk9UX0VOX01DVV9WUFVfQ09SRTEpLA0KKwkJCUJVU19QUk9UKElGUl9UWVBFLCAw
+eDJjNCwgMHgyYzgsIDAsIDB4MmU0LA0KKwkJCQlNVDgxODNfVE9QX0FYSV9QUk9UX0VOX01DVV9W
+UFVfQ09SRTFfMk5EKSwNCisJCX0sDQorCQkuY2FwcyA9IE1US19TQ1BEX1NSQU1fSVNPLA0KKwl9
+LA0KK307DQorDQogc3RhdGljIGNvbnN0IHN0cnVjdCBzY3Bfc29jX2RhdGEgbXQyNzAxX2RhdGEg
+PSB7DQogCS5kb21haW5zID0gc2NwX2RvbWFpbl9kYXRhX210MjcwMSwNCiAJLm51bV9kb21haW5z
+ID0gQVJSQVlfU0laRShzY3BfZG9tYWluX2RhdGFfbXQyNzAxKSwNCkBAIC0xMzA2LDYgKzE1MjMs
+MTUgQEAgc3RhdGljIHZvaWQgbXRrX3JlZ2lzdGVyX3Bvd2VyX2RvbWFpbnMoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldiwNCiAJfSwNCiB9Ow0KIA0KK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc2Nw
+X3NvY19kYXRhIG10ODE4M19kYXRhID0gew0KKwkuZG9tYWlucyA9IHNjcF9kb21haW5fZGF0YV9t
+dDgxODMsDQorCS5udW1fZG9tYWlucyA9IEFSUkFZX1NJWkUoc2NwX2RvbWFpbl9kYXRhX210ODE4
+MyksDQorCS5yZWdzID0gew0KKwkJLnB3cl9zdGFfb2ZmcyA9IDB4MDE4MCwNCisJCS5wd3Jfc3Rh
+Mm5kX29mZnMgPSAweDAxODQNCisJfQ0KK307DQorDQogLyoNCiAgKiBzY3BzeXMgZHJpdmVyIGlu
+aXQNCiAgKi8NCkBAIC0xMzMwLDYgKzE1NTYsOSBAQCBzdGF0aWMgdm9pZCBtdGtfcmVnaXN0ZXJf
+cG93ZXJfZG9tYWlucyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KIAkJLmNvbXBhdGli
+bGUgPSAibWVkaWF0ZWssbXQ4MTczLXNjcHN5cyIsDQogCQkuZGF0YSA9ICZtdDgxNzNfZGF0YSwN
+CiAJfSwgew0KKwkJLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXNjcHN5cyIsDQorCQku
+ZGF0YSA9ICZtdDgxODNfZGF0YSwNCisJfSwgew0KIAkJLyogc2VudGluZWwgKi8NCiAJfQ0KIH07
+DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
-[A]
-
-> Suppose we have nested virt:
-> 
-> 	L0-hv
-> 	|
-> 	G0/L1-hv
-> 	   |
-> 	   G1
-> 
-> And we're running in G0, then:
-> 
->  - 'exclude_hv' would exclude L0 events
->  - 'exclude_host' would ... exclude L1-hv events?
->  - 'exclude_guest' would ... exclude G1 events?
-
-[B]
-
-> Then the next question is, if G0 is a host, does the L1-hv run in
-> G0 userspace or G0 kernel space?
-> 
-> I was assuming G0 userspace would not include anything L1 (kvm is a
-> kernel module after all), but what do I know.
-> 
-> > > @@ -11609,7 +11636,8 @@ SYSCALL_DEFINE5(perf_event_open,
-> > >   	if (err)
-> > >   		return err;
-> > > -	if (!attr.exclude_kernel) {
-> > > +	if (!attr.exclude_kernel || !attr.exclude_callchain_kernel ||
-> > > +	    !attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest) {
-> > >   		err = perf_allow_kernel(&attr);
-> > >   		if (err)
-> > >   			return err;
-> > > 
-> > 
-> > I can understand the conditions "!attr.exclude_kernel || !attr.exclude_callchain_kernel".
-> > 
-> > But I'm not very sure about the "!attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest".
-> 
-> Well, I'm very sure G0 userspace should never see L0 or G1 state, so
-> exclude_hv and exclude_guest had better be true.
-> 
-> > On host, exclude_hv = 1, exclude_guest = 1 and exclude_host = 0, right?
-> 
-> Same as above, is G0 host state G0 userspace?
-> 
-> > So even exclude_kernel = 1 but exclude_host = 0, we will still go
-> > perf_allow_kernel path. Please correct me if my understanding is wrong.
-> 
-> Yes, because with those permission checks in place it means you have
-> permission to see kernel bits.
-
-So if I understand 'exclude_host' wrong -- a distinct possibility -- can
-we then pretty please have the above [A-B] corrected and put in a
-comment near perf_event_attr and the exclude_* comments changed to refer
-to that?
