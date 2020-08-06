@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E897C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51550C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEFB021744
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF8822CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SytaL+hr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPH07EkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHFDIK (ORCPT
+        id S1727118AbgHFDIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 23:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58178 "EHLO
+        Wed, 5 Aug 2020 23:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbgHFDII (ORCPT
+        with ESMTP id S1727081AbgHFDIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 23:08:08 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8F2C061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 20:08:08 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id y206so13857209pfb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 20:08:08 -0700 (PDT)
+        Wed, 5 Aug 2020 23:08:13 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042D0C061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 20:08:12 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ha11so5755919pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 20:08:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KQqN1QXBA5RThrLQISqCHyorCdog+0FonNa65+qisxE=;
-        b=SytaL+hriwDm27Wvly5IDA5v2ojJFlTW/6kDfg9GTCbt3V2JFZEx/EyT3u2RlL72DQ
-         ld4LzKEZQxMoX/EdCjxtky0iJxeqZErNgwGTTE6/CK24Xy09pGjAaoPgHGiRbDh97O8U
-         y38CVew/vz725Clvsy3T11c3U3PBFfQynQqiX5t8pkF9bFkNia8lb8/oPLPl3/bIfhUm
-         63UwKinRW7hqrPeTVSwsrAcw9GabFNglXiRrSUEYdA71pFcwwh1bIiafzqjUptbxZMmU
-         EW6gFokr9aW9D2tRZR4Gft52frz3G3ZAEiebfNvrQStwLJCB4wd1oVPnJAY4cb0eRkvq
-         qyCg==
+        bh=f4z8ELSFv5RMm4AHUiR4uM0G/VxLU19rLEUo8R7pEyk=;
+        b=LPH07EkINu1dk8KOKsxkMwLN4RpFGdYN2ntlMtosFaovJuxz+yw2zcSXWCxCoCy/2e
+         l9bDEKa3HBBdstS2x/iVjVt1eiTwBviwB8mv8Rvj6DQj1bV4HzEOIsQoUnwBkNHgqfXg
+         nmvHZkPciogzI8hsSaqOJ9WoWilHzL8Bf7uxrcUQkJ7AniYd/wH3O6nn/FWWMqdmLKc6
+         b6l6EiBC3Z/a1USlIPZkZ3dltWMfEOPUoHrI5tIugAoVbpBy2h6hIa2NOpiUMBCqDnO2
+         /dPbFAEc0H7Xj5x16bgsG+XHc+mOZYYRI+xEknSxg70rNbMQC7Or/0xYbuXXt6oWbIYj
+         77CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KQqN1QXBA5RThrLQISqCHyorCdog+0FonNa65+qisxE=;
-        b=Mxp1tGQe9yv1fxjIrUXeGNBEBDf9M3XQWPxal5oDzpEPcs0uZM2ZsQwTYbXFaKcwGb
-         t36iyeF0KJ2J5yyQYWAikKQsMGTwqiVHY67jsKjD6YPOHlBOVCrHEjpEjmHGFWnCzV+1
-         LlGXawByC4zsnJaK46Irf3ZEUgal3QqKbXuVuuXn18xPwx8vfTLcEGNK3BifhCsUF6Bx
-         mAB4A74IFm6ga/kTtGhSHU1I8/UwrgqDxV5ThXsO7nLbYDNmM2tPGwdP4XbizjF8/gM4
-         PTRZ6oZyAhMq/yovJfj3qaSO9yvtQi0YkYadebMExwW1P2F6z2SUgzVchgnvlx9oXH/9
-         e39w==
-X-Gm-Message-State: AOAM532pO7RnLw/hokREq8SMB+G4CPWes6l5h5i1GILjHueaGxuvspKC
-        NPtdhyRxTvnbP7i9yFcreCySig==
-X-Google-Smtp-Source: ABdhPJwke0Y+wUfKuwowywBFOEaningSOW8XeRL3hFpv5URLR8tjQxhD+XoRQvF67T6K+eSoAiI3vw==
-X-Received: by 2002:a63:7542:: with SMTP id f2mr5376480pgn.151.1596683287585;
-        Wed, 05 Aug 2020 20:08:07 -0700 (PDT)
+        bh=f4z8ELSFv5RMm4AHUiR4uM0G/VxLU19rLEUo8R7pEyk=;
+        b=CwLT5e5nKguvVUtzzWlDr7IzCwr47vuxJRM/0w5YgW9IrbVnHPxCqGlsLQQdd36PZv
+         VTZibnrpjOCwsqSvq7ymPg3e0gFlE4cP6bIEnNRCHEJhs1B+Tpp8xClopd8Vw8yRkQs9
+         72tO0Zgf2ETDyWgN464zms/xQWCR7DnfG0MigqSmEMlqSaOnfHv6hMOErQN0kYg+prqT
+         FVmXZ9X+u8v5kn5W+gFoDEFxQV7RcZmGoGhbGBrLXodoO2aE6bEabNQP1ieLH11OBm/X
+         3iNmAJbH+FToYNG+czNFArTjq8d26kS+GtucHezYDD6jwIZUtzU2vBhp6knE9YOaf88X
+         eliw==
+X-Gm-Message-State: AOAM530tTet4iZCWtdNe+GRHCw+s58l5fvDeLNN2UV4qBMiHW0jw0fc2
+        knPjrCKn8AsEIXsK8D5U+9irNw==
+X-Google-Smtp-Source: ABdhPJwYieBmx/IbMYmwDB7fbuj84UbeuI74LOOvgioCL4GFN+UIe2N0x9kgzWmfqd11xWJhNv3LlA==
+X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr6024924plk.192.1596683291511;
+        Wed, 05 Aug 2020 20:08:11 -0700 (PDT)
 Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id x28sm5394955pfj.73.2020.08.05.20.08.06
+        by smtp.gmail.com with ESMTPSA id l63sm4690548pgl.24.2020.08.05.20.08.10
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Aug 2020 20:08:07 -0700 (PDT)
+        Wed, 05 Aug 2020 20:08:10 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
@@ -76,9 +76,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Mike Leach <mike.leach@linaro.org>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH RESEND v1 03/11] perf mem: Support new memory event PERF_MEM_EVENTS__LOAD_STORE
-Date:   Thu,  6 Aug 2020 11:07:19 +0800
-Message-Id: <20200806030727.30267-4-leo.yan@linaro.org>
+Subject: [PATCH RESEND v1 04/11] perf mem: Only initialize memory event for recording
+Date:   Thu,  6 Aug 2020 11:07:20 +0800
+Message-Id: <20200806030727.30267-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806030727.30267-1-leo.yan@linaro.org>
 References: <20200806030727.30267-1-leo.yan@linaro.org>
@@ -87,72 +87,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The existed architectures which have supported perf memory profiling,
-usually it contains two types of hardware events: load and store, so if
-want to profile memory for both load and store operations, the tool will
-use these two events at the same time.  But this is not valid for aux
-tracing event, the same event can be used with setting different
-configurations for memory operation filtering, e.g the event can be used
-to only trace memory load, or only memory store, or trace for both memory
-load and store.
-
-This patch introduces a new event PERF_MEM_EVENTS__LOAD_STORE, which is
-used to support the event which can record both memory load and store
-operations.
+It's needless to initialize memory events for perf reporting, so only
+initialize memory event for perf recording.  This change allows to parse
+perf data on cross platforms, e.g. perf tool can output reports even the
+machine doesn't enable any memory events.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/builtin-mem.c     | 11 +++++++++--
- tools/perf/util/mem-events.h |  1 +
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/builtin-mem.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 9a7df8d01296..bd4229ca3685 100644
+index bd4229ca3685..a7204634893c 100644
 --- a/tools/perf/builtin-mem.c
 +++ b/tools/perf/builtin-mem.c
-@@ -19,8 +19,9 @@
- #include "util/symbol.h"
- #include <linux/err.h>
+@@ -78,6 +78,11 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 	OPT_END()
+ 	};
  
--#define MEM_OPERATION_LOAD	0x1
--#define MEM_OPERATION_STORE	0x2
-+#define MEM_OPERATION_LOAD		0x1
-+#define MEM_OPERATION_STORE		0x2
-+#define MEM_OPERATION_LOAD_STORE	0x4
- 
- struct perf_mem {
- 	struct perf_tool	tool;
-@@ -97,6 +98,11 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
- 		e->record = true;
- 	}
- 
-+	if (mem->operation & MEM_OPERATION_LOAD_STORE) {
-+		e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD_STORE);
-+		e->record = true;
++	if (perf_mem_events__init()) {
++		pr_err("failed: memory events not supported\n");
++		return -1;
 +	}
 +
- 	e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
- 	if (e->record)
- 		rec_argv[i++] = "-W";
-@@ -326,6 +332,7 @@ struct mem_mode {
- static const struct mem_mode mem_modes[]={
- 	MEM_OPT("load", MEM_OPERATION_LOAD),
- 	MEM_OPT("store", MEM_OPERATION_STORE),
-+	MEM_OPT("ldst", MEM_OPERATION_LOAD_STORE),
- 	MEM_END
- };
+ 	argc = parse_options(argc, argv, options, record_mem_usage,
+ 			     PARSE_OPT_KEEP_UNKNOWN);
  
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 726a9c8103e4..5ef178278909 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -28,6 +28,7 @@ struct mem_info {
- enum {
- 	PERF_MEM_EVENTS__LOAD,
- 	PERF_MEM_EVENTS__STORE,
-+	PERF_MEM_EVENTS__LOAD_STORE,
- 	PERF_MEM_EVENTS__MAX,
- };
+@@ -436,11 +441,6 @@ int cmd_mem(int argc, const char **argv)
+ 		NULL
+ 	};
+ 
+-	if (perf_mem_events__init()) {
+-		pr_err("failed: memory events not supported\n");
+-		return -1;
+-	}
+-
+ 	argc = parse_options_subcommand(argc, argv, mem_options, mem_subcommands,
+ 					mem_usage, PARSE_OPT_KEEP_UNKNOWN);
  
 -- 
 2.17.1
