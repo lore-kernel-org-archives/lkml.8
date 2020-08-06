@@ -2,141 +2,173 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B26C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4C223119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596732560;
-	bh=iArLv1KxUuzbXzGAtAlRwJFgWVQmsd235HnefreHjCs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dhd3FlX7FYb1vPZMiZGPVmAyzka1SxtHc4YAVJLoxK6I3CcIHGUjUlMNZpS7kMX1C
-	 YveR49bBEXZmt+E2Xy0NZxIlP7AX/1Y9Y2lMRp2PuS/ElzUpbF6D87Mji1ykFtUasr
-	 f9qVRzyhnzamSX/e76fitrkmYEA/T7iZqm7Fecuc=
+	by mail.kernel.org (Postfix) with ESMTP id 0A0702311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fWIiJ3CZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgHFQtR (ORCPT
+        id S1729540AbgHFQt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:49:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39862 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729104AbgHFQsx (ORCPT
+        Thu, 6 Aug 2020 12:49:27 -0400
+Received: from mail.efficios.com ([167.114.26.124]:56714 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728618AbgHFQm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:48:53 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v9so18064113ljk.6;
-        Thu, 06 Aug 2020 09:48:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2CFr1WO/oeNCTJdjwIX/TiCWFfnGU5V/MdaXXMTg4nw=;
-        b=o2eaXiemnyv7kEoOxaj3PhunceF4k4Z5gP6KuR88evRcrlcJ//Fu3GjVJNVnqI5/EJ
-         o6e0AbJ073jvh4mgMPAHtaeN0xqCrnC9rWc7iTXEOG0ZoyOQdtS7RTZexPDisn+hS8yJ
-         iCKgntdqy57zhihUX3JH8BjeB461v45ZkVZs80w4mmyjXVehg6/6XR59bCmi7+L90Rqi
-         mPjYp1khXm1SzwOu8nFxNQGBFLzm4yDtX39jKkTHWeMxwjQSjSNOc52lawalfQZN5Qb3
-         1WPLFYVxr9OI9nvFTl8j/3INopkqzq5pYc6rEaqQ2H8/1HuEU4I9pfWsFG7Ic6Fqwm4J
-         XnVQ==
-X-Gm-Message-State: AOAM530n8Jv1UjRK2u5g22DFkMwiV55iV7QkJ6W9g8/uy5wknhqE3DmE
-        bpAuIestmCmzsah04tJ1obGg+WIL+r0=
-X-Google-Smtp-Source: ABdhPJzBoIhDGLnB9sT9oB5TM5Ps4uAmCPKjH7JBZrcf1F76+eu7r7+YJBa7FmB1d0p5KoyIofGB8g==
-X-Received: by 2002:a2e:5c5:: with SMTP id 188mr3701045ljf.466.1596721995016;
-        Thu, 06 Aug 2020 06:53:15 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id p11sm2670295lfo.71.2020.08.06.06.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 06:53:13 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1k3gKa-0003Vy-Vg; Thu, 06 Aug 2020 15:53:17 +0200
-Date:   Thu, 6 Aug 2020 15:53:16 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patong.mxl@gmail.com, linus.walleij@linaro.org,
-        mchehab+huawei@kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip
- support
-Message-ID: <20200806135316.GT3634@localhost>
-References: <20200607162350.21297-1-mani@kernel.org>
- <20200607162350.21297-3-mani@kernel.org>
- <20200701130206.GD3334@localhost>
- <20200726155223.GB12036@Mani-XPS-13-9360>
+        Thu, 6 Aug 2020 12:42:26 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 5C1BA2999C7;
+        Thu,  6 Aug 2020 08:57:53 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id fsCxb9mpDnGb; Thu,  6 Aug 2020 08:57:53 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 05E1F299AAB;
+        Thu,  6 Aug 2020 08:57:53 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 05E1F299AAB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1596718673;
+        bh=TbqNDc8HvZfMw4xy6HohFyxAGK7CmqP9uVfXuSYcTEo=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=fWIiJ3CZMC0VGeFt+gt31xwIRcKYU1wWXjRSmn3ZvYv56MbCGMrecWFbmZhBIjbEa
+         9hUunaoqhq+HrnnNubXDBZiVi4JDsijeqcBrHUuUvfutd2x3jM5glxvA02/r5mIeSS
+         UkfP2yRB7ZUCB0oJGbAZgb7JElT9xUL6eF44y2UpePHUBcTBQB9uLBbIjFDJFaz6OO
+         liuZYhov9y1cJoqTnLsskvcdVrz1vG77xwO1nI+RuPkZQpGBoNU+MfQ4otxKhl9r/P
+         pMrn5hsotHkzCmh6J2RSOyKhsbr32n/7Q/FVXaI8SvSjodzMJpOnyqfnoc3ca11n9N
+         DOcvvF0xQEQMg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id WslYZSdaxtTR; Thu,  6 Aug 2020 08:57:52 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id EAEF1299907;
+        Thu,  6 Aug 2020 08:57:52 -0400 (EDT)
+Date:   Thu, 6 Aug 2020 08:57:52 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Message-ID: <457267869.1379.1596718672867.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200806080351.GA31889@willie-the-truck>
+References: <20200728160010.3314-1-mathieu.desnoyers@efficios.com> <20200728160010.3314-2-mathieu.desnoyers@efficios.com> <20200804145145.GM2657@hirez.programming.kicks-ass.net> <1708074166.39992.1596553173337.JavaMail.zimbra@efficios.com> <20200804170153.GO2657@hirez.programming.kicks-ass.net> <20200805105920.GB35926@hirez.programming.kicks-ass.net> <498869868.209.1596640956570.JavaMail.zimbra@efficios.com> <20200806080351.GA31889@willie-the-truck>
+Subject: Re: [RFC PATCH 2/2] sched: membarrier: cover kthread_use_mm
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726155223.GB12036@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
+Thread-Topic: sched: membarrier: cover kthread_use_mm
+Thread-Index: Rd2eLbM7vipz4MRqPtD9G/KI60o4cg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 09:22:23PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jul 01, 2020 at 03:02:06PM +0200, Johan Hovold wrote:
-> > On Sun, Jun 07, 2020 at 09:53:49PM +0530, Manivannan Sadhasivam wrote:
-> > > Add gpiochip support for Maxlinear/Exar USB to serial converter
-> > > for controlling the available gpios.
-> > > 
-> > > Inspired from cp210x usb to serial converter driver.
-> > > 
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Cc: linux-gpio@vger.kernel.org
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> > > ---
-> > >  drivers/usb/serial/xr_serial.c | 209 ++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 208 insertions(+), 1 deletion(-)
+----- On Aug 6, 2020, at 8:13 AM, Will Deacon will@kernel.org wrote:
 
-> > > @@ -390,6 +408,13 @@ static void xr_set_flow_mode(struct tty_struct *tty,
-> > >  	 */
-> > >  	gpio_mode &= ~UART_MODE_GPIO_MASK;
-> > >  	if (cflag & CRTSCTS) {
-> > > +#ifdef CONFIG_GPIOLIB
-> > > +		/* Check if the CTS/RTS pins are occupied */
-> > > +		if (port_priv->pin_status[GPIO_RTS] ||
-> > > +		    port_priv->pin_status[GPIO_CTS])
-> > > +			return;
-> > > +#endif
-> > 
-> > You cannot just bail out as this could leave software flow enabled etc.
-> > 
-> > You also need to claim these pins once at open or leave them be. We
-> > don't want CRTSCTS to suddenly start toggling because a pin is released
-> > by gpiolib.
-> > 
-> > That is, determine who owns each pin at open() and keep it that way till
-> > close() (by setting some flags at open).
-> > 
-> > > +
-> > >  		dev_dbg(&port->dev, "Enabling hardware flow ctrl\n");
-> > >  		flow = UART_FLOW_MODE_HW;
-> > >  		gpio_mode |= UART_MODE_RTS_CTS;
-> > > @@ -497,6 +522,17 @@ static int xr_tiocmset_port(struct usb_serial_port *port,
-> > >  	u8 gpio_set = 0;
-> > >  	u8 gpio_clr = 0;
-> > >  
-> > > +#ifdef CONFIG_GPIOLIB
-> > > +	/* Check if the RTS/DTR pins are occupied */
-> > > +	if (set & TIOCM_RTS || clear & TIOCM_RTS)
-> > > +		if (port_priv->pin_status[GPIO_RTS])
-> > > +			return -EBUSY;
-> > > +
-> > > +	if (set & TIOCM_DTR || clear & TIOCM_DTR)
-> > > +		if (port_priv->pin_status[GPIO_DTR])
-> > > +			return -EBUSY;
-> > > +#endif
-> > 
-> > Same here. And perhaps just ignoring the pins managed by gpiolib is
-> > better (cf. gpiolib and pinctrl being orthogonal).
+> On Wed, Aug 05, 2020 at 11:22:36AM -0400, Mathieu Desnoyers wrote:
+>> ----- On Aug 5, 2020, at 6:59 AM, Peter Zijlstra peterz@infradead.org wrote:
+>> > On Tue, Aug 04, 2020 at 07:01:53PM +0200, peterz@infradead.org wrote:
+>> >> On Tue, Aug 04, 2020 at 10:59:33AM -0400, Mathieu Desnoyers wrote:
+>> >> > ----- On Aug 4, 2020, at 10:51 AM, Peter Zijlstra peterz@infradead.org wrote:
+>> >> > > On Tue, Jul 28, 2020 at 12:00:10PM -0400, Mathieu Desnoyers wrote:
+>> >> > >>  	task_lock(tsk);
+>> >> > >> +	/*
+>> >> > >> +	 * When a kthread stops operating on an address space, the loop
+>> >> > >> +	 * in membarrier_{private,global}_expedited() may not observe
+>> >> > >> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
+>> >> > >> +	 * memory barrier after accessing user-space memory, before
+>> >> > >> +	 * clearing tsk->mm.
+>> >> > >> +	 */
+>> >> > >> +	smp_mb();
+>> >> > >>  	sync_mm_rss(mm);
+>> >> > >>  	local_irq_disable();
+>> >> > > 
+>> >> > > Would it make sense to put the smp_mb() inside the IRQ disable region?
+>> >> > 
+>> >> > I've initially placed it right after task_lock so we could eventually
+>> >> > have a smp_mb__after_non_raw_spinlock or something with a much better naming,
+>> >> > which would allow removing the extra barrier when it is implied by the
+>> >> > spinlock.
+>> >> 
+>> >> Oh, right, fair enough. I'll go think about if smp_mb__after_spinlock()
+>> >> will work for mutexes too.
+>> >> 
+>> >> It basically needs to upgrade atomic*_acquire() to smp_mb(). So that's
+>> >> all architectures that have their own _acquire() and an actual
+>> >> smp_mb__after_atomic().
+>> >> 
+>> >> Which, from the top of my head are only arm64, power and possibly riscv.
+>> >> And if I then git-grep smp_mb__after_spinlock, all those seem to be
+>> >> covered.
+>> >> 
+>> >> But let me do a better audit..
+>> > 
+>> > All I could find is csky, which, afaict, defines a superfluous
+>> > smp_mb__after_spinlock.
+>> > 
+>> > The relevant architectures are indeed power, arm64 and riscv, they all
+>> > have custom acquire/release and all define smp_mb__after_spinlock()
+>> > appropriately.
+>> > 
+>> > Should we rename it to smp_mb__after_acquire() ?
+>> 
+>> As discussed over IRC, smp_mb__after_atomic_acquire() would be better, because
+>> load_acquire and spin_lock have different semantic.
 > 
-> You mean, we can just make TX,RX,CTS,RTS pins controlled only by the serial
-> driver and the rest only by gpiolib?
+> Just to clarify here, are you talking about acquire on atomic RMW operations
+> being different to non-RMW operations, or are you talking about
+> atomic_read_acquire() being different to smp_load_acquire() (which I don't
+> think is the case, but wanted to check)?
 
-No, I think I just meant that you shouldn't return an error here for
-signals whose pins happen to be muxed for a different function (gpio).
+I was referring to the two following APIs:
 
-Johan
+- spin_lock()
+- smp_load_acquire()
+
+on x86, spin_lock() happens to be implemented with an atomic instruction, which
+implies a full memory barrier. However, its smp_load_acquire() does not provide
+a full memory barrier. Therefore, if we implement a smp_mb__after_acquire() as
+proposed by Peter, we could expect it to cover both APIs, which is tricky to do
+efficiently without adding a superfluous barrier.
+
+Hence the discussion about make its naming more specific, so it does not cover
+smp_load_acquire.
+
+> 
+> We need to write this stuff down.
+> 
+>> We could keep a define of smp_mb__after_spinlock to smp_mb__after_atomic_acquire
+>> to make the transition simpler.
+> 
+> I'm not sure I really see the benefit of the rename, to be honest with you,
+> especially if smp_mb__after_spinlock() doesn't disappear at the same time.
+> The only reason you'd use this barrier is because the atomic is hidden away
+> behind a locking API, otherwise you'd just have used the full-barrier variant
+> of the atomic op to start with, wouldn't you?
+
+Good point.
+
+As long as we can state that smp_mb__after_spinlock applies both to raw_spinlock
+and non-raw spinlock (which AFAIU are mutexes on RT), I think it would suffice for
+our immediate needs.
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
