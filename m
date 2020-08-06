@@ -2,93 +2,92 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08599C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D15A2311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215C523119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxKukvBc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YvMnkjxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbgHFRNj (ORCPT
+        id S1729386AbgHFRNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730415AbgHFRMw (ORCPT
+        Thu, 6 Aug 2020 13:13:51 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3046 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgHFRNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:12:52 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D67C061574;
-        Thu,  6 Aug 2020 10:12:52 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id x69so45670873qkb.1;
-        Thu, 06 Aug 2020 10:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=bv/T+Cc8SWIHSFomrcPUqj51gKlivyi5zXcjJ51jfYA=;
-        b=pxKukvBcJy0IGR5wO9U1XkvqCnEllThCx+g8batpLHQ/djdPKxh4X+5AKn+msb+IaD
-         aLZJvehC2RwKRlhb+8fKHRc9QNS3xTIvsHx4D/BcHjYTQ66ssGt8KsbFNOFeA6wB14n3
-         PV+UFd0ru5449KkKohwF1x/QBulhwxkNCRCJhRu+arGtAH6skh8SThI7DnKFY6vUcmRh
-         vn7aT5Vsne8bhSThJFf0OE9vCkEL87adD8liGuEm2nk4sRnqdyKjklWaQ/G1bt5bLQsP
-         3XBs0gfv8EW6tM/iN/sBiEvB7N9mT2RNHEZeFCOEmyw+wuvgkpA1XA19+JfT4e5SN2NI
-         3JJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bv/T+Cc8SWIHSFomrcPUqj51gKlivyi5zXcjJ51jfYA=;
-        b=F5OejOp/MvnHPJX2Gna/K+HTOpAkobwRjher5IRKK19ZwlEZkI67d4sJk2cbh6XbAW
-         K8AUWQ3LPpwjrN3RIv6H7sBg4IOxtKroebb4h/GfaHQ8bQTLkAs+oZpaFTPprV+AbkQI
-         KvJ+qBhcbSkr9ObdSoqB1cJFpS5nA+Zcztm9jPv4FZ2T29UXb4K0ah5IYHg4Lq3ku//9
-         kscyBFdhcDKNF76J5kaihhonShN9b32erCX1xezC/qD8AnmlX1VrHkCb1ZSu4BFYXrJf
-         0kyznfageg2seF6y9ga+ot0bzFyuErBRsIDOBAF+acMyG+oj2ti6h8pwEUHPLZfnY7x+
-         I86Q==
-X-Gm-Message-State: AOAM531T6FM6r66RrHKHdCRuYsXCleRyxxzIRLclTYmbKbNScAXxDESm
-        biWaz3b1o7rT6qQ4kijErwc=
-X-Google-Smtp-Source: ABdhPJxbCmMDgw2zfE8Um4DHcNr0p+bdIQnDOUq/x/Xj3+mqto87NHzUvR0Xsl9fq0sqV7eNkIjqoQ==
-X-Received: by 2002:a37:9b15:: with SMTP id d21mr9933406qke.9.1596733967564;
-        Thu, 06 Aug 2020 10:12:47 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:7c83:3cd:b611:a456? ([2601:282:803:7700:7c83:3cd:b611:a456])
-        by smtp.googlemail.com with ESMTPSA id x3sm4586312qkx.3.2020.08.06.10.12.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 10:12:46 -0700 (PDT)
-Subject: Re: [net-next iproute2 PATCH v3 1/2] iplink: hsr: add support for
- creating PRP device similar to HSR
-To:     Murali Karicheri <m-karicheri2@ti.com>, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        nsekhar@ti.com, grygorii.strashko@ti.com, vinicius.gomes@intel.com,
-        stephen@networkplumber.org, kuznet@ms2.inr.ac.ru
-References: <20200717152205.826-1-m-karicheri2@ti.com>
- <e6ac459e-b81c-48ee-d82c-36a533e2aa29@ti.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <6632128c-1c4b-4538-81a9-48dd752c8ab3@gmail.com>
-Date:   Thu, 6 Aug 2020 11:12:44 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Thu, 6 Aug 2020 13:13:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c3a360001>; Thu, 06 Aug 2020 10:13:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 10:13:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Aug 2020 10:13:40 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 17:13:39 +0000
+Subject: Re: linux-next: Tree for Aug 6 (mm/migrate.c)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200806162116.1d033db0@canb.auug.org.au>
+ <85e9276d-1747-b265-53be-a33ab6203045@infradead.org>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <1634e188-0faf-a240-6847-94468d63d7d7@nvidia.com>
+Date:   Thu, 6 Aug 2020 10:13:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <e6ac459e-b81c-48ee-d82c-36a533e2aa29@ti.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <85e9276d-1747-b265-53be-a33ab6203045@infradead.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596734006; bh=FgNKwrpR6dpbYgks9Ta2+mgfbhRCmYt+NfPFOCEKaP8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YvMnkjxVR89j7CHtxQAoxybVDJtVOJOqMzLz/7hFOS8O3DRjkdCY76DMI7twMYZce
+         HE92lSHfPHiX86gbdO8CeRO32qZrMVIr6+8eq0Dmnrjo5RS8FrGAdd0+zL9J0ovO+K
+         PzrOgVCmRqou7a8bH9hTmSNYJch7PtDkdYs8uq8I6gRvkJBbxi/JHSGiQ1zxC1JJ5Z
+         Gr2+KjbxXdXUGy0uG/Q2GfHeKAzrWFg/7j0NEm5rEGd1E7WYDvjFvnxGzneDAJDzKX
+         hYLvRJm60bshRxJP45c1yNAzAO5jaMGPDAcAcXcj8HvUXs0tVtgrX+PjjgvCwyA+Co
+         roOGPCqemxbUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/20 10:04 AM, Murali Karicheri wrote:
-> that the maintainers are different than the netdev maintainers. My bad.
-> The PRP driver support in kernel is merged by Dave to net-next and this
-> iproute2 change has to go with it. So please review and apply this if it
-> looks good. The kernel part merged is at
 
-there was a long delay between iproute2 and commit to net-next. You need
-to re-send the iproute2 patches.
+On 8/6/20 7:50 AM, Randy Dunlap wrote:
+> On 8/5/20 11:21 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+> 
+> on x86_64:
+> 
+> when CONFIG_MMU_NOTIFIER is not set/enabled:
+> 
+> ../mm/migrate.c: In function 'migrate_vma_collect':
+> ../mm/migrate.c:2481:7: error: 'struct mmu_notifier_range' has no member named 'migrate_pgmap_owner'
+>    range.migrate_pgmap_owner = migrate->pgmap_owner;
+>         ^
+> 
+
+Thanks for finding this.
+I'm working on it.
