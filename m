@@ -2,189 +2,105 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0051DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E429FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470B323119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="NVr3jDzX"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA582311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596732495;
+	bh=fIcGRzA8iSE5aYRClbTn+TFozKD1F4bTWoRgTAtda9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Tagvp3WwHozp/P8YbLIBwT8SCqFOYx1M7cfo8wVAUJVa8/Dg7J7UMbXIf0787Vxhr
+	 adhO5oOOrrU6r4Jf5IFSHdUI/Opnh9TvDVBYeNZ/9lhLrC3MPsyqBuhoktl1YG/c7O
+	 JiSfSlBXKRN5g33TKW48K0q3GokOcetgja30ob0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729480AbgHFQrq (ORCPT
+        id S1729512AbgHFQsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:47:46 -0400
-Received: from mga09.intel.com ([134.134.136.24]:47730 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727971AbgHFQnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:43:39 -0400
-IronPort-SDR: GRVSrb0LK03SrIIKeNu8tvIsSycbdjpipOGEB9lsGRsvo+q0/y/+bocrvseRmY0jGV1+8Nnz0F
- VbNT3rXLCBlg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="153992057"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="153992057"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 09:41:35 -0700
-IronPort-SDR: GAJDbnXkDa7psZvnylCK7oMXGkpXam4dSXEvrD0A8r1wUuweOn7oVZcUFgd9UYPa4Lz3bAb5RD
- mqceOhtePsQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="325441387"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Aug 2020 09:41:35 -0700
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Aug 2020 09:41:34 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Aug 2020 09:41:34 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Aug 2020 09:41:34 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.173)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 6 Aug 2020 09:41:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImriYgzARA4S0+6SW9EA4eY/r5TyzQwwWjERbm2feRpOJAdIr2VpTgqumaWYzaF0AbJZzY0VoxU9pB9RCfK204r72N+9whOHCJk9/f3ndJY9Vr8Hr6tPSv/xy4URiGgAthDQgyPqVgkrFInh1QEQvc6YL9aYyWZtUzEgpPAWCXOoWsMxDaCn6WrtaE7fqhLeLvwQH5vhvvOlZncIJ5RI6sHaLZC5ad6hVwV71tHf38/526Ze+0XSgxXX6kIK/1MEJSvNMyiznd+36iNimeTQCmWTRYjqjJjrOOw+FUn36sLmvTNJuWt3mUIPror4F1ncquzsd4UdXaNtTTz/zsRZ4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yBNRaYdebOZPatFDnTdRZezksjjppy9sxjIqU3rrukM=;
- b=hkZiebtxwUhFbgYmyKswH6iDhb2pmCBwSShljqubiRYUr+O8y9Fy4MsYNb0NILOKVSYm0T5TrHRwXli2w0NBIAW86gWSmY6QwB7rxGKqe2dvmpAkissB1iVjDpH5TfhnXDLAd3YyUItntaymTiFRxO5R8rtlSUSbqTuIkgsLw+pCoNwcFq7L2XFaaz+HlrkfbO6zmX2vRcGqhiMNnNXl0/MRaho354DyWRf0/ExB65R7ReOdofEpQ1BSyEtC32rX8ox6uK60v9BZM5vLJx6nnEvYlA1lvw8NhtjfPtDyxi5ZLwIdrRvK+x5oOCpiQKJN36v3QFmoksA/Y0JaxNzvDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yBNRaYdebOZPatFDnTdRZezksjjppy9sxjIqU3rrukM=;
- b=NVr3jDzX5eP+T0OPvNadOnGnlg6gDQgASjPTzG6GA/tmpYUaAlZpRP0kOOJqZl495zA7vDW6nayqF3/a1Wihb8N7lUGCqTrX0SaaIYzWNHqd8UE04Z4wfDLgd6E9+0FmFy8URAYd9PK3pKJ0wwfp/YoEI/OXqLBsC3wyWqzlK7w=
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
- by DM5PR11MB0044.namprd11.prod.outlook.com (2603:10b6:4:64::38) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Thu, 6 Aug
- 2020 16:41:28 +0000
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.022; Thu, 6 Aug 2020
- 16:41:28 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>
-CC:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Subject: RE: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Topic: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Index: AQHWZzZzIgMFwAI7HkKT1/DPVspAl6khsDgAgAFDasCAAAm3gIADX8DAgAAlz4CAABcIUIAABbiAgACx9iCAALX6gIADSeRA
-Date:   Thu, 6 Aug 2020 16:41:28 +0000
-Message-ID: <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-3-git-send-email-brent.lu@intel.com>
- <s5h5za3ajvb.wl-tiwai@suse.de>
- <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hd04a90o4.wl-tiwai@suse.de>
- <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
- <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hpn873by6.wl-tiwai@suse.de>
- <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
-In-Reply-To: <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [114.36.92.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e59278e5-c1aa-4476-1622-08d83a279148
-x-ms-traffictypediagnostic: DM5PR11MB0044:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB0044481720407480655A565F97480@DM5PR11MB0044.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: H5yaxC4riSiGOK79R3+9ZcyeCD4PvpsgO8b0rTMWiTLnRouTkMDjK1G0OxBYvr4tLPfTiP+5KR/bSH4JUsaCzsOWgeSZO2pixLqk5ufTmVce5HECXVwlaQTLmAUWXY5io+wbdt+CwR0Jfoid3MBJe+SbnePXGoM1pzA2wGUHVn08HYtOeNsmtBptrQXjznoJyFB/Sy1O5in1q5ID3+nRs0jz2swiQj+UcSqIMCc5WgluGs8zfIV4zPNrdDQcx52cpvfTMrlDXmu6YDx3txtsxnMTsaGXsWI8iurePvPwj6PvODHqZ/Wl1MsxXbQr8D3K7j76Y06PjzUu/7SvHrh3IjmoDeLDNrUJKiPvClc+tI/ho48d0UIfCWUZ3OLGsFW+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(366004)(346002)(376002)(26005)(186003)(6506007)(86362001)(2906002)(52536014)(5660300002)(7416002)(76116006)(54906003)(110136005)(8676002)(316002)(8936002)(55016002)(33656002)(64756008)(66556008)(66476007)(66946007)(66446008)(4326008)(7696005)(9686003)(71200400001)(83380400001)(478600001)(11716003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 8TMLMdksh0jtDJVNU4PlcauhIa2QNo8QO1Y15nVTFosh1Y+uT5oGAi1Ak4h0jMkhE2GOvr2hzoe2fj1uwJnrwnWifCHAnMdOYf+XQaWe7aRaTScq/2/sRpb33cRYks3rXR+u1n2t3mNV71S/JbI77DRnSG8YRDdqFWNWQQWEUP/pHGal01TFubDqUiv7c5I9MVDyEf70qDE+8AwsxeuQY2xNpDHKStp2Nq3bMcjIAOV8PT3D+QJq6wSlddzS/RBL3ELn/3+N9mwbNWzQOoaAOLb287h3oTawLLtaOb/CAMYfODD580XdUEuTFn1b6rfXZx+bEfvrdcDSTqCSmQxR0oSKj+iZyEgQuwV72aXjXn2gNeKWSxW4J1/em8vmEXEbDjeZYApB6JZqpPMVPSeu3zLUbuRPfHlAd/bWKc3l8VyPGz9KhkwP9NsulVeN1U4Lj9qPkx35QEbAfuFwx679QizLMbwtU59QXhf5Mq/AcZtyM/68CHonRxMfLjDBQ0070lyeWCL0sONcEKW0TBNOdWFeI0YWSHr0rCoOkOmKWyLSunbclJ3VlLxa29lYRej/jKOjlYgEOdbJdCPtmiHVB4wqmcGPgqa+8AZYjFMFYQdwZnzJLja/MWPPIFoBPOVu2SZccivy0+xh7pz70YUnzA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 6 Aug 2020 12:48:09 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39918 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgHFQmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:42:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id z6so50313543iow.6;
+        Thu, 06 Aug 2020 09:42:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xm0fEuCIzwDzQykroFSnT+aLdkyYmWsu6Ftt9JukdD8=;
+        b=pQJ5Wbk0onBVVfm9KbkO0nmaavZycrP8XIUYtq43nQTVhrVaoIj+HDrpXaQeHZoj59
+         bNGNwgQnjRvBDVB/vPd0DsKWMA1sfz2rPl5hAU8wwG+FozqCsYo5t6auZZmEqQJVG2Mh
+         /xn53eG5weFyiy3aFt7BcE6R5TgqTEFj2EdR5jSMimAxO8Lx0LgSWY/ZDfj9ItB+8pGk
+         kLmKTY4CqlgBxFS59tfv9jMQGLq3KrnNAD77oiUFLKD863sr+Lr0UH5FAd0CAgAhkGpW
+         vX0cWACmID12vfpA3D69yKou7Nnb2gE/F6Ew0H2+5tZbjba0LjR4QBgG1jSf3kmWOAhI
+         hjHQ==
+X-Gm-Message-State: AOAM530Kbs0aPqTvXwfU4E/hDBIMWRR2hASQtLdH+SGIeDHupjYJifa3
+        akdjR06qiDIpvz3F5Uhx4JO9CxY=
+X-Google-Smtp-Source: ABdhPJyjT8GHER76WNSFqjmQvUAzAjClMjTAIIg56K2M86QwRA9rbhDENI7nQUMj/Vpq8VKa/Li+pA==
+X-Received: by 2002:a92:1589:: with SMTP id 9mr11145233ilv.234.1596725235912;
+        Thu, 06 Aug 2020 07:47:15 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s74sm4198158ilb.44.2020.08.06.07.47.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 07:47:15 -0700 (PDT)
+Received: (nullmailer pid 834882 invoked by uid 1000);
+        Thu, 06 Aug 2020 14:47:13 -0000
+Date:   Thu, 6 Aug 2020 08:47:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>, pisa@cmp.felk.cvut.cz
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        mkl@pengutronix.de, socketcan@hartkopp.net, wg@grandegger.com,
+        davem@davemloft.net, mark.rutland@arm.com, c.emde@osadl.org,
+        armbru@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
+        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
+        porazil@pikron.com
+Subject: Re: [PATCH v4 2/6] dt-bindings: net: can: binding for CTU CAN FD
+ open-source IP core.
+Message-ID: <20200806144713.GA829771@bogus>
+References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+ <701442883f2b439637ff84544745725bdee7bcf8.1596408856.git.pisa@cmp.felk.cvut.cz>
+ <20200804091817.yuf6s26bclehpwwi@duo.ucw.cz>
+ <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e59278e5-c1aa-4476-1622-08d83a279148
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2020 16:41:28.7881
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XBH4LLHM86mvjwGSYiNX8gEF7mCQTHQGgF7/QfCLNWxBiMB+EGZKoCpGwaiosrMBDYzZ+hH/AbbbowHqDVe3hA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0044
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gSSBkb24ndCBnZXQgdGhpcy4gSWYgdGhlIHBsYXRmb3JtIGRyaXZlciBhbHJlYWR5IHN0
-YXRlZCAyNDAgYW5kIDk2MCBzYW1wbGVzIHdoeQ0KPiB3b3VsZCA0MzIgYmUgY2hvc2VuPyBEb2Vz
-bid0IHRoaXMgbWVhbiB0aGUgY29uc3RyYWludCBpcyBub3QgYXBwbGllZD8NCg0KSGkgUGllcnJl
-LA0KDQpTb3JyeSBmb3IgbGF0ZSByZXBseS4gSSB1c2VkIGZvbGxvd2luZyBjb25zdHJhaW50cyBp
-biBWMyBwYXRjaCBzbyBhbnkgcGVyaW9kIHdoaWNoDQphbGlnbnMgMW1zIHdvdWxkIGJlIGFjY2Vw
-dGVkLg0KDQorCS8qDQorCSAqIE1ha2Ugc3VyZSB0aGUgcGVyaW9kIHRvIGJlIG11bHRpcGxlIG9m
-IDFtcyB0byBhbGlnbiB0aGUNCisJICogZGVzaWduIG9mIGZpcm13YXJlLiBBcHBseSBzYW1lIHJ1
-bGUgdG8gYnVmZmVyIHNpemUgdG8gbWFrZQ0KKwkgKiBzdXJlIGFsc2EgY291bGQgYWx3YXlzIGZp
-bmQgYSB2YWx1ZSBmb3IgcGVyaW9kIHNpemUNCisJICogcmVnYXJkbGVzcyB0aGUgYnVmZmVyIHNp
-emUgZ2l2ZW4gYnkgdXNlciBzcGFjZS4NCisJICovDQorCXNuZF9wY21faHdfY29uc3RyYWludF9z
-dGVwKHN1YnN0cmVhbS0+cnVudGltZSwgMCwNCisJCQkgICBTTkRSVl9QQ01fSFdfUEFSQU1fUEVS
-SU9EX1NJWkUsIDQ4KTsNCisJc25kX3BjbV9od19jb25zdHJhaW50X3N0ZXAoc3Vic3RyZWFtLT5y
-dW50aW1lLCAwLA0KKwkJCSAgIFNORFJWX1BDTV9IV19QQVJBTV9CVUZGRVJfU0laRSwgNDgpOw0K
-DQpSZWdhcmRzLA0KQnJlbnQNCg0KPiANCj4gPiBbICAgNTIuMDExMTQ2XSBzb3VuZCBwY21DMUQw
-cDogaHdfcGFyYW0NCj4gPiBbICAgNTIuMDExMTUyXSBzb3VuZCBwY21DMUQwcDogICBBQ0NFU1Mg
-MHgxDQo+ID4gWyAgIDUyLjAxMTE1NV0gc291bmQgcGNtQzFEMHA6ICAgRk9STUFUIDB4NA0KPiA+
-IFsgICA1Mi4wMTExNThdIHNvdW5kIHBjbUMxRDBwOiAgIFNVQkZPUk1BVCAweDENCj4gPiBbICAg
-NTIuMDExMTYxXSBzb3VuZCBwY21DMUQwcDogICBTQU1QTEVfQklUUyBbMTY6MTZdDQo+ID4gWyAg
-IDUyLjAxMTE2NF0gc291bmQgcGNtQzFEMHA6ICAgRlJBTUVfQklUUyBbMzI6MzJdDQo+ID4gWyAg
-IDUyLjAxMTE2N10gc291bmQgcGNtQzFEMHA6ICAgQ0hBTk5FTFMgWzI6Ml0NCj4gPiBbICAgNTIu
-MDExMTcwXSBzb3VuZCBwY21DMUQwcDogICBSQVRFIFs0ODAwMDo0ODAwMF0NCj4gPiBbICAgNTIu
-MDExMTczXSBzb3VuZCBwY21DMUQwcDogICBQRVJJT0RfVElNRSBbOTAwMDo5MDAwXQ0KPiA+IFsg
-ICA1Mi4wMTExNzZdIHNvdW5kIHBjbUMxRDBwOiAgIFBFUklPRF9TSVpFIFs0MzI6NDMyXQ0KPiA+
-IFsgICA1Mi4wMTExNzldIHNvdW5kIHBjbUMxRDBwOiAgIFBFUklPRF9CWVRFUyBbMTcyODoxNzI4
-XQ0KPiA+IFsgICA1Mi4wMTExODJdIHNvdW5kIHBjbUMxRDBwOiAgIFBFUklPRFMgWzQ3NDo0NzRd
-DQo+ID4gWyAgIDUyLjAxMTE4NV0gc291bmQgcGNtQzFEMHA6ICAgQlVGRkVSX1RJTUUgWzQyNjYw
-MDA6NDI2NjAwMF0NCj4gPiBbICAgNTIuMDExMTg4XSBzb3VuZCBwY21DMUQwcDogICBCVUZGRVJf
-U0laRSBbMjA0NzY4OjIwNDc2OF0NCj4gPiBbICAgNTIuMDExMTkxXSBzb3VuZCBwY21DMUQwcDog
-ICBCVUZGRVJfQllURVMgWzgxOTA3Mjo4MTkwNzJdDQo+ID4gWyAgIDUyLjAxMTE5NF0gc291bmQg
-cGNtQzFEMHA6ICAgVElDS19USU1FIFswOjBdDQo+ID4NCj4gPiBSZWdhcmRzLA0KPiA+IEJyZW50
-DQo+ID4NCj4gPj4NCj4gPj4NCj4gPj4gVGFrYXNoaQ0KPiA+DQo+ID4NCg==
+On Tue, Aug 04, 2020 at 11:20:21AM +0200, Pavel Machek wrote:
+> On Tue 2020-08-04 11:18:17, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > The commit text again to make checkpatch happy.
+> > 
+> > ?
+> > 
+> > 
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - const: ctu,ctucanfd
+> > > +          - const: ctu,canfd-2
+> > > +      - const: ctu,ctucanfd
+> > 
+> > For consistency, can we have ctu,canfd-1, ctu,canfd-2?
+> 
+> Make it ctu,ctucanfd-1, ctu,ctucanfd-2... to make it consistent with
+> the file names.
+
+If you are going to do version numbers, please define where they come 
+from. Hopefully some tag of the h/w IP version...
+
+Better yet, put version numbers in the h/w registers itself and you 
+don't need different compatibles.
+
+Rob
