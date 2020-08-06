@@ -2,93 +2,131 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81EE5221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="bgSPmGpC"
+	by mail.kernel.org (Postfix) with ESMTP id 57FA2221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbgHFSew (ORCPT
+        id S1729228AbgHFSfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbgHFSeC (ORCPT
+        Thu, 6 Aug 2020 14:35:11 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:59905 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728674AbgHFSej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:34:02 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA116C0617A2
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:34:00 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id qc22so36598241ejb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Lwo0h1UUt/TkFfE8EDJeJnCBcomQmQ6I+GLf07iiXg=;
-        b=bgSPmGpCYS5e5FW3E8UqQvh0DrBkVffrlqEPzxjQ13CfvimfhTStK2fLoQVOYd9W2w
-         1f6gndjCwBqLRVnufF94mWiG+N80jMFrUzBIoHEFmw/O5M1BxMiSmJU+FsIMbeM1ZZ8m
-         B1DOF1T+PwYCGXan6+xPmqtgc3jSc4lGG9rjT1dMfhKIMkixlBv3AJWf+Kd4+fU0DRj4
-         mhZxQKFBp7vrNdEkcGJxFELeOpKh7KjxGwP6RgEP7Rzkxxp7enGlVMq/pZSwDTiofbVL
-         o4Gn3Sn9KJpfg8ZpNjspxEkq6zTvwgSbaYyp1KpP8KbMF5n4z1blX7BVt4aylgklE54o
-         mn4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Lwo0h1UUt/TkFfE8EDJeJnCBcomQmQ6I+GLf07iiXg=;
-        b=V2cKehBEZkTJx+dlJ/PMWy7cckMS/gddzVlIcU+Uq5b8qOdQZWt84auoMVYZV3L6pJ
-         ppisdnkH5TkRteLJ4KLFJpS4Q5Y5i9T7V02resul1U7xZ/cCJsjg97JcupfPWmYSV/uF
-         S8+jTCqPfde+NjzJ/7NVZocX12wFoapbgr8p8HE2w/LokzDWosreKvRCQPidV1lyEswA
-         /buo0Sf3n3PCBIJnG1jjYngXAMj3L+qKIx0+gbgLDZK4YIbyvm7OZuVxOAKNkynTDGYU
-         SrSl6ERhsCg9fvfmxrmi+9NrUl7diuCackLQr8v3KGgA2mi6JUhYKeJUZgS/OB9ePRuQ
-         lglQ==
-X-Gm-Message-State: AOAM533jF2KAWyOzswvHAPLKZILfp5yXHn/gSRcqzM0pxA7qAABVkscr
-        /yNIUhquOBXwhBrZjA/l/TgTKPlCOI8Vxwcz2PNHduCquA==
-X-Google-Smtp-Source: ABdhPJxMQZuQY3avDUyZx56UT2rDq0X/QFpraARHLo6LAMfX3Rh5oyf19noACgmf5bDruxn2zfaSliNFW2ds+o0adCE=
-X-Received: by 2002:a17:906:1403:: with SMTP id p3mr5592371ejc.106.1596738839416;
- Thu, 06 Aug 2020 11:33:59 -0700 (PDT)
+        Thu, 6 Aug 2020 14:34:39 -0400
+Received: from [192.168.1.4] (unknown [176.88.145.153])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A4228240008;
+        Thu,  6 Aug 2020 18:34:25 +0000 (UTC)
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     <andy.shevchenko@gmail.com>
+CC:     <dan.carpenter@oracle.com>, <devel@driverdev.osuosl.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <mchehab@kernel.org>,
+        <sakari.ailus@linux.intel.com>, Cengiz Can <cengiz@kernel.wtf>
+Date:   Thu, 06 Aug 2020 21:34:22 +0300
+Message-ID: <173c50d7bb0.2bfa.85c738e3968116fc5c0dc2de74002084@kernel.wtf>
+In-Reply-To: <20200801220101.2783-1-cengiz@kernel.wtf>
+References: <20200731083856.GF3703480@smile.fi.intel.com>
+ <20200801220101.2783-1-cengiz@kernel.wtf>
+User-Agent: AquaMail/1.25.2-1672 (build: 102500008)
+Subject: Re: [PATCH v6] staging: atomisp: move null check to earlier point
 MIME-Version: 1.0
-References: <20200803123439.83400-1-jbi.octave@gmail.com> <20200803123439.83400-2-jbi.octave@gmail.com>
-In-Reply-To: <20200803123439.83400-2-jbi.octave@gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 6 Aug 2020 14:33:48 -0400
-Message-ID: <CAHC9VhR1-=veLYGeRiF9MAi3QxrGy_z-q+B1DD9t-foPPRJmbA@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/2] audit: change unnecessary globals into statics
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Eric Paris <eparis@redhat.com>,
-        "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 8:35 AM Jules Irenge <jbi.octave@gmail.com> wrote:
+Hello Andy,
+
+Can I get some feedback on v6 please?
+
+I hope it suits your standards this time.
+
+Thank you
+
+On August 2, 2020 01:02:22 Cengiz Can <cengiz@kernel.wtf> wrote:
+
+> `find_gmin_subdev()` that returns a pointer to `struct
+> gmin_subdev` can return NULL.
 >
-> Variables sig_pid, audit_sig_uid and audit_sig_sid
-> are only used in the audit.c file across the kernel
-> Hence it appears no reason for declaring them as globals
-> This patch removes their global declarations from the .h file
-> and change them into static in the .c file.
+> In `gmin_v2p8_ctrl()` there's a call to this function but the
+> possibility of a NULL was not checked before its being dereferenced,
+> i.e.:
 >
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+>  /* Acquired here --------v */
+>  struct gmin_subdev *gs = find_gmin_subdev(subdev);
+>
+>  /*  v------Dereferenced here */
+>  if (gs->v2p8_gpio >= 0) {
+>      ...
+>  }
+>
+> With this change we're null checking `find_gmin_subdev()` result
+> and we return an error if that's the case. We also WARN()
+> for the sake of debugging.
+>
+> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> Reported-by: Coverity Static Analyzer CID 1465536
+> Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 > ---
->  kernel/audit.c | 6 +++---
->  kernel/audit.h | 4 ----
->  2 files changed, 3 insertions(+), 7 deletions(-)
+>
+> Please do note that this change introduces a new return value to
+> `gmin_v2p8_ctrl()`.
+>
+> [NEW] - raise a WARN and return -ENODEV if there are no subdevices.
+>       - return result of `gpio_request` or `gpio_direction_output`.
+>       - return 0 if GPIO is ON.
+>       - return results of `regulator_enable` or `regulator_disable`.
+>       - according to PMIC type, return result of `axp_regulator_set`
+>         or `gmin_i2c_write`.
+>       - return -EINVAL if unknown PMIC type.
+>
+> Patch Changelog:
+>   v4: Fix minor typo in commit message
+>   v5: Remove typo from email subject
+>   v6: Remove duplicate Signed-off-by tag
+>
+> drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 5 ++++-
+> 1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c 
+> b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> index 0df46a1af5f0..1ad0246764a6 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> @@ -871,6 +871,9 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, 
+> int on)
+> 	int ret;
+> 	int value;
+>
+> +	if (WARN_ON(!gs))
+> +		return -ENODEV;
+> +
+> 	if (gs->v2p8_gpio >= 0) {
+> 		pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
+> 			gs->v2p8_gpio);
+> @@ -881,7 +884,7 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, 
+> int on)
+> 			pr_err("V2P8 GPIO initialization failed\n");
+> 	}
+>
+> -	if (!gs || gs->v2p8_on == on)
+> +	if (gs->v2p8_on == on)
+> 		return 0;
+> 	gs->v2p8_on = on;
+>
+> --
+> 2.27.0
 
-Thanks Jules, this looks reasonable although I'm not going to merge
-them into audit/next until after the merge window closes.  I'll send
-another reply once this has been merged.
 
--- 
-paul moore
-www.paul-moore.com
+
