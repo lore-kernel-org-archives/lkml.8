@@ -2,89 +2,165 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B849206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596736374;
-	bh=Fc4HAKafihti5FdGXQTq8xE8L/v0aezeTqjq8flYAis=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DA+U7DrbwhbQquY2g1KKGUj93pr0EhyJco/k/CJtJZF5cvD/C4i6+ArtpByIzTso+
-	 6JYPf5V2TIfruPpJBdWZ3sAbysZMUXY29XjcnB/odsajDj7wwZs8YY+f9nsur2IXl7
-	 x0QdLh8dri53WbCQbs3MEb/rgLw7mV0nUdh+nHSE=
+	by mail.kernel.org (Postfix) with ESMTP id 990EB206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbgHFRww (ORCPT
+        id S1728428AbgHFRwc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:52:52 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:42113 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728399AbgHFRwt (ORCPT
+        Thu, 6 Aug 2020 13:52:32 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:8046 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728391AbgHFQbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:52:49 -0400
-Received: by mail-yb1-f196.google.com with SMTP id a34so21128399ybj.9;
-        Thu, 06 Aug 2020 10:52:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hgg7zjRmtBHf2LasBRhwIDC6917kX0SOQm5jVjzS8IY=;
-        b=nCh3eFAgcnGVQJwt76xeSrzviRhoMjBHsIuHNXqkAq8EOA6dy151e3y+EG3BLYtRsh
-         QVeqmj+OgHWIwCP9EHVbkmOZsDgAbBuH0dI7NHHm319inLAaqbVq/v+48emOBsxM6sWB
-         4Uou/DL6sXdDtY+GNzLwQ0+7EzprdDbQfmVlF0N+uCoYrknPp3yYJZ6yA+knEqTqoBsU
-         XVN16pumaeUUCx+7anFWCojmZ0K8GyeljDlxH4WvNJlOFyN76PG3WtFTD8rFogDet6Z8
-         yOvGcAKvVIEHQsT1SH3N+Xmmmu/i9Lfmau5NboSDdDGB1SlooRci5+T8xpI66ULIppIl
-         BKiA==
-X-Gm-Message-State: AOAM53190UqgjPg+EZxVr2A0wv07M7iXN69bNIdS4VZwdt5D43irDMsD
-        2tGgc1XaPcR21iWPafAUO1lK94+qINHbf97L/4p8cg==
-X-Google-Smtp-Source: ABdhPJxULzaMdb2r5HtAoGgvyO5tjHQhRFpUAVkZo1s1fFBs4k39zAEGh6ZRygcyIDYC1Ra54huZqcZBjxPgAvBb0BE=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr6761257oth.262.1596713126064;
- Thu, 06 Aug 2020 04:25:26 -0700 (PDT)
+        Thu, 6 Aug 2020 12:31:21 -0400
+Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+CC:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+References: <20200806080358.3124505-1-tweek@google.com>
+ <20200806080358.3124505-2-tweek@google.com>
+ <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com>
+ <8627d780-0e19-6755-0de5-c686deb0f5de@sony.com>
+ <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com>
+ <07e2c48d-3918-6ceb-a6b2-4e2f18f9ea01@gmail.com>
+ <CAEjxPJ4no_GqMp8aw43zpwmwq42Wi_1dvP+ZBs1a-mnReDt5Og@mail.gmail.com>
+ <dfeac808-b40d-77fd-0d31-f66f279083eb@sony.com>
+ <CAEjxPJ4EaXJ88-hT=jgfn0d1WVP9QQb0w2XQi7U2YVuqN2oMsg@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <17ca6cfc-9334-f326-2598-84a9b3846d28@sony.com>
+Date:   Thu, 6 Aug 2020 17:59:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>
- <3226770.pJcYkdRNc2@kreacher> <004701d66bb6$22a11410$67e33c30$@net>
-In-Reply-To: <004701d66bb6$22a11410$67e33c30$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 6 Aug 2020 13:25:13 +0200
-Message-ID: <CAJZ5v0gz89CXmNmFE50oB78JigrDzo=EPYcGQORRtz7WbWv9fQ@mail.gmail.com>
-Subject: Re: [PATCH v7] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Francisco Jerez <francisco.jerez.plata@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAEjxPJ4EaXJ88-hT=jgfn0d1WVP9QQb0w2XQi7U2YVuqN2oMsg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=frmim2wf c=1 sm=1 tr=0 a=Jtaq2Av1iV2Yg7i8w6AGMw==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=pGLkceISAAAA:8 a=nkvH8rM_Rumw_HgpOOAA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 1:04 PM Doug Smythies <dsmythies@telus.net> wrote:
+On 8/6/20 5:03 PM, Stephen Smalley wrote:
+> On Thu, Aug 6, 2020 at 10:51 AM peter enderborg
+> <peter.enderborg@sony.com> wrote:
+>> On 8/6/20 3:49 PM, Stephen Smalley wrote:
+>>> On Thu, Aug 6, 2020 at 9:45 AM Stephen Smalley
+>>> <stephen.smalley.work@gmail.com> wrote:
+>>>> On 8/6/20 8:32 AM, Stephen Smalley wrote:
+>>>>
+>>>>> On 8/6/20 8:24 AM, peter enderborg wrote:
+>>>>>
+>>>>>> On 8/6/20 2:11 PM, Stephen Smalley wrote:
+>>>>>>> On 8/6/20 4:03 AM, Thiébaud Weksteen wrote:
+>>>>>>>
+>>>>>>>> From: Peter Enderborg <peter.enderborg@sony.com>
+>>>>>>>>
+>>>>>>>> Add further attributes to filter the trace events from AVC.
+>>>>>>> Please include sample usage and output in the description.
+>>>>>>>
+>>>>>>>
+>>>>>> Im not sure where you want it to be.
+>>>>>>
+>>>>>> In the commit message or in a Documentation/trace/events-avc.rst ?
+>>>>> I was just asking for it in the commit message / patch description.  I
+>>>>> don't know what is typical for Documentation/trace.
+>>>> For example, I just took the patches for a spin, running the
+>>>> selinux-testsuite under perf like so:
+>>>>
+>>>> sudo perf record -e avc:selinux_audited -g make test
+>>>>
+>>>> and then ran:
+>>>>
+>>>> sudo perf report -g
+>>>>
+>>>> and a snippet of sample output included:
+>>>>
+>>>>       6.40%     6.40%  requested=0x800000 denied=0x800000
+>>>> audited=0x800000 result=-13 ssid=922 tsid=922
+>>>> scontext=unconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+>>>> tcontext=unconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+>>>> tclass=capability
+>>> So then the question becomes how do you use the above information,
+>>> e.g. is that sufficient to correlate it to an actual avc: denied
+>>> message, how do you decode the requested/denied/audited fields (or
+>>> should the code do that for you and just report the string name(s) of
+>>> the permission(s), do you need all three of those fields separately,
+>>> is it useful to log the ssid/tsid at all given that you have the
+>>> contexts and sids are dynamically assigned, etc.
+>>>
+>>>>              |
+>>>>              ---0x495641000028933d
+>>>>                 __libc_start_main
+>>>>                 |
+>>>>                 |--4.60%--__GI___ioctl
+>>>>                 |          entry_SYSCALL_64
+>>>>                 |          do_syscall_64
+>>>>                 |          __x64_sys_ioctl
+>>>>                 |          ksys_ioctl
+>>>>                 |          binder_ioctl
+>>>>                 |          binder_set_nice
+>>>>                 |          can_nice
+>>>>                 |          capable
+>>>>                 |          security_capable
+>>>>                 |          cred_has_capability.isra.0
+>>>>                 |          slow_avc_audit
+>>>>                 |          common_lsm_audit
+>>>>                 |          avc_audit_post_callback
+>>>>                 |          avc_audit_post_callback
+>> The real cool thing happen when you enable "user-stack-trace" too.
+>>
+>>            <...>-4820  [007] .... 85878.897553: selinux_audited: requested=0x4000000 denied=0x4000000 audited=0x4000000 result=-13 ssid=341 tsid=61 scontext=system_u:system_r:ntpd_t:s0 tcontext=system_u:object_r:bin_t:s0 tclass=file
+>>            <...>-4820  [007] .... 85878.897572: <user stack trace>
+>>  =>  <00007f07d99bb45b>
+>>  =>  <0000555ecd89ca57>
+>>
+>> The fields are useful for filter what you what to see and what you can ignore.  Having the ssid and text was from the part where it is called.
+>> The numeric can be used for two things. When you dont have any context. Same same reason as in post_callback. We need to be static
+>> in format so it need  be there if it ever can happen. And it is also useful for faster filtering.
+>>
+>> You can do "ssid!=42 && ssid!=43 && tsid==666".  From my view it would be good to have all fields there. But they need to right typed to be able
+>> to use the filter mechanism. There must me some trade-off too where the argument filtering get bigger than the processing, but I think we can
+>> add a lot more before we reach that threshold.
+> I don't think the SIDs are useful because they are dynamically
+> assigned (aside from the initial SIDs for bootstrapping before policy
+> load) and are not exported to userspace (userspace has no way to look
+> them up).  It is probably a mistake that we even fall back to logging
+> them in the existing code and may just be a legacy of when SIDs were
+> exported to userspace (ancient history, before mainline merge of
+> SELinux).
 >
-> On 2020.08.05 09:56 Rafael J. Wysocki wrote:
->
-> > v6 -> v7:
-> >    * Cosmetic changes in store_energy_performance_prefernce() to reduce the
-> >      LoC number and make it a bit easier to read.  No intentional functional
-> >      impact.
->
-> ??
-> V7 is identical to V6.
->
-> Diff:
+> In any event, if you were to include the sample usage and output I
+> provided as part of the commit message / patch description (or replace
+> with your own example), that would be helpful I think.  Even better
+> would be to also provide some hint as to how people are expected to
+> decode the requested/denied/audited fields (I know how to do that but
+> not everyone will, and ideally one would have a script or something
+> for doing so).
 
-Oh.
+But they are always the same until load off a new policy? And they can be mapped while debugging.
 
-It looks like I sent the v6 instead of it, then.
+You see one event and then you "know" it. This is for developers so it is a different mindset than for the
+netlink type that is for administrators.  Features for speeding things up are useful.
 
-I'll send the right one shortly, sorry for the confusion.
+Im doing a update on commit message, will send it to Weksteen for a review round first.
+
