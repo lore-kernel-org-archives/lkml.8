@@ -2,95 +2,101 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4345C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8589C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B023221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596734908;
-	bh=28d+J4ZbPNl40lknGronK+mAA8lqbwQ540gjSOJtLs8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bypjV7REmXmlT3IJ+3qj92KEqzfeDYmTUcMVnFYRQizXR9BqY6qWoVVZZvx1tFU3+
-	 QosbupUWQrlDnU/VD8ivMJy40zzx6lUViZ/+wrgIECxGkbvnkS2NJ+QI8LKF8q/zj/
-	 2ffkKETBHhKSJN5UGhIfjje1gQF8jnRvK4aAjM3g=
+	by mail.kernel.org (Postfix) with ESMTP id 1896C22DCC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wzydsvz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgHFR2H (ORCPT
+        id S1729717AbgHFR2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729716AbgHFRBX (ORCPT
+        Thu, 6 Aug 2020 13:28:36 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38867 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730422AbgHFR2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:01:23 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96066C00215C;
-        Thu,  6 Aug 2020 09:00:10 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id g19so37061742ejc.9;
-        Thu, 06 Aug 2020 09:00:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SBTEh2IqzApKPGLI0KaDJEQ6Ul4GdQLwfypsWEkduQY=;
-        b=sWjQn00opEh3ysIjn9yrPdAgeXjcTwuT3o3t+i2zi0JErjCRanMTXP8fROnEfry+1L
-         Gk/hwXzq47+3x95GBseIKNxOkYYjuJnhdnCqVO6mt19wQMYUCkFU9BqEZP3CjitmJtTT
-         0Cfb+o4flyogFkMcTqzg22VcOsRU3k5G21fD1D/NQC0jFydcYdPgeqgHWHkJ0zzGb9BS
-         XfqLowVMxF0M3BHl0pIlFOIgCT08E33Xik6CJLT9M2u++R+R/QUtikuyd3jWspZV6Gp0
-         0p62Yc067oGjj24xI583NYwBbv+S9TCTPXi64M9qzdv7Xd2ThvJo0ty2pMf6L/RHUZvX
-         ZpSQ==
-X-Gm-Message-State: AOAM532GnkCcsu3tTenh8v9iKLjMNJhQ1DvLRfLnvWFaWK04hk0PK8DB
-        wPE5Fn8hZe2rj6YlmaHwGDuamBWk4cI=
-X-Google-Smtp-Source: ABdhPJzYCjbGWFMLwI24xTvZK2FCGeO8yRGXSjriQhaEyChLhcMZZcy8l1jLyxcGio03Lm1BK6EgYg==
-X-Received: by 2002:a2e:b175:: with SMTP id a21mr3732433ljm.385.1596714135558;
-        Thu, 06 Aug 2020 04:42:15 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id r1sm2553077lff.55.2020.08.06.04.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 04:42:14 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1k3eHp-0002pY-QG; Thu, 06 Aug 2020 13:42:17 +0200
-Date:   Thu, 6 Aug 2020 13:42:17 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Patrick Riphagen <ppriphagen@gmail.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patrick.riphagen@xsens.com, stable@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: ftdi_sio: add IDs for Xsens Mti USB
- converter
-Message-ID: <20200806114217.GQ3634@localhost>
-References: <20200806090234.4130-1-patrick.riphagen@xsens.com>
+        Thu, 6 Aug 2020 13:28:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596734892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MwHd6CcJYEmEuf+YoO55dE8m5E0R87S7YH74U/aXf1A=;
+        b=Wzydsvz+CgFV08PnSwCga3m51Yl0+Yh98F/ELo+/7zTJMQIwrdni7S5cuddE4bVPl3k70D
+        n7zVtcl+KMA1fkDj25156nCeq6nH3cMzzsmOXalPwxzAMLxPGgsTZEPwKSpXJi7vQYUdBg
+        cUUxwACifn8/+2iPNocajYDVCPiq6Zc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-yw4yRZZJNTKvU8TjJjHtNg-1; Thu, 06 Aug 2020 13:28:10 -0400
+X-MC-Unique: yw4yRZZJNTKvU8TjJjHtNg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34FF6106F8C4;
+        Thu,  6 Aug 2020 17:28:09 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-112-23.rdu2.redhat.com [10.10.112.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D74767C0E5;
+        Thu,  6 Aug 2020 17:28:02 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 47886220441; Thu,  6 Aug 2020 13:28:02 -0400 (EDT)
+Date:   Thu, 6 Aug 2020 13:28:02 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 31/38] virtio_fs: convert to LE accessors
+Message-ID: <20200806172802.GD367847@redhat.com>
+References: <20200805134226.1106164-1-mst@redhat.com>
+ <20200805134226.1106164-32-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200806090234.4130-1-patrick.riphagen@xsens.com>
+In-Reply-To: <20200805134226.1106164-32-mst@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 11:02:34AM +0200, Patrick Riphagen wrote:
-> The device added has an FTDI chip inside.
-> The device is used to connect Xsens USB Motion Trackers.
+On Wed, Aug 05, 2020 at 09:44:39AM -0400, Michael S. Tsirkin wrote:
+> Virtio fs is modern-only. Use LE accessors for config space.
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Patrick Riphagen <patrick.riphagen@xsens.com>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+
+Vivek
+
 > ---
+>  fs/fuse/virtio_fs.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> index 4c4ef5d69298..104f35de5270 100644
+> --- a/fs/fuse/virtio_fs.c
+> +++ b/fs/fuse/virtio_fs.c
+> @@ -606,8 +606,8 @@ static int virtio_fs_setup_vqs(struct virtio_device *vdev,
+>  	unsigned int i;
+>  	int ret = 0;
+>  
+> -	virtio_cread(vdev, struct virtio_fs_config, num_request_queues,
+> -		     &fs->num_request_queues);
+> +	virtio_cread_le(vdev, struct virtio_fs_config, num_request_queues,
+> +			&fs->num_request_queues);
+>  	if (fs->num_request_queues == 0)
+>  		return -EINVAL;
+>  
+> -- 
+> MST
+> 
 
-Almost there; would you mind resending with an added From: line before
-the commit message so that the authorship matches the SoB?
-
-Also, whenever you update a patch, please add a version number in the
-Subject line (e.g. "[PATCH v2]: USB: serial: ...") so we can keep track
-of which version is the latest one. You should also include a short
-changelog here under the "---" line so we know what changed.
-
-Thanks,
-Johan
