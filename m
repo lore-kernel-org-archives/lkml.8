@@ -2,115 +2,141 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BC6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073C823119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4C223119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596732560;
+	bh=iArLv1KxUuzbXzGAtAlRwJFgWVQmsd235HnefreHjCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dhd3FlX7FYb1vPZMiZGPVmAyzka1SxtHc4YAVJLoxK6I3CcIHGUjUlMNZpS7kMX1C
+	 YveR49bBEXZmt+E2Xy0NZxIlP7AX/1Y9Y2lMRp2PuS/ElzUpbF6D87Mji1ykFtUasr
+	 f9qVRzyhnzamSX/e76fitrkmYEA/T7iZqm7Fecuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgHFQtC (ORCPT
+        id S1729154AbgHFQtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:49:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:45206 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbgHFQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:42:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3829131B;
-        Thu,  6 Aug 2020 04:25:59 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15FF43F99C;
-        Thu,  6 Aug 2020 04:25:51 -0700 (PDT)
-Subject: Re: [PATCH v4 00/10] sched: Instrument sched domain flags
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
-References: <20200731115502.12954-1-valentin.schneider@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <306502b9-522a-43d9-1209-15675009bf1b@arm.com>
-Date:   Thu, 6 Aug 2020 13:25:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 12:49:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39862 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729104AbgHFQsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:48:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v9so18064113ljk.6;
+        Thu, 06 Aug 2020 09:48:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2CFr1WO/oeNCTJdjwIX/TiCWFfnGU5V/MdaXXMTg4nw=;
+        b=o2eaXiemnyv7kEoOxaj3PhunceF4k4Z5gP6KuR88evRcrlcJ//Fu3GjVJNVnqI5/EJ
+         o6e0AbJ073jvh4mgMPAHtaeN0xqCrnC9rWc7iTXEOG0ZoyOQdtS7RTZexPDisn+hS8yJ
+         iCKgntdqy57zhihUX3JH8BjeB461v45ZkVZs80w4mmyjXVehg6/6XR59bCmi7+L90Rqi
+         mPjYp1khXm1SzwOu8nFxNQGBFLzm4yDtX39jKkTHWeMxwjQSjSNOc52lawalfQZN5Qb3
+         1WPLFYVxr9OI9nvFTl8j/3INopkqzq5pYc6rEaqQ2H8/1HuEU4I9pfWsFG7Ic6Fqwm4J
+         XnVQ==
+X-Gm-Message-State: AOAM530n8Jv1UjRK2u5g22DFkMwiV55iV7QkJ6W9g8/uy5wknhqE3DmE
+        bpAuIestmCmzsah04tJ1obGg+WIL+r0=
+X-Google-Smtp-Source: ABdhPJzBoIhDGLnB9sT9oB5TM5Ps4uAmCPKjH7JBZrcf1F76+eu7r7+YJBa7FmB1d0p5KoyIofGB8g==
+X-Received: by 2002:a2e:5c5:: with SMTP id 188mr3701045ljf.466.1596721995016;
+        Thu, 06 Aug 2020 06:53:15 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id p11sm2670295lfo.71.2020.08.06.06.53.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 06:53:13 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1k3gKa-0003Vy-Vg; Thu, 06 Aug 2020 15:53:17 +0200
+Date:   Thu, 6 Aug 2020 15:53:16 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com, linus.walleij@linaro.org,
+        mchehab+huawei@kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip
+ support
+Message-ID: <20200806135316.GT3634@localhost>
+References: <20200607162350.21297-1-mani@kernel.org>
+ <20200607162350.21297-3-mani@kernel.org>
+ <20200701130206.GD3334@localhost>
+ <20200726155223.GB12036@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <20200731115502.12954-1-valentin.schneider@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726155223.GB12036@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/2020 13:54, Valentin Schneider wrote:
-> Hi,
-> 
-> I've repeatedly stared at an SD flag and asked myself "how should that be
-> set up in the domain hierarchy anyway?". I figured that if we formalize our
-> flags zoology a bit, we could also do some runtime assertions on them -
-> this is what this series is all about.
-> 
-> Patches
-> =======
-> 
-> The idea is to associate the flags with metaflags that describes how they
-> should be set in a sched domain hierarchy ("if this SD has it, all its {parents,
-> children} have it") or how they behave wrt degeneration - details are in the
-> comments and commit logs. 
-> 
-> The good thing is that the debugging bits go away when CONFIG_SCHED_DEBUG isn't
-> set. The bad thing is that this replaces SD_* flags definitions with some
-> unsavoury macros. This is mainly because I wanted to avoid having to duplicate
-> work between declaring the flags and declaring their metaflags.
-> 
-> o Patches 1-3 are topology cleanups / fixes
-> o Patches 4-6 instrument SD flags and add assertions
-> o Patches 7-10 leverage the instrumentation to factorize domain degeneration
-> 
-> Revisions
-> =========
-> 
-> v3 -> v4
-> --------
-> 
-> o Reordered the series to have fixes / cleanups first
-> 
-> o Added SD_ASYM_CPUCAPACITY propagation (Quentin)
-> o Made ARM revert back to the default sched topology (Dietmar)
-> o Removed SD_SERIALIZE degeneration special case (Peter)
-> 
-> o Made SD_NUMA and SD_SERIALIZE have SDF_NEEDS_GROUPS
-> 
->   As discussed on v3, I thought this wasn't required, but thinking some more
->   about it there can be cases where that changes the current behaviour. For
->   instance, in the following wacky triangle:
-> 
->       0\ 30
->       | \
->   20  |  2
->       | /
->       1/ 30
-> 
->   there are two unique distances thus two NUMA topology levels, however the
->   first one for node 2 would have the same span as its child domain and thus
->   should be degenerated. If we don't give SD_NUMA and SD_SERIALIZE
->   SDF_NEEDS_GROUPS, this domain wouldn't be denegerated since its child
->   *doesn't* have either SD_NUMA or SD_SERIALIZE (it's the first NUMA domain),
->   and we'd have this weird NUMA domain lingering with a single group.
+On Sun, Jul 26, 2020 at 09:22:23PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jul 01, 2020 at 03:02:06PM +0200, Johan Hovold wrote:
+> > On Sun, Jun 07, 2020 at 09:53:49PM +0530, Manivannan Sadhasivam wrote:
+> > > Add gpiochip support for Maxlinear/Exar USB to serial converter
+> > > for controlling the available gpios.
+> > > 
+> > > Inspired from cp210x usb to serial converter driver.
+> > > 
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: linux-gpio@vger.kernel.org
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> > > ---
+> > >  drivers/usb/serial/xr_serial.c | 209 ++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 208 insertions(+), 1 deletion(-)
 
-LGTM.
+> > > @@ -390,6 +408,13 @@ static void xr_set_flow_mode(struct tty_struct *tty,
+> > >  	 */
+> > >  	gpio_mode &= ~UART_MODE_GPIO_MASK;
+> > >  	if (cflag & CRTSCTS) {
+> > > +#ifdef CONFIG_GPIOLIB
+> > > +		/* Check if the CTS/RTS pins are occupied */
+> > > +		if (port_priv->pin_status[GPIO_RTS] ||
+> > > +		    port_priv->pin_status[GPIO_CTS])
+> > > +			return;
+> > > +#endif
+> > 
+> > You cannot just bail out as this could leave software flow enabled etc.
+> > 
+> > You also need to claim these pins once at open or leave them be. We
+> > don't want CRTSCTS to suddenly start toggling because a pin is released
+> > by gpiolib.
+> > 
+> > That is, determine who owns each pin at open() and keep it that way till
+> > close() (by setting some flags at open).
+> > 
+> > > +
+> > >  		dev_dbg(&port->dev, "Enabling hardware flow ctrl\n");
+> > >  		flow = UART_FLOW_MODE_HW;
+> > >  		gpio_mode |= UART_MODE_RTS_CTS;
+> > > @@ -497,6 +522,17 @@ static int xr_tiocmset_port(struct usb_serial_port *port,
+> > >  	u8 gpio_set = 0;
+> > >  	u8 gpio_clr = 0;
+> > >  
+> > > +#ifdef CONFIG_GPIOLIB
+> > > +	/* Check if the RTS/DTR pins are occupied */
+> > > +	if (set & TIOCM_RTS || clear & TIOCM_RTS)
+> > > +		if (port_priv->pin_status[GPIO_RTS])
+> > > +			return -EBUSY;
+> > > +
+> > > +	if (set & TIOCM_DTR || clear & TIOCM_DTR)
+> > > +		if (port_priv->pin_status[GPIO_DTR])
+> > > +			return -EBUSY;
+> > > +#endif
+> > 
+> > Same here. And perhaps just ignoring the pins managed by gpiolib is
+> > better (cf. gpiolib and pinctrl being orthogonal).
+> 
+> You mean, we can just make TX,RX,CTS,RTS pins controlled only by the serial
+> driver and the rest only by gpiolib?
 
-Tested on Arm & Arm64 dual-cluster big.LITTLE (so only
-default_topology[]) with CONFIG_SCHED_MC=y for the following cases:
+No, I think I just meant that you shouldn't return an error here for
+signals whose pins happen to be muxed for a different function (gpio).
 
-(1) normal bring-up
-(2) CPU hp all but one CPU of one cluster
-(3) CPU hp entire cluster
-
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Johan
