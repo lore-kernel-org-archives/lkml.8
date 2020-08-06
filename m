@@ -7,65 +7,58 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7CE2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500732173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BrhbW8Wo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4IsK0bVO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QhUCUpWm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3LJkmTo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgHFXkg (ORCPT
+        id S1727797AbgHFXkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgHFXir (ORCPT
+        Thu, 6 Aug 2020 19:40:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60902 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgHFXit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:38:47 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D436C061574;
-        Thu,  6 Aug 2020 16:38:46 -0700 (PDT)
-Date:   Thu, 06 Aug 2020 23:38:44 -0000
+        Thu, 6 Aug 2020 19:38:49 -0400
+Date:   Thu, 06 Aug 2020 23:38:46 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757124;
+        s=2020; t=1596757127;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=a/6bN2W+sbKqoMQVXc/N208gzWCrayhuS/+kjHFDvAY=;
-        b=BrhbW8WoN8ZgoiwRKN+ELUA/12D+PrqobcQScAwW2lL69y5LLa+0pJ5EIR0nPp2U+pP/4n
-        WjEnPC3244L5cIqW0TwV6JPoBa7w2k+cvjiOfhiapgukFC2pxZfNxEfQdMHxnGHIwninM3
-        GW+5536t4lZFeaJaRARq5nBfOvCLzeXFosporpf6GNpiES+mBRepGR5U0TtXdBJ7xeWxNQ
-        6jYu6BjxQf+42QqNhfiGTG5QUTfkKqlX2Oy7lE8DK8ag+ICfvihTDW6TxFzvBgduYKWOPa
-        AYHmqxi/qI8ick9nDu5FYggO/ws6aNaF6gYJuI0WCQNpFp0sIBDd3+pIRmigzA==
+        bh=sbU1C4X0lV1GN1HcFt4QXmWuuCwiwsFzKG3FgR70TE4=;
+        b=QhUCUpWmK/l7cpdUOGzDeTKeql+ZZuK17qZHhSemGVYfOcwWZpN04t/IqYbcaDECG3FAyO
+        RQ0vk7NcK8zBK6hDpBA6FnhLyue6tsQLYQlh536Jda7x8l8qMGbQgSa2L1QHJzjxEEf6L0
+        iCvFFIM0RB5vYohvNJZHcYmRoIhf1WEQqQmFIJXrED/qfSzD0M8LtCBIL8MBdXOHgIAedN
+        RiqFUYJlxgWzCqmr+Iyy1anJjgHBo0RXxu/BHn983/GIDxldQLBpHusMPTYMuvIzb7xD90
+        FJIlrCqoR+vUjCx8ydWIbjmdldRQuqxJElt3tfVmlQe8oYZoxZ4eTZR4K7O9Ew==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757124;
+        s=2020e; t=1596757127;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=a/6bN2W+sbKqoMQVXc/N208gzWCrayhuS/+kjHFDvAY=;
-        b=4IsK0bVOvHegUuLCzCxTf5W0k/Oy211XSWpZNnZpU+C1hbFS6aZRurFGSHTZrqBd1Lpi0k
-        uZEQc6mYtkEmZ2BQ==
-From:   "tip-bot2 for Dilip Kota" <tip-bot2@linutronix.de>
+        bh=sbU1C4X0lV1GN1HcFt4QXmWuuCwiwsFzKG3FgR70TE4=;
+        b=3LJkmTo2IPV1YI8ga4aI9BkHsxPC36FlLEVXIrByH79VYvAHnpucbnGHcQ1Cp1Bq+xwGeV
+        VI+lMvvEmwpNvOBg==
+From:   "tip-bot2 for Shuo Liu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/tsr: Fix tsc frequency enumeration bug on
- Lightning Mountain SoC
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+Subject: [tip: x86/urgent] x86/acrn: Remove redundant chars from ACRN signature
+Cc:     Shuo Liu <shuo.a.liu@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Reinette Chatre <reinette.chatre@intel.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: =?utf-8?q?=3C211c643ae217604b46cbec43a2c0423946dc7d2d=2E15964?=
- =?utf-8?q?40057=2Egit=2Eeswara=2Ekota=40linux=2Eintel=2Ecom=3E?=
-References: =?utf-8?q?=3C211c643ae217604b46cbec43a2c0423946dc7d2d=2E159644?=
- =?utf-8?q?0057=2Egit=2Eeswara=2Ekota=40linux=2Eintel=2Ecom=3E?=
+In-Reply-To: <20200806114111.9448-1-shuo.a.liu@intel.com>
+References: <20200806114111.9448-1-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-Message-ID: <159675712426.3192.11461805237843153362.tip-bot2@tip-bot2>
+Message-ID: <159675712671.3192.9044142725285189361.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -77,53 +70,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     7d98585860d845e36ee612832a5ff021f201dbaf
-Gitweb:        https://git.kernel.org/tip/7d98585860d845e36ee612832a5ff021f201dbaf
-Author:        Dilip Kota <eswara.kota@linux.intel.com>
-AuthorDate:    Mon, 03 Aug 2020 15:56:36 +08:00
+Commit-ID:     4c7bfa383efd837d4ab8f86ef05886959ed8bfe5
+Gitweb:        https://git.kernel.org/tip/4c7bfa383efd837d4ab8f86ef05886959ed8bfe5
+Author:        Shuo Liu <shuo.a.liu@intel.com>
+AuthorDate:    Thu, 06 Aug 2020 19:41:11 +08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 07 Aug 2020 01:32:00 +02:00
 
-x86/tsr: Fix tsc frequency enumeration bug on Lightning Mountain SoC
+x86/acrn: Remove redundant chars from ACRN signature
 
-Frequency descriptor of Lightning Mountain SoC doesn't have all the
-frequency entries so resulting in the below failure causing a kernel hang:
+hypervisor_cpuid_base() only handles 12 chars of the hypervisor
+signature string but is provided with 14 chars.
 
-    Error MSR_FSB_FREQ index 15 is unknown
-    tsc: Fast TSC calibration failed
+Remove the redundancy. Additionally, replace the user space uint32_t
+with preferred kernel type u32.
 
-So, add all the frequency entries in the Lightning Mountain SoC frequency
-descriptor.
-
-Fixes: 0cc5359d8fd45 ("x86/cpu: Update init data for new Airmont CPU model")
-Fixes: 812c2d7506fd ("x86/tsc_msr: Use named struct initializers")
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Link: https://lore.kernel.org/r/211c643ae217604b46cbec43a2c0423946dc7d2d.1596440057.git.eswara.kota@linux.intel.com
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Link: https://lore.kernel.org/r/20200806114111.9448-1-shuo.a.liu@intel.com
 ---
- arch/x86/kernel/tsc_msr.c |  9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/acrn.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 4fec6f3..a654a9b 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -133,10 +133,15 @@ static const struct freq_desc freq_desc_ann = {
- 	.mask = 0x0f,
- };
+diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+index 3b08cdf..0b2c039 100644
+--- a/arch/x86/kernel/cpu/acrn.c
++++ b/arch/x86/kernel/cpu/acrn.c
+@@ -17,9 +17,9 @@
+ #include <asm/idtentry.h>
+ #include <asm/irq_regs.h>
  
--/* 24 MHz crystal? : 24 * 13 / 4 = 78 MHz */
-+/*
-+ * 24 MHz crystal? : 24 * 13 / 4 = 78 MHz
-+ * Frequency step for Lightning Mountain SoC is fixed to 78 MHz,
-+ * so all the frequency entries are 78000.
-+ */
- static const struct freq_desc freq_desc_lgm = {
- 	.use_msr_plat = true,
--	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
-+	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000,
-+		   78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
- 	.mask = 0x0f,
- };
+-static uint32_t __init acrn_detect(void)
++static u32 __init acrn_detect(void)
+ {
+-	return hypervisor_cpuid_base("ACRNACRNACRN\0\0", 0);
++	return hypervisor_cpuid_base("ACRNACRNACRN", 0);
+ }
  
+ static void __init acrn_init_platform(void)
