@@ -2,139 +2,206 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812B0C43446
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157D9C388EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6D522CBB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03022221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBq6G2Ht"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="jDKBCYuy";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="DWMIC2Gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgHFGnO (ORCPT
+        id S1728458AbgHFHj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgHFGnM (ORCPT
+        Thu, 6 Aug 2020 03:39:59 -0400
+Received: from relay2.mymailcheap.com ([151.80.165.199]:43182 "EHLO
+        relay2.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbgHFHj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:43:12 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30736C061574;
-        Wed,  5 Aug 2020 23:43:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z18so39292106wrm.12;
-        Wed, 05 Aug 2020 23:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=46ceznf8owg3s+9NXjpM+2fx/1Tzs0h2vk3bq2eXF5Y=;
-        b=NBq6G2HtRLOhigjZvBcapT0e6ZDZndnZ9JxRXY2wmvxGRm08XiFcmmLI+1EaM6lUWu
-         d5bPfa7bWn+r4wFAl8QCpqE9DcQ/hLvDKwy+PVZM8aTfLL2me3VzjuirayqTMthN+jNV
-         e0T5MpMnkbhmOBXXZsrurSg0Acbubp00avvhOa+GGxIpyP9UKdRduTPyvwvF+dziGhM6
-         x3+hMMQ1iao3AZ6ho+HaVCtxwMirT98P9EvzKvEzn4sv8gYILdNK7YyBe4tqTBedSVjw
-         pUzbjYGiwY/beqgBlwE7yJ7QQrc7R46kf4tZN71ya4rzUtF5HJ0NOUqmJwwfpMrJg/f6
-         C3Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=46ceznf8owg3s+9NXjpM+2fx/1Tzs0h2vk3bq2eXF5Y=;
-        b=K6+jCTfc4NH6tyaN27rsIhSMwpA0bk3V4fvYJHksL45KiGe7eSBQtsZKYuHylchQx8
-         R8pAWx22ufRBnwvCdiY+4fsYUoRZVtyYXhr/P7lT3PohxaBAlIyRt393Lky0EpNA9XTR
-         vdEaTsp9pZWEY3YS7g8Vl1y8je4xYlhtTj9vrM8hA5RitugKdvns1Xcs/VLKh5EIbheS
-         s3UMlKR9dqNMuxEuFCXsi/YN8mfBmR/lAYTIkKe3KfE+R1w4kIy5aZIw4UU5Wz7pQ3HD
-         xdxTT5UQLmuwlT93DKQdyWBwfecEQ8QOpgP4TMBV37APYKlvpNPfQo1kByfCNl7HYv8C
-         57qg==
-X-Gm-Message-State: AOAM530dHhfLDkHpSE51mlNTmDt3kz3yCtGv0bhwn6X3WdEvGYb5AK2o
-        N5q+fTzYXY54SvT1/1/4sc4=
-X-Google-Smtp-Source: ABdhPJye8C37Sx0qqiJv6SzW3H9qWEUK13htKqhKpm4l+PD6kzn0IUxj9AOwz6xO6vMJPqOd0IhhbQ==
-X-Received: by 2002:a5d:4603:: with SMTP id t3mr6382527wrq.175.1596696189840;
-        Wed, 05 Aug 2020 23:43:09 -0700 (PDT)
-Received: from [10.55.3.148] ([173.38.220.41])
-        by smtp.gmail.com with ESMTPSA id p15sm5237192wrj.61.2020.08.05.23.43.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 23:43:09 -0700 (PDT)
-Subject: Re: [PATCH] seg6: using DSCP of inner IPv4 packets
-To:     David Miller <davem@davemloft.net>
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.mayer@uniroma2.it
-References: <20200804074030.1147-1-ahabdels@gmail.com>
- <20200805.174049.1470539179902962793.davem@davemloft.net>
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-Message-ID: <7f8b1def-0a65-d2a4-577e-5f928cee0617@gmail.com>
-Date:   Thu, 6 Aug 2020 08:43:06 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Thu, 6 Aug 2020 03:39:58 -0400
+X-Greylist: delayed 158672 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 03:39:56 EDT
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay2.mymailcheap.com (Postfix) with ESMTPS id 178FD3EDEC;
+        Thu,  6 Aug 2020 09:39:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id E55E52A4ED;
+        Thu,  6 Aug 2020 09:39:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596699594;
+        bh=SlXr4N5zUZPies1dpF71kmNZ2wAzVghXtvgdGIbGqCk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jDKBCYuyoBCDue2RBgG+yFcraE8CPRAELSyovv86/tbZuNytDsSjpehAESQZl2huy
+         jB9kyyBWKCfM060bRZYxHXon04vTJgnjZlRq7dPAoKtw3NL2lxYP3a9WGTNVRQ4/5R
+         eVlenrgcJRUOdYl0eZt0wsqr06ULwyxN7iq7RKVY=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bgKOaq43Ym8n; Thu,  6 Aug 2020 09:39:51 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Thu,  6 Aug 2020 09:39:51 +0200 (CEST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 65DCE41330;
+        Thu,  6 Aug 2020 07:39:50 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="DWMIC2Gj";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [203.86.239.91])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id CD8D341330;
+        Thu,  6 Aug 2020 07:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596699583;
+        bh=SlXr4N5zUZPies1dpF71kmNZ2wAzVghXtvgdGIbGqCk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DWMIC2GjKyHq7fKIhxVxhNiRvhnkrikjJ6A7vhAtH2wN6QXt1wuicbSPTu5i8CxJa
+         R2kxxeRTud+K8DTTJ+dFRkKBNlTiZc2U7HOVNjTZAnzsY2cPNvvliubnbEOER2mpbw
+         1gGwL11e5HbVrDeMu5Vrctz6RUYPYeruAEy7adtA=
+Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
+Date:   Thu, 6 Aug 2020 15:39:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200805.174049.1470539179902962793.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 65DCE41330
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RCPT_COUNT_FIVE(0.00)[5];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-SRv6 as defined in [1][2] does not mandate that the hop_limit of the 
-outer IPv6 header has to be copied from the inner packet.
-
-The only thing that is mandatory is that the hop_limit of the inner 
-packet has to be decremented [3]. This complies with the specification 
-defined in the Generic Packet Tunneling in IPv6 [4]. This part is 
-actually missing in the kernel.
-
-For the hop_limit of the outer IPv6 header, the other SRv6 
-implementations [5][6] by default uses the default ipv6 hop_limit. But 
-they allow also to use a configurable hop_limit for the outer header.
-
-In conclusion the hop limit behavior in this patch is intentional and in 
-my opnion correct.
-
-If you agree I can send two patches to:
-- decrement hop_limit of inner packet
-- allow a configurable hop limit of outer IPv6 header
 
 
-[1] https://tools.ietf.org/html/rfc8754
-[2] 
-https://tools.ietf.org/html/draft-ietf-spring-srv6-network-programming-16
-[3] 
-https://tools.ietf.org/html/draft-ietf-spring-srv6-network-programming-16#section-5
-[4] https://tools.ietf.org/html/rfc2473#section-3.1
-[5]https://github.com/FDio/vpp/blob/8bf80a3ddae7733925a757cb1710e25776eea01c/src/vnet/srv6/sr_policy_rewrite.c#L110
-[6] 
-https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r6-6/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-66x/b-segment-routing-cg-asr9000-66x_chapter_011.html#id_94209
+在 2020/8/6 下午3:09, Tiezhu Yang 写道:
+> Loongson processors have a writecombine issue that maybe failed to
+> write back framebuffer used with ATI Radeon or AMD GPU at times,
+> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+> mapping for MIPS"), there exists some errors such as blurred screen
+> and lockup, and so on.
+>
+> With this patch, disable writecombine by default for Loongson64 to
+> work well with ATI Radeon or AMD GPU, and it has no influence on the
+> other platforms due to writecombine is enabled by default.
+>
+> Additionally, if it is necessary, writecombine=on can be set manually
+> in the cmdline to enhance the performance for Loongson LS7A integrated
+> graphics in the future.
+>
+> [   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than 10079msec
+> [   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id 0x0000000000000112 last fence id 0x000000000000011d on ring 0)
+> [   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than 10086msec
+> [   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id 0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
+Hi Tiezhu,
 
+Thanks for your patch.
+Personally I didn't have any issue with writecombine on my test systems, 
+but there
+are some complains about unstable graphic card from users. So generally 
+a cmdline
+writecombine switch is necessary.
 
-On 06/08/2020 02:40, David Miller wrote:
-> From: Ahmed Abdelsalam <ahabdels@gmail.com>
-> Date: Tue,  4 Aug 2020 07:40:30 +0000
-> 
->> This patch allows copying the DSCP from inner IPv4 header to the
->> outer IPv6 header, when doing SRv6 Encapsulation.
->>
->> This allows forwarding packet across the SRv6 fabric based on their
->> original traffic class.
->>
->> Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
-> 
-> You have changed the hop limit behavior here and that neither seems
-> intentional nor correct.
-> 
-> When encapsulating ipv6 inside of ipv6 the inner hop limit should be
-> inherited.  You should only use the DST hop limit when encapsulating
-> ipv4.
-> 
-> And that's what the existing code did.
-> 
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/mips/include/asm/pgtable.h |  4 ++++
+>   arch/mips/kernel/cpu-probe.c    | 19 +++++++++++++++++++
+>   2 files changed, 23 insertions(+)
+>
+> diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+> index dd7a0f5..34869f7 100644
+> --- a/arch/mips/include/asm/pgtable.h
+> +++ b/arch/mips/include/asm/pgtable.h
+> @@ -473,6 +473,10 @@ static inline pgprot_t pgprot_noncached(pgprot_t _prot)
+>   static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+>   {
+>   	unsigned long prot = pgprot_val(_prot);
+> +	extern bool mips_writecombine;
+> +
+> +	if (!mips_writecombine)
+> +		return pgprot_noncached(_prot);
 
+You can simply override c->writecombine to _CACHE_UNCACHED in 
+cpu-probe.c with
+out this kind of hijack.
+
+>   
+>   	/* cpu_data[0].writecombine is already shifted by _CACHE_SHIFT */
+>   	prot = (prot & ~_CACHE_MASK) | cpu_data[0].writecombine;
+> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+> index e2955f1..98777ca 100644
+> --- a/arch/mips/kernel/cpu-probe.c
+> +++ b/arch/mips/kernel/cpu-probe.c
+> @@ -459,6 +459,25 @@ static int __init ftlb_disable(char *s)
+>   
+>   __setup("noftlb", ftlb_disable);
+>   
+> +#ifdef CONFIG_MACH_LOONGSON64
+> +bool mips_writecombine; /* initialise to false by default */
+> +#else
+> +bool mips_writecombine = true;
+> +#endif
+> +EXPORT_SYMBOL(mips_writecombine);
+There is no need to export this symbol, see comment before.
+> +
+> +static int __init writecombine_setup(char *str)
+> +{
+> +	if (strcmp(str, "on") == 0)
+> +		mips_writecombine = true;
+> +	else if (strcmp(str, "off") == 0)
+> +		mips_writecombine = false;
+> +
+> +	return 1;
+> +}
+> +
+> +__setup("writecombine=", writecombine_setup);
+
+Use early_param here seems more reasonable, it will be probed earlier.
+
+> +
+>   /*
+>    * Check if the CPU has per tc perf counters
+>    */
+Thanks
+
+- Jiaxun
