@@ -2,158 +2,90 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA412245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596680557;
-	bh=Oyt1+UzMecDGgcbUQuNlSQ22A1IxTrKYx/rpyFlm7fw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eHsbIf1xbzRFdY7ux3u2vhHjgtTFbWV+rVs6lNiVOm/jLacLZlhNF2/HLIyQSRIYP
-	 FEsi//mZAEl0Z9nmp4015gIvpZbuO0JqSfGZK+COGww6bGSPpOT+SLrlSlF8Zca12U
-	 uxRnAQ/ACMFKYS+qGI1bhTTBVW6oa4Z/r0sxjcq8=
+	by mail.kernel.org (Postfix) with ESMTP id 3BE1920823
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="BmYQrex5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgHFCWg (ORCPT
+        id S1726841AbgHFCYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:22:36 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:31210 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgHFCWf (ORCPT
+        Wed, 5 Aug 2020 22:24:40 -0400
+Received: from m15113.mail.126.com ([220.181.15.113]:45862 "EHLO
+        m15113.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgHFCYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:22:35 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0762MGfW005242;
-        Thu, 6 Aug 2020 11:22:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0762MGfW005242
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596680537;
-        bh=sgC4wMyOXq1SDJpZeZcw2hSX1e75t3MVK4Q+P0k1NLU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oaL/Czqy1sTqI7z/ObQV9/lXX2n8BmBIaC55qwNhyYOuM7TuOWQvX3Wn4URhTSABg
-         pZD9NbDOJX7sGZGga+hZS8Re+rlHthMrg8oXTv6PKMBY8NYe8EFT1iU+Ua0N2jDHob
-         0JfkimM3iXn2iTD621RqFY69Q+RAKPuFhhR5Tt6pZ0QETglHi0lKTwT2nDg/ELnKOI
-         9Nx5hY2Bh66gkPh0gpZdPfa/W4N3Jkhf+nWtWFPLVGxmlNYrl1aNee3UGlBZPz/ScJ
-         SFNvHsxxTfhOJV0bDXe43O+1YvO/eDsEcPl0Z61NRj/OWMXb7zdnU9reyxi0pmeKXZ
-         pFPll+yblEPjQ==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id p27so10107806uaa.12;
-        Wed, 05 Aug 2020 19:22:17 -0700 (PDT)
-X-Gm-Message-State: AOAM532sa46h1RZflJtgXi8AtXlcFuSU8HfcuuRDu33tmi1uNowfibT8
-        o6Pr0TdUHR+I03PSByV65qQCpqCiSsBS3MgLGKg=
-X-Google-Smtp-Source: ABdhPJzapV3/tw5sL05iXLx3S/H/o9bbQBZyBcr5IV+1cnkMKhGX2cUkcZKpq0tPVVv2tG3KFnm9OWTFrMiPxcBGMo0=
-X-Received: by 2002:ab0:41:: with SMTP id 59mr4087008uai.40.1596680536213;
- Wed, 05 Aug 2020 19:22:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596650328-14869-1-git-send-email-eberman@codeaurora.org>
-In-Reply-To: <1596650328-14869-1-git-send-email-eberman@codeaurora.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 6 Aug 2020 11:21:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARrFFF5DTQfm3mo0NtdJjP9p4c=h5iM=vTuOSR=JE8Sbg@mail.gmail.com>
-Message-ID: <CAK7LNARrFFF5DTQfm3mo0NtdJjP9p4c=h5iM=vTuOSR=JE8Sbg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Add dtc flag test
-To:     Elliot Berman <eberman@codeaurora.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Steve Muckle <smuckle@google.com>,
-        Trilok Soni <tsoni@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 5 Aug 2020 22:24:39 -0400
+X-Greylist: delayed 1882 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 22:24:37 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Mime-Version:Subject:Date:Message-Id; bh=ywqa8
+        L2ixKMexJpGMIYm6JOP6w+bNibGRHdnxfimh+E=; b=BmYQrex5MroCjEM6mhEvH
+        txqvu9Re9qvUYzReWsIdXK4O/4RaejKzgydOnPRJ72EqK/OMg/uNUww0RVwC+jVs
+        s85Vud2ivMdfa2VuKmsQkpKjHzbxwv+BjsjioG/Ux+rYlPD8rpox/oER/6Anuqz8
+        CNxqVZdqq52HMbt0if1AKU=
+Received: from [100.34.13.32] (unknown [106.121.162.12])
+        by smtp3 (Coremail) with SMTP id DcmowABHnfFqYitfRqCkIQ--.14539S2;
+        Thu, 06 Aug 2020 09:52:44 +0800 (CST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   =?utf-8?B?5aec6L+O?= <jiangying8582@126.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v4] ext4: fix direct I/O read error
+Date:   Thu, 6 Aug 2020 09:52:42 +0800
+Message-Id: <4E76AAD5-D69F-455F-8B70-A46E50E7D60B@126.com>
+References: <20200806011909.GD2975990@sasha-vm>
+Cc:     Jan Kara <jack@suse.cz>, stable@vger.kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wanglong19@meituan.com,
+        heguanjun@meituan.com
+In-Reply-To: <20200806011909.GD2975990@sasha-vm>
+To:     Sasha Levin <sashal@kernel.org>
+X-Mailer: iPhone Mail (17F80)
+X-CM-TRANSID: DcmowABHnfFqYitfRqCkIQ--.14539S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKry7Gw13tF1DWF4kZr1UZFb_yoWfuwc_CF
+        WkG3ykGFWUCFW3JF4Uta9xAry7CFWagryDX3yqgrsFg34DArZ8Wa15Aa1Fyr1fCwn3GF1D
+        KryYyw1DWr13ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUj4CJJUUUUU==
+X-Originating-IP: [106.121.162.12]
+X-CM-SenderInfo: xmld0wp1lqwmqvysqiyswou0bp/1tbi7wx4AFpD+obtvgAAst
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 2:59 AM Elliot Berman <eberman@codeaurora.org> wrote:
->
-> Host dtc may not support the same flags as kernel's copy of dtc. Test
-> if dtc supports each flag when the dtc comes from host.
->
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+Sorry=EF=BC=8CI will fix this error on 4.4 and 4.9=EF=BC=8Cand then send a p=
+atch for 4.4 and 4.9=EF=BC=8Cthanks=EF=BC=81
 
+=E5=8F=91=E8=87=AA=E6=88=91=E7=9A=84iPhone
 
-I think this supports only the newer external DTC,
-but not older ones.
+> =E5=9C=A8 2020=E5=B9=B48=E6=9C=886=E6=97=A5=EF=BC=8C=E4=B8=8A=E5=8D=889:19=
+=EF=BC=8CSasha Levin <sashal@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> =EF=BB=BFOn Wed, Aug 05, 2020 at 10:51:07AM +0200, Jan Kara wrote:
+>> Note to stable tree maintainers (summary from the rather long changelog):=
 
-This feature is intended to test the upstream DTC
-before resyncing in-kernel scripts/dtc/.
+>> This is a non-upstream patch. It will not go upstream because the problem=
 
+>> there has been fixed by converting ext4 to use iomap infrastructure.
+>> However that change is out of scope for stable kernels and this is a
+>> minimal fix for the problem that has hit real-world applications so I thi=
+nk
+>> it would be worth it to include the fix in stable trees. Thanks.
+>=20
+> How far back should it go? It breaks the build on 4.9 and 4.4 but the
+> fix for the breakage is trivial.
+>=20
+> It does however suggest that this fix wasn't tested on 4.9 or 4.4, so
+> I'd like to clarify it here before fixing it up (or dropping it).
+>=20
+> --=20
+> Thanks,
+> Sasha
 
-
-
-
-
-> ---
->  scripts/Makefile.lib | 34 ++++++++++++++++++++++------------
->  1 file changed, 22 insertions(+), 12 deletions(-)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 841ac03..2722a67 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -274,25 +274,35 @@ quiet_cmd_gzip = GZIP    $@
->
->  # DTC
->  # ---------------------------------------------------------------------------
-> +ifeq ("$(origin DTC)", "command line")
-> +PHONY += $(DTC)
-> +dtc-option = $(call try-run, $(DTC) $1 -v,$1)
-> +else
-> +# Just add the flag. DTC is compiled later as a prerequisite, so there's no dtc
-> +# to test the flag against. This is okay because we're not testing flags which
-> +# aren't supported by in-kernel dtc to begin with.
-> +dtc-option = $1
-> +endif
-> +
->  DTC ?= $(objtree)/scripts/dtc/dtc
-> -DTC_FLAGS += -Wno-interrupt_provider
-> +DTC_FLAGS += $(call dtc-option,-Wno-interrupt_provider)
->
->  # Disable noisy checks by default
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
-> -DTC_FLAGS += -Wno-unit_address_vs_reg \
-> -       -Wno-unit_address_format \
-> -       -Wno-avoid_unnecessary_addr_size \
-> -       -Wno-alias_paths \
-> -       -Wno-graph_child_address \
-> -       -Wno-simple_bus_reg \
-> -       -Wno-unique_unit_address \
-> -       -Wno-pci_device_reg
-> +DTC_FLAGS += $(call dtc-option,-Wno-unit_address_vs_reg) \
-> +       $(call dtc-option,-Wno-unit_address_format) \
-> +       $(call dtc-option,-Wno-avoid_unnecessary_addr_size) \
-> +       $(call dtc-option,-Wno-alias_paths) \
-> +       $(call dtc-option,-Wno-graph_child_address) \
-> +       $(call dtc-option,-Wno-simple_bus_reg) \
-> +       $(call dtc-option,-Wno-unique_unit_address) \
-> +       $(call dtc-option,-Wno-pci_device_reg)
->  endif
->
->  ifneq ($(findstring 2,$(KBUILD_EXTRA_WARN)),)
-> -DTC_FLAGS += -Wnode_name_chars_strict \
-> -       -Wproperty_name_chars_strict \
-> -       -Winterrupt_provider
-> +DTC_FLAGS += $(call dtc-option,-Wnode_name_chars_strict) \
-> +       $(call dtc-option,-Wproperty_name_chars_strict) \
-> +       $(call dtc-option,-Winterrupt_provider)
->  endif
->
->  DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
-
-
--- 
-Best Regards
-Masahiro Yamada
