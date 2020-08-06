@@ -2,144 +2,114 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B371BC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD87221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3828D221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GyumodkG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="H/C34YG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgHFWVe (ORCPT
+        id S1726190AbgHFWW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:21:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38130 "EHLO
+        Thu, 6 Aug 2020 18:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHFWVc (ORCPT
+        with ESMTP id S1725947AbgHFWW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:21:32 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54080C061574;
-        Thu,  6 Aug 2020 15:21:32 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so111079pls.4;
-        Thu, 06 Aug 2020 15:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=t1TN4T3jQ2jrlk3a/d7SaKfk2DJyftZUv6bXnlt6NPQ=;
-        b=GyumodkGmYKsGSwVnzxjXGz3Hc6dDp/7EX3r4spkycDyPVNN0ciFP2qEtF0XPhrBf4
-         +cCI0OWrH6x101NHuYUTOaXPwuCecyhxfEvjJRna72hDnNI+bib+8AzwceW3eJdE75Gn
-         SeIJKEi14my/hEJw+qU/KCE5RSHazXH9KHIfKLNltLm7ADcruE5/tGFOBJjd/g0Mnrl5
-         TD9+5yjblEpGaVz4M1LHrXLmcdWRpP5c2NV1JaW3i6df06bY03MlPUl3EghFXAFM5iLk
-         Ox9KU5vu5QYQH83zkF+ICm8Q2r+16LLLSd84hY8z6dVmhZCgoIg7vDd5Gd8rg9nvzxvN
-         9EXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t1TN4T3jQ2jrlk3a/d7SaKfk2DJyftZUv6bXnlt6NPQ=;
-        b=e1lzyzb0IUfIRzudWXCJ1cnSbrZG3OU8EoVQ0p+kJDkZ1tnLXS6o966fc2KdC6EHeL
-         3SrIF0a5mXVw76vBuseFHDBVjkkqkjlSiZ4ovEVfQAjHNwieeA9kQTFnWW2rC5ZbPf9O
-         XCVz7HUemkpVnapitCxqsMEN6h+Q28m+bBbKFOppxvOEkVHfUzGS1ldj+fNmo5m0qPl1
-         ED2axOJ1D3LUxfVoNB0CC1/auI0H9efPJaH6IlviqbYNd5RQTwLOmmWz2ftkLDDCIrhJ
-         Wdyw2sb/kvUexW2wviff3HtcudiqYhWO/eNEvVHcZJMxGZcVkKXQc7LPLka0fe1Ye8m0
-         FC6w==
-X-Gm-Message-State: AOAM533QHJUjqnXMz8lHoCE9mfaVnnvTe76eDAuB5RQDhG7tKwWbhiP6
-        q6J7leABOdw2O3ozloO5s2k=
-X-Google-Smtp-Source: ABdhPJwdY4ryrXf97t2P6yPCseaEpoaitTdHlZtd60UHAYlnINemi0RFvJHHjsz9ZaSHJyy7n+NjVw==
-X-Received: by 2002:a17:902:45:: with SMTP id 63mr9766294pla.179.1596752491350;
-        Thu, 06 Aug 2020 15:21:31 -0700 (PDT)
-Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id w82sm9912017pff.7.2020.08.06.15.21.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 15:21:30 -0700 (PDT)
-Subject: Re: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
-To:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-26-hch@lst.de>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <6357942b-0b6e-1901-7dce-e308c9fac347@gmail.com>
-Date:   Thu, 6 Aug 2020 15:21:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 6 Aug 2020 18:22:58 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D87C6C061574;
+        Thu,  6 Aug 2020 15:22:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0B+JmvLt0o6PJCqFXoofb/C6EPpAP3z2zrKQYdTIcDA=; b=H/C34YG++FVEse7HSfViTC7XJ
+        SQLIyw2UeUWGN+YMszM9OhcjkKsW8+wB7Wb3U/eQyPRnG7RmtEPP68YxY8J9Pn4TR87sJ4U1Jt1tu
+        1pX4wBNAkurvYQYc2GLxAxWr1PBz6bTd1qQFT+6sf89hXpGGotHnc/ph9vVqgxcftBFL96kqNtBq7
+        oYskhJyX+jUmM0jzOpXNdFtlDH+1fxOS8JYjmIQLNCV1QgI1SkYleeePIvoY8e0b4VAKBSGdkcXCu
+        hF7OuE5zSv7sqkRulaj+9DJ9gvvcLuX+JkHFe3/G4F4jp/Wojm/iu5OIlzUL2Bi2hTtmxg4UdnYJF
+        WL+yHL1Yw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49234)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k3oHn-000599-JU; Thu, 06 Aug 2020 23:22:55 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k3oHm-0006YF-8i; Thu, 06 Aug 2020 23:22:54 +0100
+Date:   Thu, 6 Aug 2020 23:22:54 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     nolange79@gmail.com, linux-kernel@vger.kernel.org,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] arm: Add support for ZSTD compressed kernel
+Message-ID: <20200806222254.GF1551@shell.armlinux.org.uk>
+References: <CAMdYzYoqKcG+LtFZy+TeYWB=GJo8Ya60r3Los4T5j7j3Okdbtw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200723060908.50081-26-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMdYzYoqKcG+LtFZy+TeYWB=GJo8Ya60r3Los4T5j7j3Okdbtw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/22/20 11:09 PM, Christoph Hellwig wrote:
-> Rework the remaining setsockopt code to pass a sockptr_t instead of a
-> plain user pointer.  This removes the last remaining set_fs(KERNEL_DS)
-> outside of architecture specific code.
+On Thu, Aug 06, 2020 at 05:46:50PM -0400, Peter Geis wrote:
+> Good Evening,
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Stefan Schmidt <stefan@datenfreihafen.org> [ieee802154]
-> ---
+> I had attempted to get this working as well, but have run into
+> difficulties with both my implementation and yours as well.
+> My implementation was almost the same as yours, with the exception of
+> also changing:
+> @@ -303,7 +305,7 @@ restart: adr r0, LC1
+> 
+>  #ifndef CONFIG_ZBOOT_ROM
+>   /* malloc space is above the relocated stack (64k max) */
+> - add r10, sp, #0x10000
+> + add r10, sp, #0x30000
+>  #else
+>   /*
+>   * With ZBOOT_ROM the bss/stack is non relocatable,
+> 
+> On QEMU this implementation works fine.
+> However on bare metal tegra30, I get the following error:
+> 
+> Jumping to kernel at:4861 ms
+> 
+> C:0x80A000C0-0x8112BA40->0x8152C700-0x81C58080
+> Uncompressing Linux...
+> 
+> ZSTD-compressed dstSize is too small
+> 
+>  -- System halted
+> 
+> The only difference between the bare metal test and the qemu test is
+> the zImage with appended dtb is packaged in the android boot format
+> for the bare metal test.
+> Otherwise it's exactly the same file.
 
+So it's relocating the compressed kernel and decompressor from
+0x80A000C0-0x8112BA40 to 0x8152C700-0x81C58080 and then failing.
+Does the QEMU version also do similar?
 
-...
+On the off-hand, I'm not sure why it should fail.  I assume that
+you've tried the other decompressors and they work fine on the
+same setups?
 
-> diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
-> index 594e01ad670aa6..874f01cd7aec42 100644
-> --- a/net/ipv6/raw.c
-> +++ b/net/ipv6/raw.c
-> @@ -972,13 +972,13 @@ static int rawv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->  }
->  
-
-...
-
->  static int do_rawv6_setsockopt(struct sock *sk, int level, int optname,
-> -			    char __user *optval, unsigned int optlen)
-> +			       sockptr_t optval, unsigned int optlen)
->  {
->  	struct raw6_sock *rp = raw6_sk(sk);
->  	int val;
->  
-> -	if (get_user(val, (int __user *)optval))
-> +	if (copy_from_sockptr(&val, optval, sizeof(val)))
->  		return -EFAULT;
->  
-
-converting get_user(...)   to  copy_from_sockptr(...) really assumed the optlen
-has been validated to be >= sizeof(int) earlier.
-
-Which is not always the case, for example here.
-
-User application can fool us passing optlen=0, and a user pointer of exactly TASK_SIZE-1
-
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
