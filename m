@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20075C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF992C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62189221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E39221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739016;
-	bh=p2adxRzepEbIsLQnxW34looRrw9LWsLu4tmaRjq+7iw=;
+	s=default; t=1596739027;
+	bh=AIpLTJlKFItG2jWXcrIaGnSQbfvgpjgzdq2hRWO00gM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IriB0oz+Q55Vpto8Lo/mY+l5kwaNY2UX4j5/kcpt5lDXiUNj9HsWq1sVeOdXFCY+n
-	 9ZKfsBptprJfyy69zOuo08znjBiVyNE5FGlQbygDm253DcZgyTn6d5YWhJ6kxpH+Tw
-	 UVTuVTILTXdRPQHuGPVJ+sPQb3YQD196+lD4Rneo=
+	b=ocCrmSKNlHBEpCthLEjBYsk3OcbBd/XAWTcyrlt9pcv9b2Gwd50AnegdB+zqtUCO7
+	 q5vWA3aFLEJlE7fy7PWoxxhQzrMTH6GmaSLdWyIoorHWK5mkeHq5eRYeFmsHhO8fn1
+	 YmTzxZbSKFyC4qjiWDse41NseVLYO3C2L01n2svM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbgHFSgy (ORCPT
+        id S1729519AbgHFShF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59084 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbgHFSgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:36:13 -0400
+        id S1729284AbgHFSgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:36:01 -0400
 Received: from localhost.localdomain (unknown [194.230.155.117])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A45B522D3E;
-        Thu,  6 Aug 2020 18:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3098F22DCC;
+        Thu,  6 Aug 2020 18:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738149;
-        bh=p2adxRzepEbIsLQnxW34looRrw9LWsLu4tmaRjq+7iw=;
+        s=default; t=1596738207;
+        bh=AIpLTJlKFItG2jWXcrIaGnSQbfvgpjgzdq2hRWO00gM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcaczOFFmsp8VscB4RMRsZcUMJ3Z9GGnvUERUz4wHqpgjT1ohnI5xUO58LjaXZubK
-         XtjlA67UwEUfBH27ZKthnNxsFPkkgEQbTIPoFRm1pwSeQk9Lgi69cKBZtdQDngiuzr
-         PsTRrHbU6fm17mWaxBr7oHpYsiM6ZNn/fQRs/wSY=
+        b=2UrWbaccsVbgJ4PjuRufTVR4PiUR7F4mIKm0UOgmDP5hKj0u4JZl0JTQBhUXsyBDD
+         cVfUeUlHld6rKFzcXSb1dtr4jmqFMEVQ4nNjsScLrUMqUwmlHN1WuBsjByqxxfDlTg
+         RdRJ+wOC7pWeGOu85r1hKklai3x/43cWsukTya3k=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 13/41] ARM: samsung: move CONFIG_DEBUG_S3C_UART to Kconfig.debug
-Date:   Thu,  6 Aug 2020 20:20:30 +0200
-Message-Id: <20200806182059.2431-13-krzk@kernel.org>
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Subject: [PATCH v2 27/41] ASoC: samsung: s3c2412-i2s: avoid hardcoded S3C2410_PA_IIS
+Date:   Thu,  6 Aug 2020 20:20:44 +0200
+Message-Id: <20200806182059.2431-27-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
 References: <20200806181932.2253-1-krzk@kernel.org>
@@ -58,55 +62,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Before we can separate plat-samsung from the individual platforms,
-this one has to get moved to a place where it remains accessible.
+The constant requires indirectly including a machine header file,
+but it's not actually used any more since commit 87b132bc0315 ("ASoC:
+samsung: s3c24{xx,12}-i2s: port to use generic dmaengine API"), so
+remove it completely.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/Kconfig.debug        | 10 ++++++++++
- arch/arm/plat-samsung/Kconfig |  8 --------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ sound/soc/samsung/s3c-i2s-v2.c  | 3 +--
+ sound/soc/samsung/s3c-i2s-v2.h  | 3 +--
+ sound/soc/samsung/s3c2412-i2s.c | 2 +-
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 80000a66a4e3..7c34cf5c4a5b 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1497,6 +1497,16 @@ config DEBUG_S3C64XX_UART
- config DEBUG_S5PV210_UART
- 	bool
+diff --git a/sound/soc/samsung/s3c-i2s-v2.c b/sound/soc/samsung/s3c-i2s-v2.c
+index ed21786104a1..e9481187a08c 100644
+--- a/sound/soc/samsung/s3c-i2s-v2.c
++++ b/sound/soc/samsung/s3c-i2s-v2.c
+@@ -616,8 +616,7 @@ int s3c_i2sv2_iis_calc_rate(struct s3c_i2sv2_rate_calc *info,
+ EXPORT_SYMBOL_GPL(s3c_i2sv2_iis_calc_rate);
  
-+config DEBUG_S3C_UART
-+	depends on DEBUG_S3C2410_UART || DEBUG_S3C24XX_UART || \
-+		   DEBUG_S3C64XX_UART ||  DEBUG_S5PV210_UART || \
-+		   DEBUG_EXYNOS_UART
-+	int
-+	default "0" if DEBUG_S3C_UART0
-+	default "1" if DEBUG_S3C_UART1
-+	default "2" if DEBUG_S3C_UART2
-+	default "3" if DEBUG_S3C_UART3
-+
- config DEBUG_OMAP2PLUS_UART
- 	bool
- 	depends on ARCH_OMAP2PLUS
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 3aca01067b3c..c3d18b0aad75 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -290,13 +290,5 @@ config SAMSUNG_WAKEMASK
- 	  and above. This code allows a set of interrupt to wakeup-mask
- 	  mappings. See <plat/wakeup-mask.h>
+ int s3c_i2sv2_probe(struct snd_soc_dai *dai,
+-		    struct s3c_i2sv2_info *i2s,
+-		    unsigned long base)
++		    struct s3c_i2sv2_info *i2s)
+ {
+ 	struct device *dev = dai->dev;
+ 	unsigned int iismod;
+diff --git a/sound/soc/samsung/s3c-i2s-v2.h b/sound/soc/samsung/s3c-i2s-v2.h
+index fe42b77999fd..8c6fc0d3d77e 100644
+--- a/sound/soc/samsung/s3c-i2s-v2.h
++++ b/sound/soc/samsung/s3c-i2s-v2.h
+@@ -83,8 +83,7 @@ extern int s3c_i2sv2_iis_calc_rate(struct s3c_i2sv2_rate_calc *info,
+  * @base: The base address for the registers.
+  */
+ extern int s3c_i2sv2_probe(struct snd_soc_dai *dai,
+-			   struct s3c_i2sv2_info *i2s,
+-			   unsigned long base);
++			   struct s3c_i2sv2_info *i2s);
  
--config DEBUG_S3C_UART
--	depends on PLAT_SAMSUNG
--	int
--	default "0" if DEBUG_S3C_UART0
--	default "1" if DEBUG_S3C_UART1
--	default "2" if DEBUG_S3C_UART2
--	default "3" if DEBUG_S3C_UART3
--
- endmenu
- endif
+ /**
+  * s3c_i2sv2_cleanup - cleanup resources allocated in s3c_i2sv2_probe
+diff --git a/sound/soc/samsung/s3c2412-i2s.c b/sound/soc/samsung/s3c2412-i2s.c
+index b35d828c1cfe..edfa9d11d2e5 100644
+--- a/sound/soc/samsung/s3c2412-i2s.c
++++ b/sound/soc/samsung/s3c2412-i2s.c
+@@ -49,7 +49,7 @@ static int s3c2412_i2s_probe(struct snd_soc_dai *dai)
+ 	snd_soc_dai_init_dma_data(dai, &s3c2412_i2s_pcm_stereo_out,
+ 					&s3c2412_i2s_pcm_stereo_in);
+ 
+-	ret = s3c_i2sv2_probe(dai, &s3c2412_i2s, S3C2410_PA_IIS);
++	ret = s3c_i2sv2_probe(dai, &s3c2412_i2s);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.17.1
 
