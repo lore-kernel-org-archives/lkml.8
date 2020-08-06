@@ -2,105 +2,143 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61370C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED192245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F152245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:37:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o6N6qMAr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSXrsdzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgHFAdm (ORCPT
+        id S1726514AbgHFAh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 20:33:42 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2388 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgHFAcm (ORCPT
+        Wed, 5 Aug 2020 20:37:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgHFAh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 20:32:42 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2b4f780000>; Wed, 05 Aug 2020 17:31:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 05 Aug 2020 17:32:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 05 Aug 2020 17:32:42 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 00:32:39 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 6 Aug 2020 00:32:39 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.172.190]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f2b4fa60000>; Wed, 05 Aug 2020 17:32:38 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v3 2/6] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
-Date:   Wed, 5 Aug 2020 17:32:25 -0700
-Message-ID: <1596673949-1571-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596673949-1571-1-git-send-email-skomatineni@nvidia.com>
-References: <1596673949-1571-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 5 Aug 2020 20:37:26 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BF64C061574;
+        Wed,  5 Aug 2020 17:37:26 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k8so8037072wma.2;
+        Wed, 05 Aug 2020 17:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=q437G4wSOATln/xMsM+PNrrp8wCttyK7eIPhtP2hGbI=;
+        b=CSXrsdzjMinZODnr1IBV+RwU9sqtKNnURzpmlqNyJ57hjWKkdUlGuacNZWYr8hzfGw
+         WaHcmEaeusY/CjIupTqLFqVAntNpms4xbZgDNQiyM5BscyEbmTh6Bl5tL6nmmvJbi7jP
+         AE+aRpKO/aAwfudat47CZrUNNpE9cJI/ZKpGpooHq3ZcItpCGKPm8IclQadvCFJmgnvQ
+         shrVQeQ3fjrTkxUN5mg+T9JqgUEeEXRwQjuj7yITMxVihRnfXIPu93MN7yC0O8v4tjtE
+         TIrZmEjetLcJmLHxfBrYw5rdD4SmJm1UAIIMWVNkKIo+h1DHiX3BAVyPG8nwoL87BZp4
+         cCMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=q437G4wSOATln/xMsM+PNrrp8wCttyK7eIPhtP2hGbI=;
+        b=fP1HVOGudkOKewDfSiob6vQ9tfvEsJKsJaK76BXErfV4ee9eX4yRKPvR03AYScrHP6
+         F4jyHSHSsk2LscJJOMqOk4l4wTwuyUTum/auoFUKhXWZ86zXaTfKOJGxdgIZzWXnYawz
+         bzsNkCKmnuL0z5HbFrjCPiEux5e+t9qO92NKLSw83sm4XptDnURwTLMcet+3zb9NUVW9
+         kbHyLkH1suJ5V76kkKvyhC1TvEsKplTKNpYWK7g3nzKxWf5i+61pkVMPZgrnqp4+pVaQ
+         jfDfdYJbQaXbea9hiTv/GrBHfyzTSq/FfeIlV3LZMlSo5hqBuSmW3dGNANsLFKfdWwVU
+         dUig==
+X-Gm-Message-State: AOAM531TvatJIzjfHq+a6VWhfgnJ6gBmSHT+9Tdpyh/wKKnIdudfWE7/
+        0etpDjEN0QCYeVX64Mc1RdRJHn2Z
+X-Google-Smtp-Source: ABdhPJzAvjPRa0UqX9emAYM8XrmH230ZtS84QH6wVliA/qlkOAY4iuUSJtR7GKkI8JcpFAHTYxCAZg==
+X-Received: by 2002:a1c:9616:: with SMTP id y22mr5398202wmd.100.1596674244469;
+        Wed, 05 Aug 2020 17:37:24 -0700 (PDT)
+Received: from [192.168.0.48] (HSI-KBW-046-005-005-186.hsi8.kabel-badenwuerttemberg.de. [46.5.5.186])
+        by smtp.gmail.com with ESMTPSA id i14sm5328166wrc.19.2020.08.05.17.37.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Aug 2020 17:37:23 -0700 (PDT)
+From:   Edward Shishkin <edward.shishkin@gmail.com>
+Subject: Re: PROBLEM: IO lockup on reiserfs FS.
+To:     Hgntkwis@vfemail.net, torvalds@linux-foundation.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        reiserfs-devel@vger.kernel.org
+References: <20200728222041.5d88b2e1@Phenom-II-x6.niklas.com>
+ <20200728223440.0fd8681e@Phenom-II-x6.niklas.com>
+ <20200805125317.10bf1d34@Phenom-II-x6.niklas.com>
+ <CAHk-=wiGsj_R7pspFegPgtT4on1iYk5MmBz8uZZ3338EH3HO+Q@mail.gmail.com>
+ <20200805200129.0ce62f36@Phenom-II-x6.niklas.com>
+Message-ID: <3dbeff43-0905-3421-4652-41b7a935f3c1@gmail.com>
+Date:   Thu, 6 Aug 2020 02:37:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596673912; bh=oz8A57gzhp0Azl3sB2boMW8c1eZVUyjxxtqlbUBC15k=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=o6N6qMAreBK2hWApldgN64WdOlmgO2/joGUYRHSdMNdc2bgnNHq6PjKmkETq2wNBe
-         ofMmo7XYkq9QNibNUxK0xaHUkaQ8acBz+t7x/mG+BWmbDRAYtiVphXQ48AHPVEh6wH
-         HCc1PfEM0b8ACEeyxGt/sqJidTpHlKx6hcjGGJxvNG3vT3okJogoM4pLVLmACh5aCo
-         O6tnXGnerR1MAXbFQdL9gFDX8CLfJaeRHUa4SgSyVYahv8HPoj5k1d4z+7I0Dqfhn9
-         Uqn6mP8NDVWFBylHdwz9cVUC8BdOnPiZ6+LKGlEyYBxFJRY3i8jTociMjYh6/HE6Iw
-         BbS3lpOobLk0w==
+In-Reply-To: <20200805200129.0ce62f36@Phenom-II-x6.niklas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
+On 08/06/2020 02:01 AM, Hgntkwis@vfemail.net wrote:
+> On Wed, 5 Aug 2020 12:51:41 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>> On Wed, Aug 5, 2020 at 9:53 AM <Hgntkwis@vfemail.net> wrote:
+>>>
+>>> It's been over 1 week since I sent this into the reiserfs-devel
+>>> mailing list. I'm escalating this as the kernel docs recommend.
+>>> I'm still willing to help debug and test a fix for this problem.
+>>
+>> The thing is, you're using an ancient 4.14 kernel,
+> 
+> Sorry, I didn't realize kernel development went that fast.
+> I did try to go to the 5.X series, but the AMDGPU drivers don't work on
+> my SI card anymore (I need to bisect which takes time and many re-boots
+> to find the problematic commit).
+> I'll try the Radeon-SI driver and see if I can reproduce this reliably.
+> 
+>> and a filesystem
+>> that isn't really maintained any more. You'll find very few people
+>> interested in trying to debug that combination.
+>>
+>> You *might* have more luck with a more modern kernel, but even then
+>> ... reiserfs?
+>>
+>>                Linus
+>>
+> 
+> Why does no one (I've met others who share a similar sentiment), like
+> reiserfs? I'm not looking for fight, I'm incredulous. It's a great FS
+> that survives oops-es, power failures, and random crashes very very well.
+> It's the only FLOSS FS with tail packing.
+> 
+> Thanks,
+> David
+> 
 
-SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra186 from the
-beginning of its support in driver.
+Hi David,
 
-Tegra186 SDMMC hardware by default uses timeout clock (TMCLK) instead
-of SDCLK and this quirk should not be set.
+The feature of "tail packing", that you need, is brought to perfection
+in Reiser4 file system. Other file systems either don't provide tight
+packing of records in the storage tree, or they are read-only. You just
+need to manually patch (*) the kernel and install a pair of user-space
+packages (**).
 
-So, this patch remove this quirk for Tegra186.
+The latest stuff (against Linux-5.7) is stable. For older kernels you
+will need a backport for some fixups (***). We can prepare it for you.
 
-Fixes: 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
-Cc: stable <stable@vger.kernel.org> # 5.4
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/mmc/host/sdhci-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
+Reiser4 is fully supported. If any problems (including partition
+check/repair) - send a message to reiserfs-devel mailing list.
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 2be3511..31ed321 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1455,7 +1455,6 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
- 
- static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
--- 
-2.7.4
+(*)   https://reiser4.wiki.kernel.org/index.php/Reiser4_Howto
+       https://sourceforge.net/projects/reiser4/files/
+(**)  https://sourceforge.net/projects/reiser4/files/reiser4-utils/
+(***) https://marc.info/?l=reiserfs-devel&m=158086248927420&w=2
 
+Thanks,
+Edward.
