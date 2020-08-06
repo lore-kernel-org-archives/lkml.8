@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A02CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB0D2224D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9442622C9F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dW+PgodN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ii2xA4EL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgHFStk (ORCPT
+        id S1728832AbgHFStm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:49:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33672 "EHLO
+        Thu, 6 Aug 2020 14:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgHFStg (ORCPT
+        with ESMTP id S1727878AbgHFStj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:49:36 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CB4C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:49:35 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 2so7313148pjx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:49:35 -0700 (PDT)
+        Thu, 6 Aug 2020 14:49:39 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDCEC061575
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:49:38 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id h12so806357pgm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qrNOopevZrXOPbrUYdqc/luUXjhR4msmU2SD/x7wn8s=;
-        b=dW+PgodNF48RAaGwGN8hRaeeIti0F2ClybxPtutZjQItbJoVlpQkZDO8YGZYhEI+3i
-         3TUAxO+QufKjTV1DjSHQMdIzHR8kNbkPiimWo01mkhkWReUmIT/MU9HROGCVkwsrcuCQ
-         NbzIx8sAdB1hKjhQLcO8nVs/hnUfCR1P7oDITfdVwT4gebqg27MKuQrFurk9DxYw+8q+
-         B9SdiirdfpyLP+6gdCPpJmMyt1QnRfL6SD5QWWPmbHHMB/hV3Q0IF3UChhGl4/uvng9t
-         fpix0/uSNL+B4TnzZpS4SGzg+es9VjEekHF7iDNSRgxqyXXFLkUgdvHbzw2wjAxwmmiz
-         LkSg==
+        bh=D4Ndr3lMfGWryT8BpcCBWbkT9Sd7Lw+5S6mzuxOjqm0=;
+        b=ii2xA4EL8TIMLWF54Dp2D3VhPKG3XgrAie0iACmR72fXffFW1cOxQX92MCI/lEdir7
+         aiWKHf1TWBOK6nX9AwY9weAMVgtlamS0j8rv0lEEpCYk8Sx9DtVaF04m+ex66WOfpLOW
+         w+6j1GENJtWtRVPUlYXMuFjA5H93/0mYaVWDByZoRBN2uY/Ovzxc+qOzkh62Qgo5wTJZ
+         9RQF56vRmATSiMczuxW5M1A+M/jVjIBCavXVLmXSSu/L/45HZqZgDfj5CNuZdSz4sQ8X
+         XMEBwWr+27vlQGN1mX3SakuCPv/Xv5RTbd6Weohxn5Fgksuq1k+mBNr6vnr7YwsN38MR
+         M19Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qrNOopevZrXOPbrUYdqc/luUXjhR4msmU2SD/x7wn8s=;
-        b=tKxfZ1Cgk6onDdapT/ThNjhpqUXOuGmxapAJ27OpioJOUDIuaVnJLc1Ox56EXTAhEE
-         OCbXiGllqkVvJjX66ml+2kXk6gD6gyUUcDgv494jE3ng7jL/6TkE+RLhKjB/pPVbEuuC
-         Bj1OZqBhqoO2sYTxWmANXkV9CWgCykAYciISsdR4JsQ1NzF8MwWSYOXv1XxecdyHXcZk
-         Zi/V4r5Bjn2EQwCWfq7SqzP85wu7+bewFsRpGETxHbq2Mm496P+yE9WI4FPFTimADBxu
-         2DmOMXrz4CiI11prDzwNEQLEmD5uniWmGZoZDO3OHlXNAiQRNn02JwFpmmcaBCxnJ7/Z
-         k1Bg==
-X-Gm-Message-State: AOAM532T413620OO3CohPmT2n2sDtHn3sNEiY7OnZnEN3hucJTcjm+42
-        MW2ParvFbQyS05j93TDmUQ==
-X-Google-Smtp-Source: ABdhPJyGlRH9DZJICHEHHkgFtaCUSUovuGikU1NNYN8M6nMZv0PwUA/D0NIWAh5ptTVDgEknCjeFuw==
-X-Received: by 2002:a17:902:a50d:: with SMTP id s13mr9036876plq.135.1596739775259;
-        Thu, 06 Aug 2020 11:49:35 -0700 (PDT)
+        bh=D4Ndr3lMfGWryT8BpcCBWbkT9Sd7Lw+5S6mzuxOjqm0=;
+        b=Km7PMwOKrYkS9xSkwx5j76LH9L7kM+wSN6U8+mp8/8a6JK0VJa4TNVYeeNk6BljqJV
+         uj0yuvY6iD5HAyOHfETnX3ugz5lgwnXEbJGBqKMnxM2evL9zNiFz9H8tX/pUC7kt9Wq0
+         0uNzmH6QpEfp9ORIf3DI0pAmsrKtSMGTlZ9/Ve/Gr4cX8c9OE/Qkat6LAU0yslU31lrQ
+         AkcdnvTOFr2yboOXpwEtD0w88UrdOnyL8pxO5OW5U3SHWtpfCM/WCFf0Uq2X4Dh/0GIO
+         tFyalWNI4Mf6hggUEjsdpGTh+OeRyG3wmp+J0AJVfgDPSMU/OGYgN41E6TAZluSrW1af
+         WKFA==
+X-Gm-Message-State: AOAM532mkRlFNkKI2i9rBPWxda39L8qU01ZAlz/sT4Zi1bRUzXiegSnE
+        N1WWJnzS1DeBxWPBjythEQ==
+X-Google-Smtp-Source: ABdhPJxXtfyq9aAepqkzQN6GNB2RBi2ndAap+zkgx75ukc39JHhcIPD5iEbccXFxp9BhTTjZ+9wlLw==
+X-Received: by 2002:a63:7746:: with SMTP id s67mr8471318pgc.159.1596739778407;
+        Thu, 06 Aug 2020 11:49:38 -0700 (PDT)
 Received: from ip-172-31-41-194.ap-northeast-1.compute.internal (ec2-52-199-21-241.ap-northeast-1.compute.amazonaws.com. [52.199.21.241])
-        by smtp.gmail.com with ESMTPSA id u24sm9096730pfm.20.2020.08.06.11.49.32
+        by smtp.gmail.com with ESMTPSA id u24sm9096730pfm.20.2020.08.06.11.49.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 11:49:34 -0700 (PDT)
+        Thu, 06 Aug 2020 11:49:37 -0700 (PDT)
 From:   nao.horiguchi@gmail.com
 To:     linux-mm@kvack.org
 Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
@@ -66,9 +66,9 @@ Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
         david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
         zeil@yandex-team.ru, cai@lca.pw, naoya.horiguchi@nec.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 02/12] mm, hwpoison: remove recalculating hpage
-Date:   Thu,  6 Aug 2020 18:49:13 +0000
-Message-Id: <20200806184923.7007-3-nao.horiguchi@gmail.com>
+Subject: [PATCH v6 03/12] mm,hwpoison-inject: don't pin for hwpoison_filter
+Date:   Thu,  6 Aug 2020 18:49:14 +0000
+Message-Id: <20200806184923.7007-4-nao.horiguchi@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806184923.7007-1-nao.horiguchi@gmail.com>
 References: <20200806184923.7007-1-nao.horiguchi@gmail.com>
@@ -79,42 +79,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Naoya Horiguchi <naoya.horiguchi@nec.com>
 
-hpage is never used after try_to_split_thp_page() in memory_failure(),
-so we don't have to update hpage.  So let's not recalculate/use hpage.
+Another memory error injection interface debugfs:hwpoison/corrupt-pfn
+also takes bogus refcount for hwpoison_filter(). It's justified
+because this does a coarse filter, expecting that memory_failure()
+redoes the check for sure.
 
-Suggested-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
 Signed-off-by: Oscar Salvador <osalvador@suse.com>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 ---
- mm/memory-failure.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ mm/hwpoison-inject.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
 
-diff --git v5.8-rc7-mmotm-2020-07-27-18-18/mm/memory-failure.c v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/memory-failure.c
-index 3d2d61f1c6e9..f8d200417e0f 100644
---- v5.8-rc7-mmotm-2020-07-27-18-18/mm/memory-failure.c
-+++ v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/memory-failure.c
-@@ -1342,7 +1342,6 @@ int memory_failure(unsigned long pfn, int flags)
- 		}
- 		unlock_page(p);
- 		VM_BUG_ON_PAGE(!page_count(p), p);
--		hpage = compound_head(p);
- 	}
+diff --git v5.8-rc7-mmotm-2020-07-27-18-18/mm/hwpoison-inject.c v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/hwpoison-inject.c
+index e488876b168a..1ae1ebc2b9b1 100644
+--- v5.8-rc7-mmotm-2020-07-27-18-18/mm/hwpoison-inject.c
++++ v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/hwpoison-inject.c
+@@ -26,11 +26,6 @@ static int hwpoison_inject(void *data, u64 val)
+ 
+ 	p = pfn_to_page(pfn);
+ 	hpage = compound_head(p);
+-	/*
+-	 * This implies unable to support free buddy pages.
+-	 */
+-	if (!get_hwpoison_page(p))
+-		return 0;
+ 
+ 	if (!hwpoison_filter_enable)
+ 		goto inject;
+@@ -40,23 +35,20 @@ static int hwpoison_inject(void *data, u64 val)
+ 	 * This implies unable to support non-LRU pages.
+ 	 */
+ 	if (!PageLRU(hpage) && !PageHuge(p))
+-		goto put_out;
++		return 0;
  
  	/*
-@@ -1414,11 +1413,8 @@ int memory_failure(unsigned long pfn, int flags)
- 	/*
- 	 * Now take care of user space mappings.
- 	 * Abort on fail: __delete_from_page_cache() assumes unmapped page.
--	 *
--	 * When the raw error page is thp tail page, hpage points to the raw
--	 * page after thp split.
+-	 * do a racy check with elevated page count, to make sure PG_hwpoison
+-	 * will only be set for the targeted owner (or on a free page).
++	 * do a racy check to make sure PG_hwpoison will only be set for
++	 * the targeted owner (or on a free page).
+ 	 * memory_failure() will redo the check reliably inside page lock.
  	 */
--	if (!hwpoison_user_mappings(p, pfn, flags, &hpage)) {
-+	if (!hwpoison_user_mappings(p, pfn, flags, &p)) {
- 		action_result(pfn, MF_MSG_UNMAP_FAILED, MF_IGNORED);
- 		res = -EBUSY;
- 		goto out;
+ 	err = hwpoison_filter(hpage);
+ 	if (err)
+-		goto put_out;
++		return 0;
+ 
+ inject:
+ 	pr_info("Injecting memory failure at pfn %#lx\n", pfn);
+-	return memory_failure(pfn, MF_COUNT_INCREASED);
+-put_out:
+-	put_hwpoison_page(p);
+-	return 0;
++	return memory_failure(pfn, 0);
+ }
+ 
+ static int hwpoison_unpoison(void *data, u64 val)
 -- 
 2.17.1
 
