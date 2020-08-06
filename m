@@ -2,91 +2,133 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E67C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00D54206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFF4206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbgHFRdE (ORCPT
+        id S1730222AbgHFRdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:33:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:46002 "EHLO foss.arm.com"
+        Thu, 6 Aug 2020 13:33:08 -0400
+Received: from verein.lst.de ([213.95.11.211]:50470 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729889AbgHFRcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:32:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7906D1063;
-        Thu,  6 Aug 2020 04:33:17 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE94F3F99C;
-        Thu,  6 Aug 2020 04:33:15 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 12:33:13 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] arm64: tlb: fix ARM64_TLB_RANGE with LLVM's integrated
- assembler
-Message-ID: <20200806113313.GC23785@gaia>
-References: <20200805181920.4013059-1-samitolvanen@google.com>
- <95156879-d76e-65cc-1469-ae3096aa95e4@huawei.com>
+        id S1729500AbgHFRcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:32:54 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B828768D0F; Thu,  6 Aug 2020 16:48:35 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 16:48:35 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, Vikas Kumar <vikas.kumar2@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, rafael@kernel.org
+Subject: Re: [LTP-FAIL][02/21] fs: refactor ksys_umount
+Message-ID: <20200806144834.GA7818@lst.de>
+References: <d28d2235-9b1c-0403-59ca-e57ac5d0460e@arm.com> <20200806141732.GA5902@lst.de> <20200806143221.GQ1236603@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <95156879-d76e-65cc-1469-ae3096aa95e4@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200806143221.GQ1236603@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 03:17:40PM +0800, Zhenyu Ye wrote:
-> On 2020/8/6 2:19, Sami Tolvanen wrote:
-> > Commit 7c78f67e9bd9 ("arm64: enable tlbi range instructions") breaks
-> > LLVM's integrated assembler, because -Wa,-march is only passed to
-> > external assemblers and therefore, the new instructions are not enabled
-> > when IAS is used.
+On Thu, Aug 06, 2020 at 03:32:21PM +0100, Al Viro wrote:
+> On Thu, Aug 06, 2020 at 04:17:32PM +0200, Christoph Hellwig wrote:
+> > Fix for umount03 below.  The other one works fine here, but from
+> > your logs this might be a follow on if you run it after umount without
+> > the fix.
 > 
-> I have looked through the discussion on Github issues. The best way to
-> solve this problem is try to pass the "-Wa,-march" parameter to clang
-> even when IAS is enabled, which may need the cooperation of compilation
-> tool chains :(
+> Ugh...
 > 
-> Currently, I think we can solve the problem by passing
-> the '-march=armv8.4-a' when using the integrated assembler, just like:
-> 
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index 55bc8546d9c7..e5ce184e98c2 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -91,8 +91,12 @@ KBUILD_CFLAGS += $(branch-prot-flags-y)
-> 
->  ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
->  # make sure to pass the newest target architecture to -march.
-> +ifneq ($(LLVM),)
-> +KBUILD_CFLAGS  += -march=armv8.4-a
-> +else
->  KBUILD_CFLAGS  += -Wa,-march=armv8.4-a
->  endif
-> +endif
+> How about 
+> static int may_umount(const struct path *path, int flags)
 
-No, see my other reply. This only works for .S files. For inline
-assembly, passing -march to .c files will make the compiler generate
-ARMv8.4 instructions and break the kernel single image that's supposed
-to run on ARMv8.0 hardware (even if you don't have any range TLBI
-instructions).
+may_umount is already take.  But with can_umount this would work:
 
+---
+From e4ccb3da160831a43eeea48c68d2d43fd7cf6724 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Thu, 6 Aug 2020 16:07:10 +0200
+Subject: fs: fix a struct path leak in path_umount
+
+Make sure we also put the dentry and vfsmnt in the illegal flags
+and !may_umount cases.
+
+Fixes: 41525f56e256 ("fs: refactor ksys_umount")
+Reported-by: Vikas Kumar <vikas.kumar2@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/namespace.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index a7301790abb211..1c74a46367df4e 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1706,34 +1706,38 @@ static inline bool may_mandlock(void)
+ }
+ #endif
+ 
+-int path_umount(struct path *path, int flags)
++static int can_umount(const struct path *path, int flags)
+ {
+-	struct mount *mnt;
+-	int retval;
++	struct mount *mnt = real_mount(path->mnt);
+ 
+ 	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
+ 		return -EINVAL;
+ 	if (!may_mount())
+ 		return -EPERM;
+-
+-	mnt = real_mount(path->mnt);
+-	retval = -EINVAL;
+ 	if (path->dentry != path->mnt->mnt_root)
+-		goto dput_and_out;
++		return -EINVAL;
+ 	if (!check_mnt(mnt))
+-		goto dput_and_out;
++		return -EINVAL;
+ 	if (mnt->mnt.mnt_flags & MNT_LOCKED) /* Check optimistically */
+-		goto dput_and_out;
+-	retval = -EPERM;
++		return -EINVAL;
+ 	if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN))
+-		goto dput_and_out;
++		return -EPERM;
++	return 0;
++}
++
++int path_umount(struct path *path, int flags)
++{
++	struct mount *mnt = real_mount(path->mnt);
++	int ret;
++
++	ret = can_umount(path, flags);
++	if (!ret)
++		ret = do_umount(mnt, flags);
+ 
+-	retval = do_umount(mnt, flags);
+-dput_and_out:
+ 	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
+ 	dput(path->dentry);
+ 	mntput_no_expire(mnt);
+-	return retval;
++	return ret;
+ }
+ 
+ static int ksys_umount(char __user *name, int flags)
 -- 
-Catalin
+2.27.0
+
