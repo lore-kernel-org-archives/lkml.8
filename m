@@ -2,100 +2,159 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1326BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3EA322B40
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:36:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B3UqOi7/"
+	by mail.kernel.org (Postfix) with ESMTP id ADB872250E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgHFBgU (ORCPT
+        id S1726793AbgHFBjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 21:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHFBgT (ORCPT
+        Wed, 5 Aug 2020 21:39:39 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:44365 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725999AbgHFBjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 21:36:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864D9C061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 18:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=EkE504dIDh6DgjrlTkQmStpUwUgt0aoUyCrIW3ri/4A=; b=B3UqOi7/QkpLhw0oZC8mpwO1sR
-        o7Vv7Cd2TAm1Ms5Q2zIayjg8Cf1XhCYqIf/WzwS2g4NPS9cQRqldJ9lYe9HG6mi2b8+dWaE0mrSQx
-        4thar0fINnl18Kk04uYXkVHSbtFcY5nrVQgYNphb/l1FxjieF7Co2B2Z2dIH67QF2lZJ7cBOMs6oI
-        ijsgMlQUCP5+HqvGnGWLTbppJBa5ynQD9GD9HpfihZP5olmLOtIygPeGMmDoO3S2ddLJEcnMlAb9D
-        WjN62v70qIN/18ZoMdMs6NjHhulW2bmHYfFNHO+9DPr1zmzeDSQNri+PLitv8GuaQo2pv2SsEuq9U
-        NSMjyWNg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3UpH-0006DN-Oa; Thu, 06 Aug 2020 01:36:14 +0000
-Subject: Re: Is anyone else getting a bad signature from kernel.org's 5.8
- sources+Greg's sign?
-To:     David Niklas <Hgntkwis@vfemail.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <20200805205924.1f646d45@Phenom-II-x6.niklas.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5a943a1f-c5ef-937f-f67e-1c59c04d63fb@infradead.org>
-Date:   Wed, 5 Aug 2020 18:36:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 21:39:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U4t4FRM_1596677972;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4t4FRM_1596677972)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 06 Aug 2020 09:39:32 +0800
+Subject: Re: [PATCH v17 21/21] mm/lru: revise the comments of lru_lock
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Jann Horn <jannh@google.com>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-22-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UfpHjBTHvtZz7=WMhZZAunVYuNMpuYBQCiorERb5seFUQ@mail.gmail.com>
+ <f34e790f-50e6-112c-622f-d7ab804c6d22@linux.alibaba.com>
+ <CAKgT0UckqbmYJDE3L2Bg1Nr=Y=GT0OBx1GEhaZ14EbRTzd8tiw@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <a1c6a3a6-f8e3-7bb5-e881-216a4b57ae84@linux.alibaba.com>
+Date:   Thu, 6 Aug 2020 09:39:12 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200805205924.1f646d45@Phenom-II-x6.niklas.com>
+In-Reply-To: <CAKgT0UckqbmYJDE3L2Bg1Nr=Y=GT0OBx1GEhaZ14EbRTzd8tiw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/20 5:59 PM, David Niklas wrote:
-> Hello,
-> I downloaded the kernel sources from kernel.org using curl, then
-> opera, and finally lynx (to rule out an html parsing bug). I did the same
-> with the sign and I keep getting:
+
+
+在 2020/8/4 下午10:29, Alexander Duyck 写道:
+> On Tue, Aug 4, 2020 at 3:04 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>>
+>>
+>>
+>> 在 2020/8/4 上午6:37, Alexander Duyck 写道:
+>>>>
+>>>>  shrink_inactive_list() also diverts any unevictable pages that it finds on the
+>>>> -inactive lists to the appropriate zone's unevictable list.
+>>>> +inactive lists to the appropriate node's unevictable list.
+>>>>
+>>>>  shrink_inactive_list() should only see SHM_LOCK'd pages that became SHM_LOCK'd
+>>>>  after shrink_active_list() had moved them to the inactive list, or pages mapped
+>>> Same here.
+>>
+>> lruvec is used per memcg per node actually, and it fallback to node if memcg disabled.
+>> So the comments are still right.
+>>
+>> And most of changes just fix from zone->lru_lock to pgdat->lru_lock change.
 > 
-> %  gpg2 --verify linux-5.8.tar.sign linux-5.8.tar.xz
-> gpg: Signature made Mon Aug  3 00:19:13 2020 EDT
-> gpg:                using RSA key 647F28654894E3BD457199BE38DBBDC86092693E
-> gpg: BAD signature from "Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>" [unknown]
+> Actually in my mind one thing that might work better would be to
+> explain what the lruvec is and where it resides. Then replace zone
+> with lruvec since that is really where the unevictable list resides.
+> Then it would be correct for both the memcg and pgdat case.
+
+Could you like to revise the doc as your thought?
 > 
-> I did refresh all the keys just in case.
-> I believe this is important so I'm addressing this to the signer and only
-> CC'ing the list.
+>>>
+>>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>>>> index 64ede5f150dc..44738cdb5a55 100644
+>>>> --- a/include/linux/mm_types.h
+>>>> +++ b/include/linux/mm_types.h
+>>>> @@ -78,7 +78,7 @@ struct page {
+>>>>                 struct {        /* Page cache and anonymous pages */
+>>>>                         /**
+>>>>                          * @lru: Pageout list, eg. active_list protected by
+>>>> -                        * pgdat->lru_lock.  Sometimes used as a generic list
+>>>> +                        * lruvec->lru_lock.  Sometimes used as a generic list
+>>>>                          * by the page owner.
+>>>>                          */
+>>>>                         struct list_head lru;
+>>>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>>>> index 8af956aa13cf..c92289a4e14d 100644
+>>>> --- a/include/linux/mmzone.h
+>>>> +++ b/include/linux/mmzone.h
+>>>> @@ -115,7 +115,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
+>>>>  struct pglist_data;
+>>>>
+>>>>  /*
+>>>> - * zone->lock and the zone lru_lock are two of the hottest locks in the kernel.
+>>>> + * zone->lock and the lru_lock are two of the hottest locks in the kernel.
+>>>>   * So add a wild amount of padding here to ensure that they fall into separate
+>>>>   * cachelines.  There are very few zone structures in the machine, so space
+>>>>   * consumption is not a concern here.
+>>> So I don't believe you are using ZONE_PADDING in any way to try and
+>>> protect the LRU lock currently. At least you aren't using it in the
+>>> lruvec. As such it might make sense to just drop the reference to the
+>>> lru_lock here. That reminds me that we still need to review the
+>>> placement of the lru_lock and determine if there might be a better
+>>> placement and/or padding that might improve performance when under
+>>> heavy stress.
+>>>
+>>
+>> Right, is it the following looks better?
+>>
+>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>> index ccc76590f823..0ed520954843 100644
+>> --- a/include/linux/mmzone.h
+>> +++ b/include/linux/mmzone.h
+>> @@ -113,8 +113,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
+>>  struct pglist_data;
+>>
+>>  /*
+>> - * zone->lock and the lru_lock are two of the hottest locks in the kernel.
+>> - * So add a wild amount of padding here to ensure that they fall into separate
+>> + * Add a wild amount of padding here to ensure datas fall into separate
+>>   * cachelines.  There are very few zone structures in the machine, so space
+>>   * consumption is not a concern here.
+>>   */
+>>
+>> Thanks!
+>> Alex
 > 
-> If I'm made some simple mistake, feel free to send SIG666 to my terminal.
-> I did re-read the man page just in case.
+> I would maybe tweak it to make sure it is clear that we are using this
+> to pad out items that are likely to cause cache thrash such as various
+> hot spinocks and such.
+> 
 
-It works successfully for me.
+I appreciate if you like to change the doc better. :)
 
-
-from https://www.kernel.org/category/signatures.html::
-
-
-If you get "BAD signature"
-
-If at any time you see "BAD signature" output from "gpg2 --verify", please first check the following first:
-
-    Make sure that you are verifying the signature against the .tar version of the archive, not the compressed (.tar.xz) version.
-    Make sure the the downloaded file is correct and not truncated or otherwise corrupted.
-
-If you repeatedly get the same "BAD signature" output, please email helpdesk@kernel.org, so we can investigate the problem.
-
-
-
--- 
-~Randy
-
+Thanks
+Alex
