@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F11C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ECCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2668720823
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D097820823
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rbbqaStj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hzajBu1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgHFClk (ORCPT
+        id S1727101AbgHFClo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
+        Wed, 5 Aug 2020 22:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgHFClg (ORCPT
+        with ESMTP id S1726524AbgHFClm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:41:36 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA6FAC061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 19:41:35 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id 128so2348043pgd.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 19:41:35 -0700 (PDT)
+        Wed, 5 Aug 2020 22:41:42 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DE5C061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 19:41:42 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id c10so4043550pjn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 19:41:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3zIGWcBX13Hs//qf6fLwkqweQExg0kLz4brui6Ynpx0=;
-        b=rbbqaStjCsNU7kqqTd+WJFbPoYvdvos3UBSF+KBscy9yikRtbFwfTFpr8kDzEVB3t1
-         eznusG9vMbFN2A7Bu6yTRRSt7lpo0gKlyIy1vMVh3vma8YyjPbF0VY0lWdqlXqMEqpnN
-         SypuwTkaQb1Yr6TIEgvKNHpPTYqpKPBqdOLi7O3uD1dH35e/rQmPc22UeNlKUFmPCj9b
-         YCa3yhSH1Y0s86OxT8VZE+YfAmO93DuNs3UyE3xkDMy/8Xh6Qw9s9nXc393n45S2bzjq
-         WgE+4pt5eTXzJQpxqr+3fadHhEowitHe2shIYiHgJgFoctRO4mMsKWYppLOwOWw5jPTr
-         79xg==
+        bh=Z9aoTydaBrsa4BYExn4DIx/YUkSnAWMKI+PsrmMc1kg=;
+        b=hzajBu1rs2E+qvSVvJ6K6BjDroOe3GDUOn3WiHkuw+aBxuyip9JUZ5vpeDuRuXli3J
+         h14C5Mtj47fepkc0s72md3P3Rih5cZAUlKNPviimW3BUFIXu+9Khj1cUn9Xs4WgmF+ab
+         EFMx/Rbwp81sF6NQ96F+RKM004gUaVhuW9LGjPqUleyNmozTVtumxZiTXUipPdvXsoVr
+         apZ4s+dVZAJyLkKti8Obf15EmKv7tFQOKGsB98kXGm5T5a6FOPb9CzocGbOPuCHI/gtl
+         FXHhFLGVIyXrnvJlJydEH27dghrLi1lQ3TJk3U0fpIJFHuG2Ef6ByNxdGXAGIBB2yn5S
+         HJVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3zIGWcBX13Hs//qf6fLwkqweQExg0kLz4brui6Ynpx0=;
-        b=iJ1YME6UcF5IIR//Zz+ulMQrJniSyR6gsao5e0frGJwJGpHEh+Ua9QrAGtt3TWUq9F
-         lQJ7UQbcyhXRwulA487NPr82nwlw7Ea8xLXf0BPntwfa3b+fOr8ixz19NLmKaTscZXIO
-         wTiEbDLDd/A3V2zNxZ7A+NiTsHHSRCekV48hiinOIpchpB46qutmHQW57tZgnin2MZAa
-         +XhbzxUIT3veqb8S5zvREYXAXtUCizEgRG9zorDcL6nJ6BQ5J0zwaMmqlwBcwultsqh0
-         4B9b9K/eo9FScg8Bb2iOFLjwYuexQuMuIyelX8JRcxdxYk/3VEKJk0WpoXROM4GXd+dO
-         tu4g==
-X-Gm-Message-State: AOAM531aMHQ1ZWYHEw47XvrdRQWv4jl9D//16OdgomP0Do9Yx3U34LbP
-        xbC5zoI9xGBJ8T1RuVbnp2E/Nw==
-X-Google-Smtp-Source: ABdhPJxwE3H5ew7zOvgkh10J8WrJv7a3oZggizzzDGo0s97itjqsQiKZGuLFkKSrfkgFdRKOBCmOGw==
-X-Received: by 2002:a62:3583:: with SMTP id c125mr6171128pfa.158.1596681695274;
-        Wed, 05 Aug 2020 19:41:35 -0700 (PDT)
+        bh=Z9aoTydaBrsa4BYExn4DIx/YUkSnAWMKI+PsrmMc1kg=;
+        b=LY04M9RA86G6i8mX0DnqsXFp3qqI6Prka1XXv6fa6XAZ6O535utIBPt1lOCpmU2ZOJ
+         IuVitq2qUm4l3V1kEPSsvTMr0h5yS49bLg7cDeWOq6iBWPxfJVybU54irfCqcf5uHJwA
+         KKI3QGib9H+N+FmURFN7U8MRUlHpvhSLEbT/pgGUpbgEsXwI1gp/LA8U0M5lSbFG8Zwc
+         iy4a6OW/Ucb7agvrWAQK5TX2DfI4nBHWf4afh0xl/RJMDzdyLutzqGTlgIpVmNKgawS4
+         PPgN3Lq+L83uisnTIkGswlaLyGbERqlwHn+KO2ZERVLHe4e1yH7f+fCJAk1fQPLhlcwo
+         LCnw==
+X-Gm-Message-State: AOAM533bnPvnnQHeyIeT6gF+HMEIoXU5BJ3G92go9oxWoGgc1HmZYaxL
+        QWLVtoVvKCsdGM+SRKHuuN18mA==
+X-Google-Smtp-Source: ABdhPJzz2Qy8HU2xZ7sFUqhC2UKaKmZjdo2X3lMitk0hlhPnbiVfZcYp/U4p/mdSH8Q2qqg1nKZUuw==
+X-Received: by 2002:a17:902:ed4a:: with SMTP id y10mr5938244plb.106.1596681702037;
+        Wed, 05 Aug 2020 19:41:42 -0700 (PDT)
 Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id a13sm5519270pfn.171.2020.08.05.19.41.32
+        by smtp.gmail.com with ESMTPSA id na14sm4645939pjb.6.2020.08.05.19.41.41
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Aug 2020 19:41:34 -0700 (PDT)
+        Wed, 05 Aug 2020 19:41:41 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
@@ -75,9 +75,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 06/11] perf mem: Support Arm SPE events
-Date:   Thu,  6 Aug 2020 10:40:36 +0800
-Message-Id: <20200806024041.27475-7-leo.yan@linaro.org>
+Subject: [PATCH v1 07/11] perf arm-spe: Enable attribution PERF_SAMPLE_DATA_SRC
+Date:   Thu,  6 Aug 2020 10:40:37 +0800
+Message-Id: <20200806024041.27475-8-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806024041.27475-1-leo.yan@linaro.org>
 References: <20200806024041.27475-1-leo.yan@linaro.org>
@@ -86,82 +86,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is to add Arm SPE events for perf memory profiling.  It
-supports three Arm SPE events:
-
-  - spe-load: memory event for only recording memory load ops;
-  - spe-store: memory event for only recording memory store ops;
-  - spe-ldst: memory event for recording memory load and store ops.
+This patch is to enable attribution PERF_SAMPLE_DATA_SRC for the perf
+data, when decoding the tracing data, it will tells the tool it contains
+memory data.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/arch/arm64/util/Build        |  2 +-
- tools/perf/arch/arm64/util/mem-events.c | 46 +++++++++++++++++++++++++
- 2 files changed, 47 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/arch/arm64/util/mem-events.c
+ tools/perf/util/arm-spe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 5c13438c7bd4..cb18442e840f 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -8,4 +8,4 @@ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
- perf-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
- 			      ../../arm/util/auxtrace.o \
- 			      ../../arm/util/cs-etm.o \
--			      arm-spe.o
-+			      arm-spe.o mem-events.o
-diff --git a/tools/perf/arch/arm64/util/mem-events.c b/tools/perf/arch/arm64/util/mem-events.c
-new file mode 100644
-index 000000000000..f23128db54fb
---- /dev/null
-+++ b/tools/perf/arch/arm64/util/mem-events.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "map_symbol.h"
-+#include "mem-events.h"
-+
-+#define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
-+
-+static struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
-+	E("spe-load",	"arm_spe_0/ts_enable=1,load_filter=1,store_filter=0,min_latency=%u/",	"arm_spe_0"),
-+	E("spe-store",	"arm_spe_0/ts_enable=1,load_filter=0,store_filter=1/",			"arm_spe_0"),
-+	E("spe-ldst",	"arm_spe_0/ts_enable=1,load_filter=1,store_filter=1,min_latency=%u/",	"arm_spe_0"),
-+};
-+
-+static char mem_ld_name[100];
-+static char mem_st_name[100];
-+static char mem_ldst_name[100];
-+
-+struct perf_mem_event *perf_mem_events__ptr(int i)
-+{
-+	if (i >= PERF_MEM_EVENTS__MAX)
-+		return NULL;
-+
-+	return &perf_mem_events[i];
-+}
-+
-+char *perf_mem_events__name(int i)
-+{
-+	struct perf_mem_event *e = perf_mem_events__ptr(i);
-+
-+	if (i >= PERF_MEM_EVENTS__MAX)
-+		return NULL;
-+
-+	if (i == PERF_MEM_EVENTS__LOAD) {
-+		scnprintf(mem_ld_name, sizeof(mem_ld_name),
-+			  e->name, perf_mem_events__loads_ldlat);
-+		return mem_ld_name;
-+	}
-+
-+	if (i == PERF_MEM_EVENTS__STORE) {
-+		scnprintf(mem_st_name, sizeof(mem_st_name), e->name);
-+		return mem_st_name;
-+	}
-+
-+	scnprintf(mem_ldst_name, sizeof(mem_ldst_name),
-+		  e->name, perf_mem_events__loads_ldlat);
-+	return mem_ldst_name;
-+}
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 3882a5360ada..c2cf5058648f 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -803,7 +803,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 	attr.type = PERF_TYPE_HARDWARE;
+ 	attr.sample_type = evsel->core.attr.sample_type & PERF_SAMPLE_MASK;
+ 	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
+-		PERF_SAMPLE_PERIOD;
++			    PERF_SAMPLE_PERIOD | PERF_SAMPLE_DATA_SRC;
+ 	if (spe->timeless_decoding)
+ 		attr.sample_type &= ~(u64)PERF_SAMPLE_TIME;
+ 	else
 -- 
 2.17.1
 
