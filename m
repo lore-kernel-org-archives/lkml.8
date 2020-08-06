@@ -2,176 +2,222 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFA7C221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B277E2075A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2q1p0JO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="92tqIobS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgHFWjr (ORCPT
+        id S1726333AbgHFWkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHFWjq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:39:46 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54B0C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 15:39:46 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id v13so142232oiv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 15:39:46 -0700 (PDT)
+        Thu, 6 Aug 2020 18:40:49 -0400
+Received: from mail-eopbgr770090.outbound.protection.outlook.com ([40.107.77.90]:42782
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725927AbgHFWks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:40:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HxrxhyQ13l69M6lspIDYhLmWMcEjYT7DPKkl/47heEuxQnbdQISxjW+pN0otu5ryEQ3Y4I/cl3MluKpX2IRLWgKlY/gUK2j5Qhofv7HskaklKg6eRW+EtiHSGQsFPHcHgYZmbr53kpUd7BJP5CGIpmAKLGXmna3J/I/GMNffEoAaJB95yXjG3AnKpBU32k5TzsQ1Sy71qZEjBKjWFJ9yxmerV0NlXq2I/+btaiKidSOZMvsIJz3gAioLdSBmVLwnEBgwbJ17qgf7JZHbWGpktMPDRoYK7YN15FfNWIJqaMIPWg5f8VePzIfWPkI14AY/SW+VtPXtAkFK40otsMYchA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2KHaNfrghcvk5vvnQTVQ3Bfg0LhKfnpVYv9SfNhol8=;
+ b=HhIN4MMuk4AwLxoA/QTeoXBmLxmdcNL09Tm+l/pCjYxiP3s3CCQe/FGnSS+zyPEPTbQVfxf0ozIUL4I3wUksLbtjLm5OoyynFAmpYSqRcaTHtLEb3VL0XPyQqb1/4JFOE5lyqxCGQPWq+mpyYUMipYowsNqUNpeuFHEr9L19qTGOzezudn/gX4tp06C6DFTxpZFFpgqAAfTXQj9dMYZuEzyr8Z8TgE23ytU2COY9vahT82OGlqE5i6hkXVAqXDbLgGSgz0xJ2yWe/NMIawtGW9peTzQ1++vJhxZ4tZK2crjKf5epQ9kbhTVdv+wOY9D3eXcuIj0teb/56KrEUF5/eA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=amperemail.onmicrosoft.com; dkim=pass
+ header.d=amperemail.onmicrosoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QYyChGMYepRNLD8UKgj7thBgwQob2Oa7/EK/gPsMnyo=;
-        b=E2q1p0JO2XvfW4MMncIYFDARtHPyS+Dcb3O71GCXktM+fV9+klnIKIxDdRHgU8QHRr
-         l7X7JmWn9GB+naSfiniANoD7LR6lGKLMk5kpKOJWxfeJQffooRC0T6skmfrGEC1AMHne
-         yKbq2NmQL6q9ywbDwSPKDUz/etM/TXSWury+bF/GcssilJLmAiftBdZFjsPbW9rUAfP+
-         /X3iDgd1HOlYlLaINt0FDbT3U2C2Nks5KEEvO3bLUtsyWVHpvQfouOR9Zj9RrV5LhyCL
-         Ghy+AmHJ2iZQF63/YcvknmUTlSDTrBqwC41c7/rEggVDsauU9MQ+kT+MyOWnLhLqZ+EL
-         IwXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QYyChGMYepRNLD8UKgj7thBgwQob2Oa7/EK/gPsMnyo=;
-        b=JIaFu6PLJ11IfXy7aPOZjY84BazIAM6cobX7qCt4qmDLAC7dMMVFLm41x60V1nU1Zk
-         L4Jh2ugBFvqbtlmTQWigUzuBzNj8LLzM4NcqhCG5x/ulvQWsccXqHp9KGgrgqkL0d7Mh
-         gOA5F/Qdxjsf0ztVRVY6dm9+TA+uPpPQpmRKJXidiAMumI6eIyZsZtm4EOVDJrGbl1oj
-         3C7yQCOi+ywpjVEXfjBJE8W1zmcAN8BNXqbRfUxyQicfCqNQmOVZOgzVq0nPoRwr0zv4
-         PvWeCIvrTKKbV+L2xxW0aIftgRueNylynMgTkLfyjPhzieATuEPivAU4I8P2HV30tauu
-         ZkVA==
-X-Gm-Message-State: AOAM530p1+tLfI7e1ZhhNhjizOIJe82bB3Gho+kiQ5NJYGsL5AU8pcba
-        1vaqqiTe5k3sM6KKvi15xIGfnuO8ubzZBlEEl1Y=
-X-Google-Smtp-Source: ABdhPJxgRVHE+w66qKr8NvAura05izXsDohZP4qj6OUjgNalYTkqSJnvf7KROxLkFiU/XGIePEi/yKZRmmb+OQ1qMho=
-X-Received: by 2002:a54:4512:: with SMTP id l18mr8807675oil.148.1596753585500;
- Thu, 06 Aug 2020 15:39:45 -0700 (PDT)
+ d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2KHaNfrghcvk5vvnQTVQ3Bfg0LhKfnpVYv9SfNhol8=;
+ b=92tqIobShmb7lU94RGRp+nxwLlq0nrYNusPyH6HPkYbhWfWKdIxOCWasAsYjmVEsh8vuT+2xfZ8COZw7GsueZEFWSBdljAVMhiu4T3azlXrYu+L42sZaE2JsdtcKFtGK/nlMi9B9mdzpEvl3kW6Nn6wSyOPtdxrx5nfgUtN/6HQ=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none
+ header.from=amperemail.onmicrosoft.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB5576.prod.exchangelabs.com (2603:10b6:a03:126::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3239.19; Thu, 6 Aug 2020 22:40:44 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::5c26:c6ca:c444:e947]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::5c26:c6ca:c444:e947%3]) with mapi id 15.20.3239.021; Thu, 6 Aug 2020
+ 22:40:44 +0000
+Content-Type: text/plain;
+        charset=utf-8
+Subject: Re: [PATCH] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
+From:   Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+In-Reply-To: <20200806222713.GA704188@bjorn-Precision-5520>
+Date:   Thu, 6 Aug 2020 15:40:41 -0700
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        patches@amperecomputing.com, Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0A228AB4-25C4-40D8-ABA1-CB9C774825B5@amperemail.onmicrosoft.com>
+References: <20200806222713.GA704188@bjorn-Precision-5520>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-ClientProxiedBy: CY4PR08CA0040.namprd08.prod.outlook.com
+ (2603:10b6:903:151::26) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-References: <20200730205112.2099429-1-ndesaulniers@google.com> <20200730205112.2099429-4-ndesaulniers@google.com>
-In-Reply-To: <20200730205112.2099429-4-ndesaulniers@google.com>
-From:   Nathan Huckleberry <nhuck15@gmail.com>
-Date:   Thu, 6 Aug 2020 17:39:33 -0500
-Message-ID: <CAN=-RxstJBjJUcOf9iuAxEcxYUhJTdF9JhPVWwQuefnE+3s52w@mail.gmail.com>
-Subject: Re: [PATCH 3/4] ARM: backtrace-clang: give labels more descriptive names
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Lvqiang Huang <lvqiang.huang@unisoc.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.148] (73.151.56.145) by CY4PR08CA0040.namprd08.prod.outlook.com (2603:10b6:903:151::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Thu, 6 Aug 2020 22:40:43 +0000
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Originating-IP: [73.151.56.145]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 59f888b6-2db9-4054-77c1-08d83a59c144
+X-MS-TrafficTypeDiagnostic: BYAPR01MB5576:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB55768789713DEBA947FED19BE0480@BYAPR01MB5576.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NTqEJlY0IZJElRe87fPX0Syaa3pIDQxQLXgsQV+KMxPmVFnFjV6AZiKF8/Ai/Q7rdmceDBhpIQq1s8mrY49T/ncShuxLLhPZd/u6cCn/zvtFmUehSNqSfUvd2nblzZMesplhKEctT+VUomrEXIMQvjjPDssXwG8hPDgyGGqg0zSiE84qizarDToZqBxf3WCv8m5kkdBBirsc3S+LAU/RQ8JZMTHXfGJ9M8AcOmmnIElgrxn1GXxzfWNBEJyo/XnggUyGv/URMmwKcS67sYkN1NF+Lzpu2SD77xFg6/yeTP3F87n+nwCNDpsrqynmV355jdgAlMgXWVk4J+C9d2NYbg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(346002)(396003)(376002)(136003)(366004)(53546011)(16576012)(316002)(83380400001)(478600001)(16526019)(42882007)(186003)(5660300002)(8676002)(66556008)(8936002)(6486002)(2616005)(956004)(4326008)(6916009)(26005)(66476007)(54906003)(33656002)(83170400001)(66946007)(52116002)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: cGUX5HJ/cQrFfKXGGZDFtRHPJy+qg4V3/9s1JFMH+vRlH47aQt6zLugQkCIVkX9ItY3b6mZO+ne2x9/wENX18gC+kkcjm2pB+MoRMg2JY50if4Md4Ve48RFcsI33/+zb8Ywf2kWjKAUz4dJxQ2SXYy9PAf14NyMAF8XVhrd9kDlLIPaR3fFTpFE2z3lWp2SQY3OqkJvOy9udc7WlCaiGlaiQq9TEtoHA34u/HaDHMRXKw8XxSZUd4DdO3J/drkySdTHF8kt5524gWDkY8llOnfv8x1j6aFwsAr0nISnVe5RvYkN/GTEl79HtfNFcmKOra6YHpfhLCV7sqFGV+8YrtrVfF/UJXWCZJHXgDQQmicoPOpOFRPeEESz18z51ZdLqvPdBIFL0IAk+9vd2rVnJb9xZgbWnhbItbA1YrQCbCifJmUYR1k2VRDIwmyBrA12Oyv0X91pF2S3+UY8sJogWeM8av4GdQmNcgkg69d9qfBw3BWhXIVvnEvuud3bX9HOY4SCYIOztiX14dRBef9J+6nczDk4D5I5qVQT8+smYWpQnC5xZxOqY5Td3MVosHglDwy5R9Y4rQERoGSM4097R4L3I2g92Q55jbGN5jFinqeSQAptyxSdNi8/2wm8/6xD4qb517is9YU5bm7xW7l3Img==
+X-OriginatorOrg: amperemail.onmicrosoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59f888b6-2db9-4054-77c1-08d83a59c144
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR01MB4598.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 22:40:44.4993
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SjFzpDPUR0JntYFKI0IQPjUY58QxYA7o+fvSIMVMY8V4VkafG3oEwVUPAKQ+byr3hKQbT7uvHuRppKiRpjzLl4lvbuN4gEFz/9sDYdaquFzGHtGSqqYnwiczQlh3IKSd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5576
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The style cleanup looks great. I just have one extra thing that
-can probably be thrown into this patch.
 
-On Thu, Jul 30, 2020 at 3:51 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Removes the 1004 label; it was neither a control flow target, nor an
-> instruction we expect to produce a fault.
->
-> Gives the labels slightly more readable names. The `b` suffixes are
-> handy to disambiguate between labels of the same identifier when there's
-> more than one. Since these labels are unique, let's just give them
-> names.
->
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/arm/lib/backtrace-clang.S | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/arm/lib/backtrace-clang.S b/arch/arm/lib/backtrace-clang.S
-> index 40eb2215eaf4..7dad2a6843a5 100644
-> --- a/arch/arm/lib/backtrace-clang.S
-> +++ b/arch/arm/lib/backtrace-clang.S
-> @@ -121,8 +121,8 @@ for_each_frame:     tst     frame, mask             @ Check for address exceptions
->   * start. This value gets updated to be the function start later if it is
->   * possible.
->   */
-> -1001:          ldr     sv_pc, [frame, #4]      @ get saved 'pc'
-> -1002:          ldr     sv_fp, [frame, #0]      @ get saved fp
-> +load_pc:       ldr     sv_pc, [frame, #4]      @ get saved 'pc'
-> +load_fp:       ldr     sv_fp, [frame, #0]      @ get saved fp
->
->                 teq     sv_fp, mask             @ make sure next frame exists
->                 beq     no_frame
-> @@ -142,7 +142,7 @@ for_each_frame:     tst     frame, mask             @ Check for address exceptions
->   * registers for the current function, but the stacktrace is still printed
->   * properly.
->   */
-> -1003:          ldr     sv_lr, [sv_fp, #4]      @ get saved lr from next frame
-> +load_lr:       ldr     sv_lr, [sv_fp, #4]      @ get saved lr from next frame
->
->                 tst     sv_lr, #0               @ If there's no previous lr,
->                 beq     finished_setup          @ we're done.
-> @@ -166,8 +166,7 @@ finished_setup:
->  /*
->   * Print the function (sv_pc) and where it was called from (sv_lr).
->   */
-> -1004:          mov     r0, sv_pc
-> -
-> +               mov     r0, sv_pc
->                 mov     r1, sv_lr
->                 mov     r2, frame
->                 bic     r1, r1, mask            @ mask PC/LR for the mode
-> @@ -182,7 +181,7 @@ finished_setup:
->   * pointer the comparison will fail and no registers will print. Unwinding will
->   * continue as if there had been no registers stored in this frame.
->   */
-> -1005:          ldr     r1, [sv_pc, #0]         @ if stmfd sp!, {..., fp, lr}
-> +load_stmfd:    ldr     r1, [sv_pc, #0]         @ if stmfd sp!, {..., fp, lr}
->                 ldr     r3, .Lopcode            @ instruction exists,
->                 teq     r3, r1, lsr #11
->                 ldr     r0, [frame]             @ locals are stored in
-> @@ -201,7 +200,7 @@ finished_setup:
->                 mov     frame, sv_fp            @ above the current frame
->                 bhi     for_each_frame
->
-> -1006:          adr     r0, .Lbad
-> +bad_frame:     adr     r0, .Lbad
->                 mov     r1, loglvl
->                 mov     r2, frame
->                 bl      printk
-> @@ -216,11 +215,10 @@ bad_lr:           mov     sv_fp, #0
->  ENDPROC(c_backtrace)
->                 .pushsection __ex_table,"a"
->                 .align  3
-> -               .long   1001b, 1006b
-> -               .long   1002b, 1006b
-> -               .long   1003b, 1006b
-> -               .long   1004b, 1006b
-> -               .long   1005b, 1006b
-> +               .long   load_pc, bad_frame
-> +               .long   load_fp, bad_frame
-> +               .long   load_lr, bad_frame
-> +               .long   load_stmfd, bad_frame
+> On Aug 6, 2020, at 3:27 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>=20
+> On Thu, Aug 06, 2020 at 02:57:34PM -0700, Tuan Phan wrote:
+>> Ampere Altra SOC supports only 32-bit ECAM reading. Therefore,
+>> add an MCFG quirk for the platform.
+>=20
+> This is interesting.  So this host bridge supports sub 32-bit config
+> *writes*, but not reads?
+>=20
+> I actually don't know whether that complies with the spec or not.  If
+> config registers are not allowed to have side effects on read, this
+> *would* be compliant.
+>=20
+> PCIe r5.0, sec 7.4, doesn't list any register types with read side
+> effects, so there shouldn't be any in the registers defined by the
+> spec.  But I would think device-specific registers could do whatever
+> they wanted, e.g., reading an interrupt status register or something
+> could clear it.
+>=20
+> And I think sec 7.2.2 about ECAM implicitly requires sub 32-bit
+> accesses because it mentions the access size and byte enables.
+>=20
+> Is this a one-off situation where future hardware will allow sub
+> 32-bit reads and writes?  We don't want a stream of quirks for future
+> devices.
 
-Load_stmfd should get its own fixup
-handler since it should emit errors about a bad
-pc, not a bad frame pointer.
+Hi Bjorn,
 
->                 .long   prev_call, bad_lr
->                 .popsection
->
-> --
-> 2.28.0.163.g6104cc2f0b6-goog
->
+Actually, this is a silicon bug inside current Altra Soc. Our SOC supports
+sub 32-bit reads and writes. But using byte read for some devices like AMD =
+graphic
+card causing corrupted data due to host controller HW errata.
+
+Future devices will have this issue fixed so this quirk applies only for cu=
+rrent Altra
+Soc.
+
+So you think I can drop the =E2=80=9Cnon-compliant=E2=80=9D as there are no=
+ read side effects
+for all registers?
+
+>=20
+>> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+>> ---
+>> drivers/acpi/pci_mcfg.c  | 20 ++++++++++++++++++++
+>> drivers/pci/ecam.c       | 10 ++++++++++
+>> include/linux/pci-ecam.h |  1 +
+>> 3 files changed, 31 insertions(+)
+>>=20
+>> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+>> index 54b36b7ad47d..e526571e0ebd 100644
+>> --- a/drivers/acpi/pci_mcfg.c
+>> +++ b/drivers/acpi/pci_mcfg.c
+>> @@ -142,6 +142,26 @@ static struct mcfg_fixup mcfg_quirks[] =3D {
+>> 	XGENE_V2_ECAM_MCFG(4, 0),
+>> 	XGENE_V2_ECAM_MCFG(4, 1),
+>> 	XGENE_V2_ECAM_MCFG(4, 2),
+>> +
+>> +#define ALTRA_ECAM_QUIRK(rev, seg) \
+>> +	{ "Ampere", "Altra   ", rev, seg, MCFG_BUS_ANY, &pci_32b_read_ops }
+>> +
+>> +	ALTRA_ECAM_QUIRK(1, 0),
+>> +	ALTRA_ECAM_QUIRK(1, 1),
+>> +	ALTRA_ECAM_QUIRK(1, 2),
+>> +	ALTRA_ECAM_QUIRK(1, 3),
+>> +	ALTRA_ECAM_QUIRK(1, 4),
+>> +	ALTRA_ECAM_QUIRK(1, 5),
+>> +	ALTRA_ECAM_QUIRK(1, 6),
+>> +	ALTRA_ECAM_QUIRK(1, 7),
+>> +	ALTRA_ECAM_QUIRK(1, 8),
+>> +	ALTRA_ECAM_QUIRK(1, 9),
+>> +	ALTRA_ECAM_QUIRK(1, 10),
+>> +	ALTRA_ECAM_QUIRK(1, 11),
+>> +	ALTRA_ECAM_QUIRK(1, 12),
+>> +	ALTRA_ECAM_QUIRK(1, 13),
+>> +	ALTRA_ECAM_QUIRK(1, 14),
+>> +	ALTRA_ECAM_QUIRK(1, 15),
+>> };
+>>=20
+>> static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+>> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
+>> index 8f065a42fc1a..b54d32a31669 100644
+>> --- a/drivers/pci/ecam.c
+>> +++ b/drivers/pci/ecam.c
+>> @@ -168,4 +168,14 @@ const struct pci_ecam_ops pci_32b_ops =3D {
+>> 		.write		=3D pci_generic_config_write32,
+>> 	}
+>> };
+>> +
+>> +/* ECAM ops for 32-bit read only (non-compliant) */
+>> +const struct pci_ecam_ops pci_32b_read_ops =3D {
+>> +	.bus_shift	=3D 20,
+>> +	.pci_ops	=3D {
+>> +		.map_bus	=3D pci_ecam_map_bus,
+>> +		.read		=3D pci_generic_config_read32,
+>> +		.write		=3D pci_generic_config_write,
+>> +	}
+>> +};
+>> #endif
+>> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+>> index 1af5cb02ef7f..033ce74f02e8 100644
+>> --- a/include/linux/pci-ecam.h
+>> +++ b/include/linux/pci-ecam.h
+>> @@ -51,6 +51,7 @@ extern const struct pci_ecam_ops pci_generic_ecam_ops;
+>>=20
+>> #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+>> extern const struct pci_ecam_ops pci_32b_ops;	/* 32-bit accesses only */
+>> +extern const struct pci_ecam_ops pci_32b_read_ops; /* 32-bit read only =
+*/
+>> extern const struct pci_ecam_ops hisi_pcie_ops;	/* HiSilicon */
+>> extern const struct pci_ecam_ops thunder_pem_ecam_ops; /* Cavium Thunder=
+X 1.x & 2.x */
+>> extern const struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium Thunder=
+X 1.x */
+>> --=20
+>> 2.18.4
+>>=20
+
