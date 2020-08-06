@@ -7,200 +7,190 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F1AC433EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E489C4726D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 331502310B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5A323102
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgHFKos (ORCPT
+        id S1729218AbgHFJhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 06:44:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:42238 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbgHFKnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 06:43:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B01D3113E;
-        Thu,  6 Aug 2020 03:43:15 -0700 (PDT)
-Received: from net-arm-thunderx2-02.shanghai.arm.com (net-arm-thunderx2-02.shanghai.arm.com [10.169.210.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 94F403F9AB;
-        Thu,  6 Aug 2020 03:43:12 -0700 (PDT)
-From:   Jianlin Lv <Jianlin.Lv@arm.com>
-To:     bpf@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, yhs@fb.com, Song.Zhu@arm.com,
-        Jianlin.Lv@arm.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH bpf-next v2] bpf: fix compilation warning of selftests
-Date:   Thu,  6 Aug 2020 18:42:24 +0800
-Message-Id: <20200806104224.95306-1-Jianlin.Lv@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200731061600.18344-1-Jianlin.Lv@arm.com>
-References: <20200731061600.18344-1-Jianlin.Lv@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Aug 2020 05:37:02 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:17690 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729104AbgHFJcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:32:48 -0400
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 02:32:36 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 02:32:34 -0700
+Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 06 Aug 2020 15:02:13 +0530
+Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
+        id D1729219E0; Thu,  6 Aug 2020 15:02:12 +0530 (IST)
+From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sricharan@codeaurora.org, gokulsri@codeaurora.org
+Subject: [PATCH v2 2/3] arm64: dts: Add board support for HK10
+Date:   Thu,  6 Aug 2020 15:02:11 +0530
+Message-Id: <1596706332-12957-3-git-send-email-gokulsri@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596706332-12957-1-git-send-email-gokulsri@codeaurora.org>
+References: <1596706332-12957-1-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang compiler version: 12.0.0
-The following warning appears during the selftests/bpf compilation:
+Add initial support for IPQ8074 SoC based HK10-C1
+and HK10-C2 evaluation boards.
 
-prog_tests/send_signal.c:51:3: warning: ignoring return value of ‘write’,
-declared with attribute warn_unused_result [-Wunused-result]
-   51 |   write(pipe_c2p[1], buf, 1);
-      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~
-prog_tests/send_signal.c:54:3: warning: ignoring return value of ‘read’,
-declared with attribute warn_unused_result [-Wunused-result]
-   54 |   read(pipe_p2c[0], buf, 1);
-      |   ^~~~~~~~~~~~~~~~~~~~~~~~~
-......
-
-prog_tests/stacktrace_build_id_nmi.c:13:2: warning: ignoring return value
-of ‘fscanf’,declared with attribute warn_unused_result [-Wunused-resul]
-   13 |  fscanf(f, "%llu", &sample_freq);
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-test_tcpnotify_user.c:133:2: warning:ignoring return value of ‘system’,
-declared with attribute warn_unused_result [-Wunused-result]
-  133 |  system(test_script);
-      |  ^~~~~~~~~~~~~~~~~~~
-test_tcpnotify_user.c:138:2: warning:ignoring return value of ‘system’,
-declared with attribute warn_unused_result [-Wunused-result]
-  138 |  system(test_script);
-      |  ^~~~~~~~~~~~~~~~~~~
-test_tcpnotify_user.c:143:2: warning:ignoring return value of ‘system’,
-declared with attribute warn_unused_result [-Wunused-result]
-  143 |  system(test_script);
-      |  ^~~~~~~~~~~~~~~~~~~
-
-Add code that fix compilation warning about ignoring return value and
-handles any errors; Check return value of library`s API make the code
-more secure.
-
-Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 ---
-v2:
-- replease CHECK_FAIL by CHECK
-- fix test_tcpnotify_user failed issue
----
- .../selftests/bpf/prog_tests/send_signal.c     | 18 ++++++++----------
- .../bpf/prog_tests/stacktrace_build_id_nmi.c   |  4 +++-
- .../selftests/bpf/test_tcpnotify_user.c        | 13 ++++++++++---
- 3 files changed, 21 insertions(+), 14 deletions(-)
+ arch/arm64/boot/dts/qcom/Makefile            |  2 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts | 11 ++++
+ arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts | 14 +++++
+ arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi   | 76 ++++++++++++++++++++++++++++
+ 4 files changed, 103 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/send_signal.c b/tools/testing/selftests/bpf/prog_tests/send_signal.c
-index 504abb7bfb95..7043e6ded0e6 100644
---- a/tools/testing/selftests/bpf/prog_tests/send_signal.c
-+++ b/tools/testing/selftests/bpf/prog_tests/send_signal.c
-@@ -48,21 +48,19 @@ static void test_send_signal_common(struct perf_event_attr *attr,
- 		close(pipe_p2c[1]); /* close write */
- 
- 		/* notify parent signal handler is installed */
--		write(pipe_c2p[1], buf, 1);
-+		CHECK(write(pipe_c2p[1], buf, 1) != 1, "pipe_write", "err %d\n", -errno);
- 
- 		/* make sure parent enabled bpf program to send_signal */
--		read(pipe_p2c[0], buf, 1);
-+		CHECK(read(pipe_p2c[0], buf, 1) != 1, "pipe_read", "err %d\n", -errno);
- 
- 		/* wait a little for signal handler */
- 		sleep(1);
- 
--		if (sigusr1_received)
--			write(pipe_c2p[1], "2", 1);
--		else
--			write(pipe_c2p[1], "0", 1);
-+		buf[0] = sigusr1_received ? '2' : '0';
-+		CHECK(write(pipe_c2p[1], buf, 1) != 1, "pipe_write", "err %d\n", -errno);
- 
- 		/* wait for parent notification and exit */
--		read(pipe_p2c[0], buf, 1);
-+		CHECK(read(pipe_p2c[0], buf, 1) != 1, "pipe_read", "err %d\n", -errno);
- 
- 		close(pipe_c2p[1]);
- 		close(pipe_p2c[0]);
-@@ -99,7 +97,7 @@ static void test_send_signal_common(struct perf_event_attr *attr,
- 	}
- 
- 	/* wait until child signal handler installed */
--	read(pipe_c2p[0], buf, 1);
-+	CHECK(read(pipe_c2p[0], buf, 1) != 1, "pipe_read", "err %d\n", -errno);
- 
- 	/* trigger the bpf send_signal */
- 	skel->bss->pid = pid;
-@@ -107,7 +105,7 @@ static void test_send_signal_common(struct perf_event_attr *attr,
- 	skel->bss->signal_thread = signal_thread;
- 
- 	/* notify child that bpf program can send_signal now */
--	write(pipe_p2c[1], buf, 1);
-+	CHECK(write(pipe_p2c[1], buf, 1) != 1, "pipe_write", "err %d\n", -errno);
- 
- 	/* wait for result */
- 	err = read(pipe_c2p[0], buf, 1);
-@@ -121,7 +119,7 @@ static void test_send_signal_common(struct perf_event_attr *attr,
- 	CHECK(buf[0] != '2', test_name, "incorrect result\n");
- 
- 	/* notify child safe to exit */
--	write(pipe_p2c[1], buf, 1);
-+	CHECK(write(pipe_p2c[1], buf, 1) != 1, "pipe_write", "err %d\n", -errno);
- 
- disable_pmu:
- 	close(pmu_fd);
-diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c b/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
-index f002e3090d92..11a769e18f5d 100644
---- a/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
-+++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
-@@ -6,11 +6,13 @@ static __u64 read_perf_max_sample_freq(void)
- {
- 	__u64 sample_freq = 5000; /* fallback to 5000 on error */
- 	FILE *f;
-+	__u32 duration = 0;
- 
- 	f = fopen("/proc/sys/kernel/perf_event_max_sample_rate", "r");
- 	if (f == NULL)
- 		return sample_freq;
--	fscanf(f, "%llu", &sample_freq);
-+	CHECK(fscanf(f, "%llu", &sample_freq) != 1, "Get max sample rate",
-+		  "return default value: 5000,err %d\n", -errno);
- 	fclose(f);
- 	return sample_freq;
- }
-diff --git a/tools/testing/selftests/bpf/test_tcpnotify_user.c b/tools/testing/selftests/bpf/test_tcpnotify_user.c
-index 8549b31716ab..73da7fe8c152 100644
---- a/tools/testing/selftests/bpf/test_tcpnotify_user.c
-+++ b/tools/testing/selftests/bpf/test_tcpnotify_user.c
-@@ -124,17 +124,24 @@ int main(int argc, char **argv)
- 	sprintf(test_script,
- 		"iptables -A INPUT -p tcp --dport %d -j DROP",
- 		TESTPORT);
--	system(test_script);
-+	if (system(test_script)) {
-+		printf("FAILED: execute command: %s, err %d\n", test_script, -errno);
-+		goto err;
-+	}
- 
- 	sprintf(test_script,
- 		"nc 127.0.0.1 %d < /etc/passwd > /dev/null 2>&1 ",
- 		TESTPORT);
--	system(test_script);
-+	if (system(test_script))
-+		printf("execute command: %s, err %d\n", test_script, -errno);
- 
- 	sprintf(test_script,
- 		"iptables -D INPUT -p tcp --dport %d -j DROP",
- 		TESTPORT);
--	system(test_script);
-+	if (system(test_script)) {
-+		printf("FAILED: execute command: %s, err %d\n", test_script, -errno);
-+		goto err;
-+	}
- 
- 	rv = bpf_map_lookup_elem(bpf_map__fd(global_map), &key, &g);
- 	if (rv != 0) {
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index c98bafe..ea933fb 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -4,6 +4,8 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c1.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts
+new file mode 100644
+index 0000000..2bfcf42
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright (c) 2020 The Linux Foundation. All rights reserved.
++ */
++/dts-v1/;
++
++#include "ipq8074-hk10.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ8074/AP-HK10-C1";
++	compatible = "qcom,ipq8074-hk10-c1", "qcom,ipq8074";
++};
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts
+new file mode 100644
+index 0000000..1897e96
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/dts-v1/;
++/* Copyright (c) 2020 The Linux Foundation. All rights reserved.
++ */
++#include "ipq8074-hk10.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ8074/AP-HK10-C2";
++	compatible = "qcom,ipq8074-hk10-c2", "qcom,ipq8074";
++};
++
++&q6v5_wcss {
++	status = "disabled";
++};
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+new file mode 100644
+index 0000000..0827055
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+@@ -0,0 +1,76 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++/dts-v1/;
++
++#include "ipq8074.dtsi"
++
++/ {
++	#address-cells = <0x2>;
++	#size-cells = <0x2>;
++
++	interrupt-parent = <&intc>;
++
++	aliases {
++		serial0 = &blsp1_uart5;
++	};
++
++	chosen {
++		stdout-path = "serial0";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x40000000 0x0 0x20000000>;
++	};
++};
++
++&blsp1_spi1 {
++	status = "ok";
++
++	m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&blsp1_uart5 {
++	status = "ok";
++};
++
++&pcie0 {
++	status = "ok";
++	perst-gpio = <&tlmm 58 0x1>;
++};
++
++&pcie1 {
++	status = "ok";
++	perst-gpio = <&tlmm 61 0x1>;
++};
++
++&qmp_pcie_phy0 {
++	status = "ok";
++};
++
++&qmp_pcie_phy1 {
++	status = "ok";
++};
++
++&qpic_bam {
++	status = "ok";
++};
++
++&qpic_nand {
++	status = "ok";
++
++	nand@0 {
++		reg = <0>;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++		nand-bus-width = <8>;
++	};
++};
 -- 
-2.17.1
+2.7.4
 
