@@ -2,134 +2,85 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C98C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2629C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE4E12224D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26AB2224D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596739622;
+	bh=Y0WLyMYc/6bL6sF+tllMOotA+LW00xdgYY/+OD2U6vU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ehfb37uTgBCLQvdYiPgjLzx3ryYLSx3Nqp08kjK9joh2fPLYPD0vY+yy+E6/VFTf8
+	 QyfkFqdoccQFWYVbyrxhO/x8RZOP0peLwJ6lkKZc4JCDwcNijxY/1rublxIuyi4fBm
+	 K4hVUZh9LHyR5mVUXBKEPve/0lmlcYgmF7JOA07U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgHFSqV (ORCPT
+        id S1728306AbgHFSrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35762 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbgHFSqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:46:20 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725927AbgHFSrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:47:00 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 394FF20855;
-        Thu,  6 Aug 2020 18:46:20 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 14:46:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Sean Paul <sean@poorly.run>
-Subject: [PATCH v2] tracing: Add trace_array_init_printk() to initialize
- instance trace_printk() buffers
-Message-ID: <20200806144618.4384a0f9@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0EB520855;
+        Thu,  6 Aug 2020 18:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596739620;
+        bh=Y0WLyMYc/6bL6sF+tllMOotA+LW00xdgYY/+OD2U6vU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PLgazSnh6Q7APAOQ9R2fEqDg3eJ4DImjX6Wk/9tQpbYrG5For71BgmDQraXcuOZpT
+         YlLeFd2JjAqBeXiGVCqAgj2Ti3AKcgE9K3ByGwRJl7SDifQRfAF5aM70EGZHVbs/rp
+         y6+jtIYUseHPvJviOSur5eW3dE5xTX2JRH4naccU=
+Date:   Thu, 6 Aug 2020 11:46:57 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Cc:     Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next] net/tls: allow MSG_CMSG_COMPAT in sendmsg
+Message-ID: <20200806114657.42f1ce8c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200806064906.14421-1-r.czerwinski@pengutronix.de>
+References: <20200806064906.14421-1-r.czerwinski@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Thu,  6 Aug 2020 08:49:06 +0200 Rouven Czerwinski wrote:
+> Trying to use ktls on a system with 32-bit userspace and 64-bit kernel
+> results in a EOPNOTSUPP message during sendmsg:
+>=20
+>   setsockopt(3, SOL_TLS, TLS_TX, =E2=80=A6, 40) =3D 0
+>   sendmsg(3, =E2=80=A6, msg_flags=3D0}, 0) =3D -1 EOPNOTSUPP (Operation n=
+ot supported)
+>=20
+> The tls_sw implementation does strict flag checking and does not allow
+> the MSG_CMSG_COMPAT flag, which is set if the message comes in through
+> the compat syscall.
+>=20
+> This patch adds MSG_CMSG_COMPAT to the flag check to allow the usage of
+> the TLS SW implementation on systems using the compat syscall path.
+>=20
+> Note that the same check is present in the sendmsg path for the TLS
+> device implementation, however the flag hasn't been added there for lack
+> of testing hardware.
+>=20
+> Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
 
-As trace_array_printk() used with not global instances will not add noise to
-the main buffer, they are OK to have in the kernel (unlike trace_printk()).
-This require the subsystem to create their own tracing instance, and the
-trace_array_printk() only writes into those instances.
+I don't know much about the compat stuff, I trust our cmsg handling is
+fine?
 
-Add trace_array_init_printk() to initialize the trace_printk() buffers
-without printing out the WARNING message.
-
-Reported-by: Sean Paul <sean@poorly.run>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-Changes since v1:
-  Added EXPORT_SYMBOL_GPL() to trace_array_init_printk() as it is
-  required for another function that is exported.
-
- kernel/trace/trace.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 06c0feae5ff9..c5f822736261 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3129,6 +3129,9 @@ static int alloc_percpu_trace_buffer(void)
- {
- 	struct trace_buffer_struct *buffers;
- 
-+	if (trace_percpu_buffer)
-+		return 0;
-+
- 	buffers = alloc_percpu(struct trace_buffer_struct);
- 	if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
- 		return -ENOMEM;
-@@ -3331,6 +3334,26 @@ int trace_array_vprintk(struct trace_array *tr,
- 	return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
- }
- 
-+/**
-+ * trace_array_printk - Print a message to a specific instance
-+ * @tr: The instance trace_array descriptor
-+ * @ip: The instruction pointer that this is called from.
-+ * @fmt: The format to print (printf format)
-+ *
-+ * If a subsystem sets up its own instance, they have the right to
-+ * printk strings into their tracing instance buffer using this
-+ * function. Note, this function will not write into the top level
-+ * buffer (use trace_printk() for that), as writing into the top level
-+ * buffer should only have events that can be individually disabled.
-+ * trace_printk() is only used for debugging a kernel, and should not
-+ * be ever encorporated in normal use.
-+ *
-+ * trace_array_printk() can be used, as it will not add noise to the
-+ * top level tracing buffer.
-+ *
-+ * Note, trace_array_init_printk() must be called on @tr before this
-+ * can be used.
-+ */
- __printf(3, 0)
- int trace_array_printk(struct trace_array *tr,
- 		       unsigned long ip, const char *fmt, ...)
-@@ -3355,6 +3378,27 @@ int trace_array_printk(struct trace_array *tr,
- }
- EXPORT_SYMBOL_GPL(trace_array_printk);
- 
-+/**
-+ * trace_array_init_printk - Initialize buffers for trace_array_printk()
-+ * @tr: The trace array to initialize the buffers for
-+ *
-+ * As trace_array_printk() only writes into instances, they are OK to
-+ * have in the kernel (unlike trace_printk()). This needs to be called
-+ * before trace_array_printk() can be used on a trace_array.
-+ */
-+int trace_array_init_printk(struct trace_array *tr)
-+{
-+	if (!tr)
-+		return -ENOENT;
-+
-+	/* This is only allowed for created instances */
-+	if (tr == &global_trace)
-+		return -EINVAL;
-+
-+	return alloc_percpu_trace_buffer();
-+}
-+EXPORT_SYMBOL_GPL(trace_array_init_printk);
-+
- __printf(3, 4)
- int trace_array_printk_buf(struct trace_buffer *buffer,
- 			   unsigned long ip, const char *fmt, ...)
--- 
-2.25.4
-
+Just to be sure - did you run tools/testing/selftests/net/tls ?
