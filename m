@@ -2,136 +2,111 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A177C43478
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B9C43467
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C2C22DCC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6A922E00
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JdRQpYBX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xjth3DIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbgHFJTt (ORCPT
+        id S1728982AbgHFJOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729074AbgHFJS4 (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:18:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8EBC061575
-        for <Linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 02:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HBfnhIZeMcT664G81tfZBhokhfWHpa8MvvKA8GAKnW4=; b=JdRQpYBXtol5csn+jTgJXmQMuC
-        Rs9h+TuA6T61PEr5h3BLllrn0OLlKXAcDPGljedtzehj0V9Ib14nNX+O242NSr+7ppICimAwMl6Cp
-        SElRBKTxlvGzzzm6VjBDBVBSWBB9HBYeaoZ9w3igbe9Gwtx8ldr3+VpIk1FNF2ww0hRoQuIpUZwXT
-        V+SekrLBrpuM8VUhukWogLMMdge1r7Hk3ctdLHjKtcYK4bukzZzHXUOvBTF3yNUoTea5XUQzVkhaC
-        3q4JIqbp4ahtvWW6/0I77cqPifyI6EOHxPR9UQPBKJtVLXsJ1thFo9iL5rr3Vy2VLyozx5wN17PMu
-        vMTFeTqg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3c2e-0000GO-Ej; Thu, 06 Aug 2020 09:18:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92C25300446;
-        Thu,  6 Aug 2020 11:18:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7A50D220F91BB; Thu,  6 Aug 2020 11:18:27 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 11:18:27 +0200
-From:   peterz@infradead.org
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
-Subject: Re: [PATCH v1 2/2] perf/core: Fake regs for leaked kernel samples
-Message-ID: <20200806091827.GY2674@hirez.programming.kicks-ass.net>
-References: <20200731025617.16243-1-yao.jin@linux.intel.com>
- <20200731025617.16243-2-yao.jin@linux.intel.com>
- <20200804114900.GI2657@hirez.programming.kicks-ass.net>
- <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
- <20200805124454.GP2657@hirez.programming.kicks-ass.net>
- <797aa4de-c618-f340-ad7b-cef38c96b035@linux.intel.com>
+        Thu, 6 Aug 2020 05:14:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29249 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725927AbgHFJOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:14:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596705291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PptWRBZ+0zU2m0TTKrUzMYdhKSdC7q+oaIaAdKw+itE=;
+        b=Xjth3DIHzEaq81A3sMi38JkT2CEdQAm6fP+h4qjh9+HrbjExBd1Ie1gV+65mNNsupaC4ak
+        W7ZMH+BU3+QAxF8dADNzS2Vk3mbP6NYBx/30AzEdtQS93iH09zJcI14VufKT/6XjxqAImf
+        dIqocf4qEcAJ1ydylbY4YoUHgOBdNLM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-cZEssO-5PHWCNn2eJrAmMQ-1; Thu, 06 Aug 2020 05:14:49 -0400
+X-MC-Unique: cZEssO-5PHWCNn2eJrAmMQ-1
+Received: by mail-ej1-f70.google.com with SMTP id r14so13454595eji.16
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:14:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PptWRBZ+0zU2m0TTKrUzMYdhKSdC7q+oaIaAdKw+itE=;
+        b=Z81Gixi/S949c2/Nk8rw4+YqC8OQTiShxdqdfsbe6jX59VOHtfj8qel97/VXn43Vsr
+         +udo30c82wLshmiK9Ng/y7m50zYwjKHgSHraeMFZRcmt8Q9MEUogf5yscecGx21NwEUL
+         nDPt3IsgVO6iRiG0uS+W0sJb69X6RrMo5UhJpV8/OIckgqSQHMFFmITAIoyqDqx+ocKZ
+         g88J7Jfs36PN6Msk33tBJNn3myewChJrzg5OH2Y4s0EyaIYox1W/KZUq9Fi6opnTpxW7
+         M60FytW1lBodd2mSCYIGgDUF9tJR2aT/Bo99q27eHFyKQo0KBwAbw2BVGsa8muzzq967
+         VrEg==
+X-Gm-Message-State: AOAM530hL0cCx2bqNUEYKRsmmtJq3O6rZ0jBlYxBpTDTB2spnILsfRds
+        6u2ckG5ptgWQ9U+NyHsjXnkyvCdMMXueddRd/Cjc2QCHNb2/kVoLwXLVIfwJYshlz74OcX/9LeV
+        WPH1iZVOy3lTfV4hjahRksp9T
+X-Received: by 2002:a17:906:9392:: with SMTP id l18mr3298286ejx.357.1596705288228;
+        Thu, 06 Aug 2020 02:14:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwI0pHI6XZUb7InmN6q7wFebkW/fuUjhF2ooS5eJKhMI9OIcTZ5cCFPIWQVQwpkr0p5dcw3eg==
+X-Received: by 2002:a17:906:9392:: with SMTP id l18mr3298261ejx.357.1596705287973;
+        Thu, 06 Aug 2020 02:14:47 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id n11sm3072328edv.39.2020.08.06.02.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 02:14:47 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Peter Xu <peterx@redhat.com>, Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
+In-Reply-To: <CALMp9eSWsvufDXMuTUR3Fmh91O7tHUaqpDbAoavSMc=prpcDzg@mail.gmail.com>
+References: <20200728143741.2718593-1-vkuznets@redhat.com> <20200728143741.2718593-3-vkuznets@redhat.com> <CALMp9eSWsvufDXMuTUR3Fmh91O7tHUaqpDbAoavSMc=prpcDzg@mail.gmail.com>
+Date:   Thu, 06 Aug 2020 11:14:46 +0200
+Message-ID: <875z9wp249.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <797aa4de-c618-f340-ad7b-cef38c96b035@linux.intel.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:26:29AM +0800, Jin, Yao wrote:
+Jim Mattson <jmattson@google.com> writes:
 
-> > +static struct pt_regs *sanitize_sample_regs(struct perf_event *event, struct pt_regs *regs)
-> > +{
-> > +	struct pt_regs *sample_regs = regs;
-> > +
-> > +	/* user only */
-> > +	if (!event->attr.exclude_kernel || !event->attr.exclude_hv ||
-> > +	    !event->attr.exclude_host   || !event->attr.exclude_guest)
-> > +		return sample_regs;
-> > +
-> 
-> Is this condition correct?
-> 
-> Say counting user event on host, exclude_kernel = 1 and exclude_host = 0. It
-> will go "return sample_regs" path.
+> On Tue, Jul 28, 2020 at 7:38 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> PCIe config space can (depending on the configuration) be quite big but
+>> usually is sparsely populated. Guest may scan it by accessing individual
+>> device's page which, when device is missing, is supposed to have 'pci
+>> hole' semantics: reads return '0xff' and writes get discarded. Compared
+>> to the already existing KVM_MEM_READONLY, VMM doesn't need to allocate
+>> real memory and stuff it with '0xff'.
+>
+> Note that the bus error semantics described should apply to *any*
+> unbacked guest physical addresses, not just addresses in the PCI hole.
+> (Typically, this also applies to the standard local APIC page
+> (0xfee00xxx) when the local APIC is either disabled or in x2APIC mode,
+> which is an area that kvm has had trouble with in the past.)
 
-I'm not sure, I'm terminally confused on virt stuff.
+Yes, we can make KVM return 0xff on all read access to unbacked memory,
+not only KVM_MEM_PCI_HOLE slots (and drop them completely). This,
+however, takes the control from userspace: with KVM_MEM_PCI_HOLE
+memslots we're saying 'accessing this unbacked memory is fine' and we
+can still trap accesses to all other places. This should help in
+detecting misbehaving guests.
 
-Suppose we have nested virt:
+-- 
+Vitaly
 
-	L0-hv
-	|
-	G0/L1-hv
-	   |
-	   G1
-
-And we're running in G0, then:
-
- - 'exclude_hv' would exclude L0 events
- - 'exclude_host' would ... exclude L1-hv events?
- - 'exclude_guest' would ... exclude G1 events?
-
-Then the next question is, if G0 is a host, does the L1-hv run in
-G0 userspace or G0 kernel space?
-
-I was assuming G0 userspace would not include anything L1 (kvm is a
-kernel module after all), but what do I know.
-
-> > @@ -11609,7 +11636,8 @@ SYSCALL_DEFINE5(perf_event_open,
-> >   	if (err)
-> >   		return err;
-> > -	if (!attr.exclude_kernel) {
-> > +	if (!attr.exclude_kernel || !attr.exclude_callchain_kernel ||
-> > +	    !attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest) {
-> >   		err = perf_allow_kernel(&attr);
-> >   		if (err)
-> >   			return err;
-> > 
-> 
-> I can understand the conditions "!attr.exclude_kernel || !attr.exclude_callchain_kernel".
-> 
-> But I'm not very sure about the "!attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest".
-
-Well, I'm very sure G0 userspace should never see L0 or G1 state, so
-exclude_hv and exclude_guest had better be true.
-
-> On host, exclude_hv = 1, exclude_guest = 1 and exclude_host = 0, right?
-
-Same as above, is G0 host state G0 userspace?
-
-> So even exclude_kernel = 1 but exclude_host = 0, we will still go
-> perf_allow_kernel path. Please correct me if my understanding is wrong.
-
-Yes, because with those permission checks in place it means you have
-permission to see kernel bits.
