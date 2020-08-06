@@ -2,136 +2,163 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530EE22C9F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739157;
-	bh=sgrriGvvtWI7kCSGARd8WdvCWTR8opdRkGZeXw3CrHc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fqbPMqA/mBTwoVXGDS2P6NTPNQ0D2a5SCWnBTKvmrfrRfsreMumJP8be/P6H0ssl/
-	 PAk/aYCD8YB8XhXmdBw0VvQFEuA1+YtKqjjDa9sil/pKVmdK8ZoKWoWwUnMiFY5/ZI
-	 sYp2u0StS8ZHq4LY1USNgW9bOOXVP/q0yQj5fHvE=
+	by mail.kernel.org (Postfix) with ESMTP id 2858F221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="S1ikrnLe";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="FR7C13jQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgHFSjL (ORCPT
+        id S1728574AbgHFSjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgHFSaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:30:03 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 6 Aug 2020 14:39:22 -0400
+Received: from relay5.mymailcheap.com ([159.100.241.64]:34336 "EHLO
+        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbgHFS34 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:29:56 -0400
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.100])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id 7639020144;
+        Thu,  6 Aug 2020 18:29:44 +0000 (UTC)
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay1.mymailcheap.com (Postfix) with ESMTPS id 81FCA3F157;
+        Thu,  6 Aug 2020 14:27:41 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id ABEB72A7CD;
+        Thu,  6 Aug 2020 20:27:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596738460;
+        bh=v6+hYB3wUB+4/fro3yDhVbBnH/mkjkFI9z9KFpiDfWY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=S1ikrnLeCYGOThBERfKTcSAxsaKWw+oY22EKp6ctbJ3sm8pYcpExFdyU69jyvA8yn
+         7IL6fwJ7AYeY/OvjCXQ+QJmZKvSe20EzdNzg9L6y0PMOPn2H8zxjqJFvRgBuT1fHgy
+         VPl1WurgjhNCgHKVd8de4myzl+hDzQEM6ZaIosTo=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id q5uWU0nKA4vN; Thu,  6 Aug 2020 20:27:39 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF502311C;
-        Thu,  6 Aug 2020 18:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738603;
-        bh=sgrriGvvtWI7kCSGARd8WdvCWTR8opdRkGZeXw3CrHc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fNG5DOvIyahVPtBri53Saf++y4xlyIv8+02SJ89wIyCnFUIN5lVQG8ETo/KJ4fjU/
-         iDP+46UYeEdydoTAxvShr4Sk+kL3koN/yFZoXpLuXfyhAV19ULaPqTmgPBbR07Xk/l
-         SSN642xHxzS6pzimTimBnabcqxDsjGQ9OXlp0RFU=
-Date:   Thu, 6 Aug 2020 19:29:53 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 06/15] iio: sx9310: Fixes various memory handling
-Message-ID: <20200806192953.7a963543@archlinux>
-In-Reply-To: <20200803175559.v5.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
-References: <20200803235815.778997-1-campello@chromium.org>
-        <20200803175559.v5.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Thu,  6 Aug 2020 20:27:39 +0200 (CEST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id E93A3419D2;
+        Thu,  6 Aug 2020 18:27:38 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="FR7C13jQ";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [203.86.239.91])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id AE74441330;
+        Thu,  6 Aug 2020 18:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596738369;
+        bh=v6+hYB3wUB+4/fro3yDhVbBnH/mkjkFI9z9KFpiDfWY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FR7C13jQLja842FFA+9Mfd6g4RgDFwwYpn9p508EWXpQbJO+EEISvRkT04Yu3kjs5
+         8hUoJ8Za/j9z26Nqg84aOmk2fTLDqaHzLGNH4rnzeFnAZjp463C0oIv4aDmpJX9uXo
+         mlCjH08OVtGlsQlenkaO2C+wplwCTvCERW2yA96I=
+Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
+ <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
+ <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
+ <20200806101733.GA8136@alpha.franken.de>
+ <9e563c75-ffaa-45b4-0e99-25a8b1eff828@flygoat.com>
+ <20200806165212.GA2754@alpha.franken.de>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <c81440ec-a46e-06e1-9ee3-ec3bd2826c4e@flygoat.com>
+Date:   Fri, 7 Aug 2020 02:26:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200806165212.GA2754@alpha.franken.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Rspamd-Queue-Id: E93A3419D2
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RCPT_COUNT_FIVE(0.00)[5];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Aug 2020 17:58:06 -0600
-Daniel Campello <campello@chromium.org> wrote:
 
-> Makes use __aligned(8) to ensure that the timestamp is correctly aligned
-> when we call io_push_to_buffers_with_timestamp().
-> Also makes use of sizeof() for regmap_bulk_read instead of static value.
-> 
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Applied
 
-> ---
-> 
-> Changes in v5:
->  - Really use a pointer to buffer struct on
-> iio_push_to_buffers_with_timestamp().
-> 
-> Changes in v4:
->  - Use pointer to buffer struct on iio_push_to_buffers_with_timestamp().
-> 
-> Changes in v3:
->  - Changed buffer to struct type to align timestamp memory properly.
-> 
-> Changes in v2:
->  - Fixed commit message from "iio: sx9310: Align memory"
-> 
->  drivers/iio/proximity/sx9310.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index 66ecdd309e0ddc..127b1ba79e2dea 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -132,8 +132,11 @@ struct sx9310_data {
->  	 */
->  	bool prox_stat[SX9310_NUM_CHANNELS];
->  	bool trigger_enabled;
-> -	__be16 buffer[SX9310_NUM_CHANNELS +
-> -		      4]; /* 64-bit data + 64-bit timestamp */
-> +	/* Ensure correct alignment of timestamp when present. */
-> +	struct {
-> +		__be16 channels[SX9310_NUM_CHANNELS];
-> +		s64 ts __aligned(8);
-> +	} buffer;
->  	/* Remember enabled channels and sample rate during suspend. */
->  	unsigned int suspend_ctrl0;
->  	struct completion completion;
-> @@ -344,7 +347,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
->  	if (ret < 0)
->  		return ret;
->  
-> -	return regmap_bulk_read(data->regmap, chan->address, val, 2);
-> +	return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
->  }
->  
->  /*
-> @@ -694,10 +697,10 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
->  		if (ret < 0)
->  			goto out;
->  
-> -		data->buffer[i++] = val;
-> +		data->buffer.channels[i++] = val;
->  	}
->  
-> -	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-> +	iio_push_to_buffers_with_timestamp(indio_dev, &data->buffer,
->  					   pf->timestamp);
->  
->  out:
+在 2020/8/7 上午12:52, Thomas Bogendoerfer 写道:
+> On Thu, Aug 06, 2020 at 07:56:20PM +0800, Jiaxun Yang wrote:
+>> Our current problem is Loongson's writecombine implementation seems buggy.
+>> This is our platform issue rather than target hardware issue.
+> ok, so simply clear cpu_data[0].writecombine for the fauly parts
+@Tiezhu,
 
+I don't know the exact faulty parts, could you please investigate it in 
+Loongson?
+
+I can remember a Loongson stuff told me the issue was solved in GS464E but
+there are still users complaining about that.
+
+In fact I can't reproduce it in all of my test systems:
+3B1500 + RS780E + R5 230
+3A3000 + RS780E Laptop
+3A4000 + LS7A + RX550
+>> And we don't even know which hardware is known to be good. The same graphic
+>> card became a different story on different user's hand.
+> find out what is broken and add the needed workarounds then.
+
+Well, let's leave this task for Loongson company.
+User's community don't have the ability to trace hardware behavior 
+precisely.
+
+>> I understood what Teizhu thought. For entry-level users, we don't want to
+>> trouble
+>> them, so we have writecombine disabled by default. However, for advanced
+>> user
+>> trying to tweak their system, we should leave a switch for them to get it
+>> back.
+> IMHO if we do it that way, we end up with millions of knobs for tweaking
+> broken hardware, and nobody knows what's exactly broken. Sorry I won't go
+> that way.
+
+Haha, that was my first impression to Linux as a primary school student. 
+It just
+looks like an aircraft cockpit with thousands of knobs & switches, but 
+to airborne
+you just need to control yoke and throttle.
+
+- Jiaxun
