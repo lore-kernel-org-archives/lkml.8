@@ -2,118 +2,165 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E04AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09C5822DCC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF8123119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="unzLLfAH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hvCFPwav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgHFR2s (ORCPT
+        id S1729314AbgHFR2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
+        Thu, 6 Aug 2020 13:28:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729701AbgHFRA6 (ORCPT
+        with ESMTP id S1729777AbgHFRA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:00:58 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B37C0611E2;
-        Thu,  6 Aug 2020 04:55:55 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id bo3so27355717ejb.11;
-        Thu, 06 Aug 2020 04:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i/S5/6ro5vnkPW0QsQGxfYyHXJsq3PWIkSz7FKePTT4=;
-        b=unzLLfAH+rZML4MlQOvgwH6d4GmVqwjYK94T/kAmj17VHRJbmSeKf/ii0FBScS+rEB
-         GtPClBQgD6vTvW1tdb+J6xefIU2V2MSKTCSADqI0Di9xNpW07VzYSJMdPsJrT7eCxKjG
-         llef3L6bbJ34pmh1ji9vZQ1aBz4YR0nRjbSgUQvBtIWY9E+HhUP+8zkqRW+cC8TBW0t0
-         g7Jov0HEYjz3WohDLrpA4AhI4LvFouGU7QSJc6rVD9lSVjjXj0iwuo18wMQtESw7w5+x
-         GOsw85vFQjlZGCMuDZXm1ESOhYU/fbs5+/gBLpNQgV1bCsIfDINaa1a7zLGNvR2MMt4j
-         WcjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i/S5/6ro5vnkPW0QsQGxfYyHXJsq3PWIkSz7FKePTT4=;
-        b=MhAd2NRGr0h4cjvD6MOE4B8qGBZjGGXPLzx9BqPefxDxkCjolv+jkiE6y/t1nEjkT2
-         2nlfbHkMbETW9+ZrovKpjo/pxc8yUctFU0MIFaRx8oJSrD2sgIuHG4RUWsZb4d+50CTy
-         zzipvH7hrCjXH2/Lf6yu35FZcCWnef+Gm9PXhGqUvhglRpZGF/Z8PbrjWIH+6GEVYQQ8
-         8y/Td4q7MkZB0vRgXY+b/Rk0P0loDqkhdRviuZcuYAjmULuG8he6C0o1NQbri+HP8yQG
-         ppU4caq66P8QNzXYMYJT99Ip2uuwK/DmgwZpeNA9Cl85pK7Q+Kzd3n+j1GWCc0P6b8uS
-         YePQ==
-X-Gm-Message-State: AOAM530X4PSPhTrRTXVhC8c+5hRcsmsSNyCU6d1xDvVabNbY41IYkBlS
-        BrIkqJQhp3AUIP9u+PpZ1pE=
-X-Google-Smtp-Source: ABdhPJweP3zqc4d6VrXhoiDQpQN9FYCJdIjzjviNT+ke6aNdM34mOc0oCp9NcnOOzpKpooZ8wA4puw==
-X-Received: by 2002:a17:907:94ce:: with SMTP id dn14mr3816428ejc.351.1596714954327;
-        Thu, 06 Aug 2020 04:55:54 -0700 (PDT)
-Received: from ci00583-linux.xsens-tech.local (2001-1c06-0702-ba00-2186-bbad-ad24-4c2a.cable.dynamic.v6.ziggo.nl. [2001:1c06:702:ba00:2186:bbad:ad24:4c2a])
-        by smtp.googlemail.com with ESMTPSA id gh24sm3628420ejb.45.2020.08.06.04.55.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 04:55:53 -0700 (PDT)
-From:   Patrick Riphagen <ppriphagen@gmail.com>
-X-Google-Original-From: Patrick Riphagen <patrick.riphagen@xsens.com>
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     patrick.riphagen@xsens.com, stable@vger.kernel.org
-Subject: [PATCH V2] USB: serial: ftdi_sio: add IDs for Xsens Mti USB converter
-Date:   Thu,  6 Aug 2020 13:55:47 +0200
-Message-Id: <20200806115547.8007-1-patrick.riphagen@xsens.com>
-X-Mailer: git-send-email 2.25.1
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96925C034613
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cOTbQsNE4Og+7v4i6+VKDw9s40FCqKihoprFB/Z7nt8=; b=hvCFPwavzhUN+ZIogP2sMOZQlR
+        ldTroAQ1ISrql6nxZpb0nEf4gN8Fxz94Lc+EK7Cv32LXLhU9UxovKAKLvqDFx577e91UBb9M3Vkc1
+        uhd6LiOkRaw/MadIv8c+2h7qQ6GD7W67I5NCQCYtMbIE45KhgOcKTU3KseZBXf0XKKaYswdd0YWQl
+        sI6Ddf0X27dLDWKYa33hew5wjNxo1fVvwOfS+NMZ3FohiFw0dDcEOr15JDGRAV/AdpsXS0qMwRECs
+        ZpivDAKjhPWCs/nczc8EnzDTjHNcHnpgphZ1mMrLPFyREGDpvAlnHeexNyOSdfs/NgDBnHbnl95Qw
+        w5I8myLQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3fkO-0002VI-16; Thu, 06 Aug 2020 13:15:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 99ADE3010D2;
+        Thu,  6 Aug 2020 15:15:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 74607213C48A6; Thu,  6 Aug 2020 15:15:47 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 15:15:47 +0200
+From:   peterz@infradead.org
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
+Message-ID: <20200806131547.GC2674@hirez.programming.kicks-ass.net>
+References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
+ <20200804104520.GB2657@hirez.programming.kicks-ass.net>
+ <20200804121007.GJ24375@linux.vnet.ibm.com>
+ <20200804124755.GJ2674@hirez.programming.kicks-ass.net>
+ <87ft90z6dy.fsf@mpe.ellerman.id.au>
+ <20200806085429.GX2674@hirez.programming.kicks-ass.net>
+ <87d044yn9z.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d044yn9z.fsf@mpe.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Riphagen <patrick.riphagen@xsens.com>
+On Thu, Aug 06, 2020 at 10:25:12PM +1000, Michael Ellerman wrote:
+> peterz@infradead.org writes:
+> > On Thu, Aug 06, 2020 at 03:32:25PM +1000, Michael Ellerman wrote:
+> >
+> >> That brings with it a bunch of problems, such as existing software that
+> >> has been developed/configured for Power8 and expects to see SMT8.
+> >> 
+> >> We also allow LPARs to be live migrated from Power8 to Power9 (and back), so
+> >> maintaining the illusion of SMT8 is considered a requirement to make that work.
+> >
+> > So how does that work if the kernel booted on P9 and demuxed the SMT8
+> > into 2xSMT4? If you migrate that state onto a P8 with actual SMT8 you're
+> > toast again.
+> 
+> The SMT mask would be inaccurate on the P8, rather than the current case
+> where it's inaccurate on the P9.
+> 
+> Which would be our preference, because the backward migration case is
+> not common AIUI.
+> 
+> Or am I missing a reason we'd be even more toast than that?
 
-The device added has an FTDI chip inside.
-The device is used to connect Xsens USB Motion Trackers.
+Well, the scheduler might do a wee bit funny. We just had a patch that
+increase load-balancing opportunities between SMT siblings because they
+all share L1 anyway.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Patrick Riphagen <patrick.riphagen@xsens.com>
----
- drivers/usb/serial/ftdi_sio.c     | 1 +
- drivers/usb/serial/ftdi_sio_ids.h | 1 +
- 2 files changed, 2 insertions(+)
+But yeah, nothing terminal.
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 9ad44a96dfe3..2c08cad32f1d 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -713,6 +713,7 @@ static const struct usb_device_id id_table_combined[] = {
- 	{ USB_DEVICE(XSENS_VID, XSENS_AWINDA_STATION_PID) },
- 	{ USB_DEVICE(XSENS_VID, XSENS_CONVERTER_PID) },
- 	{ USB_DEVICE(XSENS_VID, XSENS_MTDEVBOARD_PID) },
-+	{ USB_DEVICE(XSENS_VID, XSENS_MTIUSBCONVERTER_PID) },
- 	{ USB_DEVICE(XSENS_VID, XSENS_MTW_PID) },
- 	{ USB_DEVICE(FTDI_VID, FTDI_OMNI1509) },
- 	{ USB_DEVICE(MOBILITY_VID, MOBILITY_USB_SERIAL_PID) },
-diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
-index e8373528264c..b5ca17a5967a 100644
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -160,6 +160,7 @@
- #define XSENS_AWINDA_DONGLE_PID 0x0102
- #define XSENS_MTW_PID		0x0200	/* Xsens MTw */
- #define XSENS_MTDEVBOARD_PID	0x0300	/* Motion Tracker Development Board */
-+#define XSENS_MTIUSBCONVERTER_PID	0x0301	/* MTi USB converter */
- #define XSENS_CONVERTER_PID	0xD00D	/* Xsens USB-serial converter */
- 
- /* Xsens devices using FTDI VID */
--- 
-2.25.1
-V2: Added CC to stable, From line to match SoB and version in subject
+> Under PowerVM the kernel does know it's being migrated, so we could
+> actually update the mask, but I'm not sure if that's really feasible.
 
+As long as you get a notification, rebuilding the sched domains isn't
+terribly hard to do, there's more code that does that.
+
+> >> Yeah I agree the naming is confusing.
+> >> 
+> >> Let's call them "SMT4 cores" and "SMT8 cores"?
+> >
+> > Works for me, thanks!
+> >
+> >> The problem is we are already lying to userspace, because firmware lies to us.
+> >> 
+> >> ie. the firmware on these systems shows us an SMT8 core, and so current kernels
+> >> show SMT8 to userspace. I don't think we can realistically change that fact now,
+> >> as these systems are already out in the field.
+> >> 
+> >> What this patch tries to do is undo some of the mess, and at least give the
+> >> scheduler the right information.
+> >
+> > What a mess... I think it depends on what you do with that P9 to P8
+> > migration case. Does it make sense to have a "p8_compat" boot arg for
+> > the case where you want LPAR migration back onto P8 systems -- in which
+> > case it simply takes the firmware's word as gospel and doesn't untangle
+> > things, because it can actually land on a P8.
+> 
+> We already get told by firmware that we're running in "p8 compat" mode,
+> because we have to pretend to userspace that it's running on a P8. So we
+> could use that as a signal to leave things alone.
+> 
+> But my understanding is most LPARs don't get migrated back and forth,
+> they'll start life on a P8 and only get migrated to a P9 once when the
+> customer gets a P9. They might then run for a long time (months to
+> years) on the P9 in P8 compat mode, not because they ever want to
+> migrate back to a real P8, but because the software in the LPAR is still
+> expecting to be on a P8.
+> 
+> I'm not a real expert on all the Enterprisey stuff though, so someone
+> else might be able to give us a better picture.
+> 
+> But the point of mentioning the migration stuff was mainly just to
+> explain why we feel we need to present SMT8 to userspace even on P9.
+
+OK, fair enough. The patch wasn't particularly onerous, I was just
+wondering why etc..
+
+The case of starting on a P8 and being migrated to a P9 makes sense to
+me; in that case you'd like to rebuild your sched domains, but can't go
+about changing user visible topolofy information.
+
+I suppose:
+
+Acked-by; Peter Zijlstra (Intel) <peterz@infradead.org>
+
+An updated Changelog that recaps some of this discussion might also be
+nice.
