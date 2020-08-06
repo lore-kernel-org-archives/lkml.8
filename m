@@ -2,117 +2,193 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7BEC43619
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79433C433F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CB722D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF53122D0B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gOvhi5v7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="any6vJdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgHFKcj (ORCPT
+        id S1729399AbgHFLAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 06:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
+        Thu, 6 Aug 2020 07:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729279AbgHFKci (ORCPT
+        with ESMTP id S1729394AbgHFKhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 06:32:38 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC24FC0617A4
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 03:31:50 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id 93so25615984otx.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 03:31:50 -0700 (PDT)
+        Thu, 6 Aug 2020 06:37:21 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91335C0617A5
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 03:36:08 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id v6so33784003iow.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 03:36:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ypy/qALQFzmq+pA0XvKiGAPjinMvR6vyLxRwEn3AJFI=;
-        b=gOvhi5v7BbQFQoXJcbV51yRSVcKrTP34twEImtq5+qWngIgzldbxjrxCgTSeJBcVhP
-         618+tmwcLdKMfEJq5jbujOgUXAU90c0yN3Z2HHwNANalPBjJJKs0/OmkNsA4X4jC+DwO
-         tY5S0ZeRPlwAkbX9ZzjlXSAO1SyCaVB+dqT6CsKr8lvUyIGHKquAap6l48keHVwHs9iy
-         qJZdMO0bo2jBQmsa44AulU7Pjg+9lZN4XMcM2rFcOUQTwhUb71hZr7FeyxRFyFG9O+3A
-         yLb8SAJlrVxYmQwwGY+EJl4lg3zxMnktNggdEbtcaqA0YTwlFFJ3rE9u9vew1hMn0oht
-         nD4g==
+         :cc:content-transfer-encoding;
+        bh=Hj3R0tIfcIkpZhk/MOW24yuwzJti3fMgCq+xlKWe23s=;
+        b=any6vJdFKrdkd+a4fKkNab188WSeW3kDjNjijmxdqJ1Y4AwYn4FLR/iQrpMyExolkK
+         66mFi0t5w16+fsEhYOsaXPC7OJVlsPhTg+WoYRWPK0FdQfP7YIvZg6ds7gMUG92eJGlf
+         QR/wHYZ3/YvNbqgsC9Df7dIJZMcVh4kmPbXY766NOOS+giXcztD5zCFd1TqLjGdL+pVO
+         Rk1DiDsxHshnBfVWwBD5pTA0mCuqTXK04NlevzeDQqxbwa63QWFviu1CKXtu3YJ1qgJr
+         2x+ZNON385FtWrcjVdXr3Pb9gwapMQ9nHVmz2lZTKPRtnV0lpchJrHtdsXLPNJk1IEsU
+         K8Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ypy/qALQFzmq+pA0XvKiGAPjinMvR6vyLxRwEn3AJFI=;
-        b=JPV50fphlNMrgFLs/nw8Y1MV/mUwPkmi55k4P/0NGuXz6fcL+ECxkCc3oTsY0Rsz1h
-         feDgudJzNNZLujXJ85jiTf+ibGYEiLJU1DwHuP8cJexYdHJ5Qe2shRratG8qe1CTvnBl
-         9dhVW3elBDiLkgDRR+Qov8t+ld2hsdVtaI2bZ9IHJxhUSdVYtYu5J89G5QoThRzM+7S8
-         gHFBU2EDB3R29rPLD17Xvm1aGOmiNUWRUfUl3NLjpAq9YHwzvPl0tSYM1sgJtSPrd/4Y
-         oKW80qISZWBVHHqu7z8C4pCX8MeQ0a3AN4i4oxij7RzlAHZtQD3L6M5BAFw3tkFFVUPB
-         MTfA==
-X-Gm-Message-State: AOAM532hqfvtggWMi3Zn0zgN6DtEZiqsj5YpK3EYtC/GhCxD58N9VG9o
-        FfJ4Ysqmq1kDOYcHmHCTUqfhVvY4iU/Gjr1WsOj6eA==
-X-Google-Smtp-Source: ABdhPJwGxfFTOMnCB+7bQVHYWAbL/9U5CLzSy4zlUHOTah/Hy8phgbFCvlGhsR1zgrKyUQro3jZbKMd4mKlz0TYmk9A=
-X-Received: by 2002:a9d:739a:: with SMTP id j26mr6861992otk.17.1596709908446;
- Thu, 06 Aug 2020 03:31:48 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Hj3R0tIfcIkpZhk/MOW24yuwzJti3fMgCq+xlKWe23s=;
+        b=M39EbJGJCLTIpZHT78Xw3CI0nFBPA4BhYsh1gEIJm80hQ+PEfMHBbgFq29RDrdbB/2
+         2/dN2KN+Yk5OYuvJldP2B0nPrTOQ26JytiknZuHTLZAk2uKXlGlWJ41sPoCbTJxG2grh
+         zEnkdPovD2f+y6+r6VufYodeG1z4uwW3Z4x468u6jEBkwejNfMRQzIaQhKL+gfIny4u2
+         sAv3+E7wj5ruzUYdY9eeRqgM6djldz12sJ9RvfXznHg1IXFdAwliPZ4dql5URdLnRW/n
+         TwLcqhGRZetXnu8+CXLEr+h8dccUpqraGbQj5EZK0I/PO0s1fjR7zP5/ylBb11RK3cec
+         qVQw==
+X-Gm-Message-State: AOAM531fCcoM9zcrZpY+VN/IKTBvHb3RpyZCbzy/fpLRAcA83ZhOKVVV
+        FxD4ydPG7bEYTnyl+ckAG23GJkWONfU084JfcpSZvw==
+X-Google-Smtp-Source: ABdhPJzHUTWPq7F01xZd1/4hqfefGb4XRem0zi/X7ZLbxaLwgnPaMNDxLcsPytmk4P8gwPB+ZN1V8Vf8ZJycfMty5SQ=
+X-Received: by 2002:a5e:d519:: with SMTP id e25mr9126780iom.36.1596710167873;
+ Thu, 06 Aug 2020 03:36:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200805230852.GA28727@paulmck-ThinkPad-P72>
-In-Reply-To: <20200805230852.GA28727@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 6 Aug 2020 12:31:36 +0200
-Message-ID: <CANpmjNPxzOFC+VQujipFaPmAV8evU2LnB4X-iXuHah45o-7pfw@mail.gmail.com>
-Subject: Re: Finally starting on short RCU grace periods, but...
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
+References: <20200805153507.005753845@linuxfoundation.org>
+In-Reply-To: <20200805153507.005753845@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 6 Aug 2020 16:05:56 +0530
+Message-ID: <CA+G9fYs3szBM=oz5f-zJudALL0Um_X9xR0cQKzq_HQXqrdut-w@mail.gmail.com>
+Subject: Re: [PATCH 4.14 0/8] 4.14.193-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc kasan-dev
-
-On Thu, 6 Aug 2020 at 01:08, Paul E. McKenney <paulmck@kernel.org> wrote:
+On Wed, 5 Aug 2020 at 21:23, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Hello!
+> This is the start of the stable review cycle for the 4.14.193 release.
+> There are 8 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> If I remember correctly, one of you asked for a way to shorten RCU
-> grace periods so that KASAN would have a better chance of detecting bugs
-> such as pointers being leaked out of RCU read-side critical sections.
-> I am finally starting entering and testing code for this, but realized
-> that I had forgotten a couple of things:
+> Responses should be made by Fri, 07 Aug 2020 15:34:53 +0000.
+> Anything received after that time might be too late.
 >
-> 1.      I don't remember exactly who asked, but I suspect that it was
->         Kostya.  I am using his Reported-by as a placeholder for the
->         moment, but please let me know if this should be adjusted.
-
-It certainly was not me.
-
-> 2.      Although this work is necessary to detect situtions where
->         call_rcu() is used to initiate a grace period, there already
->         exists a way to make short grace periods that are initiated by
->         synchronize_rcu(), namely, the rcupdate.rcu_expedited kernel
->         boot parameter.  This will cause all calls to synchronize_rcu()
->         to act like synchronize_rcu_expedited(), resulting in about 2-3
->         orders of magnitude reduction in grace-period latency on small
->         systems (say 16 CPUs).
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.193-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
 >
-> In addition, I plan to make a few other adjustments that will
-> increase the probability of KASAN spotting a pointer leak even in the
-> rcupdate.rcu_expedited case.
+> thanks,
+>
+> greg k-h
 
-Thank you, that'll be useful I think.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> But if you would like to start this sort of testing on current mainline,
-> rcupdate.rcu_expedited is your friend!
+Summary
+------------------------------------------------------------------------
 
-Do any of you remember some bugs we missed due to this? Can we find
-them if we add this option?
+kernel: 4.14.193-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: e8ffd3efac224a0f72ae9ddffc0522f6b2e169ba
+git describe: v4.14.192-9-ge8ffd3efac22
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.192-9-ge8ffd3efac22
 
-Thanks,
--- Marco
+
+No regressions (compared to build v4.14.191-57-ge8ffd3efac22)
+
+
+No fixes (compared to build v4.14.191-57-ge8ffd3efac22)
+
+Ran 25279 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* igt-gpu-tools
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-cap_bounds-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
