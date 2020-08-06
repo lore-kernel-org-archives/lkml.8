@@ -2,92 +2,93 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD25C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 215C523119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YvMnkjxV"
+	by mail.kernel.org (Postfix) with ESMTP id 8A0472311B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgHFRNv (ORCPT
+        id S1730042AbgHFRNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:13:51 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3046 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbgHFRNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:13:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2c3a360001>; Thu, 06 Aug 2020 10:13:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 10:13:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 06 Aug 2020 10:13:40 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 17:13:39 +0000
-Subject: Re: linux-next: Tree for Aug 6 (mm/migrate.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200806162116.1d033db0@canb.auug.org.au>
- <85e9276d-1747-b265-53be-a33ab6203045@infradead.org>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <1634e188-0faf-a240-6847-94468d63d7d7@nvidia.com>
-Date:   Thu, 6 Aug 2020 10:13:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 6 Aug 2020 13:13:50 -0400
+Received: from elvis.franken.de ([193.175.24.41]:36776 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728618AbgHFRNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:13:10 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k3cy8-0001w1-00; Thu, 06 Aug 2020 12:17:52 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 0C114C0C5C; Thu,  6 Aug 2020 12:17:34 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 12:17:34 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
+Message-ID: <20200806101733.GA8136@alpha.franken.de>
+References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
+ <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
+ <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <85e9276d-1747-b265-53be-a33ab6203045@infradead.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596734006; bh=FgNKwrpR6dpbYgks9Ta2+mgfbhRCmYt+NfPFOCEKaP8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YvMnkjxVR89j7CHtxQAoxybVDJtVOJOqMzLz/7hFOS8O3DRjkdCY76DMI7twMYZce
-         HE92lSHfPHiX86gbdO8CeRO32qZrMVIr6+8eq0Dmnrjo5RS8FrGAdd0+zL9J0ovO+K
-         PzrOgVCmRqou7a8bH9hTmSNYJch7PtDkdYs8uq8I6gRvkJBbxi/JHSGiQ1zxC1JJ5Z
-         Gr2+KjbxXdXUGy0uG/Q2GfHeKAzrWFg/7j0NEm5rEGd1E7WYDvjFvnxGzneDAJDzKX
-         hYLvRJm60bshRxJP45c1yNAzAO5jaMGPDAcAcXcj8HvUXs0tVtgrX+PjjgvCwyA+Co
-         roOGPCqemxbUA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 06, 2020 at 04:32:13PM +0800, Tiezhu Yang wrote:
+> On 08/06/2020 03:39 PM, Jiaxun Yang wrote:
+> >
+> >
+> >在 2020/8/6 下午3:09, Tiezhu Yang 写道:
+> >>Loongson processors have a writecombine issue that maybe failed to
+> >>write back framebuffer used with ATI Radeon or AMD GPU at times,
+> >>after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+> >>mapping for MIPS"), there exists some errors such as blurred screen
+> >>and lockup, and so on.
+> >>
+> >>With this patch, disable writecombine by default for Loongson64 to
+> >>work well with ATI Radeon or AMD GPU, and it has no influence on the
+> >>other platforms due to writecombine is enabled by default.
+> >>
+> >>Additionally, if it is necessary, writecombine=on can be set manually
+> >>in the cmdline to enhance the performance for Loongson LS7A integrated
+> >>graphics in the future.
+> >>
+> >>[   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than
+> >>10079msec
+> >>[   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id
+> >>0x0000000000000112 last fence id 0x000000000000011d on ring 0)
+> >>[   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than
+> >>10086msec
+> >>[   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id
+> >>0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
+> >Hi Tiezhu,
+> >
+> >Thanks for your patch.
+> >Personally I didn't have any issue with writecombine on my test systems,
+> >but there
+> >are some complains about unstable graphic card from users. So generally a
+> >cmdline
+> >writecombine switch is necessary.
 
-On 8/6/20 7:50 AM, Randy Dunlap wrote:
-> On 8/5/20 11:21 PM, Stephen Rothwell wrote:
->> Hi all,
->>
-> 
-> on x86_64:
-> 
-> when CONFIG_MMU_NOTIFIER is not set/enabled:
-> 
-> ../mm/migrate.c: In function 'migrate_vma_collect':
-> ../mm/migrate.c:2481:7: error: 'struct mmu_notifier_range' has no member named 'migrate_pgmap_owner'
->    range.migrate_pgmap_owner = migrate->pgmap_owner;
->         ^
-> 
+no, if there is hardware which can't work with writecombining enabled
+the driver should disable it by it's own and not by some user switch.
+It might even be better to revert the patch enabling writecombining
+blindly and add code to enable it for hardware where it works.
 
-Thanks for finding this.
-I'm working on it.
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
