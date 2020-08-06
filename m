@@ -2,120 +2,132 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE62C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F851C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B36FF23119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEA523119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:46:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="RU0tPU8b"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="bh3odnxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgHFQqG (ORCPT
+        id S1729376AbgHFQqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
+        Thu, 6 Aug 2020 12:46:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729244AbgHFQpo (ORCPT
+        with ESMTP id S1729247AbgHFQpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:45:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6F1C0A88C0
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 07:58:30 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z18so40743735wrm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 07:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I2QgUmIlO6maUIvLNmFMIgB6tFghLiGYEgxkf43Wx9U=;
-        b=RU0tPU8bAxRiOuvHY7DJRlCCP2+QRbiYTaM0EYG5OIICce80n/byLWVwV7uLOp8vjb
-         zWbCdW/3rPa2b9W3bVCAqFeyee6Kk5YIEQGfReqtSa12vcltpB6yZj0yIp6dXYe+ZXTA
-         uj1D2Zs5Yu49k1Pzvv5W7vUodcbxEQk3yvggE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I2QgUmIlO6maUIvLNmFMIgB6tFghLiGYEgxkf43Wx9U=;
-        b=afxV8DSso8eT5yH9WMXJvq9+TPBo7Q2tAex8gU+CAeMUiQfn1AsM8cVb+Wqa8mjdk8
-         JO7Sz304bhON6mqzU+WcKJKthRWmmYYg+Hsnnt58pNlw9vGsJ4i03+7N/KI29+bIG4NT
-         uKe7VjnxeAdVGqvQRRgtJyrddly410lKfJknvwDqM3wydvtFKn5h2XGnuIq5l1lYiYJh
-         z0JdBfdh/noB/RUNYpwg9PFJ8E/TzsDDdKsaTmNwtJCy3x88NHM4SVIf0tEWb93suRw9
-         hPT2Ksnsek78Yp7Ss5YWZ+uOnDY3OT6NN+rGOwTKJJ7aD+BgWqqmkvdbaXMJuF0mXO5s
-         AClA==
-X-Gm-Message-State: AOAM531f6zA+di3VubQQu0br+uZBFm/ATK1uEMIL55fX/pI+EGvyUx/Q
-        0Ya9mUZCvVqrb+tmDD0BVuOkGhf1/UAvXu6u4627lg==
-X-Google-Smtp-Source: ABdhPJxei3fOQSc5RtFiRdeqUA8wYj3HA5L3OtFNsjWOwMSmZXT0JK+Zw+6cm6ro6Yk62WFzA6yS7yy5PVLA37ZNW0U=
-X-Received: by 2002:adf:ed85:: with SMTP id c5mr7800963wro.307.1596725908629;
- Thu, 06 Aug 2020 07:58:28 -0700 (PDT)
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-am5eur03on0609.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe08::609])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63FE6C002160;
+        Thu,  6 Aug 2020 09:03:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DOzo3G5Nutbs/ulohseR341BK8C2yMJ6sgmF1xc7xG3jK+rmMTMUVMdhCYYuYMQ4wBzHjY1yQyvq8VZO541qQBPzdRnszaC/8L9uflQKQz8ccpriYqfnP4toCyBWG7qmjMXvpZRHyR9xh4dahcaZee0SEP/JxCVML7rjxmT6u2uTAlrTE0I61G1pvepXiQAUn/HBOmf5ZizY1k8bdsbgM6l+NQuIT7xzk54JRCQQgWDtBWwaEq2kEC0As7zBWoTmq0aXpZEb3AuXGTZv0vZ7ZsvWUUbUkggR6zYkhDD9SccjMAIoi0g4Qw6kwHU+V+WeZHayx7BNaqJoQ6unCtibkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b+k2D6/qcFMdpyoRIaVnXgzL/A/qtdVYBZNVBR/cfX0=;
+ b=JpF0n5G+BMsTu2izhS0fRHu/brIN/Q3jujPzwPCLs9dx0p5nsYq6GzQsFLPfmXcORvHPjLFjHB4+vtWOJYIDNAk1Ci7//gvwr/NqyILO9gzpQOdB/Fx5jJ/di9isAoSeYdgePGBXfmYTjhaHYp0RJsZjF5F/2hC2Mnmlrw0QTxj8Peki9tpbCdmBiGjzM20B6uQbJHk4eKfFFKjRb8lqYgfEcwbE6eo4e+0DgDDN/2CJCwP4pyB/4EYi/djOIzSRO0IdhpVc6QgXQ2TmoxLzYidN04FSjSFcvWVp4dmMM4oO1xdHbKe/LSX9+SLzy5w1qTLYtD1Y+uOYA4dHI5jW7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b+k2D6/qcFMdpyoRIaVnXgzL/A/qtdVYBZNVBR/cfX0=;
+ b=bh3odnxA3YQGg4aZPwB7UQC1X2TxnC6rXCjEoAGLUnAQdXGNKM6ioeRKJewIF9Ge1i+sdeep7fEllaPtYxmWH7rKQKunKHBJ/ycUcfQuoCEXiewh0qCtFEt6YW3GKQ7h+RW030kl3N+aeL8bBNXlrRqMbI6GmIL4Mn51O8o5l0w=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
+ by VI1PR04MB3022.eurprd04.prod.outlook.com (2603:10a6:802:9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Thu, 6 Aug
+ 2020 11:41:44 +0000
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
+ 11:41:44 +0000
+From:   Andrei Botila <andrei.botila@oss.nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] crypto: caam - xts(aes) updates
+Date:   Thu,  6 Aug 2020 14:41:18 +0300
+Message-Id: <20200806114127.8650-1-andrei.botila@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::42) To VE1PR04MB6608.eurprd04.prod.outlook.com
+ (2603:10a6:803:125::12)
 MIME-Version: 1.0
-References: <CAFr9PX=Gk9h6ASi6saBLhoZ45g-WqCzDQo2XWT033fJykFSY_g@mail.gmail.com>
- <20200806140739.31501-1-mark-pk.tsai@mediatek.com>
-In-Reply-To: <20200806140739.31501-1-mark-pk.tsai@mediatek.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Thu, 6 Aug 2020 23:58:33 +0900
-Message-ID: <CAFr9PXkFJJKnqVkPBXgh1kqL_serK4DmrmJ73xU+ZMA+NuF-bA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] irqchip: irq-mt58xx: Add mt58xx series interrupt
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     alix.wu@mediatek.com, DTML <devicetree@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR06CA0101.eurprd06.prod.outlook.com (2603:10a6:208:fa::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Thu, 6 Aug 2020 11:41:43 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5de1b927-6578-4be9-b611-08d839fdb1b4
+X-MS-TrafficTypeDiagnostic: VI1PR04MB3022:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB3022DABEED586C69715F7C2EB4480@VI1PR04MB3022.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: x4mogo3Ly+MWSs/3HtGylV5Xfl0dnt7+7oI4NBUxfXOtJ0yKcn/7biXVofwzqRNyWEFRVF40mWQl9x60XXMYCypXqIBfTedrG3nqBrlze/dCN09oYGZqMj0+iUrEuMOH3yf3J2khFuCcOHCoW0+qLZLTSiIiYVe8Fnbrc5yo6BUc+wvtJTlHpslbMnbb1vXVvQNiI/rxOR9v95IGu2L/YncGFbJzY4K6/iBV/e8A/YUL7UORRsYpuAft0i+7Kw4CRQUYiZTsp1soaYS/hHK7wKRK5EQPGYZf0nZuFWVjWMwvL/M1c6llgg/QL+x4COzd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(346002)(396003)(376002)(5660300002)(1076003)(478600001)(6512007)(2906002)(83380400001)(16526019)(6486002)(956004)(26005)(186003)(44832011)(2616005)(6506007)(86362001)(8676002)(316002)(66476007)(66946007)(66556008)(8936002)(4326008)(52116002)(6666004)(110136005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: pW5j9aRWBEQPKLeDDlFVtPBqe64zKOmEXh1mZ7yUzvwn0fED/G4t7NNZoVDWAabH96Y5lIdM2aMWfFSWRMxH6xKqXcfQgXi/46RkKcUbUo4qZdXb0S0KQ1mrMIJitRduTGyfbYpX7UxVf7QwfeUVtE9VKNB4OrSDhrPYOdTVFJMWM8JXk8oklLjc+fub8dKjRlFRIoQJiV0vcWQ14JTIEnKm5X2VS0XB/ua7ALIduOlzAoQ3A7BiRS9Ee1pvvD7Wh8Zl9of8oPZny2ub5q3j1ox5mGrNKEX8fxd9tvTBFRSOCjkv3LhaxBnNATjZVkleb2mTKAo7J6WekAPA240uNJe+krDgA+PGgrmlrDFV4ELdUDj8hUy/zaMQxlYh3wgt+dC0v+szAEBwN7BPncph5ltjN75M7QZpiPaRjehUHeh5QLeIkmrGKQ0rCJG6g8IkzafbAMxs0THfUrdEgwBsC65VnkQm/qvnR8p1Se4OqvXIxFc7NewqphzsQTkDFXSzAtus/D1JoH263DYkhnmTBJQgcN74e80Dbo3WTdZokp3FWGKhXqIFcnCujNYkHIBzYbIISgHp6VubxbZq54nBUAFcz9+fgT7YNrnn0BP9jj5Y7u2g8AsnGejL9+YtU9yq2lum5Qh39sjOXveBacxDKQ==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5de1b927-6578-4be9-b611-08d839fdb1b4
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:41:44.5933
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kB1MkpFYOQSRlR87Bux+pmuK5cQld9+EqPHZ+8SsTH1e7kTR2VjqjkmTwkdCP0yl38lTO7UuyGMnyOZrfOYGxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark-PK,
+From: Andrei Botila <andrei.botila@nxp.com>
 
-On Thu, 6 Aug 2020 at 23:08, Mark-PK Tsai <mark-pk.tsai@mediatek.com> wrote:
-> > Do you know if it would be possible to confirm if they are
-> > the
-> > same thing? MediaTek bought MStar a few years ago so it seems likely
-> > but I have no hard information.
-> >
->
-> Yes, it's for the same interrupt controller IP.
+This patch series fixes some problems in CAAM's implementation of xts(aes):
+ - CAAM until Era 9 can't process XTS with 16B IV
+ - CAAM can only process in hardware XTS key lengths of 16B and 32B
+ - These hardware limitations are resolved through a fallback
 
-That's good news. :)
+This patch series also adds a new feature in CAAM's xts(aes):
+ - CAAM is now able to process XTS with 16B IV in HW
 
-> > If they are the same thing could we work on making one series that
-> > supports both use cases?
->
-> Sure, and I think the irq controller driver should support both use cases.
-> So how about keep the MTK version driver?
+Andrei Botila (9):
+  crypto: caam/jr - add fallback for XTS with more than 8B IV
+  crypto: caam/qi - add fallback for XTS with more than 8B IV
+  crypto: caam/qi2 - add fallback for XTS with more than 8B IV
+  crypto: caam/jr - add support for more XTS key lengths
+  crypto: caam/qi - add support for more XTS key lengths
+  crypto: caam/qi2 - add support for more XTS key lengths
+  crypto: caam/jr - add support for XTS with 16B IV
+  crypto: caam/qi - add support for XTS with 16B IV
+  crypto: caam/qi2 - add support for XTS with 16B IV
 
-I'm fine with that. Maybe you can push the MTK version and I can send
-a small patch after that to add the small bits I need?
+ drivers/crypto/caam/caamalg.c      | 81 +++++++++++++++++++++++--
+ drivers/crypto/caam/caamalg_desc.c | 27 +++++----
+ drivers/crypto/caam/caamalg_qi.c   | 86 ++++++++++++++++++++++++---
+ drivers/crypto/caam/caamalg_qi2.c  | 95 ++++++++++++++++++++++++++++--
+ drivers/crypto/caam/caamalg_qi2.h  |  2 +
+ 5 files changed, 261 insertions(+), 30 deletions(-)
 
-> I'll send patch v2 after -rc1 as I mentioned in the previous mail,
-> and keep you posted.
-> And any suggestion is welcome. :)
+-- 
+2.17.1
 
-I think Marc's comments on my series apply to your driver and I think
-maybe answer some of the questions you had. For example what
-to do about the read-modify-write sequence for updating the registers.
-
-> > It's also possible that if the interrupt controller is the same some
-> > other things like the SPI NOR controller etc are also common and
-> > working
-> > on a single driver for those would save us both time.
->
-> I'm not sure about that.
-> I'll check the patches you contributed and confirm with our driver owners.
-
-I have a very messy tree with support for the SPI NOR controller, SPI, i2c etc
-that were used in MStar chips. If any of those are shared it'd be great to know.
-
-Thanks,
-
-Daniel
