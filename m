@@ -2,112 +2,124 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E33C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42DFD221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D9B221E5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RG/OxOWb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qz+Tzz7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgHFXCB (ORCPT
+        id S1726233AbgHFXDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:02:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49817 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725999AbgHFXCB (ORCPT
+        Thu, 6 Aug 2020 19:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgHFXDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:02:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596754920;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Xesw/0R7dO8ukumL0049322cMVGw9mWIzQSjuD9xFrA=;
-        b=RG/OxOWb6ftBbHUIdOXUjYp3B3tUL5bd1wvqf26wuFEOg1lkkdm7PqUAEJ3oLep4PCoDzp
-        fEJ6bXVug1PCgRS4lwZM54EFBW9nvRjZdvlbEL7X79ESnCqE2eToU9HqVLGd9S1K7+qsqv
-        sryhvdPQBB8OcX0gcW6Nyw9QPyk26Js=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-8qtPoFiXOM-dqQZRmzKUyg-1; Thu, 06 Aug 2020 19:01:56 -0400
-X-MC-Unique: 8qtPoFiXOM-dqQZRmzKUyg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02E7A106B243;
-        Thu,  6 Aug 2020 23:01:55 +0000 (UTC)
-Received: from Whitewolf.redhat.com (unknown [10.10.119.242])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 874145D994;
-        Thu,  6 Aug 2020 23:01:53 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Nirmoy Das <nirmoy.aiemd@gmail.com>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
-        GEFORCE/QUADRO GPUS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/nouveau/kms/nv50-: Program notifier offset before requesting disp caps
-Date:   Thu,  6 Aug 2020 19:01:29 -0400
-Message-Id: <20200806230129.324035-1-lyude@redhat.com>
+        Thu, 6 Aug 2020 19:03:38 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4150AC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 16:03:38 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f10so141283plj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 16:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=0gDnN//bxk4XCQG+5+85qQKDntN2R3o5FFO9hcqipr4=;
+        b=Qz+Tzz7bYWSKTO2D5D1zgMNC/JGFqIwqPZZilBd/61zHOwvpLorhkmc7e7VEaUMNzu
+         LnaRmb/RxkNitmzslzS10MrXEJp5npQp/zZZeMPjlconFW4iWIkykeZ/wB04ja2fGUB3
+         6OJdfKhct7H5dJi16+7wGmBn1PO/p/GPHw/Y8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=0gDnN//bxk4XCQG+5+85qQKDntN2R3o5FFO9hcqipr4=;
+        b=uYF0DZnhEAPfhEH6bngOat8NFxhI3/gryKGj8OFdsOgd82h8i1zNlcusufDhBo78E4
+         F1XIIUpp10N79MvnvlU3Q3ZLHM9Nk+EA3pYz4Ik9k2YcIhH743+NtwheGFFaDB6dOBmE
+         H1PprtMq2zvs6cYVG+9OTl0wc2JS7oxbx/2Fpfp+DqW5ggJVUXjWVK6xpOzi8E98Bm/Y
+         GeYqI1Emg/f5IXxXrnH6VR2Hab8LkorA0/SkN2H/WXLynrThplsWB17X6OW6iWXfn8hw
+         tdO08j7WiUeJAzH/+e1FPIUS+Q456r9UZ+D85BVsTHiM0XKhO3iELC+nZSsOWOYeaQ4T
+         DGVQ==
+X-Gm-Message-State: AOAM53194D+oj9rHICyLX/7ncSvEqDhQvJYZb/W8yKPx7IGIKZiFJj5k
+        NuDHzXcDFuIHTNwx3j5ZFLSYrg==
+X-Google-Smtp-Source: ABdhPJxheayUk8uIULBY6NewH6D0OhojLErEsa5goOKcKVPS5xWNRVsItvYP7z12DSkLAXSq9aVcRA==
+X-Received: by 2002:a17:902:7405:: with SMTP id g5mr9862707pll.173.1596755017579;
+        Thu, 06 Aug 2020 16:03:37 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id j16sm8166331pgb.33.2020.08.06.16.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 16:03:36 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid> <20200801160639.1410944e@archlinux> <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com> <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com> <20200806191451.3ce5ec57@archlinux> <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Douglas Anderson <dianders@chromium.org>, open list:
+        IIO SUBSYSTEM AND DRIVERS <linux-iio@vger.kernel.org>, ;
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     ;
+                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 06 Aug 2020 16:03:35 -0700
+Message-ID: <159675501533.1360974.12010874193333451805@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not entirely sure why this never came up when I originally tested this
-(maybe some BIOSes already have this setup?) but the ->caps_init vfunc
-appears to cause the display engine to throw an exception on driver
-init, at least on my ThinkPad P72:
+Quoting Rob Herring (2020-08-06 15:12:34)
+> On Thu, Aug 6, 2020 at 12:14 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Mon, 3 Aug 2020 20:01:06 -0600
+> > Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > > On Mon, Aug 3, 2020 at 1:00 PM Stephen Boyd <swboyd@chromium.org> wro=
+te:
+> > > >
+> > > > This is mostly a decision for Rob to make, but I would make it requ=
+ired
+> > > > because the device is always an io channel provider. It may be that=
+ it
+> > > > isn't providing anything in the DT to something else in the DT but =
+it is
+> > > > providing this information somewhere so always having to spell that=
+ out
+> > > > is simple and doesn't hurt.
+> > >
+> > > I agree. If the user is split in a board file or overlay, we don't
+> > > want to have to be adding it to the provider at that time.
+> >
+> > That is perhaps a reasonable view point for devices with channels that
+> > are likely to be used by consumer drivers, but in this particular case =
+we
+> > are talking about a proximity sensor.  So far I don't think we
+> > have any consumer drivers for this type of sensor (I might have forgott=
+en
+> > one of course!)
+>=20
+> Indeed, I didn't consider whether it made sense in the first place. So
+> should it just not be specified at all in this case? I can't really
+> picture what the usecase for a consumer node would be.
+>=20
 
-nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c 0000102b
-
-This is magic nvidia speak for "You need to have the DMA notifier offset
-programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
-this by doing that.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for DP interlacing support")
-Cc: <stable@vger.kernel.org> # v5.8+
----
- drivers/gpu/drm/nouveau/dispnv50/core507d.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-index ad1f09a143aa4..c984080ce99f2 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-@@ -80,11 +80,19 @@ core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
- 	struct nvif_push *push = disp->core->chan.push;
- 	int ret;
- 
--	if ((ret = PUSH_WAIT(push, 2)))
-+	if ((ret = PUSH_WAIT(push, 4)))
- 		return ret;
- 
-+	PUSH_MTHD(push, NV507D, SET_NOTIFIER_CONTROL,
-+		  NVDEF(NV507D, SET_NOTIFIER_CONTROL, MODE, WRITE) |
-+		  NVVAL(NV507D, SET_NOTIFIER_CONTROL, OFFSET, NV50_DISP_CORE_NTFY >> 2) |
-+		  NVDEF(NV507D, SET_NOTIFIER_CONTROL, NOTIFY, ENABLE));
- 	PUSH_MTHD(push, NV507D, GET_CAPABILITIES, 0x00000000);
--	return PUSH_KICK(push);
-+	ret = PUSH_KICK(push);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
- }
- 
- int
--- 
-2.26.2
-
+I was thinking that a WiFi DT node may directly grab the channel from
+this device and use this for SAR power changes. That would avoid going
+all the way to userspace to figure out that something is close proximity
+and then tell WiFi to reduce power.
