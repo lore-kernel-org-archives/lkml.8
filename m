@@ -2,145 +2,237 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9252BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED276C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BED952311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2F723119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mg6HboN/"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="eNe+XCX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgHFRPG (ORCPT
+        id S1729928AbgHFRPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
+        Thu, 6 Aug 2020 13:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729992AbgHFRFf (ORCPT
+        with ESMTP id S1729986AbgHFRFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:05:35 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10295C03461B
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:22:55 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id b25so36281342qto.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 06:22:55 -0700 (PDT)
+        Thu, 6 Aug 2020 13:05:31 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14B6FC034602
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 05:32:08 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a26so24316911ejc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 05:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l452q3QF9j1q5B+O8g1DRoVbZw8RLr9ADl2JOygRsek=;
-        b=Mg6HboN/rUfom8vlziRroCnZqyO3uPSNzAc+6sYKqxm+aO8hbUrExhJ5P0UGExDpPt
-         8E+3O5Xztb5jqAfe2sdaj+rCEVXypK/8qOW4zmrU/2krm0eVRC72vPl+3FYrO60YzLIF
-         oOLscUrZAEwW4na0p7Hy6FjleGOttqp3wkuW535u6XCmWnMGGXe9riYizroFFSr7aBlr
-         dJEsoOr4ywsL+z/hAzp/9NyqWvyUcudepm681eY7Gc9FHN2ui42sF7Zmn4n6ygygAJyL
-         K8qGm5o2zTxm8PKVLOrrhWSqP+7Xd5zo2+4SESCTatmZa0MqnGmPsc5J4/JGPZUa9zAb
-         1Ilg==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1ErNZRpF+8oSZq4thj+VkoA7Mzk+13pAiSMJt4dWjiw=;
+        b=eNe+XCX78H+NRhHx+wAc7SWkSiqhHAtvd8+5u3ePNr+D20EEBg/xRfE0+Jcfe0NVo9
+         gxs3GVSL/06sHgDhjxE/khDy9xtoxY3nFXT46+AxSU1haJE5My8R9ytCfQ09ichUWjv0
+         zcQIuTQOqORLcPtfTRrADa4Eecio5gQtNB6Wabc4XHuksmK/DPWbI9yDNo2RceIVs3Wp
+         KEjVEnJXcSCAcUFxXwZxd9VNdRo3+41pHyMp268QYSERI6JgHV22qFCjb7MoIK+oxjbI
+         asRRgcYb5rey8md5HZmt2WOxQorSXPs7Jvd93VMso20CMevToRZjPe/fHrom9XY2T6oa
+         UKnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l452q3QF9j1q5B+O8g1DRoVbZw8RLr9ADl2JOygRsek=;
-        b=FLi2im7DJCKlmBJbAEtEbne8jXhvflhszFyiaWZXo754Ta9dcXdGZTbQXrUQGX2qfx
-         k2ZeNSd57UJF9VmhTAiX3YAxZUdknw5YXW/leM1Q9t8FjKWhVsr27q4zE6q9oRskD3nw
-         cBG9Vst6a0yVD3Y4OuirHDQG928UuHR1bczkINzT+6r4g5I3i2SjQVykQcnYecgEXGut
-         C58ApZKiZ1QlZKZ0/gnuJONJS3eR9UTj0LPbJhR4xdxkjNQyCslGEaYgXAr1NS+V9KBl
-         V0OJZ1ZKMZhpjaXxZdYXquLkI3ca/gZjVu61WFxSf9wyqL001ztE696lfRKAoIcrQIYV
-         WxlA==
-X-Gm-Message-State: AOAM5305EPTa0VWXfJJVfYx0+51uPQe+uM+bWEkP6MdzHTlD+u7zf+Bu
-        Hait0WN3cWlmuIw0D2VAo9cUHMhBn0L6V7DeAajytg==
-X-Google-Smtp-Source: ABdhPJyKCRmY5VXKo1ALEnDnaEiOxnqnsnEuJ9I5ViFF2LKRVyHWjaaFicyzxjGYcX3HEb+/saU0cepj+m5ckR4FsR8=
-X-Received: by 2002:ac8:154:: with SMTP id f20mr8501217qtg.57.1596720173806;
- Thu, 06 Aug 2020 06:22:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1ErNZRpF+8oSZq4thj+VkoA7Mzk+13pAiSMJt4dWjiw=;
+        b=jjgL5OWvhM9p/wBBw3tQt9N5pAnljHGcQW2JcS4gigfz2I0rMnejdQbHT8mg38v//a
+         CXRoK3QbCtkgYgsU2GnuBY0jFdBaGhmH9+Bp7cNkZ1jcupWP7uyj+dxJ8vfGTu3TRfmK
+         pOVqMTeVqvtF6/xBELhJ7fHrv/axUvUyapRhxMvwbs7Ha4zBa3u+FnKWxpWdoZYnIb2A
+         uzNsVRulEn8ACF8uC3esQcka5TSF3UfgEYUkossc+oAd89KClVyL2g/uOJkf680o8EdO
+         53c+LXTcf99rzuX5QAjoX+9hDf4eN0AnwmJMghq3wpQDfdF5fjLgh9L4yHU0WTY3gJLB
+         A3pQ==
+X-Gm-Message-State: AOAM532i4qCtFFa4i6i04T0tkvlPfc1DOti269Xvyfdh5+y5o21EA4NE
+        xGpwNftqYw6ffQGvz9LTvUV46Q==
+X-Google-Smtp-Source: ABdhPJyvgEaE+ueWwMVZG8YsIfh7s+1/NbPE8iYqP8jwxq8qK847GFAgR+j4ZMy1l9bb+5hAUBK+IA==
+X-Received: by 2002:a17:906:32ce:: with SMTP id k14mr4303986ejk.412.1596717127478;
+        Thu, 06 Aug 2020 05:32:07 -0700 (PDT)
+Received: from tim.froidcoeur.net (ptr-7tznw15pracyli75x11.18120a2.ip6.access.telenet.be. [2a02:1811:50e:f0f0:d05d:939:f42b:f575])
+        by smtp.gmail.com with ESMTPSA id c5sm3695778ejb.103.2020.08.06.05.32.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 05:32:07 -0700 (PDT)
+From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Patrick McHardy <kaber@trash.net>,
+        KOVACS Krisztian <hidden@balabit.hu>
+Cc:     Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v3 1/2] net: refactor bind_bucket fastreuse into helper
+Date:   Thu,  6 Aug 2020 14:30:22 +0200
+Message-Id: <20200806123024.585212-2-tim.froidcoeur@tessares.net>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200806123024.585212-1-tim.froidcoeur@tessares.net>
+References: <20200806123024.585212-1-tim.froidcoeur@tessares.net>
 MIME-Version: 1.0
-References: <20200805230852.GA28727@paulmck-ThinkPad-P72> <CANpmjNPxzOFC+VQujipFaPmAV8evU2LnB4X-iXuHah45o-7pfw@mail.gmail.com>
-In-Reply-To: <CANpmjNPxzOFC+VQujipFaPmAV8evU2LnB4X-iXuHah45o-7pfw@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 6 Aug 2020 15:22:42 +0200
-Message-ID: <CACT4Y+Ye7j-scb-thp2ubORCoEnuJPHL7W6Wh_DLP_4cux-0SQ@mail.gmail.com>
-Subject: Re: Finally starting on short RCU grace periods, but...
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Kostya Serebryany <kcc@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "'Dmitry Vyukov' via syzkaller-upstream-moderation" 
-        <syzkaller-upstream-moderation@googlegroups.com>,
-        Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 12:31 PM Marco Elver <elver@google.com> wrote:
->
-> +Cc kasan-dev
->
-> On Thu, 6 Aug 2020 at 01:08, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > Hello!
-> >
-> > If I remember correctly, one of you asked for a way to shorten RCU
-> > grace periods so that KASAN would have a better chance of detecting bugs
-> > such as pointers being leaked out of RCU read-side critical sections.
-> > I am finally starting entering and testing code for this, but realized
-> > that I had forgotten a couple of things:
-> >
-> > 1.      I don't remember exactly who asked, but I suspect that it was
-> >         Kostya.  I am using his Reported-by as a placeholder for the
-> >         moment, but please let me know if this should be adjusted.
->
-> It certainly was not me.
->
-> > 2.      Although this work is necessary to detect situtions where
-> >         call_rcu() is used to initiate a grace period, there already
-> >         exists a way to make short grace periods that are initiated by
-> >         synchronize_rcu(), namely, the rcupdate.rcu_expedited kernel
-> >         boot parameter.  This will cause all calls to synchronize_rcu()
-> >         to act like synchronize_rcu_expedited(), resulting in about 2-3
-> >         orders of magnitude reduction in grace-period latency on small
-> >         systems (say 16 CPUs).
-> >
-> > In addition, I plan to make a few other adjustments that will
-> > increase the probability of KASAN spotting a pointer leak even in the
-> > rcupdate.rcu_expedited case.
->
-> Thank you, that'll be useful I think.
->
-> > But if you would like to start this sort of testing on current mainline,
-> > rcupdate.rcu_expedited is your friend!
+Refactor the fastreuse update code in inet_csk_get_port into a small
+helper function that can be called from other places.
 
-Hi Paul,
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+---
 
-This is great!
+Notes:
+    v2: - remove unnecessary cast (Matt)
 
-I understand it's not a sufficiently challenging way of tracking
-things, but it's simply here ;)
-https://bugzilla.kernel.org/show_bug.cgi?id=208299
-(now we also know who asked for this, +Jann)
+ include/net/inet_connection_sock.h |  4 ++
+ net/ipv4/inet_connection_sock.c    | 97 ++++++++++++++++--------------
+ 2 files changed, 57 insertions(+), 44 deletions(-)
 
-I've tested on the latest mainline and with rcupdate.rcu_expedited=1
-it boots to ssh successfully and I see:
-[    0.369258][    T0] All grace periods are expedited (rcu_expedited).
+diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
+index e5b388f5fa20..1d59bf55bb4d 100644
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -316,6 +316,10 @@ int inet_csk_compat_getsockopt(struct sock *sk, int level, int optname,
+ int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
+ 			       char __user *optval, unsigned int optlen);
+ 
++/* update the fast reuse flag when adding a socket */
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk);
++
+ struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
+ 
+ #define TCP_PINGPONG_THRESH	3
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index afaf582a5aa9..a1be020bde8e 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -296,6 +296,57 @@ static inline int sk_reuseport_match(struct inet_bind_bucket *tb,
+ 				    ipv6_only_sock(sk), true, false);
+ }
+ 
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk)
++{
++	kuid_t uid = sock_i_uid(sk);
++	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
++
++	if (hlist_empty(&tb->owners)) {
++		tb->fastreuse = reuse;
++		if (sk->sk_reuseport) {
++			tb->fastreuseport = FASTREUSEPORT_ANY;
++			tb->fastuid = uid;
++			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
++			tb->fast_ipv6_only = ipv6_only_sock(sk);
++			tb->fast_sk_family = sk->sk_family;
++#if IS_ENABLED(CONFIG_IPV6)
++			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
++#endif
++		} else {
++			tb->fastreuseport = 0;
++		}
++	} else {
++		if (!reuse)
++			tb->fastreuse = 0;
++		if (sk->sk_reuseport) {
++			/* We didn't match or we don't have fastreuseport set on
++			 * the tb, but we have sk_reuseport set on this socket
++			 * and we know that there are no bind conflicts with
++			 * this socket in this tb, so reset our tb's reuseport
++			 * settings so that any subsequent sockets that match
++			 * our current socket will be put on the fast path.
++			 *
++			 * If we reset we need to set FASTREUSEPORT_STRICT so we
++			 * do extra checking for all subsequent sk_reuseport
++			 * socks.
++			 */
++			if (!sk_reuseport_match(tb, sk)) {
++				tb->fastreuseport = FASTREUSEPORT_STRICT;
++				tb->fastuid = uid;
++				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
++				tb->fast_ipv6_only = ipv6_only_sock(sk);
++				tb->fast_sk_family = sk->sk_family;
++#if IS_ENABLED(CONFIG_IPV6)
++				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
++#endif
++			}
++		} else {
++			tb->fastreuseport = 0;
++		}
++	}
++}
++
+ /* Obtain a reference to a local port for the given sock,
+  * if snum is zero it means select any available local port.
+  * We try to allocate an odd port (and leave even ports for connect())
+@@ -308,7 +359,6 @@ int inet_csk_get_port(struct sock *sk, unsigned short snum)
+ 	struct inet_bind_hashbucket *head;
+ 	struct net *net = sock_net(sk);
+ 	struct inet_bind_bucket *tb = NULL;
+-	kuid_t uid = sock_i_uid(sk);
+ 	int l3mdev;
+ 
+ 	l3mdev = inet_sk_bound_l3mdev(sk);
+@@ -345,49 +395,8 @@ int inet_csk_get_port(struct sock *sk, unsigned short snum)
+ 			goto fail_unlock;
+ 	}
+ success:
+-	if (hlist_empty(&tb->owners)) {
+-		tb->fastreuse = reuse;
+-		if (sk->sk_reuseport) {
+-			tb->fastreuseport = FASTREUSEPORT_ANY;
+-			tb->fastuid = uid;
+-			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
+-			tb->fast_ipv6_only = ipv6_only_sock(sk);
+-			tb->fast_sk_family = sk->sk_family;
+-#if IS_ENABLED(CONFIG_IPV6)
+-			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+-#endif
+-		} else {
+-			tb->fastreuseport = 0;
+-		}
+-	} else {
+-		if (!reuse)
+-			tb->fastreuse = 0;
+-		if (sk->sk_reuseport) {
+-			/* We didn't match or we don't have fastreuseport set on
+-			 * the tb, but we have sk_reuseport set on this socket
+-			 * and we know that there are no bind conflicts with
+-			 * this socket in this tb, so reset our tb's reuseport
+-			 * settings so that any subsequent sockets that match
+-			 * our current socket will be put on the fast path.
+-			 *
+-			 * If we reset we need to set FASTREUSEPORT_STRICT so we
+-			 * do extra checking for all subsequent sk_reuseport
+-			 * socks.
+-			 */
+-			if (!sk_reuseport_match(tb, sk)) {
+-				tb->fastreuseport = FASTREUSEPORT_STRICT;
+-				tb->fastuid = uid;
+-				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
+-				tb->fast_ipv6_only = ipv6_only_sock(sk);
+-				tb->fast_sk_family = sk->sk_family;
+-#if IS_ENABLED(CONFIG_IPV6)
+-				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+-#endif
+-			}
+-		} else {
+-			tb->fastreuseport = 0;
+-		}
+-	}
++	inet_csk_update_fastreuse(tb, sk);
++
+ 	if (!inet_csk(sk)->icsk_bind_hash)
+ 		inet_bind_hash(sk, tb, port);
+ 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
+-- 
+2.25.1
 
-I have created https://github.com/google/syzkaller/pull/2021 to enable
-it on syzbot.
-On syzbot we generally use only 2-4 CPUs per VM, so it should be even better.
-
-> Do any of you remember some bugs we missed due to this? Can we find
-> them if we add this option?
-
-The problem is that it's hard to remember bugs that were not caught :)
-Here is an approximation of UAFs with free in rcu callback:
-https://groups.google.com/forum/#!searchin/syzkaller-bugs/KASAN$20use-after-free$20rcu_do_batch%7Csort:date
-The ones with low hit count are the ones that we almost did not catch.
-That's the best estimation I can think of. Also potentially we can get
-reproducers for such bugs without reproducers.
-Maybe we will be able to correlate some bugs/reproducers that appear
-soon with this change.
