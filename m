@@ -2,98 +2,97 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F28C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA22C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 565692086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C502086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Wgf24cwa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVRjWmZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgHFWdq (ORCPT
+        id S1726232AbgHFWe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:33:46 -0400
-Received: from ozlabs.org ([203.11.71.1]:39085 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgHFWdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:33:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BN3Dm29y5z9sPB;
-        Fri,  7 Aug 2020 08:33:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596753224;
-        bh=FsB5kYxkaUFGzjHKfdToVWaIcno3UIYxxqaOUIlfcCI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Wgf24cwa57IK9UcVS8Z4TojTJzkry95gJ9mpg9gneW6Bk34ZuJuJVDcXbruV/3rA5
-         uYiuxLSq0z0lMx0aq4Sz5wbkmJJmep+HZ80HTHJHUOuUNwxZyB2o3y1SJQ1fCq8qZf
-         6jIV5JYa3alpxFJSOu1FzEG8aeHHphBh7LH4S1hdv/IWMK9yyi0yw8JiVBmbLaW3CU
-         krCQtVvF6KTfC5C7q7hsiJVr3ZbiHmlF1t3w4+eKHV2FIbxktlplr/ZqWbfN/0POuB
-         1HxhReCqusyiCzt/6Imwcr7Ircf3TyKvR5f18/QZUDWOjGuKJXRgm07ftci24UKXNC
-         zswADLUmiXvLw==
-Date:   Fri, 7 Aug 2020 08:33:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steve French <smfrench@gmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
-Message-ID: <20200807083342.6977153b@canb.auug.org.au>
-In-Reply-To: <CAH2r5mvGD3ftLDfwrpx61kaJQnPpspupdDHD8NOjnF-q-ByTfg@mail.gmail.com>
-References: <20200806164505.0eada105@canb.auug.org.au>
-        <CAH2r5mvGD3ftLDfwrpx61kaJQnPpspupdDHD8NOjnF-q-ByTfg@mail.gmail.com>
+        Thu, 6 Aug 2020 18:34:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgHFWe5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:34:57 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B6DC061574;
+        Thu,  6 Aug 2020 15:34:57 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id u20so3938937pfn.0;
+        Thu, 06 Aug 2020 15:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gyuJ0He/a1da98HsKNWgll33VXGA3KLrT8I9Ge5lc30=;
+        b=kVRjWmZGCsr8ZmY0KIM24NUkpPosbX5+cMW+9ViLyfjM/9z1Hv2/b4Ni+Mcy/jmqgu
+         78p/uikozvJRtS9iDTAo2dGC4tjLP59emb2z9Sg48ncuwJKROhv7v4eH67woYmU8B2uv
+         QZI1vBtzJE95O2yaoBIMAEoQAxUXRN49ozK2W8vgoLvAS+gqpvuwJJoo1PRAhiW5RJ12
+         A/Ozb5XyHl+xGzMiDBCLInZcMd4tN+ox7cP6/EJyoYj5jodNl3B1MoP6U45ZMp/dmkiE
+         ron4eAhxJACjrVPmom+UjZ+D3E59cAAa14bj/eKPalvwxeJ1DVr0mrs5nZ45V7oL/VIO
+         TWAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gyuJ0He/a1da98HsKNWgll33VXGA3KLrT8I9Ge5lc30=;
+        b=r2EN906QqCtyZKM/qu+Mj3CXwAfcquKnitKqFOV5Y91vsAX5lWtxQkqFFbb3IeZ+FM
+         xMtli9MpXYMUmQT6Eyqo+tddVSVuHX4aWZ4hVl4X6FNVflnttVQc9FQFkZ2x5r7+JBcC
+         TtPxa0Lu70fOSjyXhrIAnwrh727yFjivcYdejGQkwwo0pkZtYQ5z8C8ykthEEJ9RLYVa
+         VVXc8IlOUzyX2lvObRVAgkINn2bEztXt+zaZXt7OwhPxSkmyQJFk0ck2EO6BVZOQ2RKm
+         PGPMtxZ5f5+vtlQcNnxkvXA1bwR3kVMkHBa0nc3Dcf5dj3dK+vov0Q1DJ67uHPbItOPC
+         cdoA==
+X-Gm-Message-State: AOAM5314s3koQeiXgjHaipdSJt+V56tRuQYCh3swjyw1cX1N+2Q16mCy
+        YurJlC16ZSJGuNU04WAcSBS262dMahs=
+X-Google-Smtp-Source: ABdhPJzoRn2wEXnh57GiQaK69hZDKLp23vTXkuoOTaYbOejmSJcJnx2q5fDTI/fIaz/0zQgbOyf+tw==
+X-Received: by 2002:a62:27c7:: with SMTP id n190mr2084749pfn.128.1596753295628;
+        Thu, 06 Aug 2020 15:34:55 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id v2sm8307324pje.19.2020.08.06.15.34.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 15:34:54 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 15:34:53 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][V2] input: ims-pcu: return error code rather than -ENOMEM
+Message-ID: <20200806223453.GK1665100@dtor-ws>
+References: <20200603152151.139337-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/gLZlApbWK/zRikX/hm+fGUR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603152151.139337-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gLZlApbWK/zRikX/hm+fGUR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 03, 2020 at 04:21:51PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the assignment of -ENOMEM to error is redudant because error
+> is not being read and -ENOMEM is being hard coded as an error return.
+> Fix this by returning the error code in variable 'error'; this also
+> allows the error code from a failed call to input_register_device to
+> be preserved and returned to the caller rather than just returning
+> a possibly inappropriate -ENOMEM.
+> 
+> Kudos to Dan Carpenter for the suggestion of an improved fix.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> 
 
-Hi Steve,
+Applied, thank you.
 
-Thanks for fixing this up.
-
-On Thu, 6 Aug 2020 10:31:33 -0500 Steve French <smfrench@gmail.com> wrote:
->
-> I just fixed the Author tag in this patch to match your email address
-> but seems like the author email address gets mangled when sent through
-> some mailing lists.  Any ideas how to avoid this.
-
-You may need to ask people to add an explicit From: line at the start
-of the body for patches sent via the samba.org mailing lists (since
-they mangle addresses to get around DKIM checks, I assume).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/gLZlApbWK/zRikX/hm+fGUR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8shUcACgkQAVBC80lX
-0Gw1Gwf/XWj7q5tp9zlh9ivEzpmZpfatsr98aHls5d/vEsSZEnbEjunSiqYbMXL4
-BKr6+Hl9yhN5RjiGFx7VdmZPnq2GxYKH1xCSGakENhJZBFV41vcUgzuxqXuulHYL
-0eFuuESEDv1TpTz7ACCXcRCAo6LP7EyHvBUQLLzf+We0/43y4sttf58tMVgdVg4w
-NXqghR54mkmAhI/8HPS1C6Q7s2bCbb78RrwZ8xMRZRglfFOEtmSdYDZhJYVwun33
-LBB2R9DVIjhKEx0dFPGNeR5X1RmoNl+a8+r3TOHJXPNOc91mQ3Z8BhZnUP5feOtc
-EZ+zLKtcXCk5AbcKA+NdIwsUpnRSmA==
-=HyuJ
------END PGP SIGNATURE-----
-
---Sig_/gLZlApbWK/zRikX/hm+fGUR--
+-- 
+Dmitry
