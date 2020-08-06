@@ -8,57 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5167C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEC422CAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0486722CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhhx2fAt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWUEZ/NU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgHFAJF (ORCPT
+        id S1726627AbgHFAJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 20:09:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        Wed, 5 Aug 2020 20:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgHFAJE (ORCPT
+        with ESMTP id S1725779AbgHFAJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 20:09:04 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075C9C061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 17:09:04 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id v11so51378837ybm.22
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 17:09:03 -0700 (PDT)
+        Wed, 5 Aug 2020 20:09:05 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAA3C061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 17:09:05 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id f7so5059800plj.16
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 17:09:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=KPwQaPC5rlEgRvrcmoBlVpZT38eeluDqoMRajQA10S4=;
-        b=qhhx2fAtSuQMbAlthsz86qneY+UexRTYr8f7upe8nl1fEwivtrK/hacFGf+FtW7+Mh
-         yVHFt2872Qzg20bLldT8gIlxviU0uUWOmKYQlMgLnrdJMYzFfMfVHKzAAhJWjPthwuoM
-         3EKZXSMg01/PVKuhrB+XCuT5CqGcoIbBu1icIMdghImKcHSxi2GAoCc3HfhHIBOkHr6K
-         InfWgYFkcoaX46ktGmofSr6J7kKJjP/dp5jnJQvAxhejUVJ61Pmie2F46ZgRJ+P53S2+
-         Uwq4Inwo2R4JXBWSG60TIQtFw+ZudQym3bHNUYHv4GzJGnMiyTO6TlEagvqasfVFPOr9
-         Av+A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=H3dGzahstvfIu8LFQ0q2SpynGz08Mul/xIBFXR8P1IE=;
+        b=YWUEZ/NUheQ/iu89kwB+altdcW1jR9ONZ7b/9GuCQRKZXgdQUH14FVN7cLImT0NPzg
+         iebIqNPGy1db1Bp27D8/ZfiqNaNU3NvfpynRuOdQXPfZztcr5reFwn/7PIwTJYZvnOJ+
+         pj5uqXMgU8qoEaN3SD4Zf2vrDoitGNLuncTy2Vy7z9upxqryPUiTdC+Ja2+AXRZRBCAD
+         Sw3yA3nJOU/XeUprSmPPQaYB9oYIprHzrIkaRH6YOFV3WNU3lhHqTabF1e6oK6XYIilT
+         4tCn8El8PGKTiXFMoaM2d1Zsrv+cAEd5xIxxgIDTqoWv1cijDqPtOt3kEwn7YubPnU7b
+         v0xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=KPwQaPC5rlEgRvrcmoBlVpZT38eeluDqoMRajQA10S4=;
-        b=oJJbEhj56/PorWl5NEAOKdQnwWjc6yEkHhtjR/DCcUi99Akk4XHrJ5/n6zfDBP8KwD
-         coZxRQhBXCXH36nis8dctH0aL8nyBOLieCgLhi6HyEKN7xb3+MFuENIu8B62akEjlibq
-         qLx8RW8azblAARgDw83TdtooiWmiYedm5xlDVjN+wy1ep8Bo2ozzRQ3pYlfM23Evjggc
-         QfIAVCJFvOzi6tsdpXpP3tEALvYmF8HbUfA15Hjh+Xvw3l1tI6kocpufRoSGgz7EKCOd
-         PM5+4xrYBClMVG34IPyjRczno/VA/op5YobQGnlY1p6vpTXJ2nksyptwgnr0OVHPzhgR
-         206Q==
-X-Gm-Message-State: AOAM530FFtoGdJzrkBVIfsTKTIWEHj/ihZNT2ppPfWxwXM4kZZ33oPGt
-        wvYVciNKy6BumKo682mVw9NMua2w
-X-Google-Smtp-Source: ABdhPJyOzcoq836Rgdoac/2iNrqmHqqin6yoeU0x4KQGpPc/L1RZcl4Jzyso81ab94G8Sm1JKobTzQ5C
-X-Received: by 2002:a25:44d4:: with SMTP id r203mr8462924yba.500.1596672542788;
- Wed, 05 Aug 2020 17:09:02 -0700 (PDT)
-Date:   Wed,  5 Aug 2020 17:08:58 -0700
-Message-Id: <20200806000859.160882-1-posk@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=H3dGzahstvfIu8LFQ0q2SpynGz08Mul/xIBFXR8P1IE=;
+        b=awSQQ8doOMBWEDy6GkhF2AGdyemmMpK6LT98HRYTPojKxDaLuGy0l6T8WCZQ2Xx6KH
+         1N8f0WUvOo+2bPEwd75sQDcjemQKAC0BTzKQKGyDW5OWjNizESKszZryUPYbYH7JUiK5
+         EEmQFvwSTaq5ex9xGNaRRnY1UgLUDjuM2GcOlX7EQi0NF9va0Ttw1wYR9eAVjHZzM3WE
+         +6wTUkFURZZkIHq6Zrg9XXJ0i1AMSiyNiiyKLsC0Pcx71u7O/ZBewWkGfyeaqRN1h01o
+         0l/r+MkKKyGFy+Y+PArrUZmIyRce1Lg/4aJhyDkPlQeF3Alb0hONS/J4NWptHckxDiP1
+         PtAg==
+X-Gm-Message-State: AOAM5326SX+g9vao7Q5ZMjQc5InWuvjpHBVQl3ojbp/K3CS9VIkbKu5H
+        F5NcBLbkbWTa2xePDp2Rsuu7nLi1
+X-Google-Smtp-Source: ABdhPJw6v62czoy4VBZ+Fn73XSuVLg+9X2Jm4jm89k9K0QzakWancaMB0ZAWYOjhHY7zeQTqzdQ+/mEn
+X-Received: by 2002:a17:902:9a96:: with SMTP id w22mr5387520plp.172.1596672544804;
+ Wed, 05 Aug 2020 17:09:04 -0700 (PDT)
+Date:   Wed,  5 Aug 2020 17:08:59 -0700
+In-Reply-To: <20200806000859.160882-1-posk@google.com>
+Message-Id: <20200806000859.160882-2-posk@google.com>
 Mime-Version: 1.0
+References: <20200806000859.160882-1-posk@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH 1/2] membarrier: add MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
+Subject: [PATCH 2/2] selftests/rseq: test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
 From:   Peter Oskolkov <posk@google.com>
 To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
@@ -72,151 +76,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset is based on Google-internal RSEQ
-work done by Paul Turner and Andrew Hunter.
+Based on Google-internal RSEQ work done by
+Paul Turner and Andrew Hunter.
 
-When working with per-CPU RSEQ-based memory allocations,
-it is sometimes important to make sure that a global
-memory location is no longer accessed from RSEQ critical
-sections. For example, there can be two per-CPU lists,
-one is "active" and accessed per-CPU, while another one
-is inactive and worked on asynchronously "off CPU" (e.g.
-garbage collection is performed). Then at some point
-the two lists are swapped, and a fast RCU-like mechanism
-is required to make sure that the previously active
-list is no longer accessed.
-
-This patch introduces such a mechanism: in short,
-membarrier() syscall issues an IPI to a CPU, restarting
-any potentially active RSEQ critical sections on the CPU,
-with an option to restart RSEQ CSs on all CPUs.
-
-The second patch in the patchset adds a selftest
-of this feature.
+This patch adds a selftest for MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU.
+The test quite often fails without the previous patch in this patchset,
+but consistently passes with it.
 
 Signed-off-by: Peter Oskolkov <posk@google.com>
 ---
- include/uapi/linux/membarrier.h |  8 ++++++
- kernel/sched/membarrier.c       | 51 +++++++++++++++++++++++++++++++--
- 2 files changed, 57 insertions(+), 2 deletions(-)
+ .../selftests/rseq/basic_percpu_ops_test.c    | 181 ++++++++++++++++++
+ 1 file changed, 181 insertions(+)
 
-diff --git a/include/uapi/linux/membarrier.h b/include/uapi/linux/membarrier.h
-index 5891d7614c8c..169ffb613397 100644
---- a/include/uapi/linux/membarrier.h
-+++ b/include/uapi/linux/membarrier.h
-@@ -114,6 +114,13 @@
-  *                          If this command is not implemented by an
-  *                          architecture, -EINVAL is returned.
-  *                          Returns 0 on success.
-+ * @MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU:
-+ *                          If a thread belonging to the current process
-+ *                          is currently in an RSEQ critical section on the
-+ *                          CPU identified by flags parameter, restart it.
-+ *                          @flags: if @flags >= 0, identifies the CPU to
-+ *                                  restart RSEQ CS on; if == -1, restarts
-+ *                                  RSEQ CSs on all CPUs.
-  * @MEMBARRIER_CMD_SHARED:
-  *                          Alias to MEMBARRIER_CMD_GLOBAL. Provided for
-  *                          header backward compatibility.
-@@ -131,6 +138,7 @@ enum membarrier_cmd {
- 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED		= (1 << 4),
- 	MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE		= (1 << 5),
- 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE	= (1 << 6),
-+	MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU		= (1 << 7),
+diff --git a/tools/testing/selftests/rseq/basic_percpu_ops_test.c b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
+index eb3f6db36d36..147c80deac19 100644
+--- a/tools/testing/selftests/rseq/basic_percpu_ops_test.c
++++ b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
+@@ -3,16 +3,21 @@
+ #include <assert.h>
+ #include <pthread.h>
+ #include <sched.h>
++#include <stdatomic.h>
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stddef.h>
++#include <syscall.h>
++#include <unistd.h>
  
- 	/* Alias for header backward compatibility. */
- 	MEMBARRIER_CMD_SHARED			= MEMBARRIER_CMD_GLOBAL,
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index 168479a7d61b..edcc1386daf5 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -18,11 +18,19 @@
- #define MEMBARRIER_PRIVATE_EXPEDITED_SYNC_CORE_BITMASK	0
- #endif
+ #include "rseq.h"
  
-+#ifdef CONFIG_RSEQ
-+#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK		\
-+	MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
-+#else
-+#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK	0
-+#endif
+ #define ARRAY_SIZE(arr)	(sizeof(arr) / sizeof((arr)[0]))
+ 
++#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU	(1<<7)
 +
- #define MEMBARRIER_CMD_BITMASK						\
- 	(MEMBARRIER_CMD_GLOBAL | MEMBARRIER_CMD_GLOBAL_EXPEDITED	\
- 	| MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED			\
- 	| MEMBARRIER_CMD_PRIVATE_EXPEDITED				\
- 	| MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED			\
-+	| MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK		\
- 	| MEMBARRIER_PRIVATE_EXPEDITED_SYNC_CORE_BITMASK)
- 
- static void ipi_mb(void *info)
-@@ -308,10 +316,47 @@ static int membarrier_register_private_expedited(int flags)
- 	return 0;
+ struct percpu_lock_entry {
+ 	intptr_t v;
+ } __attribute__((aligned(128)));
+@@ -289,6 +294,180 @@ void test_percpu_list(void)
+ 	assert(sum == expected_sum);
  }
  
-+#ifdef CONFIG_RSEQ
-+static void membarrier_rseq_ipi(void *arg)
++struct test_membarrier_thread_args {
++	int stop;
++	intptr_t percpu_list_ptr;
++};
++
++/* Worker threads modify data in their "active" percpu lists. */
++void *test_membarrier_worker_thread(void *arg)
 +{
-+	struct task_struct *leader = (struct task_struct *)arg;
++	struct test_membarrier_thread_args *args =
++		(struct test_membarrier_thread_args *)arg;
++	const int iters = 10 * 1000 * 1000;
++	int i;
 +
-+	if (current->group_leader != leader)  /* Not our process. */
-+		return;
-+	if (!current->rseq)  /* RSEQ not set up for current task/thread. */
-+		return;
-+
-+	rseq_preempt(current);
-+}
-+#endif
-+
-+static int membarrier_private_restart_rseq_on_cpu(int cpu_id)
-+{
-+#ifdef CONFIG_RSEQ
-+	/* syscalls are not allowed inside rseq critical sections. */
-+	if (cpu_id == raw_smp_processor_id())
-+		return 0;
-+
-+	if (cpu_id >= 0) {
-+		return smp_call_function_single(cpu_id, membarrier_rseq_ipi,
-+						current->group_leader, true);
-+	} else if (cpu_id == -1) {
-+		on_each_cpu(membarrier_rseq_ipi,
-+			    current->group_leader, true);
-+	} else {
-+		return -EINVAL;
++	if (rseq_register_current_thread()) {
++		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
 +	}
-+#endif
-+	return 0;
++
++	for (i = 0; i < iters; ++i) {
++		while (true) {
++			int cpu, ret;
++			struct percpu_list *list_ptr = (struct percpu_list *)
++				atomic_load(&args->percpu_list_ptr);
++
++			if (!list_ptr)
++				continue;  /* Not yet initialized. */
++
++			cpu = rseq_cpu_start();
++			struct percpu_list_node *node = list_ptr->c[cpu].head;
++			const intptr_t prev = node->data;
++
++			ret = rseq_cmpeqv_cmpeqv_storev(&node->data, prev,
++					&args->percpu_list_ptr,
++					(intptr_t)list_ptr, prev + 1, cpu);
++			if (!ret)
++				break;  /* Success. */
++		}
++	}
++
++	if (rseq_unregister_current_thread()) {
++		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
++	}
++	return NULL;
 +}
 +
- /**
-  * sys_membarrier - issue memory barriers on a set of threads
-  * @cmd:   Takes command values defined in enum membarrier_cmd.
-- * @flags: Currently needs to be 0. For future extensions.
-+ * @flags: Currently needs to be 0 for all commands other than
-+ *         MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU: in the latter
-+ *         case it indicates the CPU on which to interrupt (= restart)
-+ *         the RSEQ critical section, or -1 to restart RSEQ CSs on all CPUs.
-  *
-  * If this system call is not implemented, -ENOSYS is returned. If the
-  * command specified does not exist, not available on the running
-@@ -339,7 +384,7 @@ static int membarrier_register_private_expedited(int flags)
-  */
- SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
++void test_membarrier_init_percpu_list(struct percpu_list *list)
++{
++	int i;
++
++	memset(list, 0, sizeof(*list));
++	for (i = 0; i < CPU_SETSIZE; i++) {
++		struct percpu_list_node *node;
++
++		node = malloc(sizeof(*node));
++		assert(node);
++		node->data = 0;
++		node->next = NULL;
++		list->c[i].head = node;
++	}
++}
++
++void test_membarrier_free_percpu_list(struct percpu_list *list)
++{
++	int i;
++
++	for (i = 0; i < CPU_SETSIZE; i++)
++		free(list->c[i].head);
++}
++
++static int sys_membarrier(int cmd, int flags)
++{
++	return syscall(__NR_membarrier, cmd, flags);
++}
++
++/*
++ * The manager thread swaps per-cpu lists that worker threads see,
++ * and validates that there are no unexpected modifications.
++ */
++void *test_membarrier_manager_thread(void *arg)
++{
++	struct test_membarrier_thread_args *args =
++		(struct test_membarrier_thread_args *)arg;
++	struct percpu_list list_a, list_b;
++	intptr_t expect_a = 0, expect_b = 0;
++	int cpu_a = 0, cpu_b = 0;
++
++	if (rseq_register_current_thread()) {
++		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
++	}
++
++	/* Init lists. */
++	test_membarrier_init_percpu_list(&list_a);
++	test_membarrier_init_percpu_list(&list_b);
++
++	atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
++
++	while (!atomic_load(&args->stop)) {
++		/* list_a is "active". */
++		cpu_a = rand() % CPU_SETSIZE;
++		/*
++		 * As list_b is "inactive", we should never see changes
++		 * to list_b.
++		 */
++		if (expect_b != atomic_load(&list_b.c[cpu_b].head->data)) {
++			fprintf(stderr, "Membarrier test failed\n");
++			abort();
++		}
++
++		/* Make list_b "active". */
++		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_b);
++		sys_membarrier(MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU, cpu_a);
++		/*
++		 * Cpu A should now only modify list_b, so we values
++		 * in list_a should be stable.
++		 */
++		expect_a = atomic_load(&list_a.c[cpu_a].head->data);
++
++		cpu_b = rand() % CPU_SETSIZE;
++		/*
++		 * As list_a is "inactive", we should never see changes
++		 * to list_a.
++		 */
++		if (expect_a != atomic_load(&list_a.c[cpu_a].head->data)) {
++			fprintf(stderr, "Membarrier test failed\n");
++			abort();
++		}
++
++		/* Make list_a "active". */
++		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
++		sys_membarrier(MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU, cpu_b);
++		/* Remember a value from list_b. */
++		expect_b = atomic_load(&list_b.c[cpu_b].head->data);
++	}
++
++	test_membarrier_free_percpu_list(&list_a);
++	test_membarrier_free_percpu_list(&list_b);
++
++	if (rseq_unregister_current_thread()) {
++		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
++	}
++	return NULL;
++}
++
++/* Test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU membarrier command. */
++void test_membarrier(void)
++{
++	struct test_membarrier_thread_args thread_args;
++	pthread_t worker_threads[CPU_SETSIZE];
++	pthread_t manager_thread;
++	int i;
++
++	thread_args.stop = 0;
++	thread_args.percpu_list_ptr = 0;
++	pthread_create(&manager_thread, NULL,
++		       test_membarrier_manager_thread, &thread_args);
++
++	for (i = 0; i < CPU_SETSIZE; i++)
++		pthread_create(&worker_threads[i], NULL,
++		       test_membarrier_worker_thread, &thread_args);
++
++	for (i = 0; i < CPU_SETSIZE; i++)
++		pthread_join(worker_threads[i], NULL);
++
++	atomic_store(&thread_args.stop, 1);
++	pthread_join(manager_thread, NULL);
++}
++
+ int main(int argc, char **argv)
  {
--	if (unlikely(flags))
-+	if (unlikely(flags && cmd != MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU))
- 		return -EINVAL;
- 	switch (cmd) {
- 	case MEMBARRIER_CMD_QUERY:
-@@ -369,6 +414,8 @@ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
- 		return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
- 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
- 		return membarrier_register_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
-+	case MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU:
-+		return membarrier_private_restart_rseq_on_cpu(flags);
- 	default:
- 		return -EINVAL;
- 	}
+ 	if (rseq_register_current_thread()) {
+@@ -300,6 +479,8 @@ int main(int argc, char **argv)
+ 	test_percpu_spinlock();
+ 	printf("percpu_list\n");
+ 	test_percpu_list();
++	printf("membarrier\n");
++	test_membarrier();
+ 	if (rseq_unregister_current_thread()) {
+ 		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
+ 			errno, strerror(errno));
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
