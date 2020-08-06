@@ -2,180 +2,143 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C075CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D221C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A07BA22CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74EE22CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YJdzPn9n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="MiXYRT5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHFAHN (ORCPT
+        id S1726524AbgHFAIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 20:07:13 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1251 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgHFAHL (ORCPT
+        Wed, 5 Aug 2020 20:08:07 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:60009 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgHFAIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 20:07:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2b497d0000>; Wed, 05 Aug 2020 17:06:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 05 Aug 2020 17:07:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 05 Aug 2020 17:07:11 -0700
-Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 00:07:10 +0000
-Subject: Re: [PATCH v2 6/6] sdhci: tegra: Add missing TMCLK for data timeout
-To:     Adrian Hunter <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-References: <1596515363-27235-1-git-send-email-skomatineni@nvidia.com>
- <1596515363-27235-7-git-send-email-skomatineni@nvidia.com>
- <d131fc8c-fa1f-cb67-fe6a-955d3582d1d6@intel.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <8e8f3742-f80e-c58b-4d7b-99b5a455b157@nvidia.com>
-Date:   Wed, 5 Aug 2020 17:07:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 20:08:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596672486; x=1628208486;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=irrlTT1tShYqK45JMoHx2k1l0ZG3LkU/v6cuAOx3NI4=;
+  b=MiXYRT5+Acg+xBDDIL7gLGZpIm9yIcuRqxfzvMuNm9dE0FTdorMGXhbt
+   KVJXb6cry2sqbr199poMihg36o8Bh6pOMaoiWdHBxVakQP0ftVLCy+L4X
+   d7Ns8NeBs4MOZAmZ1gd++L1jakg4fM3gC+fZyCbw0b2N19Nk35+5As5iQ
+   qWVQSK4/68djUSyJ90/W4WoH5wm8w53qa3wGJ2T8PtIRbobOVRO4EvitL
+   L5UgFr3RmpPw+VPEgTZyihz8tOOABpzqYKoypWnOl77Yq5Vw9xsHL2ToB
+   UlcVAFjUnIL7GqXvg3ofXewCopTDwlgo8UdDxo504cff4QsIl1cjPwnt5
+   A==;
+IronPort-SDR: 2pS1PpoNnz3av/NR3jbJxqhFqUCjr6hWrPnlIq4zaYisZBpqSbiuU+2S7FPG2H86CouiRoS8BB
+ 7jcl334wXvUwKKtcTgGb8tpKGuo0zVxdGe6Z5UArnv7QrQJEc/dM/lwkF01gOSJEfsTcXpg2lL
+ qgrCr4f2SSlKw8uHKQGesEL6I3//ZKcLCrE7dFRsNS7dVqlpNxIIUWpZ7d93t4rgpBx8cGsHKr
+ +5m7kiW6EPcQXQu6BfCVjMRzGCC8XdN4iGiYOAQvIoRr32kalPQkj9fkmSTDZSutcbKxG6tp3m
+ MKo=
+X-IronPort-AV: E=Sophos;i="5.75,439,1589212800"; 
+   d="scan'208";a="148563506"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Aug 2020 08:08:06 +0800
+IronPort-SDR: myOKtsHncB8/84yI+KTT5p2DGi/qwJjltf270bZi6UTtM3Mj9QZiprd5ZnTpK9XmQDFseE8LEm
+ HMTiDvjZ7anw==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 16:55:24 -0700
+IronPort-SDR: nUYJmY3g69kIaMDdvEBIrAraXtLHo/3wK4/RX23X6L9uOe9tXb1pwO46qPwR74QFvRi76OnSug
+ 6ih9gd2Bb9zg==
+WDCIronportException: Internal
+Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
+  by uls-op-cesaip02.wdc.com with ESMTP; 05 Aug 2020 17:08:06 -0700
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     hch@lst.de, sagi@grimberg.me,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [PATCH] nvmet: fix opps in nvmet_execute_passthru_cmd()
+Date:   Wed,  5 Aug 2020 17:08:04 -0700
+Message-Id: <20200806000804.6345-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <d131fc8c-fa1f-cb67-fe6a-955d3582d1d6@intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596672381; bh=FbTeM4DKgB2Vhjb2SOpeG8Wwy4zacBAFsfEnf77sC7I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=YJdzPn9nPnzU3hlltw22wl4p1BG8ANDx2Ph5j6Cx1WXK5drU4jYiSmP/XP6MNiob/
-         i7k9E1Sg9eNWPoXuH2wNm57iQt1Eu40ugzu44gVJ2Hx+eZ9zPHAhS8MfQIEW0ZiEWI
-         r2DfZjFcAyIKH9qpI4dWtAGqb+WhhpJcgEDIqyWcoV+wxM98Xgg/eprZku8xZuv6kq
-         tw11yO8ml9xopUEUFH4G9x/N4MLNUIDEI8PygRrbR50wOLUfmsO2NBM2qWXXEAzQMA
-         GKoNFfjw0B0/EcDqNilhjT7ZdcGs7eLNSiYO3Y5tjCH+uqC17N4TwuLObzAObHpyyd
-         ViwJgwGPo8+4g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds a check in nvmet_execute_passthru_cmd() to prevent the
+following oops :-
 
-On 8/5/20 1:06 AM, Adrian Hunter wrote:
-> On 4/08/20 7:29 am, Sowjanya Komatineni wrote:
->> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
-> So that could be a Fixes tag also?
+[ 1457.346861] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[ 1457.347838] #PF: supervisor read access in kernel mode
+[ 1457.348464] #PF: error_code(0x0000) - not-present page
+[ 1457.349085] PGD 0 P4D 0
+[ 1457.349402] Oops: 0000 [#1] SMP NOPTI
+[ 1457.349851] CPU: 18 PID: 10782 Comm: kworker/18:2 Tainted: G           OE     5.8.0-rc4nvme-5.9+ #35
+[ 1457.350951] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e3214
+[ 1457.352347] Workqueue: events nvme_loop_execute_work [nvme_loop]
+[ 1457.353062] RIP: 0010:blk_mq_free_request+0xe/0x110
+[ 1457.353651] Code: 3f ff ff ff 83 f8 01 75 0d 4c 89 e7 e8 1b db ff ff e9 2d ff ff ff 0f 0b eb ef 66 8
+[ 1457.355975] RSP: 0018:ffffc900035b7de0 EFLAGS: 00010282
+[ 1457.356636] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000002
+[ 1457.357526] RDX: ffffffffa060bd05 RSI: 0000000000000000 RDI: 0000000000000000
+[ 1457.358416] RBP: 0000000000000037 R08: 0000000000000000 R09: 0000000000000000
+[ 1457.359317] R10: 0000000000000000 R11: 000000000000006d R12: 0000000000000000
+[ 1457.360424] R13: ffff8887ffa68600 R14: 0000000000000000 R15: ffff8888150564c8
+[ 1457.361322] FS:  0000000000000000(0000) GS:ffff888814600000(0000) knlGS:0000000000000000
+[ 1457.362337] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1457.363058] CR2: 0000000000000000 CR3: 000000081c0ac000 CR4: 00000000003406e0
+[ 1457.363973] Call Trace:
+[ 1457.364296]  nvmet_passthru_execute_cmd+0x150/0x2c0 [nvmet]
+[ 1457.364990]  process_one_work+0x24e/0x5a0
+[ 1457.365493]  ? __schedule+0x353/0x840
+[ 1457.365957]  worker_thread+0x3c/0x380
+[ 1457.366426]  ? process_one_work+0x5a0/0x5a0
+[ 1457.366948]  kthread+0x135/0x150
+[ 1457.367362]  ? kthread_create_on_node+0x60/0x60
+[ 1457.367934]  ret_from_fork+0x22/0x30
+[ 1457.368388] Modules linked in: nvme_loop(OE) nvmet(OE) nvme_fabrics(OE) null_blk nvme(OE) nvme_corer
+[ 1457.368414]  ata_piix crc32c_intel virtio_pci libata virtio_ring serio_raw t10_pi virtio floppy dm_]
+[ 1457.380849] CR2: 0000000000000000
+[ 1457.381288] ---[ end trace c6cab61bfd1f68fd ]---
+[ 1457.381861] RIP: 0010:blk_mq_free_request+0xe/0x110
+[ 1457.382469] Code: 3f ff ff ff 83 f8 01 75 0d 4c 89 e7 e8 1b db ff ff e9 2d ff ff ff 0f 0b eb ef 66 8
+[ 1457.384749] RSP: 0018:ffffc900035b7de0 EFLAGS: 00010282
+[ 1457.385393] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000002
+[ 1457.386264] RDX: ffffffffa060bd05 RSI: 0000000000000000 RDI: 0000000000000000
+[ 1457.387142] RBP: 0000000000000037 R08: 0000000000000000 R09: 0000000000000000
+[ 1457.388029] R10: 0000000000000000 R11: 000000000000006d R12: 0000000000000000
+[ 1457.388914] R13: ffff8887ffa68600 R14: 0000000000000000 R15: ffff8888150564c8
+[ 1457.389798] FS:  0000000000000000(0000) GS:ffff888814600000(0000) knlGS:0000000000000000
+[ 1457.390796] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1457.391508] CR2: 0000000000000000 CR3: 000000081c0ac000 CR4: 00000000003406e0
+[ 1457.392525] Kernel panic - not syncing: Fatal exception
+[ 1457.394138] Kernel Offset: disabled
+[ 1457.394677] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-Thanks Adrian. Will resend with fixes tag.
+Fixes: 06b7164dfdc0 ("nvmet: add passthru code to process commands")
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+---
+ drivers/nvme/target/passthru.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Sowjanya
+diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
+index 89d91dc999a6..b56292c9a76c 100644
+--- a/drivers/nvme/target/passthru.c
++++ b/drivers/nvme/target/passthru.c
+@@ -278,7 +278,8 @@ static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
+ 	if (ns)
+ 		nvme_put_ns(ns);
+ 	nvmet_req_complete(req, status);
+-	blk_put_request(rq);
++	if (rq)
++		blk_put_request(rq);
+ }
+ 
+ /*
+-- 
+2.22.1
 
->
->> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
->> SDMMC hawdware for data timeout to achive better timeout than using
->> SDCLK and using TMCLK is recommended.
->>
->> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
->> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
->> SDCLK for data timeout.
->>
->> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
->> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
->> is not recommended.
->>
->> So, this patch fixes it.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->
->> ---
->>   drivers/mmc/host/sdhci-tegra.c | 41 +++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>
->> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
->> index 31ed321..c0b9405 100644
->> --- a/drivers/mmc/host/sdhci-tegra.c
->> +++ b/drivers/mmc/host/sdhci-tegra.c
->> @@ -140,6 +140,7 @@ struct sdhci_tegra_autocal_offsets {
->>   struct sdhci_tegra {
->>   	const struct sdhci_tegra_soc_data *soc_data;
->>   	struct gpio_desc *power_gpio;
->> +	struct clk *tmclk;
->>   	bool ddr_signaling;
->>   	bool pad_calib_required;
->>   	bool pad_control_available;
->> @@ -1611,6 +1612,44 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->>   		goto err_power_req;
->>   	}
->>   
->> +	/*
->> +	 * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
->> +	 * timeout clock and SW can choose TMCLK or SDCLK for hardware
->> +	 * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
->> +	 * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
->> +	 *
->> +	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
->> +	 * 12Mhz TMCLK which is advertised in host capability register.
->> +	 * With TMCLK of 12Mhz provides maximum data timeout period that can
->> +	 * be achieved is 11s better than using SDCLK for data timeout.
->> +	 *
->> +	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
->> +	 * supporting SDR104 mode and when not using SDCLK for data timeout.
->> +	 */
->> +
->> +	if ((soc_data->nvquirks & NVQUIRK_ENABLE_SDR104) &&
->> +	    !(soc_data->pdata->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
->> +		clk = devm_clk_get(&pdev->dev, "tmclk");
->> +		if (IS_ERR(clk)) {
->> +			rc = PTR_ERR(clk);
->> +			if (rc == -EPROBE_DEFER)
->> +				goto err_power_req;
->> +
->> +			dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
->> +			clk = NULL;
->> +		}
->> +
->> +		clk_set_rate(clk, 12000000);
->> +		rc = clk_prepare_enable(clk);
->> +		if (rc) {
->> +			dev_err(&pdev->dev,
->> +				"failed to enable tmclk: %d\n", rc);
->> +			goto err_power_req;
->> +		}
->> +
->> +		tegra_host->tmclk = clk;
->> +	}
->> +
->>   	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
->>   	if (IS_ERR(clk)) {
->>   		rc = PTR_ERR(clk);
->> @@ -1654,6 +1693,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->>   err_rst_get:
->>   	clk_disable_unprepare(pltfm_host->clk);
->>   err_clk_get:
->> +	clk_disable_unprepare(tegra_host->tmclk);
->>   err_power_req:
->>   err_parse_dt:
->>   	sdhci_pltfm_free(pdev);
->> @@ -1671,6 +1711,7 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
->>   	reset_control_assert(tegra_host->rst);
->>   	usleep_range(2000, 4000);
->>   	clk_disable_unprepare(pltfm_host->clk);
->> +	clk_disable_unprepare(tegra_host->tmclk);
->>   
->>   	sdhci_pltfm_free(pdev);
->>   
->>
