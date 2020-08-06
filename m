@@ -2,170 +2,202 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20686C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF399C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 300D1206B5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE9A2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PF5pZvM0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgHFTqR (ORCPT
+        id S1726233AbgHFTrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:46:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgHFTqR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:46:17 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BFA5C061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:46:17 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3lq6-000375-2O; Thu, 06 Aug 2020 21:46:10 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3lq4-0001VV-Sw; Thu, 06 Aug 2020 21:46:08 +0200
-Date:   Thu, 6 Aug 2020 21:46:08 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
-Message-ID: <20200806194608.bdhvltvwxi3opykk@pengutronix.de>
-References: <20200804091603.541-1-a.fatoum@pengutronix.de>
- <20200805061753.5o63zu4ionhgjab4@pengutronix.de>
- <871rkkhy7v.fsf@nanos.tec.linutronix.de>
- <CACRpkdaOysS1-Y=3ghQ+1qbMTR8yi3bHg=_+gUOPo_EcmGmJiw@mail.gmail.com>
- <87r1sjham2.fsf@nanos.tec.linutronix.de>
+        Thu, 6 Aug 2020 15:47:19 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34191 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725272AbgHFTrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:47:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596743237; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=/B6mEs/W9A3x/s02MzsmbrVTWOdpSU8P9ZPpHWSNhQ8=;
+ b=PF5pZvM0wRfKj47lWg2KJvnuT0b8pHm4jbBe2OS/syY3w3dNQ6EbnT/2wc95+exGE9n4cwMN
+ iXRne6Y0Fy//6tgDtnDHqk/opUnNc2jsFh75S5lgzVXpXCOdKNPJVm+jX1rV61/fkCXcrc/+
+ eCDT9KhvFUuue+GMTBJ9MpVLvao=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f2c14f348ee73b1c786f26e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 14:34:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D55BDC43391; Thu,  6 Aug 2020 14:34:24 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0D8BC433C9;
+        Thu,  6 Aug 2020 14:34:23 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xih6xlvfk6735ntg"
-Content-Disposition: inline
-In-Reply-To: <87r1sjham2.fsf@nanos.tec.linutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Aug 2020 20:04:23 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alex Elder <elder@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] soc: qcom: aoss: Don't wait for IRQ if we might be in
+ suspend/resume noirq
+In-Reply-To: <159666852526.1360974.3062132560884413001@swboyd.mtv.corp.google.com>
+References: <20200805091141.1.I86b3faaecb0d82997b599b1300f879606c71e116@changeid>
+ <159664899840.1360974.7548807728313161626@swboyd.mtv.corp.google.com>
+ <CAD=FV=UK+xHV6qsr2AsPB=BzmzN77AT-du8G2tt1QZMQUpGgKg@mail.gmail.com>
+ <159666852526.1360974.3062132560884413001@swboyd.mtv.corp.google.com>
+Message-ID: <4c40db0fe88dd9aff6897ebc103aa3e9@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-08-06 04:32, Stephen Boyd wrote:
+> +Sibi who wrote the code
+> 
+> Quoting Doug Anderson (2020-08-05 13:24:06)
+>> 
+>> On Wed, Aug 5, 2020 at 10:36 AM Stephen Boyd <swboyd@chromium.org> 
+>> wrote:
+>> >
+>> > Why is the genpd being powered off at all? It looks like the driver is
+>> > written in a way that it doesn't expect this to happen. See where
+>> > adsp_pds_disable() is called from. Looks like the remoteproc "stop"
+>> > callback should be called or the driver should be detached.
+>> >
+>> > It sort of looks like the genpd is expected to be at the max level all
+>> > the time (it sets INT_MAX in adsp_pds_enable(), cool).
+>> 
+>> In general in Linux there are some things that, at suspend time, get
+>> done behind a driver's back.  The regulator API, for instance, allows
+>> for regulators to be turned off in suspend even if a driver leaves
+>> them on.  Sure, it's good practice for a driver to be explicit but the
+>> regulator suspend states do allow for the more heavy-handed approach.
+>> 
+>> I guess I assume that genpd is a bit similar.  If a driver leaves a
+>> genpd on all the time then it will still be turned off at suspend time
+>> and then turned back on at resume time.  It seems like it must be part
+>> of the genpd API.  Specifically genpd_sync_power_off() says: "Check if
+>> the given PM domain can be powered off (during system suspend or
+>> hibernation) and do that if so."  That makes it seem like it's how
+>> genpd works.
+>> 
+>> Reading all the descriptions of things like GENPD_FLAG_ALWAYS_ON,
+>> GENPD_FLAG_ACTIVE_WAKEUP, GENPD_FLAG_RPM_ALWAYS_ON makes me even more
+>> convinced that it's normal (unless otherwise specified) for genpds to
+>> get turned off in suspend even if a driver just blindly left them on.
+>> 
+>> Presumably if this "modem" genpd is supposed to stay on in suspend
+>> time it should have been marked "always on"?  I'd guess we'd need to
+>> add "GENPD_FLAG_ALWAYS_ON" in some (or all?) cases in qmp_pd_add() if
+>> this was true?
+> 
+> Agreed. I can't read the mind of Sibi so I can only guess that Sibi
+> wasn't expecting this behavior by reading the driver structure. That
+> could be a wrong assumption.
+> 
+>> 
+>> 
+>> > Maybe we need to
+>> > add some sort of suspend hooks to the remote proc driver instead? Where
+>> > those suspend hooks are called earlier and drop the genpd performance
+>> > state request but otherwise leave it enabled across suspend?
+>> 
+>> I think you're saying:
+>> 
+>> a) You think it's a bug today that the "modem" genpd is being powered
+>> off in suspend.  Any evidence to back this up?
+>> 
+>> b) Assuming it's a bug today, we should mark the "modem" as
+>> GENPD_FLAG_ALWAYS_ON.
+>> 
+>> c) If there are genpds that sometimes should be left on in suspend but
+>> sometimes not (and that doesn't match up with what
+>> GENPD_FLAG_ACTIVE_WAKEUP does), then we'd have to pass
+>> GENPD_FLAG_ALWAYS_ON as a flag and then add suspend hooks to make the
+>> decision for us.
 
---xih6xlvfk6735ntg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Doug/Stephen,
 
-On Thu, Aug 06, 2020 at 08:50:45PM +0200, Thomas Gleixner wrote:
-> Linus Walleij <linus.walleij@linaro.org> writes:
-> > On Thu, Aug 6, 2020 at 12:20 PM Thomas Gleixner <tglx@linutronix.de> wr=
-ote:
-> >
-> >> So the solution for this driver is either to make the dispatch handler
-> >> threaded or use the hard interrupt variant of dispatching the
-> >> demultiplexed GPIO interrupts.
-> >
-> > The struct gpio_irq_chip .threaded bool that the patch
-> > sets just instructs the gpio core to issue
-> > irq_set_nested_thread(irq, 1) on the child IRQ.
-> >
-> > This is a driver of type "struct siox_driver" handling the
-> > IRQ through the special .get_data callback supplied in the
-> > driver struct and it calls handle_nested_irq(irq) so with
-> > this fix it percolated up to the parent as intended.
-> >
-> > So far so good. So I think the patch should be applied.
-> >
-> > But what is behind this .get_data() callback for siox drivers?
-> >
-> > The siox driver framework in drivers/siox dispatches calls
-> > to .get_data() from a polling thread which is just some ordinary
-> > kthread. It looks like this because the SIOX (I think) needs
-> > to do polled I/O. (drivers/siox/siox-core.c)
-> >
-> > So this is a thread but it is not an irq thread from the irq core,
-> > however it is treated like such by the driver, and in a way what
-> > happens is events, just polled by a thread.
->=20
-> As Uwe just explained.
->=20
-> > So when we call handle_nested_irq() ... we are not really
-> > calling that from an irq handler.
-> >
-> > I don't know if the IRQ core even sees a difference between which
-> > thread it gets interfaced with. I suppose it does? :/
->=20
-> handle_nested_irq() does not care. It cares about thread context,
-> external reentrancy protection for the same nested interrupt and that
-> the nested interrupt has a thread handler.
->=20
-> The latter is what goes belly up because w/o that threaded bit set the
-> GPIO core fails to set nested thread. So if a consumer requests an
-> interrupt with request_any_context_irq() then that fails to select
-> thread mode which means the threaded handler is not set causing
-> handle_nested_irq() to fail.
+Yes this is a bug, we wouldn't want
+to disable aoss_qmp genpd for modem
+during suspend (when the modem is
+running). The qmp send for modem
+is the primary means through which
+aoss determines whether to wait for
+modem before proceeding to sleep. So
+looks like updating the flag with
+GENPD_FLAG_ACTIVE_WAKEUP is the way
+to go. But introducing another flag
+that doesn't touch genpd's during
+suspend/resume should also work.
 
-For a caller of request_threaded_irq() that passes a relevant hardirq
-handler the hardirq handler is never called but request_threaded_irq()
-doesn't fail. The handler is just replaced by irq_nested_primary_handler
-in __setup_irq(). Is that a bug? (I didn't test, just read the code, so I
-might have missed something.)=20
 
-> The polling kthread is a slight but clever abomination, but it just
-> works because it provides thread context and cannot run concurrently.
+>> 
+>> Did I understand that correctly?
+>> 
+>> ...or are you suggesting that we work around the fact that
+>> qmp_pd_power_off() can't be called at "noirq" time by forcing it to
+>> suspend earlier?
+>> 
+>> ...or am I just totally confused and you meant something else?
+>> 
+>> 
+>> > I know this isn't clearing the land mine that is calling this code from
+>> > noirq phase of suspend, but I'm just looking at the driver and thinking
+>> > that it never expected to be called from this phase of suspend to begin
+>> > with.
+>> 
+>> You're saying that qmp_pd_power_off() wasn't expecting to be called
+>> from the noirq phase of suspend?  Sure, I guess not given the bug.
+>> ...but once we fix the bug, it works fine, doesn't it?  ...and it
+>> appears that it's part of the genpd API to be able to be called from
+>> the noirq phase.  To me that means that, even if we were supposed to
+>> be keeping this particular PD on during suspend we should take my
+>> patch.
+>> 
+>> 
+>> So the summary is: I still think my patch is correct, but I could
+>> certainly still be convinced otherwise.
+>> 
+> 
+> I'm trying to say that the driver looks like it expects to power off 
+> the
+> genpd in the adsp_stop() callback. That same callback sends some sort 
+> of
+> message to the modem saying that it is being stopped (see
+> qcom_q6v5_request_stop()). Turning the performance state down, or
+> turning the power domain off completely, without telling the modem that
+> it's happening like as is done in adsp_stop() looks wrong. But who
+> knows, maybe the modem is happy with that and doesn't care?
+> 
+> In general, the whole thing looks weird to me because I would expect 
+> the
+> modem to take care of its own power requirements, including this
+> "load_state" one. Anyway, I hope Sibi can clarify what's going on.
 
-I think this is the first time you called any of my code "clever" :-)
-=20
-> So Ahmad's patch is correct, just the changelog needs polishing.
-
-Trying to be constructive, here is my suggested changelog:
-
-	gpio: siox: explicitly only support threaded irqs
-
-	The gpio-siox driver uses handle_nested_irq() to implement its
-	interrupt support. This is only capable to handle threaded irq
-	actions. For a hardirq action it triggers a NULL pointer oops.
-	(It calls action->thread_fn which is NULL then.)
-
-	So prevent registration of a hardirq action by setting
-	gpio_irq_chip::threaded to true.
-
-Does this address all your concerns?
-
-Is this bad enough to justify sending this patch to stable?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xih6xlvfk6735ntg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8sXf0ACgkQwfwUeK3K
-7Amo+Qf/fN1GTEHIWSrxr1nuexynLh4/SQzZ81hIo6o++q26qVXZYYZzIPQWCVm6
-oIhC+IcUiLAhOv7CixDAmaVQkZ+5ADwA/UhXCiyDAqXANkszJ5eFdsLWaoMcOIs0
-FKqfkchLvBVdvjQ1eyV/y9XQz8GJ4SOaeRmQjVox5RnNLjazeFUEoMqZhyATCCcJ
-PaJsghlW/0nh4bogXuJ6By4ZqQE+LFwe2eQPHqXQwn3eT7mnKHePhTveRDm1t055
-iKw1S5llmYQEM/qXbrVMc76i8airR7UfIRJ3Ftt3mkBHZjJuEuAwgbRnWob8yUVq
-litTTD9aHYqMQtAhkN1xgCfF/8Tsng==
-=MQsG
------END PGP SIGNATURE-----
-
---xih6xlvfk6735ntg--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
