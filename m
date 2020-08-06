@@ -2,108 +2,157 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34AAC38152
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BE4C35255
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3FE22D0B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kN9sYWpF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MLXgfR34"
+	by mail.kernel.org (Postfix) with ESMTP id 2A6F322D05
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgHFJhK (ORCPT
+        id S1729226AbgHFJZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729074AbgHFJey (ORCPT
+        Thu, 6 Aug 2020 05:25:53 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:43311 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729074AbgHFJZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:34:54 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD03BC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 02:34:53 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596706483;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fQkbKY9HMHdIDVxo57b/7ooYqvcFkMgq0/3YSoWs1eI=;
-        b=kN9sYWpFBqxH8i+Q+XfIJ8K3gXFkwExErJzky6iYhLWWPcVa2Z+p+OkEvD+GisZSXAeaLZ
-        /oJ9kuejzW+IncznugGgptjhxw1+7hzVMcsFt7Y1Oq4issSKGHiO8rU7Rs5jqhzql0diX2
-        2oG3d8F9RifH6uyXVYIIZqNNKOuJmzgMFr7kSEomrSqabk5OASsk4BB+EN+HwRxo7IqWBZ
-        zoRt4BEcLoNSg66M2m8QbTb2dRdkf7tE/7hJ4bjWqnvjmFwRE7dmSMQT6GFb35Fxk9YSpH
-        n8j4k/ev4EXmFfg2P1UeeSmzVNT1JD2pVHXwXZN5cCxzYfIGBmWpyeLkIjCxzA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596706483;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fQkbKY9HMHdIDVxo57b/7ooYqvcFkMgq0/3YSoWs1eI=;
-        b=MLXgfR34ZN2c7p471X0+h9DeZYNO1M5vJ4NsJRZZh/+fSvjbiWc5sKSQu+R2OqaUwHFJ4S
-        b72tNLPsH2m+vSBA==
-To:     peterz@infradead.org
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
-In-Reply-To: <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
-References: <877dumbtoi.fsf@kurt> <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt> <87lfiwm2bj.fsf@nanos.tec.linutronix.de> <20200803114112.mrcuupz4ir5uqlp6@skbuf> <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com> <875z9zmt4i.fsf@nanos.tec.linutronix.de> <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
-Date:   Thu, 06 Aug 2020 11:34:42 +0200
-Message-ID: <877duci0ct.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 6 Aug 2020 05:25:06 -0400
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 02:24:59 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 02:24:57 -0700
+Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Aug 2020 14:54:40 +0530
+Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
+        id E7BD6219E1; Thu,  6 Aug 2020 14:54:38 +0530 (IST)
+From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sricharan@codeaurora.org, gokulsri@codeaurora.org
+Subject: [PATCH 3/3] arm64: dts: Enabled MHI device over PCIe
+Date:   Thu,  6 Aug 2020 14:54:38 +0530
+Message-Id: <1596705878-12385-4-git-send-email-gokulsri@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596705878-12385-1-git-send-email-gokulsri@codeaurora.org>
+References: <1596705878-12385-1-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-peterz@infradead.org writes:
-> On Mon, Aug 03, 2020 at 09:22:53PM +0200, Thomas Gleixner wrote:
->
->>    totaltime = irqtime + tasktime
->> 
->> Ignoring irqtime and pretending that totaltime is what the scheduler
->> can control and deal with is naive at best.
->
-> Well no, that's what we call system overhead and is assumed to be
-> included in the 'error margin'.
->
-> The way things are set up is that we say that, by default, RT tasks can
-> consume 95% of cputime and the remaining 5% is sufficient to keep the
-> system alive.
->
-> Those 5% include all system overhead, IRQs, RCU, !RT workqueues etc..
->
-> Obviously IRQ_TIME accounting changes the balance a bit, but that's what
-> it is. We can't really do anything better.
->
-> Apparently this SoC has significant IRQ time for some reason. Also,
-> relying on RT throttling for 'correct' behaviour is also wrong. What
-> needs to be done is find who is using all this RT time and why, that
-> isn't right.
+Enabled MHI device support over PCIe and added memory
+reservation required for MHI enabled QCN9000 PCIe card.
 
-It's a test case and we know already who is using the time. But that's
-not the point.
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi | 58 ++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi      |  8 +++++
+ 2 files changed, 66 insertions(+)
 
-A runaway RT task resulting in a RCU stall or whatever lockup of the
-system is definitely not the right answer.
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+index 0827055..d201a7b 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+@@ -24,6 +24,22 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000 0x0 0x20000000>;
+ 	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		qcn9000_pcie0: memory@50f00000 {
++			no-map;
++			reg = <0x0 0x50f00000 0x0 0x03700000>;
++		};
++
++		qcn9000_pcie1: memory@54600000 {
++			no-map;
++			reg = <0x0 0x54600000 0x0 0x03700000>;
++		};
++	};
+ };
+ 
+ &blsp1_spi1 {
+@@ -74,3 +90,45 @@
+ 		nand-bus-width = <8>;
+ 	};
+ };
++
++&pcie0_rp {
++	status = "ok";
++
++	mhi_0: qcom,mhi@0 {
++		reg = <0 0 0 0 0 >;
++		qrtr_instance_id = <0x20>;
++		#address-cells = <0x2>;
++		#size-cells = <0x2>;
++
++		base-addr = <0x50f00000>;
++		qcom,caldb-addr = <0x53E00000>;
++		qrtr_node_id = <0x27>;
++		mhi,max-channels = <30>;
++		mhi,timeout = <10000>;
++
++		pcie0_mhi: pcie0_mhi {
++			status = "ok";
++		};
++	};
++};
++
++&pcie1_rp {
++	status = "ok";
++
++	mhi_1: qcom,mhi@1 {
++		reg = <0 0 0 0 0 >;
++		qrtr_instance_id = <0x21>;
++		#address-cells = <0x2>;
++		#size-cells = <0x2>;
++
++		base-addr = <0x54600000>;
++		qcom,caldb-addr = <0x57500000>;
++		qrtr_node_id = <0x28>;
++		mhi,max-channels = <30>;
++		mhi,timeout = <10000>;
++
++		pcie1_mhi: pcie1_mhi {
++			status = "ok";
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index b651345..eef47c1 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -709,6 +709,10 @@
+ 				      "ahb",
+ 				      "axi_m_sticky";
+ 			status = "disabled";
++
++			pcie1_rp: pcie1_rp {
++				reg = <0 0 0 0 0>;
++			};
+ 		};
+ 
+ 		pcie0: pci@20000000 {
+@@ -779,6 +783,10 @@
+ 				      "axi_m_sticky",
+ 				      "axi_s_sticky";
+ 			status = "disabled";
++
++			pcie0_rp: pcie0_rp {
++				reg = <0 0 0 0 0>;
++			};
+ 		};
+ 
+ 		tcsr_q6: syscon@1945000 {
+-- 
+2.7.4
 
-The throttler, as much as it's a horrible hack, is there to prevent this
-and to give the admin a chance to pinpoint and kill that thing instead
-of having to press the reset button and scratching head what might have
-caused this.
-
-Thanks,
-
-        tglx
