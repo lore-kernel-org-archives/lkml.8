@@ -2,88 +2,137 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 12:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 12:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53AD922D74
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 12:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="e7LJq29O"
+	by mail.kernel.org (Postfix) with ESMTP id 88D3523117
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 12:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgHFMlj (ORCPT
+        id S1726073AbgHFMvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 08:41:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:37694 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726923AbgHFLOk (ORCPT
+        Thu, 6 Aug 2020 08:51:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18576 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725272AbgHFLNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 07:14:40 -0400
-X-UUID: 8271cb3c4d904dd39d5c6a59fc41d09e-20200806
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=81yr++aU7+XxgAqjzy+4dxBSf9qaA6XpetwM97SESGs=;
-        b=e7LJq29OgasN7UOqAY9dT759QzXEoNacew8H+ap9oqxiKRl+noQDphmm4jZONqrjtTOVt6O80tqAvD+32Ae0uqx0Dtjmu1B5BEmI7tohA802YBAg1GbXii6Hr0DXlmJ6V9YAz7oI1yza4Kqnqf4NH41oykPJ1+mV+zpR/DnP9qw=;
-X-UUID: 8271cb3c4d904dd39d5c6a59fc41d09e-20200806
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 136117303; Thu, 06 Aug 2020 19:07:29 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs02n1.mediatek.inc
- (172.21.101.77) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 6 Aug
- 2020 19:07:26 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 6 Aug 2020 19:07:27 +0800
-Message-ID: <1596712005.8263.4.camel@mhfsdcap03>
-Subject: Re: [PATCH] i2c: mediatek: Fix i2c_spec_values description
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <wsa@the-dreams.de>, <yingjoe.chen@mediatek.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Matthias Brugger <mbrugger@suse.com>
-Date:   Thu, 6 Aug 2020 19:06:45 +0800
-In-Reply-To: <c410f784-7b51-0d65-7a41-3845214dd273@gmail.com>
-References: <c410f784-7b51-0d65-7a41-3845214dd273@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 6 Aug 2020 07:13:50 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076B27hF073142;
+        Thu, 6 Aug 2020 07:11:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32rfvv9d7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 07:11:14 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076B6D04086959;
+        Thu, 6 Aug 2020 07:11:13 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32rfvv9d6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 07:11:13 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076BAWFJ024047;
+        Thu, 6 Aug 2020 11:11:10 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 32n018b9k5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 11:11:10 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076BB82e21496274
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 11:11:08 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49BE211C052;
+        Thu,  6 Aug 2020 11:11:08 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFE8111C050;
+        Thu,  6 Aug 2020 11:11:04 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.24.39])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  6 Aug 2020 11:11:04 +0000 (GMT)
+Date:   Thu, 6 Aug 2020 14:11:02 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
+        x86@kernel.org
+Subject: Re: [PATCH v3 3/6] mm: introduce memfd_secret system call to create
+ "secret" memory areas
+Message-ID: <20200806111102.GK163101@linux.ibm.com>
+References: <20200804095035.18778-1-rppt@kernel.org>
+ <20200804095035.18778-4-rppt@kernel.org>
+ <1f52d43e-29e4-b175-73d5-0aa3c3e79f23@infradead.org>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f52d43e-29e4-b175-73d5-0aa3c3e79f23@infradead.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ mlxlogscore=935 suspectscore=1 clxscore=1015 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA4LTA2IGF0IDExOjQ4ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiBUaGUgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyBoYXZlIGl0J3MgbWVtYmVycyBkb2N1bWVu
-dGVkIGJ1dCBpcyBtaXNzaW5nIHRoZSANCj4gc3RhcnRpbmcgJ0AnLCB3aGljaCBsZWFkcyB0byB3
-YXJpbmdzIGxpa2U6DQo+IA0KPiBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jOjI2Nzog
-d2FybmluZzogRnVuY3Rpb24gcGFyYW1ldGVyIG9yIG1lbWJlciANCj4gJ21pbl9sb3dfbnMnIG5v
-dCBkZXNjcmliZWQgaW4gJ2kyY19zcGVjX3ZhbHVlcycNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1h
-dHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZl
-cnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCA4ICsrKystLS0tDQo+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1t
-dDY1eHguYw0KPiBpbmRleCBlODg5Zjc0NzAzZTQuLmY1MWIzNWZjNDAwZiAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiArKysgYi9kcml2ZXJzL2kyYy9i
-dXNzZXMvaTJjLW10NjV4eC5jDQo+IEBAIC0yNTMsMTAgKzI1MywxMCBAQCBzdHJ1Y3QgbXRrX2ky
-YyB7DQo+IA0KPiAgIC8qKg0KPiAgICAqIHN0cnVjdCBpMmNfc3BlY192YWx1ZXM6DQo+IC0gKiBt
-aW5fbG93X25zOiBtaW4gTE9XIHBlcmlvZCBvZiB0aGUgU0NMIGNsb2NrDQoNCkNhbiB5b3UgaGVs
-cCBtZSBhZGQgYSBkZXNjcmlwdGlvbiBvZiBtaW5faGlnaF9ucy4gQXMNCkBtaW5faGlnaF9uczog
-bWluIEhJR0ggcGVyaW9kIG9mIHRoZSBTQ0wgY2xvY2sNClRoYW5rcw0KIA0KPiAtICogbWluX3N1
-X3N0YV9uczogbWluIHNldC11cCB0aW1lIGZvciBhIHJlcGVhdGVkIFNUQVJUIGNvbmRpdGlvbg0K
-PiAtICogbWF4X2hkX2RhdF9uczogbWF4IGRhdGEgaG9sZCB0aW1lDQo+IC0gKiBtaW5fc3VfZGF0
-X25zOiBtaW4gZGF0YSBzZXQtdXAgdGltZQ0KPiArICogQG1pbl9sb3dfbnM6IG1pbiBMT1cgcGVy
-aW9kIG9mIHRoZSBTQ0wgY2xvY2sNCj4gKyAqIEBtaW5fc3Vfc3RhX25zOiBtaW4gc2V0LXVwIHRp
-bWUgZm9yIGEgcmVwZWF0ZWQgU1RBUlQgY29uZGl0aW9uDQo+ICsgKiBAbWF4X2hkX2RhdF9uczog
-bWF4IGRhdGEgaG9sZCB0aW1lDQo+ICsgKiBAbWluX3N1X2RhdF9uczogbWluIGRhdGEgc2V0LXVw
-IHRpbWUNCj4gICAgKi8NCj4gICBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCj4gICAJdW5zaWdu
-ZWQgaW50IG1pbl9sb3dfbnM7DQoNCg==
+On Wed, Aug 05, 2020 at 06:05:18AM -0700, Randy Dunlap wrote:
+> On 8/4/20 2:50 AM, Mike Rapoport wrote:
+> > diff --git a/mm/Kconfig b/mm/Kconfig
+> > index f2104cc0d35c..8378175e72a4 100644
+> > --- a/mm/Kconfig
+> > +++ b/mm/Kconfig
+> > @@ -872,4 +872,8 @@ config ARCH_HAS_HUGEPD
+> >  config MAPPING_DIRTY_HELPERS
+> >          bool
+> >  
+> > +config SECRETMEM
+> > +        def_bool ARCH_HAS_SET_DIRECT_MAP && !EMBEDDED
+> 
+> use tab above, not spaces.
 
+Will fix.
+
+> > +	select GENERIC_ALLOCATOR
+> > +
+> >  endmenu
+> 
+> 
+> -- 
+> ~Randy
+> 
+
+-- 
+Sincerely yours,
+Mike.
