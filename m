@@ -2,90 +2,131 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67195C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE1920823
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="BmYQrex5"
+	by mail.kernel.org (Postfix) with ESMTP id 3B06C20823
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgHFCYk (ORCPT
+        id S1726851AbgHFC03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:24:40 -0400
-Received: from m15113.mail.126.com ([220.181.15.113]:45862 "EHLO
-        m15113.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHFCYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:24:39 -0400
-X-Greylist: delayed 1882 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 22:24:37 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Mime-Version:Subject:Date:Message-Id; bh=ywqa8
-        L2ixKMexJpGMIYm6JOP6w+bNibGRHdnxfimh+E=; b=BmYQrex5MroCjEM6mhEvH
-        txqvu9Re9qvUYzReWsIdXK4O/4RaejKzgydOnPRJ72EqK/OMg/uNUww0RVwC+jVs
-        s85Vud2ivMdfa2VuKmsQkpKjHzbxwv+BjsjioG/Ux+rYlPD8rpox/oER/6Anuqz8
-        CNxqVZdqq52HMbt0if1AKU=
-Received: from [100.34.13.32] (unknown [106.121.162.12])
-        by smtp3 (Coremail) with SMTP id DcmowABHnfFqYitfRqCkIQ--.14539S2;
-        Thu, 06 Aug 2020 09:52:44 +0800 (CST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   =?utf-8?B?5aec6L+O?= <jiangying8582@126.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4] ext4: fix direct I/O read error
-Date:   Thu, 6 Aug 2020 09:52:42 +0800
-Message-Id: <4E76AAD5-D69F-455F-8B70-A46E50E7D60B@126.com>
-References: <20200806011909.GD2975990@sasha-vm>
-Cc:     Jan Kara <jack@suse.cz>, stable@vger.kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wanglong19@meituan.com,
-        heguanjun@meituan.com
-In-Reply-To: <20200806011909.GD2975990@sasha-vm>
-To:     Sasha Levin <sashal@kernel.org>
-X-Mailer: iPhone Mail (17F80)
-X-CM-TRANSID: DcmowABHnfFqYitfRqCkIQ--.14539S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKry7Gw13tF1DWF4kZr1UZFb_yoWfuwc_CF
-        WkG3ykGFWUCFW3JF4Uta9xAry7CFWagryDX3yqgrsFg34DArZ8Wa15Aa1Fyr1fCwn3GF1D
-        KryYyw1DWr13ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUj4CJJUUUUU==
-X-Originating-IP: [106.121.162.12]
-X-CM-SenderInfo: xmld0wp1lqwmqvysqiyswou0bp/1tbi7wx4AFpD+obtvgAAst
+        Wed, 5 Aug 2020 22:26:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8771 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725999AbgHFC02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 22:26:28 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6C8951545C524298B78F;
+        Thu,  6 Aug 2020 10:26:26 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.106) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 6 Aug 2020
+ 10:26:24 +0800
+Subject: Re: Patch "KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts" has
+ been added to the 4.4-stable tree
+To:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <james.morse@arm.com>, <maz@kernel.org>, <drjones@redhat.com>,
+        <marc.zyngier@arm.com>, <christoffer.dall@linaro.org>
+CC:     <stable-commits@vger.kernel.org>, <kvm@vger.kernel.org>
+References: <159230500664142@kroah.com>
+From:   yangerkun <yangerkun@huawei.com>
+Message-ID: <6084bc97-11ea-4b7d-086e-fb98880fca6c@huawei.com>
+Date:   Thu, 6 Aug 2020 10:26:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <159230500664142@kroah.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.106]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry=EF=BC=8CI will fix this error on 4.4 and 4.9=EF=BC=8Cand then send a p=
-atch for 4.4 and 4.9=EF=BC=8Cthanks=EF=BC=81
+Hi,
 
-=E5=8F=91=E8=87=AA=E6=88=91=E7=9A=84iPhone
+Not familiar with kvm. And I have a question about this patch. Maybe 
+backport this patch 3204be4109ad("KVM: arm64: Make vcpu_cp1x() work on 
+Big Endian hosts") without 52f6c4f02164 ("KVM: arm64: Change 32-bit 
+handling of VM system registers") seems not right?
 
-> =E5=9C=A8 2020=E5=B9=B48=E6=9C=886=E6=97=A5=EF=BC=8C=E4=B8=8A=E5=8D=889:19=
-=EF=BC=8CSasha Levin <sashal@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> =EF=BB=BFOn Wed, Aug 05, 2020 at 10:51:07AM +0200, Jan Kara wrote:
->> Note to stable tree maintainers (summary from the rather long changelog):=
+Thanks,
+Kun.
 
->> This is a non-upstream patch. It will not go upstream because the problem=
-
->> there has been fixed by converting ext4 to use iomap infrastructure.
->> However that change is out of scope for stable kernels and this is a
->> minimal fix for the problem that has hit real-world applications so I thi=
-nk
->> it would be worth it to include the fix in stable trees. Thanks.
->=20
-> How far back should it go? It breaks the build on 4.9 and 4.4 but the
-> fix for the breakage is trivial.
->=20
-> It does however suggest that this fix wasn't tested on 4.9 or 4.4, so
-> I'd like to clarify it here before fixing it up (or dropping it).
->=20
-> --=20
-> Thanks,
-> Sasha
+在 2020/6/16 18:56, gregkh@linuxfoundation.org 写道:
+> 
+> This is a note to let you know that I've just added the patch titled
+> 
+>      KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
+> 
+> to the 4.4-stable tree which can be found at:
+>      http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>       kvm-arm64-make-vcpu_cp1x-work-on-big-endian-hosts.patch
+> and it can be found in the queue-4.4 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
+> 
+> 
+>>From 3204be4109ad681523e3461ce64454c79278450a Mon Sep 17 00:00:00 2001
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Tue, 9 Jun 2020 08:40:35 +0100
+> Subject: KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
+> 
+> From: Marc Zyngier <maz@kernel.org>
+> 
+> commit 3204be4109ad681523e3461ce64454c79278450a upstream.
+> 
+> AArch32 CP1x registers are overlayed on their AArch64 counterparts
+> in the vcpu struct. This leads to an interesting problem as they
+> are stored in their CPU-local format, and thus a CP1x register
+> doesn't "hit" the lower 32bit portion of the AArch64 register on
+> a BE host.
+> 
+> To workaround this unfortunate situation, introduce a bias trick
+> in the vcpu_cp1x() accessors which picks the correct half of the
+> 64bit register.
+> 
+> Cc: stable@vger.kernel.org
+> Reported-by: James Morse <james.morse@arm.com>
+> Tested-by: James Morse <james.morse@arm.com>
+> Acked-by: James Morse <james.morse@arm.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>   arch/arm64/include/asm/kvm_host.h |    6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -178,8 +178,10 @@ struct kvm_vcpu_arch {
+>    * CP14 and CP15 live in the same array, as they are backed by the
+>    * same system registers.
+>    */
+> -#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r)])
+> -#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r)])
+> +#define CPx_BIAS		IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
+> +
+> +#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
+> +#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
+>   
+>   #ifdef CONFIG_CPU_BIG_ENDIAN
+>   #define vcpu_cp15_64_high(v,r)	vcpu_cp15((v),(r))
+> 
+> 
+> Patches currently in stable-queue which might be from maz@kernel.org are
+> 
+> queue-4.4/kvm-arm64-make-vcpu_cp1x-work-on-big-endian-hosts.patch
+> 
+> .
+> 
 
