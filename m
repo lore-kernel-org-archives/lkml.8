@@ -2,206 +2,189 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157D9C388EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B162CC47426
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03022221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37FF22CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="jDKBCYuy";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="DWMIC2Gj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpdDkZjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgHFHj7 (ORCPT
+        id S1727006AbgHFIHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:39:59 -0400
-Received: from relay2.mymailcheap.com ([151.80.165.199]:43182 "EHLO
-        relay2.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgHFHj6 (ORCPT
+        Thu, 6 Aug 2020 04:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728473AbgHFIEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 03:39:58 -0400
-X-Greylist: delayed 158672 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 03:39:56 EDT
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay2.mymailcheap.com (Postfix) with ESMTPS id 178FD3EDEC;
-        Thu,  6 Aug 2020 09:39:55 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id E55E52A4ED;
-        Thu,  6 Aug 2020 09:39:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1596699594;
-        bh=SlXr4N5zUZPies1dpF71kmNZ2wAzVghXtvgdGIbGqCk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jDKBCYuyoBCDue2RBgG+yFcraE8CPRAELSyovv86/tbZuNytDsSjpehAESQZl2huy
-         jB9kyyBWKCfM060bRZYxHXon04vTJgnjZlRq7dPAoKtw3NL2lxYP3a9WGTNVRQ4/5R
-         eVlenrgcJRUOdYl0eZt0wsqr06ULwyxN7iq7RKVY=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bgKOaq43Ym8n; Thu,  6 Aug 2020 09:39:51 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Thu,  6 Aug 2020 09:39:51 +0200 (CEST)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 65DCE41330;
-        Thu,  6 Aug 2020 07:39:50 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="DWMIC2Gj";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [203.86.239.91])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id CD8D341330;
-        Thu,  6 Aug 2020 07:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1596699583;
-        bh=SlXr4N5zUZPies1dpF71kmNZ2wAzVghXtvgdGIbGqCk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DWMIC2GjKyHq7fKIhxVxhNiRvhnkrikjJ6A7vhAtH2wN6QXt1wuicbSPTu5i8CxJa
-         R2kxxeRTud+K8DTTJ+dFRkKBNlTiZc2U7HOVNjTZAnzsY2cPNvvliubnbEOER2mpbw
-         1gGwL11e5HbVrDeMu5Vrctz6RUYPYeruAEy7adtA=
-Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
-Date:   Thu, 6 Aug 2020 15:39:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: 65DCE41330
-X-Spamd-Result: default: False [-0.10 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         RCPT_COUNT_FIVE(0.00)[5];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+        Thu, 6 Aug 2020 04:04:13 -0400
+Received: from mail-ed1-x54a.google.com (mail-ed1-x54a.google.com [IPv6:2a00:1450:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8ADFC061756
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 01:04:09 -0700 (PDT)
+Received: by mail-ed1-x54a.google.com with SMTP id x12so6896853eds.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 01:04:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=LcmumI/w/Hm4tyicPdUaUNyCK6OWHY8oQP8ZiSpx1Fw=;
+        b=vpdDkZjdkXkYqtDgFNnezY0woangi9BN3lrLOrCQwyy4EsZMw0fsi+t57Qm3ccQVBS
+         00a062McIzIhQbGYSxG5vsmjITQcYN7jdm5ab6WLIZ3FLWXcdmuCfuA88SxfBreLLCfc
+         HE5HJAeSzQuQwkCwyHszArHeK6OIbutuS6bkiaRzXgo+P9NmpiU1tR/lerHt/LVOtw7T
+         MOKsDoVAUy/jqkpdqagqAQviyhdOWfW0KowT2CG40pmUz2xRC5Vi0vE0um3Ad4yf3ddS
+         k1epQ1Skpk0dMnKQmsw8O1rt7rQp6giPZOPMzCnhoGNv6YE6U1yX3g2Uk0DRUVOltRkA
+         G4gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=LcmumI/w/Hm4tyicPdUaUNyCK6OWHY8oQP8ZiSpx1Fw=;
+        b=hxLnKzeyv76iY49Lt70lWKPUWevlXKwjgAWV3Y7DRdyIjTme3gZur4lhfbBxc4xai8
+         1nbyU7LbGyxrKYn/KWVUQAgJ18YsWPYQEvQs1XPZMNvz6t+3UmD+LSszVgl2EdOQTWaG
+         JESU+krlhDe1ag+oqmI5Q4u75hlsooo8ItLajCHz0fmBL4auepwV4n1JuhpJHfdaPq4f
+         JBVZWaFj3qnpCJBkv/wGijFp0v6NymSGLHqfMUDIQs/Da19SgtLX7+RPZV1MqT57vdXU
+         JcXRT92az2mVSTDNlxOuFp9i1RnKhGX5k6fsC6gz7gDnb4TVZzMOJrGkd8fMAKPsh6W8
+         SS0A==
+X-Gm-Message-State: AOAM533peWxt5bXiSxxGdmQ9mTCgA/tHiBdJInjcZ80/Fyt0TZtFROgD
+        kuPE8jr0M/3p0TFRyJ/cxpQ0b+/8Tw==
+X-Google-Smtp-Source: ABdhPJzUel/EPiNJ94rUHLsYATT2qjBrxXNXOu8GqzYUfz1/Vy6keCPUJzpkyY5F3u6H+k+5Pnu0DEgsgA==
+X-Received: by 2002:a17:906:d930:: with SMTP id rn16mr3267737ejb.330.1596701044913;
+ Thu, 06 Aug 2020 01:04:04 -0700 (PDT)
+Date:   Thu,  6 Aug 2020 10:03:41 +0200
+Message-Id: <20200806080358.3124505-1-tweek@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH 1/2] selinux: add tracepoint on denials
+From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The audit data currently captures which process and which target
+is responsible for a denial. There is no data on where exactly in the
+process that call occurred. Debugging can be made easier by being able to
+reconstruct the unified kernel and userland stack traces [1]. Add a
+tracepoint on the SELinux denials which can then be used by userland
+(i.e. perf).
 
+Although this patch could manually be added by each OS developer to
+trouble shoot a denial, adding it to the kernel streamlines the
+developers workflow.
 
-在 2020/8/6 下午3:09, Tiezhu Yang 写道:
-> Loongson processors have a writecombine issue that maybe failed to
-> write back framebuffer used with ATI Radeon or AMD GPU at times,
-> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
-> mapping for MIPS"), there exists some errors such as blurred screen
-> and lockup, and so on.
->
-> With this patch, disable writecombine by default for Loongson64 to
-> work well with ATI Radeon or AMD GPU, and it has no influence on the
-> other platforms due to writecombine is enabled by default.
->
-> Additionally, if it is necessary, writecombine=on can be set manually
-> in the cmdline to enhance the performance for Loongson LS7A integrated
-> graphics in the future.
->
-> [   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than 10079msec
-> [   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id 0x0000000000000112 last fence id 0x000000000000011d on ring 0)
-> [   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than 10086msec
-> [   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id 0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
-Hi Tiezhu,
+[1] https://source.android.com/devices/tech/debug/native_stack_dump
 
-Thanks for your patch.
-Personally I didn't have any issue with writecombine on my test systems, 
-but there
-are some complains about unstable graphic card from users. So generally 
-a cmdline
-writecombine switch is necessary.
+Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
+Suggested-by: Joel Fernandes <joelaf@google.com>
+Reviewed-by: Peter Enderborg <peter.enderborg@sony.com>
+---
+ MAINTAINERS                |  1 +
+ include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
+ security/selinux/avc.c     |  5 +++++
+ 3 files changed, 43 insertions(+)
+ create mode 100644 include/trace/events/avc.h
 
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/mips/include/asm/pgtable.h |  4 ++++
->   arch/mips/kernel/cpu-probe.c    | 19 +++++++++++++++++++
->   2 files changed, 23 insertions(+)
->
-> diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-> index dd7a0f5..34869f7 100644
-> --- a/arch/mips/include/asm/pgtable.h
-> +++ b/arch/mips/include/asm/pgtable.h
-> @@ -473,6 +473,10 @@ static inline pgprot_t pgprot_noncached(pgprot_t _prot)
->   static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
->   {
->   	unsigned long prot = pgprot_val(_prot);
-> +	extern bool mips_writecombine;
-> +
-> +	if (!mips_writecombine)
-> +		return pgprot_noncached(_prot);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c8e8232c65da..0efaea0e144c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15426,6 +15426,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/gi=
+t/pcmoore/selinux.git
+ F:	Documentation/ABI/obsolete/sysfs-selinux-checkreqprot
+ F:	Documentation/ABI/obsolete/sysfs-selinux-disable
+ F:	Documentation/admin-guide/LSM/SELinux.rst
++F:	include/trace/events/avc.h
+ F:	include/uapi/linux/selinux_netlink.h
+ F:	scripts/selinux/
+ F:	security/selinux/
+diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
+new file mode 100644
+index 000000000000..07c058a9bbcd
+--- /dev/null
++++ b/include/trace/events/avc.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Author: Thi=C3=A9baud Weksteen <tweek@google.com>
++ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM avc
++
++#if !defined(_TRACE_SELINUX_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_SELINUX_H
++
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(selinux_audited,
++
++	TP_PROTO(struct selinux_audit_data *sad),
++
++	TP_ARGS(sad),
++
++	TP_STRUCT__entry(
++		__field(unsigned int, tclass)
++		__field(unsigned int, audited)
++	),
++
++	TP_fast_assign(
++		__entry->tclass =3D sad->tclass;
++		__entry->audited =3D sad->audited;
++	),
++
++	TP_printk("tclass=3D%u audited=3D%x",
++		__entry->tclass,
++		__entry->audited)
++);
++
++#endif
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index d18cb32a242a..b0a0af778b70 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -31,6 +31,9 @@
+ #include "avc_ss.h"
+ #include "classmap.h"
+=20
++#define CREATE_TRACE_POINTS
++#include <trace/events/avc.h>
++
+ #define AVC_CACHE_SLOTS			512
+ #define AVC_DEF_CACHE_THRESHOLD		512
+ #define AVC_CACHE_RECLAIM		16
+@@ -706,6 +709,8 @@ static void avc_audit_post_callback(struct audit_buffer=
+ *ab, void *a)
+ 	u32 scontext_len;
+ 	int rc;
+=20
++	trace_selinux_audited(sad);
++
+ 	rc =3D security_sid_to_context(sad->state, sad->ssid, &scontext,
+ 				     &scontext_len);
+ 	if (rc)
+--=20
+2.28.0.163.g6104cc2f0b6-goog
 
-You can simply override c->writecombine to _CACHE_UNCACHED in 
-cpu-probe.c with
-out this kind of hijack.
-
->   
->   	/* cpu_data[0].writecombine is already shifted by _CACHE_SHIFT */
->   	prot = (prot & ~_CACHE_MASK) | cpu_data[0].writecombine;
-> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-> index e2955f1..98777ca 100644
-> --- a/arch/mips/kernel/cpu-probe.c
-> +++ b/arch/mips/kernel/cpu-probe.c
-> @@ -459,6 +459,25 @@ static int __init ftlb_disable(char *s)
->   
->   __setup("noftlb", ftlb_disable);
->   
-> +#ifdef CONFIG_MACH_LOONGSON64
-> +bool mips_writecombine; /* initialise to false by default */
-> +#else
-> +bool mips_writecombine = true;
-> +#endif
-> +EXPORT_SYMBOL(mips_writecombine);
-There is no need to export this symbol, see comment before.
-> +
-> +static int __init writecombine_setup(char *str)
-> +{
-> +	if (strcmp(str, "on") == 0)
-> +		mips_writecombine = true;
-> +	else if (strcmp(str, "off") == 0)
-> +		mips_writecombine = false;
-> +
-> +	return 1;
-> +}
-> +
-> +__setup("writecombine=", writecombine_setup);
-
-Use early_param here seems more reasonable, it will be probed earlier.
-
-> +
->   /*
->    * Check if the CPU has per tc perf counters
->    */
-Thanks
-
-- Jiaxun
