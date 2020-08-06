@@ -4,91 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3504C46466
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6B8C43466
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5E062310A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6EFB2310E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgHFGuY (ORCPT
+        id S1728554AbgHFHJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:50:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgHFGuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:50:23 -0400
-Received: from magratgarlick.emantor.de (magratgarlick.emantor.de [IPv6:2a01:4f8:c17:c88::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E14C8C061574;
-        Wed,  5 Aug 2020 23:50:22 -0700 (PDT)
-Received: by magratgarlick.emantor.de (Postfix, from userid 114)
-        id D7DC510C96B; Thu,  6 Aug 2020 08:50:14 +0200 (CEST)
-Received: from localhost (200116b82871d502e89ff5a9718d1cab.dip.versatel-1u1.de [IPv6:2001:16b8:2871:d502:e89f:f5a9:718d:1cab])
-        by magratgarlick.emantor.de (Postfix) with ESMTPSA id 84D9410C5FB;
-        Thu,  6 Aug 2020 08:50:11 +0200 (CEST)
-From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
-To:     Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     kernel@pengutronix.de,
-        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next] net/tls: allow MSG_CMSG_COMPAT in sendmsg
-Date:   Thu,  6 Aug 2020 08:49:06 +0200
-Message-Id: <20200806064906.14421-1-r.czerwinski@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Aug 2020 03:09:28 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:47006 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728443AbgHFHJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 03:09:16 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP9yNrCtfsTgFAA--.866S2;
+        Thu, 06 Aug 2020 15:09:05 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Introduce cmdline argument writecombine=
+Date:   Thu,  6 Aug 2020 15:09:01 +0800
+Message-Id: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxP9yNrCtfsTgFAA--.866S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFWUGFyrtw1ftr47CF48JFb_yoW5XrW7pF
+        4qk3Z7Gr4Fgw1vyF9xAr1jgrW5Zrn5AFZxJr4UCw18Zas0qr4kKFnaqrWaqF48XFyxJa48
+        tFWruFyUKw1Iy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF
+        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+        IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUy75rDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to use ktls on a system with 32-bit userspace and 64-bit kernel
-results in a EOPNOTSUPP message during sendmsg:
+Loongson processors have a writecombine issue that maybe failed to
+write back framebuffer used with ATI Radeon or AMD GPU at times,
+after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+mapping for MIPS"), there exists some errors such as blurred screen
+and lockup, and so on.
 
-  setsockopt(3, SOL_TLS, TLS_TX, …, 40) = 0
-  sendmsg(3, …, msg_flags=0}, 0) = -1 EOPNOTSUPP (Operation not supported)
+With this patch, disable writecombine by default for Loongson64 to
+work well with ATI Radeon or AMD GPU, and it has no influence on the
+other platforms due to writecombine is enabled by default.
 
-The tls_sw implementation does strict flag checking and does not allow
-the MSG_CMSG_COMPAT flag, which is set if the message comes in through
-the compat syscall.
+Additionally, if it is necessary, writecombine=on can be set manually
+in the cmdline to enhance the performance for Loongson LS7A integrated
+graphics in the future.
 
-This patch adds MSG_CMSG_COMPAT to the flag check to allow the usage of
-the TLS SW implementation on systems using the compat syscall path.
+[   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than 10079msec
+[   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id 0x0000000000000112 last fence id 0x000000000000011d on ring 0)
+[   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than 10086msec
+[   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id 0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
 
-Note that the same check is present in the sendmsg path for the TLS
-device implementation, however the flag hasn't been added there for lack
-of testing hardware.
-
-Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- net/tls/tls_sw.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/include/asm/pgtable.h |  4 ++++
+ arch/mips/kernel/cpu-probe.c    | 19 +++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index 24f64bc0de18..a332ae123bda 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -935,7 +935,8 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
- 	int ret = 0;
- 	int pending;
+diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+index dd7a0f5..34869f7 100644
+--- a/arch/mips/include/asm/pgtable.h
++++ b/arch/mips/include/asm/pgtable.h
+@@ -473,6 +473,10 @@ static inline pgprot_t pgprot_noncached(pgprot_t _prot)
+ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+ {
+ 	unsigned long prot = pgprot_val(_prot);
++	extern bool mips_writecombine;
++
++	if (!mips_writecombine)
++		return pgprot_noncached(_prot);
  
--	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
-+	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
-+			       MSG_CMSG_COMPAT))
- 		return -EOPNOTSUPP;
+ 	/* cpu_data[0].writecombine is already shifted by _CACHE_SHIFT */
+ 	prot = (prot & ~_CACHE_MASK) | cpu_data[0].writecombine;
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index e2955f1..98777ca 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -459,6 +459,25 @@ static int __init ftlb_disable(char *s)
  
- 	mutex_lock(&tls_ctx->tx_lock);
-
-base-commit: c1055b76ad00aed0e8b79417080f212d736246b6
+ __setup("noftlb", ftlb_disable);
+ 
++#ifdef CONFIG_MACH_LOONGSON64
++bool mips_writecombine; /* initialise to false by default */
++#else
++bool mips_writecombine = true;
++#endif
++EXPORT_SYMBOL(mips_writecombine);
++
++static int __init writecombine_setup(char *str)
++{
++	if (strcmp(str, "on") == 0)
++		mips_writecombine = true;
++	else if (strcmp(str, "off") == 0)
++		mips_writecombine = false;
++
++	return 1;
++}
++
++__setup("writecombine=", writecombine_setup);
++
+ /*
+  * Check if the CPU has per tc perf counters
+  */
 -- 
-2.27.0
+2.1.0
 
