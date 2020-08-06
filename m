@@ -2,194 +2,147 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73215C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67B862075A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884E9221E5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="syzHWmPv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I6hCyl8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgHFXRv (ORCPT
+        id S1726429AbgHFXSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFXRv (ORCPT
+        Thu, 6 Aug 2020 19:18:05 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:27694 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgHFXSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:17:51 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D645C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 16:17:51 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id 2so7629883pjx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 16:17:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:cc:from:to:message-id;
-        bh=i/OwUIJf7SuJHYzeBOib/eEDsTwDweM8G7B4I7i5Bvo=;
-        b=syzHWmPvTWALcrWBF18nmFt2CvSrIQYFi1YMgwYoeqCG1noUVuvEyvzppBNyxLschE
-         vuX35e4wHBO2uDnVXgHHa8SUMo7ibA3GrjjlHw62UO3BE9b+AsLtvN/JyMadYkvn4cQB
-         F3I6JVnvZAFkwunDEY7J34CGXmCvq6kj94LsGSGNaO1D7KmdlrfxCP8hD4QSZ+qwvGxv
-         ts8MAebxt/4uuGVrn+HQQBvKWhMbRkgXVOKJQVgyyyyJ9u3Q3x7hA0FYzvwlFoa8GdGq
-         UZBHbIpd73ITwUoJJrESh7jQtaxz4GsC4Q0/6nLr7QDEGJ9N+dGy5PZNv/uPqRVdFyf9
-         HZFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:cc:from:to:message-id;
-        bh=i/OwUIJf7SuJHYzeBOib/eEDsTwDweM8G7B4I7i5Bvo=;
-        b=M+MOl1zWIxAGG09WX2M42b0hr+DPoGWIhfPS807MWaYwIufQNlozQNRlRD/EbvS9JL
-         NOeIhG1sjgH46gnqchtuemwYQx1mLGmWtpwFoNVDmOqZ89ULyybwsQMM0/2jMaWSYcMj
-         DiPdOaftcaXBVwF8HKiOp1d2ymFwsYG1Nz1iRDuHML0288VVKslMUTNqI5y6zDQNtXMX
-         tTpFl/zDkPa+sh8RqA8KepkX8NhFMvaa2uMMo2WMno+SXhS9iwTIe6p7SnJoI1F1dveK
-         NGvyYu0TzagZ1JjRVafeXVjIHdzPXM9lpnI/y9PAEmT85H2KbmYAqussveSzvK9Ct7Mg
-         6/Kg==
-X-Gm-Message-State: AOAM532Y2uXwgVc5gt8gSmiD2tR2t5cfuokA9sCnQ2csz5XJYe767b4C
-        uSK+UmOaSVTXRsL5qNDR9APt/g==
-X-Google-Smtp-Source: ABdhPJx9PA/4CJu14d0jYRFqd7WVyGbfengXQHp8k+Q/wkU6L2M8uCVqMNWs1WC93enhL/GT20beMw==
-X-Received: by 2002:a17:902:368:: with SMTP id 95mr10201850pld.279.1596755870455;
-        Thu, 06 Aug 2020 16:17:50 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id e9sm9761253pfh.151.2020.08.06.16.17.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 16:17:49 -0700 (PDT)
-Date:   Thu, 06 Aug 2020 16:17:49 -0700 (PDT)
-X-Google-Original-Date: Thu, 06 Aug 2020 16:17:37 PDT (-0700)
-Subject: [GIT PULL] RISC-V Patches for the 5.9 Merge Window, Part 1
-CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-bb218bf7-4f63-48f8-95a6-67ff0d32a166@palmerdabbelt-glaptop1>
+        Thu, 6 Aug 2020 19:18:05 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200806231802epoutp0268d786f38c43c34f9490125fb4fcfcc8~o0QP-BRSc1535715357epoutp02R
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 23:18:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200806231802epoutp0268d786f38c43c34f9490125fb4fcfcc8~o0QP-BRSc1535715357epoutp02R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596755883;
+        bh=qepv6a95XKs0GXbFbCftAQvu650mnE1KSc7vk4o8Kps=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=I6hCyl8D5+y+Hpa44/4D9sBvXOUL6yFoI3RbgWsEU9vkOmnFh9OZZqwuQHoEn+418
+         k+yMrEax4y5zp8wegtM6ZUBBetBZ04gVDzlk5RsvdJ3yzeoHn6CysHqTOkOQgJXPRn
+         qQzMemYpaJwuM/RKM4vGawMdJo1UptuwD+m7MK9I=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200806231802epcas1p1b3ef4ff58eea9597465a8a6e8db93164~o0QPf4l8j2976929769epcas1p12;
+        Thu,  6 Aug 2020 23:18:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: RE: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Avri Altman <Avri.Altman@wdc.com>, Bean Huo <huobean@gmail.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21596755882463.JavaMail.epsvc@epcpadp2>
+Date:   Fri, 07 Aug 2020 08:15:37 +0900
+X-CMS-MailID: 20200806231537epcms2p504703655baf8e6962ea099fb907ab9bc
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
+References: <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+        <7c59c7abf7b00c368228b3096e1bea8c9e2b2e80.camel@gmail.com>
+        <SN6PR04MB4640CE297AAB3CF4D37EE002FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <39c546268abead68f4c00f17dc47c1597f3e0273.camel@gmail.com>
+        <SN6PR04MB4640210D586CBA053F56DCF0FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <e3aba7fba7c208ac58c638139bd615c871d2e52e.camel@gmail.com>
+        <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p5>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+Hi Avri,
+> > 
+> > On Thu, 2020-08-06 at 10:12 +0000, Avri Altman wrote:
+> > > > >
+> > > >
+> > > > we didn't see you Acked-by in the pathwork, would you like to add
+> > > > them?
+> > > > Just for reminding us that you have agreed to mainline this series
+> > > > patchset.
+> > >
+> > > I acked it - https://protect2.fireeye.com/v1/url?k=0669baeb-5ba5764e-066831a4-0cc47a30d446-27c87d7023437946&q=1&e=cf195d42-fec6-43bb-b797-203c71fd6665&u=https%3A%2F%2Fwww.spinics.net%2Flists%2Flinux-scsi%2Fmsg144660.html
+> > > And asked Martin to move forward -
+> > > https://protect2.fireeye.com/v1/url?k=f5035541-a8cf99e4-f502de0e-0cc47a30d446-b2b42329eddc02dc&q=1&e=cf195d42-fec6-43bb-b797-203c71fd6665&u=https%3A%2F%2Fwww.spinics.net%2Flists%2Flinux-scsi%2Fmsg144738.html
+> > > Which he did, and got some sparse errors:
+> > > https://protect2.fireeye.com/v1/url?k=242040ce-79ec8c6b-2421cb81-0cc47a30d446-4d1c0f96a36b8f4d&q=1&e=cf195d42-fec6-43bb-b797-203c71fd6665&u=https%3A%2F%2Fwww.spinics.net%2Flists%2Flinux-scsi%2Fmsg144977.html
+> > > Which I asked Daejun to fix -
+> > > https://protect2.fireeye.com/v1/url?k=44587fa8-1994b30d-4459f4e7-0cc47a30d446-d01ce202f9a3c6b5&q=1&e=cf195d42-fec6-43bb-b797-203c71fd6665&u=https%3A%2F%2Fwww.spinics.net%2Flists%2Flinux-scsi%2Fmsg144987.html
+> > >
+> > > For the next chain of events I guess you can follow by yourself.
+> > >
+> > > Thanks,
+> > > Avri
+> > 
+> > Avri
+> > Sorry for making you confusing. yes, I knew that, and following.
+> > I mean Acked-by tag in the patchset, then we see your acked in the
+> > patchwork, and let others know that you acked it, rather than going
+> > backtrack history email.
+> > 
+> > Hi Daejun
+> > I think you can add Avri's Acked-by tag in your patchset, just for
+> > quickly moving forward and reminding.
+> Ahhh - One moment please - 
+> While rebasing the v8 on my platform, I noticed some substantial changes since v6.
+> e.g. the hpb lun ref counting isn't there anymore, as well as some more stuff.
+> While those changes might be only for the best,  I think any tested-by tag should be re-assign.
 
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+In this version, the HPB is no more loadable module, it is sticked with
+UFS-core driver. So, I removed reference counter for HPB.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.9-mw0
-
-for you to fetch changes up to 40284a072c42f6177184fb1f62ba94c69e0c0277:
-
-  riscv: disable stack-protector for vDSO (2020-08-04 15:02:49 -0700)
-
-----------------------------------------------------------------
-RISC-V Patches for the 5.9 Merge Window, Part 1
-
-We have a lot of new kernel features for this merge window:
-
-* ARCH_SUPPORTS_ATOMIC_RMW, to allow OSQ locks to be enabled.
-* The ability to enable NO_HZ_FULL
-* Support for enabling kcov, kmemleak, stack protector, and VM debugging.
-* JUMP_LABEL support.
-
-There are also a handful of cleanups.
-
-next points out a trivial Kconfig merge conflict.  I don't see any way to have
-done this better: the symbols are sorted, it just happens that
-HAVE_COPY_THREAD_TLS was in the middle of two new symbols.  In case it helps
-any, here's a pretty current conflict resolution:
-
-diff --cc arch/riscv/Kconfig
-index bc37241a6875,6c4bce7cad8a..7b5905529146
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@@ -57,9 -54,6 +59,8 @@@ config RISC
-        select HAVE_ARCH_SECCOMP_FILTER
-        select HAVE_ARCH_TRACEHOOK
-        select HAVE_ASM_MODVERSIONS
- +      select HAVE_CONTEXT_TRACKING
--       select HAVE_COPY_THREAD_TLS
- +      select HAVE_DEBUG_KMEMLEAK
-        select HAVE_DMA_CONTIGUOUS if MMU
-        select HAVE_EBPF_JIT if MMU
-        select HAVE_FUTEX_CMPXCHG if FUTEX
-
-----------------------------------------------------------------
-Alexander A. Klimov (1):
-      Replace HTTP links with HTTPS ones: RISC-V
-
-Atish Patra (2):
-      RISC-V: Setup exception vector early
-      RISC-V: Fix build warning for smpboot.c
-
-Chenxi Mao (1):
-      riscv: Select ARCH_SUPPORTS_ATOMIC_RMW by default
-
-Emil Renner Berthing (3):
-      riscv: Support R_RISCV_ADD64 and R_RISCV_SUB64 relocs
-      riscv: Add jump-label implementation
-      riscv: Select ARCH_HAS_DEBUG_VM_PGTABLE
-
-Greentime Hu (3):
-      RISC-V: Use a local variable instead of smp_processor_id()
-      riscv: Support irq_work via self IPIs
-      riscv: Enable context tracking
-
-Guo Ren (4):
-      riscv: Fixup static_obj() fail
-      riscv: Enable LOCKDEP_SUPPORT & fixup TRACE_IRQFLAGS_SUPPORT
-      riscv: Add STACKPROTECTOR supported
-      riscv: Cleanup unnecessary define in asm-offset.c
-
-Pekka Enberg (2):
-      mm: pgtable: Make generic pgprot_* macros available for no-MMU
-      riscv: Use generic pgprot_* macros from <linux/pgtable.h>
-
-Tobias Klauser (4):
-      riscv: Allow building with kcov coverage
-      riscv: Add kmemleak support
-      riscv: Fix typo in asm/hwcap.h uapi header
-      riscv: disable stack-protector for vDSO
-
-Zong Li (4):
-      riscv: Register System RAM as iomem resources
-      riscv: Fixup lockdep_assert_held with wrong param cpu_running
-      riscv: Fix build warning for mm/init
-      riscv: fix build warning of mm/pageattr
-
- .../features/core/jump-labels/arch-support.txt     |  2 +-
- .../debug/debug-vm-pgtable/arch-support.txt        |  2 +-
- arch/riscv/Kconfig                                 | 12 ++++
- arch/riscv/boot/Makefile                           |  2 +
- arch/riscv/configs/defconfig                       |  1 +
- arch/riscv/configs/nommu_k210_defconfig            |  1 +
- arch/riscv/configs/nommu_virt_defconfig            |  1 +
- arch/riscv/configs/rv32_defconfig                  |  1 +
- arch/riscv/include/asm/irq_work.h                  | 10 +++
- arch/riscv/include/asm/jump_label.h                | 60 ++++++++++++++++++
- arch/riscv/include/asm/mmio.h                      |  6 --
- arch/riscv/include/asm/smp.h                       |  3 +
- arch/riscv/include/asm/stackprotector.h            | 33 ++++++++++
- arch/riscv/include/uapi/asm/hwcap.h                |  2 +-
- arch/riscv/include/uapi/asm/unistd.h               |  2 +-
- arch/riscv/kernel/Makefile                         |  2 +
- arch/riscv/kernel/asm-offsets.c                    |  3 -
- arch/riscv/kernel/entry.S                          | 54 ++++++++++++++--
- arch/riscv/kernel/head.S                           | 10 ++-
- arch/riscv/kernel/jump_label.c                     | 53 ++++++++++++++++
- arch/riscv/kernel/module.c                         | 16 +++++
- arch/riscv/kernel/process.c                        |  6 ++
- arch/riscv/kernel/smp.c                            | 15 +++++
- arch/riscv/kernel/smpboot.c                        | 12 ++--
- arch/riscv/kernel/traps.c                          |  8 +--
- arch/riscv/kernel/vdso/Makefile                    |  3 +
- arch/riscv/kernel/vmlinux.lds.S                    |  2 +-
- arch/riscv/mm/Makefile                             |  2 +
- arch/riscv/mm/init.c                               | 27 ++++++++
- arch/riscv/mm/pageattr.c                           |  3 +-
- include/linux/pgtable.h                            | 71 +++++++++++-----------
- tools/arch/riscv/include/uapi/asm/unistd.h         |  2 +-
- 32 files changed, 356 insertions(+), 71 deletions(-)
- create mode 100644 arch/riscv/include/asm/irq_work.h
- create mode 100644 arch/riscv/include/asm/jump_label.h
- create mode 100644 arch/riscv/include/asm/stackprotector.h
- create mode 100644 arch/riscv/kernel/jump_label.c
+> Anyway, as for myself, I am not planning to put any more time in this,
+> until there is a clear decision where this series is going to.
+> 
+> Martin - Are you considering to merge the HPB feature eventually to mainline kernel?
+> 
+> Thanks,
+> Avri
+> > 
+> > thanks,
+> > Bean
+> 
+> 
+Thanks,
+Daejun
