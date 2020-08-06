@@ -2,166 +2,105 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F497C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC8920786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5064823119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VZp0+VHr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shJQXwNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgHFRIJ (ORCPT
+        id S1730133AbgHFRIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:08:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45924 "EHLO
+        Thu, 6 Aug 2020 13:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729136AbgHFRGk (ORCPT
+        with ESMTP id S1729780AbgHFRGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:06:40 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A6AC00039B
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:41:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SYlFjm0mwqc1/fLu0yjS/vwFC4Hl2/w3ahTiDqtfULI=; b=VZp0+VHrvA/ss+thlumVpoS9l
-        msQUgYqdXu8vSwI729+ZVuDv1CLlf22ILfwawlPVDf/Afffgb9LNeU3GYftSJKKu8KU3fWsn2mobg
-        Ev1a9GcJyWXNav5OfbfbgHTl4CXilPehVT0uAonCtmdikoFj2tLyyn0IRoZwmEryJwiuxJ/raz1Sj
-        GYLCC9wJTxK44Ia5RznOBlNKdPyqRW7LfrlGoJq+wu93B9xQT60aTPIaIECAawOALg+zzuRCBhI5n
-        4Ku8mi+DwbUgVwDi22RJ8w1Si28OlJMf8lj6YfmBDSneCweCl+JzspzbhWxmWE0Ih40y6YOwA0pqk
-        x+hol8PhQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49120)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k3i1Z-0004nQ-U7; Thu, 06 Aug 2020 16:41:45 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k3i1Y-0006Ie-Mj; Thu, 06 Aug 2020 16:41:44 +0100
-Date:   Thu, 6 Aug 2020 16:41:44 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Pratyush Anand <panand@redhat.com>,
-        Pavel Labath <labath@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kazuhiro Inaba <kinaba@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
-Message-ID: <20200806154144.GD1551@shell.armlinux.org.uk>
-References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
- <20191120191813.GD4799@willie-the-truck>
- <CAD=FV=Wntf0TCwdtNNvPY-CXX1VL_SZK8Y8yw1r=UfeayHfwgw@mail.gmail.com>
- <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3381C002157
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:55:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id d6so37030988ejr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P2isjLZ0JPuBERYLPVsRRFizdiIqjElG9tzLkwc7/+4=;
+        b=shJQXwNSQr5EhI41kfaTjiC67sCJkV9h4LOd+Fzw0w6acAGvSkL9CjhygQ8bf3PSr3
+         mpFkMdZTJ/NRCYfP9rIck09KxS8n9u/MfoMPGqmjjQGnIlXg9BDkXpgev0ihqs77yrbD
+         pnoG44nQC7t3BRIMgm4jYjdI8e/+pVkZjenCuTWuq/G0JJvMnU6MqIUl9fmjq6XDeeeM
+         FsSUyZJ4H5TyimiRsgipfoV4A9BqzjDhGXDuj0JLvi90xSP0R5LeMYA84p7Ve+H7aoDj
+         gjv6hZ1BuwRW3ofrxkK4cQKJMgNg6ZuEBSw6fFpFwn2qigtBneKQtII7kQoom2mmcWMg
+         sg/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P2isjLZ0JPuBERYLPVsRRFizdiIqjElG9tzLkwc7/+4=;
+        b=jE70B6P1cIK/sksaDObRzoXGdrfPgb6PfwmgQ2KEdmqXbbAj1HEs6zOdTbY67ugDRb
+         X2Hs3oFxTf5BuiBGF53GfcKZOp7Q3480vlhqXI0KwNP066kCBjUF+bnLsosfCA+qTqQi
+         k7CDQAPSyWtQWa8D/7DgJHTnt3twF1JzIdPh81tJhMiFZs9ZP7Q/Hhrld9MfqvhMQPP3
+         5ngTpVmBtjKoDfhyrhr4uFvgWYuHaUUwXxLAgWd63leT8NCwnXC/sTD/QmE7WJehQjES
+         GPbBf+bnaP/3l34yu0+CB92kXJjI0ROxbSgM1gNVcFy6vhjE5i151BL4UTXMDDtmEu9m
+         k+PQ==
+X-Gm-Message-State: AOAM530dyx+Dyp7dEztFRYKw3gUPZpeP5l7PMDoTCtcNmFb24DkrLZNh
+        2CbRhdxyqPLhbdN/9upxnGURGApV
+X-Google-Smtp-Source: ABdhPJyyOVXJ2BfZbMU0k3lG9Ksgo/vg9llnsmn4xbtJvvWgp25mE1Qz/tQiycTjNY162QaRhcpwRg==
+X-Received: by 2002:a17:906:1c0e:: with SMTP id k14mr4881023ejg.479.1596729317720;
+        Thu, 06 Aug 2020 08:55:17 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id n5sm4044600eja.105.2020.08.06.08.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 08:55:16 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: pwm: Do not print error on probe deferral
+Date:   Thu,  6 Aug 2020 17:55:15 +0200
+Message-Id: <20200806155515.3936329-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 08:05:10AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Dec 2, 2019 at 8:36 AM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Nov 20, 2019 at 11:18 AM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
-> > > > This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
-> > > > watchpoint addresses") but ported to arm32, which has the same
-> > > > problem.
-> > > >
-> > > > This problem was found by Android CTS tests, notably the
-> > > > "watchpoint_imprecise" test [1].  I tested locally against a copycat
-> > > > (simplified) version of the test though.
-> > > >
-> > > > [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
-> > > >
-> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > ---
-> > > >
-> > > >  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
-> > > >  1 file changed, 70 insertions(+), 26 deletions(-)
-> > >
-> > > Sorry for taking so long to look at this. After wrapping my head around the
-> > > logic again
-> >
-> > Yeah.  It was a little weird and (unfortunately) arbitrarily different
-> > in some places compared to the arm64 code.
-> >
-> >
-> > > I think it looks fine, so please put it into the patch system
-> > > with my Ack:
-> > >
-> > > Acked-by: Will Deacon <will@kernel.org>
-> >
-> > Thanks!  Submitted as:
-> >
-> > https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8944/1
-> 
-> Oddly, I found that if I go visit that page now I see:
-> 
-> > - - - Note 2 submitted by Russell King on 17 Jan 2020 11:16:34 (UTC) - - -
-> > Moved to applied
-> >
-> > Applied to git-curr (misc branch).
-> 
-> Yet if I go check mainline the patch is not there.  This came to my
-> attention since we had my patch picked to the Chrome OS 4.19 tree and
-> suddenly recently got a stable merge conflict with "ARM: 8986/1:
-> hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints".
-> 
-> Anyone know what happened here?
+From: Thierry Reding <treding@nvidia.com>
 
-Yes.  Stephen Rothwell raised a complaint against it, which you were
-copied with:
+When the pwm-regulator driver fails to find the enable GPIO because of
+probe deferral, prevent it from potentially spamming the kernel log with
+error messages that are not useful.
 
-> Hi all,
-> 
-> Commit
-> 
->   116375be0461 ("ARM: 8944/1: hw_breakpoint: Handle inexact watchpoint addresses")
-> 
-> is missing a Signed-off-by from its author.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/regulator/pwm-regulator.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-My reply to Stephen's email was:
-
-> Thanks Stephen, patch dropped.
-> 
-> It looks like Doug used his "m.disordat.com" address to submit the
-> patch through the web interface, and there was no From: in the patch
-> itself, so that was used as the patch author.  However, as you spotted,
-> it was signed off using Doug's "chromium.org" address.
-> 
-> I think it's time to make the patch system a bit more strict, checking
-> that the submission address is mentioned in a signed-off-by tag
-> somewhere in the commit message.
-> 
-> Doug, the patch system does have your "chromium.org" address, if that's
-> the one you want to use as the author, please submit using that instead.
-> Thanks.
-> 
-> Russell.
-
-Neither email got a response from you, so the patch was dropped and
-nothing further happened.
-
+diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+index 3234b118b53e..dc99ac9b0cdf 100644
+--- a/drivers/regulator/pwm-regulator.c
++++ b/drivers/regulator/pwm-regulator.c
+@@ -370,7 +370,9 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+ 						    gpio_flags);
+ 	if (IS_ERR(drvdata->enb_gpio)) {
+ 		ret = PTR_ERR(drvdata->enb_gpio);
+-		dev_err(&pdev->dev, "Failed to get enable GPIO: %d\n", ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get enable GPIO: %d\n", ret);
++
+ 		return ret;
+ 	}
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.27.0
+
