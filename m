@@ -2,114 +2,181 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D139C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B66C206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tGrB7Z7W"
+	by mail.kernel.org (Postfix) with ESMTP id AAC04206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbgHFRga (ORCPT
+        id S1730042AbgHFRge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
+        Thu, 6 Aug 2020 13:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbgHFRfY (ORCPT
+        with ESMTP id S1729231AbgHFRfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:35:24 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BED4C0086A7
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:20:03 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id g19so36922114ejc.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=27KOdDBMR58YvRnK7H5/nd9yUqjH+UuYcfpnQiwOOLU=;
-        b=tGrB7Z7WS0HHtWrS+RAu0IAYwU8Nad8rwMZdG73SY5x2ARE0d1FqXwWCLzD3UMrdlR
-         6Kn0kjJyU3Zbj6OubM+TRf7kg41JZspNfLxofrrUzUQMRrYpHgt6yi61+Rzw0TSxyySG
-         ZrV978lfm55ZcESwNGZp975asvMxzL4xk01lDpBkj9kuUKt1y4ZnLs/xyWsATvELhJk1
-         kFLFuZbHju979DVXXQ3lQhqftMpDMvL9oc++9T2qcgkhq/HPw08XX+JQDNIRTow6uAXN
-         WiVbdduH+x+EmynnvVmeE/Jlm8OcHRV5jln6i5lJFo17YjLsUFxNhJ1YjoX3Mjouet1b
-         4MZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=27KOdDBMR58YvRnK7H5/nd9yUqjH+UuYcfpnQiwOOLU=;
-        b=VYimEth6TiqnsnInDDBRwXzdmZIvJFUwBGOH1wa/DLtnZ01l/rMhfatTMzPX77/W5x
-         1zpGwSrTmuaw8w/dbWIZPH1yoi3sjTUOJ5cqvEzgvA4j+MhWDwo/EbBCN+WK1k0+7/SJ
-         +OQVTIs5gxba/FnuATfMZWc44qGLwVrcuGGd5yyCSVxJ6hObV0q4GlGF8BazVb2hruxM
-         A6AiIfGTS5LSKqf5H1xSPrb9uuvi+wy0/wsO9vwXD6WOWdTCrmpBUJ0hfwHhIOp4/Sjd
-         E82r1qGN4wFGmSTIFX011YJDv/dHTtDMPwd7zH+KKG1z9HQ5vHH9blMwSFVPgIPBXF60
-         q70Q==
-X-Gm-Message-State: AOAM531DjbEtsbAaNQlAv/xe8vLLEJ8rre3XUetxa558Nys2skuMl4vQ
-        vtA9S0AWiiLEdig4PauDj8jPwvPhaHZTL9dlXzHd7w==
-X-Google-Smtp-Source: ABdhPJzrlkvHWWpq4WM0aG15rib8qGzmbNy1T+8TCAaz/ASsMen1gmJIqTYuiQwAEJfL8+D0y5EKRfUDgIokuAOiI0I=
-X-Received: by 2002:a17:906:38d8:: with SMTP id r24mr4667542ejd.341.1596727202027;
- Thu, 06 Aug 2020 08:20:02 -0700 (PDT)
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8FCCC0086A2;
+        Thu,  6 Aug 2020 08:19:02 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 1E27B299596
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 09/14] media: uapi: h264: Clarify SLICE_BASED mode
+Date:   Thu,  6 Aug 2020 12:13:05 -0300
+Message-Id: <20200806151310.98624-10-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200806151310.98624-1-ezequiel@collabora.com>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-References: <159630256804.3143511.8894023468833792004.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200803094257.GA23458@shao2-debian> <20200806133452.GA2077191@gmail.com>
-In-Reply-To: <20200806133452.GA2077191@gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 6 Aug 2020 08:19:52 -0700
-Message-ID: <CAPcyv4hS7K0Arrd+C0LhjrFH=yGJf3g55_WkHOET4z58AcWrJw@mail.gmail.com>
-Subject: Re: [x86/copy_mc] a0ac629ebe: fio.read_iops -43.3% regression
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        X86 ML <x86@kernel.org>, stable <stable@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        0day robot <lkp@intel.com>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 6:35 AM Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * kernel test robot <rong.a.chen@intel.com> wrote:
->
-> > Greeting,
-> >
-> > FYI, we noticed a -43.3% regression of fio.read_iops due to commit:
-> >
-> >
-> > commit: a0ac629ebe7b3d248cb93807782a00d9142fdb98 ("x86/copy_mc: Introduce copy_mc_generic()")
-> > url: https://github.com/0day-ci/linux/commits/Dan-Williams/Renovate-memcpy_mcsafe-with-copy_mc_to_-user-kernel/20200802-014046
-> >
-> >
-> > in testcase: fio-basic
-> > on test machine: 96 threads Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz with 256G memory
-> > with following parameters:
->
-> So this performance regression, if it isn't a spurious result, looks
-> concerning. Is this expected?
+Currently, the SLICE_BASED and FRAME_BASED modes documentation
+is misleading and not matching the intended use-cases.
 
-This is not expected and I think delays these patches until I'm back
-from leave in a few weeks. I know that we might lose some inlining
-effect due to replacing native memcpy, but I did not expect it would
-have an impact like this. In my testing I was seeing a performance
-improvement from replacing the careful / open-coded copy with rep;
-mov;, which increases the surprise of this result.
+Drop non-required fields SLICE_PARAMS 'start_byte_offset' and
+DECODE_PARAMS 'num_slices' and clarify the decoding modes in the
+documentation.
+
+On SLICE_BASED mode, a single slice is expected per OUTPUT buffer,
+and therefore 'start_byte_offset' is not needed (since the offset
+to the slice is the start of the buffer).
+
+This mode requires the use of CAPTURE buffer holding, and so
+the number of slices shall not be required.
+
+On FRAME_BASED mode, the devices are expected to take care of slice
+parsing. Neither SLICE_PARAMS are required (and shouldn't be
+exposed by frame-based drivers), nor the number of slices.
+
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ .../media/v4l/ext-ctrls-codec.rst             | 39 +++++--------------
+ include/media/h264-ctrls.h                    |  4 --
+ 2 files changed, 10 insertions(+), 33 deletions(-)
+
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index fff74b7bf32a..b3963c1acc2c 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -1748,9 +1748,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+        This compound control is not yet part of the public kernel API
+        and it is expected to change.
+ 
+-       This structure is expected to be passed as an array, with one
+-       entry for each slice included in the bitstream buffer.
+-
+ .. c:type:: v4l2_ctrl_h264_slice_params
+ 
+ .. cssclass:: longtable
+@@ -1760,17 +1757,9 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+     :stub-columns: 0
+     :widths:       1 1 2
+ 
+-    * - __u32
+-      - ``start_byte_offset``
+-        Offset (in bytes) from the beginning of the OUTPUT buffer to the start
+-        of the slice. If the slice starts with a start code, then this is the
+-        offset to such start code. When operating in slice-based decoding mode
+-        (see :c:type:`v4l2_mpeg_video_h264_decode_mode`), this field should
+-        be set to 0. When operating in frame-based decoding mode, this field
+-        should be 0 for the first slice.
+     * - __u32
+       - ``header_bit_size``
+-      -
++      - Offset in bits to slice_data() from the beginning of this slice.
+     * - __u32
+       - ``first_mb_in_slice``
+       -
+@@ -1998,12 +1987,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+     * - struct :c:type:`v4l2_h264_dpb_entry`
+       - ``dpb[16]``
+       -
+-    * - __u16
+-      - ``num_slices``
+-      - Number of slices needed to decode the current frame/field. When
+-        operating in slice-based decoding mode (see
+-        :c:type:`v4l2_mpeg_video_h264_decode_mode`), this field
+-        should always be set to one.
+     * - __u16
+       - ``nal_ref_idc``
+       - NAL reference ID value coming from the NAL Unit header
+@@ -2121,22 +2104,20 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+     * - ``V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED``
+       - 0
+       - Decoding is done at the slice granularity.
+-        In this mode, ``num_slices`` field in struct
+-        :c:type:`v4l2_ctrl_h264_decode_params` should be set to 1,
+-        and ``start_byte_offset`` in struct
+-        :c:type:`v4l2_ctrl_h264_slice_params` should be set to 0.
+         The OUTPUT buffer must contain a single slice.
++        When this mode is selected, the ``V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS``
++        control shall be set. When multiple slices compose a frame,
++        use of ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` flag
++        is required.
+     * - ``V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED``
+       - 1
+-      - Decoding is done at the frame granularity.
+-        In this mode, ``num_slices`` field in struct
+-        :c:type:`v4l2_ctrl_h264_decode_params` should be set to the number
+-        of slices in the frame, and ``start_byte_offset`` in struct
+-        :c:type:`v4l2_ctrl_h264_slice_params` should be set accordingly
+-        for each slice. For the first slice, ``start_byte_offset`` should
+-        be zero.
++      - Decoding is done at the frame granularity,
+         The OUTPUT buffer must contain all slices needed to decode the
+         frame. The OUTPUT buffer must also contain both fields.
++        This mode will be supported by devices that
++        parse the slice(s) header(s) in hardware. When this mode is
++        selected, the ``V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS``
++        control shall not be set.
+ 
+ ``V4L2_CID_MPEG_VIDEO_H264_START_CODE (enum)``
+     Specifies the H264 slice start code expected for each slice.
+diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+index f74736fcfa00..ea8c8c93305b 100644
+--- a/include/media/h264-ctrls.h
++++ b/include/media/h264-ctrls.h
+@@ -158,9 +158,6 @@ struct v4l2_h264_reference {
+ };
+ 
+ struct v4l2_ctrl_h264_slice_params {
+-	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
+-	__u32 start_byte_offset;
+-
+ 	/* Offset in bits to slice_data() from the beginning of this slice. */
+ 	__u32 header_bit_size;
+ 
+@@ -219,7 +216,6 @@ struct v4l2_h264_dpb_entry {
+ 
+ struct v4l2_ctrl_h264_decode_params {
+ 	struct v4l2_h264_dpb_entry dpb[V4L2_H264_NUM_DPB_ENTRIES];
+-	__u16 num_slices;
+ 	__u16 nal_ref_idc;
+ 	__s32 top_field_order_cnt;
+ 	__s32 bottom_field_order_cnt;
+-- 
+2.27.0
+
