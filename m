@@ -2,148 +2,121 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9968FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D040206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wy/DxXqm"
+	by mail.kernel.org (Postfix) with ESMTP id EC887206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgHFRsR (ORCPT
+        id S1730488AbgHFRsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:48:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21210 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728935AbgHFQfp (ORCPT
+        Thu, 6 Aug 2020 13:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728923AbgHFQfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:35:45 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076E296Q092894;
-        Thu, 6 Aug 2020 10:23:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=cK+IFbwDsM2m9d21mk++qrDlBgGZFvrkkmzPVkYIzkw=;
- b=Wy/DxXqmIU1/ZqRoHZPqLu9oj7ath30Pv4e1FvQ7vq46Ful0fvenpSQOtpq0EmuF7yqi
- lXH6qTHYc2W4pkoa2gm56Eb0kse8bu7mNntp3WKrKsnk8yILFR4LvmBRKgfoWc2NRK8+
- iD+vzfe4NuI2f+VDseLvdF7i1/njOKnOjE4WU2tZpJ5YNElm5ItAAmqdidGABGuO7xqR
- Td632cBQQ5WLo7ceohtcYfRcu/HvGe8qSBiJW/AeT+umrvjkCO0BTpjRd5Eewudh88Kw
- pAeYb2wxa/w9KxTe/Fy7K0GB0lA3cmUkmrg5BMWSliJX77Rac9FcabcnNJKiWzlWqbDI eQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qu0w8xkc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 10:23:12 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076E38m9098055;
-        Thu, 6 Aug 2020 10:23:11 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qu0w8xjb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 10:23:11 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076EGXgN027832;
-        Thu, 6 Aug 2020 14:23:08 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 32n018bda0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 14:23:08 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076EN59J27721984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 14:23:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7AEA6AE053;
-        Thu,  6 Aug 2020 14:23:05 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8AE7AE04D;
-        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.149.70])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v1 1/1] s390: virtio-ccw: PV needs VIRTIO I/O device protection
-Date:   Thu,  6 Aug 2020 16:23:02 +0200
-Message-Id: <1596723782-12798-2-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1596723782-12798-1-git-send-email-pmorel@linux.ibm.com>
-References: <1596723782-12798-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_09:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 lowpriorityscore=0 suspectscore=3
- phishscore=0 mlxscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060096
+        Thu, 6 Aug 2020 12:35:44 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FD63C00216D
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:10:56 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k3iTS-00046v-3l; Thu, 06 Aug 2020 18:10:34 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k3iTL-0002vh-8h; Thu, 06 Aug 2020 18:10:27 +0200
+Date:   Thu, 6 Aug 2020 18:10:27 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Zhang Changzhong <zhangchangzhong@huawei.com>
+Cc:     robin@protonic.nl, linux@rempel-privat.de, kernel@pengutronix.de,
+        socketcan@hartkopp.net, mkl@pengutronix.de, davem@davemloft.net,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
+Subject: Re: [PATCH net 0/4] support multipacket broadcast message
+Message-ID: <20200806161027.py5ged3a23xpmxgi@pengutronix.de>
+References: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="q2ffmggcds5tcngt"
+Content-Disposition: inline
+In-Reply-To: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:56:06 up 265 days,  7:14, 243 users,  load average: 0.06, 0.07,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If protected virtualization is active on s390, the virtio queues are
-not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
-negotiated. Use ccw_transport_features() to fail feature negociation
-and consequently probe if that's not the case, preventing a host
-error on access attempt.
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
----
- drivers/s390/virtio/virtio_ccw.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+--q2ffmggcds5tcngt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index 5730572b52cd..cc8d8064c6c4 100644
---- a/drivers/s390/virtio/virtio_ccw.c
-+++ b/drivers/s390/virtio/virtio_ccw.c
-@@ -803,11 +803,23 @@ static u64 virtio_ccw_get_features(struct virtio_device *vdev)
- 	return rc;
- }
- 
--static void ccw_transport_features(struct virtio_device *vdev)
-+static int ccw_transport_features(struct virtio_device *vdev)
- {
--	/*
--	 * Currently nothing to do here.
--	 */
-+	if (!is_prot_virt_guest())
-+		return 0;
-+
-+	if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
-+		dev_warn(&vdev->dev,
-+			 "device must provide VIRTIO_F_VERSION_1\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
-+		dev_warn(&vdev->dev,
-+			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-+		return -ENODEV;
-+	}
-+	return 0;
- }
- 
- static int virtio_ccw_finalize_features(struct virtio_device *vdev)
-@@ -837,7 +849,9 @@ static int virtio_ccw_finalize_features(struct virtio_device *vdev)
- 	vring_transport_features(vdev);
- 
- 	/* Give virtio_ccw a chance to accept features. */
--	ccw_transport_features(vdev);
-+	ret = ccw_transport_features(vdev);
-+	if (ret)
-+		goto out_free;
- 
- 	features->index = 0;
- 	features->features = cpu_to_le32((u32)vdev->features);
--- 
-2.25.1
+Hello,
 
+Thank you for your patches! Currently I'm busy, but I'll take a look at it =
+as
+soon possible.
+
+btw. can you tell me about more of your use case/work. I would like to
+have some feedback about this stack. You can write a personal message,
+if it is not for public.
+
+On Wed, Aug 05, 2020 at 11:50:21AM +0800, Zhang Changzhong wrote:
+> Zhang Changzhong (4):
+>   can: j1939: fix support for multipacket broadcast message
+>   can: j1939: cancel rxtimer on multipacket broadcast session complete
+>   can: j1939: abort multipacket broadcast session when timeout occurs
+>   can: j1939: add rxtimer for multipacket broadcast session
+>=20
+>  net/can/j1939/transport.c | 48 +++++++++++++++++++++++++++++++++++------=
+------
+>  1 file changed, 36 insertions(+), 12 deletions(-)
+
+Regards,
+Oleksij
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--q2ffmggcds5tcngt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8sK24ACgkQ4omh9DUa
+UbNKXw//YcVYtmARpdPi2H/KsMzVUNKAtJAJv/VLjfu4gMt7LKyUfwSAoTNQMgBF
+rY5RMh3hoRlSY0lZnuGf+L1IRdfioOOzN1ljiUHW49t2oJdbE3KvOQjAHRd7HkdD
+8THLbi2QZtP6bl6VtJP4kX6dUV1Y9mkQNlAClA24WbntnHJ3UmTE9200ZyAFf1zQ
+bmo7j/TtQCcYZla4rewSh8/nwEySFkMV0+9afm2ihD9M6Vqly9nCGx8LKbbZJXHt
+yAW4N82ZZcLmEz7tDf/kUemY5TVogSCZc8XxzZb8iaO+vlhdkpZpa/+WzHR78t4A
+2wHHB8jLq5M8te3DzEZ0e+lnGE7nLOeTB8Xk0TAifArMkj+8JLTeFuopuvYaNGQh
+L5BSG8iml24+WndixVtA7R4Fax4lvnUCgBTni3SJiwz55dBzKTOB/ZmJcyshMPKG
+91bP/sUZ9nGROlWVw+Ehhi8rJSZAKhG1qdBkfxmxQCVxK4TS7AsuHMUOwHp3jVMb
+1dMlDZ30AjTf9ITcFsLW0stGAUjJQJ/TR2vqCdn/ubTPzV7yAOFxCPAyz0dIx79w
+0bPnOmapDKSYViCGxyJ0oSmDqpm1GjWtKnw0gueQLprQ1ObMJyN4R5Io0kdJ0dGS
+4WBfpecsE9CN0fuAwBAt/nKCOUPWSPN6r3+lbQWYOa8PQonF6Cg=
+=IVdX
+-----END PGP SIGNATURE-----
+
+--q2ffmggcds5tcngt--
