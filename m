@@ -2,226 +2,82 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B38C35278
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF9FC4CC60
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F121204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60B423135
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="Y02KnJPd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="so9zJ/Hf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgHFIOs (ORCPT
+        id S1728912AbgHFIh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48602 "EHLO
+        Thu, 6 Aug 2020 04:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbgHFIOl (ORCPT
+        with ESMTP id S1726844AbgHFIhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:14:41 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13563C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 01:14:40 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 9so8011667wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 01:14:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries-io.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5PktqX1lhXj7JIJmMasUxCbKwHj1GRVaq6Q9Nfn/AB0=;
-        b=Y02KnJPdyHNoxv5A62MbXo+ySPtxSc7Zo6WJLI3eoRZB5waqsU59OlqE92BgFcDE/4
-         dTWfYDULmCIgQQ1nP8sS/vW7g6x9PnmV1lDiyUOHw1VQU/vSMF+8aBtc0xagQagpAtKX
-         0vRoWdnr5KcIoi4ExzFLCB3i/FODp+Gb/9+9IgjVuCjbdNxgLhnXmWqEEIyM7aEfdES0
-         QCPS5Y5P1JCXd3t/1W8d0NVECwmfvcxxUYZa4/kfDWrBMglf3/uvk9HdK638sa8rzvZQ
-         nSv7FICaSMsbklecY+ehKAGVFb6c+/AXslwso6PoftJn7hjfjSLT761UaZg6lSTkdnfe
-         pl2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5PktqX1lhXj7JIJmMasUxCbKwHj1GRVaq6Q9Nfn/AB0=;
-        b=siy4/VUq9Ts2EzDDYj2qygidVD//V/mdlNNatLbGP4Zo3XmNMac+FnoByZqB85vYhO
-         pXs92vE/RhqNHUnXZIVX1VrLPCUlqQef51WSIrBm5CPf3t/2oKCR780OHhv6AvEZ+ANC
-         3acTbKXSaarPPG/q+DknSAEN7bg50JXf4VslSWGA17DJrOFKmobM3abnpzrVWSuRMvw6
-         UMTZW8GqWaj21Wps2NXZjijVU9IxjAR3Otjpov+0mWv3PT22BH3sK+i6UEF0clSk+LOO
-         HqwOAbtDQNz+aK4e68jSOKapVtbAP3LGgqYLoAQdQfn4bYSGKR0rXBnriQZlcwY2p26p
-         nPFQ==
-X-Gm-Message-State: AOAM531vL7OdAegGPF8uD1SXfxOkWJPgUT7XIaM8gFB3w6IK54bh/teR
-        MyTeKFAmfC3F4GTVbdQ1XHYfTQ==
-X-Google-Smtp-Source: ABdhPJxKVWFIn+tzSkG2xCzWTuprtYCwg5y0fKh1L37+YmaeQYDCm5+KsZhOgFUVcf4NDAu+eSgfXQ==
-X-Received: by 2002:a1c:2985:: with SMTP id p127mr6571788wmp.166.1596701679009;
-        Thu, 06 Aug 2020 01:14:39 -0700 (PDT)
-Received: from trex (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
-        by smtp.gmail.com with ESMTPSA id h14sm5422330wml.30.2020.08.06.01.14.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Aug 2020 01:14:38 -0700 (PDT)
-From:   "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
-X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
-Date:   Thu, 6 Aug 2020 10:14:37 +0200
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, ricardo@foundries.io,
-        Michael Scott <mike@foundries.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        op-tee@lists.trustedfirmware.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2 2/2] hwrng: optee: fix wait use case
-Message-ID: <20200806081437.GA21405@trex>
-References: <20200723084622.31134-1-jorge@foundries.io>
- <20200723084622.31134-2-jorge@foundries.io>
- <CAFA6WYPQ3GGYostoHU=6qg4c_LqoqOZVbZ8gbQbGkNfyGydQjQ@mail.gmail.com>
- <20200724142305.GA24164@trex>
- <CAFA6WYOGu4DPzd93h-yFLJvLmRH=ZroN70+ZNY6xCOOM+TJOSA@mail.gmail.com>
- <20200805203817.GA12229@trex>
- <CAFA6WYPKGTb6Qj7emETpB9-XXO8vcf6v2ONKD4pt+M9F-=HWbQ@mail.gmail.com>
- <20200806063040.GA27943@trex>
- <CAFA6WYMSXGKXx2vM2qcTLpRUugQUphM8Gn5YvPX9fTj3MHvXqQ@mail.gmail.com>
+        Thu, 6 Aug 2020 04:37:25 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45F4C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 01:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/s+G2eGqMR8MQPfsMaNKoN8G20XvSbaDF1vueDDt9Ng=; b=so9zJ/Hf9o8jCMTBAOknq8zBhI
+        K63dTVUNOzWsriGmjfplEzJEJCZdrEw0xp4kt8NtrrFAgd2P9OuS2xKrB8QUvE2698EbGeBpJDtlN
+        JYEcolPNktsilJsNLu5AurQ9lshkp4eWfUiPOoCemX+ApTT3bfQKC7OqhCGER0l9n/fvQxTZM9tvy
+        ki7tkEtnXUWQ/NiHCEFWWyOsbYk+Kgw9JLZ3P0QqHQkpotu2Z+YlDmqL3nYfjpS8fqXr+C+tQREB7
+        5CGasY48zLonbJ8BEWI3CS1dDdCAFxAPMYt60UkZK5j4le/Rts9ehRPIhFimBHaivEY7xrIz0jN20
+        1IPVUmyg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3bOq-0002qH-Ml; Thu, 06 Aug 2020 08:37:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 009E9300F7A;
+        Thu,  6 Aug 2020 10:37:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E0AEE2B61F1C1; Thu,  6 Aug 2020 10:37:17 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 10:37:17 +0200
+From:   peterz@infradead.org
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        g@hirez.programming.kicks-ass.net
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com
+Subject: Re: [PATCH 0/2] perf: Allow closing siblings' file descriptors
+Message-ID: <20200806083717.GW2674@hirez.programming.kicks-ass.net>
+References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
+ <32ad7700-3d4e-6c20-31c9-8b002fea5cbc@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFA6WYMSXGKXx2vM2qcTLpRUugQUphM8Gn5YvPX9fTj3MHvXqQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <32ad7700-3d4e-6c20-31c9-8b002fea5cbc@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/08/20, Sumit Garg wrote:
-> On Thu, 6 Aug 2020 at 12:00, Jorge Ramirez-Ortiz, Foundries
-> <jorge@foundries.io> wrote:
-> >
-> > On 06/08/20, Sumit Garg wrote:
-> > > On Thu, 6 Aug 2020 at 02:08, Jorge Ramirez-Ortiz, Foundries
-> > > <jorge@foundries.io> wrote:
-> > > >
-> > > > On 05/08/20, Sumit Garg wrote:
-> > > > > Apologies for my delayed response as I was busy with some other tasks
-> > > > > along with holidays.
-> > > >
-> > > > no pb! was just making sure this wasnt falling through some cracks.
-> > > >
-> > > > >
-> > > > > On Fri, 24 Jul 2020 at 19:53, Jorge Ramirez-Ortiz, Foundries
-> > > > > <jorge@foundries.io> wrote:
-> > > > > >
-> > > > > > On 24/07/20, Sumit Garg wrote:
-> > > > > > > On Thu, 23 Jul 2020 at 14:16, Jorge Ramirez-Ortiz <jorge@foundries.io> wrote:
-> > > > > > > >
-> > > > > > > > The current code waits for data to be available before attempting a
-> > > > > > > > second read. However the second read would not be executed as the
-> > > > > > > > while loop exits.
-> > > > > > > >
-> > > > > > > > This fix does not wait if all data has been read and reads a second
-> > > > > > > > time if only partial data was retrieved on the first read.
-> > > > > > > >
-> > > > > > > > This fix also does not attempt to read if not data is requested.
-> > > > > > >
-> > > > > > > I am not sure how this is possible, can you elaborate?
-> > > > > >
-> > > > > > currently, if the user sets max 0, get_optee_rng_data will regardless
-> > > > > > issuese a call to the secure world requesting 0 bytes from the RNG
-> > > > > >
-> > > > >
-> > > > > This case is already handled by core API: rng_dev_read().
-> > > >
-> > > > ah ok good point, you are right
-> > > > but yeah, there is no consequence to the actual patch.
-> > > >
-> > >
-> > > So, at least you could get rid of the corresponding text from commit message.
-> > >
-> > > > >
-> > > > > > with this patch, this request is avoided.
-> > > > > >
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
-> > > > > > > > ---
-> > > > > > > >  v2: tidy up the while loop to avoid reading when no data is requested
-> > > > > > > >
-> > > > > > > >  drivers/char/hw_random/optee-rng.c | 4 ++--
-> > > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/char/hw_random/optee-rng.c b/drivers/char/hw_random/optee-rng.c
-> > > > > > > > index 5bc4700c4dae..a99d82949981 100644
-> > > > > > > > --- a/drivers/char/hw_random/optee-rng.c
-> > > > > > > > +++ b/drivers/char/hw_random/optee-rng.c
-> > > > > > > > @@ -122,14 +122,14 @@ static int optee_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> > > > > > > >         if (max > MAX_ENTROPY_REQ_SZ)
-> > > > > > > >                 max = MAX_ENTROPY_REQ_SZ;
-> > > > > > > >
-> > > > > > > > -       while (read == 0) {
-> > > > > > > > +       while (read < max) {
-> > > > > > > >                 rng_size = get_optee_rng_data(pvt_data, data, (max - read));
-> > > > > > > >
-> > > > > > > >                 data += rng_size;
-> > > > > > > >                 read += rng_size;
-> > > > > > > >
-> > > > > > > >                 if (wait && pvt_data->data_rate) {
-> > > > > > > > -                       if (timeout-- == 0)
-> > > > > > > > +                       if ((timeout-- == 0) || (read == max))
-> > > > > > >
-> > > > > > > If read == max, would there be any sleep?
-> > > > > >
-> > > > > > no but I see no reason why there should be a wait since we already have
-> > > > > > all the data that we need; the msleep is only required when we need to
-> > > > > > wait for the RNG to generate entropy for the number of bytes we are
-> > > > > > requesting. if we are requesting 0 bytes, the entropy is already
-> > > > > > available. at leat this is what makes sense to me.
-> > > > > >
-> > > > >
-> > > > > Wouldn't it lead to a call as msleep(0); that means no wait as well?
-> > > >
-> > > > I dont understand: there is no reason to wait if read == max and this
-> > > > patch will not wait: if read == max it calls 'return read'
-> > > >
-> > > > am I misunderstanding your point?
-> > >
-> > > What I mean is that we shouldn't require this extra check here as
-> > > there wasn't any wait if read == max with existing implementation too.
-> >
-> > um, I am getting confused Sumit
-> >
-> > with the exisiting implementation (the one we aim to replace), if get_optee_rng_data reads all the values requested on the first call (ie, read = 0) with wait set to true, the call will wait with msleep(0). Which is unnecessary and waits for a jiffy (ie, the call to msleep 0 will schedule a one jiffy timeout interrruptible)
-> >
-> > with this alternative implementation, msleep(0) does not get called.
-> >
-> > are we in synch?
+On Thu, Aug 06, 2020 at 09:15:08AM +0300, Adrian Hunter wrote:
+> On 8/07/20 6:16 pm, Alexander Shishkin wrote:
+> > Hi guys,
+> > 
+> > I've been looking at reducing the number of open file descriptors per perf
+> > session. If we retain one descriptor per event, in a large group they add
+> > up. At the same time, we're not actually using them for anything after the
+> > SET_OUTPUT and maybe SET_FILTER ioctls. So, this series is a stab at that.
 > 
-> Ah, I see msleep(0) also by default schedules timeout for 1 jiffy. So
-> we are in sync now. Probably you can clarify this in commit message as
-> well to avoid confusion.
+> I am wondering if instead we should be looking at creating a kernel API that
+> allows associating a multitude of tracepoints with a single event.  Thoughts
+> anyone?
 
-ok will do.
-shall I add your reviewed-by line or just resend?
-
-> 
-> -Sumit
-> 
-> >
-> > >
-> > > -Sumit
-> > >
-> > > >
-> > > > >
-> > > > > -Sumit
-> > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > -Sumit
-> > > > > > >
-> > > > > > > >                                 return read;
-> > > > > > > >                         msleep((1000 * (max - read)) / pvt_data->data_rate);
-> > > > > > > >                 } else {
-> > > > > > > > --
-> > > > > > > > 2.17.1
-> > > > > > > >
+https://lkml.kernel.org/r/1290445737.2072.338.camel@laptop
