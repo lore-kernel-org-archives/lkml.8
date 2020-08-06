@@ -2,121 +2,114 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9968FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC887206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CDC206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhr3f/+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbgHFRsT (ORCPT
+        id S1730503AbgHFRsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40868 "EHLO
+        Thu, 6 Aug 2020 13:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728923AbgHFQfo (ORCPT
+        with ESMTP id S1728915AbgHFQf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:35:44 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FD63C00216D
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:10:56 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k3iTS-00046v-3l; Thu, 06 Aug 2020 18:10:34 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k3iTL-0002vh-8h; Thu, 06 Aug 2020 18:10:27 +0200
-Date:   Thu, 6 Aug 2020 18:10:27 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Zhang Changzhong <zhangchangzhong@huawei.com>
-Cc:     robin@protonic.nl, linux@rempel-privat.de, kernel@pengutronix.de,
-        socketcan@hartkopp.net, mkl@pengutronix.de, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
-Subject: Re: [PATCH net 0/4] support multipacket broadcast message
-Message-ID: <20200806161027.py5ged3a23xpmxgi@pengutronix.de>
-References: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
+        Thu, 6 Aug 2020 12:35:29 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A6DC002171
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:12:21 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b14so43721572qkn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:12:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LNB4XrMfx73bJTHAO2AhrZUygv9EzgmvGK/ZVIbyqWk=;
+        b=rhr3f/+dktLBEgzw+MJRXvW/ZFTLTiX0yv0u8nO/IkwCM3Maf5waT00SMNZd4oAu4W
+         0hmRWusyqbiGWLyRx/cBtbApYYEpVomBuE/y02SCH7N9l1b5J7xVRMkd4AnYcBYbl7VS
+         BHrBPhGtyIncF9DKGqFV51JW0AXJOjyLr3QiNArI+GcZtIvjbQtFiJS2KlhHPtQdNlOI
+         heb1pfPvIb0gBuCMmJoHzHH6FGdZUXJmr04FlOkM7fNGkytatxwYr7C+j5HriVYm545k
+         8EscbPVENUaVNmBG7oAY2M/2lgrF6muj0o7gZOEHbojGaZQis9TCaVhxkxpvLBYaR5fm
+         +p+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=LNB4XrMfx73bJTHAO2AhrZUygv9EzgmvGK/ZVIbyqWk=;
+        b=CoFZTOnvErKK7vWPAvCCrlAH4392n4DLeqFe//KyoWbYEvlY++XpQHk+2159eIB6Ad
+         ptKp0E6AUlgb7kCgJtzsvk2RrIZMYg9goeTMRUyppWq5DixAINewSi6pyldGmt9J9wvP
+         IXPSzeC6ghWu0ZqyNSBQm9Ps7yJxZ1kdhT2ZfdGqdihPOzRzc5fCvuJN0TzcJVbrhksa
+         pcK7mzXv4gDrBhxINW4PmdZOK0rPp9p7mmOL7/dScFNjQGAgQX49VgAOzjc7aDtEk681
+         Ucs/CMR9KKp6lXthxISdwCogNATP/1nyAisEzVr+I/IAzqRN2NX5M9QNRYvWS2XNhVnn
+         L8nQ==
+X-Gm-Message-State: AOAM532rdE8QisiAuUmbZk2q2S0E9/YigLfslYFgLmAbHlHKtXo3OvbT
+        U/vBY6XfKCCLLchOtymFKiY=
+X-Google-Smtp-Source: ABdhPJw04QM3xFHJS5pDtBRTiR9Yg7aRmbMABPh0dZttNj1MZn0oKCHd2GgnvHncOWyKNqP19tH0DA==
+X-Received: by 2002:a37:a848:: with SMTP id r69mr8799325qke.58.1596730340541;
+        Thu, 06 Aug 2020 09:12:20 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id l11sm5121757qti.59.2020.08.06.09.12.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 09:12:19 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 6 Aug 2020 12:12:17 -0400
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Fangrui Song <maskray@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] x86/boot: Check that there are no runtime
+ relocations
+Message-ID: <20200806161217.GA682406@rani.riverdale.lan>
+References: <20200524212816.243139-1-nivedita@alum.mit.edu>
+ <20200525225918.1624470-5-nivedita@alum.mit.edu>
+ <CAMj1kXHc4o91VkaChoyVzr4w-HOaashMPtkCKLaszMGCxhR_2A@mail.gmail.com>
+ <20200526151623.GB2190602@rani.riverdale.lan>
+ <20200526171340.pdbautbix5ygdvgp@google.com>
+ <20200526191411.GA2380966@rani.riverdale.lan>
+ <20200806111953.GA1630647@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q2ffmggcds5tcngt"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:56:06 up 265 days,  7:14, 243 users,  load average: 0.06, 0.07,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200806111953.GA1630647@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 06, 2020 at 02:19:53PM +0300, Andy Shevchenko wrote:
+> On Tue, May 26, 2020 at 03:14:11PM -0400, Arvind Sankar wrote:
+> 
+> Side question: are you going to submit a v3 of this?
+> Or i.o.w. what is the status of this series?
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
---q2ffmggcds5tcngt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The latest is v6 [0], which has some minor changes over this version and
+is rebased on 5.8-rc7.
 
-Hello,
+I will send out another rebase once the merge window closes.
 
-Thank you for your patches! Currently I'm busy, but I'll take a look at it =
-as
-soon possible.
+Thanks.
 
-btw. can you tell me about more of your use case/work. I would like to
-have some feedback about this stack. You can write a personal message,
-if it is not for public.
-
-On Wed, Aug 05, 2020 at 11:50:21AM +0800, Zhang Changzhong wrote:
-> Zhang Changzhong (4):
->   can: j1939: fix support for multipacket broadcast message
->   can: j1939: cancel rxtimer on multipacket broadcast session complete
->   can: j1939: abort multipacket broadcast session when timeout occurs
->   can: j1939: add rxtimer for multipacket broadcast session
->=20
->  net/can/j1939/transport.c | 48 +++++++++++++++++++++++++++++++++++------=
-------
->  1 file changed, 36 insertions(+), 12 deletions(-)
-
-Regards,
-Oleksij
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---q2ffmggcds5tcngt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8sK24ACgkQ4omh9DUa
-UbNKXw//YcVYtmARpdPi2H/KsMzVUNKAtJAJv/VLjfu4gMt7LKyUfwSAoTNQMgBF
-rY5RMh3hoRlSY0lZnuGf+L1IRdfioOOzN1ljiUHW49t2oJdbE3KvOQjAHRd7HkdD
-8THLbi2QZtP6bl6VtJP4kX6dUV1Y9mkQNlAClA24WbntnHJ3UmTE9200ZyAFf1zQ
-bmo7j/TtQCcYZla4rewSh8/nwEySFkMV0+9afm2ihD9M6Vqly9nCGx8LKbbZJXHt
-yAW4N82ZZcLmEz7tDf/kUemY5TVogSCZc8XxzZb8iaO+vlhdkpZpa/+WzHR78t4A
-2wHHB8jLq5M8te3DzEZ0e+lnGE7nLOeTB8Xk0TAifArMkj+8JLTeFuopuvYaNGQh
-L5BSG8iml24+WndixVtA7R4Fax4lvnUCgBTni3SJiwz55dBzKTOB/ZmJcyshMPKG
-91bP/sUZ9nGROlWVw+Ehhi8rJSZAKhG1qdBkfxmxQCVxK4TS7AsuHMUOwHp3jVMb
-1dMlDZ30AjTf9ITcFsLW0stGAUjJQJ/TR2vqCdn/ubTPzV7yAOFxCPAyz0dIx79w
-0bPnOmapDKSYViCGxyJ0oSmDqpm1GjWtKnw0gueQLprQ1ObMJyN4R5Io0kdJ0dGS
-4WBfpecsE9CN0fuAwBAt/nKCOUPWSPN6r3+lbQWYOa8PQonF6Cg=
-=IVdX
------END PGP SIGNATURE-----
-
---q2ffmggcds5tcngt--
+[0] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
