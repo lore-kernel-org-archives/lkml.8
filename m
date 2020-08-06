@@ -2,279 +2,194 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D18DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73215C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110C4221E5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B862075A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:17:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bl/YHoYg"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="syzHWmPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgHFXRT (ORCPT
+        id S1726294AbgHFXRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
+        Thu, 6 Aug 2020 19:17:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFXRR (ORCPT
+        with ESMTP id S1725272AbgHFXRv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:17:17 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA67C061574;
-        Thu,  6 Aug 2020 16:17:17 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ep8so7462395pjb.3;
-        Thu, 06 Aug 2020 16:17:17 -0700 (PDT)
+        Thu, 6 Aug 2020 19:17:51 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D645C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 16:17:51 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id 2so7629883pjx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 16:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sxJQyfNlxaPXI3YyUyhCN/hAin2yAC4OKlE8Ab+h4PI=;
-        b=bl/YHoYgVcxqnb+p06g3vXsA9CDKCBgZ1dwDGwveaeFf3FnSpgZgkfYyamJaYbewJC
-         BrzBHcaCrQJSvS9FTZww+dMT4M/0dYdsC3ZAhyxO4AZ1n/qTIgSbOqN8UUqAhqBtnNHg
-         ok3Tp5A4Y6YSobxQLlQU9dPdk01tX0nrndxKeQTNKI6cQBrIbQGo8yWrrYUUEc4J95RI
-         D9jouGYRbEpNY2OZxpfc/W8efyYxnD+K2Yt1bIIgj6QGMBtADiwHUSm3bX156t9Z+HKv
-         QxLKoLWbnlq0piJMWXOVRCaHZNT00BXZf9jvdLXPqKC8tMU9qLijOQR0xV60o6Bt7fFD
-         2QCA==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:cc:from:to:message-id;
+        bh=i/OwUIJf7SuJHYzeBOib/eEDsTwDweM8G7B4I7i5Bvo=;
+        b=syzHWmPvTWALcrWBF18nmFt2CvSrIQYFi1YMgwYoeqCG1noUVuvEyvzppBNyxLschE
+         vuX35e4wHBO2uDnVXgHHa8SUMo7ibA3GrjjlHw62UO3BE9b+AsLtvN/JyMadYkvn4cQB
+         F3I6JVnvZAFkwunDEY7J34CGXmCvq6kj94LsGSGNaO1D7KmdlrfxCP8hD4QSZ+qwvGxv
+         ts8MAebxt/4uuGVrn+HQQBvKWhMbRkgXVOKJQVgyyyyJ9u3Q3x7hA0FYzvwlFoa8GdGq
+         UZBHbIpd73ITwUoJJrESh7jQtaxz4GsC4Q0/6nLr7QDEGJ9N+dGy5PZNv/uPqRVdFyf9
+         HZFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sxJQyfNlxaPXI3YyUyhCN/hAin2yAC4OKlE8Ab+h4PI=;
-        b=QIcOhcBMzQSdEuKGjNMZUPLkD+il9iwjpU0fy+caZP3RIhnhQnr7g+07x+Zm2N3aGn
-         OtBLo4C17TvruSr3+sI3e2RyXP1yZM9kM15vytXPb/AUUFw4jHA7OoZQcf3jN5ff+7UO
-         V/f/9NzhlQ8Q0T6s9anST+QbHH9JfxBIS5g7FY4mq+qbYrXzC/NS/0S5bC3QkjrPqNJ4
-         eW3j2o2nv6n2g0mUDKkOLfuxGhdPBdtw6rTBlR1IVIDRbScY7L+r/FbKSx1NJ3n/UcLt
-         D3AQBth5eMtoqeXdLDVTs1CiGNb3Hcky+bVuo1mx5C3nobVdpNGpKx6wmh1PZctjkqj7
-         Pbvw==
-X-Gm-Message-State: AOAM530VvyaG+HLMOGCsP6s0ch+BPpDxjJbAFgAij/JzFRDl7/g//kng
-        JunAVwOcq9l5gbOzvs2l/Qt3x0ET
-X-Google-Smtp-Source: ABdhPJyGVNur/k1d5e87UVNp5gRDbKeWpZUyIcQ44kifzHFvGtXPtdg3WPSowDg/+HtcOk+ueKMUlQ==
-X-Received: by 2002:a17:902:ff03:: with SMTP id f3mr9859213plj.302.1596755835878;
-        Thu, 06 Aug 2020 16:17:15 -0700 (PDT)
-Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id u15sm8101431pgm.10.2020.08.06.16.17.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 16:17:15 -0700 (PDT)
-Subject: Re: [GIT] Networking
-To:     John Stultz <john.stultz@linaro.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>
-References: <20200805.185559.1225246192723680518.davem@davemloft.net>
- <CANcMJZA1pSz8T9gkRtwYHy_vVfoMj35Wd-+qqxQBg+GRaXS0_Q@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <011a0a3b-74ac-fa61-2a04-73cb9897e8e8@gmail.com>
-Date:   Thu, 6 Aug 2020 16:17:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <CANcMJZA1pSz8T9gkRtwYHy_vVfoMj35Wd-+qqxQBg+GRaXS0_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:subject:cc:from:to:message-id;
+        bh=i/OwUIJf7SuJHYzeBOib/eEDsTwDweM8G7B4I7i5Bvo=;
+        b=M+MOl1zWIxAGG09WX2M42b0hr+DPoGWIhfPS807MWaYwIufQNlozQNRlRD/EbvS9JL
+         NOeIhG1sjgH46gnqchtuemwYQx1mLGmWtpwFoNVDmOqZ89ULyybwsQMM0/2jMaWSYcMj
+         DiPdOaftcaXBVwF8HKiOp1d2ymFwsYG1Nz1iRDuHML0288VVKslMUTNqI5y6zDQNtXMX
+         tTpFl/zDkPa+sh8RqA8KepkX8NhFMvaa2uMMo2WMno+SXhS9iwTIe6p7SnJoI1F1dveK
+         NGvyYu0TzagZ1JjRVafeXVjIHdzPXM9lpnI/y9PAEmT85H2KbmYAqussveSzvK9Ct7Mg
+         6/Kg==
+X-Gm-Message-State: AOAM532Y2uXwgVc5gt8gSmiD2tR2t5cfuokA9sCnQ2csz5XJYe767b4C
+        uSK+UmOaSVTXRsL5qNDR9APt/g==
+X-Google-Smtp-Source: ABdhPJx9PA/4CJu14d0jYRFqd7WVyGbfengXQHp8k+Q/wkU6L2M8uCVqMNWs1WC93enhL/GT20beMw==
+X-Received: by 2002:a17:902:368:: with SMTP id 95mr10201850pld.279.1596755870455;
+        Thu, 06 Aug 2020 16:17:50 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id e9sm9761253pfh.151.2020.08.06.16.17.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 16:17:49 -0700 (PDT)
+Date:   Thu, 06 Aug 2020 16:17:49 -0700 (PDT)
+X-Google-Original-Date: Thu, 06 Aug 2020 16:17:37 PDT (-0700)
+Subject: [GIT PULL] RISC-V Patches for the 5.9 Merge Window, Part 1
+CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-bb218bf7-4f63-48f8-95a6-67ff0d32a166@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-On 8/6/20 2:39 PM, John Stultz wrote:
-> On Wed, Aug 5, 2020 at 6:57 PM David Miller <davem@davemloft.net> wrote:
->> There is a minor conflict in net/ipv6/ip6_flowlabel.c, it's because of
->> the commit that did the tree-wide removal of uninitialized_var().  The
->> resolution is simple, kill all of the conflict markers and content
->> within, and remove the uninitialized_var() marker that got moved
->> elsewhere in the file in the net-next tree.
->>
->> Otherwise, we have:
->>
->> 1) Support 6Ghz band in ath11k driver, from Rajkumar Manoharan.
->>
->> 2) Support UDP segmentation in code TSO code, from Eric Dumazet.
->>
->> 3) Allow flashing different flash images in cxgb4 driver, from Vishal
->>    Kulkarni.
->>
->> 4) Add drop frames counter and flow status to tc flower offloading,
->>    from Po Liu.
->>
->> 5) Support n-tuple filters in cxgb4, from Vishal Kulkarni.
->>
->> 6) Various new indirect call avoidance, from Eric Dumazet and Brian
->>    Vazquez.
->>
->> 7) Fix BPF verifier failures on 32-bit pointer arithmetic, from
->>    Yonghong Song.
->>
->> 8) Support querying and setting hardware address of a port function
->>    via devlink, use this in mlx5, from Parav Pandit.
->>
->> 9) Support hw ipsec offload on bonding slaves, from Jarod Wilson.
->>
->> 10) Switch qca8k driver over to phylink, from Jonathan McDowell.
->>
->> 11) In bpftool, show list of processes holding BPF FD references to
->>     maps, programs, links, and btf objects.  From Andrii Nakryiko.
->>
->> 12) Several conversions over to generic power management, from Vaibhav
->>     Gupta.
->>
->> 13) Add support for SO_KEEPALIVE et al. to bpf_setsockopt(), from
->>     Dmitry Yakunin.
->>
->> 14) Various https url conversions, from Alexander A. Klimov.
->>
->> 15) Timestamping and PHC support for mscc PHY driver, from Antoine
->>     Tenart.
->>
->> 16) Support bpf iterating over tcp and udp sockets, from Yonghong
->>     Song.
->>
->> 17) Support 5GBASE-T i40e NICs, from Aleksandr Loktionov.
->>
->> 18) Add kTLS RX HW offload support to mlx5e, from Tariq Toukan.
->>
->> 19) Fix the ->ndo_start_xmit() return type to be netdev_tx_t in several
->>     drivers.  From Luc Van Oostenryck.
->>
->> 20) XDP support for xen-netfront, from Denis Kirjanov.
->>
->> 21) Support receive buffer autotuning in MPTCP, from Florian Westphal.
->>
->> 22) Support EF100 chip in sfc driver, from Edward Cree.
->>
->> 23) Add XDP support to mvpp2 driver, from Matteo Croce.
->>
->> 24) Support MPTCP in sock_diag, from Paolo Abeni.
->>
->> 25) Commonize UDP tunnel offloading code by creating udp_tunnel_nic
->>     infrastructure, from Jakub Kicinski.
->>
->> 26) Several pci_ --> dma_ API conversions, from Christophe JAILLET.
->>
->> 27) Add FLOW_ACTION_POLICE support to mlxsw, from Ido Schimmel.
->>
->> 28) Add SK_LOOKUP bpf program type, from Jakub Sitnicki.
->>
->> 29) Refactor a lot of networking socket option handling code in
->>     order to avoid set_fs() calls, from Christoph Hellwig.
->>
->> 30) Add rfc4884 support to icmp code, from Willem de Bruijn.
->>
->> 31) Support TBF offload in dpaa2-eth driver, from Ioana Ciornei.
->>
->> 32) Support XDP_REDIRECT in qede driver, from Alexander Lobakin.
->>
->> 33) Support PCI relaxed ordering in mlx5 driver, from Aya Levin.
->>
->> 34) Support TCP syncookies in MPTCP, from Flowian Westphal.
->>
->> 35) Fix several tricky cases of PMTU handling wrt. briding, from
->>     Stefano Brivio.
->>
->> Please pull, thanks a lot!
->>
->> The following changes since commit ac3a0c8472969a03c0496ae774b3a29eb26c8d5a:
->>
->>   Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2020-08-01 16:47:24 -0700)
->>
->> are available in the Git repository at:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
-> 
-> Hey David, All,
->   Just as a heads up, after net-next was merged into Linus' tree, I
-> started hitting the following crash on boot on the Dragonboard 845c
-> booting AOSP.
-> 
-> I've bisected it down to the net-next merge, but haven't bisected it
-> further yet, as I still have a handful of (unrelated to networking)
-> out of tree patches needed to boot the board.
-> 
-> [   19.709492] Unable to handle kernel access to user memory outside
-> uaccess routines at virtual address 0000006f53337070
-> [   19.726539] Mem abort info:
-> [   19.726544]   ESR = 0x9600000f
-> [   19.741323]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [   19.741326]   SET = 0, FnV = 0
-> [   19.761185]   EA = 0, S1PTW = 0
-> [   19.761188] Data abort info:
-> [   19.761190]   ISV = 0, ISS = 0x0000000f
-> [   19.761192]   CM = 0, WnR = 0
-> [   19.761199] user pgtable: 4k pages, 39-bit VAs, pgdp=000000016e9e9000
-> [   19.777584] [0000006f53337070] pgd=000000016e99e003,
-> p4d=000000016e99e003, pud=000000016e99e003, pmd=000000016e99a003,
-> pte=00e800016d3c7f53
-> [   19.789205] Internal error: Oops: 9600000f [#1] PREEMPT SMP
-> [   19.789211] Modules linked in:
-> [   19.797153] CPU: 7 PID: 364 Comm: iptables-restor Tainted: G
-> W         5.8.0-mainline-08255-gf9e74a8eb6f3 #3350
-> [   19.797156] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [   19.797161] pstate: a0400005 (NzCv daif +PAN -UAO BTYPE=--)
-> [   19.797177] pc : do_ipt_set_ctl+0x304/0x610
-> [   19.807891] lr : do_ipt_set_ctl+0x50/0x610
-> [   19.807894] sp : ffffffc0139bbba0
-> [   19.807898] x29: ffffffc0139bbba0 x28: ffffff80f07a3800
-> [   19.846468] x27: 0000000000000000 x26: 0000000000000000
-> [   19.846472] x25: 0000000000000000 x24: 0000000000000698
-> [   19.846476] x23: ffffffec8eb0cc80 x22: 0000000000000040
-> [   19.846480] x21: b400006f53337070 x20: ffffffec8eb0c000
-> [   19.846484] x19: ffffffec8e9e9000 x18: 0000000000000000
-> [   19.846487] x17: 0000000000000000 x16: 0000000000000000
-> [   19.846491] x15: 0000000000000000 x14: 0000000000000000
-> [   19.846495] x13: 0000000000000000 x12: 0000000000000000
-> [   19.846501] x11: 0000000000000000 x10: 0000000000000000
-> [   19.856005] x9 : 0000000000000000 x8 : 0000000000000000
-> [   19.856008] x7 : ffffffec8e9e9d08 x6 : 0000000000000000
-> [   19.856012] x5 : 0000000000000000 x4 : 0000000000000213
-> [   19.856015] x3 : 00000001ffdeffef x2 : 11ded3fb0bb85e00
-> [   19.856019] x1 : 0000000000000027 x0 : 0000008000000000
-> [   19.856024] Call trace:
-> [   19.866319]  do_ipt_set_ctl+0x304/0x610
-> [   19.866327]  nf_setsockopt+0x64/0xa8
-> [   19.866332]  ip_setsockopt+0x21c/0x1710
-> [   19.866338]  raw_setsockopt+0x50/0x1b8
-> [   19.866347]  sock_common_setsockopt+0x50/0x68
-> [   19.882672]  __sys_setsockopt+0x120/0x1c8
-> [   19.882677]  __arm64_sys_setsockopt+0x30/0x40
-> [   19.882686]  el0_svc_common.constprop.3+0x78/0x188
-> [   19.882691]  do_el0_svc+0x80/0xa0
-> [   19.882699]  el0_sync_handler+0x134/0x1a0
-> [   19.901555]  el0_sync+0x140/0x180
-> [   19.901564] Code: aa1503e0 97fffd3e 2a0003f5 17ffff80 (a9401ea6)
-> [   19.901569] ---[ end trace 22010e9688ae248f ]---
-> [   19.913033] Kernel panic - not syncing: Fatal exception
-> [   19.913042] SMP: stopping secondary CPUs
-> [   20.138885] Kernel Offset: 0x2c7d080000 from 0xffffffc010000000
-> [   20.138887] PHYS_OFFSET: 0xfffffffa80000000
-> [   20.138894] CPU features: 0x0040002,2a80a218
-> [   20.138898] Memory Limit: none
-> 
-> I'll continue to work on bisecting this down further, but figured I'd
-> share now as you or someone else might be able to tell whats wrong
-> from the trace.
-> 
+are available in the Git repository at:
 
-Can you try at commit c2f12630c60ff33a9cafd221646053fc10ec59b6 ("netfilter: switch nf_setsockopt to sockptr_t") 
-(and right before it)
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.9-mw0
 
-do_replace(.... unsigned int len) ignore @len parameter.
+for you to fetch changes up to 40284a072c42f6177184fb1f62ba94c69e0c0277:
 
-This means that the access_ok() in init_user_sockptr() might have received a too small @size
+  riscv: disable stack-protector for vDSO (2020-08-04 15:02:49 -0700)
 
-Presumably on old kernels your command was silently failing.
+----------------------------------------------------------------
+RISC-V Patches for the 5.9 Merge Window, Part 1
 
-Thanks.
+We have a lot of new kernel features for this merge window:
 
+* ARCH_SUPPORTS_ATOMIC_RMW, to allow OSQ locks to be enabled.
+* The ability to enable NO_HZ_FULL
+* Support for enabling kcov, kmemleak, stack protector, and VM debugging.
+* JUMP_LABEL support.
 
+There are also a handful of cleanups.
+
+next points out a trivial Kconfig merge conflict.  I don't see any way to have
+done this better: the symbols are sorted, it just happens that
+HAVE_COPY_THREAD_TLS was in the middle of two new symbols.  In case it helps
+any, here's a pretty current conflict resolution:
+
+diff --cc arch/riscv/Kconfig
+index bc37241a6875,6c4bce7cad8a..7b5905529146
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@@ -57,9 -54,6 +59,8 @@@ config RISC
+        select HAVE_ARCH_SECCOMP_FILTER
+        select HAVE_ARCH_TRACEHOOK
+        select HAVE_ASM_MODVERSIONS
+ +      select HAVE_CONTEXT_TRACKING
+-       select HAVE_COPY_THREAD_TLS
+ +      select HAVE_DEBUG_KMEMLEAK
+        select HAVE_DMA_CONTIGUOUS if MMU
+        select HAVE_EBPF_JIT if MMU
+        select HAVE_FUTEX_CMPXCHG if FUTEX
+
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      Replace HTTP links with HTTPS ones: RISC-V
+
+Atish Patra (2):
+      RISC-V: Setup exception vector early
+      RISC-V: Fix build warning for smpboot.c
+
+Chenxi Mao (1):
+      riscv: Select ARCH_SUPPORTS_ATOMIC_RMW by default
+
+Emil Renner Berthing (3):
+      riscv: Support R_RISCV_ADD64 and R_RISCV_SUB64 relocs
+      riscv: Add jump-label implementation
+      riscv: Select ARCH_HAS_DEBUG_VM_PGTABLE
+
+Greentime Hu (3):
+      RISC-V: Use a local variable instead of smp_processor_id()
+      riscv: Support irq_work via self IPIs
+      riscv: Enable context tracking
+
+Guo Ren (4):
+      riscv: Fixup static_obj() fail
+      riscv: Enable LOCKDEP_SUPPORT & fixup TRACE_IRQFLAGS_SUPPORT
+      riscv: Add STACKPROTECTOR supported
+      riscv: Cleanup unnecessary define in asm-offset.c
+
+Pekka Enberg (2):
+      mm: pgtable: Make generic pgprot_* macros available for no-MMU
+      riscv: Use generic pgprot_* macros from <linux/pgtable.h>
+
+Tobias Klauser (4):
+      riscv: Allow building with kcov coverage
+      riscv: Add kmemleak support
+      riscv: Fix typo in asm/hwcap.h uapi header
+      riscv: disable stack-protector for vDSO
+
+Zong Li (4):
+      riscv: Register System RAM as iomem resources
+      riscv: Fixup lockdep_assert_held with wrong param cpu_running
+      riscv: Fix build warning for mm/init
+      riscv: fix build warning of mm/pageattr
+
+ .../features/core/jump-labels/arch-support.txt     |  2 +-
+ .../debug/debug-vm-pgtable/arch-support.txt        |  2 +-
+ arch/riscv/Kconfig                                 | 12 ++++
+ arch/riscv/boot/Makefile                           |  2 +
+ arch/riscv/configs/defconfig                       |  1 +
+ arch/riscv/configs/nommu_k210_defconfig            |  1 +
+ arch/riscv/configs/nommu_virt_defconfig            |  1 +
+ arch/riscv/configs/rv32_defconfig                  |  1 +
+ arch/riscv/include/asm/irq_work.h                  | 10 +++
+ arch/riscv/include/asm/jump_label.h                | 60 ++++++++++++++++++
+ arch/riscv/include/asm/mmio.h                      |  6 --
+ arch/riscv/include/asm/smp.h                       |  3 +
+ arch/riscv/include/asm/stackprotector.h            | 33 ++++++++++
+ arch/riscv/include/uapi/asm/hwcap.h                |  2 +-
+ arch/riscv/include/uapi/asm/unistd.h               |  2 +-
+ arch/riscv/kernel/Makefile                         |  2 +
+ arch/riscv/kernel/asm-offsets.c                    |  3 -
+ arch/riscv/kernel/entry.S                          | 54 ++++++++++++++--
+ arch/riscv/kernel/head.S                           | 10 ++-
+ arch/riscv/kernel/jump_label.c                     | 53 ++++++++++++++++
+ arch/riscv/kernel/module.c                         | 16 +++++
+ arch/riscv/kernel/process.c                        |  6 ++
+ arch/riscv/kernel/smp.c                            | 15 +++++
+ arch/riscv/kernel/smpboot.c                        | 12 ++--
+ arch/riscv/kernel/traps.c                          |  8 +--
+ arch/riscv/kernel/vdso/Makefile                    |  3 +
+ arch/riscv/kernel/vmlinux.lds.S                    |  2 +-
+ arch/riscv/mm/Makefile                             |  2 +
+ arch/riscv/mm/init.c                               | 27 ++++++++
+ arch/riscv/mm/pageattr.c                           |  3 +-
+ include/linux/pgtable.h                            | 71 +++++++++++-----------
+ tools/arch/riscv/include/uapi/asm/unistd.h         |  2 +-
+ 32 files changed, 356 insertions(+), 71 deletions(-)
+ create mode 100644 arch/riscv/include/asm/irq_work.h
+ create mode 100644 arch/riscv/include/asm/jump_label.h
+ create mode 100644 arch/riscv/include/asm/stackprotector.h
+ create mode 100644 arch/riscv/kernel/jump_label.c
