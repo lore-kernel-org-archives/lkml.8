@@ -2,288 +2,290 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B140CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14420221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E88221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:13:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tud5yzMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHFUND (ORCPT
+        id S1726524AbgHFUN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:13:03 -0400
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:57592 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgHFUND (ORCPT
+        Thu, 6 Aug 2020 16:13:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50684 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgHFUNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:13:03 -0400
-Received: from localhost.localdomain ([93.22.39.179])
-        by mwinf5d39 with ME
-        id CAzB2300Z3rvC1Z03AzC6E; Thu, 06 Aug 2020 12:59:13 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 06 Aug 2020 12:59:13 +0200
-X-ME-IP: 93.22.39.179
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     gregkh@linuxfoundation.org, jirislaby@kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] tty: serial: icom: switch from 'pci_' to 'dma_' API
-Date:   Thu,  6 Aug 2020 08:05:07 +0200
-Message-Id: <20200806060507.730142-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Aug 2020 16:13:55 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076EgAfH175366;
+        Thu, 6 Aug 2020 14:42:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=sjtN+u4jC9Ht8p59OvrPGMDnS5TblL+US63NwcAFliM=;
+ b=Tud5yzMzSuw2emWSk2OCx8u1UwSc386u0jjuO/cZzGMfI9l8TES49e8GmGIhA8z8pfJG
+ t9faGKssXUXMv7yuAtLIGE0nnaICzVQKLsBcux60tQiEKwav+AQQ3POmaEGYAS3XBTK3
+ ckiRhqQuWZeiANchkzIDGrvDtbrc2Do3vUeKnoGrz79uM2S6G7AyFublH8pJdf5MNcwx
+ sa3UvTxlvMYQtp02NrOexYiNozqpRdJyOdl7br7Ojqy2C8AcJrNndd3qHg6nPjcvi9fg
+ ao8PJhvWbd/Wu2tFH8F2jjWQ0OoUfmZgZ9If3JH7zaRPofNRD9R1WOElhkWBY7G9T1JX Jw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32r6fxkcey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 06 Aug 2020 14:42:44 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076EdFbP010286;
+        Thu, 6 Aug 2020 14:42:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 32p5gvh4rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Aug 2020 14:42:43 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 076EgcS4013941;
+        Thu, 6 Aug 2020 14:42:38 GMT
+Received: from localhost.uk.oracle.com (/10.175.182.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Aug 2020 07:42:38 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     ast@kernel.org, daniel@iogearbox.net, andriin@fb.com, yhs@fb.com
+Cc:     linux@rasmusvillemoes.dk, andriy.shevchenko@linux.intel.com,
+        pmladek@suse.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org, shuah@kernel.org,
+        rdna@fb.com, scott.branden@broadcom.com, quentin@isovalent.com,
+        cneirabustos@gmail.com, jakub@cloudflare.com, mingo@redhat.com,
+        rostedt@goodmis.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [RFC PATCH bpf-next 0/4] bpf: add bpf-based bpf_trace_printk()-like support
+Date:   Thu,  6 Aug 2020 15:42:21 +0100
+Message-Id: <1596724945-22859-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ phishscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008060104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 adultscore=0
+ bulkscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 clxscore=1011 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008060105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+This series attempts to provide a simple way for BPF programs (and in
+future other consumers) to utilize BPF Type Format (BTF) information
+to display kernel data structures in-kernel.  The use case this
+functionality is applied to here is to support a bpf_trace_printk
+trace event-based method of rendering type information.
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+There is already support in kernel/bpf/btf.c for "show" functionality;
+the changes here generalize that support from seq-file specific
+verifier display to the more generic case and add another specific
+use case; rather than seq_printf()ing the show data, it is traced
+using the bpf_trace_printk trace event.  Other future uses of the
+show functionality could include a bpf_printk_btf() function which
+printk()ed the data instead. Oops messaging in particular would
+be an interesting application for such functionality.
 
-When memory is allocated in 'get_port_memory()', GFP_KERNEL can be used
-because it is only called from a probe function and no lock is acquired.
-The call chain is:
-   icom_probe				(the probe function)
-      --> icom_load_ports
-         --> get_port_memory
+The above potential use case hints at a potential reply to
+a reasonable objection that such typed display should be
+solved by tracing programs, where the in-kernel tracing records
+data and the userspace program prints it out.  While this
+is certainly the recommended approach for most cases, I
+believe having an in-kernel mechanism would be valuable
+also.  Critically in BPF programs it greatly simplifies
+debugging and tracing of such data to invoking a one-line
+helper.
+
+One challenge raised in an earlier iteration of this work -
+where the BTF printing was implemented as a printk() format
+specifier - was that the amount of data printed per
+printk() was large, and other format specifiers were far
+simpler.  This patchset tackles this by instead displaying
+data _as the data structure is traversed_, rathern than copying
+it to a string for later display.  The problem in doing this
+however is that such output can be intermixed with other
+bpf_trace_printk events.  The solution pursued here is to
+associate a trace ID with the bpf_trace_printk events.  For
+now, the bpf_trace_printk() helper sets this trace ID to 0,
+and bpf_trace_btf() can specify non-zero values.  This allows
+a BPF program to coordinate with a user-space program which
+creates a separate trace instance which filters trace events
+based on trace ID, allowing for clean display without pollution
+from other data sources.  Future work could enhance
+bpf_trace_printk() to do this too, either via a new helper
+or by smuggling a 32-bit trace id value into the "fmt_size"
+argument (the latter might be problematic for 32-bit platforms
+though, so a new helper might be preferred).
+
+To aid in display the bpf_trace_btf() helper is passed a
+"struct btf_ptr *" which specifies the data to be traced
+(struct sk_buff * say),  the BTF id of the type (the BTF
+id of "struct sk_buff") or a string representation of
+the type ("struct sk_buff").  A flags field is also
+present for future use.
+
+Separately a number of flags control how the output is
+rendered, see patch 3 for more details.
+
+A snippet of output from printing "struct sk_buff *"
+(see patch 3 for the full output) looks like this:
+
+          <idle>-0     [023] d.s.  1825.778400: bpf_trace_printk: (struct sk_buff){
+          <idle>-0     [023] d.s.  1825.778409: bpf_trace_printk:  (union){
+          <idle>-0     [023] d.s.  1825.778410: bpf_trace_printk:   (struct){
+          <idle>-0     [023] d.s.  1825.778412: bpf_trace_printk:    .prev = (struct sk_buff *)0x00000000b2a3df7e,
+          <idle>-0     [023] d.s.  1825.778413: bpf_trace_printk:    (union){
+          <idle>-0     [023] d.s.  1825.778414: bpf_trace_printk:     .dev = (struct net_device *)0x000000001658808b,
+          <idle>-0     [023] d.s.  1825.778416: bpf_trace_printk:     .dev_scratch = (long unsigned int)18446628460391432192,
+          <idle>-0     [023] d.s.  1825.778417: bpf_trace_printk:    },
+          <idle>-0     [023] d.s.  1825.778417: bpf_trace_printk:   },
+          <idle>-0     [023] d.s.  1825.778418: bpf_trace_printk:   .rbnode = (struct rb_node){
+          <idle>-0     [023] d.s.  1825.778419: bpf_trace_printk:    .rb_right = (struct rb_node *)0x00000000b2a3df7e,
+          <idle>-0     [023] d.s.  1825.778420: bpf_trace_printk:    .rb_left = (struct rb_node *)0x000000001658808b,
+          <idle>-0     [023] d.s.  1825.778420: bpf_trace_printk:   },
+          <idle>-0     [023] d.s.  1825.778421: bpf_trace_printk:   .list = (struct list_head){
+          <idle>-0     [023] d.s.  1825.778422: bpf_trace_printk:    .prev = (struct list_head *)0x00000000b2a3df7e,
+          <idle>-0     [023] d.s.  1825.778422: bpf_trace_printk:   },
+          <idle>-0     [023] d.s.  1825.778422: bpf_trace_printk:  },
+          <idle>-0     [023] d.s.  1825.778426: bpf_trace_printk:  .len = (unsigned int)168,
+          <idle>-0     [023] d.s.  1825.778427: bpf_trace_printk:  .mac_len = (__u16)14,
+
+Changes since v3:
+
+- Moved to RFC since the approach is different (and bpf-next is
+  closed)
+- Rather than using a printk() format specifier as the means
+  of invoking BTF-enabled display, a dedicated BPF helper is
+  used.  This solves the issue of printk() having to output
+  large amounts of data using a complex mechanism such as
+  BTF traversal, but still provides a way for the display of
+  such data to be achieved via BPF programs.  Future work could
+  include a bpf_printk_btf() function to invoke display via
+  printk() where the elements of a data structure are printk()ed
+  one at a time.  Thanks to Petr Mladek, Andy Shevchenko and
+  Rasmus Villemoes who took time to look at the earlier printk()
+  format-specifier-focused version of this and provided feedback
+  clarifying the problems with that approach.
+- Added trace id to the bpf_trace_printk events as a means of
+  separating output from standard bpf_trace_printk() events,
+  ensuring it can be easily parsed by the reader.
+- Added bpf_trace_btf() helper tests which do simple verification
+  of the various display options.
+
+Changes since v2:
+
+- Alexei and Yonghong suggested it would be good to use
+  probe_kernel_read() on to-be-shown data to ensure safety
+  during operation.  Safe copy via probe_kernel_read() to a
+  buffer object in "struct btf_show" is used to support
+  this.  A few different approaches were explored
+  including dynamic allocation and per-cpu buffers. The
+  downside of dynamic allocation is that it would be done
+  during BPF program execution for bpf_trace_printk()s using
+  %pT format specifiers. The problem with per-cpu buffers
+  is we'd have to manage preemption and since the display
+  of an object occurs over an extended period and in printk
+  context where we'd rather not change preemption status,
+  it seemed tricky to manage buffer safety while considering
+  preemption.  The approach of utilizing stack buffer space
+  via the "struct btf_show" seemed like the simplest approach.
+  The stack size of the associated functions which have a
+  "struct btf_show" on their stack to support show operation
+  (btf_type_snprintf_show() and btf_type_seq_show()) stays
+  under 500 bytes. The compromise here is the safe buffer we
+  use is small - 256 bytes - and as a result multiple
+  probe_kernel_read()s are needed for larger objects. Most
+  objects of interest are smaller than this (e.g.
+  "struct sk_buff" is 224 bytes), and while task_struct is a
+  notable exception at ~8K, performance is not the priority for
+  BTF-based display. (Alexei and Yonghong, patch 2).
+- safe buffer use is the default behaviour (and is mandatory
+  for BPF) but unsafe display - meaning no safe copy is done
+  and we operate on the object itself - is supported via a
+  'u' option.
+- pointers are prefixed with 0x for clarity (Alexei, patch 2)
+- added additional comments and explanations around BTF show
+  code, especially around determining whether objects such
+  zeroed. Also tried to comment safe object scheme used. (Yonghong,
+  patch 2)
+- added late_initcall() to initialize vmlinux BTF so that it would
+  not have to be initialized during printk operation (Alexei,
+  patch 5)
+- removed CONFIG_BTF_PRINTF config option as it is not needed;
+  CONFIG_DEBUG_INFO_BTF can be used to gate test behaviour and
+  determining behaviour of type-based printk can be done via
+  retrieval of BTF data; if it's not there BTF was unavailable
+  or broken (Alexei, patches 4,6)
+- fix bpf_trace_printk test to use vmlinux.h and globals via
+  skeleton infrastructure, removing need for perf events
+  (Andrii, patch 8)
+
+Changes since v1:
+
+- changed format to be more drgn-like, rendering indented type info
+  along with type names by default (Alexei)
+- zeroed values are omitted (Arnaldo) by default unless the '0'
+  modifier is specified (Alexei)
+- added an option to print pointer values without obfuscation.
+  The reason to do this is the sysctls controlling pointer display
+  are likely to be irrelevant in many if not most tracing contexts.
+  Some questions on this in the outstanding questions section below...
+- reworked printk format specifer so that we no longer rely on format
+  %pT<type> but instead use a struct * which contains type information
+  (Rasmus). This simplifies the printk parsing, makes use more dynamic
+  and also allows specification by BTF id as well as name.
+- removed incorrect patch which tried to fix dereferencing of resolved
+  BTF info for vmlinux; instead we skip modifiers for the relevant
+  case (array element type determination) (Alexei).
+- fixed issues with negative snprintf format length (Rasmus)
+- added test cases for various data structure formats; base types,
+  typedefs, structs, etc.
+- tests now iterate through all typedef, enum, struct and unions
+  defined for vmlinux BTF and render a version of the target dummy
+  value which is either all zeros or all 0xff values; the idea is this
+  exercises the "skip if zero" and "print everything" cases.
+- added support in BPF for using the %pT format specifier in
+  bpf_trace_printk()
+- added BPF tests which ensure %pT format specifier use works (Alexei).
 
 
-When memory is allocated in 'load_code()', GFP_KERNEL can be used because
-it is only called from a .startup function.
-   icom_open				(the .startup function of struct uart_ops)
-      --> startup
-         --> load_code
-.startup functions are protected using a semaphore and no spinlock is
-taken.
 
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
 
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
 
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
+Alan Maguire (4):
+  bpf: provide function to get vmlinux BTF information
+  bpf: make BTF show support generic, apply to seq
+    files/bpf_trace_printk
+  bpf: add bpf_trace_btf helper
+  selftests/bpf: add bpf_trace_btf helper tests
 
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
+ include/linux/bpf.h                                |   5 +
+ include/linux/btf.h                                |  38 +
+ include/uapi/linux/bpf.h                           |  63 ++
+ kernel/bpf/btf.c                                   | 962 ++++++++++++++++++---
+ kernel/bpf/core.c                                  |   5 +
+ kernel/bpf/helpers.c                               |   4 +
+ kernel/bpf/verifier.c                              |  18 +-
+ kernel/trace/bpf_trace.c                           | 121 ++-
+ kernel/trace/bpf_trace.h                           |   6 +-
+ scripts/bpf_helpers_doc.py                         |   2 +
+ tools/include/uapi/linux/bpf.h                     |  63 ++
+ tools/testing/selftests/bpf/prog_tests/trace_btf.c |  45 +
+ .../selftests/bpf/progs/netif_receive_skb.c        |  43 +
+ 13 files changed, 1257 insertions(+), 118 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_btf.c
+ create mode 100644 tools/testing/selftests/bpf/progs/netif_receive_skb.c
 
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/tty/serial/icom.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/tty/serial/icom.c b/drivers/tty/serial/icom.c
-index 624f3d541c68..94c8281ddb5f 100644
---- a/drivers/tty/serial/icom.c
-+++ b/drivers/tty/serial/icom.c
-@@ -138,24 +138,24 @@ static void free_port_memory(struct icom_port *icom_port)
- 
- 	trace(icom_port, "RET_PORT_MEM", 0);
- 	if (icom_port->recv_buf) {
--		pci_free_consistent(dev, 4096, icom_port->recv_buf,
--				    icom_port->recv_buf_pci);
-+		dma_free_coherent(&dev->dev, 4096, icom_port->recv_buf,
-+				  icom_port->recv_buf_pci);
- 		icom_port->recv_buf = NULL;
- 	}
- 	if (icom_port->xmit_buf) {
--		pci_free_consistent(dev, 4096, icom_port->xmit_buf,
--				    icom_port->xmit_buf_pci);
-+		dma_free_coherent(&dev->dev, 4096, icom_port->xmit_buf,
-+				  icom_port->xmit_buf_pci);
- 		icom_port->xmit_buf = NULL;
- 	}
- 	if (icom_port->statStg) {
--		pci_free_consistent(dev, 4096, icom_port->statStg,
--				    icom_port->statStg_pci);
-+		dma_free_coherent(&dev->dev, 4096, icom_port->statStg,
-+				  icom_port->statStg_pci);
- 		icom_port->statStg = NULL;
- 	}
- 
- 	if (icom_port->xmitRestart) {
--		pci_free_consistent(dev, 4096, icom_port->xmitRestart,
--				    icom_port->xmitRestart_pci);
-+		dma_free_coherent(&dev->dev, 4096, icom_port->xmitRestart,
-+				  icom_port->xmitRestart_pci);
- 		icom_port->xmitRestart = NULL;
- 	}
- }
-@@ -169,7 +169,8 @@ static int get_port_memory(struct icom_port *icom_port)
- 	struct pci_dev *dev = icom_port->adapter->pci_dev;
- 
- 	icom_port->xmit_buf =
--	    pci_alloc_consistent(dev, 4096, &icom_port->xmit_buf_pci);
-+	    dma_alloc_coherent(&dev->dev, 4096, &icom_port->xmit_buf_pci,
-+			       GFP_KERNEL);
- 	if (!icom_port->xmit_buf) {
- 		dev_err(&dev->dev, "Can not allocate Transmit buffer\n");
- 		return -ENOMEM;
-@@ -179,7 +180,8 @@ static int get_port_memory(struct icom_port *icom_port)
- 	      (unsigned long) icom_port->xmit_buf);
- 
- 	icom_port->recv_buf =
--	    pci_alloc_consistent(dev, 4096, &icom_port->recv_buf_pci);
-+	    dma_alloc_coherent(&dev->dev, 4096, &icom_port->recv_buf_pci,
-+			       GFP_KERNEL);
- 	if (!icom_port->recv_buf) {
- 		dev_err(&dev->dev, "Can not allocate Receive buffer\n");
- 		free_port_memory(icom_port);
-@@ -189,7 +191,8 @@ static int get_port_memory(struct icom_port *icom_port)
- 	      (unsigned long) icom_port->recv_buf);
- 
- 	icom_port->statStg =
--	    pci_alloc_consistent(dev, 4096, &icom_port->statStg_pci);
-+	    dma_alloc_coherent(&dev->dev, 4096, &icom_port->statStg_pci,
-+			       GFP_KERNEL);
- 	if (!icom_port->statStg) {
- 		dev_err(&dev->dev, "Can not allocate Status buffer\n");
- 		free_port_memory(icom_port);
-@@ -199,7 +202,8 @@ static int get_port_memory(struct icom_port *icom_port)
- 	      (unsigned long) icom_port->statStg);
- 
- 	icom_port->xmitRestart =
--	    pci_alloc_consistent(dev, 4096, &icom_port->xmitRestart_pci);
-+	    dma_alloc_coherent(&dev->dev, 4096, &icom_port->xmitRestart_pci,
-+			       GFP_KERNEL);
- 	if (!icom_port->xmitRestart) {
- 		dev_err(&dev->dev,
- 			"Can not allocate xmit Restart buffer\n");
-@@ -414,7 +418,7 @@ static void load_code(struct icom_port *icom_port)
- 	/*Set up data in icom DRAM to indicate where personality
- 	 *code is located and its length.
- 	 */
--	new_page = pci_alloc_consistent(dev, 4096, &temp_pci);
-+	new_page = dma_alloc_coherent(&dev->dev, 4096, &temp_pci, GFP_KERNEL);
- 
- 	if (!new_page) {
- 		dev_err(&dev->dev, "Can not allocate DMA buffer\n");
-@@ -494,7 +498,7 @@ static void load_code(struct icom_port *icom_port)
- 	}
- 
- 	if (new_page != NULL)
--		pci_free_consistent(dev, 4096, new_page, temp_pci);
-+		dma_free_coherent(&dev->dev, 4096, new_page, temp_pci);
- }
- 
- static int startup(struct icom_port *icom_port)
 -- 
-2.25.1
+1.8.3.1
 
