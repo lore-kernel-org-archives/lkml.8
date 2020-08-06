@@ -2,94 +2,183 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01982C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90873C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FB8221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B22221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596739135;
+	bh=2kQR9I4zXt/WNULI01GY/ypUOHIRns3YKmoIz1UaEr4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iXbHIhzVN7wA7TePAsDB4oysLHxbHsUQ0uSP57BIMZV+qWUyesoyvRzj4oRdPF8fs
+	 yL+zO65Rz01IYQNnNO019SKXIToFShGPhmxuyVYD0rZx8evC4JQKtRPee24/T/9JZD
+	 TL1wpr28lIjzro+9jbw4fzet9qSPI38cTQQFk144=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgHFSig (ORCPT
+        id S1729284AbgHFSiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:38:36 -0400
-Received: from gate.crashing.org ([63.228.1.57]:59882 "EHLO gate.crashing.org"
+        Thu, 6 Aug 2020 14:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgHFSeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:34:22 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 076IXI7v018034;
-        Thu, 6 Aug 2020 13:33:18 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 076IXGtc018033;
-        Thu, 6 Aug 2020 13:33:16 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Thu, 6 Aug 2020 13:33:16 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, nathanl@linux.ibm.com,
-        linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org,
-        Tulio Magno Quites Machado Filho <tuliom@linux.ibm.com>,
-        luto@kernel.org, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v8 5/8] powerpc/vdso: Prepare for switching VDSO to generic C implementation.
-Message-ID: <20200806183316.GV6753@gate.crashing.org>
-References: <cover.1588079622.git.christophe.leroy@c-s.fr> <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr> <878sflvbad.fsf@mpe.ellerman.id.au> <65fd7823-cc9d-c05a-0816-c34882b5d55a@csgroup.eu> <87wo2dy5in.fsf@mpe.ellerman.id.au> <20200805133505.GN6753@gate.crashing.org> <87r1sky1hm.fsf@mpe.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r1sky1hm.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.4.2.3i
+        id S1726899AbgHFSin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:38:43 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 878AF221E3;
+        Thu,  6 Aug 2020 18:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596739123;
+        bh=2kQR9I4zXt/WNULI01GY/ypUOHIRns3YKmoIz1UaEr4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fRTYpEGCjZWeocG4aY97dzfbZvAO437sqaVl2VpUuxiYy7sElhR1g3gUyoezzPBMS
+         9hojTb0yDIbtJjxuXpZpdoi+mIF/q0DYfIMi0exfQeg05CMS6LCSTCIOG/8qsYEX3X
+         ydTPApw7fIA7o+rGUqq8tYAhmdGBDpfk9d4phDC4=
+Date:   Thu, 6 Aug 2020 19:38:38 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v5 11/15] iio: sx9310: Use variable to hold &client->dev
+Message-ID: <20200806193838.092d1567@archlinux>
+In-Reply-To: <20200803175559.v5.11.If9d9c0fe089e43ea2dbc7900b6d61cd05c66f1f7@changeid>
+References: <20200803235815.778997-1-campello@chromium.org>
+        <20200803175559.v5.11.If9d9c0fe089e43ea2dbc7900b6d61cd05c66f1f7@changeid>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Mon,  3 Aug 2020 17:58:11 -0600
+Daniel Campello <campello@chromium.org> wrote:
 
-On Thu, Aug 06, 2020 at 12:03:33PM +1000, Michael Ellerman wrote:
-> Segher Boessenkool <segher@kernel.crashing.org> writes:
-> > On Wed, Aug 05, 2020 at 04:24:16PM +1000, Michael Ellerman wrote:
-> >> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> >> > Indeed, 32-bit doesn't have a redzone, so I believe it needs a stack 
-> >> > frame whenever it has anything to same.
-
-^^^
-
-> >> >     fbb60:	94 21 ff e0 	stwu    r1,-32(r1)
-> >
-> > This is the *only* place where you can use a negative offset from r1:
-> > in the stwu to extend the stack (set up a new stack frame, or make the
-> > current one bigger).
+> Improves readability by storing &client->dev in a local variable.
 > 
-> (You're talking about 32-bit code here right?)
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+This one needed some tweaking to apply as the parent is now
+set by the core code.
 
-The "SYSV" ELF binding, yeah, which is used for 32-bit on Linux (give or
-take, ho hum).
+Applied (and the ones before I didn't metion) to the togreg branch
+of iio.git and pushed out as testing,
 
-The ABIs that have a red zone are much nicer here (but less simple) :-)
+Thanks,
 
-> >> At the same time it's much safer for us to just save/restore r2, and
-> >> probably in the noise performance wise.
-> >
-> > If you want a function to be able to work with ABI-compliant code safely
-> > (in all cases), you'll have to make it itself ABI-compliant as well,
-> > yes :-)
+Jonathan
+
+> ---
 > 
-> True. Except this is the VDSO which has previously been a bit wild west
-> as far as ABI goes :)
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+>  - Added '\n' to dev_err()
+> 
+>  drivers/iio/proximity/sx9310.c | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index adb707e2d79612..589052d2d1146e 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -887,11 +887,12 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+>  static int sx9310_probe(struct i2c_client *client)
+>  {
+>  	int ret;
+> +	struct device *dev = &client->dev;
+>  	struct iio_dev *indio_dev;
+>  	struct sx9310_data *data;
+>  
+> -	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> -	if (indio_dev == NULL)
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> +	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+>  	data = iio_priv(indio_dev);
+> @@ -905,17 +906,16 @@ static int sx9310_probe(struct i2c_client *client)
+>  
+>  	ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
+>  	if (ret) {
+> -		dev_err(&client->dev, "error in reading WHOAMI register: %d",
+> -			ret);
+> +		dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
+> +	ret = sx9310_set_indio_dev_name(dev, indio_dev, data->whoami);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(&client->dev));
+> -	indio_dev->dev.parent = &client->dev;
+> +	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(dev));
+> +	indio_dev->dev.parent = dev;
+>  	indio_dev->channels = sx9310_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(sx9310_channels);
+>  	indio_dev->info = &sx9310_info;
+> @@ -927,7 +927,7 @@ static int sx9310_probe(struct i2c_client *client)
+>  		return ret;
+>  
+>  	if (client->irq) {
+> -		ret = devm_request_threaded_irq(&client->dev, client->irq,
+> +		ret = devm_request_threaded_irq(dev, client->irq,
+>  						sx9310_irq_handler,
+>  						sx9310_irq_thread_handler,
+>  						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> @@ -935,29 +935,29 @@ static int sx9310_probe(struct i2c_client *client)
+>  		if (ret)
+>  			return ret;
+>  
+> -		data->trig =
+> -			devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
+> -					       indio_dev->name, indio_dev->id);
+> +		data->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
+> +						    indio_dev->name,
+> +						    indio_dev->id);
+>  		if (!data->trig)
+>  			return -ENOMEM;
+>  
+> -		data->trig->dev.parent = &client->dev;
+> +		data->trig->dev.parent = dev;
+>  		data->trig->ops = &sx9310_trigger_ops;
+>  		iio_trigger_set_drvdata(data->trig, indio_dev);
+>  
+> -		ret = devm_iio_trigger_register(&client->dev, data->trig);
+> +		ret = devm_iio_trigger_register(dev, data->trig);
+>  		if (ret)
+>  			return ret;
+>  	}
+>  
+> -	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
+> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+>  					      iio_pollfunc_store_time,
+>  					      sx9310_trigger_handler,
+>  					      &sx9310_buffer_setup_ops);
+>  	if (ret)
+>  		return ret;
+>  
+> -	return devm_iio_device_register(&client->dev, indio_dev);
+> +	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  
+>  static int __maybe_unused sx9310_suspend(struct device *dev)
 
-It could get away with many things because it was guaranteed to be a
-leaf function.  Some of those things even violate the ABIs, but you can
-get away with it easily, much reduced scope.  Now if this is generated
-code, violating the rules will catch up with you sooner rather than
-later ;-)
-
-
-Segher
