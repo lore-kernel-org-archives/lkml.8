@@ -2,127 +2,112 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A34C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F339C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 878D92311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7562523119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QUJyF20P"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nxRpKDfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgHFQpF (ORCPT
+        id S1728730AbgHFQph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:45:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33558 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728720AbgHFQo3 (ORCPT
+        Thu, 6 Aug 2020 12:45:37 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16829 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729092AbgHFQn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:44:29 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076Cm3kU143057;
-        Thu, 6 Aug 2020 08:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=kLXKmSnVlmdtUZjHTj796ycXcVrQoTJVvUMMwy3L9uQ=;
- b=QUJyF20PNAG4Ka4uAR7bLNxR0pMVq3Z1fVJpqLDi83iBffcGSb7gFtX72O/tEvMITdFV
- Es5cXi44KlzbCrzbSb+ceiuskAjUSlk2EZyvorzfrB800X/Mkz1jHB0LkrhE4i/K2UAa
- 6/7shZVjkrBDIG6yiAf3h7neuGDQlqbvvK2F9d6fv/5QE0/QXL6Jjc+aJLIinzalruX7
- 0xIC3aLpBGJSOE+7MKp9tempq+kfGBcgT3o7B1N1srVeVZqOEK5Nc6NFWANVtL2ybgcT
- Gc1JGFIwSPC3sbzUUgnjJCjdWPglA2dfzDj5NWB4/I8GPyqUlOQ61fWi5ZltO/y/gKrs Fg== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rgnf3335-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 08:53:53 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076CiKeN019063;
-        Thu, 6 Aug 2020 12:53:51 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 32n0185fhe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 12:53:50 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076CrmrX53412194
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 12:53:48 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 719F7A4060;
-        Thu,  6 Aug 2020 12:53:48 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 162FCA405B;
-        Thu,  6 Aug 2020 12:53:46 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Thu,  6 Aug 2020 12:53:45 +0000 (GMT)
-Date:   Thu, 6 Aug 2020 18:23:45 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     peterz@infradead.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
-Message-ID: <20200806125345.GB31068@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
- <20200804104520.GB2657@hirez.programming.kicks-ass.net>
- <20200804121007.GJ24375@linux.vnet.ibm.com>
- <20200804124755.GJ2674@hirez.programming.kicks-ass.net>
- <87ft90z6dy.fsf@mpe.ellerman.id.au>
- <20200806085429.GX2674@hirez.programming.kicks-ass.net>
+        Thu, 6 Aug 2020 12:43:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c32e80000>; Thu, 06 Aug 2020 09:42:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 09:43:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 09:43:56 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 16:43:55 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <9deaee09-c422-5694-7c19-d85354b9b703@gmail.com>
+ <14793e8c-30dc-5cf5-fdf9-6f64fa433818@gmail.com>
+ <c9709f37-02dd-cd1a-b83f-07784365945d@nvidia.com>
+Message-ID: <268dd631-bf5e-8236-1e38-786989cc06ac@nvidia.com>
+Date:   Thu, 6 Aug 2020 09:43:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200806085429.GX2674@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0 mlxscore=0
- phishscore=0 suspectscore=1 clxscore=1015 impostorscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060091
+In-Reply-To: <c9709f37-02dd-cd1a-b83f-07784365945d@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596732136; bh=AVma5jGXArZVd4VOJRBFrVAEISxBozYZ4GHgECLEV44=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=nxRpKDfI7GJ2NX/+f4CE3ZG2NfJ8m63EHQqW9Lf4HtzODFngRWyrvW3/GI193Al3Z
+         5hT8fQDXbpDTJ3xoNXf9vZHsjrqS7IyHjLvCDPPk/in4bwaTGtFAom24aw+DsK56a3
+         gIPd99YZJ/GczfS6LsvaFQGe8tkShsAjW4+WWHIrdNmImypEY3VPulBZEdIHm/X19J
+         jH0heLw6YbcZ3Y5C4Ao2vPFTsUq8mWI0VUio6pD5zNG/bNio5cuC3/OF4SBu9Cpxkh
+         Vnp27Dc6+2CgPwcd1JVjNuO1cQ6b910aqxloJoxcvBMNhJIypyKrxkCDxHIn6XAGf0
+         CcXe1CbyKVa2Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* peterz@infradead.org <peterz@infradead.org> [2020-08-06 10:54:29]:
 
-> On Thu, Aug 06, 2020 at 03:32:25PM +1000, Michael Ellerman wrote:
-> 
-> > That brings with it a bunch of problems, such as existing software that
-> > has been developed/configured for Power8 and expects to see SMT8.
-> > 
-> > We also allow LPARs to be live migrated from Power8 to Power9 (and back), so
-> > maintaining the illusion of SMT8 is considered a requirement to make that work.
-> 
-> So how does that work if the kernel booted on P9 and demuxed the SMT8
-> into 2xSMT4? If you migrate that state onto a P8 with actual SMT8 you're
-> toast again.
-> 
-
-To add to what Michael already said, the reason we don't expose the demux of
-SMT8 into 2xSMT4 to userspace, is to make the userspace believe they are on
-a SMT8. When the kernel is live migrated from P8 to P9, till the time of reboot
-they would only have the older P8 topology. After reboot the kernel topology
-would change, but the userspace is made to believe that they are running on
-SMT8 core by way of keeping the sibling_cpumask at SMT8 core level.
-
--- 
-Thanks and Regards
-Srikar Dronamraju
+On 8/6/20 9:42 AM, Sowjanya Komatineni wrote:
+>
+> On 8/6/20 9:37 AM, Dmitry Osipenko wrote:
+>> 06.08.2020 19:13, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 06.08.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ..
+>>>> We cant use active status check for specific pads under calibration.
+>>>> This is common bit for all pads.
+>>> I'm not sure why this is a problem.
+>>>
+>> IIUC, the start_calibration() should wait for the MIPI_CAL_STATUS_ACTIVE
+>> and finish_calibration() should wait for MIPI_AUTO_CAL_DONE_CSIA/B.
+>
+> As soon as START bit it set, FSM will set ACTIVE =3D 1
+>
+> There is no added advantage of waiting for ACTIVE to be in=20
+> start_calibration()
+Also like I explained in other post of same discussion, ACTIVE we will=20
+be 1 even when other parallel pads are under calibration.
