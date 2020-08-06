@@ -2,115 +2,130 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C68C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7BB3221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:27:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DyT6FG8C"
+	by mail.kernel.org (Postfix) with ESMTP id CC37222DCC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596734836;
+	bh=rG6YravFTKqffBTxWyAmkaV605CSK2gQ7u+8+ReQXPI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PEn7jDFMKkRKe2a1S4EokBu/GiR3XfA7DYYgQRg4uNAjZeOmCnvUa7CscbQiF38hX
+	 W4sJaN+yugymJdBoa1OY0PUVdTlprq2SOEviH4NFXrUoIgwD2vaZ6x/EfoA4eDy88z
+	 sn68vAh9/0svSGY4Bv3l1QpDG0tRV4BNBpuRzjEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbgHFR06 (ORCPT
+        id S1728666AbgHFR1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44992 "EHLO
+        Thu, 6 Aug 2020 13:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729403AbgHFRBx (ORCPT
+        with ESMTP id S1729685AbgHFRBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:01:53 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2568CC00214F
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:54:06 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l6so45358146qkc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:54:06 -0700 (PDT)
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23B9AC0698CD;
+        Thu,  6 Aug 2020 06:50:41 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id c2so29333088edx.8;
+        Thu, 06 Aug 2020 06:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9UsHAX7esgjtVzNUCEqqvqu86wCp66quILvQY7iEL8g=;
-        b=DyT6FG8ChV01l/RE876rDNuC6j5DZJjP1C4cM04Su+qQP/+5Fv7Ee/cT/IS1nBx360
-         Pv5BJ+oxTlFo/nboo9WeCzc9ezk3F9gAj3slg5OXaDJWKtg8l5CEVDSnTnJ9QvdXVnN6
-         CoPWeXdDnTCkJXuSjv/FC7NntuHtLLFNd9taIhYEFs+8Ice71Sv/a4WJ62TJNP+AEcD2
-         CCuGrbnxz0ywxNZylEFrKVP5V/KajDbma/cMnWfiLLuInEgosYYRmNviv9apqXpN/QnZ
-         7qsJyIt0ydS6C4ytPStPVKjRrHh7ed7LPCduQgkT0aUJKGY2nLeKYN6B703T1+qSmADU
-         LRWA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pYOAU4zyTtJPYkEQfnQ4aWaYGVh8/wQuqp7IpTtJ6do=;
+        b=LvlvYpq9JUMWnC9/yFSS4wQkoMzm46piNKWyoQ5DuTwW/jjZl7ANZ4j592Uyj1yy3Y
+         31H9pN3pbfyxBlVjBg64O+j4LwbZFScsNLIjvF/xJffyXB6z4b1w/YA+UINKPohJPaKM
+         DhL8lwL+cYEe5vSJyl7gu1SCgZsX7iilU2sURy2UrTJgoEa0KrNbaU6eVmOsX1Dtp1Vs
+         A040v/hmZTFY4JNauiwROduRvAeiJehMUPswUJA9yeARYk+30rTwtZkzc7LQhJPv/sEt
+         kSF0maMNyYzQhF8UsZAf9VAKcQmDJRyt8GUPaEH5dTUt+t8xVfWwudrXhnv/OhxEJC80
+         KuwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9UsHAX7esgjtVzNUCEqqvqu86wCp66quILvQY7iEL8g=;
-        b=pjtNvlsEz4pjOfMIOWGhKGfrWt9NH9eek3ttEPNQkVu6Gr7zEbAJer8qulSsX/4//q
-         g0leiyOcR5bxgYJ1b8gbCU221Sm3dkjEGJ2eSZUWnZ/Y1CTxqI9Yt+Hf0G7Iyc3PE1LL
-         MMdHYG/YaZkmnT6hFN813AWKNpNYxhRz424JCNN5np/JKkbc/tDcCDrXigqDLDd884du
-         Jhy8W1JJfFnWysBmh3z1yrMhlJ72S5lZatb1M3YUomjNbi2QBUV9/pbM5Hrd6o8PYi0l
-         hCcP8V1ypLXODltpsCDo+t3nD/viFczTTLO4o7Db1Q/8I5e6FBanurtRwro7EIGMdSKA
-         ieug==
-X-Gm-Message-State: AOAM5329FtWZUVIiCTiGcEk8MmX42LpuJcWHukA58t95P7d7zVL1rKXa
-        Jz5MhXDEyaXDPmQDlGUyK8m2f9Lxid5B6SNwql/qcA==
-X-Google-Smtp-Source: ABdhPJzbBj8BOLmvjWfD0JzRDsoVdCv0FKrvWOOJLr1shEyMS3Imf50S97xGa6pPDYHYJAHuGq+9AddRZGrZu80kcLg=
-X-Received: by 2002:a37:a495:: with SMTP id n143mr9203612qke.330.1596729244782;
- Thu, 06 Aug 2020 08:54:04 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=pYOAU4zyTtJPYkEQfnQ4aWaYGVh8/wQuqp7IpTtJ6do=;
+        b=YR5fT+QSuZ/dBEwGSsK5mYJhzW5ArBsUUbmkhC2vO9ujgh28/V39u3+fYVINmBhtPa
+         VzC3j7Pk5FyqHRdOTHGnlahNraAcGs+h/zjzwQwYmatyOSSUjy02EgrhDf3cxdSRmu84
+         WyWmD8/v3U8oWvcw4Sapmd//IPbXaqZcVmuIpo2kBzMNbHMFK2SAmgAuh773KjV+Hytk
+         0o2UlcGFts9eAQe/WnqPSLjeh/8+L5gGfdk2bfgzsPKckEliazNJ4Rey/jyu0h4K+Epr
+         PN5gPZZRJWhORszPSQqsBulo3xw4+mHny527WiQ7OsfBMxQK205LVUKr/5nXt08GoRIm
+         BxmA==
+X-Gm-Message-State: AOAM5313a4W/raGmtwtZunkPZFZMPgMCw3CtdHFOILHjACLXUZfm19nC
+        SaFhMSomLM8OaA6qV8euLvs=
+X-Google-Smtp-Source: ABdhPJzYxh9mNb/BHUYWWWsOHgNjPXvNZwBtPKO84YZdhn5EUVlGhMh8pj2PSHlZ0cZ/+d3acTJDPQ==
+X-Received: by 2002:a05:6402:13d9:: with SMTP id a25mr4192009edx.141.1596721839522;
+        Thu, 06 Aug 2020 06:50:39 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id c7sm3614732edf.1.2020.08.06.06.50.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 06:50:38 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 15:50:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     x86@kernel.org, Jan Kara <jack@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: improve compat handling for the i386 u64 alignment quirk v2
+Message-ID: <20200806135036.GA2077896@gmail.com>
+References: <20200731122202.213333-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-3-warthog618@gmail.com>
- <CAMpxmJXocdDTvC7_76UwZ9FONn86p0MjZtorRKTR5bxN7PJy6g@mail.gmail.com>
- <20200805051853.GA122005@sol> <20200806011513.GC11890@sol>
-In-Reply-To: <20200806011513.GC11890@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 6 Aug 2020 17:53:54 +0200
-Message-ID: <CAMpxmJXk42efa5PoK=BuwHeU-9T_886uEXK8AworQ__334aU5Q@mail.gmail.com>
-Subject: Re: [PATCH v2 02/18] gpio: uapi: define uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731122202.213333-1-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 3:15 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Wed, Aug 05, 2020 at 01:18:53PM +0800, Kent Gibson wrote:
-> > On Tue, Aug 04, 2020 at 07:42:34PM +0200, Bartosz Golaszewski wrote:
-> > > On Sat, Jul 25, 2020 at 6:20 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> [snip]
->
-> > > > config, info, info_changed and event structs receive updated versions,
-> > > > and the first three new ioctls.
-> > > >
-> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > > ---
-> > >
-> > > Hi Kent,
-> > >
-> > > Thanks a lot for your work on this. Please see comments below.
-> > >
-> > > One thing I'd change globally for better readability is to have all
-> > > new symbols marked as v2 - even if they have no counterparts in v1. I
-> > > know libgpiod will wrap it all anyway but I think it's still a good
-> > > way to make our work in user-space easier.
-> > >
-> >
-> > Fair enough.  Oh joy.
-> >
->
-> Given that the intent is to highlight that the symbols are related to the
-> v2 of the GPIO uAPI, and not the second version of a particular type, it
-> makes more sense to me that the v2 is placed adjacent to the GPIO in the
-> name.  e.g. gpioline_flag_v2 would become gpiov2line_flag.
->
-> Does that work for you?
->
 
-Yes, except that gpiov2line is a terrible prefix. Perhaps we should
-make that into gpiov2_line_flag and same for all others? Maybe even
-gpio_v2_line_flag if that doesn't make the symbols too long/too hard
-to read.
+* Christoph Hellwig <hch@lst.de> wrote:
 
-Bartosz
+> Hi all,
+> 
+> the i386 ABI is a little special in that it uses less than natural
+> alignment for 64-bit integer types (u64 and s64), and a significant
+> amount of our compat handlers deals with just that.  Unfortunately
+> there is no good way to check for this specific quirk at runtime,
+> similar how in_compat_syscall() checks for a compat syscall.  This
+> series adds such a check, and then uses the quota code as an example
+> of how this improves the compat handling.  I have a few other places
+> in mind where this will also be useful going forward.
+> 
+> Changes since v1:
+>  - use asm-generic/compat.h instead of linux/compat.h for
+>    compat_u64 and compat_s64
+>  - fix a typo
+> 
+> Diffstat:
+>  b/arch/arm64/include/asm/compat.h        |    2 
+>  b/arch/mips/include/asm/compat.h         |    2 
+>  b/arch/parisc/include/asm/compat.h       |    2 
+>  b/arch/powerpc/include/asm/compat.h      |    2 
+>  b/arch/s390/include/asm/compat.h         |    2 
+>  b/arch/sparc/include/asm/compat.h        |    3 
+>  b/arch/x86/entry/syscalls/syscall_32.tbl |    2 
+>  b/arch/x86/include/asm/compat.h          |    3 
+>  b/fs/quota/Kconfig                       |    5 -
+>  b/fs/quota/Makefile                      |    1 
+>  b/fs/quota/compat.h                      |   34 ++++++++
+>  b/fs/quota/quota.c                       |   73 +++++++++++++++---
+>  b/include/asm-generic/compat.h           |    8 ++
+>  b/include/linux/compat.h                 |    9 ++
+>  b/include/linux/quotaops.h               |    3 
+>  b/kernel/sys_ni.c                        |    1 
+>  fs/quota/compat.c                        |  120 -------------------------------
+>  17 files changed, 113 insertions(+), 159 deletions(-)
+
+If nobody objects to this being done at runtime, and if it's 100% ABI 
+compatible, then the x86 impact looks good to me:
+
+Acked-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
