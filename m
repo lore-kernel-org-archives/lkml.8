@@ -2,80 +2,113 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3652C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1355DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6DD221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF3922CAF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739370;
-	bh=5nwPKu2c7dkQrGtzL6LA+yW44/UqSKxYq4VNokfpuKc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wt4bAfcF3A8zCGOK3T1b3+ObcXqRaU8hwNbiK3+GSZboLs5LkDz+9SxXNAfruN2Rb
-	 +T66X8Tk2wuOTN51pb4TdwQXrKdDo7np/AhiSEI+LD0wPIATxpDEY4Y2VyVgXGQqxm
-	 Y8rgJa/QJUSFPZt0uWj33bo2BFuSJN8e9g8Av1xs=
+	s=default; t=1596739376;
+	bh=u+1HGN9MykfdvUiljd3ywd/elL+4BMhGex8+hTChb8k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qQTCB5LZHc/DX1VcaRhmLDbGCkxIm9ox2uzYo/bUm5BTv5e9EvEFuxv2Q/MIZYczf
+	 qrtg0a5oyl+EqfxQEnMmiZJqiVuUh+uSl1jAj8Au5y7/g6BVeb7rfENHRISDNZ483+
+	 A7Q6ronjuqit+qjGeKKpEdLhuv7G8Uk4tmPULw94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgHFSmp (ORCPT
+        id S1730153AbgHFSmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbgHFSVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:21:51 -0400
-Received: from localhost.localdomain (unknown [194.230.155.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727976AbgHFSmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:42:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AACD122CE3;
-        Thu,  6 Aug 2020 18:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3BC5221E2;
+        Thu,  6 Aug 2020 18:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738105;
-        bh=5nwPKu2c7dkQrGtzL6LA+yW44/UqSKxYq4VNokfpuKc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEgyjomsMoi1BFSWY8gCec2B4/q2Pq75dQpIw60bSofKWB72/qyz5rcT+tpYSEhE/
-         agpw62Ugw4k3jgXE5TpFTFC8Rvy6hcmfjCWN8qOhxQsQ5uYZo4Vhh8bOBfGJEtEnRS
-         PEy1pSyBCQLsfnXBnVNsplmQIyAdng8RyS1xKyHI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
-Subject: [PATCH v2 02/41] mmc: s3cmci: Remove unneeded machine header include
-Date:   Thu,  6 Aug 2020 20:20:19 +0200
-Message-Id: <20200806182059.2431-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
-References: <20200806181932.2253-1-krzk@kernel.org>
+        s=default; t=1596739358;
+        bh=u+1HGN9MykfdvUiljd3ywd/elL+4BMhGex8+hTChb8k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CriL3uclknhQ5xQHnbof2S7VM3qtbLGk46mEtdSbiagrMvu7TUxRmWJ8wjCLuaaXO
+         6mYWsAVva9o++qxYs7FmOOLirYnQdxrWou4+JRqKUX37lEyd0KDzakrufMEtYratoZ
+         PG8/g7OOBx0qYnKqpgU9gyCvUKlXU8zy4cDG5rWY=
+Date:   Thu, 6 Aug 2020 19:42:33 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v5 15/15] iio: sx9310: Use irq trigger flags from
+ firmware
+Message-ID: <20200806194233.68d92802@archlinux>
+In-Reply-To: <20200803175559.v5.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
+References: <20200803235815.778997-1-campello@chromium.org>
+        <20200803175559.v5.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The s3cmci driver does not use machine header mach/dma.h.
+On Mon,  3 Aug 2020 17:58:15 -0600
+Daniel Campello <campello@chromium.org> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/mmc/host/s3cmci.c | 1 -
- 1 file changed, 1 deletion(-)
+> From: Stephen Boyd <swboyd@chromium.org>
+> 
+> We shouldn't need to set default irq trigger flags here as the firmware
+> should have properly indicated the trigger type, i.e. level low, in the
+> DT or ACPI tables.
+> 
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Series all applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it,
 
-diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
-index b5df948f8155..60fc3fc30fb4 100644
---- a/drivers/mmc/host/s3cmci.c
-+++ b/drivers/mmc/host/s3cmci.c
-@@ -26,7 +26,6 @@
- #include <linux/mmc/slot-gpio.h>
- 
- #include <plat/gpio-cfg.h>
--#include <mach/dma.h>
- #include <mach/gpio-samsung.h>
- 
- #include <linux/platform_data/mmc-s3cmci.h>
--- 
-2.17.1
+Thanks,
+
+Jonathan
+
+> ---
+> 
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3:
+>  - Added irq trigger flags commit to the series.
+> 
+> Changes in v2: None
+> 
+>  drivers/iio/proximity/sx9310.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index a68766708fb304..db97b5339d0eff 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -948,7 +948,7 @@ static int sx9310_probe(struct i2c_client *client)
+>  		ret = devm_request_threaded_irq(dev, client->irq,
+>  						sx9310_irq_handler,
+>  						sx9310_irq_thread_handler,
+> -						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> +						IRQF_ONESHOT,
+>  						"sx9310_event", indio_dev);
+>  		if (ret)
+>  			return ret;
 
