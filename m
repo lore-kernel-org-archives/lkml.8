@@ -2,237 +2,121 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7384C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C03C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28256206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31D0206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqOUSExp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I33yC6oS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgHFR60 (ORCPT
+        id S1726471AbgHFR6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgHFR6Z (ORCPT
+        Thu, 6 Aug 2020 13:58:54 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50140 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgHFR6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:58:25 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73275C061574;
-        Thu,  6 Aug 2020 10:58:25 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id m200so22002427ybf.10;
-        Thu, 06 Aug 2020 10:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=38zt7R0RJPvUtymX3Nw4Froxt2V5VzBCbTJwdCMITjk=;
-        b=JqOUSExpWEr6MrFaSCly9Ovija/fz43XDW+gr6PI61X+B+JCPytJ2Vf1F9JIMC7LuV
-         t7EG7svIbvbImejCECaNF0WFsDqeEaBI8FZLkOA4kechvVj2051f6rhhB5xk3iIaSM2F
-         qYK8KCMLC6dNC0Tfl6UL8+lfIKSER1HbggNtkRJmBZdFbHfchW1bj2qfa9PLbR/q0I5a
-         zdje0Orjx+M8gmCTn0POcb7PLabdLmbaSAF3CtQ5qikd0OzNB9IwRYIiJYLKSrqnfw7z
-         uuLv0PUSZrw5TxyVDFCVyRVXR6zSHQP6tZ4e19lTYqrHa41MutsJkkPJ4gf/2bfvdJbZ
-         Nd/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=38zt7R0RJPvUtymX3Nw4Froxt2V5VzBCbTJwdCMITjk=;
-        b=K0/fjFvLtQcIT+ZGB9G7Nib41xduzR+TRp7PwE9dKRtl9DZjtp287ryAL8LjKe2cbw
-         qX4TEW/Fj+dZBcYh2P/T6f6KVIUYUBkxy/mSqxp2hpuCHSs4huVqoCz/5j6gygtz8UBT
-         p8ch8haGeJvZb/k/6QX+guurkY1gmoJMiAB2p1JowMNS7kHYOeG9N4g1yOniTGv2t/jB
-         6zKv3JpBuSRQskTEFPOvoW1GAR4NSXJin6tfBNqtRQxikoIVHluOPZVgcSfoGoHrnkmw
-         yULdASGrANLAyvldw06GbfiGEgbR5nUhcaSbRSiAqUyVzqdJ82xqbHGLhYSV33Bc8l8D
-         gwrw==
-X-Gm-Message-State: AOAM53183e0cowIqhH2+4iaeYB/ru9gtVGr2bHKgCwNwGKvMMpHMVHU3
-        PCfMW7v0ciKFZ3gxgQwwe2ppb8zGzUUcy0zETB4=
-X-Google-Smtp-Source: ABdhPJz355Ybf7YZoM14a0jlC2NgBFxprVG+YySjYZNVzQuSWG8GFbt/H3f/xBFH7oB6PrZTgeImqQGI4NkzBYFnW3k=
-X-Received: by 2002:a25:84cd:: with SMTP id x13mr14685208ybm.425.1596736702777;
- Thu, 06 Aug 2020 10:58:22 -0700 (PDT)
+        Thu, 6 Aug 2020 13:58:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076HqMx9104451;
+        Thu, 6 Aug 2020 17:58:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=GWGjS1okergUbUW1f9Q9NaiNB9H9selvvFJ3V+2VHMM=;
+ b=I33yC6oSful38sp4NtJLagmNfQV7JDBMd+pei8BruFXnjxz+1VmgzeyAxtdgnh2nJCnc
+ x7ix7+R6u3Ox38n4EBAul91XFP4gzq/TlDw5lJ3gOzEr17XYsSBIVrOz0DLoJgHjkWgR
+ TZeDBJ4dDaFbyTqT2q8sJLXdAx+U1sk6b/zfHWX05NfBVtSCgceBNNdCW4oIf7r5GXXt
+ h+k3V+X7ueBkiM5usoTcMQHpSIzKOHSXfpmQBaIoj+ssDXreQ8dkHgspjptjA+rWk/tt
+ SikPnCoqjIOafVW+dxP7z8AggVQrz3ciZ5MrQ2chDiQFNGBQskOwaNCE96z3Zq8IPXK6 Vw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 32r6ep4gv0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 06 Aug 2020 17:58:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076HrP7g168276;
+        Thu, 6 Aug 2020 17:58:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 32qy8nu4r7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Aug 2020 17:58:38 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 076Hwab6013255;
+        Thu, 6 Aug 2020 17:58:36 GMT
+Received: from [10.74.109.129] (/10.74.109.129)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Aug 2020 10:58:36 -0700
+Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring
+ pair request
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+References: <20200805112746.15475-1-peter.ujfalusi@ti.com>
+ <20200805113237.GX12965@vkoul-mobl>
+ <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <83ffe78c-3c3b-a1a3-ae17-90a0a1f4da93@oracle.com>
+Date:   Thu, 6 Aug 2020 10:58:34 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200722054314.2103880-1-irogers@google.com> <CAEf4BzaBYaFJ3eUinS9nHeykJ0xEbZpwLts33ZDp1PT=bkyjww@mail.gmail.com>
- <CAP-5=fXMUWFs6YtQVuxjenCrOmKtKYCqZE3YofwdR=ArDYSwbQ@mail.gmail.com> <CAEf4BzYiY30de5qmiKeazG4ewyziXtdhHFFH4vjp1wi4iAXqiw@mail.gmail.com>
-In-Reply-To: <CAEf4BzYiY30de5qmiKeazG4ewyziXtdhHFFH4vjp1wi4iAXqiw@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 6 Aug 2020 10:58:12 -0700
-Message-ID: <CAEf4BzZ_67M6nJZFL73ANYYARiErmv9aiYygw8JwJW4qyWGNog@mail.gmail.com>
-Subject: Re: [RFC PATCH] bpftool btf: Add prefix option to dump C
-To:     Ian Rogers <irogers@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ malwarescore=0 clxscore=1015 mlxscore=0 priorityscore=1501 adultscore=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 8:47 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Jul 31, 2020 at 6:47 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Tue, Jul 21, 2020 at 11:58 PM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Tue, Jul 21, 2020 at 10:44 PM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > When bpftool dumps types and enum members into a header file for
-> > > > inclusion the names match those in the original source. If the same
-> > > > header file needs to be included in the original source and the bpf
-> > > > program, the names of structs, unions, typedefs and enum members will
-> > > > have naming collisions.
-> > >
-> > > vmlinux.h is not really intended to be used from user-space, because
-> > > it's incompatible with pretty much any other header that declares any
-> > > type. Ideally we should make this better, but that might require some
-> > > compiler support. We've been discussing with Yonghong extending Clang
-> > > with a compile-time check for whether some type is defined or not,
-> > > which would allow to guard every type and only declare it
-> > > conditionally, if it's missing. But that's just an idea at this point.
-> >
-> > Thanks Andrii! We're not looking at user-space code but the BPF code.
-> > The prefix idea comes from a way to solve this problem in C++ with
-> > namespaces:
-> >
-> > namespace vmlinux {
-> > #include "vmlinux.h"
-> > }
-> >
-> > As the BPF programs are C code then the prefix acts like the
-> > namespace. It seems strange to need to extend the language.
->
-> This is a classic case of jumping to designing a solution without
-> discussing a real problem first :)
->
-> You don't need to use any of the kernel headers together with
-> vmlinux.h (and it won't work as well), because vmlinux.h is supposed
-> to have all the **used** types from the kernel. So BPF programs only
-> include vmlinux.h and few libbpf-provided headers with helpers. Which
-> is why I assumed that you are trying to use it from user-space. But
-> see below on what went wrong.
->
-> >
-> > > Regardless, vmlinux.h is also very much Clang-specific, and shouldn't
-> > > work well with GCC. Could you elaborate on the specifics of the use
-> > > case you have in mind? That could help me see what might be the right
-> > > solution. Thanks!
-> >
-> > So the use-case is similar to btf_iter.h:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/testing/selftests/bpf/progs/bpf_iter.h
-> > To avoid collisions with somewhat cleaner macro or not games.
-> >
-> > Prompted by your concern I was looking into changing bpf_iter.h to use
-> > a prefix to show what the difference would be like. I also think that
-> > there may be issues with our kernel and tool set up that may mean that
-> > the prefix is unnecessary, if I fix something else. Anyway, to give an
-> > example I needed to build the selftests but this is failing for me.
-> > What I see is:
-> >
-> > $ git clone git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
-> > $ cd bpf-next
-> > $ make defconfig
-> > $ cat >>.config <<EOF
-> > CONFIG_DEBUG_INFO=y
-> > CONFIG_DEBUG_INFO_BTF=y
-> > EOF
-> > $ make -j all
-> > $ mkdir /tmp/selftests
-> > $ make O=/tmp/selftests/ TARGETS=bpf kselftest
-> > ...
-> >   CLANG    /tmp/selftests//kselftest/bpf/tools/build/bpftool/profiler.bpf.o
-> > skeleton/profiler.bpf.c:18:21: error: invalid application of 'sizeof'
-> > to an incomplete type 'struct bpf_perf_event_value'
-> >         __uint(value_size, sizeof(struct bpf_perf_event_value));
-> >                            ^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Checking with bpftool the vmlinux lacks struct bpf_perf_event_value
-> > but as this is unconditionally defined in bpf.h this seems wrong. Do
-> > you have any suggestions and getting a working build?
->
-> It is unconditionally defined in bpf.h, but unless kernel code really
-> uses that type for something, compiler won't generate DWARF
-> information for that type, which subsequently won't get into BTF.
-> Adding CONFIG_DEBUG_INFO_BTF=y ensures you get BTF type info
-> generated, but only for subsystems that were compiled into vmlinux
-> according to your kernel config.
->
-> In this case, default config doesn't enable CONFIG_BPF_EVENTS, which
-> is a requirement to compile kernel/trace/bpf_trace.c, which in turn
-> uses struct bpf_perf_event_value in the helper signature.
->
-> So the solution in your case would be to use a slightly richer kernel
-> config, which enables more of the BPF subsystem. You can check
-> selftests/bpf/config for a list of options we typically enable to run
-> of selftests, for instance.
->
+On 8/5/20 6:17 AM, Grygorii Strashko wrote:
+> 
+> 
+> On 05/08/2020 14:32, Vinod Koul wrote:
+>> On 05-08-20, 14:27, Peter Ujfalusi wrote:
+>>> The original commit mixed up the forward and completion ring IDs for the
+>>> rx flow configuration.
+>>
+>> Acked-By: Vinod Koul <vkoul@kernel.org>
+>>
+>>>
+>>> Fixes: 4927b1ab2047 ("dmaengine: ti: k3-udma: Switch to 
+>>> k3_ringacc_request_rings_pair")
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> ---
+>>> Hi Santosh, Vinod,
+>>>
+>>> the offending patch was queued via ti SoC tree.
+>>> Santosh, can you pick up this fix also?
+> 
+> Thank you Peter for catching this - it's valid issue.
+> but I'd like to note that issue was discovered with private code and
+> nothing is broken in Master.
+> 
+> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+Will queue this up for next merge window.
 
-So we've discussed this and related issues today at BPF office hours
-and few more thoughts occurred to me after I left the call.
-
-You don't really have to use vmlinux.h, if it's inconvenient. Unless
-you want to use some internal kernel type that's not available in
-kernel-headers. Otherwise feel free to use normal kernel header
-includes and don't use vmlinux.h. If you are using BPF_CORE_READ(),
-any type is automatically CO-RE-relocatable, even if they come from
-#include <linux/whatever.h>. If you need to use direct memory accesses
-with programs like fentry/fexit, then adding:
-
-#pragma clang attribute push (__attribute__((preserve_access_index)),
-apply_to = record)
-
-before you include any headers would make types in those headers
-automatically CO-RE-relocatable even for direct memory accesses. So
-this is just something to keep in mind.
-
-
-But the way we've been handling this was like this.
-
-On BPF program side:
-
-#include "vmlinux.h"
-#include "my_custom_types.h"
-
-...
-
-
-On user-space program side:
-
-#include <stdint.h> /* and whatever else is needed */
-#include "my_custom_types.h"
-
-Then in my_custom_types.h you just assume all the needed types are
-defined (in either vmlinux.h or in user-space header includes):
-
-
-struct my_struct {
-    uint64_t whatever;
-};
-
-So far worked fine. It still sucks you can't include some of the
-kernel headers to get some useful macro, but to solve that we'd need
-Clang extension to check that some type X is already defined, as we
-discussed in the call.
-
-Hope this helps a bit.
-
-
-
-[...]
+regards,
+Santosh
