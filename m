@@ -2,134 +2,94 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C08C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B591207FC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8332173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I67mP7zN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="wFJLq5LH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgHFAW3 (ORCPT
+        id S1726344AbgHFAau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 20:22:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60986 "EHLO
+        Wed, 5 Aug 2020 20:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHFAW1 (ORCPT
+        with ESMTP id S1725779AbgHFAas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 20:22:27 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6BC8C061574;
-        Wed,  5 Aug 2020 17:22:27 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id x24so10717768otp.3;
-        Wed, 05 Aug 2020 17:22:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3DAufWk9vSwTboJltSs7ArOo0iNxdupoCTtJrGJ9kM4=;
-        b=I67mP7zNbseyzlaP/E4elCoSCfLEs5lcQU/MDL0tbqt0rJUE6yR+aAIdaTgrsRODwx
-         jm8Z/+9s58LpprEAFAMxlS6296EX9HEuFu7y5NJz22d5Iwk0+tq75zXIXocZOemtutKB
-         7uCdFakgCvmVwWuAv6y3Wo4BsL0X9HTbA/ybjJbLsFIN5Sjtke/n4VamOPA8K7Mo3ZFl
-         CGB7M+wGBket3oaPCmc+ohDEsSpeWAEeKyB5WJx+Gu/MMUw7Ruri5TQoXYp9LwkZB87u
-         PyEasWCr7kNVs+//R5N5G6dWmAo+IrijEZ7/ztHpf6ZXJ0oo6B4QE1iWcUu8MRP3zQcj
-         LeUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3DAufWk9vSwTboJltSs7ArOo0iNxdupoCTtJrGJ9kM4=;
-        b=LTTZ8LfoDyQYSUFbrcwyrnJPRrsy31t0IbVkqtTDKMCti7n38OSt9lEujYJd8bC5SZ
-         EF/Hi68HEvkkM4elQMYeCPYImy7qyDkBgBLRYTfL+MSl4jzolg5y4E0XGYRa6LSk2ELv
-         cCi2OmruN6G8rzYlQxYUONNbMTOHuGLfX0yfmAbVyvRkGFgrajaFHkxaXA3WMOjxm+75
-         39Gjdz6QZhw1NfjE4LrMw2XybYXhJTkHEF2LKYI+f6xo8VARcujPUQJruFcUj+sJ0eUp
-         cE+EOSnLz245XLiTP6crSIAZbInHGtdWD2FGFVJ+k0pDMpm5gdUBv37D7B05aDC3Ne08
-         KT4A==
-X-Gm-Message-State: AOAM5312k/vl6fVZS2K9BqxTCdUaWEE/9wdhK2K4IWO1NgFxJBCULeD4
-        h7azcg5mz4ordp/kNUGAhWGzXdxhcnhnHM7B0BsnLp6r
-X-Google-Smtp-Source: ABdhPJywu6kmkXLawFxNZI6Uf+Prg8T2FmHQcTexCsXa5EqmFv9HjlHp0DjCUjrXK1Wvebd4woiWGg//OEtNbiO2gvE=
-X-Received: by 2002:a9d:22ca:: with SMTP id y68mr4895359ota.56.1596673347193;
- Wed, 05 Aug 2020 17:22:27 -0700 (PDT)
+        Wed, 5 Aug 2020 20:30:48 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F60C061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 17:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k9ZUUoVT/rC8cRMVNQlujKR+wnRdpm96UsegNSVO9/A=; b=wFJLq5LHslH58jU71H4rejyAM
+        4BSHcOUv4cOu16/dnhsitej9zJ/2bIvYV7mx0AaxxldC8llbrfQfDj/9AbDeHSHAedxg7zsA6ngPM
+        U0Hy1G9c3XvprYmrBpkjTDXrmEVptIxf3uzx7EG3xu3Wyx9ff5xWigyDxyKQ3fpgbQvWmRCrzDgPM
+        0ZwxZdKIBvh1F0/9ugKpCj2rVlV6lWWlgra7Zm9TZu8/WvyaVBeQ1Zw069zRVchaNv+eIJrlOHkej
+        WBk75kLTC/iUjlSSwQkCbEFFArRbc34oXZ1bOVACOCgfauSU8Tb0oAfdXx0gxpqVTTSvGze4ceeNg
+        R5JwVCoTw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48850)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k3Tnx-00042b-Lt; Thu, 06 Aug 2020 01:30:45 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k3Tnu-0005b9-Ji; Thu, 06 Aug 2020 01:30:42 +0100
+Date:   Thu, 6 Aug 2020 01:30:42 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Norbert Lange <nolange79@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH] arm: Add support for ZSTD compressed kernel
+Message-ID: <20200806003042.GB1551@shell.armlinux.org.uk>
+References: <20200805230555.84214-1-nolange79@gmail.com>
 MIME-Version: 1.0
-References: <20200805141202.8641-1-yulei.kernel@gmail.com>
-In-Reply-To: <20200805141202.8641-1-yulei.kernel@gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 6 Aug 2020 08:22:16 +0800
-Message-ID: <CANRm+Czyes8N00SvUjkbgcvk1EXzkG9u_Av16bzxJGowy0V=JA@mail.gmail.com>
-Subject: Re: [RFC 0/9] KVM:x86/mmu:Introduce parallel memory virtualization to
- boost performance
-To:     Yulei Zhang <yulei.kernel@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Haiwei Li <lihaiwei.kernel@gmail.com>,
-        Yulei Zhang <yuleixzhang@tencent.com>,
-        Junaid Shahid <junaids@google.com>,
-        Ben Gardon <bgardon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805230555.84214-1-nolange79@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also Cc Junaid Shahid, Ben Gardon
-On Wed, 5 Aug 2020 at 22:11, Yulei Zhang <yulei.kernel@gmail.com> wrote:
->
-> From: Yulei Zhang <yuleixzhang@tencent.com>
->
-> Currently in KVM memory virtulization we relay on mmu_lock to synchronize
-> the memory mapping update, which make vCPUs work in serialize mode and
-> slow down the execution, especially after migration to do substantial
-> memory mapping setup, and performance get worse if increase vCPU numbers
-> and guest memories.
->
-> The idea we present in this patch set is to mitigate the issue with
-> pre-constructed memory mapping table. We will fast pin the guest memory
-> to build up a global memory mapping table according to the guest memslots
-> changes and apply it to cr3, so that after guest starts up all the vCPUs
-> would be able to update the memory concurrently, thus the performance
-> improvement is expected.
->
-> And after test the initial patch with memory dirty pattern workload, we
-> have seen positive results even with huge page enabled. For example,
-> guest with 32 vCPUs and 64G memories, in 2M/1G huge page mode we would get
-> more than 50% improvement.
->
->
-> Yulei Zhang (9):
->   Introduce new fields in kvm_arch/vcpu_arch struct for direct build EPT
->     support
->   Introduce page table population function for direct build EPT feature
->   Introduce page table remove function for direct build EPT feature
->   Add release function for direct build ept when guest VM exit
->   Modify the page fault path to meet the direct build EPT requirement
->   Apply the direct build EPT according to the memory slots change
->   Add migration support when using direct build EPT
->   Introduce kvm module parameter global_tdp to turn on the direct build
->     EPT mode
->   Handle certain mmu exposed functions properly while turn on direct
->     build EPT mode
->
->  arch/mips/kvm/mips.c            |  13 +
->  arch/powerpc/kvm/powerpc.c      |  13 +
->  arch/s390/kvm/kvm-s390.c        |  13 +
->  arch/x86/include/asm/kvm_host.h |  13 +-
->  arch/x86/kvm/mmu/mmu.c          | 537 ++++++++++++++++++++++++++++++--
->  arch/x86/kvm/svm/svm.c          |   2 +-
->  arch/x86/kvm/vmx/vmx.c          |  17 +-
->  arch/x86/kvm/x86.c              |  55 ++--
->  include/linux/kvm_host.h        |   7 +-
->  virt/kvm/kvm_main.c             |  43 ++-
->  10 files changed, 648 insertions(+), 65 deletions(-)
->
-> --
-> 2.17.1
->
+On Thu, Aug 06, 2020 at 01:05:55AM +0200, Norbert Lange wrote:
+> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+> index 434a16982e34..1af01bfe6638 100644
+> --- a/arch/arm/boot/compressed/head.S
+> +++ b/arch/arm/boot/compressed/head.S
+> @@ -614,7 +614,11 @@ not_relocated:	mov	r0, #0
+>   */
+>  		mov	r0, r4
+>  		mov	r1, sp			@ malloc space above stack
+> +#if defined(CONFIG_KERNEL_ZSTD)
+> +		add	r2, sp, #0x30000	@ Context needs ~160K
+
+That's going to mess up kexec:
+
+        /*
+         * The zImage length does not include its stack (4k) or its
+         * malloc space (64k).  Include this.
+         */
+        len += 0x11000;
+
+I guess we need to add this to the information provided to kexec.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
