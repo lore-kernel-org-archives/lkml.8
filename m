@@ -2,230 +2,109 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D3CC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB53C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC2B0221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59822224D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a310Y1Dh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QThCNrkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgHFTC3 (ORCPT
+        id S1729813AbgHFTCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:02:29 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14673 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgHFTBo (ORCPT
+        Thu, 6 Aug 2020 15:02:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgHFTCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:01:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2c53650003>; Thu, 06 Aug 2020 12:00:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 12:01:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 12:01:43 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 19:01:43 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 6 Aug 2020 19:01:42 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.172.190]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f2c53950000>; Thu, 06 Aug 2020 12:01:42 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 07/10] media: tegra-video: Add support for selection ioctl ops
-Date:   Thu, 6 Aug 2020 12:01:31 -0700
-Message-ID: <1596740494-19306-8-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
-References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 6 Aug 2020 15:02:32 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8634CC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:02:32 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id di22so28748151edb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yQz8jNT7jbM1zvtc9MWwIejDFC/8b3Ez/9JWOSG7lno=;
+        b=QThCNrkJPHr7s8iGlc4uJowP3s2qbSNAZJpUW7ELidrJUK4mRke6zh9BN727pTaUcX
+         s0Zdlw7Yaz2UO4I4m0bPU7i0qJgki0oxGA9nHGGa22RnjGxdNU/ZrqiH1bjNEtU3n0T7
+         QhloKmQ7m8OCCX86CWv9iFnezJNfb5LboVOUqU1SoQOpM4AATGJUIwltweLLiPN/Wtqc
+         KkE97A0v/Ob2s+fW8cVjdA1WCYb3a1f/aXSSns2Q3rWqgu1JGZm8ZFM910hEHPuSupIQ
+         fDDi8TRxAAbWx9P0lLKwFYnP0XEPve49vOaD80w93nLM17VQ5XiNOGJq6SWp+38D1SO+
+         +a0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yQz8jNT7jbM1zvtc9MWwIejDFC/8b3Ez/9JWOSG7lno=;
+        b=hlTlYBELYSooFk69z34642OEXBxFD2dX7fuWqJAGVk06VASpaoDUxJ92k/ju+LTC89
+         0qui+cdL5yfq7picE3qXDgGDO856q8PWxrrRAMXivm4r8/q2EkqaxVymxrE+yJDnfCqL
+         8fIbU0PuLyPSjhDulWm8Nr2zpIX49K0bdE786ypa4WJlMvpiF7MygJbWGaY9Ngq+vTvl
+         r4PfYL4rkdZrcqJS9eVFsL2moNzl+2JhGUumdN6WoJm/ZCy98vmytfTiJ7Ny39h2t/7V
+         z2X1dAlYdZMK6Ay40lL/P3txqJF5J7mqhEHZEqQAU7qswkyvxY78PvpftYfwrauEMokx
+         uCmg==
+X-Gm-Message-State: AOAM532dT7oNSR215X109NOd1/+AvIhcU+SQNzAdjkuIAByD/DUYwx16
+        nRz5hZ2d7TPg8v5XV6GbU1o=
+X-Google-Smtp-Source: ABdhPJzm3Zj+ASLTF3FMTFHWlkAVgt69skwnKs2qqEcaZxXLYEOnyqK4lKXFT9L3QRgSHWdh9CG7uA==
+X-Received: by 2002:aa7:db10:: with SMTP id t16mr5281903eds.196.1596740551235;
+        Thu, 06 Aug 2020 12:02:31 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:a7fb:e200:d567:ec52:e0a5:f485])
+        by smtp.gmail.com with ESMTPSA id w19sm4262655ejv.92.2020.08.06.12.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 12:02:30 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 21:02:29 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH v2 6/6] openrisc: uaccess: Add user address space check
+ to access_ok
+Message-ID: <20200806190229.b7jbmkavu7qqzegy@ltop.local>
+References: <20200805210725.310301-1-shorne@gmail.com>
+ <20200805210725.310301-7-shorne@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596740453; bh=MY7OOyZbj1LgF9iiygCS22H/LqLtPRo9jxHh5A4z9vs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=a310Y1Dhqq/dfKu+UgCJTdMbOS7BpSwg9rpRiMA4yDOKknr844Xmy+/EnM/SHKuuO
-         2a72qnsTzqKHeHBzH/F9OJGi66m+ZieEh7OZSYZwT5BMP8Se8IbB8NjblqRtmHSuEn
-         vdv4F+3sDq+FfGCD1qL84J/Uc6a6ZImT1wGw5sUk/h3MBILCUPdNZ8JypjzfykPLGM
-         wFvh+6uf32Ryx/8wuGBZT5VHWtPV67rFY4ae1HpNm+HmZ6oixnc+BSPMHnzfUFP7MC
-         RasIyc0j8c3AkZurcufLCDfoT+q9rBj/fFN68UgH7+XWED7w/i3RgKRGVu0/rcomJr
-         AZI4Pzz/gwm7g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805210725.310301-7-shorne@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds selection v4l2 ioctl operations to allow configuring
-a selection rectangle in the sensor through the Tegra video device
-node.
+On Thu, Aug 06, 2020 at 06:07:25AM +0900, Stafford Horne wrote:
+> Now that __user annotations are fixed for openrisc uaccess api's we can
+> add checking to the access_ok macro.  This patch adds the __chk_user_ptr
+> check, on normal builds the added check is a nop.
+> 
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
+> ---
+>  arch/openrisc/include/asm/uaccess.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/openrisc/include/asm/uaccess.h b/arch/openrisc/include/asm/uaccess.h
+> index 85a55359b244..53ddc66abb3f 100644
+> --- a/arch/openrisc/include/asm/uaccess.h
+> +++ b/arch/openrisc/include/asm/uaccess.h
+> @@ -57,7 +57,8 @@ static inline int __range_ok(unsigned long addr, unsigned long size)
+>  
+>  #define access_ok(addr, size)						\
+>  ({ 									\
+> -	__range_ok((unsigned long)(addr), (size));			\
+> +	__chk_user_ptr(addr);						\
+> +	__range_ok((__force unsigned long)(addr), (size));		\
+>  })
 
-Some sensor drivers supporting crop uses try_crop rectangle from
-v4l2_subdev_pad_config during try format for computing binning.
+Just for info, __force is not needed when casting a pointer to
+unsigned long (or uintptr_t). It's not incorrect to use one
+but I think it's to avoid __force as much as possible.
 
-So with selection ops support, this patch also updates try format
-to use try crop rectangle either from subdev frame size enumeration
-or from subdev crop boundary.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/staging/media/tegra-video/vi.c | 106 +++++++++++++++++++++++++++++++++
- 1 file changed, 106 insertions(+)
-
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index deb1252..29a172f 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -474,6 +474,13 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
- 	struct v4l2_subdev *subdev;
- 	struct v4l2_subdev_format fmt;
- 	struct v4l2_subdev_pad_config *pad_cfg;
-+	struct v4l2_subdev_frame_size_enum fse = {
-+		.which = V4L2_SUBDEV_FORMAT_TRY,
-+	};
-+	struct v4l2_subdev_selection sdsel = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+		.target = V4L2_SEL_TGT_CROP_BOUNDS,
-+	};
- 	int ret;
- 
- 	subdev = tegra_channel_get_remote_source_subdev(chan);
-@@ -499,6 +506,24 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
- 	fmt.which = V4L2_SUBDEV_FORMAT_TRY;
- 	fmt.pad = 0;
- 	v4l2_fill_mbus_format(&fmt.format, pix, fmtinfo->code);
-+
-+	/*
-+	 * Attempt to obtain the format size from subdev.
-+	 * If not available, try to get crop boundary from subdev.
-+	 */
-+	fse.code = fmtinfo->code;
-+	ret = v4l2_subdev_call(subdev, pad, enum_frame_size, pad_cfg, &fse);
-+	if (ret) {
-+		ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
-+		if (ret)
-+			return -EINVAL;
-+		pad_cfg->try_crop.width = sdsel.r.width;
-+		pad_cfg->try_crop.height = sdsel.r.height;
-+	} else {
-+		pad_cfg->try_crop.width = fse.max_width;
-+		pad_cfg->try_crop.height = fse.max_height;
-+	}
-+
- 	ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
- 	if (ret < 0)
- 		return ret;
-@@ -588,6 +613,85 @@ static int tegra_channel_set_subdev_active_fmt(struct tegra_vi_channel *chan)
- 	return 0;
- }
- 
-+static int tegra_channel_g_selection(struct file *file, void *priv,
-+				     struct v4l2_selection *sel)
-+{
-+	struct tegra_vi_channel *chan = video_drvdata(file);
-+	struct v4l2_subdev *subdev;
-+	struct v4l2_subdev_format fmt = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+	};
-+	struct v4l2_subdev_selection sdsel = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+		.target = sel->target,
-+	};
-+	int ret;
-+
-+	subdev = tegra_channel_get_remote_source_subdev(chan);
-+	if (!v4l2_subdev_has_op(subdev, pad, get_selection))
-+		return -ENOTTY;
-+
-+	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+	/*
-+	 * Try the get selection operation and fallback to get format if not
-+	 * implemented.
-+	 */
-+	ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
-+	if (!ret)
-+		sel->r = sdsel.r;
-+	if (ret != -ENOIOCTLCMD)
-+		return ret;
-+
-+	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
-+	if (ret < 0)
-+		return ret;
-+
-+	sel->r.left = 0;
-+	sel->r.top = 0;
-+	sel->r.width = fmt.format.width;
-+	sel->r.height = fmt.format.height;
-+
-+	return 0;
-+}
-+
-+static int tegra_channel_s_selection(struct file *file, void *fh,
-+				     struct v4l2_selection *sel)
-+{
-+	struct tegra_vi_channel *chan = video_drvdata(file);
-+	struct v4l2_subdev *subdev;
-+	int ret;
-+	struct v4l2_subdev_selection sdsel = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+		.target = sel->target,
-+		.flags = sel->flags,
-+		.r = sel->r,
-+	};
-+
-+	subdev = tegra_channel_get_remote_source_subdev(chan);
-+	if (!v4l2_subdev_has_op(subdev, pad, set_selection))
-+		return -ENOTTY;
-+
-+	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+
-+	if (vb2_is_busy(&chan->queue))
-+		return -EBUSY;
-+
-+	ret = v4l2_subdev_call(subdev, pad, set_selection, NULL, &sdsel);
-+	if (!ret) {
-+		sel->r = sdsel.r;
-+		/*
-+		 * Subdev active format resolution may have changed during
-+		 * set selection operation. So, update channel format to
-+		 * the sub-device active format.
-+		 */
-+		return tegra_channel_set_subdev_active_fmt(chan);
-+	}
-+
-+	return ret;
-+}
-+
- static int tegra_channel_enum_input(struct file *file, void *fh,
- 				    struct v4l2_input *inp)
- {
-@@ -645,6 +749,8 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
- 	.vidioc_streamoff		= vb2_ioctl_streamoff,
- 	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
- 	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
-+	.vidioc_g_selection		= tegra_channel_g_selection,
-+	.vidioc_s_selection		= tegra_channel_s_selection,
- };
- 
- /*
--- 
-2.7.4
-
+-- Luc
