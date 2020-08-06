@@ -2,127 +2,91 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486DCC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3181C433E0
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 966D2206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436962177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596735356;
-	bh=iNFLlgEhiYwp8ZRVI4J6gnGFP+JhjSTOqd0S/pIkyto=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=BArkfmF12YY44ce5iu6VnQxNs/oyrskd/2d9V+JBGBBwTaxeNgujG4q8LKJg4cB7N
-	 dPX2sbFo3IgOp2LFge0npzz8VzrO1GUoKOSgT5FL5Pb42cTJiRfcr0xZE1wQMBjwEc
-	 j2PZq0Kn7WrCdVdsv/1XXmUPnzJfnUmsyKzYFxKY=
+	s=default; t=1596735357;
+	bh=d/Xylb6F3zb0kZ2gd52Fq58UKLgcP+AqxybVL4QzT0s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TbcIRkDb8l0QOP4pJ8ZBczgr6wYROHN6kLkRhWxh3MTgk0MP7lVuU85r/58T4E2jr
+	 XGaLoS5REyK0CE5mIhTSZHUt70zWmxFGv5N5jIfWXD893r8rBk227VAgNavv9mjHF4
+	 aBoh0QXtUu0sE0J6+zpXn0WBfE7kxs1U8AnLi7xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730629AbgHFRfs (ORCPT
+        id S1729529AbgHFRfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 13:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729339AbgHFRfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729549AbgHFRfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:35:23 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D180823131;
-        Thu,  6 Aug 2020 15:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA80822DA7;
+        Thu,  6 Aug 2020 12:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596726464;
-        bh=iNFLlgEhiYwp8ZRVI4J6gnGFP+JhjSTOqd0S/pIkyto=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y05pH6hS7jyZT5I8hGUXIH6dhp6PsUwz5DjbgHn90eVss5blosSYAtqvXLAZi0cru
-         f/6d9Z2uXGUfy8Dt/nLbxnBREXGcOJF2eIAY58tqgMl8+/8KY3/bfqo+hawGgia2CQ
-         XCtAqh4Tnn0mF+9oROVTrcDvkJ111VpXtBDsG5RA=
-Date:   Thu, 6 Aug 2020 08:07:43 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, riteshh@linux.ibm.com,
-        rgoldwyn@suse.de, agruenba@redhat.com, linux-btrfs@vger.kernel.org
-Subject: [GIT PULL v2] iomap: new code for 5.9-rc1
-Message-ID: <20200806150743.GC6090@magnolia>
+        s=default; t=1596715965;
+        bh=d/Xylb6F3zb0kZ2gd52Fq58UKLgcP+AqxybVL4QzT0s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oMfbAypuu0haKllRVB9om26o5NMUVEcwU2Mxvwec2f1tRqgDaqBDg6MH6qyOvTPlQ
+         U62cg7k10H/gnnKyYkfzt4gzRtQIvvBQ6lOkj/xjC/uHZcaV/dnWjHDOsPeXiFEfhB
+         AP+cO9p5XsCl4BwlUqCP7NsLnkIjnV8/Yd+yHfH8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k3bgh-000F1t-K2; Thu, 06 Aug 2020 09:55:47 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Aug 2020 09:55:47 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     yangerkun <yangerkun@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, drjones@redhat.com, marc.zyngier@arm.com,
+        christoffer.dall@linaro.org, stable-commits@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: Patch "KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts" has
+ been added to the 4.4-stable tree
+In-Reply-To: <6084bc97-11ea-4b7d-086e-fb98880fca6c@huawei.com>
+References: <159230500664142@kroah.com>
+ <6084bc97-11ea-4b7d-086e-fb98880fca6c@huawei.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <dec976884660057c6705be64e1e1cd20@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yangerkun@huawei.com, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, james.morse@arm.com, drjones@redhat.com, marc.zyngier@arm.com, christoffer.dall@linaro.org, stable-commits@vger.kernel.org, kvm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Kun,
 
-Please pull these new changes to the iomap code for 5.9.  The most
-notable changes are:
+On 2020-08-06 03:26, yangerkun wrote:
+> Hi,
+> 
+> Not familiar with kvm. And I have a question about this patch. Maybe
+> backport this patch 3204be4109ad("KVM: arm64: Make vcpu_cp1x() work on
+> Big Endian hosts") without 52f6c4f02164 ("KVM: arm64: Change 32-bit
+> handling of VM system registers") seems not right?
 
-1) iomap no longer invalidate the page cache when performing a direct
-read, since doing so is unnecessary and the old directio code doesn't do
-that either.
+This seems sensible. Please post a backport of this patch, assuming
+you are in a position to actually test it (I'm not able to run BE
+kernels, let alone userspace).
 
-2) iomap embraced the use of returning ENOTBLK from a direct write to
-trigger falling back to a buffered write since ext4 already did this and
-btrfs wants it for their port.
+Thanks,
 
-3) iomap falls back to buffered writes if we're doing a direct write and
-the page cache invalidation after the flush fails; this was necessary to
-handle a corner case in the btrfs port.
-
-4) Remove email virus scanner detritus that was accidentally included in
-yesterday's pull request.  Clearly I need(ed) to update my git branch
-checker scripts. :(
-
-The branch merges cleanly with your HEAD branch as of a few minutes ago.
-Please let me know if there are any strange problems.
-
---D
-
-The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
-
-  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.9-merge-5
-
-for you to fetch changes up to 60263d5889e6dc5987dc51b801be4955ff2e4aa7:
-
-  iomap: fall back to buffered writes for invalidation failures (2020-08-05 09:24:16 -0700)
-
-----------------------------------------------------------------
-New code for 5.9:
-- Make sure we call ->iomap_end with a failure code if ->iomap_begin
-  failed in any way; some filesystems need to try to undo things.
-- Don't invalidate the page cache during direct reads since we already
-  sync'd the cache with disk.
-- Make direct writes fall back to the page cache if the pre-write
-  cache invalidation fails.  This avoids a cache coherency problem.
-- Fix some idiotic virus scanner warning bs in the previous tag.
-
-----------------------------------------------------------------
-Andreas Gruenbacher (1):
-      iomap: Make sure iomap_end is called after iomap_begin
-
-Christoph Hellwig (2):
-      xfs: use ENOTBLK for direct I/O to buffered I/O fallback
-      iomap: fall back to buffered writes for invalidation failures
-
-Dave Chinner (1):
-      iomap: Only invalidate page cache pages on direct IO writes
-
- fs/ext4/file.c       |  2 ++
- fs/gfs2/file.c       |  3 ++-
- fs/iomap/apply.c     | 13 +++++++++----
- fs/iomap/direct-io.c | 37 +++++++++++++++++++++----------------
- fs/iomap/trace.h     |  1 +
- fs/xfs/xfs_file.c    |  8 ++++----
- fs/zonefs/super.c    |  7 +++++--
- 7 files changed, 44 insertions(+), 27 deletions(-)
+         M.
+-- 
+Jazz is not dead. It just smells funny...
