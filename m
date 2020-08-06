@@ -2,298 +2,148 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3391EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD5B20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9179222C9F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrOzapY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgHFStP (ORCPT
+        id S1728414AbgHFSta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:49:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43380 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbgHFStK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:49:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3B6D8AC83;
-        Thu,  6 Aug 2020 18:49:25 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     amit.pundir@linaro.org, hch@lst.de, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     rientjes@google.com, jeremy.linton@arm.com,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH v3 1/2] dma-pool: fix coherent pool allocations for IOMMU mappings
-Date:   Thu,  6 Aug 2020 20:47:54 +0200
-Message-Id: <20200806184756.32075-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200806184756.32075-1-nsaenzjulienne@suse.de>
-References: <20200806184756.32075-1-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Aug 2020 14:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgHFSt3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:49:29 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C76CC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:49:29 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id r11so17686473pfl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RzCR8eOyGZpHLydYs0qnEBF3ql3Tt87KmFjZ6QFWP+0=;
+        b=HrOzapY58HGT/QHFZ2Ar3eHGxaNQBne46zo/lYKat8FzI+hw3SWo56er1DkIwL+30D
+         1fav0XJZzhxLEOCZbOJxYSt+b6Gv5d7+U/zsZ6BPh01SV9Lfa9U9+Y/hM3OTKQ2KF05C
+         Qr0/O7nzG7mD7ireeuYHehgI4o6pQ/K9ZSt+ESoVmDDelsk84B1gVs0luwnkthHlWZoK
+         K1/tLWNmiuN1QjpA0XOuFHIgTWXw9etIwXQ6N4oM/ohR4cIojBhZrbopqbOTQMiUkDhs
+         nKRtwIDZf5MSzRcrDojl/fWt8rEYOTcCgBZEOFBgtrPaeO7Tx7Mji6wCKtQIGpuAWvSL
+         ndNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RzCR8eOyGZpHLydYs0qnEBF3ql3Tt87KmFjZ6QFWP+0=;
+        b=DEDdNRWJ6tr6byM4M7qwMQjIl5qdl3zm9y2dIlexl8Qt3A3WcSi3hlwn4VPEMT+QMk
+         5CU6a0OpZZZpC+gLfvmXk+IQGj1DAF+XnPGwJzJEp+V9WCjI6EiTUM8ALlmCq6+z3bTY
+         6Cn/jZ/5B87xyBadTg3UPHq3m9Kw9hMbSpP4CyxYkDURsDi9i/lUbgDLCQPSb49NxXDn
+         IwsJVuRHk071508kUvXS1Pd0kkJExeI+wvyJcMQTBzRuo226OyVnczn4ff6KB3zZWzh+
+         nabibxLqE6jhYFHEuLTkNYtPlmw2DMPPD+OOq43niH9FDpUu4VFmBqhsYAmy3xDlKfvp
+         RP9Q==
+X-Gm-Message-State: AOAM533qWoostOnTQ8tuUdZI2mb/Cj18Wrb8le2GXwWIC3pfYHN+FhEE
+        +6UPHoF17v3CKS7qcW409A==
+X-Google-Smtp-Source: ABdhPJwwWS0/MG9ulSnZhDQM2qzYL9cXvhe9nZ4acBdeqU8xXU5hMDmpWXhEhM2l/9LO9LWZ5oAnDA==
+X-Received: by 2002:a62:82c1:: with SMTP id w184mr9809084pfd.202.1596739768843;
+        Thu, 06 Aug 2020 11:49:28 -0700 (PDT)
+Received: from ip-172-31-41-194.ap-northeast-1.compute.internal (ec2-52-199-21-241.ap-northeast-1.compute.amazonaws.com. [52.199.21.241])
+        by smtp.gmail.com with ESMTPSA id u24sm9096730pfm.20.2020.08.06.11.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 11:49:28 -0700 (PDT)
+From:   nao.horiguchi@gmail.com
+To:     linux-mm@kvack.org
+Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
+        mike.kravetz@oracle.com, osalvador@suse.de, tony.luck@intel.com,
+        david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
+        zeil@yandex-team.ru, cai@lca.pw, naoya.horiguchi@nec.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 00/12] HWPOISON: soft offline rework
+Date:   Thu,  6 Aug 2020 18:49:11 +0000
+Message-Id: <20200806184923.7007-1-nao.horiguchi@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+Hi,
 
-When allocating coherent pool memory for an IOMMU mapping we don't care
-about the DMA mask.  Move the guess for the initial GFP mask into the
-dma_direct_alloc_pages and pass dma_coherent_ok as a function pointer
-argument so that it doesn't get applied to the IOMMU case.
+This patchset is the latest version of soft offline rework patchset
+targetted for v5.9.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Since v5, I dropped some patches which tweak refcount handling in
+madvise_inject_error() to avoid the "unknown refcount page" error.
+I don't confirm the fix (that didn't reproduce with v5 in my environment),
+but this change surely call soft_offline_page() after holding refcount,
+so the error should not happen any more.
+
+Dropped patches
+- mm,madvise: call soft_offline_page() without MF_COUNT_INCREASED
+- mm,madvise: Refactor madvise_inject_error
+- mm,hwpoison: remove MF_COUNT_INCREASED
+- mm,hwpoison: remove flag argument from soft offline functions
+
+Thanks,
+Naoya Horiguchi
+
+Quoting cover letter of v5:
+----
+Main focus of this series is to stabilize soft offline.  Historically soft
+offlined pages have suffered from racy conditions because PageHWPoison is
+used to a little too aggressively, which (directly or indirectly) invades
+other mm code which cares little about hwpoison.  This results in unexpected
+behavior or kernel panic, which is very far from soft offline's "do not
+disturb userspace or other kernel component" policy.
+
+Main point of this change set is to contain target page "via buddy allocator",
+where we first free the target page as we do for normal pages, and remove
+from buddy only when we confirm that it reaches free list. There is surely
+race window of page allocation, but that's fine because someone really want
+that page and the page is still working, so soft offline can happily give up.
+
+v4 from Oscar tries to handle the race around reallocation, but that part
+seems still work in progress, so I decide to separate it for changes into
+v5.9.  Thank you for your contribution, Oscar.
+
 ---
+Previous versions:
+  v1: https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
+  v2: https://lore.kernel.org/linux-mm/20191017142123.24245-1-osalvador@suse.de/
+  v3: https://lore.kernel.org/linux-mm/20200624150137.7052-1-nao.horiguchi@gmail.com/
+  v4: https://lore.kernel.org/linux-mm/20200716123810.25292-1-osalvador@suse.de/
+  v5: https://lore.kernel.org/linux-mm/20200805204354.GA16406@hori.linux.bs1.fc.nec.co.jp/T/#t
+---
+Summary:
 
-Changes since v1:
-  - Check if phys_addr_ok() exists prior calling it
+Naoya Horiguchi (5):
+      mm,hwpoison: cleanup unused PageHuge() check
+      mm, hwpoison: remove recalculating hpage
+      mm,hwpoison-inject: don't pin for hwpoison_filter
+      mm,hwpoison: introduce MF_MSG_UNSPLIT_THP
+      mm,hwpoison: double-check page count in __get_any_page()
 
- drivers/iommu/dma-iommu.c   |   4 +-
- include/linux/dma-direct.h  |   3 -
- include/linux/dma-mapping.h |   5 +-
- kernel/dma/direct.c         |  13 ++--
- kernel/dma/pool.c           | 114 +++++++++++++++---------------------
- 5 files changed, 62 insertions(+), 77 deletions(-)
+Oscar Salvador (7):
+      mm,hwpoison: Un-export get_hwpoison_page and make it static
+      mm,hwpoison: Kill put_hwpoison_page
+      mm,hwpoison: Unify THP handling for hard and soft offline
+      mm,hwpoison: Rework soft offline for free pages
+      mm,hwpoison: Rework soft offline for in-use pages
+      mm,hwpoison: Refactor soft_offline_huge_page and __soft_offline_page
+      mm,hwpoison: Return 0 if the page is already poisoned in soft-offline
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 4959f5df21bd..5141d49a046b 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1035,8 +1035,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
- 
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
- 	    !gfpflags_allow_blocking(gfp) && !coherent)
--		cpu_addr = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page,
--					       gfp);
-+		page = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &cpu_addr,
-+					       gfp, NULL);
- 	else
- 		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
- 	if (!cpu_addr)
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 5a3ce2a24794..6e87225600ae 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -73,9 +73,6 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
- }
- 
- u64 dma_direct_get_required_mask(struct device *dev);
--gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
--				  u64 *phys_mask);
--bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size);
- void *dma_direct_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 		gfp_t gfp, unsigned long attrs);
- void dma_direct_free(struct device *dev, size_t size, void *cpu_addr,
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 016b96b384bd..52635e91143b 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -522,8 +522,9 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
- 			pgprot_t prot, const void *caller);
- void dma_common_free_remap(void *cpu_addr, size_t size);
- 
--void *dma_alloc_from_pool(struct device *dev, size_t size,
--			  struct page **ret_page, gfp_t flags);
-+struct page *dma_alloc_from_pool(struct device *dev, size_t size,
-+		void **cpu_addr, gfp_t flags,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t));
- bool dma_free_from_pool(struct device *dev, void *start, size_t size);
- 
- int
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index bb0041e99659..db6ef07aec3b 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -43,7 +43,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
- 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
- }
- 
--gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
-+static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 				  u64 *phys_limit)
- {
- 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
-@@ -68,7 +68,7 @@ gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 	return 0;
- }
- 
--bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
-+static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
- {
- 	return phys_to_dma_direct(dev, phys) + size - 1 <=
- 			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
-@@ -161,8 +161,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	size = PAGE_ALIGN(size);
- 
- 	if (dma_should_alloc_from_pool(dev, gfp, attrs)) {
--		ret = dma_alloc_from_pool(dev, size, &page, gfp);
--		if (!ret)
-+		u64 phys_mask;
-+
-+		gfp |= dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
-+				&phys_mask);
-+		page = dma_alloc_from_pool(dev, size, &ret, gfp,
-+				dma_coherent_ok);
-+		if (!page)
- 			return NULL;
- 		goto done;
- 	}
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 6bc74a2d5127..5d071d4a3cba 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -196,93 +196,75 @@ static int __init dma_atomic_pool_init(void)
- }
- postcore_initcall(dma_atomic_pool_init);
- 
--static inline struct gen_pool *dma_guess_pool_from_device(struct device *dev)
-+static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
- {
--	u64 phys_mask;
--	gfp_t gfp;
--
--	gfp = dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
--					  &phys_mask);
--	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp == GFP_DMA)
-+	if (prev == NULL) {
-+		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
-+			return atomic_pool_dma32;
-+		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
-+			return atomic_pool_dma;
-+		return atomic_pool_kernel;
-+	}
-+	if (prev == atomic_pool_kernel)
-+		return atomic_pool_dma32 ? atomic_pool_dma32 : atomic_pool_dma;
-+	if (prev == atomic_pool_dma32)
- 		return atomic_pool_dma;
--	if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp == GFP_DMA32)
--		return atomic_pool_dma32;
--	return atomic_pool_kernel;
-+	return NULL;
- }
- 
--static inline struct gen_pool *dma_get_safer_pool(struct gen_pool *bad_pool)
-+static struct page *__dma_alloc_from_pool(struct device *dev, size_t size,
-+		struct gen_pool *pool, void **cpu_addr,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
- {
--	if (bad_pool == atomic_pool_kernel)
--		return atomic_pool_dma32 ? : atomic_pool_dma;
-+	unsigned long addr;
-+	phys_addr_t phys;
- 
--	if (bad_pool == atomic_pool_dma32)
--		return atomic_pool_dma;
-+	addr = gen_pool_alloc(pool, size);
-+	if (!addr)
-+		return NULL;
- 
--	return NULL;
--}
-+	phys = gen_pool_virt_to_phys(pool, addr);
-+	if (phys_addr_ok && !phys_addr_ok(dev, phys, size)) {
-+		gen_pool_free(pool, addr, size);
-+		return NULL;
-+	}
- 
--static inline struct gen_pool *dma_guess_pool(struct device *dev,
--					      struct gen_pool *bad_pool)
--{
--	if (bad_pool)
--		return dma_get_safer_pool(bad_pool);
-+	if (gen_pool_avail(pool) < atomic_pool_size)
-+		schedule_work(&atomic_pool_work);
- 
--	return dma_guess_pool_from_device(dev);
-+	*cpu_addr = (void *)addr;
-+	memset(*cpu_addr, 0, size);
-+	return pfn_to_page(__phys_to_pfn(phys));
- }
- 
--void *dma_alloc_from_pool(struct device *dev, size_t size,
--			  struct page **ret_page, gfp_t flags)
-+struct page *dma_alloc_from_pool(struct device *dev, size_t size,
-+		void **cpu_addr, gfp_t gfp,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
- {
- 	struct gen_pool *pool = NULL;
--	unsigned long val = 0;
--	void *ptr = NULL;
--	phys_addr_t phys;
--
--	while (1) {
--		pool = dma_guess_pool(dev, pool);
--		if (!pool) {
--			WARN(1, "Failed to get suitable pool for %s\n",
--			     dev_name(dev));
--			break;
--		}
--
--		val = gen_pool_alloc(pool, size);
--		if (!val)
--			continue;
--
--		phys = gen_pool_virt_to_phys(pool, val);
--		if (dma_coherent_ok(dev, phys, size))
--			break;
--
--		gen_pool_free(pool, val, size);
--		val = 0;
--	}
--
--
--	if (val) {
--		*ret_page = pfn_to_page(__phys_to_pfn(phys));
--		ptr = (void *)val;
--		memset(ptr, 0, size);
-+	struct page *page;
- 
--		if (gen_pool_avail(pool) < atomic_pool_size)
--			schedule_work(&atomic_pool_work);
-+	while ((pool = dma_guess_pool(pool, gfp))) {
-+		page = __dma_alloc_from_pool(dev, size, pool, cpu_addr,
-+					     phys_addr_ok);
-+		if (page)
-+			return page;
- 	}
- 
--	return ptr;
-+	WARN(1, "Failed to get suitable pool for %s\n", dev_name(dev));
-+	return NULL;
- }
- 
- bool dma_free_from_pool(struct device *dev, void *start, size_t size)
- {
- 	struct gen_pool *pool = NULL;
- 
--	while (1) {
--		pool = dma_guess_pool(dev, pool);
--		if (!pool)
--			return false;
--
--		if (gen_pool_has_addr(pool, (unsigned long)start, size)) {
--			gen_pool_free(pool, (unsigned long)start, size);
--			return true;
--		}
-+	while ((pool = dma_guess_pool(pool, 0))) {
-+		if (!gen_pool_has_addr(pool, (unsigned long)start, size))
-+			continue;
-+		gen_pool_free(pool, (unsigned long)start, size);
-+		return true;
- 	}
-+
-+	return false;
- }
--- 
-2.28.0
-
+ include/linux/mm.h         |   3 +-
+ include/linux/page-flags.h |   6 +-
+ include/ras/ras_event.h    |   3 +
+ mm/hwpoison-inject.c       |  18 +--
+ mm/madvise.c               |   5 -
+ mm/memory-failure.c        | 307 +++++++++++++++++++++------------------------
+ mm/migrate.c               |  11 +-
+ mm/page_alloc.c            |  60 +++++++--
+ 8 files changed, 203 insertions(+), 210 deletions(-)
