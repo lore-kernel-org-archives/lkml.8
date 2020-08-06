@@ -2,127 +2,149 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A32C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7DD221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9669D221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596743852;
-	bh=+VmuM/1u7i3X4Vu/hSmGjplIMQWbQYEg7Tij33ZLEDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZaT4jCXpc/O3OPhEVy+5xtWEPbeAm/HIRO0J4TN0a3cdIgy6E1+tkCbBwtlAJkvL5
-	 B929qwQiYXSmVZqqsUhZzphucpwFdo8wpaBejbJ7MxmOhQgf/2LT3v02PbExUCXkIu
-	 tbegUR8t3gkvrAyyxzVc/CzFYa037O1robfHUPFs=
+	s=default; t=1596743972;
+	bh=rZzNB7Mchw1xUwGcA2KB6ufKo5ZZoG/yMfMIbq6pK/Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HpR7UlhPKjZNzhAuOdDnnFFXBVmHUnooYosHI0O84460jt2DkjX+jUXs/Gl4jMNSk
+	 aaW+KHpkJcH9rk+8+G9XkyS+seNFd+sfM3eeaXfEAWoGaEcAD5YfW7JLICpCndRd7u
+	 xR1aSaCzUhoJWCNSN09Qm7/j522fuMSDD549pBiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgHFT5a (ORCPT
+        id S1726217AbgHFT7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbgHFT52 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:57:28 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B897CC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:57:28 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id v22so31405275qtq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FCOZIRhvd3ECxrtGqId1ZP0YOYmVDIm1/Jxa7nxwJQE=;
-        b=kmKAxtd0R5xtd5UrJA4nBn3Y3xBU0sEQNaIeK846VSdEuH/EVHCsgWQ7m8P0p2ndBq
-         681i8D+ofQEmE8WtQCMQeT2uJRF13V9skph1L+7NH05h/v6EplObdgpBI7GZGEyczYdP
-         OLxiHhGfszlB36ydgn2ODdwb1THR/DGSQayGdpl7Af0A+5/yiGJF6WpGa6WUeuSNcymn
-         jaOILBebxiySjSPned545p1+5uEnvY/1o3qCDltq0cQG0T0GDapp+zQ0nc5lnFunMK1d
-         PFNwUtsogJ5XOv+iCAuTz80DdqeBte71GAv4GXujTazfMa8vE0OLc9YdEd1loNNbWEK+
-         X02A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=FCOZIRhvd3ECxrtGqId1ZP0YOYmVDIm1/Jxa7nxwJQE=;
-        b=A2Qx/uwcx79Q76O7zB7J24O8vDGadMOVJKFGvXZym7LfEBkj2WtcOHhyolnRdWpI8m
-         ziluvD7nAxFBrMQtS8GbXhX70L78zRSVg/HoWLK1fSIo4qgV1Tr7Bs+TjpHhouKiUx2p
-         DfUMK+yp0EmIXZHi3Fx3Xkqbo2NjwX+y4GCUvyMWzeCgLfLoOWm/B1n41utZ7YRhMtvZ
-         xQTMUAoSwyXD6pyRFjC4Ie0/7DZG1s97UT9L55z9FcuRChdUmqqlpzPBxwJotTMCX3OA
-         BIJ9Xldf5sxugy1jI4YNuF7TQ4VEtbNIuYe4quZM7Scppo7u2pEdy9HABLafryu1Y5A3
-         skcw==
-X-Gm-Message-State: AOAM531iOT9ndZxlkB87QIadu9pvz/h5PfI6xE9nxIaxmRCfwlKwEMXY
-        8pSjKFIfIs5DbnBibQFQqYE=
-X-Google-Smtp-Source: ABdhPJzNtt5jxhK+32G/3aTp+8cfRJKiz84iuUBNxYQDTlyrpx/Ptr2LlUF8qSd0mlMsOw4KDquILA==
-X-Received: by 2002:aed:2f02:: with SMTP id l2mr10786981qtd.48.1596743847866;
-        Thu, 06 Aug 2020 12:57:27 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2e8b])
-        by smtp.gmail.com with ESMTPSA id s30sm5693189qtc.87.2020.08.06.12.57.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 12:57:27 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 15:57:26 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Joerg Roedel <jroedel@suse.de>, Ingo Molnar <mingo@kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/mm changes for v5.9
-Message-ID: <20200806195726.GI4520@mtj.thefacebook.com>
-References: <20200803190354.GA1293087@gmail.com>
- <20200805110348.GA108872@zx2c4.com>
- <CAHk-=wiq+7sW3Lk5iQ0-zY5XWES4rSxK505vXsgFY=za88+RZw@mail.gmail.com>
- <20200806131034.GA2067370@gmail.com>
- <20200806185723.GA24304@suse.de>
- <CAHk-=wg7PHCUMD1xY=YCCeVHspAhw0YNEhyO3CnHfRPwsf6P8A@mail.gmail.com>
- <20200806192333.GB24304@suse.de>
- <CAHk-=win5DxMK-MH57NSrA+nVxF60MYR9RyArPX5NW_0yaBpoA@mail.gmail.com>
+        Thu, 6 Aug 2020 15:59:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbgHFT7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:59:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFBAE2173E;
+        Thu,  6 Aug 2020 19:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596743970;
+        bh=rZzNB7Mchw1xUwGcA2KB6ufKo5ZZoG/yMfMIbq6pK/Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2oq7B8IMmc0UB+V4Gs9PVKpLknPtYkzLPt6nce5QAFIKMqUSYttUwXraHgU41ekQg
+         idJrEf9h1GGJy7Kb1jWhp9GWclJ9y5E0WckC6dyocfEOOSli3dSDSVcshgAAIiOcbz
+         1H86dIn1t92Nnw6/n5miq3I0V0KITvHSGAIBX5LM=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k3m2y-000Mn1-AH; Thu, 06 Aug 2020 20:59:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=win5DxMK-MH57NSrA+nVxF60MYR9RyArPX5NW_0yaBpoA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Aug 2020 20:59:28 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>, steev@kali.org,
+        Nial Peters <uceenpe@ucl.ac.uk>
+Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
+ IRQCHIP_PLATFORM_DRIVER helper macros
+In-Reply-To: <CAGETcx89BRdSP6FKjDPU0zapt0ET9_PUr6bjZb9EA-jYn0maFw@mail.gmail.com>
+References: <20200718000637.3632841-1-saravanak@google.com>
+ <20200718000637.3632841-3-saravanak@google.com>
+ <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
+ <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
+ <CALAqxLUz6GTT96nO9igiWVwyaRs_xbO+=mySLm4BKX6-Uh90ZA@mail.gmail.com>
+ <5e6124390b9e3e7f4d6f6decbdb669ca@kernel.org>
+ <CAGETcx89BRdSP6FKjDPU0zapt0ET9_PUr6bjZb9EA-jYn0maFw@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <4d79a3e9c8c24f8adb6f7ade97d5a9c6@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: saravanak@google.com, john.stultz@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, matthias.bgg@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org, kernel-team@android.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, hanks.chen@mediatek.com, cc.hwang@mediatek.com, loda.chou@mediatek.com, steev@kali.org, uceenpe@ucl.ac.uk
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 12:42:23PM -0700, Linus Torvalds wrote:
-> that admittedly odd sequence is get_work_pwq(work)
-> 
-> And then the faulting instruction is:
-> 
-> >   2a:* 49 8b 46 08          mov    0x8(%r14),%rax <-- trapping instruction
-> 
-> and this is the "->wq" dereference.
-> 
-> So it's the pwq->wq that traps, with 'pwq' being the trapping base
-> pointer, and clearly being in the vmalloc space.
-> 
-> I think pwq may a percpu allocation, so not _directly_ vmalloc().
-> Adding Tejun to the cc in case he can clarify ("No, silly Linus, it's
-> allocated here..").
+On 2020-08-06 19:05, Saravana Kannan wrote:
+> On Thu, Aug 6, 2020 at 5:12 AM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> On 2020-08-06 02:24, John Stultz wrote:
 
-Hey, silly Linus, yeap, they're per-cpu allocations and will be in vmalloc
-address space for per-cpu workqueues. For unbound workqueues, they're
-regular kmallocs. The per-cpu allocation happens in alloc_and_link_pwqs():
+[...]
 
-  static int alloc_and_link_pwqs(struct workqueue_struct *wq)
-  {
-          bool highpri = wq->flags & WQ_HIGHPRI;
-          int cpu, ret;
+>> >> + if (par_np == np)
+>> >> +         par_np = NULL;
+>> >> +
+>> >> + /*
+>> >> + * If there's a parent interrupt controller and  none of the parent
+>> >> irq
+>> >> + * domains have been registered, that means the parent interrupt
+>> >> + * controller has not been initialized yet.  it's not time for this
+>> >> + * interrupt controller to initialize. So, defer probe of this
+>> >> + * interrupt controller. The actual initialization callback of this
+>> >> + * interrupt controller can check for specific domains as necessary.
+>> >> + */
+>> >> + if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
+>> >> +         return -EPROBE_DEFER;
+>> >
+>> > Yep. We're getting caught on the irq_find_matching_host() check. I'm a
+>> > little lost as when I look at the qcom,pdc node in the dtsi its not
+>> > under a parent controller (instead the soc node).
+>> > Not sure if that's an issue in the dtsi or if par_np check needs to
+>> > ignore the soc node and pass null?
+>> 
+>> I think you have nailed it. This checks for a domain attached to
+>> the driver we are about to probe, and this domain cannot possibly
+>> exist. Instead, it is the *parent* this should check for, as we
+>> depend on it for successful probing.
+> 
+> Duh! Looks like I made a copy-paste/typo error. The comment clearly
+> says I'm trying to check the parent and then I end up checking the
+> node getting registered. I'm sure this will fix it.
+> 
+> Actually Nial sent an email a few hours after your and he had found
+> the same issue. He even tested the fix with an irqchip driver and it
+> fixed the probe issue.
 
-          if (!(wq->flags & WQ_UNBOUND)) {
-                  wq->cpu_pwqs = alloc_percpu(struct pool_workqueue);
-                  if (!wq->cpu_pwqs)
-                          return -ENOMEM;
+OK, thanks for confirming. It would have been good if these patches
+had seen a bit more testing.
 
-Thanks.
+> 
+> I'm assuming you'll put up the patch yourself. Please let me know if
+> you need me to send one.
 
+I have queued this [1] in -next.
+
+It'd be good if someone (John?) could give a Tested-by.
+
+Thanks,
+
+         M.
+
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/irqchip-next
 -- 
-tejun
+Jazz is not dead. It just smells funny...
