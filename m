@@ -2,376 +2,210 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A688C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6403C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E806206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28FBD206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596735176;
-	bh=2YyO1ZqH/6cnyMPPGg73Ui0g57bCCXYKUQEKexUXx3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AP6ytUhMlK21v7MoBGugYvWLiZFcMvhpJfBELsjTf1DvNUDP4q6Tgx3n2+GC5laag
-	 ZL1iCpzQ2XKMcJKZvEocHOw9E95DXcgXT5ZcEX93jqbK2/xENE3264q3Iwk2sekR54
-	 6PmSjU6O8J7bTwp2n8vJVpQKfbp+iIoRCKW521jA=
+	s=default; t=1596735180;
+	bh=RnBeNxWWl4q9QSN+tmbvArEJ2MhaOfF3wq7wtPI6v9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v6j1+Yg8IRN4JR7YML+pC33KEC/Ja4NPpSIrGVdcHZ9cBe5LAVPWYwdexVLWoz2XL
+	 D+HbeWSLV61P9wVQBUL/MubASxMg+Ayq5w68SEa4qT/OAOvfGdGxo1wc593qaXtqmr
+	 9sXtwupFFTk8dGseaeEuuJC4ljtLx2kWsiw9VPDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730316AbgHFRcg (ORCPT
+        id S1730438AbgHFRc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:32:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 13:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729990AbgHFRcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729957AbgHFRcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:32:05 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.162.129.152])
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40B6122E00;
-        Thu,  6 Aug 2020 12:46:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 461EE22D6E;
+        Thu,  6 Aug 2020 12:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596717979;
-        bh=2YyO1ZqH/6cnyMPPGg73Ui0g57bCCXYKUQEKexUXx3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O9uop/ZUocbLCmFVUhPP4EbZ84zTLLkbhvET+p+8XavNveD1egkGHnllzLGaDdMra
-         yOunxij9yATii/ElapTlYASqKHDGGAZe0odkc+JkhEragd+pw/Z5IO5Q3vSMu/sJOQ
-         5DH4CzLDYgMEAGhh1K2nqfuC5T/C3KxRPSbcmgSs=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6798840DEA; Thu,  6 Aug 2020 09:46:17 -0300 (-03)
-Date:   Thu, 6 Aug 2020 09:46:17 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     David Ahern <dsahern@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        =?iso-8859-1?Q?Genevi=E8ve?= Bastien <gbastien@versatic.net>,
-        Wang Nan <wangnan0@huawei.com>,
-        Jeremie Galarneau <jgalar@efficios.com>
-Subject: Re: [PATCH v2 7/7] perf script: Add tod field to display time of day
-Message-ID: <20200806124617.GI71359@kernel.org>
-References: <20200805093444.314999-1-jolsa@kernel.org>
- <20200805093444.314999-8-jolsa@kernel.org>
+        s=default; t=1596715961;
+        bh=RnBeNxWWl4q9QSN+tmbvArEJ2MhaOfF3wq7wtPI6v9s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SpOS6lQOAH9r/CIi/S3TDpOXthbyTOKoERVxpMjkp7ZKNYvD23xa640uTIbU9WnDB
+         cxSWbc5tiraE9L9evnyesXRnDvQudHa7kX43Yh+bL/62IQsDaMslV9TX13RIT5Fru6
+         hQZuwnjielyHPVPInWo9WoM/PrFKOq72Zxlso0Ig=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k3bal-000Eyu-7Y; Thu, 06 Aug 2020 09:49:39 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805093444.314999-8-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Aug 2020 09:49:39 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>, steev@kali.org
+Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
+ IRQCHIP_PLATFORM_DRIVER helper macros
+In-Reply-To: <CALAqxLUz6GTT96nO9igiWVwyaRs_xbO+=mySLm4BKX6-Uh90ZA@mail.gmail.com>
+References: <20200718000637.3632841-1-saravanak@google.com>
+ <20200718000637.3632841-3-saravanak@google.com>
+ <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
+ <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
+ <CALAqxLUz6GTT96nO9igiWVwyaRs_xbO+=mySLm4BKX6-Uh90ZA@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <5e6124390b9e3e7f4d6f6decbdb669ca@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: john.stultz@linaro.org, saravanak@google.com, tglx@linutronix.de, jason@lakedaemon.net, matthias.bgg@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org, kernel-team@android.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, hanks.chen@mediatek.com, cc.hwang@mediatek.com, loda.chou@mediatek.com, steev@kali.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Aug 05, 2020 at 11:34:44AM +0200, Jiri Olsa escreveu:
-> Adding tod field to display time of day column with
-> time of date (wallclock) time.
+On 2020-08-06 02:24, John Stultz wrote:
+> On Wed, Aug 5, 2020 at 1:19 PM Saravana Kannan <saravanak@google.com> 
+> wrote:
+>> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> 
+>> wrote:
+>> > On Fri, Jul 17, 2020 at 5:06 PM Saravana Kannan <saravanak@google.com> wrote:
+>> > >
+>> > > Switch the driver to use the helper macros. In addition to reducing the
+>> > > number of lines, this also adds module unload protection (if the driver
+>> > > is compiled as a module) by switching from module_platform_driver to
+>> > > builtin_platform_driver.
+>> > >
+>> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+>> > > ---
+>> > >  drivers/irqchip/qcom-pdc.c | 26 +++-----------------------
+>> > >  1 file changed, 3 insertions(+), 23 deletions(-)
+>> > >
+>> > > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+>> > > index 5b624e3295e4..c1c5dfad57cc 100644
+>> > > --- a/drivers/irqchip/qcom-pdc.c
+>> > > +++ b/drivers/irqchip/qcom-pdc.c
+>> > > @@ -432,28 +432,8 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+>> > >         return ret;
+>> > >  }
+>> > >
+>> > > -static int qcom_pdc_probe(struct platform_device *pdev)
+>> > > -{
+>> > > -       struct device_node *np = pdev->dev.of_node;
+>> > > -       struct device_node *parent = of_irq_find_parent(np);
+>> > > -
+>> > > -       return qcom_pdc_init(np, parent);
+>> > > -}
+>> > > -
+>> > > -static const struct of_device_id qcom_pdc_match_table[] = {
+>> > > -       { .compatible = "qcom,pdc" },
+>> > > -       {}
+>> > > -};
+>> > > -MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
+>> > > -
+>> > > -static struct platform_driver qcom_pdc_driver = {
+>> > > -       .probe = qcom_pdc_probe,
+>> > > -       .driver = {
+>> > > -               .name = "qcom-pdc",
+>> > > -               .of_match_table = qcom_pdc_match_table,
+>> > > -               .suppress_bind_attrs = true,
+>> > > -       },
+>> > > -};
+>> > > -module_platform_driver(qcom_pdc_driver);
+>> > > +IRQCHIP_PLATFORM_DRIVER_BEGIN(qcom_pdc)
+>> > > +IRQCHIP_MATCH("qcom,pdc", qcom_pdc_init)
+>> > > +IRQCHIP_PLATFORM_DRIVER_END(qcom_pdc)
+>> > >  MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
+>> > >  MODULE_LICENSE("GPL v2");
+>> >
+>> > <sigh>
+>> > So this is where I bashfully admit I didn't get a chance to try this
+>> > patch series out, as I had success with a much older version of
+>> > Saravana's macro magic.
+>> >
+>> > But unfortunately, now that this has landed in mainline, I'm seeing
+>> > boot regressions on db845c. :( This is in the non-modular case,
+>> > building the driver in.
+>> 
+>> Does that mean the modular version is working? Or you haven't tried
+>> that yet? I'll wait for your reply before I try to fix it. I don't
+>> have the hardware, but it should be easy to guess this issue looking
+>> at the code delta.
 > 
->   # perf record -k CLOCK_MONOTONIC kill
->   kill: not enough arguments
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.033 MB perf.data (8 samples) ]
+> I've not yet tested with modules with your patch.
+> 
+>> The only significant change from what your probe function is doing is
+>> this snippet. But it'd be surprising if this only affects the builtin
+>> case.
+>> 
+>> + if (par_np == np)
+>> +         par_np = NULL;
+>> +
+>> + /*
+>> + * If there's a parent interrupt controller and  none of the parent 
+>> irq
+>> + * domains have been registered, that means the parent interrupt
+>> + * controller has not been initialized yet.  it's not time for this
+>> + * interrupt controller to initialize. So, defer probe of this
+>> + * interrupt controller. The actual initialization callback of this
+>> + * interrupt controller can check for specific domains as necessary.
+>> + */
+>> + if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
+>> +         return -EPROBE_DEFER;
+> 
+> Yep. We're getting caught on the irq_find_matching_host() check. I'm a
+> little lost as when I look at the qcom,pdc node in the dtsi its not
+> under a parent controller (instead the soc node).
+> Not sure if that's an issue in the dtsi or if par_np check needs to
+> ignore the soc node and pass null?
 
-Thanks, applied.
+I think you have nailed it. This checks for a domain attached to
+the driver we are about to probe, and this domain cannot possibly
+exist. Instead, it is the *parent* this should check for, as we
+depend on it for successful probing.
 
-- Arnaldo
- 
->   # perf script
->             perf 261340 152919.481538:          1 cycles:  ffffffff8106d104 ...
->             perf 261340 152919.481543:          1 cycles:  ffffffff8106d104 ...
->             perf 261340 152919.481545:          7 cycles:  ffffffff8106d104 ...
->   ...
-> 
->   # perf script --ns
->             perf 261340 152919.481538922:          1 cycles:  ffffffff8106d ...
->             perf 261340 152919.481543286:          1 cycles:  ffffffff8106d ...
->             perf 261340 152919.481545397:          7 cycles:  ffffffff8106d ...
->   ...
-> 
->   # perf script -F+tod
->             perf 261340 2020-07-13 18:26:55.620971 152919.481538:           ...
->             perf 261340 2020-07-13 18:26:55.620975 152919.481543:           ...
->             perf 261340 2020-07-13 18:26:55.620978 152919.481545:           ...
->   ...
-> 
->   # perf script -F+tod --ns
->             perf 261340 2020-07-13 18:26:55.620971621 152919.481538922:     ...
->             perf 261340 2020-07-13 18:26:55.620975985 152919.481543286:     ...
->             perf 261340 2020-07-13 18:26:55.620978096 152919.481545397:     ...
->   ...
-> 
-> It's available only for recording with clockid specified,
-> because it's the only case where we can get reference time
-> to wallclock time. It's can't do that with perf clock yet.
-> 
-> Error is display if you want to use --tod on data without
-> clockid specified:
-> 
->   # perf script -F+tod
->   Can't provide 'tod' time, missing clock data. Please record with -k/--clockid option.
-> 
-> Original-patch-by: David Ahern <dsahern@gmail.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/builtin-script.c | 131 +++++++++++++++++++++++++++---------
->  1 file changed, 98 insertions(+), 33 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index eb45f678dc2f..484ce6067d23 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -114,6 +114,32 @@ enum perf_output_field {
->  	PERF_OUTPUT_MISC            = 1ULL << 29,
->  	PERF_OUTPUT_SRCCODE	    = 1ULL << 30,
->  	PERF_OUTPUT_IPC             = 1ULL << 31,
-> +	PERF_OUTPUT_TOD             = 1ULL << 32,
-> +};
-> +
-> +struct perf_script {
-> +	struct perf_tool	tool;
-> +	struct perf_session	*session;
-> +	bool			show_task_events;
-> +	bool			show_mmap_events;
-> +	bool			show_switch_events;
-> +	bool			show_namespace_events;
-> +	bool			show_lost_events;
-> +	bool			show_round_events;
-> +	bool			show_bpf_events;
-> +	bool			show_cgroup_events;
-> +	bool			show_text_poke_events;
-> +	bool			allocated;
-> +	bool			per_event_dump;
-> +	bool			stitch_lbr;
-> +	struct evswitch		evswitch;
-> +	struct perf_cpu_map	*cpus;
-> +	struct perf_thread_map *threads;
-> +	int			name_width;
-> +	const char              *time_str;
-> +	struct perf_time_interval *ptime_range;
-> +	int			range_size;
-> +	int			range_num;
->  };
->  
->  struct output_option {
-> @@ -152,6 +178,7 @@ struct output_option {
->  	{.str = "misc", .field = PERF_OUTPUT_MISC},
->  	{.str = "srccode", .field = PERF_OUTPUT_SRCCODE},
->  	{.str = "ipc", .field = PERF_OUTPUT_IPC},
-> +	{.str = "tod", .field = PERF_OUTPUT_TOD},
->  };
->  
->  enum {
-> @@ -502,6 +529,7 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
->   */
->  static int perf_session__check_output_opt(struct perf_session *session)
->  {
-> +	bool tod = false;
->  	unsigned int j;
->  	struct evsel *evsel;
->  
-> @@ -528,6 +556,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
->  			continue;
->  
->  		set_print_ip_opts(&evsel->core.attr);
-> +		tod |= output[j].fields & PERF_OUTPUT_TOD;
->  	}
->  
->  	if (!no_callchain) {
-> @@ -568,13 +597,17 @@ static int perf_session__check_output_opt(struct perf_session *session)
->  		}
->  	}
->  
-> +	if (tod && !session->header.env.clock.enabled) {
-> +		pr_err("Can't provide 'tod' time, missing clock data. "
-> +		       "Please record with -k/--clockid option.\n");
-> +		return -1;
-> +	}
->  out:
->  	return 0;
->  }
->  
->  static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
-> -				     FILE *fp
-> -)
-> +				     FILE *fp)
->  {
->  	unsigned i = 0, r;
->  	int printed = 0;
-> @@ -592,6 +625,56 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
->  	return printed;
->  }
->  
-> +#define DEFAULT_TOD_FMT "%F %H:%M:%S"
-> +
-> +static char*
-> +tod_scnprintf(struct perf_script *script, char *buf, int buflen,
-> +	     u64 timestamp)
-> +{
-> +	u64 tod_ns, clockid_ns;
-> +	struct perf_env *env;
-> +	unsigned long nsec;
-> +	struct tm ltime;
-> +	char date[64];
-> +	time_t sec;
-> +
-> +	buf[0] = '\0';
-> +	if (buflen < 64 || !script)
-> +		return buf;
-> +
-> +	env = &script->session->header.env;
-> +	if (!env->clock.enabled) {
-> +		scnprintf(buf, buflen, "disabled");
-> +		return buf;
-> +	}
-> +
-> +	clockid_ns = env->clock.clockid_ns;
-> +	tod_ns     = env->clock.tod_ns;
-> +
-> +	if (timestamp > clockid_ns)
-> +		tod_ns += timestamp - clockid_ns;
-> +	else
-> +		tod_ns -= clockid_ns - timestamp;
-> +
-> +	sec  = (time_t) (tod_ns / NSEC_PER_SEC);
-> +	nsec = tod_ns - sec * NSEC_PER_SEC;
-> +
-> +	if (localtime_r(&sec, &ltime) == NULL) {
-> +		scnprintf(buf, buflen, "failed");
-> +	} else {
-> +		strftime(date, sizeof(date), DEFAULT_TOD_FMT, &ltime);
-> +
-> +		if (symbol_conf.nanosecs) {
-> +			snprintf(buf, buflen, "%s.%09lu", date, nsec);
-> +		} else {
-> +			snprintf(buf, buflen, "%s.%06lu",
-> +				 date, nsec / NSEC_PER_USEC);
-> +		}
-> +	}
-> +
-> +	return buf;
-> +}
-> +
->  static int perf_sample__fprintf_iregs(struct perf_sample *sample,
->  				      struct perf_event_attr *attr, FILE *fp)
->  {
-> @@ -606,7 +689,8 @@ static int perf_sample__fprintf_uregs(struct perf_sample *sample,
->  					 attr->sample_regs_user, fp);
->  }
->  
-> -static int perf_sample__fprintf_start(struct perf_sample *sample,
-> +static int perf_sample__fprintf_start(struct perf_script *script,
-> +				      struct perf_sample *sample,
->  				      struct thread *thread,
->  				      struct evsel *evsel,
->  				      u32 type, FILE *fp)
-> @@ -615,6 +699,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
->  	unsigned long secs;
->  	unsigned long long nsecs;
->  	int printed = 0;
-> +	char tstr[128];
->  
->  	if (PRINT_FIELD(COMM)) {
->  		if (latency_format)
-> @@ -683,6 +768,11 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
->  		printed += ret;
->  	}
->  
-> +	if (PRINT_FIELD(TOD)) {
-> +		tod_scnprintf(script, tstr, sizeof(tstr), sample->time);
-> +		printed += fprintf(fp, "%s ", tstr);
-> +	}
-> +
->  	if (PRINT_FIELD(TIME)) {
->  		u64 t = sample->time;
->  		if (reltime) {
-> @@ -1667,31 +1757,6 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
->  	return 0;
->  }
->  
-> -struct perf_script {
-> -	struct perf_tool	tool;
-> -	struct perf_session	*session;
-> -	bool			show_task_events;
-> -	bool			show_mmap_events;
-> -	bool			show_switch_events;
-> -	bool			show_namespace_events;
-> -	bool			show_lost_events;
-> -	bool			show_round_events;
-> -	bool			show_bpf_events;
-> -	bool			show_cgroup_events;
-> -	bool			show_text_poke_events;
-> -	bool			allocated;
-> -	bool			per_event_dump;
-> -	bool			stitch_lbr;
-> -	struct evswitch		evswitch;
-> -	struct perf_cpu_map	*cpus;
-> -	struct perf_thread_map *threads;
-> -	int			name_width;
-> -	const char              *time_str;
-> -	struct perf_time_interval *ptime_range;
-> -	int			range_size;
-> -	int			range_num;
-> -};
-> -
->  static int evlist__max_name_len(struct evlist *evlist)
->  {
->  	struct evsel *evsel;
-> @@ -1739,7 +1804,7 @@ static void script_print_metric(struct perf_stat_config *config __maybe_unused,
->  
->  	if (!fmt)
->  		return;
-> -	perf_sample__fprintf_start(mctx->sample, mctx->thread, mctx->evsel,
-> +	perf_sample__fprintf_start(NULL, mctx->sample, mctx->thread, mctx->evsel,
->  				   PERF_RECORD_SAMPLE, mctx->fp);
->  	fputs("\tmetric: ", mctx->fp);
->  	if (color)
-> @@ -1754,7 +1819,7 @@ static void script_new_line(struct perf_stat_config *config __maybe_unused,
->  {
->  	struct metric_ctx *mctx = ctx;
->  
-> -	perf_sample__fprintf_start(mctx->sample, mctx->thread, mctx->evsel,
-> +	perf_sample__fprintf_start(NULL, mctx->sample, mctx->thread, mctx->evsel,
->  				   PERF_RECORD_SAMPLE, mctx->fp);
->  	fputs("\tmetric: ", mctx->fp);
->  }
-> @@ -1865,7 +1930,7 @@ static void process_event(struct perf_script *script,
->  
->  	++es->samples;
->  
-> -	perf_sample__fprintf_start(sample, thread, evsel,
-> +	perf_sample__fprintf_start(script, sample, thread, evsel,
->  				   PERF_RECORD_SAMPLE, fp);
->  
->  	if (PRINT_FIELD(PERIOD))
-> @@ -2174,7 +2239,7 @@ static int print_event_with_time(struct perf_tool *tool,
->  		thread = machine__findnew_thread(machine, pid, tid);
->  
->  	if (thread && evsel) {
-> -		perf_sample__fprintf_start(sample, thread, evsel,
-> +		perf_sample__fprintf_start(script, sample, thread, evsel,
->  					   event->header.type, stdout);
->  	}
->  
-> @@ -3439,7 +3504,7 @@ int cmd_script(int argc, const char **argv)
->  		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
->  		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
->  		     "brstacksym,flags,bpf-output,brstackinsn,brstackoff,"
-> -		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc",
-> +		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,tod",
->  		     parse_output_fields),
->  	OPT_BOOLEAN('a', "all-cpus", &system_wide,
->  		    "system-wide collection from all CPUs"),
-> -- 
-> 2.25.4
-> 
+Can you please give this a go?
+
+Thanks,
+
+         M.
+
+diff --git a/drivers/irqchip/irqchip.c b/drivers/irqchip/irqchip.c
+index 1bb0e36c2bf3..d2341153e181 100644
+--- a/drivers/irqchip/irqchip.c
++++ b/drivers/irqchip/irqchip.c
+@@ -52,7 +52,7 @@ int platform_irqchip_probe(struct platform_device 
+*pdev)
+  	 * interrupt controller. The actual initialization callback of this
+  	 * interrupt controller can check for specific domains as necessary.
+  	 */
+-	if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
++	if (par_np && !irq_find_matching_host(par_np, DOMAIN_BUS_ANY))
+  		return -EPROBE_DEFER;
+
+  	return irq_init_cb(np, par_np);
 
 -- 
-
-- Arnaldo
+Jazz is not dead. It just smells funny...
