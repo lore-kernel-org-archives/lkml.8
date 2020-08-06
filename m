@@ -2,152 +2,158 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9107BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5132245C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:19:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="crkZ/ujv"
+	by mail.kernel.org (Postfix) with ESMTP id 6BA412245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:22:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596680557;
+	bh=Oyt1+UzMecDGgcbUQuNlSQ22A1IxTrKYx/rpyFlm7fw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eHsbIf1xbzRFdY7ux3u2vhHjgtTFbWV+rVs6lNiVOm/jLacLZlhNF2/HLIyQSRIYP
+	 FEsi//mZAEl0Z9nmp4015gIvpZbuO0JqSfGZK+COGww6bGSPpOT+SLrlSlF8Zca12U
+	 uxRnAQ/ACMFKYS+qGI1bhTTBVW6oa4Z/r0sxjcq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgHFCTg (ORCPT
+        id S1726718AbgHFCWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgHFCTd (ORCPT
+        Wed, 5 Aug 2020 22:22:36 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:31210 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgHFCWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:19:33 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D38C061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 19:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=xofDKx+o3lfDCmu16wOwUA02EP86ThN0YOQmggCIzCs=; b=crkZ/ujvSIDdXY+v4hPfwRHs9q
-        0+U0bSOKKrL8q+xXgaLa9xT24ax+PIYKAefYMJdT5kL2y1H6uHBuyd/ZQ4ietlku+km8OAAUyw4TW
-        C1QWy2CSeGb/X7GDHpLzJvzwSyETOO6ymWM25xwqhieF67OoYz/q7uIMcec5jvBzuE/85xxuSuer+
-        w+7xUYyR57O+iFKqDCoc4bEvUVa6vj0EOShLeqDX3SqNQ1K3OwxEKbsoG+05/3kHhwsDI9eQAFITh
-        RVb0LOllnw0azwyoV26Dmu1lasO+PCNDIHsGV5+/PkLPkEfFslvWNYcMYRc+EHNYg6gDfpSspHJT4
-        sQ5hzOKw==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3VVC-0007us-2G; Thu, 06 Aug 2020 02:19:31 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Clemens Ladisch <clemens@ladisch.de>
-Subject: [PATCH] sound: pci: delete repeated words in comments
-Date:   Wed,  5 Aug 2020 19:19:26 -0700
-Message-Id: <20200806021926.32418-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 5 Aug 2020 22:22:35 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0762MGfW005242;
+        Thu, 6 Aug 2020 11:22:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0762MGfW005242
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596680537;
+        bh=sgC4wMyOXq1SDJpZeZcw2hSX1e75t3MVK4Q+P0k1NLU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oaL/Czqy1sTqI7z/ObQV9/lXX2n8BmBIaC55qwNhyYOuM7TuOWQvX3Wn4URhTSABg
+         pZD9NbDOJX7sGZGga+hZS8Re+rlHthMrg8oXTv6PKMBY8NYe8EFT1iU+Ua0N2jDHob
+         0JfkimM3iXn2iTD621RqFY69Q+RAKPuFhhR5Tt6pZ0QETglHi0lKTwT2nDg/ELnKOI
+         9Nx5hY2Bh66gkPh0gpZdPfa/W4N3Jkhf+nWtWFPLVGxmlNYrl1aNee3UGlBZPz/ScJ
+         SFNvHsxxTfhOJV0bDXe43O+1YvO/eDsEcPl0Z61NRj/OWMXb7zdnU9reyxi0pmeKXZ
+         pFPll+yblEPjQ==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id p27so10107806uaa.12;
+        Wed, 05 Aug 2020 19:22:17 -0700 (PDT)
+X-Gm-Message-State: AOAM532sa46h1RZflJtgXi8AtXlcFuSU8HfcuuRDu33tmi1uNowfibT8
+        o6Pr0TdUHR+I03PSByV65qQCpqCiSsBS3MgLGKg=
+X-Google-Smtp-Source: ABdhPJzapV3/tw5sL05iXLx3S/H/o9bbQBZyBcr5IV+1cnkMKhGX2cUkcZKpq0tPVVv2tG3KFnm9OWTFrMiPxcBGMo0=
+X-Received: by 2002:ab0:41:: with SMTP id 59mr4087008uai.40.1596680536213;
+ Wed, 05 Aug 2020 19:22:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1596650328-14869-1-git-send-email-eberman@codeaurora.org>
+In-Reply-To: <1596650328-14869-1-git-send-email-eberman@codeaurora.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 6 Aug 2020 11:21:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARrFFF5DTQfm3mo0NtdJjP9p4c=h5iM=vTuOSR=JE8Sbg@mail.gmail.com>
+Message-ID: <CAK7LNARrFFF5DTQfm3mo0NtdJjP9p4c=h5iM=vTuOSR=JE8Sbg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Add dtc flag test
+To:     Elliot Berman <eberman@codeaurora.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Steve Muckle <smuckle@google.com>,
+        Trilok Soni <tsoni@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop duplicated words in sound/pci/.
-{and, the, at}
+On Thu, Aug 6, 2020 at 2:59 AM Elliot Berman <eberman@codeaurora.org> wrote:
+>
+> Host dtc may not support the same flags as kernel's copy of dtc. Test
+> if dtc supports each flag when the dtc comes from host.
+>
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: Clemens Ladisch <clemens@ladisch.de>
----
- sound/pci/cs46xx/cs46xx_lib.c       |    2 +-
- sound/pci/cs46xx/dsp_spos_scb_lib.c |    2 +-
- sound/pci/hda/hda_codec.c           |    2 +-
- sound/pci/hda/hda_generic.c         |    2 +-
- sound/pci/hda/patch_sigmatel.c      |    2 +-
- sound/pci/ice1712/prodigy192.c      |    2 +-
- sound/pci/oxygen/xonar_dg.c         |    2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
 
---- linux-next-20200805.orig/sound/pci/cs46xx/cs46xx_lib.c
-+++ linux-next-20200805/sound/pci/cs46xx/cs46xx_lib.c
-@@ -766,7 +766,7 @@ static void snd_cs46xx_set_capture_sampl
- 		rate = 48000 / 9;
- 
- 	/*
--	 *  We can not capture at at rate greater than the Input Rate (48000).
-+	 *  We can not capture at a rate greater than the Input Rate (48000).
- 	 *  Return an error if an attempt is made to stray outside that limit.
- 	 */
- 	if (rate > 48000)
---- linux-next-20200805.orig/sound/pci/cs46xx/dsp_spos_scb_lib.c
-+++ linux-next-20200805/sound/pci/cs46xx/dsp_spos_scb_lib.c
-@@ -1716,7 +1716,7 @@ int cs46xx_iec958_pre_open (struct snd_c
- 	struct dsp_spos_instance * ins = chip->dsp_spos_instance;
- 
- 	if ( ins->spdif_status_out & DSP_SPDIF_STATUS_OUTPUT_ENABLED ) {
--		/* remove AsynchFGTxSCB and and PCMSerialInput_II */
-+		/* remove AsynchFGTxSCB and PCMSerialInput_II */
- 		cs46xx_dsp_disable_spdif_out (chip);
- 
- 		/* save state */
---- linux-next-20200805.orig/sound/pci/hda/hda_codec.c
-+++ linux-next-20200805/sound/pci/hda/hda_codec.c
-@@ -3428,7 +3428,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save
-  * @nid: NID to check / update
-  *
-  * Check whether the given NID is in the amp list.  If it's in the list,
-- * check the current AMP status, and update the the power-status according
-+ * check the current AMP status, and update the power-status according
-  * to the mute status.
-  *
-  * This function is supposed to be set or called from the check_power_status
---- linux-next-20200805.orig/sound/pci/hda/hda_generic.c
-+++ linux-next-20200805/sound/pci/hda/hda_generic.c
-@@ -813,7 +813,7 @@ static void activate_amp_in(struct hda_c
- 	}
- }
- 
--/* sync power of each widget in the the given path */
-+/* sync power of each widget in the given path */
- static hda_nid_t path_power_update(struct hda_codec *codec,
- 				   struct nid_path *path,
- 				   bool allow_powerdown)
---- linux-next-20200805.orig/sound/pci/hda/patch_sigmatel.c
-+++ linux-next-20200805/sound/pci/hda/patch_sigmatel.c
-@@ -838,7 +838,7 @@ static int stac_auto_create_beep_ctls(st
- 	static const struct snd_kcontrol_new beep_vol_ctl =
- 		HDA_CODEC_VOLUME(NULL, 0, 0, 0);
- 
--	/* check for mute support for the the amp */
-+	/* check for mute support for the amp */
- 	if ((caps & AC_AMPCAP_MUTE) >> AC_AMPCAP_MUTE_SHIFT) {
- 		const struct snd_kcontrol_new *temp;
- 		if (spec->anabeep_nid == nid)
---- linux-next-20200805.orig/sound/pci/ice1712/prodigy192.c
-+++ linux-next-20200805/sound/pci/ice1712/prodigy192.c
-@@ -32,7 +32,7 @@
-  *		  Experimentally I found out that only a combination of
-  *		  OCKS0=1, OCKS1=1 (128fs, 64fs output) and ice1724 -
-  *		  VT1724_MT_I2S_MCLK_128X=0 (256fs input) yields correct
-- *		  sampling rate. That means the the FPGA doubles the
-+ *		  sampling rate. That means that the FPGA doubles the
-  *		  MCK01 rate.
-  *
-  *	Copyright (c) 2003 Takashi Iwai <tiwai@suse.de>
---- linux-next-20200805.orig/sound/pci/oxygen/xonar_dg.c
-+++ linux-next-20200805/sound/pci/oxygen/xonar_dg.c
-@@ -29,7 +29,7 @@
-  *   GPIO 4 <- headphone detect
-  *   GPIO 5 -> enable ADC analog circuit for the left channel
-  *   GPIO 6 -> enable ADC analog circuit for the right channel
-- *   GPIO 7 -> switch green rear output jack between CS4245 and and the first
-+ *   GPIO 7 -> switch green rear output jack between CS4245 and the first
-  *             channel of CS4361 (mechanical relay)
-  *   GPIO 8 -> enable output to speakers
-  *
+I think this supports only the newer external DTC,
+but not older ones.
+
+This feature is intended to test the upstream DTC
+before resyncing in-kernel scripts/dtc/.
+
+
+
+
+
+
+> ---
+>  scripts/Makefile.lib | 34 ++++++++++++++++++++++------------
+>  1 file changed, 22 insertions(+), 12 deletions(-)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 841ac03..2722a67 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -274,25 +274,35 @@ quiet_cmd_gzip = GZIP    $@
+>
+>  # DTC
+>  # ---------------------------------------------------------------------------
+> +ifeq ("$(origin DTC)", "command line")
+> +PHONY += $(DTC)
+> +dtc-option = $(call try-run, $(DTC) $1 -v,$1)
+> +else
+> +# Just add the flag. DTC is compiled later as a prerequisite, so there's no dtc
+> +# to test the flag against. This is okay because we're not testing flags which
+> +# aren't supported by in-kernel dtc to begin with.
+> +dtc-option = $1
+> +endif
+> +
+>  DTC ?= $(objtree)/scripts/dtc/dtc
+> -DTC_FLAGS += -Wno-interrupt_provider
+> +DTC_FLAGS += $(call dtc-option,-Wno-interrupt_provider)
+>
+>  # Disable noisy checks by default
+>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+> -DTC_FLAGS += -Wno-unit_address_vs_reg \
+> -       -Wno-unit_address_format \
+> -       -Wno-avoid_unnecessary_addr_size \
+> -       -Wno-alias_paths \
+> -       -Wno-graph_child_address \
+> -       -Wno-simple_bus_reg \
+> -       -Wno-unique_unit_address \
+> -       -Wno-pci_device_reg
+> +DTC_FLAGS += $(call dtc-option,-Wno-unit_address_vs_reg) \
+> +       $(call dtc-option,-Wno-unit_address_format) \
+> +       $(call dtc-option,-Wno-avoid_unnecessary_addr_size) \
+> +       $(call dtc-option,-Wno-alias_paths) \
+> +       $(call dtc-option,-Wno-graph_child_address) \
+> +       $(call dtc-option,-Wno-simple_bus_reg) \
+> +       $(call dtc-option,-Wno-unique_unit_address) \
+> +       $(call dtc-option,-Wno-pci_device_reg)
+>  endif
+>
+>  ifneq ($(findstring 2,$(KBUILD_EXTRA_WARN)),)
+> -DTC_FLAGS += -Wnode_name_chars_strict \
+> -       -Wproperty_name_chars_strict \
+> -       -Winterrupt_provider
+> +DTC_FLAGS += $(call dtc-option,-Wnode_name_chars_strict) \
+> +       $(call dtc-option,-Wproperty_name_chars_strict) \
+> +       $(call dtc-option,-Winterrupt_provider)
+>  endif
+>
+>  DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
