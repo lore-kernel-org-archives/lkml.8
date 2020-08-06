@@ -2,209 +2,115 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A250C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF674C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3150221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q2tp+5P1"
+	by mail.kernel.org (Postfix) with ESMTP id 4DE20221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgHFSjk (ORCPT
+        id S1729507AbgHFSjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729472AbgHFSjV (ORCPT
+        Thu, 6 Aug 2020 14:39:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40144 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgHFSjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:39:21 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA633C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:39:20 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id j187so45848161qke.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bEB+eFbcq/8iHsVmYFS7GFD4Ork+qLK5d/Ky4s3qseI=;
-        b=Q2tp+5P1jjX7ju+lu4QjZLIHjUwFBSVpdKRx5cHBtE2mbipB6yjkGx9HczVww/9HMu
-         LOTPafsEWgRWDVZeJjKFyKzI/KoRVSMHwKlbrI/HuNMmFOvFq6PZYJsrvzRcHIjLk4LE
-         hEmBbV28IrEOAXwhWtCYJFBJCR+/gAUYzJTvA=
+        Thu, 6 Aug 2020 14:39:17 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h12so792020pgm.7;
+        Thu, 06 Aug 2020 11:39:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bEB+eFbcq/8iHsVmYFS7GFD4Ork+qLK5d/Ky4s3qseI=;
-        b=qu0PB2CeMYdxFNPrwA+H97B5rVS1lsRDy35Wy2xUske0cMwkdJZGMC4j12jIr0oKXx
-         m2HcKBWGVL6E9p2M7i/ah5BL64xIatqieD0svfSwjtaYZXjnDx3BZFMDEYaUG5cmX7JO
-         okIJnlf3q8uHhS1QfijvIzvb97ePBxLP8+FJZAxtfcEFoyyruCGGML7yJjuzD7s/QUIf
-         NItQ7Y3o8k7NCnMbUvA7eISbDnpNmtqlxmbGAh0FG4u6wRXHAxRRt9fxhtqlWMhgdplq
-         DZ+fWQ5UKE9UdLnFKC5Fz4QJu0/E4HKoLXFybQ9YohqC4wEUFhdnuMCJl3tjuee8DAYr
-         fXgA==
-X-Gm-Message-State: AOAM530g6vJ2HRpd4RZxKYTGHV74MukYYn1t/LeeObRSm/ITnQ3OMXhP
-        hCHPq0Q0+KKpzrusGBe5thr0Djs3dZ2IUxtPh3RwRg==
-X-Google-Smtp-Source: ABdhPJzFzzFbqbRQyoOETbw3G8FdBFxzF/Y39ZK/3j5jMz8+Kj+aqclKQnQvhWeswXsGDvrdXC9xQLyanNW3umXpEZI=
-X-Received: by 2002:a37:e01:: with SMTP id 1mr9696836qko.128.1596739159829;
- Thu, 06 Aug 2020 11:39:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=AvhBChDNTPymYmm5n2siH1WepfqMKnpgUYkWosLF0Wo=;
+        b=mn7vCvhSrlbvCGTNWAMydZ/L2dtQYuoiWHV1DfZGGXxz9eoXW6gJqACbnSuL4qpdnB
+         SWkY6SH2lnJVWlIUWokITr5voXLAaBGzd3rQkUAfu3zVeF3C3FEQvkX7I7LKP0B1Z8ff
+         QbrQDhQQk1WHk2wnCMK19RilxYfUyJ6yWMNvirlgKNzYbytiUvMFqt4WvtJaLsJlzSQv
+         gdLehkcDzsc1EK5k1upEz2h/h3fwRIAzq/T0OBoMsgSUhqTSLl2kJaFJveTZaQPr2cQG
+         eKndiePHArIfGO3QXnsCyuFcJ7cWXup6cs8+9hfPCCTuBn5ZpWHvzu0CuaYAMdOFUThF
+         WPVA==
+X-Gm-Message-State: AOAM530PNPPj5nKYKuFwMooD9j+c4KSEGokyWqr7zUS1LqHW7ov0gzam
+        iDssrpW8vfZaJUaMDBQW98U=
+X-Google-Smtp-Source: ABdhPJznYbebF/HhoXOXhYSsvhrUY3CyTTZgMhlaY1IgfxjNny6VU0KYLjHGlSS6n6rVM5Qi/GO7hw==
+X-Received: by 2002:a65:5c4d:: with SMTP id v13mr8195277pgr.6.1596739156798;
+        Thu, 06 Aug 2020 11:39:16 -0700 (PDT)
+Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id y4sm7763803pgb.16.2020.08.06.11.39.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 11:39:15 -0700 (PDT)
+Subject: Re: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        'Avri Altman' <Avri.Altman@wdc.com>,
+        'Bean Huo' <huobean@gmail.com>, daejun7.park@samsung.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        asutoshd@codeaurora.org, beanhuo@micron.com,
+        stanley.chu@mediatek.com, cang@codeaurora.org,
+        tomas.winkler@intel.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        'Sang-yoon Oh' <sangyoon.oh@samsung.com>,
+        'Sung-Jun Park' <sungjun07.park@samsung.com>,
+        'yongmyung lee' <ymhungry.lee@samsung.com>,
+        'Jinyoung CHOI' <j-young.choi@samsung.com>,
+        'Adel Choi' <adel.choi@samsung.com>,
+        'BoRam Shin' <boram.shin@samsung.com>
+References: <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
+ <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+ <7c59c7abf7b00c368228b3096e1bea8c9e2b2e80.camel@gmail.com>
+ <SN6PR04MB4640CE297AAB3CF4D37EE002FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <39c546268abead68f4c00f17dc47c1597f3e0273.camel@gmail.com>
+ <SN6PR04MB4640210D586CBA053F56DCF0FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <e3aba7fba7c208ac58c638139bd615c871d2e52e.camel@gmail.com>
+ <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <000001d66c0f$ce9615a0$6bc240e0$@samsung.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <8a43e89b-f3b8-2a48-7cd2-36f659da21c2@acm.org>
+Date:   Thu, 6 Aug 2020 11:39:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200730225609.7395-1-azhar.shaikh@intel.com> <20200730225609.7395-3-azhar.shaikh@intel.com>
- <20200730230238.GD3145664@google.com> <MWHPR11MB1518178C5B2335FC02CD36AE91710@MWHPR11MB1518.namprd11.prod.outlook.com>
- <20200730232504.GG3145664@google.com> <MWHPR11MB151867DF25664C80E99A326D914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
- <CACeCKaf6WuW6XbFBQoVEW55w=OHfaVmmDn1xepiYYeRyMzZFrA@mail.gmail.com> <20200806113907.GX883641@kuha.fi.intel.com>
-In-Reply-To: <20200806113907.GX883641@kuha.fi.intel.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Thu, 6 Aug 2020 11:39:08 -0700
-Message-ID: <CACeCKaeLmVudhssvnYrQGmnJiD-byW8jOas1QKyQj4gg0=sC4A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
- role during disconnect
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Shaikh, Azhar" <azhar.shaikh@intel.com>,
-        "bleung@chromium.org" <bleung@chromium.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "groeck@chromium.org" <groeck@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>,
-        "Bowman, Casey G" <casey.g.bowman@intel.com>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <000001d66c0f$ce9615a0$6bc240e0$@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki,
+On 2020-08-06 09:36, Alim Akhtar wrote:
+> V8 has removed the "UFS feature layer" which was  the main topic of discussion. What else we thing is blocking this to be in mainline?
+> Bart / Martin, any thought?
 
-On Thu, Aug 6, 2020 at 4:39 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Wed, Aug 05, 2020 at 12:37:14PM -0700, Prashant Malani wrote:
-> > Hi Azhar,
-> >
-> >
-> > On Wed, Aug 5, 2020 at 12:22 PM Shaikh, Azhar <azhar.shaikh@intel.com> wrote:
-> > >
-> > > Hi Prashant,
-> > >
-> > > > Is this documented anywhere? Kindly provide the links to that if so. I wasn't
-> > > > aware of any ordering requirements (but I may be missing something).
-> > >
-> > > The configuration of the connector should always happen in the order defined in the
-> > > USB Type-C specification. Check ch. 2.3 (USB Type-C Spec R2.0). So that will basically give you:
-> > >
-> > > 1. orientation
-> > > 2. role(s)
-> > > 3. the rest.
-> >
-> > Thanks for the link. Are you referring to Section 2.3 (Configuration
-> > Process) ? I couldn't find anything there which
-> > implied any required ordering (I'm reading Release 2.0, Aug 2019, so I
-> > don't know if something has been added since).
-> > Could you kindly point me to the appropriate subsection?
->
-> Please check the section 4.5.1.2 (Connecting Sources and Sinks). Check
-> the typical flow. You can also check the Connection State Machine
-> Requirements. The order should be clear from those as well.
+Thank you for having posted a version with the UFS feature layer removed. I
+will try to find some time this weekend to review version 8 of this patch
+series.
 
-Thanks for sending the section info.
-
->
-> 1. Source/sink detection
-> 2. Orientation
-> 3. Data role
-> 4. VCONN
-> 5. VBUS (USB Type-C currents)
-> 6. The connector is now configured. We can start the PD communication
->    that should lead into configuration of the mux if we enter a mode.
-
-The cros-ec-typec driver only receives a USB_PD_MUX_INFO [1] host
-command after we've
-already entered the mode as far as PD communication is concerned
-(steps 1-5 and even PD communication
-to enter the mode is already done by the time cros-ec-typec receives
-PD_MUX_INFO).
-There is no further PD communication to be done in this case (for a
-particular mode), at least nothing that
-is triggered by the AP.
-
->
-> The data role, the thing that we are talking about here, really should
-> be set before the mux is configured.
-
-I apologize but I still didn't see anything there enforcing an
-ordering for those on any AP switches. The state
-machine you're referring to ((I assume you are referring to Figure
-4-12 to Figure Figure 4-18)
-is already implemented in the TCPM in the Chrome EC for the Chrome OS
-Platform [2]
-
-Perhaps we can take that discussion off-mailing list if necessary ?
-(I'd like to avoid blasting the large mailing list
-with more discussion email, but also happy to continue here if that's
-the preference).
-
-To be clear, all these comments are limited to the only Chrome OS platform.
->
-> > Additionally, I think any ordering requirements there are already
-> > handled by the TCPM in the Chrome OS EC.
->
-> The TCPM does not execute the steps that configure the port on this
-> platform. The OS is the part that actually executes the steps.
-
-My response was w.r.t section 2.3 (the section which was originally
-quoted) which deals
-with things like:
-"
-- Source-to-Sink attach/detach detection
-- Plug orientation/cable twist detection
-- Detect if cable requires Vconn
-"
-etc.
-
-All these things are performed by the Chrome OS EC (via TCPM or the TCPC).
-For the items listed in Section 4.5.1.2, AFAIK those steps are
-performed by the Chrome OS EC (via
-a combination of the TCPM and TCPC).
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/tree/include/linux/platform_data/cros_ec_commands.h?h=for-kernelci#n5214
-[2]: https://source.corp.google.com/chromeos_public/src/platform/ec/common/usbc/
-
->
-> That is one reason (but not the only one) why it is important that
-> both parts follow the order that is proposed in the spec. Otherwise we
-> may endup negotiating things with the partner in one order but then
-> actually executing those steps in some other.
-
-I agree with this, but since the role of TCPM is performed by the
-Chrome EC, I'm not convinced this patch is
-addressing any spec related ordering requirements.
-
-As I mentioned above, the Chrome OS EC is following the state machine
-as well as the section
-of the spec you referred to.
-
-I would suggest:
-- Merging Patch 1 (role set correction) and Patch 2 (moving the
-usb_role_switch_set_role() inside cros_typec_configure_mux()
-*but* keep it at the end to preserve existing ordering) into 1 patch.
-- Add another patch which re-orders the calls and which in the commit
-message lists out all the reasons why this re-ordering
-needs to be done.
-
-Doing the above will help keep better track of why the changes were made.
-
-BR,
-
--Prashant
->
->
-> thanks,
-
->
-> --
-> heikki
+Bart.
