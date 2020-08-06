@@ -2,310 +2,181 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3241BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F25AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77246206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="enQ46/8U"
+	by mail.kernel.org (Postfix) with ESMTP id B3249206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596735126;
+	bh=OEb91Ejr5JEtyZgzJD6o2mtTHegdt84CjOCxzu1PrwI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Elxy9FsYdxS+mGm5h74y+MJT98ZEGvCDPzruO5ayW2DQe62UUbHrfr9+PtY8+qsWt
+	 KB9UOMKyPSUZsACYoETuHv6OTXtQ9W0JPqazybL+/1UcDeHB4qlxDPY+3DjxSl2shb
+	 wkGPnl8iyVlO642y75BoYJeCgmu5WL7B7bytJhXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgHFR3g (ORCPT
+        id S1729146AbgHFRbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:29:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729924AbgHFRAI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:00:08 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0EDC0A8894
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 07:45:01 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id x1so20331002ilp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 07:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W4cJ9kP3/QwzZNthUtsOjhu6rTVF+wY/ZoFelfzu+s4=;
-        b=enQ46/8UJpafoTUsx6GsvtfMUmNj8dZqxhKn+aekJLw24TGyQe/9DB4NMJrXz8Gn3X
-         3b8hQW1zt5ezg94/dlUE4j8oCdS173qlNMiCdLG8K2BfsoCmfCERxTEOAhj42XxdGKgE
-         KvwVkfS2Lessc5mXmUyz2vADfJJWRjk6rpTdhboV/e+8IVyqnK4vGqIkEib5X05o6zOm
-         XgjdZY+T09eZ100PUl6LzLJBDftBKLDGrLi8+JgHNxwZw5Jtqxn1Hc2lsok+1FPDxJ9q
-         E+NLTBSs3wkCkdi+G+CAXN+V36HZms5s1ZjpxEJIJ8Db9qlBcOXc7SldMjuo92CmNbn3
-         /vWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W4cJ9kP3/QwzZNthUtsOjhu6rTVF+wY/ZoFelfzu+s4=;
-        b=hD4zJVLVGvX/UwoKhA0Gq+DIY7g7v1CdLLEJImZYPAIeXzJN48T7gFeR4YhkpdgnIy
-         AnO5geIjNbErntSmwpyfzC5y7zUNDE42EYdOXY4DnCOhoFmHj/AGlfEGH5btDuhBNiJB
-         XzSHq1kjlLIFu1vy/15Ie4KuozVZ6vLTzPKTdgKijpLKO9VOd4jPVoFaWpHleeb3rlga
-         JMUIBqBqBwc+MhGNImGOYyvOyE4XM5+vc3+4OVGs4klBpBTWApoamV1Kj5RZ2hmJbrrJ
-         WsyipkUPb2HntdD1OiGDGehClrx/vKbsDMDKxIobpPdxHVrwFSn5KVhzB+nWzyMcdCM2
-         Y7cA==
-X-Gm-Message-State: AOAM532aM8MHsxFNJ2sJaK3VYdiae6+NH5skxzKV30kh0GhkHNMu/thb
-        7pvhj7/GzLU+lbDKdHesl4KFZcTau0CUHed/RnmjUw==
-X-Google-Smtp-Source: ABdhPJwu/iLGRyqF0WyJN5ax5yp/CiX30nzRev10q3kB+HJmWGfUejCN7JqZDvohvLvyDAkwALRDLN5XJzctNqyJ27w=
-X-Received: by 2002:a92:1805:: with SMTP id 5mr10588552ily.127.1596725099915;
- Thu, 06 Aug 2020 07:44:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200728163416.556521-1-hch@lst.de> <20200728163416.556521-3-hch@lst.de>
-In-Reply-To: <20200728163416.556521-3-hch@lst.de>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 6 Aug 2020 20:14:48 +0530
-Message-ID: <CA+G9fYuYxGBKR5aQqCQwA=SjLRDbyQKwQYJvbJRaKT7qwy7voQ@mail.gmail.com>
-Subject: Re: [PATCH 02/23] fs: refactor ksys_umount
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thu, 6 Aug 2020 13:31:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729231AbgHFRa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:30:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A7D822CBB;
+        Thu,  6 Aug 2020 11:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596712238;
+        bh=OEb91Ejr5JEtyZgzJD6o2mtTHegdt84CjOCxzu1PrwI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LaSl7aFBP67JYQSOwJImoFOTnSp1zRtRAYwJJvljYR8MME7OgXk5s3c09bk1KyjCa
+         GAkR2fOYdD6TtoV5ncAgF6tE1azaghriZ2BxUZTgrGc318xTzu5AxNbst81Vaw7QhG
+         j1iARMnMtEHYkxWP59bd4fKSPN6tnCOYlb4jFdY0=
+Date:   Thu, 6 Aug 2020 12:53:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "hongxu.zhao" <hongxu.zhao@mediatek.com>
+Cc:     "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        wsd_upstream@mediatek.com, Weiqi Fu <weiqi.fu@mediatek.com>,
         open list <linux-kernel@vger.kernel.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
-        chrubis <chrubis@suse.cz>, lkft-triage@lists.linaro.org,
-        LTP List <ltp@lists.linux.it>
-Content-Type: text/plain; charset="UTF-8"
+        Cunliang Du <cunliang.du@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhen jiang <zhen.jiang@mediatek.com>
+Subject: Re: [PATCH] staging: Add Mediatek High Frequency Manager Framework
+Message-ID: <20200806105351.GA2829418@kroah.com>
+References: <20200804075339.9820-1-hongxu.zhao@mediatek.com>
+ <20200804081126.GA1765831@kroah.com>
+ <1596702748.6258.3.camel@mbjsdccf07>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596702748.6258.3.camel@mbjsdccf07>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020 at 22:04, Christoph Hellwig <hch@lst.de> wrote:
->
-> Factor out a path_umount helper that takes a struct path * instead of the
-> actual file name.  This will allow to convert the init and devtmpfs code
-> to properly mount based on a kernel pointer instead of relying on the
-> implicit set_fs(KERNEL_DS) during early init.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/namespace.c | 40 ++++++++++++++++++----------------------
->  1 file changed, 18 insertions(+), 22 deletions(-)
->
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 6f8234f74bed90..43834b59eff6c3 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -1706,36 +1706,19 @@ static inline bool may_mandlock(void)
->  }
->  #endif
->
-> -/*
-> - * Now umount can handle mount points as well as block devices.
-> - * This is important for filesystems which use unnamed block devices.
-> - *
-> - * We now support a flag for forced unmount like the other 'big iron'
-> - * unixes. Our API is identical to OSF/1 to avoid making a mess of AMD
-> - */
-> -
-> -int ksys_umount(char __user *name, int flags)
-> +static int path_umount(struct path *path, int flags)
->  {
-> -       struct path path;
->         struct mount *mnt;
->         int retval;
-> -       int lookup_flags = LOOKUP_MOUNTPOINT;
->
->         if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
->                 return -EINVAL;
-> -
->         if (!may_mount())
->                 return -EPERM;
->
-> -       if (!(flags & UMOUNT_NOFOLLOW))
-> -               lookup_flags |= LOOKUP_FOLLOW;
-> -
-> -       retval = user_path_at(AT_FDCWD, name, lookup_flags, &path);
-> -       if (retval)
-> -               goto out;
-> -       mnt = real_mount(path.mnt);
-> +       mnt = real_mount(path->mnt);
->         retval = -EINVAL;
-> -       if (path.dentry != path.mnt->mnt_root)
-> +       if (path->dentry != path->mnt->mnt_root)
->                 goto dput_and_out;
->         if (!check_mnt(mnt))
->                 goto dput_and_out;
-> @@ -1748,12 +1731,25 @@ int ksys_umount(char __user *name, int flags)
->         retval = do_umount(mnt, flags);
->  dput_and_out:
->         /* we mustn't call path_put() as that would clear mnt_expiry_mark */
-> -       dput(path.dentry);
-> +       dput(path->dentry);
->         mntput_no_expire(mnt);
-> -out:
->         return retval;
->  }
->
-> +int ksys_umount(char __user *name, int flags)
-> +{
-> +       int lookup_flags = LOOKUP_MOUNTPOINT;
-> +       struct path path;
-> +       int ret;
-> +
-> +       if (!(flags & UMOUNT_NOFOLLOW))
-> +               lookup_flags |= LOOKUP_FOLLOW;
-> +       ret = user_path_at(AT_FDCWD, name, lookup_flags, &path);
-> +       if (ret)
-> +               return ret;
-> +       return path_umount(&path, flags);
-> +}
-> +
->  SYSCALL_DEFINE2(umount, char __user *, name, int, flags)
->  {
->         return ksys_umount(name, flags);
+On Thu, Aug 06, 2020 at 04:32:28PM +0800, hongxu.zhao wrote:
+> On Tue, 2020-08-04 at 10:11 +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Aug 04, 2020 at 03:52:49PM +0800, hongxu.zhao wrote:
+> > > Add a new sensor framework into linux kernel which can support multi client request sensor data.
+> > > There are the following features:
+> > >     1.Ringbuffer between manager and client;
+> > >     2.Kernel space user interface;
+> > >     3.User space user interface with syscall;
+> > >     4.Each client hang detect mechanism;
+> > >     5.Polling timer management in framework no need driver concern;
+> > >     6.Polling kthread work intergrated into a single kthread
+> > >       worker to save system resources in framework no need driver concern;
+> > >     7.Proc file system to show manager device and client details;
+> > >     8.Compitable with android and widely used in many mediatek platform products;
+> > > 
+> > > Change-Id: I6361cdc2d51de50f66eede7df099c4575e7ec473
+> > 
+> > Did you not run checkpatch.pl on this?  :)
+> > 
+> > No need for change-id here.
+> > 
+> > But, most importantly, why is this in drivers/staging?  What keeps it
+> > from being in the "real" part of the kernel?  I need a TODO file in the
+> > directory of the driver listing what remains to be done and who is
+> > responsible for doing this work and reviewing patches.
+> > 
+> > Can you resend this with that file added and the Change-id removed?
+> > 
+> > Also, why not just use the IIO interface, why are you creating
+> > yet-another api for sensors?  We already have 2, making a third seems
+> > like something that guarantees this will never be mergable to the
+> > correct part of the kernel.
+> > 
+> > And finally, /proc/ is not for devices, that is what sysfs is for,
+> > please use that.
+> 
+> I have modified checkpatch issue, but blocked by ARCH=alpha build error
+> and I can't reproduce this build error in mediatek environment. I need
+> spend some time setting up an environment to solve this problem and will
+> send you the latest patch together after solving the problem of alpha
+> build error.
 
-Regressions on linux next 20200803 tag kernel.
-LTP syscalls test umount03 mount a path for testing and
-umount failed and retired for 50 times and test exit with warning
-and following test cases using that mount path failed.
+If you can't easily fix the alpha issue, you can just mark the driver as
+not able to be built there for now.
 
-LTP syscalls tests failed list,
-    * umount03
-    * umount2_01
-    * umount2_02
-    * umount2_03
-    * utime06
-    * copy_file_range01
+> Firstly I want keep it in the real part of kernel and I send mail to
+> community to find the right maintainer, unfortunately, several emails
+> were not answered.
 
+Pointers to those emails on lore.kernel.org?
 
-Summary
-------------------------------------------------------------------------
+> Secondly I found iio upstream history it also started from staging at
+> the beginning, maybe staging is the best start until it become mature we
+> can move it to the real part of kernel.
 
-kernel: 5.8.0
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-git branch: master
-git describe: next-20200803
-Test details: https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200803
-------------------------------------------------------------------------
+iio started in staging, but now that the infrastructure is out of it,
+there should not be any reason that new drivers be forced to go into
+staging too.  You only want to do it this way if for some reason you can
+not get the work done on your own.
 
-test failed log:
-tst_device.c:262: INFO: Using test device LTP_DEV='/dev/loop0'
-tst_mkfs.c:90: INFO: Formatting /dev/loop0 with ext2 opts='' extra opts=''
-mke2fs 1.43.8 (1-Jan-2018)
-tst_test.c:1246: INFO: Timeout per run is 0h 15m 00s
-[  870.449934] EXT4-fs (loop0): mounting ext2 file system using the
-ext4 subsystem
-[  870.454338] EXT4-fs (loop0): mounted filesystem without journal. Opts: (null)
-[  870.456412] ext2 filesystem being mounted at
-/tmp/ltp-YQrzWZNEEy/jVhqum/mntpoint supports timestamps until 2038
-(0x7fffffff)
-umount03.c:35: PASS: umount() fails as expected: EPERM (1)
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  1...
-tst_device.c:388: INFO: Likely gvfsd-trash is probing newly mounted
-fs, kill it to speed up tests.
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  2...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  3...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  4...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  5...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  6...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  7...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  8...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try  9...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 10...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 11...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 12...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 13...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 14...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 15...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 16...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 17...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 18...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 19...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 20...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 21...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 22...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 23...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 24...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 25...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 26...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 27...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 28...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 29...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 30...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 31...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 32...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 33...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 34...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 35...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 36...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 37...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 38...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 39...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 40...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 41...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 42...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 43...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 44...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 45...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 46...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 47...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 48...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 49...
-tst_device.c:384: INFO: umount('mntpoint') failed with EBUSY, try 50...
-tst_device.c:394: WARN: Failed to umount('mntpoint') after 50 retries
-tst_tmpdir.c:337: WARN: tst_rmdir: rmobj(/tmp/ltp-YQrzWZNEEy/jVhqum)
-failed: remove(/tmp/ltp-YQrzWZNEEy/jVhqum/mntpoint) failed; errno=16:
-EBUSY
-Summary:
-passed   1
-failed   0
-skipped  0
-warnings 1
+> Actually, we have already assessed IIO subsystem, but the conclusion is
+> that it doesn't meet our requirement:
+> 1. iio doesn't have sensor manager in kernel space.
 
-mke2fs 1.43.8 (1-Jan-2018)
-/dev/loop0 is mounted; will not make a filesystem here!
-umount2_01    0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
-umount2_01    0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
-umount2_01    1  TBROK  :  tst_mkfs.c:103: umount2_01.c:81: mkfs.ext2
-failed with 1
-umount2_01    2  TBROK  :  tst_mkfs.c:103: Remaining cases broken
-mke2fs 1.43.8 (1-Jan-2018)
-/dev/loop0 is mounted; will not make a filesystem here!
-umount2_02    0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
-umount2_02    0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
-umount2_02    1  TBROK  :  tst_mkfs.c:103: umount2_02.c:121: mkfs.ext2
-failed with 1
-umount2_02    2  TBROK  :  tst_mkfs.c:103: Remaining cases broken
-mke2fs 1.43.8 (1-Jan-2018)
-/dev/loop0 is mounted; will not make a filesystem here!
-umount2_03    0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
-umount2_03    0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
-umount2_03    1  TBROK  :  tst_mkfs.c:103: umount2_03.c:101: mkfs.ext2
-failed with 1
-umount2_03    2  TBROK  :  tst_mkfs.c:103: Remaining cases broken
+What exactly do you mean by this?  Who needs to be a "manager" here?
 
-mke2fs 1.43.8 (1-Jan-2018)
-/dev/loop0 is mounted; will not make a filesystem here!
-utime06     0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
-utime06     0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
-utime06     1  TBROK  :  tst_mkfs.c:103: utime06.c:122: mkfs.ext2 failed with 1
-utime06     2  TBROK  :  tst_mkfs.c:103: Remaining cases broken
+> 2. each driver under the iio subsystem needs to create workqueue or
+> kthread by itself, waste system resources.
 
-Steps to reproduce:
--------------------------
-cd /opt/ltp
-./runltp -s umount                 --> FAILS
+workqueues are very light, how many sensors and what type of resources
+are you referring to here?  And adding a whole new user api is not
+exactly "tiny" either :)
 
-Above command runs all umount tests.
+> 3. iio doesn't have hang detect mechanism to detect polling thread hang.
 
-Test case description,
-Verify that umount(2) returns -1 and sets errno to EPERM if the user
-is not the super-user.
-Test case link,
-https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/umount/umount03.c
+That's userspace's issue, right?
 
-full test log,
-https://lkft.validation.linaro.org/scheduler/job/1642287
+> We need a sensor manager architecture in kernel space to select the best
+> delay and latency that multi-client(user space or kernel space user)
+> requested at the same time, and finally dispatch data to each client.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Why does that have to be in the kernel?
+
+> We need lower resource comsumption, each driver can poll data by kthread
+> work which intergrated into a single kthread worker to save system
+> resources in framework.
+
+Again, how many resources are you really saving here with a whole new
+framework?
+
+> We need detect polling thread hang to decide whether to send data to
+> him.
+
+Data to where?
+
+> About proc, proc is only for High Frequency Manager Framework to show
+> manager details and client details, is not for device drivers.
+
+Then it is not needed :)
+
+> we recommend device driver(like test/test_app.c) use sysfs which under
+> High Frequency Manager Framework.
+
+Then you need to document it really well as to what you are doing here.
+
+But again, please try working with the IIO framework as that is what we
+have today.  Any improvements you make to it will help everyone out.
+
+Adding a third way to handle sensor data to the kernel is probably not
+going to work well for anyone...
+
+thanks,
+
+greg k-h
