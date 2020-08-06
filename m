@@ -2,130 +2,115 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5641CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4DF21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="aKVvTF3y"
+	by mail.kernel.org (Postfix) with ESMTP id 93FB0204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgHFXog (ORCPT
+        id S1726316AbgHFX7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:44:36 -0400
-Received: from mail-eopbgr70082.outbound.protection.outlook.com ([40.107.7.82]:64789
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725272AbgHFXog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:44:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n6RN0j/oLTCa4/YwunqJgfdbxy3sEA+jWtm0DUbBa20Pv6dAA/tAh4ObuJsVycd/ZsXamqJL8Go/72oGmWaLBkZZHGmuhRBUcbOilf4H0W1IUBGpUY6EaL9VNTqhd6tm/zVzc6k+3gaGKXrZNCIdtlsuKDPEZAE0PyvYsMH9jwzbMr59v719TCkqUnB5L3AzUjDjx2b1hfpQanO/zjHFM4ANIteA3d8MaI9O4rBHIself/B3hsJmPp23u3DBoWgrOVRRJiGwM9V3cHCKWCdfuiK/mWzU1KDvWD0Zye5PMLFwbwaeGs0lBflZXvu3lkzMJTa6X/fqv46+qNoZqWViEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PUbkFLlQ9431637+XYpeG5sAsoAaxSeAVPd61Nk/mIo=;
- b=AH9sSqJbVQeTnj23wDAHl0+/O/SFa5Ux6cxYvphYk3M1imq6Ggq9oLP/czZZu++9m6/jzCIxdTfwzJdkTUkqrX/lCrjUa4WVZUhoosc1/t0CmvGZyMB0X48J/Z+wzz9d//FYOI1NuxkuXeOEDpIJ0h2k2YeVrtkRSFCmFG3CGGUZJUgkZbTIGxnPe1EeHhEHWvCa06xpdgWsOBudX+Lmtibv8hhHBk3KcvviAlbXSQBoUGTmI9Q2Ix84MKO/9au4U3W8f3FTxAZdl3Wm9zW+O6NE3PklqSFuJUUklV8IPyMCT4P7f1EjpBNvlkDe3my5uwmPKLO6KOOwlsD3heiPNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PUbkFLlQ9431637+XYpeG5sAsoAaxSeAVPd61Nk/mIo=;
- b=aKVvTF3y8DnV+3w5wyZvfPV41PkNKjzLQh2l7vysYH46UFwxFG2+A5GyxPxVDB/OyMJUFoQ6VUx8SDHoPUuPrezXqKMtPWkPvhGLMjl3RSGuxwoDEj9/DTsKU0sil0kwUm+TntC4OS0ptmH2vA9Ws/aIV9QSWUtlRdToDv44YQs=
-Authentication-Results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR0502MB3837.eurprd05.prod.outlook.com (2603:10a6:803:d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 6 Aug
- 2020 23:44:31 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a%4]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
- 23:44:31 +0000
-Date:   Thu, 6 Aug 2020 20:44:27 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] mm/migrate: fix migrate_pgmap_owner w/o
- CONFIG_MMU_NOTIFIER
-Message-ID: <20200806234427.GR19097@mellanox.com>
-References: <20200806193353.7124-1-rcampbell@nvidia.com>
- <a093b5ed-4ea6-7e02-f9da-19799f3cd59a@infradead.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a093b5ed-4ea6-7e02-f9da-19799f3cd59a@infradead.org>
-X-ClientProxiedBy: BL1PR13CA0027.namprd13.prod.outlook.com
- (2603:10b6:208:256::32) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Thu, 6 Aug 2020 19:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgHFX7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 19:59:45 -0400
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [IPv6:2001:67c:2050::465:102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5779AC061574;
+        Thu,  6 Aug 2020 16:59:45 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4BN57s5V1GzKmRH;
+        Fri,  7 Aug 2020 01:59:37 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id Z5kYO4k7-bo7; Fri,  7 Aug 2020 01:59:32 +0200 (CEST)
+Date:   Fri, 7 Aug 2020 09:59:20 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Lokesh Gidra <lokeshgidra@google.com>, viro@zeniv.linux.org.uk,
+        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+        jmorris@namei.org, kaleshsingh@google.com, dancol@dancol.org,
+        surenb@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nnk@google.com, jeffv@google.com,
+        calin@google.com, kernel-team@android.com, yanfei.xu@windriver.com,
+        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
+Subject: Re: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and
+ remove O_CLOEXEC
+Message-ID: <20200806235920.vy6ngjb7h55hg5w4@yavin.dot.cyphar.com>
+References: <20200804203155.2181099-1-lokeshgidra@google.com>
+ <20200805034758.lrobunwdcqtknsvz@yavin.dot.cyphar.com>
+ <20200805040806.GB1136@sol.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL1PR13CA0027.namprd13.prod.outlook.com (2603:10b6:208:256::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.7 via Frontend Transport; Thu, 6 Aug 2020 23:44:31 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1k3pYh-004XGF-8c; Thu, 06 Aug 2020 20:44:27 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 56c3b674-82c9-48d5-151a-08d83a62aa50
-X-MS-TrafficTypeDiagnostic: VI1PR0502MB3837:
-X-Microsoft-Antispam-PRVS: <VI1PR0502MB3837CB650A65D79DD232B64CCF480@VI1PR0502MB3837.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OfwD3YzH6r1n7LzVw91vDI2w2wn2WJBYbLm/pMTnPdyImDr4l55SbHvZdkiwy+msDwZoXyscfvAr+2GB9OToTlxqnZLGUh79xmAuKf1HiNuqcm+OHiklDQJh9xPCEp5pfPz+gWoODpNDO+8qKqMvTUCIaXHyrdjy/PWwYkySI1tbkcfii8d776Xdp46syEVbaeITSGpsp1RETreUYS3skHb7qVg6CjZUxw+P/nI5bM6AWlTJRLn2HD9zXbFPNkGIISdFN55zxUyKvk6QpG9CYC5RkvaPUOcm5o8I5LvyNcWBin+lBqGztmhDhH8hcdO+
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(346002)(39860400002)(396003)(5660300002)(83380400001)(66946007)(2616005)(1076003)(86362001)(66476007)(4744005)(36756003)(66556008)(9746002)(2906002)(53546011)(316002)(8676002)(8936002)(54906003)(26005)(426003)(478600001)(186003)(9786002)(4326008)(110136005)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: OpuWTCAQbLQw2XqJB6iXt0BktiDdPtNu+Xi7H3r45ksXNoQfy7SGSlEfSkflaeWWZL1YQOX4Br+oUZa7/WM/KoDkFliXjppsougZrONNpFlWvw0mQV791vKaGa6hXrHbbUwDHadjUtYs/23FmS0cHpvWnJXvWjwlK1sBaP6p3TDpGtAUZZ5HDDBC7WIc7STws1xIc+2RE9xHM65DdKTna28AjJSwmNYoAdnexig8vwzshnMDC4s/4bWP7LzeWgyMNZEw2VhqFZtYMvwU+bMr7OgOeL7dURyx03nj4nQepHTQ0tn/JiwkAV1vDekP3D8ERxljFW6wH3BdflbdGooqzKrQmDzkEfm17+ddcO1sh7/INg26HfIYuXXXncTZerx+Y5pVpKUH1FcTgmuDsFFip+hN7OhQibEOjZZ2PlUMunZxCit94rj41niqG8rBYOSCm8vXYYqnvZl3/+bH07ZNCRGmSDGVOmY+Nnhv9x9ta4OAXUpFGp1SnMgyxkxEccIpSYtFjVX8y8iJszHXZVEOJMF/Tbn6Xf1Q52qSFDFUhRi2fWOQOC3sG03adBPuKceRsZsI/GZZhff1lfxdGof36yibOIAVDytNwj2qmE3PoF8kVHWRazIv48kaVp3Qowm+XPcAjaKC7c9/ThT0jlYlTg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56c3b674-82c9-48d5-151a-08d83a62aa50
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 23:44:31.4164
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MEVKqcOQWixnCfOzfX0QQRn2YRxj6e3KeM9qAUJ6YIGJXJN16PXqNQUJcCsoa1TPMKXNVsa2AaKAcRIAlRSedQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3837
-X-MS-Exchange-Transport-Forked: True
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2o2yssul3qsbj6lg"
+Content-Disposition: inline
+In-Reply-To: <20200805040806.GB1136@sol.localdomain>
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -6.18 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 88FDD1832
+X-Rspamd-UID: 6bf24b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 04:39:58PM -0700, Randy Dunlap wrote:
-> On 8/6/20 12:33 PM, Ralph Campbell wrote:
-> > On x86_64, when CONFIG_MMU_NOTIFIER is not set/enabled, there is a
-> > compiler error:
-> > 
-> > ../mm/migrate.c: In function 'migrate_vma_collect':
-> > ../mm/migrate.c:2481:7: error: 'struct mmu_notifier_range' has no member
-> > named 'migrate_pgmap_owner'
-> >   range.migrate_pgmap_owner = migrate->pgmap_owner;
-> >        ^
-> > 
-> > Fixes: 998427b3ad2c ("mm/notifier: add migration invalidation type")
-> > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+--2o2yssul3qsbj6lg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I thought it spent enough time in linux-next and for 0-day to catch
-things like this, but I guess I was wrong.
+On 2020-08-04, Eric Biggers <ebiggers@kernel.org> wrote:
+> On Wed, Aug 05, 2020 at 01:47:58PM +1000, Aleksa Sarai wrote:
+> > On 2020-08-04, Lokesh Gidra <lokeshgidra@google.com> wrote:
+> > > when get_unused_fd_flags returns error, ctx will be freed by
+> > > userfaultfd's release function, which is indirectly called by fput().
+> > > Also, if anon_inode_getfile_secure() returns an error, then
+> > > userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
+> > >=20
+> > > Also, the O_CLOEXEC was inadvertently added to the call to
+> > > get_unused_fd_flags() [1].
+> >=20
+> > I disagree that it is "wrong" to do O_CLOEXEC-by-default (after all,
+> > it's trivial to disable O_CLOEXEC, but it's non-trivial to enable it on
+> > an existing file descriptor because it's possible for another thread to
+> > exec() before you set the flag). Several new syscalls and fd-returning
+> > facilities are O_CLOEXEC-by-default now (the most obvious being pidfds
+> > and seccomp notifier fds).
+>=20
+> Sure, O_CLOEXEC *should* be the default, but this is an existing syscall =
+so it
+> has to keep the existing behavior.
 
-Linus has already merged the hmm pull request.
+Ah, I missed that this was a UAPI breakage. :P
 
-Andrew Morton: Can you pick this fix up to forward to Linus?
+> > At the very least there should be a new flag added that sets O_CLOEXEC.
+>=20
+> There already is one (but these patches broke it).
 
-Thanks,
-Jason
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--2o2yssul3qsbj6lg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXyyZVAAKCRCdlLljIbnQ
+EqERAQCdc5vbuBbcH6ZvlJ76Nh76VRRomUWHHCrcOMRHSFrJ+gD/WfDZUXU8Mwa0
+gAR9T/LNnZ0Yv7I1Q/ny7ZJjPIQswgU=
+=y/ce
+-----END PGP SIGNATURE-----
+
+--2o2yssul3qsbj6lg--
