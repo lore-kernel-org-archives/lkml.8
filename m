@@ -2,82 +2,67 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8558CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9789F221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B993221E5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596743691;
+	bh=PvFDB25rT0Rn8EmFv571YNgGV/SoRouG9j9H2iWeAA4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=wv60k9XeXpClwB2mdGD8FlUiVmg8+Y91oZBdkxhJVCojeWxx/MyOCvgDHqxditJOj
+	 0pq90uOyhAOVlJplGCOgQhymrDO38HvM47riQvGMv1mk4DHZcI7jOvOHP5HVDY0QUw
+	 mcaIZ5Nd4HnQ5BX4VW2EM092sn7d2qbz9JTUDOwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgHFTvT (ORCPT
+        id S1726150AbgHFTyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:51:19 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:64798 "EHLO pegase1.c-s.fr"
+        Thu, 6 Aug 2020 15:54:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgHFTvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:51:07 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BMndG3llCzB09ZR;
-        Thu,  6 Aug 2020 14:20:34 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id TuxF9pezDG3S; Thu,  6 Aug 2020 14:20:34 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMndG2lCLzB09ZL;
-        Thu,  6 Aug 2020 14:20:34 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 135DA8B80D;
-        Thu,  6 Aug 2020 14:20:36 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id avjRKZaeuOha; Thu,  6 Aug 2020 14:20:36 +0200 (CEST)
-Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DB7398B7FC;
-        Thu,  6 Aug 2020 14:20:35 +0200 (CEST)
-Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id C67A765BEB; Thu,  6 Aug 2020 12:20:35 +0000 (UTC)
-Message-Id: <edcdd72a36495d25213c0256c8022367458e0d19.1596716418.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <d5641ada199b8dd2af16ad00a66084cf974f2704.1596716418.git.christophe.leroy@csgroup.eu>
-References: <d5641ada199b8dd2af16ad00a66084cf974f2704.1596716418.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 2/2] powerpc: drop hard_reset_now() and poweroff_now()
- declaration
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu,  6 Aug 2020 12:20:35 +0000 (UTC)
+        id S1725875AbgHFTyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:54:50 -0400
+Subject: Re: [GIT PULL] livepatching for 5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596743690;
+        bh=PvFDB25rT0Rn8EmFv571YNgGV/SoRouG9j9H2iWeAA4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=n4AjJk3B2lwIzpjmjFpnbMtCVbogZXvlALxYrX9J3rp1sHWQR/xLXibw/VAXWNvb8
+         DTDRZHGVqbFjTILuIlhfCLVJ5Ypsz/wTLcdm9rbVslynKrjoKVWQf02ER04ssaADgw
+         YZEXpYeoXj/cXSOPzthVAPnBL4tFnJ+jIStCUt/U=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200806082437.GK24529@alley>
+References: <20200806082437.GK24529@alley>
+X-PR-Tracked-List-Id: <live-patching.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200806082437.GK24529@alley>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching tags/livepatching-for-5.9
+X-PR-Tracked-Commit-Id: 5e4d46881f29a93f35f3aefeebc80cebfb44ef71
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1e21b5c73912a516bb13aec0ff69205b0b33568f
+Message-Id: <159674368994.25191.1307493752244719342.pr-tracker-bot@kernel.org>
+Date:   Thu, 06 Aug 2020 19:54:49 +0000
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Those function have never existed. Drop their declaration.
+The pull request you sent on Thu, 6 Aug 2020 10:24:37 +0200:
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/processor.h | 2 --
- 1 file changed, 2 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching tags/livepatching-for-5.9
 
-diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-index 9ebcb2f095db..2b4dc10230da 100644
---- a/arch/powerpc/include/asm/processor.h
-+++ b/arch/powerpc/include/asm/processor.h
-@@ -422,8 +422,6 @@ extern void power9_idle_type(unsigned long stop_psscr_val,
- 			      unsigned long stop_psscr_mask);
- 
- extern void flush_instruction_cache(void);
--extern void hard_reset_now(void);
--extern void poweroff_now(void);
- extern int fix_alignment(struct pt_regs *);
- extern void _nmask_and_or_msr(unsigned long nmask, unsigned long or_val);
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1e21b5c73912a516bb13aec0ff69205b0b33568f
+
+Thank you!
+
 -- 
-2.25.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
