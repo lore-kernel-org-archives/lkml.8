@@ -2,137 +2,176 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD94C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F543C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A200E20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kF/rEQ3U"
+	by mail.kernel.org (Postfix) with ESMTP id 55D3120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgHFW6d (ORCPT
+        id S1726240AbgHFXAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgHFW6c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:58:32 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C20BC061574;
-        Thu,  6 Aug 2020 15:58:32 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id i26so33003246edv.4;
-        Thu, 06 Aug 2020 15:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VtslGrVU5SAGgzW7ltz0AWj8DRyVUchOuuqr0kZRa5k=;
-        b=kF/rEQ3Upz30sy/q3PWqJOWBXzsQPT5udDoKLn0UMVtp2nGshMNkeBK7y2wl5N0nnp
-         bDp82L6sUeACUxMObpLrF7kPXE9bRfbRGloAUa2dgzSqmy2ajLMpMznJFgWWYrKfLPlr
-         9DvvgK1tvE/32QyHh3JRWLghCgw6rLbD6yz2ILaPOpfI+0Nqdd1w+a8HwMUmlPY3Rdnt
-         kLDyvxpnv11bHNIFVrkAadk8H8pS476mcq4O6zg/vzEwQBCIWLX/txP6gf22EOkPGWOw
-         woblvaqpzUw/7sM/zgEefGKYTAfM5HWFE/ymiPh0shUyjzjIhMxK0ZmE11EH7eivFFbk
-         TdvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VtslGrVU5SAGgzW7ltz0AWj8DRyVUchOuuqr0kZRa5k=;
-        b=hKR2irNR1rW5+fmWjWXoYnNysNYlDvZMK0BOrcTXZhKuKM0gnICBk7WWRPm0BPHtIn
-         +HZwIf1F2Zqh86uOgUMjGoLH7OKTRtt9EM9W0kmi4WudA3SgmprQ54L1p4akzcqMAWwD
-         zAFlUX95LiOg5wxlvMhc+9G4FAhx4VXEInjvDIgdAzLMQqRvm0SYIZEcQj4u9uYxcV+G
-         MexTsBWBI/J3N1JYpAf8SDSOFwuyUh3tqUW1zM9D8k8hzkrvbczOCOpxs1c0MI3VTGHu
-         sYaaHXqGQA8hMHVPMNfJEHex+XOW4rQAByia92lStNuy2lHGOkVGyZ4iqPlEa35N8xCk
-         gG6g==
-X-Gm-Message-State: AOAM532X5SfODJWn2/dPjWPh4UWXsJzY/Lq7QsbQXrRp1i4ExN1UxBXq
-        NZL/3zRvzwCfZ1Ff+sgnbP0wFqsrbyFXoVQtEes=
-X-Google-Smtp-Source: ABdhPJy7M1v3UbuJwCxS7d3k0GfNAu1Z2svSkVIyAj9XiXhqCh18sFq+Q96lb3zshRUkqnjrLeBL4eXChstRAtRq59E=
-X-Received: by 2002:a05:6402:1855:: with SMTP id v21mr6335735edy.355.1596754710231;
- Thu, 06 Aug 2020 15:58:30 -0700 (PDT)
+        Thu, 6 Aug 2020 19:00:31 -0400
+Received: from mga03.intel.com ([134.134.136.65]:19501 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbgHFXA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 19:00:27 -0400
+IronPort-SDR: uIt+SGUqqUhBTxST/oOC45EqfymoLzI04PFK4Vm3qfe8orrYEmlZIJp67/MaBw2wL1X8FN1st7
+ O81aoz7mdb9w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="152905492"
+X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
+   d="scan'208";a="152905492"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 16:00:25 -0700
+IronPort-SDR: PGfApDRB2dP/uHSF5+ROVKWgV0sgQpaEaRrUDeFKi5ADRV32PumSHXRAJhabHymK8NzrLgXEsQ
+ nlY9qMSpSSNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
+   d="scan'208";a="275214021"
+Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Aug 2020 16:00:24 -0700
+Received: from kbuild by 37a337f97289 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k3os3-0001qq-Si; Thu, 06 Aug 2020 23:00:23 +0000
+Date:   Fri, 07 Aug 2020 06:59:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:sched/urgent] BUILD SUCCESS
+ a1bd06853ee478d37fae9435c5521e301de94c67
+Message-ID: <5f2c8b5e.QGGIDCoHrRGKjsPM%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <CAMdYzYoqKcG+LtFZy+TeYWB=GJo8Ya60r3Los4T5j7j3Okdbtw@mail.gmail.com>
- <20200806222254.GF1551@shell.armlinux.org.uk>
-In-Reply-To: <20200806222254.GF1551@shell.armlinux.org.uk>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Thu, 6 Aug 2020 18:58:18 -0400
-Message-ID: <CAMdYzYoa52gZ5TdPU366QoaVjGFxPxvjTn15ipyNp428iR_Seg@mail.gmail.com>
-Subject: Re: [PATCH] arm: Add support for ZSTD compressed kernel
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     nolange79@gmail.com, linux-kernel@vger.kernel.org,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Terrell <terrelln@fb.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 6:22 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Thu, Aug 06, 2020 at 05:46:50PM -0400, Peter Geis wrote:
-> > Good Evening,
-> >
-> > I had attempted to get this working as well, but have run into
-> > difficulties with both my implementation and yours as well.
-> > My implementation was almost the same as yours, with the exception of
-> > also changing:
-> > @@ -303,7 +305,7 @@ restart: adr r0, LC1
-> >
-> >  #ifndef CONFIG_ZBOOT_ROM
-> >   /* malloc space is above the relocated stack (64k max) */
-> > - add r10, sp, #0x10000
-> > + add r10, sp, #0x30000
-> >  #else
-> >   /*
-> >   * With ZBOOT_ROM the bss/stack is non relocatable,
-> >
-> > On QEMU this implementation works fine.
-> > However on bare metal tegra30, I get the following error:
-> >
-> > Jumping to kernel at:4861 ms
-> >
-> > C:0x80A000C0-0x8112BA40->0x8152C700-0x81C58080
-> > Uncompressing Linux...
-> >
-> > ZSTD-compressed dstSize is too small
-> >
-> >  -- System halted
-> >
-> > The only difference between the bare metal test and the qemu test is
-> > the zImage with appended dtb is packaged in the android boot format
-> > for the bare metal test.
-> > Otherwise it's exactly the same file.
->
-> So it's relocating the compressed kernel and decompressor from
-> 0x80A000C0-0x8112BA40 to 0x8152C700-0x81C58080 and then failing.
-> Does the QEMU version also do similar?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/urgent
+branch HEAD: a1bd06853ee478d37fae9435c5521e301de94c67  sched: Fix use of count for nr_running tracepoint
 
-Here is the output from QEMU, note boot doesn't work because this
-image isn't for QEMU:
+elapsed time: 725m
 
-C:0x400100C0-0x4073B1E0->0x4152C600-0x41C57720
-Uncompressing Linux... done, booting the kernel.
+configs tested: 105
+configs skipped: 4
 
->
-> On the off-hand, I'm not sure why it should fail.  I assume that
-> you've tried the other decompressors and they work fine on the
-> same setups?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Correct, all other compressors work.
-ZSTD is handy for arm because size and speed are both important.
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                      mgcoge_defconfig
+sh                   sh7770_generic_defconfig
+powerpc64                        alldefconfig
+mips                      maltasmvp_defconfig
+mips                         tb0287_defconfig
+sh                        dreamcast_defconfig
+arc                              allyesconfig
+m68k                       m5249evb_defconfig
+powerpc                    amigaone_defconfig
+powerpc                      pasemi_defconfig
+arm                             rpc_defconfig
+m68k                        mvme147_defconfig
+m68k                          multi_defconfig
+powerpc                  mpc885_ads_defconfig
+mips                      fuloong2e_defconfig
+sh                   secureedge5410_defconfig
+ia64                          tiger_defconfig
+arm                         mv78xx0_defconfig
+microblaze                      mmu_defconfig
+s390                          debug_defconfig
+sh                           se7722_defconfig
+ia64                            zx1_defconfig
+mips                 decstation_r4k_defconfig
+openrisc                    or1ksim_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20200806
+x86_64               randconfig-a001-20200806
+x86_64               randconfig-a004-20200806
+x86_64               randconfig-a005-20200806
+x86_64               randconfig-a003-20200806
+x86_64               randconfig-a002-20200806
+i386                 randconfig-a005-20200806
+i386                 randconfig-a004-20200806
+i386                 randconfig-a001-20200806
+i386                 randconfig-a002-20200806
+i386                 randconfig-a003-20200806
+i386                 randconfig-a006-20200806
+i386                 randconfig-a004-20200805
+i386                 randconfig-a001-20200805
+i386                 randconfig-a002-20200805
+i386                 randconfig-a006-20200805
+x86_64               randconfig-a013-20200805
+x86_64               randconfig-a011-20200805
+x86_64               randconfig-a012-20200805
+x86_64               randconfig-a016-20200805
+x86_64               randconfig-a015-20200805
+x86_64               randconfig-a014-20200805
+i386                 randconfig-a011-20200805
+i386                 randconfig-a012-20200805
+i386                 randconfig-a013-20200805
+i386                 randconfig-a014-20200805
+i386                 randconfig-a015-20200805
+i386                 randconfig-a016-20200805
+i386                 randconfig-a011-20200806
+i386                 randconfig-a012-20200806
+i386                 randconfig-a013-20200806
+i386                 randconfig-a015-20200806
+i386                 randconfig-a014-20200806
+i386                 randconfig-a016-20200806
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
