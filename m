@@ -2,67 +2,298 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6022C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01994221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596745104;
-	bh=zJ3eJOnJZ7ZiJQ6aX1VbeNDUBiQ3Ztg6enPxU46oNH8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QOVZqTW4CONiXnd/rQ7GA6esdFLlDsIflg9ok3poh2TZba4agM5N4vcohvM5dUzAB
-	 4g7WVPSvqRoMxBH3IP68hJOpLGDThMg26J+hA4+BcT+ykea7AvFNGK7UWI1XT3xCZV
-	 NJ2qLRnM94m/upt6+jAG9novfAUscx4bgqsgz1c4=
+	by mail.kernel.org (Postfix) with ESMTP id B2C1E2177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/GerVru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgHFUSW (ORCPT
+        id S1726386AbgHFUTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgHFUSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:18:22 -0400
-Subject: Re: [GIT PULL] First batch of KVM changes for Linux 5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596745102;
-        bh=zJ3eJOnJZ7ZiJQ6aX1VbeNDUBiQ3Ztg6enPxU46oNH8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OyFkDvt2CNRYJADAk3MC29J7O21quN21PooHKe7IH8W7IKj609BqwbAvVP+Jm43xj
-         D7OzsHp238eGKPFALnpbpCfTOIwIbNKOxB1I1sgBvKVd8P/McoLVCp3ScSoPtKxakD
-         xY216voFu6opM8Qu5Fy6olspUtJo5QQKCFJ3Hjvs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200805182606.12621-1-pbonzini@redhat.com>
-References: <20200805182606.12621-1-pbonzini@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200805182606.12621-1-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-X-PR-Tracked-Commit-Id: f3633c2683545213de4a00a9b0c3fba741321fb2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 921d2597abfc05e303f08baa6ead8f9ab8a723e1
-Message-Id: <159674510213.4984.18107283985942506496.pr-tracker-bot@kernel.org>
-Date:   Thu, 06 Aug 2020 20:18:22 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
+        Thu, 6 Aug 2020 16:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgHFUTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 16:19:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 870A4C061575
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 13:19:07 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t14so10867570wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 13:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=jN6H7gSQ3+o0bH9j1Dm5F5mz7YQDGK2LdjSj6lic1YU=;
+        b=e/GerVru/dRsJppM3t9SU+1h2Q9ppkZ6tLjpCU5onl8i989Z+aPGwbG3MKkP+4O/ks
+         FFTZ9ZQyH7/D7DgqBxy7OhXBl1Agtj0y9vFOxf6k5tS5ayKKxnT8ME/JUC/XG8AzzAEU
+         wLmqZn3Tidd3V9nf8LYyYtvKJVE6jI/gN93qG4YLksF+5+C9lK/JnhD9/6ediQDlnPcs
+         7KRDTGq8bOKa9D1c1Id9Ic8E/9sPJajEaZBo1xlUgzwfY2BdXPjvNmq2ipSrd/gQix2G
+         eTgEQCREIEpMX4eRwBcSBk+rm9/kobEfDrHnRolVuz4Zay9C+m9c2aCIVmoqjc6K5j2Q
+         fG6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=jN6H7gSQ3+o0bH9j1Dm5F5mz7YQDGK2LdjSj6lic1YU=;
+        b=EW4b57iznuUg6VIApy/vskNgSklOPHYFicm/NgvFGcKBJkVkcnALEY+fj1LuXTq+Hs
+         dUch2qMJI909599wJEZX+VXGMhmrJ7x0nqidDGvyZBzxDOP7YR2NogqmW7N2lqJ4kiKs
+         JlHupybxlZ4671cALIMWIA+uhUdEejadpciOvwQ5ejH56W4kjBeXarM7c2Sb++UIQkRJ
+         eO58n1sL2ZKAXQ+MRNGVqPpm37n6egr01VkncwfNt4itIgWtVySMIn/jyBOM+r/Ss/zp
+         Bx17q8uZPlXfjG74aC00a1nSaHYV6axPV1h6JfT7CuSEsBjmoPQUC8oHjyynisiP2fJ+
+         qHiQ==
+X-Gm-Message-State: AOAM531CHpKdYioZLUjGaD7U/3ThfAxdWHK/8wPUKeYvMtIkM0JROE8s
+        /pgQoFs5UR2QQQjoBBAZWgYd8g==
+X-Google-Smtp-Source: ABdhPJxPWiGvLzQjFl3tbtdsnigcN9QOJmStwA5cx3B/6QfmsG1TNEsOS+99IoiD2C2pV6KWqh0wCw==
+X-Received: by 2002:a1c:541b:: with SMTP id i27mr9335187wmb.179.1596745145990;
+        Thu, 06 Aug 2020 13:19:05 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f457:5fc1:5262:84c? ([2a01:e34:ed2f:f020:f457:5fc1:5262:84c])
+        by smtp.googlemail.com with ESMTPSA id w1sm7809139wmc.18.2020.08.06.13.19.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 13:19:05 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [GIT PULL] RESEND: thermal for v5.9-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Colin King <colin.king@canonical.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Lukasz Luba <Lukasz.Luba@arm.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Henry Yen <henry.yen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+Message-ID: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
+Date:   Thu, 6 Aug 2020 22:18:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed,  5 Aug 2020 14:26:06 -0400:
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/921d2597abfc05e303f08baa6ead8f9ab8a723e1
+are available in the Git repository at:
 
-Thank you!
+
+ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+tags/thermal-v5.9-rc1
+
+for you to fetch changes up to c569e805c7bcebdd069e5c97ce5f8543f6d02433:
+
+  thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH
+support (2020-08-04 10:43:03 +0200)
+
+----------------------------------------------------------------
+- Add support to enable/disable the thermal zones resulting on core code and
+  drivers cleanup (Andrzej Pietrasiewicz)
+
+- Add generic netlink support for userspace notifications: events,
+temperature
+  and discovery commands (Daniel Lezcano)
+
+- Fix redundant initialization for a ret variable (Colin Ian King)
+
+- Remove the clock cooling code as it is used nowhere (Amit Kucheria)
+
+- Add the rcar_gen3_thermal's r8a774e1 support (Marian-Cristian Rotariu)
+
+- Replace all references to thermal.txt in the documentation to the
+  corresponding yaml files (Amit Kucheria)
+
+- Add maintainer entry for the IPA (Lukasz Luba)
+
+- Add support for MSM8939 for the tsens (Shawn Guo)
+
+- Update power allocator and devfreq cooling to SPDX licensing (Lukasz Luba)
+
+- Add Cannon Lake Low Power PCH support (Sumeet Pawnikar)
+
+- Add tsensor support for V2 mediatek thermal system (Henry Yen)
+
+- Fix thermal zone lookup by ID for the core code (Thierry Reding)
+
+----------------------------------------------------------------
+Amit Kucheria (2):
+      thermal/drivers/clock_cooling: Remove clock_cooling code
+      dt-bindings: thermal: Get rid of thermal.txt and replace references
+
+Andrzej Pietrasiewicz (14):
+      acpi: thermal: Fix error handling in the register function
+      thermal: Store thermal mode in a dedicated enum
+      thermal: Add current mode to thermal zone device
+      thermal: Store device mode in struct thermal_zone_device
+      thermal: remove get_mode() operation of drivers
+      thermal: Add mode helpers
+      thermal: Use mode helpers in drivers
+      thermal: Explicitly enable non-changing thermal zone devices
+      thermal: core: Stop polling DISABLED thermal devices
+      thermal: Simplify or eliminate unnecessary set_mode() methods
+      thermal: Rename set_mode() to change_mode()
+      acpi: thermal: Don't call thermal_zone_device_is_enabled()
+      thermal: imx: Use driver's local data to decide whether to run a
+measurement
+      thermal: Make thermal_zone_device_is_enabled() available to core only
+
+Anson Huang (1):
+      thermal: imx8mm: Support module autoloading
+
+Colin Ian King (1):
+      thermal: core: remove redundant initialization of variable ret
+
+Dan Carpenter (1):
+      thermal: ti-soc-thermal: Fix reversed condition in
+ti_thermal_expose_sensor()
+
+Daniel Lezcano (9):
+      thermal: core: Add helpers to browse the cdev, tz and governor list
+      thermal: core: Get thermal zone by id
+      thermal: core: genetlink support for events/cmd/sampling
+      thermal: core: Add notifications call in the framework
+      thermal: netlink: Fix compilation error when CONFIG_NET=n
+      net: genetlink: Move initialization to core_initcall
+      thermal: netlink: Improve the initcall ordering
+      thermal: core: Move initialization after core initcall
+      thermal: core: Add thermal zone enable/disable notification
+
+Henry Yen (2):
+      thermal: mediatek: Prepare to add support for other platforms
+      thermal: mediatek: Add tsensor support for V2 thermal system
+
+Konrad Dybcio (1):
+      dt-bindings: tsens: qcom: Document MSM8939 compatible
+
+Lukas Bulwahn (1):
+      MAINTAINERS: update entry to thermal governors file name prefixing
+
+Lukasz Luba (2):
+      MAINTAINERS: Add maintenance information for IPA
+      thermal: Update power allocator and devfreq cooling to SPDX licensing
+
+Marian-Cristian Rotariu (1):
+      thermal: rcar_gen3_thermal: Add r8a774e1 support
+
+Niklas Söderlund (1):
+      thermal: rcar_gen3_thermal: Do not shadow thcode variable
+
+Shawn Guo (1):
+      thermal: qcom: tsens-v0_1: Add support for MSM8939
+
+Sumeet Pawnikar (2):
+      thermal: int340x: processor_thermal: fix: update Jasper Lake PCI id
+      thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH
+support
+
+Thierry Reding (1):
+      thermal: core: Fix thermal zone lookup by ID
+
+ Documentation/devicetree/bindings/arm/arm,scmi.txt |   2 +-
+ Documentation/devicetree/bindings/arm/arm,scpi.txt |   2 +-
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  |   2 +-
+ .../arm/marvell/ap80x-system-controller.txt        |   2 +-
+ .../arm/marvell/cp110-system-controller.txt        |   2 +-
+ .../devicetree/bindings/cpufreq/cpufreq-dt.txt     |   3 +-
+ .../bindings/cpufreq/cpufreq-mediatek.txt          |   4 +-
+ .../bindings/cpufreq/nvidia,tegra20-cpufreq.txt    |   2 +-
+ .../devicetree/bindings/hwmon/gpio-fan.txt         |   3 +-
+ Documentation/devicetree/bindings/hwmon/lm90.txt   |   4 +-
+ .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml |   2 +-
+ .../bindings/thermal/amazon,al-thermal.txt         |   2 +-
+ .../bindings/thermal/brcm,avs-ro-thermal.yaml      |   2 +-
+ .../bindings/thermal/brcm,bcm2835-thermal.txt      |   2 +-
+ .../bindings/thermal/hisilicon-thermal.txt         |   2 +-
+ .../bindings/thermal/max77620_thermal.txt          |   6 +-
+ .../bindings/thermal/mediatek-thermal.txt          |   2 +-
+ .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  10 +-
+ .../thermal/nvidia,tegra186-bpmp-thermal.txt       |   2 +-
+ .../bindings/thermal/qcom-spmi-temp-alarm.txt      |   2 +-
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |   1 +
+ .../bindings/thermal/rockchip-thermal.txt          |   2 +-
+ .../devicetree/bindings/thermal/tango-thermal.txt  |   2 +-
+ .../bindings/thermal/thermal-generic-adc.txt       |   2 +-
+ .../devicetree/bindings/thermal/thermal.txt        | 586
+-------------------
+ MAINTAINERS                                        |   8 +
+ drivers/acpi/thermal.c                             |  76 +--
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c |   8 +
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c |  91 +--
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c        |   9 +-
+ drivers/platform/x86/acerhdf.c                     |  33 +-
+ drivers/platform/x86/intel_mid_thermal.c           |   6 +
+ drivers/power/supply/power_supply_core.c           |   9 +-
+ drivers/thermal/Kconfig                            |  20 +-
+ drivers/thermal/Makefile                           |   6 +-
+ drivers/thermal/armada_thermal.c                   |   6 +
+ drivers/thermal/clock_cooling.c                    | 445 --------------
+ drivers/thermal/da9062-thermal.c                   |  16 +-
+ drivers/thermal/devfreq_cooling.c                  |  10 +-
+ drivers/thermal/dove_thermal.c                     |   6 +
+ drivers/thermal/gov_power_allocator.c              |   9 +-
+ drivers/thermal/hisi_thermal.c                     |   6 +-
+ drivers/thermal/imx8mm_thermal.c                   |   1 +
+ drivers/thermal/imx_thermal.c                      |  60 +-
+ .../intel/int340x_thermal/int3400_thermal.c        |  38 +-
+ .../intel/int340x_thermal/int340x_thermal_zone.c   |   5 +
+ .../int340x_thermal/processor_thermal_device.c     |   2 +-
+ drivers/thermal/intel/intel_pch_thermal.c          |   8 +
+ drivers/thermal/intel/intel_quark_dts_thermal.c    |  34 +-
+ drivers/thermal/intel/intel_soc_dts_iosf.c         |   3 +
+ drivers/thermal/intel/x86_pkg_temp_thermal.c       |   6 +
+ drivers/thermal/kirkwood_thermal.c                 |   7 +
+ drivers/thermal/mtk_thermal.c                      | 234 ++++++--
+ drivers/thermal/qcom/tsens-v0_1.c                  | 144 ++++-
+ drivers/thermal/qcom/tsens.c                       |   3 +
+ drivers/thermal/qcom/tsens.h                       |   2 +-
+ drivers/thermal/rcar_gen3_thermal.c                |  10 +-
+ drivers/thermal/rcar_thermal.c                     |   9 +-
+ drivers/thermal/rockchip_thermal.c                 |   6 +-
+ drivers/thermal/spear_thermal.c                    |   7 +
+ drivers/thermal/sprd_thermal.c                     |   6 +-
+ drivers/thermal/st/st_thermal.c                    |   5 +
+ drivers/thermal/thermal_core.c                     | 174 +++++-
+ drivers/thermal/thermal_core.h                     |  15 +
+ drivers/thermal/thermal_helpers.c                  |  13 +-
+ drivers/thermal/thermal_netlink.c                  | 647
++++++++++++++++++++++
+ drivers/thermal/thermal_netlink.h                  | 104 ++++
+ drivers/thermal/thermal_of.c                       |  41 +-
+ drivers/thermal/thermal_sysfs.c                    |  52 +-
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c |   2 +-
+ include/linux/clock_cooling.h                      |  57 --
+ include/linux/devfreq_cooling.h                    |   9 +-
+ include/linux/thermal.h                            |  31 +-
+ include/uapi/linux/thermal.h                       |  89 ++-
+ net/netlink/genetlink.c                            |   2 +-
+ 75 files changed, 1632 insertions(+), 1609 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+ delete mode 100644 drivers/thermal/clock_cooling.c
+ create mode 100644 drivers/thermal/thermal_netlink.c
+ create mode 100644 drivers/thermal/thermal_netlink.h
+ delete mode 100644 include/linux/clock_cooling.h
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
