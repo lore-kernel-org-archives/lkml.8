@@ -2,109 +2,111 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A77C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4BD3221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596734784;
-	bh=IpyzccZXD84HyOjPRB4hn5BMWrTd+yAJGDzT+33yIz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kpWuEgj6QfBSbSK2i4QTKRJDxDH5JeEt79Cvzg2dtyDXm6aLvHkJf5XQA7jt51t+U
-	 p3q35V5taSLaooEJtuRLW0EDK1zbxzXoJSZDc7O5mDmyKQ1hfOkI/enLM6wBCTHlub
-	 +0LIGRHPXtsBHfxLzcKC+SBJy8hPXDUJLLU9gzQE=
+	by mail.kernel.org (Postfix) with ESMTP id 22348221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pXQv1rb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgHFR0R (ORCPT
+        id S1729896AbgHFR0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:26:17 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46178 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729832AbgHFRCD (ORCPT
+        Thu, 6 Aug 2020 13:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729830AbgHFRB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:02:03 -0400
-Received: by mail-il1-f194.google.com with SMTP id c6so5935116ilo.13;
-        Thu, 06 Aug 2020 10:02:02 -0700 (PDT)
+        Thu, 6 Aug 2020 13:01:58 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD2BC0A54D7
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:59:20 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id l13so16052675qvt.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 06:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=aDhJ3BwsHEwEzPKPkJxFBX4MNurIU5lO4LLSrBoplxs=;
+        b=pXQv1rb1LDMT9p5PJKkN34fCIy1Nuuyoj0JXb3dtmNH2cYyfiVSD29lea9Qm6P09OM
+         69lJrSspkIqY4nar32A/byyQSbLt2PndQGSD67O0bv4UWATkrowXoLo5TziSpMTc1suy
+         XrTYTDszMCn/26jfkCmkQn0b4AOEH/9Y/MCYs8dnvafufaVE8CAK+LYCSDg/MN9RLYp3
+         MXK8H/k8lbl6s0KHZLek+gFJw7vKxecHM7L7XwSCvuMpDQoaOHiuQRE742w8cpj/D0I4
+         tlbAxj8WHqGCBSxuqUrIBpl3RvhdSNa/fQqptXS3Vj7BkdFIHq/FgcZo5N3/KwjokQTs
+         gYpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4a+UH2c0ravXsXQYiIiU2PDrCAbSISRiJ7nu8uzSR8k=;
-        b=doauD29SYFYkF9x+c3jO2UjCMUlaICRp/oouYVKaPh+q19dbCjvxdeGLU04JMRUahV
-         Fc580rgI1RKdFryyT1UJjcEuVa+nfa2tcaKCGAVYRCaTzuDT+4B4Hqget+0858QftfE2
-         G+Vy0a6eIIrxp4COtbr87KvTZ7ScrG0rMHy2pvWjCpok1UbCElsEn8cW/Mj9XMrW9Swf
-         xXiRwJPyU5dMN8CfmF6rbQwMNg2uOWGMFTp7GiPAfQk7JlDTw4dIT/pRqtVrB3cZIbZE
-         G40YJvxZmzp1c6juuwMSmn8PsC04Rk3e5m/S6MpQrFbKyaNVZOtrR+ElZiqmePH+qCvQ
-         hTMg==
-X-Gm-Message-State: AOAM532lFn9QL21xxfWmse8KOzpjEj8yvIjKrk09m8wOfOieY0OZQP2S
-        KWPV59w+3eBbe5o9/AM7QGK13SY=
-X-Google-Smtp-Source: ABdhPJzRteBDaWzy4duYfRNpOT2CWnniOjFmm0VIz9MvqlHlamjAWGnsZtm0dzKTfwRZ3h3p7UE8Sg==
-X-Received: by 2002:a92:4f:: with SMTP id 76mr10864122ila.291.1596722950017;
-        Thu, 06 Aug 2020 07:09:10 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q200sm3812334iod.5.2020.08.06.07.09.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aDhJ3BwsHEwEzPKPkJxFBX4MNurIU5lO4LLSrBoplxs=;
+        b=LlMW1SKkgcqLfMx/5DJ0wGSwXMJ+/keRBqpNZsVV7Yl757AzdTDzh5tjTtkVVZcYel
+         t8IhncfoIjDv8ldsRSHmzA5/cg6HlxYOUSEFDRgKYsUGfY8t1bqZkQQgwRwiL2xdu4A1
+         q5mKiBFEv6lVbs3uh317r81Gwt4+ePa3laD25lhA7f7kOkQqQjzSnADXzTJa/b3XvBUk
+         +EZCG0aE2qk1sFlcLUAa9W8o/d0H6/Ue/eLYB4N13iAFRq7/N2XWkxCanbCXBu6gm57O
+         30eG7g+PKLw/SBIpLiVIGlDlWEGcSGn5E7gBVmdZTmj8z1jiPCpbo/Es05q+8OSWSkKL
+         dLFQ==
+X-Gm-Message-State: AOAM533Ak5il+rkpyjhcORBzvZ/osXvif3pbIwnGfhTJPXdXatiUgjSZ
+        4lE38OMvrXyQ5F5x7eQcug9F+w==
+X-Google-Smtp-Source: ABdhPJzFT3bBn7kvSmKrN3dp/BXM9RBI6m1pRrSjKba4KzSAlrw7TW+cwxJLIBiJb6w/1qG7dlkDyg==
+X-Received: by 2002:a0c:b60d:: with SMTP id f13mr6793580qve.38.1596722352707;
+        Thu, 06 Aug 2020 06:59:12 -0700 (PDT)
+Received: from localhost.localdomain.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r6sm4489285qkc.43.2020.08.06.06.59.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:09:09 -0700 (PDT)
-Received: (nullmailer pid 771383 invoked by uid 1000);
-        Thu, 06 Aug 2020 14:09:06 -0000
-Date:   Thu, 6 Aug 2020 08:09:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     galak@codeaurora.org, festevam@gmail.com,
-        linux-serial@vger.kernel.org, s.hauer@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com,
-        kernel@pengutronix.de, shawnguo@kernel.org,
-        gregkh@linuxfoundation.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: serial: Convert MXS auart to json-schema
-Message-ID: <20200806140906.GA770620@bogus>
-References: <1596603259-5367-1-git-send-email-Anson.Huang@nxp.com>
- <1596603259-5367-2-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596603259-5367-2-git-send-email-Anson.Huang@nxp.com>
+        Thu, 06 Aug 2020 06:59:11 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     torvalds@linux-foundation.org
+Cc:     daniel.diaz@linaro.org, linux@roeck-us.net, tytso@mit.edu,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] random: fix a compilation error on arm64
+Date:   Thu,  6 Aug 2020 09:58:36 -0400
+Message-Id: <20200806135836.31736-1-cai@lca.pw>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Aug 2020 12:54:18 +0800, Anson Huang wrote:
-> Convert the MXS auart binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../devicetree/bindings/serial/fsl-mxs-auart.txt   | 53 ------------
->  .../devicetree/bindings/serial/fsl-mxs-auart.yaml  | 93 ++++++++++++++++++++++
->  2 files changed, 93 insertions(+), 53 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml
-> 
+linux-next failed to compile using this .config,
+https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
 
+arch/arm64/kernel/kaslr.c: In function 'kaslr_early_init':
+arch/arm64/kernel/kaslr.c:128:6: error: implicit declaration of function
+'__early_cpu_has_rndr'; did you mean '__early_pfn_to_nid'?
+[-Werror=implicit-function-declaration]
+  if (__early_cpu_has_rndr()) {
+      ^~~~~~~~~~~~~~~~~~~~
+      __early_pfn_to_nid
+arch/arm64/kernel/kaslr.c:131:7: error: implicit declaration of function
+'__arm64_rndr' [-Werror=implicit-function-declaration]
+   if (__arm64_rndr(&raw))
+       ^~~~~~~~~~~~
+cc1: some warnings being treated as errors
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Fixes: 585524081ecd ("random: random.h should include archrandom.h, not the other way around")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/linux/random.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml: serial@8006a000: clocks: [[4294967295, 45]] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml: serial@8006a000: compatible: Additional items are not allowed ('fsl,imx23-auart' was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml: serial@8006a000: compatible: ['fsl,imx28-auart', 'fsl,imx23-auart'] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml: serial@8006a000: 'dmas' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml: serial@8006a000: 'dma-names' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx23-clock.example.dt.yaml: serial@8006c000: clocks: [[4294967295, 32]] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx23-clock.example.dt.yaml: serial@8006c000: 'dmas' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx23-clock.example.dt.yaml: serial@8006c000: 'dma-names' is a required property
-
-
-See https://patchwork.ozlabs.org/patch/1341077
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/include/linux/random.h b/include/linux/random.h
+index f45b8be3e3c4..da782c16c20c 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -12,6 +12,8 @@
+ #include <linux/list.h>
+ #include <linux/once.h>
+ 
++#include <asm/archrandom.h>
++
+ #include <uapi/linux/random.h>
+ 
+ struct random_ready_callback {
+-- 
+2.18.4
 
