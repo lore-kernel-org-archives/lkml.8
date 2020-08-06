@@ -2,78 +2,134 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B201C43459
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13868C35277
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 766E6221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CCA204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="znsX4TBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgHFHI7 (ORCPT
+        id S1728479AbgHFGln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:08:59 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:33352 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgHFHIN (ORCPT
+        Thu, 6 Aug 2020 02:41:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgHFGlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 03:08:13 -0400
-Received: by mail-il1-f199.google.com with SMTP id m9so882957ili.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 00:08:13 -0700 (PDT)
+        Thu, 6 Aug 2020 02:41:16 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083CEC061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 23:41:14 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id o18so49049778eje.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 23:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version;
+        bh=hA5JCTqaCCREAuEoCIHIc9jLTAOEK7qQNsr7rDO2FA0=;
+        b=znsX4TBfyR5p6MWtCGhXPPD+DRyjOvaJE1NVfd8TuaurE/zcGlPGJrBhwa4gq9QOCl
+         yR8WY3AZGrKKdYiIaV0mxgadgXt0TvJjTrr0C0cxrvaM5vT9ODEsfpbZkeEfofFzkZM5
+         AZ560eyEC4kzBTm8RAon7PesCtCASvRuSvhE/1lJ4clbb1FUimJBWmzzwEBX6xXmXsn2
+         Bp/pRIeNTIH3K83zLWOrMn09spoRLlZ/DQZe+NaL50MiCQmtk5drjVKLlIPXd4TbuiGZ
+         sczMaCU9T2GPtL4xpFka18bvECRuBM8Pkq/lOeH+SgXi6gP5jHjelfJ/K46eeN2swKRd
+         wUNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=7dfgtw1iR3AjrQXBtDJPZWn65f38aLiV7OcURuGXSL4=;
-        b=Cz/VWKnztuoexs+gbIUCe3DA8Vv4yMAGXqQzIA3C9Bsd69m3V/XxD8ghIrSUxmVpCQ
-         ToNgC5NoNm0+F0lhIdjWOkyQpBL15lLUqoB8BWvcjODjBp7MDGN2sHuf12JZHrCBjRKe
-         3Z1KDMToFVUGqe5YAIinbpA4HPkxtphBDX8+8sM9G0b3/pPwGMxGoREPaFSrE7mPLbzi
-         DoeWPBY46nluCdzCLTqzn6BBh7qUKEEa1/+HlbkQDdwehpSUVNyA1LVqhmx1sQxiE0K7
-         3XqMi1cL8fsf33kzIvcnR7Q04Y2U+/vUprZWxm2ZON6sDEZwU8LrUtzcVfiVd9pNUkR5
-         cEsQ==
-X-Gm-Message-State: AOAM53337FjQ/vSsOBGl/z6WjIFjVr55YeKV3g0/k5dufP98GV62KdrN
-        aKzCbVsz2m+aPPcdYeWKBrwfRy52O/TOYgCkuu4n0OwSfiWB
-X-Google-Smtp-Source: ABdhPJy/NNkYLn1yvZCHE7rpwLkZOK8dRMoNBFkSPy7ou01r8UDVgYzQVGCO3tkNx8KwQ2h8PC7FmQF05vWr1AcJaPz7b8SR4Sxg
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
+        bh=hA5JCTqaCCREAuEoCIHIc9jLTAOEK7qQNsr7rDO2FA0=;
+        b=JWKvyQnU6qghZQZ0O4mzbeN/8sCkc58iphf/llw2oUJyvDxhuIEpBwH8KM6p+CTCIw
+         4EC6VHbeYmnoHqIb5jsPQ+VpBcs6wlSzj5jKrB9JREKwJvgtqgHMSACleBKk6k7dQjNt
+         xfTOLS83u93wuSadN+koYVy6d/BNjZWWoaDDqudl3VqlqiA9+nVWkvyjGfXzlpsf8gHa
+         fCxjWFF3YY5PVLPVG8XryHQzw0Mu3U8LhZdLCNWDC0c0JQDuSff3w+9YlFMGlf8J6Dkf
+         J+CAhcC1nk7rnoeQsjScNlPduAwriKabQ/JiJNZQC+7aE8Uy711agbOJEvtX7MJAg0oK
+         nA9A==
+X-Gm-Message-State: AOAM531SBNl1xFFjrigHt8jzYcUfUjeZ+adz2TncgjUYUOSle9IVf5jy
+        UdZuKGd+ow/CwwrNjXK5xiW4LIf3/K+zJ2CcyCrRIcTbfp4Tm0kRylXXVQNoZ2hdHU/uaym9s9i
+        2kaMPJg6GjkIapxisbQ==
+X-Google-Smtp-Source: ABdhPJx36tiST5AcBE4fms9ytZlygeNek5jU38om01yv8EofclOiCTv1Z38KD4nfsreMho4H3f96jw==
+X-Received: by 2002:a17:906:7253:: with SMTP id n19mr3006802ejk.387.1596696073363;
+        Wed, 05 Aug 2020 23:41:13 -0700 (PDT)
+Received: from tim.froidcoeur.net (ptr-7tznw15pracyli75x11.18120a2.ip6.access.telenet.be. [2a02:1811:50e:f0f0:d05d:939:f42b:f575])
+        by smtp.gmail.com with ESMTPSA id h18sm2880984edw.56.2020.08.05.23.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 23:41:12 -0700 (PDT)
+From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        KOVACS Krisztian <hidden@balabit.hu>,
+        Patrick McHardy <kaber@trash.net>
+Cc:     Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/2] net: initialize fastreuse on inet_inherit_port
+Date:   Thu,  6 Aug 2020 08:41:06 +0200
+Message-Id: <20200806064109.183059-1-tim.froidcoeur@tessares.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:c844:: with SMTP id b4mr8694995ilq.297.1596697205171;
- Thu, 06 Aug 2020 00:00:05 -0700 (PDT)
-Date:   Thu, 06 Aug 2020 00:00:05 -0700
-In-Reply-To: <00000000000053e07805a9b61e09@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ba6a2d05ac300953@google.com>
-Subject: Re: KASAN: use-after-free Read in __cfg8NUM_wpan_dev_from_attrs (2)
-From:   syzbot <syzbot+14e0e4960091ffae7cf7@syzkaller.appspotmail.com>
-To:     alex.aring@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, stefan@datenfreihafen.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
+In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
+SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
+behaviour or in the incorrect reuse of a bind.
 
-commit bf64ff4c2aac65d680dc639a511c781cf6b6ec08
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sat Jun 27 07:12:24 2020 +0000
+the kernel keeps track for each bind_bucket if all sockets in the
+bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
+These flags allow skipping the costly bind_conflict check when possible
+(meaning when all sockets have the proper SO_REUSE option).
 
-    genetlink: get rid of family->attrbuf
+For every socket added to a bind_bucket, these flags need to be updated.
+As soon as a socket that does not support reuse is added, the flag is
+set to false and will never go back to true, unless the bind_bucket is
+deleted.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12069494900000
-start commit:   e44f65fd xen-netfront: remove redundant assignment to vari..
-git tree:       net-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=829871134ca5e230
-dashboard link: https://syzkaller.appspot.com/bug?extid=14e0e4960091ffae7cf7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11818aa7100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f997d3100000
+Note that there is no mechanism to re-evaluate these flags when a socket
+is removed (this might make sense when removing a socket that would not
+allow reuse; this leaves room for a future patch).
 
-If the result looks correct, please mark the issue as fixed by replying with:
+For this optimization to work, it is mandatory that these flags are
+properly initialized and updated.
 
-#syz fix: genetlink: get rid of family->attrbuf
+When a child socket is created from a listen socket in
+__inet_inherit_port, the TPROXY case could create a new bind bucket
+without properly initializing these flags, thus preventing the
+optimization to work. Alternatively, a socket not allowing reuse could
+be added to an existing bind bucket without updating the flags, causing
+bind_conflict to never be called as it should.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Patch 1/2 refactors the fastreuse update code in inet_csk_get_port into a
+small helper function, making the actual fix tiny and easier to understand. 
+
+Patch 2/2 calls this new helper when __inet_inherit_port decides to create
+a new bind_bucket or use a different bind_bucket than the one of the listen
+socket.
+
+Tim Froidcoeur (2):
+  net: refactor bind_bucket fastreuse into helper
+  net: initialize fastreuse on inet_inherit_port
+
+ include/net/inet_connection_sock.h |  4 ++
+ net/ipv4/inet_connection_sock.c    | 99 ++++++++++++++++--------------
+ net/ipv4/inet_hashtables.c         |  1 +
+ 3 files changed, 59 insertions(+), 45 deletions(-)
+
+-- 
+2.25.1
+
+
+-- 
+
+
+Disclaimer: https://www.tessares.net/mail-disclaimer/ 
+<https://www.tessares.net/mail-disclaimer/>
+
+
