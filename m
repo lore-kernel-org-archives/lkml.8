@@ -2,106 +2,183 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99361C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F98C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7C9323119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4E323119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RWFCzw5A";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jIGFwuAI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="Gp4pAV2r";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="N/yZPClG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgHFROq (ORCPT
+        id S1730486AbgHFROu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:14:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730206AbgHFRJ4 (ORCPT
+        Thu, 6 Aug 2020 13:14:50 -0400
+Received: from relay5.mymailcheap.com ([159.100.248.207]:56506 "EHLO
+        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730223AbgHFRO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:09:56 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B0EC061574;
-        Thu,  6 Aug 2020 10:09:55 -0700 (PDT)
-Date:   Thu, 06 Aug 2020 17:09:52 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596733793;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=0IfDYCyrpOkq4cmxc1Tqa4VZc19IKhfIyezM8UnI2Pg=;
-        b=RWFCzw5AvxwIuVk3MEpBqIPepmQuV2m3tPeZOAcF1Hd4xJjna2IIHpEfkGO4ErOLhPkGxe
-        VDGQEzxkAvukHWgMc7vmH7OHI6g0CxIU+rJX9MdKTRMtwkGIFANBu8X3qOjnSwYQLy29ki
-        0hg3z3p6zE8e6+Su4lKV5MPbMSxr+sKXn4Py+GHdFDCW7QTzuIFC3hNwdkUfKiG7yDTK+K
-        QwLMpO2Ns9C2Q8m+32Q6Yi7G3ywoLSLy3MxKpUlAumc7uSxG/8z7/5gb8nokhDmsEn92RL
-        c5sVK0oErMQ5mTf/iUGR6RJ4TCFm8wbocleBDFyC4xH4gVPLqJAy25M4dGHj+Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596733793;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=0IfDYCyrpOkq4cmxc1Tqa4VZc19IKhfIyezM8UnI2Pg=;
-        b=jIGFwuAIXvTsnDCz+IY8ShcX6rnpSfQYztmes6UQ1o8JBBbXSXkYWV8i/1SssAGwITWnVl
-        o68fCXUWTdgThEAw==
-From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] kprobes: Remove show_registers() function prototype
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Thu, 6 Aug 2020 13:14:29 -0400
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.113.132])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id E72BB263D5;
+        Thu,  6 Aug 2020 12:01:45 +0000 (UTC)
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
+        by relay2.mymailcheap.com (Postfix) with ESMTPS id CC4263ECDA;
+        Thu,  6 Aug 2020 13:56:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter1.mymailcheap.com (Postfix) with ESMTP id 1D2832A0FA;
+        Thu,  6 Aug 2020 07:56:43 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596715003;
+        bh=6G0cn3xGImope7dNhq/9bXTMK4Or6HKqo1wprFpAZGQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Gp4pAV2rRjjvLSdLhtJlkm+k0DOlUtsQdIYiAGkcALzibUavRjiz7tlLq0xxlJbax
+         GfUztSoh9YctPnoSNk0d+5ZBkTbdPztN7SyCXKFAYrxeSOIxLz0xCylZ6aykCltGr0
+         1yZ0MXPXoc5Q4TtI4MRqvjgH6Enuaw4BZYFp8fEw=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id l1MoxOhF7M5y; Thu,  6 Aug 2020 07:56:42 -0400 (EDT)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter1.mymailcheap.com (Postfix) with ESMTPS;
+        Thu,  6 Aug 2020 07:56:41 -0400 (EDT)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id F054741330;
+        Thu,  6 Aug 2020 11:56:38 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="N/yZPClG";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [203.86.239.91])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2089541330;
+        Thu,  6 Aug 2020 11:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596714987;
+        bh=6G0cn3xGImope7dNhq/9bXTMK4Or6HKqo1wprFpAZGQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=N/yZPClG9FCvhJhEdtgTiNcyOVYkssmiSU/y6So9kzfOHU2UX+jJx5tDsj20FXUxW
+         cMMF79z5WJeIrXoEfMRWD21PIfC6j2E/epK8eila5LmEnXmlVxEWqCvNuBEh6AAIem
+         oRtz6cZhaH9w50b21STRQfxjRTFLNgLbhGqVw5RE=
+Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
+ <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
+ <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
+ <20200806101733.GA8136@alpha.franken.de>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <9e563c75-ffaa-45b4-0e99-25a8b1eff828@flygoat.com>
+Date:   Thu, 6 Aug 2020 19:56:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <159673379297.3192.4747957589177383846.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200806101733.GA8136@alpha.franken.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Rspamd-Queue-Id: F054741330
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RCPT_COUNT_FIVE(0.00)[5];
+         ML_SERVERS(-3.10)[213.133.102.83];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     09fc67b500c7f0bb1b5ed774197ac7f2c5285655
-Gitweb:        https://git.kernel.org/tip/09fc67b500c7f0bb1b5ed774197ac7f2c5285655
-Author:        Masami Hiramatsu <mhiramat@kernel.org>
-AuthorDate:    Fri, 17 Jul 2020 17:42:55 +09:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 06 Aug 2020 17:52:28 +02:00
 
-kprobes: Remove show_registers() function prototype
+在 2020/8/6 下午6:17, Thomas Bogendoerfer 写道:
+> On Thu, Aug 06, 2020 at 04:32:13PM +0800, Tiezhu Yang wrote:
+>> On 08/06/2020 03:39 PM, Jiaxun Yang wrote:
+>>>
+>>> 在 2020/8/6 下午3:09, Tiezhu Yang 写道:
+>>>> Loongson processors have a writecombine issue that maybe failed to
+>>>> write back framebuffer used with ATI Radeon or AMD GPU at times,
+>>>> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+>>>> mapping for MIPS"), there exists some errors such as blurred screen
+>>>> and lockup, and so on.
+>>>>
+>>>> With this patch, disable writecombine by default for Loongson64 to
+>>>> work well with ATI Radeon or AMD GPU, and it has no influence on the
+>>>> other platforms due to writecombine is enabled by default.
+>>>>
+>>>> Additionally, if it is necessary, writecombine=on can be set manually
+>>>> in the cmdline to enhance the performance for Loongson LS7A integrated
+>>>> graphics in the future.
+>>>>
+>>>> [   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than
+>>>> 10079msec
+>>>> [   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id
+>>>> 0x0000000000000112 last fence id 0x000000000000011d on ring 0)
+>>>> [   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than
+>>>> 10086msec
+>>>> [   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id
+>>>> 0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
+>>> Hi Tiezhu,
+>>>
+>>> Thanks for your patch.
+>>> Personally I didn't have any issue with writecombine on my test systems,
+>>> but there
+>>> are some complains about unstable graphic card from users. So generally a
+>>> cmdline
+>>> writecombine switch is necessary.
+> no, if there is hardware which can't work with writecombining enabled
+> the driver should disable it by it's own and not by some user switch.
+> It might even be better to revert the patch enabling writecombining
+> blindly and add code to enable it for hardware where it works.
 
-Remove show_registers() function prototype because this function
-has been renamed by commit:
+Our current problem is Loongson's writecombine implementation seems buggy.
+This is our platform issue rather than target hardware issue.
+And we don't even know which hardware is known to be good. The same graphic
+card became a different story on different user's hand.
 
-  57da8b960b9a ("x86: Avoid double stack traces with show_regs()")
+However, turning off writecombine would cause a visible performance 
+regression
+on graphic.
 
-and this commit has removed the caller in kprobes altogether:
+I understood what Teizhu thought. For entry-level users, we don't want 
+to trouble
+them, so we have writecombine disabled by default. However, for advanced 
+user
+trying to tweak their system, we should leave a switch for them to get 
+it back.
 
-  80006dbee674 ("kprobes/x86: Remove jprobe implementation")
+Thanks.
 
-So this doesn't exist anymore - remove the orphan prototype.
+- Jiaxun
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/kprobes.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 45b8cdc..9be1bff 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -227,7 +227,6 @@ extern int arch_prepare_kprobe(struct kprobe *p);
- extern void arch_arm_kprobe(struct kprobe *p);
- extern void arch_disarm_kprobe(struct kprobe *p);
- extern int arch_init_kprobes(void);
--extern void show_registers(struct pt_regs *regs);
- extern void kprobes_inc_nmissed_count(struct kprobe *p);
- extern bool arch_within_kprobe_blacklist(unsigned long addr);
- extern int arch_populate_kprobe_blacklist(void);
+>
+> Thomas.
+>
