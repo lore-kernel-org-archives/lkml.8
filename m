@@ -2,105 +2,113 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C99C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE29A23119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F089F23117
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgHFQWe (ORCPT
+        id S1726446AbgHFQYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43264 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 12:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgHFQRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727837AbgHFQRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:17:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688E02311B;
-        Thu,  6 Aug 2020 13:11:33 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1k3fgC-006KVA-7z; Thu, 06 Aug 2020 09:11:32 -0400
-Message-ID: <20200806131132.126327427@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Thu, 06 Aug 2020 09:11:11 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id 251B923134;
+        Thu,  6 Aug 2020 15:48:52 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 11:48:50 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [for-linus][PATCH 3/3] kprobes: Fix compiler warning for !CONFIG_KPROBES_ON_FTRACE
-References: <20200806131108.374130743@goodmis.org>
+To:     guoren@kernel.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: Re: [PATCH] ftrace: Fixup lockdep assert held of text_mutex
+Message-ID: <20200806114850.051f84d0@oasis.local.home>
+In-Reply-To: <1596725454-16245-1-git-send-email-guoren@kernel.org>
+References: <1596725454-16245-1-git-send-email-guoren@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+On Thu,  6 Aug 2020 14:50:54 +0000
+guoren@kernel.org wrote:
 
-Fix compiler warning(as show below) for !CONFIG_KPROBES_ON_FTRACE.
+> From: Guo Ren <guoren@linux.alibaba.com>
+> 
+> The function ftrace_process_locs() will modify text code, so we
+> should give a text_mutex lock. Because some arch's patch code
+> will assert held of text_mutex even during start_kernel->
+> ftrace_init().
 
-kernel/kprobes.c: In function 'kill_kprobe':
-kernel/kprobes.c:1116:33: warning: statement with no effect
-[-Wunused-value]
- 1116 | #define disarm_kprobe_ftrace(p) (-ENODEV)
-      |                                 ^
-kernel/kprobes.c:2154:3: note: in expansion of macro
-'disarm_kprobe_ftrace'
- 2154 |   disarm_kprobe_ftrace(p);
+NAK.
 
-Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
-Link: https://lkml.kernel.org/r/20200805172046.19066-1-songmuchun@bytedance.com
+This looks like a bug in the lockdep_assert_held() in whatever arch
+(riscv) is running.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/kprobes.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> backtrace log:
+>    assert by lockdep_assert_held(&text_mutex)
+> 0  patch_insn_write (addr=0xffffffe0000010fc <set_reset_devices+10>, insn=0xffffffe001203eb8, len=8) at arch/riscv/kernel/patch.c:63
+> 1  0xffffffe0002042ec in patch_text_nosync (addr=<optimized out>, insns=<optimized out>, len=<optimized out>) at arch/riscv/kernel/patch.c:93
+> 2  0xffffffe00020628e in __ftrace_modify_call (hook_pos=<optimized out>, target=<optimized out>, enable=<optimized out>) at arch/riscv/kernel/ftrace.c:68
+> 3  0xffffffe0002063c0 in ftrace_make_nop (mod=<optimized out>, rec=0xffffffe001221c70 <text_mutex+96>, addr=18446743936272720288) at arch/riscv/kernel/ftrace.c:97
+> 4  0xffffffe0002b13f0 in ftrace_init_nop (rec=<optimized out>, mod=<optimized out>) at ./include/linux/ftrace.h:647
+> 5  ftrace_nop_initialize (rec=<optimized out>, mod=<optimized out>) at kernel/trace/ftrace.c:2619
+> 6  ftrace_update_code (new_pgs=<optimized out>, mod=<optimized out>) at kernel/trace/ftrace.c:3063
+> 7  ftrace_process_locs (mod=<optimized out>, start=<optimized out>, end=<optimized out>) at kernel/trace/ftrace.c:6154
+> 8  0xffffffe00000b6e6 in ftrace_init () at kernel/trace/ftrace.c:6715
+> 9  0xffffffe000001b48 in start_kernel () at init/main.c:888
+> 10 0xffffffe0000010a8 in _start_kernel () at arch/riscv/kernel/head.S:247
+> 
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> ---
+>  kernel/trace/ftrace.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 1903b80..4b48b88 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/bsearch.h>
+>  #include <linux/module.h>
+> +#include <linux/memory.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/sysctl.h>
+>  #include <linux/slab.h>
+> @@ -6712,9 +6713,11 @@ void __init ftrace_init(void)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 07bf03fcf574..66d14107968d 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1079,9 +1079,20 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
- 		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
- }
- #else	/* !CONFIG_KPROBES_ON_FTRACE */
--#define prepare_kprobe(p)	arch_prepare_kprobe(p)
--#define arm_kprobe_ftrace(p)	(-ENODEV)
--#define disarm_kprobe_ftrace(p)	(-ENODEV)
-+static inline int prepare_kprobe(struct kprobe *p)
-+{
-+	return arch_prepare_kprobe(p);
-+}
-+
-+static inline int arm_kprobe_ftrace(struct kprobe *p)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int disarm_kprobe_ftrace(struct kprobe *p)
-+{
-+	return -ENODEV;
-+}
- #endif
- 
- /* Arm a kprobe with text_mutex */
--- 
-2.26.2
+ftrace_init() is called before SMP is initialized. Nothing else should
+be running here. That means grabbing a mutex is useless.
 
+-- Steve
+
+
+>  
+>  	last_ftrace_enabled = ftrace_enabled = 1;
+>  
+> +	mutex_lock(&text_mutex);
+>  	ret = ftrace_process_locs(NULL,
+>  				  __start_mcount_loc,
+>  				  __stop_mcount_loc);
+> +	mutex_unlock(&text_mutex);
+>  
+>  	pr_info("ftrace: allocated %ld pages with %ld groups\n",
+>  		ftrace_number_of_pages, ftrace_number_of_groups);
 
