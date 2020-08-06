@@ -2,137 +2,326 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661C9C433ED
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC37C433E5
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5543B22CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29B422CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="e7ojmdTQ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Gif9B6D4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZWHgZTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgHFHIU (ORCPT
+        id S1728514AbgHFHC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:08:20 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:51737 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgHFHII (ORCPT
+        Thu, 6 Aug 2020 03:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbgHFHCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 03:08:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596697688; x=1628233688;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=i6ILggSoaj8v+P+32X8VOpmr3H4b2DO0DSnanQJVCC0=;
-  b=e7ojmdTQ/O9vIKxkm2fUQS9x1wxIqOcopg9kAFubDhU+6BFJwIlRVjco
-   dPRMVLh36E00NZUUAmuDpxf0zV3c37pHIN3TSOdMuiDTF0fZwfmdvHF35
-   ERNlWX+w5QQgarX652cbiosiOjgf5TlcCW+O/X6POHWpyflgaEe5TPOEg
-   rhg8IsTtJVyTtVtrbZtYLMtBM+BIcG3AAwJPJo9Ml2lKZOi3//kvoXdPv
-   uJgGzPgX+L895YWJhEBrq4r/Y5q59iAqeW1qvKOyWtXXWblvPjuN2tk/J
-   h36T+1/kOvjjX6M3HoInj/eWZnO1CNKHT8FByRzhlsXtACK+nUsWqDaEB
-   A==;
-IronPort-SDR: NOVNs/GY3mIuw41Gn/c6of4WA6AVXxzo56tEZrJ2kxET437SZqlSRLsKy0Xqel0ofbnVSWRg4l
- iSchgpEHjfBh2FbvR49jbMRcaPI9r3ARF99dOsS2E0h/FjHqkc4AyY6jc0AyVbyae5c0bzLA5F
- be1pUF30aSY65XfoZQ0yL/Rz7nR/89b02rUF4Ukv1pQa6L+AP8kiqaJcmrz4P5AFsEQcVUV0Il
- UXBmoDW/uivHRBN2RccovCv7AtcMJsk5lN4NRjl+WNSUigrQPJtnTtNclivfNHYvKleakdQK4H
- f20=
-X-IronPort-AV: E=Sophos;i="5.75,440,1589212800"; 
-   d="scan'208";a="148590151"
-Received: from mail-dm6nam10lp2102.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.102])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Aug 2020 15:08:07 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ell9rZxyJYRHgdnCUsnzgQHZwMUnzhLQtt5jJ2AupYck8F8mZoLWebWTfRzL000gkZI0cvuoswV7PCbFaaDbtATYo2wUJGLbUN65zzUSb7gzCESSdzHoSMqSsB1kZuLcvlzgnBCLJG5zmsnxBCTPPGTmRmWyZBUB5MQGmn/fxyt0zYgAsDohujzGMmsAD4eqKrxg4O23EbxB9RvUIyZAb7PgrN5WVl9YrVE6Ase0tR2KbAi+VsBWZht4rv9xXkXdfdGuZT58O+k5HI+ksY6/WgW1c6evkwYMqUnAdaDWzGdoTuZ9hluh0DGxNKqGcPOGkzUIc9YMdOgkSGphOiSdlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i6ILggSoaj8v+P+32X8VOpmr3H4b2DO0DSnanQJVCC0=;
- b=UKaJSY4P4BmNhU9iStgT8ZOvo4GmgdM2Ald10/0lWrnjGIEnMAxH0edpHQEJN918NjAIXHjKEplv0BbxlLovVSIk0W3cvX9LLiifvmPb5QNMYcAYNrIBbLk3p9QvUSziIB1NRmZCIFWN0s4j1itYY/tjhJVxsZSvpL/0Th0A0mV1Ix9M3pFI2cy+pDXvhCkP8hVQOV+5wkvtWpV/5y2vl5sspPMC4MHUDBz5EV14vWeK84AaQFTPb455UszJidqnr16Irf5P8ve1khRDGoq8e7S0hmOQwXkvOL2u4ZA5L9ANzBW5QfkK3NpOETYfcyWKUUwazRUkZbaAFhlofhlKDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 6 Aug 2020 03:02:41 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86001C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 00:02:37 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l60so6153905pjb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 00:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i6ILggSoaj8v+P+32X8VOpmr3H4b2DO0DSnanQJVCC0=;
- b=Gif9B6D4fewqjJbwPCaTy3+o06DnN0dH9zSkg5SlOYFBy/ML3fsWiVJGbJeGwQPJXfRe0RqTGqBaBZNgq6ma06+kJ+WCNOwlqQLAd4FrF0QoUKPJUknSt6l22vXCkPkRYXibm2TymuM7MHw7z9xa0EmYiSoiqXBPpYXTBbR6tUo=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN4PR0401MB3632.namprd04.prod.outlook.com (2603:10b6:803:46::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 6 Aug
- 2020 07:08:06 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2%4]) with mapi id 15.20.3239.022; Thu, 6 Aug 2020
- 07:08:06 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] scsi: ufs: ti-j721e-ufs: Fix error return in
- ti_j721e_ufs_probe()
-Thread-Topic: [PATCH v2] scsi: ufs: ti-j721e-ufs: Fix error return in
- ti_j721e_ufs_probe()
-Thread-Index: AQHWa78US7jgK0oOakiuuLwn+3qzRakqqPlg
-Date:   Thu, 6 Aug 2020 07:08:06 +0000
-Message-ID: <SN6PR04MB4640BBD412F95CE2A1E28942FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200806070135.67797-1-jingxiangfeng@huawei.com>
-In-Reply-To: <20200806070135.67797-1-jingxiangfeng@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e29a1af5-db84-4ee0-db5f-08d839d777b5
-x-ms-traffictypediagnostic: SN4PR0401MB3632:
-x-microsoft-antispam-prvs: <SN4PR0401MB3632945E2F53E4A3F503662AFC480@SN4PR0401MB3632.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K7t/cDt5GvDig3hqYCE/Zv9nF2Dv6NQMX76HYzzDm4UJb45v4cZvdChAq+L1rqlVVs4c1ulrl0UHsQRmtp2SnlrmwBc+yT4CCIN6RJFYTgZY30a3CutdryP6uQShNbOlUX+ovKRqznIQ7KGe73E2X5uoXpd21hpcCiEdATwShwtMC2DDU4zcGM2AiH9TJcqAegR7eLOrQ7qpHx6b3tcdxAqKZMrrUIr7eSISQ3+0VdF7WZU0HOMDw4xHbGaHPA1ATH6KCW3yieZJCQvvpV3slWfB2xO9vx48xIctKdG89PJLqfzLGey6OBMi8OBeflCy
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(52536014)(8936002)(71200400001)(76116006)(33656002)(478600001)(5660300002)(26005)(86362001)(186003)(110136005)(7696005)(2906002)(8676002)(9686003)(558084003)(66446008)(55016002)(64756008)(316002)(4326008)(66556008)(6506007)(54906003)(66946007)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 70IOZBX+cMUjTNgQvd7fyKf65W6UampALIpqFvK4/iJLHqq8xY73gEEuA8yiqmyOUq0hi+VcWIOwHQt1o03Bly9hH0A30o/QF9I/JyoITMSFmcuS0i44aK49xJfsqLeYQl1drboRRJLfenAuktq4OwxuBWOIJcI89HA+bLjG6Nfs2q88PNAGSmQhfBmKZesvuKdXCJsejzTlZEW/NKZzuJzNdAymhygwm4Q7/7f3CDqD2r2D4oX0mZV0vZw9/zqLjrZDBnvkwLrYQxsJPMyGz1FiN9trJvtX060/E0s+jI8+kOzU+Lfy36O7hYz39WGLE6XIxkqmcXdKaMxST0DsoBqikKGxVl30GJWI0mRKfrJZQBE809Lf5c3LHOHlW/NqxOnXUabW1D8OKJpw3vnSS6ud2BXl01+ydNz/8ByyD2IFLhLj9lLKfuVu8CSqp8ScdkV/IVBID847/IbOiIODTqcjUPmnKqtMPDu2dc6ktFtUdOfxAEuPyIGO2Qaf4U5zJ5drynJLHc1EXqom9Acr6Pxsyo6Sv4vjlxXqew8L3tSWCxETWpojjHLgWatBcGmjA6iREhLHZ/+MQOyvQha5XFFxXYke5nU11nf3/Hvi8Bc5Ut/n8J6WeX82hDc9UJkEMfge1dySMnO5D+60tGx+Vw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e29a1af5-db84-4ee0-db5f-08d839d777b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2020 07:08:06.1064
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rTQTgR8EP0cyvjF/SaztC9kuY1BjPBfzyrxcgI/B+g8oPJ//QBeTRgrYehMdSfQuodc2ueDZjJ/hvFGwhLiYkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3632
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8GDk4wvC7PK9uLDNwic4bnqKP6GMmNE8vLOoCruFRtc=;
+        b=nZWHgZTEYfWMCUBn1a1rbiCNJPmRgW1eJuPMJZPUzMPuq6EIGzuOvE8q/Ex/Ms65PT
+         HoF/2s0G1MnvSuXkXTwZHOvqObwqeH0K6lBDdbYCziSTxRtBa5Tzn0u6w0hPZvopphWu
+         CJzA/KqX27kPLJ+u+a/80la8tnzuihvNlqUu8UJAbsEF3cXm/znlM+sqAv3uRo5szEss
+         tCjvPj7TI312PphfEP/gMcD7VTj6PbpG3X/X/qHWvsviCnQLq65CB4OEZAC8gi//qJ3p
+         8axZF6RBA7Y68GAuY3jkCQuOtBRlvGQjUnElLmBJIda1/015mAV0lx1yg5kYsf1NriIL
+         s1oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8GDk4wvC7PK9uLDNwic4bnqKP6GMmNE8vLOoCruFRtc=;
+        b=rjKQ3BJ8PRhEKpYwMf/VVaO1vLfhp9a8RQTzFiVw6P7Ga7DrU5oQG2QhmnzRfVGErr
+         iJQ+0108eaKW5D+btMXfrqZ5ynogbLWQeylwmJOZ0TPDBdfereUMeXFlKmQ0DxaBA6Jz
+         QuVzYiGi0qjtQmzdzhks6kF3Egs+87+fS7wBzLhtG6xa6Xc6SlA0obJLnRI3AADu0k4s
+         fcXzDAeUEXhrMZJRgtO9nxVsAYMwlMa1V0giiHBApFxYqteACR+5IYD124Zjm4RbnrJ+
+         Bq7Ih2v6Z51K72Pqx39u8fQxF0DPt7ZwNUBbH9yuly7l6zWlYyE5gD96PovRKKiVVWWU
+         VFMA==
+X-Gm-Message-State: AOAM532/7zkootfsKPEB/Os55hkAyzl0+Occo3TuX+CZC2OUzzcZHWL7
+        ZLHjhAVhETuMjgli28tOITS0og==
+X-Google-Smtp-Source: ABdhPJyM39Yq+P8A/I/OtYOSHwTrd8v5jB/8ym+P2oHUwf0qoMAKpIyLNj/yGYOa0jLIcU1mVPqO8Q==
+X-Received: by 2002:a17:90a:a65:: with SMTP id o92mr3362678pjo.104.1596697356910;
+        Thu, 06 Aug 2020 00:02:36 -0700 (PDT)
+Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id q7sm6336907pfl.156.2020.08.06.00.02.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Aug 2020 00:02:36 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v4] perf test: Introduce script for Arm CoreSight testing
+Date:   Thu,  6 Aug 2020 15:02:13 +0800
+Message-Id: <20200806070213.7386-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
->=20
-> Fix to return error code PTR_ERR() from the error handling case instead
-> of 0.
->=20
-> Fixes: 22617e216331 ("scsi: ufs: ti-j721e-ufs: Fix unwinding of pm_runtim=
-e
-> changes")
-> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+We need a simple method to test Perf with Arm CoreSight drivers, this
+could be used for smoke testing when new patch is coming for perf or
+CoreSight drivers, and we also can use the test to confirm if the
+CoreSight has been enabled successfully on new platforms.
+
+This patch introduces the shell script test_arm_coresight.sh which is
+under the 'pert test' framework.  This script provides three testing
+scenarios:
+
+Test scenario 1: traverse all possible paths between source and sink
+
+For traversing possible paths, simply to say, the testing rationale
+is source oriented testing, it traverses every source (now only refers
+to ETM device) and test its all possible sinks.  To search the complete
+paths from one specific source to its sinks, this patch relies on the
+sysfs '/sys/bus/coresight/devices/devX/out:Y' for depth-first search
+(DFS) for iteration connected device nodes, if the output device is
+detected as one of ETR, ETF, or ETB types then it will test trace data
+recording and decoding for this PMU device.
+
+The script runs three output testings for every trace data:
+- Test branch samples dumping with 'perf script' command;
+- Test branch samples reporting with 'perf report' command;
+- Use option '--itrace=i1000i' to insert synthesized instructions events
+  and the script will check if perf can output the percentage value
+  successfully based on the instruction samples.
+
+Test scenario 2: CPU wide mode test
+
+For CPU wide mode testing, it passes option '-a' to perf tool to enable
+tracing on all CPUs, so it's hard to say which program will be traced.
+But perf tool itself contributes much overload in this case, so it will
+parse trace data and check if process 'perf' can be detected or not.
+
+Test scenario 3: snapshot mode test.
+
+For snapshot mode testing, it uses 'dd' command to launch a long running
+program, so this can give chance to send signal -USR2; it will check the
+captured trace data contains 'dd' related thread info or not.
+
+If any test fails, it will report failure and directly exit with error.
+This test will be only applied on a platform with PMU event 'cs_etm//',
+otherwise will skip the testing.
+
+Below is detailed usage for it:
+
+  # cd $linux/tools/perf  -> This is important so can use shell script
+  # perf test list
+    [...]
+    65: probe libc's inet_pton & backtrace it with ping
+    66: Check Arm CoreSight trace data recording and branch samples
+    67: Check open filename arg using perf trace + vfs_getname
+    68: Zstd perf.data compression/decompression
+    69: Add vfs_getname probe to get syscall args filenames
+    70: Use vfs_getname probe to get syscall args filenames
+
+  # perf test 66
+    66: Check Arm CoreSight trace data recording and branch samples: Ok
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/tests/shell/test_arm_coresight.sh | 172 +++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_arm_coresight.sh
+
+diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+new file mode 100755
+index 000000000000..73b973bada26
+--- /dev/null
++++ b/tools/perf/tests/shell/test_arm_coresight.sh
+@@ -0,0 +1,172 @@
++#!/bin/sh
++# Check Arm CoreSight trace data recording and branch samples
++
++# Uses the 'perf record' to record trace data with Arm CoreSight sinks;
++# then verify if there have any branch samples and instruction samples
++# are generated by CoreSight with 'perf script' and 'perf report'
++# commands.
++
++# SPDX-License-Identifier: GPL-2.0
++# Leo Yan <leo.yan@linaro.org>, 2020
++
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++file=$(mktemp /tmp/temporary_file.XXXXX)
++
++skip_if_no_cs_etm_event() {
++	perf list | grep -q 'cs_etm//' && return 0
++
++	# cs_etm event doesn't exist
++	return 2
++}
++
++skip_if_no_cs_etm_event || exit 2
++
++record_touch_file() {
++	echo "Recording trace (only user mode) with path: CPU$2 => $1"
++	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
++		-- taskset -c $2 touch $file
++}
++
++perf_script_branch_samples() {
++	echo "Looking at perf.data file for dumping branch samples:"
++
++	# Below is an example of the branch samples dumping:
++	#   touch  6512          1         branches:u:      ffffb220824c strcmp+0xc (/lib/aarch64-linux-gnu/ld-2.27.so)
++	#   touch  6512          1         branches:u:      ffffb22082e0 strcmp+0xa0 (/lib/aarch64-linux-gnu/ld-2.27.so)
++	#   touch  6512          1         branches:u:      ffffb2208320 strcmp+0xe0 (/lib/aarch64-linux-gnu/ld-2.27.so)
++	perf script -F,-time -i ${perfdata} | \
++		egrep " +$1 +[0-9]+ .* +branches:([u|k]:)? +"
++}
++
++perf_report_branch_samples() {
++	echo "Looking at perf.data file for reporting branch samples:"
++
++	# Below is an example of the branch samples reporting:
++	#   73.04%    73.04%  touch    libc-2.27.so      [.] _dl_addr
++	#    7.71%     7.71%  touch    libc-2.27.so      [.] getenv
++	#    2.59%     2.59%  touch    ld-2.27.so        [.] strcmp
++	perf report --stdio -i ${perfdata} | \
++		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 "
++}
++
++perf_report_instruction_samples() {
++	echo "Looking at perf.data file for instruction samples:"
++
++	# Below is an example of the instruction samples reporting:
++	#   68.12%  touch    libc-2.27.so   [.] _dl_addr
++	#    5.80%  touch    libc-2.27.so   [.] getenv
++	#    4.35%  touch    ld-2.27.so     [.] _dl_fixup
++	perf report --itrace=i1000i --stdio -i ${perfdata} | \
++		egrep " +[0-9]+\.[0-9]+% +$1"
++}
++
++arm_cs_iterate_devices() {
++	for dev in $1/connections/out\:*; do
++
++		# Skip testing if it's not a directory
++		! [ -d $dev ] && continue;
++
++		# Read out its symbol link file name
++		path=`readlink -f $dev`
++
++		# Extract device name from path, e.g.
++		#   path = '/sys/devices/platform/20010000.etf/tmc_etf0'
++		#     `> device_name = 'tmc_etf0'
++		device_name=`echo $path | awk -F/ '{print $(NF)}'`
++
++		echo $device_name | egrep -q "etr|etb|etf"
++
++		# Only test if the output device is ETR/ETB/ETF
++		if [ $? -eq 0 ]; then
++
++			pmu_dev="/sys/bus/event_source/devices/cs_etm/sinks/$device_name"
++
++			# Exit if PMU device node doesn't exist
++			if ! [ -f $pmu_dev ]; then
++				echo "PMU device $pmu_dev doesn't exist"
++				exit 1
++			fi
++
++			record_touch_file $device_name $2 &&
++				perf_script_branch_samples touch &&
++				perf_report_branch_samples touch &&
++				perf_report_instruction_samples touch
++
++			err=$?
++
++			# Exit when find failure
++			[ $err != 0 ] && exit $err
++
++			rm -f ${perfdata}
++			rm -f ${file}
++		fi
++
++		arm_cs_iterate_devices $dev $2
++	done
++}
++
++arm_cs_etm_traverse_path_test() {
++	# Iterate for every ETM device
++	for dev in /sys/bus/coresight/devices/etm*; do
++
++		# Find the ETM device belonging to which CPU
++		cpu=`cat $dev/cpu`
++
++		echo $dev
++		echo $cpu
++
++		# Use depth-first search (DFS) to iterate outputs
++		arm_cs_iterate_devices $dev $cpu
++	done
++}
++
++arm_cs_etm_cpu_wide_test() {
++	echo "Recording trace with CPU wide mode"
++	perf record -o ${perfdata} -e cs_etm// -a -- ls
++
++	perf_script_branch_samples perf &&
++	perf_report_branch_samples perf &&
++	perf_report_instruction_samples perf
++
++	err=$?
++
++	# Exit when find failure
++	[ $err != 0 ] && exit $err
++
++	rm -f ${perfdata}
++	rm -f ${file}
++}
++
++arm_cs_etm_snapshot_test() {
++	echo "Recording trace with snapshot mode"
++	perf record -o ${perfdata} -e cs_etm// -S --per-thread \
++		-- dd if=/dev/zero of=/dev/null &
++	PERFPID=$!
++
++	# Wait for perf program
++	sleep 1
++
++	# Send signal to snapshot trace data
++	kill -USR2 $PERFPID
++
++	# Stop perf program
++	kill $PERFPID
++	wait $PERFPID
++
++	perf_script_branch_samples dd &&
++	perf_report_branch_samples dd &&
++	perf_report_instruction_samples dd
++
++	err=$?
++
++	# Exit when find failure
++	[ $err != 0 ] && exit $err
++
++	rm -f ${perfdata}
++	rm -f ${file}
++}
++
++arm_cs_etm_traverse_path_test
++arm_cs_etm_cpu_wide_test
++arm_cs_etm_snapshot_test
++exit 0
+-- 
+2.17.1
+
