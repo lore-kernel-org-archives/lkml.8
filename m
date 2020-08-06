@@ -2,136 +2,139 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5956823119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596732670;
-	bh=sPqT44CYHNyOG5pq4JVNEebprcgrQJyMEDJGkP9TKms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UrYxOdplUXSEbsWXXaljuECCIWU+GkrnyhgWmMqQt1G87ji6o8XdDfLi1iIumkc53
-	 go8dYLPQlScHMsVzP2Bh4ZlK2g6uu+YIAA8S/Lj4Bo2hCra7eq64ljoPOYFJKw5OVh
-	 olsLMrtPnB827A9hnE7i/ipBUnYtGiyz1E4JNpfI=
+	by mail.kernel.org (Postfix) with ESMTP id 3999423119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qe0AHxKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgHFQvD (ORCPT
+        id S1728877AbgHFQvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43232 "EHLO
+        Thu, 6 Aug 2020 12:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729555AbgHFQuN (ORCPT
+        with ESMTP id S1729130AbgHFQur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:50:13 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E497C0086B8;
-        Thu,  6 Aug 2020 08:35:08 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id m22so7692552eje.10;
-        Thu, 06 Aug 2020 08:35:08 -0700 (PDT)
+        Thu, 6 Aug 2020 12:50:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A465C002145;
+        Thu,  6 Aug 2020 08:48:51 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g33so9556133pgb.4;
+        Thu, 06 Aug 2020 08:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jAnZHwKItrjXdvdR58QzqOoGM6YiK6Tg67ZIO3IEXZQ=;
-        b=PaV9DzcXBRT4XdiWVj2xuDnpNzGzZvTVchEJ29eJg3AwKErvnq9AkPTWImWIdPrvSk
-         Cm1fi9ZxhQcs1r7k5zNMztQZEJqDMdu4nka/5tt8Hhb9cFcUnBoSa31kj9ZW0F5Bwztk
-         NHaIsLTKVw7u8qV/lSP5g3fWoeyPzO6NUKldsdvdpw3jIGhMz1cqJ+9ArczJ7cx3GIwk
-         PX8WirWmF4DG/A/CFrnhy+HE2KQsK+ZRlZFYc32HeYG6Tbh2C++BzOTYyxkUXmkEOi0k
-         xTt2rad3nwG1/HXaM/GIW7ndJd+xF1vxwoL77XDNGhT/4l0+wVpZ2QhQn6ruUQVtS02g
-         ux2w==
+        h=from:to:cc:subject:date:message-id;
+        bh=O4fFNtupII4G3GGho31c/AZ+b/qF/UUJtsnTVBsXCWQ=;
+        b=Qe0AHxKYEd9paOfHikjpuE8sGQp696XvNaD8W3DahCu5M7sEFlNJNvAh9DJSbDzo2k
+         wLTyOY91Jl5e6ZHEnaARkpVYICAxLtbL93ynS+hilvB/gdQFh1a2nZ7/0N4OU03WUWQy
+         mE0F+8w5iI0rlA1rJZavPbSB/VZ+TK2D1cKsQArlVhvBIx8i1wIwDUX78REVE2AAGSzA
+         nk0aT0hCXgNkoE6fO2AnBmW/wWqPBwQxLeTbNys1MsXZ4goh6G+QgY1HLGZz6yr9B75f
+         fo9XxYBqcD0J+fvBKD7VLsLV6w7oHEgMtqGpa/PpjlFbo0AznYv/5Y70V4iCcVMZchBK
+         DPPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=jAnZHwKItrjXdvdR58QzqOoGM6YiK6Tg67ZIO3IEXZQ=;
-        b=TTPfMM13Pu9OMkt7JxxQcBfbqEEvjOOoD3OhDR9jjNMI3rOH3FU9JWaJ0i279B6ENc
-         afd6v9+JHkBxdfK2LuuX0Xs1oozl+ODcj9U2gDDA2zlJqO4d6n1q3VEnYaTy47VQDl32
-         PaiDPLLKTvPmffe5ANx4wHYxaanegVYtFUwxf2G0LRmMkRVDwTjOHZoJ0qe89+WdW2y2
-         KqCv97hIG/ksaGLxClZ5TRxd2e526HyQJf4Fqp8BUpcWZzcGHL6EdQWVen1qZVLC94lU
-         dPfPSUpdAOrdOOSErXE5OGN36zxwBIFEHg6h9UvYsdx8GyRVIw4kEW25Vc//14hdrd9M
-         cxHg==
-X-Gm-Message-State: AOAM530JJcsyGeEvUzWUBBrJC099TNgwOteWgIcuS7ccgTYC2a182LsF
-        uc/0L24eMtPD9JUxlnL8tW4=
-X-Google-Smtp-Source: ABdhPJzGSWcXsTvrFChy/oKLxWzAYTmdg9pUBz7YXxu/sHbxaHPFNUziq5MLvb9Mv5LaLwHDPyG+XA==
-X-Received: by 2002:a17:907:4064:: with SMTP id nl4mr4903112ejb.342.1596728106880;
-        Thu, 06 Aug 2020 08:35:06 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id h9sm4027593ejt.50.2020.08.06.08.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 08:35:06 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 17:35:00 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        X86 ML <x86@kernel.org>, stable <stable@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        0day robot <lkp@intel.com>, lkp@lists.01.org
-Subject: Re: [x86/copy_mc] a0ac629ebe: fio.read_iops -43.3% regression
-Message-ID: <20200806153500.GC2131635@gmail.com>
-References: <159630256804.3143511.8894023468833792004.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200803094257.GA23458@shao2-debian>
- <20200806133452.GA2077191@gmail.com>
- <CAPcyv4hS7K0Arrd+C0LhjrFH=yGJf3g55_WkHOET4z58AcWrJw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hS7K0Arrd+C0LhjrFH=yGJf3g55_WkHOET4z58AcWrJw@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=O4fFNtupII4G3GGho31c/AZ+b/qF/UUJtsnTVBsXCWQ=;
+        b=eTe3+TNKuSiMxgGA44yc8CniXRXVJukqlO2mPWK4qhiu5cWos1fYYscaDez2X/L26v
+         2PXISZ4vgM92g0Nc9WzWmPrIiJdK10Pcw+4bYKfHwOu3QesjunbtmQgHG/3Vi6TuAxio
+         x7E5xukL9Ne3uN9+dpHIQ4AkhWSigXCr2rB/ucZ58fiJuc3ajH2+x8OeTNmA2JmEGZTJ
+         5zFE5cFqQ6W+Tk39a18USr1WWwcuiHsm6ELUAxD+I0z+Bt2XCwcX3ey42F0b6XmMXK8m
+         6DFL9c3yBTpL3BMNJtaqUvJWfGtJfacSRin75ot536b9xA/J3gmgSd1oJon7iCpnem+J
+         HU7A==
+X-Gm-Message-State: AOAM532xi3liQqv0xUtjrhi417+AX33hlBwM/KUV8q7ezULdmhVIHdFd
+        3+Sx3pfaQrRjgEPg/RNp3oHGs1efQrI=
+X-Google-Smtp-Source: ABdhPJwjxTDldD4lbT7Tg3xiJNgOhHHqyCxRvl290V9QfB+Zm4xmX12EtTp0dNKbfe7bxHFShHTOug==
+X-Received: by 2002:a62:c182:: with SMTP id i124mr2596803pfg.225.1596728930820;
+        Thu, 06 Aug 2020 08:48:50 -0700 (PDT)
+Received: from localhost.localdomain ([123.201.68.255])
+        by smtp.gmail.com with ESMTPSA id f6sm8375856pje.16.2020.08.06.08.48.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Aug 2020 08:48:50 -0700 (PDT)
+From:   Raag Jadav <raagjadav@gmail.com>
+To:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     wsa+renesas@sang-engineering.com, jacopo@jmondi.org,
+        akinobu.mita@gmail.com, sakari.ailus@linux.intel.com,
+        mchehab@kernel.org, Raag Jadav <raagjadav@gmail.com>
+Subject: [PATCH v2] media: ov7740: use SCCB regmap
+Date:   Thu,  6 Aug 2020 21:18:27 +0530
+Message-Id: <1596728907-32120-1-git-send-email-raagjadav@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make use of SCCB APIs for regmap operations.
+Remove i2c_check_functionality as devm_regmap_init_sccb
+does it for us.
 
-* Dan Williams <dan.j.williams@intel.com> wrote:
+Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+---
+Changes since v1:
+- Changed commit message.
+- Added SCCB config for ov7740.
 
-> On Thu, Aug 6, 2020 at 6:35 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * kernel test robot <rong.a.chen@intel.com> wrote:
-> >
-> > > Greeting,
-> > >
-> > > FYI, we noticed a -43.3% regression of fio.read_iops due to commit:
-> > >
-> > >
-> > > commit: a0ac629ebe7b3d248cb93807782a00d9142fdb98 ("x86/copy_mc: Introduce copy_mc_generic()")
-> > > url: https://github.com/0day-ci/linux/commits/Dan-Williams/Renovate-memcpy_mcsafe-with-copy_mc_to_-user-kernel/20200802-014046
-> > >
-> > >
-> > > in testcase: fio-basic
-> > > on test machine: 96 threads Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz with 256G memory
-> > > with following parameters:
-> >
-> > So this performance regression, if it isn't a spurious result, looks
-> > concerning. Is this expected?
-> 
-> This is not expected and I think delays these patches until I'm back
-> from leave in a few weeks. I know that we might lose some inlining
-> effect due to replacing native memcpy, but I did not expect it would
-> have an impact like this. In my testing I was seeing a performance
-> improvement from replacing the careful / open-coded copy with rep;
-> mov;, which increases the surprise of this result.
+ drivers/media/i2c/Kconfig  |  2 +-
+ drivers/media/i2c/ov7740.c | 10 +---------
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-It would be nice to double check this on the kernel-test-robot side as 
-well, to make sure it's not a false positive.
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index da11036..c7d5722 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -1001,7 +1001,7 @@ config VIDEO_OV7670
+ config VIDEO_OV7740
+ 	tristate "OmniVision OV7740 sensor support"
+ 	depends on I2C && VIDEO_V4L2
+-	select REGMAP_I2C
++	select REGMAP_SCCB
+ 	help
+ 	  This is a Video4Linux2 sensor driver for the OmniVision
+ 	  OV7740 VGA camera sensor.
+diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+index 732655f..5832461 100644
+--- a/drivers/media/i2c/ov7740.c
++++ b/drivers/media/i2c/ov7740.c
+@@ -1068,13 +1068,6 @@ static int ov7740_probe(struct i2c_client *client)
+ 	struct v4l2_subdev *sd;
+ 	int ret;
+ 
+-	if (!i2c_check_functionality(client->adapter,
+-				     I2C_FUNC_SMBUS_BYTE_DATA)) {
+-		dev_err(&client->dev,
+-			"OV7740: I2C-Adapter doesn't support SMBUS\n");
+-		return -EIO;
+-	}
+-
+ 	ov7740 = devm_kzalloc(&client->dev, sizeof(*ov7740), GFP_KERNEL);
+ 	if (!ov7740)
+ 		return -ENOMEM;
+@@ -1091,7 +1084,7 @@ static int ov7740_probe(struct i2c_client *client)
+ 	if (ret)
+ 		return ret;
+ 
+-	ov7740->regmap = devm_regmap_init_i2c(client, &ov7740_regmap_config);
++	ov7740->regmap = devm_regmap_init_sccb(client, &ov7740_regmap_config);
+ 	if (IS_ERR(ov7740->regmap)) {
+ 		ret = PTR_ERR(ov7740->regmap);
+ 		dev_err(&client->dev, "Failed to allocate register map: %d\n",
+@@ -1100,7 +1093,6 @@ static int ov7740_probe(struct i2c_client *client)
+ 	}
+ 
+ 	sd = &ov7740->subdev;
+-	client->flags |= I2C_CLIENT_SCCB;
+ 	v4l2_i2c_subdev_init(sd, client, &ov7740_subdev_ops);
+ 
+ #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
+-- 
+2.7.4
 
-Thanks,
-
-	Ingo
