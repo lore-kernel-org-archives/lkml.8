@@ -2,100 +2,232 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 13:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 13:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF90723128
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 13:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A2E22DD6
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 13:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgHFNPA (ORCPT
+        id S1726596AbgHFNSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 09:15:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58966 "EHLO mx2.suse.de"
+        Thu, 6 Aug 2020 09:18:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58898 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbgHFNJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 09:09:06 -0400
+        id S1727991AbgHFNIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 09:08:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 427C4AB55;
-        Thu,  6 Aug 2020 12:03:54 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 14:03:36 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] docs/livepatch: Add new compiler considerations doc
-Message-ID: <20200806120336.GP24529@alley>
-References: <20200721161407.26806-1-joe.lawrence@redhat.com>
- <20200721161407.26806-2-joe.lawrence@redhat.com>
- <20200721230442.5v6ah7bpjx4puqva@treble>
- <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
- <20200722205139.hwbej2atk2ejq27n@treble>
+        by mx2.suse.de (Postfix) with ESMTP id 74907AFCD;
+        Thu,  6 Aug 2020 12:43:01 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
+ objects
+To:     Xunlei Pang <xlpang@linux.alibaba.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        David Rientjes <rientjes@google.com>
+References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <a53f9039-5cba-955b-009e-12e8c5ffb345@suse.cz>
+Date:   Thu, 6 Aug 2020 14:42:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722205139.hwbej2atk2ejq27n@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-07-22 15:51:39, Josh Poimboeuf wrote:
-> On Wed, Jul 22, 2020 at 01:03:03PM -0400, Joe Lawrence wrote:
-> > On 7/21/20 7:04 PM, Josh Poimboeuf wrote:
-> > > On Tue, Jul 21, 2020 at 12:14:06PM -0400, Joe Lawrence wrote:
-> > > > Compiler optimizations can have serious implications on livepatching.
-> > > > Create a document that outlines common optimization patterns and safe
-> > > > ways to livepatch them.
-> > > > 
-> > > > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > > 
-> > > There's a lot of good info here, but I wonder if it should be
-> > > reorganized a bit and instead called "how to create a livepatch module",
-> > > because that's really the point of it all.
-> > > 
-> > 
-> > That would be nice.  Would you consider a stand-alone compiler-optimizations
-> > doc an incremental step towards that end?  Note that the other files
-> > (callbacks, shadow-vars, system-state) in their current form might be as
-> > confusing to the newbie.
+On 7/2/20 10:32 AM, Xunlei Pang wrote:
+> The node list_lock in count_partial() spend long time iterating
+> in case of large amount of partial page lists, which can cause
+> thunder herd effect to the list_lock contention, e.g. it cause
+> business response-time jitters when accessing "/proc/slabinfo"
+> in our production environments.
 > 
-> It's an incremental step towards _something_.  Whether that's a cohesive
-> patch creation guide, or just a growing hodgepodge of random documents,
-> it may be too early to say :-)
-
-Yes, it would be nice to have a cohesive documentation. But scattered
-pieces are better than nothing.
-
-> > > I'm thinking a newcomer reading this might be lost.  It's not
-> > > necessarily clear that there are currently two completely different
-> > > approaches to creating a livepatch module, each with their own quirks
-> > > and benefits/drawbacks.  There is one mention of a "source-based
-> > > livepatch author" but no explanation of what that means.
-> > > 
-> > 
-> > Yes, the initial draft was light on source-based patching since I only
-> > really tinker with it for samples/kselftests.  The doc was the result of an
-> > experienced livepatch developer and Sunday afternoon w/the compiler. I'm
-> > sure it reads as such. :)
+> This patch introduces two counters to maintain the actual number
+> of partial objects dynamically instead of iterating the partial
+> page lists with list_lock held.
 > 
-> Are experienced livepatch developers the intended audience?  If so I
-> question what value this document has in its current form.  Presumably
-> experienced livepatch developers would already know this stuff.
+> New counters of kmem_cache_node are: pfree_objects, ptotal_objects.
+> The main operations are under list_lock in slow path, its performance
+> impact is minimal.
+> 
+> Co-developed-by: Wen Yang <wenyang@linux.alibaba.com>
+> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
 
-IMHO, this document is useful even for newbies. They might at
-least get a clue about these catches. It is better than nothing.
+This or similar things seem to be reported every few months now, last time was
+here [1] AFAIK. The solution was to just stop counting at some point.
 
-I do not want to discourage Joe from creating even better
-documentation. But if he does not have interest or time
-to work on it, I am happy even for this piece.
+Shall we perhaps add these counters under CONFIG_SLUB_DEBUG then and be done
+with it? If anyone needs the extreme performance and builds without
+CONFIG_SLUB_DEBUG, I'd assume they also don't have userspace programs reading
+/proc/slabinfo periodically anyway?
 
-Acked-by: Petr Mladek <pmladek@suse.com>
+[1]
+https://lore.kernel.org/linux-mm/158860845968.33385.4165926113074799048.stgit@buzz/
 
-Best Regards,
-Petr
+> ---
+>  mm/slab.h |  2 ++
+>  mm/slub.c | 38 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 7e94700..5935749 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -616,6 +616,8 @@ struct kmem_cache_node {
+>  #ifdef CONFIG_SLUB
+>  	unsigned long nr_partial;
+>  	struct list_head partial;
+> +	atomic_long_t pfree_objects; /* partial free objects */
+> +	atomic_long_t ptotal_objects; /* partial total objects */
+>  #ifdef CONFIG_SLUB_DEBUG
+>  	atomic_long_t nr_slabs;
+>  	atomic_long_t total_objects;
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 6589b41..53890f3 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1775,10 +1775,24 @@ static void discard_slab(struct kmem_cache *s, struct page *page)
+>  /*
+>   * Management of partially allocated slabs.
+>   */
+> +
+> +static inline void
+> +__update_partial_free(struct kmem_cache_node *n, long delta)
+> +{
+> +	atomic_long_add(delta, &n->pfree_objects);
+> +}
+> +
+> +static inline void
+> +__update_partial_total(struct kmem_cache_node *n, long delta)
+> +{
+> +	atomic_long_add(delta, &n->ptotal_objects);
+> +}
+> +
+>  static inline void
+>  __add_partial(struct kmem_cache_node *n, struct page *page, int tail)
+>  {
+>  	n->nr_partial++;
+> +	__update_partial_total(n, page->objects);
+>  	if (tail == DEACTIVATE_TO_TAIL)
+>  		list_add_tail(&page->slab_list, &n->partial);
+>  	else
+> @@ -1798,6 +1812,7 @@ static inline void remove_partial(struct kmem_cache_node *n,
+>  	lockdep_assert_held(&n->list_lock);
+>  	list_del(&page->slab_list);
+>  	n->nr_partial--;
+> +	__update_partial_total(n, -page->objects);
+>  }
+>  
+>  /*
+> @@ -1842,6 +1857,7 @@ static inline void *acquire_slab(struct kmem_cache *s,
+>  		return NULL;
+>  
+>  	remove_partial(n, page);
+> +	__update_partial_free(n, -*objects);
+>  	WARN_ON(!freelist);
+>  	return freelist;
+>  }
+> @@ -2174,8 +2190,11 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
+>  				"unfreezing slab"))
+>  		goto redo;
+>  
+> -	if (lock)
+> +	if (lock) {
+> +		if (m == M_PARTIAL)
+> +			__update_partial_free(n, page->objects - page->inuse);
+>  		spin_unlock(&n->list_lock);
+> +	}
+>  
+>  	if (m == M_PARTIAL)
+>  		stat(s, tail);
+> @@ -2241,6 +2260,7 @@ static void unfreeze_partials(struct kmem_cache *s,
+>  			discard_page = page;
+>  		} else {
+>  			add_partial(n, page, DEACTIVATE_TO_TAIL);
+> +			__update_partial_free(n, page->objects - page->inuse);
+>  			stat(s, FREE_ADD_PARTIAL);
+>  		}
+>  	}
+> @@ -2915,6 +2935,14 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
+>  		head, new.counters,
+>  		"__slab_free"));
+>  
+> +	if (!was_frozen && prior) {
+> +		if (n)
+> +			__update_partial_free(n, cnt);
+> +		else
+> +			__update_partial_free(get_node(s, page_to_nid(page)),
+> +					cnt);
+> +	}
+> +
+>  	if (likely(!n)) {
+>  
+>  		/*
+> @@ -2944,6 +2972,7 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
+>  	if (!kmem_cache_has_cpu_partial(s) && unlikely(!prior)) {
+>  		remove_full(s, n, page);
+>  		add_partial(n, page, DEACTIVATE_TO_TAIL);
+> +		__update_partial_free(n, page->objects - page->inuse);
+>  		stat(s, FREE_ADD_PARTIAL);
+>  	}
+>  	spin_unlock_irqrestore(&n->list_lock, flags);
+> @@ -2955,6 +2984,7 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
+>  		 * Slab on the partial list.
+>  		 */
+>  		remove_partial(n, page);
+> +		__update_partial_free(n, page->inuse - page->objects);
+>  		stat(s, FREE_REMOVE_PARTIAL);
+>  	} else {
+>  		/* Slab must be on the full list */
+> @@ -3364,6 +3394,8 @@ static inline int calculate_order(unsigned int size)
+>  	n->nr_partial = 0;
+>  	spin_lock_init(&n->list_lock);
+>  	INIT_LIST_HEAD(&n->partial);
+> +	atomic_long_set(&n->pfree_objects, 0);
+> +	atomic_long_set(&n->ptotal_objects, 0);
+>  #ifdef CONFIG_SLUB_DEBUG
+>  	atomic_long_set(&n->nr_slabs, 0);
+>  	atomic_long_set(&n->total_objects, 0);
+> @@ -3437,6 +3469,7 @@ static void early_kmem_cache_node_alloc(int node)
+>  	 * initialized and there is no concurrent access.
+>  	 */
+>  	__add_partial(n, page, DEACTIVATE_TO_HEAD);
+> +	__update_partial_free(n, page->objects - page->inuse);
+>  }
+>  
+>  static void free_kmem_cache_nodes(struct kmem_cache *s)
+> @@ -3747,6 +3780,7 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
+>  	list_for_each_entry_safe(page, h, &n->partial, slab_list) {
+>  		if (!page->inuse) {
+>  			remove_partial(n, page);
+> +			__update_partial_free(n, page->objects - page->inuse);
+>  			list_add(&page->slab_list, &discard);
+>  		} else {
+>  			list_slab_objects(s, page,
+> @@ -4045,6 +4079,8 @@ int __kmem_cache_shrink(struct kmem_cache *s)
+>  			if (free == page->objects) {
+>  				list_move(&page->slab_list, &discard);
+>  				n->nr_partial--;
+> +				__update_partial_free(n, -free);
+> +				__update_partial_total(n, -free);
+>  			} else if (free <= SHRINK_PROMOTE_MAX)
+>  				list_move(&page->slab_list, promote + free - 1);
+>  		}
+> 
+
