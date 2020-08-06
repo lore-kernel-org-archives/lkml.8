@@ -2,204 +2,201 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5266BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92556221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jic5NH9/"
+	by mail.kernel.org (Postfix) with ESMTP id A25E1206B5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596738988;
+	bh=eC8+pdiOP0SN41WUeXwn8RHaqXAyWuLR/6yLOdAxbuk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uO6CwW7N0yWXS3KVkf6WQ1QN/tLDRIjiHvDwbkBoJtR0yBbQ8q/w+9WUUx2C/Cwo6
+	 q13SLQMswgClVxdm1IhL5cwbFERePh5FrIaNOqNOagNXUgZ28xST5LNOZgseKj+Ala
+	 2tAQ54ByqVcRtm1sHrh9qsb4MwCOurQPd7A28eLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgHFSgQ (ORCPT
+        id S1729400AbgHFSgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:36:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgHFSfZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:35:25 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A789DC0617A3
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:28:24 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id 1so19924692vsl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TO5teO9c8cpNcatyoij4oyB8bpRqrObQH+QtL1KfiLk=;
-        b=Jic5NH9/4gbjtPD6VZVDLx/E+VlSfmhVG1Keye4C+/pj2a6YM8VFlwv+hDi5zbBIqz
-         imdPu/0+dh68V6L5izomHnkkaGmKdr9owMIs+lvR1X3IO7FglLRlVtOAkBvP9PiYI9tH
-         uFKsp/ROoLFsB/MkkLOjCiXh5Yygy9HIrYmHo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TO5teO9c8cpNcatyoij4oyB8bpRqrObQH+QtL1KfiLk=;
-        b=p4wt5fkHG+AIJe6RWCEgi1H+RIk5OKsBx36umVbAHYgNzRmUncNIuLKhVvc2jN5hgW
-         IkHBZMAKbJQ4gqark+ro5L8Tayad3/FrtP0sZU2+DVLbXbCh8iK+kBEJ6Z/xoJp8Zayd
-         5hOTuYLiMxeUl3MNyWkrMrO1HOU8aNOx3fcwlf+TgtoLkD7tvcOgwkG8N8iNbGRTY19U
-         W8vbf+Io9rFHV7Ll+cskbsuhoxwTG7E1WlpCMJIB8hRO1gOfx+Mi2WNVD2jPSSWYimNt
-         Qc48F00v75WacPyEejC7+iPt1xNVrzGHm4pkBA+kThlk+R7fc6n+Y4LC6SEzw7NPtxMm
-         N/Xw==
-X-Gm-Message-State: AOAM532zdxyTK/2RuOwVI58CPhw9B4+YebeNZur4cQPHEh0IrXunnUyL
-        OpTEr+4HftSLzOqMCJch3e/9MWo7Vv4=
-X-Google-Smtp-Source: ABdhPJwg0n+Hs7tsLQHGQdSyTKqCvAq/GqoS5MYBFGyVyJOpJnJ3FZ6YC4jDQiW69WefkYZWQhY86A==
-X-Received: by 2002:a05:6102:213a:: with SMTP id f26mr7644140vsg.6.1596738503257;
-        Thu, 06 Aug 2020 11:28:23 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id l1sm851660uak.3.2020.08.06.11.28.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 11:28:22 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id i129so7200598vsi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:28:21 -0700 (PDT)
-X-Received: by 2002:a67:d714:: with SMTP id p20mr7860462vsj.119.1596738500959;
- Thu, 06 Aug 2020 11:28:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
- <20191120191813.GD4799@willie-the-truck> <CAD=FV=Wntf0TCwdtNNvPY-CXX1VL_SZK8Y8yw1r=UfeayHfwgw@mail.gmail.com>
- <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
- <20200806154144.GD1551@shell.armlinux.org.uk> <CAD=FV=XBinO0+uSt_sDTw_YFiZC4Gf8RMSC9ycDg+RWH=63Tog@mail.gmail.com>
-In-Reply-To: <CAD=FV=XBinO0+uSt_sDTw_YFiZC4Gf8RMSC9ycDg+RWH=63Tog@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 6 Aug 2020 11:28:09 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XAi6J1LZRZJacTVhX=PYCWs3-5MtS_bG2_ZTuQPfxstQ@mail.gmail.com>
-Message-ID: <CAD=FV=XAi6J1LZRZJacTVhX=PYCWs3-5MtS_bG2_ZTuQPfxstQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Pratyush Anand <panand@redhat.com>,
-        Pavel Labath <labath@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kazuhiro Inaba <kinaba@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Aug 2020 14:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729342AbgHFSgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:36:14 -0400
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 459DD22D72;
+        Thu,  6 Aug 2020 18:22:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596738167;
+        bh=eC8+pdiOP0SN41WUeXwn8RHaqXAyWuLR/6yLOdAxbuk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VHn+t9EEdJVdosmd7F/izmV/f/BVJ2cqpO/rOXPJA+hkWnTb+ZcHGrmO09n3zqq00
+         cEZgOxnbH50Oz/fzhKpLLQL6S+SfioSMmFDm6iI8IBuS9MA7Eev/PZZ7uyPmHDHbnC
+         Kp5ilhF0X14zo6b3c/21m8qfQP2BgvBkw8gI1mIY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v2 17/41] ARM: s5pv210: use private pm save/restore
+Date:   Thu,  6 Aug 2020 20:20:34 +0200
+Message-Id: <20200806182059.2431-17-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
+References: <20200806181932.2253-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-On Thu, Aug 6, 2020 at 8:45 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, Aug 6, 2020 at 8:41 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Thu, Aug 06, 2020 at 08:05:10AM -0700, Doug Anderson wrote:
-> > > Hi,
-> > >
-> > > On Mon, Dec 2, 2019 at 8:36 AM Doug Anderson <dianders@chromium.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Wed, Nov 20, 2019 at 11:18 AM Will Deacon <will@kernel.org> wrote:
-> > > > >
-> > > > > On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
-> > > > > > This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
-> > > > > > watchpoint addresses") but ported to arm32, which has the same
-> > > > > > problem.
-> > > > > >
-> > > > > > This problem was found by Android CTS tests, notably the
-> > > > > > "watchpoint_imprecise" test [1].  I tested locally against a copycat
-> > > > > > (simplified) version of the test though.
-> > > > > >
-> > > > > > [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
-> > > > > >
-> > > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > > > ---
-> > > > > >
-> > > > > >  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
-> > > > > >  1 file changed, 70 insertions(+), 26 deletions(-)
-> > > > >
-> > > > > Sorry for taking so long to look at this. After wrapping my head around the
-> > > > > logic again
-> > > >
-> > > > Yeah.  It was a little weird and (unfortunately) arbitrarily different
-> > > > in some places compared to the arm64 code.
-> > > >
-> > > >
-> > > > > I think it looks fine, so please put it into the patch system
-> > > > > with my Ack:
-> > > > >
-> > > > > Acked-by: Will Deacon <will@kernel.org>
-> > > >
-> > > > Thanks!  Submitted as:
-> > > >
-> > > > https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8944/1
-> > >
-> > > Oddly, I found that if I go visit that page now I see:
-> > >
-> > > > - - - Note 2 submitted by Russell King on 17 Jan 2020 11:16:34 (UTC) - - -
-> > > > Moved to applied
-> > > >
-> > > > Applied to git-curr (misc branch).
-> > >
-> > > Yet if I go check mainline the patch is not there.  This came to my
-> > > attention since we had my patch picked to the Chrome OS 4.19 tree and
-> > > suddenly recently got a stable merge conflict with "ARM: 8986/1:
-> > > hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints".
-> > >
-> > > Anyone know what happened here?
-> >
-> > Yes.  Stephen Rothwell raised a complaint against it, which you were
-> > copied with:
->
-> Was a mailing list copied?  If so, do you have a lore.kernel.org link?
->  I certainly don't see the email so I can only assume it made it to
-> spam.  That's unfortunate.
->
->
-> > > Hi all,
-> > >
-> > > Commit
-> > >
-> > >   116375be0461 ("ARM: 8944/1: hw_breakpoint: Handle inexact watchpoint addresses")
-> > >
-> > > is missing a Signed-off-by from its author.
-> >
-> > My reply to Stephen's email was:
-> >
-> > > Thanks Stephen, patch dropped.
-> > >
-> > > It looks like Doug used his "m.disordat.com" address to submit the
-> > > patch through the web interface, and there was no From: in the patch
-> > > itself, so that was used as the patch author.  However, as you spotted,
-> > > it was signed off using Doug's "chromium.org" address.
-> > >
-> > > I think it's time to make the patch system a bit more strict, checking
-> > > that the submission address is mentioned in a signed-off-by tag
-> > > somewhere in the commit message.
-> > >
-> > > Doug, the patch system does have your "chromium.org" address, if that's
-> > > the one you want to use as the author, please submit using that instead.
-> > > Thanks.
-> > >
-> > > Russell.
-> >
-> > Neither email got a response from you, so the patch was dropped and
-> > nothing further happened.
->
-> OK, I guess I'll have to rebase and resend.
+The pm save/restore code is fairly small, so in order to
+separate the s3c and s5p platforms, adding an s5p specific
+copy instead of sharing it is actually easier.
 
-Let's hope this one works:
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/mach-s5pv210/Makefile     |  7 -----
+ arch/arm/mach-s5pv210/pm.c         | 45 ++++++++++++++++++++++++++++--
+ arch/arm/mach-s5pv210/regs-clock.h |  4 ++-
+ arch/arm/mach-s5pv210/s5pv210.c    |  2 --
+ arch/arm/plat-samsung/Makefile     |  3 +-
+ 5 files changed, 47 insertions(+), 14 deletions(-)
 
-https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=8997/1
+diff --git a/arch/arm/mach-s5pv210/Makefile b/arch/arm/mach-s5pv210/Makefile
+index e7b551e18e5c..aa0a1f091daf 100644
+--- a/arch/arm/mach-s5pv210/Makefile
++++ b/arch/arm/mach-s5pv210/Makefile
+@@ -3,12 +3,5 @@
+ # Copyright (c) 2010 Samsung Electronics Co., Ltd.
+ # 		http://www.samsung.com/
+ 
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) += -I$(srctree)/arch/arm/plat-samsung/include
+-
+-# Core
+-
+ obj-$(CONFIG_PM_SLEEP)		+= pm.o sleep.o
+-
+-# machine support
+-
+ obj-y				+= s5pv210.o
+diff --git a/arch/arm/mach-s5pv210/pm.c b/arch/arm/mach-s5pv210/pm.c
+index efdb5a27c060..d59c094cdea8 100644
+--- a/arch/arm/mach-s5pv210/pm.c
++++ b/arch/arm/mach-s5pv210/pm.c
+@@ -13,15 +13,56 @@
+ #include <linux/suspend.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/io.h>
++#include <linux/soc/samsung/s3c-pm.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/suspend.h>
+ 
+-#include <plat/pm-common.h>
+-
+ #include "common.h"
+ #include "regs-clock.h"
+ 
++/* helper functions to save and restore register state */
++struct sleep_save {
++	void __iomem	*reg;
++	unsigned long	val;
++};
++
++#define SAVE_ITEM(x) \
++	{ .reg = (x) }
++
++/**
++ * s3c_pm_do_save() - save a set of registers for restoration on resume.
++ * @ptr: Pointer to an array of registers.
++ * @count: Size of the ptr array.
++ *
++ * Run through the list of registers given, saving their contents in the
++ * array for later restoration when we wakeup.
++ */
++static void s3c_pm_do_save(struct sleep_save *ptr, int count)
++{
++	for (; count > 0; count--, ptr++) {
++		ptr->val = readl_relaxed(ptr->reg);
++		S3C_PMDBG("saved %p value %08lx\n", ptr->reg, ptr->val);
++	}
++}
++
++/**
++ * s3c_pm_do_restore() - restore register values from the save list.
++ * @ptr: Pointer to an array of registers.
++ * @count: Size of the ptr array.
++ *
++ * Restore the register values saved from s3c_pm_do_save().
++ *
++ * WARNING: Do not put any debug in here that may effect memory or use
++ * peripherals, as things may be changing!
++*/
++
++static void s3c_pm_do_restore_core(const struct sleep_save *ptr, int count)
++{
++	for (; count > 0; count--, ptr++)
++		writel_relaxed(ptr->val, ptr->reg);
++}
++
+ static struct sleep_save s5pv210_core_save[] = {
+ 	/* Clock ETC */
+ 	SAVE_ITEM(S5P_MDNIE_SEL),
+diff --git a/arch/arm/mach-s5pv210/regs-clock.h b/arch/arm/mach-s5pv210/regs-clock.h
+index 2a35c831a9b0..9cad2306e470 100644
+--- a/arch/arm/mach-s5pv210/regs-clock.h
++++ b/arch/arm/mach-s5pv210/regs-clock.h
+@@ -9,7 +9,9 @@
+ #ifndef __ASM_ARCH_REGS_CLOCK_H
+ #define __ASM_ARCH_REGS_CLOCK_H __FILE__
+ 
+-#include <plat/map-base.h>
++#define S3C_ADDR_BASE		0xF6000000
++#define S3C_ADDR(x)		((void __iomem __force *)S3C_ADDR_BASE + (x))
++#define S3C_VA_SYS		S3C_ADDR(0x00100000)
+ 
+ #define S5P_CLKREG(x)		(S3C_VA_SYS + (x))
+ 
+diff --git a/arch/arm/mach-s5pv210/s5pv210.c b/arch/arm/mach-s5pv210/s5pv210.c
+index 868f9c20419d..a21ed3bb992a 100644
+--- a/arch/arm/mach-s5pv210/s5pv210.c
++++ b/arch/arm/mach-s5pv210/s5pv210.c
+@@ -13,8 +13,6 @@
+ #include <asm/mach/map.h>
+ #include <asm/system_misc.h>
+ 
+-#include <plat/map-base.h>
+-
+ #include "common.h"
+ #include "regs-clock.h"
+ 
+diff --git a/arch/arm/plat-samsung/Makefile b/arch/arm/plat-samsung/Makefile
+index c47f58ed83e2..feddb42cae51 100644
+--- a/arch/arm/plat-samsung/Makefile
++++ b/arch/arm/plat-samsung/Makefile
+@@ -24,8 +24,7 @@ obj-$(CONFIG_GPIO_SAMSUNG)     += gpio-samsung.o
+ 
+ # PM support
+ 
+-obj-$(CONFIG_PM_SLEEP)		+= pm-common.o
+-obj-$(CONFIG_SAMSUNG_PM)	+= pm.o
++obj-$(CONFIG_SAMSUNG_PM)	+= pm.o pm-common.o
+ obj-$(CONFIG_SAMSUNG_PM_GPIO)	+= pm-gpio.o
+ 
+ obj-$(CONFIG_SAMSUNG_WAKEMASK)	+= wakeup-mask.o
+-- 
+2.17.1
 
-I re-tested it and it also matches how the conflict was resolved in
-the Chrome OS tree which means that (once the stable merge lands in
-our tree) this conflict resolution will get a bit of testing, though
-the vast majority of devices running this code have since stopped
-receiving auto updates.
-
--Doug
