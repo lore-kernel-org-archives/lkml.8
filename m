@@ -2,120 +2,95 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2407C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89D5F2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FF62086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="Q0Vkd8f+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgHFQzt (ORCPT
+        id S1729451AbgHFQzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:55:49 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:33314 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbgHFQzr (ORCPT
+        Thu, 6 Aug 2020 12:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729821AbgHFQzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:55:47 -0400
-Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 8EC6B3B2C33;
-        Thu,  6 Aug 2020 14:37:42 +0000 (UTC)
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 75B25C000F;
-        Thu,  6 Aug 2020 14:32:18 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 16:35:59 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: ov772x: Document endpoint
- properties
-Message-ID: <20200806143559.ha6amfa4gq2o4jbi@uno.localdomain>
-References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 6 Aug 2020 12:55:08 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A388C0A8896
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 07:46:13 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x5so9097129wmi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 07:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gLXqGFGiHgPstKedhUHjfysLbjGakCzVB3i4zDx+oWw=;
+        b=Q0Vkd8f+xEGj7g+Tfc/bf7PgGTANOuxb8H/vt4RA8nQe0K9jblkNaMap5vDZwOxwRH
+         jtVczWc4chEpp+xh4NPMhlEUHFF83KX3i+4LOutvQnN1JiU9nq85rZ0MbqjQMUtAK/yf
+         1aI0JEz98Tx2V1OOL9Blul3Bt50mZ7MHmN4yA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gLXqGFGiHgPstKedhUHjfysLbjGakCzVB3i4zDx+oWw=;
+        b=Od0O4XFKOCkv4XGA7V/aPlKEj2QNB3thi2PL7CpGIS3SuUS6WiBd+ggCo6vfUF07LB
+         3mC5qdGDBI9RXpLPIjT9X/d9rdsvLTCznJiQKa6btTKMQQ4eU0p11BBFWRIqPq8LcCYS
+         G8SWh4+fgLmcsCPnv8OTY/HGRy8Yr9f98k9V9us3vh1tiV2lFmlvhRqK0/vlsqgwpQoO
+         IAF1bg4nNKoDfUWgyksImhimPHP7ORq7BYGYnMmVHavN/+sZESr5aEog/9Un+EZk15Eu
+         sGOzRU3/jrSsz5t5/g5k/hs2Mbu4TucNF6YW6LKukaZ8/rgIExsCJ8gJqkagSU2bpfaj
+         OChg==
+X-Gm-Message-State: AOAM5311DvGp2IuYyB2/MfzOJLcvnn59Aof1RDMCn0oJd6j/kui0Hs8f
+        szhIQ5Vq4hJiV9zDX8Pw9C9fsEbCylbxQ/OYpOfO8Q==
+X-Google-Smtp-Source: ABdhPJyRPdnu/4oes4dUWniKCpXd9HW462x3vl7mDrEPqKHwTpf2ehRX8ZMMFSRZUR47QXpMdE14WQ64HNIMpiKFVSE=
+X-Received: by 2002:a1c:2646:: with SMTP id m67mr8832227wmm.137.1596725171925;
+ Thu, 06 Aug 2020 07:46:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200805110052.2655487-1-daniel@0x0f.com> <20200805110052.2655487-2-daniel@0x0f.com>
+ <CAL_JsqK5YWe71HU+bSMG2uNZOgFN85x4zatuiS-fkUYKXHDs-w@mail.gmail.com>
+In-Reply-To: <CAL_JsqK5YWe71HU+bSMG2uNZOgFN85x4zatuiS-fkUYKXHDs-w@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Thu, 6 Aug 2020 23:46:16 +0900
+Message-ID: <CAFr9PXn_RSwWoaWEmW5m1pBVgo5c41KfEy0db-cgt0+v_sv5Ww@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt: bindings: interrupt-controller: Add binding
+ description for msc313-intc
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Hi Rob,
 
-On Mon, Aug 03, 2020 at 12:39:11PM +0100, Lad Prabhakar wrote:
-> Document endpoint properties required for parallel interface
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov772x.txt     | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> index 0b3ede5b8e6a..1f4153484717 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> @@ -21,6 +21,22 @@ subnode for its digital output video port, in accordance with the video
->  interface bindings defined in Documentation/devicetree/bindings/media/
->  video-interfaces.txt.
->
-> +Endpoint node required properties for parallel connection are:
-> +- remote-endpoint: a phandle to the bus receiver's endpoint node.
+On Thu, 6 Aug 2020 at 23:15, Rob Herring <robh+dt@kernel.org> wrote:
 
-we allow endpoints without a remote end connected usually. They can be
-filled in later, in example, with an overlay.
+> Why are you sending another version? You ignored the errors and my
+> questions on the RFC.
 
-> +- bus-width: shall be set to <8> for 8 bits parallel bus
-> +	     or <10> for 10 bits parallel bus
-> +- data-shift: shall be set to <2> for 8 bits parallel bus
-> +	      (lines 9:2 are used) or <0> for 10 bits parallel bus
+Sorry I didn't think I got any responses RFC but after searching it looks
+like the email from your bot and your question about the two custom
+properties went into a folder I wasn't looking at.
 
-defining what is required or optional might be hard. I don't see the
-driver enforcing their presence and I assume they have safe default.
-Maybe make them optional and specify what the defaul value is ?
+Based on Marc's feedback (that there should be an static irqchip
+struct for each variation)
+I'm going to drop the custom properties and make the metadata they had
+part of the driver. They were basically there to try to make the
+driver universal.
 
+Again sorry for my mishap.
 
-> +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> +		(Not required for bus-type equal 6)
-> +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> +		(Not required for bus-type equal 6)
-
-If they're not required, they're optional, aren't they ? :)
-
-> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
-> +	       signal. (Not required for bus-type equal 6)
-
-Why the pclk polarity is does not apply to BT.656 ?
-
-> +- bus-type: data bus type. Possible values are:
-> +	    5 - Parallel
-> +	    6 - Bt.656
-
-Are we making this required, or do we expect this to be deduced
-depending on which other properties have been specified ? Sakari it
-seems you would like this to become a properties that has to be
-specified most of the times, right ? (I tend to agree with that FWIW),
-but does it impact retro-compatibility ?
-
-> +
->  Example:
->
->  &i2c0 {
-> --
-> 2.17.1
->
+Daniel
