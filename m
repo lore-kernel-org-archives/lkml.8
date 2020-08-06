@@ -2,99 +2,512 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D87C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB79E23119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0453D2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzvBpExn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgHFQ6K (ORCPT
+        id S1729698AbgHFQ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:58:10 -0400
-Received: from mga09.intel.com ([134.134.136.24]:49498 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729764AbgHFQ6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:58:00 -0400
-IronPort-SDR: WLdqZe4tV5KZW1xn3O0Emg85d3+Vn67AdmIpBEeCjw+MwRhCIGI+pIKGeAkwjR+T4S2gA+e6rA
- T+4+HRfk57BA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="153943831"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="153943831"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 07:25:09 -0700
-IronPort-SDR: ah2anX3z0TQP0vyEw5c+uaJdOGWBrH1WybS8y6rEptf+myvDgodfHn1Rz3Xu4D9TCsXM8cp6EV
- +g8yWwfENwGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="437557111"
-Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.140])
-  by orsmga004.jf.intel.com with ESMTP; 06 Aug 2020 07:25:08 -0700
-Date:   Thu, 6 Aug 2020 22:37:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Shannon Nelson <snelson@pensando.io>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: drivers/net/ethernet/pensando/ionic/ionic_txrx.c:608:3: warning:
- Variable 'done' is modified but its new value is never used.
-Message-ID: <20200806143735.GA9232@xsang-OptiPlex-9020>
+        Thu, 6 Aug 2020 12:58:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbgHFQkm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:40:42 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D701C0A8938;
+        Thu,  6 Aug 2020 09:39:25 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id e187so13701269ybc.5;
+        Thu, 06 Aug 2020 09:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CouUnYBkuAmV4JKwky5FNt+DlmjxWfezT2r8xtdBStw=;
+        b=BzvBpExnJ1CGSJxMPejYRdqmf7wplvQSNSW069kfyEGf9N2VNPF83LGr6fPe7MuKDx
+         4bW3jsnK02CUOQIVACL4ypUQ+4v9Tos1xj4Gs22TDz2gCGArIOsWiJJha0494XE4gg3O
+         X5omCVNU08/NITGBwLYxMARl4VyV+V/Sr4XKTL1j7ZacaaFARkiKQJ6/3lQyYdmuWes+
+         6aZeDlsESL2esNMsiz290EUM4d/ru+l0s3zeBguxhi9S17UYzE9S3BCG9fO8WzoMMENm
+         fmcgRHIhVKibFzgTF2P+KZrY3dJ3BuypozbHlpxPsRLH/qdo1Hb+ja3meocdS9QiNdOJ
+         hSJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CouUnYBkuAmV4JKwky5FNt+DlmjxWfezT2r8xtdBStw=;
+        b=hOLF9ZloyOqlCdCqZym7AxMjc1wSG0sJaTdAi5v62ve0PiJKV0gK4+HH0HwMM2QTB/
+         /OSNdqGg2nosUI4DsnTf6GIbKlXxC8O8uMC8MRTiUGWTMgdC1RV1ApT+EWI7ShJaWUZL
+         vwK0ytF2Ctlh2xbchyKkYao4XICwoGQCiddKhpUp6GybwMnDh9V7Z9yoLBxKiVuFSvbv
+         OCGBiBPpKEBxld9LDzStxfNKqjN/8uWTmk52PxSEWXUt1YI2jq0G1miQxEFSdVD8/Cv/
+         i4BMCTQnNr9dgs2pchHLy5YoPKK3fcBiFozU0MQLpUr51lzkmtHkEEPSFyF272VUOYAw
+         0Eog==
+X-Gm-Message-State: AOAM531QZ5O7FGs1LaNGO0bg1MVceLGI1/cjAmupkYY358JEzJekodtY
+        hl2QylULDR1f4pBptbjqi6g0wzbx8s4iqqYQ2Lw=
+X-Google-Smtp-Source: ABdhPJyKjvsxu3866DOGraLC7oo+BoJnKPATWcIrtajBImTzStfDVzQYUptH25FJisF3XDi718ZpAjRUePo2hpuDeJg=
+X-Received: by 2002:a25:3355:: with SMTP id z82mr14756085ybz.445.1596731963711;
+ Thu, 06 Aug 2020 09:39:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596465107-14251-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806163054.vz7t7jgm4bapzkpq@uno.localdomain>
+In-Reply-To: <20200806163054.vz7t7jgm4bapzkpq@uno.localdomain>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 6 Aug 2020 17:38:57 +0100
+Message-ID: <CA+V-a8tmnqRvmW1=55K7Za2DoxBR+4LD4oZMGfX14-WfBocokQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] media: i2c: ov5640: Enable data pins on poweron
+ for DVP mode
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   fffe3ae0ee84e25d2befe2ae59bc32aa2b6bc77b
-commit: f9c00e2cf258d215a1ed2a7b2ae5b91ac2f29582 ionic: clean tx queue of unfinished requests
-date:   4 months ago
-:::::: branch date: 5 hours ago
-:::::: commit date: 4 months ago
-compiler: ia64-linux-gcc (GCC) 9.3.0
+Hi Jacopo,
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+Thank you for the review.
 
+On Thu, Aug 6, 2020 at 5:27 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, Aug 03, 2020 at 03:31:45PM +0100, Lad Prabhakar wrote:
+> > During testing this sensor on iW-RainboW-G21D-Qseven platform in 8-bit DVP
+> > mode with rcar-vin bridge noticed the capture worked fine for the first run
+> > (with yavta), but for subsequent runs the bridge driver waited for the
+> > frame to be captured. Debugging further noticed the data lines were
+> > enabled/disabled in stream on/off callback and dumping the register
+> > contents 0x3017/0x3018 in ov5640_set_stream_dvp() reported the correct
+> > values, but yet frame capturing failed.
+>
+> That's pretty weird, I wonder if that's not an issue in the bridge, as
+> I expect someone tryed to capture more than 1 image in DVP mode with
+> this driver already.
+>
+I did try the bridge driver with an ov7725 sensor and it works fine in
+both the modes (DVP and BT656).
 
-cppcheck warnings: (new ones prefixed by >>)
+> I didn't get from your commit message if you have been able to
+> identify where the issue is. You said register values are correct, but
+> did you try to plug a scope and see if data are actually put on the
+> bus ? Does this happen with full parallel too or BT.656 only ?
+>
+unfortunately I didn't scope the pins, but this issue happened in both
+the modes. And with this patch it improves handling the sensor in
+s_stream call.
 
->> drivers/net/ethernet/pensando/ionic/ionic_txrx.c:608:3: warning: Variable 'done' is modified but its new value is never used. [unreadVariable]
-     done++;
-     ^
+Cheers,
+Prabhakar
 
-# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f9c00e2cf258d215a1ed2a7b2ae5b91ac2f29582
-git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-git remote update linus
-git checkout f9c00e2cf258d215a1ed2a7b2ae5b91ac2f29582
-vim +/done +608 drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-
-0f3154e6bcb3549 Shannon Nelson 2019-09-03  595  
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  596  void ionic_tx_empty(struct ionic_queue *q)
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  597  {
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  598  	struct ionic_desc_info *desc_info;
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  599  	int done = 0;
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  600  
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  601  	/* walk the not completed tx entries, if any */
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  602  	while (q->head != q->tail) {
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  603  		desc_info = q->tail;
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  604  		q->tail = desc_info->next;
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  605  		ionic_tx_clean(q, desc_info, NULL, desc_info->cb_arg);
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  606  		desc_info->cb = NULL;
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  607  		desc_info->cb_arg = NULL;
-f9c00e2cf258d21 Shannon Nelson 2020-03-27 @608  		done++;
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  609  	}
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  610  }
-f9c00e2cf258d21 Shannon Nelson 2020-03-27  611  
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
+> >
+> > To get around this issue the following actions are performed for
+> > parallel mode (DVP):
+> > 1: Keeps the sensor in software power down mode and is woken up only in
+> >    ov5640_set_stream_dvp() callback.
+> > 2: Enables data lines in s_power callback
+> > 3: Configures HVP lines in s_power callback instead of configuring
+> >    everytime in ov5640_set_stream_dvp().
+> > 4: Disables MIPI interface.
+> >
+> > Fixes: f22996db44e2d ("media: ov5640: add support of DVP parallel interface")
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> >  drivers/media/i2c/ov5640.c | 321 ++++++++++++++++++++-----------------
+> >  1 file changed, 172 insertions(+), 149 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > index 2fe4a7ac0592..ec444bee2ce9 100644
+> > --- a/drivers/media/i2c/ov5640.c
+> > +++ b/drivers/media/i2c/ov5640.c
+> > @@ -94,6 +94,9 @@
+> >  #define OV5640_REG_SDE_CTRL5         0x5585
+> >  #define OV5640_REG_AVG_READOUT               0x56a1
+> >
+> > +#define OV5640_SOFTWARE_PWDN         0x42
+> > +#define OV5640_SOFTWARE_WAKEUP               0x02
+> > +
+> >  enum ov5640_mode_id {
+> >       OV5640_MODE_QCIF_176_144 = 0,
+> >       OV5640_MODE_QVGA_320_240,
+> > @@ -274,7 +277,7 @@ static inline struct v4l2_subdev *ctrl_to_sd(struct v4l2_ctrl *ctrl)
+> >  /* YUV422 UYVY VGA@30fps */
+> >  static const struct reg_value ov5640_init_setting_30fps_VGA[] = {
+> >       {0x3103, 0x11, 0, 0}, {0x3008, 0x82, 0, 5}, {0x3008, 0x42, 0, 0},
+> > -     {0x3103, 0x03, 0, 0}, {0x3017, 0x00, 0, 0}, {0x3018, 0x00, 0, 0},
+> > +     {0x3103, 0x03, 0, 0},
+> >       {0x3630, 0x36, 0, 0},
+> >       {0x3631, 0x0e, 0, 0}, {0x3632, 0xe2, 0, 0}, {0x3633, 0x12, 0, 0},
+> >       {0x3621, 0xe0, 0, 0}, {0x3704, 0xa0, 0, 0}, {0x3703, 0x5a, 0, 0},
+> > @@ -1120,6 +1123,11 @@ static int ov5640_load_regs(struct ov5640_dev *sensor,
+> >               val = regs->val;
+> >               mask = regs->mask;
+> >
+> > +             /* remain in power down mode for DVP */
+> > +             if (regs->reg_addr == OV5640_REG_SYS_CTRL0 && val == OV5640_SOFTWARE_WAKEUP &&
+> > +                 sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY)
+> > +                     continue;
+> > +
+> >               if (mask)
+> >                       ret = ov5640_mod_reg(sensor, reg_addr, mask, val);
+> >               else
+> > @@ -1210,96 +1218,8 @@ static int ov5640_set_autogain(struct ov5640_dev *sensor, bool on)
+> >
+> >  static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
+> >  {
+> > -     int ret;
+> > -     unsigned int flags = sensor->ep.bus.parallel.flags;
+> > -     u8 pclk_pol = 0;
+> > -     u8 hsync_pol = 0;
+> > -     u8 vsync_pol = 0;
+> > -
+> > -     /*
+> > -      * Note about parallel port configuration.
+> > -      *
+> > -      * When configured in parallel mode, the OV5640 will
+> > -      * output 10 bits data on DVP data lines [9:0].
+> > -      * If only 8 bits data are wanted, the 8 bits data lines
+> > -      * of the camera interface must be physically connected
+> > -      * on the DVP data lines [9:2].
+> > -      *
+> > -      * Control lines polarity can be configured through
+> > -      * devicetree endpoint control lines properties.
+> > -      * If no endpoint control lines properties are set,
+> > -      * polarity will be as below:
+> > -      * - VSYNC:     active high
+> > -      * - HREF:      active low
+> > -      * - PCLK:      active low
+> > -      */
+> > -
+> > -     if (on) {
+> > -             /*
+> > -              * configure parallel port control lines polarity
+> > -              *
+> > -              * POLARITY CTRL0
+> > -              * - [5]:       PCLK polarity (0: active low, 1: active high)
+> > -              * - [1]:       HREF polarity (0: active low, 1: active high)
+> > -              * - [0]:       VSYNC polarity (mismatch here between
+> > -              *              datasheet and hardware, 0 is active high
+> > -              *              and 1 is active low...)
+> > -              */
+> > -             if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> > -                     pclk_pol = 1;
+> > -             if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> > -                     hsync_pol = 1;
+> > -             if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> > -                     vsync_pol = 1;
+> > -
+> > -             ret = ov5640_write_reg(sensor,
+> > -                                    OV5640_REG_POLARITY_CTRL00,
+> > -                                    (pclk_pol << 5) |
+> > -                                    (hsync_pol << 1) |
+> > -                                    vsync_pol);
+> > -
+> > -             if (ret)
+> > -                     return ret;
+> > -     }
+> > -
+> > -     /*
+> > -      * powerdown MIPI TX/RX PHY & disable MIPI
+> > -      *
+> > -      * MIPI CONTROL 00
+> > -      * 4:    PWDN PHY TX
+> > -      * 3:    PWDN PHY RX
+> > -      * 2:    MIPI enable
+> > -      */
+> > -     ret = ov5640_write_reg(sensor,
+> > -                            OV5640_REG_IO_MIPI_CTRL00, on ? 0x18 : 0);
+> > -     if (ret)
+> > -             return ret;
+> > -
+> > -     /*
+> > -      * enable VSYNC/HREF/PCLK DVP control lines
+> > -      * & D[9:6] DVP data lines
+> > -      *
+> > -      * PAD OUTPUT ENABLE 01
+> > -      * - 6:         VSYNC output enable
+> > -      * - 5:         HREF output enable
+> > -      * - 4:         PCLK output enable
+> > -      * - [3:0]:     D[9:6] output enable
+> > -      */
+> > -     ret = ov5640_write_reg(sensor,
+> > -                            OV5640_REG_PAD_OUTPUT_ENABLE01,
+> > -                            on ? 0x7f : 0);
+> > -     if (ret)
+> > -             return ret;
+> > -
+> > -     /*
+> > -      * enable D[5:0] DVP data lines
+> > -      *
+> > -      * PAD OUTPUT ENABLE 02
+> > -      * - [7:2]:     D[5:0] output enable
+> > -      */
+> > -     return ov5640_write_reg(sensor,
+> > -                             OV5640_REG_PAD_OUTPUT_ENABLE02,
+> > -                             on ? 0xfc : 0);
+> > +     return ov5640_write_reg(sensor, OV5640_REG_SYS_CTRL0, on ?
+> > +                             OV5640_SOFTWARE_WAKEUP : OV5640_SOFTWARE_PWDN);
+> >  }
+> >
+> >  static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
+> > @@ -2001,6 +1921,159 @@ static void ov5640_set_power_off(struct ov5640_dev *sensor)
+> >       clk_disable_unprepare(sensor->xclk);
+> >  }
+> >
+> > +static int ov5640_set_mipi(struct ov5640_dev *sensor, bool on)
+> > +{
+> > +     int ret = 0;
+> > +
+> > +     if (!on) {
+> > +             /* Reset MIPI bus settings to their default values. */
+> > +             ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x58);
+> > +             ov5640_write_reg(sensor, OV5640_REG_MIPI_CTRL00, 0x04);
+> > +             ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT00, 0x00);
+> > +
+> > +             return ret;
+> > +     }
+> > +
+> > +     /*
+> > +      * Power up MIPI HS Tx and LS Rx; 2 data lanes mode
+> > +      *
+> > +      * 0x300e = 0x40
+> > +      * [7:5] = 010  : 2 data lanes mode (see FIXME note in
+> > +      *                "ov5640_set_stream_mipi()")
+> > +      * [4] = 0      : Power up MIPI HS Tx
+> > +      * [3] = 0      : Power up MIPI LS Rx
+> > +      * [2] = 0      : MIPI interface disabled
+> > +      */
+> > +     ret = ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x40);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * Gate clock and set LP11 in 'no packets mode' (idle)
+> > +      *
+> > +      * 0x4800 = 0x24
+> > +      * [5] = 1      : Gate clock when 'no packets'
+> > +      * [2] = 1      : MIPI bus in LP11 when 'no packets'
+> > +      */
+> > +     ret = ov5640_write_reg(sensor, OV5640_REG_MIPI_CTRL00, 0x24);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * Set data lanes and clock in LP11 when 'sleeping'
+> > +      *
+> > +      * 0x3019 = 0x70
+> > +      * [6] = 1      : MIPI data lane 2 in LP11 when 'sleeping'
+> > +      * [5] = 1      : MIPI data lane 1 in LP11 when 'sleeping'
+> > +      * [4] = 1      : MIPI clock lane in LP11 when 'sleeping'
+> > +      */
+> > +     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT00, 0x70);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Give lanes some time to coax into LP11 state. */
+> > +     usleep_range(500, 1000);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ov5640_set_dvp(struct ov5640_dev *sensor, bool on)
+> > +{
+> > +     unsigned int flags = sensor->ep.bus.parallel.flags;
+> > +     u8 pclk_pol = 0;
+> > +     u8 hsync_pol = 0;
+> > +     u8 vsync_pol = 0;
+> > +     int ret = 0;
+> > +
+> > +     if (!on) {
+> > +             /* Reset settings to their default values. */
+> > +             ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x58);
+> > +             ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00, 0x20);
+> > +             ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01, 0x00);
+> > +             ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE02, 0x00);
+> > +
+> > +             return ret;
+> > +     }
+> > +
+> > +     /*
+> > +      * Note about parallel port configuration.
+> > +      *
+> > +      * When configured in parallel mode, the OV5640 will
+> > +      * output 10 bits data on DVP data lines [9:0].
+> > +      * If only 8 bits data are wanted, the 8 bits data lines
+> > +      * of the camera interface must be physically connected
+> > +      * on the DVP data lines [9:2].
+> > +      *
+> > +      * Control lines polarity can be configured through
+> > +      * devicetree endpoint control lines properties.
+> > +      * If no endpoint control lines properties are set,
+> > +      * polarity will be as below:
+> > +      * - VSYNC:     active high
+> > +      * - HREF:      active low
+> > +      * - PCLK:      active low
+> > +      */
+> > +     /*
+> > +      * configure parallel port control lines polarity
+> > +      *
+> > +      * POLARITY CTRL0
+> > +      * - [5]:       PCLK polarity (0: active low, 1: active high)
+> > +      * - [1]:       HREF polarity (0: active low, 1: active high)
+> > +      * - [0]:       VSYNC polarity (mismatch here between
+> > +      *              datasheet and hardware, 0 is active high
+> > +      *              and 1 is active low...)
+> > +      */
+> > +     if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> > +             pclk_pol = 1;
+> > +     if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> > +             hsync_pol = 1;
+> > +     if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> > +             vsync_pol = 1;
+> > +
+> > +     ret = ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00,
+> > +                            (pclk_pol << 5) | (hsync_pol << 1) | vsync_pol);
+> > +
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * powerdown MIPI TX/RX PHY & disable MIPI
+> > +      *
+> > +      * MIPI CONTROL 00
+> > +      * 4:    PWDN PHY TX
+> > +      * 3:    PWDN PHY RX
+> > +      * 2:    MIPI enable
+> > +      */
+> > +     ret = ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x18);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * enable VSYNC/HREF/PCLK DVP control lines
+> > +      * & D[9:6] DVP data lines
+> > +      *
+> > +      * PAD OUTPUT ENABLE 01
+> > +      * - 6:         VSYNC output enable
+> > +      * - 5:         HREF output enable
+> > +      * - 4:         PCLK output enable
+> > +      * - [3:0]:     D[9:6] output enable
+> > +      */
+> > +     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01, 0x7f);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * enable D[5:0] DVP data lines
+> > +      *
+> > +      * PAD OUTPUT ENABLE 02
+> > +      * - [7:2]:     D[5:0] output enable
+> > +      */
+> > +     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE02, 0xfc);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+> >  {
+> >       int ret = 0;
+> > @@ -2013,67 +2086,17 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+> >               ret = ov5640_restore_mode(sensor);
+> >               if (ret)
+> >                       goto power_off;
+> > +     }
+> >
+> > -             /* We're done here for DVP bus, while CSI-2 needs setup. */
+> > -             if (sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY)
+> > -                     return 0;
+> > -
+> > -             /*
+> > -              * Power up MIPI HS Tx and LS Rx; 2 data lanes mode
+> > -              *
+> > -              * 0x300e = 0x40
+> > -              * [7:5] = 010  : 2 data lanes mode (see FIXME note in
+> > -              *                "ov5640_set_stream_mipi()")
+> > -              * [4] = 0      : Power up MIPI HS Tx
+> > -              * [3] = 0      : Power up MIPI LS Rx
+> > -              * [2] = 0      : MIPI interface disabled
+> > -              */
+> > -             ret = ov5640_write_reg(sensor,
+> > -                                    OV5640_REG_IO_MIPI_CTRL00, 0x40);
+> > -             if (ret)
+> > -                     goto power_off;
+> > -
+> > -             /*
+> > -              * Gate clock and set LP11 in 'no packets mode' (idle)
+> > -              *
+> > -              * 0x4800 = 0x24
+> > -              * [5] = 1      : Gate clock when 'no packets'
+> > -              * [2] = 1      : MIPI bus in LP11 when 'no packets'
+> > -              */
+> > -             ret = ov5640_write_reg(sensor,
+> > -                                    OV5640_REG_MIPI_CTRL00, 0x24);
+> > -             if (ret)
+> > -                     goto power_off;
+> > -
+> > -             /*
+> > -              * Set data lanes and clock in LP11 when 'sleeping'
+> > -              *
+> > -              * 0x3019 = 0x70
+> > -              * [6] = 1      : MIPI data lane 2 in LP11 when 'sleeping'
+> > -              * [5] = 1      : MIPI data lane 1 in LP11 when 'sleeping'
+> > -              * [4] = 1      : MIPI clock lane in LP11 when 'sleeping'
+> > -              */
+> > -             ret = ov5640_write_reg(sensor,
+> > -                                    OV5640_REG_PAD_OUTPUT00, 0x70);
+> > -             if (ret)
+> > -                     goto power_off;
+> > -
+> > -             /* Give lanes some time to coax into LP11 state. */
+> > -             usleep_range(500, 1000);
+> > -
+> > -     } else {
+> > -             if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
+> > -                     /* Reset MIPI bus settings to their default values. */
+> > -                     ov5640_write_reg(sensor,
+> > -                                      OV5640_REG_IO_MIPI_CTRL00, 0x58);
+> > -                     ov5640_write_reg(sensor,
+> > -                                      OV5640_REG_MIPI_CTRL00, 0x04);
+> > -                     ov5640_write_reg(sensor,
+> > -                                      OV5640_REG_PAD_OUTPUT00, 0x00);
+> > -             }
+> > +     if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
+> > +             ret = ov5640_set_mipi(sensor, on);
+> > +     else
+> > +             ret = ov5640_set_dvp(sensor, on);
+> > +     if (ret)
+> > +             goto power_off;
+> >
+> > +     if (!on)
+> >               ov5640_set_power_off(sensor);
+> > -     }
+> >
+> >       return 0;
+> >
+> > --
+> > 2.17.1
+> >
