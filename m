@@ -1,111 +1,92 @@
-Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A50C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 23:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1866F206CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 23:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B0A20823
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:01:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6CnF3IF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=vfemail.net header.i=@vfemail.net header.b="pOFgYIUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgHEX5s (ORCPT
+        id S1726293AbgHFABl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 19:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgHEX5p (ORCPT
+        Wed, 5 Aug 2020 20:01:41 -0400
+Received: from nl101-3.vfemail.net ([149.210.219.33]:38006 "EHLO
+        nl101-3.vfemail.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgHFABk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 19:57:45 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028C8C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 16:57:44 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id d4so5534711pjx.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 16:57:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=4ifd5xwQw/fF71sDAVj0NW6xVjjKI1lLoO8YrlRE1c0=;
-        b=W6CnF3IFM1qV4vtyI4l+BsHliSAapqyzRfwP5beGaDhXjDfZFPIU6UStOC92nizOTo
-         aWkDKwkFohx7OKn2mg8i/RSJrfwtBoR5s6iBJWAGa9yjAqbJVL7kn4mG5Ax8Ih/a0UGL
-         b1ZjUdMSZyOOwYExEooYKVQan12BTOgKsSKo0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=4ifd5xwQw/fF71sDAVj0NW6xVjjKI1lLoO8YrlRE1c0=;
-        b=pwLoudeSUjtBdMbEHGiplvjn0LIw4MXUtP8Nr4xIwVvmzpBr+Wy7k3qVvRz6oaHTz5
-         toDGFgmt9xkTeP51DAagygnBtL/8w6czZxIV8siFe/R6lzT6A3JpUIKLTIS6MeBgCZLs
-         YoW/we8RWv2mMIyOFH/Dal49YiMh89yrlPoKP8X5cRyGUiAvl9Xz2tS1cQzDLJgHlRas
-         MNWkwrhTs9ZFOsWoFDVSes9CW/APmPRjgsE9sHlw0WYd57vBtzC8+eefqZ2roLTkjvbr
-         UR5bXxB6pPgf1j1gKPuhUc7jIZi4/KBQnKnSoZpLVgt429vL5pnec9QdQLqDvjVnZTWI
-         9v4w==
-X-Gm-Message-State: AOAM531pVk0+Ac2sWUf0hlA0wM4/9A6IptQPLReP+f/WYKNX2GX5Fu41
-        EnzUwcbnGrQvhwm3gdC6C6JP+A==
-X-Google-Smtp-Source: ABdhPJxdV4c+ByHIoyl3UTQ5JOq/H3l5NMy7snS9vWIKQev3DSMuRd8Yi8bmuJJTKYnajrrlgKX1jg==
-X-Received: by 2002:a17:90a:f68a:: with SMTP id cl10mr5578673pjb.40.1596671864307;
-        Wed, 05 Aug 2020 16:57:44 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id go12sm4214725pjb.2.2020.08.05.16.57.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 16:57:43 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 5 Aug 2020 20:01:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=vfemail.net; h=date:from
+        :to:cc:subject:message-id:in-reply-to:references:mime-version
+        :content-type:content-transfer-encoding; s=2018; bh=cBlIM0iIpgAS
+        X6jPln2dXnKmSot3xYQw5rrzWqdwnv0=; b=pOFgYIUDmYq69NxF5liShlVHkkmJ
+        9VKnD/ITItMtUMg8ZrgAaI428h29oPUGJ6vOjpU7qupJ2l4UcbiXgb5Hhy5z9kl+
+        qIHXF3/Bt4v2qq0lXjE7zKY0oysJsJzuyCPxxd0aYew9v4UtGWq2hazMN9t3Z5P1
+        ceIdwo7XYnsA4BI=
+Received: (qmail 59456 invoked from network); 6 Aug 2020 00:01:40 -0000
+Received: by simscan 1.4.0 ppid: 59351, pid: 59450, t: 0.1964s
+         scanners:none
+Received: from unknown (HELO d3d3MTkyLnZmZW1haWwubmV0) (aGdudGt3aXNAdmZlbWFpbC5uZXQ=@MTkyLjE2OC4xLjE5Mg==)
+  by nl101.vfemail.net with ESMTPA; 6 Aug 2020 00:01:40 -0000
+Date:   Wed, 5 Aug 2020 20:01:29 -0400
+From:   Hgntkwis@vfemail.net
+To:     torvalds@linux-foundation.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        reiserfs-devel@vger.kernel.org
+Subject: Re: PROBLEM: IO lockup on reiserfs FS.
+Message-ID: <20200805200129.0ce62f36@Phenom-II-x6.niklas.com>
+In-Reply-To: <CAHk-=wiGsj_R7pspFegPgtT4on1iYk5MmBz8uZZ3338EH3HO+Q@mail.gmail.com>
+References: <20200728222041.5d88b2e1@Phenom-II-x6.niklas.com>
+ <20200728223440.0fd8681e@Phenom-II-x6.niklas.com>
+ <20200805125317.10bf1d34@Phenom-II-x6.niklas.com>
+ <CAHk-=wiGsj_R7pspFegPgtT4on1iYk5MmBz8uZZ3338EH3HO+Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <98050322-9ba6-303c-4ca4-07baa56ebd80@codeaurora.org>
-References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org> <1596541616-27688-2-git-send-email-rnayak@codeaurora.org> <159660954201.1360974.5176671532597020049@swboyd.mtv.corp.google.com> <98050322-9ba6-303c-4ca4-07baa56ebd80@codeaurora.org>
-Subject: Re: [PATCH 1/3] dt-bindings: power: Introduce 'assigned-performance-states' property
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-To:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org
-Date:   Wed, 05 Aug 2020 16:57:41 -0700
-Message-ID: <159667186194.1360974.10053425753327700919@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2020-08-05 01:13:06)
->=20
-> On 8/5/2020 12:09 PM, Stephen Boyd wrote:
-> > Quoting Rajendra Nayak (2020-08-04 04:46:54)
-> >=20
-> >> +       device's performance, also known as DVFS techniques. The list =
-of performance
-> >> +       state values should correspond to the list of power domains sp=
-ecified as part
-> >> +       of the power-domains property.
-> >=20
-> > This is different than assigned-clock-rates. I guess that's OK because
-> > we don't need to assign parents with more specifiers. Maybe it should be
-> > worded more strongly to clearly state that each cell corresponds to one
-> > power domain? And that it should match the opp-level inside any OPP
-> > table for the power domain?
->=20
-> Sure, I'll reword it to make it clear that we need the same number of cel=
-ls
-> as power-domains, and as you pointed out below that 0 corresponds to not =
-setting
-> anything.
->=20
-> For the matching of opp-level inside the OPP table of the power-domain, I=
- don't
-> think from the power-domain bindings we limit providers with only OPP tab=
-les to
-> support performance states? It could be just a range that the provider ma=
-nages
-> internally?
+On Wed, 5 Aug 2020 12:51:41 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> On Wed, Aug 5, 2020 at 9:53 AM <Hgntkwis@vfemail.net> wrote:
+> >
+> > It's been over 1 week since I sent this into the reiserfs-devel
+> > mailing list. I'm escalating this as the kernel docs recommend.
+> > I'm still willing to help debug and test a fix for this problem.  
+> 
+> The thing is, you're using an ancient 4.14 kernel, 
 
-Ok. The example made it match so maybe that can be clarified as well
-that it doesn't need to match any OPP table performance state.
+Sorry, I didn't realize kernel development went that fast.
+I did try to go to the 5.X series, but the AMDGPU drivers don't work on
+my SI card anymore (I need to bisect which takes time and many re-boots
+to find the problematic commit).
+I'll try the Radeon-SI driver and see if I can reproduce this reliably.
+
+> and a filesystem
+> that isn't really maintained any more. You'll find very few people
+> interested in trying to debug that combination.
+> 
+> You *might* have more luck with a more modern kernel, but even then
+> ... reiserfs?
+> 
+>               Linus
+> 
+
+Why does no one (I've met others who share a similar sentiment), like
+reiserfs? I'm not looking for fight, I'm incredulous. It's a great FS
+that survives oops-es, power failures, and random crashes very very well.
+It's the only FLOSS FS with tail packing.
+
+Thanks,
+David
