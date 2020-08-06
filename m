@@ -2,292 +2,116 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5A32311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20172311B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Et4UyxEh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Os3fgVnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgHFRJG (ORCPT
+        id S1728473AbgHFRJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45732 "EHLO
+        Thu, 6 Aug 2020 13:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729960AbgHFRGI (ORCPT
+        with ESMTP id S1730029AbgHFRGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:06:08 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0FAC008692
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:28:54 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id m22so7669480eje.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:28:54 -0700 (PDT)
+        Thu, 6 Aug 2020 13:06:01 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C80EC0A3BD0;
+        Thu,  6 Aug 2020 10:00:28 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 2so41464103qkf.10;
+        Thu, 06 Aug 2020 10:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=8dJRX0Igl8Nzz5CO3GKFYKT9330jHgO3CL9EwFxbfPY=;
-        b=Et4UyxEhb4ruYaDwnjt8+KPZrq/MFw2cICGFKe8rbg1pXlR+HHtzHMoSEgtnFbWhyU
-         oO7c1P0pwaTs0mUWogLImAdsgBwbePBedWGjXHb+kEIBlevGB2o01x2tle+6oNN7Ne3z
-         X0kABG46i+CXilTn3kpGonGXNkRilg4VYfJkMq3i+HF0v/LWF+HZYzq78yQo4Lx9fgav
-         qIMFgp1Cg2K7vBH2DRyFdZcFa2RvxJG+yfVJPpCcdMlqezRcrf1A1cdSVpAKI13eHGUs
-         hTsvrcBK4klJThdTnXVOA/yZE02qyEgx57ygmx0QqxEo7BPljTAUffEXUcGLohS1rrXa
-         nSVg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1Z5fSMAgfU80dT8D8hmuYu346Oxtx8DJQl6whGIjWhw=;
+        b=Os3fgVnJ6scXpj5/EgxXOxGBSpATTMOfUmm03Cec1/fiQgpB9j138nicy3/BghB2Zl
+         dNDMlGxmMpCu7eC73KpiVbkhCQL6x2IuV9bN24sicJ/SBchboHxOjw3T8+zUZ1tW5ZZr
+         Qgykli1ZUhQaEXca1VLv6c/Y8bZJExU5tEnSCXdDfrMgHfW8ugZdUXGNrqcJCokt9eox
+         k+UAPtuAdqHtKQhCDYRcwMH+mCBNeLVX2LPGuAZkXw6PF5ige3jNg8DUVZHxDpzVRhRa
+         JYZpU94c3ZKgd8ILNPJRWCcQCheE1Dv8lAvPdViMqqU+VWuBSo6Qzm0uOfvQfJqt+H9s
+         NbLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8dJRX0Igl8Nzz5CO3GKFYKT9330jHgO3CL9EwFxbfPY=;
-        b=pf1q7nQmrtftW64uG0QrGop+k8SNOd3AXNQPYXVxoN+BoB52aUv/t6V9AwCihyYaFo
-         HacwNQqWrpGi1mVvSVlgvXAX/MvnTBBurU3gBxl5ti4fKMCRDD3JzPaTF6IAAUuLejPT
-         696N6u1FpDwwy2ES+7nMnN5P9uORd6kWNZfwWHuj2JqVPkgMoPFxmp9EF54aPyM02D4M
-         76iKVtmEs/wYENUG06eu24iHqJmpxjI/++ULOSjdN0G6WAWI4n5z12v/eZniSS88OJNm
-         UM6rWzTd9jWQDV9wI78vMDaOdPgDoOSZBgKPCrEYFBfTWNqaJqeHKhzr3S/ocf5cDNHr
-         2wLg==
-X-Gm-Message-State: AOAM532jo55pt21Kv9HhVlf1W7eIvookGEL2XRqi3OLEcnnoCieEvyp8
-        TYY1CH9IT3XJ2HUyKVw8t4x/eGhyxmAJP7sxmvrRjA==
-X-Google-Smtp-Source: ABdhPJyJ6LKnK4sE4FKAWZMO5lrML4pA9T6kL3O1Se2tGp1Pmv8J4aqcA9YOHsfaPuOVZxolrRJlCDcA5wi4VNs9FzU=
-X-Received: by 2002:a17:906:7fc9:: with SMTP id r9mr4742298ejs.407.1596727732562;
- Thu, 06 Aug 2020 08:28:52 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1Z5fSMAgfU80dT8D8hmuYu346Oxtx8DJQl6whGIjWhw=;
+        b=EZIJFnOBOooYVEaJor2z+/7NPfV3bYWZhOFn+mT7xQuV7G/H/XiUun9ctYwglVE1IH
+         wan9vuTtnJQkBluK8oNiHMAZmvTcXsO6aNXTJOJS+51R0Na/JqosXr4EtuOgdZbYGbVO
+         kET1tdxevk39wAvtUqxFl7neEsKaBlskhzhMeUQ8C1QjuTDU50vaSxmKykrafLLAP1UV
+         P66hjqWXlr3LLYGhM/A+u68C/P+HzB+cYy+J2jfOklcbKZkEKJVRQbJmW91CCDMTRaM8
+         MZXB8TXSJDxUSTSZdN57YD0K8Y3zgQllVvs883awJMYSCc0an6xkbRIzjHEJQpX4YNeb
+         LW1w==
+X-Gm-Message-State: AOAM531xuuHf7MYkyuLqyaD0xx1rsvgjf512B2ubw5is3HBamcyS5rVI
+        9cGULELGOCgYNQh3ry//LE76a/wG
+X-Google-Smtp-Source: ABdhPJwS8XEe4hwORTMLv+asnKNIB0/3Z3hbF6JNKH4+0bzy8ImZQfKV5yV86CKSqU60CbT1mJZBlQ==
+X-Received: by 2002:a05:620a:20ca:: with SMTP id f10mr9352219qka.0.1596733227427;
+        Thu, 06 Aug 2020 10:00:27 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:7c83:3cd:b611:a456? ([2601:282:803:7700:7c83:3cd:b611:a456])
+        by smtp.googlemail.com with ESMTPSA id a21sm4222575qkg.54.2020.08.06.10.00.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 10:00:26 -0700 (PDT)
+Subject: Re: [RFC PATCH 1/3] selftests: Add VRF icmp error route lookup test
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        David Ahern <dsa@cumulusnetworks.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Jeanson <mjeanson@efficios.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <42cb74c8-9391-cf4c-9e57-7a1d464f8706@gmail.com>
+Date:   Thu, 6 Aug 2020 11:00:24 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-From:   Raul Rangel <rrangel@google.com>
-Date:   Thu, 6 Aug 2020 09:28:41 -0600
-Message-ID: <CAHQZ30ANTeM-pgdYZ4AbgxsnevBJnJgKZ1Kg+Uy8oSXZUvz=og@mail.gmail.com>
-Subject: PS/2 + i8042 intermixing commands
-To:     linux-input@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "S, Shirish" <Shirish.S@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm debugging a resume issue on one of our devices using the v5.4
-kernel. The device has a PS/2 atkbd and a PS/2 touchpad. It looks like
-PS/2 commands are getting intermingled with i8042 commands. This
-results in our keyboard controller thinking it got some invalid data.
-This usually happens 1 out of 1500 resumes.
+On 7/29/20 3:12 PM, Mathieu Desnoyers wrote:
+> From: Michael Jeanson <mjeanson@efficios.com>
+> 
+> The objective is to check that the incoming vrf routing table is selected
+> to send an ICMP error back to the source when the ttl of a packet reaches 1
+> while it is forwarded between different vrfs.
+> 
+> The first test sends a ping with a ttl of 1 from h1 to h2 and parses the
+> output of the command to check that a ttl expired error is received.
+> 
+> [This may be flaky, I'm open to suggestions of a more robust approch.]
+> 
+> The second test runs traceroute from h1 to h2 and parses the output to check
+> for a hop on r1.
+> 
+> Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+> Cc: David Ahern <dsa@cumulusnetworks.com>
 
-Here is the log from my keyboard controller on a good resume.
-
-I've added some comments to make it easier to follow:
-> <-- i8042_controller_resume
-> [KB recv cmd: 0xaa] # CMD #1
->
-> [KB recv cmd: 0x60] # CMD #2
-> [ACPI kblight 0]
-> [KB recv data: 0x70]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x70]
-> [KB set CTR_RAM(0x00)=0x70 (old:0x70)]
->
-> <- i8042_enable_aux_port
-> [KB recv cmd: 0x60] # CMD #3
-> [KB recv data: 0x52]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x52]
-> [KB set CTR_RAM(0x00)=0x52 (old:0x70)]
-> [AUX IRQ enable]
-> [AUX enabled]
->
-> <- i8042_enable_kbd_port
-> [KB recv cmd: 0x60] # CMD #4
-> [KB recv data: 0x43]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x43]
-> [KB set CTR_RAM(0x00)=0x43 (old:0x52)]
-> [KB IRQ enable]
-> [KB enable]
->
-> <- atkbd_reconnect->atkbd_probe
-> [KB recv data: 0xf2] <- ATKBD_CMD_GETID # CMD #5
-> <- atkbd_deactivate
-> [KB recv data: 0xf5] <- ATKBD_CMD_RESET_DIS # CMD #6
-> [KS disable]
-> [KB Clear Buffer]
->
-> <- atkbd_reconnect->atkbd_set_leds
-> [KB recv data: 0xed] # CMD #7
-> [KB recv data: 0x00]
-> [KB eaten by STATE_SETLEDS]
->
-> <- atkbd_reconnect->atkbd_set_repeat_rate
-> [KB recv data: 0xf3] # CMD #8
-> [KB recv data: 0x00]
-> [KB eaten by STATE_SETREP: 0x00]
->
-> <- atkbd_reconnect->atkbd_activate
-> [KB recv data: 0xf4] <- ATKBD_CMD_ENABLE # CMD #9
-> [KS enable]
-> [KB Clear Buffer]
->
-> <- atkbd_event_work->atkbd_set_leds
-> [KB recv data: 0xed] # CMD #10
-> [KB recv data: 0x00]
-> [KB eaten by STATE_SETLEDS]
->
-> <- atkbd_event_work->atkbd_set_repeat_rate
-> [KB recv data: 0xf3] # CMD #11
-> [KB recv data: 0x00]
-> [KB eaten by STATE_SETREP: 0x00]
->
-> <-- trackpoint_reconnect->trackpoint_start_protocol
-> [KB recv cmd: 0xd4] <- I8042_CMD_AUX_SEND # CMD #12
-> [KB recv data: 0xe1] <- TP_READ_ID
-> [STATE_SEND_TO_MOUSE: 0xe1]
->
-> <- Is this i8042_port_close?
-> [KB recv cmd: 0x60] # CMD #13
-> [KB recv data: 0x41]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x41]
-> [KB set CTR_RAM(0x00)=0x41 (old:0x43)]
-> [AUX IRQ disable]
-> [KB recv cmd: 0x60] # CMD #14
-> [KB recv data: 0x43]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x43]
-> [KB set CTR_RAM(0x00)=0x43 (old:0x41)]
-> [AUX IRQ enable]
->
-> [KB recv cmd: 0xd4] # CMD #15
-> [KB recv data: 0xf2]
-> [STATE_SEND_TO_MOUSE: 0xf2]
+Update the address to dsahern@kernel.org
 
 
-Here is the log on the bad resume:
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> ---
+>  tools/testing/selftests/net/Makefile          |   1 +
+>  .../selftests/net/vrf_icmp_error_route.sh     | 461 ++++++++++++++++++
+>  2 files changed, 462 insertions(+)
+>  create mode 100755 tools/testing/selftests/net/vrf_icmp_error_route.sh
+> 
 
-> <-- i8042_controller_resume
-> [KB recv cmd: 0xaa] # CMD #1
->
-> [KB recv cmd: 0x60] # CMD #2
-> [ACPI kblight 0]
-> [KB recv data: 0x70]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x70]
-> [KB set CTR_RAM(0x00)=0x70 (old:0x70)]
->
-> <- i8042_enable_aux_port
-> [KB recv cmd: 0x60] # CMD #3
-> [KB recv data: 0x52]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x52]
-> [KB set CTR_RAM(0x00)=0x52 (old:0x70)]
-> [AUX IRQ enable]
-> [AUX enabled]
->
-> <- i8042_enable_kbd_port
-> [KB recv cmd: 0x60] # CMD #4
-> [KB recv data: 0x43]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x43]
-> [KB set CTR_RAM(0x00)=0x43 (old:0x52)]
-> [KB IRQ enable]
-> [KB enable]
->
-> <- atkbd_reconnect->atkbd_probe
-> [KB recv data: 0xf2] <- ATKBD_CMD_GETID # CMD #5
-> <- atkbd_deactivate
-> [KB recv data: 0xf5] <- ATKBD_CMD_RESET_DIS # CMD #6
-> [KS disable]
-> [KB Clear Buffer]
->
-> <- atkbd_reconnect->atkbd_set_leds
-> [KB recv data: 0xed] # CMD #7
-> [KB recv data: 0x00]
-> [KB eaten by STATE_SETLEDS]
->
-> <- atkbd_reconnect->atkbd_set_repeat_rate
-> [KB recv data: 0xf3] # CMD #8
-> [KB recv data: 0x00]
-> [KB eaten by STATE_SETREP: 0x00]
->
-> <- atkbd_reconnect->atkbd_activate
-> [KB recv data: 0xf4] <- ATKBD_CMD_ENABLE # CMD #9
-> [KS enable]
-> [KB Clear Buffer]
->
-> <-- trackpoint_reconnect->trackpoint_start_protocol
-> [KB recv cmd: 0xd4] <- I8042_CMD_AUX_SEND # CMD #12
-> [KB recv data: 0xe1] <- TP_READ_ID
-> [STATE_SEND_TO_MOUSE: 0xe1]
->
-> <- Is this i8042_port_close?
-> [KB recv cmd: 0x60] # CMD #13
-> [KB recv data: 0x41]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x41]
-> [KB set CTR_RAM(0x00)=0x41 (old:0x43)]
-> [AUX IRQ disable]
->
-> <- atkbd_event_work->atkbd_set_leds
-> [KB recv data: 0xed] # CMD 10
-> <- Wait, where is the data?
->
-> <- Continuation of i8042_port_close?
-> [KB recv cmd: 0x60] # CMD #14
-> [KB recv data: 0x43]
-> [KB eaten by STATE_WRITE_CMD_BYTE: 0x43]
-> [KB set CTR_RAM(0x00)=0x43 (old:0x41)]
-> [AUX IRQ enable]
->
-> <- Here is the data!
-> [KB recv data: 0x00] # CMD 10 (data)
-> [KB Unsupported i8042 data 0x00]
-> [KB recv data: 0x00] <- Did the host retry?
-> [KB Unsupported i8042 data 0x00]
->
-> <- atkbd_event_work->atkbd_set_repeat_rate
-> [KB recv data: 0xf3] # CMD #11
-> [KB recv data: 0x00]
-> [KB eaten by STATE_SETREP: 0x00]
->
-> [KB recv cmd: 0xd4] # CMD #15
-> [KB recv data: 0xf2]
-> [STATE_SEND_TO_MOUSE: 0xf2]
-
-As you can see CMD #10 starts between #13 and #14, and then completes
-after #14. Is this expected behavior?
-
-I'm not quite sure if #13 and #14 are coming from i8042_port_close. I
-don't have a function trace available, but it seems to fit.
-
-I found this comment:
-/*
- * Writers to AUX and KBD ports as well as users issuing i8042_command
- * directly should acquire i8042_mutex (by means of calling
- * i8042_lock_chip() and i8042_unlock_ship() helpers) to ensure that
- * they do not disturb each other (unfortunately in many i8042
- * implementations write to one of the ports will immediately abort
- * command that is being processed by another port).
- */
-static DEFINE_MUTEX(i8042_mutex);
-
-Does that not mean that i8042_port_close, i8042_enable_kbd_port,
-i8042_enable_aux_port, + any other function that calls i8042_command
-should be taking the lock before calling i8042_command?
-
-Imagine this scenario:
-1) atkbd_set_leds->ps2_command: locks i8042_mutex
-2) __ps2_command->ps2_do_sendbyte->i8042_kbd_write
-2a) locks i8042_lock
-2b) Sends the kbd command
-2c) unlocks i8042_lock
-3) i8042_port_close/i8042_enable_aux_port/etc gets called and then
-calls i8042_command
-3a) locks i8042_lock
-3b) sends 8042 CMD
-3c) sends 8042 DATA
-3d) unlocks i8042_lock
-3e) i8042_command returns
-4)  ps2_do_sendbyte continues sending the kb param via i8042_kbd_write
-4a) locks i8042_lock
-4b) Sends the kbd data <- Original data got stomped on because of the
-8042 CMD in between
-4c) unlocks i8042_lock
-4c) ps2_command unlocks i8042_mutex
-
-Is this an invalid sequence or is our keyboard controller at fault
-because it doesn't support intermingled commands?
-
-Thanks,
-Raul
-
-p.s, sorry for sending twice. I forgot to set the original as plain text :)
+Test seems fine to me. you copied icmp_redirect.sh which is fine but
+please clean up comments and functions not needed for this test.
