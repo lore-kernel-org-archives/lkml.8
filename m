@@ -2,180 +2,188 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E49C43463
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EB8C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 092FE22D02
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AEDC22D04
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgHFJJG (ORCPT
+        id S1729171AbgHFJnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:09:06 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60683 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728489AbgHFJJF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:09:05 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U4ud9kI_1596704940;
-Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0U4ud9kI_1596704940)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 06 Aug 2020 17:09:01 +0800
-Subject: Re: [PATCH] net: core: explicitly call linkwatch_fire_event to speed
- up the startup of network services
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, xlpang@linux.alibaba.com,
-        caspar@linux.alibaba.com, andrew@lunn.ch, edumazet@google.com,
-        jiri@mellanox.com, leon@kernel.org, jwi@linux.ibm.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200801085845.20153-1-wenyang@linux.alibaba.com>
- <20200804.155831.644663742975051162.davem@davemloft.net>
-From:   Wen Yang <wenyang@linux.alibaba.com>
-Message-ID: <41107812-01ba-169e-2f18-69cecec94d8d@linux.alibaba.com>
-Date:   Thu, 6 Aug 2020 17:09:00 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.1.0
+        Thu, 6 Aug 2020 05:43:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:41644 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbgHFJnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:43:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10F511045;
+        Thu,  6 Aug 2020 02:43:14 -0700 (PDT)
+Received: from [10.163.65.54] (unknown [10.163.65.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C8FB3F9AB;
+        Thu,  6 Aug 2020 02:43:10 -0700 (PDT)
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, rafael@kernel.org
+From:   Vikas Kumar <vikas.kumar2@arm.com>
+Subject: [LTP-FAIL][02/21] fs: refactor ksys_umount
+Message-ID: <d28d2235-9b1c-0403-59ca-e57ac5d0460e@arm.com>
+Date:   Thu, 6 Aug 2020 15:13:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200804.155831.644663742975051162.davem@davemloft.net>
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Christoph,
+
+We have seen LTP test(utime06 and umount03) failure in Next Master with 
+commit Id 41525f56e256("fs: refactor ksys_umount").
+I didn't analysis root cause of problem, i am reporting this issue.
+
+---------------------------------------------
+LTP Testcase    Result    Exit Value
+----------------------------------- ---------
+umount03          FAIL           4
+utime06             FAIL           2
+--------------------------------------------
+
+LTP utime06 Fail Log:
+/dev/loop0 is mounted; will not make a filesystem here!
+utime06     0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
+utime06     0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra 
+opts=''
+utime06     1  TBROK  :  tst_mkfs.c:102: utime06.c:122: mkfs.ext2 failed 
+with 1
+utime06     2  TBROK  :  tst_mkfs.c:102: Remaining cases broken
+
+LTP umount03 Fail Log:
+tst_device.c:262: INFO: Using test device LTP_DEV='/dev/loop0'
+tst_mkfs.c:89: INFO: Formatting /dev/loop0 with ext2 opts='' extra opts=''
+mke2fs 1.44.5 (15-Dec-2018)
+tst_test.c:1244: INFO: Timeout per run is 0h 05m 00s
+umount03.c:35: PASS: umount() fails as expected: EPERM (1)
+tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 1...
+tst_device.c:387: INFO: Likely gvfsd-trash is probing newly mounted fs, 
+kill it to speed up tests.
+tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 2...
+tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 3...
+tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 48...
+tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 49...
+tst_device.c:383: INFO: umount('mntpoint') failed with EBUSY, try 50...
+tst_device.c:394: WARN: Failed to umount('mntpoint') after 50 retries
+tst_tmpdir.c:336: WARN: tst_rmdir: rmobj(/scratch/ltp-Lnmh7tbxY6/gx0hJU) 
+failed: remove(/scratch/ltp-Lnmh7tbxY6/gx0hJU/mntpoint) failed; 
+errno=16: EBUSY
+
+Regards,
+
+Vikas
 
 
-�� 2020/8/5 ����6:58, David Miller д��:
-> From: Wen Yang <wenyang@linux.alibaba.com>
-> Date: Sat,  1 Aug 2020 16:58:45 +0800
-> 
->> diff --git a/net/core/link_watch.c b/net/core/link_watch.c
->> index 75431ca..6b9d44b 100644
->> --- a/net/core/link_watch.c
->> +++ b/net/core/link_watch.c
->> @@ -98,6 +98,9 @@ static bool linkwatch_urgent_event(struct net_device *dev)
->>   	if (netif_is_lag_port(dev) || netif_is_lag_master(dev))
->>   		return true;
->>   
->> +	if ((dev->flags & IFF_UP) && dev->operstate == IF_OPER_DOWN)
->> +		return true;
->> +
->>   	return netif_carrier_ok(dev) &&	qdisc_tx_changing(dev);
->>   }
->>   
-> 
-> You're bypassing explicitly the logic here:
-> 
-> 	/*
-> 	 * Limit the number of linkwatch events to one
-> 	 * per second so that a runaway driver does not
-> 	 * cause a storm of messages on the netlink
-> 	 * socket.  This limit does not apply to up events
-> 	 * while the device qdisc is down.
-> 	 */
-> 	if (!urgent_only)
-> 		linkwatch_nextevent = jiffies + HZ;
-> 	/* Limit wrap-around effect on delay. */
-> 	else if (time_after(linkwatch_nextevent, jiffies + HZ))
-> 		linkwatch_nextevent = jiffies;
-> 
-> Something about this isn't right.  We need to analyze what you are seeing,
-> what device you are using, and what systemd is doing to figure out what
-> the right place for the fix.
-> 
-> Thank you.
-> 
+Below Commit ID 41525f56e256 Bisected for This fail:
 
-Thank you very much for your comments.
-We are using virtio_net and the environment is a microvm similar to 
-firecracker.
+     commit 41525f56e2564c2feff4fb2824823900efb3a39f
+     Author: Christoph Hellwig <hch@lst.de>
+     Date:   Tue Jul 21 10:54:34 2020 +0200
 
-Let's briefly explain.
-net_device->operstate is assigned through linkwatch_event, and the call 
-stack is as follows:
-process_one_work
--> linkwatch_event
-  -> __linkwatch_run_queue
-   -> linkwatch_do_dev
-    -> rfc2863_policy
-     -> default_operstate
+     fs: refactor ksys_umount
 
-During the machine startup process, net_device->operstate has the 
-following two-step state changes:
+     Factor out a path_umount helper that takes a struct path * instead 
+of the
+     actual file name.  This will allow to convert the init and devtmpfs 
+code
+     to properly mount based on a kernel pointer instead of relying on the
+     implicit set_fs(KERNEL_DS) during early init.
 
-STEP A: virtnet_probe detects the network card and triggers the 
-execution of linkwatch_fire_event.
-Since linkwatch_nextevent is initialized to 0, linkwatch_work will run.
-And since net_device->state is 6 (__LINK_STATE_PRESENT | 
-__LINK_STATE_NOCARRIER), net_device->operstate will be changed from 
-IF_OPER_UNKNOWN to IF_OPER_DOWN:
-eth0 operstate:0 (IF_OPER_UNKNOWN) -> operstate:2 (IF_OPER_DOWN)
+     Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-virtnet_probe then executes netif_carrier_on to update 
-net_device->state, it will be changed from ��__LINK_STATE_PRESENT | 
-__LINK_STATE_NOCARRIER�� to __LINK_STATE_PRESENT:
-eth0 state: 6 (__LINK_STATE_PRESENT | __LINK_STATE_NOCARRIER) -> 2 
-(__LINK_STATE_PRESENT)
+---
+  fs/namespace.c | 40 ++++++++++++++++++----------------------
+  1 file changed, 18 insertions(+), 22 deletions(-)
 
-STEP B: One second later (because linkwatch_nextevent = jiffies + HZ), 
-linkwatch_work is executed again.
-At this time, since net_device->state is __LINK_STATE_PRESENT, so the 
-net_device->operstate will be changed from IF_OPER_DOWN to IF_OPER_UP:
-eth0 operstate:2 (IF_OPER_DOWN) -> operstate:6 (IF_OPER_UP)
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 6f8234f74bed90..43834b59eff6c3 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1706,36 +1706,19 @@ static inline bool may_mandlock(void)
+  }
+  #endif
 
+-/*
+- * Now umount can handle mount points as well as block devices.
+- * This is important for filesystems which use unnamed block devices.
+- *
+- * We now support a flag for forced unmount like the other 'big iron'
+- * unixes. Our API is identical to OSF/1 to avoid making a mess of AMD
+- */
+-
+-int ksys_umount(char __user *name, int flags)
++static int path_umount(struct path *path, int flags)
+  {
+-    struct path path;
+      struct mount *mnt;
+      int retval;
+-    int lookup_flags = LOOKUP_MOUNTPOINT;
 
-The above state change can be completed within 2 seconds.
-Generally, the machine will load the initramfs first, and do some 
-initialization in the initramfs, which takes some time; then switch_root 
-to the system disk and continue the initialization, which will also take 
-some time, and finally start the systemd-networkd service, bringing 
-link, etc.,
-In this way, the linkwatch_work work queue has enough time to run twice, 
-and the state of net_device->operstate is already IF_OPER_UP,
-So bringing link up quickly returns the following information:
-Aug 06 16:35:55.966121 iZuf6h1kfgutxc3el68z2lZ systemd-networkd[580]: 
-eth0: bringing link up
-...
-Aug 06 16:35:55.990461 iZuf6h1kfgutxc3el68z2lZ systemd-networkd[580]: 
-eth0: flags change: +UP +LOWER_UP +RUNNING
+      if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
+          return -EINVAL;
+-
+      if (!may_mount())
+          return -EPERM;
 
-But we are now using MicroVM, which requires extreme speed to start, 
-bypassing the initramfs and directly booting the trimmed system on the disk.
-systemd-networkd starts in less than 1 second after booting. the STEP B 
-has not been run yet, so it will wait for several hundred milliseconds 
-here, as follows:
-Jul 20 22:00:47.432552 systemd-networkd[210]: eth0: bringing link up
-...
-Jul 20 22:00:47.446108 systemd-networkd[210]: eth0: flags change: +UP 
-+LOWER_UP
-...
-Jul 20 22:00:47.781463 systemd-networkd[210]: eth0: flags change: +RUNNING
+-    if (!(flags & UMOUNT_NOFOLLOW))
+-        lookup_flags |= LOOKUP_FOLLOW;
+-
+-    retval = user_path_at(AT_FDCWD, name, lookup_flags, &path);
+-    if (retval)
+-        goto out;
+-    mnt = real_mount(path.mnt);
++    mnt = real_mount(path->mnt);
+      retval = -EINVAL;
+-    if (path.dentry != path.mnt->mnt_root)
++    if (path->dentry != path->mnt->mnt_root)
+          goto dput_and_out;
+      if (!check_mnt(mnt))
+          goto dput_and_out;
+@@ -1748,12 +1731,25 @@ int ksys_umount(char __user *name, int flags)
+      retval = do_umount(mnt, flags);
+  dput_and_out:
+      /* we mustn't call path_put() as that would clear mnt_expiry_mark */
+-    dput(path.dentry);
++    dput(path->dentry);
+      mntput_no_expire(mnt);
+-out:
+      return retval;
+  }
 
-
-Note: dhcp pays attention to IFF_RUNNING status, we may refer to:
-https://www.kernel.org/doc/Documentation/networking/operstates.txt
-
-A routing daemon or dhcp client just needs to care for IFF_RUNNING or
-waiting for operstate to go IF_OPER_UP/IF_OPER_UNKNOWN before
-considering the interface / querying a DHCP address.
-
-Finally, the STEP B above only updates the value of operstate based on 
-the known state (operstate/state) on the net_device, without any 
-hardware interaction involved, so it is not very reasonable to wait for 
-1 second there.
-
-By adding:
-+	if ((dev->flags & IFF_UP) && dev->operstate == IF_OPER_DOWN)
-+		return true;
++int ksys_umount(char __user *name, int flags)
++{
++    int lookup_flags = LOOKUP_MOUNTPOINT;
++    struct path path;
++    int ret;
 +
-We hope to improve the linkwatch_urgent_event function a bit.
++    if (!(flags & UMOUNT_NOFOLLOW))
++        lookup_flags |= LOOKUP_FOLLOW;
++    ret = user_path_at(AT_FDCWD, name, lookup_flags, &path);
++    if (ret)
++        return ret;
++    return path_umount(&path, flags);
++}
++
+SYSCALL_DEFINE2(umount, char __user *, name, int, flags)
+  {
 
-Hope to get more of your advice and guidance.
 
-Best wishes,
-Wen
