@@ -2,163 +2,186 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2858F221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="S1ikrnLe";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="FR7C13jQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3B60D221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596739175;
+	bh=4Gk7D0MO/sNh3nZnLY13LdzWLPNi69k9gLeAgtM/VQM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jWMa6i4fmxbao1XgkY52xqiBMRSXXy4THSaD1u6c2WoxFvM84b86vAQYwFxWilnTV
+	 F994d40A4MYO03T17rrD1HReTAGBKBqLD56ZjI8LyFCZq7Jn0WneKk3QRNoNikoiWH
+	 8CPXdnBgZTW6xD7pmRIsIwt3m1OIpxJovu4z7ksc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgHFSjW (ORCPT
+        id S1729255AbgHFSjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:39:22 -0400
-Received: from relay5.mymailcheap.com ([159.100.241.64]:34336 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgHFS34 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:39:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728045AbgHFS34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:29:56 -0400
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.100])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 7639020144;
-        Thu,  6 Aug 2020 18:29:44 +0000 (UTC)
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay1.mymailcheap.com (Postfix) with ESMTPS id 81FCA3F157;
-        Thu,  6 Aug 2020 14:27:41 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id ABEB72A7CD;
-        Thu,  6 Aug 2020 20:27:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1596738460;
-        bh=v6+hYB3wUB+4/fro3yDhVbBnH/mkjkFI9z9KFpiDfWY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S1ikrnLeCYGOThBERfKTcSAxsaKWw+oY22EKp6ctbJ3sm8pYcpExFdyU69jyvA8yn
-         7IL6fwJ7AYeY/OvjCXQ+QJmZKvSe20EzdNzg9L6y0PMOPn2H8zxjqJFvRgBuT1fHgy
-         VPl1WurgjhNCgHKVd8de4myzl+hDzQEM6ZaIosTo=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id q5uWU0nKA4vN; Thu,  6 Aug 2020 20:27:39 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Thu,  6 Aug 2020 20:27:39 +0200 (CEST)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id E93A3419D2;
-        Thu,  6 Aug 2020 18:27:38 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="FR7C13jQ";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [203.86.239.91])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id AE74441330;
-        Thu,  6 Aug 2020 18:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1596738369;
-        bh=v6+hYB3wUB+4/fro3yDhVbBnH/mkjkFI9z9KFpiDfWY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FR7C13jQLja842FFA+9Mfd6g4RgDFwwYpn9p508EWXpQbJO+EEISvRkT04Yu3kjs5
-         8hUoJ8Za/j9z26Nqg84aOmk2fTLDqaHzLGNH4rnzeFnAZjp463C0oIv4aDmpJX9uXo
-         mlCjH08OVtGlsQlenkaO2C+wplwCTvCERW2yA96I=
-Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
- <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
- <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
- <20200806101733.GA8136@alpha.franken.de>
- <9e563c75-ffaa-45b4-0e99-25a8b1eff828@flygoat.com>
- <20200806165212.GA2754@alpha.franken.de>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <c81440ec-a46e-06e1-9ee3-ec3bd2826c4e@flygoat.com>
-Date:   Fri, 7 Aug 2020 02:26:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D58423110;
+        Thu,  6 Aug 2020 18:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596738559;
+        bh=4Gk7D0MO/sNh3nZnLY13LdzWLPNi69k9gLeAgtM/VQM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f3OdALKW3CQXK9/2MfkNE1i+JDefpBiKHak75OTvoddwQOFByg+S9NxHQ+yGkHNJp
+         zjhmkHvol1lk86n8MFOmPJT4PqceteXsA9ZXCS0EFmNBAk88Qm55vNcoNhC89hSLjk
+         W2CXV1wvhZwIM3OdDpW8rNKWEb2GtfMdmaZdQpLE=
+Date:   Thu, 6 Aug 2020 19:29:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v5 05/15] iio: sx9310: Change from .probe to .probe_new
+Message-ID: <20200806192914.71bfec22@archlinux>
+In-Reply-To: <20200803175559.v5.5.Ieb5fdf7381764835dad0b3099c7b19ba754e4c47@changeid>
+References: <20200803235815.778997-1-campello@chromium.org>
+        <20200803175559.v5.5.Ieb5fdf7381764835dad0b3099c7b19ba754e4c47@changeid>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200806165212.GA2754@alpha.franken.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: E93A3419D2
-X-Spamd-Result: default: False [-0.10 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         RCPT_COUNT_FIVE(0.00)[5];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon,  3 Aug 2020 17:58:05 -0600
+Daniel Campello <campello@chromium.org> wrote:
 
+> Uses .probe_new in place of .probe. Also uses device_get_match_data()
+> for whoami matching.
+> 
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Applied,
 
-在 2020/8/7 上午12:52, Thomas Bogendoerfer 写道:
-> On Thu, Aug 06, 2020 at 07:56:20PM +0800, Jiaxun Yang wrote:
->> Our current problem is Loongson's writecombine implementation seems buggy.
->> This is our platform issue rather than target hardware issue.
-> ok, so simply clear cpu_data[0].writecombine for the fauly parts
-@Tiezhu,
+Thanks,
 
-I don't know the exact faulty parts, could you please investigate it in 
-Loongson?
+Jonathan
 
-I can remember a Loongson stuff told me the issue was solved in GS464E but
-there are still users complaining about that.
+> ---
+> 
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+>  - Added '\n' to dev_err()
+> 
+>  drivers/iio/proximity/sx9310.c | 39 ++++++++++++----------------------
+>  1 file changed, 14 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index 9daf2b8591a0a0..66ecdd309e0ddc 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -139,7 +139,7 @@ struct sx9310_data {
+>  	struct completion completion;
+>  	unsigned int chan_read, chan_event;
+>  	int channel_users[SX9310_NUM_CHANNELS];
+> -	int whoami;
+> +	unsigned int whoami;
+>  };
+>  
+>  static const struct iio_event_spec sx9310_events[] = {
+> @@ -858,24 +858,15 @@ static int sx9310_init_device(struct iio_dev *indio_dev)
+>  
+>  static int sx9310_set_indio_dev_name(struct device *dev,
+>  				     struct iio_dev *indio_dev,
+> -				     const struct i2c_device_id *id, int whoami)
+> +				     unsigned int whoami)
+>  {
+> -	const struct acpi_device_id *acpi_id;
+> -
+> -	/* id will be NULL when enumerated via ACPI */
+> -	if (id) {
+> -		if (id->driver_data != whoami)
+> -			dev_err(dev, "WHOAMI does not match i2c_device_id: %s",
+> -				id->name);
+> -	} else if (ACPI_HANDLE(dev)) {
+> -		acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
+> -		if (!acpi_id)
+> -			return -ENODEV;
+> -		if (acpi_id->driver_data != whoami)
+> -			dev_err(dev, "WHOAMI does not match acpi_device_id: %s",
+> -				acpi_id->id);
+> -	} else
+> +	unsigned int long ddata;
+> +
+> +	ddata = (uintptr_t)device_get_match_data(dev);
+> +	if (ddata != whoami) {
+> +		dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
+>  		return -ENODEV;
+> +	}
+>  
+>  	switch (whoami) {
+>  	case SX9310_WHOAMI_VALUE:
+> @@ -885,15 +876,14 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+>  		indio_dev->name = "sx9311";
+>  		break;
+>  	default:
+> -		dev_err(dev, "unexpected WHOAMI response: %u", whoami);
+> +		dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
+>  		return -ENODEV;
+>  	}
+>  
+>  	return 0;
+>  }
+>  
+> -static int sx9310_probe(struct i2c_client *client,
+> -			const struct i2c_device_id *id)
+> +static int sx9310_probe(struct i2c_client *client)
+>  {
+>  	int ret;
+>  	struct iio_dev *indio_dev;
+> @@ -919,8 +909,7 @@ static int sx9310_probe(struct i2c_client *client,
+>  		return ret;
+>  	}
+>  
+> -	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, id,
+> -					data->whoami);
+> +	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -1033,8 +1022,8 @@ static const struct acpi_device_id sx9310_acpi_match[] = {
+>  MODULE_DEVICE_TABLE(acpi, sx9310_acpi_match);
+>  
+>  static const struct of_device_id sx9310_of_match[] = {
+> -	{ .compatible = "semtech,sx9310" },
+> -	{ .compatible = "semtech,sx9311" },
+> +	{ .compatible = "semtech,sx9310", (void *)SX9310_WHOAMI_VALUE },
+> +	{ .compatible = "semtech,sx9311", (void *)SX9311_WHOAMI_VALUE },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, sx9310_of_match);
+> @@ -1053,7 +1042,7 @@ static struct i2c_driver sx9310_driver = {
+>  		.of_match_table = sx9310_of_match,
+>  		.pm = &sx9310_pm_ops,
+>  	},
+> -	.probe		= sx9310_probe,
+> +	.probe_new	= sx9310_probe,
+>  	.id_table	= sx9310_id,
+>  };
+>  module_i2c_driver(sx9310_driver);
 
-In fact I can't reproduce it in all of my test systems:
-3B1500 + RS780E + R5 230
-3A3000 + RS780E Laptop
-3A4000 + LS7A + RX550
->> And we don't even know which hardware is known to be good. The same graphic
->> card became a different story on different user's hand.
-> find out what is broken and add the needed workarounds then.
-
-Well, let's leave this task for Loongson company.
-User's community don't have the ability to trace hardware behavior 
-precisely.
-
->> I understood what Teizhu thought. For entry-level users, we don't want to
->> trouble
->> them, so we have writecombine disabled by default. However, for advanced
->> user
->> trying to tweak their system, we should leave a switch for them to get it
->> back.
-> IMHO if we do it that way, we end up with millions of knobs for tweaking
-> broken hardware, and nobody knows what's exactly broken. Sorry I won't go
-> that way.
-
-Haha, that was my first impression to Linux as a primary school student. 
-It just
-looks like an aircraft cockpit with thousands of knobs & switches, but 
-to airborne
-you just need to control yoke and throttle.
-
-- Jiaxun
