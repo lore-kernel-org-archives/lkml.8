@@ -2,105 +2,285 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6368DC4345A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE14EC4346A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABFD23117
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A30F922CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiJgIehP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HP6Mu1Vr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgHFFln (ORCPT
+        id S1728043AbgHFFoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:41:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgHFFll (ORCPT
+        Thu, 6 Aug 2020 01:44:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20871 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727979AbgHFFoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 01:41:41 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D89AC061574;
-        Wed,  5 Aug 2020 22:41:41 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id y18so30989545ilp.10;
-        Wed, 05 Aug 2020 22:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=HIGPgBL7n98bpEVZBM/4G2APCFecCIPvFc7WiIgCYY0=;
-        b=FiJgIehPKvn2HJA91Zt1bLnAxrIVtSKzm8V2TXidY17vnP9eFbF33heWll62gghlgO
-         XfMOrBzima/hMa6eeD21FBfFGWkNznqaMlpoGEIhvI6RGOWsbYCiu404LXAJnsqhZsI1
-         WFN2Mo/MV6O5TG9DqXjZBcM7xJEsHjZVgvnbmaCOMagFpIm9W6cex5AQj1s5JAqndb03
-         Bi5x+kYXZSSUYKBZajnFd3deR5qcTVmv7GdpyIT1cGJFTclKzRgbq3lgXTfpwe0BTCvN
-         v6N5t+yTKM30fvYyAjJxtOuxbiJG9eHmsM19GAQk9Ur+6dPGjj3c7iKUUrGHR5XdRbTV
-         MgeA==
+        Thu, 6 Aug 2020 01:44:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596692659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B1WkhY8QD0f5DxDB9jVqeA3H8Wo7kGb4Rskkut4YioA=;
+        b=HP6Mu1Vr9CY1VqEdvQTRQNqNP3EGiSIbfH1nWwef/DU/4Ow5o8dWtF4ixazHGUOkXCyiAH
+        hJOb7SPulusgua0E0znzJukJJerR7s6g6sQqqWqQiAZgCPoVlX3L/O9+6CN0CRhs6aD41y
+        CZzUNTfFjVNodmV1ENd3PPAnNdvDSPo=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-VDjGwevbOy6WlWOo876_fA-1; Thu, 06 Aug 2020 01:44:09 -0400
+X-MC-Unique: VDjGwevbOy6WlWOo876_fA-1
+Received: by mail-wr1-f71.google.com with SMTP id b8so4686398wrr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 22:44:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=HIGPgBL7n98bpEVZBM/4G2APCFecCIPvFc7WiIgCYY0=;
-        b=Ch5xNxILbM0D9L3WBQForNm0mf9jZRG9ZcHmh4Z3K04Vn1KHYqERY1sGbUxM/zCgI4
-         vpyYmz9065MJe5Igl+GzMy+X2iywAw3SQV1iXaE9TFcs4zNFDthPDLDSbWApT1AHJzlk
-         BeaLmU3vBaXzMcbOXibwltSSdyTMkZ35BOGmuKxxxuIM7BLQDcoSydVdatfVnvcVEunc
-         dTRxJz+K0BfuNagU/RRenrPYMv7oCGjHgE0/WlMy99j1Dp0nGwZDS2GqAF0JaL4Uuo/Y
-         Q97bFpERfduSynkmLFX2A0NDBk6Rq4WI1vVe+WVelbn7uCruWPXI8SpvO4iT6Pn57TX0
-         atpA==
-X-Gm-Message-State: AOAM530wU8jJjQbQ/iHKkxZFsX7zSZl7wpLqH2Y9h8U+YZUn4SvBoluR
-        wH58CgImD2I1m06q/KAgYY8=
-X-Google-Smtp-Source: ABdhPJzfFQrkhxfiSuEnos5KxcjG3hgktUyK5qO7wvdWxUZYYXobmNCqd9eumJE1qTchwrRO1oLRCA==
-X-Received: by 2002:a92:d34c:: with SMTP id a12mr8492912ilh.20.1596692500154;
-        Wed, 05 Aug 2020 22:41:40 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id n10sm2879634ila.2.2020.08.05.22.41.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B1WkhY8QD0f5DxDB9jVqeA3H8Wo7kGb4Rskkut4YioA=;
+        b=W3W00MX1eCf0T+whGlScPxnYoU0YCPr3LPuuwqaKVL02pLRU0fBdA6s7nojzYcnp63
+         dwG+gJvEHlyRits4j3Cas4OAc7kldQLj5D9MxrqHZRxzpkElJoGgvjSddBp7BfDQEiiH
+         fad0SO7jbiDVJSK9ZPpV6CnDpvE6If6EsfTfZIoqyscHA5gy4+MmU3N1XhcGmjEk5MNA
+         fsSQxVCv2csBv/EJUGzEgG2o2B5SRtbvnWLTkGkS1uYfLGlLrnU8E1qv1oHDnr3yNkst
+         HxqYxKIVU5OZpMDAC+hdSfvU7vtjdFkvoWZpngASjx2Z/JJaejK2mgnNwAzBFwW4eYMu
+         UvFQ==
+X-Gm-Message-State: AOAM531vIq4K3gTfxfdLS+LX40xCVOCGwZie4VIylvT8X1qxgHzEv/JL
+        lkvvOsrY9DBKafEETjGsu4n9XzsHMgkTWF7Mz3lzBnqp15cSDqLmrDHatUzdp+Cm9XDbj310/ap
+        Sc7z3e7x7/ADm2NihaMXxKdBf
+X-Received: by 2002:a1c:2095:: with SMTP id g143mr6059862wmg.78.1596692647839;
+        Wed, 05 Aug 2020 22:44:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwmPXCaeMja3+wQqRTRcnR9xvH5V51yW3HFk0DygRewkzwUjPll1ovSwhp2Uz6I/TBHtDNZTQ==
+X-Received: by 2002:a1c:2095:: with SMTP id g143mr6059816wmg.78.1596692647427;
+        Wed, 05 Aug 2020 22:44:07 -0700 (PDT)
+Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
+        by smtp.gmail.com with ESMTPSA id v12sm5079783wri.47.2020.08.05.22.44.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 22:41:39 -0700 (PDT)
-Date:   Wed, 05 Aug 2020 22:41:30 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Muchun Song <songmuchun@bytedance.com>, rostedt@goodmis.org,
-        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, sfr@canb.auug.org.au, mingo@kernel.org,
-        akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>
-Message-ID: <5f2b980abeaad_291f2b27e574e5b82@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200805172046.19066-1-songmuchun@bytedance.com>
-References: <20200805172046.19066-1-songmuchun@bytedance.com>
-Subject: RE: [PATCH] kprobes: fix compiler warning for
- !CONFIG_KPROBES_ON_FTRACE
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Wed, 05 Aug 2020 22:44:06 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 01:44:01 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nick Kralevich <nnk@google.com>
+Cc:     Lokesh Gidra <lokeshgidra@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@google.com>,
+        Sandeep Patil <sspatil@google.com>, kernel@android.com,
+        Daniel Colascione <dancol@dancol.org>,
+        Kalesh Singh <kaleshsingh@google.com>
+Subject: Re: [PATCH 2/2] Add a new sysctl knob:
+ unprivileged_userfaultfd_user_mode_only
+Message-ID: <20200806004351-mutt-send-email-mst@kernel.org>
+References: <202005200921.2BD5A0ADD@keescook>
+ <20200520194804.GJ26186@redhat.com>
+ <20200520195134.GK26186@redhat.com>
+ <CA+EESO4wEQz3CMxNLh8mQmTpUHdO+zZbV10zUfYGKEwfRPK2nQ@mail.gmail.com>
+ <20200520211634.GL26186@redhat.com>
+ <CABXk95A-E4NYqA5qVrPgDF18YW-z4_udzLwa0cdo2OfqVsy=SQ@mail.gmail.com>
+ <CA+EESO4kLaje0yTOyMSxHfSLC0n86zAF+M1DWB_XrwFDLOCawQ@mail.gmail.com>
+ <CAFJ0LnGfrzvVgtyZQ+UqRM6F3M7iXOhTkUBTc+9sV+=RrFntyQ@mail.gmail.com>
+ <20200724093852-mutt-send-email-mst@kernel.org>
+ <CAFJ0LnEZghYj=d3w8Fmko4GZAWw6Qc5rgAMmXj-8qgXtyU3bZQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFJ0LnEZghYj=d3w8Fmko4GZAWw6Qc5rgAMmXj-8qgXtyU3bZQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Muchun Song wrote:
-> Fix compiler warning(as show below) for !CONFIG_KPROBES_ON_FTRACE.
+On Wed, Aug 05, 2020 at 05:43:02PM -0700, Nick Kralevich wrote:
+> On Fri, Jul 24, 2020 at 6:40 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Thu, Jul 23, 2020 at 05:13:28PM -0700, Nick Kralevich wrote:
+> > > On Thu, Jul 23, 2020 at 10:30 AM Lokesh Gidra <lokeshgidra@google.com> wrote:
+> > > > From the discussion so far it seems that there is a consensus that
+> > > > patch 1/2 in this series should be upstreamed in any case. Is there
+> > > > anything that is pending on that patch?
+> > >
+> > > That's my reading of this thread too.
+> > >
+> > > > > > Unless I'm mistaken that you can already enforce bit 1 of the second
+> > > > > > parameter of the userfaultfd syscall to be set with seccomp-bpf, this
+> > > > > > would be more a question to the Android userland team.
+> > > > > >
+> > > > > > The question would be: does it ever happen that a seccomp filter isn't
+> > > > > > already applied to unprivileged software running without
+> > > > > > SYS_CAP_PTRACE capability?
+> > > > >
+> > > > > Yes.
+> > > > >
+> > > > > Android uses selinux as our primary sandboxing mechanism. We do use
+> > > > > seccomp on a few processes, but we have found that it has a
+> > > > > surprisingly high performance cost [1] on arm64 devices so turning it
+> > > > > on system wide is not a good option.
+> > > > >
+> > > > > [1] https://lore.kernel.org/linux-security-module/202006011116.3F7109A@keescook/T/#m82ace19539ac595682affabdf652c0ffa5d27dad
+> > >
+> > > As Jeff mentioned, seccomp is used strategically on Android, but is
+> > > not applied to all processes. It's too expensive and impractical when
+> > > simpler implementations (such as this sysctl) can exist. It's also
+> > > significantly simpler to test a sysctl value for correctness as
+> > > opposed to a seccomp filter.
+> >
+> > Given that selinux is already used system-wide on Android, what is wrong
+> > with using selinux to control userfaultfd as opposed to seccomp?
 > 
-> kernel/kprobes.c: In function 'kill_kprobe':
-> kernel/kprobes.c:1116:33: warning: statement with no effect
-> [-Wunused-value]
->  1116 | #define disarm_kprobe_ftrace(p) (-ENODEV)
->       |                                 ^
-> kernel/kprobes.c:2154:3: note: in expansion of macro
-> 'disarm_kprobe_ftrace'
->  2154 |   disarm_kprobe_ftrace(p);
+> Userfaultfd file descriptors will be generally controlled by SELinux.
+> You can see the patchset at
+> https://lore.kernel.org/lkml/20200401213903.182112-3-dancol@google.com/
+> (which is also referenced in the original commit message for this
+> patchset). However, the SELinux patchset doesn't include the ability
+> to control FAULT_FLAG_USER / UFFD_USER_MODE_ONLY directly.
 > 
-> Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
+> SELinux already has the ability to control who gets CAP_SYS_PTRACE,
+> which combined with this patch, is largely equivalent to direct
+> UFFD_USER_MODE_ONLY checks. Additionally, with the SELinux patch
+> above, movement of userfaultfd file descriptors can be mediated by
+> SELinux, preventing one process from acquiring userfaultfd descriptors
+> of other processes unless allowed by security policy.
 > 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
+> It's an interesting question whether finer-grain SELinux support for
+> controlling UFFD_USER_MODE_ONLY should be added. I can see some
+> advantages to implementing this. However, we don't need to decide that
+> now.
+>
+> Kernel security checks generally break down into DAC (discretionary
+> access control) and MAC (mandatory access control) controls. Most
+> kernel security features check via both of these mechanisms. Security
+> attributes of the system should be settable without necessarily
+> relying on an LSM such as SELinux. This patch follows the same basic
+> model -- system wide control of a hardening feature is provided by the
+> unprivileged_userfaultfd_user_mode_only sysctl (DAC), and if needed,
+> SELinux support for this can also be implemented on top of the DAC
+> controls.
+> 
+> This DAC/MAC split has been successful in several other security
+> features. For example, the ability to map at page zero is controlled
+> in DAC via the mmap_min_addr sysctl [1], and via SELinux via the
+> mmap_zero access vector [2]. Similarly, access to the kernel ring
+> buffer is controlled both via DAC as the dmesg_restrict sysctl [3], as
+> well as the SELinux syslog_read [2] check. Indeed, the dmesg_restrict
+> sysctl is very similar to this patch -- it introduces a capability
+> (CAP_SYSLOG, CAP_SYS_PTRACE) check on access to a sensitive resource.
+> 
+> If we want to ensure that a security feature will be well tested and
+> vetted, it's important to not limit its use to LSMs only. This ensures
+> that kernel and application developers will always be able to test the
+> effects of a security feature, without relying on LSMs like SELinux.
+> It also ensures that all distributions can enable this security
+> mitigation should it be necessary for their unique environments,
+> without introducing an SELinux dependency. And this patch does not
+> preclude an SELinux implementation should it be necessary.
+> 
+> Even if we decide to implement fine-grain SELinux controls on
+> UFFD_USER_MODE_ONLY, we still need this patch. We shouldn't make this
+> an either/or choice between SELinux and this patch. Both are
+> necessary.
+> 
+> -- Nick
+> 
+> [1] https://wiki.debian.org/mmap_min_addr
+> [2] https://selinuxproject.org/page/NB_ObjectClassesPermissions
+> [3] https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+I am not sure I agree this is similar to dmesg access.
+
+The reason I say it is this: it is pretty easy for admins to know
+whether they run something that needs to access the kernel ring buffer.
+Or if it's a tool developer poking at dmesg, they can tell admins "we
+need these permissions".  But it seems impossible for either an admin to
+know that a userfaultfd page e.g. used with shared memory is accessed
+from the kernel.
+
+So I guess the question is: how does anyone not running Android
+know to set this flag?
+
+I got the feeling it's not really possible, and so for a single-user
+feature like this a single API seems enough.  Given a choice between a
+knob an admin is supposed to set and selinux policy written by
+presumably knowledgeable OS vendors, I'd opt for a second option.
+
+Hope this helps.
+
+> >
+> >
+> > > > > >
+> > > > > >
+> > > > > > If answer is "no" the behavior of the new sysctl in patch 2/2 (in
+> > > > > > subject) should be enforceable with minor changes to the BPF
+> > > > > > assembly. Otherwise it'd require more changes.
+> > >
+> > > It would be good to understand what these changes are.
+> > >
+> > > > > > Why exactly is it preferable to enlarge the surface of attack of the
+> > > > > > kernel and take the risk there is a real bug in userfaultfd code (not
+> > > > > > just a facilitation of exploiting some other kernel bug) that leads to
+> > > > > > a privilege escalation, when you still break 99% of userfaultfd users,
+> > > > > > if you set with option "2"?
+> > >
+> > > I can see your point if you think about the feature as a whole.
+> > > However, distributions (such as Android) have specialized knowledge of
+> > > their security environments, and may not want to support the typical
+> > > usages of userfaultfd. For such distributions, providing a mechanism
+> > > to prevent userfaultfd from being useful as an exploit primitive,
+> > > while still allowing the very limited use of userfaultfd for userspace
+> > > faults only, is desirable. Distributions shouldn't be forced into
+> > > supporting 100% of the use cases envisioned by userfaultfd when their
+> > > needs may be more specialized, and this sysctl knob empowers
+> > > distributions to make this choice for themselves.
+> > >
+> > > > > > Is the system owner really going to purely run on his systems CRIU
+> > > > > > postcopy live migration (which already runs with CAP_SYS_PTRACE) and
+> > > > > > nothing else that could break?
+> > >
+> > > This is a great example of a capability which a distribution may not
+> > > want to support, due to distribution specific security policies.
+> > >
+> > > > > >
+> > > > > > Option "2" to me looks with a single possible user, and incidentally
+> > > > > > this single user can already enforce model "2" by only tweaking its
+> > > > > > seccomp-bpf filters without applying 2/2. It'd be a bug if android
+> > > > > > apps runs unprotected by seccomp regardless of 2/2.
+> > >
+> > > Can you elaborate on what bug is present by processes being
+> > > unprotected by seccomp?
+> > >
+> > > Seccomp cannot be universally applied on Android due to previously
+> > > mentioned performance concerns. Seccomp is used in Android primarily
+> > > as a tool to enforce the list of allowed syscalls, so that such
+> > > syscalls can be audited before being included as part of the Android
+> > > API.
+> > >
+> > > -- Nick
+> > >
+> > > --
+> > > Nick Kralevich | nnk@google.com
+> >
+> 
+> 
+> -- 
+> Nick Kralevich | nnk@google.com
+
