@@ -2,137 +2,193 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C88C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11CEE2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CD62086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmngnfVz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7q0pe2L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgHFQ6b (ORCPT
+        id S1729585AbgHFQ6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41658 "EHLO
+        Thu, 6 Aug 2020 12:58:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728975AbgHFQkm (ORCPT
+        with ESMTP id S1728829AbgHFQkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:40:42 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D5DC00216C;
-        Thu,  6 Aug 2020 09:10:56 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id k13so26439147lfo.0;
-        Thu, 06 Aug 2020 09:10:55 -0700 (PDT)
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA91C0A8935;
+        Thu,  6 Aug 2020 08:03:42 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id 25so19562700oir.0;
+        Thu, 06 Aug 2020 08:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CARAOasIFak870VufiBClJ7GzwKqbGWjQPwUf4dCREk=;
-        b=OmngnfVzaAJ9jJNJdEi4kf1hA9P2f7ak2OMok4/yWOq+hkeBgCSKcgzjtw27fGmOWn
-         3Zr8eTtteML9DsrP8N8PGLMwnxXtz2X5uWtxhQ1b1Hp0lQ3K227+u3B9Y44NmKqsDiAI
-         PoGdUJrtbj5F5PHsAbCQ/Xlg8BGF/H+5Ji8upNSdPxqYHp69l0/gw5+WAhPBzdU851Y4
-         OZngM7HgmAS0C6TzfrcDz3JJ+k9LNjkmAOqZ2kkNckw+xhrNxNuoyiHIk+KPqIxMpngc
-         uoTKka3sq9RAXGa3rl6n/LiXS1X1o1Bw47L3qLOompZl1KYCytoql8VhP2iFa6gGlKSe
-         pKDw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QmBAkio3HqZXyLXzZvG0W5rZ+32Ncd4SFfX8CWNZXqo=;
+        b=d7q0pe2LphFy3tVHJjI9V+nKk9i6A77hOJYbtyZtPx11pAdOqRtnIZWNEhzbbqzITV
+         fOGz1xnFeeELtvrdZcDd6hthIcK7MLUCtyEHTZlMCfM1xtVnAcjSnMvni+uiQBmQZHEI
+         4n7BWzq7sIB0IcNUmHT7PVfYhJ8YCQtnxsXcfAkwfIuDQD3/1GT2qkte991aPf1MBM+u
+         FdRNdytGVqkdnuz9kOyLpjDy/DFsQybVNgEvQJxMOvArmDM2OX9jIenU5ivx9flJWXsU
+         TZfMRFrskK+ByYnY7BCrrYXTPdLHYgpOf53HpqdRzlm+iWA+IPPk8iqsvnBB/LOO8sHJ
+         Xh0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CARAOasIFak870VufiBClJ7GzwKqbGWjQPwUf4dCREk=;
-        b=Rvn61SHyDSvs5LrCpe/XgfFQ3dEjZFqOttgbjSenDllbn2EbA24HCi3tXS7LHFkVKA
-         IpNwRX6sTVVqW8fo81W5muMITeogvfY0ca/Df1fKrGqLn/YfoZ/nO9rwQjg8HCZjVXQr
-         7MfdpUJhrbxXn1RasPv6VsbrGWNvv+xMVa66s0LlUvjzTACWpm7c3mh9aXwXWFxpz2qZ
-         RV8PG2IZTNTLsYsWprVkEF6wuQvLFqWXfQ84V+5PlbSQqHjT6vY90FMfMncdXPIUm6Lh
-         MyLqyxOW5AOy1NID9a6YJPT6QF3gYDdjKCpCy3/IdKrE6BdVeGH7yC6enWUOOleI9N8K
-         dmiw==
-X-Gm-Message-State: AOAM531GHmPIi40RDNQY+rUuoncj4bLLlHiwcWnqj8qg9a7DDmSsDT27
-        cEkOGxyyRw89HhhZF1KPf5Js9ujy
-X-Google-Smtp-Source: ABdhPJzuFA0l+OQL4YSNgzVA9hLB2nNjiEMtvYCJAZAFfYBW6wFxaQDOT3HDYMkQDm5DZYd2Vh+F6Q==
-X-Received: by 2002:ac2:5ec8:: with SMTP id d8mr4213855lfq.169.1596730253375;
-        Thu, 06 Aug 2020 09:10:53 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id y1sm3096536lfb.45.2020.08.06.09.10.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 09:10:52 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
-Date:   Thu, 6 Aug 2020 19:10:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QmBAkio3HqZXyLXzZvG0W5rZ+32Ncd4SFfX8CWNZXqo=;
+        b=aUrxjRq0F8TfbSyBpopV/bCPgkJSJ32182S+hbM4ntnW2gw9Gbp52zriybz5NYBoGt
+         tuvbYLKdqCU+AfcdVz0o11mxbGd31/9TLtQJaaHtKt+pfEWVGm4AbWcKuKoXjeYASuTt
+         QY38JCd5/BV/Wv94hAeRgviQsbMrYMs0gZKJvItrCHaFJjGK5VuPlgDyR6M31stCR66d
+         ln0OEMlkMRcF8bgg/LSLmT2+MpBRzVcCn2hXYvKf3Y49KN4+FDpWHnnApk/cVWqg0MOJ
+         w2EeFz3LXcZCeQQ09vAni8FUcC2pxkpP6cXgsub/Jsv/E1y/vCnue+xS3y+zezYzgChe
+         jMqA==
+X-Gm-Message-State: AOAM531OgAqA54gJ3mCofbJgV2TLirunqkaR6r4OGeogXuYARuGCwMcX
+        k/n2pcht7faP3gGRvKNrR4IiyUfq9vlmzUrXHTA=
+X-Google-Smtp-Source: ABdhPJw/dtcEyn/5MkeX+6B9hKzdwerGRcmnrQpewRREzYTtjCtgDu/mN4S+X6UK9uqoV0cCtIuaDaCeVFm7gfjYDIw=
+X-Received: by 2002:a05:6808:1d9:: with SMTP id x25mr7145834oic.92.1596726216077;
+ Thu, 06 Aug 2020 08:03:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200806080358.3124505-1-tweek@google.com> <20200806080358.3124505-2-tweek@google.com>
+ <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com> <8627d780-0e19-6755-0de5-c686deb0f5de@sony.com>
+ <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com> <07e2c48d-3918-6ceb-a6b2-4e2f18f9ea01@gmail.com>
+ <CAEjxPJ4no_GqMp8aw43zpwmwq42Wi_1dvP+ZBs1a-mnReDt5Og@mail.gmail.com> <dfeac808-b40d-77fd-0d31-f66f279083eb@sony.com>
+In-Reply-To: <dfeac808-b40d-77fd-0d31-f66f279083eb@sony.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 6 Aug 2020 11:03:25 -0400
+Message-ID: <CAEjxPJ4EaXJ88-hT=jgfn0d1WVP9QQb0w2XQi7U2YVuqN2oMsg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
+To:     peter enderborg <peter.enderborg@sony.com>
+Cc:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.08.2020 18:59, Sowjanya Komatineni пишет:
-...
->>> Confirmed from HW designer, calibration FSM to finish takes worst case
->>> 72uS so by the time it gets to sensor stream it will be done its
->>> sequence and will be waiting for DONE bit.
->>>
->>> So disabling MIPI CAL clock on sensor stream fails is safe.
->>
->> 72us is quite a lot of time, what will happen if LP-11 happens before
->> FSM finished calibration?
->>
->> Maybe the finish_calibration() needs to split into two parts:
->>
->>   1. wait for CAL_STATUS_ACTIVE before enabling sensor
->>   2. wait for CAL_STATUS_DONE after enabling sensor
-> 
-> I don't think we need to split for active and done. Active will be 1 as
-> long as other pads are in calibration as well.
-> 
-> We cant use active status check for specific pads under calibration.
-> This is common bit for all pads.
+On Thu, Aug 6, 2020 at 10:51 AM peter enderborg
+<peter.enderborg@sony.com> wrote:
+>
+> On 8/6/20 3:49 PM, Stephen Smalley wrote:
+> > On Thu, Aug 6, 2020 at 9:45 AM Stephen Smalley
+> > <stephen.smalley.work@gmail.com> wrote:
+> >> On 8/6/20 8:32 AM, Stephen Smalley wrote:
+> >>
+> >>> On 8/6/20 8:24 AM, peter enderborg wrote:
+> >>>
+> >>>> On 8/6/20 2:11 PM, Stephen Smalley wrote:
+> >>>>> On 8/6/20 4:03 AM, Thi=C3=A9baud Weksteen wrote:
+> >>>>>
+> >>>>>> From: Peter Enderborg <peter.enderborg@sony.com>
+> >>>>>>
+> >>>>>> Add further attributes to filter the trace events from AVC.
+> >>>>> Please include sample usage and output in the description.
+> >>>>>
+> >>>>>
+> >>>> Im not sure where you want it to be.
+> >>>>
+> >>>> In the commit message or in a Documentation/trace/events-avc.rst ?
+> >>> I was just asking for it in the commit message / patch description.  =
+I
+> >>> don't know what is typical for Documentation/trace.
+> >> For example, I just took the patches for a spin, running the
+> >> selinux-testsuite under perf like so:
+> >>
+> >> sudo perf record -e avc:selinux_audited -g make test
+> >>
+> >> and then ran:
+> >>
+> >> sudo perf report -g
+> >>
+> >> and a snippet of sample output included:
+> >>
+> >>       6.40%     6.40%  requested=3D0x800000 denied=3D0x800000
+> >> audited=3D0x800000 result=3D-13 ssid=3D922 tsid=3D922
+> >> scontext=3Dunconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+> >> tcontext=3Dunconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+> >> tclass=3Dcapability
+> > So then the question becomes how do you use the above information,
+> > e.g. is that sufficient to correlate it to an actual avc: denied
+> > message, how do you decode the requested/denied/audited fields (or
+> > should the code do that for you and just report the string name(s) of
+> > the permission(s), do you need all three of those fields separately,
+> > is it useful to log the ssid/tsid at all given that you have the
+> > contexts and sids are dynamically assigned, etc.
+> >
+> >>              |
+> >>              ---0x495641000028933d
+> >>                 __libc_start_main
+> >>                 |
+> >>                 |--4.60%--__GI___ioctl
+> >>                 |          entry_SYSCALL_64
+> >>                 |          do_syscall_64
+> >>                 |          __x64_sys_ioctl
+> >>                 |          ksys_ioctl
+> >>                 |          binder_ioctl
+> >>                 |          binder_set_nice
+> >>                 |          can_nice
+> >>                 |          capable
+> >>                 |          security_capable
+> >>                 |          cred_has_capability.isra.0
+> >>                 |          slow_avc_audit
+> >>                 |          common_lsm_audit
+> >>                 |          avc_audit_post_callback
+> >>                 |          avc_audit_post_callback
+>
+> The real cool thing happen when you enable "user-stack-trace" too.
+>
+>            <...>-4820  [007] .... 85878.897553: selinux_audited: requeste=
+d=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000 result=3D-13 ssid=3D34=
+1 tsid=3D61 scontext=3Dsystem_u:system_r:ntpd_t:s0 tcontext=3Dsystem_u:obje=
+ct_r:bin_t:s0 tclass=3Dfile
+>            <...>-4820  [007] .... 85878.897572: <user stack trace>
+>  =3D>  <00007f07d99bb45b>
+>  =3D>  <0000555ecd89ca57>
+>
+> The fields are useful for filter what you what to see and what you can ig=
+nore.  Having the ssid and text was from the part where it is called.
+> The numeric can be used for two things. When you dont have any context. S=
+ame same reason as in post_callback. We need to be static
+> in format so it need  be there if it ever can happen. And it is also usef=
+ul for faster filtering.
+>
+> You can do "ssid!=3D42 && ssid!=3D43 && tsid=3D=3D666".  From my view it =
+would be good to have all fields there. But they need to right typed to be =
+able
+> to use the filter mechanism. There must me some trade-off too where the a=
+rgument filtering get bigger than the processing, but I think we can
+> add a lot more before we reach that threshold.
 
-Does hardware have a single FSM block shared by all pads or there is FSM
-per group of pads?
+I don't think the SIDs are useful because they are dynamically
+assigned (aside from the initial SIDs for bootstrapping before policy
+load) and are not exported to userspace (userspace has no way to look
+them up).  It is probably a mistake that we even fall back to logging
+them in the existing code and may just be a legacy of when SIDs were
+exported to userspace (ancient history, before mainline merge of
+SELinux).
 
-> Unfortunately HW don't have separate status indicating when sequence is
-> done to indicate its waiting for LP11.
-> 
-> 
-> To avoid all this, will remove cancel_calibration() totally and use same
-> finish calibration even in case of stream failure then.
-> 
-
-What about to add 72us delay to the end of start_calibration() in order
-to ensure that FSM is finished before LP-11?
+In any event, if you were to include the sample usage and output I
+provided as part of the commit message / patch description (or replace
+with your own example), that would be helpful I think.  Even better
+would be to also provide some hint as to how people are expected to
+decode the requested/denied/audited fields (I know how to do that but
+not everyone will, and ideally one would have a script or something
+for doing so).
