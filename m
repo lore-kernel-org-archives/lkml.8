@@ -2,159 +2,429 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05270C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7B1221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F30420748
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dPT1Dcqn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="koToQFz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgHFWIO (ORCPT
+        id S1728613AbgHFWJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:08:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2848 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728794AbgHFWIM (ORCPT
+        Thu, 6 Aug 2020 18:09:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgHFWJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:08:12 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076M2RvK019382;
-        Thu, 6 Aug 2020 18:07:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=oL8rfatTQ117+qM6l9H41acaUXAS4Gv8Ss5dDG9xkOo=;
- b=dPT1DcqnvyKDulRVjsH7eMqJv7UIuPBwuaKc0+J7RacBYmt33DP7yKh5ntonCswr9Up5
- 9PBbRhRJPr1LI+NXub8PwHV5HOAAc0yStNq4SGAXQfmAbtWoiVo237zIHRSbdtOvpTNu
- oBcwO+dabJhvGJi1oYZD5AuhLKP496XkmQFeR45XVMDALSCreOaL11OsLTMUtrlD5TGU
- FnLGW7Gv2dzUYrENG7i3JRtax+T9EaA4hxrUAnlEzu1V+mv5iyv/39WvqSpLH0G7PipC
- ONV685tjkljX+1Y4um7D/MzpJli4u992EJiBD5rODnVTk9lqHvx5ltMdZ52Vx6zITkUR ZQ== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rfm9kchu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 18:07:56 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076M75vL019809;
-        Thu, 6 Aug 2020 22:07:53 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 32mynh5vv7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 22:07:53 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076M7nYJ24510744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 22:07:49 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B58D52054;
-        Thu,  6 Aug 2020 22:07:49 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.117.136])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4F04052050;
-        Thu,  6 Aug 2020 22:07:46 +0000 (GMT)
-Message-ID: <6be709297b60260faf9fb8b741799d130a663d52.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 10/17] firmware_loader: Use security_post_load_data()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Takashi Iwai <tiwai@suse.de>, Jessica Yu <jeyu@kernel.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 06 Aug 2020 18:07:35 -0400
-In-Reply-To: <20200729175845.1745471-11-keescook@chromium.org>
-References: <20200729175845.1745471-1-keescook@chromium.org>
-         <20200729175845.1745471-11-keescook@chromium.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_17:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- adultscore=0 priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060141
+        Thu, 6 Aug 2020 18:09:51 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A25C061756
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 15:09:51 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mw10so3686347pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 15:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CRP3FgRyQ/k48NTUuHSvU7SLO+Q+hOFOxehsPE+mY3A=;
+        b=koToQFz7v/FNbYDUnN7uUjTfsar8RnUGuRSmognn2IXLMfP3k0TA0YVizuDKsldhCB
+         oKL0TTm/CPbY9FwI+p94fRf/RVUPLuni/gRgietd/s6uKg0l4CXy14b0eKcAGA/tSijk
+         ozo6ZDCuptECLJz1cGm1K6VT/QjQNmNKjn8iMW7XksBfJkrHors35OlSwnYlpjb9xu/7
+         4wd8dLHukDPpGQ8yzP4CRj9SqSju3fi4muJJH7TnO3QuLzqSDWRlLuZLq9MARynzV126
+         b4+/uVQUOgtUiyM6hv2/2+TNV74S3w+bziPPQTsgXqD491pP6XoES/LHTtzUtL2U1acd
+         DhMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CRP3FgRyQ/k48NTUuHSvU7SLO+Q+hOFOxehsPE+mY3A=;
+        b=Kwy5BxukJ90ACLGNtXHb/3tkUCg2QXMQ/sREYsVRZU7t9nQhAuKLeIB8WFKnPEgQY4
+         7FsS7pjQH4Z1OreX4ywbGB9yKZ5h8OQPgsaSabGiik0Juqq2a2lGbGE2zxyOkBKN5ufT
+         gtq1Vh3d2z7tI0UqSvgM7aQatdr+p9QNfDvL0do4Pqt3JYBsIhn91H1+wSA9XNRrQCau
+         n+jwqiWuJHd6c0v0ePPPtWlo1ClUJb7z8JLn/uRuyMeZ7h7b5GYJ4qnOSYSZFzt1jiXv
+         D6KbTy4jhxohyr/atHAy7d0A+X/k5XbCcufazRS9r7v4+AqppQGfQMsUDxC49OsUHWh7
+         dDSg==
+X-Gm-Message-State: AOAM5335p/LIaX9xom6jBlozbA6umZXZAi3yms1q0adqIdU78drwOHAp
+        seQM2qdrXLv0xuyJY+Bavi2GRw==
+X-Google-Smtp-Source: ABdhPJyIvDdOsrSRk0Aersg8zp7X6hgYDLE4DrekCgs3b7/u9ms0kPv6U1wN8B2b/xqJQTL8s6WaHg==
+X-Received: by 2002:a17:90a:2210:: with SMTP id c16mr10702188pje.65.1596751790067;
+        Thu, 06 Aug 2020 15:09:50 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id 193sm9352085pfu.169.2020.08.06.15.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 15:09:49 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 15:09:43 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+Message-ID: <20200806220943.GA1781224@google.com>
+References: <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+ <20200625161503.GB173089@google.com>
+ <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+ <20200625224042.GA169781@google.com>
+ <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+ <20200722135542.41127cc4@oasis.local.home>
+ <20200722184137.GP10769@hirez.programming.kicks-ass.net>
+ <20200722150943.53046592@oasis.local.home>
+ <20200722235620.GR10769@hirez.programming.kicks-ass.net>
+ <20200722200608.40ca9994@oasis.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722200608.40ca9994@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-29 at 10:58 -0700, Kees Cook wrote:
-> Now that security_post_load_data() is wired up, use it instead
-> of the NULL file argument style of security_post_read_file(),
-> and update the security_kernel_load_data() call to indicate that a
-> security_kernel_post_load_data() call is expected.
+On Wed, Jul 22, 2020 at 08:06:08PM -0400, Steven Rostedt wrote:
+> On Thu, 23 Jul 2020 01:56:20 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Wire up the IMA check to match earlier logic. Perhaps a generalized
-> change to ima_post_load_data() might look something like this:
+> > Anyway, what do you prefer, I suppose I can make objtool whatever we
+> > need, that patch is trivial. Simply recording the sites and not
+> > rewriting them should be simple enough.
 > 
->     return process_buffer_measurement(buf, size,
->                                       kernel_load_data_id_str(load_id),
->                                       read_idmap[load_id] ?: FILE_CHECK,
->                                       0, NULL);
+> Either way. If objtool turns it into nops, just make it where we can
+> enable -DCC_USING_NOP_MCOUNT set, and the kernel will be unaware.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Or if you just add the locations, then that would work too.
 
-Other than one change and one question below, it looks good.
+I took Peter's earlier patch, rebased it on top of the current mainline
+tree for easier testing, and tweaked the makefiles to only use objtool
+--mcount when CONFIG_STACK_VALIDATION is enabled and the compiler
+supports -mfentry. This works for me with both gcc and clang. Thoughts?
 
-Reviewed-by:  Mimi Zohar <zohar@linux.ibm.com>
+Sami
 
-<snip>
 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 85000dc8595c..1a7bc4c7437d 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
+---
+ Makefile                      | 38 ++++++++++++----
+ arch/x86/Kconfig              |  1 +
+ kernel/trace/Kconfig          |  5 +++
+ scripts/Makefile.build        |  9 ++--
+ tools/objtool/builtin-check.c |  3 +-
+ tools/objtool/builtin.h       |  2 +-
+ tools/objtool/check.c         | 83 +++++++++++++++++++++++++++++++++++
+ tools/objtool/check.h         |  1 +
+ tools/objtool/objtool.h       |  1 +
+ 9 files changed, 129 insertions(+), 14 deletions(-)
 
-> @@ -706,7 +697,7 @@ int ima_load_data(enum kernel_load_data_id id, bool contents)
->  		}
->  		break;
->  	case LOADING_FIRMWARE:
-> -		if (ima_enforce && (ima_appraise & IMA_APPRAISE_FIRMWARE)) {
-> +		if (ima_enforce && (ima_appraise & IMA_APPRAISE_FIRMWARE) && !contents) {
->  			pr_err("Prevent firmware sysfs fallback loading.\n");
-
-Appended signatures are limited to kernel modules and, more recently,
-to the kexec kernel image, not firmware.  Without a file descriptor,
-file signatures stored as an xattrs are not applicable either.  We
-might as well fail earlier, rather than later.  Adding "!contents" is
-unnecessary.
-
->  			return -EACCES;	/* INTEGRITY_UNKNOWN */
->  		}
-> @@ -739,6 +730,15 @@ int ima_load_data(enum kernel_load_data_id id, bool contents)
->   */
->  int ima_post_load_data(char *buf, loff_t size, enum kernel_load_data_id load_id)
->  {
-> +	if (load_id == LOADING_FIRMWARE) {
-> +		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
-> +		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
-> +			pr_err("Prevent firmware loading_store.\n");
-> +			return -EACCES; /* INTEGRITY_UNKNOWN */
-> +		}
-> +		return 0;
-> +	}
-
-Even with failing LOADING_FIRMWARE early in ima_load_data(), is this
-still needed for fw_sysfs_loading()?
-
-thanks,
-
-Mimi
-
-> +
->  	return 0;
->  }
->  
+diff --git a/Makefile b/Makefile
+index 5cfc3481207f..2d23b6b6c4c9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -864,17 +864,34 @@ ifdef CONFIG_HAVE_FENTRY
+   ifeq ($(call cc-option-yn, -mfentry),y)
+     CC_FLAGS_FTRACE	+= -mfentry
+     CC_FLAGS_USING	+= -DCC_USING_FENTRY
++    export CC_USING_FENTRY := 1
+   endif
+ endif
+ export CC_FLAGS_FTRACE
+-KBUILD_CFLAGS	+= $(CC_FLAGS_FTRACE) $(CC_FLAGS_USING)
+-KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
+ ifdef CONFIG_DYNAMIC_FTRACE
+-	ifdef CONFIG_HAVE_C_RECORDMCOUNT
+-		BUILD_C_RECORDMCOUNT := y
+-		export BUILD_C_RECORDMCOUNT
+-	endif
++  ifndef CC_USING_RECORD_MCOUNT
++  ifndef CC_USING_PATCHABLE_FUNCTION_ENTRY
++    # use objtool or recordmcount to generate mcount tables
++    ifdef CONFIG_HAVE_OBJTOOL_MCOUNT
++      ifdef CC_USING_FENTRY
++        USE_OBJTOOL_MCOUNT := y
++        CC_FLAGS_USING += -DCC_USING_NOP_MCOUNT
++        export USE_OBJTOOL_MCOUNT
++      endif
++    endif
++    ifndef USE_OBJTOOL_MCOUNT
++      USE_RECORDMCOUNT := y
++      export USE_RECORDMCOUNT
++      ifdef CONFIG_HAVE_C_RECORDMCOUNT
++        BUILD_C_RECORDMCOUNT := y
++        export BUILD_C_RECORDMCOUNT
++      endif
++    endif
++  endif
++  endif
+ endif
++KBUILD_CFLAGS	+= $(CC_FLAGS_FTRACE) $(CC_FLAGS_USING)
++KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
+ endif
+ 
+ # We trigger additional mismatches with less inlining
+@@ -1211,11 +1228,16 @@ uapi-asm-generic:
+ PHONY += prepare-objtool prepare-resolve_btfids
+ prepare-objtool: $(objtool_target)
+ ifeq ($(SKIP_STACK_VALIDATION),1)
++objtool-lib-prompt := "please install libelf-dev, libelf-devel or elfutils-libelf-devel"
++ifdef USE_OBJTOOL_MCOUNT
++	@echo "error: Cannot generate __mcount_loc for CONFIG_DYNAMIC_FTRACE=y, $(objtool-lib-prompt)" >&2
++	@false
++endif
+ ifdef CONFIG_UNWINDER_ORC
+-	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
++	@echo "error: Cannot generate ORC metadata for CONFIG_UNWINDER_ORC=y, $(objtool-lib-prompt)" >&2
+ 	@false
+ else
+-	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel" >&2
++	@echo "warning: Cannot use CONFIG_STACK_VALIDATION=y, $(objtool-lib-prompt)" >&2
+ endif
+ endif
+ 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 9a2849527dd7..149c94a44cf0 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -163,6 +163,7 @@ config X86
+ 	select HAVE_CMPXCHG_LOCAL
+ 	select HAVE_CONTEXT_TRACKING		if X86_64
+ 	select HAVE_C_RECORDMCOUNT
++	select HAVE_OBJTOOL_MCOUNT		if STACK_VALIDATION
+ 	select HAVE_DEBUG_KMEMLEAK
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_DYNAMIC_FTRACE
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a4020c0b4508..b510af5b216c 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -56,6 +56,11 @@ config HAVE_C_RECORDMCOUNT
+ 	help
+ 	  C version of recordmcount available?
+ 
++config HAVE_OBJTOOL_MCOUNT
++	bool
++	help
++	  Arch supports objtool --mcount
++
+ config TRACER_MAX_TRACE
+ 	bool
+ 
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2e8810b7e5ed..f66f8c0ef294 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -175,8 +175,7 @@ cmd_modversions_c =								\
+ 	fi
+ endif
+ 
+-ifdef CONFIG_FTRACE_MCOUNT_RECORD
+-ifndef CC_USING_RECORD_MCOUNT
++ifdef USE_RECORDMCOUNT
+ # compiler will not generate __mcount_loc use recordmcount or recordmcount.pl
+ ifdef BUILD_C_RECORDMCOUNT
+ ifeq ("$(origin RECORDMCOUNT_WARN)", "command line")
+@@ -203,8 +202,7 @@ recordmcount_source := $(srctree)/scripts/recordmcount.pl
+ endif # BUILD_C_RECORDMCOUNT
+ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
+ 	$(sub_cmd_record_mcount))
+-endif # CC_USING_RECORD_MCOUNT
+-endif # CONFIG_FTRACE_MCOUNT_RECORD
++endif # USE_RECORDMCOUNT
+ 
+ ifdef CONFIG_STACK_VALIDATION
+ ifneq ($(SKIP_STACK_VALIDATION),1)
+@@ -227,6 +225,9 @@ endif
+ ifdef CONFIG_X86_SMAP
+   objtool_args += --uaccess
+ endif
++ifdef USE_OBJTOOL_MCOUNT
++  objtool_args += --mcount
++endif
+ 
+ # 'OBJECT_FILES_NON_STANDARD := y': skip objtool checking for a directory
+ # 'OBJECT_FILES_NON_STANDARD_foo.o := 'y': skip objtool checking for a file
+diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
+index 7a44174967b5..71595cf4946d 100644
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -18,7 +18,7 @@
+ #include "builtin.h"
+ #include "objtool.h"
+ 
+-bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
++bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, mcount;
+ 
+ static const char * const check_usage[] = {
+ 	"objtool check [<options>] file.o",
+@@ -35,6 +35,7 @@ const struct option check_options[] = {
+ 	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
+ 	OPT_BOOLEAN('d', "duplicate", &validate_dup, "duplicate validation for vmlinux.o"),
+ 	OPT_BOOLEAN('l', "vmlinux", &vmlinux, "vmlinux.o validation"),
++	OPT_BOOLEAN('M', "mcount", &mcount, "generate __mcount_loc"),
+ 	OPT_END(),
+ };
+ 
+diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
+index 85c979caa367..94565a72b701 100644
+--- a/tools/objtool/builtin.h
++++ b/tools/objtool/builtin.h
+@@ -8,7 +8,7 @@
+ #include <subcmd/parse-options.h>
+ 
+ extern const struct option check_options[];
+-extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
++extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, mcount;
+ 
+ extern int cmd_check(int argc, const char **argv);
+ extern int cmd_orc(int argc, const char **argv);
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index e034a8f24f46..6e0b478dc065 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -433,6 +433,65 @@ static int add_dead_ends(struct objtool_file *file)
+ 	return 0;
+ }
+ 
++static int create_mcount_loc_sections(struct objtool_file *file)
++{
++	struct section *sec, *reloc_sec;
++	struct reloc *reloc;
++	unsigned long *loc;
++	struct instruction *insn;
++	int idx;
++
++	sec = find_section_by_name(file->elf, "__mcount_loc");
++	if (sec) {
++		INIT_LIST_HEAD(&file->mcount_loc_list);
++		WARN("file already has __mcount_loc section, skipping");
++		return 0;
++	}
++
++	if (list_empty(&file->mcount_loc_list))
++		return 0;
++
++	idx = 0;
++	list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node)
++		idx++;
++
++	sec = elf_create_section(file->elf, "__mcount_loc", sizeof(unsigned long), idx);
++	if (!sec)
++		return -1;
++
++	reloc_sec = elf_create_reloc_section(file->elf, sec, SHT_RELA);
++	if (!reloc_sec)
++		return -1;
++
++	idx = 0;
++	list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node) {
++
++		loc = (unsigned long *)sec->data->d_buf + idx;
++		memset(loc, 0, sizeof(unsigned long));
++
++		reloc = malloc(sizeof(*reloc));
++		if (!reloc) {
++			perror("malloc");
++			return -1;
++		}
++		memset(reloc, 0, sizeof(*reloc));
++
++		reloc->sym = insn->sec->sym;
++		reloc->addend = insn->offset;
++		reloc->type = R_X86_64_64;
++		reloc->offset = idx * sizeof(unsigned long);
++		reloc->sec = reloc_sec;
++		elf_add_reloc(file->elf, reloc);
++
++		idx++;
++	}
++
++	if (elf_rebuild_reloc_section(file->elf, reloc_sec))
++		return -1;
++
++	return 0;
++}
++
+ /*
+  * Warnings shouldn't be reported for ignored functions.
+  */
+@@ -784,6 +843,22 @@ static int add_call_destinations(struct objtool_file *file)
+ 			insn->type = INSN_NOP;
+ 		}
+ 
++		if (mcount && !strcmp(insn->call_dest->name, "__fentry__")) {
++			if (reloc) {
++				reloc->type = R_NONE;
++				elf_write_reloc(file->elf, reloc);
++			}
++
++			elf_write_insn(file->elf, insn->sec,
++				       insn->offset, insn->len,
++				       arch_nop_insn(insn->len));
++
++			insn->type = INSN_NOP;
++
++			list_add_tail(&insn->mcount_loc_node,
++				      &file->mcount_loc_list);
++		}
++
+ 		/*
+ 		 * Whatever stack impact regular CALLs have, should be undone
+ 		 * by the RETURN of the called function.
+@@ -2791,6 +2866,7 @@ int check(const char *_objname, bool orc)
+ 
+ 	INIT_LIST_HEAD(&file.insn_list);
+ 	hash_init(file.insn_hash);
++	INIT_LIST_HEAD(&file.mcount_loc_list);
+ 	file.c_file = !vmlinux && find_section_by_name(file.elf, ".comment");
+ 	file.ignore_unreachables = no_unreachable;
+ 	file.hints = false;
+@@ -2838,6 +2914,13 @@ int check(const char *_objname, bool orc)
+ 		warnings += ret;
+ 	}
+ 
++	if (mcount) {
++		ret = create_mcount_loc_sections(&file);
++		if (ret < 0)
++			goto out;
++		warnings += ret;
++	}
++
+ 	if (orc) {
+ 		ret = create_orc(&file);
+ 		if (ret < 0)
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index 061aa96e15d3..b62afd3d970b 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -22,6 +22,7 @@ struct insn_state {
+ struct instruction {
+ 	struct list_head list;
+ 	struct hlist_node hash;
++	struct list_head mcount_loc_node;
+ 	struct section *sec;
+ 	unsigned long offset;
+ 	unsigned int len;
+diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
+index 528028a66816..427806079540 100644
+--- a/tools/objtool/objtool.h
++++ b/tools/objtool/objtool.h
+@@ -16,6 +16,7 @@ struct objtool_file {
+ 	struct elf *elf;
+ 	struct list_head insn_list;
+ 	DECLARE_HASHTABLE(insn_hash, 20);
++	struct list_head mcount_loc_list;
+ 	bool ignore_unreachables, c_file, hints, rodata;
+ };
+ 
 
