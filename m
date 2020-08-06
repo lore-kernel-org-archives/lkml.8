@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED03C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD282173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E107E22CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kf8WYWyI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KquSmEdC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0fj4/Jd5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RtXLoRvf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHFXiz (ORCPT
+        id S1726676AbgHFXjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:38:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60886 "EHLO
+        Thu, 6 Aug 2020 19:39:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60908 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbgHFXis (ORCPT
+        with ESMTP id S1726450AbgHFXit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:38:48 -0400
-Date:   Thu, 06 Aug 2020 23:38:44 -0000
+        Thu, 6 Aug 2020 19:38:49 -0400
+Date:   Thu, 06 Aug 2020 23:38:47 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757125;
+        s=2020; t=1596757127;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=euZjanT6kjbBMt9mOI93vtI7+GhGL3QWOcr5yXnKhJE=;
-        b=kf8WYWyISqdKVTZ2qXYD+2hk0lxkEAf+0v7bHBofb9N6u/IN9As1dksbij1WiFHTuMHx0i
-        JnG6omaFV+bWcpepWA+dbQKGxAWn5kWosViZh5T1vxP9h0mmVrlS9ORuGqW4DzEiY1lpUW
-        S0XVHhmES4n7JyBVBjTApCeB3ZFzvMlF3TvmveX5Pf5Nza81UBsd8jOcUypwKTUnJxzpp3
-        A3qasIokbrzDO4+LdB3acJof5yrhxDHORRJygcXO4/IhuFWrj6egSOCO0QWjH6FZkmW7Z4
-        SeKcZQcpJbHXkeSIyFufSm2h/a+fisK50ku/K/F5nk6mzKDb478nR8SR8xbzCw==
+        bh=mpe6YTkV44HAJlNIEEmmAavR1L5M4e4miMoT9IbpiR8=;
+        b=0fj4/Jd5BbZPGwf3L7GlhUiQkm48zILc8QUremzOBtu+Xm+HdNFxOGP7L2s+KjOgETRny2
+        h56Ovvwz5szuWVuVAbPCiCmbJj7HyXu+Hcp+JX/B6rdWSodwJkohfLkc2ajD5To9znomhX
+        pSKJP8m3OI+hwNJylj4GMOhkXzcwBeQMWql5NKKUEuhtFKm8VdEIKD9pmtANnENWPyA38w
+        zm3B035Xffw7jqxhkZ/sfVGN3q2kgzf7/vhHfV6nUIA/arL8yPGplj9GhgPDpD7UMhskay
+        eCrcvFJKguAc0K7cn8oKukI1KZA9STPuhzqf/z8jX2+myWBVaHf+TFH7BR1qtg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757125;
+        s=2020e; t=1596757127;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=euZjanT6kjbBMt9mOI93vtI7+GhGL3QWOcr5yXnKhJE=;
-        b=KquSmEdCMCevjaYuCZf7g405FtdyyEiKXlwb78NUmQVxW/tl7EznntXVr7GE3yVGKEIOjE
-        ZD9n7vsmuZxzyeDw==
-From:   "tip-bot2 for Lianbo Jiang" <tip-bot2@linutronix.de>
+        bh=mpe6YTkV44HAJlNIEEmmAavR1L5M4e4miMoT9IbpiR8=;
+        b=RtXLoRvfm52g5tI4i3o+EVeIRkEiI04qkWo3INjIMhWo98nU6wYlhq/a7G7FzUT6Vpjldj
+        DyZFpG9lNBC6sWBA==
+From:   "tip-bot2 for Shuo Liu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] kexec_file: Correctly output debugging information
- for the PT_LOAD ELF header
-Cc:     Lianbo Jiang <lijiang@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Dave Young <dyoung@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200804044933.1973-4-lijiang@redhat.com>
-References: <20200804044933.1973-4-lijiang@redhat.com>
+Subject: [tip: x86/urgent] x86/acrn: Allow ACRN guest to use X2APIC mode
+Cc:     Yakui Zhao <yakui.zhao@intel.com>, Shuo Liu <shuo.a.liu@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200806113802.9325-1-shuo.a.liu@intel.com>
+References: <20200806113802.9325-1-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-Message-ID: <159675712489.3192.10936858740810441552.tip-bot2@tip-bot2>
+Message-ID: <159675712730.3192.10606013510070138850.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,81 +71,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     475f63ae63b5102ae6423d1712333929d04d6ecc
-Gitweb:        https://git.kernel.org/tip/475f63ae63b5102ae6423d1712333929d04d6ecc
-Author:        Lianbo Jiang <lijiang@redhat.com>
-AuthorDate:    Tue, 04 Aug 2020 12:49:33 +08:00
+Commit-ID:     86d709ce30eaa65706090865662a08d7bdd30c54
+Gitweb:        https://git.kernel.org/tip/86d709ce30eaa65706090865662a08d7bdd30c54
+Author:        Shuo Liu <shuo.a.liu@intel.com>
+AuthorDate:    Thu, 06 Aug 2020 19:38:02 +08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 07 Aug 2020 01:32:00 +02:00
 
-kexec_file: Correctly output debugging information for the PT_LOAD ELF header
+x86/acrn: Allow ACRN guest to use X2APIC mode
 
-Currently, when we enable the debugging switch to debug kexec_file,
-we always get the following incorrect results:
+The ACRN Hypervisor did not support x2APIC and thus x2APIC support was
+disabled by always returning false when VM checked for x2APIC support.
 
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000c988639b vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=51 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=000000003cca69a0 vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=52 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000c584cb9f vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=53 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000cf85d57f vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=54 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000a4a8f847 vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=55 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000272ec49f vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=56 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000ea0b65de vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=57 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=000000001f5e490c vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=58 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000dfe4109e vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=59 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000480ed2b6 vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=60 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=0000000080b65151 vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=61 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=0000000024e31c5e vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=62 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000332e0385 vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=63 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=000000002754d5da vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=64 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=00000000783320dd vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=65 p_offset=0x0
-  kexec_file: Crash PT_LOAD elf header. phdr=0000000076fe5b64 vaddr=0x0, paddr=0x0, sz=0x0 e_phnum=66 p_offset=0x0
+ACRN received full support of x2APIC and exports the capability through
+CPUID feature bits.
 
-The reason is that kernel always prints the values of the next PT_LOAD
-instead of the current PT_LOAD. Change it to ensure that we can get the
-correct debugging information.
+Let VM decide if it needs to switch to x2APIC mode according to CPUID
+features.
 
-[ mingo: Amended changelog, capitalized "ELF". ]
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Originally-by: Yakui Zhao <yakui.zhao@intel.com>
+Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Dave Young <dyoung@redhat.com>
-Link: https://lore.kernel.org/r/20200804044933.1973-4-lijiang@redhat.com
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Link: https://lore.kernel.org/r/20200806113802.9325-1-shuo.a.liu@intel.com
 ---
- kernel/kexec_file.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/acrn.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 97fa682..3f7867c 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -1246,7 +1246,7 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 	unsigned long long notes_addr;
- 	unsigned long mstart, mend;
+diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+index 1da9b1c..3b08cdf 100644
+--- a/arch/x86/kernel/cpu/acrn.c
++++ b/arch/x86/kernel/cpu/acrn.c
+@@ -11,6 +11,7 @@
  
--	/* extra phdr for vmcoreinfo elf note */
-+	/* extra phdr for vmcoreinfo ELF note */
- 	nr_phdr = nr_cpus + 1;
- 	nr_phdr += mem->nr_ranges;
+ #include <linux/interrupt.h>
+ #include <asm/apic.h>
++#include <asm/cpufeatures.h>
+ #include <asm/desc.h>
+ #include <asm/hypervisor.h>
+ #include <asm/idtentry.h>
+@@ -29,12 +30,7 @@ static void __init acrn_init_platform(void)
  
-@@ -1254,7 +1254,7 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
- 	 * area (for example, ffffffff80000000 - ffffffffa0000000 on x86_64).
- 	 * I think this is required by tools like gdb. So same physical
--	 * memory will be mapped in two elf  headers. One will contain kernel
-+	 * memory will be mapped in two ELF headers. One will contain kernel
- 	 * text virtual addresses and other will have __va(physical) addresses.
- 	 */
+ static bool acrn_x2apic_available(void)
+ {
+-	/*
+-	 * x2apic is not supported for now. Future enablement will have to check
+-	 * X86_FEATURE_X2APIC to determine whether x2apic is supported in the
+-	 * guest.
+-	 */
+-	return false;
++	return boot_cpu_has(X86_FEATURE_X2APIC);
+ }
  
-@@ -1323,10 +1323,10 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
- 		phdr->p_align = 0;
- 		ehdr->e_phnum++;
--		phdr++;
--		pr_debug("Crash PT_LOAD elf header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
-+		pr_debug("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
- 			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
- 			ehdr->e_phnum, phdr->p_offset);
-+		phdr++;
- 	}
- 
- 	*addr = buf;
+ static void (*acrn_intr_handler)(void);
