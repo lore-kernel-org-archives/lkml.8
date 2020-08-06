@@ -2,153 +2,98 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ADAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10632173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RKNOVCYP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K4LXh0Sd"
+	by mail.kernel.org (Postfix) with ESMTP id 99AAF21744
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgHFXjV (ORCPT
+        id S1726913AbgHFXjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:39:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60990 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgHFXjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:39:06 -0400
-Date:   Thu, 06 Aug 2020 23:39:03 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757144;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mRN6QvitSIvL/somoMlX60NzPXdS9FzFfalaag+UTxM=;
-        b=RKNOVCYPvKU5dgrAcJfXJpCLw6QDFJPr4TunVyd4NhVKNBz6XJ8bM0oS6ooFywRTkFZHO6
-        wBaTDxU3O73ZQ9Z7OaxGP0BRiYG8tuYFcNLkt+zKed7u46svRn4z7UYdURcMlK/1YcbYnG
-        ObX84yg/34OJh9KUPAv5IpMdRGKrAa3GGPsEOR/CoSDVOeBTKZQ72wcSZ60NNiFCdE56AJ
-        notzgDwlPx6MV05FjllQXeqquQJrUd2DTpomUc6fClv9ELqUFcyi4j0qncOidlbd1d4V9A
-        tagDrtS3hNmHdXpcFcpnm4Mx5i/eeyefLCztQUEorZIG1UrY3XRbBLBsLRX+kA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757144;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mRN6QvitSIvL/somoMlX60NzPXdS9FzFfalaag+UTxM=;
-        b=K4LXh0Sduu8HHbfoGYV1qPVQUXXTWMeY+kN0WHJpn0oLPUFJOdBsaVExwpvnA9IzmjoaeP
-        fQR8FVpHyX3H/lAQ==
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kaslr] x86/kaslr: Make command line handling safer
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200727230801.3468620-2-nivedita@alum.mit.edu>
-References: <20200727230801.3468620-2-nivedita@alum.mit.edu>
+        Thu, 6 Aug 2020 19:39:25 -0400
+Received: from mga18.intel.com ([134.134.136.126]:33140 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbgHFXjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 19:39:23 -0400
+IronPort-SDR: WxImU8HKevawQsvWAAy8RPClL4sPTbQfxQsSdB4fOJVzpGfc+LYIibsLG+kA+us0OoPanuGZaa
+ eQcDPtymJWDA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="140546952"
+X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
+   d="scan'208";a="140546952"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 16:39:22 -0700
+IronPort-SDR: li0Zvboit1nDjrVaU53I/yfcJlRuBf8AuGwmO7gp3Q+8SO0OtZaKFEmtR1Ad803PgyAwVTC5hQ
+ UPwAdr0LeSqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
+   d="scan'208";a="333366457"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga007.jf.intel.com with ESMTP; 06 Aug 2020 16:39:21 -0700
+Date:   Thu, 6 Aug 2020 16:39:06 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH v3] x86/cpu: Use SERIALIZE in sync_core() when available
+Message-ID: <20200806233906.GA27118@ranerica-svr.sc.intel.com>
+References: <20200806192531.25136-1-ricardo.neri-calderon@linux.intel.com>
+ <a6ab438e-8ca8-999f-9eb9-c43fe1b9f128@intel.com>
+ <20200806230455.GA25599@ranerica-svr.sc.intel.com>
+ <929b76df-7da8-9147-3939-5e044f9d7728@intel.com>
 MIME-Version: 1.0
-Message-ID: <159675714346.3192.17629244064214120082.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <929b76df-7da8-9147-3939-5e044f9d7728@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/kaslr branch of tip:
+On Thu, Aug 06, 2020 at 04:08:47PM -0700, Dave Hansen wrote:
+> On 8/6/20 4:04 PM, Ricardo Neri wrote:
+> > 	 * CPUID is the conventional way, but it's nasty: it doesn't
+> > 	 * exist on some 486-like CPUs, and it usually exits to a
+> > 	 * hypervisor.
+> > 	 *
+> >  	 * The SERIALIZE instruction is the most straightforward way to
+> >  	 * do this as it does not clobber registers or exit to a
+> > 	 * hypervisor. However, it is not universally available.
+> >  	 *
+> > 	 * Like all of Linux's memory ordering operations, this is a
+> > 	 * compiler barrier as well.
+> > 	 */
+> > 
+> > What do you think?
+> 
+> I like what I suggested.  :)
+> 
+> SERIALIZE is best where available.  Do it first, comment it by itself.
+> 
+> Then, go into the long discussion of the other alternatives.  They only
+> make sense when SERIALIZE isn't there, and the logic for selection there
+> is substantially more complicated.
 
-Commit-ID:     709709ac6410f4a14ded158a4b23b979e33e10fb
-Gitweb:        https://git.kernel.org/tip/709709ac6410f4a14ded158a4b23b979e33e10fb
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Mon, 27 Jul 2020 19:07:54 -04:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 31 Jul 2020 11:07:51 +02:00
+Sure Dave, I think this layout makes sense. I will rework the comments.
 
-x86/kaslr: Make command line handling safer
-
-Handle the possibility that the command line is NULL.
-
-Replace open-coded strlen with a function call.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200727230801.3468620-2-nivedita@alum.mit.edu
----
- arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index d7408af..e0f69f3 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -268,15 +268,19 @@ static void parse_gb_huge_pages(char *param, char *val)
- static void handle_mem_options(void)
- {
- 	char *args = (char *)get_cmd_line_ptr();
--	size_t len = strlen((char *)args);
-+	size_t len;
- 	char *tmp_cmdline;
- 	char *param, *val;
- 	u64 mem_size;
- 
-+	if (!args)
-+		return;
-+
- 	if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
- 		!strstr(args, "hugepages"))
- 		return;
- 
-+	len = strlen(args);
- 	tmp_cmdline = malloc(len + 1);
- 	if (!tmp_cmdline)
- 		error("Failed to allocate space for tmp_cmdline");
-@@ -399,8 +403,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- {
- 	unsigned long init_size = boot_params->hdr.init_size;
- 	u64 initrd_start, initrd_size;
--	u64 cmd_line, cmd_line_size;
--	char *ptr;
-+	unsigned long cmd_line, cmd_line_size;
- 
- 	/*
- 	 * Avoid the region that is unsafe to overlap during
-@@ -421,16 +424,15 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 	/* No need to set mapping for initrd, it will be handled in VO. */
- 
- 	/* Avoid kernel command line. */
--	cmd_line  = (u64)boot_params->ext_cmd_line_ptr << 32;
--	cmd_line |= boot_params->hdr.cmd_line_ptr;
-+	cmd_line = get_cmd_line_ptr();
- 	/* Calculate size of cmd_line. */
--	ptr = (char *)(unsigned long)cmd_line;
--	for (cmd_line_size = 0; ptr[cmd_line_size++];)
--		;
--	mem_avoid[MEM_AVOID_CMDLINE].start = cmd_line;
--	mem_avoid[MEM_AVOID_CMDLINE].size = cmd_line_size;
--	add_identity_map(mem_avoid[MEM_AVOID_CMDLINE].start,
--			 mem_avoid[MEM_AVOID_CMDLINE].size);
-+	if (cmd_line) {
-+		cmd_line_size = strlen((char *)cmd_line) + 1;
-+		mem_avoid[MEM_AVOID_CMDLINE].start = cmd_line;
-+		mem_avoid[MEM_AVOID_CMDLINE].size = cmd_line_size;
-+		add_identity_map(mem_avoid[MEM_AVOID_CMDLINE].start,
-+				 mem_avoid[MEM_AVOID_CMDLINE].size);
-+	}
- 
- 	/* Avoid boot parameters. */
- 	mem_avoid[MEM_AVOID_BOOTPARAMS].start = (unsigned long)boot_params;
+Thanks and BR,
+Ricardo
