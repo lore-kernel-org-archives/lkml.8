@@ -2,93 +2,186 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF50C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0472311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A364D23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgHFRNu (ORCPT
+        id S1730454AbgHFROF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:13:50 -0400
-Received: from elvis.franken.de ([193.175.24.41]:36776 "EHLO elvis.franken.de"
+        Thu, 6 Aug 2020 13:14:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41168 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbgHFRNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:13:10 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k3cy8-0001w1-00; Thu, 06 Aug 2020 12:17:52 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 0C114C0C5C; Thu,  6 Aug 2020 12:17:34 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 12:17:34 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
-Message-ID: <20200806101733.GA8136@alpha.franken.de>
-References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
- <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
- <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
+        id S1730445AbgHFRNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:13:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5C35CABE9;
+        Thu,  6 Aug 2020 11:45:28 +0000 (UTC)
+Subject: Re: [PATCH v2] mm, dump_page: do not crash with bad
+ compound_mapcount()
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        willy@infradead.org, cai@lca.pw, kirill@shutemov.name,
+        rppt@linux.ibm.com, william.kucharski@oracle.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200804214807.169256-1-jhubbard@nvidia.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <ac97deea-4638-badd-9495-c9ca313837bb@suse.cz>
+Date:   Thu, 6 Aug 2020 13:45:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200804214807.169256-1-jhubbard@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 04:32:13PM +0800, Tiezhu Yang wrote:
-> On 08/06/2020 03:39 PM, Jiaxun Yang wrote:
-> >
-> >
-> >在 2020/8/6 下午3:09, Tiezhu Yang 写道:
-> >>Loongson processors have a writecombine issue that maybe failed to
-> >>write back framebuffer used with ATI Radeon or AMD GPU at times,
-> >>after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
-> >>mapping for MIPS"), there exists some errors such as blurred screen
-> >>and lockup, and so on.
-> >>
-> >>With this patch, disable writecombine by default for Loongson64 to
-> >>work well with ATI Radeon or AMD GPU, and it has no influence on the
-> >>other platforms due to writecombine is enabled by default.
-> >>
-> >>Additionally, if it is necessary, writecombine=on can be set manually
-> >>in the cmdline to enhance the performance for Loongson LS7A integrated
-> >>graphics in the future.
-> >>
-> >>[   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than
-> >>10079msec
-> >>[   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id
-> >>0x0000000000000112 last fence id 0x000000000000011d on ring 0)
-> >>[   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than
-> >>10086msec
-> >>[   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id
-> >>0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
-> >Hi Tiezhu,
-> >
-> >Thanks for your patch.
-> >Personally I didn't have any issue with writecombine on my test systems,
-> >but there
-> >are some complains about unstable graphic card from users. So generally a
-> >cmdline
-> >writecombine switch is necessary.
 
-no, if there is hardware which can't work with writecombining enabled
-the driver should disable it by it's own and not by some user switch.
-It might even be better to revert the patch enabling writecombining
-blindly and add code to enable it for hardware where it works.
+On 8/4/20 11:48 PM, John Hubbard wrote:
+> If a compound page is being split while dump_page() is being run on that
+> page, we can end up calling compound_mapcount() on a page that is no
+> longer compound. This leads to a crash (already seen at least once in
+> the field), due to the VM_BUG_ON_PAGE() assertion inside
+> compound_mapcount().
+> 
+> (The above is from Matthew Wilcox's analysis of Qian Cai's bug report.)
+> 
+> A similar problem is possible, via compound_pincount() instead of
+> compound_mapcount().
+> 
+> In order to avoid this kind of crash, make dump_page() slightly more
+> robust, by providing a pair of simpler routines that don't contain
+> assertions: head_mapcount() and head_pincount().
+> 
+> For debug tools, we don't want to go *too* far in this direction, but
+> this is a simple small fix, and the crash has already been seen, so it's
+> a good trade-off.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Suggested-by: Matthew Wilcox <willy@infradead.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-Thomas.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
+> ---
+> Hi,
+> 
+> I'm assuming that a fix is not required for -stable, but let me know if
+> others feel differently. The dump_page() code has changed a lot in that
+> area.
+
+I'd say only if we backport all those changes, as most were to avoid similar
+kind of crashes?
+How about this additional patch now that we have head_mapcoun()? (I wouldn't
+go for squashing as the goal and scope is too different).
+
+----8<----
+From 3b3d5b4639eea9c0787eed510a32acdc918d569f Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Thu, 6 Aug 2020 13:33:58 +0200
+Subject: [PATCH] mm, thp: use head_mapcount when we know we have a head page
+
+Patch "mm, dump_page: do not crash with bad compound_mapcount()" has introduced
+head_mapcount() to split out the part of compound_mapcount() where we already
+know/assume we have a head page. We can use the new function in more places
+where we already have a head page, to avoid the overhead of compound_head()
+and (with DEBUG_VM) a debug check. This patch does that. There are few more
+applicable places, but behind DEBUG_VM so performance is not important, and the
+extra debug check in compound_mapcount() could be useful instead.
+
+The bloat-o-meter difference without DEBUG_VM is the following:
+
+add/remove: 0/0 grow/shrink: 1/4 up/down: 32/-56 (-24)
+Function                                     old     new   delta
+__split_huge_pmd                            2867    2899     +32
+shrink_page_list                            3860    3847     -13
+reuse_swap_page                              762     748     -14
+page_trans_huge_mapcount                     153     139     -14
+total_mapcount                               187     172     -15
+Total: Before=8687306, After=8687282, chg -0.00%
+
+This just shows that compiler wasn't able to prove we have a head page by
+itself. In __split_huge_pmd() the eliminated check probably led to different
+optimization decisions thus code size increased.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/huge_memory.c | 6 +++---
+ mm/swapfile.c    | 2 +-
+ mm/vmscan.c      | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 90733cefa528..5927874b7894 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2125,7 +2125,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+ 	 * Set PG_double_map before dropping compound_mapcount to avoid
+ 	 * false-negative page_mapped().
+ 	 */
+-	if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
++	if (head_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
+ 		for (i = 0; i < HPAGE_PMD_NR; i++)
+ 			atomic_inc(&page[i]._mapcount);
+ 	}
+@@ -2467,7 +2467,7 @@ int total_mapcount(struct page *page)
+ 	if (likely(!PageCompound(page)))
+ 		return atomic_read(&page->_mapcount) + 1;
+ 
+-	compound = compound_mapcount(page);
++	compound = head_mapcount(page);
+ 	if (PageHuge(page))
+ 		return compound;
+ 	ret = compound;
+@@ -2531,7 +2531,7 @@ int page_trans_huge_mapcount(struct page *page, int *total_mapcount)
+ 		ret -= 1;
+ 		_total_mapcount -= HPAGE_PMD_NR;
+ 	}
+-	mapcount = compound_mapcount(page);
++	mapcount = head_mapcount(page);
+ 	ret += mapcount;
+ 	_total_mapcount += mapcount;
+ 	if (total_mapcount)
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 9ee4211835c6..c5e722de38b8 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1673,7 +1673,7 @@ static int page_trans_huge_map_swapcount(struct page *page, int *total_mapcount,
+ 		map_swapcount -= 1;
+ 		_total_mapcount -= HPAGE_PMD_NR;
+ 	}
+-	mapcount = compound_mapcount(page);
++	mapcount = head_mapcount(page);
+ 	map_swapcount += mapcount;
+ 	_total_mapcount += mapcount;
+ 	if (total_mapcount)
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index a086c104a9a6..72218cdfd902 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1248,7 +1248,7 @@ static unsigned int shrink_page_list(struct list_head *page_list,
+ 					 * away. Chances are some or all of the
+ 					 * tail pages can be freed without IO.
+ 					 */
+-					if (!compound_mapcount(page) &&
++					if (!head_mapcount(page) &&
+ 					    split_huge_page_to_list(page,
+ 								    page_list))
+ 						goto activate_locked;
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.28.0
+
