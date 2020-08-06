@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F01921744
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB8B21744
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WUO1ltbd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="27kD3CyM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DAAGpn/z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KT176TXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgHFXjd (ORCPT
+        id S1726963AbgHFXjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:39:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60966 "EHLO
+        Thu, 6 Aug 2020 19:39:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60984 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHFXjE (ORCPT
+        with ESMTP id S1726641AbgHFXjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:39:04 -0400
-Date:   Thu, 06 Aug 2020 23:39:02 -0000
+        Thu, 6 Aug 2020 19:39:03 -0400
+Date:   Thu, 06 Aug 2020 23:39:00 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757142;
+        s=2020; t=1596757140;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=965pAqaMzTYAjEnNgooelFyKKV0yVuFCat0tV7lH4Y4=;
-        b=WUO1ltbdFI5+BHWlBEZVNAwWhK/L1K8LI/uddn6T3L49hu3uoVPAlQDacqyjQj8aYlPr6D
-        nNcr6k7+vEdoBKrKiYOrnBdwbJU0TL1wPxX2RADaCgXf/HVwOpJzteESvphF0VFpHm0Slm
-        AjvACtHcnp1esXVIqrPwB33Z4BLbxPB6oeP52oYrnnbC5wK8FYQrFt5ll/Lf4C2NOkLh+B
-        mO+yFcGEqGHxQzpF9ByBztAFwfsm3fUSD0cxSNkmG1IHz2cgkn5IJlA50AIDW6K0ssw5UG
-        VqUiV41LG79+/V2svNqqvfoSOL4OjnAICAkZ7Go7t6ky6UuZ9gPleY4IjYptEQ==
+        bh=Qr987amBZwdnITURmE65nMl6RZWE9Vvv/+AZTeUYqj0=;
+        b=DAAGpn/zFU9XUKjA17apPVl6tkZ15PxzCCg0EFOpDKHHVif2fCjXplT/D/jqwhHh5uQdaP
+        6e1ZV4OBDhQFsjg31YDnS4/Ta6mf2JCB7/dghhxV1Rq2HnQwdprvm6ptC62MscA0Vv0zyS
+        V/XwtiycAk070SWPRVMnds6++qBcE0cANcQByeqxx9ZmLiSCsUuj3AjoXkJUf8I8OloC79
+        EtmTksb+Kv9dzITNIFgtv9x6ryWXOw7ftAlzgQS185STztRf58kkxhgCNb2BHyN1rQD8K9
+        6IswqJFLY7ZigGdmTwfReDRGpvKuJMs6cXWS6C41cT6cdJWUmqJ9OMtq75i8gg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757142;
+        s=2020e; t=1596757140;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=965pAqaMzTYAjEnNgooelFyKKV0yVuFCat0tV7lH4Y4=;
-        b=27kD3CyMqToLhGWd7PPeiJBCWj5/6QO4M8+VLufrk6AdvR4X006T08upP1wLAiYTkOLVvh
-        PxqF8c7hz+k2raDA==
+        bh=Qr987amBZwdnITURmE65nMl6RZWE9Vvv/+AZTeUYqj0=;
+        b=KT176TXhwShaaIEF7jUzFoD/ZXcDBKALQNwpOfzMMi9nU3UsL/gFx5uyroHljmJYpWSdKS
+        yd71d83h2o1X/3AA==
 From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kaslr] x86/kaslr: Fix process_efi_entries comment
+Subject: [tip: x86/kaslr] x86/kaslr: Drop redundant cur_entry from
+ __process_mem_region()
 Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200727230801.3468620-4-nivedita@alum.mit.edu>
-References: <20200727230801.3468620-4-nivedita@alum.mit.edu>
+In-Reply-To: <20200728225722.67457-7-nivedita@alum.mit.edu>
+References: <20200728225722.67457-7-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Message-ID: <159675714219.3192.7212574474867061776.tip-bot2@tip-bot2>
+Message-ID: <159675714018.3192.1265605139963105539.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,42 +71,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/kaslr branch of tip:
 
-Commit-ID:     08705365560a352d3f5b4f1f52270b4d4ff7911e
-Gitweb:        https://git.kernel.org/tip/08705365560a352d3f5b4f1f52270b4d4ff7911e
+Commit-ID:     3f9412c73053a5be311607e42560c1303a873be7
+Gitweb:        https://git.kernel.org/tip/3f9412c73053a5be311607e42560c1303a873be7
 Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Mon, 27 Jul 2020 19:07:56 -04:00
+AuthorDate:    Tue, 28 Jul 2020 18:57:07 -04:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 31 Jul 2020 11:08:12 +02:00
+CommitterDate: Fri, 31 Jul 2020 11:08:17 +02:00
 
-x86/kaslr: Fix process_efi_entries comment
+x86/kaslr: Drop redundant cur_entry from __process_mem_region()
 
-Since commit:
-
-  0982adc74673 ("x86/boot/KASLR: Work around firmware bugs by excluding EFI_BOOT_SERVICES_* and EFI_LOADER_* from KASLR's choice")
-
-process_efi_entries() will return true if we have an EFI memmap, not just
-if it contained EFI_MEMORY_MORE_RELIABLE regions.
+cur_entry is only used as cur_entry.start + cur_entry.size, which is
+always equal to end.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200727230801.3468620-4-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200728225722.67457-7-nivedita@alum.mit.edu
 ---
- arch/x86/boot/compressed/kaslr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/kaslr.c |  9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index c31f3a5..1ab67a8 100644
+index 848346f..f2454ee 100644
 --- a/arch/x86/boot/compressed/kaslr.c
 +++ b/arch/x86/boot/compressed/kaslr.c
-@@ -742,8 +742,8 @@ static bool process_mem_region(struct mem_vector *region,
+@@ -624,7 +624,6 @@ static void __process_mem_region(struct mem_vector *entry,
+ {
+ 	struct mem_vector region, overlap;
+ 	unsigned long start_orig, end;
+-	struct mem_vector cur_entry;
  
- #ifdef CONFIG_EFI
- /*
-- * Returns true if mirror region found (and must have been processed
-- * for slots adding)
-+ * Returns true if we processed the EFI memmap, which we prefer over the E820
-+ * table if it is available.
-  */
- static bool
- process_efi_entries(unsigned long minimum, unsigned long image_size)
+ 	/* Ignore entries entirely below our minimum. */
+ 	if (entry->start + entry->size < minimum)
+@@ -634,11 +633,9 @@ static void __process_mem_region(struct mem_vector *entry,
+ 	end = min(entry->size + entry->start, mem_limit);
+ 	if (entry->start >= end)
+ 		return;
+-	cur_entry.start = entry->start;
+-	cur_entry.size = end - entry->start;
+ 
+-	region.start = cur_entry.start;
+-	region.size = cur_entry.size;
++	region.start = entry->start;
++	region.size = end - entry->start;
+ 
+ 	/* Give up if slot area array is full. */
+ 	while (slot_area_index < MAX_SLOT_AREA) {
+@@ -652,7 +649,7 @@ static void __process_mem_region(struct mem_vector *entry,
+ 		region.start = ALIGN(region.start, CONFIG_PHYSICAL_ALIGN);
+ 
+ 		/* Did we raise the address above the passed in memory entry? */
+-		if (region.start > cur_entry.start + cur_entry.size)
++		if (region.start > end)
+ 			return;
+ 
+ 		/* Reduce size by any delta from the original address. */
