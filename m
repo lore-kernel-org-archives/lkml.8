@@ -2,104 +2,218 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C232C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23909C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F852086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQcflc2Y"
+	by mail.kernel.org (Postfix) with ESMTP id 707372086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596732756;
+	bh=6Ibsyaw2FefxKuClRyPVKKIN/nMVuRAur37qCTL3o1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1spqQSbFqzBCm+wzIqeBHQWncUt/ljSnQeYZVAW8njhku3c+PTLQzxh6/XXhT//E+
+	 fLGBDquxJXuEAfFz888fO1h5qMQ2vbLEWAw56qCbCND1OU1z2nBJgzBEXJsZ2a+d14
+	 opvDK7O1DptBaDi12E9rUGCV03KPKTe58QdYkdQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbgHFQwN (ORCPT
+        id S1729171AbgHFQwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        Thu, 6 Aug 2020 12:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729508AbgHFQvD (ORCPT
+        with ESMTP id S1729509AbgHFQvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:51:03 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 717FCC0086AB;
-        Thu,  6 Aug 2020 08:31:45 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id z6so50062328iow.6;
-        Thu, 06 Aug 2020 08:31:45 -0700 (PDT)
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEE4C0086AE
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:33:05 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id m22so7685225eje.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T9d2cPoZwDqNGPTOF/xh+MxXI5gE97qXPjeblukEaaA=;
-        b=vQcflc2YsOmgW2sQjngcKtZEcaKtv5UkXvVETU5hbzK6g0ksH2yEr8GcVsuKfRcpsR
-         EFW2Dxuq+ZVOurLvqdJcInXpyTCS4D5zF0d9Gu1tWjyu6PSFcwzbHQoqPL9cVwSsVT4I
-         THCWUNf3YKvfZhJG/jaBUwiX7vn+TLoxKzj33KMkHw2AABschis+j1bRkvEk6gvGBOHV
-         gvNx8YOSEbBcBQO5NDwNosSImG3Jg9yxf3z87RhWVJkfTQPlHDuICSpTDX08c+rws8ZR
-         CF51+6gtwtvDWoSteC6vZ2C3x6k1f+8j9/p1QeDxVSxuOZR4yvDnu+NtziMwVpVpauNa
-         ccJw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BJRVvbJ27WTMdqqsxMOJteTWJIZ1QhBp8oNNmFI81Ts=;
+        b=J1kms1Jb+DBdy5tnRvsQhyY5wCNWWMDZ5UhkCcv51jnBWIEP44sPwLQU49f/DZ+UqN
+         ATRIAgR5nrdJESlIXlZA9JZ6VKqbSeiFL/eDWjrZ17nG2Ziot8JbxvgwwSIkH01rc0cR
+         nOhlq03lA6XNLqBreq14AIiCB/cp+NF6DbLjLsfX5U5bLr7cNzGSD//gmVIJ5O6Q/Lqy
+         RoMZp0mSuIgDbjVFKx6NfBplUOIYCKTKQSn3FN7/iAu0Vztf8okVp2gwU+ed5xee6l8o
+         qi87urfH+G2reTX5kcSC/y7C4xYkqmssnH6WMScQbUXpQbs8N1doCrUy1DBsHjTXOgZb
+         7kag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T9d2cPoZwDqNGPTOF/xh+MxXI5gE97qXPjeblukEaaA=;
-        b=hqdq/N9R+HxJtnC0gmqQqmjbRwVIvD6kdQyW7TYK3MSFQ7HXxZJGYfu+9p+bhREK1f
-         qAQm5XykoW1arwnS628T5Wit3j10ZyYf9XfOoaTkbZelx8KwZm9F0W5MF6lWb1vsLUMz
-         P2UoCX0zmQmsoveZbQWx0gtzyVt+ee2RFzqD/qFPV05lU+fSFxDjOEduUa+8tzekPIcz
-         7Ncr0p00plsqlVFlBEpDU2zXa6YRp71WNtKOpJ/FBGUnjKf7ulErUeXZDDqPLyX/MnMx
-         BdqVFmICzacH3aj4yplVv4aM/AuDsRHV+JYdbA/CN+7wo43+mEqA390MVF91e1Yhd4E0
-         A3ew==
-X-Gm-Message-State: AOAM531D7Eieg7u1InwFawT4WT7LwwKCy0RapBJrQh6/tW9EeQ2BbDk2
-        KZ4d4atOpGkM6eg4Q2qJ6NXVGmwTwpdeQhOiHsSQ8Yoo
-X-Google-Smtp-Source: ABdhPJzmjtu3I9LpJ7xxUqAWkEMGb6vq1m8lbFSQ4AwTzFSkP9twdx78ZCkmV7yKZa1BLk2PvG5WRWqNadBbvjcTUho=
-X-Received: by 2002:a5e:d80e:: with SMTP id l14mr10808869iok.65.1596727904697;
- Thu, 06 Aug 2020 08:31:44 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=BJRVvbJ27WTMdqqsxMOJteTWJIZ1QhBp8oNNmFI81Ts=;
+        b=bCL5x9XxO9Qud8gHrCwjYwLZtpLTNR5YhPE+zqOIIbjcoIGKxIr5TDrJKqE/aVx04o
+         hC1/D7m98+9WLVgJWBU74Y1XjzP+2OoHshN4PoewRvAQv6oMg39HH7mqARZjRP0XgS5h
+         4Q7/IRNByBeswuaMitHQmNU5B55W6wGA1U7+H0hGP8O+5UO8cCInQRIBETX7YRRyiyS4
+         igFFtkyRJjQBuBuDwrZTv9Lgj8gRg894tf0fuFro6IYE1ksVkpYybu7roaJEFbZtKOLf
+         9HNBuVsJFizuWucAVnYc/8+cGew55XgH/6dOtkS899uQxY5KFJeUfl96PRKtAON8JYjP
+         zhig==
+X-Gm-Message-State: AOAM531b/VYbi4haLk0Ldwn/DeM+tRuxMmh6ol1co9C2GbdZx0UfSAV9
+        WqG5JC4qdcC61DXV+4AtI0A=
+X-Google-Smtp-Source: ABdhPJzKadYqu9DuxT6yEhY+yLfMI17678fAKsD2zLmixlazR3kmBiWq46Lgd5M0wGB4iVXxcsq0vA==
+X-Received: by 2002:a17:907:10d9:: with SMTP id rv25mr4656328ejb.264.1596727984179;
+        Thu, 06 Aug 2020 08:33:04 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u13sm3984781ejc.72.2020.08.06.08.33.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 08:33:02 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 17:32:58 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+Message-ID: <20200806153258.GB2131635@gmail.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
 MIME-Version: 1.0
-References: <20200806164505.0eada105@canb.auug.org.au>
-In-Reply-To: <20200806164505.0eada105@canb.auug.org.au>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 6 Aug 2020 10:31:33 -0500
-Message-ID: <CAH2r5mvGD3ftLDfwrpx61kaJQnPpspupdDHD8NOjnF-q-ByTfg@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717170008.5949-1-kristen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
-I just fixed the Author tag in this patch to match your email address
-but seems like the author email address gets mangled when sent through
-some mailing lists.  Any ideas how to avoid this.
 
-On Thu, Aug 6, 2020 at 1:45 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   2676d210d2f4 ("cifs: Fix an error pointer dereference in cifs_mount()")
->
-> is missing a Signed-off-by from its author.
->
-> This is only pisked up by my script because of the mangling of the email
-> sender address by the mailing list it passed through.  I guess a little
-> more care is required to make sure the author attribution is correct in
-> this case.
->
-> --
-> Cheers,
-> Stephen Rothwell
+* Kristen Carlson Accardi <kristen@linux.intel.com> wrote:
 
+> Function Granular Kernel Address Space Layout Randomization (fgkaslr)
+> ---------------------------------------------------------------------
+> 
+> This patch set is an implementation of finer grained kernel address space
+> randomization. It rearranges your kernel code at load time 
+> on a per-function level granularity, with only around a second added to
+> boot time.
 
+This is a very nice feature IMO, and it should be far more effective 
+at randomizing the kernel, due to the sheer number of randomization 
+bits that kernel function granular randomization presents.
 
--- 
+If this is a good approximation of fg-kaslr randomization depth:
+
+  thule:~/tip> grep ' [tT] ' /proc/kallsyms  | wc -l
+  88488
+
+... then that's 80K bits of randomization instead of the mere handful 
+of kaslr bits we have today. Very nice!
+
+> In order to hide our new layout, symbols reported through 
+> /proc/kallsyms will be displayed in a random order.
+
+Neat. :-)
+
+> Performance Impact
+> ------------------
+
+> * Run time
+> The performance impact at run-time of function reordering varies by workload.
+> Using kcbench, a kernel compilation benchmark, the performance of a kernel
+> build with finer grained KASLR was about 1% slower than a kernel with standard
+> KASLR. Analysis with perf showed a slightly higher percentage of 
+> L1-icache-load-misses. Other workloads were examined as well, with varied
+> results. Some workloads performed significantly worse under FGKASLR, while
+> others stayed the same or were mysteriously better. In general, it will
+> depend on the code flow whether or not finer grained KASLR will impact
+> your workload, and how the underlying code was designed. Because the layout
+> changes per boot, each time a system is rebooted the performance of a workload
+> may change.
+
+I'd guess that the biggest performance impact comes from tearing apart 
+'groups' of functions that particular workloads are using.
+
+In that sense it might be worthwile to add a '__kaslr_group' function 
+tag to key functions, which would keep certain performance critical 
+functions next to each other.
+
+This shouldn't really be a problem, as even with generous amount of 
+grouping the number of randomization bits is incredibly large.
+
+> Future work could identify hot areas that may not be randomized and either
+> leave them in the .text section or group them together into a single section
+> that may be randomized. If grouping things together helps, one other thing to
+> consider is that if we could identify text blobs that should be grouped together
+> to benefit a particular code flow, it could be interesting to explore
+> whether this security feature could be also be used as a performance
+> feature if you are interested in optimizing your kernel layout for a
+> particular workload at boot time. Optimizing function layout for a particular
+> workload has been researched and proven effective - for more information
+> read the Facebook paper "Optimizing Function Placement for Large-Scale
+> Data-Center Applications" (see references section below).
+
+I'm pretty sure the 'grouping' solution would address any real 
+slowdowns.
+
+I'd also suggest allowing the passing in of a boot-time pseudo-random 
+generator seed number, which would allow the creation of a 
+pseudo-randomized but repeatable layout across reboots.
+
+> Image Size
+> ----------
+> Adding additional section headers as a result of compiling with
+> -ffunction-sections will increase the size of the vmlinux ELF file.
+> With a standard distro config, the resulting vmlinux was increased by
+> about 3%. The compressed image is also increased due to the header files,
+> as well as the extra relocations that must be added. You can expect fgkaslr
+> to increase the size of the compressed image by about 15%.
+
+What is the increase of the resulting raw kernel image? Additional 
+relocations might increase its size (unless I'm missing something) - 
+it would be nice to measure this effect. I'd expect this to be really 
+low.
+
+vmlinux or compressed kernel size doesn't really matter on x86-64, 
+it's a boot time only expense well within typical system resource 
+limits.
+
+> Disabling
+> ---------
+> Disabling normal KASLR using the nokaslr command line option also disables
+> fgkaslr. It is also possible to disable fgkaslr separately by booting with
+> fgkaslr=off on the commandline.
+
+I'd suggest to also add a 'nofgkaslr' boot option if it doesn't yet 
+exist, to keep usage symmetric with kaslr.
+
+Likewise, there should probably be a 'kaslr=off' option as well.
+
+The less random our user interfaces are, the better ...
+
+>  arch/x86/boot/compressed/Makefile             |   9 +-
+>  arch/x86/boot/compressed/fgkaslr.c            | 811 ++++++++++++++++++
+>  arch/x86/boot/compressed/kaslr.c              |   4 -
+>  arch/x86/boot/compressed/misc.c               | 157 +++-
+>  arch/x86/boot/compressed/misc.h               |  30 +
+>  arch/x86/boot/compressed/utils.c              |  11 +
+>  arch/x86/boot/compressed/vmlinux.symbols      |  17 +
+>  arch/x86/include/asm/boot.h                   |  15 +-
+>  arch/x86/kernel/vmlinux.lds.S                 |  17 +-
+>  arch/x86/lib/kaslr.c                          |  18 +-
+>  arch/x86/tools/relocs.c                       | 143 ++-
+>  arch/x86/tools/relocs.h                       |   4 +-
+>  arch/x86/tools/relocs_common.c                |  15 +-
+>  include/asm-generic/vmlinux.lds.h             |  18 +-
+>  include/linux/decompress/mm.h                 |  12 +-
+>  include/uapi/linux/elf.h                      |   1 +
+>  init/Kconfig                                  |  26 +
+>  kernel/kallsyms.c                             | 163 +++-
+>  kernel/module.c                               |  81 ++
+>  tools/objtool/elf.c                           |   8 +-
+>  26 files changed, 1670 insertions(+), 85 deletions(-)
+>  create mode 100644 Documentation/security/fgkaslr.rst
+>  create mode 100644 arch/x86/boot/compressed/fgkaslr.c
+>  create mode 100644 arch/x86/boot/compressed/utils.c
+>  create mode 100644 arch/x86/boot/compressed/vmlinux.symbols
+
+This looks surprisingly lean overall.
+
 Thanks,
 
-Steve
+	Ingo
