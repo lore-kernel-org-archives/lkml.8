@@ -2,110 +2,181 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2269C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00C55221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FSNR9s4d"
+	by mail.kernel.org (Postfix) with ESMTP id B3EBA221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596744174;
+	bh=wfJIbANL7LlTamKj+9GVaaO2FY9N6fJoge7afS3fuFA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=tToNE1uPS+y8tYBJvH8Q2UJbZVMSkZe5vxcqsfTf+OQFe21FlCn3iB5QbHezD2Qiw
+	 prB4x2YqfXXnsmKwvwG6Hj7PU7h8AVl7D90d0BM8CIhzK2gfIOi7h/uVFyKFbjzgz3
+	 V5ohd8QvZcwkGYQ/rmDDlu2ogbsYxMxJOdsykQC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgHFUCs (ORCPT
+        id S1726578AbgHFUCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45008 "EHLO
+        Thu, 6 Aug 2020 16:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFUCr (ORCPT
+        with ESMTP id S1725272AbgHFUCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:02:47 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0067C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 13:02:47 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o13so27545644pgf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 13:02:47 -0700 (PDT)
+        Thu, 6 Aug 2020 16:02:50 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF03C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 13:02:50 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id c6so6401222ilo.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 13:02:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y6WcLYjf0CU0iVN4Q9GedmvZXdsK8JgwGS0sL53z0KA=;
-        b=FSNR9s4dMJqLdikbJ7ztdA7Pc3gB6eHveHHSW/Z1O5T8Mxz64Jn7BAZ0O+v2c82Kc7
-         OrwOfX5GfZzOAWnQw0WKofOrkhuOP0oVFwHKtDbxGNXKLn6Ip6/BX/fuThjIBbaWokht
-         qX7N+5AMA+kUDpoZLYgpKcNcyV39bEiWJKW1k=
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GcmxaFAbN9FMOZvy1ws6uE/hP82637tGxfEk48uh7HY=;
+        b=AzQNBu5LtmU+t3c6vUOJRUCvqiRtHE7oZ2mjfQNHOTkSRfBPMdGUrkKbxZBQI1jIU5
+         LKinN/3WztDZsYn5pMZ1v3MxwbqbolF0H+dYM5UpKIhdOHXv1r41z2XVOl7VY3QHH1tL
+         7bb+Ssl+fBKgZxUvcWKBbr/I4BFlGWg/jvilI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=y6WcLYjf0CU0iVN4Q9GedmvZXdsK8JgwGS0sL53z0KA=;
-        b=JLIs/z/FPSEzs5KqN2D0PA9k4sbg7Z23CSSUIVtfQrHv6C4dAmEXoUwTT3DzBPHQG/
-         nfQT7PryYvTEGAQ5LTxRISNzfwFY5Auvkz9js5WR/a9QMaR0XTUh5coHWiYb+uyjCWoc
-         XnCpzLqT4S/7HdiEOrmyDa/yLsmRcFnFd/vAkOlFKFrVDNHzo1pHXW9iXsPol5I7u4UQ
-         fC+S0UMbc86KNRxo+2Ag9eauzV77KKgUsT4u27Q8HOFWptyGaUUnL9E8Ny7TMdt8v1TO
-         tZACo7v50KGnvpvNH38F0Fx1gHfRNkdp81qJrm5y9vpDtn8oLQMMUAKAWQIK1wcO+CvN
-         qogw==
-X-Gm-Message-State: AOAM5330R/7toZIM6qNn0BaRHVDZwA50TK2Otqn00wyKSQqnEJ4tzQX+
-        ByVxDnkAIH1B4WyJ/maVVq0Z+A==
-X-Google-Smtp-Source: ABdhPJxhkPxXi4g1/LUWtikGFy2euAdY0VwMTB8RnKsrwCYod3B6LIF43md44gYapZuhzzj0nMEFcQ==
-X-Received: by 2002:a65:6817:: with SMTP id l23mr8744061pgt.428.1596744167100;
-        Thu, 06 Aug 2020 13:02:47 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id y29sm9322179pfr.11.2020.08.06.13.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 13:02:46 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] regmap: debugfs: Fix comment typo malforned=>malformed
-Date:   Thu,  6 Aug 2020 13:02:26 -0700
-Message-Id: <20200806130222.1.I832b2b45244c80ba2550a5bbcef80b574e47c57e@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+        bh=GcmxaFAbN9FMOZvy1ws6uE/hP82637tGxfEk48uh7HY=;
+        b=MdEFUig/F1zcOqArKEXemwLyAZHroHEVX4s0gcUFj+QJHg2/VFpDkUCK/pe4xgHUFd
+         xilZroS/SnGO7WAtp4n+5PNMN9XzavZbUoKASHsXD0EXsnu1cgMKkyMJaHHxXMXepvqY
+         8kr0CbTQPCDONaYUqcae6qWxWjxoAYDVeqdyWcF5eCQCAZqHqi66w/Ou5oC0EWz4FQEF
+         tp03zfRwDKm0+4DJpe6Je1Xh+ULVQevMyygB5tTDNAuMZAIMoUpzsmO7KEuBJVzeOl1N
+         mF/VzuUyLUQsltxAw7l5fj9lEQ6W2T7NbSqAWC/L4KtBkvNo+cqvDL0JnZ4mGYnwl8k2
+         33ZQ==
+X-Gm-Message-State: AOAM53089fdkIDNV3Y5HZcSEYpJlCzskpQmKufkSuzd8E3z+cgZN9EA1
+        0aRrQcnWj8+XKpOY5HJtY2O9hA==
+X-Google-Smtp-Source: ABdhPJyVWpq4Hy6ek99rwtJSeq/2b1JB3+ZMX421UkOI3KmSXS+Rx1lmNwqnEWR8vOC170Yh+F6Wkw==
+X-Received: by 2002:a05:6e02:1213:: with SMTP id a19mr658521ilq.129.1596744169530;
+        Thu, 06 Aug 2020 13:02:49 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id l5sm5241282ios.3.2020.08.06.13.02.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 13:02:49 -0700 (PDT)
+Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
+        cocci@systeme.lip6.fr, stable@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200604164145.173925-1-maennich@google.com>
+ <alpine.DEB.2.21.2006042130080.2577@hadrien>
+ <bf757b9d-6a67-598b-ed6e-7ee24464abfa@linuxfoundation.org>
+ <20200622080345.GD260206@google.com>
+ <0eda607e-4083-46d2-acb8-63cfa2697a71@linuxfoundation.org>
+ <20200622150605.GA3828014@kroah.com>
+ <f09e32dc-8f17-d09a-b2e4-fb4c0699838e@linuxfoundation.org>
+ <baf80622-0860-e640-eb14-dffc02597ed3@linuxfoundation.org>
+ <20200806195704.GA2950037@kroah.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <8417ccd3-9964-3b8e-65e5-6140be0b28fd@linuxfoundation.org>
+Date:   Thu, 6 Aug 2020 14:02:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200806195704.GA2950037@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Silly typo.  You go squish now.  Was introduced in commit 299632e54b2e
-("regmap: debugfs: Don't sleep while atomic for fast_io regmaps").
+On 8/6/20 1:57 PM, Greg Kroah-Hartman wrote:
+> On Thu, Aug 06, 2020 at 01:48:26PM -0600, Shuah Khan wrote:
+>> On 6/22/20 10:14 AM, Shuah Khan wrote:
+>>> On 6/22/20 9:06 AM, Greg Kroah-Hartman wrote:
+>>>> On Mon, Jun 22, 2020 at 08:46:18AM -0600, Shuah Khan wrote:
+>>>>> On 6/22/20 2:03 AM, Matthias Maennich wrote:
+>>>>>> On Thu, Jun 04, 2020 at 02:39:18PM -0600, Shuah Khan wrote:
+>>>>>>> On 6/4/20 1:31 PM, Julia Lawall wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On Thu, 4 Jun 2020, Matthias Maennich wrote:
+>>>>>>>>
+>>>>>>>>> When running `make coccicheck` in report mode using the
+>>>>>>>>> add_namespace.cocci file, it will fail for files that contain
+>>>>>>>>> MODULE_LICENSE. Those match the replacement precondition, but spatch
+>>>>>>>>> errors out as virtual.ns is not set.
+>>>>>>>>>
+>>>>>>>>> In order to fix that, add the virtual rule nsdeps and only
+>>>>>>>>> do search and
+>>>>>>>>> replace if that rule has been explicitly requested.
+>>>>>>>>>
+>>>>>>>>> In order to make spatch happy in report mode, we also need a
+>>>>>>>>> dummy rule,
+>>>>>>>>> as otherwise it errors out with "No rules
+>>>>>>>>> apply". Using a script:python
+>>>>>>>>> rule appears unrelated and odd, but this is the shortest I
+>>>>>>>>> could come up
+>>>>>>>>> with.
+>>>>>>>>>
+>>>>>>>>> Adjust scripts/nsdeps accordingly to set the nsdeps rule
+>>>>>>>>> when run trough
+>>>>>>>>> `make nsdeps`.
+>>>>>>>>>
+>>>>>>>>> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+>>>>>>>>> Fixes: c7c4e29fb5a4 ("scripts: add_namespace:
+>>>>>>>>> Fix coccicheck failed")
+>>>>>>>>> Cc: YueHaibing <yuehaibing@huawei.com>
+>>>>>>>>> Cc: jeyu@kernel.org
+>>>>>>>>> Cc: cocci@systeme.lip6.fr
+>>>>>>>>> Cc: stable@vger.kernel.org
+>>>>>>>>> Signed-off-by: Matthias Maennich <maennich@google.com>
+>>>>>>>>
+>>>>>>>> Acked-by: Julia Lawall <julia.lawall@inria.fr>
+>>>>>>>>
+>>>>>>>> Shuah reported the problem to me, so you could add
+>>>>>>>>
+>>>>>>>> Reported-by: Shuah Khan <skhan@linuxfoundation.org>
+>>>>>>>>
+>>>>>>>
+>>>>>>> Very cool. No errors with this patch. Thanks for fixing it
+>>>>>>> quickly.
+>>>>>>
+>>>>>> I am happy I could fix that and thanks for confirming. I assume your
+>>>>>> Tested-by could be added?
+>>>>>
+>>>>> Yes
+>>>>>
+>>>>> Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+>>>>>>
+>>>>>> Is somebody willing to take this patch through their tree?
+>>>>>>
+>>>>>
+>>>>> My guess is that these go through kbuild git??
+>>>>
+>>>> If you want to take this, that's fine with me.  But as I had the
+>>>> original file come through my tree, I can take it too.  It's up to you,
+>>>> either is ok with me.
+>>>>
+>>>
+>>> Great. Please take this through your tree.
+>>>
+>>
+>> Greg! Looks like this one didn't make it in. Can you pick this up?
+> 
+> I think this is 55c7549819e4 ("scripts: add dummy report mode to
+> add_namespace.cocci") in Linus's tree right now, right?
+> 
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Yes. It is in Linux 5.9. I was looking in the wrong place on
+Linux 5.8. :(
 
- drivers/base/regmap/regmap-debugfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index f58baff2be0a..51ed8fd29c79 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -467,7 +467,7 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
- 	int err;
- 
- 	err = kstrtobool_from_user(user_buf, count, &new_val);
--	/* Ignore malforned data like debugfs_write_file_bool() */
-+	/* Ignore malformed data like debugfs_write_file_bool() */
- 	if (err)
- 		return count;
- 
-@@ -514,7 +514,7 @@ static ssize_t regmap_cache_bypass_write_file(struct file *file,
- 	int err;
- 
- 	err = kstrtobool_from_user(user_buf, count, &new_val);
--	/* Ignore malforned data like debugfs_write_file_bool() */
-+	/* Ignore malformed data like debugfs_write_file_bool() */
- 	if (err)
- 		return count;
- 
--- 
-2.28.0.163.g6104cc2f0b6-goog
+thanks,
+-- Shuah
 
