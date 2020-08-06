@@ -2,128 +2,114 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B4F206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B66C206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tGrB7Z7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgHFRgQ (ORCPT
+        id S1730604AbgHFRga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:36:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50406 "EHLO
+        Thu, 6 Aug 2020 13:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730411AbgHFRfY (ORCPT
+        with ESMTP id S1729698AbgHFRfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:35:24 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DB1C0086A1;
-        Thu,  6 Aug 2020 08:18:58 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id A216129959B
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 08/14] media: uapi: h264: Drop SLICE_PARAMS 'size' field
-Date:   Thu,  6 Aug 2020 12:13:04 -0300
-Message-Id: <20200806151310.98624-9-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200806151310.98624-1-ezequiel@collabora.com>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BED4C0086A7
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:20:03 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id g19so36922114ejc.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=27KOdDBMR58YvRnK7H5/nd9yUqjH+UuYcfpnQiwOOLU=;
+        b=tGrB7Z7WS0HHtWrS+RAu0IAYwU8Nad8rwMZdG73SY5x2ARE0d1FqXwWCLzD3UMrdlR
+         6Kn0kjJyU3Zbj6OubM+TRf7kg41JZspNfLxofrrUzUQMRrYpHgt6yi61+Rzw0TSxyySG
+         ZrV978lfm55ZcESwNGZp975asvMxzL4xk01lDpBkj9kuUKt1y4ZnLs/xyWsATvELhJk1
+         kFLFuZbHju979DVXXQ3lQhqftMpDMvL9oc++9T2qcgkhq/HPw08XX+JQDNIRTow6uAXN
+         WiVbdduH+x+EmynnvVmeE/Jlm8OcHRV5jln6i5lJFo17YjLsUFxNhJ1YjoX3Mjouet1b
+         4MZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=27KOdDBMR58YvRnK7H5/nd9yUqjH+UuYcfpnQiwOOLU=;
+        b=VYimEth6TiqnsnInDDBRwXzdmZIvJFUwBGOH1wa/DLtnZ01l/rMhfatTMzPX77/W5x
+         1zpGwSrTmuaw8w/dbWIZPH1yoi3sjTUOJ5cqvEzgvA4j+MhWDwo/EbBCN+WK1k0+7/SJ
+         +OQVTIs5gxba/FnuATfMZWc44qGLwVrcuGGd5yyCSVxJ6hObV0q4GlGF8BazVb2hruxM
+         A6AiIfGTS5LSKqf5H1xSPrb9uuvi+wy0/wsO9vwXD6WOWdTCrmpBUJ0hfwHhIOp4/Sjd
+         E82r1qGN4wFGmSTIFX011YJDv/dHTtDMPwd7zH+KKG1z9HQ5vHH9blMwSFVPgIPBXF60
+         q70Q==
+X-Gm-Message-State: AOAM531DjbEtsbAaNQlAv/xe8vLLEJ8rre3XUetxa558Nys2skuMl4vQ
+        vtA9S0AWiiLEdig4PauDj8jPwvPhaHZTL9dlXzHd7w==
+X-Google-Smtp-Source: ABdhPJzrlkvHWWpq4WM0aG15rib8qGzmbNy1T+8TCAaz/ASsMen1gmJIqTYuiQwAEJfL8+D0y5EKRfUDgIokuAOiI0I=
+X-Received: by 2002:a17:906:38d8:: with SMTP id r24mr4667542ejd.341.1596727202027;
+ Thu, 06 Aug 2020 08:20:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <159630256804.3143511.8894023468833792004.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200803094257.GA23458@shao2-debian> <20200806133452.GA2077191@gmail.com>
+In-Reply-To: <20200806133452.GA2077191@gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 6 Aug 2020 08:19:52 -0700
+Message-ID: <CAPcyv4hS7K0Arrd+C0LhjrFH=yGJf3g55_WkHOET4z58AcWrJw@mail.gmail.com>
+Subject: Re: [x86/copy_mc] a0ac629ebe: fio.read_iops -43.3% regression
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        X86 ML <x86@kernel.org>, stable <stable@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        0day robot <lkp@intel.com>, lkp@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SLICE_PARAMS control is intended for slice-based
-devices. In this mode, the OUTPUT buffer contains
-a single slice, and so the buffer's plane payload size
-can be used to query the slice size.
+On Thu, Aug 6, 2020 at 6:35 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * kernel test robot <rong.a.chen@intel.com> wrote:
+>
+> > Greeting,
+> >
+> > FYI, we noticed a -43.3% regression of fio.read_iops due to commit:
+> >
+> >
+> > commit: a0ac629ebe7b3d248cb93807782a00d9142fdb98 ("x86/copy_mc: Introduce copy_mc_generic()")
+> > url: https://github.com/0day-ci/linux/commits/Dan-Williams/Renovate-memcpy_mcsafe-with-copy_mc_to_-user-kernel/20200802-014046
+> >
+> >
+> > in testcase: fio-basic
+> > on test machine: 96 threads Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz with 256G memory
+> > with following parameters:
+>
+> So this performance regression, if it isn't a spurious result, looks
+> concerning. Is this expected?
 
-To reduce the API surface drop the size from the
-SLICE_PARAMS control.
-
-A follow-up change will remove other members in SLICE_PARAMS
-so we don't need to add padding fields here.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 ---
- drivers/staging/media/sunxi/cedrus/cedrus_h264.c          | 7 +++----
- include/media/h264-ctrls.h                                | 3 ---
- 3 files changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index 427fc5727ec0..fff74b7bf32a 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -1760,9 +1760,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-     :stub-columns: 0
-     :widths:       1 1 2
- 
--    * - __u32
--      - ``size``
--      -
-     * - __u32
-       - ``start_byte_offset``
-         Offset (in bytes) from the beginning of the OUTPUT buffer to the start
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-index a9ba78b15907..8b6f05aadbe8 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -324,17 +324,16 @@ static void cedrus_set_params(struct cedrus_ctx *ctx,
- 	struct vb2_buffer *src_buf = &run->src->vb2_buf;
- 	struct cedrus_dev *dev = ctx->dev;
- 	dma_addr_t src_buf_addr;
--	u32 len = slice->size * 8;
-+	size_t slice_bytes = vb2_get_plane_payload(src_buf, 0);
- 	unsigned int pic_width_in_mbs;
- 	bool mbaff_pic;
- 	u32 reg;
- 
--	cedrus_write(dev, VE_H264_VLD_LEN, len);
-+	cedrus_write(dev, VE_H264_VLD_LEN, slice_bytes * 8);
- 	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
- 
- 	src_buf_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	cedrus_write(dev, VE_H264_VLD_END,
--		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
-+	cedrus_write(dev, VE_H264_VLD_END, src_buf_addr + slice_bytes);
- 	cedrus_write(dev, VE_H264_VLD_ADDR,
- 		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
- 		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
-diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-index 4f05ee265997..f74736fcfa00 100644
---- a/include/media/h264-ctrls.h
-+++ b/include/media/h264-ctrls.h
-@@ -158,9 +158,6 @@ struct v4l2_h264_reference {
- };
- 
- struct v4l2_ctrl_h264_slice_params {
--	/* Size in bytes, including header */
--	__u32 size;
--
- 	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
- 	__u32 start_byte_offset;
- 
--- 
-2.27.0
-
+This is not expected and I think delays these patches until I'm back
+from leave in a few weeks. I know that we might lose some inlining
+effect due to replacing native memcpy, but I did not expect it would
+have an impact like this. In my testing I was seeing a performance
+improvement from replacing the careful / open-coded copy with rep;
+mov;, which increases the surprise of this result.
