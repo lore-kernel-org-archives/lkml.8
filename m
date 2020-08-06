@@ -2,155 +2,246 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C323CC433F7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B65FC433F4
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC2F822CAE
+	by mail.kernel.org (Postfix) with ESMTP id 783B422B48
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lk5N9u3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgHFFXQ (ORCPT
+        id S1727937AbgHFFWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:23:16 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:11253 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727771AbgHFFXP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 01:23:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596691393; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=bvZnrTkOnWDZNUUhPw1+FJ3XFluG45rscsa1dJ+3kus=; b=Lk5N9u3ePpxHsjSDmt38lZGYuh50tSAEXE1cuUtM0h2YhExLomYmNkpEQE+2qOBl66PZwyfE
- qMj3GjWbLkoKYttUa8z1PQPXllaDILT+esrrZEKYtaT/oHomhgZhfiCa4MHdWyVIhvA0x2nc
- svRFZTyl5JSWwQnjJLTgz4NBsZA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f2b93c1725833be306e2d8a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 05:23:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D79BC43391; Thu,  6 Aug 2020 05:23:12 +0000 (UTC)
-Received: from [192.168.0.105] (unknown [49.204.182.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5DD4EC433C6;
-        Thu,  6 Aug 2020 05:23:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5DD4EC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v5 4/4] clk: qcom: lpass: Add support for LPASS clock
- controller for SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org
-References: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
- <1595606878-2664-5-git-send-email-tdas@codeaurora.org>
- <159665909245.1360974.10366839079633595523@swboyd.mtv.corp.google.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <13ac9aad-2377-472d-b2be-a762a21c2dac@codeaurora.org>
-Date:   Thu, 6 Aug 2020 10:53:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <159665909245.1360974.10366839079633595523@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Aug 2020 01:22:43 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45928 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgHFFWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 01:22:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CCBEB200788;
+        Thu,  6 Aug 2020 07:22:37 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2946A200785;
+        Thu,  6 Aug 2020 07:22:34 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8650640309;
+        Thu,  6 Aug 2020 07:22:29 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        shengjiu.wang@nxp.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: sound: Convert NXP spdif to json-schema
+Date:   Thu,  6 Aug 2020 13:17:57 +0800
+Message-Id: <1596691077-30658-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Convert the NXP SPDIF binding to DT schema format using json-schema.
 
-On 8/6/2020 1:54 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2020-07-24 09:07:58)
->> +
->> +static struct clk_rcg2 core_clk_src = {
->> +       .cmd_rcgr = 0x1d000,
->> +       .mnd_width = 8,
->> +       .hid_width = 5,
->> +       .parent_map = lpass_core_cc_parent_map_2,
->> +       .clkr.hw.init = &(struct clk_init_data){
->> +               .name = "core_clk_src",
-> 
-> Any chance this can get a better name? Something with LPASS prefix?
-> 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/sound/fsl,spdif.txt        |  68 -------------
+ .../devicetree/bindings/sound/fsl,spdif.yaml       | 108 +++++++++++++++++++++
+ 2 files changed, 108 insertions(+), 68 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.yaml
 
-These are the exact clock names from the hardware plan.
-
->> +               .parent_data = &(const struct clk_parent_data){
->> +                       .fw_name = "bi_tcxo",
->> +               },
->> +               .num_parents = 1,
->> +               .ops = &clk_rcg2_ops,
->> +       },
->> +};
->> +
-> [...]
->> +
->> +static struct clk_branch lpass_audio_core_sysnoc_mport_core_clk = {
->> +       .halt_reg = 0x23000,
->> +       .halt_check = BRANCH_HALT,
->> +       .hwcg_reg = 0x23000,
->> +       .hwcg_bit = 1,
->> +       .clkr = {
->> +               .enable_reg = 0x23000,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "lpass_audio_core_sysnoc_mport_core_clk",
->> +                       .parent_data = &(const struct clk_parent_data){
->> +                               .hw = &core_clk_src.clkr.hw,
->> +                       },
->> +                       .num_parents = 1,
->> +                       .flags = CLK_SET_RATE_PARENT,
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +static struct clk_regmap *lpass_core_cc_sc7180_clocks[] = {
->> +       [EXT_MCLK0_CLK_SRC] = &ext_mclk0_clk_src.clkr,
->> +       [LPAIF_PRI_CLK_SRC] = &lpaif_pri_clk_src.clkr,
->> +       [LPAIF_SEC_CLK_SRC] = &lpaif_sec_clk_src.clkr,
->> +       [CORE_CLK_SRC] = &core_clk_src.clkr,
-> 
-> And all of these, can they have LPASS_ prefix on the defines? Seems
-> like we're missing a namespace otherwise.
-> 
-
-These are generated as they are in the HW plan. Do you still think I 
-should update them?
-
->> +       [LPASS_AUDIO_CORE_EXT_MCLK0_CLK] = &lpass_audio_core_ext_mclk0_clk.clkr,
->> +       [LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK] =
->> +               &lpass_audio_core_lpaif_pri_ibit_clk.clkr,
->> +       [LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK] =
->> +               &lpass_audio_core_lpaif_sec_ibit_clk.clkr,
->> +       [LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK] =
->> +               &lpass_audio_core_sysnoc_mport_core_clk.clkr,
->> +       [LPASS_LPAAUDIO_DIG_PLL] = &lpass_lpaaudio_dig_pll.clkr,
->> +       [LPASS_LPAAUDIO_DIG_PLL_OUT_ODD] = &lpass_lpaaudio_dig_pll_out_odd.clkr,
->> +};
->> +
-
+diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
+deleted file mode 100644
+index e1365b0..0000000
+--- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
++++ /dev/null
+@@ -1,68 +0,0 @@
+-Freescale Sony/Philips Digital Interface Format (S/PDIF) Controller
+-
+-The Freescale S/PDIF audio block is a stereo transceiver that allows the
+-processor to receive and transmit digital audio via an coaxial cable or
+-a fibre cable.
+-
+-Required properties:
+-
+-  - compatible		: Compatible list, should contain one of the following
+-			  compatibles:
+-			  "fsl,imx35-spdif",
+-			  "fsl,vf610-spdif",
+-			  "fsl,imx6sx-spdif",
+-
+-  - reg			: Offset and length of the register set for the device.
+-
+-  - interrupts		: Contains the spdif interrupt.
+-
+-  - dmas		: Generic dma devicetree binding as described in
+-			  Documentation/devicetree/bindings/dma/dma.txt.
+-
+-  - dma-names		: Two dmas have to be defined, "tx" and "rx".
+-
+-  - clocks		: Contains an entry for each entry in clock-names.
+-
+-  - clock-names		: Includes the following entries:
+-	"core"		  The core clock of spdif controller.
+-	"rxtx<0-7>"	  Clock source list for tx and rx clock.
+-			  This clock list should be identical to the source
+-			  list connecting to the spdif clock mux in "SPDIF
+-			  Transceiver Clock Diagram" of SoC reference manual.
+-			  It can also be referred to TxClk_Source bit of
+-			  register SPDIF_STC.
+-	"spba"		  The spba clock is required when SPDIF is placed as a
+-			  bus slave of the Shared Peripheral Bus and when two
+-			  or more bus masters (CPU, DMA or DSP) try to access
+-			  it. This property is optional depending on the SoC
+-			  design.
+-
+-Optional properties:
+-
+-   - big-endian		: If this property is absent, the native endian mode
+-			  will be in use as default, or the big endian mode
+-			  will be in use for all the device registers.
+-
+-Example:
+-
+-spdif: spdif@2004000 {
+-	compatible = "fsl,imx35-spdif";
+-	reg = <0x02004000 0x4000>;
+-	interrupts = <0 52 0x04>;
+-	dmas = <&sdma 14 18 0>,
+-	       <&sdma 15 18 0>;
+-	dma-names = "rx", "tx";
+-
+-	clocks = <&clks 197>, <&clks 3>,
+-	       <&clks 197>, <&clks 107>,
+-	       <&clks 0>, <&clks 118>,
+-	       <&clks 62>, <&clks 139>,
+-	       <&clks 0>;
+-	clock-names = "core", "rxtx0",
+-		"rxtx1", "rxtx2",
+-		"rxtx3", "rxtx4",
+-		"rxtx5", "rxtx6",
+-		"rxtx7";
+-
+-	big-endian;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.yaml b/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
+new file mode 100644
+index 0000000..819f37f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/fsl,spdif.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Sony/Philips Digital Interface Format (S/PDIF) Controller
++
++maintainers:
++  - Shengjiu Wang <shengjiu.wang@nxp.com>
++
++description: |
++  The Freescale S/PDIF audio block is a stereo transceiver that allows the
++  processor to receive and transmit digital audio via an coaxial cable or
++  a fibre cable.
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx35-spdif
++      - fsl,vf610-spdif
++      - fsl,imx6sx-spdif
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: DMA controller phandle and request line for RX
++      - description: DMA controller phandle and request line for TX
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++  clocks:
++    items:
++      - description: The core clock of spdif controller.
++      - description: Clock for tx0 and rx0.
++      - description: Clock for tx1 and rx1.
++      - description: Clock for tx2 and rx2.
++      - description: Clock for tx3 and rx3.
++      - description: Clock for tx4 and rx4.
++      - description: Clock for tx5 and rx5.
++      - description: Clock for tx6 and rx6.
++      - description: Clock for tx7 and rx7.
++      - description: The spba clock is required when SPDIF is placed as a bus
++          slave of the Shared Peripheral Bus and when two or more bus masters
++          (CPU, DMA or DSP) try to access it. This property is optional depending
++          on the SoC design.
++    minItems: 9
++
++  clock-names:
++    items:
++      - const: core
++      - const: rxtx0
++      - const: rxtx1
++      - const: rxtx2
++      - const: rxtx3
++      - const: rxtx4
++      - const: rxtx5
++      - const: rxtx6
++      - const: rxtx7
++      - const: spba
++    minItems: 9
++
++  big-endian:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      If this property is absent, the native endian mode will be in use
++      as default, or the big endian mode will be in use for all the device
++      registers. Set this flag for HCDs with big endian descriptors and big
++      endian registers.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - dmas
++  - dma-names
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    spdif@2004000 {
++        compatible = "fsl,imx35-spdif";
++        reg = <0x02004000 0x4000>;
++        interrupts = <0 52 0x04>;
++        dmas = <&sdma 14 18 0>,
++               <&sdma 15 18 0>;
++        dma-names = "rx", "tx";
++        clocks = <&clks 197>, <&clks 3>,
++                 <&clks 197>, <&clks 107>,
++                 <&clks 0>, <&clks 118>,
++                 <&clks 62>, <&clks 139>,
++                 <&clks 0>;
++        clock-names = "core", "rxtx0",
++                      "rxtx1", "rxtx2",
++                      "rxtx3", "rxtx4",
++                      "rxtx5", "rxtx6",
++                      "rxtx7";
++        big-endian;
++    };
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+2.7.4
 
---
