@@ -2,109 +2,215 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5059C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E880F20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1753420786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IaHQhlbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgHFRHu (ORCPT
+        id S1730116AbgHFRIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:07:50 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63876 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729728AbgHFRGl (ORCPT
+        Thu, 6 Aug 2020 13:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729946AbgHFRGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:06:41 -0400
-Received: from 89-64-86-116.dynamic.chello.pl (89.64.86.116) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id a0952d0a893f35a5; Thu, 6 Aug 2020 13:39:54 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
-        'Linux Documentation' <linux-doc@vger.kernel.org>,
-        'LKML' <linux-kernel@vger.kernel.org>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Giovanni Gherdovich' <ggherdovich@suse.cz>,
-        'Francisco Jerez' <francisco.jerez.plata@intel.com>,
-        'Linux PM' <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Thu, 06 Aug 2020 13:39:53 +0200
-Message-ID: <5275102.Ez0hqPNOlg@kreacher>
-In-Reply-To: <004601d66bb6$199ce1a0$4cd6a4e0$@net>
-References: <3955470.QvD6XneCf3@kreacher> <2418846.A4mPlhI7ni@kreacher> <004601d66bb6$199ce1a0$4cd6a4e0$@net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 6 Aug 2020 13:06:40 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323BBC061575
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 10:05:50 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id 3so33988648qkv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 10:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ClCRhz5VpiOzswZeEfz32cI4Ba2QyTHClpP/KXN77n8=;
+        b=IaHQhlbRWGXN2/ao+LoJlBFGdbqt+zL5VeTLHAkovnP6l+enfuSJzm52DuFZPXbvWI
+         FSspI20sJny2yb3byTqFpczlG9HADujqraCWnUSwzqwLTvYaiYL1PRHk/2dxxj2Is2u+
+         a3LV++mKN5yFhfQcaUcpwu3eL6bIA6zT7Lgm6eSZZJoeLsXc/A0typPneJKHKREIvNqZ
+         wn9gQtrl27vn5k4unsqOvnPBsjcKswcsFY6ReFOGmVfxVQeSUo3tWx+9AeFIvQ9gHNVe
+         PBB3s/5lq4nEuZQh9mZSEEzLLvlhpsJlKQTuzyPJPlykKmDL+wMe3h13i09TDxg+13yC
+         nUmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ClCRhz5VpiOzswZeEfz32cI4Ba2QyTHClpP/KXN77n8=;
+        b=qISYHphlFOLnDUy0f1ahor2brTSXzft9UcE8jAUTPkreOijZ9b29jKaclog+17Zi46
+         XOlhuFeTiEQgqUyqA3XLCWAsk7g8Le2xE7YCp/qNeQ8vraelEznZe2bACpAkn/PcGsPd
+         /gXqNzjcxIW1Df7xhqf4YWOQYpYfUrIo6j9HulyR6VLzBMoY/yJufYPXxLwKtttYE5YY
+         BU6EGeIfNiAcxWmzTcJLI+2MH5MeNTMW03oUcKkYd+TFOSFptpsH4NYlgU7uEvlKfO/O
+         vStYM1wR0BEwQNW/dR5c9xy5vWPzK6l/EdFPQIkrzILJjcHUEQg6iSA36TEif1f+B9fZ
+         AGIQ==
+X-Gm-Message-State: AOAM530JcyUA2yRbpOt6e7l/GQSaXaJTQKr6JeHIr3ja9jUJQsNE+gB/
+        BWDrtCNp35St8xwV6FRoG0synRXb
+X-Google-Smtp-Source: ABdhPJyPrrFgf+jmR3AS5090OYP3uL6N4D/xOD+aUyRRQ84OAADWwld7vDWjMWEJ5+hHxAx/fLoVPu0b
+X-Received: by 2002:ad4:46e1:: with SMTP id h1mr10195779qvw.129.1596733548153;
+ Thu, 06 Aug 2020 10:05:48 -0700 (PDT)
+Date:   Thu,  6 Aug 2020 10:05:43 -0700
+Message-Id: <20200806170544.382140-1-posk@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH 1/2 v2] rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
+From:   Peter Oskolkov <posk@google.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>,
+        Peter Oskolkov <posk@posk.io>, Peter Oskolkov <posk@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, August 6, 2020 7:54:47 AM CEST Doug Smythies wrote:
-> On 2020.08.03 10:09 Rafael J. Wysocki wrote:
-> > On Sunday, August 2, 2020 5:17:39 PM CEST Doug Smythies wrote:
-> > > On 2020.07.19 04:43 Rafael J. Wysocki wrote:
-> > > > On Fri, Jul 17, 2020 at 3:37 PM Doug Smythies <dsmythies@telus.net> wrote:
-> > > > > On 2020.07.16 05:08 Rafael J. Wysocki wrote:
-> > > > > > On Wed, Jul 15, 2020 at 10:39 PM Doug Smythies <dsmythies@telus.net> wrote:
-> > > > > >> On 2020.07.14 11:16 Rafael J. Wysocki wrote:
-> > > > > >> >
-> > > > > >> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > >> ...
-> > > > > >> > Since the passive mode hasn't worked with HWP at all, and it is not going to
-> > > > > >> > the default for HWP systems anyway, I don't see any drawbacks related to making
-> > > > > >> > this change, so I would consider this as 5.9 material unless there are any
-> > > > > >> > serious objections.
-> > > > > >>
-> > > > > >> Good point.
-> > > > >
-> > > > > Actually, for those users that default to passive mode upon boot,
-> > > > > this would mean they would find themselves using this.
-> > > > > Also, it isn't obvious, from the typical "what driver and what governor"
-> > > > > inquiry.
-> > > >
-> > > > So the change in behavior is that after this patch
-> > > > intel_pstate=passive doesn't imply no_hwp any more.
-> > > >
-> > > > That's a very minor difference though and I'm not aware of any adverse
-> > > > effects it can cause on HWP systems anyway.
-> > >
-> > > My point was, that it will now default to something where
-> > > testing has not been completed.
-> > >
-> > > > The "what governor" is straightforward in the passive mode: that's
-> > > > whatever cpufreq governor has been selected.
-> > >
-> > > I think you might have missed my point.
-> > > From the normal methods of inquiry one does not know
-> > > if HWP is being used or not. Why? Because with
-> > > or without HWP one gets the same answers under:
-> > >
-> > > /sys/devices/system/cpu/cpu*/cpufreq/scaling_driver
-> > > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-> > 
-> > Yes, but this is also the case in the active mode, isn't it?
-> 
-> Yes, fair enough.
-> But we aren't changing what it means by default
-> between kernel 5.8 and 5.9-rc1.
+This patchset is based on Google-internal RSEQ
+work done by Paul Turner and Andrew Hunter.
 
-No, we aren't.
+When working with per-CPU RSEQ-based memory allocations,
+it is sometimes important to make sure that a global
+memory location is no longer accessed from RSEQ critical
+sections. For example, there can be two per-CPU lists,
+one is "active" and accessed per-CPU, while another one
+is inactive and worked on asynchronously "off CPU" (e.g.
+garbage collection is performed). Then at some point
+the two lists are swapped, and a fast RCU-like mechanism
+is required to make sure that the previously active
+list is no longer accessed.
 
-The only (expected) change is when booting with intel_pstate=passive and
-without intel_pstate=no_hwp in the command line.
+This patch introduces such a mechanism: in short,
+membarrier() syscall issues an IPI to a CPU, restarting
+a potentially active RSEQ critical section on the CPU.
 
-Which should be easy enough to address by adding intel_pstate=no_hwp to the
-command line in 5.9-rc1 and later (to achieve the same behavior after a
-fresh boot).
+v1->v2:
+  - removed the ability to IPI all CPUs in a single sycall;
+  - use task->mm rather than task->group_leader to identify
+    tasks belonging to the same process.
 
-Cheers!
+The second patch in the patchset adds a selftest
+of this feature.
 
+Signed-off-by: Peter Oskolkov <posk@google.com>
+---
+ include/uapi/linux/membarrier.h |  5 ++++
+ kernel/sched/membarrier.c       | 43 +++++++++++++++++++++++++++++++--
+ 2 files changed, 46 insertions(+), 2 deletions(-)
 
+diff --git a/include/uapi/linux/membarrier.h b/include/uapi/linux/membarrier.h
+index 5891d7614c8c..ce4628ea17fa 100644
+--- a/include/uapi/linux/membarrier.h
++++ b/include/uapi/linux/membarrier.h
+@@ -114,6 +114,10 @@
+  *                          If this command is not implemented by an
+  *                          architecture, -EINVAL is returned.
+  *                          Returns 0 on success.
++ * @MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU:
++ *                          If a thread belonging to the current process
++ *                          is currently in an RSEQ critical section on the
++ *                          CPU identified by flags parameter, restart it.
+  * @MEMBARRIER_CMD_SHARED:
+  *                          Alias to MEMBARRIER_CMD_GLOBAL. Provided for
+  *                          header backward compatibility.
+@@ -131,6 +135,7 @@ enum membarrier_cmd {
+ 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED		= (1 << 4),
+ 	MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE		= (1 << 5),
+ 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE	= (1 << 6),
++	MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU		= (1 << 7),
+ 
+ 	/* Alias for header backward compatibility. */
+ 	MEMBARRIER_CMD_SHARED			= MEMBARRIER_CMD_GLOBAL,
+diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
+index 168479a7d61b..1cdfde23696c 100644
+--- a/kernel/sched/membarrier.c
++++ b/kernel/sched/membarrier.c
+@@ -18,11 +18,19 @@
+ #define MEMBARRIER_PRIVATE_EXPEDITED_SYNC_CORE_BITMASK	0
+ #endif
+ 
++#ifdef CONFIG_RSEQ
++#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK		\
++	MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
++#else
++#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK	0
++#endif
++
+ #define MEMBARRIER_CMD_BITMASK						\
+ 	(MEMBARRIER_CMD_GLOBAL | MEMBARRIER_CMD_GLOBAL_EXPEDITED	\
+ 	| MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED			\
+ 	| MEMBARRIER_CMD_PRIVATE_EXPEDITED				\
+ 	| MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED			\
++	| MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK		\
+ 	| MEMBARRIER_PRIVATE_EXPEDITED_SYNC_CORE_BITMASK)
+ 
+ static void ipi_mb(void *info)
+@@ -308,10 +316,39 @@ static int membarrier_register_private_expedited(int flags)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_RSEQ
++static void membarrier_rseq_ipi(void *arg)
++{
++	if (current->mm != arg)  /* Not our process. */
++		return;
++	if (!current->rseq)  /* RSEQ not set up for the current task/thread. */
++		return;
++
++	rseq_preempt(current);
++}
++#endif
++
++static int membarrier_private_restart_rseq_on_cpu(int cpu_id)
++{
++#ifdef CONFIG_RSEQ
++	/* syscalls are not allowed inside rseq critical sections. */
++	if (cpu_id == raw_smp_processor_id())
++		return 0;
++
++	return smp_call_function_single(cpu_id, membarrier_rseq_ipi,
++					current->mm, true);
++#else
++	return 0;
++#endif
++}
++
+ /**
+  * sys_membarrier - issue memory barriers on a set of threads
+  * @cmd:   Takes command values defined in enum membarrier_cmd.
+- * @flags: Currently needs to be 0. For future extensions.
++ * @flags: Currently needs to be 0 for all commands other than
++ *         MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU: in the latter
++ *         case it indicates the CPU on which to interrupt (= restart)
++ *         the RSEQ critical section.
+  *
+  * If this system call is not implemented, -ENOSYS is returned. If the
+  * command specified does not exist, not available on the running
+@@ -339,7 +376,7 @@ static int membarrier_register_private_expedited(int flags)
+  */
+ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
+ {
+-	if (unlikely(flags))
++	if (unlikely(flags && cmd != MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU))
+ 		return -EINVAL;
+ 	switch (cmd) {
+ 	case MEMBARRIER_CMD_QUERY:
+@@ -369,6 +406,8 @@ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
+ 		return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
+ 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
+ 		return membarrier_register_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
++	case MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU:
++		return membarrier_private_restart_rseq_on_cpu(flags);
+ 	default:
+ 		return -EINVAL;
+ 	}
+-- 
+2.28.0.163.g6104cc2f0b6-goog
 
