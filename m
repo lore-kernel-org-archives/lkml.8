@@ -2,150 +2,204 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13363C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB9A23120
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42081204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoPd66cT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgHFQoo (ORCPT
+        id S1729176AbgHFQpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:44:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:45204 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbgHFQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:42:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5598511D4;
-        Thu,  6 Aug 2020 09:18:51 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54BBF3F887;
-        Thu,  6 Aug 2020 09:18:50 -0700 (PDT)
-References: <20200731115502.12954-1-valentin.schneider@arm.com> <20200731115502.12954-6-valentin.schneider@arm.com> <20200806140750.GC2077896@gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
-Subject: Re: [PATCH v4 05/10] sched/topology: Define and assign sched_domain flag metadata
-Message-ID: <jhj8serixd4.mognet@arm.com>
-In-reply-to: <20200806140750.GC2077896@gmail.com>
-Date:   Thu, 06 Aug 2020 17:18:45 +0100
+        Thu, 6 Aug 2020 12:45:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727824AbgHFQoq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:44:46 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FDA5C0A8921;
+        Thu,  6 Aug 2020 09:44:46 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c10so5921598edk.6;
+        Thu, 06 Aug 2020 09:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7j5tR0m8H3OjMJuPim98FwiN1aMkbIjxdxVhuyjo0Ew=;
+        b=eoPd66cTTjH9l86GoO63fQ8X+ctw+Tj6hSPmE5nYp/Vdw7ql/bdp4r9RzKYlJMfuc6
+         Uv8D1gdE4B+TP1mfI9optHvVmRoSLmApmaSXNVcECB65pZ8tz+2AyjO9ruPRFC25iy7P
+         GUKejLwQ/2ZaTbOxLdkbRqTHAS7Pf8nC9vskid09nzG5twd6YAD24ztc9/h6xh5r/wS8
+         IxPxwM73RIb7oiyYJwFcLdvxiVLKrNZLEgBmui6leAyfg2ByBszOKKDeCehFyiG9JPsm
+         K4eQ1HVC6piC9IOLSV2KMGGIbEXbSenlSoNegi0W7skQxYA720JZqAWd99NG0vJG3oe2
+         rXFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7j5tR0m8H3OjMJuPim98FwiN1aMkbIjxdxVhuyjo0Ew=;
+        b=hAkF1lbYeNCZFijXsiDk3SbtrBrVXg8sZ86tD+Aayf8RUylTCerVFt6frl2MMMwqfQ
+         k755u8odwthqIgOnX++qrN1IIIHTZXnbVQj9xENANWVgBYypEbrJTkj+ayywWzrcNmw/
+         uLTiUpME1QgJvW9mQTdwnlPv9qSSGDY8L98N+25zB5SG35SDzjsCgw5cCLXSaoHXgQHo
+         LStdYKt7a07CKKjSyBUVZhBcwd2OhxgImD8eZBk5MPIKBVJzhwTbGA+LLA+IBMrut2GS
+         cpx9bYo7qAu3yZbP+8aoHq5rSHjapwKZUJygOhQZTLgNoaR/B5yBSfAXk0bxyfJG1BNB
+         uBbw==
+X-Gm-Message-State: AOAM533TpVzbHddcFJSZv+bontlBIJ8h3uqTg6J/0RtZa9TSXM173UQk
+        IB7TM1bD6u5QlGD2i5QfsC2Ir43VmVb85rqUR/s=
+X-Google-Smtp-Source: ABdhPJwR1WrcmmYyv3xVh2Lg73XDm1Qy31RKbQCdDoen+3KsX/nStphPf+QMMn9o4Ud82k5K1qcstkFDVwFQJCjr5Ao=
+X-Received: by 2002:a05:6402:a5b:: with SMTP id bt27mr5003305edb.120.1596732284503;
+ Thu, 06 Aug 2020 09:44:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com> <1101abba0c8082da196f36636ef07a84@codeaurora.org>
+In-Reply-To: <1101abba0c8082da196f36636ef07a84@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 6 Aug 2020 09:45:28 -0700
+Message-ID: <CAF6AEGu2Lfb94kjnd7+GU_c93z0Zw2SgQ==UcrjPg3Wah=24ng@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dpu: Fix reservation failures in modeset
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 06/08/20 15:07, Ingo Molnar wrote:
-> * Valentin Schneider <valentin.schneider@arm.com> wrote:
+On Thu, Aug 6, 2020 at 7:46 AM <kalyan_t@codeaurora.org> wrote:
 >
->> +#ifndef SD_FLAG
->> +#define SD_FLAG(x, y, z)
->> +#endif
->
-> AFAICS there's not a single use of sd_flags.h that doesn't come with
-> its own SD_FLAG definition, so I suppose this should be:
->
-> #ifndef SD_FLAG
-> # error "Should not happen."
-> #endif
->
-> ?
->
+> On 2020-08-05 21:18, Rob Clark wrote:
+> > On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org>
+> > wrote:
+> >>
+> >> In TEST_ONLY commit, rm global_state will duplicate the
+> >> object and request for new reservations, once they pass
+> >> then the new state will be swapped with the old and will
+> >> be available for the Atomic Commit.
+> >>
+> >> This patch fixes some of missing links in the resource
+> >> reservation sequence mentioned above.
+> >>
+> >> 1) Creation of a duplicate state in test_only commit (Rob)
+> >> 2) Allow resource release only during crtc_active false.
+> >>
+> >> For #2
+> >> In a modeset operation, swap state happens well before disable.
+> >> Hence clearing reservations in disable will cause failures
+> >> in modeset enable.
+> >>
+> >> Sequence:
+> >>     Swap state --> old, new
+> >>     modeset disables --> virt disable
+> >>     modeset enable --> virt modeset
+> >>
+> >> Allow reservations to be cleared only when crtc active is false
+> >> as in that case there wont be any modeset enable after disable.
+> >>
+> >> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> >> ---
+> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
+> >>  1 file changed, 5 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> >> index 63976dc..b85a576 100644
+> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> >> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+> >>         dpu_kms = to_dpu_kms(priv->kms);
+> >>         mode = &crtc_state->mode;
+> >>         adj_mode = &crtc_state->adjusted_mode;
+> >> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
+> >> +       global_state = dpu_kms_get_global_state(crtc_state->state);
+> >>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
+> >>
+> >>         /*
+> >> @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct
+> >> drm_encoder *drm_enc)
+> >>         struct msm_drm_private *priv;
+> >>         struct dpu_kms *dpu_kms;
+> >>         struct dpu_global_state *global_state;
+> >> +       struct drm_crtc_state *crtc_state;
+> >>         int i = 0;
+> >>
+> >>         if (!drm_enc) {
+> >> @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct
+> >> drm_encoder *drm_enc)
+> >>         priv = drm_enc->dev->dev_private;
+> >>         dpu_kms = to_dpu_kms(priv->kms);
+> >>         global_state = dpu_kms_get_existing_global_state(dpu_kms);
+> >> +       crtc_state = drm_enc->crtc->state;
+> >>
+> >>         trace_dpu_enc_disable(DRMID(drm_enc));
+> >>
+> >> @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct
+> >> drm_encoder *drm_enc)
+> >>
+> >>         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+> >>
+> >> -       dpu_rm_release(global_state, drm_enc);
+> >> +       if (crtc_state->active_changed && !crtc_state->active)
+> >> +               dpu_rm_release(global_state, drm_enc);
+> >
+> > I still think releasing the state in the atomic_commit() path is the
+> > wrong thing to do.  In the commit path, the various state objects
+> > should be immutable.. ie. in the atomic_test() path you derive the new
+> > hw state (including assignment/release of resources), and
+> > atomic_commit() is simply pushing the state down to the hw.
+> >
+> > Otherwise, this looks better than v1.
+> >
+> > BR,
+> > -R
+> >
+> okay. Should we avoid reservation all together if active=0 on that crtc
+> and trigger rm_release on the enc during atomic_check ?
+> how do you see the approach ?
 
-I can give this a try; for the context, I copied uapi/asm-generic/unistd.h
-without thinking too much, and that does:
+Yeah, I suppose something like:
 
-  #ifndef __SYSCALL
-  #define __SYSCALL(x, y)
-  #endif
+   if (drm_atomic_crtc_needs_modeset()) {
+      reserve()
+   } else if (active_changed && !active) {
+      release()
+   }
 
-> Also, some nits:
->
->> +/*
->> + * Expected flag uses
->> + *
->> + * SHARED_CHILD: These flags are meant to be set from the base domain upwards.
->> + * If a domain has this flag set, all of its children should have it set. This
->> + * is usually because the flag describes some shared resource (all CPUs in that
->> + * domain share the same foobar), or because they are tied to a scheduling
->> + * behaviour that we want to disable at some point in the hierarchy for
->> + * scalability reasons.
->
-> s/foobar/resource
->
-> ?
->
+I think it could happen (at least with atomic api) that you get a
+modeset without active_changed, so we might need to release() and then
+reserve() in that case?  (This is probably where starting to run more
+IGT tests would be useful)
 
-That's better indeed, I think that's a remnant of when I was listing a lot
-of things that could be shared.
+BR,
+-R
 
->> +/*
->> + * cross-node balancing
->> + *
->> + * SHARED_PARENT: Set for all NUMA levels above NODE.
->> + */
->> +SD_FLAG(SD_NUMA,                12, SDF_SHARED_PARENT)
->
-> s/cross-node/Cross-node
->
-> BTW., is there any particular reason why these need to be defines with
-> a manual enumeration of flag values - couldn't we generate
-> auto-enumerated C enums instead or so?
->
-
-I remember exploring a few different options there, but it's been a while
-already. I think one of the reasons I kept some form of explicit assignment
-is to avoid making reading
-
-  /proc/sys/kernel/sched_domain/cpu*/domain*/flags
-
-more convoluted than it is now (i.e. you have to go fetch the
-bit -> name translation in the source code).
-
-In the grand scheme of things I'd actually like to have this file output
-the names of the flags rather than their values (since I now save them when
-SCHED_DEBUG=y), but I didn't find a simple way to hack the existing SD ctl
-table (sd_alloc_ctl_domain_table() and co) into doing this.
-
-
-Now as to making this fully automagic, I *think* I could do something like
-having a first enum to set up an ordering:
-
-  #define SD_FLAG(name, ...) __##name,
-  enum {
-    #include <linux/sched/sd_flags.h>
-  };
-
-A second one to have powers of 2:
-
-  #define SD_FLAG(name, ...) name = 1 << __##name,
-  enum {
-    #include <linux/sched/sd_flags.h>
-  };
-
-And finally the metadata array assignment might be doable with:
-
-  #define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
-
-Or, if there is a way somehow to directly get powers of 2 out of an enum:
-
-  #define SD_FLAG(_name, mflags) [_ffs(_name)] = { .meta_flags = mflags, .name = #_name },
-
->> +#ifdef CONFIG_SCHED_DEBUG
->> +#define SD_FLAG(_name, idx, mflags) [idx] = {.meta_flags = mflags, .name = #_name},
->
-> s/{./{ .
-> s/e}/e }
->
-> Thanks,
->
->       Ingo
+> -Kalyan
+> >>
+> >>         mutex_unlock(&dpu_enc->enc_lock);
+> >>  }
+> >> --
+> >> 1.9.1
+> >>
+> > _______________________________________________
+> > Freedreno mailing list
+> > Freedreno@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/freedreno
