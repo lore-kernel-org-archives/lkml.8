@@ -2,158 +2,181 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ABBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA998C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3C222B40
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E4B2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpdlqqNa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zBjyQ7Fq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgHFBZH (ORCPT
+        id S1726934AbgHFBZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 21:25:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39063 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726787AbgHFBZD (ORCPT
+        Wed, 5 Aug 2020 21:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgHFBZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 21:25:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596677102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UMQQrEZ+Nh2Ng/k4GnJLH3osJ2CLCkGK7FDHnj5N9Y=;
-        b=TpdlqqNawCAB5XAUaJNRhnjBm+QNdSy17XAa3J0KPgtRb3c4ozFUJZEumTJurZCc3CFxN4
-        ZX3TqPQbVxF7ZLgIbNluSaUQOAimhQ6PfaPiR2NJNI24+2YZKCmm8WLHv5qwRYuKo3j/xF
-        jRItv/ycq8d5kLPkiZxQcNBPMFsBcpw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-hlfFQIgrNMqgf_91JPS2og-1; Wed, 05 Aug 2020 21:23:09 -0400
-X-MC-Unique: hlfFQIgrNMqgf_91JPS2og-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A77180046B;
-        Thu,  6 Aug 2020 01:23:05 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA47910013D7;
-        Thu,  6 Aug 2020 01:22:59 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 19:22:58 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200805192258.5ee7a05b@x1.home>
-In-Reply-To: <20200724001930.GS2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com>
-Organization: Red Hat
+        Wed, 5 Aug 2020 21:25:04 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF983C061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 18:25:03 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id h22so5709020otq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 18:25:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k6pimq7S+VITQhnjcjjKsbMV9B3GCD09apLcTf0EFW4=;
+        b=zBjyQ7FqB6dMiThk1hav7gsRnCLpxmI/Fy5uZOtG59LSQ2QsizkGeT9cxRcrrT5uuK
+         IN7w9SlXJWWBuojgD/fhVAol+es3RGGs8AmAlc7M3oYZR77TgO837vZj7SBdpFIojDRw
+         LTKRa9aTIHhvoQX+4vvpYLQ+yGi/UKZ8Y7EbrZD1x6XS4Bd5efeeHiRAUqKaCUK1vNQK
+         lexkbnVoJkHVdOviBHjojnC4qCA6htQXfwn4PGdpQSF16KaqNDXBMqWYqst2HW96Hm7r
+         2/VNTA/3gvLGwRTGVyBp9ZBPbKUGDZdXhoY6xue1CEj/Gg4kd1FIAb4SqmnPuO8aJGbY
+         6hng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k6pimq7S+VITQhnjcjjKsbMV9B3GCD09apLcTf0EFW4=;
+        b=Zf4464ZqT/R4wth5w32zJ1pv4UhX4U3ScV7tLfkMM04S7P17gs0+wwgfCsmvQm6iPK
+         jcnJGzZH4Sp72TxLd5biQ4W1dwvmopriVwU71e1s8K5dqA742ePp72m8dQ1HlMmPb5NW
+         m/0BrtSmzJajG9AKxT/jj3+AqnNHG+zD0ZDi7S5z5+n0sPd1A1p48rdn/7ZPnbD41kng
+         eviy7JEhmn1E8iRX7lrjsWIO9VNmvvh4sQUtqX7mH1T61Zj3ie37ORr/K90+wtvpb7MP
+         l7CJsEjuPe02URQnxjrP7Ux+GJDzsUSR95iVdMyf7jfLvSU0MjDSDbO90o6Oj/bpiePL
+         h1Sg==
+X-Gm-Message-State: AOAM530KufFAs7P6dHE6VgSVpziaV/CXOCsqaUilWXFsUcMEArAH+2Yd
+        p5NZ4NBINbZlh5pkhVXrODZNN+dD8NHHHy+VVuV4BA==
+X-Google-Smtp-Source: ABdhPJwp1gy6ICxlR+QU+ROR+YJdoXDHLADEqbolalzpss7WqkKehLyLFZYdIvJ/S4ZjbwkZ1sedTzTnZwQb6ihZJxQ=
+X-Received: by 2002:a05:6830:3196:: with SMTP id p22mr5524618ots.102.1596677102717;
+ Wed, 05 Aug 2020 18:25:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200718000637.3632841-1-saravanak@google.com>
+ <20200718000637.3632841-3-saravanak@google.com> <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
+ <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
+In-Reply-To: <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 5 Aug 2020 18:24:50 -0700
+Message-ID: <CALAqxLUz6GTT96nO9igiWVwyaRs_xbO+=mySLm4BKX6-Uh90ZA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
+ IRQCHIP_PLATFORM_DRIVER helper macros
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020 21:19:30 -0300
-Jason Gunthorpe <jgg@mellanox.com> wrote:
+On Wed, Aug 5, 2020 at 1:19 PM Saravana Kannan <saravanak@google.com> wrote:
+> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> wrote:
+> > On Fri, Jul 17, 2020 at 5:06 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Switch the driver to use the helper macros. In addition to reducing the
+> > > number of lines, this also adds module unload protection (if the driver
+> > > is compiled as a module) by switching from module_platform_driver to
+> > > builtin_platform_driver.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/irqchip/qcom-pdc.c | 26 +++-----------------------
+> > >  1 file changed, 3 insertions(+), 23 deletions(-)
+> > >
+> > > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> > > index 5b624e3295e4..c1c5dfad57cc 100644
+> > > --- a/drivers/irqchip/qcom-pdc.c
+> > > +++ b/drivers/irqchip/qcom-pdc.c
+> > > @@ -432,28 +432,8 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+> > >         return ret;
+> > >  }
+> > >
+> > > -static int qcom_pdc_probe(struct platform_device *pdev)
+> > > -{
+> > > -       struct device_node *np = pdev->dev.of_node;
+> > > -       struct device_node *parent = of_irq_find_parent(np);
+> > > -
+> > > -       return qcom_pdc_init(np, parent);
+> > > -}
+> > > -
+> > > -static const struct of_device_id qcom_pdc_match_table[] = {
+> > > -       { .compatible = "qcom,pdc" },
+> > > -       {}
+> > > -};
+> > > -MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
+> > > -
+> > > -static struct platform_driver qcom_pdc_driver = {
+> > > -       .probe = qcom_pdc_probe,
+> > > -       .driver = {
+> > > -               .name = "qcom-pdc",
+> > > -               .of_match_table = qcom_pdc_match_table,
+> > > -               .suppress_bind_attrs = true,
+> > > -       },
+> > > -};
+> > > -module_platform_driver(qcom_pdc_driver);
+> > > +IRQCHIP_PLATFORM_DRIVER_BEGIN(qcom_pdc)
+> > > +IRQCHIP_MATCH("qcom,pdc", qcom_pdc_init)
+> > > +IRQCHIP_PLATFORM_DRIVER_END(qcom_pdc)
+> > >  MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
+> > >  MODULE_LICENSE("GPL v2");
+> >
+> > <sigh>
+> > So this is where I bashfully admit I didn't get a chance to try this
+> > patch series out, as I had success with a much older version of
+> > Saravana's macro magic.
+> >
+> > But unfortunately, now that this has landed in mainline, I'm seeing
+> > boot regressions on db845c. :( This is in the non-modular case,
+> > building the driver in.
+>
+> Does that mean the modular version is working? Or you haven't tried
+> that yet? I'll wait for your reply before I try to fix it. I don't
+> have the hardware, but it should be easy to guess this issue looking
+> at the code delta.
 
-> On Tue, Jul 21, 2020 at 11:54:49PM +0000, Tian, Kevin wrote:
-> > In a nutshell, applications don't require raw WQ controllability as guest
-> > kernel drivers may expect. Extending DSA user space interface to be another
-> > passthrough interface just for virtualization needs is less compelling than
-> > leveraging established VFIO/mdev framework (with the major merit that
-> > existing user space VMMs just work w/o any change as long as they already
-> > support VFIO uAPI).  
-> 
-> Sure, but the above is how the cover letter should have summarized
-> that discussion, not as "it is not much code difference"
-> 
-> > In last review you said that you didn't hard nak this approach and would
-> > like to hear opinion from virtualization guys. In this version we CCed KVM
-> > mailing list, Paolo (VFIO/Qemu), Alex (VFIO), Samuel (Rust-VMM/Cloud
-> > hypervisor), etc. Let's see how they feel about this approach.  
-> 
-> Yes, the VFIO community should decide.
-> 
-> If we are doing emulation tasks in the kernel now, then I can think of
-> several nice semi-emulated mdevs to propose.
-> 
-> This will not be some one off, but the start of a widely copied
-> pattern.
+I've not yet tested with modules with your patch.
 
-And that's definitely a concern, there should be a reason for
-implementing device emulation in the kernel beyond an easy path to get
-a device exposed up through a virtualization stack.  The entire idea of
-mdev is the mediation of access to a device to make it safe for a user
-and to fit within the vfio device API.  Mediation, emulation, and
-virtualization can be hard to differentiate, and there is some degree of
-emulation required to fill out the device API, for vfio-pci itself
-included.  So I struggle with a specific measure of where to draw the
-line, and also whose authority it is to draw that line.  I don't think
-it's solely mine, that's something we need to decide as a community.
+> The only significant change from what your probe function is doing is
+> this snippet. But it'd be surprising if this only affects the builtin
+> case.
+>
+> + if (par_np == np)
+> +         par_np = NULL;
+> +
+> + /*
+> + * If there's a parent interrupt controller and  none of the parent irq
+> + * domains have been registered, that means the parent interrupt
+> + * controller has not been initialized yet.  it's not time for this
+> + * interrupt controller to initialize. So, defer probe of this
+> + * interrupt controller. The actual initialization callback of this
+> + * interrupt controller can check for specific domains as necessary.
+> + */
+> + if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
+> +         return -EPROBE_DEFER;
 
-If you see this as an abuse of the framework, then let's identify those
-specific issues and come up with a better approach.  As we've discussed
-before, things like basic PCI config space emulation are acceptable
-overhead and low risk (imo) and some degree of register emulation is
-well within the territory of an mdev driver.  Drivers are accepting
-some degree of increased attack surface by each addition of a uAPI and
-the complexity of those uAPIs, but it seems largely a decision for
-those drivers whether they're willing to take on that responsibility
-and burden.
+Yep. We're getting caught on the irq_find_matching_host() check. I'm a
+little lost as when I look at the qcom,pdc node in the dtsi its not
+under a parent controller (instead the soc node).
+Not sure if that's an issue in the dtsi or if par_np check needs to
+ignore the soc node and pass null?
 
-At some point, possibly in the near-ish future, we might have a
-vfio-user interface with userspace vfio-over-socket servers that might
-be able to consume existing uAPIs and offload some of this complexity
-and emulation to userspace while still providing an easy path to insert
-devices into the virtualization stack.  Hopefully if/when that comes
-along, it would provide these sorts of drivers an opportunity to
-offload some of the current overhead out to userspace, but I'm not sure
-it's worth denying a mainline implementation now.  Thanks,
-
-Alex
-
+thanks
+-john
