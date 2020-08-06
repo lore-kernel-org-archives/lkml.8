@@ -2,169 +2,105 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D464EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A19C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D53D52086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596743315;
-	bh=1nahwTrMArZelmC+WxPZ+mLta7T5whOYFxnf/IoMp4w=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=MRNgm022JtNvRyMBqAVBdNI/vzFNluzHVAoOZ021isBSdgsq8Y7zudKme6dWtFnZ7
-	 kzpUW7IT5emFVU035P5f44sd7ift3u0zFsTxYoQ1Rh9OAAz7zQXPgkqVyxFANyDROm
-	 OBhG5fsRlb9kCy9b8DhVSwA6k4ChfSRzqsxxaeo4=
+	by mail.kernel.org (Postfix) with ESMTP id D27B12173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgHFTse (ORCPT
+        id S1726335AbgHFTvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgHFTsb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:48:31 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3CBC061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:48:31 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id 25so20409136oir.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4gQ75ruoSOCI+/ZqdsWxnLpvjWBjTukbDtC3AHZ8rTg=;
-        b=HL+bKaZ+qVQ7F1TeHaJfo1vBm5yKb7vlf1+/xmjhLCt38vp7sIy8YHm32APcZNMHRZ
-         Pk8848zPgRvrItpKjsDLfhlQ1I97F12VaL4ybd3Bg/rAwX6FnS3hld18jW4QXK7VUVmH
-         CrDQcIQQ0hIDhPm5bXwQw+0rHRPZ7idk5LuXI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4gQ75ruoSOCI+/ZqdsWxnLpvjWBjTukbDtC3AHZ8rTg=;
-        b=X9CGa9g/kPK90FQbuDOGVJD9Dd34GWl4niFcvZO55U2xiHGT06nGMc1DE141twGKb1
-         cFz/6Y5lpMkq3cJdqijKeT6rKhpuqH+haE9SpUEYnSjm74F7cLcjTGZFDrmWCfkCTPXc
-         vOIAEYHt04T5Bti8QDCjJO4Mjb/Zm0FFJjxZm/nai7vmPitOQNi4myvNWxH8Y1mqWzgF
-         /J9sEM/j1DMDskmdCinMdaBdkRhZmbhbCmjCRW6FxprThaYPuwcIbGS1ncaRBZzK6OUu
-         P1AFLO8zfQ5Bayr6rXM7jKT5/bRasm1SD8B3JXwvj9u1Q1tP1sDpjtHc28gT1W3s5jEx
-         lRdQ==
-X-Gm-Message-State: AOAM532zyqKGdZNusuj0KKQI9PksDQm1+/5bhLD4AGfd3CEYGrb/MLjW
-        VgLTXUiwGw6pMK2lNJxncywvxQ==
-X-Google-Smtp-Source: ABdhPJw21Tec6i06lnsFmCKGZ+xmQIMhPfqdJ0RZ3DidumVLHLn1K9s9oALDXkGudqsb5SkM+Xo+0g==
-X-Received: by 2002:aca:b106:: with SMTP id a6mr8160402oif.46.1596743308916;
-        Thu, 06 Aug 2020 12:48:28 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 63sm1190607otp.39.2020.08.06.12.48.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 12:48:27 -0700 (PDT)
-Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
-        cocci@systeme.lip6.fr, stable@vger.kernel.org,
-        skhan@linuxfoundation.org
-References: <20200604164145.173925-1-maennich@google.com>
- <alpine.DEB.2.21.2006042130080.2577@hadrien>
- <bf757b9d-6a67-598b-ed6e-7ee24464abfa@linuxfoundation.org>
- <20200622080345.GD260206@google.com>
- <0eda607e-4083-46d2-acb8-63cfa2697a71@linuxfoundation.org>
- <20200622150605.GA3828014@kroah.com>
- <f09e32dc-8f17-d09a-b2e4-fb4c0699838e@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <baf80622-0860-e640-eb14-dffc02597ed3@linuxfoundation.org>
-Date:   Thu, 6 Aug 2020 13:48:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <f09e32dc-8f17-d09a-b2e4-fb4c0699838e@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Aug 2020 15:51:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64329 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgHFTvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:51:07 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BMndF4Cq3zB09ZQ;
+        Thu,  6 Aug 2020 14:20:33 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id viDHCb0dqpmM; Thu,  6 Aug 2020 14:20:33 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMndF3FnXzB09ZL;
+        Thu,  6 Aug 2020 14:20:33 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3A0C88B80D;
+        Thu,  6 Aug 2020 14:20:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id eafrqRz1HQM5; Thu,  6 Aug 2020 14:20:35 +0200 (CEST)
+Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D6ACF8B7FC;
+        Thu,  6 Aug 2020 14:20:34 +0200 (CEST)
+Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id C00ED65BEB; Thu,  6 Aug 2020 12:20:34 +0000 (UTC)
+Message-Id: <d5641ada199b8dd2af16ad00a66084cf974f2704.1596716418.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH 1/2] powerpc/fpu: Drop cvt_fd() and cvt_df()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  6 Aug 2020 12:20:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 10:14 AM, Shuah Khan wrote:
-> On 6/22/20 9:06 AM, Greg Kroah-Hartman wrote:
->> On Mon, Jun 22, 2020 at 08:46:18AM -0600, Shuah Khan wrote:
->>> On 6/22/20 2:03 AM, Matthias Maennich wrote:
->>>> On Thu, Jun 04, 2020 at 02:39:18PM -0600, Shuah Khan wrote:
->>>>> On 6/4/20 1:31 PM, Julia Lawall wrote:
->>>>>>
->>>>>>
->>>>>> On Thu, 4 Jun 2020, Matthias Maennich wrote:
->>>>>>
->>>>>>> When running `make coccicheck` in report mode using the
->>>>>>> add_namespace.cocci file, it will fail for files that contain
->>>>>>> MODULE_LICENSE. Those match the replacement precondition, but spatch
->>>>>>> errors out as virtual.ns is not set.
->>>>>>>
->>>>>>> In order to fix that, add the virtual rule nsdeps and only
->>>>>>> do search and
->>>>>>> replace if that rule has been explicitly requested.
->>>>>>>
->>>>>>> In order to make spatch happy in report mode, we also need a
->>>>>>> dummy rule,
->>>>>>> as otherwise it errors out with "No rules apply". Using a 
->>>>>>> script:python
->>>>>>> rule appears unrelated and odd, but this is the shortest I
->>>>>>> could come up
->>>>>>> with.
->>>>>>>
->>>>>>> Adjust scripts/nsdeps accordingly to set the nsdeps rule
->>>>>>> when run trough
->>>>>>> `make nsdeps`.
->>>>>>>
->>>>>>> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
->>>>>>> Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck 
->>>>>>> failed")
->>>>>>> Cc: YueHaibing <yuehaibing@huawei.com>
->>>>>>> Cc: jeyu@kernel.org
->>>>>>> Cc: cocci@systeme.lip6.fr
->>>>>>> Cc: stable@vger.kernel.org
->>>>>>> Signed-off-by: Matthias Maennich <maennich@google.com>
->>>>>>
->>>>>> Acked-by: Julia Lawall <julia.lawall@inria.fr>
->>>>>>
->>>>>> Shuah reported the problem to me, so you could add
->>>>>>
->>>>>> Reported-by: Shuah Khan <skhan@linuxfoundation.org>
->>>>>>
->>>>>
->>>>> Very cool. No errors with this patch. Thanks for fixing it
->>>>> quickly.
->>>>
->>>> I am happy I could fix that and thanks for confirming. I assume your
->>>> Tested-by could be added?
->>>
->>> Yes
->>>
->>> Tested-by: Shuah Khan <skhan@linuxfoundation.org>
->>>>
->>>> Is somebody willing to take this patch through their tree?
->>>>
->>>
->>> My guess is that these go through kbuild git??
->>
->> If you want to take this, that's fine with me.  But as I had the
->> original file come through my tree, I can take it too.  It's up to you,
->> either is ok with me.
->>
-> 
-> Great. Please take this through your tree.
-> 
+Those two functions have been unused since commit identified below.
+Drop them.
 
-Greg! Looks like this one didn't make it in. Can you pick this up?
+Fixes: 31bfdb036f12 ("powerpc: Use instruction emulation infrastructure to handle alignment faults")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/include/asm/processor.h |  2 --
+ arch/powerpc/kernel/fpu.S            | 15 ---------------
+ 2 files changed, 17 deletions(-)
 
-thanks,
--- Shuah
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index 5c20b6d509ae..9ebcb2f095db 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -425,8 +425,6 @@ extern void flush_instruction_cache(void);
+ extern void hard_reset_now(void);
+ extern void poweroff_now(void);
+ extern int fix_alignment(struct pt_regs *);
+-extern void cvt_fd(float *from, double *to);
+-extern void cvt_df(double *from, float *to);
+ extern void _nmask_and_or_msr(unsigned long nmask, unsigned long or_val);
+ 
+ #ifdef CONFIG_PPC64
+diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
+index 4ae39db70044..825893d4cb59 100644
+--- a/arch/powerpc/kernel/fpu.S
++++ b/arch/powerpc/kernel/fpu.S
+@@ -134,18 +134,3 @@ _GLOBAL(save_fpu)
+ 	mffs	fr0
+ 	stfd	fr0,FPSTATE_FPSCR(r6)
+ 	blr
+-
+-/*
+- * These are used in the alignment trap handler when emulating
+- * single-precision loads and stores.
+- */
+-
+-_GLOBAL(cvt_fd)
+-	lfs	0,0(r3)
+-	stfd	0,0(r4)
+-	blr
+-
+-_GLOBAL(cvt_df)
+-	lfd	0,0(r3)
+-	stfs	0,0(r4)
+-	blr
+-- 
+2.25.0
 
