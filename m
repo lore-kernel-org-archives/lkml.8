@@ -2,61 +2,62 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4956AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D323FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDD0E20823
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA22E20823
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XvwazSi3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fNIdU00H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHFClB (ORCPT
+        id S1726890AbgHFClY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53996 "EHLO
+        Wed, 5 Aug 2020 22:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHFClB (ORCPT
+        with ESMTP id S1726514AbgHFClM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:41:01 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2CA5C061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 19:40:59 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id p8so9804953pgn.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 19:40:59 -0700 (PDT)
+        Wed, 5 Aug 2020 22:41:12 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A032C061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 19:41:12 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t11so6912407plr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 19:41:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=GKCYwGkIkZzoBWY4eR7yYQLz/eI09m7DZMufw7NU6qE=;
-        b=XvwazSi3xag0/7Jy8zFjpwnwFNeQwVrgSYsa0XgZby7/Jugj8LH6KadJnFHRSPkvUJ
-         yh2egvUU3Fp+OyGy4o9MCfH8181BI1t6UEfTmu3Fz6rmud+tVXMy80S/AAsox0pDohyU
-         8y9qWdKYGQcr8DsbOgBLTqjlOxhAfzfmIqVg0G441QsVBcC4sw7RZq0DMXG2bCt6dW0U
-         8kjzAACDhPrr+WBbesDyndeDG6ZG4oU+kHmt6L0YW3p4gSqbkQSOL7cV62Y4+D/Iy9PN
-         TZ3i4GFfR33HftYQinA8unIbSgcS6ZOxtq5P2bXVkueerF+AzM1vbGqMqgKaO3HeIBHn
-         l2Tw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Jv5cjXz26GSLxrf6/cECpRDuH6bf6WlYndXHHKVBb1I=;
+        b=fNIdU00HahtimRivt2mBz5dkzmuSmDxXqfe0yOXVkoaDv0k5XuyH/kfCmi9byki2t1
+         iVSIzq2IKJixqcz+g4CEHSYe5Zr5mBuW8wHKOwQI3Ft8w0RhRHjIxPgjsxTNa9ARky+/
+         JRQvtjMl0aZ2VWg6/I1iG7zP+tDfBnRk2WE5baUAJ1erxHEacuCWzJ4d9UDEEaIuIQL/
+         qvjWHvHmw3pZg4EKR1vzcvqSy8/MayD8l24gF0xO0Md/qZk93lxFLkqWIhSqXlcBxD36
+         wQUXe6sCurLaP4mvXn4nVtc68T2Qfv0FtIj1ROnslGH8jgIcDY+rd9C7jED12EU+4lvv
+         9PmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GKCYwGkIkZzoBWY4eR7yYQLz/eI09m7DZMufw7NU6qE=;
-        b=LoAIg8ogDcaZp1UxIE0jDrw1uA6uwdhTR+WKNAqEo3OHq5sx/7fUBtqDj4C4i3N8XE
-         wU7D5wnlcdRiMVebcvmb2n4qRSH57PCRG7+GfVI24pBgt2H0k9W8jPKLE9k1SxQRLjkA
-         xmU7DBnmZqemsd74+dgArYNdBGd0VbwjZIZXvNT0yqSBdrTo0Dfw1DZ3L9VekysuoVTp
-         mv2MJkXkoaSNZ51iO5vHLzH5Hz8fVqDHu61rdaXwAdXV+JEk8ja4RJIgyCno1Q+ycdcS
-         gldGxfyv277lItnf1G39grMYO3JDbJtkvG7RxiJU5b9tqoGwtFi3+SPXzY3k3Q/6067f
-         +Chw==
-X-Gm-Message-State: AOAM531VY4N8dNBDDDkjHhu78h1kSkP1ihtLLbaUmmY8DGvtv3f2jS+P
-        cUlWUkgYJXjJc6FXa8xuMrhOjg==
-X-Google-Smtp-Source: ABdhPJx4z1qFee8nhaSQVAi72rBIVHYCOwE99vG0u72CWb9aTOjnnJwnrtP6YiH76IvKDDMPZWpw1w==
-X-Received: by 2002:a62:7c87:: with SMTP id x129mr6464453pfc.165.1596681657326;
-        Wed, 05 Aug 2020 19:40:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Jv5cjXz26GSLxrf6/cECpRDuH6bf6WlYndXHHKVBb1I=;
+        b=NjNuiVgOO8oKQLJco+ZJC/BPIDzM+p0cA2YUh0nYRpcxr3IzdcI1NdN3fAIh4fsocB
+         VvwOe2PiUbJuHWfqjCjTMUWgK663mGgHJ98bkClMHrAEsoxZttH0vW89NdnWunfQFHBn
+         A0TUC8ZCtIcGFuUdToyLOgp0K/5J7MD1r4DbQXEuKuCHx7sfAkSErc/Nih/Wsr/6EtuC
+         5WlZheuoIDiYLHZQwyGwxNrcK/2fjw74QO+Vej4Qyg2zyLnyTwReldIfL2yHOG2KEYfy
+         fKcEF6Bjulxyz7fK/h+dD5F+GJUYsryhZ6n1oJQlCYLLWlTkV1Ivbb3s3mQy9zgthu2D
+         XX4g==
+X-Gm-Message-State: AOAM530+1/JesF/hdQUuvQcSCKsUPGgP3c0Cbymcqn54VlMix7ndU4Ew
+        eWGmQ3lYgha/CJRQbo83fal1qA==
+X-Google-Smtp-Source: ABdhPJwXjo4qBJv6AY4l2kSi5F53JmYwoZHKTt5fwNDIwY2qUxsB6QGpRBaymaQwAkdM4ASNDFsLfQ==
+X-Received: by 2002:a17:90a:de03:: with SMTP id m3mr5884450pjv.130.1596681670775;
+        Wed, 05 Aug 2020 19:41:10 -0700 (PDT)
 Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id s24sm877219pjp.1.2020.08.05.19.40.55
+        by smtp.gmail.com with ESMTPSA id mj6sm4746090pjb.15.2020.08.05.19.41.09
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Aug 2020 19:40:56 -0700 (PDT)
+        Wed, 05 Aug 2020 19:41:10 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
@@ -74,173 +75,227 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 00/11] perf mem: Support AUX trace and Arm SPE
-Date:   Thu,  6 Aug 2020 10:40:30 +0800
-Message-Id: <20200806024041.27475-1-leo.yan@linaro.org>
+Subject: [PATCH v1 02/11] perf mem: Introduce weak function perf_mem_events__ptr()
+Date:   Thu,  6 Aug 2020 10:40:32 +0800
+Message-Id: <20200806024041.27475-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806024041.27475-1-leo.yan@linaro.org>
+References: <20200806024041.27475-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set is to support AUX trace and Arm SPE as the first enabled
-hardware tracing for Perf memory tool.
+Different architectures might use different event or different event
+parameters for memory profiling, this patch introduces weak function
+perf_mem_events__ptr(), which allows to return back architecture
+specific memory event.
 
-Patches 01 ~ 04 are preparasion patches which mainly resolve the issue
-for memory events, since the existed code is hard coded the memory
-events which based on x86 and PowerPC architectures, so patches 01 ~ 04
-extend to support more flexible memory event name, and introduce weak
-functions so can allow every architecture to define its own memory
-events structure and returning event pointer and name respectively.
+After the function perf_mem_events__ptr() is introduced, the variable
+'perf_mem_events' can be accessed by using this new function; so marks
+the variable as 'static' variable, this can allow the architectures to
+define its own memory event array.
 
-Patch 05 is used to extend Perf memory tool to support AUX trace.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/builtin-c2c.c     | 18 ++++++++++++------
+ tools/perf/builtin-mem.c     | 21 ++++++++++++++-------
+ tools/perf/util/mem-events.c | 26 +++++++++++++++++++-------
+ tools/perf/util/mem-events.h |  2 +-
+ 4 files changed, 46 insertions(+), 21 deletions(-)
 
-Patch 06 ~ 11 are to support Arm SPE with Perf memory tool.  Firstly it
-registers SPE events for memory events, then it extends the SPE packet
-to pass addresses info and operation types, and also set 'data_src'
-field so can allow the tool to display readable string in the result.
-
-This patch set has been tested on ARMv8 Hisilicon D06 platform.  I noted
-now the 'data object' cannot be displayed properly, this should be
-another issue so need to check separately.   Below is testing result:
-
-# Samples: 73  of event 'l1d-miss'
-# Total weight : 73
-# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol                              Shared Object      Data Symbol                                                   Data Object         Snoop         TLB access              Locked
-# ........  ............  ............  ........................  ..................................  .................  ............................................................  ..................  ............  ......................  ......
-#
-     2.74%             2  0             L1 or L1 miss             [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027aacb08a8                                        [unknown]           N/A           N/A                     No
-     2.74%             2  0             L1 or L1 miss             [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027be6488a8                                        [unknown]           N/A           N/A                     No
-     2.74%             2  0             L1 or L1 miss             [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027c432f8a8                                        [unknown]           N/A           N/A                     No
-     1.37%             1  0             L1 or L1 miss             [k] __arch_copy_to_user             [kernel.kallsyms]  [k] 0xffff0027a65352a0                                        [unknown]           N/A           N/A                     No
-     1.37%             1  0             L1 or L1 miss             [k] __d_lookup_rcu                  [kernel.kallsyms]  [k] 0xffff0027d3cbf468                                        [unknown]           N/A           N/A                     No
-     1.37%             1  0             L1 or L1 miss             [k] __d_lookup_rcu                  [kernel.kallsyms]  [k] 0xffff0027d8f44490                                        [unknown]           N/A           N/A                     No
-     [...]
-
-
-# Samples: 101  of event 'l1d-access'
-# Total weight : 101
-# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol                              Shared Object      Data Symbol                                                   Data Object             Snoop         TLB access              Locked
-# ........  ............  ............  ........................  ..................................  .................  ............................................................  ......................  ............  ......................  ......
-#
-     2.97%             3  0             L1 or L1 hit              [k] perf_event_mmap                 [kernel.kallsyms]  [k] perf_swevent+0x5c                                         [kernel.kallsyms].data  N/A           N/A                     No
-     1.98%             2  0             L1 or L1 hit              [k] kmem_cache_alloc                [kernel.kallsyms]  [k] 0xffff2027af40e3d0                                        [unknown]               N/A           N/A                     No
-     1.98%             2  0             L1 or L1 hit              [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027aacb08a8                                        [unknown]               N/A           N/A                     No
-     1.98%             2  0             L1 or L1 hit              [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027be6488a8                                        [unknown]               N/A           N/A                     No
-     1.98%             2  0             L1 or L1 hit              [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027c432f8a8                                        [unknown]               N/A           N/A                     No
-     0.99%             1  0             L1 or L1 hit              [k] __arch_copy_to_user             [kernel.kallsyms]  [k] 0xffff0027a65352a0                                        [unknown]               N/A           N/A                     No
-     0.99%             1  0             L1 or L1 hit              [k] __d_lookup_rcu                  [kernel.kallsyms]  [k] 0xffff0027d3cbf468                                        [unknown]               N/A           N/A                     No
-     0.99%             1  0             L1 or L1 hit              [k] __d_lookup_rcu                  [kernel.kallsyms]  [k] 0xffff0027d8f44490                                        [unknown]               N/A           N/A                     No
-     [...]
-
-
-# Samples: 46  of event 'llc-miss'
-# Total weight : 46
-# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol                              Shared Object      Data Symbol                                                   Data Object         Snoop         TLB access              Locked
-# ........  ............  ............  ........................  ..................................  .................  ............................................................  ..................  ............  ......................  ......
-#
-     2.17%             1  0             L3 or L3 miss             [k] __arch_copy_to_user             [kernel.kallsyms]  [k] 0xffff0027a65352a0                                        [unknown]           N/A           N/A                     No
-     2.17%             1  0             L3 or L3 miss             [k] __d_lookup_rcu                  [kernel.kallsyms]  [k] 0xffff0027d3cbf468                                        [unknown]           N/A           N/A                     No
-     2.17%             1  0             L3 or L3 miss             [k] __d_lookup_rcu                  [kernel.kallsyms]  [k] 0xffff0027d8f44490                                        [unknown]           N/A           N/A                     No
-     2.17%             1  0             L3 or L3 miss             [k] __tty_buffer_request_room       [kernel.kallsyms]  [k] 0xffff2027c424ac08                                        [unknown]           N/A           N/A                     No
-     2.17%             1  0             L3 or L3 miss             [.] _dl_addr                        libc-2.28.so       [.] 0x0000ffff9afc94c4                                        libc-2.28.so        N/A           N/A                     No
-     2.17%             1  0             L3 or L3 miss             [.] _dl_addr                        libc-2.28.so       [.] 0x0000ffff9afc98b6                                        libc-2.28.so        N/A           N/A                     No
-     2.17%             1  0             L3 or L3 miss             [.] _dl_lookup_symbol_x             ld-2.28.so         [.] 0x0000ffff9af38703                                        libdl-2.28.so       N/A           N/A                     No
-     [...]
-
-
-# Samples: 6  of event 'llc-access'
-# Total weight : 6
-# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol                   Shared Object      Data Symbol             Data Object       Snoop         TLB access              Locked
-# ........  ............  ............  ........................  .......................  .................  ......................  ................  ............  ......................  ......
-#
-    16.67%             1  0             L3 or L3 hit              [.] _dl_addr             libc-2.28.so       [.] 0x0000ffff9afc98b6  libc-2.28.so      N/A           N/A                     No
-    16.67%             1  0             L3 or L3 hit              [.] _dl_lookup_symbol_x  ld-2.28.so         [.] 0x0000ffff9af38703  libdl-2.28.so     N/A           N/A                     No
-    16.67%             1  0             L3 or L3 hit              [.] _dl_relocate_object  ld-2.28.so         [.] 0x0000aaaadc9e4dd0  ls                N/A           N/A                     No
-    16.67%             1  0             L3 or L3 hit              [.] _dl_relocate_object  ld-2.28.so         [.] 0x0000aaaadc9e5970  ls                N/A           N/A                     No
-    16.67%             1  0             L3 or L3 hit              [k] copy_page            [kernel.kallsyms]  [k] 0xffff0027a8528be0  [unknown]         N/A           N/A                     No
-    16.67%             1  0             L3 or L3 hit              [k] copy_page            [kernel.kallsyms]  [k] 0xffff2027c66a65e0  [unknown]         N/A           N/A                     No
-
-
-# Samples: 32  of event 'tlb-miss'
-# Total weight : 32
-# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol                              Shared Object      Data Symbol             Data Object         Snoop         TLB access              Locked
-# ........  ............  ............  ........................  ..................................  .................  ......................  ..................  ............  ......................  ......
-#
-     6.25%             2  0             N/A                       [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027be6488a8  [unknown]           N/A           Walker miss             No
-     6.25%             2  0             N/A                       [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027c432f8a8  [unknown]           N/A           Walker miss             No
-     3.12%             1  0             N/A                       [k] __arch_clear_user               [kernel.kallsyms]  [k] 0x0000aaaadca14658  [unknown]           N/A           Walker miss             No
-     3.12%             1  0             N/A                       [.] _dl_map_object_deps             ld-2.28.so         [.] 0x0000ffffdd807c50  [stack]             N/A           Walker miss             No
-     3.12%             1  0             N/A                       [.] _dl_map_object_from_fd          ld-2.28.so         [.] 0x0000ffff9af32d50  libpthread-2.28.so  N/A           Walker miss             No
-     [...]
-
-
-# Samples: 114  of event 'tlb-access'
-# Total weight : 114
-# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol                              Shared Object      Data Symbol                                                   Data Object             Snoop         TLB access              Locked
-# ........  ............  ............  ........................  ..................................  .................  ............................................................  ......................  ............  ......................  ......
-#
-     2.63%             3  0             N/A                       [k] perf_event_mmap                 [kernel.kallsyms]  [k] perf_swevent+0x5c                                         [kernel.kallsyms].data  N/A           Walker hit              No
-     1.75%             2  0             N/A                       [k] kmem_cache_alloc                [kernel.kallsyms]  [k] 0xffff2027af40e3d0                                        [unknown]               N/A           Walker hit              No
-     1.75%             2  0             N/A                       [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027aacb08a8                                        [unknown]               N/A           Walker hit              No
-     1.75%             2  0             N/A                       [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027be6488a8                                        [unknown]               N/A           Walker hit              No
-     1.75%             2  0             N/A                       [k] perf_iterate_ctx.constprop.151  [kernel.kallsyms]  [k] 0xffff2027c432f8a8                                        [unknown]               N/A           Walker hit              No
-     0.88%             1  0             N/A                       [k] __arch_clear_user               [kernel.kallsyms]  [k] 0x0000aaaadca14658                                        [unknown]               N/A           Walker hit              No
-     0.88%             1  0             N/A                       [k] __arch_clear_user               [kernel.kallsyms]  [k] 0x0000ffff9b1963f8                                        [unknown]               N/A           Walker hit              No
-     [...]
-
-
-# Samples: 21  of event 'remote-access'
-# Total weight : 21
-# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol                      Shared Object      Data Symbol                                                   Data Object         Snoop         TLB access              Locked
-# ........  ............  ............  ........................  ..........................  .................  ............................................................  ..................  ............  ......................  ......
-#
-     4.76%             1  0             Remote Cache (1 hop) or Any cache hit  [k] __arch_copy_to_user     [kernel.kallsyms]  [k] 0xffff0027a65352a0                                        [unknown]           N/A           N/A                     No
-     4.76%             1  0             Remote Cache (1 hop) or Any cache hit  [k] __d_lookup_rcu          [kernel.kallsyms]  [k] 0xffff0027d3cbf468                                        [unknown]           N/A           N/A                     No
-     4.76%             1  0             Remote Cache (1 hop) or Any cache hit  [k] __d_lookup_rcu          [kernel.kallsyms]  [k] 0xffff0027d8f44490                                        [unknown]           N/A           N/A                     No
-     4.76%             1  0             Remote Cache (1 hop) or Any cache hit  [.] _dl_addr                libc-2.28.so       [.] 0x0000ffff9afc94c4                                        libc-2.28.so        N/A           N/A                     No
-     [...]
-
-
-Leo Yan (11):
-  perf mem: Search event name with more flexible path
-  perf mem: Introduce weak function perf_mem_events__ptr()
-  perf mem: Support new memory event PERF_MEM_EVENTS__LOAD_STORE
-  perf mem: Only initialize memory event for recording
-  perf mem: Support AUX trace
-  perf mem: Support Arm SPE events
-  perf arm-spe: Enable attribution PERF_SAMPLE_DATA_SRC
-  perf arm-spe: Save memory addresses in packet
-  perf arm-spe: Store operation types in packet
-  perf arm-spe: Fill address info for memory samples
-  perf arm-spe: Set sample's data source field
-
- tools/perf/arch/arm64/util/Build              |   2 +-
- tools/perf/arch/arm64/util/mem-events.c       |  46 +++++++
- tools/perf/builtin-c2c.c                      |  18 ++-
- tools/perf/builtin-mem.c                      |  71 ++++++++--
- .../util/arm-spe-decoder/arm-spe-decoder.c    |  15 +++
- .../util/arm-spe-decoder/arm-spe-decoder.h    |   8 ++
- tools/perf/util/arm-spe.c                     | 125 +++++++++++++++---
- tools/perf/util/mem-events.c                  |  32 +++--
- tools/perf/util/mem-events.h                  |   3 +-
- 9 files changed, 266 insertions(+), 54 deletions(-)
- create mode 100644 tools/perf/arch/arm64/util/mem-events.c
-
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 5938b100eaf4..88e68f36aa62 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2914,6 +2914,7 @@ static int perf_c2c__record(int argc, const char **argv)
+ 	int ret;
+ 	bool all_user = false, all_kernel = false;
+ 	bool event_set = false;
++	struct perf_mem_event *e;
+ 	struct option options[] = {
+ 	OPT_CALLBACK('e', "event", &event_set, "event",
+ 		     "event selector. Use 'perf mem record -e list' to list available events",
+@@ -2941,11 +2942,15 @@ static int perf_c2c__record(int argc, const char **argv)
+ 	rec_argv[i++] = "record";
+ 
+ 	if (!event_set) {
+-		perf_mem_events[PERF_MEM_EVENTS__LOAD].record  = true;
+-		perf_mem_events[PERF_MEM_EVENTS__STORE].record = true;
++		e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
++		e->record = true;
++
++		e = perf_mem_events__ptr(PERF_MEM_EVENTS__STORE);
++		e->record = true;
+ 	}
+ 
+-	if (perf_mem_events[PERF_MEM_EVENTS__LOAD].record)
++	e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
++	if (e->record)
+ 		rec_argv[i++] = "-W";
+ 
+ 	rec_argv[i++] = "-d";
+@@ -2953,12 +2958,13 @@ static int perf_c2c__record(int argc, const char **argv)
+ 	rec_argv[i++] = "--sample-cpu";
+ 
+ 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+-		if (!perf_mem_events[j].record)
++		e = perf_mem_events__ptr(j);
++		if (!e->record)
+ 			continue;
+ 
+-		if (!perf_mem_events[j].supported) {
++		if (!e->supported) {
+ 			pr_err("failed: event '%s' not supported\n",
+-			       perf_mem_events[j].name);
++			       perf_mem_events__name(j));
+ 			free(rec_argv);
+ 			return -1;
+ 		}
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 3523279af6af..9a7df8d01296 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -64,6 +64,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 	const char **rec_argv;
+ 	int ret;
+ 	bool all_user = false, all_kernel = false;
++	struct perf_mem_event *e;
+ 	struct option options[] = {
+ 	OPT_CALLBACK('e', "event", &mem, "event",
+ 		     "event selector. use 'perf mem record -e list' to list available events",
+@@ -86,13 +87,18 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 
+ 	rec_argv[i++] = "record";
+ 
+-	if (mem->operation & MEM_OPERATION_LOAD)
+-		perf_mem_events[PERF_MEM_EVENTS__LOAD].record = true;
++	if (mem->operation & MEM_OPERATION_LOAD) {
++		e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
++		e->record = true;
++	}
+ 
+-	if (mem->operation & MEM_OPERATION_STORE)
+-		perf_mem_events[PERF_MEM_EVENTS__STORE].record = true;
++	if (mem->operation & MEM_OPERATION_STORE) {
++		e = perf_mem_events__ptr(PERF_MEM_EVENTS__STORE);
++		e->record = true;
++	}
+ 
+-	if (perf_mem_events[PERF_MEM_EVENTS__LOAD].record)
++	e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
++	if (e->record)
+ 		rec_argv[i++] = "-W";
+ 
+ 	rec_argv[i++] = "-d";
+@@ -101,10 +107,11 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 		rec_argv[i++] = "--phys-data";
+ 
+ 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+-		if (!perf_mem_events[j].record)
++		e = perf_mem_events__ptr(j);
++		if (!e->record)
+ 			continue;
+ 
+-		if (!perf_mem_events[j].supported) {
++		if (!e->supported) {
+ 			pr_err("failed: event '%s' not supported\n",
+ 			       perf_mem_events__name(j));
+ 			free(rec_argv);
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 35c8d175a9d2..7a5a0d699e27 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -17,7 +17,7 @@ unsigned int perf_mem_events__loads_ldlat = 30;
+ 
+ #define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
+ 
+-struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
++static struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
+ 	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"cpu/events/mem-loads"),
+ 	E("ldlat-stores",	"cpu/mem-stores/P",		"cpu/events/mem-stores"),
+ };
+@@ -28,19 +28,31 @@ struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
+ static char mem_loads_name[100];
+ static bool mem_loads_name__init;
+ 
++struct perf_mem_event * __weak perf_mem_events__ptr(int i)
++{
++	if (i >= PERF_MEM_EVENTS__MAX)
++		return NULL;
++
++	return &perf_mem_events[i];
++}
++
+ char * __weak perf_mem_events__name(int i)
+ {
++	struct perf_mem_event *e = perf_mem_events__ptr(i);
++
++	if (!e)
++		return NULL;
++
+ 	if (i == PERF_MEM_EVENTS__LOAD) {
+ 		if (!mem_loads_name__init) {
+ 			mem_loads_name__init = true;
+ 			scnprintf(mem_loads_name, sizeof(mem_loads_name),
+-				  perf_mem_events[i].name,
+-				  perf_mem_events__loads_ldlat);
++				  e->name, perf_mem_events__loads_ldlat);
+ 		}
+ 		return mem_loads_name;
+ 	}
+ 
+-	return (char *)perf_mem_events[i].name;
++	return (char *)e->name;
+ }
+ 
+ int perf_mem_events__parse(const char *str)
+@@ -61,7 +73,7 @@ int perf_mem_events__parse(const char *str)
+ 
+ 	while (tok) {
+ 		for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+-			struct perf_mem_event *e = &perf_mem_events[j];
++			struct perf_mem_event *e = perf_mem_events__ptr(j);
+ 
+ 			if (strstr(e->tag, tok))
+ 				e->record = found = true;
+@@ -90,7 +102,7 @@ int perf_mem_events__init(void)
+ 
+ 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+ 		char path[PATH_MAX];
+-		struct perf_mem_event *e = &perf_mem_events[j];
++		struct perf_mem_event *e = perf_mem_events__ptr(j);
+ 		struct stat st;
+ 
+ 		scnprintf(path, PATH_MAX, "%s/devices/%s",
+@@ -108,7 +120,7 @@ void perf_mem_events__list(void)
+ 	int j;
+ 
+ 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+-		struct perf_mem_event *e = &perf_mem_events[j];
++		struct perf_mem_event *e = perf_mem_events__ptr(j);
+ 
+ 		fprintf(stderr, "%-13s%-*s%s\n",
+ 			e->tag,
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index 904dad34f7f7..726a9c8103e4 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -31,13 +31,13 @@ enum {
+ 	PERF_MEM_EVENTS__MAX,
+ };
+ 
+-extern struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX];
+ extern unsigned int perf_mem_events__loads_ldlat;
+ 
+ int perf_mem_events__parse(const char *str);
+ int perf_mem_events__init(void);
+ 
+ char *perf_mem_events__name(int i);
++struct perf_mem_event *perf_mem_events__ptr(int i);
+ 
+ void perf_mem_events__list(void);
+ 
 -- 
 2.17.1
 
