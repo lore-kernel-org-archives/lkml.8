@@ -2,290 +2,146 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B140CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D37AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E88221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FBC2177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:16:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tud5yzMz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h35Sp8BE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHFUN4 (ORCPT
+        id S1726197AbgHFUP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:13:56 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50684 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbgHFUNz (ORCPT
+        Thu, 6 Aug 2020 16:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgHFUP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:13:55 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076EgAfH175366;
-        Thu, 6 Aug 2020 14:42:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=sjtN+u4jC9Ht8p59OvrPGMDnS5TblL+US63NwcAFliM=;
- b=Tud5yzMzSuw2emWSk2OCx8u1UwSc386u0jjuO/cZzGMfI9l8TES49e8GmGIhA8z8pfJG
- t9faGKssXUXMv7yuAtLIGE0nnaICzVQKLsBcux60tQiEKwav+AQQ3POmaEGYAS3XBTK3
- ckiRhqQuWZeiANchkzIDGrvDtbrc2Do3vUeKnoGrz79uM2S6G7AyFublH8pJdf5MNcwx
- sa3UvTxlvMYQtp02NrOexYiNozqpRdJyOdl7br7Ojqy2C8AcJrNndd3qHg6nPjcvi9fg
- ao8PJhvWbd/Wu2tFH8F2jjWQ0OoUfmZgZ9If3JH7zaRPofNRD9R1WOElhkWBY7G9T1JX Jw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32r6fxkcey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 06 Aug 2020 14:42:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076EdFbP010286;
-        Thu, 6 Aug 2020 14:42:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32p5gvh4rs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Aug 2020 14:42:43 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 076EgcS4013941;
-        Thu, 6 Aug 2020 14:42:38 GMT
-Received: from localhost.uk.oracle.com (/10.175.182.235)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Aug 2020 07:42:38 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     ast@kernel.org, daniel@iogearbox.net, andriin@fb.com, yhs@fb.com
-Cc:     linux@rasmusvillemoes.dk, andriy.shevchenko@linux.intel.com,
-        pmladek@suse.com, kafai@fb.com, songliubraving@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org, shuah@kernel.org,
-        rdna@fb.com, scott.branden@broadcom.com, quentin@isovalent.com,
-        cneirabustos@gmail.com, jakub@cloudflare.com, mingo@redhat.com,
-        rostedt@goodmis.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [RFC PATCH bpf-next 0/4] bpf: add bpf-based bpf_trace_printk()-like support
-Date:   Thu,  6 Aug 2020 15:42:21 +0100
-Message-Id: <1596724945-22859-1-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- phishscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008060104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 clxscore=1011 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008060105
+        Thu, 6 Aug 2020 16:15:59 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A917C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 13:15:58 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l64so39376294qkb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 13:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z5BaX90LdW8Ugx54ddA3KoziTH/PsAA8tFDwiMrbnR8=;
+        b=h35Sp8BEgVxDlpWym/cQDqC4zseWQpiWdcfic5rVu1+3HpzGdKAeQGbagPrCRlkBKx
+         7BMR5dsAGTbm/KvFxdORSZ4SwErxkTluAWtQIVmJmv1vPKSWOw2zKya/kpKjJGw1bfis
+         oq/GYvo44pMAk3bLZT7xeexIRN5NYpjMf32iiSgGOUJ4Jz40CAVQmSTWWwTFWf0c1GQJ
+         MZlwfp4WKJ0iWSTN4ua7uIngbzICK/dUIxzZN6y3Q4FuadADXkBP+K8AcbENRmGNdSdY
+         neh4s3xk1Fs7HJeLqHFMOMdvS2D3/bS9KTtc5xiaBcK9aDYpHCG+6ngpGQ0d/0FDBmgd
+         iiKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z5BaX90LdW8Ugx54ddA3KoziTH/PsAA8tFDwiMrbnR8=;
+        b=f9DGjiJ4KNP+JcgDMHznHnxEMU16c2e3bEdSO+dOoXoVuJl4uWLBu0u5DUj5LOyeKw
+         jc7l8O3TDE6TWq2Mf08fEHJeP2ygT3H7LzOFpzfaGCMfV4qN0R4EDLztolXWkdZILfLq
+         nyzcxbPDm/XkD/xbNUlqGm7dW6J4Vc/F07BhMbqC2c3SLkq5zWz27OcCNVzUStmbUQZO
+         uRFT/RXJ+zO9er3jyC2QUm1cKnln8FEQWU9lmamsYeRKnBbCLYjCqJ7dl5UxhIpf05VA
+         6EuGzUhbeRAw7ze5N7k9kweVIe9ZEIqI9FaKiVTBp8Z23UukNXDJC90q+mM1j4kRBveV
+         YHNg==
+X-Gm-Message-State: AOAM5302LipwCIrkmrMApW9OSJP8kxtZdHcI2NV0ss13ZV9658QyFeca
+        AAJQJaLc5xzBzm8yrNmBEKF5bqfAJD4Tpd1O72o=
+X-Google-Smtp-Source: ABdhPJwSfeFtVLjjuWu43jt9dVPk/qZN6CoHRswsFXANDqtxyDrzZufWflt9mHDnqAa1Yh69p4Nz07aZufBWpHGp3/A=
+X-Received: by 2002:a37:a44:: with SMTP id 65mr10479172qkk.370.1596744957954;
+ Thu, 06 Aug 2020 13:15:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200601091231.3794350-1-chengzhihao1@huawei.com>
+ <CAFLxGvwLSvYsQ+OPi85VS8aQ2uge_JqQRD2C8h=XMORvCej3Sw@mail.gmail.com>
+ <211afcd0-d5b3-5ac0-1fd1-dc789634a858@huawei.com> <CAFLxGvwRDfB4mqxJhOLwWvoZ3yzpVY-kuAiovYLf8T7WwJqaTg@mail.gmail.com>
+ <9caa4860-975c-70bb-c8b9-737d1db9ead4@huawei.com> <CAFLxGvycs7DNu5o5QY1WwTPfS6cTTykTh-91n9TQZ7yP_ADr4A@mail.gmail.com>
+ <2086f822-e67a-43e4-76d8-5339eaccd3ac@huawei.com>
+In-Reply-To: <2086f822-e67a-43e4-76d8-5339eaccd3ac@huawei.com>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Thu, 6 Aug 2020 22:15:46 +0200
+Message-ID: <CAFLxGvzwoC1GcjJOfwpc8V5LD79=8XiJaNV2HjOm8EdQcCbp+w@mail.gmail.com>
+Subject: Re: [PATCH] ubi: check kthread_should_stop() after the setting of
+ task state
+To:     Zhihao Cheng <chengzhihao1@huawei.com>
+Cc:     linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series attempts to provide a simple way for BPF programs (and in
-future other consumers) to utilize BPF Type Format (BTF) information
-to display kernel data structures in-kernel.  The use case this
-functionality is applied to here is to support a bpf_trace_printk
-trace event-based method of rendering type information.
+On Wed, Aug 5, 2020 at 4:23 AM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+> Er, I can't get the point. I can list two possible situations, did I
+> miss other situations?
 
-There is already support in kernel/bpf/btf.c for "show" functionality;
-the changes here generalize that support from seq-file specific
-verifier display to the more generic case and add another specific
-use case; rather than seq_printf()ing the show data, it is traced
-using the bpf_trace_printk trace event.  Other future uses of the
-show functionality could include a bpf_printk_btf() function which
-printk()ed the data instead. Oops messaging in particular would
-be an interesting application for such functionality.
+Yes. You keep ignoring the case I brought up.
 
-The above potential use case hints at a potential reply to
-a reasonable objection that such typed display should be
-solved by tracing programs, where the in-kernel tracing records
-data and the userspace program prints it out.  While this
-is certainly the recommended approach for most cases, I
-believe having an in-kernel mechanism would be valuable
-also.  Critically in BPF programs it greatly simplifies
-debugging and tracing of such data to invoking a one-line
-helper.
+Let's start from scratch, maybe I miss something.
+So I'm sorry for being persistent.
 
-One challenge raised in an earlier iteration of this work -
-where the BTF printing was implemented as a printk() format
-specifier - was that the amount of data printed per
-printk() was large, and other format specifiers were far
-simpler.  This patchset tackles this by instead displaying
-data _as the data structure is traversed_, rathern than copying
-it to a string for later display.  The problem in doing this
-however is that such output can be intermixed with other
-bpf_trace_printk events.  The solution pursued here is to
-associate a trace ID with the bpf_trace_printk events.  For
-now, the bpf_trace_printk() helper sets this trace ID to 0,
-and bpf_trace_btf() can specify non-zero values.  This allows
-a BPF program to coordinate with a user-space program which
-creates a separate trace instance which filters trace events
-based on trace ID, allowing for clean display without pollution
-from other data sources.  Future work could enhance
-bpf_trace_printk() to do this too, either via a new helper
-or by smuggling a 32-bit trace id value into the "fmt_size"
-argument (the latter might be problematic for 32-bit platforms
-though, so a new helper might be preferred).
+The ubi thread can be reduced to a loop like this one:
+1. for (;;) {
+2.      if (kthread_should_stop())
+3.              break;
+4.
+5.      if ( /* no work pending*/ ){
+6.              set_current_state(TASK_INTERRUPTIBLE);
+7.              schedule();
+8.              continue;
+9.      }
+10.
+11.     do_work();
+12. }
 
-To aid in display the bpf_trace_btf() helper is passed a
-"struct btf_ptr *" which specifies the data to be traced
-(struct sk_buff * say),  the BTF id of the type (the BTF
-id of "struct sk_buff") or a string representation of
-the type ("struct sk_buff").  A flags field is also
-present for future use.
+syzcaller found a case where stopping the thread did not work.
+If another task tries to stop the thread while no work is pending and
+the program counter in the thread
+is between lines 5 and 6, the kthread_stop() instruction has no effect.
+It has no effect because the thread sets the thread state to
+interruptible sleep and then schedules away.
 
-Separately a number of flags control how the output is
-rendered, see patch 3 for more details.
+This is a common anti-pattern in the Linux kernel, sadly.
 
-A snippet of output from printing "struct sk_buff *"
-(see patch 3 for the full output) looks like this:
+Do you agree with me so far or do you think syzcaller found a different issue?
 
-          <idle>-0     [023] d.s.  1825.778400: bpf_trace_printk: (struct sk_buff){
-          <idle>-0     [023] d.s.  1825.778409: bpf_trace_printk:  (union){
-          <idle>-0     [023] d.s.  1825.778410: bpf_trace_printk:   (struct){
-          <idle>-0     [023] d.s.  1825.778412: bpf_trace_printk:    .prev = (struct sk_buff *)0x00000000b2a3df7e,
-          <idle>-0     [023] d.s.  1825.778413: bpf_trace_printk:    (union){
-          <idle>-0     [023] d.s.  1825.778414: bpf_trace_printk:     .dev = (struct net_device *)0x000000001658808b,
-          <idle>-0     [023] d.s.  1825.778416: bpf_trace_printk:     .dev_scratch = (long unsigned int)18446628460391432192,
-          <idle>-0     [023] d.s.  1825.778417: bpf_trace_printk:    },
-          <idle>-0     [023] d.s.  1825.778417: bpf_trace_printk:   },
-          <idle>-0     [023] d.s.  1825.778418: bpf_trace_printk:   .rbnode = (struct rb_node){
-          <idle>-0     [023] d.s.  1825.778419: bpf_trace_printk:    .rb_right = (struct rb_node *)0x00000000b2a3df7e,
-          <idle>-0     [023] d.s.  1825.778420: bpf_trace_printk:    .rb_left = (struct rb_node *)0x000000001658808b,
-          <idle>-0     [023] d.s.  1825.778420: bpf_trace_printk:   },
-          <idle>-0     [023] d.s.  1825.778421: bpf_trace_printk:   .list = (struct list_head){
-          <idle>-0     [023] d.s.  1825.778422: bpf_trace_printk:    .prev = (struct list_head *)0x00000000b2a3df7e,
-          <idle>-0     [023] d.s.  1825.778422: bpf_trace_printk:   },
-          <idle>-0     [023] d.s.  1825.778422: bpf_trace_printk:  },
-          <idle>-0     [023] d.s.  1825.778426: bpf_trace_printk:  .len = (unsigned int)168,
-          <idle>-0     [023] d.s.  1825.778427: bpf_trace_printk:  .mac_len = (__u16)14,
+Your patch changes the loop as follows:
+1. for (;;) {
+2.      if (kthread_should_stop())
+3.              break;
+4.
+5.      if ( /* no work pending*/ ){
+6.              set_current_state(TASK_INTERRUPTIBLE);
+7.
+8.              if (kthread_should_stop()) {
+9.                      set_current_state(TASK_RUNNING);
+10.                     break;
+11.             }
+12.
+13.             schedule();
+14.             continue;
+15.     }
+16.
+17.     do_work();
+18. }
 
-Changes since v3:
+That way there is a higher chance that the thread sees the stop flag
+and gracefully terminates, I fully agree on that.
+But it does not completely solve the problem.
+If kthread_stop() happens while the program counter of the ubi thread
+is at line 12, the stop flag is still missed
+and we end up in interruptible sleep just like before.
 
-- Moved to RFC since the approach is different (and bpf-next is
-  closed)
-- Rather than using a printk() format specifier as the means
-  of invoking BTF-enabled display, a dedicated BPF helper is
-  used.  This solves the issue of printk() having to output
-  large amounts of data using a complex mechanism such as
-  BTF traversal, but still provides a way for the display of
-  such data to be achieved via BPF programs.  Future work could
-  include a bpf_printk_btf() function to invoke display via
-  printk() where the elements of a data structure are printk()ed
-  one at a time.  Thanks to Petr Mladek, Andy Shevchenko and
-  Rasmus Villemoes who took time to look at the earlier printk()
-  format-specifier-focused version of this and provided feedback
-  clarifying the problems with that approach.
-- Added trace id to the bpf_trace_printk events as a means of
-  separating output from standard bpf_trace_printk() events,
-  ensuring it can be easily parsed by the reader.
-- Added bpf_trace_btf() helper tests which do simple verification
-  of the various display options.
-
-Changes since v2:
-
-- Alexei and Yonghong suggested it would be good to use
-  probe_kernel_read() on to-be-shown data to ensure safety
-  during operation.  Safe copy via probe_kernel_read() to a
-  buffer object in "struct btf_show" is used to support
-  this.  A few different approaches were explored
-  including dynamic allocation and per-cpu buffers. The
-  downside of dynamic allocation is that it would be done
-  during BPF program execution for bpf_trace_printk()s using
-  %pT format specifiers. The problem with per-cpu buffers
-  is we'd have to manage preemption and since the display
-  of an object occurs over an extended period and in printk
-  context where we'd rather not change preemption status,
-  it seemed tricky to manage buffer safety while considering
-  preemption.  The approach of utilizing stack buffer space
-  via the "struct btf_show" seemed like the simplest approach.
-  The stack size of the associated functions which have a
-  "struct btf_show" on their stack to support show operation
-  (btf_type_snprintf_show() and btf_type_seq_show()) stays
-  under 500 bytes. The compromise here is the safe buffer we
-  use is small - 256 bytes - and as a result multiple
-  probe_kernel_read()s are needed for larger objects. Most
-  objects of interest are smaller than this (e.g.
-  "struct sk_buff" is 224 bytes), and while task_struct is a
-  notable exception at ~8K, performance is not the priority for
-  BTF-based display. (Alexei and Yonghong, patch 2).
-- safe buffer use is the default behaviour (and is mandatory
-  for BPF) but unsafe display - meaning no safe copy is done
-  and we operate on the object itself - is supported via a
-  'u' option.
-- pointers are prefixed with 0x for clarity (Alexei, patch 2)
-- added additional comments and explanations around BTF show
-  code, especially around determining whether objects such
-  zeroed. Also tried to comment safe object scheme used. (Yonghong,
-  patch 2)
-- added late_initcall() to initialize vmlinux BTF so that it would
-  not have to be initialized during printk operation (Alexei,
-  patch 5)
-- removed CONFIG_BTF_PRINTF config option as it is not needed;
-  CONFIG_DEBUG_INFO_BTF can be used to gate test behaviour and
-  determining behaviour of type-based printk can be done via
-  retrieval of BTF data; if it's not there BTF was unavailable
-  or broken (Alexei, patches 4,6)
-- fix bpf_trace_printk test to use vmlinux.h and globals via
-  skeleton infrastructure, removing need for perf events
-  (Andrii, patch 8)
-
-Changes since v1:
-
-- changed format to be more drgn-like, rendering indented type info
-  along with type names by default (Alexei)
-- zeroed values are omitted (Arnaldo) by default unless the '0'
-  modifier is specified (Alexei)
-- added an option to print pointer values without obfuscation.
-  The reason to do this is the sysctls controlling pointer display
-  are likely to be irrelevant in many if not most tracing contexts.
-  Some questions on this in the outstanding questions section below...
-- reworked printk format specifer so that we no longer rely on format
-  %pT<type> but instead use a struct * which contains type information
-  (Rasmus). This simplifies the printk parsing, makes use more dynamic
-  and also allows specification by BTF id as well as name.
-- removed incorrect patch which tried to fix dereferencing of resolved
-  BTF info for vmlinux; instead we skip modifiers for the relevant
-  case (array element type determination) (Alexei).
-- fixed issues with negative snprintf format length (Rasmus)
-- added test cases for various data structure formats; base types,
-  typedefs, structs, etc.
-- tests now iterate through all typedef, enum, struct and unions
-  defined for vmlinux BTF and render a version of the target dummy
-  value which is either all zeros or all 0xff values; the idea is this
-  exercises the "skip if zero" and "print everything" cases.
-- added support in BPF for using the %pT format specifier in
-  bpf_trace_printk()
-- added BPF tests which ensure %pT format specifier use works (Alexei).
-
-
-
-
-
-Alan Maguire (4):
-  bpf: provide function to get vmlinux BTF information
-  bpf: make BTF show support generic, apply to seq
-    files/bpf_trace_printk
-  bpf: add bpf_trace_btf helper
-  selftests/bpf: add bpf_trace_btf helper tests
-
- include/linux/bpf.h                                |   5 +
- include/linux/btf.h                                |  38 +
- include/uapi/linux/bpf.h                           |  63 ++
- kernel/bpf/btf.c                                   | 962 ++++++++++++++++++---
- kernel/bpf/core.c                                  |   5 +
- kernel/bpf/helpers.c                               |   4 +
- kernel/bpf/verifier.c                              |  18 +-
- kernel/trace/bpf_trace.c                           | 121 ++-
- kernel/trace/bpf_trace.h                           |   6 +-
- scripts/bpf_helpers_doc.py                         |   2 +
- tools/include/uapi/linux/bpf.h                     |  63 ++
- tools/testing/selftests/bpf/prog_tests/trace_btf.c |  45 +
- .../selftests/bpf/progs/netif_receive_skb.c        |  43 +
- 13 files changed, 1257 insertions(+), 118 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_btf.c
- create mode 100644 tools/testing/selftests/bpf/progs/netif_receive_skb.c
+So, to solve the problem entirely I suggest changing schedule() to
+schedule_timeout() and let the thread wake up
+periodically.
 
 -- 
-1.8.3.1
-
+Thanks,
+//richard
