@@ -2,166 +2,212 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEB8C433F1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D3BC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2596522D05
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oyj/A4qt"
+	by mail.kernel.org (Postfix) with ESMTP id 6F29823330
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgHFFVg (ORCPT
+        id S1728198AbgHFFHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgHFFVf (ORCPT
+        Thu, 6 Aug 2020 01:07:00 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:27913 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbgHFFG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 01:21:35 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9797DC061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 22:21:34 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id e6so21585487oii.4
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 22:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=NawncW6kcN7J/8qHcLn2vH5R5YQS2/laJgJm6p/2YCk=;
-        b=oyj/A4qtZQFmUNx3d8X6GCw9WEuOghnm1XwugQyROixks1XkjMb3pWc838vhBkvDR+
-         dQ4776yWmKpUGQKAR/vPQWeCIcnXjSdbqeaMRKbakwt6AEf94LgWKI1IyCg82bM38xKV
-         V7/eANJ7VR9Lb8Y5Tlv7QYbXRG4p6FEPFNaZHUKDKGasYuXfp+t501S28LB9KgmB45Gf
-         5c6BuP0WDKhsJEYi2P5UIwlvfsrzmob+gsJwOZgqgGCL36oOb1v64lzzvLvvboVs3Xst
-         FeIIw7QihwkcTJNwXuQh7N/mRKJXi9E20nesrqi05PydTk8ZyPueKMlil21ChOC9pbD8
-         YmIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=NawncW6kcN7J/8qHcLn2vH5R5YQS2/laJgJm6p/2YCk=;
-        b=jDaB4kkMdZj0XPOAQIUfb63peDVPFeelKhJnekv25koC2/iGUNzRuVm0xr/lqp6fVU
-         qg7RIeCzZci7cQO5gxekuwGvmC8xUrep+S6sdZQWGjNKX7wbIxhF5orqQFqvu38oq4Jv
-         lawVxnI1V4KnmxNrxfzi+u7vPIcl5iYL3QbgAqNSkKjmEB/QuX/5LmtPUcfsr3TCUBZZ
-         BPOxka4d667hxrhfG9hyYIClKl8fzr9ESVf1mc9wAz5+Cwc/sOuHAr/NXbs8xK6QAumr
-         L9Fatua7Xu/uS61HmiRCW8nUBiZHk3XaCmX5BAzRvhvgPTRteDlS56QJU6LmD9JdZ0/a
-         Ioyg==
-X-Gm-Message-State: AOAM531b+egVFZVtF1jVc+pum6N9WtX4qhglSeX/V7CaqR8xVAgQRTYX
-        6yKIRs18aeywsB/WGi5RtevX1A==
-X-Google-Smtp-Source: ABdhPJwP0SUs4y6xBmSM+VlR4LZd/gb+f0cyUOs/WRnv2k3YOa6BUmM28Erezs7jF6n/63Hheq1okQ==
-X-Received: by 2002:aca:5585:: with SMTP id j127mr5299089oib.120.1596691293575;
-        Wed, 05 Aug 2020 22:21:33 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id t83sm945595oot.22.2020.08.05.22.21.31
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 05 Aug 2020 22:21:32 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 22:21:18 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Hugh Dickins <hughd@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-In-Reply-To: <alpine.LSU.2.11.2007261246530.6812@eggly.anvils>
-Message-ID: <alpine.LSU.2.11.2008052105040.8716@eggly.anvils>
-References: <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com> <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com> <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
- <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com> <alpine.LSU.2.11.2007231549540.1016@eggly.anvils> <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com> <20200724152424.GC17209@redhat.com>
- <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com> <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com> <20200725101445.GB3870@redhat.com> <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
- <alpine.LSU.2.11.2007251343370.3804@eggly.anvils> <alpine.LSU.2.11.2007252100230.5376@eggly.anvils> <alpine.LSU.2.11.2007261246530.6812@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Thu, 6 Aug 2020 01:06:56 -0400
+IronPort-SDR: 9sJWW2Fy+8CXbrGuLIsVwQzJufuXnmMm+dsw/WVIDhEhPYnSthF3s4uhq7nePqvl0NQTefQmEU
+ fZMhIbMoC7mdS7UCUFc/iHnPnzT2QNuLGZa4ovlcwVHHYmz8tiM7I910QkH9NUe6N+4cMoCzed
+ Z/Ov7rhHSR653FbZXCuHuAqwoIBxIovuDxsGDBGaDceLXyebU+SvTQh7dqn7KMiPStdD/ZWxl9
+ veHKnQ7w9++pqKug7no2TjB8bPgjCeXqgfDBqLVZC5AswNS6ltQAp5WRVFo/aUEvoW1qgURXwA
+ Kjc=
+X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
+   d="scan'208";a="47243585"
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by labrats.qualcomm.com with ESMTP; 05 Aug 2020 22:06:56 -0700
+Received: from stor-presley.qualcomm.com ([192.168.140.85])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 05 Aug 2020 22:06:55 -0700
+Received: by stor-presley.qualcomm.com (Postfix, from userid 359480)
+        id 3171E21562; Wed,  5 Aug 2020 22:06:55 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 8/9] scsi: ufs: Fix a racing problem btw error handler and runtime PM ops
+Date:   Wed,  5 Aug 2020 22:06:19 -0700
+Message-Id: <1596690383-16438-9-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596690383-16438-1-git-send-email-cang@codeaurora.org>
+References: <1596690383-16438-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nice to see the +130.0% this morning.
+Current IRQ handler blocks scsi requests before scheduling eh_work, when
+error handler calls pm_runtime_get_sync, if ufshcd_suspend/resume sends a
+scsi cmd, most likely the SSU cmd, since scsi requests are blocked,
+pm_runtime_get_sync() will never return because ufshcd_suspend/reusme is
+blocked by the scsi cmd. Some changes and code re-arrangement can be made
+to resolve it.
 
-I got back on to this on Monday, here's some follow-up.
+o In queuecommand path, hba->ufshcd_state check and ufshcd_send_command
+  should stay into the same spin lock. This is to make sure that no more
+  commands leak into doorbell after hba->ufshcd_state is changed.
+o Don't block scsi requests before error handler starts to run, let error
+  handler block scsi requests when it is ready to start error recovery.
+o Don't let scsi layer keep requeuing the scsi cmds sent from hba runtime
+  PM ops, let them pass or fail them. Let them pass if eh_work is scheduled
+  due to non-fatal errors. Fail them if eh_work is scheduled due to fatal
+  errors, otherwise the cmds may eventually time out since UFS is in bad
+  state, which gets error handler blocked for too long. If we fail the scsi
+  cmds sent from hba runtime PM ops, hba runtime PM ops fails too, but it
+  does not hurt since error handler can recover hba runtime PM error.
 
-On Sun, 26 Jul 2020, Hugh Dickins wrote:
-> 
-> The comparison runs have not yet completed (except for the one started
-> early), but they have all got past the most interesting tests, and it's
-> clear that they do not have the "failure"s seen with your patches.
-> 
-> From that I can only conclude that your patches make a difference.
-> 
-> I've deduced nothing useful from the logs, will have to leave that
-> to others here with more experience of them.  But my assumption now
-> is that you have successfully removed one bottleneck, so the tests
-> get somewhat further and now stick in the next bottleneck, whatever
-> that may be.  Which shows up as "failure", where the unlock_page()
-> wake_up_page_bit() bottleneck had allowed the tests to proceed in
-> a more serially sedate way.
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 
-Yes, that's still how it appears to me. The test failures, all
-of them, came from fork() returning ENOSPC, which originated from
-alloc_pid()'s idr_alloc_cyclic(). I did try doubling our already
-large pid_max, that did not work out well, there are probably good
-reasons for it to be where it is and I was wrong to dabble with it.
-I also tried an rcu_barrier() and retry when getting -ENOSPC there,
-thinking maybe RCU was not freeing them up fast enough, but that
-didn't help either.
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index a79fbbd..b2947ab 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -126,7 +126,8 @@ enum {
+ 	UFSHCD_STATE_RESET,
+ 	UFSHCD_STATE_ERROR,
+ 	UFSHCD_STATE_OPERATIONAL,
+-	UFSHCD_STATE_EH_SCHEDULED,
++	UFSHCD_STATE_EH_SCHEDULED_FATAL,
++	UFSHCD_STATE_EH_SCHEDULED_NON_FATAL,
+ };
+ 
+ /* UFSHCD error handling flags */
+@@ -2515,34 +2516,6 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+ 	if (!down_read_trylock(&hba->clk_scaling_lock))
+ 		return SCSI_MLQUEUE_HOST_BUSY;
+ 
+-	spin_lock_irqsave(hba->host->host_lock, flags);
+-	switch (hba->ufshcd_state) {
+-	case UFSHCD_STATE_OPERATIONAL:
+-		break;
+-	case UFSHCD_STATE_EH_SCHEDULED:
+-	case UFSHCD_STATE_RESET:
+-		err = SCSI_MLQUEUE_HOST_BUSY;
+-		goto out_unlock;
+-	case UFSHCD_STATE_ERROR:
+-		set_host_byte(cmd, DID_ERROR);
+-		cmd->scsi_done(cmd);
+-		goto out_unlock;
+-	default:
+-		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
+-				__func__, hba->ufshcd_state);
+-		set_host_byte(cmd, DID_BAD_TARGET);
+-		cmd->scsi_done(cmd);
+-		goto out_unlock;
+-	}
+-
+-	/* if error handling is in progress, don't issue commands */
+-	if (ufshcd_eh_in_progress(hba)) {
+-		set_host_byte(cmd, DID_ERROR);
+-		cmd->scsi_done(cmd);
+-		goto out_unlock;
+-	}
+-	spin_unlock_irqrestore(hba->host->host_lock, flags);
+-
+ 	hba->req_abort_count = 0;
+ 
+ 	err = ufshcd_hold(hba, true);
+@@ -2578,11 +2551,51 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+ 	/* Make sure descriptors are ready before ringing the doorbell */
+ 	wmb();
+ 
+-	/* issue command to the controller */
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
++	switch (hba->ufshcd_state) {
++	case UFSHCD_STATE_OPERATIONAL:
++	case UFSHCD_STATE_EH_SCHEDULED_NON_FATAL:
++		break;
++	case UFSHCD_STATE_EH_SCHEDULED_FATAL:
++		/*
++		 * pm_runtime_get_sync() is used at error handling preparation
++		 * stage. If a scsi cmd, e.g. the SSU cmd, is sent from hba's
++		 * PM ops, it can never be finished if we let SCSI layer keep
++		 * retrying it, which gets err handler stuck forever. Neither
++		 * can we let the scsi cmd pass through, because UFS is in bad
++		 * state, the scsi cmd may eventually time out, which will get
++		 * err handler blocked for too long. So, just fail the scsi cmd
++		 * sent from PM ops, err handler can recover PM error anyways.
++		 */
++		if (hba->pm_op_in_progress) {
++			hba->force_reset = true;
++			set_host_byte(cmd, DID_BAD_TARGET);
++			goto out_compl_cmd;
++		}
++		fallthrough;
++	case UFSHCD_STATE_RESET:
++		err = SCSI_MLQUEUE_HOST_BUSY;
++		goto out_compl_cmd;
++	case UFSHCD_STATE_ERROR:
++		set_host_byte(cmd, DID_ERROR);
++		goto out_compl_cmd;
++	default:
++		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
++				__func__, hba->ufshcd_state);
++		set_host_byte(cmd, DID_BAD_TARGET);
++		goto out_compl_cmd;
++	}
+ 	ufshcd_send_command(hba, tag);
+-out_unlock:
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
++	goto out;
++
++out_compl_cmd:
++	scsi_dma_unmap(lrbp->cmd);
++	lrbp->cmd = NULL;
++	spin_unlock_irqrestore(hba->host->host_lock, flags);
++	ufshcd_release(hba);
++	if (!err)
++		cmd->scsi_done(cmd);
+ out:
+ 	up_read(&hba->clk_scaling_lock);
+ 	return err;
+@@ -5552,9 +5565,12 @@ static inline void ufshcd_schedule_eh_work(struct ufs_hba *hba)
+ {
+ 	/* handle fatal errors only when link is not in error state */
+ 	if (hba->ufshcd_state != UFSHCD_STATE_ERROR) {
+-		hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED;
+-		if (queue_work(hba->eh_wq, &hba->eh_work))
+-			ufshcd_scsi_block_requests(hba);
++		if (hba->force_reset || ufshcd_is_link_broken(hba) ||
++		    ufshcd_is_saved_err_fatal(hba))
++			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_FATAL;
++		else
++			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_NON_FATAL;
++		queue_work(hba->eh_wq, &hba->eh_work);
+ 	}
+ }
+ 
+@@ -5664,6 +5680,7 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 	ufshcd_err_handling_prepare(hba);
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
++	ufshcd_scsi_block_requests(hba);
+ 	/*
+ 	 * A full reset and restore might have happened after preparation
+ 	 * is finished, double check whether we should stop.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-I think (but didn't quite make the effort to double-check with
-an independent count) it was simply running out of pids: that your
-change speeds up the forking enough, that exiting could not quite keep
-up (SIGCHLD is SIG_IGNed); whereas before your change, the unlock_page()
-in do_wp_page(), on a PageAnon stack page, slowed the forking down enough
-when heavily contended.
-
-(I think we could improve the checks there, to avoid taking page lock in
-more cases; but I don't know if that would help any real-life workload -
-I see now that Michal's case is do_read_fault() not do_wp_page().)
-
-And FWIW a further speedup there is the opposite of what these tests
-are wanting: for the moment I've enabled a delay to get them passing
-as before.
-
-Something I was interested to realize in looking at this: trylock_page()
-on a contended lock is now much less likely to jump the queue and
-succeed than before, since your lock holder hands off the page lock to
-the next holder: much smaller window than waiting for the next to wake
-to take it. Nothing wrong with that, but effect might be seen somewhere.
-
-> 
-> The xhci handle_cmd_completion list_del bugs (on an older version
-> of the driver): weird, nothing to do with page wakeups, I'll just
-> have to assume that it's some driver bug exposed by the greater
-> stress allowed down, and let driver people investigate (if it
-> still manifests) when we take in your improvements.
-
-Complete red herring. I'll give Greg more info in response to his
-mail, and there may be an xhci bug in there; but when I looked back,
-found I'd come across the same bug back in October, and find that
-occasionally it's been seen in our fleet. Yes, it's odd that your
-change coincided with it becoming more common on that machine
-(which I've since replaced by another), yes it's funny that it's
-in __list_del_entry_valid(), which is exactly where I got crashes
-on pages with your initial patch; but it's just a distraction.
-
-> 
-> One nice thing from the comparison runs without your patches:
-> watchdog panic did crash one of those with exactly the unlock_page()
-> wake_up_page_bit() softlockup symptom we've been fighting, that did
-> not appear with your patches.  So although the sample size is much
-> too small to justify a conclusion, it does tend towards confirming
-> your changes.
-> 
-> Thank you for your work on this! And I'm sure you'd have preferred
-> some hard data back, rather than a diary of my mood swings, but...
-> we do what we can.
-> 
-> Hugh
