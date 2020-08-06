@@ -2,94 +2,71 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C173C388D3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC2C43464
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5017B22EBD
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pasqh1jn"
+	by mail.kernel.org (Postfix) with ESMTP id BB83623105
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgHFHbe (ORCPT
+        id S1728412AbgHFHmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:31:34 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7835 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbgHFHah (ORCPT
+        Thu, 6 Aug 2020 03:42:24 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:46328 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728430AbgHFHmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 03:30:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2bb1690000>; Thu, 06 Aug 2020 00:29:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 00:30:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 00:30:35 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 07:30:31 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 6 Aug 2020 07:30:31 +0000
-Received: from rgumasta-linux.nvidia.com (Not Verified[10.19.66.108]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f2bb1940000>; Thu, 06 Aug 2020 00:30:31 -0700
-From:   Rajesh Gumasta <rgumasta@nvidia.com>
-To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <thierry.reding@gmail.com>,
-        <p.zabel@pengutronix.de>, <dmaengine@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <kyarlagadda@nvidia.com>, <rgumasta@nvidia.com>
-Subject: [Patch v2 3/4] arm64: configs: enable tegra gpc dma
-Date:   Thu, 6 Aug 2020 13:00:05 +0530
-Message-ID: <1596699006-9934-4-git-send-email-rgumasta@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
-References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 6 Aug 2020 03:42:04 -0400
+X-Greylist: delayed 567 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 03:42:03 EDT
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 66C94E80643;
+        Thu,  6 Aug 2020 09:32:22 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id CB059160D57; Thu,  6 Aug 2020 09:32:21 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 09:32:21 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Martijn Coenen <maco@android.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
+Message-ID: <20200806073221.GA219724@gardel-login>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596698985; bh=bhLBojTFXOgiLqqKv69qFtYQJyCZHygwLjpojlupOrc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=pasqh1jnp3vNX360Qyd8fLgLjAMgIdkybdPEWS3LgYohQao/CgS46vVLi2K/zIa1u
-         GsjMLfuWtG0PdmKxw+dhq44MTS/Gfm8id+4TlenjFIJ6iG59OKoaaXyOkvB1vLPUrx
-         1Dr5hPtblsuTOrz9WykSuyfuHOIxhh61re4cEyLpXs+z7vyJxeKJn4qZM9/ocQD1BJ
-         I3LENnzOPMVouwPavHstT7kB+VMtZ60ho/qxOOObRUU0uEAyGWuCACStZSdlo9I6kw
-         eups/kapnO16L/M5r6tqVM17s3P6xqrx4NOW2PNxmRB9xp2pf8Tywz5rUodIg3wMfj
-         8r+vLWRQr0Z0A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable TEGRA_GPC_DMA in defconfig for Tegra186 and Tegra196 gpc
-dma controller driver
+When LOOP_CONFIGURE is used with LO_FLAGS_PARTSCAN we need to propagate
+this into the GENHD_FL_NO_PART_SCAN. LOOP_SETSTATUS does this,
+LOOP_CONFIGURE doesn't so far. Effect is that setting up a loopback
+device with partition scanning doesn't actually work when LOOP_CONFIGURE
+is issued, though it works fine with LOOP_SETSTATUS.
 
-Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
+Let's correct that and propagate the flag in LOOP_SETSTATUS too.
+
+Signed-off-by: Lennart Poettering <lennart@poettering.net>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/loop.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 883e8ba..600f568 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -775,6 +775,7 @@ CONFIG_MV_XOR_V2=y
- CONFIG_OWL_DMA=y
- CONFIG_PL330_DMA=y
- CONFIG_TEGRA20_APB_DMA=y
-+CONFIG_TEGRA_GPC_DMA=m
- CONFIG_QCOM_BAM_DMA=y
- CONFIG_QCOM_HIDMA_MGMT=y
- CONFIG_QCOM_HIDMA=y
--- 
-2.7.4
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index d18160146226..2f137d6ce169 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1171,6 +1171,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+ 	if (part_shift)
+ 		lo->lo_flags |= LO_FLAGS_PARTSCAN;
+ 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
++	if (partscan)
++		lo->lo_disk->flags &= ~GENHD_FL_NO_PART_SCAN;
 
+ 	/* Grab the block_device to prevent its destruction after we
+ 	 * put /dev/loopXX inode. Later in __loop_clr_fd() we bdput(bdev).
+--
+2.26.2
