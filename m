@@ -2,307 +2,153 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B03C3815A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD0CC47277
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485B422D04
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EC222CE3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKnCtfCe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OdQhs77y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgHFJqN (ORCPT
+        id S1729273AbgHFJyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbgHFJpt (ORCPT
+        Thu, 6 Aug 2020 05:54:03 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39186 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729125AbgHFJxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:45:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5CFC061574;
-        Thu,  6 Aug 2020 02:45:35 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id o1so27239111plk.1;
-        Thu, 06 Aug 2020 02:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qWcDbCXjjTS6FI2Lgan9OIsGZAC933SE4UPrECccLi4=;
-        b=KKnCtfCegvFbD/tDZxYcvbMK30oQ3CsY9rUNbUO1ne/rJOL//uutNsLiyQwEmU0w7j
-         z39/+c0SdKROpUiVvcgOUKEyCivyMDvsj5f5DSVm7Dx1ut65er3z37aiLab1gw460Xv5
-         r8sPPFIRjMk4KrkDDRoJ8pix33kuUmOGbwdytFBncHRBMGbWqk/rpkFEXcV7BttRvCSB
-         3+cUqBKpLfx7AwQiKWMRUW/jrK/bvcEESGyDf6vWuRZkvm5RBc0Bi4MsZpkrULdi1+mk
-         s9Yrw8zSPoV2RT/tB1/Wxultw5MK5vyhpcvWB8+CshnT2jAXL+pjKjWYwtC9QsAmYkBN
-         lNTQ==
+        Thu, 6 Aug 2020 05:53:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596707605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KFQZ0mX53TPSFs7e42z02Iv0vBjIKEpvfFKAKifFm84=;
+        b=OdQhs77y+/xp+GSTQX+QW5cg2VvJV3fBBmrtv2wTcuZXzMq/IPHgSn8sxQ0Ko2AcuhWgHr
+        rhHrLHEsdYu4hMFbuOYle4f0O0ZDdnYScwoatS9hE0D2TctHeFADz9l0xsmaZTcc8hIyaw
+        bvKW1ZhDkkA6PxGO4M3x9jskuGUhSfQ=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-UVigqYytNGa1-LZQZJGy0g-1; Thu, 06 Aug 2020 05:53:23 -0400
+X-MC-Unique: UVigqYytNGa1-LZQZJGy0g-1
+Received: by mail-wm1-f71.google.com with SMTP id v8so3376604wma.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:53:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qWcDbCXjjTS6FI2Lgan9OIsGZAC933SE4UPrECccLi4=;
-        b=SG2SmCON2n6Sp/47RSmh05bY/D0H/LTQiT+RPoFk+GzeeaWwuqrehH9sMpmgXH8m42
-         GtuJA9wRQGuFaUdv5QUFpBwSkLsw9YWZti73ccQSP+xwo0e2wYqKNp1wlSbE3/CedfOO
-         oN85z9DLhlVVoTH3nOclDadTImSq6diHf0EnGLad6yTDnfP74iOgOgpWfZo5RnykVIGm
-         sOdu/VnHKRvX46K5jW8SJnu+gLBOHfJ8tOlan4lfuC8OFfwSwCOlzJi/32UQZJ97YGdQ
-         V2mWNdSvdKgbm/xl3K/UdlGxc5XUqDmDzCCSSVToqZSItqj6HRZJdXfx5AERmdIIrFBf
-         mbNw==
-X-Gm-Message-State: AOAM532v9Eio0QjAy5I4+AlOapQs4ban+TAr/CKo9mYqSl+kmGaitccP
-        RHfX1TYnxc8H7tuEDx6MxZVgffW0PYENog==
-X-Google-Smtp-Source: ABdhPJweWzPxErikXlHXt2fZRae5rt4PSN+3g5cwiXlmpZWnbdEM0SQRie62WOdOxMGXOv/WIjSyEg==
-X-Received: by 2002:a17:90a:fa94:: with SMTP id cu20mr7583230pjb.145.1596707135130;
-        Thu, 06 Aug 2020 02:45:35 -0700 (PDT)
-Received: from arpitha-Inspiron-7570.lan ([49.206.15.28])
-        by smtp.gmail.com with ESMTPSA id 3sm6374496pjo.40.2020.08.06.02.45.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KFQZ0mX53TPSFs7e42z02Iv0vBjIKEpvfFKAKifFm84=;
+        b=O5C4qj2OPuwbhFif3lEX+P3kibKHZN853b86Bk4JaJid4AEl9fbK/6HQB+c+PR+QzB
+         0Fp7oIeC7kopmL5fuPEIRulZ6Y1Rv/9QY+9IrUzxh99PLxodfJYx+CMhwc4ptmjbLnhS
+         FOwo2hzyElwpUA8D+qEw3S+ZbDkMU1FyAA9odrN/Ns2Tq7D50HpGXoM8eEhxmadBNZLm
+         2K1rH6szYtcjGUiKMljf0gvRriy8KQAy9Se9e3tD1xPy8gapn5f7vLYTPj1IkkGlB9VF
+         bCOK5HCRzrPHehKWasZScUh+NmjYpmfuhqAdvui9LSUcdY7unygpFifCm5w1f65lutrE
+         lRwA==
+X-Gm-Message-State: AOAM533lrj7dEB+BcihV/LbSG9Rr4cZV8YvJcj9D5Q+fg465P3lMGckI
+        qM/aaEiXV8AXES7Uq7FgYzMXbEf4nHaC3I30sBd3P1jDcXEzH8nWjlE0Oq4vMfZes0BaqLleIVS
+        yXNPXozNNmv7/6QW/B5WePZgM
+X-Received: by 2002:adf:a35e:: with SMTP id d30mr7103529wrb.53.1596707602574;
+        Thu, 06 Aug 2020 02:53:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzH/h9qDvGp6nYOJg6CynBAkWPpcdo5K5kwjUb/kSWQKLCWEkI6SJe/Yh1L7V0XGzkLsCqZXw==
+X-Received: by 2002:adf:a35e:: with SMTP id d30mr7103515wrb.53.1596707602334;
+        Thu, 06 Aug 2020 02:53:22 -0700 (PDT)
+Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
+        by smtp.gmail.com with ESMTPSA id m126sm5943543wmf.3.2020.08.06.02.53.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 02:45:34 -0700 (PDT)
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com
-Cc:     Arpitha Raghunandan <98.arpi@gmail.com>,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] lib: Convert test_hexdump.c to KUnit
-Date:   Thu,  6 Aug 2020 15:14:40 +0530
-Message-Id: <20200806094440.14962-1-98.arpi@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 06 Aug 2020 02:53:21 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 05:53:18 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
+Message-ID: <20200806055008-mutt-send-email-mst@kernel.org>
+References: <20200728143741.2718593-1-vkuznets@redhat.com>
+ <20200805201851-mutt-send-email-mst@kernel.org>
+ <873650p1vo.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <873650p1vo.fsf@vitty.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converts test lib/test_hexdump.c to KUnit.
-More information about KUnit can be found at
-https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
-KUnit provides a common framework for unit tests in the kernel.
+On Thu, Aug 06, 2020 at 11:19:55AM +0200, Vitaly Kuznetsov wrote:
+> "Michael S. Tsirkin" <mst@redhat.com> writes:
+> 
+> > On Tue, Jul 28, 2020 at 04:37:38PM +0200, Vitaly Kuznetsov wrote:
+> >> This is a continuation of "[PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES
+> >> memory" work: 
+> >> https://lore.kernel.org/kvm/20200514180540.52407-1-vkuznets@redhat.com/
+> >> and pairs with Julia's "x86/PCI: Use MMCONFIG by default for KVM guests":
+> >> https://lore.kernel.org/linux-pci/20200722001513.298315-1-jusual@redhat.com/
+> >> 
+> >> PCIe config space can (depending on the configuration) be quite big but
+> >> usually is sparsely populated. Guest may scan it by accessing individual
+> >> device's page which, when device is missing, is supposed to have 'pci
+> >> hole' semantics: reads return '0xff' and writes get discarded.
+> >> 
+> >> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
+> >> I observed 8193 accesses to PCI hole memory. When such exit is handled
+> >> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
+> >> Handling the same exit in userspace is six times slower (0.000006 sec) so
+> >> the overal; difference is 0.04 sec. This may be significant for 'microvm'
+> >> ideas.
+> >> 
+> >> Note, the same speed can already be achieved by using KVM_MEM_READONLY
+> >> but doing this would require allocating real memory for all missing
+> >> devices and e.g. 8192 pages gives us 32mb. This will have to be allocated
+> >> for each guest separately and for 'microvm' use-cases this is likely
+> >> a no-go.
+> >> 
+> >> Introduce special KVM_MEM_PCI_HOLE memory: userspace doesn't need to
+> >> back it with real memory, all reads from it are handled inside KVM and
+> >> return '0xff'. Writes still go to userspace but these should be extremely
+> >> rare.
+> >> 
+> >> The original 'KVM_MEM_ALLONES' idea had additional optimizations: KVM
+> >> was mapping all 'PCI hole' pages to a single read-only page stuffed with
+> >> 0xff. This is omitted in this submission as the benefits are unclear:
+> >> KVM will have to allocate SPTEs (either on demand or aggressively) and
+> >> this also consumes time/memory.
+> >
+> > Curious about this: if we do it aggressively on the 1st fault,
+> > how long does it take to allocate 256 huge page SPTEs?
+> > And the amount of memory seems pretty small then, right?
+> 
+> Right, this could work but we'll need a 2M region (one per KVM host of
+> course) filled with 0xff-s instead of a single 4k page.
 
-Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
----
- lib/Kconfig.debug                       |  7 ++-
- lib/Makefile                            |  2 +-
- lib/{test_hexdump.c => hexdump_kunit.c} | 81 ++++++++++---------------
- 3 files changed, 36 insertions(+), 54 deletions(-)
- rename lib/{test_hexdump.c => hexdump_kunit.c} (74%)
+Given it's global doesn't sound too bad.
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index a164785c3b48..20efea177e02 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2003,9 +2003,6 @@ config ASYNC_RAID6_TEST
- 
- 	  If unsure, say N.
- 
--config TEST_HEXDUMP
--	tristate "Test functions located in the hexdump module at runtime"
--
- config TEST_STRING_HELPERS
- 	tristate "Test functions located in the string_helpers module at runtime"
- 
-@@ -2224,6 +2221,10 @@ config LINEAR_RANGES_TEST
- 
- 	  If unsure, say N.
- 
-+config HEXDUMP_KUNIT_TEST
-+	tristate "KUnit test for functions located in the hexdump module at runtime"
-+	depends on KUNIT
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 435f7f13b8aa..3819d42a4681 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -54,7 +54,6 @@ obj-$(CONFIG_STRING_SELFTEST) += test_string.o
- obj-y += string_helpers.o
- obj-$(CONFIG_TEST_STRING_HELPERS) += test-string_helpers.o
- obj-y += hexdump.o
--obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
- obj-y += kstrtox.o
- obj-$(CONFIG_FIND_BIT_BENCHMARK) += find_bit_benchmark.o
- obj-$(CONFIG_TEST_BPF) += test_bpf.o
-@@ -346,3 +345,4 @@ obj-$(CONFIG_PLDMFW) += pldmfw/
- # KUnit tests
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-+obj-$(CONFIG_HEXDUMP_KUNIT_TEST) += hexdump_kunit.o
-diff --git a/lib/test_hexdump.c b/lib/hexdump_kunit.c
-similarity index 74%
-rename from lib/test_hexdump.c
-rename to lib/hexdump_kunit.c
-index 5144899d3c6b..8f8d80114a92 100644
---- a/lib/test_hexdump.c
-+++ b/lib/hexdump_kunit.c
-@@ -3,6 +3,7 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <kunit/test.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -61,10 +62,7 @@ static const char * const test_data_8_be[] __initconst = {
- 
- #define FILL_CHAR	'#'
- 
--static unsigned total_tests __initdata;
--static unsigned failed_tests __initdata;
--
--static void __init test_hexdump_prepare_test(size_t len, int rowsize,
-+static void test_hexdump_prepare_test(size_t len, int rowsize,
- 					     int groupsize, char *test,
- 					     size_t testlen, bool ascii)
- {
-@@ -122,14 +120,12 @@ static void __init test_hexdump_prepare_test(size_t len, int rowsize,
- 
- #define TEST_HEXDUMP_BUF_SIZE		(32 * 3 + 2 + 32 + 1)
- 
--static void __init test_hexdump(size_t len, int rowsize, int groupsize,
--				bool ascii)
-+static void test_hexdump(struct kunit *kunittest, size_t len, int rowsize,
-+				int groupsize, bool ascii)
- {
- 	char test[TEST_HEXDUMP_BUF_SIZE];
- 	char real[TEST_HEXDUMP_BUF_SIZE];
- 
--	total_tests++;
--
- 	memset(real, FILL_CHAR, sizeof(real));
- 	hex_dump_to_buffer(data_b, len, rowsize, groupsize, real, sizeof(real),
- 			   ascii);
-@@ -138,28 +134,23 @@ static void __init test_hexdump(size_t len, int rowsize, int groupsize,
- 	test_hexdump_prepare_test(len, rowsize, groupsize, test, sizeof(test),
- 				  ascii);
- 
--	if (memcmp(test, real, TEST_HEXDUMP_BUF_SIZE)) {
--		pr_err("Len: %zu row: %d group: %d\n", len, rowsize, groupsize);
--		pr_err("Result: '%s'\n", real);
--		pr_err("Expect: '%s'\n", test);
--		failed_tests++;
--	}
-+	KUNIT_EXPECT_EQ(kunittest, 0, memcmp(test, real, TEST_HEXDUMP_BUF_SIZE));
- }
- 
--static void __init test_hexdump_set(int rowsize, bool ascii)
-+static void test_hexdump_set(struct kunit *test, int rowsize, bool ascii)
- {
- 	size_t d = min_t(size_t, sizeof(data_b), rowsize);
- 	size_t len = get_random_int() % d + 1;
- 
--	test_hexdump(len, rowsize, 4, ascii);
--	test_hexdump(len, rowsize, 2, ascii);
--	test_hexdump(len, rowsize, 8, ascii);
--	test_hexdump(len, rowsize, 1, ascii);
-+	test_hexdump(test, len, rowsize, 4, ascii);
-+	test_hexdump(test, len, rowsize, 2, ascii);
-+	test_hexdump(test, len, rowsize, 8, ascii);
-+	test_hexdump(test, len, rowsize, 1, ascii);
- }
- 
--static void __init test_hexdump_overflow(size_t buflen, size_t len,
--					 int rowsize, int groupsize,
--					 bool ascii)
-+static void test_hexdump_overflow(struct kunit *kunittest, size_t buflen,
-+					size_t len, int rowsize,
-+					int groupsize, bool ascii)
- {
- 	char test[TEST_HEXDUMP_BUF_SIZE];
- 	char buf[TEST_HEXDUMP_BUF_SIZE];
-@@ -167,8 +158,6 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
- 	int ae, he, e, f, r;
- 	bool a;
- 
--	total_tests++;
--
- 	memset(buf, FILL_CHAR, sizeof(buf));
- 
- 	r = hex_dump_to_buffer(data_b, len, rs, gs, buf, buflen, ascii);
-@@ -196,16 +185,10 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
- 
- 	buf[sizeof(buf) - 1] = '\0';
- 
--	if (!a) {
--		pr_err("Len: %zu buflen: %zu strlen: %zu\n",
--			len, buflen, strnlen(buf, sizeof(buf)));
--		pr_err("Result: %d '%s'\n", r, buf);
--		pr_err("Expect: %d '%s'\n", e, test);
--		failed_tests++;
--	}
-+	KUNIT_EXPECT_NE(kunittest, 0, a);
- }
- 
--static void __init test_hexdump_overflow_set(size_t buflen, bool ascii)
-+static void test_hexdump_overflow_set(struct kunit *test, size_t buflen, bool ascii)
- {
- 	unsigned int i = 0;
- 	int rs = (get_random_int() % 2 + 1) * 16;
-@@ -214,43 +197,41 @@ static void __init test_hexdump_overflow_set(size_t buflen, bool ascii)
- 		int gs = 1 << i;
- 		size_t len = get_random_int() % rs + gs;
- 
--		test_hexdump_overflow(buflen, rounddown(len, gs), rs, gs, ascii);
-+		test_hexdump_overflow(test, buflen, rounddown(len, gs), rs, gs, ascii);
- 	} while (i++ < 3);
- }
- 
--static int __init test_hexdump_init(void)
-+static void test_hexdump_init(struct kunit *test)
- {
- 	unsigned int i;
- 	int rowsize;
- 
- 	rowsize = (get_random_int() % 2 + 1) * 16;
- 	for (i = 0; i < 16; i++)
--		test_hexdump_set(rowsize, false);
-+		test_hexdump_set(test, rowsize, false);
- 
- 	rowsize = (get_random_int() % 2 + 1) * 16;
- 	for (i = 0; i < 16; i++)
--		test_hexdump_set(rowsize, true);
-+		test_hexdump_set(test, rowsize, true);
- 
- 	for (i = 0; i <= TEST_HEXDUMP_BUF_SIZE; i++)
--		test_hexdump_overflow_set(i, false);
-+		test_hexdump_overflow_set(test, i, false);
- 
- 	for (i = 0; i <= TEST_HEXDUMP_BUF_SIZE; i++)
--		test_hexdump_overflow_set(i, true);
-+		test_hexdump_overflow_set(test, i, true);
-+}
- 
--	if (failed_tests == 0)
--		pr_info("all %u tests passed\n", total_tests);
--	else
--		pr_err("failed %u out of %u tests\n", failed_tests, total_tests);
-+static struct kunit_case hexdump_test_cases[] = {
-+	KUNIT_CASE(test_hexdump_init),
-+	{}
-+};
- 
--	return failed_tests ? -EINVAL : 0;
--}
--module_init(test_hexdump_init);
-+static struct kunit_suite hexdump_test_suite = {
-+	.name = "hexdump-kunit-test",
-+	.test_cases = hexdump_test_cases,
-+};
- 
--static void __exit test_hexdump_exit(void)
--{
--	/* do nothing */
--}
--module_exit(test_hexdump_exit);
-+kunit_test_suite(hexdump_test_suite);
- 
- MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
- MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.25.1
+> 
+> Generally, I'd like to reach an agreement on whether this feature (and
+> the corresponding Julia's patch addding PV feature bit) is worthy. In
+> case it is (meaning it gets merged in this simplest form), we can
+> suggest further improvements. It would also help if firmware (SeaBIOS,
+> OVMF) would start recognizing the PV feature bit too, this way we'll be
+> seeing even bigger improvement and this may or may not be a deal-breaker
+> when it comes to the 'aggressive PTE mapping' idea.
+
+About the feature bit, I am not sure why it's really needed. A single
+mmio access is cheaper than two io accesses anyway, right? So it makes
+sense for a kvm guest whether host has this feature or not.
+We need to be careful and limit to a specific QEMU implementation
+to avoid tripping up bugs, but it seems more appropriate to
+check it using pci host IDs.
+
+> -- 
+> Vitaly
 
