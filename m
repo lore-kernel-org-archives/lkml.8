@@ -2,108 +2,84 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D87DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 15:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 15:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0AA23137
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 15:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596728387;
-	bh=mrC/DeV0Udt6vJJBBCspeSRHCDSht3FHOCvmlOhY+0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OqeTsJu0nzH++M8gKQwkuoK57p4BPtGEzYBjgilpdqjeyQfSDnxbVdq6uHhBpj23n
-	 4AJyHjbjEQi8VrxtXCnaxrQTn5RHs+Wu7rU5u2D4LjHTueMEqxTH9L2B9/UNoNn7Ez
-	 RvYZvnAfvAlBcf04TgrUiuL2aSAgnqTI4Xvlp2sI=
+	by mail.kernel.org (Postfix) with ESMTP id B52AB22E01
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 15:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="B8RRnKd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgHFPeL (ORCPT
+        id S1726403AbgHFPpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 11:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgHFOUR (ORCPT
+        Thu, 6 Aug 2020 11:45:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55473 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725927AbgHFOUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 10:20:17 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3901C0A54D6
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:57:59 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id q4so31994328edv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 06:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IIm6TB2DhuDQ44K6wIJRyHH6Xdto2sFrurS9xyjL+rA=;
-        b=rd1vI8Zlk7oq+FHWbvUuvfUOesZGL+1j6zN0cGdF5/0N+mvQt/d72y655/XSu1FIms
-         fhsGfoFsLAw8xYk4ZXkEVZDlL7D8YhHX8ICjz52hB2y8K8AKwh0t52NRNms/RIjR4vaf
-         IG9TbK3IJarxL49Ti9ODqMHSrshGBLHM22YAjo2NOhWirqHqYodvI9GgI4nW2BQnVCjA
-         2kUR7YWtDdT2WqUQOCuUOsglzHAoAqSthD7IibVLp3kwyFvZWFLfnA9ITZDYIS5JQSPe
-         IOJRmrSdFeHbUU+K4b3ho4uisvZy08XXzMSTd63Vj3ALNKSbS1DC6su0H9KXWMr8xf1K
-         DBjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=IIm6TB2DhuDQ44K6wIJRyHH6Xdto2sFrurS9xyjL+rA=;
-        b=niYkXG56CJ84G5hGYQxzAB2yvW68pUa23mRrmdnnGpwSLoskVQeJhFZYIEZsoDyMYK
-         U8ZEgOf0dEDoe2hokGNtR55WdiXqUUgtaPDPaXyRyCVfEMps1+3pl2slZVoFcwZ16HUe
-         c1Li2zBHU0rn545f3F7JKNsAHEmR6cQVElqI8XGgRr6Oajujq5Tljzm17Kv+hPZ2Ivhb
-         InMzo5uyeZrXYFkkKOv/tiT+W2ak0rgGkVp/J2jEM4eZMQdUjB8zaENh5QHeM2mbdBpT
-         osubX02paOJYfKP+5hoiBq7P1f0yQjxopaTUdu0GoCDnqFN9F4OzDH7jlArnne35jQS+
-         tuDA==
-X-Gm-Message-State: AOAM530pxoyMSq0BL6OrAc4au/v/TAgGE+OI/EP7XF43RpjeSQ7RPke6
-        RHhQyyxI2cQsPp4mB0F7jvo=
-X-Google-Smtp-Source: ABdhPJx5o+15B/66I272m4UZ+rb1HvnvnKwemZ6TbWP/v7P69Hkts0QWBS0WzpCMwst+5V0EqlTvOQ==
-X-Received: by 2002:aa7:c697:: with SMTP id n23mr4103938edq.50.1596722257591;
-        Thu, 06 Aug 2020 06:57:37 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id bd13sm3548692edb.38.2020.08.06.06.57.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 06:57:36 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 15:57:34 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
-Subject: Re: [PATCH v4 07/10] sched/topology: Add more flags to the SD
- degeneration mask
-Message-ID: <20200806135734.GB2077896@gmail.com>
-References: <20200731115502.12954-1-valentin.schneider@arm.com>
- <20200731115502.12954-8-valentin.schneider@arm.com>
+        Thu, 6 Aug 2020 10:20:16 -0400
+X-UUID: c21eb5ad084c4d4583c72c78fe8f7549-20200806
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3gLQcEfwtJI1Q0Ph3JAitnDfiUoVRJTnHH6hq25dato=;
+        b=B8RRnKd3HPHMdUq3sU1Y/9nIiP7NlY9nDLUnwXh8mJ+Uh4dCfC49erokAyAV8aeJ80pn9xeTomcWvJT1eyrcLK0DSf01b+QgrU1bpnnwKIrKknwJsTjD5DmPlnkOgfDBZ7f6AoJUKzklvwjDxVfiSTgmbYYOz+6SBhPMxqXTuzo=;
+X-UUID: c21eb5ad084c4d4583c72c78fe8f7549-20200806
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <mark-pk.tsai@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1258676737; Thu, 06 Aug 2020 22:08:14 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 6 Aug 2020 22:08:11 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 6 Aug 2020 22:08:11 +0800
+From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+To:     <daniel@0x0f.com>, Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+CC:     <alix.wu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <jason@lakedaemon.net>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
+        <maz@kernel.org>, <robh+dt@kernel.org>, <tglx@linutronix.de>,
+        <yj.chiang@mediatek.com>
+Subject: Re: [PATCH 0/2] irqchip: irq-mt58xx: Add mt58xx series interrupt
+Date:   Thu, 6 Aug 2020 22:07:39 +0800
+Message-ID: <20200806140739.31501-1-mark-pk.tsai@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <CAFr9PX=Gk9h6ASi6saBLhoZ45g-WqCzDQo2XWT033fJykFSY_g@mail.gmail.com>
+References: <CAFr9PX=Gk9h6ASi6saBLhoZ45g-WqCzDQo2XWT033fJykFSY_g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731115502.12954-8-valentin.schneider@arm.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogRGFuaWVsIFBhbG1lciA8ZGFuaWVsQDB4MGYuY29tPg0KDQo+IEhpIE1hcmstUEssDQo+
+IA0KPiBZb3VyIGRyaXZlciBzZWVtcyB0byBiZSBmb3IgdGhlIHNhbWUgaW50ZXJydXB0IGNvbnRy
+b2xsZXIgSVAgdGhhdCBpcw0KPiBwcmVzZW50IGluIE1TdGFyJ3MgVFYgYW5kIGNhbWVyYSBTb0Nz
+IGFuZCBub3cgU2lnbWFTdGFyJ3MgU29Dcy4NCj4gSSBzZW50IGEgc2VyaWVzWzBdIGZvciBhIGRy
+aXZlciB2ZXJ5IHNpbWlsYXIgdG8geW91cnMgYnV0IGZvciB0aGUNCj4gTVN0YXIgU29Dcy4gRG8g
+eW91IGtub3cgaWYgaXQgd291bGQgYmUgcG9zc2libGUgdG8gY29uZmlybSBpZiB0aGV5IGFyZQ0K
+PiB0aGUNCj4gc2FtZSB0aGluZz8gTWVkaWFUZWsgYm91Z2h0IE1TdGFyIGEgZmV3IHllYXJzIGFn
+byBzbyBpdCBzZWVtcyBsaWtlbHkNCj4gYnV0IEkgaGF2ZSBubyBoYXJkIGluZm9ybWF0aW9uLg0K
+PiANCg0KWWVzLCBpdCdzIGZvciB0aGUgc2FtZSBpbnRlcnJ1cHQgY29udHJvbGxlciBJUC4NCg0K
+PiBJZiB0aGV5IGFyZSB0aGUgc2FtZSB0aGluZyBjb3VsZCB3ZSB3b3JrIG9uIG1ha2luZyBvbmUg
+c2VyaWVzIHRoYXQNCj4gc3VwcG9ydHMgYm90aCB1c2UgY2FzZXM/DQoNClN1cmUsIGFuZCBJIHRo
+aW5rIHRoZSBpcnEgY29udHJvbGxlciBkcml2ZXIgc2hvdWxkIHN1cHBvcnQgYm90aCB1c2UgY2Fz
+ZXMuDQpTbyBob3cgYWJvdXQga2VlcCB0aGUgTVRLIHZlcnNpb24gZHJpdmVyPw0KSSdsbCBzZW5k
+IHBhdGNoIHYyIGFmdGVyIC1yYzEgYXMgSSBtZW50aW9uZWQgaW4gdGhlIHByZXZpb3VzIG1haWws
+DQphbmQga2VlcCB5b3UgcG9zdGVkLg0KQW5kIGFueSBzdWdnZXN0aW9uIGlzIHdlbGNvbWUuIDop
+DQoNCj4gSXQncyBhbHNvIHBvc3NpYmxlIHRoYXQgaWYgdGhlIGludGVycnVwdCBjb250cm9sbGVy
+IGlzIHRoZSBzYW1lIHNvbWUNCj4gb3RoZXIgdGhpbmdzIGxpa2UgdGhlIFNQSSBOT1IgY29udHJv
+bGxlciBldGMgYXJlIGFsc28gY29tbW9uIGFuZA0KPiB3b3JraW5nDQo+IG9uIGEgc2luZ2xlIGRy
+aXZlciBmb3IgdGhvc2Ugd291bGQgc2F2ZSB1cyBib3RoIHRpbWUuDQo+IA0KDQpJJ20gbm90IHN1
+cmUgYWJvdXQgdGhhdC4NCkknbGwgY2hlY2sgdGhlIHBhdGNoZXMgeW91IGNvbnRyaWJ1dGVkIGFu
+ZCBjb25maXJtIHdpdGggb3VyIGRyaXZlciBvd25lcnMu
 
-* Valentin Schneider <valentin.schneider@arm.com> wrote:
-
-> I don't think it is going to change much in practice, but we were missing
-> those:
-> 
-> o SD_BALANCE_WAKE: Used just like the other SD_BALANCE_* flags, so also
->   needs > 1 group.
-> o SD_ASYM_PACKING: Hinges on load balancing (periodic / wakeup), thus needs
->   > 1 group to happen
-> o SD_OVERLAP: Describes domains with overlapping groups; can't have
->   overlaps with a single group.
-> 
-> SD_PREFER_SIBLING is as always the odd one out: we currently consider it
-> in sd_parent_degenerate() but not in sd_degenerate(). It too hinges on load
-> balancing, and thus won't have any effect when set on a domain with a
-> single group. Add it to the sd_degenerate() groups mask.
-
-Would be nice to add these one by one, just in case there's a 
-performance or boot regression with any of them.
-
-Thanks,
-
-	Ingo
