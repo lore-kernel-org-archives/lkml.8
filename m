@@ -2,128 +2,139 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7878C4361B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDF7C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F085F22DA7
+	by mail.kernel.org (Postfix) with ESMTP id 09FEC22DFA
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LVKhvWwa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cEoQlBQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgHFJYd (ORCPT
+        id S1729034AbgHFJWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:24:33 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:38463 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729132AbgHFJXd (ORCPT
+        Thu, 6 Aug 2020 05:22:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59218 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729128AbgHFJUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:23:33 -0400
-X-UUID: c90b4b5441d24288acb143bcc4e49656-20200806
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=mvtOpKmyyI86lc99yfomx8qPrFB6iHZgh3PjEqxrAa8=;
-        b=LVKhvWwaCXgo4L207xNBvICumCDrgPHVMHW7ggfgSgE53vSODWPAWrxeejSHKOI7Mh7GVJv4BpaAawiPr2LWV2E0g6BcKVNDFEDgWYkAEUST+Cj7AnOvPpGH11GMDY/uOsLuWHa6sMOCzgh/myWGYW7t1VBL1djIhY5L/rG993o=;
-X-UUID: c90b4b5441d24288acb143bcc4e49656-20200806
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 550916183; Thu, 06 Aug 2020 17:22:01 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 6 Aug 2020 17:21:58 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 6 Aug 2020 17:21:58 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v17 00/12] Mediatek MT8183 scpsys support 
-Date:   Thu, 6 Aug 2020 17:21:43 +0800
-Message-ID: <1596705715-15320-1-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Thu, 6 Aug 2020 05:20:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596705599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qbng0KIuhjnrRqPApXRDER8ey72aYykcRLaK9qO7KvA=;
+        b=cEoQlBQEuqu+qCJvvxQttxVJScTJXz19QmuG29oAhVIiZESCVvIfHPT+4/zb9KMBnse6lQ
+        RH0nCF4bcz5tZREwAz7At8ycBx9+vsrCtw+3qCWj5aMuIoxtpemKWEHl4IX4XxfpTg9X0B
+        uR6Ij5yZiIc7K9CIDtucwRsPgzQW2AE=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-33-MweavDV1P1Kqq0QdmHwjGA-1; Thu, 06 Aug 2020 05:19:58 -0400
+X-MC-Unique: MweavDV1P1Kqq0QdmHwjGA-1
+Received: by mail-ej1-f71.google.com with SMTP id y10so18403534ejd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:19:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Qbng0KIuhjnrRqPApXRDER8ey72aYykcRLaK9qO7KvA=;
+        b=SfiwPJCPPTzQbDp9vMdM7EqYoWQpis6DWXz3CmlhwnKK66rYTzlZaVv7Y60Uc09RHJ
+         QWNGNNiVABuryUrcHzWnHQsHgTf+T1csLGj7E9QpiX0czNEi32I1ipApRmt5DtfOHfT2
+         BzOEHTnBhdhU0AmnE6vMTOeImnotaZOApF/iYDzyL6U6rDzfMjeQ4n/2UAhBZW//OOli
+         1pbeDVFe8dx1B0RdrBRllVDGWnkjpjEzscTchiEYQnG3Tft6TfJIpvlA8clqGnXf1xQs
+         A2Upoo4+Std6SCPD1baxpOFcKQvR7j3zCfQBMTZA2Xn41VTP9zSoyCyTf6vTif+t2l/b
+         /GPQ==
+X-Gm-Message-State: AOAM532fznKM/UVeQvgnn/7SKHbIeuVlnkLsgU8X+3uj8s86lq3F4Fg5
+        bhlYMP5LjqzCt3kCaGMrZBYHPlHdjgsf+UBShR+pepE0sarpigFSjgUlgY2wNaKJdIPQaCYcNMC
+        hDVE0E+Yc198nqgGZ7eu8QNqC
+X-Received: by 2002:a17:906:c1c3:: with SMTP id bw3mr3607430ejb.8.1596705596998;
+        Thu, 06 Aug 2020 02:19:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxuRhDEaObKZG/m3SESq3Y56+cff+sBnsRhNDN/4SkNQ35QaOrvvNAQiLpZKC54ekRuuLKNEA==
+X-Received: by 2002:a17:906:c1c3:: with SMTP id bw3mr3607421ejb.8.1596705596800;
+        Thu, 06 Aug 2020 02:19:56 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id i9sm3312397ejb.48.2020.08.06.02.19.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 02:19:56 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
+In-Reply-To: <20200805201851-mutt-send-email-mst@kernel.org>
+References: <20200728143741.2718593-1-vkuznets@redhat.com> <20200805201851-mutt-send-email-mst@kernel.org>
+Date:   Thu, 06 Aug 2020 11:19:55 +0200
+Message-ID: <873650p1vo.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBzZXJpZXMgaXMgYmFzZWQgb24gdjUuOC1yYzENCg0KY2hhbmdlIHNpbmNlIHYxNjoNCi0g
-SW50cm9kdWNlIGhpZXJhcmNoaWNhbCBzY3BzeXMgZGV2aWNlIG5vZGUgdG8gc2hvdyB0aGUgZGVw
-ZW5kZW5jeSBiZXR3ZWVuIGVhY2ggcG93ZXIgZG9tYWluLg0KICBBbmQgY291bGQgYmUgbW9yZSBj
-bGVhcmx5IHRvIGdyb3VwIHN1YnN5cyBjbG9ja3MgaW50byBwb3dlciBkb21haW4gc3ViIG5vZGUu
-DQoNCmNoYW5nZSBzaW5jZSB2MTU6DQotIHJlbW92ZSB1bm5lZWRlZCBlcnJvciBsb2cgaW4gW1BB
-VENIIDA2LzExXQ0KDQpjaGFuZ2VzIHNpbmNlIHYxNDoNCi0gZml4IGNvbW1pdCBtZXNzYWdlIHR5
-cG8NCi0gdXNlIHByb3BlcnR5IG5hbWUgIm1lZGlhdGVrLHNtaSIgZm9yIHNtaSBwaGFuZGxlDQoN
-CmNoYW5nZXMgc2luY2UgdjEzOg0KLSBkb2N1bWVudCBvcHRpb25hbCBwcm9wZXJ0eSAic21pLWNv
-bW0iDQotIG1vdmUgZGVmaW5lcyBpbiBzY3BzeWMuaCB0byBtdGstc2Nwc3lzLmMgZGlyZWN0bHkN
-Ci0gbWlub3IgY29kaW5nIHN5dGxlIGZpeGVzDQoNCmNoYW5nZSBzaW5jZSB2MTI6DQotIHNlcGFy
-YXRlIHRoZSBmaXggb2YgY29tbWEgYXQgdGhlIGVuZCBpbnRvIGEgbmV3IHBhdGNoIFtQQVRDSCAw
-OS8xMV0NCg0KY2hhbmdlcyBzaW5jZSB2MTE6DQotIHJlLW9yZGVyIHBhdGNoZXMgIlJlbW92ZSBp
-bmZyYWNmZyBtaXNjIGRyaXZlciBzdXBwb3J0IiBhbmQgIkFkZCBtdWx0aXBsZSBzdGVwIGJ1cyBw
-cm90ZWN0aW9uIg0KLSBhZGQgY2FwIE1US19TQ1BEX1NSQU1fSVNPIGZvciBleHRyYSBzcmFtIGNv
-bnRyb2wNCi0gbWlub3IgY29kaW5nIHN5dGxlIGZpeGVzIGFuZCByZXdvcmQgY29tbWl0IG1lc3Nh
-Z2VzDQoNCmNoYW5nZXMgc2luY2UgdjEwOg0KLSBzcXVhc2ggUEFUQ0ggMDQgYW5kIFBBVENIIDA2
-IGluIHY5IGludG8gaXRzIHByZXZpb3VzIHBhdGNoDQotIGFkZCAiaWdub3JlX2Nscl9hY2siIGZv
-ciBtdWx0aXBsZSBzdGVwIGJ1cyBwcm90ZWN0aW9uIGNvbnRyb2wgdG8gaGF2ZSBhIGNsZWFuIGRl
-ZmluaXRpb24gb2YgcG93ZXIgZG9tYWluIGRhdGENCi0ga2VlcCB0aGUgbWFzayByZWdpc3RlciBi
-aXQgZGVmaW5pdGlvbnMgYW5kIGRvIHRoZSBzYW1lIGZvciBNVDgxODMNCg0KY2hhbmdlcyBzaW5j
-ZSB2OToNCi0gYWRkIG5ldyBQQVRDSCAwNCBhbmQgUEFUQ0ggMDYgdG8gcmVwbGFjZSBieSBuZXcg
-bWV0aG9kIGZvciBhbGwgY29tcGF0aWJsZXMNCi0gYWRkIG5ldyBQQVRDSCAwNyB0byByZW1vdmUg
-aW5mcmFjZmcgbWlzYyBkcml2ZXINCi0gbWlub3IgY29kaW5nIHN5dGxlIGZpeA0KDQpjaGFuZ2Vz
-IHNpbmNlIHY3Og0KLSByZXdvcmQgaW4gYmluZGluZyBkb2N1bWVudCBbUEFUQ0ggMDIvMTRdDQot
-IGZpeCBlcnJvciByZXR1cm4gY2hlY2tpbmcgYnVnIGluIHN1YnN5cyBjbG9jayBjb250cm9sIFtQ
-QVRDSCAxMC8xNF0NCi0gYWRkIHBvd2VyIGRvbWFpbnMgcHJvcGVyaXR5IHRvIG1mZ2NmZyBwYXRj
-aCBbUEFUQ0ggMTQvMTRdIGZyb20NCiAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
-aC8xMTEyNjE5OS8NCg0KY2hhbmdlcyBzaW5jZSB2NjoNCi0gcmVtb3ZlIHRoZSBwYXRjaCBvZiBT
-UERYIGxpY2Vuc2UgaWRlbnRpZmllciBiZWNhdXNlIGl0J3MgYWxyZWFkeSBmaXhlZA0KDQpjaGFu
-Z2VzIHNpbmNlIHY1Og0KLSBmaXggZG9jdW1lbnRhdGlvbiBpbiBbUEFUQ0ggMDQvMTRdDQotIHJl
-bW92ZSB1c2VsZXNzIHZhcmlhYmxlIGNoZWNraW5nIGFuZCByZXVzZSBBUEkgb2YgY2xvY2sgY29u
-dHJvbCBpbiBbUEFUQ0ggMDYvMTRdDQotIGNvZGluZyBzdHlsZSBmaXggb2YgYnVzIHByb3RlY3Rp
-b24gY29udHJvbCBpbiBbUEFUQ0ggMDgvMTRdDQotIGZpeCBuYW1pbmcgb2YgbmV3IGFkZGVkIGRh
-dGEgaW4gW1BBVENIIDA5LzE0XQ0KLSBzbWFsbCByZWZhY3RvciBvZiBtdWx0aXBsZSBzdGVwIGJ1
-cyBwcm90ZWN0aW9uIGNvbnRyb2wgaW4gW1BBVENIIDEwLzE0XQ0KDQpjaGFuZ2VzIHNpbmNlIHY0
-Og0KLSBhZGQgcHJvcGVydHkgdG8gbXQ4MTgzIHNtaS1jb21tb24NCi0gc2VwZXJhdGUgcmVmYWN0
-b3IgcGF0Y2hlcyBhbmQgbmV3IGFkZCBmdW5jdGlvbg0KLSBhZGQgcG93ZXIgY29udHJvbGxlciBk
-ZXZpY2Ugbm9kZQ0KDQoNCldlaXlpIEx1ICgxMik6DQogIGR0LWJpbmRpbmdzOiBtZWRpYXRlazog
-QWRkIHByb3BlcnR5IHRvIG10ODE4MyBzbWktY29tbW9uDQogIHNvYzogbWVkaWF0ZWs6IEFkZCBi
-YXNpY19jbGtfbmFtZSB0byBzY3BfcG93ZXJfZGF0YQ0KICBzb2M6IG1lZGlhdGVrOiBSZW1vdmUg
-aW5mcmFjZmcgbWlzYyBkcml2ZXIgc3VwcG9ydA0KICBzb2M6IG1lZGlhdGVrOiBBZGQgbXVsdGlw
-bGUgc3RlcCBidXMgcHJvdGVjdGlvbiBjb250cm9sDQogIGR0LWJpbmRpbmdzOiBzb2M6IEFkZCBN
-VDgxODMgcG93ZXIgZHQtYmluZGluZ3MNCiAgc29jOiBtZWRpYXRlazogQWRkIHN1cHBvcnQgZm9y
-IGhpZXJhcmNoaWNhbCBzY3BzeXMgZGV2aWNlIG5vZGUNCiAgc29jOiBtZWRpYXRlazogQWRkIHN1
-YnN5cyBjbG9jayBjb250cm9sIGZvciBidXMgcHJvdGVjdGlvbg0KICBzb2M6IG1lZGlhdGVrOiBB
-ZGQgZXh0cmEgc3JhbSBjb250cm9sDQogIHNvYzogbWVkaWF0ZWs6IEFkZCBNVDgxODMgc2Nwc3lz
-IHN1cHBvcnQNCiAgc29jOiBtZWRpYXRlazogQWRkIGEgY29tbWEgYXQgdGhlIGVuZA0KICBhcm02
-NDogZHRzOiBBZGQgcG93ZXIgY29udHJvbGxlciBkZXZpY2Ugbm9kZSBvZiBNVDgxODMNCiAgYXJt
-NjQ6IGR0czogQWRkIHBvd2VyLWRvbWFpbnMgcHJvcGVydHkgdG8gbWZnY2ZnDQoNCiAuLi4vbWVk
-aWF0ZWssc21pLWNvbW1vbi50eHQgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCiAuLi4vYmlu
-ZGluZ3Mvc29jL21lZGlhdGVrL3NjcHN5cy50eHQgICAgICAgICAgfCAgODEgKy0NCiBhcmNoL2Fy
-bTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpICAgICAgfCAxMjQgKysrDQogZHJpdmVy
-cy9zb2MvbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAgICAgIHwgIDEwIC0NCiBkcml2ZXJz
-L3NvYy9tZWRpYXRlay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDEgLQ0KIGRyaXZlcnMv
-c29jL21lZGlhdGVrL210ay1pbmZyYWNmZy5jICAgICAgICAgICB8ICA3OSAtLQ0KIGRyaXZlcnMv
-c29jL21lZGlhdGVrL210ay1zY3BzeXMuYyAgICAgICAgICAgICB8IDc3MCArKysrKysrKysrKysr
-Ky0tLS0NCiBpbmNsdWRlL2R0LWJpbmRpbmdzL3Bvd2VyL210ODE4My1wb3dlci5oICAgICAgfCAg
-MjYgKw0KIGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL2luZnJhY2ZnLmggICAgICAgICB8ICAz
-OSAtDQogOSBmaWxlcyBjaGFuZ2VkLCA4NDUgaW5zZXJ0aW9ucygrKSwgMjg3IGRlbGV0aW9ucygt
-KQ0KIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstaW5mcmFjZmcu
-Yw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3Bvd2VyL210ODE4My1w
-b3dlci5oDQogZGVsZXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL2lu
-ZnJhY2ZnLmgNCg==
+"Michael S. Tsirkin" <mst@redhat.com> writes:
+
+> On Tue, Jul 28, 2020 at 04:37:38PM +0200, Vitaly Kuznetsov wrote:
+>> This is a continuation of "[PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES
+>> memory" work: 
+>> https://lore.kernel.org/kvm/20200514180540.52407-1-vkuznets@redhat.com/
+>> and pairs with Julia's "x86/PCI: Use MMCONFIG by default for KVM guests":
+>> https://lore.kernel.org/linux-pci/20200722001513.298315-1-jusual@redhat.com/
+>> 
+>> PCIe config space can (depending on the configuration) be quite big but
+>> usually is sparsely populated. Guest may scan it by accessing individual
+>> device's page which, when device is missing, is supposed to have 'pci
+>> hole' semantics: reads return '0xff' and writes get discarded.
+>> 
+>> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
+>> I observed 8193 accesses to PCI hole memory. When such exit is handled
+>> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
+>> Handling the same exit in userspace is six times slower (0.000006 sec) so
+>> the overal; difference is 0.04 sec. This may be significant for 'microvm'
+>> ideas.
+>> 
+>> Note, the same speed can already be achieved by using KVM_MEM_READONLY
+>> but doing this would require allocating real memory for all missing
+>> devices and e.g. 8192 pages gives us 32mb. This will have to be allocated
+>> for each guest separately and for 'microvm' use-cases this is likely
+>> a no-go.
+>> 
+>> Introduce special KVM_MEM_PCI_HOLE memory: userspace doesn't need to
+>> back it with real memory, all reads from it are handled inside KVM and
+>> return '0xff'. Writes still go to userspace but these should be extremely
+>> rare.
+>> 
+>> The original 'KVM_MEM_ALLONES' idea had additional optimizations: KVM
+>> was mapping all 'PCI hole' pages to a single read-only page stuffed with
+>> 0xff. This is omitted in this submission as the benefits are unclear:
+>> KVM will have to allocate SPTEs (either on demand or aggressively) and
+>> this also consumes time/memory.
+>
+> Curious about this: if we do it aggressively on the 1st fault,
+> how long does it take to allocate 256 huge page SPTEs?
+> And the amount of memory seems pretty small then, right?
+
+Right, this could work but we'll need a 2M region (one per KVM host of
+course) filled with 0xff-s instead of a single 4k page.
+
+Generally, I'd like to reach an agreement on whether this feature (and
+the corresponding Julia's patch addding PV feature bit) is worthy. In
+case it is (meaning it gets merged in this simplest form), we can
+suggest further improvements. It would also help if firmware (SeaBIOS,
+OVMF) would start recognizing the PV feature bit too, this way we'll be
+seeing even bigger improvement and this may or may not be a deal-breaker
+when it comes to the 'aggressive PTE mapping' idea.
+
+-- 
+Vitaly
 
