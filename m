@@ -4,117 +4,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7932221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25BE3221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="YKSScdMP"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="NulZcUOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgHFRZW (ORCPT
+        id S1730196AbgHFRZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbgHFRDC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:03:02 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF19CC034615
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:19:13 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s15so15145180pgc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 06:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V1nnod0YcV7H2TUfC8Gd96YGz+LSO9JcTYXXX1K5F8M=;
-        b=YKSScdMPWzgWF7wSGiSqP95WaTCqorzQjkBnqwiKacTI0pfodkP5JNyOASut44yJ3s
-         l5WouG2nks7VRPeOnmuKSKOFIZh8Ic0u8UuUxx45NqhalbT1S4f/9zdk9NtVZOzxRZIQ
-         5aiTXswxQAVqbhKii8Csr+ntnUijgnCyA7hcfIOHIXy36EYCI/cakomgU/tpxjmQzq1D
-         2pwabp9JoYYNme1qeEGLFdWuN+eKF79/Trev97gkXlSZWXu0VOo/HKohGN680R/9FDPI
-         Ere7hd6MEpRJtverCfv4jb0jqpZkVGowXiQuFo/kT+QYEJlC6cIka8DF1SLC/s5p6s+X
-         Ichw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V1nnod0YcV7H2TUfC8Gd96YGz+LSO9JcTYXXX1K5F8M=;
-        b=iF7i09/mKC/fAy3lFE5KN6mkPl4wgMnktQdGl8cUqf1QAnC/CETovUk3ZgGjh1dMxh
-         TLFbxlawUXLOBtOdDkRQ5PAi5XouEEDfa/sxvkH+o0ct5OO3h11u3R2xM86de5tN1z02
-         VfdPBQa1KdRLMf/x78vJcWTBoUX/UrSO89auS0IF6wdkXlOEwL19TyNct2Fv+OguGLNj
-         oyIpTuVL22dc+FE80qrk4O1A5qaAE/+BF6a6fycjbTcT/dd28WUYK5PuOJisZt+l3447
-         dfYlboRN1yMblxJo/qAnAUOQte45P/zYrfRmaprRyaKfCQONSms+53NtfwL2p1KGfga8
-         W/bw==
-X-Gm-Message-State: AOAM531WhGXT+6985KCiUTAfo6msZee/iwzDx5x/MSgW+emEr1JOFT/e
-        o3iG0+e/3Bv7Nr9oK4EXwLklI8WVcRI=
-X-Google-Smtp-Source: ABdhPJy5OWv4YebWEdmAk1TZNEahwpIKQsFkvMQ2u8mMNYwisz/N6njR6OtM1fCTbW1PDnm4LCQG4w==
-X-Received: by 2002:aa7:982e:: with SMTP id q14mr8418876pfl.299.1596719950852;
-        Thu, 06 Aug 2020 06:19:10 -0700 (PDT)
-Received: from localhost.localdomain (p14232-ipngn10801marunouchi.tokyo.ocn.ne.jp. [122.24.13.232])
-        by smtp.gmail.com with ESMTPSA id y72sm8790366pfg.58.2020.08.06.06.19.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 06:19:09 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-Date:   Thu,  6 Aug 2020 22:18:47 +0900
-Message-Id: <20200806131847.2248244-1-devel@etsukata.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 6 Aug 2020 13:25:35 -0400
+Received: from mail-eopbgr20067.outbound.protection.outlook.com ([40.107.2.67]:45317
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729432AbgHFRZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:25:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IRhoyRc4VkaFutzkk4uMzbuNdZlBpB8oS2Q7ij6g+XejzqoeViGyyS+fTsRv66TEaZBIE3bK665AW6I74oe1v+/7BZPoKJYHK9aHCM1SAlhMqxEq2o5CLgzHOXRS5Xir6pXRrMH9qW4e1/iP8eM1XH+ug1uRhbDBiJtDTex3ie7F5rYJhSlc9qHwhA3z99HjtSJRu1uD4xNPD9NdrYppTZMsVrWUiGH/6o2sICYA/dTsNcktbXVxu6qGND1CP58s4H7CABlmQJZIvw4NEjZWeShjESi4S2oEXgF9wqsoL/eCYTzVTWXtXYG5Lh8JQJmuBRQf9bH1BB1nrTWZuEbXQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CIjB9Rl+VRm7VK3Tw09Xzj/S0WiJewL5eXiGQEOxIWI=;
+ b=IfjCj9fveCjm3p59+9CPZl7tq3GDpyfPZ7izDJ0Y0mtEvVCEcYUAEgTSzlYk7Vbj22cqNdUK/yqGJ/F1r/TyP44P6fjI4DQE2R1PMxGLgQ2dV9+lTVcpqelUCyXPDfYWsfmyVKLMi026wGQ+TCGiqVmEzkLEUTxSdqiA24+pZCvjQZdn6jm4YZlp1uiuFf4u1jRhbZahqIcBf1WUMNAsml6QlztNvz7kZ6N2HB2a1aI2D2jObux+OuT2QOgb1zyKq5c0I69PfLc+oa1g5j+fHsSZRUr8dHHuRE2lqWlakgjT4xeeiHM/Nn5QZhgysh/uaeyHelwsEm4aY+W+yFeDsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CIjB9Rl+VRm7VK3Tw09Xzj/S0WiJewL5eXiGQEOxIWI=;
+ b=NulZcUOOhsg00qlKaKs4qdwf5diCE9mkhzUBnffFi4GuW1lf0w1CbD6fZ3Ehm7h3GHF0ylQp+6OT1fHgJFQ9EsXd+nlU+5NiKMs1dRpZfIsz8v0RKI3fr15npCob11ijH7y283KcJjxFqYzhZpUIARYvuCmmNbTYlDsse0REy5A=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
+ by VI1PR0402MB3440.eurprd04.prod.outlook.com (2603:10a6:803:6::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Thu, 6 Aug
+ 2020 11:41:55 +0000
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
+ 11:41:55 +0000
+From:   Andrei Botila <andrei.botila@oss.nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 6/9] crypto: caam/qi2 - add support for more XTS key lengths
+Date:   Thu,  6 Aug 2020 14:41:24 +0300
+Message-Id: <20200806114127.8650-7-andrei.botila@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806114127.8650-1-andrei.botila@oss.nxp.com>
+References: <20200806114127.8650-1-andrei.botila@oss.nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::42) To VE1PR04MB6608.eurprd04.prod.outlook.com
+ (2603:10a6:803:125::12)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR06CA0101.eurprd06.prod.outlook.com (2603:10a6:208:fa::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Thu, 6 Aug 2020 11:41:54 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 285cfcd2-7ca3-4e9b-dd20-08d839fdb7e6
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3440:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3440862AAC56F3A4ABC5DF6DB4480@VI1PR0402MB3440.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Q9xIB5HLaudml6iDm5epuzXvfcLrWrfQXDwfY4OJ3XSeISZFh14KX0HIWXTCslZohn/QOXsOvTQ6f+UqbmyoKUmpIN/ZRGnOODc9ZoHw+7YQWJZEAKxu+dToTNIfbol8YKMdYTclxLgJ9Bd1r3797nQYB27f+uRqXXMWzVdduvCzjbjPmR6ElWHO3rrrUH/yeo6u+p0c5WlVeS4qct8qSRg9EQNKERf5ZbIIt7cbQZ5Vh5lXIhZx6rxI1tklmO76Gr6UFS4YR3DLiYBNPzA+APTQq2qfX0ymyWLkc7jaCFxAbflRTCMuD0SR9QAOzldivwIOb32aVlLCPZwz5RlDWA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(110136005)(316002)(6666004)(6512007)(478600001)(956004)(2616005)(6486002)(4326008)(1076003)(44832011)(52116002)(6506007)(86362001)(186003)(26005)(16526019)(66556008)(66476007)(2906002)(66946007)(83380400001)(8676002)(5660300002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: s180gEXho9U09YfC2hPMJ97qoEz7DbHyrk6hzIfX509hj83P+iGIpfvmGAfUXYBChVQ2ULvJY0fvezGWJ/PepgjyxBBpsrYIZUNCT9rHDciTZpXCs+Oa59rENViGZEYcnhQMr6JguKof/dPIqoMm+bVGhbY0Lowc5iL7UbRb6iuMWCjy9qJKl3oTz7IM6mgOoyeJhZCaBIrWB/nYG2jg+iFxkJj/COgxcaT8AC5e1Uman97qD5iNtDuLKr9YlJFP7toowArAdvi2m75bj7vY22kafstOcFY2z6ku/MbBRzXCW8LozTAfXCSU9X6MdcOo5RSV3+/eL59UP2l0xgkKuHd++gI6J4t6CpgcbPCxj45NQvgBbVP7qgeA0cfbFIHIJaKIPcUGNS4jrWIfxJezARNkIgxhYsWqGNNs3s8HrcSfJvxqGiDoXFvhN17hKYQmKgEl1PSFc6YKI6YXpz4/QPeFbepsAuL15KB8dOZpCh1d18fBDU7N8xLObau00R7gg+B2Nheym1bpNYxCvPBPLR6lMAAOy+4s8BfuMLtwB/RIfARR6B6ZgBlak29TjiDGQyu9OiGfiV5/+zmAdBswj2GMdQ/DXCLONNfKbvqUaAmJc5bVvW686wFi134zDIn7cU68ufpbg2nLe0alDG5Xnw==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 285cfcd2-7ca3-4e9b-dd20-08d839fdb7e6
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:41:54.9153
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Kzezrx5XfaSK8+6jljV6gqRheIJi2v/dtWQs0rOsJi1j04YZTJe038M+vqlKfH7Ezaf+RZ7AKY63hYGyP6YJSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3440
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
-shows the following warning:
+From: Andrei Botila <andrei.botila@nxp.com>
 
-  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
-  member access within null pointer of type 'struct xfs_kobj'
-  Call Trace:
-   dump_stack+0x10e/0x195
-   ubsan_type_mismatch_common+0x241/0x280
-   __ubsan_handle_type_mismatch_v1+0x32/0x40
-   init_xfs_fs+0x12b/0x28f
-   do_one_initcall+0xdd/0x1d0
-   do_initcall_level+0x151/0x1b6
-   do_initcalls+0x50/0x8f
-   do_basic_setup+0x29/0x2b
-   kernel_init_freeable+0x19f/0x20b
-   kernel_init+0x11/0x1e0
-   ret_from_fork+0x22/0x30
+CAAM accelerator only supports XTS-AES-128 and XTS-AES-256 since
+it adheres strictly to the standard. All the other key lengths
+are accepted and processed through a fallback as long as they pass
+the xts_verify_key() checks.
 
-Fix it by checking parent_kobj before the code accesses its member.
-
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Fixes: 226853ac3ebe ("crypto: caam/qi2 - add skcipher algorithms")
+Cc: <stable@vger.kernel.org> # v4.20+
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
 ---
- fs/xfs/xfs_sysfs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/caam/caamalg_qi2.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
-index e9f810fc6731..aad67dc4ab5b 100644
---- a/fs/xfs/xfs_sysfs.h
-+++ b/fs/xfs/xfs_sysfs.h
-@@ -32,9 +32,9 @@ xfs_sysfs_init(
- 	struct xfs_kobj		*parent_kobj,
- 	const char		*name)
- {
-+	struct kobject *parent = parent_kobj ? &parent_kobj->kobject : NULL;
- 	init_completion(&kobj->complete);
--	return kobject_init_and_add(&kobj->kobject, ktype,
--				    &parent_kobj->kobject, "%s", name);
-+	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
- }
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index a0b13bf6b528..f2f137f47972 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -19,6 +19,7 @@
+ #include <linux/fsl/mc.h>
+ #include <soc/fsl/dpaa2-io.h>
+ #include <soc/fsl/dpaa2-fd.h>
++#include <crypto/xts.h>
+ #include <asm/unaligned.h>
  
- static inline void
+ #define CAAM_CRA_PRIORITY	2000
+@@ -1060,9 +1061,10 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	u32 *desc;
+ 	int err;
+ 
+-	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
++	err = xts_verify_key(skcipher, key, keylen);
++	if (err) {
+ 		dev_dbg(dev, "key size mismatch\n");
+-		return -EINVAL;
++		return err;
+ 	}
+ 
+ 	err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
+@@ -1475,7 +1477,9 @@ static int skcipher_encrypt(struct skcipher_request *req)
+ 	if (!req->cryptlen)
+ 		return 0;
+ 
+-	if (ctx->fallback && xts_skcipher_ivsize(req)) {
++	if (ctx->fallback && (xts_skcipher_ivsize(req) ||
++			      (ctx->cdata.keylen != 2 * AES_KEYSIZE_128 &&
++			       ctx->cdata.keylen != 2 * AES_KEYSIZE_256))) {
+ 		skcipher_request_set_tfm(&caam_req->fallback_req, ctx->fallback);
+ 		skcipher_request_set_callback(&caam_req->fallback_req,
+ 					      req->base.flags,
+@@ -1518,7 +1522,9 @@ static int skcipher_decrypt(struct skcipher_request *req)
+ 	if (!req->cryptlen)
+ 		return 0;
+ 
+-	if (ctx->fallback && xts_skcipher_ivsize(req)) {
++	if (ctx->fallback && (xts_skcipher_ivsize(req) ||
++			      (ctx->cdata.keylen != 2 * AES_KEYSIZE_128 &&
++			       ctx->cdata.keylen != 2 * AES_KEYSIZE_256))) {
+ 		skcipher_request_set_tfm(&caam_req->fallback_req, ctx->fallback);
+ 		skcipher_request_set_callback(&caam_req->fallback_req,
+ 					      req->base.flags,
 -- 
-2.26.2
+2.17.1
 
