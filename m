@@ -2,291 +2,270 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C32C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ED1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB7B20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB8820786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZbdJjRb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0sTLMzAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgHFRCK (ORCPT
+        id S1729616AbgHFRCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
+        Thu, 6 Aug 2020 13:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729618AbgHFRAb (ORCPT
+        with ESMTP id S1729710AbgHFRA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:00:31 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC395C0A3BE2;
-        Thu,  6 Aug 2020 06:53:05 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c10so5494140edk.6;
-        Thu, 06 Aug 2020 06:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eZ1hvjI2k7PxapIbdDWM4KmvIBLycDrwWJ/PVRnPpkE=;
-        b=GZbdJjRb6J3NI0p+e+Jlu/Yb9KW6femyZPr8xmUW3Ev9AHe/8SbyjkhDwSgTn2Zj2G
-         0HzjXU3Adq2o4ctN5RGobireeGGLVWs4gNto89bugMQ27oS8rhx9Zm9nA0nyjv4Hbl9L
-         jwCCzHPRGEcuSX1v3MhQGnjFKhu1KKg9CbQvIZn3aEL5BTxJafhZBpx2CknP/YNmkNmS
-         2rfAcnHgnia2eEQMe5seDpBMtftR/GKu81UpZ2RfBpvxeHO6JEQ5iWQSi7JPugaWZlBR
-         hohFfqoO/V3O34b5D2P2dlE9WyE1ym1KF8QjS1+Hk6b0WlfSFud9wb3T+c3iPvKRnsW0
-         WG5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eZ1hvjI2k7PxapIbdDWM4KmvIBLycDrwWJ/PVRnPpkE=;
-        b=KjpZkTe5uUgPj3fHWDe5x+8RsiKNjI14d90UfpU2vGmnRq2X7LJV02sxr5GvtO8yRC
-         2NA2CHQFlmg067wQbvX4Cztkr9on6stgiNl8VCh9ElqjzgfgVdPzOqpc05tme4KcqVXy
-         E8tkzDUBiToqRXLHtXTHvrtOj40XJvuqDXHgnkIXCECoATFmm0zcvt8Yo83+X3aV5rfQ
-         c1d1wUgE0vQxfBcKRqzi26BZLWeiYyQNyjOacs2F2OTII1cHLUaBrDXajL359yXW42K7
-         B5Ewxa5u+LY1KvYfxa9Smrn8z/CaWwvvLtRc+I3bXQPPja1F+AVuVg4xWDljLuy76vFg
-         CVpA==
-X-Gm-Message-State: AOAM530zYfE6ITnFiAChFsXD1MWeg0d56FUecUteuDt3TL5teULC0UqU
-        yIjQJkH+XUyNwEyvkj2d84CjNiUM
-X-Google-Smtp-Source: ABdhPJwrtn8TBnvxrR4dTun1NmGyvo2avAxmYKxn0etadYxcZgnXT6X6AB0m+uy9guGlcRr66J7LGg==
-X-Received: by 2002:a05:6402:1427:: with SMTP id c7mr4290420edx.245.1596721974488;
-        Thu, 06 Aug 2020 06:52:54 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id c18sm3834642eja.13.2020.08.06.06.52.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 06:52:52 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 15:52:51 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        netdev <netdev@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 1/3] driver core: Revert default
- driver_deferred_probe_timeout value to 0
-Message-ID: <20200806135251.GB3351349@ulmo>
-References: <20200422203245.83244-1-john.stultz@linaro.org>
- <20200422203245.83244-2-john.stultz@linaro.org>
+        Thu, 6 Aug 2020 13:00:56 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9924AC0617A9
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 04:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HOHNK/Wwh4r+dLOwnbPsU+//UraXJR2JWx5StwnIbMY=; b=0sTLMzAiW/vkKYsNYbSBHPq85f
+        7mIVV3rtllIgLSoMUwHAx9bADSCyheIH3Vr9XuIsGYReUNEAeMFktXRBu1XGBWeKZkxtRReusdh5U
+        JP2iR2+gZwXB7UvdMSRaKIlxmNQzO4osCTSBUOsGVvHgXjH/oys9VGYosHPXvwyai9EngYMt+4WJ1
+        Lqj0FhWGWo/eSn4zUPc+aABDW5olIlv2gNInI59OVWK28yozeQFOlUGnqVEd3qFbE+rc462ZjgGNA
+        mtKAu9/0zoXyyrb+scimVCT3nXnZz/RDf8/lv9RxevxiT/NPDVfZn41zArdgtRIFA3o4G3bZXHiyU
+        YgEHUOZw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3e8V-0006OU-91; Thu, 06 Aug 2020 11:32:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33BE7300446;
+        Thu,  6 Aug 2020 13:32:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0DD6F2B61F1E7; Thu,  6 Aug 2020 13:32:36 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 13:32:36 +0200
+From:   peterz@infradead.org
+To:     Marco Elver <elver@google.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        yu-cheng.yu@intel.com, jgross@suse.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
+ helpers
+Message-ID: <20200806113236.GZ2674@hirez.programming.kicks-ass.net>
+References: <0000000000007d3b2d05ac1c303e@google.com>
+ <20200805132629.GA87338@elver.google.com>
+ <20200805134232.GR2674@hirez.programming.kicks-ass.net>
+ <20200805135940.GA156343@elver.google.com>
+ <20200805141237.GS2674@hirez.programming.kicks-ass.net>
+ <20200805141709.GD35926@hirez.programming.kicks-ass.net>
+ <CANpmjNN6FWZ+MsAn3Pj+WEez97diHzqF8hjONtHG15C2gSpSgw@mail.gmail.com>
+ <CANpmjNNy3XKQqgrjGPPKKvXhAoF=mae7dk8hmoS4k4oNnnB=KA@mail.gmail.com>
+ <20200806074723.GA2364872@elver.google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422203245.83244-2-john.stultz@linaro.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200806074723.GA2364872@elver.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 06, 2020 at 09:47:23AM +0200, Marco Elver wrote:
+> Testing my hypothesis that raw then nested non-raw
+> local_irq_save/restore() breaks IRQ state tracking -- see the reproducer
+> below. This is at least 1 case I can think of that we're bound to hit.
 
---JP+T4n/bALQSJXh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Aaargh!
 
-On Wed, Apr 22, 2020 at 08:32:43PM +0000, John Stultz wrote:
-> This patch addresses a regression in 5.7-rc1+
->=20
-> In commit c8c43cee29f6 ("driver core: Fix
-> driver_deferred_probe_check_state() logic"), we both cleaned up
-> the logic and also set the default driver_deferred_probe_timeout
-> value to 30 seconds to allow for drivers that are missing
-> dependencies to have some time so that the dependency may be
-> loaded from userland after initcalls_done is set.
->=20
-> However, Yoshihiro Shimoda reported that on his device that
-> expects to have unmet dependencies (due to "optional links" in
-> its devicetree), was failing to mount the NFS root.
->=20
-> In digging further, it seemed the problem was that while the
-> device properly probes after waiting 30 seconds for any missing
-> modules to load, the ip_auto_config() had already failed,
-> resulting in NFS to fail. This was due to ip_auto_config()
-> calling wait_for_device_probe() which doesn't wait for the
-> driver_deferred_probe_timeout to fire.
->=20
-> Fixing that issue is possible, but could also introduce 30
-> second delays in bootups for users who don't have any
-> missing dependencies, which is not ideal.
->=20
-> So I think the best solution to avoid any regressions is to
-> revert back to a default timeout value of zero, and allow
-> systems that need to utilize the timeout in order for userland
-> to load any modules that supply misisng dependencies in the dts
-> to specify the timeout length via the exiting documented boot
-> argument.
->=20
-> Thanks to Geert for chasing down that ip_auto_config was why NFS
-> was failing in this case!
->=20
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Basil Eljuse <Basil.Eljuse@arm.com>
-> Cc: Ferry Toth <fntoth@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Cc: netdev <netdev@vger.kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state(=
-) logic")
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/base/dd.c | 13 ++-----------
->  1 file changed, 2 insertions(+), 11 deletions(-)
+> diff --git a/init/main.c b/init/main.c
+> index 15bd0efff3df..0873319dcff4 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1041,6 +1041,22 @@ asmlinkage __visible void __init start_kernel(void)
+>  	sfi_init_late();
+>  	kcsan_init();
+>  
+> +	/* DEBUG CODE */
+> +	lockdep_assert_irqs_enabled(); /* Pass. */
+> +	{
+> +		unsigned long flags1;
+> +		raw_local_irq_save(flags1);
 
-Sorry for being a bit late to the party, but this breaks suspend/resume
-support on various Tegra devices. I've only noticed now because, well,
-suspend/resume have been broken for other reasons for a little while and
-it's taken us a bit to resolve those issues.
+This disables IRQs but doesn't trace..
 
-But now that those other issues have been fixed, I've started seeing an
-issue where after resume from suspend some of the I2C controllers are no
-longer working. The reason for this is that they share pins with DP AUX
-controllers via the pinctrl framework. The DP AUX driver registers as
-part of the DRM/KMS driver, which usually happens in userspace. Since
-the deferred probe timeout was set to 0 by default this no longer works
-because no pinctrl states are assigned to the I2C controller and
-therefore upon resume the pins cannot be configured for I2C operation.
+> +		{
+> +			unsigned long flags2;
+> +			lockdep_assert_irqs_enabled(); /* Pass - expectedly blind. */
 
-I'm also somewhat confused by this patch and a few before because they
-claim that they restore previous default behaviour, but that's just not
-true. Originally when this timeout was introduced it was -1, which meant
-that there was no timeout at all and hence users had to opt-in if they
-wanted to use a deferred probe timeout.
+Indeed, we didn't trace the above disable, so software state is still
+on.
 
-But now after this series the default is for there to be a very short
-timeout, which in turn causes existing use-cases to potentially break.
-I'm also going to suggest here that in most cases a driver will require
-the resources that it asks for, so the case that Yoshihiro described and
-that this patch is meant to fix sounds to me like it's the odd one out
-rather than the other way around.
+> +			local_irq_save(flags2);
 
-But I realize that that's not very constructive. So perhaps we can find
-some other way for drivers to advertise that their dependencies are
-optional? I came up with the below patch, which restores suspend/resume
-on Tegra and could be used in conjunction with a patch that opts into
-this behaviour for the problematic driver in Yoshihiro's case to make
-this again work for everyone.
+So here we save IRQ state, and unconditionally disable IRQs and trace
+them disabled.
 
---- >8 ---
-=46rom a95f8f41b8a32dee3434db4f0515af7376d1873a Mon Sep 17 00:00:00 2001
-=46rom: Thierry Reding <treding@nvidia.com>
-Date: Thu, 6 Aug 2020 14:51:59 +0200
-Subject: [PATCH] driver core: Do not ignore dependencies by default
+> +			lockdep_assert_irqs_disabled(); /* Pass. */
+> +			local_irq_restore(flags2);
 
-Many drivers do require the resources that they ask for and timing out
-may not always be an option. While there is a way to allow probing to
-continue to be deferred for some time after the system has booted, the
-fact that this is controlled via a command-line parameter is undesired
-because it require manual intervention, whereas in can be avoid in the
-majority of cases.
+But here, we restore IRQ state to 'disabled' and explicitly trace it
+disabled *again* (which is a bit daft, but whatever).
 
-Instead of requiring users to edit the kernel command-line, add a way
-for drivers to specify whether or not their dependencies are optional
-so that they can continue deferring probe indefinitely.
+> +		}
+> +		raw_local_irq_restore(flags1);
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+This then restores the IRQ state to enable, but no tracing.
+
+> +	}
+> +	lockdep_assert_irqs_enabled(); /* FAIL! */
+
+And we're out of sync... :/
+
+/me goes ponder things...
+
+How's something like this then?
+
 ---
- drivers/base/dd.c             | 2 +-
- include/linux/device/driver.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ include/linux/sched.h |  3 ---
+ kernel/kcsan/core.c   | 62 ++++++++++++++++++++++++++++++++++++---------------
+ 2 files changed, 44 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 857b0a928e8d..11e747070eae 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -279,7 +279,7 @@ int driver_deferred_probe_check_state(struct device *de=
-v)
- 		return -ENODEV;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 06ec60462af0..2f5aef57e687 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1193,9 +1193,6 @@ struct task_struct {
+ 
+ #ifdef CONFIG_KCSAN
+ 	struct kcsan_ctx		kcsan_ctx;
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	struct irqtrace_events		kcsan_save_irqtrace;
+-#endif
+ #endif
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 9147ff6a12e5..9c4436bf0561 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -291,17 +291,50 @@ static inline unsigned int get_delay(void)
+ 				0);
+ }
+ 
+-void kcsan_save_irqtrace(struct task_struct *task)
++/*
++ * KCSAN hooks are everywhere, which means they're NMI like for interrupt
++ * tracing. In order to present a 'normal' as possible context to the code
++ * called by KCSAN when reporting errors we need to update the irq-tracing
++ * state.
++ *
++ * Save and restore the IRQ state trace touched by KCSAN, since KCSAN's
++ * runtime is entered for every memory access, and potentially useful
++ * information is lost if dirtied by KCSAN.
++ */
++
++struct kcsan_irq_state {
++	unsigned long		flags;
++#ifdef CONFIG_TRACE_IRQFLAGS
++	int			hardirqs;
++	struct irqtrace_events	irqtrace;
++#endif
++};
++
++void kcsan_save_irqtrace(struct kcsan_irq_state *irq_state)
+ {
+ #ifdef CONFIG_TRACE_IRQFLAGS
+-	task->kcsan_save_irqtrace = task->irqtrace;
++	irq_state->irqtrace = task->irqtrace;
++	irq_state->hardirq = lockdep_hardirqs_enabled();
+ #endif
++	if (!kcsan_interrupt_watcher) {
++		raw_local_irq_save(irq_state->flags);
++		lockdep_hardirqs_off(CALLER_ADDR0);
++	}
+ }
+ 
+-void kcsan_restore_irqtrace(struct task_struct *task)
++void kcsan_restore_irqtrace(struct kcsan_irq_state *irq_state)
+ {
++	if (!kcsan_interrupt_watcher) {
++#ifdef CONFIG_TRACE_IRQFLAGS
++		if (irq_state->hardirqs) {
++			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
++			lockdep_hardirqs_on(CALLER_ADDR0);
++		}
++#endif
++		raw_local_irq_restore(irq_state->flags);
++	}
+ #ifdef CONFIG_TRACE_IRQFLAGS
+-	task->irqtrace = task->kcsan_save_irqtrace;
++	task->irqtrace = irq_state->irqtrace;
+ #endif
+ }
+ 
+@@ -350,11 +383,13 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
+ 	flags = user_access_save();
+ 
+ 	if (consumed) {
+-		kcsan_save_irqtrace(current);
++		struct kcsan_irq_state irqstate;
++
++		kcsan_save_irqtrace(&irqstate);
+ 		kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_MAYBE,
+ 			     KCSAN_REPORT_CONSUMED_WATCHPOINT,
+ 			     watchpoint - watchpoints);
+-		kcsan_restore_irqtrace(current);
++		kcsan_restore_irqtrace(&irqstate);
+ 	} else {
+ 		/*
+ 		 * The other thread may not print any diagnostics, as it has
+@@ -387,7 +422,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	unsigned long access_mask;
+ 	enum kcsan_value_change value_change = KCSAN_VALUE_CHANGE_MAYBE;
+ 	unsigned long ua_flags = user_access_save();
+-	unsigned long irq_flags = 0;
++	struct kcsan_irq_state irqstate;
+ 
+ 	/*
+ 	 * Always reset kcsan_skip counter in slow-path to avoid underflow; see
+@@ -412,14 +447,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 		goto out;
  	}
-=20
--	if (!driver_deferred_probe_timeout && initcalls_done) {
-+	if (dev->driver->ignore_dependencies && !driver_deferred_probe_timeout &&=
- initcalls_done) {
- 		dev_warn(dev, "deferred probe timeout, ignoring dependency\n");
- 		return -ETIMEDOUT;
- 	}
-diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-index ee7ba5b5417e..6994455e8a2e 100644
---- a/include/linux/device/driver.h
-+++ b/include/linux/device/driver.h
-@@ -100,6 +100,7 @@ struct device_driver {
- 	const char		*mod_name;	/* used for built-in modules */
-=20
- 	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
-+	bool ignore_dependencies;	/* ignores dependencies */
- 	enum probe_type probe_type;
-=20
- 	const struct of_device_id	*of_match_table;
---=20
-2.27.0
---- >8 ---
+ 
+-	/*
+-	 * Save and restore the IRQ state trace touched by KCSAN, since KCSAN's
+-	 * runtime is entered for every memory access, and potentially useful
+-	 * information is lost if dirtied by KCSAN.
+-	 */
+-	kcsan_save_irqtrace(current);
+-	if (!kcsan_interrupt_watcher)
+-		local_irq_save(irq_flags);
++	kcsan_save_irqtrace(&irqstate);
+ 
+ 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
+ 	if (watchpoint == NULL) {
+@@ -559,9 +587,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	remove_watchpoint(watchpoint);
+ 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
+ out_unlock:
+-	if (!kcsan_interrupt_watcher)
+-		local_irq_restore(irq_flags);
+-	kcsan_restore_irqtrace(current);
++	kcsan_restore_irqtrace(&irqstate);
+ out:
+ 	user_access_restore(ua_flags);
+ }
 
-Although, thinking about it a bit more it sounds to me like an even
-better approach would be to make this part of the API where a resource
-is requested. There are in fact already APIs that can request optional
-resources (such as regulator_get_optional()), so I think it would make
-more sense for any driver that can live without a resource to request
-it with an optional flag, which in turn could then trigger this code
-path for the deferred probe timeout. For anyone that really needs the
-resources that they request, they really shouldn't have to jump through
-hoops to get there.
 
-Thierry
-
---JP+T4n/bALQSJXh8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8sCy8ACgkQ3SOs138+
-s6GvwhAAnB1zEygGH/A1YRgS2NGGwPGWTkHasFfcxAv3MpbRYWsI+DzDblqiUNh+
-T50wVC81N486hkhmJPusc9DQSCVZff1EuR75R0uhR+RVTHsVL5LaL/wo3ful5v3J
-Pmi66IUoPj8HjBt+hxrcLMPKLOwG/j38OXU4GJaTLbG45Sdr1fkkZOte7NmfuP9p
-IMXE3Dc0hzwfcw8vdAOdNMxAnR+DE0Rw6K6N8RMkYxbCHAStLGzDV1NpOHM7hjqQ
-ymxXyTajPv17sx9Tg4NeIH4ANh73IHhSCPEKOGUykktgsGFhYrxwYSlK+9dnSRb2
-trDPIa+4gwrI1R8iMogmqWApSkkaeRWNaJPxBOyg+mHq3H3KCcQLxcb1KGwTioIL
-cbdlVtsIYJtDiT0TqFWREBRYVcvWA2hT/VNq9G0aIYyzW1r5GwAjKKpruky1rg3f
-jzU/jiJJn5fgOLK4s87sqw9dStTyGZlXBhX5/yDJaDxNNU2jPwn6CIB6PZWsWdan
-paSxpleHQhgcD9kS7Qru3mDxvsQzPx4DHv8wQkUOX/AeRYXiB38RNg4c9M1YwOFp
-jxUJqwXTyQdtOjblN5HZyEDCkIUUV0qVg486WKkktuep7nMQHOCDiWY/WYXmpL/u
-Uf0sYgl2bQPssMBhHpD6rr7G6Tr6Vzt/JjP8QdrAV1qlo9+IuR0=
-=MKXR
------END PGP SIGNATURE-----
-
---JP+T4n/bALQSJXh8--
