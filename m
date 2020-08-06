@@ -2,150 +2,242 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0C7C38149
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89C5C43618
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A058922D02
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y3H2sHxr"
+	by mail.kernel.org (Postfix) with ESMTP id 311FD22EBF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbgHFJda (ORCPT
+        id S1729120AbgHFK04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:33:30 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:51591 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729008AbgHFJWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:22:47 -0400
-X-UUID: ca487f489f414c2db250a778624f327c-20200806
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=WTzfa/t8bk8sxGScWdoKmOhtLiKTTktmTscE+vpAf7A=;
-        b=Y3H2sHxrdbxhUsv7i6HYTKbS3X042OhpO2CCpu0wA9AMhC712bvUHe2uc5i+i2OK1Jak8EZ2chZgeufiJLiBCTjuWEveiiFqyrWwTquyUkHCUqB5P22LB5JpKT3G4McQLnougvVnp7mo+vmM3VysHW15UqhJ2pF6N7H2UMY+RVM=;
-X-UUID: ca487f489f414c2db250a778624f327c-20200806
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1798099553; Thu, 06 Aug 2020 17:22:01 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 6 Aug 2020 17:21:59 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 6 Aug 2020 17:21:59 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v17 06/12] soc: mediatek: Add support for hierarchical scpsys device node
-Date:   Thu, 6 Aug 2020 17:21:49 +0800
-Message-ID: <1596705715-15320-7-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1596705715-15320-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1596705715-15320-1-git-send-email-weiyi.lu@mediatek.com>
+        Thu, 6 Aug 2020 06:26:56 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9086 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729341AbgHFKWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 06:22:04 -0400
+IronPort-SDR: OwOrNdKo+gMIDT8Jmopwm7OEug3bhxSv8Ueyin2RSSHiF7vaO1GFCENgBzz3Jqfi2K43KDlqx8
+ uK/j+8jfmdtg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="152728007"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="152728007"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 03:21:32 -0700
+IronPort-SDR: DOibyVrDWa5fh86oYt6dWfcQQ0nIGK3xu3k6eCZUovsBrTmuklRwz8StZwW44b24/mviuVg7xJ
+ hOk3ilmZpmKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="289231281"
+Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2020 03:21:30 -0700
+Received: from kbuild by 37a337f97289 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k3d1d-0001EE-Ud; Thu, 06 Aug 2020 10:21:29 +0000
+Date:   Thu, 6 Aug 2020 18:20:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: fs/exfat/namei.c:1297:6: warning: Variable 'ret' is reassigned a
+ value before the old one has been used.
+Message-ID: <202008061846.4E82tOUR%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VHJ5IHRvIGxpc3QgYWxsIHRoZSBwb3dlciBkb21haW5zIG9mIHVuZGVyIHBvd2VyIGNvbnRyb2xs
-ZXINCm5vZGUgdG8gc2hvdyB0aGUgZGVwZW5kZW5jeSBiZXR3ZWVuIGVhY2ggcG93ZXIgZG9tYWlu
-IGRpcmVjdGx5DQppbnN0ZWFkIG9mIGZpbGxpbmcgdGhlIGRlcGVuZGVuY3kgaW4gc2NwX3NvY19k
-YXRhLg0KQW5kIGNvdWxkIGJlIG1vcmUgY2xlYXJseSB0byBncm91cCBzdWJzeXMgY2xvY2tzIGlu
-dG8gcG93ZXIgZG9tYWluDQpzdWIgbm9kZSB0byBpbnRyb2R1Y2Ugc3Vic3lzIGNsb2NrcyBvZiBi
-dXMgcHJvdGVjdGlvbiBpbiBuZXh0IHBhdGNoLg0KDQpTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8
-d2VpeWkubHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNj
-cHN5cy5jIHwgMTAzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tDQogMSBm
-aWxlIGNoYW5nZWQsIDk1IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMgYi9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstc2Nwc3lzLmMNCmluZGV4IDVhMmMzMjMuLjUwMmI2NmYgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1zY3BzeXMuYw0KQEAgLTE4MiwxMSArMTgyLDEzIEBAIHN0cnVjdCBzY3Agew0KIAlz
-dHJ1Y3QgcmVnbWFwICppbmZyYWNmZzsNCiAJc3RydWN0IHJlZ21hcCAqc21pX2NvbW1vbjsNCiAJ
-c3RydWN0IHNjcF9jdHJsX3JlZyBjdHJsX3JlZzsNCisJc3RydWN0IGxpc3RfaGVhZCBkZXBfbGlu
-a3M7DQogfTsNCiANCiBzdHJ1Y3Qgc2NwX3N1YmRvbWFpbiB7DQogCWludCBvcmlnaW47DQogCWlu
-dCBzdWJkb21haW47DQorCXN0cnVjdCBsaXN0X2hlYWQgbGlzdDsNCiB9Ow0KIA0KIHN0cnVjdCBz
-Y3Bfc29jX2RhdGEgew0KQEAgLTUxMyw2ICs1MTUsNzkgQEAgc3RhdGljIGludCBpbml0X2Jhc2lj
-X2Nsa3Moc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwgc3RydWN0IGNsayAqKmNsaywNCiAJ
-cmV0dXJuIDA7DQogfQ0KIA0KK3N0YXRpYyBpbnQgc2Nwc3lzX2dldF9kb21haW5faWQoc3RydWN0
-IGRldmljZV9ub2RlICpub2RlLCB1MzIgKmlkKQ0KK3sNCisJaW50IHJldDsNCisNCisJcmV0ID0g
-b2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgInJlZyIsIGlkKTsNCisJaWYgKHJldCkNCisJCXBy
-X2VycigiJXBPRm46IGZhaWxlZCB0byByZXRyaWV2ZSBkb21haW4gaWQsIHJldD0lZFxuIiwgbm9k
-ZSwgcmV0KTsNCisNCisJcmV0dXJuIHJldDsNCit9DQorDQorc3RhdGljIGludCBzY3BzeXNfZ2V0
-X2RvbWFpbihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3Qgc2NwICpzY3AsDQor
-CQkJc3RydWN0IGRldmljZV9ub2RlICpub2RlLCBjb25zdCBzdHJ1Y3Qgc2NwX2RvbWFpbl9kYXRh
-ICpkYXRhKQ0KK3sNCisJc3RydWN0IHNjcF9zdWJkb21haW4gKmRlcF9ub2RlOw0KKwlzdHJ1Y3Qg
-ZGV2aWNlX25vZGUgKnN1YjsNCisJdTMyIHBhcmVudF9pZCwgY2hpbGRfaWQ7DQorCWludCByZXQ7
-DQorDQorCXJldCA9IHNjcHN5c19nZXRfZG9tYWluX2lkKG5vZGUsICZwYXJlbnRfaWQpOw0KKwlp
-ZiAocmV0KQ0KKwkJcmV0dXJuIHJldDsNCisNCisJZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZShub2Rl
-LCBzdWIpIHsNCisJCXJldCA9IHNjcHN5c19nZXRfZG9tYWluX2lkKHN1YiwgJmNoaWxkX2lkKTsN
-CisJCWlmIChyZXQpDQorCQkJZ290byBvdXQ7DQorDQorCQlkZXBfbm9kZSA9IGRldm1fa3phbGxv
-YygmcGRldi0+ZGV2LCBzaXplb2YoKmRlcF9ub2RlKSwgR0ZQX0tFUk5FTCk7DQorCQlpZiAoIWRl
-cF9ub2RlKSB7DQorCQkJcmV0ID0gLUVOT01FTTsNCisJCQlnb3RvIG91dDsNCisJCX0NCisNCisJ
-CWRlcF9ub2RlLT5vcmlnaW4gPSBwYXJlbnRfaWQ7DQorCQlkZXBfbm9kZS0+c3ViZG9tYWluID0g
-Y2hpbGRfaWQ7DQorCQlsaXN0X2FkZCgmZGVwX25vZGUtPmxpc3QsICZzY3AtPmRlcF9saW5rcyk7
-DQorDQorCQlzY3BzeXNfZ2V0X2RvbWFpbihwZGV2LCBzY3AsIHN1YiwgZGF0YSk7DQorCX0NCisN
-CisJcmV0dXJuIDA7DQorDQorb3V0Og0KKwlvZl9ub2RlX3B1dChzdWIpOw0KKwlyZXR1cm4gcmV0
-Ow0KK30NCisNCitzdGF0aWMgaW50IHRyYXZlcnNlX3NjcChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2LCBzdHJ1Y3Qgc2NwICpzY3AsDQorCQkJY29uc3Qgc3RydWN0IHNjcF9kb21haW5fZGF0
-YSAqc2NwX2RvbWFpbl9kYXRhKQ0KK3sNCisJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRl
-djsNCisJc3RydWN0IGRldmljZV9ub2RlICpucCA9IGRldi0+b2Zfbm9kZTsNCisJc3RydWN0IGRl
-dmljZV9ub2RlICpzdWI7DQorCWludCByZXQ7DQorDQorCUlOSVRfTElTVF9IRUFEKCZzY3AtPmRl
-cF9saW5rcyk7DQorDQorCWZvcl9lYWNoX2F2YWlsYWJsZV9jaGlsZF9vZl9ub2RlKG5wLCBzdWIp
-IHsNCisJCXJldCA9IHNjcHN5c19nZXRfZG9tYWluKHBkZXYsIHNjcCwgc3ViLCBzY3BfZG9tYWlu
-X2RhdGEpOw0KKwkJaWYgKHJldCkgew0KKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0
-byBoYW5kbGUgbm9kZSAlcE9GbjogJWRcbiIsIHN1YiwgcmV0KTsNCisJCQlnb3RvIGVycjsNCisJ
-CX0NCisJfQ0KKw0KKwlyZXR1cm4gMDsNCisNCitlcnI6DQorCW9mX25vZGVfcHV0KHN1Yik7DQor
-CXJldHVybiByZXQ7DQorfQ0KKw0KIHN0YXRpYyBzdHJ1Y3Qgc2NwICppbml0X3NjcChzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KIAkJCWNvbnN0IHN0cnVjdCBzY3BfZG9tYWluX2RhdGEg
-KnNjcF9kb21haW5fZGF0YSwgaW50IG51bSwNCiAJCQljb25zdCBzdHJ1Y3Qgc2NwX2N0cmxfcmVn
-ICpzY3BfY3RybF9yZWcpDQpAQCAtNTgyLDYgKzY1NywxMCBAQCBzdGF0aWMgc3RydWN0IHNjcCAq
-aW5pdF9zY3Aoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCiANCiAJcGRfZGF0YS0+bnVt
-X2RvbWFpbnMgPSBudW07DQogDQorCXJldCA9IHRyYXZlcnNlX3NjcChwZGV2LCBzY3AsIHNjcF9k
-b21haW5fZGF0YSk7DQorCWlmIChyZXQpDQorCQlyZXR1cm4gRVJSX1BUUihyZXQpOw0KKw0KIAlm
-b3IgKGkgPSAwOyBpIDwgbnVtOyBpKyspIHsNCiAJCXN0cnVjdCBzY3BfZG9tYWluICpzY3BkID0g
-JnNjcC0+ZG9tYWluc1tpXTsNCiAJCXN0cnVjdCBnZW5lcmljX3BtX2RvbWFpbiAqZ2VucGQgPSAm
-c2NwZC0+Z2VucGQ7DQpAQCAtMTIwOCw3ICsxMjg3LDcgQEAgc3RhdGljIGludCBzY3BzeXNfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJY29uc3Qgc3RydWN0IHNjcF9zb2Nf
-ZGF0YSAqc29jOw0KIAlzdHJ1Y3Qgc2NwICpzY3A7DQogCXN0cnVjdCBnZW5wZF9vbmVjZWxsX2Rh
-dGEgKnBkX2RhdGE7DQotCWludCBpLCByZXQ7DQorCWludCBpLCByZXQgPSAwOw0KIA0KIAlzb2Mg
-PSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoJnBkZXYtPmRldik7DQogDQpAQCAtMTIyMCwxNSAr
-MTI5OSwyMyBAQCBzdGF0aWMgaW50IHNjcHN5c19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KIA0KIAlwZF9kYXRhID0gJnNjcC0+cGRfZGF0YTsNCiANCi0JZm9yIChpID0gMCwg
-c2QgPSBzb2MtPnN1YmRvbWFpbnM7IGkgPCBzb2MtPm51bV9zdWJkb21haW5zOyBpKyssIHNkKysp
-IHsNCi0JCXJldCA9IHBtX2dlbnBkX2FkZF9zdWJkb21haW4ocGRfZGF0YS0+ZG9tYWluc1tzZC0+
-b3JpZ2luXSwNCi0JCQkJCSAgICAgcGRfZGF0YS0+ZG9tYWluc1tzZC0+c3ViZG9tYWluXSk7DQot
-CQlpZiAocmV0ICYmIElTX0VOQUJMRUQoQ09ORklHX1BNKSkNCi0JCQlkZXZfZXJyKCZwZGV2LT5k
-ZXYsICJGYWlsZWQgdG8gYWRkIHN1YmRvbWFpbjogJWRcbiIsDQotCQkJCXJldCk7DQorCWlmIChz
-b2MtPnN1YmRvbWFpbnMgJiYgc29jLT5udW1fc3ViZG9tYWlucykgew0KKwkJZm9yIChpID0gMCwg
-c2QgPSBzb2MtPnN1YmRvbWFpbnM7IGkgPCBzb2MtPm51bV9zdWJkb21haW5zOyBpKyssIHNkKysp
-IHsNCisJCQlyZXQgPSBwbV9nZW5wZF9hZGRfc3ViZG9tYWluKHBkX2RhdGEtPmRvbWFpbnNbc2Qt
-Pm9yaWdpbl0sDQorCQkJCQkJICAgICBwZF9kYXRhLT5kb21haW5zW3NkLT5zdWJkb21haW5dKTsN
-CisJCQlpZiAocmV0ICYmIElTX0VOQUJMRUQoQ09ORklHX1BNKSkNCisJCQkJZGV2X2VycigmcGRl
-di0+ZGV2LCAiRmFpbGVkIHRvIGFkZCBzdWJkb21haW46ICVkXG4iLCByZXQpOw0KKwkJfQ0KKwl9
-IGVsc2Ugew0KKwkJbGlzdF9mb3JfZWFjaF9lbnRyeShzZCwgJnNjcC0+ZGVwX2xpbmtzLCBsaXN0
-KSB7DQorCQkJcmV0ID0gcG1fZ2VucGRfYWRkX3N1YmRvbWFpbihwZF9kYXRhLT5kb21haW5zW3Nk
-LT5vcmlnaW5dLA0KKwkJCQkJCSAgICAgcGRfZGF0YS0+ZG9tYWluc1tzZC0+c3ViZG9tYWluXSk7
-DQorCQkJaWYgKHJldCAmJiBJU19FTkFCTEVEKENPTkZJR19QTSkpDQorCQkJCWRldl9lcnIoJnBk
-ZXYtPmRldiwgIkZhaWxlZCB0byBhZGQgc3ViZG9tYWluOiAlZFxuIiwgcmV0KTsNCisJCX0NCiAJ
-fQ0KIA0KLQlyZXR1cm4gMDsNCisJcmV0dXJuIHJldDsNCiB9DQogDQogc3RhdGljIHN0cnVjdCBw
-bGF0Zm9ybV9kcml2ZXIgc2Nwc3lzX2RydiA9IHsNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   47ec5303d73ea344e84f46660fff693c57641386
+commit: b9d1e2e6265f5dc25e9f5dbfbde3e53d8a4958ac exfat: add Kconfig and Makefile
+date:   5 months ago
+compiler: ia64-linux-gcc (GCC) 9.3.0
 
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+
+cppcheck warnings: (new ones prefixed by >>)
+
+>> fs/exfat/namei.c:1297:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
+    ret = exfat_resolve_path(new_parent_inode, new_path, &newdir,
+        ^
+   fs/exfat/namei.c:1260:7: note: Variable 'ret' is reassigned a value before the old one has been used.
+     ret = -EIO;
+         ^
+   fs/exfat/namei.c:1297:6: note: Variable 'ret' is reassigned a value before the old one has been used.
+    ret = exfat_resolve_path(new_parent_inode, new_path, &newdir,
+        ^
+
+vim +/ret +1297 fs/exfat/namei.c
+
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1214  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1215  /* rename or move a old file into a new file */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1216  static int __exfat_rename(struct inode *old_parent_inode,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1217  		struct exfat_inode_info *ei, struct inode *new_parent_inode,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1218  		struct dentry *new_dentry)
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1219  {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1220  	int ret;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1221  	int dentry;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1222  	struct exfat_chain olddir, newdir;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1223  	struct exfat_chain *p_dir = NULL;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1224  	struct exfat_uni_name uni_name;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1225  	struct exfat_dentry *ep;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1226  	struct super_block *sb = old_parent_inode->i_sb;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1227  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1228  	const unsigned char *new_path = new_dentry->d_name.name;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1229  	struct inode *new_inode = new_dentry->d_inode;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1230  	int num_entries;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1231  	struct exfat_inode_info *new_ei = NULL;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1232  	unsigned int new_entry_type = TYPE_UNUSED;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1233  	int new_entry = 0;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1234  	struct buffer_head *old_bh, *new_bh = NULL;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1235  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1236  	/* check the validity of pointer parameters */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1237  	if (new_path == NULL || strlen(new_path) == 0)
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1238  		return -EINVAL;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1239  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1240  	if (ei->dir.dir == DIR_DELETED) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1241  		exfat_msg(sb, KERN_ERR,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1242  				"abnormal access to deleted source dentry");
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1243  		return -ENOENT;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1244  	}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1245  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1246  	exfat_update_parent_info(ei, old_parent_inode);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1247  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1248  	exfat_chain_dup(&olddir, &ei->dir);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1249  	dentry = ei->entry;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1250  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1251  	ep = exfat_get_dentry(sb, &olddir, dentry, &old_bh, NULL);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1252  	if (!ep) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1253  		ret = -EIO;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1254  		goto out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1255  	}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1256  	brelse(old_bh);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1257  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1258  	/* check whether new dir is existing directory and empty */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1259  	if (new_inode) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1260  		ret = -EIO;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1261  		new_ei = EXFAT_I(new_inode);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1262  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1263  		if (new_ei->dir.dir == DIR_DELETED) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1264  			exfat_msg(sb, KERN_ERR,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1265  				"abnormal access to deleted target dentry");
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1266  			goto out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1267  		}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1268  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1269  		exfat_update_parent_info(new_ei, new_parent_inode);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1270  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1271  		p_dir = &(new_ei->dir);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1272  		new_entry = new_ei->entry;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1273  		ep = exfat_get_dentry(sb, p_dir, new_entry, &new_bh, NULL);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1274  		if (!ep)
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1275  			goto out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1276  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1277  		new_entry_type = exfat_get_entry_type(ep);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1278  		brelse(new_bh);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1279  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1280  		/* if new_inode exists, update ei */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1281  		if (new_entry_type == TYPE_DIR) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1282  			struct exfat_chain new_clu;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1283  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1284  			new_clu.dir = new_ei->start_clu;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1285  			new_clu.size =
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1286  				EXFAT_B_TO_CLU_ROUND_UP(i_size_read(new_inode),
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1287  				sbi);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1288  			new_clu.flags = new_ei->flags;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1289  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1290  			ret = exfat_check_dir_empty(sb, &new_clu);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1291  			if (ret)
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1292  				goto out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1293  		}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1294  	}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1295  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1296  	/* check the validity of directory name in the given new pathname */
+5f2aa075070cf5 Namjae Jeon 2020-03-02 @1297  	ret = exfat_resolve_path(new_parent_inode, new_path, &newdir,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1298  			&uni_name);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1299  	if (ret)
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1300  		goto out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1301  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1302  	exfat_set_vol_flags(sb, VOL_DIRTY);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1303  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1304  	if (olddir.dir == newdir.dir)
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1305  		ret = exfat_rename_file(new_parent_inode, &olddir, dentry,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1306  				&uni_name, ei);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1307  	else
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1308  		ret = exfat_move_file(new_parent_inode, &olddir, dentry,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1309  				&newdir, &uni_name, ei);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1310  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1311  	if (!ret && new_inode) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1312  		/* delete entries of new_dir */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1313  		ep = exfat_get_dentry(sb, p_dir, new_entry, &new_bh, NULL);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1314  		if (!ep) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1315  			ret = -EIO;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1316  			goto del_out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1317  		}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1318  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1319  		num_entries = exfat_count_ext_entries(sb, p_dir, new_entry, ep);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1320  		if (num_entries < 0) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1321  			ret = -EIO;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1322  			goto del_out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1323  		}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1324  		brelse(new_bh);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1325  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1326  		if (exfat_remove_entries(new_inode, p_dir, new_entry, 0,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1327  				num_entries + 1)) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1328  			ret = -EIO;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1329  			goto del_out;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1330  		}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1331  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1332  		/* Free the clusters if new_inode is a dir(as if exfat_rmdir) */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1333  		if (new_entry_type == TYPE_DIR) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1334  			/* new_ei, new_clu_to_free */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1335  			struct exfat_chain new_clu_to_free;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1336  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1337  			exfat_chain_set(&new_clu_to_free, new_ei->start_clu,
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1338  				EXFAT_B_TO_CLU_ROUND_UP(i_size_read(new_inode),
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1339  				sbi), new_ei->flags);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1340  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1341  			if (exfat_free_cluster(new_inode, &new_clu_to_free)) {
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1342  				/* just set I/O error only */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1343  				ret = -EIO;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1344  			}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1345  
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1346  			i_size_write(new_inode, 0);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1347  			new_ei->start_clu = EXFAT_EOF_CLUSTER;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1348  			new_ei->flags = ALLOC_NO_FAT_CHAIN;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1349  		}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1350  del_out:
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1351  		/* Update new_inode ei
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1352  		 * Prevent syncing removed new_inode
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1353  		 * (new_ei is already initialized above code ("if (new_inode)")
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1354  		 */
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1355  		new_ei->dir.dir = DIR_DELETED;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1356  	}
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1357  	exfat_set_vol_flags(sb, VOL_CLEAN);
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1358  out:
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1359  	return ret;
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1360  }
+5f2aa075070cf5 Namjae Jeon 2020-03-02  1361  
+
+:::::: The code at line 1297 was first introduced by commit
+:::::: 5f2aa075070cf5b2e6aae011d5a3390408d7d913 exfat: add inode operations
+
+:::::: TO: Namjae Jeon <namjae.jeon@samsung.com>
+:::::: CC: Al Viro <viro@zeniv.linux.org.uk>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
