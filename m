@@ -2,476 +2,153 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3450C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9376C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E716D221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739364;
-	bh=gWYszA3rqYV5erGGQ6aQA0zIEaoB7n1mGCk9zgFoZXI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqBH2G5nZM+Qi44vET/TkNBeUyq70jViMGg0OMPiP9nZs/XCcmNbqu/damJ69mIKv
-	 IKXc5KB62flBo5n/EsiMLJdZYr6+Pv35E05dWXM/2cvoivOf6Y4T3RQoIIm/+HONmb
-	 k6qdeXqlHRGxVSQuSp5XZ2nTRv02HvEubriopfzY=
+	by mail.kernel.org (Postfix) with ESMTP id 28FB4221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyRZbQfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgHFSml (ORCPT
+        id S1729935AbgHFSmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728194AbgHFSV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:21:56 -0400
-Received: from localhost.localdomain (unknown [194.230.155.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C5322CBB;
-        Thu,  6 Aug 2020 18:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738071;
-        bh=gWYszA3rqYV5erGGQ6aQA0zIEaoB7n1mGCk9zgFoZXI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIR9gMTObfVKOk1mNw4+1PtKpiDvpZD872ty8wZ52lKCqk+nchkm9FWjkDoLRb9SX
-         7oL2+EA4FLv9a3eLDkmMfSGrvp10LYrRawaish4kA220msiXFBhp8ekOrFAnl1k20s
-         LCbmZGqoUOJNWT+pwqSMFKXeRUs1YZk9n6G0751c=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 01/41] ARM: s3c: Remove unneeded machine header includes
-Date:   Thu,  6 Aug 2020 20:20:18 +0200
-Message-Id: <20200806182059.2431-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
-References: <20200806181932.2253-1-krzk@kernel.org>
+        Thu, 6 Aug 2020 14:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbgHFSUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:20:01 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B82DC0617A2;
+        Thu,  6 Aug 2020 11:18:39 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id b30so26611445lfj.12;
+        Thu, 06 Aug 2020 11:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zyDgQ58yfMwWuCC3duccdkOno3vWVcRNh6nKRXhidek=;
+        b=MyRZbQfGm1TKcB+zBssqDMtxcidwjYO7hE4TlnATgTe0SqNa0BctoPeiVmFPhWxaxw
+         9HgsPi+ytgS6C+dLS5cbg0t0zGUI60l7w7qf/X76752INI/nDLHSPBvwvEwIxHkg72yr
+         t1fYK9Exm0UHawEzsVglsQvCFsKhh/WbzOc/0g23Wo7JMNB/zosNweCHyQ2LegAovw05
+         WJ3fpKjmLSt7TgLgMRKQU3ArR+P/c9OM3aRMi98LMDd/HJX3vg5qP+/AzIuUBlYSNOkA
+         oQyNWVqpRJlY7P35stTlbYDVn/6G4U4AAhKrSI/lKFSErmYn1AgtYwJ6iTmw+k9jSvsP
+         9WdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zyDgQ58yfMwWuCC3duccdkOno3vWVcRNh6nKRXhidek=;
+        b=FhyP0Nfzr24jUSUFQ8fqTltCvBNEe8LZsNSLvoewUNY6us5ZV+uc4+4yoFMEKQNjDB
+         9GljJU84S5p+pAUZBWt5bJnl6TebTu+TgcRXHxhWPdVvJz/R6wtAvBRFwBk5J3IGWGy4
+         T533yTqL5lkDKBneHhlMwgd0bndgCKkCHWEKNs5JOQSUqPR6/LJuGPsZmW+vMEi3HnDm
+         RZwxmocv6A0sMC7sc8+VmDQLVlc+k2pMQ2+3Iz93vUWvoJOcdyoklMGBZxJRdizQ6vSn
+         MoqA3zqBJja5TNDX1OkIPuw052LzSe8VEUx+y488bnJuMIekgleSIceyokd43z+xOvLJ
+         +b3A==
+X-Gm-Message-State: AOAM530qLF2xi/+NlrRlTq0Pd+RyCpcAKc0S3CbFxTui5x4WomIuD8WU
+        VUvazRwHhNA1LM+T2k8PBu1D1lEA
+X-Google-Smtp-Source: ABdhPJwsXrrzhKIHd4U+0mxTpUSDS+7zShPN2F0Yc4n/A8sv96yqeEPFnojDg1v3UbYpBfNORZD/4A==
+X-Received: by 2002:ac2:5e2c:: with SMTP id o12mr4378022lfg.71.1596737916355;
+        Thu, 06 Aug 2020 11:18:36 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id 1sm2751561ljr.6.2020.08.06.11.18.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 11:18:35 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
+ <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
+ <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
+ <6ff57c38-9847-42b0-643b-0d167c13779f@gmail.com>
+ <c6ef5e77-2b0a-1712-ca58-dbd8d232e1f1@nvidia.com>
+ <ed79b201-85ba-f725-c5fa-fcde0761bc3d@nvidia.com>
+ <26ed2841-db5d-aeb0-11c7-cbe2ddd1d76b@gmail.com>
+ <eddfdaf0-818a-c4dd-e3b4-4d432af56982@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e965076a-dc31-5774-dd27-98c992331bd2@gmail.com>
+Date:   Thu, 6 Aug 2020 21:18:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <eddfdaf0-818a-c4dd-e3b4-4d432af56982@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all units use the contents of mach/hardware.h and
-mach/dma.h.  Remove these includes when not needed.
+06.08.2020 21:07, Sowjanya Komatineni пишет:
+> 
+> On 8/6/20 11:01 AM, Dmitry Osipenko wrote:
+>> 06.08.2020 20:52, Sowjanya Komatineni пишет:
+>> ...
+>>> Right mutex_unlock should happen at end of finish_calibration.
+>>>
+>>> With keeping mutex locked in start, we dont have to check for active to
+>>> be 0 to issue start as mutex will keep it locked and other pads
+>>> calibration can only go thru when current one is done.
+>>>
+>>> So instead of below sequence, its simpler to do this way?
+>>>
+>>> start_calibration()
+>>>
+>>> - mutex_lock
+>>>
+>>> - wait for 72uS after start
+>>>
+>>> finish_calibration()
+>>>
+>>> - keep check for ACTIVE = 0 and DONE = 1
+>> I think only the DONE bits which correspond to the mipi_device->pads
+>> bitmask should be awaited.
+> 
+> As next START can't be triggered when auto cal is ACTIVE, we should keep
+> this in finish.
+> 
+> As we do mutex_unlock only at end of finish, other pads calibrations
+> dont go thru till the one in process is finished.
+> 
+> So in this case ACTIVE applies to current selected pads that are under
+> calibration.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/mach-s3c24xx/bast-irq.c        | 1 -
- arch/arm/mach-s3c24xx/common-smdk.c     | 1 -
- arch/arm/mach-s3c24xx/h1940-bluetooth.c | 1 -
- arch/arm/mach-s3c24xx/mach-amlm5900.c   | 1 -
- arch/arm/mach-s3c24xx/mach-anubis.c     | 1 -
- arch/arm/mach-s3c24xx/mach-at2440evb.c  | 1 -
- arch/arm/mach-s3c24xx/mach-bast.c       | 1 -
- arch/arm/mach-s3c24xx/mach-gta02.c      | 1 -
- arch/arm/mach-s3c24xx/mach-mini2440.c   | 1 -
- arch/arm/mach-s3c24xx/mach-nexcoder.c   | 1 -
- arch/arm/mach-s3c24xx/mach-osiris.c     | 1 -
- arch/arm/mach-s3c24xx/mach-otom.c       | 1 -
- arch/arm/mach-s3c24xx/mach-qt2410.c     | 1 -
- arch/arm/mach-s3c24xx/mach-rx3715.c     | 1 -
- arch/arm/mach-s3c24xx/mach-smdk2410.c   | 1 -
- arch/arm/mach-s3c24xx/mach-smdk2440.c   | 1 -
- arch/arm/mach-s3c24xx/mach-smdk2443.c   | 1 -
- arch/arm/mach-s3c24xx/mach-tct_hammer.c | 1 -
- arch/arm/mach-s3c24xx/mach-vr1000.c     | 1 -
- arch/arm/mach-s3c24xx/mach-vstms.c      | 1 -
- arch/arm/mach-s3c24xx/pm-s3c2410.c      | 1 -
- arch/arm/mach-s3c24xx/pm-s3c2412.c      | 1 -
- arch/arm/mach-s3c24xx/s3c2440.c         | 1 -
- arch/arm/mach-s3c24xx/s3c2442.c         | 1 -
- arch/arm/mach-s3c24xx/setup-i2c.c       | 1 -
- arch/arm/mach-s3c24xx/setup-ts.c        | 1 -
- arch/arm/mach-s3c24xx/simtec-audio.c    | 1 -
- arch/arm/mach-s3c24xx/simtec-pm.c       | 2 --
- arch/arm/mach-s3c24xx/simtec-usb.c      | 1 -
- arch/arm/mach-s3c64xx/dev-audio.c       | 1 -
- arch/arm/plat-samsung/devs.c            | 1 -
- 31 files changed, 32 deletions(-)
+Should be better to check only the relevant bits in order to catch bugs,
+otherwise you may get a DONE status from the irrelevant pads.
 
-diff --git a/arch/arm/mach-s3c24xx/bast-irq.c b/arch/arm/mach-s3c24xx/bast-irq.c
-index 03728058d58d..03209fefa5db 100644
---- a/arch/arm/mach-s3c24xx/bast-irq.c
-+++ b/arch/arm/mach-s3c24xx/bast-irq.c
-@@ -15,7 +15,6 @@
- #include <asm/mach-types.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <mach/regs-irq.h>
- 
- #include "bast.h"
-diff --git a/arch/arm/mach-s3c24xx/common-smdk.c b/arch/arm/mach-s3c24xx/common-smdk.c
-index 75064dfaceb1..c0c176651f96 100644
---- a/arch/arm/mach-s3c24xx/common-smdk.c
-+++ b/arch/arm/mach-s3c24xx/common-smdk.c
-@@ -29,7 +29,6 @@
- #include <asm/mach/irq.h>
- 
- #include <asm/mach-types.h>
--#include <mach/hardware.h>
- #include <asm/irq.h>
- 
- #include <mach/regs-gpio.h>
-diff --git a/arch/arm/mach-s3c24xx/h1940-bluetooth.c b/arch/arm/mach-s3c24xx/h1940-bluetooth.c
-index 186b5321658e..8533e7521b50 100644
---- a/arch/arm/mach-s3c24xx/h1940-bluetooth.c
-+++ b/arch/arm/mach-s3c24xx/h1940-bluetooth.c
-@@ -14,7 +14,6 @@
- #include <linux/rfkill.h>
- 
- #include <plat/gpio-cfg.h>
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/gpio-samsung.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-amlm5900.c b/arch/arm/mach-s3c24xx/mach-amlm5900.c
-index 623c320f8253..6324e608dcda 100644
---- a/arch/arm/mach-s3c24xx/mach-amlm5900.c
-+++ b/arch/arm/mach-s3c24xx/mach-amlm5900.c
-@@ -26,7 +26,6 @@
- #include <asm/mach/irq.h>
- #include <asm/mach/flash.h>
- 
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- #include <mach/fb.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-anubis.c b/arch/arm/mach-s3c24xx/mach-anubis.c
-index 44338dfb5470..753a314f4493 100644
---- a/arch/arm/mach-s3c24xx/mach-anubis.c
-+++ b/arch/arm/mach-s3c24xx/mach-anubis.c
-@@ -24,7 +24,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-at2440evb.c b/arch/arm/mach-s3c24xx/mach-at2440evb.c
-index 02ac2e240bd7..6da4dcfd5c0f 100644
---- a/arch/arm/mach-s3c24xx/mach-at2440evb.c
-+++ b/arch/arm/mach-s3c24xx/mach-at2440evb.c
-@@ -24,7 +24,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <mach/fb.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-bast.c b/arch/arm/mach-s3c24xx/mach-bast.c
-index cd67d00a46e4..9eef0f80175f 100644
---- a/arch/arm/mach-s3c24xx/mach-bast.c
-+++ b/arch/arm/mach-s3c24xx/mach-bast.c
-@@ -41,7 +41,6 @@
- #include <asm/mach-types.h>
- 
- #include <mach/fb.h>
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/regs-lcd.h>
- #include <mach/gpio-samsung.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-gta02.c b/arch/arm/mach-s3c24xx/mach-gta02.c
-index 81d94a75d1c2..346a158f9960 100644
---- a/arch/arm/mach-s3c24xx/mach-gta02.c
-+++ b/arch/arm/mach-s3c24xx/mach-gta02.c
-@@ -58,7 +58,6 @@
- #include <linux/platform_data/usb-s3c2410_udc.h>
- 
- #include <mach/fb.h>
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/regs-irq.h>
- #include <mach/gpio-samsung.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-mini2440.c b/arch/arm/mach-s3c24xx/mach-mini2440.c
-index 936f7e3b7213..5bfe9ef62716 100644
---- a/arch/arm/mach-s3c24xx/mach-mini2440.c
-+++ b/arch/arm/mach-s3c24xx/mach-mini2440.c
-@@ -30,7 +30,6 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/hardware.h>
- #include <mach/fb.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-nexcoder.c b/arch/arm/mach-s3c24xx/mach-nexcoder.c
-index 92ecc15c4320..5385437ef464 100644
---- a/arch/arm/mach-s3c24xx/mach-nexcoder.c
-+++ b/arch/arm/mach-s3c24xx/mach-nexcoder.c
-@@ -28,7 +28,6 @@
- #include <asm/mach/irq.h>
- 
- #include <asm/setup.h>
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-osiris.c b/arch/arm/mach-s3c24xx/mach-osiris.c
-index ed03928dffe4..03595144126b 100644
---- a/arch/arm/mach-s3c24xx/mach-osiris.c
-+++ b/arch/arm/mach-s3c24xx/mach-osiris.c
-@@ -41,7 +41,6 @@
- #include <plat/devs.h>
- #include <plat/gpio-cfg.h>
- 
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/regs-lcd.h>
- #include <mach/gpio-samsung.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-otom.c b/arch/arm/mach-s3c24xx/mach-otom.c
-index d65c65ca1a38..e7eec5ccddb3 100644
---- a/arch/arm/mach-s3c24xx/mach-otom.c
-+++ b/arch/arm/mach-s3c24xx/mach-otom.c
-@@ -22,7 +22,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- 
- #include <plat/cpu.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-qt2410.c b/arch/arm/mach-s3c24xx/mach-qt2410.c
-index 2f3c8b31a08a..4ac3d0531992 100644
---- a/arch/arm/mach-s3c24xx/mach-qt2410.c
-+++ b/arch/arm/mach-s3c24xx/mach-qt2410.c
-@@ -28,7 +28,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-rx3715.c b/arch/arm/mach-s3c24xx/mach-rx3715.c
-index 740865ef8e23..617392de01ac 100644
---- a/arch/arm/mach-s3c24xx/mach-rx3715.c
-+++ b/arch/arm/mach-s3c24xx/mach-rx3715.c
-@@ -35,7 +35,6 @@
- #include <asm/mach-types.h>
- 
- #include <mach/fb.h>
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/regs-lcd.h>
- #include <mach/gpio-samsung.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-smdk2410.c b/arch/arm/mach-s3c24xx/mach-smdk2410.c
-index 1c2f20ab0520..1d4d8735f283 100644
---- a/arch/arm/mach-s3c24xx/mach-smdk2410.c
-+++ b/arch/arm/mach-s3c24xx/mach-smdk2410.c
-@@ -24,7 +24,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-smdk2440.c b/arch/arm/mach-s3c24xx/mach-smdk2440.c
-index ebc184cd9aba..bd6a35105518 100644
---- a/arch/arm/mach-s3c24xx/mach-smdk2440.c
-+++ b/arch/arm/mach-s3c24xx/mach-smdk2440.c
-@@ -23,7 +23,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-smdk2443.c b/arch/arm/mach-s3c24xx/mach-smdk2443.c
-index dcc4e446938a..8a1f2580c6c7 100644
---- a/arch/arm/mach-s3c24xx/mach-smdk2443.c
-+++ b/arch/arm/mach-s3c24xx/mach-smdk2443.c
-@@ -22,7 +22,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-tct_hammer.c b/arch/arm/mach-s3c24xx/mach-tct_hammer.c
-index e334ddf0832f..fd51a098e443 100644
---- a/arch/arm/mach-s3c24xx/mach-tct_hammer.c
-+++ b/arch/arm/mach-s3c24xx/mach-tct_hammer.c
-@@ -24,7 +24,6 @@
- #include <asm/mach/irq.h>
- #include <asm/mach/flash.h>
- 
--#include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-vr1000.c b/arch/arm/mach-s3c24xx/mach-vr1000.c
-index 2f00217fa44e..638e53ec1e4f 100644
---- a/arch/arm/mach-s3c24xx/mach-vr1000.c
-+++ b/arch/arm/mach-s3c24xx/mach-vr1000.c
-@@ -35,7 +35,6 @@
- #include <linux/platform_data/i2c-s3c2410.h>
- #include <linux/platform_data/asoc-s3c24xx_simtec.h>
- 
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/gpio-samsung.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/mach-vstms.c b/arch/arm/mach-s3c24xx/mach-vstms.c
-index 9f479e28b8fd..f0acbaa6dfd6 100644
---- a/arch/arm/mach-s3c24xx/mach-vstms.c
-+++ b/arch/arm/mach-s3c24xx/mach-vstms.c
-@@ -24,7 +24,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <asm/setup.h>
- #include <asm/irq.h>
- #include <asm/mach-types.h>
-diff --git a/arch/arm/mach-s3c24xx/pm-s3c2410.c b/arch/arm/mach-s3c24xx/pm-s3c2410.c
-index 2d8ea701380a..ffd0d6c2324f 100644
---- a/arch/arm/mach-s3c24xx/pm-s3c2410.c
-+++ b/arch/arm/mach-s3c24xx/pm-s3c2410.c
-@@ -16,7 +16,6 @@
- 
- #include <asm/mach-types.h>
- 
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/gpio-samsung.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/pm-s3c2412.c b/arch/arm/mach-s3c24xx/pm-s3c2412.c
-index 2dfdaab0aa1f..b1d0ad07301b 100644
---- a/arch/arm/mach-s3c24xx/pm-s3c2412.c
-+++ b/arch/arm/mach-s3c24xx/pm-s3c2412.c
-@@ -19,7 +19,6 @@
- #include <asm/cacheflush.h>
- #include <asm/irq.h>
- 
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- 
- #include <plat/cpu.h>
-diff --git a/arch/arm/mach-s3c24xx/s3c2440.c b/arch/arm/mach-s3c24xx/s3c2440.c
-index 451d9851b0a7..bbe1f9cf5cf0 100644
---- a/arch/arm/mach-s3c24xx/s3c2440.c
-+++ b/arch/arm/mach-s3c24xx/s3c2440.c
-@@ -23,7 +23,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <mach/gpio-samsung.h>
- #include <asm/irq.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/s3c2442.c b/arch/arm/mach-s3c24xx/s3c2442.c
-index 432d68325c9d..5b8751506d02 100644
---- a/arch/arm/mach-s3c24xx/s3c2442.c
-+++ b/arch/arm/mach-s3c24xx/s3c2442.c
-@@ -21,7 +21,6 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- 
--#include <mach/hardware.h>
- #include <mach/gpio-samsung.h>
- #include <linux/atomic.h>
- #include <asm/irq.h>
-diff --git a/arch/arm/mach-s3c24xx/setup-i2c.c b/arch/arm/mach-s3c24xx/setup-i2c.c
-index 1a01d44b5910..1be5372e0261 100644
---- a/arch/arm/mach-s3c24xx/setup-i2c.c
-+++ b/arch/arm/mach-s3c24xx/setup-i2c.c
-@@ -12,7 +12,6 @@ struct platform_device;
- 
- #include <plat/gpio-cfg.h>
- #include <linux/platform_data/i2c-s3c2410.h>
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- #include <mach/gpio-samsung.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/setup-ts.c b/arch/arm/mach-s3c24xx/setup-ts.c
-index 272d65400b71..65ec67e0759f 100644
---- a/arch/arm/mach-s3c24xx/setup-ts.c
-+++ b/arch/arm/mach-s3c24xx/setup-ts.c
-@@ -13,7 +13,6 @@ struct platform_device; /* don't need the contents */
- #include <linux/platform_data/touchscreen-s3c2410.h>
- 
- #include <plat/gpio-cfg.h>
--#include <mach/hardware.h>
- #include <mach/gpio-samsung.h>
- 
- /**
-diff --git a/arch/arm/mach-s3c24xx/simtec-audio.c b/arch/arm/mach-s3c24xx/simtec-audio.c
-index 12e17f82dae3..cfe78bf8cc9b 100644
---- a/arch/arm/mach-s3c24xx/simtec-audio.c
-+++ b/arch/arm/mach-s3c24xx/simtec-audio.c
-@@ -12,7 +12,6 @@
- #include <linux/device.h>
- #include <linux/io.h>
- 
--#include <mach/hardware.h>
- #include <mach/regs-gpio.h>
- 
- #include <linux/platform_data/asoc-s3c24xx_simtec.h>
-diff --git a/arch/arm/mach-s3c24xx/simtec-pm.c b/arch/arm/mach-s3c24xx/simtec-pm.c
-index c19074d81389..bc939dfce488 100644
---- a/arch/arm/mach-s3c24xx/simtec-pm.c
-+++ b/arch/arm/mach-s3c24xx/simtec-pm.c
-@@ -19,8 +19,6 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/hardware.h>
--
- #include <mach/map.h>
- #include <mach/regs-gpio.h>
- 
-diff --git a/arch/arm/mach-s3c24xx/simtec-usb.c b/arch/arm/mach-s3c24xx/simtec-usb.c
-index dc1016ffed94..3488988316a8 100644
---- a/arch/arm/mach-s3c24xx/simtec-usb.c
-+++ b/arch/arm/mach-s3c24xx/simtec-usb.c
-@@ -23,7 +23,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/hardware.h>
- #include <mach/gpio-samsung.h>
- #include <asm/irq.h>
- 
-diff --git a/arch/arm/mach-s3c64xx/dev-audio.c b/arch/arm/mach-s3c64xx/dev-audio.c
-index e3c49b5d1355..1d3124db6afc 100644
---- a/arch/arm/mach-s3c64xx/dev-audio.c
-+++ b/arch/arm/mach-s3c64xx/dev-audio.c
-@@ -12,7 +12,6 @@
- 
- #include <mach/irqs.h>
- #include <mach/map.h>
--#include <mach/dma.h>
- 
- #include <plat/devs.h>
- #include <linux/platform_data/asoc-s3c.h>
-diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-index 089a17687104..2ed3ef604a25 100644
---- a/arch/arm/plat-samsung/devs.c
-+++ b/arch/arm/plat-samsung/devs.c
-@@ -37,7 +37,6 @@
- #include <asm/mach/map.h>
- #include <asm/mach/irq.h>
- 
--#include <mach/dma.h>
- #include <mach/irqs.h>
- #include <mach/map.h>
- 
--- 
-2.17.1
+>>> - mutex_unlock()
+>> Perhaps the start_calibration() also needs to be changed to not touch
+>> the MIPI_CAL_CONFIG bits of the unrelated pads?
+> Driver already takes care of programming corresponding pads config only.
 
+It writes 0 to the config of the unrelated pads, which probably isn't
+nice if some pads use periodic auto-calibration.
+
+https://elixir.bootlin.com/linux/v5.8/source/drivers/gpu/host1x/mipi.c#L350
+
+Although looks like auto-calibration isn't supported by the current driver.
