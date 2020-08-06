@@ -2,97 +2,128 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67666C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A8E206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="wi4dRPNx"
+	by mail.kernel.org (Postfix) with ESMTP id 21B4F206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgHFRgO (ORCPT
+        id S1729679AbgHFRgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50414 "EHLO
+        Thu, 6 Aug 2020 13:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730412AbgHFRfY (ORCPT
+        with ESMTP id S1730411AbgHFRfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:35:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3559DC008698
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:16:37 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so8168615pgi.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lkmeDFCb+vAIp5A4XwAMAJW588/NOgnU33kU5Ds2q8U=;
-        b=wi4dRPNxYEFgOvGpsjjRxtDn2I9IamqHuFJzrb9/BuBRChg/enUxUB6jKiVJyf6FSn
-         OEQMb2RXR2Ht+C6Ju/CpXw+3C8IXjLBhGdgnDRc+0mD42UF2fgmfGBI+NDEQDfVS+FPg
-         8Yte0Alz1AaaMd1lh6L2ptLcnhrBzWalCQR42JDJeAyQD1H9NJDT0b18q5zQqirTk5sw
-         MQTa65RVxamAwTEOlvLR1qATaDfFMPrdnpkmrZ75l2JmkJ2Zy9MPxE1hZyGlCwG5lUWc
-         dMIBO4mmLkijKg2CX5kvhARvLNuj4R+a6FF2AhYbKN6g85KDBnPw2HmOoO1VsmzJJPBe
-         6lpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lkmeDFCb+vAIp5A4XwAMAJW588/NOgnU33kU5Ds2q8U=;
-        b=oPzGrZc8I2FvFWNUw3Vpv8Qn+G8hHlMu7wIJudj2mkscblt7Nn50GJaBn6w+/meHGn
-         +1kSHbFzEpUr1YB3uTYqceRAfOd9E8qnLqKdnPjBIY8VTG2HDDaq/gQ++gkXYLd2R0co
-         71v519fZ7rojepVX8cnEim4E4evE4jbIJ6rDqkP7VRV/V9WfYU3VG+JNnB1O9utiMQuh
-         LCgM5qBIp5f0mheutLK++h1p4Nr7ynxbI0Ul4BzYQOKBx0PZhRsJPMHGo6JgQiNmus6R
-         XGJoNQH26NPJw+qEPX6cdVUWlfPIMQePNXw67kiBdv9zWzIAUXpy6uUsCgbAc32igEBy
-         +VKg==
-X-Gm-Message-State: AOAM532/cOIlN0NasApgR8X8M30ceGVWveaYquxtccVRD3hj/G4aep4i
-        2YMKqCb3BtHwH1FmdjMsjPJBrwdiP0Q=
-X-Google-Smtp-Source: ABdhPJw12jZ3DwVtFWJem2DsB0Vuvxs5W1jsJdh1xkbPJ6eXu/HRB7XOi58ujieN7nBfCOicKddtyw==
-X-Received: by 2002:a63:fd41:: with SMTP id m1mr1061769pgj.12.1596726996234;
-        Thu, 06 Aug 2020 08:16:36 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id b15sm7241610pjo.48.2020.08.06.08.16.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 08:16:35 -0700 (PDT)
-Subject: Re: [PATCH] blkcg: add plugging support for punt bio
-To:     Xianting Tian <xianting_tian@126.com>, tj@kernel.org
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596722082-31817-1-git-send-email-xianting_tian@126.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8f84e1fe-9fa5-b7e7-1f2f-b0c4a40614e2@kernel.dk>
-Date:   Thu, 6 Aug 2020 09:16:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DB1C0086A1;
+        Thu,  6 Aug 2020 08:18:58 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id A216129959B
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 08/14] media: uapi: h264: Drop SLICE_PARAMS 'size' field
+Date:   Thu,  6 Aug 2020 12:13:04 -0300
+Message-Id: <20200806151310.98624-9-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200806151310.98624-1-ezequiel@collabora.com>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <1596722082-31817-1-git-send-email-xianting_tian@126.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/20 7:54 AM, Xianting Tian wrote:
-> Try to merge continuous bio to current task's plug fisrt.
+The SLICE_PARAMS control is intended for slice-based
+devices. In this mode, the OUTPUT buffer contains
+a single slice, and so the buffer's plane payload size
+can be used to query the slice size.
 
-The patch looks fine to me, but I'd really like to see a bit more
-changelog here. The commit message should explain why the change
-is made, rather it's a very brief explanation of what it does.
+To reduce the API surface drop the size from the
+SLICE_PARAMS control.
 
-If the bio list is contiguous, then we do the plugging to improve
-merging at the lower level. You probably ran into a case where
-you saw sub-optimal merging? And now the performance is better
-with the patch? How much?
+A follow-up change will remove other members in SLICE_PARAMS
+so we don't need to add padding fields here.
 
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 ---
+ drivers/staging/media/sunxi/cedrus/cedrus_h264.c          | 7 +++----
+ include/media/h264-ctrls.h                                | 3 ---
+ 3 files changed, 3 insertions(+), 10 deletions(-)
 
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index 427fc5727ec0..fff74b7bf32a 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -1760,9 +1760,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+     :stub-columns: 0
+     :widths:       1 1 2
+ 
+-    * - __u32
+-      - ``size``
+-      -
+     * - __u32
+       - ``start_byte_offset``
+         Offset (in bytes) from the beginning of the OUTPUT buffer to the start
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+index a9ba78b15907..8b6f05aadbe8 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+@@ -324,17 +324,16 @@ static void cedrus_set_params(struct cedrus_ctx *ctx,
+ 	struct vb2_buffer *src_buf = &run->src->vb2_buf;
+ 	struct cedrus_dev *dev = ctx->dev;
+ 	dma_addr_t src_buf_addr;
+-	u32 len = slice->size * 8;
++	size_t slice_bytes = vb2_get_plane_payload(src_buf, 0);
+ 	unsigned int pic_width_in_mbs;
+ 	bool mbaff_pic;
+ 	u32 reg;
+ 
+-	cedrus_write(dev, VE_H264_VLD_LEN, len);
++	cedrus_write(dev, VE_H264_VLD_LEN, slice_bytes * 8);
+ 	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
+ 
+ 	src_buf_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
+-	cedrus_write(dev, VE_H264_VLD_END,
+-		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
++	cedrus_write(dev, VE_H264_VLD_END, src_buf_addr + slice_bytes);
+ 	cedrus_write(dev, VE_H264_VLD_ADDR,
+ 		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
+ 		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
+diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+index 4f05ee265997..f74736fcfa00 100644
+--- a/include/media/h264-ctrls.h
++++ b/include/media/h264-ctrls.h
+@@ -158,9 +158,6 @@ struct v4l2_h264_reference {
+ };
+ 
+ struct v4l2_ctrl_h264_slice_params {
+-	/* Size in bytes, including header */
+-	__u32 size;
+-
+ 	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
+ 	__u32 start_byte_offset;
+ 
 -- 
-Jens Axboe
+2.27.0
 
