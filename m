@@ -2,99 +2,93 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0001CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBD223120
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:21:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JpkurE4T"
+	by mail.kernel.org (Postfix) with ESMTP id 5D24323119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgHFRVM (ORCPT
+        id S1730326AbgHFRVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:21:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53400 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729376AbgHFRVF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:21:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596734464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z0yMbsT7pcgi1iAHyYcod+CvrElFV6deSSG6mOjxpA8=;
-        b=JpkurE4TQ0HhBbugzOI7UcoukIohiO+2Q5pZdlZta5wGBQh2pLUmIxq935ZGVMRDOU724r
-        ucCGYCiLwevzBgTcx3OoYOAhWyEp4urAQQBfXgdMC+HUyEiw9BIFqhjKmfxoy6b4WXPCq7
-        gesZp62tf4JugFPJPFt1yEBtsQy+A7I=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-UXY6awtINe2hI5AmW3Xsdw-1; Thu, 06 Aug 2020 07:39:12 -0400
-X-MC-Unique: UXY6awtINe2hI5AmW3Xsdw-1
-Received: by mail-ej1-f72.google.com with SMTP id lg2so13622407ejb.23
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 04:39:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=z0yMbsT7pcgi1iAHyYcod+CvrElFV6deSSG6mOjxpA8=;
-        b=QNqNJkPyFAAc+YLamO7ydEFLRpENZjOJbFGCYyn0/+i077yzpdg8+MOgV2VOO7yX1R
-         /RzKbvFwmI05cpjGeLc73sbSCWsQDVsMnDuiPW70ZueTn4ulSOk4kJZOM5+n5Oo5r7fJ
-         MayOJOc2MO3REePgQLjEFEkgwgHACU4G75UFtiY501YbSW8RvZYsD/5igTtkFfWyip9G
-         KTkZEazA/wjogoZ5+81VNCNtVI656ba3/OFqtbOh6GGRjNZmLpT2m+oKf2ipEr/E7R+X
-         TxrhIUWFqy2K/4dZHZ/kCUpzgCYLNmCM1JPfUpgbERFC7FMfr9wOEUw/p7dtWdUPaM/N
-         2CLg==
-X-Gm-Message-State: AOAM530a1OQ34t/1GErgOkR+rb6HDcAnFt7XIsA5EbYde+cPpykuMkIk
-        02OqlrjjXjkaavNFCHRT6ZKRd25bk5BQkNctk3MwjFGtuuGMlTr6FJ/S+YjQ0DbeY1roTk9Much
-        DtOtKjakPjxM6jXGmD1dGITaN
-X-Received: by 2002:a50:d485:: with SMTP id s5mr3707037edi.285.1596713951113;
-        Thu, 06 Aug 2020 04:39:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw9gpH7Y4wZjbEShVJ7bFDHbXcr/x4vdBu+Kk8uS1Zn8NzRbVW/Adp0kk2I0m9EFJ/FFoNX6Q==
-X-Received: by 2002:a50:d485:: with SMTP id s5mr3707021edi.285.1596713950936;
-        Thu, 06 Aug 2020 04:39:10 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id w7sm3521262ejb.3.2020.08.06.04.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 04:39:10 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
-In-Reply-To: <20200806055008-mutt-send-email-mst@kernel.org>
-References: <20200728143741.2718593-1-vkuznets@redhat.com> <20200805201851-mutt-send-email-mst@kernel.org> <873650p1vo.fsf@vitty.brq.redhat.com> <20200806055008-mutt-send-email-mst@kernel.org>
-Date:   Thu, 06 Aug 2020 13:39:09 +0200
-Message-ID: <87wo2cngv6.fsf@vitty.brq.redhat.com>
+        Thu, 6 Aug 2020 13:21:22 -0400
+Received: from mga02.intel.com ([134.134.136.20]:15606 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730434AbgHFRRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:17:05 -0400
+IronPort-SDR: /slNVu9mYoXyp+zWgpWBcOmMfwLN2bjumDruDhHfEioSXgbgcKwHtfqwHThQmKhIoAdhY72Xjx
+ S3SpCwoDSr7A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="140662224"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="140662224"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 05:21:38 -0700
+IronPort-SDR: Qwvu0VK5iroQvkARLssUhiiV4FgMFwJQ6rsD01xVsy79+MlsNigcuySyBTMRj670mHi4IFu/z+
+ uZm712bkEdSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="493647059"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2020 05:21:36 -0700
+Subject: Re: [PATCH] mmc: sdhci-pci-o2micro: fix spelling mistake "unsupport"
+ -> "unsupported"
+To:     Colin King <colin.king@canonical.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "ernest.zhang" <ernest.zhang@bayhubtech.com>
+References: <20200806115059.59241-1-colin.king@canonical.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <016404fc-fce8-20f5-da6c-1b7ea936cf5a@intel.com>
+Date:   Thu, 6 Aug 2020 15:21:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200806115059.59241-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Michael S. Tsirkin" <mst@redhat.com> writes:
++ code author ernest.zhang <ernest.zhang@bayhubtech.com>
 
-> About the feature bit, I am not sure why it's really needed. A single
-> mmio access is cheaper than two io accesses anyway, right? So it makes
-> sense for a kvm guest whether host has this feature or not.
-> We need to be careful and limit to a specific QEMU implementation
-> to avoid tripping up bugs, but it seems more appropriate to
-> check it using pci host IDs.
+On 6/08/20 2:50 pm, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a pr_info message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index fa76748d8929..4eca8d2d0599 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -469,7 +469,7 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_chip *chip,
+>  
+>  	ret = pci_find_capability(chip->pdev, PCI_CAP_ID_MSI);
+>  	if (!ret) {
+> -		pr_info("%s: unsupport msi, use INTx irq\n",
+> +		pr_info("%s: unsupported msi, use INTx irq\n",
 
-Right, it's just that "running on KVM" is too coarse grained, we just
-need a way to somehow distinguish between "known/good" and
-"unknown/buggy" configurations.
+I think the meaning is more like:
 
--- 
-Vitaly
+	MSI is not supported, using INTx IRQ
+
+>  			mmc_hostname(host->mmc));
+>  		return;
+>  	}
+> 
 
