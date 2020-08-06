@@ -4,271 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B87C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F4D23119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EB423119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbgHFQsu (ORCPT
+        id S1729496AbgHFQs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:48:50 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:42586 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729181AbgHFQsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:48:04 -0400
-Received: from relay5-d.mail.gandi.net (unknown [217.70.183.197])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 4BD373A9E62;
-        Thu,  6 Aug 2020 15:47:30 +0000 (UTC)
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id B435D1C0003;
-        Thu,  6 Aug 2020 15:47:07 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 17:47:07 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v2 01/14] media: uapi: h264: Update reference lists
-Message-ID: <20200806154707.GA1621078@aptenodytes>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
- <20200806151310.98624-2-ezequiel@collabora.com>
+        Thu, 6 Aug 2020 12:48:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:45200 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729098AbgHFQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:42:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D93013D5;
+        Thu,  6 Aug 2020 09:19:30 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D14B3F887;
+        Thu,  6 Aug 2020 09:19:28 -0700 (PDT)
+References: <20200731115502.12954-1-valentin.schneider@arm.com> <20200731115502.12954-4-valentin.schneider@arm.com> <20200806142025.GD2077896@gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Quentin Perret <qperret@google.com>,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
+Subject: Re: [PATCH v4 03/10] sched/topology: Propagate SD_ASYM_CPUCAPACITY upwards
+In-reply-to: <20200806142025.GD2077896@gmail.com>
+Date:   Thu, 06 Aug 2020 17:19:26 +0100
+Message-ID: <jhj5z9viw6p.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
-Content-Disposition: inline
-In-Reply-To: <20200806151310.98624-2-ezequiel@collabora.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/08/20 15:20, Ingo Molnar wrote:
+> * Valentin Schneider <valentin.schneider@arm.com> wrote:
+>
+>> We currently set this flag *only* on domains whose topology level exactly
+>> match the level where we detect asymmetry (as returned by
+>> asym_cpu_capacity_level()). This is rather problematic.
+>>
+>> Say there are two clusters in the system, one with a lone big CPU and the
+>> other with a mix of big and LITTLE CPUs (as is allowed by DynamIQ):
+>>
+>> DIE [                ]
+>> MC  [             ][ ]
+>>      0   1   2   3  4
+>>      L   L   B   B  B
+>>
+>> asym_cpu_capacity_level() will figure out that the MC level is the one
+>> where all CPUs can see a CPU of max capacity, and we will thus set
+>> SD_ASYM_CPUCAPACITY at MC level for all CPUs.
+>>
+>> That lone big CPU will degenerate its MC domain, since it would be alone in
+>> there, and will end up with just a DIE domain. Since the flag was only set
+>> at MC, this CPU ends up not seeing any SD with the flag set, which is
+>> broken.
+>>
+>> Rather than clearing dflags at every topology level, clear it before
+>> entering the topology level loop. This will properly propagate upwards
+>> flags that are set starting from a certain level.
+>>
+>> Reviewed-by: Quentin Perret <qperret@google.com>
+>> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+>> ---
+>>  kernel/sched/topology.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+>> index 865fff3ef20a..42b89668e1e4 100644
+>> --- a/kernel/sched/topology.c
+>> +++ b/kernel/sched/topology.c
+>> @@ -1985,11 +1985,10 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>>      /* Set up domains for CPUs specified by the cpu_map: */
+>>      for_each_cpu(i, cpu_map) {
+>>              struct sched_domain_topology_level *tl;
+>> +		int dflags = 0;
+>>
+>>              sd = NULL;
+>>              for_each_sd_topology(tl) {
+>> -			int dflags = 0;
+>> -
+>>                      if (tl == tl_asym) {
+>>                              dflags |= SD_ASYM_CPUCAPACITY;
+>>                              has_asym = true;
+>
+> I'd suggest ordering all patches with potential side effects at the
+> end, to make them easier to bisect.
+>
+> I.e. I'd reorder this series to do:
+>
+>  - Obviously correct renamings & cleanups
+>
+>  - Convert the code over to the new instrumented sd-flags method. This
+>    will presumably spew a few warnings for problems the new debugging
+>    checks catch in existing topologies.
+>
+>  - Do all the behavioral changes and fixes like this patch, even if we
+>    think that they have no serious side effects.
+>
+> In that sense it might make sense to order the two ARM patches to the
+> later stage as well - but I suppose it's OK to do those two first as
+> well.
+>
 
-Hi,
+This does sound sensible; I can shuffle this around for v5.
 
-On Thu 06 Aug 20, 12:12, Ezequiel Garcia wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
->=20
-> When dealing with with interlaced frames, reference lists must tell if
-> each particular reference is meant for top or bottom field. This info
-> is currently not provided at all in the H264 related controls.
->=20
-> Make reference lists hold a structure which will also hold an
-> enumerator type along index into DPB array. The enumerator must
-> be used to specify if reference is for top or bottom field.
->=20
-> Currently the only user of these lists is Cedrus which is just compile
-> fixed here. Actual usage of will come in a following commit.
+FWIW the reason I had this very patch before the instrumentation is that
+IMO it really wants to be propagated and could thus directly be tagged with
+SDF_SHARED_PARENT when the instrumentation hits. It's a minor thing, but
+having it after the instrumentation means that I'll first have to tag it
+without any hierarchical metaflag, and then tag it with SDF_SHARED_PARENT
+in the propagation fix.
 
-Is there a particular reason we are adding this to the ref_pic_list[0-1]
-instead of the DPB entries directly?
+If that sounds fine by you, I'll do just that.
 
-It feels nicer to avoid making the lists structs when the entries they are
-referring to are already in a struct. I think this is the approach Kwiboo t=
-ook
-when adding support for fields in references some time ago.
+> Nice series otherwise, these new checks look really useful and already
+> caught bugs.
+>
 
-What do you think?
+Thanks!
 
-Cheers,
-
-Paul
-
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> v2:
-> * As pointed out by Jonas, enum v4l2_h264_dpb_reference here.
-> ---
->  .../media/v4l/ext-ctrls-codec.rst             | 44 ++++++++++++++++++-
->  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
->  include/media/h264-ctrls.h                    | 23 +++++++---
->  3 files changed, 62 insertions(+), 11 deletions(-)
->=20
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index d0d506a444b1..f2b2a381369f 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_typ=
-e -
->      * - __u32
->        - ``slice_group_change_cycle``
->        -
-> -    * - __u8
-> +    * - struct :c:type:`v4l2_h264_reference`
->        - ``ref_pic_list0[32]``
->        - Reference picture list after applying the per-slice modifications
-> -    * - __u8
-> +    * - struct :c:type:`v4l2_h264_reference`
->        - ``ref_pic_list1[32]``
->        - Reference picture list after applying the per-slice modifications
->      * - __u32
-> @@ -1926,6 +1926,46 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
- -
->        - ``chroma_offset[32][2]``
->        -
-> =20
-> +``Picture Reference``
-> +
-> +.. c:type:: v4l2_h264_reference
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table:: struct v4l2_h264_reference
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - enum :c:type:`v4l2_h264_dpb_reference`
-> +      - ``reference``
-> +      - Specifies how the DPB entry is referenced.
-> +    * - __u8
-> +      - ``index``
-> +      - Index into the :c:type:`v4l2_ctrl_h264_decode_params`.dpb array.
-> +
-> +.. c:type:: v4l2_h264_dpb_reference
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - ``V4L2_H264_DPB_TOP_REF``
-> +      - 0x1
-> +      - The top field in field pair is used for
-> +        short-term reference.
-> +    * - ``V4L2_H264_DPB_BOTTOM_REF``
-> +      - 0x2
-> +     - The bottom field in field pair is used for
-> +        short-term reference.
-> +    * - ``V4L2_H264_DPB_FRAME_REF``
-> +      - 0x3
-> +      - The frame (or the top/bottom fields, if it's a field pair)
-> +        is used for short-term reference.
-> +
->  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
->      Specifies the decode parameters (as extracted from the bitstream)
->      for the associated H264 slice data. This includes the necessary
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h264.c
-> index 54ee2aa423e2..cce527bbdf86 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx=
- *ctx,
-> =20
->  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
->  				   struct cedrus_run *run,
-> -				   const u8 *ref_list, u8 num_ref,
-> -				   enum cedrus_h264_sram_off sram)
-> +				   const struct v4l2_h264_reference *ref_list,
-> +				   u8 num_ref, enum cedrus_h264_sram_off sram)
->  {
->  	const struct v4l2_ctrl_h264_decode_params *decode =3D run->h264.decode_=
-params;
->  	struct vb2_queue *cap_q;
-> @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx =
-*ctx,
->  		int buf_idx;
->  		u8 dpb_idx;
-> =20
-> -		dpb_idx =3D ref_list[i];
-> +		dpb_idx =3D ref_list[i].index;
->  		dpb =3D &decode->dpb[dpb_idx];
-> =20
->  		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index 080fd1293c42..4c0bb7f5fb05 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -19,6 +19,8 @@
->   */
->  #define V4L2_H264_NUM_DPB_ENTRIES 16
-> =20
-> +#define V4L2_H264_REF_LIST_LEN (2 * V4L2_H264_NUM_DPB_ENTRIES)
-> +
->  /* Our pixel format isn't stable at the moment */
->  #define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 =
-parsed slices */
-> =20
-> @@ -140,6 +142,19 @@ struct v4l2_h264_pred_weight_table {
->  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x04
->  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x08
-> =20
-> +enum v4l2_h264_dpb_reference {
-> +	V4L2_H264_DPB_TOP_REF =3D 0x1,
-> +	V4L2_H264_DPB_BOTTOM_REF =3D 0x2,
-> +	V4L2_H264_DPB_FRAME_REF =3D 0x3,
-> +};
-> +
-> +struct v4l2_h264_reference {
-> +	enum v4l2_h264_dpb_reference fields;
-> +
-> +	/* Index into v4l2_ctrl_h264_decode_params.dpb[] */
-> +	__u8 index;
-> +};
-> +
->  struct v4l2_ctrl_h264_slice_params {
->  	/* Size in bytes, including header */
->  	__u32 size;
-> @@ -178,12 +193,8 @@ struct v4l2_ctrl_h264_slice_params {
->  	__u8 num_ref_idx_l1_active_minus1;
->  	__u32 slice_group_change_cycle;
-> =20
-> -	/*
-> -	 * Entries on each list are indices into
-> -	 * v4l2_ctrl_h264_decode_params.dpb[].
-> -	 */
-> -	__u8 ref_pic_list0[32];
-> -	__u8 ref_pic_list1[32];
-> +	struct v4l2_h264_reference ref_pic_list0[V4L2_H264_REF_LIST_LEN];
-> +	struct v4l2_h264_reference ref_pic_list1[V4L2_H264_REF_LIST_LEN];
-> =20
->  	__u32 flags;
->  };
-> --=20
-> 2.27.0
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl8sJfsACgkQ3cLmz3+f
-v9G7JQf/TnWncpqO5avCsiYx8iHH1eLwDhPb6bnmWUzXT4OaXdC12feSeLbDMMg1
-LJCN8vURx+PCw7lwqV86i3gVlvePQZ+BukVOELAomGEDJP4Wrr2mrz7Z0p5encuv
-nQrzHqEdKZVi4CLXxNEsrqidJo/74vnUgeP10jtPG72+nluwXmOlACXeNJgA2/Ca
-UfHUCjy6eXVvLShfabxuej+5GP4zVWAHRtwJi8Ar3Ik/WyazhWoqCvNguA2LxgUl
-IRYWs4suJUAbR4ftreTcqEeb0bM60F7mxAik8UtnVvZd3YMgQL+4FBiA6nW+pYzu
-ZFcdsq53+2TSQY/8E1vOZrZ87qwRiw==
-=EiuI
------END PGP SIGNATURE-----
-
---C7zPtVaVf+AK4Oqc--
+> Thanks,
+>
+>       Ingo
