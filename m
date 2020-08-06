@@ -2,118 +2,124 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF71C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42717C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F199204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596731814;
-	bh=kXFEFcQbGFAyZthtqBKGE5NblPCw+yWna5WHqn9lX/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WL12nb2rYUknRmE7mKN1qrmQjI7BiL8c3kxCS0O4Lp7/uA9TigLCNQkA00SWI6hBq
-	 SCQgyLaZMCSoRV9N2QrOP9auHskparkGaj7WgBCYzM4sdZMSCvchaAeW4CdgIfbmVr
-	 SsgJMjdOEmMe4DELip1XeQ33zx6q6M+YU32uMVkY=
+	by mail.kernel.org (Postfix) with ESMTP id 6E095204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:37:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u2YT/+ar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgHFQgo (ORCPT
+        id S1728864AbgHFQhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:36:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40882 "EHLO
+        Thu, 6 Aug 2020 12:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgHFQfY (ORCPT
+        with ESMTP id S1728932AbgHFQfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:35:24 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9355C0A893C;
-        Thu,  6 Aug 2020 08:08:16 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id i26so32073921edv.4;
-        Thu, 06 Aug 2020 08:08:16 -0700 (PDT)
+        Thu, 6 Aug 2020 12:35:44 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18BBC00216A
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:09:06 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id t6so39467093ljk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:09:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/NBVKOjlAWWfsV7g9wQU/wL49LI80XYT8ZZs5+X9WF4=;
-        b=X0/iNYVseeiv7KKCcoHOOF+EgAeIK3Jhiqd/cqA341huobn7TndXq1Xkph67VmiIIQ
-         pL8KNuqR9x09+LI3pU1gcxrBk4ffIub0jP2cj9GfKvNY+c1QALaWRd2uSovGRaO8fhiP
-         uyJkUPPDA4ggB3mgn0K4MiFUaU5ZAzJC1IqwqJH8IY+Vm9rAeRqdYPnGgZjXQPZAUX9d
-         lD/yHm37Y7GShrMpO60wOb2AzykPpn0tbk5EkF4BExNpSy7MJV9U8YDZ6YOdHvEVzF09
-         Ri/5Vn9xpo2XomBE4jkhZbLdHRmTK6kEZrCsJnNzvKEhYhjBRYE9ILZzFDCs93li9gil
-         qPHw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b+FOmc3x4TlSIosvK+g/xbYJM2PQZPI5ZqFQRC+ljXI=;
+        b=u2YT/+arQ2RT6JROfq2KclPiQp4+Q216/ziCsMWXtr9rNVYLBKRtFK6ZbJSSZd9PYp
+         5MqQNXTpoE134DxS/Ec4aZOqUZhhsNxTmENZl2EeRinjavid10hIqBUv6oodlANe2SwJ
+         Kgbbr4M0hEbLoS3xuOqRoMJJeYe6WoZc+FcByAn/5tnb0Igg/cKQqjhCRvI1S/A6XGJX
+         tT1cbjFaLMp6GR6G+c7MoR43IwUXP0mxYZkfLALzluzzkTyur3Tqos38pP4hyQb8sxYh
+         QHLR4fmX4aH5ThtvTDuFmbwBgcAmc1pcTvKTdlrwiGhQyPcdbaphs4xVm8jECht9r5CL
+         thww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=/NBVKOjlAWWfsV7g9wQU/wL49LI80XYT8ZZs5+X9WF4=;
-        b=gBugjOcQ68WL+pel+9/6nwRgCh31FJlMPaogSCwghNSUpiC+iFj8IREXiVIcFQKONo
-         YSm4ik2UzVqcNkAoJ0j4/py66+b5L7xTPv5ri8wwxf+eW4vjpScvrDXREFopr5SxZ0Jb
-         B62UIZPleEAyEDeibqHhYKOTSlHC+/lRo9TDhHaYis3Pr83k8HaaeoXk8RQhjQIh8N/q
-         uISll/xFlFqiEA+hiX6BGDNI4VHKh3OmLzphKDdYCCWUq6KlSrSEBA/OD3VPDfO9yPKO
-         WJAMEl1L5NDmh8DSqORAM6s/l9c1NZGaIWiPKbODCfkwU1ULdQeRYangKHSyN0QuwMZe
-         cBXA==
-X-Gm-Message-State: AOAM53283/BerG7oWJIXavA7PkYScGK16Jc2cgAM+u2K5q+c55lICrN8
-        mAmeGZbjv+Vpr1hIoQXZiQg=
-X-Google-Smtp-Source: ABdhPJx4tglb5q6BahdDY6UfNDnLH/fg9q5/lMjer49/21DCpLvr0dFIv9J/IPh1tHwgokZaqFNpmg==
-X-Received: by 2002:aa7:c74f:: with SMTP id c15mr4558837eds.331.1596726495566;
-        Thu, 06 Aug 2020 08:08:15 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id 4sm3886474ejn.84.2020.08.06.08.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 08:08:14 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 17:08:10 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     changhuaixin <changhuaixin@linux.alibaba.com>
-Cc:     bp@alien8.de, hpa@zytor.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        michal.lkml@markovi.net, mingo@redhat.com,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        x86@kernel.org, yamada.masahiro@socionext.com, jpoimboe@redhat.com
-Subject: Re: [PATCH 1/3] scripts/sorttable: Change section type of orc_lookup
- to SHT_PROGBITS
-Message-ID: <20200806150810.GA2127855@gmail.com>
-References: <20200723034643.33537-1-changhuaixin@linux.alibaba.com>
- <20200723034643.33537-2-changhuaixin@linux.alibaba.com>
- <2714DF66-5F65-4CB1-A232-B88E4D5AF566@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b+FOmc3x4TlSIosvK+g/xbYJM2PQZPI5ZqFQRC+ljXI=;
+        b=Lcx4RJ8dBK8kU59mHPY5Mm/G0JOaCIfv85rvRdELaGbGz/HPWFLOd+x90ZV1hjro/n
+         h5zy+64p/XdC4I6x/T8BXcbvhc869a63OIk1hShIvZiWtKRLeeyFbiLiVVsHK7BXNMgL
+         b1J2IKkJOjqC31DGXr3f6qmWro11IV9yKLd509fpv0VmucutOGmSOMBaNRluHi/yb1Nx
+         SPK7XcLKjK5OTK4mkT683nVfS7SW+pAZkqY98xKcNhkb0pCsZ3iTHd3MXeMHZKFjl3Wo
+         7Ubb7RKRl4bvOAl/hGq3pR57Jj/NSbROw37vHGT5Nw+hG3JWmf72BP9mIIrJahgy27Q9
+         JpZw==
+X-Gm-Message-State: AOAM532Abmq9asscz5dH/9hWHFnxFicQEleFO4s0J+vBzVAR2GdmwYax
+        XtkrIUonR6FxZosgSF4hsnJRedE4WeaHoY4GwjuZ+ZzzJLw=
+X-Google-Smtp-Source: ABdhPJw3JV+p1U0VEzzIMl77foo8ILJLvSfoLsNoqG/VsjTgotZRib0SJ53kgAs7YyHWHvURuABt6bcvPtjKrx6CBT8=
+X-Received: by 2002:a05:651c:543:: with SMTP id q3mr4132966ljp.145.1596730143553;
+ Thu, 06 Aug 2020 09:09:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2714DF66-5F65-4CB1-A232-B88E4D5AF566@linux.alibaba.com>
+References: <0000000000006925ea05a69d5bfb@google.com> <000000000000ecb92805ac33a761@google.com>
+In-Reply-To: <000000000000ecb92805ac33a761@google.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 6 Aug 2020 18:08:36 +0200
+Message-ID: <CAG48ez0Rdut=HxSyKUCiCVU=zZJPR7YXcOfL3tRBXXwUS0iKxw@mail.gmail.com>
+Subject: Re: WARNING in binder_transaction_buffer_release (2)
+To:     syzbot <syzbot+e113a0b970b7b3f394ba@syzkaller.appspotmail.com>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Todd Kjos <tkjos@android.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 6, 2020 at 1:19 PM syzbot
+<syzbot+e113a0b970b7b3f394ba@syzkaller.appspotmail.com> wrote:
+> syzbot suspects this issue was fixed by commit:
+>
+> commit 4b836a1426cb0f1ef2a6e211d7e553221594f8fc
+> Author: Jann Horn <jannh@google.com>
+> Date:   Mon Jul 27 12:04:24 2020 +0000
+>
+>     binder: Prevent context manager from incrementing ref 0
+[...]
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e113a0b970b7b3f394ba
+[...]
+> If the result looks correct, please mark the issue as fixed by replying with:
+>
+> #syz fix: binder: Prevent context manager from incrementing ref 0
 
-* changhuaixin <changhuaixin@linux.alibaba.com> wrote:
+I think this issue still exists, syzbot probably just hit it in a
+weird way that doesn't work anymore.
 
-> Hi, Ingo
-> 
-> Another way to write SHT_PROGBITS is using elf_create_section to write orc_lookup table headers, when orc_unwind_ip table and orc_unwind table are written. Is this a better solution?
-> 
-> diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
-> index 3f98dcfbc177..860d4dcec8e6 100644
-> --- a/tools/objtool/orc_gen.c
-> +++ b/tools/objtool/orc_gen.c
-> @@ -183,6 +183,10 @@ int create_orc_sections(struct objtool_file *file)
->         u_sec = elf_create_section(file->elf, ".orc_unwind",
->                                    sizeof(struct orc_entry), idx);
-> 
-> +       /* make flags of section orc_lookup right */
-> +       if (!elf_create_section(file->elf, ".orc_lookup", sizeof(int), 0))
-> +               return -1;
-> +
->         /* populate sections */
->         idx = 0;
->         for_each_sec(file, sec) {
+This warning:
 
-Looks much nicer IMO.
+case BINDER_TYPE_FD: {
+        /*
+         * No need to close the file here since user-space
+         * closes it for for successfully delivered
+         * transactions. For transactions that weren't
+         * delivered, the new fd was never allocated so
+         * there is no need to close and the fput on the
+         * file is done when the transaction is torn
+         * down.
+         */
+        WARN_ON(failed_at &&
+                proc->tsk == current->group_leader);
+} break;
 
-Mind turning this into a proper patch that does it plus reverts the 
-hack?
+can be false-positive if the sender and recipient of the transaction
+are associated with the same task_struct. But there isn't really any
+reason why you wouldn't be able to have sender and recipient in the
+same process, as long as the binder_proc is different.
+(binder_transaction() has a weird check that refuses transactions to
+handle 0 based on task_struct equality - which IMO doesn't really make
+sense -, but transactions to other handles can happen just fine even
+if both ends are in the same task_struct.)
 
-Thanks,
-
-	Ingo
+Maybe the best fix is just to rip out that WARN_ON()?
