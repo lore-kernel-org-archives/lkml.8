@@ -2,108 +2,70 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D816BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A43222CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3717F22CB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596737443;
+	bh=s2E2AZg9Rq24AcGg3lWK4zcwHLb91fKHlAzIexnkNv0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=hUM0E4aN4zr/Gx2B5arbuKwiMdAve5CSlFKNuCIpoJlMCqTHeeO0wzQmI0S16J+bp
+	 Rl4XFApU3YpIcSww6s6XsVA7GzX8mjcUsQLfLTlZb7Irogj9/ZXqaEzWX90MsYQvrf
+	 P1teNVnPBP1YIiU/oIm4Nxzm7I5BmigxQOTfVNBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgHFSKg (ORCPT
+        id S1729027AbgHFSKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:10:36 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:31669 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbgHFSHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:07:19 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 06:17:51 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 06:17:48 -0700
-Received: from c-mansur-linux.qualcomm.com ([10.204.90.208])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 06 Aug 2020 18:47:43 +0530
-Received: by c-mansur-linux.qualcomm.com (Postfix, from userid 461723)
-        id 284D721C62; Thu,  6 Aug 2020 18:47:42 +0530 (IST)
-From:   Mansur Alisha Shaik <mansur@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org,
-        Mansur Alisha Shaik <mansur@codeaurora.org>
-Subject: [PATCH 2/3] venus: core: cancel pending work items in workqueue
-Date:   Thu,  6 Aug 2020 18:47:34 +0530
-Message-Id: <1596719855-1725-3-git-send-email-mansur@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596719855-1725-1-git-send-email-mansur@codeaurora.org>
-References: <1596719855-1725-1-git-send-email-mansur@codeaurora.org>
+        Thu, 6 Aug 2020 14:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728057AbgHFSJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:09:55 -0400
+Subject: Re: [GIT PULL] Smack patches for v5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596737394;
+        bh=s2E2AZg9Rq24AcGg3lWK4zcwHLb91fKHlAzIexnkNv0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ShfW0YRIsAUEae61UgU1p62cG4v+u1kGD2Zg0tNwcn81g1WO4bWdKw7YHA/qKL3Cz
+         ZT4+srS3tLUO7svGCBQ0am3+WlKPgMK4dhjsyq4cgNeRN+Z9hNJBMHH2UBZP0sU1gD
+         4TDtiJlM6D69+Q6jlJg7dD9F9q6qSFTCjs2uxxmg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <8ce85723-5656-0ee8-67a7-35597d9df0dd@schaufler-ca.com>
+References: <8ce85723-5656-0ee8-67a7-35597d9df0dd.ref@schaufler-ca.com> <8ce85723-5656-0ee8-67a7-35597d9df0dd@schaufler-ca.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <8ce85723-5656-0ee8-67a7-35597d9df0dd@schaufler-ca.com>
+X-PR-Tracked-Remote: https://github.com/cschaufler/smack-next smack-for-5.9
+X-PR-Tracked-Commit-Id: 42a2df3e829f3c5562090391b33714b2e2e5ad4a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: bfdd5aaa54b0a44d9df550fe4c9db7e1470a11b8
+Message-Id: <159673739379.10708.792636659703040715.pr-tracker-bot@kernel.org>
+Date:   Thu, 06 Aug 2020 18:09:53 +0000
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In concurrency usecase and reboot scenario we are
-observing race condition and seeing NULL pointer
-dereference crash.when workqueue is in progress
-to handle system recovery and at same when device
-happends, in bothe paths we are trying to destryo
-the same mutex hence seeing the crash.
+The pull request you sent on Tue, 4 Aug 2020 10:49:09 -0700:
 
-So this is hadled by protecting hfi_destroy in
-remove by mutext variable and cancel a delayed
-work items before reboot.
+> https://github.com/cschaufler/smack-next smack-for-5.9
 
-Below is the call trace for the crash
-Call trace:
- venus_remove+0xdc/0xec [venus_core]
- venus_core_shutdown+0x1c/0x34 [venus_core]
- platform_drv_shutdown+0x28/0x34
- device_shutdown+0x154/0x1fc
- kernel_restart_prepare+0x40/0x4c
- kernel_restart+0x1c/0x64
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/bfdd5aaa54b0a44d9df550fe4c9db7e1470a11b8
 
-Call trace:
- mutex_lock+0x34/0x60
- venus_hfi_destroy+0x28/0x98 [venus_core]
- hfi_destroy+0x1c/0x28 [venus_core]
- venus_sys_error_handler+0x60/0x14c [venus_core]
- process_one_work+0x210/0x3d0
- worker_thread+0x248/0x3f4
- kthread+0x11c/0x12c
- ret_from_fork+0x10/0x18
+Thank you!
 
-Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
----
- drivers/media/platform/qcom/venus/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index fe99c83..41a293e 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -312,6 +312,8 @@ static int venus_remove(struct platform_device *pdev)
- 	struct device *dev = core->dev;
- 	int ret;
- 
-+	cancel_delayed_work_sync(&core->work);
-+
- 	ret = pm_runtime_get_sync(dev);
- 	WARN_ON(ret < 0);
- 
-@@ -329,7 +331,9 @@ static int venus_remove(struct platform_device *pdev)
- 	if (pm_ops->core_put)
- 		pm_ops->core_put(dev);
- 
-+	mutex_lock(&core->lock);
- 	hfi_destroy(core);
-+	mutex_unlock(&core->lock);
- 
- 	icc_put(core->video_path);
- 	icc_put(core->cpucfg_path);
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
