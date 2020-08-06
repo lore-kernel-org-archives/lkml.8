@@ -2,142 +2,123 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A61E23119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33A423119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:15:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lq3TcMtz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cmrZQ8Yv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbgHFRPb (ORCPT
+        id S1730528AbgHFRPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:15:31 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:45854 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729507AbgHFRPZ (ORCPT
+        Thu, 6 Aug 2020 13:15:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729477AbgHFRPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:15:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076DILXb007671;
-        Thu, 6 Aug 2020 13:18:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : in-reply-to : references : date : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=AHSv3tsI28sIISVsPR048qSjA4rjmfzS6HgnYK0Bxvc=;
- b=Lq3TcMtz29DRvR8UISmpLfn9qAFdXxKeC3s8/FD7pj4ij7eSqrHztQ/RtQvyvZ8JLMh+
- MwklYDHZi52xRqeZVXaSKdTRK3tC4kClZrwLCCly/JBvozGdeiCj579ZG72vxJMByJuW
- 6/Db/L5yHg7wD1per9OfP82QHaPwklcFWZhCx7E5ONrMUdz/LDQVAZkalNrzWoFN6wK7
- cqTMY4RBKeVl9s3slreVL1NOOGgPyBIGT+mqU4/IBUSyh1Bna3QscCHeLkBivSxGVYY2
- utcMj2qVhduUgZ/mN12WlBATYGDGYfYaYtfnxaq/8BvJrviSJOgLWjSN7zcRM+iPLaFN eA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 32r6ep2urb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 06 Aug 2020 13:18:20 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076Cwxi9172955;
-        Thu, 6 Aug 2020 13:18:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 32pdnwc31r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Aug 2020 13:18:15 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 076DIEuv021665;
-        Thu, 6 Aug 2020 13:18:14 GMT
-Received: from starbug-mbp.localdomain (/79.97.215.145)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Aug 2020 06:18:14 -0700
-Received: by starbug-mbp.localdomain (Postfix, from userid 501)
-        id BC84EF04A3F; Thu,  6 Aug 2020 14:18:09 +0100 (IST)
-From:   Darren Kenny <darren.kenny@oracle.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 07/24] x86/cpu/intel: Add nosgx kernel parameter
-In-Reply-To: <20200716135303.276442-8-jarkko.sakkinen@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-8-jarkko.sakkinen@linux.intel.com>
-Date:   Thu, 06 Aug 2020 14:18:09 +0100
-Message-ID: <m2wo2brjzi.fsf@oracle.com>
+        Thu, 6 Aug 2020 13:15:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FC8C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 10:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XxaSeZ8vU13ipKwWzVxowozt5SCaySmLqUJlyGW8WBI=; b=cmrZQ8YvjWkEmDNcAnsrELEWBy
+        +U/oGZ90fBu3UCq1CEVkLZ8pQXNZz/HX9XtdneThVBn8S+5rR7beEskioaQxUwouXGRCImpAbOLUg
+        IvIh3MD/OTU10pRzBM2HG8ypZ0FianKgzTtevdllZhIe/BkaCEpQGY6KrlGv1SFM8eQsgsX0cZiaS
+        1Q9hwQk9NaT839uWgfXwv/Lg3ghYyYsi3b13RJyS+MbQwfglYT54wN9v2nrDnRc/isnCEwZK+V8KU
+        7jOeRrsVSiyYdxtkxFXhUgjpZL0UGtWy5iNixC/W4kW1o3tD98QhRnD3yUuh+tMvSOG8hE9Gi8aiP
+        X5NTaawA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3jTp-00050N-0D; Thu, 06 Aug 2020 17:15:01 +0000
+Date:   Thu, 6 Aug 2020 18:15:00 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        cai@lca.pw, kirill@shutemov.name, rppt@linux.ibm.com,
+        william.kucharski@oracle.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v2] mm, dump_page: do not crash with bad
+ compound_mapcount()
+Message-ID: <20200806171500.GA17456@casper.infradead.org>
+References: <20200804214807.169256-1-jhubbard@nvidia.com>
+ <ac97deea-4638-badd-9495-c9ca313837bb@suse.cz>
+ <20200806134851.GN23808@casper.infradead.org>
+ <790ae9a4-6874-ac34-d2a2-28a2137335cb@suse.cz>
+ <20200806153938.GO23808@casper.infradead.org>
+ <da00f435-a867-0108-8855-872019d85d44@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008060094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da00f435-a867-0108-8855-872019d85d44@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, 2020-07-16 at 16:52:46 +03, Jarkko Sakkinen wrote:
-> Add kernel parameter to disable Intel SGX kernel support.
->
-> Tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Thu, Aug 06, 2020 at 05:53:10PM +0200, Vlastimil Babka wrote:
+> On 8/6/20 5:39 PM, Matthew Wilcox wrote:
+> >> >> +++ b/mm/huge_memory.c
+> >> >> @@ -2125,7 +2125,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+> >> >>  	 * Set PG_double_map before dropping compound_mapcount to avoid
+> >> >>  	 * false-negative page_mapped().
+> >> >>  	 */
+> >> >> -	if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
+> >> >> +	if (head_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
+> >> > 
+> >> > I'm a little nervous about this one.  The page does actually come from
+> >> > pmd_page(), and today that's guaranteed to be a head page.  But I'm
+> >> > not convinced that's going to still be true in twenty years.  With the
+> >> > current THP patchset, I won't allocate pages larger than PMD order, but
+> >> > I can see there being interest in tracking pages in chunks larger than
+> >> > 2MB in the future.  And then pmd_page() might well return a tail page.
+> >> > So it might be a good idea to not convert this one.
+> >> 
+> >> Hmm the function converts the compound mapcount of the whole page to a
+> >> HPAGE_PMD_NR of base pages. If suddenly the compound page was bigger than a pmd,
+> >> then I guess this wouldn't work properly anymore without changes anyway?
+> >> Maybe we could stick something like VM_BUG_ON(PageTransHuge(page)) there as
+> >> "enforced documentation" for now?
+> > 
+> > I think it would work as-is.  But also I may have totally misunderstood it.
+> > I'll write this declaratively and specifically for x86 (PMD order is 9)
+> > ... tell me when I've made a mistake ;-)
+> > 
+> > This function is for splitting the PMD.  We're leaving the underlying
+> > page intact and just changing the page table.  So if, say, we have an
+> > underlying 4MB page (and maybe the pages are mapped as PMDs in this
+> > process), we might get subpage number 512 of this order-10 page.  We'd
+> > need to check the DoubleMap bit on subpage 1, and the compound_mapcount
+> > also stored in page 1, but we'd only want to spread the mapcount out
+> > over the 512 subpages from 512-1023; we wouldn't want to spread it out
+> > over 0-511 because they aren't affected by this particular PMD.
+> 
+> Yeah, and then we decrease the compound mapcount, which is a counter of "how
+> many times is this compound page mapped as a whole". But we only removed (the
+> second) half of the compound mapping, so imho that would be wrong?
 
-Reviewed-by: Darren Kenny <darren.kenny@oracle.com>
+I'd expect that count to be incremented by 1 for each PMD that it's
+mapped to?  ie change the definition of that counter slightly.
 
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 2 ++
->  arch/x86/kernel/cpu/feat_ctl.c                  | 9 +++++++++
->  2 files changed, 11 insertions(+)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index fb95fad81c79..e747bd9ca911 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3314,6 +3314,8 @@
->  
->  	nosep		[BUGS=X86-32] Disables x86 SYSENTER/SYSEXIT support.
->  
-> +	nosgx		[X86-64,SGX] Disables Intel SGX kernel support.
-> +
->  	nosmp		[SMP] Tells an SMP kernel to act as a UP kernel,
->  			and disable the IO APIC.  legacy for "maxcpus=0".
->  
-> diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
-> index c3afcd2e4342..1837df39527f 100644
-> --- a/arch/x86/kernel/cpu/feat_ctl.c
-> +++ b/arch/x86/kernel/cpu/feat_ctl.c
-> @@ -101,6 +101,15 @@ static void clear_sgx_caps(void)
->  	setup_clear_cpu_cap(X86_FEATURE_SGX2);
->  }
->  
-> +static int __init nosgx(char *str)
-> +{
-> +	clear_sgx_caps();
-> +
-> +	return 0;
-> +}
-> +
-> +early_param("nosgx", nosgx);
-> +
->  void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
->  {
->  	bool tboot = tboot_enabled();
-> -- 
-> 2.25.1
+> > Having to reason about stuff like this is why I limited the THP code to
+> > stop at PMD order ... I don't want to make my life even more complicated
+> > than I have to!
+> 
+> Kirill might correct me but I'd expect the THP code right now has baked in many
+> assumptions about THP pages being exactly HPAGE_PMD_ORDER large?
+
+There are somewhat fewer places that make that assumption after applying
+the ~80 patches here ... http://git.infradead.org/users/willy/pagecache.git
+
+I have mostly not touched the anonymous THPs (obviously some of the code
+paths are shared), although both Kirill & I think there's a win to be
+had there too.
