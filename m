@@ -2,216 +2,105 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B29DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD59C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D199323119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17A523119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kMlwX2KC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ybqcPxBZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgHFRO1 (ORCPT
+        id S1730312AbgHFROf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:14:27 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:35152 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730195AbgHFRJ6 (ORCPT
+        Thu, 6 Aug 2020 13:14:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58886 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730102AbgHFRKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:09:58 -0400
-Received: from relay11.mail.gandi.net (unknown [217.70.178.231])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 1F3A23B2C0F;
-        Thu,  6 Aug 2020 14:46:57 +0000 (UTC)
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id CA24C100006;
-        Thu,  6 Aug 2020 14:41:30 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 16:45:11 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] media: i2c: ov772x: Add support for BT656 mode
-Message-ID: <20200806144511.6ajoqyynowglnbpm@uno.localdomain>
-References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596454753-13612-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 6 Aug 2020 13:10:01 -0400
+Date:   Thu, 06 Aug 2020 17:09:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596733798;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RM82mvGB9xHHLFX9L5uZJx49nhDyo16+bh6kN2BD0Qc=;
+        b=kMlwX2KCgbqCvdU7ycv3qbAQ/rt16EL6XxSzYZRmhYWQqVD2TaH9QHfINeeg/EWcSUnXcB
+        bML6tE6A8iwKTTQSSEU7DeRoytgRvumFr7g22KOFclceyvidRCGhhicF6njEwB542PHPf2
+        T1ovF8fXy+iIXHZv//Pxn9wDh5dQOtxXIjO2CC+Ym/LRDFBGzZ4HTmu1s4lz8tUDvSgVKP
+        mutAdMC3aXzoLmY4uPldH2b+xN/ngYSPYSE6O28C38R4WegauNJi/r4Lap0MXUhDtNmZ/Z
+        dlnGC7MRLywZqxkNBEzzeykRXsDbXDD7T/UMQissBRYxQKwZ8JBMDJz3skoPPg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596733798;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RM82mvGB9xHHLFX9L5uZJx49nhDyo16+bh6kN2BD0Qc=;
+        b=ybqcPxBZPnd0keqLOiFRCwChs8bdPxRVy0VRJ1IMl4cZPuSOfUyS5MI2Mj4vB1j74mHQRD
+        Kg4m7fTRyyOTV8BQ==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] x86: Select POSIX_CPU_TIMERS_TASK_WORK
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200730102337.888613724@linutronix.de>
+References: <20200730102337.888613724@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1596454753-13612-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Message-ID: <159673379799.3192.4481379459137146476.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 12:39:12PM +0100, Lad Prabhakar wrote:
-> Add support to read the bus-type and enable BT656 mode if needed.
->
-> The driver defaults to parallel mode if bus-type is not specified in DT.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
->  drivers/media/i2c/ov772x.c | 40 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->
-> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> index 2cc6a678069a..2de9248e3689 100644
-> --- a/drivers/media/i2c/ov772x.c
-> +++ b/drivers/media/i2c/ov772x.c
-> @@ -31,6 +31,7 @@
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-event.h>
-> +#include <media/v4l2-fwnode.h>
->  #include <media/v4l2-image-sizes.h>
->  #include <media/v4l2-subdev.h>
->
-> @@ -434,6 +435,7 @@ struct ov772x_priv {
->  #ifdef CONFIG_MEDIA_CONTROLLER
->  	struct media_pad pad;
->  #endif
-> +	struct v4l2_fwnode_endpoint ep;
->  };
->
->  /*
-> @@ -574,6 +576,7 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
->  {
->  	struct i2c_client *client = v4l2_get_subdevdata(sd);
->  	struct ov772x_priv *priv = to_ov772x(sd);
-> +	unsigned int val;
->  	int ret = 0;
->
->  	mutex_lock(&priv->lock);
-> @@ -581,6 +584,22 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
->  	if (priv->streaming == enable)
->  		goto done;
->
-> +	if (priv->ep.bus_type == V4L2_MBUS_BT656 && enable) {
-> +		ret = regmap_read(priv->regmap, COM7, &val);
-> +		if (ret)
-> +			goto done;
-> +		val |= ITU656_ON_OFF;
-> +		ret = regmap_write(priv->regmap, COM7, val);
-> +	} else if (priv->ep.bus_type == V4L2_MBUS_BT656 && !enable) {
+The following commit has been merged into the timers/core branch of tip:
 
-is the !enable intentional ? (sorry I don't have access to the sensor
-manual). If not, see below:
+Commit-ID:     0099808553ad4f9c04ad7afd966f6d7f470f247f
+Gitweb:        https://git.kernel.org/tip/0099808553ad4f9c04ad7afd966f6d7f470f247f
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 30 Jul 2020 12:14:07 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 06 Aug 2020 16:50:59 +02:00
 
-> +		ret = regmap_read(priv->regmap, COM7, &val);
-> +		if (ret)
-> +			goto done;
-> +		val &= ~ITU656_ON_OFF;
-> +		ret = regmap_write(priv->regmap, COM7, val);
-> +	}
-> +	if (ret)
-> +		goto done;
+x86: Select POSIX_CPU_TIMERS_TASK_WORK
 
-Could you write this as:
+Move POSIX CPU timer expiry and signal delivery into task context.
 
-static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
-{
-	struct i2c_client *client = v4l2_get_subdevdata(sd);
-	struct ov772x_priv *priv = to_ov772x(sd);
-	int ret = 0;
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200730102337.888613724@linutronix.de
+---
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-	mutex_lock(&priv->lock);
-
-	if (priv->streaming == enable)
-		goto done;
-
-	if (enable) {
-		ret = regmap_read(priv->regmap, COM7, &val);
-		if (ret)
-			goto done;
-
-	        if (priv->ep.bus_type == V4L2_MBUS_BT656)
-		        val |= ITU656_ON_OFF;
-                else /* if you accept my suggestion to consider othe
-                        bus types as errors */
-		        val &= ~ITU656_ON_OFF;
-
-		ret = regmap_write(priv->regmap, COM7, val);
-		if (ret)
-			goto done;
-
-		dev_dbg(&client->dev, "format %d, win %s\n",
-			priv->cfmt->code, priv->win->name);
-	}
-
-	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
-				 enable ? 0 : SOFT_SLEEP_MODE);
-	if (ret)
-		goto done;
-	priv->streaming = enable;
-
-done:
-	mutex_unlock(&priv->lock);
-
-	return ret;
-}
-
-
->  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
->  				 enable ? 0 : SOFT_SLEEP_MODE);
->  	if (ret)
-> @@ -1354,6 +1373,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
->
->  static int ov772x_probe(struct i2c_client *client)
->  {
-> +	struct fwnode_handle *endpoint;
->  	struct ov772x_priv	*priv;
->  	int			ret;
->  	static const struct regmap_config ov772x_regmap_config = {
-> @@ -1415,6 +1435,26 @@ static int ov772x_probe(struct i2c_client *client)
->  		goto error_clk_put;
->  	}
->
-> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-> +						  NULL);
-> +	if (!endpoint) {
-> +		dev_err(&client->dev, "endpoint node not found\n");
-> +		ret = -EINVAL;
-> +		goto error_clk_put;
-> +	}
-> +
-> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
-> +	fwnode_handle_put(endpoint);
-> +	if (ret) {
-> +		dev_err(&client->dev, "Could not parse endpoint\n");
-> +		goto error_clk_put;
-> +	}
-> +
-> +	/* fallback to parallel mode */
-> +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
-> +	    priv->ep.bus_type != V4L2_MBUS_BT656)
-> +		priv->ep.bus_type = V4L2_MBUS_PARALLEL;
-
-shouldn't this be an error ? It's either the bus type has not been
-specified on DT (which is fine, otherwise old DTB without that
-properties will fail) and the bus identification routine implemented
-in v4l2_fwnode_endpoint_parse() detected a bus type which is not
-supported, hence the DT properties are wrong, and this should be an
-error. If you plan to expand the parsing routine to support, say
-bus-width and pclk polarity please break this out to a new function.
-
-Thanks
-   j
-
-> +
->  	ret = ov772x_video_probe(priv);
->  	if (ret < 0)
->  		goto error_gpio_put;
-> --
-> 2.17.1
->
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index fd03cef..a82e715 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -209,6 +209,7 @@ config X86
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select MMU_GATHER_RCU_TABLE_FREE		if PARAVIRT
++	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_RELIABLE_STACKTRACE		if X86_64 && (UNWINDER_FRAME_POINTER || UNWINDER_ORC) && STACK_VALIDATION
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
