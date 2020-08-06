@@ -2,219 +2,169 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85563C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D41E2177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9301C2177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DFW9zqFU"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="fXqsYbmI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgHFTRe (ORCPT
+        id S1726126AbgHFTXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37952 "EHLO
+        Thu, 6 Aug 2020 15:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgHFTRW (ORCPT
+        with ESMTP id S1726055AbgHFTXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:17:22 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B523C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:17:22 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 128so3901568pgd.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:17:22 -0700 (PDT)
+        Thu, 6 Aug 2020 15:23:00 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB7CC061575
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:23:00 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id g19so38735093ioh.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UGw36nAvKdWXoAUWiTJPP1buT7PpTyoMWVcd5KcuaEY=;
-        b=DFW9zqFUE6UVv/NaVI75iFcIdiXnJS93SWnk7O+7CjAlc8gNumlsOWPSXXtOOIUKo+
-         nKk6n/Z85ltJEdpP+o5GdhyOqODga0cLxlSQLwR89YqY4W7VScc4T7sXz4g8sUjcmzLF
-         VyZi8rkD7YQ5Hmdft+EDfCoLzKQV0q/GiNqkWcLx4ZokrEcBNEJKXdr8MAf4oPRG862O
-         CDLfqGXmCoAgwlmp54J39Q6fhlz9ZM7hWSY1Or0d5Rk2heRHDA3E1SEfMxGaEvsHosSh
-         knXPwzo6jQF18xgEKz5l6sepIqTiE6Z4z+BIKE65bqmHvL1lZBnPVaxaZynP/j/9dgTJ
-         tBMg==
+        d=poorly.run; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nJMMEQyeYoFZamYcp1LYhzE0BTlamnydOpPxwDn2cGs=;
+        b=fXqsYbmIT1mSvSoJNPQ1aMveBbEXe6FaWiTjjLD7vClMKtZNFOwBq9xP9rkqhpAXpj
+         0S8XA5sqdQ6Rs5cl34L0Cg2n6SYnwdyX/fYTn3wTWXls8UgF6Zp2J2JOhZyLrK/ibRfS
+         jnQBUp+XFpneM3+ugwPmog+A5+c7S4yT4RFXLUQiw/dC9eeunQS923G5TdDgSFLl8DKE
+         RUGWgHm9/5PsfZdMZBKslvKmFmQs93CUxIg8eLRpdNCiTEAph2BLmzWojoU6h3jGziaP
+         wT3zl9aOO5Y55YZ30yfHKUhJWRfQ7SfoYuZolUV4/7V06s7RPzwm29d3kwCkIbM8oIf8
+         PoOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UGw36nAvKdWXoAUWiTJPP1buT7PpTyoMWVcd5KcuaEY=;
-        b=II7Zq5aI2evXesHaMd3DNo/8allTr73LLk0ugVNcS6HrWoDEaSqWr1nSm0iRYe74jc
-         6MmWzuBSTTy1/JwebuYXp4nVNDsQhSowz15xN8IO1MNHBbtAd6A41PAusf9WzUBIwqIU
-         xV9WD1ANHWXHT2NksKnZOHfOCRcBm3uzZhZPlVVQTuna7sxU5jsc6gcT84DO6azSHByR
-         YCZ80rwNQVLVxJ7k0bb1KcV7/d7v9H+NX5hpTVGwBpThy237iJ0e03wIAYaoxxlGvUC9
-         OOgdT3lsS6hNSmx2JjLDwyFum1zNViB0vNUsJ+ajst7RXmiU3zAqD0IzayC/rA542PXv
-         0liw==
-X-Gm-Message-State: AOAM533W5dkM9D2L4yOMhDDEcqZS0gdVjIUBetMN5WKk8phgUAiTlzzc
-        Rk/Xvpidlk9d3QxAOKE9THsIag==
-X-Google-Smtp-Source: ABdhPJzoT1G0SlbqzFmLb6EOwVf73tF88sKWs484NPe384VDxj3BsxPArY1ZsNbRHHWT/wbvM8d4kw==
-X-Received: by 2002:a63:cc49:: with SMTP id q9mr8350589pgi.390.1596741441391;
-        Thu, 06 Aug 2020 12:17:21 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id d5sm7709517pju.15.2020.08.06.12.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 12:17:20 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 12:17:14 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Zhenyu Ye <yezhenyu2@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] arm64: tlb: fix ARM64_TLB_RANGE with LLVM's integrated
- assembler
-Message-ID: <20200806191714.GA1980587@google.com>
-References: <20200805181920.4013059-1-samitolvanen@google.com>
- <20200806120109.GD23785@gaia>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nJMMEQyeYoFZamYcp1LYhzE0BTlamnydOpPxwDn2cGs=;
+        b=K0RughRxAx3i23+2d8PFWf4xBUlnVhze65ZzJLCbo3NtCjimuH8kT2s6aYdK4uY9GU
+         /vcNDic41Z1PB0p5PCpKgUY2ZrWPW+SHG3WIeMP/Cxgqv9fOYzJRnjsH/jK3qJ+gq0Ma
+         tmKrc57PWbYutEnxwfGZwZBBcFSj3pBuYlmnol9Irdfmoo4GBGzoiCXCVwNHYGoEZD7g
+         8Df0/GXIEZZxZ3ed32cfYnGAzExwuPcVEbn0tpTFV79BAEh+1oFTpZAGxHGBLgYUw5Fm
+         t53DD9umAZ8Bv+aFbG3IP2CFgWhcaXA9VHpW2K/O6rUow9zFyNS1FyD712J/TEqEXysd
+         SjEg==
+X-Gm-Message-State: AOAM530nmTlEpG7oilzRyIVcBKCveWifmI+YxiZaaosbvYZ/I9efAa8e
+        7hsXQ0ZPn3WtKdmaexF51O1tCndLo+DRqqzuHkzRWOAp
+X-Google-Smtp-Source: ABdhPJy4WmJcVXA1gBMJGOmohxprVyg5ve0gqpy0IlGbYGAqjJu2AIxPjnPrNwwYptTfyq2LZVkyeLZYYqzhFQ2MyIo=
+X-Received: by 2002:a02:70c3:: with SMTP id f186mr537634jac.118.1596741778965;
+ Thu, 06 Aug 2020 12:22:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806120109.GD23785@gaia>
+References: <20200806144618.4384a0f9@oasis.local.home>
+In-Reply-To: <20200806144618.4384a0f9@oasis.local.home>
+From:   Sean Paul <sean@poorly.run>
+Date:   Thu, 6 Aug 2020 15:22:23 -0400
+Message-ID: <CAMavQK+j8Gxj5n8XnzjprM5b4gL0Kopd5Nu0MNnJPt5_5KifWA@mail.gmail.com>
+Subject: Re: [PATCH v2] tracing: Add trace_array_init_printk() to initialize
+ instance trace_printk() buffers
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 01:01:09PM +0100, Catalin Marinas wrote:
-> On Wed, Aug 05, 2020 at 11:19:20AM -0700, Sami Tolvanen wrote:
-> > diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-> > index d493174415db..66c2aab5e9cb 100644
-> > --- a/arch/arm64/include/asm/tlbflush.h
-> > +++ b/arch/arm64/include/asm/tlbflush.h
-> > @@ -16,6 +16,16 @@
-> >  #include <asm/cputype.h>
-> >  #include <asm/mmu.h>
-> >  
-> > +/*
-> > + * Enable ARMv8.4-TLBI instructions with ARM64_TLB_RANGE. Note that binutils
-> > + * doesn't support .arch_extension tlb-rmi, so use .arch armv8.4-a instead.
-> > + */
-> > +#ifdef CONFIG_ARM64_TLB_RANGE
-> > +#define __TLBI_PREAMBLE	".arch armv8.4-a\n"
-> > +#else
-> > +#define __TLBI_PREAMBLE
-> > +#endif
-> > +
-> >  /*
-> >   * Raw TLBI operations.
-> >   *
-> > @@ -28,14 +38,16 @@
-> >   * not. The macros handles invoking the asm with or without the
-> >   * register argument as appropriate.
-> >   */
-> > -#define __TLBI_0(op, arg) asm ("tlbi " #op "\n"				       \
-> > +#define __TLBI_0(op, arg) asm (__TLBI_PREAMBLE				       \
-> > +			       "tlbi " #op "\n"				       \
-> >  		   ALTERNATIVE("nop\n			nop",		       \
-> >  			       "dsb ish\n		tlbi " #op,	       \
-> >  			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
-> >  			       CONFIG_ARM64_WORKAROUND_REPEAT_TLBI)	       \
-> >  			    : : )
-> >  
-> > -#define __TLBI_1(op, arg) asm ("tlbi " #op ", %0\n"			       \
-> > +#define __TLBI_1(op, arg) asm (__TLBI_PREAMBLE				       \
-> > +			       "tlbi " #op ", %0\n"			       \
-> >  		   ALTERNATIVE("nop\n			nop",		       \
-> >  			       "dsb ish\n		tlbi " #op ", %0",     \
-> >  			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
-> 
-> A potential problem here is that for gas (not sure about the integrated
-> assembler), .arch overrides any other .arch. So if we end up with two
-> preambles included in the same generated .S files in the future, it will
-> lead to some random behaviour.
-> 
-> Does the LLVM integrated assembler have the same behaviour on .arch
-> overriding a prior .arch?
+On Thu, Aug 6, 2020 at 2:46 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+>
+> As trace_array_printk() used with not global instances will not add noise to
+> the main buffer, they are OK to have in the kernel (unlike trace_printk()).
+> This require the subsystem to create their own tracing instance, and the
+> trace_array_printk() only writes into those instances.
+>
+> Add trace_array_init_printk() to initialize the trace_printk() buffers
+> without printing out the WARNING message.
+>
+> Reported-by: Sean Paul <sean@poorly.run>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+> Changes since v1:
+>   Added EXPORT_SYMBOL_GPL() to trace_array_init_printk() as it is
+>   required for another function that is exported.
 
-I would assume so, but each inline assembly block is independent in
-LLVM, so unless there are .arch changes within the block, that shouldn't
-be an issue for the integrated assembler.
+Could we also add this to trace.h?
 
-> Maybe a better solution is for all inline asm on arm64 to have a
-> standard preamble which is the maximum supported architecture version.
-> We can add individual .arch_extension as those are not overriding.
-
-Sure, that works. How would you feel about something like this, so we can
-keep the preamble in sync with future -Wa,-march changes? I'm not sure if
-asm/compiler.h is the correct place for the definition though.
-
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 55bc8546d9c7..0dd07059beaa 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -82,8 +82,8 @@ endif
- # compiler to generate them and consequently to break the single image contract
- # we pass it only to the assembler. This option is utilized only in case of non
- # integrated assemblers.
--ifneq ($(CONFIG_AS_HAS_ARMV8_4), y)
--branch-prot-flags-$(CONFIG_AS_HAS_PAC) += -Wa,-march=armv8.3-a
-+ifeq ($(CONFIG_AS_HAS_PAC), y)
-+asm-arch := armv8.3-a
- endif
- endif
- 
-@@ -91,7 +91,12 @@ KBUILD_CFLAGS += $(branch-prot-flags-y)
- 
- ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
- # make sure to pass the newest target architecture to -march.
--KBUILD_CFLAGS	+= -Wa,-march=armv8.4-a
-+asm-arch := armv8.4-a
-+endif
-+
-+ifdef asm-arch
-+KBUILD_CFLAGS	+= -Wa,-march=$(asm-arch) \
-+		   -DARM64_ASM_ARCH='"$(asm-arch)"'
- endif
- 
- ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
-diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
-index 51a7ce87cdfe..6fb2e6bcc392 100644
---- a/arch/arm64/include/asm/compiler.h
-+++ b/arch/arm64/include/asm/compiler.h
-@@ -2,6 +2,12 @@
- #ifndef __ASM_COMPILER_H
- #define __ASM_COMPILER_H
- 
-+#ifdef ARM64_ASM_ARCH
-+#define ARM64_ASM_PREAMBLE ".arch " ARM64_ASM_ARCH "\n"
-+#else
-+#define ARM64_ASM_PREAMBLE
-+#endif
-+
- /*
-  * The EL0/EL1 pointer bits used by a pointer authentication code.
-  * This is dependent on TBI0/TBI1 being enabled, or bits 63:56 would also apply.
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index d493174415db..cc3f5a33ff9c 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -28,14 +28,16 @@
-  * not. The macros handles invoking the asm with or without the
-  * register argument as appropriate.
-  */
--#define __TLBI_0(op, arg) asm ("tlbi " #op "\n"				       \
-+#define __TLBI_0(op, arg) asm (ARM64_ASM_PREAMBLE			       \
-+			       "tlbi " #op "\n"				       \
- 		   ALTERNATIVE("nop\n			nop",		       \
- 			       "dsb ish\n		tlbi " #op,	       \
- 			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
- 			       CONFIG_ARM64_WORKAROUND_REPEAT_TLBI)	       \
- 			    : : )
- 
--#define __TLBI_1(op, arg) asm ("tlbi " #op ", %0\n"			       \
-+#define __TLBI_1(op, arg) asm (ARM64_ASM_PREAMBLE			       \
-+			       "tlbi " #op ", %0\n"			       \
- 		   ALTERNATIVE("nop\n			nop",		       \
- 			       "dsb ish\n		tlbi " #op ", %0",     \
- 			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
-
-Sami
+>
+>  kernel/trace/trace.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 06c0feae5ff9..c5f822736261 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -3129,6 +3129,9 @@ static int alloc_percpu_trace_buffer(void)
+>  {
+>         struct trace_buffer_struct *buffers;
+>
+> +       if (trace_percpu_buffer)
+> +               return 0;
+> +
+>         buffers = alloc_percpu(struct trace_buffer_struct);
+>         if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
+>                 return -ENOMEM;
+> @@ -3331,6 +3334,26 @@ int trace_array_vprintk(struct trace_array *tr,
+>         return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
+>  }
+>
+> +/**
+> + * trace_array_printk - Print a message to a specific instance
+> + * @tr: The instance trace_array descriptor
+> + * @ip: The instruction pointer that this is called from.
+> + * @fmt: The format to print (printf format)
+> + *
+> + * If a subsystem sets up its own instance, they have the right to
+> + * printk strings into their tracing instance buffer using this
+> + * function. Note, this function will not write into the top level
+> + * buffer (use trace_printk() for that), as writing into the top level
+> + * buffer should only have events that can be individually disabled.
+> + * trace_printk() is only used for debugging a kernel, and should not
+> + * be ever encorporated in normal use.
+> + *
+> + * trace_array_printk() can be used, as it will not add noise to the
+> + * top level tracing buffer.
+> + *
+> + * Note, trace_array_init_printk() must be called on @tr before this
+> + * can be used.
+> + */
+>  __printf(3, 0)
+>  int trace_array_printk(struct trace_array *tr,
+>                        unsigned long ip, const char *fmt, ...)
+> @@ -3355,6 +3378,27 @@ int trace_array_printk(struct trace_array *tr,
+>  }
+>  EXPORT_SYMBOL_GPL(trace_array_printk);
+>
+> +/**
+> + * trace_array_init_printk - Initialize buffers for trace_array_printk()
+> + * @tr: The trace array to initialize the buffers for
+> + *
+> + * As trace_array_printk() only writes into instances, they are OK to
+> + * have in the kernel (unlike trace_printk()). This needs to be called
+> + * before trace_array_printk() can be used on a trace_array.
+> + */
+> +int trace_array_init_printk(struct trace_array *tr)
+> +{
+> +       if (!tr)
+> +               return -ENOENT;
+> +
+> +       /* This is only allowed for created instances */
+> +       if (tr == &global_trace)
+> +               return -EINVAL;
+> +
+> +       return alloc_percpu_trace_buffer();
+> +}
+> +EXPORT_SYMBOL_GPL(trace_array_init_printk);
+> +
+>  __printf(3, 4)
+>  int trace_array_printk_buf(struct trace_buffer *buffer,
+>                            unsigned long ip, const char *fmt, ...)
+> --
+> 2.25.4
+>
