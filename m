@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139CCC43457
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F012322CBB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F1322B48
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHFFia (ORCPT
+        id S1727057AbgHFFtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:38:30 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:48296 "EHLO
+        Thu, 6 Aug 2020 01:49:14 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49213 "EHLO
         outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725440AbgHFFia (ORCPT
+        with ESMTP id S1726051AbgHFFtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 01:38:30 -0400
+        Thu, 6 Aug 2020 01:49:13 -0400
 Received: from callcc.thunk.org (pool-96-230-252-158.bstnma.fios.verizon.net [96.230.252.158])
         (authenticated bits=0)
         (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 0765cO92030075
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 0765mt6s032275
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 6 Aug 2020 01:38:25 -0400
+        Thu, 6 Aug 2020 01:48:56 -0400
 Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id CD2B7420263; Thu,  6 Aug 2020 01:38:24 -0400 (EDT)
-Date:   Thu, 6 Aug 2020 01:38:24 -0400
+        id BCF11420263; Thu,  6 Aug 2020 01:48:55 -0400 (EDT)
+Date:   Thu, 6 Aug 2020 01:48:55 -0400
 From:   tytso@mit.edu
-To:     brookxu <brookxu.cn@gmail.com>
-Cc:     adilger.kernel@dilger.ca, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Subject: Re: ext4: fix spelling typos in ext4_mb_initialize_context
-Message-ID: <20200806053824.GK7657@mit.edu>
-References: <883b523c-58ec-7f38-0bb8-cd2ea4393684@gmail.com>
+To:     Xianting Tian <xianting_tian@126.com>
+Cc:     jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] jbd2: fix incorrect code style
+Message-ID: <20200806054855.GM7657@mit.edu>
+References: <1595077057-8048-1-git-send-email-xianting_tian@126.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <883b523c-58ec-7f38-0bb8-cd2ea4393684@gmail.com>
+In-Reply-To: <1595077057-8048-1-git-send-email-xianting_tian@126.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:00:44AM +0800, brookxu wrote:
-> Fix spelling typos in ext4_mb_initialize_context.
+On Sat, Jul 18, 2020 at 08:57:37AM -0400, Xianting Tian wrote:
+> Remove unnecessary blank.
 > 
-> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+> Signed-off-by: Xianting Tian <xianting_tian@126.com>
 
 Thanks, applied.
 
-					- Ted
+						- Ted
