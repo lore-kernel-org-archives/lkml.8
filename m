@@ -2,133 +2,198 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E67C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFF4206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B1B206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kEmZwxzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbgHFRdI (ORCPT
+        id S1730541AbgHFRdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:33:08 -0400
-Received: from verein.lst.de ([213.95.11.211]:50470 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729500AbgHFRcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:32:54 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B828768D0F; Thu,  6 Aug 2020 16:48:35 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 16:48:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, Vikas Kumar <vikas.kumar2@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, rafael@kernel.org
-Subject: Re: [LTP-FAIL][02/21] fs: refactor ksys_umount
-Message-ID: <20200806144834.GA7818@lst.de>
-References: <d28d2235-9b1c-0403-59ca-e57ac5d0460e@arm.com> <20200806141732.GA5902@lst.de> <20200806143221.GQ1236603@ZenIV.linux.org.uk>
+        Thu, 6 Aug 2020 13:33:14 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49232 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729889AbgHFRdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:33:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596735186; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=KzVFweAIS+EhIpI7ual5fLSHmD+4lkv/Udm9Snff2TA=;
+ b=kEmZwxzB651AgGzR7XIzXO2/8lAYJkqbFYX976ClqaViih6s8pj5JkhpuWF1vFxBZVc/wXv1
+ BhzjVgu5DzpqDVZCkpN1elaSm3hrUmuLi2GucFTQOXxVTTbu5msT2y2jL8dOHJlW4MX/QJCf
+ JVvPENRKQuOWZDanKdnH/gLnWHI=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f2c3ed0d5b453ea40097d64 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 17:33:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1375AC433A0; Thu,  6 Aug 2020 17:33:04 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25B06C43391;
+        Thu,  6 Aug 2020 17:33:03 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806143221.GQ1236603@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Aug 2020 23:03:03 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alex Elder <elder@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] soc: qcom: aoss: Don't wait for IRQ if we might be in
+ suspend/resume noirq
+In-Reply-To: <CAD=FV=Xmf5Qj8obuKdE5CqYL7ek7CQQLPt4j4eTu=RpwcDwM2w@mail.gmail.com>
+References: <20200805091141.1.I86b3faaecb0d82997b599b1300f879606c71e116@changeid>
+ <159664899840.1360974.7548807728313161626@swboyd.mtv.corp.google.com>
+ <CAD=FV=UK+xHV6qsr2AsPB=BzmzN77AT-du8G2tt1QZMQUpGgKg@mail.gmail.com>
+ <159666852526.1360974.3062132560884413001@swboyd.mtv.corp.google.com>
+ <4c40db0fe88dd9aff6897ebc103aa3e9@codeaurora.org>
+ <CAD=FV=Xmf5Qj8obuKdE5CqYL7ek7CQQLPt4j4eTu=RpwcDwM2w@mail.gmail.com>
+Message-ID: <8450aff2d16aed092295c61a8e4ca850@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 03:32:21PM +0100, Al Viro wrote:
-> On Thu, Aug 06, 2020 at 04:17:32PM +0200, Christoph Hellwig wrote:
-> > Fix for umount03 below.  The other one works fine here, but from
-> > your logs this might be a follow on if you run it after umount without
-> > the fix.
+On 2020-08-06 22:40, Doug Anderson wrote:
+> Hi,
 > 
-> Ugh...
+> On Thu, Aug 6, 2020 at 7:36 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> On 2020-08-06 04:32, Stephen Boyd wrote:
+>> > +Sibi who wrote the code
+>> >
+>> > Quoting Doug Anderson (2020-08-05 13:24:06)
+>> >>
+>> >> On Wed, Aug 5, 2020 at 10:36 AM Stephen Boyd <swboyd@chromium.org>
+>> >> wrote:
+>> >> >
+>> >> > Why is the genpd being powered off at all? It looks like the driver is
+>> >> > written in a way that it doesn't expect this to happen. See where
+>> >> > adsp_pds_disable() is called from. Looks like the remoteproc "stop"
+>> >> > callback should be called or the driver should be detached.
+>> >> >
+>> >> > It sort of looks like the genpd is expected to be at the max level all
+>> >> > the time (it sets INT_MAX in adsp_pds_enable(), cool).
+>> >>
+>> >> In general in Linux there are some things that, at suspend time, get
+>> >> done behind a driver's back.  The regulator API, for instance, allows
+>> >> for regulators to be turned off in suspend even if a driver leaves
+>> >> them on.  Sure, it's good practice for a driver to be explicit but the
+>> >> regulator suspend states do allow for the more heavy-handed approach.
+>> >>
+>> >> I guess I assume that genpd is a bit similar.  If a driver leaves a
+>> >> genpd on all the time then it will still be turned off at suspend time
+>> >> and then turned back on at resume time.  It seems like it must be part
+>> >> of the genpd API.  Specifically genpd_sync_power_off() says: "Check if
+>> >> the given PM domain can be powered off (during system suspend or
+>> >> hibernation) and do that if so."  That makes it seem like it's how
+>> >> genpd works.
+>> >>
+>> >> Reading all the descriptions of things like GENPD_FLAG_ALWAYS_ON,
+>> >> GENPD_FLAG_ACTIVE_WAKEUP, GENPD_FLAG_RPM_ALWAYS_ON makes me even more
+>> >> convinced that it's normal (unless otherwise specified) for genpds to
+>> >> get turned off in suspend even if a driver just blindly left them on.
+>> >>
+>> >> Presumably if this "modem" genpd is supposed to stay on in suspend
+>> >> time it should have been marked "always on"?  I'd guess we'd need to
+>> >> add "GENPD_FLAG_ALWAYS_ON" in some (or all?) cases in qmp_pd_add() if
+>> >> this was true?
+>> >
+>> > Agreed. I can't read the mind of Sibi so I can only guess that Sibi
+>> > wasn't expecting this behavior by reading the driver structure. That
+>> > could be a wrong assumption.
+>> >
+>> >>
+>> >>
+>> >> > Maybe we need to
+>> >> > add some sort of suspend hooks to the remote proc driver instead? Where
+>> >> > those suspend hooks are called earlier and drop the genpd performance
+>> >> > state request but otherwise leave it enabled across suspend?
+>> >>
+>> >> I think you're saying:
+>> >>
+>> >> a) You think it's a bug today that the "modem" genpd is being powered
+>> >> off in suspend.  Any evidence to back this up?
+>> >>
+>> >> b) Assuming it's a bug today, we should mark the "modem" as
+>> >> GENPD_FLAG_ALWAYS_ON.
+>> >>
+>> >> c) If there are genpds that sometimes should be left on in suspend but
+>> >> sometimes not (and that doesn't match up with what
+>> >> GENPD_FLAG_ACTIVE_WAKEUP does), then we'd have to pass
+>> >> GENPD_FLAG_ALWAYS_ON as a flag and then add suspend hooks to make the
+>> >> decision for us.
+>> 
+>> Doug/Stephen,
+>> 
+>> Yes this is a bug, we wouldn't want
+>> to disable aoss_qmp genpd for modem
+>> during suspend (when the modem is
+>> running). The qmp send for modem
+>> is the primary means through which
+>> aoss determines whether to wait for
+>> modem before proceeding to sleep. So
+>> looks like updating the flag with
+>> GENPD_FLAG_ACTIVE_WAKEUP is the way
+>> to go. But introducing another flag
+>> that doesn't touch genpd's during
+>> suspend/resume should also work.
 > 
-> How about 
-> static int may_umount(const struct path *path, int flags)
+> OK, sounds good.  As per out-of-band conversation:
+> 
+> * You'll plan to post a patch updating the flag.
+> 
+> * There's still nothing here that says my patch is the wrong thing to
+> do also.  It seems like genpd poweroff routine are expected to be able
+> to run at "noirq" time so we should make sure we are able to do that.
+> 
+> I'm also curious: my patch doesn't affect the behavior.  The genpd
+> would be powered off with or without my patch, my patch just removes a
+> pointless 1 second delay.  Therefore I guess today there is some type
+> of bug because the genpd is being turned off.  What would be the
+> visible impact of that bug?  ...or is it somehow masked by something
+> else keeping this power on so it wasn't an issue right now?
 
-may_umount is already take.  But with can_umount this would work:
+I've been told AOSS decides to wait
+for modem suspend if its been notified
+that modem is on through qmp_send. AFAIK
+we never ran into this because AOSS sleep
+sequence starts after xo-shutdown which
+wont be reached in the presence of active
+rpmh votes from modem.
 
----
-From e4ccb3da160831a43eeea48c68d2d43fd7cf6724 Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Thu, 6 Aug 2020 16:07:10 +0200
-Subject: fs: fix a struct path leak in path_umount
+Regardless we definitely want this genpd left
+untouched during suspend/resume.
 
-Make sure we also put the dentry and vfsmnt in the illegal flags
-and !may_umount cases.
+> 
+> -Doug
+> 
+> 
+> -Doug
 
-Fixes: 41525f56e256 ("fs: refactor ksys_umount")
-Reported-by: Vikas Kumar <vikas.kumar2@arm.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/namespace.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index a7301790abb211..1c74a46367df4e 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1706,34 +1706,38 @@ static inline bool may_mandlock(void)
- }
- #endif
- 
--int path_umount(struct path *path, int flags)
-+static int can_umount(const struct path *path, int flags)
- {
--	struct mount *mnt;
--	int retval;
-+	struct mount *mnt = real_mount(path->mnt);
- 
- 	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
- 		return -EINVAL;
- 	if (!may_mount())
- 		return -EPERM;
--
--	mnt = real_mount(path->mnt);
--	retval = -EINVAL;
- 	if (path->dentry != path->mnt->mnt_root)
--		goto dput_and_out;
-+		return -EINVAL;
- 	if (!check_mnt(mnt))
--		goto dput_and_out;
-+		return -EINVAL;
- 	if (mnt->mnt.mnt_flags & MNT_LOCKED) /* Check optimistically */
--		goto dput_and_out;
--	retval = -EPERM;
-+		return -EINVAL;
- 	if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN))
--		goto dput_and_out;
-+		return -EPERM;
-+	return 0;
-+}
-+
-+int path_umount(struct path *path, int flags)
-+{
-+	struct mount *mnt = real_mount(path->mnt);
-+	int ret;
-+
-+	ret = can_umount(path, flags);
-+	if (!ret)
-+		ret = do_umount(mnt, flags);
- 
--	retval = do_umount(mnt, flags);
--dput_and_out:
- 	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
- 	dput(path->dentry);
- 	mntput_no_expire(mnt);
--	return retval;
-+	return ret;
- }
- 
- static int ksys_umount(char __user *name, int flags)
 -- 
-2.27.0
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
