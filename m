@@ -2,143 +2,221 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D221C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5167C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E74EE22CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEC422CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="MiXYRT5+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhhx2fAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHFAIH (ORCPT
+        id S1726547AbgHFAJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 20:08:07 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:60009 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgHFAIG (ORCPT
+        Wed, 5 Aug 2020 20:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgHFAJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 20:08:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596672486; x=1628208486;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=irrlTT1tShYqK45JMoHx2k1l0ZG3LkU/v6cuAOx3NI4=;
-  b=MiXYRT5+Acg+xBDDIL7gLGZpIm9yIcuRqxfzvMuNm9dE0FTdorMGXhbt
-   KVJXb6cry2sqbr199poMihg36o8Bh6pOMaoiWdHBxVakQP0ftVLCy+L4X
-   d7Ns8NeBs4MOZAmZ1gd++L1jakg4fM3gC+fZyCbw0b2N19Nk35+5As5iQ
-   qWVQSK4/68djUSyJ90/W4WoH5wm8w53qa3wGJ2T8PtIRbobOVRO4EvitL
-   L5UgFr3RmpPw+VPEgTZyihz8tOOABpzqYKoypWnOl77Yq5Vw9xsHL2ToB
-   UlcVAFjUnIL7GqXvg3ofXewCopTDwlgo8UdDxo504cff4QsIl1cjPwnt5
-   A==;
-IronPort-SDR: 2pS1PpoNnz3av/NR3jbJxqhFqUCjr6hWrPnlIq4zaYisZBpqSbiuU+2S7FPG2H86CouiRoS8BB
- 7jcl334wXvUwKKtcTgGb8tpKGuo0zVxdGe6Z5UArnv7QrQJEc/dM/lwkF01gOSJEfsTcXpg2lL
- qgrCr4f2SSlKw8uHKQGesEL6I3//ZKcLCrE7dFRsNS7dVqlpNxIIUWpZ7d93t4rgpBx8cGsHKr
- +5m7kiW6EPcQXQu6BfCVjMRzGCC8XdN4iGiYOAQvIoRr32kalPQkj9fkmSTDZSutcbKxG6tp3m
- MKo=
-X-IronPort-AV: E=Sophos;i="5.75,439,1589212800"; 
-   d="scan'208";a="148563506"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Aug 2020 08:08:06 +0800
-IronPort-SDR: myOKtsHncB8/84yI+KTT5p2DGi/qwJjltf270bZi6UTtM3Mj9QZiprd5ZnTpK9XmQDFseE8LEm
- HMTiDvjZ7anw==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 16:55:24 -0700
-IronPort-SDR: nUYJmY3g69kIaMDdvEBIrAraXtLHo/3wK4/RX23X6L9uOe9tXb1pwO46qPwR74QFvRi76OnSug
- 6ih9gd2Bb9zg==
-WDCIronportException: Internal
-Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 05 Aug 2020 17:08:06 -0700
-From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     hch@lst.de, sagi@grimberg.me,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH] nvmet: fix opps in nvmet_execute_passthru_cmd()
-Date:   Wed,  5 Aug 2020 17:08:04 -0700
-Message-Id: <20200806000804.6345-1-chaitanya.kulkarni@wdc.com>
-X-Mailer: git-send-email 2.22.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 5 Aug 2020 20:09:04 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075C9C061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 17:09:04 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id v11so51378837ybm.22
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 17:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KPwQaPC5rlEgRvrcmoBlVpZT38eeluDqoMRajQA10S4=;
+        b=qhhx2fAtSuQMbAlthsz86qneY+UexRTYr8f7upe8nl1fEwivtrK/hacFGf+FtW7+Mh
+         yVHFt2872Qzg20bLldT8gIlxviU0uUWOmKYQlMgLnrdJMYzFfMfVHKzAAhJWjPthwuoM
+         3EKZXSMg01/PVKuhrB+XCuT5CqGcoIbBu1icIMdghImKcHSxi2GAoCc3HfhHIBOkHr6K
+         InfWgYFkcoaX46ktGmofSr6J7kKJjP/dp5jnJQvAxhejUVJ61Pmie2F46ZgRJ+P53S2+
+         Uwq4Inwo2R4JXBWSG60TIQtFw+ZudQym3bHNUYHv4GzJGnMiyTO6TlEagvqasfVFPOr9
+         Av+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KPwQaPC5rlEgRvrcmoBlVpZT38eeluDqoMRajQA10S4=;
+        b=oJJbEhj56/PorWl5NEAOKdQnwWjc6yEkHhtjR/DCcUi99Akk4XHrJ5/n6zfDBP8KwD
+         coZxRQhBXCXH36nis8dctH0aL8nyBOLieCgLhi6HyEKN7xb3+MFuENIu8B62akEjlibq
+         qLx8RW8azblAARgDw83TdtooiWmiYedm5xlDVjN+wy1ep8Bo2ozzRQ3pYlfM23Evjggc
+         QfIAVCJFvOzi6tsdpXpP3tEALvYmF8HbUfA15Hjh+Xvw3l1tI6kocpufRoSGgz7EKCOd
+         PM5+4xrYBClMVG34IPyjRczno/VA/op5YobQGnlY1p6vpTXJ2nksyptwgnr0OVHPzhgR
+         206Q==
+X-Gm-Message-State: AOAM530FFtoGdJzrkBVIfsTKTIWEHj/ihZNT2ppPfWxwXM4kZZ33oPGt
+        wvYVciNKy6BumKo682mVw9NMua2w
+X-Google-Smtp-Source: ABdhPJyOzcoq836Rgdoac/2iNrqmHqqin6yoeU0x4KQGpPc/L1RZcl4Jzyso81ab94G8Sm1JKobTzQ5C
+X-Received: by 2002:a25:44d4:: with SMTP id r203mr8462924yba.500.1596672542788;
+ Wed, 05 Aug 2020 17:09:02 -0700 (PDT)
+Date:   Wed,  5 Aug 2020 17:08:58 -0700
+Message-Id: <20200806000859.160882-1-posk@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH 1/2] membarrier: add MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
+From:   Peter Oskolkov <posk@google.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>,
+        Peter Oskolkov <posk@posk.io>, Peter Oskolkov <posk@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a check in nvmet_execute_passthru_cmd() to prevent the
-following oops :-
+This patchset is based on Google-internal RSEQ
+work done by Paul Turner and Andrew Hunter.
 
-[ 1457.346861] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[ 1457.347838] #PF: supervisor read access in kernel mode
-[ 1457.348464] #PF: error_code(0x0000) - not-present page
-[ 1457.349085] PGD 0 P4D 0
-[ 1457.349402] Oops: 0000 [#1] SMP NOPTI
-[ 1457.349851] CPU: 18 PID: 10782 Comm: kworker/18:2 Tainted: G           OE     5.8.0-rc4nvme-5.9+ #35
-[ 1457.350951] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e3214
-[ 1457.352347] Workqueue: events nvme_loop_execute_work [nvme_loop]
-[ 1457.353062] RIP: 0010:blk_mq_free_request+0xe/0x110
-[ 1457.353651] Code: 3f ff ff ff 83 f8 01 75 0d 4c 89 e7 e8 1b db ff ff e9 2d ff ff ff 0f 0b eb ef 66 8
-[ 1457.355975] RSP: 0018:ffffc900035b7de0 EFLAGS: 00010282
-[ 1457.356636] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000002
-[ 1457.357526] RDX: ffffffffa060bd05 RSI: 0000000000000000 RDI: 0000000000000000
-[ 1457.358416] RBP: 0000000000000037 R08: 0000000000000000 R09: 0000000000000000
-[ 1457.359317] R10: 0000000000000000 R11: 000000000000006d R12: 0000000000000000
-[ 1457.360424] R13: ffff8887ffa68600 R14: 0000000000000000 R15: ffff8888150564c8
-[ 1457.361322] FS:  0000000000000000(0000) GS:ffff888814600000(0000) knlGS:0000000000000000
-[ 1457.362337] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1457.363058] CR2: 0000000000000000 CR3: 000000081c0ac000 CR4: 00000000003406e0
-[ 1457.363973] Call Trace:
-[ 1457.364296]  nvmet_passthru_execute_cmd+0x150/0x2c0 [nvmet]
-[ 1457.364990]  process_one_work+0x24e/0x5a0
-[ 1457.365493]  ? __schedule+0x353/0x840
-[ 1457.365957]  worker_thread+0x3c/0x380
-[ 1457.366426]  ? process_one_work+0x5a0/0x5a0
-[ 1457.366948]  kthread+0x135/0x150
-[ 1457.367362]  ? kthread_create_on_node+0x60/0x60
-[ 1457.367934]  ret_from_fork+0x22/0x30
-[ 1457.368388] Modules linked in: nvme_loop(OE) nvmet(OE) nvme_fabrics(OE) null_blk nvme(OE) nvme_corer
-[ 1457.368414]  ata_piix crc32c_intel virtio_pci libata virtio_ring serio_raw t10_pi virtio floppy dm_]
-[ 1457.380849] CR2: 0000000000000000
-[ 1457.381288] ---[ end trace c6cab61bfd1f68fd ]---
-[ 1457.381861] RIP: 0010:blk_mq_free_request+0xe/0x110
-[ 1457.382469] Code: 3f ff ff ff 83 f8 01 75 0d 4c 89 e7 e8 1b db ff ff e9 2d ff ff ff 0f 0b eb ef 66 8
-[ 1457.384749] RSP: 0018:ffffc900035b7de0 EFLAGS: 00010282
-[ 1457.385393] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000002
-[ 1457.386264] RDX: ffffffffa060bd05 RSI: 0000000000000000 RDI: 0000000000000000
-[ 1457.387142] RBP: 0000000000000037 R08: 0000000000000000 R09: 0000000000000000
-[ 1457.388029] R10: 0000000000000000 R11: 000000000000006d R12: 0000000000000000
-[ 1457.388914] R13: ffff8887ffa68600 R14: 0000000000000000 R15: ffff8888150564c8
-[ 1457.389798] FS:  0000000000000000(0000) GS:ffff888814600000(0000) knlGS:0000000000000000
-[ 1457.390796] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1457.391508] CR2: 0000000000000000 CR3: 000000081c0ac000 CR4: 00000000003406e0
-[ 1457.392525] Kernel panic - not syncing: Fatal exception
-[ 1457.394138] Kernel Offset: disabled
-[ 1457.394677] ---[ end Kernel panic - not syncing: Fatal exception ]---
+When working with per-CPU RSEQ-based memory allocations,
+it is sometimes important to make sure that a global
+memory location is no longer accessed from RSEQ critical
+sections. For example, there can be two per-CPU lists,
+one is "active" and accessed per-CPU, while another one
+is inactive and worked on asynchronously "off CPU" (e.g.
+garbage collection is performed). Then at some point
+the two lists are swapped, and a fast RCU-like mechanism
+is required to make sure that the previously active
+list is no longer accessed.
 
-Fixes: 06b7164dfdc0 ("nvmet: add passthru code to process commands")
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+This patch introduces such a mechanism: in short,
+membarrier() syscall issues an IPI to a CPU, restarting
+any potentially active RSEQ critical sections on the CPU,
+with an option to restart RSEQ CSs on all CPUs.
+
+The second patch in the patchset adds a selftest
+of this feature.
+
+Signed-off-by: Peter Oskolkov <posk@google.com>
 ---
- drivers/nvme/target/passthru.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/uapi/linux/membarrier.h |  8 ++++++
+ kernel/sched/membarrier.c       | 51 +++++++++++++++++++++++++++++++--
+ 2 files changed, 57 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
-index 89d91dc999a6..b56292c9a76c 100644
---- a/drivers/nvme/target/passthru.c
-+++ b/drivers/nvme/target/passthru.c
-@@ -278,7 +278,8 @@ static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
- 	if (ns)
- 		nvme_put_ns(ns);
- 	nvmet_req_complete(req, status);
--	blk_put_request(rq);
-+	if (rq)
-+		blk_put_request(rq);
+diff --git a/include/uapi/linux/membarrier.h b/include/uapi/linux/membarrier.h
+index 5891d7614c8c..169ffb613397 100644
+--- a/include/uapi/linux/membarrier.h
++++ b/include/uapi/linux/membarrier.h
+@@ -114,6 +114,13 @@
+  *                          If this command is not implemented by an
+  *                          architecture, -EINVAL is returned.
+  *                          Returns 0 on success.
++ * @MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU:
++ *                          If a thread belonging to the current process
++ *                          is currently in an RSEQ critical section on the
++ *                          CPU identified by flags parameter, restart it.
++ *                          @flags: if @flags >= 0, identifies the CPU to
++ *                                  restart RSEQ CS on; if == -1, restarts
++ *                                  RSEQ CSs on all CPUs.
+  * @MEMBARRIER_CMD_SHARED:
+  *                          Alias to MEMBARRIER_CMD_GLOBAL. Provided for
+  *                          header backward compatibility.
+@@ -131,6 +138,7 @@ enum membarrier_cmd {
+ 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED		= (1 << 4),
+ 	MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE		= (1 << 5),
+ 	MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE	= (1 << 6),
++	MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU		= (1 << 7),
+ 
+ 	/* Alias for header backward compatibility. */
+ 	MEMBARRIER_CMD_SHARED			= MEMBARRIER_CMD_GLOBAL,
+diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
+index 168479a7d61b..edcc1386daf5 100644
+--- a/kernel/sched/membarrier.c
++++ b/kernel/sched/membarrier.c
+@@ -18,11 +18,19 @@
+ #define MEMBARRIER_PRIVATE_EXPEDITED_SYNC_CORE_BITMASK	0
+ #endif
+ 
++#ifdef CONFIG_RSEQ
++#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK		\
++	MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
++#else
++#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK	0
++#endif
++
+ #define MEMBARRIER_CMD_BITMASK						\
+ 	(MEMBARRIER_CMD_GLOBAL | MEMBARRIER_CMD_GLOBAL_EXPEDITED	\
+ 	| MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED			\
+ 	| MEMBARRIER_CMD_PRIVATE_EXPEDITED				\
+ 	| MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED			\
++	| MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU_BITMASK		\
+ 	| MEMBARRIER_PRIVATE_EXPEDITED_SYNC_CORE_BITMASK)
+ 
+ static void ipi_mb(void *info)
+@@ -308,10 +316,47 @@ static int membarrier_register_private_expedited(int flags)
+ 	return 0;
  }
  
- /*
++#ifdef CONFIG_RSEQ
++static void membarrier_rseq_ipi(void *arg)
++{
++	struct task_struct *leader = (struct task_struct *)arg;
++
++	if (current->group_leader != leader)  /* Not our process. */
++		return;
++	if (!current->rseq)  /* RSEQ not set up for current task/thread. */
++		return;
++
++	rseq_preempt(current);
++}
++#endif
++
++static int membarrier_private_restart_rseq_on_cpu(int cpu_id)
++{
++#ifdef CONFIG_RSEQ
++	/* syscalls are not allowed inside rseq critical sections. */
++	if (cpu_id == raw_smp_processor_id())
++		return 0;
++
++	if (cpu_id >= 0) {
++		return smp_call_function_single(cpu_id, membarrier_rseq_ipi,
++						current->group_leader, true);
++	} else if (cpu_id == -1) {
++		on_each_cpu(membarrier_rseq_ipi,
++			    current->group_leader, true);
++	} else {
++		return -EINVAL;
++	}
++#endif
++	return 0;
++}
++
+ /**
+  * sys_membarrier - issue memory barriers on a set of threads
+  * @cmd:   Takes command values defined in enum membarrier_cmd.
+- * @flags: Currently needs to be 0. For future extensions.
++ * @flags: Currently needs to be 0 for all commands other than
++ *         MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU: in the latter
++ *         case it indicates the CPU on which to interrupt (= restart)
++ *         the RSEQ critical section, or -1 to restart RSEQ CSs on all CPUs.
+  *
+  * If this system call is not implemented, -ENOSYS is returned. If the
+  * command specified does not exist, not available on the running
+@@ -339,7 +384,7 @@ static int membarrier_register_private_expedited(int flags)
+  */
+ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
+ {
+-	if (unlikely(flags))
++	if (unlikely(flags && cmd != MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU))
+ 		return -EINVAL;
+ 	switch (cmd) {
+ 	case MEMBARRIER_CMD_QUERY:
+@@ -369,6 +414,8 @@ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
+ 		return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
+ 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
+ 		return membarrier_register_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
++	case MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU:
++		return membarrier_private_restart_rseq_on_cpu(flags);
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
-2.22.1
+2.28.0.163.g6104cc2f0b6-goog
 
