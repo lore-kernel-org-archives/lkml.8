@@ -2,209 +2,172 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C00C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B859B23119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959022311C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="YCo9N4vY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHFRWY (ORCPT
+        id S1729786AbgHFRWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:22:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:21019 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729682AbgHFRWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:22:20 -0400
-IronPort-SDR: nPbIrXuGCnxNcfTnCprALzQ0BFh3/+vc1AVHiSEpzU8dU7pTug7ieOKjXn37vd6bRUGDA4AHsb
- nFgKIoQosE2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="132350916"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="132350916"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 06:49:33 -0700
-IronPort-SDR: VifqmHcioRWCOYS5d4Qs4Nqs93YWd2Lrl0707lzM3kzXcZU+XnNUN4NdD0v/f0VeHjPIv8ISA3
- /7ePweAgmmZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="333190377"
-Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 06 Aug 2020 06:49:32 -0700
-Received: from kbuild by 37a337f97289 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k3gGx-0001K8-Md; Thu, 06 Aug 2020 13:49:31 +0000
-Date:   Thu, 06 Aug 2020 21:49:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.08.04a] BUILD SUCCESS
- 9acd395ec8a6addc60cc95c6ba0c9a70e85d0601
-Message-ID: <5f2c0a4c.vKH25GcoWnQnVl8R%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 6 Aug 2020 13:22:30 -0400
+Received: from mail-vi1eur05on2047.outbound.protection.outlook.com ([40.107.21.47]:5856
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729811AbgHFRWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:22:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k5s97EfATDWCJEMSbvDLsttovRbEl+y1TJVlDERXZCns9edxRkJg/fG8g8orLbnXRGv9Lwp3+1ti7SF6k4xezzR1yZU3ih6/sgagQ+cfl/ErR015ePK3ezqqegAQIfNFuLb7HOMrmCbeLLRT5nbJd0B7hkXzVm2lVfjQld7H59kbLtFmkHNNO07iloTpErlSyEpO5sgxUhu2ozZvOSFV1rj7whSCyyj3H9X642Lc6nt+UP/6uyL09Ku09hfhYA6KUfazG1c/FPsAjoLyB8zsjvY8jdK/jg1hhYhDduwYPRdUyn8W0D9TaKOPIc/MzTwsNAxXrVcoMWjBLg7i0ycPFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y4FFxvCtd5FGH5hWLm5Lv9sEb67r44oV0tHVJRKUXLw=;
+ b=jNHccwq4t1uX/tnWLvAPuixDjEGK1Nzbmy4EUezXXgNy0TE8O0W88rrEhsgThiRi7MV4ZdaaDASbhia012t5SthBt4wedobouhr1QbESZwI8hI7PXV4mXES0rHcs1bhvuUU2lJUBHd27NbfRJGQtg/cRM6+iiHIRtq88LaExWwYQnknMF9W5PTI/J9Br+/fUAAKb0W02KM9CEgHJSWVerw4hXWD2VHsJgC5cndhx7I0c1+agSogBvrgSMdLI3IK/b+U+Q915nl1s3AnWAsSA13rBo96yj45ZWXRxFNtJUUzxzAOpnNSJqBfnXzpCPe+bccr22DzGMEjJ3ivOKumYmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y4FFxvCtd5FGH5hWLm5Lv9sEb67r44oV0tHVJRKUXLw=;
+ b=YCo9N4vYTUNCuJAPrBAktKAhZpok3ST2xRLqNtTfvtPK7eR50hDrw+BcwjHFvVkn2P8SCBlrfU5RDLoiyHRnAQdZRxZ8ZIbgpkrSmpoT/FA5RfSbkhKWPmbV+9sjbV13rP7AZjKqprxmdHGppI1zu4mGLwwD6qN4xkrLugzrIU0=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
+ by VI1PR0402MB3440.eurprd04.prod.outlook.com (2603:10a6:803:6::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Thu, 6 Aug
+ 2020 11:41:59 +0000
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
+ 11:41:59 +0000
+From:   Andrei Botila <andrei.botila@oss.nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 9/9] crypto: caam/qi2 - add support for XTS with 16B IV
+Date:   Thu,  6 Aug 2020 14:41:27 +0300
+Message-Id: <20200806114127.8650-10-andrei.botila@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806114127.8650-1-andrei.botila@oss.nxp.com>
+References: <20200806114127.8650-1-andrei.botila@oss.nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::42) To VE1PR04MB6608.eurprd04.prod.outlook.com
+ (2603:10a6:803:125::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR06CA0101.eurprd06.prod.outlook.com (2603:10a6:208:fa::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Thu, 6 Aug 2020 11:41:56 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: db75bd79-b086-4ee5-6bd9-08d839fdb95b
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3440:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3440E422A9C6CF6276578D1EB4480@VI1PR0402MB3440.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UfVR2x6EOP4a3KRHtlb50513VFGih+QKs4dFBaCyo33DY46lX5ay9eYbFaA29R/Kdz3DemeUu5g4r8fN6bsHozCSAvV65AlZwFirB78cUDFKlQjEuRx9QaoWB6S/2Y8cWDi0Lf9ee60tIIG7P3foF1mG6ULTkNVeVFrH9m+DclTsNx4PjGjZNR23oo5FsyA96ua5ZYEe3yCJjH8JxwH3kQq2PHVeDcGiRdxF9QU2tIBvnzeeAcjcwTOB7MVw5a1UZtIiQ9TM3xZ7o86X3K5o3W+XFdJ/ZEGvHxyrVYE5qBV2BOLykftDk5a95ky1JGL1x3gZi1vfF029Og0Q3zil4A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(110136005)(316002)(6666004)(6512007)(478600001)(956004)(2616005)(6486002)(4326008)(1076003)(44832011)(52116002)(6506007)(86362001)(186003)(26005)(16526019)(66556008)(66476007)(2906002)(66946007)(83380400001)(8676002)(5660300002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: qPacvdCh9sZhvj+wQ5uYw++pkdddMC6Q2vC6rkcKKWStD5qsOsavHCc5B77lREucDO6NPrGgwomxd/QcCD0/cyiuyLvKf6a6RPJb7DIHu+7yhrwsOfRt/ZT6CqhRsTwVmhuDe6sD2wNjNJI7NBkBDZvpd9WSFNsUNei5IGu9XY6fDYZmO5lFrdmzeW7N5S0i/wdmlLB7o68UM9nw1tMt47UPl+tXTJiyMVkOeNt3D9HJPDRvmSy2APe7WB2GuWH+A/AWh9G3lmCUtZpJpQCGwo4E/MCLt1u6Gh9z9qLbInc/em/wfev4nR2HY+mMUyUfKA8OTbuen3p9ITilWBVZlepIQnYxeF1w8RAbQLxCuuzPiaF9kbQA8fd3KW3N0xC1HkBNYe/xx88Qud2EBBVN5yxoH638SkY883lXzF3tCS/1x9IYoS0KuyTbC0UbUMA6TJS96xgK5tREslM13+NI6KWAof0hW8UIVGRXVnqjs2fPdasTCNAGqlCYE35W/68SfQqdU8xGR2j90cF+2pFa+IewjNrDxKAxHC04y94ZrOBNY0Pqz7t7cUydbCwdDh4TRDYbkvn1y/DcZM6ZScFcU0GVpr3cqABHpSHnESkSJhslsFcDGoJZSU8YdEIgQt92yo1an+gOmq7DywpBEm/L/A==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db75bd79-b086-4ee5-6bd9-08d839fdb95b
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:41:57.3519
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g3tIpvG0R+26SFplJC8YPEWaq4g3G8/sAu8P/GLtJCunzzRGef1vowILlxqb1IM6UkcoBpSopc1hGegBNVavoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3440
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.08.04a
-branch HEAD: 9acd395ec8a6addc60cc95c6ba0c9a70e85d0601  squash! tools/memory-model: Improve litmus-test documentation
+From: Andrei Botila <andrei.botila@nxp.com>
 
-elapsed time: 720m
+Newer CAAM versions (Era 9+) support 16B IVs. Since for these devices
+the HW limitation is no longer present newer version should process the
+requests containing 16B IVs directly in hardware without using a fallback.
 
-configs tested: 139
-configs skipped: 9
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                       mainstone_defconfig
-sh                   sh7770_generic_defconfig
-mips                       rbtx49xx_defconfig
-ia64                         bigsur_defconfig
-arm                          simpad_defconfig
-sh                          polaris_defconfig
-powerpc64                           defconfig
-mips                  mips_paravirt_defconfig
-microblaze                      mmu_defconfig
-sh                          rsk7201_defconfig
-powerpc                      mgcoge_defconfig
-powerpc64                        alldefconfig
-mips                      maltasmvp_defconfig
-arm                         axm55xx_defconfig
-xtensa                    xip_kc705_defconfig
-m68k                       m5475evb_defconfig
-powerpc                       holly_defconfig
-mips                         tb0287_defconfig
-arc                              allyesconfig
-sh                        dreamcast_defconfig
-mips                      fuloong2e_defconfig
-mips                     loongson1c_defconfig
-arm                          lpd270_defconfig
-m68k                       m5249evb_defconfig
-arm                            qcom_defconfig
-powerpc                      ep88xc_defconfig
-mips                           jazz_defconfig
-arm                       netwinder_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                    amigaone_defconfig
-powerpc                      pasemi_defconfig
-arm                             rpc_defconfig
-m68k                        mvme147_defconfig
-m68k                          multi_defconfig
-powerpc                  mpc885_ads_defconfig
-sh                   secureedge5410_defconfig
-ia64                          tiger_defconfig
-arm                         mv78xx0_defconfig
-mips                     loongson1b_defconfig
-sh                         apsh4a3a_defconfig
-s390                          debug_defconfig
-powerpc                     powernv_defconfig
-arm                        spear6xx_defconfig
-mips                         db1xxx_defconfig
-mips                            gpr_defconfig
-arm                       imx_v4_v5_defconfig
-arm                     eseries_pxa_defconfig
-arm                            pleb_defconfig
-arm                        keystone_defconfig
-arm                          collie_defconfig
-arm                         bcm2835_defconfig
-c6x                        evmc6678_defconfig
-sh                         microdev_defconfig
-sh                           se7751_defconfig
-powerpc                       ppc64_defconfig
-m68k                       m5275evb_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a006-20200806
-x86_64               randconfig-a001-20200806
-x86_64               randconfig-a004-20200806
-x86_64               randconfig-a005-20200806
-x86_64               randconfig-a003-20200806
-x86_64               randconfig-a002-20200806
-i386                 randconfig-a004-20200805
-i386                 randconfig-a001-20200805
-i386                 randconfig-a002-20200805
-i386                 randconfig-a006-20200805
-i386                 randconfig-a005-20200805
-i386                 randconfig-a003-20200805
-i386                 randconfig-a005-20200806
-i386                 randconfig-a004-20200806
-i386                 randconfig-a001-20200806
-i386                 randconfig-a002-20200806
-i386                 randconfig-a003-20200806
-i386                 randconfig-a006-20200806
-x86_64               randconfig-a013-20200805
-x86_64               randconfig-a011-20200805
-x86_64               randconfig-a012-20200805
-x86_64               randconfig-a016-20200805
-x86_64               randconfig-a015-20200805
-x86_64               randconfig-a014-20200805
-i386                 randconfig-a011-20200805
-i386                 randconfig-a012-20200805
-i386                 randconfig-a013-20200805
-i386                 randconfig-a014-20200805
-i386                 randconfig-a015-20200805
-i386                 randconfig-a016-20200805
-i386                 randconfig-a011-20200806
-i386                 randconfig-a012-20200806
-i386                 randconfig-a013-20200806
-i386                 randconfig-a015-20200806
-i386                 randconfig-a014-20200806
-i386                 randconfig-a016-20200806
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/crypto/caam/caamalg_qi2.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index f2f137f47972..99b1267b1a0b 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -1057,6 +1057,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ {
+ 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+ 	struct device *dev = ctx->dev;
++	struct dpaa2_caam_priv *priv = dev_get_drvdata(dev);
+ 	struct caam_flc *flc;
+ 	u32 *desc;
+ 	int err;
+@@ -1067,9 +1068,12 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 		return err;
+ 	}
+ 
+-	err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
+-	if (err)
+-		return err;
++	if (priv->sec_attr.era <= 8 || (keylen != 2 * AES_KEYSIZE_128 &&
++					keylen != 2 * AES_KEYSIZE_256)) {
++		err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
++		if (err)
++			return err;
++	}
+ 
+ 	ctx->cdata.keylen = keylen;
+ 	ctx->cdata.key_virt = key;
+@@ -1472,12 +1476,13 @@ static int skcipher_encrypt(struct skcipher_request *req)
+ 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+ 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+ 	struct caam_request *caam_req = skcipher_request_ctx(req);
++	struct dpaa2_caam_priv *priv = dev_get_drvdata(ctx->dev);
+ 	int ret;
+ 
+ 	if (!req->cryptlen)
+ 		return 0;
+ 
+-	if (ctx->fallback && (xts_skcipher_ivsize(req) ||
++	if (ctx->fallback && ((priv->sec_attr.era <= 8 && xts_skcipher_ivsize(req)) ||
+ 			      (ctx->cdata.keylen != 2 * AES_KEYSIZE_128 &&
+ 			       ctx->cdata.keylen != 2 * AES_KEYSIZE_256))) {
+ 		skcipher_request_set_tfm(&caam_req->fallback_req, ctx->fallback);
+@@ -1517,12 +1522,13 @@ static int skcipher_decrypt(struct skcipher_request *req)
+ 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+ 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+ 	struct caam_request *caam_req = skcipher_request_ctx(req);
++	struct dpaa2_caam_priv *priv = dev_get_drvdata(ctx->dev);
+ 	int ret;
+ 
+ 	if (!req->cryptlen)
+ 		return 0;
+ 
+-	if (ctx->fallback && (xts_skcipher_ivsize(req) ||
++	if (ctx->fallback && ((priv->sec_attr.era <= 8 && xts_skcipher_ivsize(req)) ||
+ 			      (ctx->cdata.keylen != 2 * AES_KEYSIZE_128 &&
+ 			       ctx->cdata.keylen != 2 * AES_KEYSIZE_256))) {
+ 		skcipher_request_set_tfm(&caam_req->fallback_req, ctx->fallback);
+-- 
+2.17.1
+
