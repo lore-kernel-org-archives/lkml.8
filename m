@@ -2,143 +2,98 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4239CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9136022CAF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4438221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596739325;
+	bh=jkHktbppRvONf+xJVWmfSCc2eQC8JATnpI2A2T7cDPw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Or85bYeeCX78JPuRz0lZNimWN28GXG972N39FXYkV99UtmBYaaVZ2Oic7NCHdqoM1
+	 HC9tDs8O6vVOFg6X+lYQJ4hD9M7sBqJOWB64Uyt8KmtcXUutBE7sZqPbXN7Y0jNjE2
+	 frS5szCR+NUGLstGI5IviuvREJp1E2RHcskHaa7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgHFSmA (ORCPT
+        id S1730130AbgHFSmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:42:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:46570 "EHLO foss.arm.com"
+        Thu, 6 Aug 2020 14:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbgHFSXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728279AbgHFSXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:23:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FCCA1FB;
-        Thu,  6 Aug 2020 11:11:26 -0700 (PDT)
-Received: from [10.57.35.143] (unknown [10.57.35.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BB813F7D7;
-        Thu,  6 Aug 2020 11:11:24 -0700 (PDT)
-Subject: Re: [tip: perf/core] perf/core: Fix endless multiplex timer
-To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>
-References: <20200305123851.GX2596@hirez.programming.kicks-ass.net>
- <158470908175.28353.4859180707604949658.tip-bot2@tip-bot2>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <abd1dde6-2761-ae91-195c-cd7c4e4515c6@arm.com>
-Date:   Thu, 6 Aug 2020 19:11:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <158470908175.28353.4859180707604949658.tip-bot2@tip-bot2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7680622CF7;
+        Thu,  6 Aug 2020 18:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596738116;
+        bh=jkHktbppRvONf+xJVWmfSCc2eQC8JATnpI2A2T7cDPw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=myqjfk5TqieOfDTqf9vLXeOC0RvfTRnK4oPV3KF2Mi25rXjpnyj89EYEB/pv3E6oD
+         hX+zM779/ialBivqyBVc5q9adJbuO7yXflyYpaJyjYiFP0b4Ky4Q9mBCUgof7rc4uz
+         lDAEWR85hJEmUil1JhdfzQKn8uqDhADiCt+ymd5c=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v2 04/41] ARM: s3c24xx: iotiming: make functions static
+Date:   Thu,  6 Aug 2020 20:20:21 +0200
+Message-Id: <20200806182059.2431-4-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
+References: <20200806181932.2253-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-20 12:58, tip-bot2 for Peter Zijlstra wrote:
-> The following commit has been merged into the perf/core branch of tip:
-> 
-> Commit-ID:     90c91dfb86d0ff545bd329d3ddd72c147e2ae198
-> Gitweb:        https://git.kernel.org/tip/90c91dfb86d0ff545bd329d3ddd72c147e2ae198
-> Author:        Peter Zijlstra <peterz@infradead.org>
-> AuthorDate:    Thu, 05 Mar 2020 13:38:51 +01:00
-> Committer:     Peter Zijlstra <peterz@infradead.org>
-> CommitterDate: Fri, 20 Mar 2020 13:06:22 +01:00
-> 
-> perf/core: Fix endless multiplex timer
-> 
-> Kan and Andi reported that we fail to kill rotation when the flexible
-> events go empty, but the context does not. XXX moar
-> 
-> Fixes: fd7d55172d1e ("perf/cgroups: Don't rotate events for cgroups unnecessarily")
+From: Arnd Bergmann <arnd@arndb.de>
 
-Can this patch (commit 90c91dfb86d0 ("perf/core: Fix endless multiplex 
-timer") upstream) be applied to stable please? For PMU drivers built as 
-modules, the bug can actually kill the system, since the runaway hrtimer 
-loop keeps calling pmu->{enable,disable} after all the events have been 
-closed and dropped their references to pmu->module. Thus legitimately 
-unloading the module once things have got into this state quickly 
-results in a crash when those callbacks disappear.
+There are two functions in this file that are never called from
+anywhere else, so they should be static to allow the compiler
+to optimize it better and not pollute the global namespace.
 
-(FWIW I spent about two days fighting with this while testing a new 
-driver as a module against the 5.3 kernel installed on someone else's 
-machine, assuming it was a bug in my code...)
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/mach-s3c24xx/iotiming-s3c2410.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Robin.
+diff --git a/arch/arm/mach-s3c24xx/iotiming-s3c2410.c b/arch/arm/mach-s3c24xx/iotiming-s3c2410.c
+index 9f90aaf70bf3..39081c41958c 100644
+--- a/arch/arm/mach-s3c24xx/iotiming-s3c2410.c
++++ b/arch/arm/mach-s3c24xx/iotiming-s3c2410.c
+@@ -129,7 +129,7 @@ static unsigned int calc_0124(unsigned int cyc, unsigned long hclk_tns,
+ 	return 0;
+ }
+ 
+-int calc_tacp(unsigned int cyc, unsigned long hclk, unsigned long *v)
++static int calc_tacp(unsigned int cyc, unsigned long hclk, unsigned long *v)
+ {
+ 	/* Currently no support for Tacp calculations. */
+ 	return 0;
+@@ -288,8 +288,8 @@ static unsigned int get_0124(unsigned long hclk_tns,
+  * Given the BANKCON setting in @bt and the current frequency settings
+  * in @cfg, update the cycle timing information.
+  */
+-void s3c2410_iotiming_getbank(struct s3c_cpufreq_config *cfg,
+-			      struct s3c2410_iobank_timing *bt)
++static void s3c2410_iotiming_getbank(struct s3c_cpufreq_config *cfg,
++				     struct s3c2410_iobank_timing *bt)
+ {
+ 	unsigned long bankcon = bt->bankcon;
+ 	unsigned long hclk = cfg->freq.hclk_tns;
+-- 
+2.17.1
 
-> Reported-by: Andi Kleen <ak@linux.intel.com>
-> Reported-by: Kan Liang <kan.liang@linux.intel.com>
-> Tested-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20200305123851.GX2596@hirez.programming.kicks-ass.net
-> ---
->   kernel/events/core.c | 20 ++++++++++++++------
->   1 file changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index ccf8d4f..b5a68d2 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2291,6 +2291,7 @@ __perf_remove_from_context(struct perf_event *event,
->   
->   	if (!ctx->nr_events && ctx->is_active) {
->   		ctx->is_active = 0;
-> +		ctx->rotate_necessary = 0;
->   		if (ctx->task) {
->   			WARN_ON_ONCE(cpuctx->task_ctx != ctx);
->   			cpuctx->task_ctx = NULL;
-> @@ -3188,12 +3189,6 @@ static void ctx_sched_out(struct perf_event_context *ctx,
->   	if (!ctx->nr_active || !(is_active & EVENT_ALL))
->   		return;
->   
-> -	/*
-> -	 * If we had been multiplexing, no rotations are necessary, now no events
-> -	 * are active.
-> -	 */
-> -	ctx->rotate_necessary = 0;
-> -
->   	perf_pmu_disable(ctx->pmu);
->   	if (is_active & EVENT_PINNED) {
->   		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
-> @@ -3203,6 +3198,13 @@ static void ctx_sched_out(struct perf_event_context *ctx,
->   	if (is_active & EVENT_FLEXIBLE) {
->   		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
->   			group_sched_out(event, cpuctx, ctx);
-> +
-> +		/*
-> +		 * Since we cleared EVENT_FLEXIBLE, also clear
-> +		 * rotate_necessary, is will be reset by
-> +		 * ctx_flexible_sched_in() when needed.
-> +		 */
-> +		ctx->rotate_necessary = 0;
->   	}
->   	perf_pmu_enable(ctx->pmu);
->   }
-> @@ -3985,6 +3987,12 @@ ctx_event_to_rotate(struct perf_event_context *ctx)
->   				      typeof(*event), group_node);
->   	}
->   
-> +	/*
-> +	 * Unconditionally clear rotate_necessary; if ctx_flexible_sched_in()
-> +	 * finds there are unschedulable events, it will set it again.
-> +	 */
-> +	ctx->rotate_necessary = 0;
-> +
->   	return event;
->   }
->   
-> 
