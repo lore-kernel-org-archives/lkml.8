@@ -2,87 +2,216 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E2A2311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596732437;
-	bh=Z7TdfRn+l/U2D+R5a5JP0c/lzBH2WD7BitkuHPSAWnY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gMWvFOL5DVDOkBwbr25j9h872f2jHeUi82rxjxiYptLPEOVF3mOEM1EMAhLEJAC/h
-	 FzBgOqGyA1IzfzrzCehoxy1rsEAUsE0BijLWLPgipfUl100QN95cA8AmQk95T30/B5
-	 kcISLbApr32N3VMUBOAX6io9M/BvUnP/bSCMqjzA=
+	by mail.kernel.org (Postfix) with ESMTP id 5A23D2311B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QKumoDKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgHFQrM (ORCPT
+        id S1729427AbgHFQr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:47:12 -0400
-Received: from mail-pg1-f182.google.com ([209.85.215.182]:34074 "EHLO
-        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728574AbgHFQrB (ORCPT
+        Thu, 6 Aug 2020 12:47:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25398 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729212AbgHFQpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:47:01 -0400
-Received: by mail-pg1-f182.google.com with SMTP id t6so27146974pgq.1;
-        Thu, 06 Aug 2020 09:47:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jhzmlepFdmy2r2HquH9Bg1monL9cuu4aWWWaAK4BuRY=;
-        b=L/OCQO3QVNxIcULL/tzcZgWkmAlzx/5lladJTZs5aN7kLs3VhAtXz8GaLrDp5S9OS+
-         VJ+T4+Kn4m7vJbKSNHadWKzn1AbPXMpjCPqpIOwKsFO6Zww1QgxwLeXgywzU3pVMWFaI
-         tuMasx83vuKzXzb0UUbR7X4+90n5e+eEJrK/x+LLERqkUb+AXl5MZk3MutJaBVerlone
-         bQ0ZxXPaWydj47oNoHzYI3zar2VSXId6q9HofK0/ojpB28BSutknkWu+ErSHrngKNMM0
-         DeOjSkDEp0CD8PQAnbW1/NYbfHGuenfXwpY6D4ayhGYrluvao4ZXeDvwjpiHUIqDoiZ+
-         SRFQ==
-X-Gm-Message-State: AOAM5304k1uyKazE6MCerbxehoTjFCy42+UqjntvBb8utIDdQjxcll/Z
-        bWzsp/IakyU5PcxGy2Bd7eVOTA4=
-X-Google-Smtp-Source: ABdhPJxljR+2BM3+NLxYnTHpAFI/rfqUTIy5+s1RD0u2NtfsfyOfJFOSZ30o8lRm2APyJKjzexiCiA==
-X-Received: by 2002:a92:d985:: with SMTP id r5mr12111148iln.82.1596725393434;
-        Thu, 06 Aug 2020 07:49:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l5sm1910747ilj.88.2020.08.06.07.49.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:49:52 -0700 (PDT)
-Received: (nullmailer pid 839216 invoked by uid 1000);
-        Thu, 06 Aug 2020 14:49:51 -0000
-Date:   Thu, 6 Aug 2020 08:49:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        kernel@collabora.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, Ahmet Inan <inan@distec.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>
-Subject: Re: [PATCHv4 2/4] Input: EXC3000: add EXC80H60 and EXC80H84 support
-Message-ID: <20200806144951.GA839183@bogus>
-References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
- <20200805160520.456570-3-sebastian.reichel@collabora.com>
+        Thu, 6 Aug 2020 12:45:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596732313;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yq06NoGira3XJqUtq4OjZJOaAZeoUPCFVsdiIYhXg5k=;
+        b=QKumoDKSyhlrP3AWcV+Ky64NMseRT+67caqbtGZnqxP/ZNgjxsBmP0VeUSKO6H4czJwwny
+        ri5aMhpVUtN/enEgF3g4nF+qaBifs/yuovp13eZCXYeGBfSdnCp1kY8EPRhQD7erN1ubSI
+        0uiirNnL0MA9Y3DdY2HsNM/lmtgLlUQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-504-07Wt8F2CPnqXy1snbvub0g-1; Thu, 06 Aug 2020 11:28:17 -0400
+X-MC-Unique: 07Wt8F2CPnqXy1snbvub0g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5BFF1005504;
+        Thu,  6 Aug 2020 15:28:16 +0000 (UTC)
+Received: from thinkpad.redhat.com (ovpn-113-9.ams2.redhat.com [10.36.113.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A8D05DA6B;
+        Thu,  6 Aug 2020 15:28:15 +0000 (UTC)
+From:   Laurent Vivier <lvivier@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Amit Shah <amit@kernel.org>,
+        Laurent Vivier <lvivier@redhat.com>
+Subject: [PATCH] hwrng: core - allocate a one page buffer
+Date:   Thu,  6 Aug 2020 17:28:14 +0200
+Message-Id: <20200806152814.1325776-1-lvivier@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805160520.456570-3-sebastian.reichel@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Aug 2020 18:05:18 +0200, Sebastian Reichel wrote:
-> This adds support for EXC80H60 and EXCH84 controllers, which
-> use a different event type id and have two extra bits for the
-> resolution (so the maximum is 16K instead of 4K).
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../input/touchscreen/eeti,exc3000.yaml       |  5 +-
->  drivers/input/touchscreen/exc3000.c           | 80 +++++++++++++++----
->  2 files changed, 70 insertions(+), 15 deletions(-)
-> 
+This allows the driver to move bigger data block when the backend allows
+it.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Add a backend buffer_size for this purpose. For the moment only
+virtio-rng defines it.
+
+Using bigger buffer with virtio-rng improves performance from:
+
+  # dd if=/dev/hwrng of=/dev/null bs=1024 count=1024000
+  1048576000 bytes (1.0 GB, 1000 MiB) copied, 674.303 s, 1.6 MB/s
+  # dd if=/dev/hwrng of=/dev/null bs=4096 count=256000
+  1048576000 bytes (1.0 GB, 1000 MiB) copied, 622.394 s, 1.7 MB/s
+
+to
+
+  # dd if=/dev/hwrng of=/dev/null bs=1024 count=1024000
+  1048576000 bytes (1.0 GB, 1000 MiB) copied, 41.0579 s, 25.5 MB/s
+  # dd if=/dev/hwrng of=/dev/null bs=4096 count=256000
+  1048576000 bytes (1.0 GB, 1000 MiB) copied, 14.394 s, 72.8 MB/s
+
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+---
+ drivers/char/hw_random/core.c       | 37 ++++++++++++++++++++---------
+ drivers/char/hw_random/virtio-rng.c |  1 +
+ include/linux/hw_random.h           |  2 ++
+ 3 files changed, 29 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
+index 8c1c47dd9f46..3d8ce3c4d79c 100644
+--- a/drivers/char/hw_random/core.c
++++ b/drivers/char/hw_random/core.c
+@@ -56,15 +56,25 @@ static void start_khwrngd(void);
+ static inline int rng_get_data(struct hwrng *rng, u8 *buffer, size_t size,
+ 			       int wait);
+ 
+-static size_t rng_buffer_size(void)
++static size_t rng_min_buffer_size(void)
+ {
+-	return SMP_CACHE_BYTES < 32 ? 32 : SMP_CACHE_BYTES;
++	return max_t(size_t, 32, SMP_CACHE_BYTES);
++}
++
++static size_t rng_max_buffer_size(struct hwrng *rng)
++{
++	size_t size;
++
++	size = max_t(size_t, rng->buffer_size, SMP_CACHE_BYTES);
++
++	/* rng_buffer can store up to PAGE_SIZE */
++	return min(PAGE_SIZE, size);
+ }
+ 
+ static void add_early_randomness(struct hwrng *rng)
+ {
+ 	int bytes_read;
+-	size_t size = min_t(size_t, 16, rng_buffer_size());
++	size_t size = min_t(size_t, 16, rng_min_buffer_size());
+ 
+ 	mutex_lock(&reading_mutex);
+ 	bytes_read = rng_get_data(rng, rng_buffer, size, 0);
+@@ -226,9 +236,14 @@ static ssize_t rng_dev_read(struct file *filp, char __user *buf,
+ 			goto out_put;
+ 		}
+ 		if (!data_avail) {
+-			bytes_read = rng_get_data(rng, rng_buffer,
+-				rng_buffer_size(),
+-				!(filp->f_flags & O_NONBLOCK));
++			size_t to_read;
++			/* read at least 32 bytes, up to rng_max_buffer_size()
++			 * but no more than size
++			 */
++			to_read = max_t(size_t, 32,
++					min(size, rng_max_buffer_size(rng)));
++			bytes_read = rng_get_data(rng, rng_buffer, to_read,
++						  !(filp->f_flags & O_NONBLOCK));
+ 			if (bytes_read < 0) {
+ 				err = bytes_read;
+ 				goto out_unlock_reading;
+@@ -440,7 +455,7 @@ static int hwrng_fillfn(void *unused)
+ 			break;
+ 		mutex_lock(&reading_mutex);
+ 		rc = rng_get_data(rng, rng_fillbuf,
+-				  rng_buffer_size(), 1);
++				  rng_min_buffer_size(), 1);
+ 		mutex_unlock(&reading_mutex);
+ 		put_rng(rng);
+ 		if (rc <= 0) {
+@@ -614,11 +629,11 @@ static int __init hwrng_modinit(void)
+ 	int ret;
+ 
+ 	/* kmalloc makes this safe for virt_to_page() in virtio_rng.c */
+-	rng_buffer = kmalloc(rng_buffer_size(), GFP_KERNEL);
++	rng_buffer = (u8 *)get_zeroed_page(GFP_KERNEL);
+ 	if (!rng_buffer)
+ 		return -ENOMEM;
+ 
+-	rng_fillbuf = kmalloc(rng_buffer_size(), GFP_KERNEL);
++	rng_fillbuf = kmalloc(rng_min_buffer_size(), GFP_KERNEL);
+ 	if (!rng_fillbuf) {
+ 		kfree(rng_buffer);
+ 		return -ENOMEM;
+@@ -627,7 +642,7 @@ static int __init hwrng_modinit(void)
+ 	ret = register_miscdev();
+ 	if (ret) {
+ 		kfree(rng_fillbuf);
+-		kfree(rng_buffer);
++		free_page((unsigned long)rng_buffer);
+ 	}
+ 
+ 	return ret;
+@@ -637,7 +652,7 @@ static void __exit hwrng_modexit(void)
+ {
+ 	mutex_lock(&rng_mutex);
+ 	BUG_ON(current_rng);
+-	kfree(rng_buffer);
++	free_page((unsigned long)rng_buffer);
+ 	kfree(rng_fillbuf);
+ 	mutex_unlock(&rng_mutex);
+ 
+diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
+index a90001e02bf7..b71c137fcd05 100644
+--- a/drivers/char/hw_random/virtio-rng.c
++++ b/drivers/char/hw_random/virtio-rng.c
+@@ -104,6 +104,7 @@ static int probe_common(struct virtio_device *vdev)
+ 
+ 	vi->hwrng = (struct hwrng) {
+ 		.read = virtio_read,
++		.buffer_size = PAGE_SIZE,
+ 		.cleanup = virtio_cleanup,
+ 		.priv = (unsigned long)vi,
+ 		.name = vi->name,
+diff --git a/include/linux/hw_random.h b/include/linux/hw_random.h
+index 8e6dd908da21..582c8787f808 100644
+--- a/include/linux/hw_random.h
++++ b/include/linux/hw_random.h
+@@ -31,6 +31,7 @@
+  * @read:		New API. drivers can fill up to max bytes of data
+  *			into the buffer. The buffer is aligned for any type
+  *			and max is a multiple of 4 and >= 32 bytes.
++ * @buffer_size:	Optional. if not 0, optimal buffer size.
+  * @priv:		Private data, for use by the RNG driver.
+  * @quality:		Estimation of true entropy in RNG's bitstream
+  *			(in bits of entropy per 1024 bits of input;
+@@ -43,6 +44,7 @@ struct hwrng {
+ 	int (*data_present)(struct hwrng *rng, int wait);
+ 	int (*data_read)(struct hwrng *rng, u32 *data);
+ 	int (*read)(struct hwrng *rng, void *data, size_t max, bool wait);
++	size_t buffer_size;
+ 	unsigned long priv;
+ 	unsigned short quality;
+ 
+-- 
+2.26.2
+
