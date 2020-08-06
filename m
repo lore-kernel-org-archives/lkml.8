@@ -2,101 +2,102 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A572C4363A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8566A221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7519722CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="M+qtjXCm"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="a3YFdVFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgHFFzJ (ORCPT
+        id S1728262AbgHFGiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:55:09 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:48262 "EHLO cmta18.telus.net"
+        Thu, 6 Aug 2020 02:38:05 -0400
+Received: from m12-15.163.com ([220.181.12.15]:33391 "EHLO m12-15.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgHFFzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 01:55:08 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id 3YrokNSMVqUs33YrpkBwBc; Wed, 05 Aug 2020 23:55:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1596693307; bh=UdY9SBhzelhDfX04xJQMe/tnrZmIn+bwMhQh/d7gS14=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=M+qtjXCmrA7/G/ymG1TyeaJgy2oPWxHrtGABymuDkulMYUHYEQMRm72rghu6tr00J
-         GeNOqke41SHjOELaOF4GAV8QVwnu26wbWCIEjehINnlesMVoIbp6LJAw4emlBHT33n
-         uu8ivc0EN0J394QKemMHBPvSsKKrI+FrIYMrNU6sgX0/Hry66VunxBfUx4gRDzsTbH
-         SJ4jQYm0RY0Q8rj01jjLgvXG74nzreIBfi8bGqNaXN0xXXXYsJ2GYvEBmUwTSI5Ohi
-         EshHRPxqMW/k8xnjkABIyxUGj+JcODXWPDhH81fT/JCWtBauriO2h6/s9Y0mxNKndW
-         52EjvC48f+CmA==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=Mo8sFFSe c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=BksG-UogcMQq9l1sBr8A:9
- a=WNjDzcG3-xvNU-Du:21 a=sI7P83wg1hG2aD_E:21 a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher> <3226770.pJcYkdRNc2@kreacher>
-In-Reply-To: <3226770.pJcYkdRNc2@kreacher>
-Subject: RE: [PATCH v7] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Wed, 5 Aug 2020 22:55:03 -0700
-Message-ID: <004701d66bb6$22a11410$67e33c30$@net>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdZrSU4IfOy1pyhARg2cUO2gNUQGyAAbEZuQ
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfE4hLMxmYldtWQ0VrnqMmaky8OnCKk9AJ11DLo7lGr1p7mIp04Qio1Ieh3xJEu5B/w5yZyrcESGncqPlckt23ApEzliATAfPpUCKfWKbTU29WS9eMOOG
- Ifmh10zUQD19Lbp5dS3q6xnLUftetkQjOZqJ5MzhHqydyJovoM0OT1nDsY7KJspil15dMl0Gn5rC4E+1NVmkNi7bp00PgUwUYVgeyPRVV4shsoJHO9a9Adhx
- 7jbAE0Kmpcnf5bGmwR5t9OnJp5E0AowyzTh0zvUC0DVdze5FoBPC/qWx+lYEfzFTmQ8g1Ocq9VmjFhD4iNCRYM5D96/ruSpprz0XE1QlkucD3PIf2OLpQO/8
- yVgv40IlP6llcuRGUkbUbaNf+g6LoXe66FRT5BNjoacWEBPmoZ5ETIt+AGbca657bVigugIyMtXVcI/RKoJuoN3iDH7HEI6/XtBJpEg5ugbz4fjGqLU=
+        id S1726051AbgHFGiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 02:38:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=PtRFGMacX+QscZqfbZ
+        +Lu5FxPAgj+Rd4K44h0HnDPoQ=; b=a3YFdVFvhVRmHICzbfsIWhBZQD/rgvhTWF
+        QqabZ3we7Z8X5pN69cI6TvMH1VIjmZR24IqQUE1PQZ6UUsGIgQVv/D8llXC6y/zg
+        PcYOV6m9LG0jEZU2WJ5hxBgFM89l2A2GItkWczwvO75skBqUglVeD0sJvnjbohyj
+        fEJhsVyNM=
+Received: from localhost.localdomain (unknown [58.33.126.62])
+        by smtp11 (Coremail) with SMTP id D8CowADnbcp1oStf0rT5EQ--.55997S2;
+        Thu, 06 Aug 2020 14:21:45 +0800 (CST)
+From:   Grant Feng <von81@163.com>
+To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low pulse when startup
+Date:   Thu,  6 Aug 2020 14:21:29 +0800
+Message-Id: <20200806062130.25187-1-von81@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: D8CowADnbcp1oStf0rT5EQ--.55997S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AF17try8JrWDGr18ur48WFg_yoW8GF4UpF
+        1DCFyrZFW3J3y2g3WfZFW7u345ta18KrZrJrWxXa4Sv3WkK3Wvga4ktFnIvF13XFWxuay5
+        ZanxtFW8Gr4vyw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j73kZUUUUU=
+X-Originating-IP: [58.33.126.62]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiRBp4OlSIgamPWgAAs9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.08.05 09:56 Rafael J. Wysocki wrote:
+generate a 5ms low pulse on sdb pin when startup, then the chip
+becomes more stable in the complex EM environment.
 
-> v6 -> v7:
->    * Cosmetic changes in store_energy_performance_prefernce() to reduce the
->      LoC number and make it a bit easier to read.  No intentional functional
->      impact.
-
-??
-V7 is identical to V6.
-
-Diff:
-
-$ diff hwppassive-v6-2-2.patch hwppassive-v7-2-2.patch
-2c2
-< Sent: August 4, 2020 8:11 AM
+Signed-off-by: Grant Feng <von81@163.com>
 ---
-> Sent: August 5, 2020 9:56 AM
-5c5
-< Subject: [PATCH v6] cpufreq: intel_pstate: Implement passive mode with HWP enabled
----
-> Subject: [PATCH v7] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-76a77,81
->
-> v6 -> v7:
->    * Cosmetic changes in store_energy_performance_prefernce() to reduce the
->      LoC number and make it a bit easier to read.  No intentional functional
->      impact.
+ drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-... Doug
+diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
+index ca6634b8683c..b4f70002cec9 100644
+--- a/drivers/leds/leds-is31fl319x.c
++++ b/drivers/leds/leds-is31fl319x.c
+@@ -16,6 +16,8 @@
+ #include <linux/of_device.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ 
+ /* register numbers */
+ #define IS31FL319X_SHUTDOWN		0x00
+@@ -61,6 +63,7 @@
+ struct is31fl319x_chip {
+ 	const struct is31fl319x_chipdef *cdef;
+ 	struct i2c_client               *client;
++	struct gpio_desc		*sdb_pin;
+ 	struct regmap                   *regmap;
+ 	struct mutex                    lock;
+ 	u32                             audio_gain_db;
+@@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
+ 		is31->audio_gain_db = min(is31->audio_gain_db,
+ 					  IS31FL319X_AUDIO_GAIN_DB_MAX);
+ 
++	is31->sdb_pin = gpiod_get(dev, "sdb", GPIOD_ASIS);
++	if (IS_ERR(is31->sdb_pin)) {
++		dev_warn(dev, "failed to get gpio_sdb, try default\r\n");
++	} else {
++		gpiod_direction_output(is31->sdb_pin, 0);
++		mdelay(5);
++		gpiod_direction_output(is31->sdb_pin, 1);
++	}
++
+ 	return 0;
+ 
+ put_child_node:
+-- 
+2.17.1
 
 
