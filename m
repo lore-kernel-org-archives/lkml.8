@@ -2,158 +2,220 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB742086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B8E2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LRaJTvTW"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NFp7G9kd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgHFQyi (ORCPT
+        id S1729786AbgHFQys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729111AbgHFQun (ORCPT
+        Thu, 6 Aug 2020 12:54:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52960 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729111AbgHFQym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:50:43 -0400
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2060f.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e1a::60f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9080CC0D942C
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:45:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JIcGnlhXsL2JHZTHArjIyTci93TGBNAFek9b/Zpr83Lxv8fDLhZi+gTGzVvTcGlqFpOH56/PQCxxW8dZRS2avhttaT86U1kObnMMMTM9S6f4nETHAQl665Xp3pGfvGh+RtULvRoo3JCmAcbJFjTxKyG/zQy8d1P4rHa790GkKhSEwV4b5lcXcZ6vQaxBYsLuNlry/L7Tifc+eoJJ7iqv+MBEZfv59AMzV1zT/PSk8YdP40UubgqKT8aXq5zfVEswi6KxkG6xw1yO0xo2pIVJ1Z0pr13MsGyT7ggg9DztgUSktXWkpD4Wf4JpBDfgH4/W8NwsTzXnQYyVY8LQHHfTiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lMjay+xK+PsR1kMGpTyND9dKSV6ajylT4lusBHJ0bkk=;
- b=QRB1UcMfKGwkCtKhyeV2cwxCtA5+2ilWNaaCiuK8HK3FZY4z2tfSLrdOzwSC/EH7WAMzsxzi3OLXv0cNDG90W+3lbFRturiP9diRT20wsDoSV2ynmqVGRBXaRM6NgTxjoiWEutRMI5Tai7ewNtvuZ9rFJcoCqJBHKbMed7vN6LXgHp41NTSJmylyKAo+m/2WOrsCbKT30u8hOoRRp5AQiDGa90Dy2GjbdYznG/q8mKSFMueFlKSKtDPlfjvjTFBoaSu1L7UgtelY9RlQfaThonA2u28QOhHhUf1JTbGv4G3a9Yi0xsCyIHKyc+yBwvoMnCKo+wV783O2NCg0d06cjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lMjay+xK+PsR1kMGpTyND9dKSV6ajylT4lusBHJ0bkk=;
- b=LRaJTvTWXuChZPcwnLlvdHm2cT0huNyHlxBvviS4uzHtOVg+PI/rODk/e2MnPIFuGCP/6lCBkfNkyaZ0z/FdnYgR8EzEJihesGMMNgq/ZTixZMjsIMMr0GC5B6hEeKk44cDrvKjuxPIsYwYzOa3MTIWl1p3BAWxIwvu2YnErXkI=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
-Received: from AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
- by AM0PR05MB6628.eurprd05.prod.outlook.com (2603:10a6:20b:15b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Thu, 6 Aug
- 2020 12:43:59 +0000
-Received: from AM0PR05MB4786.eurprd05.prod.outlook.com
- ([fe80::9186:8b7:3cf7:7813]) by AM0PR05MB4786.eurprd05.prod.outlook.com
- ([fe80::9186:8b7:3cf7:7813%7]) with mapi id 15.20.3239.021; Thu, 6 Aug 2020
- 12:43:59 +0000
-Date:   Thu, 6 Aug 2020 15:43:54 +0300
-From:   Eli Cohen <eli@mellanox.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
-        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn
-Subject: Re: [PATCH 1/4] vdpa: introduce config op to get valid iova range
-Message-ID: <20200806124354.GA172661@mtl-vdi-166.wap.labs.mlnx>
-References: <20200617032947.6371-1-jasowang@redhat.com>
- <20200617032947.6371-2-jasowang@redhat.com>
- <20200805085035-mutt-send-email-mst@kernel.org>
- <20200806120354.GA171218@mtl-vdi-166.wap.labs.mlnx>
- <20200806082727-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806082727-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-ClientProxiedBy: FR2P281CA0007.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::17) To AM0PR05MB4786.eurprd05.prod.outlook.com
- (2603:10a6:208:b3::15)
+        Thu, 6 Aug 2020 12:54:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076FVtLN001663;
+        Thu, 6 Aug 2020 11:34:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=/6OwY2FMLYMMfilDKDbdLEaroXYly6ajpHy06tH7vzE=;
+ b=NFp7G9kd2x96lc9KEZiGdkoiJtZVPUeCg+siGa9Rvr+HnY3ZwjZHVOiTfqDwgSCPW+Tc
+ iBDfRXr0claVrFidVYxv7V2IYQzOQwBVk4nGtfYZYPN5PqB3+pk+VMlJ0chbURrLir9W
+ 1hgjui5lwxXaXhU+Ye7jMRSajeC8rMDRlotc7FrkXP1qwAwvsH/dbKvBKSfZjpEc+/J9
+ GmEGWO4h5GI2Bgi+3kjgnQ1ycjz5i/zbYiF1M7Jncc+PMyFW1a0l6vOEd2d0+rLCUlDb
+ UD2Ou4iJP+c3h7K4bcLdfqya0iBR0RxJd5IivrCFQIXoQduwt0WcXW5+HrqmSDhZWj8i OA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32repgumnm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 11:34:48 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076FWxK7005324;
+        Thu, 6 Aug 2020 11:34:48 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32repgumn8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 11:34:48 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076FYC00010222;
+        Thu, 6 Aug 2020 15:34:47 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 32n018jgks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 15:34:47 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076FYkDv60096866
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 15:34:46 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1999C605B;
+        Thu,  6 Aug 2020 15:34:45 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F259C6055;
+        Thu,  6 Aug 2020 15:34:44 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.68.187])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Aug 2020 15:34:43 +0000 (GMT)
+Subject: Re: [PATCH 1/2] ima: Pre-parse the list of keyrings in a KEY_CHECK
+ rule
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
+ <20200727140831.64251-2-tyhicks@linux.microsoft.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <8f749594-1214-9f2d-4614-d360772a2ab6@linux.vnet.ibm.com>
+Date:   Thu, 6 Aug 2020 11:34:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mtl-vdi-166.wap.labs.mlnx (94.188.199.18) by FR2P281CA0007.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.13 via Frontend Transport; Thu, 6 Aug 2020 12:43:57 +0000
-X-Originating-IP: [94.188.199.18]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2d17f53a-f0db-43b8-c27e-08d83a06638e
-X-MS-TrafficTypeDiagnostic: AM0PR05MB6628:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR05MB6628BE7BAC483329EB370B46C5480@AM0PR05MB6628.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NRbOEy3dPRTd9iBLY4apxq3j+OnXkB103y11VfjEbxwnkvSw2GEowFi/cTHXXy6yKVcH3Phvn2yLXk8V9l5tpORBUEjSLC1CBaF9dk+yGj7V/9QcO2phI4UQ9jNxNTSl1+aswZybRQoaFXv3+xVAb7mN0dYm6TqD/ZrBcPrsgeVQhIEB3PshGqaazKhPLWtt73Or6JjUbaBflIP92oPwKW/DZpwsAoxYr97fCcqq1PQKlgRtO9d0PbdbpC2eW5IXMRXJ/wAa8bvrXWBjeoxNgGz/+nw4AKm/mjyf6l3rWEAFY5s5LPpl9YDKg4HyiINa
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4786.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(7696005)(9686003)(52116002)(6916009)(33656002)(4326008)(5660300002)(316002)(83380400001)(66946007)(66476007)(66556008)(55016002)(7416002)(6666004)(8676002)(1076003)(8936002)(26005)(956004)(2906002)(86362001)(6506007)(478600001)(186003)(16526019);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Qyj+g/y1Mxv3h07bwRSN+9PUDKK3D00UrJzcdsQzMeMeMvYliUH9qCU4bc7K1eJ9hRLsukhhBVm9JV7ki/ORK43sgDokUurA9esk8gv+tDdjSvEEM1+6itJqRokxSPHXIoY11jBnVCYvUldS45wo/pzzVRKz8bT4ks4n4KObE/DtV+fmKbhqbBPFWLlskQGLrszGGNGoCh7vxoWZ23xSt40um3cSGmnt/qSXt8qOEvsUq9O83F/00y9UXQURg1X4jSi/Bv3OlewEggWtLxmW/NZmbT65bSmvjIROprXAjBGgZy9n1SRd6T6PzwO/usrJs5VYhdvBBnTvfqvuj+c2XnANqxLMCi7RV6hSFD4Szx/4X4Mpgig7zyrYV3j95hLzVlCF3oUpTqWWklwz4YplLpbbsl+vJYkmxroiXr6E+QlWNgCLXJxDM6JURapO+6Tpfcf4lZ0oScSqgw9Joa5q7pU0XFjFipW7gySCfZmeIbT4rtnjy0cuj7KmJpHvLYDUvNYSRGdpgaDYPrLd+o7RbSt5nsvfI+4jVCgG34jwFMm2j7thBl0bJZlqnvpeeTNWnTiFBj/zHTyf6KWpXSkIIE3DEaGwF4kiNybPU4lGVo7PCIstycORAaFuTff75GsdVTugR36HS35BjC65xcGJzQ==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d17f53a-f0db-43b8-c27e-08d83a06638e
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4786.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 12:43:59.1857
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WXXLlkcepGdTTije8PBzn8urm8vJcxodDNTkw8TtU45FyOZNF99jFefBP+RvGWXIk5THTkekNUEyImqFV8yO6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6628
+In-Reply-To: <20200727140831.64251-2-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_12:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1011 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 08:29:22AM -0400, Michael S. Tsirkin wrote:
-> On Thu, Aug 06, 2020 at 03:03:55PM +0300, Eli Cohen wrote:
-> > On Wed, Aug 05, 2020 at 08:51:56AM -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Jun 17, 2020 at 11:29:44AM +0800, Jason Wang wrote:
-> > > > This patch introduce a config op to get valid iova range from the vDPA
-> > > > device.
-> > > > 
-> > > > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > > > ---
-> > > >  include/linux/vdpa.h | 14 ++++++++++++++
-> > > >  1 file changed, 14 insertions(+)
-> > > > 
-> > > > diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-> > > > index 239db794357c..b7633ed2500c 100644
-> > > > --- a/include/linux/vdpa.h
-> > > > +++ b/include/linux/vdpa.h
-> > > > @@ -41,6 +41,16 @@ struct vdpa_device {
-> > > >  	unsigned int index;
-> > > >  };
-> > > >  
-> > > > +/**
-> > > > + * vDPA IOVA range - the IOVA range support by the device
-> > > > + * @start: start of the IOVA range
-> > > > + * @end: end of the IOVA range
-> > > > + */
-> > > > +struct vdpa_iova_range {
-> > > > +	u64 start;
-> > > > +	u64 end;
-> > > > +};
-> > > > +
-> > > 
-> > > 
-> > > This is ambiguous. Is end in the range or just behind it?
-> > > How about first/last?
-> > 
-> > It is customary in the kernel to use start-end where end corresponds to
-> > the byte following the last in the range. See struct vm_area_struct
-> > vm_start and vm_end fields
-> 
-> Exactly my point:
-> 
-> include/linux/mm_types.h:       unsigned long vm_end;           /* The first byte after our end address
-> 
-> in this case Jason wants it to be the last byte, not one behind.
-> 
-> 
-Maybe start, size? Not ambiguous, and you don't need to do annoying
-calculations like size = last - start + 1
+
+On 7/27/20 10:08 AM, Tyler Hicks wrote:
+> The ima_keyrings buffer was used as a work buffer for strsep()-based
+> parsing of the "keyrings=" option of an IMA policy rule. This parsing
+> was re-performed each time an asymmetric key was added to a kernel
+> keyring for each loaded policy rule that contained a "keyrings=" option.
+>
+> An example rule specifying this option is:
+>
+>   measure func=KEY_CHECK keyrings=a|b|c
+>
+> The rule says to measure asymmetric keys added to any of the kernel
+> keyrings named "a", "b", or "c". The size of the buffer size was
+> equal to the size of the largest "keyrings=" value seen in a previously
+> loaded rule (5 + 1 for the NUL-terminator in the previous example) and
+> the buffer was pre-allocated at the time of policy load.
+>
+> The pre-allocated buffer approach suffered from a couple bugs:
+>
+> 1) There was no locking around the use of the buffer so concurrent key
+>     add operations, to two different keyrings, would result in the
+>     strsep() loop of ima_match_keyring() to modify the buffer at the same
+>     time. This resulted in unexpected results from ima_match_keyring()
+>     and, therefore, could cause unintended keys to be measured or keys to
+>     not be measured when IMA policy intended for them to be measured.
+>
+> 2) If the kstrdup() that initialized entry->keyrings in ima_parse_rule()
+>     failed, the ima_keyrings buffer was freed and set to NULL even when a
+>     valid KEY_CHECK rule was previously loaded. The next KEY_CHECK event
+>     would trigger a call to strcpy() with a NULL destination pointer and
+>     crash the kernel.
+>
+> Remove the need for a pre-allocated global buffer by parsing the list of
+> keyrings in a KEY_CHECK rule at the time of policy load. The
+> ima_rule_entry will contain an array of string pointers which point to
+> the name of each keyring specified in the rule. No string processing
+> needs to happen at the time of asymmetric key add so iterating through
+> the list and doing a string comparison is all that's required at the
+> time of policy check.
+>
+> In the process of changing how the "keyrings=" policy option is handled,
+> a couple additional bugs were fixed:
+>
+> 1) The rule parser accepted rules containing invalid "keyrings=" values
+>     such as "a|b||c", "a|b|", or simply "|".
+>
+> 2) The /sys/kernel/security/ima/policy file did not display the entire
+>     "keyrings=" value if the list of keyrings was longer than what could
+>     fit in the fixed size tbuf buffer in ima_policy_show().
+>
+> Fixes: 5c7bac9fb2c5 ("IMA: pre-allocate buffer to hold keyrings string")
+> Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> ---
+>   security/integrity/ima/ima_policy.c | 138 +++++++++++++++++++---------
+>   1 file changed, 93 insertions(+), 45 deletions(-)
+>
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 07f033634b27..c328cfa0fc49 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -59,6 +59,11 @@ enum policy_types { ORIGINAL_TCB = 1, DEFAULT_TCB };
+>   
+>   enum policy_rule_list { IMA_DEFAULT_POLICY = 1, IMA_CUSTOM_POLICY };
+>   
+> +struct ima_rule_opt_list {
+> +	size_t count;
+> +	char *items[];
+> +};
+> +
+>   struct ima_rule_entry {
+>   	struct list_head list;
+>   	int action;
+> @@ -78,7 +83,7 @@ struct ima_rule_entry {
+>   		int type;	/* audit type */
+>   	} lsm[MAX_LSM_RULES];
+>   	char *fsname;
+> -	char *keyrings; /* Measure keys added to these keyrings */
+> +	struct ima_rule_opt_list *keyrings; /* Measure keys added to these keyrings */
+>   	struct ima_template_desc *template;
+>   };
+>   
+> @@ -206,10 +211,6 @@ static LIST_HEAD(ima_policy_rules);
+>   static LIST_HEAD(ima_temp_rules);
+>   static struct list_head *ima_rules = &ima_default_rules;
+>   
+> -/* Pre-allocated buffer used for matching keyrings. */
+> -static char *ima_keyrings;
+> -static size_t ima_keyrings_len;
+> -
+>   static int ima_policy __initdata;
+>   
+>   static int __init default_measure_policy_setup(char *str)
+> @@ -253,6 +254,72 @@ static int __init default_appraise_policy_setup(char *str)
+>   }
+>   __setup("ima_appraise_tcb", default_appraise_policy_setup);
+>   
+> +static struct ima_rule_opt_list *ima_alloc_rule_opt_list(const substring_t *src)
+> +{
+> +	struct ima_rule_opt_list *opt_list;
+> +	size_t count = 0;
+> +	char *src_copy;
+> +	char *cur, *next;
+> +	size_t i;
+> +
+> +	src_copy = match_strdup(src);
+> +	if (!src_copy)
+> +		return NULL;
+
+The caller of this function checks for IS_ERR(..) and not 
+IS_ERR_OR_NULL(..). Shouldn't it return ERR_PTR(-EINVAL) instead of NULL ?
+
+Thanks & Regards,
+
+     - Nayna
 
