@@ -2,139 +2,91 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AB6C433F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980CBC43463
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD7E822D02
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD7022D05
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="RCqGu7tx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgHFK6l (ORCPT
+        id S1729376AbgHFKNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 06:58:41 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:50922 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbgHFKhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 06:37:21 -0400
-X-Greylist: delayed 481 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 06:35:34 EDT
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 076ALnK6015337;
-        Thu, 6 Aug 2020 05:21:49 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 076ALmaH015336;
-        Thu, 6 Aug 2020 05:21:48 -0500
-Date:   Thu, 6 Aug 2020 05:21:48 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 23/24] docs: x86/sgx: Document SGX micro architecture and kernel internals
-Message-ID: <20200806102148.GA14798@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com> <20200716135303.276442-24-jarkko.sakkinen@linux.intel.com> <20200728213511.GB13081@duo.ucw.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728213511.GB13081@duo.ucw.cz>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 06 Aug 2020 05:21:49 -0500 (CDT)
+        Thu, 6 Aug 2020 06:13:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729336AbgHFKMf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 06:12:35 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B5EC061756
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 03:12:35 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f18so6236340wmc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 03:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sVXbFojH/0R1sh5NGJY6hM5Fv6yHchdFYqFYRJiPcsk=;
+        b=RCqGu7txZxmTvjk8hFf9VCO6P0oOQtU9w1qLjI9bgEqPurJEc5ppShIfh23PTPqZOF
+         Rx4V3jSS2vqgcGVkhDFvZIr71G3bon5/yAvpGu8v4V3+H8kAyNOvxjumBbk9gU8dCboq
+         XiuD6bY5nCpwm0ePducl8RnH1HsiCdyzM5SwY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sVXbFojH/0R1sh5NGJY6hM5Fv6yHchdFYqFYRJiPcsk=;
+        b=O42bnZ/ys/g7g5RABEhr5Jir14C3F8v4TadPWTFx4GKzoUcfHQDUbp0wX1qMDb9tII
+         Hj+bxN0d7L7PqSDaXsxclf8apnPwYbntvWl1+XMjfjy5FRR9Va2Be+t3300KVAC5D6hb
+         BJqrXAuVJ5wqalAN8RCY1rUkKm6UClsHn8+aL1EzFb8TYFce0Ia2PRcyduuu5D244dAd
+         t8iWkz9kgZ1afhrtAvnpGFeggpTokooueG3AOKXWYyCax7Vm3a2RuUROd7vu58HVtknn
+         zNUOum+iQBpuvvKcQIhCaag3W6mJnhhfWwdxFCPONvj+kAgc6fPtJ1p5h/6D/ven2nQr
+         1t5g==
+X-Gm-Message-State: AOAM532AteQY1YE63T5lGqfhk4mgEuAneohb469QHxWc8aJ6o5n+RDj/
+        V/rA2jHOHy9coWSgeM2QQMMYlegrUIYBj7sqE9Rg1w==
+X-Google-Smtp-Source: ABdhPJzlXXZln0onZBt7l5va/GB6ImScyHaiS3RfhGoDY/VOeSuREACSW8Vh6oIT4OB38N29lX47wSMOiyyn3mPjIOY=
+X-Received: by 2002:a1c:2646:: with SMTP id m67mr7719681wmm.137.1596708752740;
+ Thu, 06 Aug 2020 03:12:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200803062214.24076-1-mark-pk.tsai@mediatek.com>
+In-Reply-To: <20200803062214.24076-1-mark-pk.tsai@mediatek.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Thu, 6 Aug 2020 19:12:21 +0900
+Message-ID: <CAFr9PX=Gk9h6ASi6saBLhoZ45g-WqCzDQo2XWT033fJykFSY_g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] irqchip: irq-mt58xx: Add mt58xx series interrupt
+To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc:     yj.chiang@mediatek.com, alix.wu@mediatek.com, tglx@linutronix.de,
+        jason@lakedaemon.net, Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 11:35:11PM +0200, Pavel Machek wrote:
+Hi Mark-PK,
 
-> Hi!
+Your driver seems to be for the same interrupt controller IP that is
+present in MStar's TV and camera SoCs and now SigmaStar's SoCs.
+I sent a series[0] for a driver very similar to yours but for the
+MStar SoCs. Do you know if it would be possible to confirm if they are
+the
+same thing? MediaTek bought MStar a few years ago so it seems likely
+but I have no hard information.
 
-Good morning, I hope the week is progressing well for everyone.
+If they are the same thing could we work on making one series that
+supports both use cases?
+It's also possible that if the interrupt controller is the same some
+other things like the SPI NOR controller etc are also common and
+working
+on a single driver for those would save us both time.
 
-> > CPUs starting from Icelake use Total Memory Encryption (TME) in
-> > the place of MEE. TME throws away the Merkle tree, which means
-> > losing integrity and anti-replay protection but also enables
-> > variable size memory pools for EPC.  Using this attack for
-> > benefit would require an interposer on the system bus.
-
-> It is not exactly clear what "this attack" means.
-
-In the new world that is SGX, 'this attack', roughly means that
-enclaves are susceptible to the same security threats that would be
-faced if you were running TLS/HTTPS or SSH without packet checksums
-and replay avoidance/detection mechanisms in place.
-
-It is extremely unfortunate to the nascent field of confidential
-computing that an option was not made available to the platform owner
-to choose between full and partial security.  The decision to opt for
-partial security only, significantly limits the utility of this
-technology for architects who are serious about the ability to push
-applications into the 'cloud', or other environments without direct
-physical control, with an expectation that it will be running in an
-'island' of confidentiality or security.
-
-> (And it would be cool to explain against what SGX is protecting. I
-> thought it was malicious RAM, but apparently not on Icelake+).
-
-The best way to understand the implications of all this is to review
-the following paper:
-
-https://eprint.iacr.org/2016/204.pdf
-
-It is the canonical and very thorough description of the Memory
-Encryption Engine (MEE) by its designer Shay Gueron.  Shay is notable
-in that he led the development of the Intel hardware AES architecture
-including the 'shuffle' instructions that make it possible.
-
-As would be expected for a scientific paper on security, it has a full
-description of the threat model that the MEE was designed to address
-and mathematical proofs of its correctness in doing so.  Absent its
-implementation, the 'new' SGX is vulnerable to the threats described
-in that paper.
-
-This ultimately calls into question what the Confidential Computing
-Initiative (CCI) actually represents.  The question to be answered is
-whether or not one believes that encryption without integrity is an
-acceptable security architecture.
-
-One can make a perfectly legitimate argument, which Jarkko notes, in
-that an adversary has to control the physical hardware.  A very candid
-assessment is that the CCI is predicated on the notion of providing
-protection in an environment where you push your computation and data
-into an environment where an adversary has both the access and ability
-to mount an attack.
-
-There are certainly economic issues driving these decisions.  Which is
-ultimately a statement on the actual and very difficult inherency
-barriers that security innovation and advancement faces.
-
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-Hopefully the above is helpful and informative to those who are
-interested in these types of issues.
-
-Best wishes for a productive remainder of the week.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686            EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"We can't solve today's problems by using the same thinking we used in
- creating them."
-                                -- Einstein
+[0] - https://lore.kernel.org/linux-arm-kernel/20200805110052.2655487-1-daniel@0x0f.com/
