@@ -2,220 +2,358 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD80C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F61C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F23E2311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F5923119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ye1VrZbm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WOxDiAq+"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="mRpjVNWc";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="V4t7kp1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgHFRM2 (ORCPT
+        id S1730386AbgHFRMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:12:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58916 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730215AbgHFRKG (ORCPT
+        Thu, 6 Aug 2020 13:12:37 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:42264 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730377AbgHFRM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:10:06 -0400
-Date:   Thu, 06 Aug 2020 17:10:01 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596733801;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WqGPH07pzHO47/xm9n06evZRKuSJhzUmUKmbO1v96+E=;
-        b=Ye1VrZbm2fG74IfDotWAi5nfNJSP1bi31yteIDYG9HWKtdvY2JxF8ZliICEcb1P8cnBokq
-        C/aJkO9shrF1RFok2C8Nd7RRiN9pWHsfchHnbJ47JByoKo4yLVNvQL5xph1KNOimvUSAgv
-        /XPSJzk0zC0rXM8ImENqSSwgB+Y2QApjMM46y5VwsUFdsl2dt2I0SIfaP718NgPh/5Bxw8
-        lkNJPPTmAWdV3zfa3oVG6lJK1ufJUj6D9Ife104+d9g18OB3GwKQumKKEih9Zfo6JDp0T/
-        Ygjx2HEMX+r8Qmjih19PQ4wMx2XMHKxAvZ9WAhT5/GdmvM2o1iTmGFNbBNguUg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596733801;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WqGPH07pzHO47/xm9n06evZRKuSJhzUmUKmbO1v96+E=;
-        b=WOxDiAq+txKabkOs0K+aE484kQD5IEVOtUIk3SESpDUr0NfwNtjagRkbUsf7dageqCPL+Z
-        VnFdsSKB1CzKU1Aw==
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] timekeeping/vsyscall: Provide vdso_update_begin/end()
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Sven Schnelle <svens@linux.ibm.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200804150124.41692-3-svens@linux.ibm.com>
-References: <20200804150124.41692-3-svens@linux.ibm.com>
+        Thu, 6 Aug 2020 13:12:29 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076BPekl022269;
+        Thu, 6 Aug 2020 04:34:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=jN3tbJ0H5AhuKPfGuwHh/w2l9PpmjpyYwBaGYK77DDk=;
+ b=mRpjVNWc3jzKQsF9st+GufeZGtZl9B/cp/7Fei5tKb7rZlS1bY68c+VRCOricoYkKk3I
+ Sm9lBD3nqRpFDKM0Zht4Kf3E2tlYwI8mYkR13O3l9m704R8pWiWgCdJVmFjZ33v1uCrd
+ F9QTNUOwB/MxdZZei4suClSiGNA491Wwf+hDcxuLpkcMzCw0SQwbyXtzP+CNVFoKMgpr
+ d6g5R9LrZketZdtWusPPgOiMCwx4PYriP0Ek8kYauQx79k+z8SSzu3hIr1iZzqb0jeS7
+ 05Y222Aci3q+axuejhnVkVX98Atzs52B+DD4RX8MmenH2fbiNSakHttTLAZvYh5c+PyC DQ== 
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 32n8gy1uvc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 04:34:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4si2uPlYGI+WhAZtgvA7WH/XRGFf8xNU8OOCYi6TxyZl+jvXxZrz/R7NI/tNZHgXvDUXmYZzuxTxgrgfsEt1Uob1IVrDp4BxwZ3FSH3Qg51N1yuED5aquyI02mFGzg9KmnS4g0/e5RG5tlZLw+mJnNsUNNKv6BE6gNnvEzkO8eNGXikfq0t6Xfi6XjprtHqM37jgg1BhEZug1TnGcJx4nNKn6qhR2kWTxlSCov861wHQ0ENOPEzou8+qrnnUGHpOdeJGJfWOHIMGV9joBg9G6Tap95XBZOst9l8N9dBIhh7Kyu/tu/hjv13zhoaJP8XixcF0Bea0wP6enVG7RWU4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jN3tbJ0H5AhuKPfGuwHh/w2l9PpmjpyYwBaGYK77DDk=;
+ b=QJGVwwh8p2oqtdAD4TOgIbtTxVldGpRFmqTkNTTnk3u7WgGzXZ6XuCzwIGf/p0F29h7+QiX5m48YSW7BibGzP1IeJrPPN//msVVbds/2YT9bqG1Z2zaB8PtJhk69G/JD5+G/p4OZ8+LdtOVBI3d5rq2BWt69ntWjNyyVG7QVqnpuILx3gXVZxXtJcs3aOfdy5UJnMFXSHXlhgMN2xP6zwc4+kwqdooAbrixAC30QiFOzhoT4Fb1EC52pz6cQk1i5eYVHOJ1oVlDC9QyISQc/I33ekDK0anLGcX/syz39f049Rq5+m657z5Y2VutyIkNfjYTdryEy5PxQEvqpct+lzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.244) smtp.rcpttodomain=samsung.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jN3tbJ0H5AhuKPfGuwHh/w2l9PpmjpyYwBaGYK77DDk=;
+ b=V4t7kp1CMp71KySbV/5uDMBXagoFSEasgraHqB1v7BGQCUZYluUwHvLMjC5bDRghKXik9fHKjAXLLPpNCfdMQu78djRJsJMANpBJGCLxyE52erCxPEvMF4m3JkO+SSN7oaB7pl+VG5vZU2m5aUK1Mv5hWi+YWniDt8O2+z7Na0s=
+Received: from CO2PR04CA0158.namprd04.prod.outlook.com (2603:10b6:104:4::12)
+ by MN2PR07MB6605.namprd07.prod.outlook.com (2603:10b6:208:164::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Thu, 6 Aug
+ 2020 11:34:50 +0000
+Received: from MW2NAM12FT033.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:104:4:cafe::3a) by CO2PR04CA0158.outlook.office365.com
+ (2603:10b6:104:4::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend
+ Transport; Thu, 6 Aug 2020 11:34:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
+ smtp.mailfrom=cadence.com; samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
+ MW2NAM12FT033.mail.protection.outlook.com (10.13.181.41) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3261.10 via Frontend Transport; Thu, 6 Aug 2020 11:34:48 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 076BYZWp083124
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 04:34:48 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 076BYZ6w008213;
+        Thu, 6 Aug 2020 13:34:35 +0200
+Received: (from sjakhade@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 076BYZ2X008212;
+        Thu, 6 Aug 2020 13:34:35 +0200
+From:   Swapnil Jakhade <sjakhade@cadence.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Laurent.pinchart@ideasonboard.com>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>, <praneeth@ti.com>
+Subject: [PATCH v8 3/3] drm: bridge: cdns-mhdp: Add j721e wrapper
+Date:   Thu, 6 Aug 2020 13:34:32 +0200
+Message-ID: <1596713672-8146-4-git-send-email-sjakhade@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-Message-ID: <159673380118.3192.11120762582178305899.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 44b8cd8d-25d0-4308-5547-08d839fcba24
+X-MS-TrafficTypeDiagnostic: MN2PR07MB6605:
+X-Microsoft-Antispam-PRVS: <MN2PR07MB6605FC0000CE0644E6D2B282C5480@MN2PR07MB6605.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s0Ly7MvAeJUpGzw/9bSuX873JnhTgoUq9+jVRirOWqxwkIx/JirQNLW4KQRm6lJP2LZOWDt/lNyYLkMgSs308YAAK/h3HfDOI3j54ZZTp+r9AR5oRKWFsiHI3HvrFhpSzJrfXVis7CzVi/ML9EdOyerr7HvRbGj3jiLyNN4srxmyHPbQ+44JhNdXT0iM5SgkWgWhsbVsqZTQetKonuZG0EH09SXk5EJ3JrbpJntyFLCeYKMmje9KM68XtdegumqAI5/UNLSx8Ydkzp4VTSTUacpjRoXXZtR5xFxQERX1mFzCDKeE1RhoDBfJ59/jUE6mfK3CyAs+tCzxsOJbEq1GI09CsgVqEm66Vw7cwbaLqap0/ZaiTRH36piqXAckk4psGlAgdYw24lhL2aUabhIfRzQ/rpfCCcgNl/l+3SMdrcZuYR+vtzn2hyNTTXEIWoAE4i/1Q1kdG/TsVOOCfLDZNrQvt/terPjrCxANMZB/nv0lTzplJ2bsqKqGDybZJaQ2w9eZHgL3VqqkxbXQyErZ+ZjyRIDKjOTqh5wMrWWEVdsZAYWbzhT2dzjlyAgDOKVu
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(36092001)(46966005)(36756003)(36906005)(186003)(82310400002)(4326008)(6666004)(2906002)(83380400001)(8936002)(5660300002)(26005)(336012)(86362001)(110136005)(81166007)(426003)(356005)(42186006)(47076004)(82740400003)(316002)(8676002)(478600001)(54906003)(966005)(2616005)(70586007)(70206006)(7416002)(921003)(83996005)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:34:48.9770
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44b8cd8d-25d0-4308-5547-08d839fcba24
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: MW2NAM12FT033.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6605
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008060083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+Add j721e wrapper for mhdp, which sets up the clock and data muxes.
 
-Commit-ID:     19d0070a2792181f79df01277fe00b83b9f7eda7
-Gitweb:        https://git.kernel.org/tip/19d0070a2792181f79df01277fe00b83b9f7eda7
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 04 Aug 2020 17:01:23 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 06 Aug 2020 10:57:30 +02:00
-
-timekeeping/vsyscall: Provide vdso_update_begin/end()
-
-Architectures can have the requirement to add additional architecture
-specific data to the VDSO data page which needs to be updated independent
-of the timekeeper updates.
-
-To protect these updates vs. concurrent readers and a conflicting update
-through timekeeping, provide helper functions to make such updates safe.
-
-vdso_update_begin() takes the timekeeper_lock to protect against a
-potential update from timekeeper code and increments the VDSO sequence
-count to signal data inconsistency to concurrent readers. vdso_update_end()
-makes the sequence count even again to signal data consistency and drops
-the timekeeper lock.
-
-[ Sven: Add interrupt disable handling to the functions ]
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200804150124.41692-3-svens@linux.ibm.com
-
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- include/vdso/vsyscall.h            |  3 ++-
- kernel/time/timekeeping.c          |  2 +-
- kernel/time/timekeeping_internal.h | 11 +++++---
- kernel/time/vsyscall.c             | 41 +++++++++++++++++++++++++++++-
- 4 files changed, 53 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/bridge/Kconfig           | 13 +++++
+ drivers/gpu/drm/bridge/Makefile          |  2 +
+ drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 15 +++++
+ drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
+ drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 72 ++++++++++++++++++++++++
+ drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 19 +++++++
+ 6 files changed, 122 insertions(+)
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
 
-diff --git a/include/vdso/vsyscall.h b/include/vdso/vsyscall.h
-index 2c6134e..b0fdc9c 100644
---- a/include/vdso/vsyscall.h
-+++ b/include/vdso/vsyscall.h
-@@ -6,6 +6,9 @@
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 6a4c324302a8..8c1738653b7e 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -38,6 +38,19 @@ config DRM_CDNS_MHDP
+ 	  It takes a DPI stream as input and outputs it encoded
+ 	  in DP format.
  
- #include <asm/vdso/vsyscall.h>
- 
-+unsigned long vdso_update_begin(void);
-+void vdso_update_end(unsigned long flags);
++if DRM_CDNS_MHDP
 +
- #endif /* !__ASSEMBLY__ */
++config DRM_CDNS_MHDP_J721E
++	depends on ARCH_K3_J721E_SOC
++	bool "J721E Cadence DPI/DP wrapper support"
++	default y
++	help
++	  Support J721E Cadence DPI/DP wrapper. This is a wrapper
++	  which adds support for J721E related platform ops. It
++	  initializes the J721e Display Port and sets up the
++	  clock and data muxes.
++endif
++
+ config DRM_CHRONTEL_CH7033
+ 	tristate "Chrontel CH7033 Video Encoder"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 7046bf077603..be92ebf620b6 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -2,6 +2,8 @@
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+ obj-$(CONFIG_DRM_CDNS_MHDP) += cdns-mhdp.o
+ cdns-mhdp-y := cdns-mhdp-core.o
++cdns-mhdp-$(CONFIG_DRM_CDNS_MHDP_J721E) += cdns-mhdp-j721e.o
++
+ obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
+ obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
+ obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+index d47187ab358b..53c25f6ecddf 100644
+--- a/drivers/gpu/drm/bridge/cdns-mhdp-core.c
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+@@ -42,6 +42,8 @@
  
- #endif /* __VDSO_VSYSCALL_H */
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 63a632f..4c7212f 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -50,7 +50,7 @@ static struct {
- 	.seq = SEQCNT_ZERO(tk_core.seq),
+ #include "cdns-mhdp-core.h"
+ 
++#include "cdns-mhdp-j721e.h"
++
+ static DECLARE_WAIT_QUEUE_HEAD(fw_load_wq);
+ 
+ static int cdns_mhdp_mailbox_read(struct cdns_mhdp_device *mhdp)
+@@ -1702,6 +1704,16 @@ static int cdns_mhdp_connector_init(struct cdns_mhdp_device *mhdp)
+ 
+ 	conn->display_info.bus_flags = DRM_BUS_FLAG_DE_HIGH;
+ 
++	if (of_device_is_compatible(mhdp->dev->of_node, "ti,j721e-mhdp8546"))
++	/*
++	 * DP is internal to J7 SoC and we need to use DRIVE_POSEDGE
++	 * in the display controller. This is achieved for the time being
++	 * by defining SAMPLE_NEGEDGE here.
++	 */
++		conn->display_info.bus_flags |=
++					DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++					DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE;
++
+ 	ret = drm_connector_attach_encoder(conn, bridge->encoder);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to attach connector to encoder\n");
+@@ -2521,6 +2533,9 @@ static int cdns_mhdp_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id mhdp_ids[] = {
+ 	{ .compatible = "cdns,mhdp8546", },
++#ifdef CONFIG_DRM_CDNS_MHDP_J721E
++	{ .compatible = "ti,j721e-mhdp8546", .data = &mhdp_ti_j721e_ops },
++#endif
+ 	{ /* sentinel */ }
  };
+ MODULE_DEVICE_TABLE(of, mhdp_ids);
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.h b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
+index bd97a7aeb28b..d40a0f8615a4 100644
+--- a/drivers/gpu/drm/bridge/cdns-mhdp-core.h
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
+@@ -343,6 +343,7 @@ struct cdns_mhdp_bridge_state {
  
--static DEFINE_RAW_SPINLOCK(timekeeper_lock);
-+DEFINE_RAW_SPINLOCK(timekeeper_lock);
- static struct timekeeper shadow_timekeeper;
+ struct cdns_mhdp_device {
+ 	void __iomem *regs;
++	void __iomem *j721e_regs;
  
- /**
-diff --git a/kernel/time/timekeeping_internal.h b/kernel/time/timekeeping_internal.h
-index bcbb52d..4ca2787 100644
---- a/kernel/time/timekeeping_internal.h
-+++ b/kernel/time/timekeeping_internal.h
-@@ -1,12 +1,14 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _TIMEKEEPING_INTERNAL_H
- #define _TIMEKEEPING_INTERNAL_H
--/*
-- * timekeeping debug functions
-- */
-+
- #include <linux/clocksource.h>
-+#include <linux/spinlock.h>
- #include <linux/time.h>
- 
+ 	struct device *dev;
+ 	struct clk *clk;
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+new file mode 100644
+index 000000000000..cc33c9afb5bb
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * timekeeping debug functions
-+ */
- #ifdef CONFIG_DEBUG_FS
- extern void tk_debug_account_sleep_time(const struct timespec64 *t);
- #else
-@@ -31,4 +33,7 @@ static inline u64 clocksource_delta(u64 now, u64 last, u64 mask)
- }
- #endif
- 
-+/* Semi public for serialization of non timekeeper VDSO updates. */
-+extern raw_spinlock_t timekeeper_lock;
-+
- #endif /* _TIMEKEEPING_INTERNAL_H */
-diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
-index 54ce6eb..88e6b8e 100644
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -13,6 +13,8 @@
- #include <vdso/helpers.h>
- #include <vdso/vsyscall.h>
- 
-+#include "timekeeping_internal.h"
-+
- static inline void update_vdso_data(struct vdso_data *vdata,
- 				    struct timekeeper *tk)
- {
-@@ -127,3 +129,42 @@ void update_vsyscall_tz(void)
- 
- 	__arch_sync_vdso_data(vdata);
- }
-+
-+/**
-+ * vdso_update_begin - Start of a VDSO update section
++ * TI j721e Cadence MHDP DP wrapper
 + *
-+ * Allows architecture code to safely update the architecture specific VDSO
-+ * data. Disables interrupts, acquires timekeeper lock to serialize against
-+ * concurrent updates from timekeeping and invalidates the VDSO data
-+ * sequence counter to prevent concurrent readers from accessing
-+ * inconsistent data.
-+ *
-+ * Returns: Saved interrupt flags which need to be handed in to
-+ * vdso_update_end().
++ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++ * Author: Jyri Sarha <jsarha@ti.com
 + */
-+unsigned long vdso_update_begin(void)
++
++#include <linux/io.h>
++#include <linux/platform_device.h>
++
++#include "cdns-mhdp-j721e.h"
++
++#define	REVISION			0x00
++#define	DPTX_IPCFG			0x04
++#define	ECC_MEM_CFG			0x08
++#define	DPTX_DSC_CFG			0x0c
++#define	DPTX_SRC_CFG			0x10
++#define	DPTX_VIF_SECURE_MODE_CFG	0x14
++#define	DPTX_VIF_CONN_STATUS		0x18
++#define	PHY_CLK_STATUS			0x1c
++
++#define DPTX_SRC_AIF_EN			BIT(16)
++#define DPTX_SRC_VIF_3_IN30B		BIT(11)
++#define DPTX_SRC_VIF_2_IN30B		BIT(10)
++#define DPTX_SRC_VIF_1_IN30B		BIT(9)
++#define DPTX_SRC_VIF_0_IN30B		BIT(8)
++#define DPTX_SRC_VIF_3_SEL_DPI5		BIT(7)
++#define DPTX_SRC_VIF_3_SEL_DPI3		0
++#define DPTX_SRC_VIF_2_SEL_DPI4		BIT(6)
++#define DPTX_SRC_VIF_2_SEL_DPI2		0
++#define DPTX_SRC_VIF_1_SEL_DPI3		BIT(5)
++#define DPTX_SRC_VIF_1_SEL_DPI1		0
++#define DPTX_SRC_VIF_0_SEL_DPI2		BIT(4)
++#define DPTX_SRC_VIF_0_SEL_DPI0		0
++#define DPTX_SRC_VIF_3_EN		BIT(3)
++#define DPTX_SRC_VIF_2_EN		BIT(2)
++#define DPTX_SRC_VIF_1_EN		BIT(1)
++#define DPTX_SRC_VIF_0_EN		BIT(0)
++
++/* TODO turn DPTX_IPCFG fw_mem_clk_en at pm_runtime_suspend. */
++
++static int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp)
 +{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+	unsigned long flags;
++	struct platform_device *pdev = to_platform_device(mhdp->dev);
 +
-+	raw_spin_lock_irqsave(&timekeeper_lock, flags);
-+	vdso_write_begin(vdata);
-+	return flags;
++	mhdp->j721e_regs = devm_platform_ioremap_resource(pdev, 1);
++	return PTR_ERR_OR_ZERO(mhdp->j721e_regs);
 +}
 +
-+/**
-+ * vdso_update_end - End of a VDSO update section
-+ * @flags:	Interrupt flags as returned from vdso_update_begin()
-+ *
-+ * Pairs with vdso_update_begin(). Marks vdso data consistent, invokes data
-+ * synchronization if the architecture requires it, drops timekeeper lock
-+ * and restores interrupt flags.
-+ */
-+void vdso_update_end(unsigned long flags)
++static void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
 +{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+
-+	vdso_write_end(vdata);
-+	__arch_sync_vdso_data(vdata);
-+	raw_spin_unlock_irqrestore(&timekeeper_lock, flags);
++	/*
++	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
++	 * to eDP DPI2. This is the only supported SST configuration on
++	 * J721E.
++	 */
++	writel(DPTX_SRC_VIF_0_EN | DPTX_SRC_VIF_0_SEL_DPI2,
++	       mhdp->j721e_regs + DPTX_SRC_CFG);
 +}
++
++static void cdns_mhdp_j721e_disable(struct cdns_mhdp_device *mhdp)
++{
++	/* Put everything to defaults  */
++	writel(0, mhdp->j721e_regs + DPTX_DSC_CFG);
++}
++
++const struct mhdp_platform_ops mhdp_ti_j721e_ops = {
++	.init = cdns_mhdp_j721e_init,
++	.enable = cdns_mhdp_j721e_enable,
++	.disable = cdns_mhdp_j721e_disable,
++};
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
+new file mode 100644
+index 000000000000..7a4a1a269b5e
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * TI j721e Cadence MHDP DP wrapper
++ *
++ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++ * Author: Jyri Sarha <jsarha@ti.com
++ */
++
++#ifndef CDNS_MHDP_J721E_H
++#define CDNS_MHDP_J721E_H
++
++#include <linux/platform_device.h>
++#include "cdns-mhdp-core.h"
++
++struct mhdp_platform_ops;
++
++extern const struct mhdp_platform_ops mhdp_ti_j721e_ops;
++
++#endif /* !CDNS_MHDP_J721E_H */
+-- 
+2.26.1
+
