@@ -2,162 +2,214 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C47C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 857A5206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD77206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdUtrIiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgHFRzs (ORCPT
+        id S1730263AbgHFRzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39220 "EHLO
+        Thu, 6 Aug 2020 13:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbgHFQ2v (ORCPT
+        with ESMTP id S1728117AbgHFQ2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:28:51 -0400
-Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D6B12C002156;
-        Thu,  6 Aug 2020 08:55:08 -0700 (PDT)
-Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
-        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 076Frg7D045971;
-        Thu, 6 Aug 2020 17:53:42 +0200 (CEST)
-        (envelope-from pisa@cmp.felk.cvut.cz)
-Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
-        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 076FrfBn002665;
-        Thu, 6 Aug 2020 17:53:41 +0200
-Received: (from pisa@localhost)
-        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 076FrfWs002664;
-        Thu, 6 Aug 2020 17:53:41 +0200
-X-Authentication-Warning: haar.felk.cvut.cz: pisa set sender to pisa@cmp.felk.cvut.cz using -f
-From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
-To:     Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
-Date:   Thu, 6 Aug 2020 17:53:40 +0200
-User-Agent: KMail/1.9.10
-Cc:     Pavel Machek <pavel@ucw.cz>, linux-can@vger.kernel.org,
-        devicetree@vger.kernel.org, mkl@pengutronix.de,
-        socketcan@hartkopp.net, wg@grandegger.com, davem@davemloft.net,
-        mark.rutland@arm.com, c.emde@osadl.org, armbru@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
-        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com
-References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz> <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz> <20200806144713.GA829771@bogus>
-In-Reply-To: <20200806144713.GA829771@bogus>
-X-KMail-QuotePrefix: > 
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B1CC002147;
+        Thu,  6 Aug 2020 09:27:29 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q75so42072431iod.1;
+        Thu, 06 Aug 2020 09:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ahDyQRQ8qG4y6mT2u2SznObMHtFgTL4ajSNN22kfjp4=;
+        b=ZdUtrIiJcl7Nfj9Rvxj9ES6+kDWC9CU4i6LSL72ge1TPy0kr03vTTQEUex02PjmL3u
+         OREa/2ZjGChbnkDQPpgqTUPhSe1rrAhOluGC/DnFLngXi6g5zwZGyNbmoRXbsTxxdNht
+         fct1LmaMYieptij4rv7VS/p47/4iviUWpBv0w3z9v1hGJLdxx9bBuWkxNdrfMKei+8pm
+         iADYistAX6rxg2A/SFtqiU3NnJBJPQZHYT6bkzKb13tAG6buip1ZlNxlEI45+l4cQThT
+         FLg479wbNG8iJF15uFtunAfz8Lpk+Y+8WpfyljXhAmTw3Eugcyr9C/nhqPKFGXKkKu3+
+         uUKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ahDyQRQ8qG4y6mT2u2SznObMHtFgTL4ajSNN22kfjp4=;
+        b=ma8hcYstOX/2t0tqA1eUEpt/wM7WuES0R+yB8oMngn2R4NOvRj8tWWOHpoFmijYLiw
+         xS3Taii4Pz0b9HaZD/JJ+8EnR0umErapR17o8M0EkSmIYeL3SjL/2dt773MoUzaxrhF0
+         5jZ43uCuitf0jcPW4MD+fnqiIOxrWY1ZfHORCO7qWk0ZgvAtBVmTA0qMy5+FvOytY0Uq
+         GYW+c9tREOdXogIYjdY+aMC7MOPVHog/lznKoGKBkckiMacjWtcH81Ll4X5HZTD+speg
+         lL+x92WXo20o+k/1nSYrxBW7Vc8Ufj1rlPy9wlXfCCxDD+dInnB2uEgYaLo/rCH3afGg
+         7rVw==
+X-Gm-Message-State: AOAM531rx88ZikX2dn4FJkAgfSFRn5cK3tjihTSdWHmp47Zt67Gv7jx+
+        BUtbpJ+GKKxAQ/6JDgqEGyK1Tks/fHy8vic3Oag=
+X-Google-Smtp-Source: ABdhPJwp0t3SYC5aIhVbXM5FB0FqySqXQ3e9kH+H7ALWmqQU0x59DnrVnktbemL/IXIyov7ZoZdkXqsBZiq+pkoA6oM=
+X-Received: by 2002:a05:6602:2e83:: with SMTP id m3mr11285893iow.38.1596731248551;
+ Thu, 06 Aug 2020 09:27:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202008061753.40832.pisa@cmp.felk.cvut.cz>
-X-FELK-MailScanner-Information: 
-X-MailScanner-ID: 076Frg7D045971
-X-FELK-MailScanner: Found to be clean
-X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached, score=-0.1,
-        required 6, BAYES_00 -0.50, KHOP_HELO_FCRDNS 0.40,
-        NICE_REPLY_A -0.00, SPF_HELO_NONE 0.00, SPF_NONE 0.00)
-X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
-X-FELK-MailScanner-Watermark: 1597334025.32967@lL+aMP+/PLx5Ni1jQOKRFQ
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-22-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UfpHjBTHvtZz7=WMhZZAunVYuNMpuYBQCiorERb5seFUQ@mail.gmail.com>
+ <f34e790f-50e6-112c-622f-d7ab804c6d22@linux.alibaba.com> <CAKgT0UckqbmYJDE3L2Bg1Nr=Y=GT0OBx1GEhaZ14EbRTzd8tiw@mail.gmail.com>
+ <a1c6a3a6-f8e3-7bb5-e881-216a4b57ae84@linux.alibaba.com>
+In-Reply-To: <a1c6a3a6-f8e3-7bb5-e881-216a4b57ae84@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 6 Aug 2020 09:27:16 -0700
+Message-ID: <CAKgT0UcARhDAVYkJAPe=P5XBfk9fdyGPx0S7rqhiLLhg3s62dQ@mail.gmail.com>
+Subject: Re: [PATCH v17 21/21] mm/lru: revise the comments of lru_lock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pavel and Rob,
-
-thanks much for review.
-
-On Thursday 06 of August 2020 16:47:13 Rob Herring wrote:
-> On Tue, Aug 04, 2020 at 11:20:21AM +0200, Pavel Machek wrote:
-> > On Tue 2020-08-04 11:18:17, Pavel Machek wrote:
-> > > Hi!
-> > >
-> > > > The commit text again to make checkpatch happy.
-> > >
-> > > ?
-
-The checkpatch reports as a problem when there is no description
-of the patch. At least for patch
-
-  [PATCH v4 1/6] dt-bindings: vendor-prefix: add prefix for the Czech Technical University in Prague.
-
-I consider that little pontificate but I have fullfiled its suggestion
-with remark, that in this case, It is not my intention to add these
-promotions. I remove the reference to patchcheck from these commit messages.
-
-> > > > +    oneOf:
-> > > > +      - items:
-> > > > +          - const: ctu,ctucanfd
-> > > > +          - const: ctu,canfd-2
-> > > > +      - const: ctu,ctucanfd
-> > >
-> > > For consistency, can we have ctu,canfd-1, ctu,canfd-2?
+On Wed, Aug 5, 2020 at 6:39 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+>
+>
+> =E5=9C=A8 2020/8/4 =E4=B8=8B=E5=8D=8810:29, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> > On Tue, Aug 4, 2020 at 3:04 AM Alex Shi <alex.shi@linux.alibaba.com> wr=
+ote:
+> >>
+> >>
+> >>
+> >> =E5=9C=A8 2020/8/4 =E4=B8=8A=E5=8D=886:37, Alexander Duyck =E5=86=99=
+=E9=81=93:
+> >>>>
+> >>>>  shrink_inactive_list() also diverts any unevictable pages that it f=
+inds on the
+> >>>> -inactive lists to the appropriate zone's unevictable list.
+> >>>> +inactive lists to the appropriate node's unevictable list.
+> >>>>
+> >>>>  shrink_inactive_list() should only see SHM_LOCK'd pages that became=
+ SHM_LOCK'd
+> >>>>  after shrink_active_list() had moved them to the inactive list, or =
+pages mapped
+> >>> Same here.
+> >>
+> >> lruvec is used per memcg per node actually, and it fallback to node if=
+ memcg disabled.
+> >> So the comments are still right.
+> >>
+> >> And most of changes just fix from zone->lru_lock to pgdat->lru_lock ch=
+ange.
 > >
-> > Make it ctu,ctucanfd-1, ctu,ctucanfd-2... to make it consistent with
-> > the file names.
+> > Actually in my mind one thing that might work better would be to
+> > explain what the lruvec is and where it resides. Then replace zone
+> > with lruvec since that is really where the unevictable list resides.
+> > Then it would be correct for both the memcg and pgdat case.
 >
-> If you are going to do version numbers, please define where they come
-> from. Hopefully some tag of the h/w IP version...
+> Could you like to revise the doc as your thought?
+> >
+> >>>
+> >>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> >>>> index 64ede5f150dc..44738cdb5a55 100644
+> >>>> --- a/include/linux/mm_types.h
+> >>>> +++ b/include/linux/mm_types.h
+> >>>> @@ -78,7 +78,7 @@ struct page {
+> >>>>                 struct {        /* Page cache and anonymous pages */
+> >>>>                         /**
+> >>>>                          * @lru: Pageout list, eg. active_list prote=
+cted by
+> >>>> -                        * pgdat->lru_lock.  Sometimes used as a gen=
+eric list
+> >>>> +                        * lruvec->lru_lock.  Sometimes used as a ge=
+neric list
+> >>>>                          * by the page owner.
+> >>>>                          */
+> >>>>                         struct list_head lru;
+> >>>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> >>>> index 8af956aa13cf..c92289a4e14d 100644
+> >>>> --- a/include/linux/mmzone.h
+> >>>> +++ b/include/linux/mmzone.h
+> >>>> @@ -115,7 +115,7 @@ static inline bool free_area_empty(struct free_a=
+rea *area, int migratetype)
+> >>>>  struct pglist_data;
+> >>>>
+> >>>>  /*
+> >>>> - * zone->lock and the zone lru_lock are two of the hottest locks in=
+ the kernel.
+> >>>> + * zone->lock and the lru_lock are two of the hottest locks in the =
+kernel.
+> >>>>   * So add a wild amount of padding here to ensure that they fall in=
+to separate
+> >>>>   * cachelines.  There are very few zone structures in the machine, =
+so space
+> >>>>   * consumption is not a concern here.
+> >>> So I don't believe you are using ZONE_PADDING in any way to try and
+> >>> protect the LRU lock currently. At least you aren't using it in the
+> >>> lruvec. As such it might make sense to just drop the reference to the
+> >>> lru_lock here. That reminds me that we still need to review the
+> >>> placement of the lru_lock and determine if there might be a better
+> >>> placement and/or padding that might improve performance when under
+> >>> heavy stress.
+> >>>
+> >>
+> >> Right, is it the following looks better?
+> >>
+> >> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> >> index ccc76590f823..0ed520954843 100644
+> >> --- a/include/linux/mmzone.h
+> >> +++ b/include/linux/mmzone.h
+> >> @@ -113,8 +113,7 @@ static inline bool free_area_empty(struct free_are=
+a *area, int migratetype)
+> >>  struct pglist_data;
+> >>
+> >>  /*
+> >> - * zone->lock and the lru_lock are two of the hottest locks in the ke=
+rnel.
+> >> - * So add a wild amount of padding here to ensure that they fall into=
+ separate
+> >> + * Add a wild amount of padding here to ensure datas fall into separa=
+te
+> >>   * cachelines.  There are very few zone structures in the machine, so=
+ space
+> >>   * consumption is not a concern here.
+> >>   */
+> >>
+> >> Thanks!
+> >> Alex
+> >
+> > I would maybe tweak it to make sure it is clear that we are using this
+> > to pad out items that are likely to cause cache thrash such as various
+> > hot spinocks and such.
+> >
 >
-> Better yet, put version numbers in the h/w registers itself and you
-> don't need different compatibles.
+> I appreciate if you like to change the doc better. :)
 
-The actual major version of the core is 2. The minor intended
-for release was 1. But we wait for driver inclusion and release
-and IP core release has not been realized. Sources moved to
-2.2-pre version and compiled core reports 2.2 now.
-There is added control bit for protocol exception
-behavior selection and minor enhancements in sync of standard
-and data rate bittimes starts.
+Give me a day or so. I will submit a follow-on patch with some cleanup
+for the comments.
 
-Yes, version can be obtained from hardware.
-There is magic and version in the first core register.
-See 3.1.1 DEVICE_ID section of the manual (page 22/28)
+Thanks.
 
-  http://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
-
-As for the DT identifier we use "ctu,ctucanfd" in more projects already.
-Some devices are in the wild now. So I would prefer to keep compatibility
-with that name. Other name reflects that this driver is compatible with major
-version 2 of the core. It can be "ctu,ctucanfd-2". I am not sure if the
-repeat of "ctu" is good idea, but yes, full sources prefix is "ctucanfd".
-The second alias can be omitted alltogether. But I am not sure, there can
-be one day fundamental change between IP core versions which would be better
-handled by change of PCI ID and DT ID. It is questionable if attempt to keep
-single driver for more too different versions would be more manageable
-or convoluted than two fully independent ones. May it be we do not need
-to solve that because by that time it would be "ctu,ctucanxl".
-
-At this time, our actual first first choic for the IP core identifier
-is ctu,ctucanfd.
-
-As for the pointed description, I would remove them from version 5
-according to your reference. My personal one is to keep documentation
-(even of actual/local functional setup) directly in the sources and mainline
-to find it out when I or somebody else need to recreate or update designs,
-my biological memory is already worn out by past events.
-
-I am not sure if I should wait for subsystem maintainers review now
-or sent new patches version. I may get to its preparation tommorrow
-or may it be later because I want to take some time in
-countrysite/mountains.
-
-Best wishes
-
-                Pavel
--- 
-                Pavel Pisa
-    phone:      +420 603531357
-    e-mail:     pisa@cmp.felk.cvut.cz
-    Department of Control Engineering FEE CVUT
-    Karlovo namesti 13, 121 35, Prague 2
-    university: http://dce.fel.cvut.cz/
-    personal:   http://cmp.felk.cvut.cz/~pisa
-    projects:   https://www.openhub.net/accounts/ppisa
-    CAN related:http://canbus.pages.fel.cvut.cz/
-
+- Alex
