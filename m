@@ -2,160 +2,149 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1B520786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D5C20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="VqFWwVlK"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YrHgsmBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbgHFRHL (ORCPT
+        id S1729933AbgHFRHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730047AbgHFRGU (ORCPT
+        Thu, 6 Aug 2020 13:07:05 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:49738 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729787AbgHFRGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:06:20 -0400
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on20601.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e1b::601])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB5EC0D941E;
-        Thu,  6 Aug 2020 08:43:56 -0700 (PDT)
+        Thu, 6 Aug 2020 13:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1596733569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y9kBOOdZEEej7ZEMsqH+ctYfRfzHs9cxAnplDiFJTdY=;
+        b=YrHgsmBLKh6A9HbLxTfRJV7y4Pc3pFBKliHXwD5Bck1U0QG5koNHcndXqGTekWB2MiIRjA
+        EJ2HH4Xjfg5l214qIqTc7x38iQY+X7E4BeFb9Nz+LOe13OkoA1FZB63rIXrAHIQWzrodmp
+        fFertizl2sml8WwrS5YuniXfi9Csgyk=
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur04lp2054.outbound.protection.outlook.com [104.47.14.54]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-21-hcpBO9YnP6WiSjWmpHCSUg-1; Thu, 06 Aug 2020 15:35:05 +0200
+X-MC-Unique: hcpBO9YnP6WiSjWmpHCSUg-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gJX7945/rW07qjfTYtG6MGB19xI/RC7MJ+im8670in2pW9HSXt63CKt7cz2wp6+RI6H/nRAvxQe38DRzApv9301jW3XsXCWL+kgD43+YdURObUtp+eA5JG3b4YCUfbIvfKEHM2twvNBC5bFx88HhkCrZgNtl42hUOsZthOsg+O0axAWxDNid1MjL3p/Mpn6pnu7x1tloNrpGSzFm01u3zJMcbbcyDajCkTpKnEi4DD6OwQGTO+wMmzb5K61rUpYqLqOx8di9rSjSz+wM+a0p9lnGeFY5ii/fl2iQrsj/wuE0eG+K1qWeMmAZhnMt6vkbGcEAbj685A8opuDC1WDn4A==
+ b=OHtNTC/LRi/KQq3xeuhnxPzyqOWh6wd7L2eKLdTlTvveL4U/xCp4hUA8FlTEeWkKOoO6SeK+k9kgOQqencv+lLHLWjmTcZp/QI7yLOao0f3mSQljdOTa31DSACJMhNW0IrepEXOEfDkKRZ7G4/AvLtE5nWSB0vSCcm6CIqsrhCu3ZgFEU+pteT25kCAaw8IqG9fP/3MkXsBzcj+aBNXJYo9HD9ELER+GweuwYdwE/d+Yz24zgvX2Lmk7h7B0VCH1ub8wT9f9HH86eSCfTWQjiPrq0tEoEUwTfxiRLvu0kvUviCJ93G3Y4xslcZvjl4ebQeRMXNURige/+dGuIgonZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HgZtPL4Ibx4wosYkqrEpR4/2iTIOpPK1UPEReGFUPoc=;
- b=IhZJBYR+/K8LAZ1+v3JCFQWyrPoL3lcOPhtbiKq8RR03l70DTf+ncepDzwmF9c1517bUKRmJ6xN28HuhWxbgHD/H3e63orIu8Zx41umgc3H8c+zAQoiASovNykiqbYYXBrGS2Gg0NnpsI3xo52TNSbquAMq5OUZJ+1vBtyE91wAYK2dWr5dW9BmXlLJbwgDWmutF9yAuvbuLjWovRZG0lTJHe1YiYM3QTvVCV5HBT566PxJf1lp79b4NLP2I7IPPAjaYR9PSQAGRYfF02flwldLrkGYq3q/iELHeK/m1lKW4aACXuZOZCaz7xwu1utN9pRBJ7Uo5xGvX30vXPH8WMw==
+ bh=Y9kBOOdZEEej7ZEMsqH+ctYfRfzHs9cxAnplDiFJTdY=;
+ b=GBZuBCuwbgohQG3feJMXudne/aGqQt8iNVcfQtguklFwbvgjhkUU8O4EdYJSUkyOSwhcRSVgAPL6pqVT6KvTSE/jV694ZrAAzpJS1HlosRd768xrP0bzAx07w7c3fQM6w/cJ/xXWb/vYT40j0GMle9pZmyNK57lVaMwddgcMQ5lJ4a635xCnbkMmssuTgTvAROBEjfQbqKm1gxzrZRemNp2xUhEgb34UTJUIRUb13BtgMXeFQhGJ6rgSyT0OgnWdxusmj33pKOQgba1g6wVEyR2wCzhnLOAi8EdSl8IZCG/uIYsIgkTD+egrYUG5KHhUMrqJZQ3/QaVUIkATPGC+uw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HgZtPL4Ibx4wosYkqrEpR4/2iTIOpPK1UPEReGFUPoc=;
- b=VqFWwVlKdhUfwoeK4Q+TzK/GK50yqKh7fkhNY3BHlVwi4iH21fAXLeDLztXXNLlEJRoTwDnrZCiY0/zgjxS3hk07a1Qp3kRYcSU2UFjTxwcX+4fRB6KXMZBf6r/9khfc1ExLH2CoIYN2aOFKMULZZ84KJhtTie4e6V+Rl4xhcVo=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
- by VI1PR0402MB3440.eurprd04.prod.outlook.com (2603:10a6:803:6::32) with
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
+Received: from AM6PR04MB5366.eurprd04.prod.outlook.com (2603:10a6:20b:9d::19)
+ by AM7PR04MB7141.eurprd04.prod.outlook.com (2603:10a6:20b:11d::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Thu, 6 Aug
- 2020 11:41:58 +0000
-Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
- ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
- ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
- 11:41:58 +0000
-From:   Andrei Botila <andrei.botila@oss.nxp.com>
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 8/9] crypto: caam/qi - add support for XTS with 16B IV
-Date:   Thu,  6 Aug 2020 14:41:26 +0300
-Message-Id: <20200806114127.8650-9-andrei.botila@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806114127.8650-1-andrei.botila@oss.nxp.com>
-References: <20200806114127.8650-1-andrei.botila@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::42) To VE1PR04MB6608.eurprd04.prod.outlook.com
- (2603:10a6:803:125::12)
+ 2020 13:35:03 +0000
+Received: from AM6PR04MB5366.eurprd04.prod.outlook.com
+ ([fe80::3050:e412:7b95:de7d]) by AM6PR04MB5366.eurprd04.prod.outlook.com
+ ([fe80::3050:e412:7b95:de7d%7]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
+ 13:35:03 +0000
+Subject: Re: [PATCH] i2c: mediatek: Fix i2c_spec_values description
+To:     Qii Wang <qii.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     wsa@the-dreams.de, yingjoe.chen@mediatek.com,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <c410f784-7b51-0d65-7a41-3845214dd273@gmail.com>
+ <1596712005.8263.4.camel@mhfsdcap03>
+From:   Matthias Brugger <mbrugger@suse.com>
+Message-ID: <6e029d96-6171-0006-a5bb-01d0d5a7391b@suse.com>
+Date:   Thu, 6 Aug 2020 15:35:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <1596712005.8263.4.camel@mhfsdcap03>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MR2P264CA0156.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:1::19) To AM6PR04MB5366.eurprd04.prod.outlook.com
+ (2603:10a6:20b:9d::19)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR06CA0101.eurprd06.prod.outlook.com (2603:10a6:208:fa::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Thu, 6 Aug 2020 11:41:55 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
+Received: from ziggy.stardust (213.195.117.232) by MR2P264CA0156.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:1::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Thu, 6 Aug 2020 13:35:02 +0000
+X-Originating-IP: [213.195.117.232]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: aabd6133-543f-4cbf-a8a7-08d839fdb8e0
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3440:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB3440F6EEC33A516F5851E824B4480@VI1PR0402MB3440.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-MS-Office365-Filtering-Correlation-Id: 2fd860f5-0d0a-4f68-dd8d-08d83a0d860a
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7141:
+X-Microsoft-Antispam-PRVS: <AM7PR04MB7141881A84DCD725D45EFFCDBA480@AM7PR04MB7141.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jJbLgAPtOJyQDjgMJCZLMA2uU6S7XV/PnE0FAXH74m+3pJ1If9go0BQp467tagY49ZAsYQ9zjlLmBucLi0TPS4zLJqcdxNlB7UMjTZz5VlT2fADJ2I6peyugCPa85TF5PX02h+mNlDDnvMAJNi7UR5CRDkKXyZLguRSBOEkVnM0KOZrEHgNVg3NROqlp3imKmWA0hKoZvys3p9gZHa4KBBAbwOZify/qfb3pthq5i5hlYjzY5t8eak45TfCRIDftTy7shQ+NMnIbHZwoiTW0W0qllVD++AJWkSGrU60497DMOh/yPwURMiNBSwkrGsaHM3elWO5cwgvrTKTEfsttAg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(110136005)(316002)(6666004)(6512007)(478600001)(956004)(2616005)(6486002)(4326008)(1076003)(44832011)(52116002)(6506007)(86362001)(186003)(26005)(16526019)(66556008)(66476007)(2906002)(66946007)(83380400001)(8676002)(5660300002)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ENaLEt3MU1ccF/ZeZzV7mtPiW/Dz7JDMLQ1V6gYOb8KP7NHV6bwK4SG1kMZNAaxskQKi3jhwZ6p3nHqKL9mVQbpDQRC8DDeQ8ATdeoG/3x6rJKvL9UpKecTDPzZrIQmq8YCxSWW2t/KMEFIZZUhZzucG8Xxpdk7eU3DPYI06iezo1Iy8HYUA/tOs0uDt9y0iitOQjlM+gDxqXpNByG+dpKuk4RUoNIZTbe/1UWPuhQywFFRBQWXPG+UqkNKypH0e5k49ygV7du2YYG11mVwJEkT2jRBfiUyQaZbfi5++0QWe78IuzoN7qVzDYUI7NdScJrik9MKg5k+/fiafR9NDwC2FP5R1vyGoaftIM0VpiEgpOO5mmnzc+BqqwbQbxEnYCI4rs/wiTTBbM2w8MoQqTMwOWl+5vln/HIlvX+d8ucB9oT3pgJYyBxY2UEVvZdoPCgmfpDya8Y+jcXXTUAKMwFMperaeXePm6p2ow3zehVwVld6FY1jIPlkYoGAkuGJdLBJlxNJFIgHGl/lJgorEe98C9//i8eQgbjxV9l/z2IA6eyH83rKQ/2jW/w5l9C2UYo1Zzihw06qeMTcATForW9KuUwum4xKgmLyduwNOmW2/QvETOHarQpybc6yw7A0Lg0Ixa0TULzMUw3GT4fSmIQ==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aabd6133-543f-4cbf-a8a7-08d839fdb8e0
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
+X-Microsoft-Antispam-Message-Info: lqjE1z8u6le7vfVd+Z82bTP//L7ZcsRrIPJZH7ABJEyx8cPZwgHiWs9AIZyVWwZoAzfKu7TYDi7y+Enqc3m40XyePa9CQDezVLv4uBpqFc+rjZKTkrt9GLayfgnvZNbJH67dp/SoD+M2XqUuBHRG4NGzxO22f7R+kMLNXPJ/lXw8hsYWHjYi1mymKbTe588lu28NCyO+gC8t5A6hjT2p6E7OoBJlsAy4OIy9Y1padcJpHdA4+yi+TK2NAKgtc3owPSvwBTvLww9alF3cuMvxxZXQM2nUmYt8rFJXVGw3jrKdsuS0MEVHVol+elO4GeHCNVHJU1zuEFeBeszIS4+fujtiwj5EyacDoVVot+wXQ7jnUh6vcwDgpm1SGBj9Fh1L
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(136003)(366004)(346002)(376002)(5660300002)(66556008)(86362001)(2616005)(956004)(66946007)(36756003)(66476007)(16526019)(26005)(186003)(6506007)(83380400001)(31696002)(52116002)(53546011)(478600001)(6512007)(4326008)(8676002)(31686004)(6486002)(110136005)(316002)(2906002)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 6t68Zh/YCIxYkAcg1OYO1zrAEF0ZjBuOe381HV1tZ9s0bALfwANkibiTOvC3CyfPAjUkJ5/y8bXvizmAY8nFlPdjjgOZ4Y1ina0bIClGVrnNqPU8gD6or5aC8l0QJApvpjeimkuROuGuJWhB8X2fton9TeBrN3aiEXTWul7fTenen8pZHSPaDkIowVS20xMcrhC2rgXHO8qa1jSjfNnfx1llzg3y1HyifEXDBXonF/dr0q69kLeaHPAVV0kmzVS9X9SuT6t3qpZZqqUp+ocYaxvwSlFXOvI6AYsx3+5NqlVUYJxfEeVgW0HfIF1Cr7wd2dkPR7GjmGosM/7hP7zm51a21LlsrrnWCDBwM4Y4Mg52NrOYHvmCiDO6jkCZ3pDRn8bBnJZVOLv7XmjNYVbKqtfF8F5qpI8KLotPpQGZSzbTqtTshqZavt1a2ZG77GzkJbgixYe1TA8m48r/6Q7aSLwMcgjD9ssg2tQQqxFpgqFEPBFVbhpJnQrHOxWg0zK5Ll12KoJkzpnNcRfqnydyPYAzuB7L22ASwxicCC93rw/Elca3eImvji/0vJ8hYJuaj5fxdoZOX8zIEIjPpRSSd9NFle167QZm2FljT9EZud4nDXDKyZde7A57N4FtGP3jMVxl/rcazwmZIMbvySTfCw==
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fd860f5-0d0a-4f68-dd8d-08d83a0d860a
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:41:56.5364
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 13:35:03.2718
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5NlDTvfxPpGzfebwLbuT9N0j/e3MsFOr+Yyr2HAjX/jXeyFyMrvp9JTHE1FvFzC+oVWBZcrRZUbKLmLGPNbunA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3440
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8Rd09f+lJJ23Hn4x+zDtD+YCaLi2e5ZHcOeB4n359Ul6JG/azXeMO8BmtVlkngudAK9YGABE6pUX7/4o3NRV+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Botila <andrei.botila@nxp.com>
 
-Newer CAAM versions (Era 9+) support 16B IVs. Since for these devices
-the HW limitation is no longer present newer version should process the
-requests containing 16B IVs directly in hardware without using a fallback.
 
-Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
----
- drivers/crypto/caam/caamalg_qi.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+On 06/08/2020 13:06, Qii Wang wrote:
+> On Thu, 2020-08-06 at 11:48 +0200, Matthias Brugger wrote:
+>> The struct i2c_spec_values have it's members documented but is missing the
+>> starting '@', which leads to warings like:
+>>
+>> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member
+>> 'min_low_ns' not described in 'i2c_spec_values'
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> ---
+>>    drivers/i2c/busses/i2c-mt65xx.c | 8 ++++----
+>>    1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+>> index e889f74703e4..f51b35fc400f 100644
+>> --- a/drivers/i2c/busses/i2c-mt65xx.c
+>> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+>> @@ -253,10 +253,10 @@ struct mtk_i2c {
+>>
+>>    /**
+>>     * struct i2c_spec_values:
+>> - * min_low_ns: min LOW period of the SCL clock
+> 
+> Can you help me add a description of min_high_ns. As
+> @min_high_ns: min HIGH period of the SCL clock
 
-diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
-index 1d775a55fcf5..df58a899e97d 100644
---- a/drivers/crypto/caam/caamalg_qi.c
-+++ b/drivers/crypto/caam/caamalg_qi.c
-@@ -732,6 +732,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- {
- 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
- 	struct device *jrdev = ctx->jrdev;
-+	struct caam_drv_private *ctrlpriv = dev_get_drvdata(jrdev->parent);
- 	int ret = 0;
- 	int err;
- 
-@@ -741,9 +742,12 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 		return err;
- 	}
- 
--	err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
--	if (err)
--		return err;
-+	if (ctrlpriv->era <= 8 || (keylen != 2 * AES_KEYSIZE_128 &&
-+				   keylen != 2 * AES_KEYSIZE_256)) {
-+		err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
-+		if (err)
-+			return err;
-+	}
- 
- 	ctx->cdata.keylen = keylen;
- 	ctx->cdata.key_virt = key;
-@@ -1405,12 +1409,13 @@ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
- 	struct skcipher_edesc *edesc;
- 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
- 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
-+	struct caam_drv_private *ctrlpriv = dev_get_drvdata(ctx->jrdev->parent);
- 	int ret;
- 
- 	if (!req->cryptlen)
- 		return 0;
- 
--	if (ctx->fallback && (xts_skcipher_ivsize(req) ||
-+	if (ctx->fallback && ((ctrlpriv->era <= 8 && xts_skcipher_ivsize(req)) ||
- 			      (ctx->cdata.keylen != 2 * AES_KEYSIZE_128 &&
- 			       ctx->cdata.keylen != 2 * AES_KEYSIZE_256))) {
- 		struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
--- 
-2.17.1
+Right, I forgot about this one.
+
+Actually I don't see any code which uses the value, so I think it should be 
+deleted from the struct.
+
+Do you have any thoughts on this.
+
+Regards,
+Matthias
 
