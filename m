@@ -2,50 +2,72 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7460C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15982204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD51204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="srEzXbtV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgHFQch (ORCPT
+        id S1727768AbgHFQdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40158 "EHLO
+        Thu, 6 Aug 2020 12:33:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbgHFQbD (ORCPT
+        with ESMTP id S1726197AbgHFQcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:31:03 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59176C0086D2;
-        Thu,  6 Aug 2020 08:14:16 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 3781829959A
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 12/14] media: rkvdec: Don't require unneeded H264_SLICE_PARAMS
-Date:   Thu,  6 Aug 2020 12:13:08 -0300
-Message-Id: <20200806151310.98624-13-ezequiel@collabora.com>
+        Thu, 6 Aug 2020 12:32:05 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C53C0086D1
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:31:30 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id p14so9388800wmg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8EjdHovA6pZhCGDIxpXlqTI6MPX2VaDhsI56ZjDVyws=;
+        b=srEzXbtVUdgu44HdzXkXf2AxcnIqodA/urxiuekKMnDaoiGV2acenxFr53rvkguLUf
+         dpASK/e72i8vVBbrtPa6ilthaekLyW9TgiLQxLjx0zIiNBiyzL5inBgxCzp/tHG2/keR
+         2Uj+FjF0ybIbPmYi55Sj/c3uFKzn6YSRiTOyNdCs8V8mwutMqzsWnpghadwHvsAH9E+G
+         HySprz3wc+JOVzTCPowsQaHape+e7GYavYYmHFGcRJJQghf4/VeIe7Rwe7H1ZlE6g/hb
+         +qf8FnvXGSiZ7OpV351VShW4oZcGHB6q2RLhQYzEnHBy7fOg0CvurHy0MbgHtjMShV67
+         3ZuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8EjdHovA6pZhCGDIxpXlqTI6MPX2VaDhsI56ZjDVyws=;
+        b=YQE5vxkjbbliBdbZCp6T8iGlgHkGp7+FzZM22p+UAvI3txUXUmNTUDKXCFvOtS2rLl
+         hjUCxObDhCw8Y4o9MvdDOux2Y9yvN1RBNuUMqbm5KA+FLkChYyHkiMEmFXzpgeOomlC/
+         JKmuNJmpFESl3qZZgxASZWmDyp1pkj4jFeKzGlU1tSAF7ZX0kC2lpmZJF/AeWotyKmll
+         z1pzsVjn3oi2XM0t10+fnVo0UN/+B0JiluRf0lq8bXAgliusXgRNa3+yJCrcmCtwa9ol
+         si820gQ7umf0LJyOv4sAMCUkWfBsmIIcllqBpaV9y5tyjBP2rZMrT+cgFt76Uahj1pGA
+         qEMg==
+X-Gm-Message-State: AOAM532hrkJHzDojiPzMFLff32KMxsUySheasxvRjiyQ9zX8hdIaCLa0
+        RlVaUUw6EkKVuaXTZGp9bB/Npw==
+X-Google-Smtp-Source: ABdhPJypiYwGRpysEd1neDA1eIk52zMbC2H9K1CR8BaJUNaCtbcDui/TRhD4tJ0nfK9bVv3n+mzotQ==
+X-Received: by 2002:a7b:c1c3:: with SMTP id a3mr9046794wmj.111.1596731488952;
+        Thu, 06 Aug 2020 09:31:28 -0700 (PDT)
+Received: from localhost.localdomain ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id i66sm7468537wma.35.2020.08.06.09.31.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Aug 2020 09:31:27 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/7] interconnect: Introduce xlate_extended()
+Date:   Thu,  6 Aug 2020 19:31:19 +0300
+Message-Id: <20200806163126.22667-1-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200806151310.98624-1-ezequiel@collabora.com>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,57 +75,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that slice invariant parameters have been moved,
-the driver no longer needs this control, so drop it.
+Currently the interconnect framework provides the xlate() callback for
+mapping the endpoints from phandle arguments in DT. This is implemented
+by the provider drivers. But the endpoints (or the path between the
+endpoints) might have an additional attributes, which should be parsed
+and populated. During previous discussions [1], it was suggested that
+adding more and more DT properties will not scale very well. So instead
+of adding DT properties, such data should be put into the 'interconnects'
+arguments.
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
----
+This patchset is introducing a new xlate_extended() callback, which
+would allow the interconnect provider drivers to parse additional data
+(such as path tags) and allow the framework to make use of them.
+
+Thanks to Sibi for the preliminary feedback and testing this patchset
+on the sc7180 platform.
+
+The patchset is based on linux-next (next-20200723).
+
+Changelog:
 v2:
-* Fix wrongly removed SPS.
----
- drivers/staging/media/rkvdec/rkvdec-h264.c | 4 ----
- drivers/staging/media/rkvdec/rkvdec.c      | 5 -----
- 2 files changed, 9 deletions(-)
+* Add a patch to update the DT documentation, which i missed initially.
+* Minor changes in commit text of patch 1/7. (Sibi)
+* Remove a useless null check in patch 4/7. (Sibi)
+* Print a warning if the number of DT args is higher than what we expect
+  in patch 3/7. (Matthias)
+* Pick Reviewed-by/Tested-by tags.
+* TODO: Replace tag IDs with macros in patches 5/7 and 7/7 when [2] lands.
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-index 33e1d10f6253..fdb4fc2157d3 100644
---- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-@@ -109,7 +109,6 @@ struct rkvdec_h264_reflists {
- struct rkvdec_h264_run {
- 	struct rkvdec_run base;
- 	const struct v4l2_ctrl_h264_decode_params *decode_params;
--	const struct v4l2_ctrl_h264_slice_params *slices_params;
- 	const struct v4l2_ctrl_h264_sps *sps;
- 	const struct v4l2_ctrl_h264_pps *pps;
- 	const struct v4l2_ctrl_h264_scaling_matrix *scaling_matrix;
-@@ -1066,9 +1065,6 @@ static void rkvdec_h264_run_preamble(struct rkvdec_ctx *ctx,
- 	ctrl = v4l2_ctrl_find(&ctx->ctrl_hdl,
- 			      V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS);
- 	run->decode_params = ctrl ? ctrl->p_cur.p : NULL;
--	ctrl = v4l2_ctrl_find(&ctx->ctrl_hdl,
--			      V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
--	run->slices_params = ctrl ? ctrl->p_cur.p : NULL;
- 	ctrl = v4l2_ctrl_find(&ctx->ctrl_hdl,
- 			      V4L2_CID_MPEG_VIDEO_H264_SPS);
- 	run->sps = ctrl ? ctrl->p_cur.p : NULL;
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index c8151328fb70..7c5129593921 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -59,11 +59,6 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
- 		.mandatory = true,
- 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
- 	},
--	{
--		.per_request = true,
--		.mandatory = true,
--		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS,
--	},
- 	{
- 		.per_request = true,
- 		.mandatory = true,
--- 
-2.27.0
+v1: http://lore.kernel.org/r/20200723130942.28491-1-georgi.djakov@linaro.org
+
+[1] https://lore.kernel.org/linux-devicetree/20200519185836.GA469006@bogus/
+[2] https://lore.kernel.org/r/20200801033215.1440-2-mdtipton@codeaurora.org
+
+Georgi Djakov (5):
+  interconnect: Introduce xlate_extended() callback
+  dt-bindings: interconnect: Document the support of optional path tag
+  interconnect: qcom: Implement xlate_extended() to parse tags
+  interconnect: qcom: sdm845: Replace xlate with xlate_extended
+  arm64: dts: qcom: sdm845: Increase the number of interconnect cells
+
+Sibi Sankar (2):
+  interconnect: qcom: sc7180: Replace xlate with xlate_extended
+  arm64: dts: qcom: sc7180: Increase the number of interconnect cells
+
+ .../bindings/interconnect/interconnect.txt    |  24 +-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 216 +++++++++---------
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  44 ++--
+ drivers/interconnect/core.c                   |  73 ++++--
+ drivers/interconnect/qcom/icc-rpmh.c          |  27 +++
+ drivers/interconnect/qcom/icc-rpmh.h          |   1 +
+ drivers/interconnect/qcom/sc7180.c            |   2 +-
+ drivers/interconnect/qcom/sdm845.c            |   2 +-
+ include/linux/interconnect-provider.h         |  17 +-
+ 9 files changed, 248 insertions(+), 158 deletions(-)
 
