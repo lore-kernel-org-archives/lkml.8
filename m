@@ -2,298 +2,338 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6022C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E14C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C1E2177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/GerVru"
+	by mail.kernel.org (Postfix) with ESMTP id 8B2372224D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgHFUTJ (ORCPT
+        id S1726798AbgHFUTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgHFUTH (ORCPT
+        Thu, 6 Aug 2020 16:19:49 -0400
+Received: from smtp11.smtpout.orange.fr ([80.12.242.133]:23880 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgHFUTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:19:07 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 870A4C061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 13:19:07 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id t14so10867570wmi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 13:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=jN6H7gSQ3+o0bH9j1Dm5F5mz7YQDGK2LdjSj6lic1YU=;
-        b=e/GerVru/dRsJppM3t9SU+1h2Q9ppkZ6tLjpCU5onl8i989Z+aPGwbG3MKkP+4O/ks
-         FFTZ9ZQyH7/D7DgqBxy7OhXBl1Agtj0y9vFOxf6k5tS5ayKKxnT8ME/JUC/XG8AzzAEU
-         wLmqZn3Tidd3V9nf8LYyYtvKJVE6jI/gN93qG4YLksF+5+C9lK/JnhD9/6ediQDlnPcs
-         7KRDTGq8bOKa9D1c1Id9Ic8E/9sPJajEaZBo1xlUgzwfY2BdXPjvNmq2ipSrd/gQix2G
-         eTgEQCREIEpMX4eRwBcSBk+rm9/kobEfDrHnRolVuz4Zay9C+m9c2aCIVmoqjc6K5j2Q
-         fG6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=jN6H7gSQ3+o0bH9j1Dm5F5mz7YQDGK2LdjSj6lic1YU=;
-        b=EW4b57iznuUg6VIApy/vskNgSklOPHYFicm/NgvFGcKBJkVkcnALEY+fj1LuXTq+Hs
-         dUch2qMJI909599wJEZX+VXGMhmrJ7x0nqidDGvyZBzxDOP7YR2NogqmW7N2lqJ4kiKs
-         JlHupybxlZ4671cALIMWIA+uhUdEejadpciOvwQ5ejH56W4kjBeXarM7c2Sb++UIQkRJ
-         eO58n1sL2ZKAXQ+MRNGVqPpm37n6egr01VkncwfNt4itIgWtVySMIn/jyBOM+r/Ss/zp
-         Bx17q8uZPlXfjG74aC00a1nSaHYV6axPV1h6JfT7CuSEsBjmoPQUC8oHjyynisiP2fJ+
-         qHiQ==
-X-Gm-Message-State: AOAM531CHpKdYioZLUjGaD7U/3ThfAxdWHK/8wPUKeYvMtIkM0JROE8s
-        /pgQoFs5UR2QQQjoBBAZWgYd8g==
-X-Google-Smtp-Source: ABdhPJxPWiGvLzQjFl3tbtdsnigcN9QOJmStwA5cx3B/6QfmsG1TNEsOS+99IoiD2C2pV6KWqh0wCw==
-X-Received: by 2002:a1c:541b:: with SMTP id i27mr9335187wmb.179.1596745145990;
-        Thu, 06 Aug 2020 13:19:05 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f457:5fc1:5262:84c? ([2a01:e34:ed2f:f020:f457:5fc1:5262:84c])
-        by smtp.googlemail.com with ESMTPSA id w1sm7809139wmc.18.2020.08.06.13.19.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 13:19:05 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [GIT PULL] RESEND: thermal for v5.9-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Colin King <colin.king@canonical.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Lukasz Luba <Lukasz.Luba@arm.com>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Henry Yen <henry.yen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-Message-ID: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
-Date:   Thu, 6 Aug 2020 22:18:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 16:19:48 -0400
+Received: from localhost.localdomain ([93.22.37.174])
+        by mwinf5d46 with ME
+        id CLKd230023lSDvh03LKdnk; Thu, 06 Aug 2020 22:19:47 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 06 Aug 2020 22:19:47 +0200
+X-ME-IP: 93.22.37.174
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     davem@davemloft.net, kuba@kernel.org, snelson@pensando.io,
+        mhabets@solarflare.com, vaibhavgupta40@gmail.com, mst@redhat.com,
+        mkubecek@suse.cz
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] epic100: switch from 'pci_' to 'dma_' API
+Date:   Thu,  6 Aug 2020 22:19:35 +0200
+Message-Id: <20200806201935.733641-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
-are available in the Git repository at:
+When memory is allocated in 'epic_init_one()', GFP_KERNEL can be used
+because it is a probe function and no lock is acquired.
 
 
-ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
-tags/thermal-v5.9-rc1
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
 
-for you to fetch changes up to c569e805c7bcebdd069e5c97ce5f8543f6d02433:
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
 
-  thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH
-support (2020-08-04 10:43:03 +0200)
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
 
-----------------------------------------------------------------
-- Add support to enable/disable the thermal zones resulting on core code and
-  drivers cleanup (Andrzej Pietrasiewicz)
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
 
-- Add generic netlink support for userspace notifications: events,
-temperature
-  and discovery commands (Daniel Lezcano)
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
 
-- Fix redundant initialization for a ret variable (Colin Ian King)
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
 
-- Remove the clock cooling code as it is used nowhere (Amit Kucheria)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
 
-- Add the rcar_gen3_thermal's r8a774e1 support (Marian-Cristian Rotariu)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
 
-- Replace all references to thermal.txt in the documentation to the
-  corresponding yaml files (Amit Kucheria)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
 
-- Add maintainer entry for the IPA (Lukasz Luba)
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
 
-- Add support for MSM8939 for the tsens (Shawn Guo)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
 
-- Update power allocator and devfreq cooling to SPDX licensing (Lukasz Luba)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
 
-- Add Cannon Lake Low Power PCH support (Sumeet Pawnikar)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
 
-- Add tsensor support for V2 mediatek thermal system (Henry Yen)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
 
-- Fix thermal zone lookup by ID for the core code (Thierry Reding)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
 
-----------------------------------------------------------------
-Amit Kucheria (2):
-      thermal/drivers/clock_cooling: Remove clock_cooling code
-      dt-bindings: thermal: Get rid of thermal.txt and replace references
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
 
-Andrzej Pietrasiewicz (14):
-      acpi: thermal: Fix error handling in the register function
-      thermal: Store thermal mode in a dedicated enum
-      thermal: Add current mode to thermal zone device
-      thermal: Store device mode in struct thermal_zone_device
-      thermal: remove get_mode() operation of drivers
-      thermal: Add mode helpers
-      thermal: Use mode helpers in drivers
-      thermal: Explicitly enable non-changing thermal zone devices
-      thermal: core: Stop polling DISABLED thermal devices
-      thermal: Simplify or eliminate unnecessary set_mode() methods
-      thermal: Rename set_mode() to change_mode()
-      acpi: thermal: Don't call thermal_zone_device_is_enabled()
-      thermal: imx: Use driver's local data to decide whether to run a
-measurement
-      thermal: Make thermal_zone_device_is_enabled() available to core only
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
 
-Anson Huang (1):
-      thermal: imx8mm: Support module autoloading
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
 
-Colin Ian King (1):
-      thermal: core: remove redundant initialization of variable ret
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
 
-Dan Carpenter (1):
-      thermal: ti-soc-thermal: Fix reversed condition in
-ti_thermal_expose_sensor()
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
 
-Daniel Lezcano (9):
-      thermal: core: Add helpers to browse the cdev, tz and governor list
-      thermal: core: Get thermal zone by id
-      thermal: core: genetlink support for events/cmd/sampling
-      thermal: core: Add notifications call in the framework
-      thermal: netlink: Fix compilation error when CONFIG_NET=n
-      net: genetlink: Move initialization to core_initcall
-      thermal: netlink: Improve the initcall ordering
-      thermal: core: Move initialization after core initcall
-      thermal: core: Add thermal zone enable/disable notification
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/net/ethernet/smsc/epic100.c | 71 +++++++++++++++++------------
+ 1 file changed, 42 insertions(+), 29 deletions(-)
 
-Henry Yen (2):
-      thermal: mediatek: Prepare to add support for other platforms
-      thermal: mediatek: Add tsensor support for V2 thermal system
-
-Konrad Dybcio (1):
-      dt-bindings: tsens: qcom: Document MSM8939 compatible
-
-Lukas Bulwahn (1):
-      MAINTAINERS: update entry to thermal governors file name prefixing
-
-Lukasz Luba (2):
-      MAINTAINERS: Add maintenance information for IPA
-      thermal: Update power allocator and devfreq cooling to SPDX licensing
-
-Marian-Cristian Rotariu (1):
-      thermal: rcar_gen3_thermal: Add r8a774e1 support
-
-Niklas Söderlund (1):
-      thermal: rcar_gen3_thermal: Do not shadow thcode variable
-
-Shawn Guo (1):
-      thermal: qcom: tsens-v0_1: Add support for MSM8939
-
-Sumeet Pawnikar (2):
-      thermal: int340x: processor_thermal: fix: update Jasper Lake PCI id
-      thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH
-support
-
-Thierry Reding (1):
-      thermal: core: Fix thermal zone lookup by ID
-
- Documentation/devicetree/bindings/arm/arm,scmi.txt |   2 +-
- Documentation/devicetree/bindings/arm/arm,scpi.txt |   2 +-
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  |   2 +-
- .../arm/marvell/ap80x-system-controller.txt        |   2 +-
- .../arm/marvell/cp110-system-controller.txt        |   2 +-
- .../devicetree/bindings/cpufreq/cpufreq-dt.txt     |   3 +-
- .../bindings/cpufreq/cpufreq-mediatek.txt          |   4 +-
- .../bindings/cpufreq/nvidia,tegra20-cpufreq.txt    |   2 +-
- .../devicetree/bindings/hwmon/gpio-fan.txt         |   3 +-
- Documentation/devicetree/bindings/hwmon/lm90.txt   |   4 +-
- .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml |   2 +-
- .../bindings/thermal/amazon,al-thermal.txt         |   2 +-
- .../bindings/thermal/brcm,avs-ro-thermal.yaml      |   2 +-
- .../bindings/thermal/brcm,bcm2835-thermal.txt      |   2 +-
- .../bindings/thermal/hisilicon-thermal.txt         |   2 +-
- .../bindings/thermal/max77620_thermal.txt          |   6 +-
- .../bindings/thermal/mediatek-thermal.txt          |   2 +-
- .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  10 +-
- .../thermal/nvidia,tegra186-bpmp-thermal.txt       |   2 +-
- .../bindings/thermal/qcom-spmi-temp-alarm.txt      |   2 +-
- .../devicetree/bindings/thermal/qcom-tsens.yaml    |   1 +
- .../bindings/thermal/rockchip-thermal.txt          |   2 +-
- .../devicetree/bindings/thermal/tango-thermal.txt  |   2 +-
- .../bindings/thermal/thermal-generic-adc.txt       |   2 +-
- .../devicetree/bindings/thermal/thermal.txt        | 586
--------------------
- MAINTAINERS                                        |   8 +
- drivers/acpi/thermal.c                             |  76 +--
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c |   8 +
- drivers/net/ethernet/mellanox/mlxsw/core_thermal.c |  91 +--
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c        |   9 +-
- drivers/platform/x86/acerhdf.c                     |  33 +-
- drivers/platform/x86/intel_mid_thermal.c           |   6 +
- drivers/power/supply/power_supply_core.c           |   9 +-
- drivers/thermal/Kconfig                            |  20 +-
- drivers/thermal/Makefile                           |   6 +-
- drivers/thermal/armada_thermal.c                   |   6 +
- drivers/thermal/clock_cooling.c                    | 445 --------------
- drivers/thermal/da9062-thermal.c                   |  16 +-
- drivers/thermal/devfreq_cooling.c                  |  10 +-
- drivers/thermal/dove_thermal.c                     |   6 +
- drivers/thermal/gov_power_allocator.c              |   9 +-
- drivers/thermal/hisi_thermal.c                     |   6 +-
- drivers/thermal/imx8mm_thermal.c                   |   1 +
- drivers/thermal/imx_thermal.c                      |  60 +-
- .../intel/int340x_thermal/int3400_thermal.c        |  38 +-
- .../intel/int340x_thermal/int340x_thermal_zone.c   |   5 +
- .../int340x_thermal/processor_thermal_device.c     |   2 +-
- drivers/thermal/intel/intel_pch_thermal.c          |   8 +
- drivers/thermal/intel/intel_quark_dts_thermal.c    |  34 +-
- drivers/thermal/intel/intel_soc_dts_iosf.c         |   3 +
- drivers/thermal/intel/x86_pkg_temp_thermal.c       |   6 +
- drivers/thermal/kirkwood_thermal.c                 |   7 +
- drivers/thermal/mtk_thermal.c                      | 234 ++++++--
- drivers/thermal/qcom/tsens-v0_1.c                  | 144 ++++-
- drivers/thermal/qcom/tsens.c                       |   3 +
- drivers/thermal/qcom/tsens.h                       |   2 +-
- drivers/thermal/rcar_gen3_thermal.c                |  10 +-
- drivers/thermal/rcar_thermal.c                     |   9 +-
- drivers/thermal/rockchip_thermal.c                 |   6 +-
- drivers/thermal/spear_thermal.c                    |   7 +
- drivers/thermal/sprd_thermal.c                     |   6 +-
- drivers/thermal/st/st_thermal.c                    |   5 +
- drivers/thermal/thermal_core.c                     | 174 +++++-
- drivers/thermal/thermal_core.h                     |  15 +
- drivers/thermal/thermal_helpers.c                  |  13 +-
- drivers/thermal/thermal_netlink.c                  | 647
-+++++++++++++++++++++
- drivers/thermal/thermal_netlink.h                  | 104 ++++
- drivers/thermal/thermal_of.c                       |  41 +-
- drivers/thermal/thermal_sysfs.c                    |  52 +-
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c |   2 +-
- include/linux/clock_cooling.h                      |  57 --
- include/linux/devfreq_cooling.h                    |   9 +-
- include/linux/thermal.h                            |  31 +-
- include/uapi/linux/thermal.h                       |  89 ++-
- net/netlink/genetlink.c                            |   2 +-
- 75 files changed, 1632 insertions(+), 1609 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
- delete mode 100644 drivers/thermal/clock_cooling.c
- create mode 100644 drivers/thermal/thermal_netlink.c
- create mode 100644 drivers/thermal/thermal_netlink.h
- delete mode 100644 include/linux/clock_cooling.h
-
+diff --git a/drivers/net/ethernet/smsc/epic100.c b/drivers/net/ethernet/smsc/epic100.c
+index d950b312c418..51cd7dca91cd 100644
+--- a/drivers/net/ethernet/smsc/epic100.c
++++ b/drivers/net/ethernet/smsc/epic100.c
+@@ -374,13 +374,15 @@ static int epic_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	ep->mii.phy_id_mask = 0x1f;
+ 	ep->mii.reg_num_mask = 0x1f;
+ 
+-	ring_space = pci_alloc_consistent(pdev, TX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pdev->dev, TX_TOTAL_SIZE, &ring_dma,
++					GFP_KERNEL);
+ 	if (!ring_space)
+ 		goto err_out_iounmap;
+ 	ep->tx_ring = ring_space;
+ 	ep->tx_ring_dma = ring_dma;
+ 
+-	ring_space = pci_alloc_consistent(pdev, RX_TOTAL_SIZE, &ring_dma);
++	ring_space = dma_alloc_coherent(&pdev->dev, RX_TOTAL_SIZE, &ring_dma,
++					GFP_KERNEL);
+ 	if (!ring_space)
+ 		goto err_out_unmap_tx;
+ 	ep->rx_ring = ring_space;
+@@ -493,9 +495,11 @@ static int epic_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	return ret;
+ 
+ err_out_unmap_rx:
+-	pci_free_consistent(pdev, RX_TOTAL_SIZE, ep->rx_ring, ep->rx_ring_dma);
++	dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, ep->rx_ring,
++			  ep->rx_ring_dma);
+ err_out_unmap_tx:
+-	pci_free_consistent(pdev, TX_TOTAL_SIZE, ep->tx_ring, ep->tx_ring_dma);
++	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, ep->tx_ring,
++			  ep->tx_ring_dma);
+ err_out_iounmap:
+ 	pci_iounmap(pdev, ioaddr);
+ err_out_free_netdev:
+@@ -918,8 +922,10 @@ static void epic_init_ring(struct net_device *dev)
+ 		if (skb == NULL)
+ 			break;
+ 		skb_reserve(skb, 2);	/* 16 byte align the IP header. */
+-		ep->rx_ring[i].bufaddr = pci_map_single(ep->pci_dev,
+-			skb->data, ep->rx_buf_sz, PCI_DMA_FROMDEVICE);
++		ep->rx_ring[i].bufaddr = dma_map_single(&ep->pci_dev->dev,
++							skb->data,
++							ep->rx_buf_sz,
++							DMA_FROM_DEVICE);
+ 		ep->rx_ring[i].rxstatus = DescOwn;
+ 	}
+ 	ep->dirty_rx = (unsigned int)(i - RX_RING_SIZE);
+@@ -955,8 +961,9 @@ static netdev_tx_t epic_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	entry = ep->cur_tx % TX_RING_SIZE;
+ 
+ 	ep->tx_skbuff[entry] = skb;
+-	ep->tx_ring[entry].bufaddr = pci_map_single(ep->pci_dev, skb->data,
+-		 			            skb->len, PCI_DMA_TODEVICE);
++	ep->tx_ring[entry].bufaddr = dma_map_single(&ep->pci_dev->dev,
++						    skb->data, skb->len,
++						    DMA_TO_DEVICE);
+ 	if (free_count < TX_QUEUE_LEN/2) {/* Typical path */
+ 		ctrl_word = 0x100000; /* No interrupt */
+ 	} else if (free_count == TX_QUEUE_LEN/2) {
+@@ -1036,8 +1043,9 @@ static void epic_tx(struct net_device *dev, struct epic_private *ep)
+ 
+ 		/* Free the original skb. */
+ 		skb = ep->tx_skbuff[entry];
+-		pci_unmap_single(ep->pci_dev, ep->tx_ring[entry].bufaddr,
+-				 skb->len, PCI_DMA_TODEVICE);
++		dma_unmap_single(&ep->pci_dev->dev,
++				 ep->tx_ring[entry].bufaddr, skb->len,
++				 DMA_TO_DEVICE);
+ 		dev_consume_skb_irq(skb);
+ 		ep->tx_skbuff[entry] = NULL;
+ 	}
+@@ -1178,20 +1186,21 @@ static int epic_rx(struct net_device *dev, int budget)
+ 			if (pkt_len < rx_copybreak &&
+ 			    (skb = netdev_alloc_skb(dev, pkt_len + 2)) != NULL) {
+ 				skb_reserve(skb, 2);	/* 16 byte align the IP header */
+-				pci_dma_sync_single_for_cpu(ep->pci_dev,
+-							    ep->rx_ring[entry].bufaddr,
+-							    ep->rx_buf_sz,
+-							    PCI_DMA_FROMDEVICE);
++				dma_sync_single_for_cpu(&ep->pci_dev->dev,
++							ep->rx_ring[entry].bufaddr,
++							ep->rx_buf_sz,
++							DMA_FROM_DEVICE);
+ 				skb_copy_to_linear_data(skb, ep->rx_skbuff[entry]->data, pkt_len);
+ 				skb_put(skb, pkt_len);
+-				pci_dma_sync_single_for_device(ep->pci_dev,
+-							       ep->rx_ring[entry].bufaddr,
+-							       ep->rx_buf_sz,
+-							       PCI_DMA_FROMDEVICE);
++				dma_sync_single_for_device(&ep->pci_dev->dev,
++							   ep->rx_ring[entry].bufaddr,
++							   ep->rx_buf_sz,
++							   DMA_FROM_DEVICE);
+ 			} else {
+-				pci_unmap_single(ep->pci_dev,
+-					ep->rx_ring[entry].bufaddr,
+-					ep->rx_buf_sz, PCI_DMA_FROMDEVICE);
++				dma_unmap_single(&ep->pci_dev->dev,
++						 ep->rx_ring[entry].bufaddr,
++						 ep->rx_buf_sz,
++						 DMA_FROM_DEVICE);
+ 				skb_put(skb = ep->rx_skbuff[entry], pkt_len);
+ 				ep->rx_skbuff[entry] = NULL;
+ 			}
+@@ -1213,8 +1222,10 @@ static int epic_rx(struct net_device *dev, int budget)
+ 			if (skb == NULL)
+ 				break;
+ 			skb_reserve(skb, 2);	/* Align IP on 16 byte boundaries */
+-			ep->rx_ring[entry].bufaddr = pci_map_single(ep->pci_dev,
+-				skb->data, ep->rx_buf_sz, PCI_DMA_FROMDEVICE);
++			ep->rx_ring[entry].bufaddr = dma_map_single(&ep->pci_dev->dev,
++								    skb->data,
++								    ep->rx_buf_sz,
++								    DMA_FROM_DEVICE);
+ 			work_done++;
+ 		}
+ 		/* AV: shouldn't we add a barrier here? */
+@@ -1294,8 +1305,8 @@ static int epic_close(struct net_device *dev)
+ 		ep->rx_ring[i].rxstatus = 0;		/* Not owned by Epic chip. */
+ 		ep->rx_ring[i].buflength = 0;
+ 		if (skb) {
+-			pci_unmap_single(pdev, ep->rx_ring[i].bufaddr,
+-					 ep->rx_buf_sz, PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&pdev->dev, ep->rx_ring[i].bufaddr,
++					 ep->rx_buf_sz, DMA_FROM_DEVICE);
+ 			dev_kfree_skb(skb);
+ 		}
+ 		ep->rx_ring[i].bufaddr = 0xBADF00D0; /* An invalid address. */
+@@ -1305,8 +1316,8 @@ static int epic_close(struct net_device *dev)
+ 		ep->tx_skbuff[i] = NULL;
+ 		if (!skb)
+ 			continue;
+-		pci_unmap_single(pdev, ep->tx_ring[i].bufaddr, skb->len,
+-				 PCI_DMA_TODEVICE);
++		dma_unmap_single(&pdev->dev, ep->tx_ring[i].bufaddr, skb->len,
++				 DMA_TO_DEVICE);
+ 		dev_kfree_skb(skb);
+ 	}
+ 
+@@ -1502,8 +1513,10 @@ static void epic_remove_one(struct pci_dev *pdev)
+ 	struct net_device *dev = pci_get_drvdata(pdev);
+ 	struct epic_private *ep = netdev_priv(dev);
+ 
+-	pci_free_consistent(pdev, TX_TOTAL_SIZE, ep->tx_ring, ep->tx_ring_dma);
+-	pci_free_consistent(pdev, RX_TOTAL_SIZE, ep->rx_ring, ep->rx_ring_dma);
++	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, ep->tx_ring,
++			  ep->tx_ring_dma);
++	dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, ep->rx_ring,
++			  ep->rx_ring_dma);
+ 	unregister_netdev(dev);
+ 	pci_iounmap(pdev, ep->ioaddr);
+ 	pci_release_regions(pdev);
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.25.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
