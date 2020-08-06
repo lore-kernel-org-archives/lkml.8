@@ -2,71 +2,88 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A98C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F4C43639
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9925E22CAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9C922CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SN5MGle4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgHFGPu (ORCPT
+        id S1728191AbgHFGiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:15:50 -0400
-Received: from mga12.intel.com ([192.55.52.136]:13679 "EHLO mga12.intel.com"
+        Thu, 6 Aug 2020 02:38:01 -0400
+Received: from m12-15.163.com ([220.181.12.15]:32968 "EHLO m12-15.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbgHFGPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:15:49 -0400
-IronPort-SDR: FzdIOrhCEVJEVNStAXUSbqNDmuUoFPCO0ug62Gjo8+vkNA57+7+1tXqHeZp6DfwkVDcNaYfBCH
- lU2o+tXvlsYQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="132286575"
-X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
-   d="scan'208";a="132286575"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 23:15:34 -0700
-IronPort-SDR: psBcpFRPS/T1+BeZPwSHC2pI4x8dzWgV9wzmPm9RIIyirra8V4qbeojVA2SfwcemEaOeSte8xa
- PE0iydH2NRzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
-   d="scan'208";a="493561482"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 23:15:32 -0700
-Subject: Re: [PATCH 0/2] perf: Allow closing siblings' file descriptors
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com
-References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <32ad7700-3d4e-6c20-31c9-8b002fea5cbc@intel.com>
-Date:   Thu, 6 Aug 2020 09:15:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726051AbgHFGiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 02:38:00 -0400
+X-Greylist: delayed 939 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 02:37:57 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=b4Vljfz11N5B3BsXB/
+        jU+jLNNdpMd3l8kupGK/FIHnQ=; b=SN5MGle4MIp3KSKXRDPu290DgzSt7dTQJD
+        fGhFwn8vRFwNlRWqFKLxUn2oEe0BV14NgDRduHZobrliuXmYHOJ//xfcrpLKwMIP
+        59FW5K294r5swrb4TWJ8RACE+6l2YZtwag5bk3BtF9mRAlrnhko4xTdMAarFnO+B
+        bwUdHtark=
+Received: from localhost.localdomain (unknown [58.33.126.62])
+        by smtp11 (Coremail) with SMTP id D8CowADnbcp1oStf0rT5EQ--.55997S3;
+        Thu, 06 Aug 2020 14:21:48 +0800 (CST)
+From:   Grant Feng <von81@163.com>
+To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] DT: leds: Add an optional property named 'sdb-gpios'
+Date:   Thu,  6 Aug 2020 14:21:30 +0800
+Message-Id: <20200806062130.25187-2-von81@163.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806062130.25187-1-von81@163.com>
+References: <20200806062130.25187-1-von81@163.com>
+X-CM-TRANSID: D8CowADnbcp1oStf0rT5EQ--.55997S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4fCFWfXFW7XFy3XrWfAFb_yoWkKFX_G3
+        Z7JrsFqas8uF1vgr4qvr15Wr43Cr47AF1kCw15ZF48Aw1fXas09FZ7t34Yyr15WFZxurZx
+        C3ykCr4qqr17GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0_Oz5UUUUU==
+X-Originating-IP: [58.33.126.62]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiNxx4OlWBhkubuAAAsT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/07/20 6:16 pm, Alexander Shishkin wrote:
-> Hi guys,
-> 
-> I've been looking at reducing the number of open file descriptors per perf
-> session. If we retain one descriptor per event, in a large group they add
-> up. At the same time, we're not actually using them for anything after the
-> SET_OUTPUT and maybe SET_FILTER ioctls. So, this series is a stab at that.
+The chip enters hardware shutdown when the SDB pin is pulled low.
+The chip releases hardware shutdown when the SDB pin is pulled high.
 
-I am wondering if instead we should be looking at creating a kernel API that
-allows associating a multitude of tracepoints with a single event.  Thoughts
-anyone?
+Signed-off-by: Grant Feng <von81@163.com>
+---
+ Documentation/devicetree/bindings/leds/leds-is31fl319x.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+index fc2603484544..e8bef4be57dc 100644
+--- a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+@@ -16,6 +16,7 @@ Optional properties:
+ - audio-gain-db : audio gain selection for external analog modulation input.
+ 	Valid values: 0 - 21, step by 3 (rounded down)
+ 	Default: 0
++- sdb-gpios : Specifier of the GPIO connected to SDB pin.
+ 
+ Each led is represented as a sub-node of the issi,is31fl319x device.
+ There can be less leds subnodes than the chip can support but not more.
+@@ -44,6 +45,7 @@ fancy_leds: leds@65 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	reg = <0x65>;
++	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+ 
+ 	red_aux: led@1 {
+ 		label = "red:aux";
+-- 
+2.17.1
+
+
