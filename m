@@ -2,100 +2,129 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20851C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0366C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6784A2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSuw0JUD"
+	by mail.kernel.org (Postfix) with ESMTP id 1FE5C2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596732936;
+	bh=xGt61VXl0JXC+OP2QjtwWPAk9TtHHrvDaRrvwx763jA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xmX77g6AmxBWIPw96ihqO74I203GMhhGQXG+4wxcskf50FU6rPlRjDBMbLo7B3dpn
+	 q7RTIIDNUoAqonh6fukm+wTHnfqDhqJRafEVQY0HOYigbMud5fU9fp3mF+c7WvkORA
+	 wdbJF7bxKiY3zrDwiUM0l5H04rAfTL4iVGOtdW1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgHFQzb (ORCPT
+        id S1729521AbgHFQza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:55:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
+        Thu, 6 Aug 2020 12:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729759AbgHFQzU (ORCPT
+        with ESMTP id S1729828AbgHFQzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:55:20 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7F8C0A889D;
-        Thu,  6 Aug 2020 07:50:05 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id i80so26235480lfi.13;
-        Thu, 06 Aug 2020 07:50:05 -0700 (PDT)
+        Thu, 6 Aug 2020 12:55:17 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5264FC0A8895
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 07:45:37 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c15so25673405edj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 07:45:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Q+Uq8k5re7cUqp6WIZR8xEDOrcjWzDvNdEqOcxf2ZGk=;
-        b=YSuw0JUD4BI9mDqWniQI7oBkON85+Hily9832Miaihip0RlifaExWnpi46k72Ylx/0
-         j8dBhGbQtkX23MvMAlBA1VcS6Er1XNDPV8EThtSUBYVSUhGp9LIWaD3ne1uwJiyqBXw1
-         D5nGpPcknk3s4yzbaepxnRvrXbtI3MQYlZhj+YMBawEoaiPHRu5D5fDv0ORa5GEPxNy+
-         TEPhCrzev0zQKsSKVx4MVxamstlMxS7DGaUkHQbmcfS5aju9oQpDxX9yxs81BgmeUJUc
-         lT2FfL7PXRm8I8Im19vcypzAr8t0DyX0QiTF28F1RqyMcZybK2R5+weOFDGowmeYHxJn
-         NusQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yYVuBVabzbzwKa6QXgVhZky/17L0x8BFmX65otxgpTI=;
+        b=XKYy8IuTF3Kcgk3+NCYYk35dOiKkzZQpswgbR1Z8aRUyW1omIB1koVTJMQuWvGhaXy
+         a6OYG1ElcCAB9PTbfxkN8JSQIcOm+XE9iOXVVpivKdIpHXNgX3kB4u67mISjzca5SHr1
+         4ucC8ReziEal1HCTrJMjqgRmxpe9+OPxsDiZgmZSXimlQk2mzNQHMElHjjaZGTFv+PY2
+         b/HT8N9QsacZGbpFmYW62YPcFv5t63jz7oX73Nnm1jYM83izwZNT2a6jO+Slzn7BbvRH
+         3lA1+DWNmuVI3rFKxc031YQ8MNdEs1nn0IUVz/ngVR9McQKwE5EYzA4NltBlsdic2Hp9
+         uvJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q+Uq8k5re7cUqp6WIZR8xEDOrcjWzDvNdEqOcxf2ZGk=;
-        b=AKt7yYQTc0AJTJrtAuxJ0IyyhOBvkwbCfuwP/EFdLmYnvnQmr9FE7hv/fTmZGGIyWL
-         qvDfEyvbkzHFEcE5UlItPdM5o7Mz2Vj6LgOQIo/EVvUfLWjqnCm2HlWSvBHTIMM4kgcz
-         VNmFhH9mvw2z/9X3UEe/OVwF7aQjd8Z3dT3GdkqonHtUKR5HDKtpeFMGIlG254R7zQES
-         /icejXIVDAxy2lbbQQk6FJxtYM97jLfydzQ5mQv1d/onZkltegY7ipQFudFX6hPVl1Oa
-         g/Y+yfVhIMkvw6QLWa743AvxAjjZBo9xE5pePbHwVilzMHxEV7yrJ7dHdxj9B+iPdl3M
-         ssjw==
-X-Gm-Message-State: AOAM530pM2j2Bg5TwrfrypyWNnkzDvp+0qe/EN1MX8voytv2hghEnHCu
-        QD/unB4/fO6lZni3VIDDf1w=
-X-Google-Smtp-Source: ABdhPJzWUE2bNkTWRtmo+gsMb7ug+grnXRR4hPLQdhUh80mdWnmTJ62sNdD6tPJa0sgHU3CrS+mq1Q==
-X-Received: by 2002:a19:457:: with SMTP id 84mr4141422lfe.191.1596725401282;
-        Thu, 06 Aug 2020 07:50:01 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id a16sm2739927ljj.108.2020.08.06.07.49.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 07:50:00 -0700 (PDT)
-Subject: Re: [Patch v2 2/4] dmaengine: tegra: Add Tegra GPC DMA driver
-To:     Rajesh Gumasta <rgumasta@nvidia.com>, ldewangan@nvidia.com,
-        jonathanh@nvidia.com, vkoul@kernel.org, dan.j.williams@intel.com,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=yYVuBVabzbzwKa6QXgVhZky/17L0x8BFmX65otxgpTI=;
+        b=QwoI2KVcFLrJxu06k0gA942QxUgk/z6e0PMFUt9E4uSSjs13Tg7i59Gtyr2VJujpw6
+         gidpJCbl9lwd4eH2NtYvJ20sw7qpPS83M8ceWgdklc7Dd3e3/mmuZjaBztAcSveBj+5W
+         UArz3aR8Q+CWgxiI2OIE6LMsy8YpJIRlCP908f5PCnNRKY2g+Ke9Ed4oJZ6D2LtGUqWg
+         ZWqcgYGWQtWC6JAII804eYGZNN4NdsE+y4yeo5JTJ6UtXxw+R3SMMx34V3YX59ixsIZW
+         2LDsZ7i0eIH7VY8sayMm4JyNJL3ShsqyaU7b7zmSmVoWuzv8xS604DASx8V7GauEKn0y
+         E0lw==
+X-Gm-Message-State: AOAM531aNU7h+fOeXkN7U/e51Ax7ykpW9uWfTucVfPmagLSxTppjtrd+
+        oz9P2dis8clh1QwC4yQz2kE=
+X-Google-Smtp-Source: ABdhPJy5Adtz5OUMX+QruORlC+ggIIh8g6p8eKEuoHSCOc/OlOCUCLa/ueOHhp5KbtbGCX5wiwmflw==
+X-Received: by 2002:aa7:c697:: with SMTP id n23mr4310500edq.50.1596725136036;
+        Thu, 06 Aug 2020 07:45:36 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id i5sm3648201edt.52.2020.08.06.07.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 07:45:34 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 16:45:33 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Qi Zheng <arch0.zheng@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
         linux-kernel@vger.kernel.org
-Cc:     kyarlagadda@nvidia.com, Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
- <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <93b20bf7-1cb8-c8cf-06ef-1c15b7ce7ff2@gmail.com>
-Date:   Thu, 6 Aug 2020 17:49:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCH] sched/core: add unlikely in group_has_capacity()
+Message-ID: <20200806144533.GA2123716@gmail.com>
+References: <20200730135423.232776-1-arch0.zheng@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730135423.232776-1-arch0.zheng@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.08.2020 10:30, Rajesh Gumasta пишет:
-> +static struct dma_async_tx_descriptor *tegra_dma_prep_dma_memset(
-> +	struct dma_chan *dc, dma_addr_t dest, int value, size_t len,
-> +	unsigned long flags)
-> +{
 
-This looks and reads okay, although the following style of code's
-formatting is a bit more common for the kernel:
+* Qi Zheng <arch0.zheng@gmail.com> wrote:
 
-static struct dma_async_tx_descriptor *
-tegra_dma_prep_dma_memset(struct dma_chan *dc, dma_addr_t dest,
-			  int value, size_t len, unsigned long flags)
+> 1. The group_has_capacity() function is only called in
+>    group_classify().
+> 2. Before calling the group_has_capacity() function,
+>    group_is_overloaded() will first judge the following
+>    formula, if it holds, the group_classify() will directly
+>    return the group_overloaded.
+> 
+> 	(sgs->group_capacity * imbalance_pct) <
+>                         (sgs->group_runnable * 100)
+> 
+> Therefore, when the group_has_capacity() is called, the
+> probability that the above formalu holds is very small. Hint
+> compilers about that.
+> 
+> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+> ---
+>  kernel/sched/fair.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 2ba8f230feb9..9074fd5e23b2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8234,8 +8234,8 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
+>  	if (sgs->sum_nr_running < sgs->group_weight)
+>  		return true;
+>  
+> -	if ((sgs->group_capacity * imbalance_pct) <
+> -			(sgs->group_runnable * 100))
+> +	if (unlikely((sgs->group_capacity * imbalance_pct) <
+> +			(sgs->group_runnable * 100)))
+>  		return false;
 
-You could make this small improvement in a v3. Same for all similar
-cases in the code.
+Isn't the probability that this second check will match around 0%?
+
+I.e. wouldn't the right fix be to remove the duplicate check from 
+group_has_capacity(), because it's already been checked in 
+group_classify()? Maybe while leaving a comment in place?
+
+Thanks,
+
+	Ingo
