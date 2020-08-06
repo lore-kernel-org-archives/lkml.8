@@ -2,120 +2,121 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3155C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B337C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3D392086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652A92086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzDR8/m7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IydTJGkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgHFQxT (ORCPT
+        id S1729665AbgHFQxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbgHFQvC (ORCPT
+        Thu, 6 Aug 2020 12:53:24 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56292 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729231AbgHFQwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:51:02 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D064C0086B0;
-        Thu,  6 Aug 2020 08:33:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g33so9518531pgb.4;
-        Thu, 06 Aug 2020 08:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CN7uHlPIi8/iD7OlGD8kFHlcRvOdmfTdi7G7UlWQ4cQ=;
-        b=bzDR8/m7lhxxuexHxN8XtssGQWJGqBJsSmWiN7jtIMtLvoVdn94DwJr9Su2QJRQGZs
-         k29+mHOG9x2wsoA5CWruJlqxflFi2bQ36Fb4xCsxBDz0a4ERJHPuU3xI02EXlQ+SkaZH
-         78yOyQGOyE48KySnZY/Sy1Y+focpKatwdt9yJashzTjxCyZTHB9YC1HUnzEEgYE92HoS
-         FDTceYg/sfB8KHsQ17SJtCKTQPWE45ziA2Wv+u9hJyWiyfogXran7AefBZ+tUZFHswWp
-         wbomNsX73S4/jwlA9GAGPqMzo5hMGGlvNrBxKIqRHvjIV9uG588ZV3PUV18kEvbugH7f
-         1uCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=CN7uHlPIi8/iD7OlGD8kFHlcRvOdmfTdi7G7UlWQ4cQ=;
-        b=tPGtnioMhCujeNsvzRD1tjq6+2uVbE6hwa48hqFAYZbPb+//R4vA9Co5x/TSZ7nMzm
-         iCW0rAXQm6DV/dluzj8XnljQMkIK/016MWYsYw6/X9rNQ2U862iEyn1VQizWJ4hiu8OY
-         P4wHuOL24PIKKh8srutLGJYjkv817+BV/ZWewg4W6iC+p5/i7h5rZJ66irNh81uZ6eso
-         OZZSYDsRuX69mRhD5cr5tLZ+quyJMovmyl9W/2gb/Yh5ZDQO8PhJrgFBxBZTNXVUdB8i
-         nE38A345n8E/RYp+FkYL38ShwOWkW7FPMfNyNu+RaYcsPAoZXPNtj3RCXIy55ymFpqv8
-         kopw==
-X-Gm-Message-State: AOAM530TZiAhp8WmeHY9GgGvMSf773eoiP3TjBmJaj6v+6Y9rIPtIn7h
-        gJU2pne7QKMCk9ami0+jGSo=
-X-Google-Smtp-Source: ABdhPJxhsDhjaMYsKZs6gAAdwc4LekHYCqv+Ibr7AR7BKYdy6R2x5nFLfZMsGjMySWEvo48m78m2Zg==
-X-Received: by 2002:a63:f24a:: with SMTP id d10mr7739694pgk.4.1596727992856;
-        Thu, 06 Aug 2020 08:33:12 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g12sm8159035pfb.190.2020.08.06.08.33.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Aug 2020 08:33:12 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v4 1/7] iio: cros_ec: Accept -EOPNOTSUPP as 'not supported' error code
-Date:   Thu,  6 Aug 2020 08:33:02 -0700
-Message-Id: <20200806153308.204605-2-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806153308.204605-1-linux@roeck-us.net>
-References: <20200806153308.204605-1-linux@roeck-us.net>
+        Thu, 6 Aug 2020 12:52:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 076F15Ev107938;
+        Thu, 6 Aug 2020 10:01:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596726065;
+        bh=SsDht611ujdkNQFc6BFSfYMna5LmuK9AurW2tYiBVyU=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=IydTJGkvBiT7VaX6EBJOe1Z1CzhZiR6dHukbm9n8mlGN/ogWpgM04AcWOGWWqilRV
+         aVoxk2TSG5yjqHjWygESa/KQksSSpl/nyd+5j9Y0f+uKkuyeyay94f0K+0S0ahvi4w
+         a3NIvRw6BmqgBwxkkKa4qNyqzlfEDuB14CS9L//w=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 076F15G0015172
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Aug 2020 10:01:05 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
+ 2020 10:01:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 6 Aug 2020 10:01:05 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076F14J2050834;
+        Thu, 6 Aug 2020 10:01:04 -0500
+Subject: Re: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low
+ pulse when startup
+To:     Grant Feng <von81@163.com>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>, <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200806062130.25187-1-von81@163.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
+Date:   Thu, 6 Aug 2020 10:00:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200806062130.25187-1-von81@163.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A follow-up patch will extend the number of errors reported by
-cros_ec_cmd_xfer_status(). Specifically, the function will return
--EOPNOTSUPP if a command is not supported by the EC. Prepare for it.
+Grant
 
-Cc: Gwendal Grignou <gwendal@chromium.org>
-Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc: Prashant Malani <pmalani@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v4: No change
-v3: No change
-v2: No change
+On 8/6/20 1:21 AM, Grant Feng wrote:
+> generate a 5ms low pulse on sdb pin when startup, then the chip
+> becomes more stable in the complex EM environment.
+>
+> Signed-off-by: Grant Feng <von81@163.com>
+> ---
+>   drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+>
+> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
+> index ca6634b8683c..b4f70002cec9 100644
+> --- a/drivers/leds/leds-is31fl319x.c
+> +++ b/drivers/leds/leds-is31fl319x.c
+> @@ -16,6 +16,8 @@
+>   #include <linux/of_device.h>
+>   #include <linux/regmap.h>
+>   #include <linux/slab.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>   
+>   /* register numbers */
+>   #define IS31FL319X_SHUTDOWN		0x00
+> @@ -61,6 +63,7 @@
+>   struct is31fl319x_chip {
+>   	const struct is31fl319x_chipdef *cdef;
+>   	struct i2c_client               *client;
+> +	struct gpio_desc		*sdb_pin;
+>   	struct regmap                   *regmap;
+>   	struct mutex                    lock;
+>   	u32                             audio_gain_db;
+> @@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
+>   		is31->audio_gain_db = min(is31->audio_gain_db,
+>   					  IS31FL319X_AUDIO_GAIN_DB_MAX);
+>   
+> +	is31->sdb_pin = gpiod_get(dev, "sdb", GPIOD_ASIS);
 
- drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Since this is optional maybe use devm_gpiod_get_optional.
 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-index a66941fdb385..e3aff95493dd 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-@@ -73,7 +73,7 @@ static int cros_ec_sensors_read(struct iio_dev *indio_dev,
- 		st->core.param.sensor_offset.flags = 0;
- 
- 		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
--		if (ret == -EPROTO) {
-+		if (ret == -EPROTO || ret == -EOPNOTSUPP) {
- 			/* Reading calibscale is not supported on older EC. */
- 			*val = 1;
- 			*val2 = 0;
--- 
-2.17.1
+If this is required for stability then if the GPIO is not present then 
+the parse_dt should return the error.
+
+And use the devm_gpiod_get call.  Otherwise you are missing the 
+gpiod_put when exiting or removing the driver.
+
+Dan
+
 
