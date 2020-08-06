@@ -4,66 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E970C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74DA1206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A815206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgHFRp7 convert rfc822-to-8bit (ORCPT
+        id S1730372AbgHFRqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:45:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 13:46:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:50250 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbgHFQih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:38:37 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F012204FD;
-        Thu,  6 Aug 2020 16:37:50 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 12:37:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     peter enderborg <peter.enderborg@sony.com>,
-        =?UTF-8?B?VGhpw6liYXVk?= Weksteen <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Nick Kralevich <nnk@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
-Message-ID: <20200806123748.2285944b@oasis.local.home>
-In-Reply-To: <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com>
-References: <20200806080358.3124505-1-tweek@google.com>
-        <20200806080358.3124505-2-tweek@google.com>
-        <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com>
-        <8627d780-0e19-6755-0de5-c686deb0f5de@sony.com>
-        <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1729027AbgHFQic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:38:32 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id AA0EC68D0D; Thu,  6 Aug 2020 15:55:25 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 15:55:25 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Christoph Hellwig <hch@lst.de>, amit.pundir@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>, rientjes@google.com,
+        jeremy.linton@arm.com, linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2 2/2] dma-pool: Only allocate from CMA when in same
+ memory zone
+Message-ID: <20200806135525.GA4380@lst.de>
+References: <20200803160956.19235-1-nsaenzjulienne@suse.de> <20200803160956.19235-3-nsaenzjulienne@suse.de> <20200804060633.GA7368@lst.de> <e0b2a00c8cf86cb1a91804942d35c9d4b98e9f9f.camel@suse.de> <20200806051814.GA10143@lst.de> <3a530804ad5aa96d2502da8ee3e8650b0b477c0f.camel@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a530804ad5aa96d2502da8ee3e8650b0b477c0f.camel@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 08:32:38 -0400
-Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
-
-> >
-> > In the commit message or in a Documentation/trace/events-avc.rst ?  
+On Thu, Aug 06, 2020 at 01:50:29PM +0200, Nicolas Saenz Julienne wrote:
+> > The latter is pretty much what I expect, as we only support the default and
+> > per-device DMA CMAs.
 > 
-> I was just asking for it in the commit message / patch description.  I 
-> don't know what is typical for Documentation/trace.
+> Fair enough, should I send a v3 with everything cleaned-up/rebased, or you'd
+> rather pick it up from your version?
 
-No, the Documentation/trace is for generic tracing documentation. Not
-for individual events.
-
--- Steve
+Please just resend the whole thing. 
