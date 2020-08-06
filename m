@@ -2,146 +2,180 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C996DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A72A20823
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57562245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yx3BJr6p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oxNnsnxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgHFBtF (ORCPT
+        id S1726971AbgHFBvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 21:49:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46659 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgHFBtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 21:49:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BMWcR5H9gz9sPC;
-        Thu,  6 Aug 2020 11:48:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596678540;
-        bh=Ceb6LToJ+7vmEHhGywFYyHWH3nc/3SWKpK13hR/D9sU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yx3BJr6pOw4OmA8EZp0nMhU9EQiiGK96eNm+E244cdRsEyxS9+lBXbwYyVLTzlM7I
-         HXN43s7N8yL3VoE8wdrGycmcFjBch7eM6Sdygp3dMEFmX0vdESx6bfMFhjoAYF3utQ
-         NMU1wKsqKRBBLxrHOLIvH4dOBzUnwcmGJXAY5OdiRYX1UkRGQy1zEZ0p9GhV59UqZs
-         wcMycN8JK9znIBjOP7bIiZWE6UmJ/6eMOfFbUD6qmFjvy6Sb5EagMd9mZ/tFT3qxVm
-         G3XrUyVZg0LdrrGFKclf7CAGO+PUbFSX1JBmT8K3Yo0boBOWqVnotwRCn5dpV3fesU
-         VdZpXCieSOaDQ==
-Date:   Thu, 6 Aug 2020 11:48:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Rob Herring <robherring2@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: Re: linux-next: manual merge of the devicetree tree with the drm
- tree
-Message-ID: <20200806114853.43f2e6fb@canb.auug.org.au>
-In-Reply-To: <20200722155239.07bafdfc@canb.auug.org.au>
-References: <20200722155239.07bafdfc@canb.auug.org.au>
+        Wed, 5 Aug 2020 21:51:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgHFBvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 21:51:04 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97C8C061574;
+        Wed,  5 Aug 2020 18:51:04 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mw10so1957148pjb.2;
+        Wed, 05 Aug 2020 18:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t7qgvGoGJ/RGVSfdKbMsEFKwg8apV6p2sE/5Kdluv/M=;
+        b=oxNnsnxt/6vP6yiDtEclyzwcrnpNndJDHOtveoyjVZGe/SccV1U5ZjFpVCsTGkG4aM
+         Un8s5QqLNRmTsxhnqa5wp6s5y4Es6/0ByrIq9lsLmh1Ky6/23Crw3mBt8xU2XHRHhp2z
+         guosVzJ6/F4imnpqLp09VfJfQsiMAUcIR33InKI7EP6PB3s4CrvqHCrgH5m1T60v/nFt
+         0SrBhErh4PYM6l5bY0FTKyNzCrmO5KyOrTR7fpFF1zWclpMLFQUceQhmkmNHgqKAFAQ3
+         ZGSqvk+YXINV+f+54DN6JwViAd2HAZKXZcKYFdSLghH+HSNgkhylPeKXOFpH1NfRRSHp
+         N4NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t7qgvGoGJ/RGVSfdKbMsEFKwg8apV6p2sE/5Kdluv/M=;
+        b=R7OE7eRCc1nOPBHcTIP86KuHbc8tSN63BCQ8Fd6aB/dPJ7t26zbSuhpCp41NGO6rgp
+         GYQRx0SMU09oXEF6E62Uhjh3GwAiEhbY/PagoCzFjma7WYJjCo/h/O3SE3TIc+yhvPXz
+         QM1Dkb/xV7xCPag59fUKz7xcAzEZjfcIOxs2ni39FMjyPqe/WoAV/IFaYwLihwUICKPm
+         Ccn/TP2GkMWHDY4YwD+876mDC84hwZ381YfDf8F8hQ22g+i+7cpoJlxypgb9TTTyf/4q
+         p/YsIQ5nXhhPHda57nVmtnBSFqZkeAZgWt5qHVFRSYj+X5is4h9ewaBWD9DLeiKT9qnQ
+         +mag==
+X-Gm-Message-State: AOAM530KoAU5WS7fIWsa24Yig1x5UH90VqXd5p0W8gX5BARJsYva+Ehp
+        bEDU8rhQJw6ZxTvs/qp5bvE=
+X-Google-Smtp-Source: ABdhPJzQFukfZk3y0bJJVnzC7wLxBmCVbKJapj/E8kdoYTrDWfwN/BTRIRgO6gPJOTUYcIjcP6mC5Q==
+X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr5714651plr.155.1596678663448;
+        Wed, 05 Aug 2020 18:51:03 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:985d:3e31:b954:7ccf])
+        by smtp.gmail.com with ESMTPSA id m26sm5375622pff.84.2020.08.05.18.51.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 18:51:03 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PATCH] drivers/net/wan/lapbether: Added needed_headroom and a skb->len check
+Date:   Wed,  5 Aug 2020 18:50:40 -0700
+Message-Id: <20200806015040.98379-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ciKrCbctQVDTvj=cVrqeP4m";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ciKrCbctQVDTvj=cVrqeP4m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+1. Added a skb->len check
 
-Hi all,
+This driver expects upper layers to include a pseudo header of 1 byte
+when passing down a skb for transmission. This driver will read this
+1-byte header. This patch added a skb->len check before reading the
+header to make sure the header exists.
 
-On Wed, 22 Jul 2020 15:52:39 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the devicetree tree got a conflict in:
->=20
->   Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
->=20
-> between commit:
->=20
->   5a2e9b658cdc ("dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml")
->=20
-> from the drm tree and commit:
->=20
->   382646090f7f ("dt-bindings: drm/bridge: Replace HTTP links with HTTPS o=
-nes")
->=20
-> from the devicetree tree.
->=20
-> I fixed it up (I delete the file and adde the following merge fix
-> patch) and can carry the fix as necessary. This is now fixed as far as
-> linux-next is concerned, but any non trivial conflicts should be
-> mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 22 Jul 2020 15:47:22 +1000
-> Subject: [PATCH] fix for "dt-bindings: drm/bridge: Replace HTTP links wit=
-h HTTPS ones"
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  .../devicetree/bindings/display/bridge/ti,sn65dsi86.yaml        | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi8=
-6.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> index be10e8cf31e1..f8622bd0f61e 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> @@ -11,7 +11,7 @@ maintainers:
-> =20
->  description: |
->    The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs e=
-DP.
-> -  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=
-=3Dsn65dsi86&fileType=3Dpdf
-> +  https://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumbe=
-r=3Dsn65dsi86&fileType=3Dpdf
-> =20
->  properties:
->    compatible:
-> --=20
-> 2.27.0
+2. Changed to use needed_headroom instead of hard_header_len to request
+necessary headroom to be allocated
 
-This is now a conflict between the drm tree and Linus' tree.
+In net/packet/af_packet.c, the function packet_snd first reserves a
+headroom of length (dev->hard_header_len + dev->needed_headroom).
+Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
+which calls dev->header_ops->create, to create the link layer header.
+If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
+length (dev->hard_header_len), and assumes the user to provide the
+appropriate link layer header.
 
---=20
-Cheers,
-Stephen Rothwell
+So according to the logic of af_packet.c, dev->hard_header_len should
+be the length of the header that would be created by
+dev->header_ops->create.
 
---Sig_/ciKrCbctQVDTvj=cVrqeP4m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+However, this driver doesn't provide dev->header_ops, so logically
+dev->hard_header_len should be 0.
 
------BEGIN PGP SIGNATURE-----
+So we should use dev->needed_headroom instead of dev->hard_header_len
+to request necessary headroom to be allocated.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8rYYUACgkQAVBC80lX
-0GwIXQf/SLzjkXaFmkX9wJyeKhhsoMGpM7T59b9DWNPtr1S4cP7EIuDXY7+cBhde
-UsF9GfJux7P2i1OadYftdH843y4rGP+SmxxKt0/2DsNjgsWQXz1u4/khJ3tEz9Q7
-aRQD9ukn9F6UjiJmWvWtn1RTpJj58RYjHAoMGEB7aKIMD1bBCWiq30CD8cxheBZt
-z/hm4bPSpK3JoyP2JH0lz901ZmgoAhEwek3eX2F8FYgAaAvnDwS9FqjsZbJ8g3OR
-y0VgI/y+6CnLinCWeYkH+kMJZa4rCU+dBdkRZBeMio/T9DC7mwHvZHjPJ0Ec7wmm
-2wr2T2pU6kEHlf+QMYbkq1Z4Hs7Q4w==
-=D5vb
------END PGP SIGNATURE-----
+This change fixes kernel panic when this driver is used with AF_PACKET
+SOCK_RAW sockets.
 
---Sig_/ciKrCbctQVDTvj=cVrqeP4m--
+Call stack when panic:
+
+[  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
+put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
+dev:veth0
+...
+[  168.399255] Call Trace:
+[  168.399259]  skb_push.cold+0x14/0x24
+[  168.399262]  eth_header+0x2b/0xc0
+[  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
+[  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
+[  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
+[  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
+[  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
+[  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
+[  168.399286]  dev_hard_start_xmit+0x91/0x1f0
+[  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
+[  168.399291]  __dev_queue_xmit+0x721/0x8e0
+[  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
+[  168.399297]  dev_queue_xmit+0x10/0x20
+[  168.399298]  packet_sendmsg+0xbf0/0x19b0
+......
+
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Cc: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+---
+ drivers/net/wan/lapbether.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index b2868433718f..1ea15f2123ed 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -157,6 +157,12 @@ static netdev_tx_t lapbeth_xmit(struct sk_buff *skb,
+ 	if (!netif_running(dev))
+ 		goto drop;
+ 
++	/* There should be a pseudo header of 1 byte added by upper layers.
++	 * Check to make sure it is there before reading it.
++	 */
++	if (skb->len < 1)
++		goto drop;
++
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:
+ 		break;
+@@ -305,6 +311,7 @@ static void lapbeth_setup(struct net_device *dev)
+ 	dev->netdev_ops	     = &lapbeth_netdev_ops;
+ 	dev->needs_free_netdev = true;
+ 	dev->type            = ARPHRD_X25;
++	dev->hard_header_len = 0;
+ 	dev->mtu             = 1000;
+ 	dev->addr_len        = 0;
+ }
+@@ -331,7 +338,8 @@ static int lapbeth_new_device(struct net_device *dev)
+ 	 * then this driver prepends a length field of 2 bytes,
+ 	 * then the underlying Ethernet device prepends its own header.
+ 	 */
+-	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
++	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
++					   + dev->needed_headroom;
+ 
+ 	lapbeth = netdev_priv(ndev);
+ 	lapbeth->axdev = ndev;
+-- 
+2.25.1
+
