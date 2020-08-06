@@ -2,195 +2,199 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E489C4726D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED79C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB5A323102
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B718720855
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z8tydMrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729218AbgHFJhC (ORCPT
+        id S1729388AbgHFKll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:37:02 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:17690 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729104AbgHFJcs (ORCPT
+        Thu, 6 Aug 2020 06:41:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729392AbgHFKgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:32:48 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 02:32:36 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 02:32:34 -0700
-Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 06 Aug 2020 15:02:13 +0530
-Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id D1729219E0; Thu,  6 Aug 2020 15:02:12 +0530 (IST)
-From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        Thu, 6 Aug 2020 06:36:23 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C69C061757
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 03:26:32 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z188so16840337pfc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 03:26:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HFQwzbiefbpfbQFLc0zRge0aMRzUuoiJq6/bLA8CABQ=;
+        b=z8tydMrbJZmdGu0lb6D8fiATUQOQnZ2LTi3TH8K+kklHy1YxIMA7o18BjoXkNo8SLu
+         uDGXiQIhcaweqBHVQaS6UwO954M24jqnaK3oZEE49+ChN0NRBTjvEJttxbrsPVBge/3J
+         kX1nJEAklBNWWZXdGZ1fyUiWi9EBasqndrPm2LhFaaI2/uWnnk6n1BAYBZXWeD6MSUww
+         d3740yD04zI0BzUmuurGfrH2rXG794yB3fE9/pGbc5eEz3Fmu2wpxjzX5Xi7/6R6g5P3
+         g35ZMrhUwug0NSjANrWSnp7LSIfGJAgDOMOdfSRpNmi+jSZoTbCV+bE8Glrk15ra+PVk
+         oetg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HFQwzbiefbpfbQFLc0zRge0aMRzUuoiJq6/bLA8CABQ=;
+        b=atTu1Uail3ZH2pQ5iJeQjNZvzpYRZn05rhKRUmf1Me4VmEAx8bTfZNsp+zt0nxIigS
+         EvED74o027pLcjHtheS2Br/ETnXRVOPs2N4cWsHUf6jbvyD21Fpa4oi3pNRjDC1TRx1t
+         46dK5yMAdq4YExmgpPydcY1yxC187CU2oQT/EeRWBDiluZ/gSqAf2ttgdQucGiq0CsY1
+         7ZtIXtojmIRpuI98jFzDGtsyCOL5nIeFEosVlY48ZRh7EJpDYU2FSBlFEZHIO1+wvfMt
+         xzt7pQ0tiv/7rt9UayO6b7FjX2mFcWkv1dcETQDtJCDgcVSRsS76mxTPFf16bz5xtDgB
+         ouKw==
+X-Gm-Message-State: AOAM532TxKurFCIBgsQICzFpXHLSlrEJ3hIAjN68ucu7Klo5/VUICNF6
+        pYhx8UDrv2p+Bislei049hCB
+X-Google-Smtp-Source: ABdhPJyeuaqpfkpPTZXEXyS2DV+YjRijY6hoRp+ZiREGIm+IZTpaxIeO+Am8BZpkc2kEWk4wH+OEtA==
+X-Received: by 2002:a63:c50a:: with SMTP id f10mr6885148pgd.167.1596709591711;
+        Thu, 06 Aug 2020 03:26:31 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:594:2f7a:c8c3:17bf:d7ce:f7e2])
+        by smtp.gmail.com with ESMTPSA id a18sm6181942pjh.42.2020.08.06.03.26.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Aug 2020 03:26:31 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 15:56:23 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     sricharan@codeaurora.org, gokulsri@codeaurora.org
-Subject: [PATCH v2 2/3] arm64: dts: Add board support for HK10
-Date:   Thu,  6 Aug 2020 15:02:11 +0530
-Message-Id: <1596706332-12957-3-git-send-email-gokulsri@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596706332-12957-1-git-send-email-gokulsri@codeaurora.org>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sricharan@codeaurora.org
+Subject: Re: [PATCH v2 3/3] arm64: dts: Enabled MHI device over PCIe
+Message-ID: <20200806102623.GB2406@Mani-XPS-13-9360>
 References: <1596706332-12957-1-git-send-email-gokulsri@codeaurora.org>
+ <1596706332-12957-4-git-send-email-gokulsri@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596706332-12957-4-git-send-email-gokulsri@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial support for IPQ8074 SoC based HK10-C1
-and HK10-C2 evaluation boards.
+On Thu, Aug 06, 2020 at 03:02:12PM +0530, Gokul Sriram Palanisamy wrote:
+> Enabled MHI device support over PCIe and added memory
+> reservation required for MHI enabled QCN9000 PCIe card.
+> 
 
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/Makefile            |  2 +
- arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts | 11 ++++
- arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts | 14 +++++
- arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi   | 76 ++++++++++++++++++++++++++++
- 4 files changed, 103 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+There is no DT support exist for MHI as of now, so this is not going to work.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index c98bafe..ea933fb 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -4,6 +4,8 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
- dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c1.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts
-new file mode 100644
-index 0000000..2bfcf42
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c1.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright (c) 2020 The Linux Foundation. All rights reserved.
-+ */
-+/dts-v1/;
-+
-+#include "ipq8074-hk10.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ8074/AP-HK10-C1";
-+	compatible = "qcom,ipq8074-hk10-c1", "qcom,ipq8074";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts
-new file mode 100644
-index 0000000..1897e96
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10-c2.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/dts-v1/;
-+/* Copyright (c) 2020 The Linux Foundation. All rights reserved.
-+ */
-+#include "ipq8074-hk10.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ8074/AP-HK10-C2";
-+	compatible = "qcom,ipq8074-hk10-c2", "qcom,ipq8074";
-+};
-+
-+&q6v5_wcss {
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
-new file mode 100644
-index 0000000..0827055
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+/dts-v1/;
-+
-+#include "ipq8074.dtsi"
-+
-+/ {
-+	#address-cells = <0x2>;
-+	#size-cells = <0x2>;
-+
-+	interrupt-parent = <&intc>;
-+
-+	aliases {
-+		serial0 = &blsp1_uart5;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x40000000 0x0 0x20000000>;
-+	};
-+};
-+
-+&blsp1_spi1 {
-+	status = "ok";
-+
-+	m25p80@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+	};
-+};
-+
-+&blsp1_uart5 {
-+	status = "ok";
-+};
-+
-+&pcie0 {
-+	status = "ok";
-+	perst-gpio = <&tlmm 58 0x1>;
-+};
-+
-+&pcie1 {
-+	status = "ok";
-+	perst-gpio = <&tlmm 61 0x1>;
-+};
-+
-+&qmp_pcie_phy0 {
-+	status = "ok";
-+};
-+
-+&qmp_pcie_phy1 {
-+	status = "ok";
-+};
-+
-+&qpic_bam {
-+	status = "ok";
-+};
-+
-+&qpic_nand {
-+	status = "ok";
-+
-+	nand@0 {
-+		reg = <0>;
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-bus-width = <8>;
-+	};
-+};
--- 
-2.7.4
+Thanks,
+Mani
 
+> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi | 58 ++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi      |  8 +++++
+>  2 files changed, 66 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+> index 0827055..d201a7b 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+> @@ -24,6 +24,22 @@
+>  		device_type = "memory";
+>  		reg = <0x0 0x40000000 0x0 0x20000000>;
+>  	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		qcn9000_pcie0: memory@50f00000 {
+> +			no-map;
+> +			reg = <0x0 0x50f00000 0x0 0x03700000>;
+> +		};
+> +
+> +		qcn9000_pcie1: memory@54600000 {
+> +			no-map;
+> +			reg = <0x0 0x54600000 0x0 0x03700000>;
+> +		};
+> +	};
+>  };
+>  
+>  &blsp1_spi1 {
+> @@ -74,3 +90,45 @@
+>  		nand-bus-width = <8>;
+>  	};
+>  };
+> +
+> +&pcie0_rp {
+> +	status = "ok";
+> +
+> +	mhi_0: qcom,mhi@0 {
+> +		reg = <0 0 0 0 0 >;
+> +		qrtr_instance_id = <0x20>;
+> +		#address-cells = <0x2>;
+> +		#size-cells = <0x2>;
+> +
+> +		base-addr = <0x50f00000>;
+> +		qcom,caldb-addr = <0x53E00000>;
+> +		qrtr_node_id = <0x27>;
+> +		mhi,max-channels = <30>;
+> +		mhi,timeout = <10000>;
+> +
+> +		pcie0_mhi: pcie0_mhi {
+> +			status = "ok";
+> +		};
+> +	};
+> +};
+> +
+> +&pcie1_rp {
+> +	status = "ok";
+> +
+> +	mhi_1: qcom,mhi@1 {
+> +		reg = <0 0 0 0 0 >;
+> +		qrtr_instance_id = <0x21>;
+> +		#address-cells = <0x2>;
+> +		#size-cells = <0x2>;
+> +
+> +		base-addr = <0x54600000>;
+> +		qcom,caldb-addr = <0x57500000>;
+> +		qrtr_node_id = <0x28>;
+> +		mhi,max-channels = <30>;
+> +		mhi,timeout = <10000>;
+> +
+> +		pcie1_mhi: pcie1_mhi {
+> +			status = "ok";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> index b651345..eef47c1 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> @@ -709,6 +709,10 @@
+>  				      "ahb",
+>  				      "axi_m_sticky";
+>  			status = "disabled";
+> +
+> +			pcie1_rp: pcie1_rp {
+> +				reg = <0 0 0 0 0>;
+> +			};
+>  		};
+>  
+>  		pcie0: pci@20000000 {
+> @@ -779,6 +783,10 @@
+>  				      "axi_m_sticky",
+>  				      "axi_s_sticky";
+>  			status = "disabled";
+> +
+> +			pcie0_rp: pcie0_rp {
+> +				reg = <0 0 0 0 0>;
+> +			};
+>  		};
+>  
+>  		tcsr_q6: syscon@1945000 {
+> -- 
+> 2.7.4
+> 
