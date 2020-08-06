@@ -2,210 +2,91 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6403C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28FBD206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596735180;
-	bh=RnBeNxWWl4q9QSN+tmbvArEJ2MhaOfF3wq7wtPI6v9s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v6j1+Yg8IRN4JR7YML+pC33KEC/Ja4NPpSIrGVdcHZ9cBe5LAVPWYwdexVLWoz2XL
-	 D+HbeWSLV61P9wVQBUL/MubASxMg+Ayq5w68SEa4qT/OAOvfGdGxo1wc593qaXtqmr
-	 9sXtwupFFTk8dGseaeEuuJC4ljtLx2kWsiw9VPDg=
+	by mail.kernel.org (Postfix) with ESMTP id 00D54206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbgHFRc6 (ORCPT
+        id S1730488AbgHFRdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55150 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 13:33:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:46002 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729957AbgHFRcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:32:05 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461EE22D6E;
-        Thu,  6 Aug 2020 12:12:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596715961;
-        bh=RnBeNxWWl4q9QSN+tmbvArEJ2MhaOfF3wq7wtPI6v9s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SpOS6lQOAH9r/CIi/S3TDpOXthbyTOKoERVxpMjkp7ZKNYvD23xa640uTIbU9WnDB
-         cxSWbc5tiraE9L9evnyesXRnDvQudHa7kX43Yh+bL/62IQsDaMslV9TX13RIT5Fru6
-         hQZuwnjielyHPVPInWo9WoM/PrFKOq72Zxlso0Ig=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k3bal-000Eyu-7Y; Thu, 06 Aug 2020 09:49:39 +0100
+        id S1729889AbgHFRcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:32:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7906D1063;
+        Thu,  6 Aug 2020 04:33:17 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE94F3F99C;
+        Thu,  6 Aug 2020 04:33:15 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 12:33:13 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] arm64: tlb: fix ARM64_TLB_RANGE with LLVM's integrated
+ assembler
+Message-ID: <20200806113313.GC23785@gaia>
+References: <20200805181920.4013059-1-samitolvanen@google.com>
+ <95156879-d76e-65cc-1469-ae3096aa95e4@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 06 Aug 2020 09:49:39 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>, steev@kali.org
-Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
- IRQCHIP_PLATFORM_DRIVER helper macros
-In-Reply-To: <CALAqxLUz6GTT96nO9igiWVwyaRs_xbO+=mySLm4BKX6-Uh90ZA@mail.gmail.com>
-References: <20200718000637.3632841-1-saravanak@google.com>
- <20200718000637.3632841-3-saravanak@google.com>
- <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
- <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
- <CALAqxLUz6GTT96nO9igiWVwyaRs_xbO+=mySLm4BKX6-Uh90ZA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <5e6124390b9e3e7f4d6f6decbdb669ca@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: john.stultz@linaro.org, saravanak@google.com, tglx@linutronix.de, jason@lakedaemon.net, matthias.bgg@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org, kernel-team@android.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, hanks.chen@mediatek.com, cc.hwang@mediatek.com, loda.chou@mediatek.com, steev@kali.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95156879-d76e-65cc-1469-ae3096aa95e4@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-06 02:24, John Stultz wrote:
-> On Wed, Aug 5, 2020 at 1:19 PM Saravana Kannan <saravanak@google.com> 
-> wrote:
->> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> 
->> wrote:
->> > On Fri, Jul 17, 2020 at 5:06 PM Saravana Kannan <saravanak@google.com> wrote:
->> > >
->> > > Switch the driver to use the helper macros. In addition to reducing the
->> > > number of lines, this also adds module unload protection (if the driver
->> > > is compiled as a module) by switching from module_platform_driver to
->> > > builtin_platform_driver.
->> > >
->> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
->> > > ---
->> > >  drivers/irqchip/qcom-pdc.c | 26 +++-----------------------
->> > >  1 file changed, 3 insertions(+), 23 deletions(-)
->> > >
->> > > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->> > > index 5b624e3295e4..c1c5dfad57cc 100644
->> > > --- a/drivers/irqchip/qcom-pdc.c
->> > > +++ b/drivers/irqchip/qcom-pdc.c
->> > > @@ -432,28 +432,8 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->> > >         return ret;
->> > >  }
->> > >
->> > > -static int qcom_pdc_probe(struct platform_device *pdev)
->> > > -{
->> > > -       struct device_node *np = pdev->dev.of_node;
->> > > -       struct device_node *parent = of_irq_find_parent(np);
->> > > -
->> > > -       return qcom_pdc_init(np, parent);
->> > > -}
->> > > -
->> > > -static const struct of_device_id qcom_pdc_match_table[] = {
->> > > -       { .compatible = "qcom,pdc" },
->> > > -       {}
->> > > -};
->> > > -MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
->> > > -
->> > > -static struct platform_driver qcom_pdc_driver = {
->> > > -       .probe = qcom_pdc_probe,
->> > > -       .driver = {
->> > > -               .name = "qcom-pdc",
->> > > -               .of_match_table = qcom_pdc_match_table,
->> > > -               .suppress_bind_attrs = true,
->> > > -       },
->> > > -};
->> > > -module_platform_driver(qcom_pdc_driver);
->> > > +IRQCHIP_PLATFORM_DRIVER_BEGIN(qcom_pdc)
->> > > +IRQCHIP_MATCH("qcom,pdc", qcom_pdc_init)
->> > > +IRQCHIP_PLATFORM_DRIVER_END(qcom_pdc)
->> > >  MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
->> > >  MODULE_LICENSE("GPL v2");
->> >
->> > <sigh>
->> > So this is where I bashfully admit I didn't get a chance to try this
->> > patch series out, as I had success with a much older version of
->> > Saravana's macro magic.
->> >
->> > But unfortunately, now that this has landed in mainline, I'm seeing
->> > boot regressions on db845c. :( This is in the non-modular case,
->> > building the driver in.
->> 
->> Does that mean the modular version is working? Or you haven't tried
->> that yet? I'll wait for your reply before I try to fix it. I don't
->> have the hardware, but it should be easy to guess this issue looking
->> at the code delta.
+On Thu, Aug 06, 2020 at 03:17:40PM +0800, Zhenyu Ye wrote:
+> On 2020/8/6 2:19, Sami Tolvanen wrote:
+> > Commit 7c78f67e9bd9 ("arm64: enable tlbi range instructions") breaks
+> > LLVM's integrated assembler, because -Wa,-march is only passed to
+> > external assemblers and therefore, the new instructions are not enabled
+> > when IAS is used.
 > 
-> I've not yet tested with modules with your patch.
+> I have looked through the discussion on Github issues. The best way to
+> solve this problem is try to pass the "-Wa,-march" parameter to clang
+> even when IAS is enabled, which may need the cooperation of compilation
+> tool chains :(
 > 
->> The only significant change from what your probe function is doing is
->> this snippet. But it'd be surprising if this only affects the builtin
->> case.
->> 
->> + if (par_np == np)
->> +         par_np = NULL;
->> +
->> + /*
->> + * If there's a parent interrupt controller and  none of the parent 
->> irq
->> + * domains have been registered, that means the parent interrupt
->> + * controller has not been initialized yet.  it's not time for this
->> + * interrupt controller to initialize. So, defer probe of this
->> + * interrupt controller. The actual initialization callback of this
->> + * interrupt controller can check for specific domains as necessary.
->> + */
->> + if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
->> +         return -EPROBE_DEFER;
+> Currently, I think we can solve the problem by passing
+> the '-march=armv8.4-a' when using the integrated assembler, just like:
 > 
-> Yep. We're getting caught on the irq_find_matching_host() check. I'm a
-> little lost as when I look at the qcom,pdc node in the dtsi its not
-> under a parent controller (instead the soc node).
-> Not sure if that's an issue in the dtsi or if par_np check needs to
-> ignore the soc node and pass null?
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 55bc8546d9c7..e5ce184e98c2 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -91,8 +91,12 @@ KBUILD_CFLAGS += $(branch-prot-flags-y)
+> 
+>  ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
+>  # make sure to pass the newest target architecture to -march.
+> +ifneq ($(LLVM),)
+> +KBUILD_CFLAGS  += -march=armv8.4-a
+> +else
+>  KBUILD_CFLAGS  += -Wa,-march=armv8.4-a
+>  endif
+> +endif
 
-I think you have nailed it. This checks for a domain attached to
-the driver we are about to probe, and this domain cannot possibly
-exist. Instead, it is the *parent* this should check for, as we
-depend on it for successful probing.
-
-Can you please give this a go?
-
-Thanks,
-
-         M.
-
-diff --git a/drivers/irqchip/irqchip.c b/drivers/irqchip/irqchip.c
-index 1bb0e36c2bf3..d2341153e181 100644
---- a/drivers/irqchip/irqchip.c
-+++ b/drivers/irqchip/irqchip.c
-@@ -52,7 +52,7 @@ int platform_irqchip_probe(struct platform_device 
-*pdev)
-  	 * interrupt controller. The actual initialization callback of this
-  	 * interrupt controller can check for specific domains as necessary.
-  	 */
--	if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
-+	if (par_np && !irq_find_matching_host(par_np, DOMAIN_BUS_ANY))
-  		return -EPROBE_DEFER;
-
-  	return irq_init_cb(np, par_np);
+No, see my other reply. This only works for .S files. For inline
+assembly, passing -march to .c files will make the compiler generate
+ARMv8.4 instructions and break the kernel single image that's supposed
+to run on ARMv8.0 hardware (even if you don't have any range TLBI
+instructions).
 
 -- 
-Jazz is not dead. It just smells funny...
+Catalin
