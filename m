@@ -7,70 +7,72 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16016C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE30CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CABB522D06
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9817222D00
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="ZQmX2XOG"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="RiFKf1ZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgHFLrs (ORCPT
+        id S1728391AbgHFL5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 07:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48272 "EHLO
+        Thu, 6 Aug 2020 07:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbgHFLRA (ORCPT
+        with ESMTP id S1727800AbgHFLRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 07:17:00 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4763CC0617A9
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 04:06:46 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id df16so18497100edb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 04:06:46 -0700 (PDT)
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABC1C0617AB
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 04:06:47 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id m20so25358002eds.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 04:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version;
-        bh=S/X2S8Un72gBHPqjEBeUbRT6khumFRMEJ0GKnYWhQoU=;
-        b=ZQmX2XOG51SZPQLT9CoMa3NRtTFzhOTfEl/HndyrmJ+5KOoCEzpzgAKbfksi1pDrgR
-         J8OcaKxOL8iiZiWypX7BiJ7ZAQlJ7+snk+f10xB/Iyhw+3YDrIBXMlCYYSPTXcYrW3ag
-         CdXnh8Y9ClcWRbAfbrNLSMKnqZf65CNXESYNM5rXyzz2t6iOaAr1f0JAW8itoGpEqLt2
-         yAPUGnk6bT+31I9WRdTAzRctxNu80WZiYZh5z4I3JXdBJT7syuUJba8V0Vl67sWTEwJG
-         1quus6OfKfIXUxvE6YKGwbWPqRpa3IW8I0TjosZ3w3qY2LVtiDeQ7OkcQ6YBnavx+ZIo
-         /bLw==
+        bh=PYSsCrOysop+Sh0mOiJ6j1B4kZ/DvpynNkFjKlnFTtk=;
+        b=RiFKf1ZDy1QYFqUEaD38cJSlgDMEp2uzQNfOQF28/kHkXz8nwtGrTxRXuMrcxIYUCW
+         i2SyC7q4a+Hlfbov9p/707mge6kYnZcvbb5lGvpuhHnY31qyhnKNTbtuVD2yDg9qiOEk
+         qNaAgDRhdrN8EJBFTY21+UBpZpx4oQr7+6Fvj9CXtFRbGci0z3mOdfwp0aC+9050chrZ
+         LLwgUne6B29yqzjvBmLRuhX/PYNrfZXCRyh0YlNI+DC5W0JzExy464GxzNPr5wtaLEDz
+         Gk7/o17kfdrVqw+JiskeC3yrY8gnyjlwl4LeYXXih14fnlWw37D7OPiB9aJpJevfHU86
+         mDeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version;
-        bh=S/X2S8Un72gBHPqjEBeUbRT6khumFRMEJ0GKnYWhQoU=;
-        b=q3frUw/6JCDVM/dXgtAJZFtLf8T+mEFOqTxZ09hqx+LcSoOaAvDzVb291Z+LMnQqfv
-         3+pCWQj7k3c+oYibpKS+2594n/dVaLm6KCLurGR4wvWSZ0xsSu+ZM/1rTGNC2Y6P/6cM
-         A3ba0VK8yWKKgfvcwfxQSY3Tw4UUDQOdMUlRUzUGujAN2BpnYUPjnnU78ZU2sVRd2KnY
-         lOqU4uhuusoRkvg6lnLwMUuBCNr1Mm+dFeujVh4i/8Wp28qignFh7NFl73T2/DRf/gyA
-         vZGAs5EKj9YWRkyoqKpxHivrPtkBqwUmVCmiKImEV7JsJSUFeO0knncOwjYi8a7s17z7
-         UX/w==
-X-Gm-Message-State: AOAM532gxUmFeDMRru7SjBkn+TAC4nWJcu4y/BZD7yVzRtcybjhXH96H
-        pYiU2vqv5d6O0s8a/DslbndIsYtlBlpe0MZtCiSlM910PH17nW3Se4B24gMeawF4flY6WX50nK7
-        ELryYPE5RHkZ767MZBg==
-X-Google-Smtp-Source: ABdhPJy3G6d4eB2KPic/Jx2xZphGvOf7yTyGdw/FaCqjMdrsgXqO8sB7/mWx+z08+SMJ8SK5WtqviQ==
-X-Received: by 2002:aa7:ccd5:: with SMTP id y21mr3402579edt.91.1596712004954;
-        Thu, 06 Aug 2020 04:06:44 -0700 (PDT)
+        bh=PYSsCrOysop+Sh0mOiJ6j1B4kZ/DvpynNkFjKlnFTtk=;
+        b=Sd+jE3k8NhB1AwLP2N8MnsV8GN3+rE4Q02Z6Ua2bzaSwYuygqsaLkaA7CeKzXxfOnx
+         p5qbnYZAZUZEQSSFQcsUr8BSB061hvuSZ93ZqUpNVZe5a6PsaKuDG8Yc5aXlx4YH26nq
+         mlXUjJdC3gwVGjlxP/Kp3Z5gf630C9jRpAsjNCeVVI2se8Y3NtjpeODpLtvRPd9+9uRt
+         77TvX8pH5p0oUrRmBG0N0Jp0Fw00Rh4owE+a8GM2uAyWPoP9HhMCKuEBcheJX/98ryVL
+         nZ29CY8fTtRJpdxtpx4Ia1Tp1Yf07k7U4f8LWWxyXO8CX7Oh04jHHu7BJYn9bbHBvdQg
+         2ISA==
+X-Gm-Message-State: AOAM530kZopWXRaFT78nLF74d9jq8B8snxul5v8ZMs7fzGcOf4WFgl/8
+        9egPx/rZglj8SL99AMJnW/jBtQ1xVW1XOnjvUPxrMR545AyHdQMipBIMs5TJX+45wSYsGHhsa/G
+        Quj9qR7Vu/22SLx6fbw==
+X-Google-Smtp-Source: ABdhPJwLqyoWjwRDYILTF5e67AwRbZf7hhQrvTreE0IkPpokDMYDsXaFaI97KW0N6QvK5JTBtuHSbQ==
+X-Received: by 2002:a05:6402:899:: with SMTP id e25mr3435126edy.311.1596712006085;
+        Thu, 06 Aug 2020 04:06:46 -0700 (PDT)
 Received: from tim.froidcoeur.net (ptr-7tznw15pracyli75x11.18120a2.ip6.access.telenet.be. [2a02:1811:50e:f0f0:d05d:939:f42b:f575])
-        by smtp.gmail.com with ESMTPSA id v13sm3597682edl.9.2020.08.06.04.06.44
+        by smtp.gmail.com with ESMTPSA id v13sm3597682edl.9.2020.08.06.04.06.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 04:06:44 -0700 (PDT)
+        Thu, 06 Aug 2020 04:06:45 -0700 (PDT)
 From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
 To:     tim.froidcoeur@tessares.net,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
         Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Patrick McHardy <kaber@trash.net>,
+        KOVACS Krisztian <hidden@balabit.hu>
 Cc:     matthieu.baerts@tessares.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 1/2] net: refactor bind_bucket fastreuse into helper
-Date:   Thu,  6 Aug 2020 13:06:30 +0200
-Message-Id: <20200806110631.475855-2-tim.froidcoeur@tessares.net>
+Subject: [PATCH net v2 2/2] net: initialize fastreuse on inet_inherit_port
+Date:   Thu,  6 Aug 2020 13:06:31 +0200
+Message-Id: <20200806110631.475855-3-tim.froidcoeur@tessares.net>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200806110631.475855-1-tim.froidcoeur@tessares.net>
 References: <20200806110631.475855-1-tim.froidcoeur@tessares.net>
@@ -81,157 +83,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor the fastreuse update code in inet_csk_get_port into a small
-helper function that can be called from other places.
+In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
+SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
+behaviour or in the incorrect reuse of a bind.
 
+the kernel keeps track for each bind_bucket if all sockets in the
+bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
+These flags allow skipping the costly bind_conflict check when possible
+(meaning when all sockets have the proper SO_REUSE option).
+
+For every socket added to a bind_bucket, these flags need to be updated.
+As soon as a socket that does not support reuse is added, the flag is
+set to false and will never go back to true, unless the bind_bucket is
+deleted.
+
+Note that there is no mechanism to re-evaluate these flags when a socket
+is removed (this might make sense when removing a socket that would not
+allow reuse; this leaves room for a future patch).
+
+For this optimization to work, it is mandatory that these flags are
+properly initialized and updated.
+
+When a child socket is created from a listen socket in
+__inet_inherit_port, the TPROXY case could create a new bind bucket
+without properly initializing these flags, thus preventing the
+optimization to work. Alternatively, a socket not allowing reuse could
+be added to an existing bind bucket without updating the flags, causing
+bind_conflict to never be called as it should.
+
+Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
+a new bind_bucket or use a different bind_bucket than the one of the
+listen socket.
+
+Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
 Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 ---
+ net/ipv4/inet_hashtables.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Notes:
-    - remove unnecessary cast (Matt)
-
- include/net/inet_connection_sock.h |  4 ++
- net/ipv4/inet_connection_sock.c    | 97 ++++++++++++++++--------------
- 2 files changed, 57 insertions(+), 44 deletions(-)
-
-diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
-index e5b388f5fa20..1d59bf55bb4d 100644
---- a/include/net/inet_connection_sock.h
-+++ b/include/net/inet_connection_sock.h
-@@ -316,6 +316,10 @@ int inet_csk_compat_getsockopt(struct sock *sk, int level, int optname,
- int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
- 			       char __user *optval, unsigned int optlen);
- 
-+/* update the fast reuse flag when adding a socket */
-+void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-+			       struct sock *sk);
-+
- struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
- 
- #define TCP_PINGPONG_THRESH	3
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index afaf582a5aa9..a1be020bde8e 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -296,6 +296,57 @@ static inline int sk_reuseport_match(struct inet_bind_bucket *tb,
- 				    ipv6_only_sock(sk), true, false);
- }
- 
-+void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-+			       struct sock *sk)
-+{
-+	kuid_t uid = sock_i_uid(sk);
-+	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
-+
-+	if (hlist_empty(&tb->owners)) {
-+		tb->fastreuse = reuse;
-+		if (sk->sk_reuseport) {
-+			tb->fastreuseport = FASTREUSEPORT_ANY;
-+			tb->fastuid = uid;
-+			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
-+			tb->fast_ipv6_only = ipv6_only_sock(sk);
-+			tb->fast_sk_family = sk->sk_family;
-+#if IS_ENABLED(CONFIG_IPV6)
-+			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
-+#endif
-+		} else {
-+			tb->fastreuseport = 0;
-+		}
-+	} else {
-+		if (!reuse)
-+			tb->fastreuse = 0;
-+		if (sk->sk_reuseport) {
-+			/* We didn't match or we don't have fastreuseport set on
-+			 * the tb, but we have sk_reuseport set on this socket
-+			 * and we know that there are no bind conflicts with
-+			 * this socket in this tb, so reset our tb's reuseport
-+			 * settings so that any subsequent sockets that match
-+			 * our current socket will be put on the fast path.
-+			 *
-+			 * If we reset we need to set FASTREUSEPORT_STRICT so we
-+			 * do extra checking for all subsequent sk_reuseport
-+			 * socks.
-+			 */
-+			if (!sk_reuseport_match(tb, sk)) {
-+				tb->fastreuseport = FASTREUSEPORT_STRICT;
-+				tb->fastuid = uid;
-+				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
-+				tb->fast_ipv6_only = ipv6_only_sock(sk);
-+				tb->fast_sk_family = sk->sk_family;
-+#if IS_ENABLED(CONFIG_IPV6)
-+				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
-+#endif
-+			}
-+		} else {
-+			tb->fastreuseport = 0;
-+		}
-+	}
-+}
-+
- /* Obtain a reference to a local port for the given sock,
-  * if snum is zero it means select any available local port.
-  * We try to allocate an odd port (and leave even ports for connect())
-@@ -308,7 +359,6 @@ int inet_csk_get_port(struct sock *sk, unsigned short snum)
- 	struct inet_bind_hashbucket *head;
- 	struct net *net = sock_net(sk);
- 	struct inet_bind_bucket *tb = NULL;
--	kuid_t uid = sock_i_uid(sk);
- 	int l3mdev;
- 
- 	l3mdev = inet_sk_bound_l3mdev(sk);
-@@ -345,49 +395,8 @@ int inet_csk_get_port(struct sock *sk, unsigned short snum)
- 			goto fail_unlock;
+diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+index 2bbaaf0c7176..006a34b18537 100644
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -163,6 +163,7 @@ int __inet_inherit_port(const struct sock *sk, struct sock *child)
+ 				return -ENOMEM;
+ 			}
+ 		}
++		inet_csk_update_fastreuse(tb, child);
  	}
- success:
--	if (hlist_empty(&tb->owners)) {
--		tb->fastreuse = reuse;
--		if (sk->sk_reuseport) {
--			tb->fastreuseport = FASTREUSEPORT_ANY;
--			tb->fastuid = uid;
--			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
--			tb->fast_ipv6_only = ipv6_only_sock(sk);
--			tb->fast_sk_family = sk->sk_family;
--#if IS_ENABLED(CONFIG_IPV6)
--			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
--#endif
--		} else {
--			tb->fastreuseport = 0;
--		}
--	} else {
--		if (!reuse)
--			tb->fastreuse = 0;
--		if (sk->sk_reuseport) {
--			/* We didn't match or we don't have fastreuseport set on
--			 * the tb, but we have sk_reuseport set on this socket
--			 * and we know that there are no bind conflicts with
--			 * this socket in this tb, so reset our tb's reuseport
--			 * settings so that any subsequent sockets that match
--			 * our current socket will be put on the fast path.
--			 *
--			 * If we reset we need to set FASTREUSEPORT_STRICT so we
--			 * do extra checking for all subsequent sk_reuseport
--			 * socks.
--			 */
--			if (!sk_reuseport_match(tb, sk)) {
--				tb->fastreuseport = FASTREUSEPORT_STRICT;
--				tb->fastuid = uid;
--				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
--				tb->fast_ipv6_only = ipv6_only_sock(sk);
--				tb->fast_sk_family = sk->sk_family;
--#if IS_ENABLED(CONFIG_IPV6)
--				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
--#endif
--			}
--		} else {
--			tb->fastreuseport = 0;
--		}
--	}
-+	inet_csk_update_fastreuse(tb, sk);
-+
- 	if (!inet_csk(sk)->icsk_bind_hash)
- 		inet_bind_hash(sk, tb, port);
- 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
+ 	inet_bind_hash(child, tb, port);
+ 	spin_unlock(&head->lock);
 -- 
 2.25.1
 
