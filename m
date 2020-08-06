@@ -2,153 +2,94 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD0CC47277
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66656C47274
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05EC222CE3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988F522D02
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OdQhs77y"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0en1W3fo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4eBnpOGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgHFJyD (ORCPT
+        id S1729222AbgHFJlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:54:03 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39186 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729125AbgHFJxc (ORCPT
+        Thu, 6 Aug 2020 05:41:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57040 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgHFJlJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:53:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596707605;
+        Thu, 6 Aug 2020 05:41:09 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596706866;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=KFQZ0mX53TPSFs7e42z02Iv0vBjIKEpvfFKAKifFm84=;
-        b=OdQhs77y+/xp+GSTQX+QW5cg2VvJV3fBBmrtv2wTcuZXzMq/IPHgSn8sxQ0Ko2AcuhWgHr
-        rhHrLHEsdYu4hMFbuOYle4f0O0ZDdnYScwoatS9hE0D2TctHeFADz9l0xsmaZTcc8hIyaw
-        bvKW1ZhDkkA6PxGO4M3x9jskuGUhSfQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-UVigqYytNGa1-LZQZJGy0g-1; Thu, 06 Aug 2020 05:53:23 -0400
-X-MC-Unique: UVigqYytNGa1-LZQZJGy0g-1
-Received: by mail-wm1-f71.google.com with SMTP id v8so3376604wma.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:53:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KFQZ0mX53TPSFs7e42z02Iv0vBjIKEpvfFKAKifFm84=;
-        b=O5C4qj2OPuwbhFif3lEX+P3kibKHZN853b86Bk4JaJid4AEl9fbK/6HQB+c+PR+QzB
-         0Fp7oIeC7kopmL5fuPEIRulZ6Y1Rv/9QY+9IrUzxh99PLxodfJYx+CMhwc4ptmjbLnhS
-         FOwo2hzyElwpUA8D+qEw3S+ZbDkMU1FyAA9odrN/Ns2Tq7D50HpGXoM8eEhxmadBNZLm
-         2K1rH6szYtcjGUiKMljf0gvRriy8KQAy9Se9e3tD1xPy8gapn5f7vLYTPj1IkkGlB9VF
-         bCOK5HCRzrPHehKWasZScUh+NmjYpmfuhqAdvui9LSUcdY7unygpFifCm5w1f65lutrE
-         lRwA==
-X-Gm-Message-State: AOAM533lrj7dEB+BcihV/LbSG9Rr4cZV8YvJcj9D5Q+fg465P3lMGckI
-        qM/aaEiXV8AXES7Uq7FgYzMXbEf4nHaC3I30sBd3P1jDcXEzH8nWjlE0Oq4vMfZes0BaqLleIVS
-        yXNPXozNNmv7/6QW/B5WePZgM
-X-Received: by 2002:adf:a35e:: with SMTP id d30mr7103529wrb.53.1596707602574;
-        Thu, 06 Aug 2020 02:53:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzH/h9qDvGp6nYOJg6CynBAkWPpcdo5K5kwjUb/kSWQKLCWEkI6SJe/Yh1L7V0XGzkLsCqZXw==
-X-Received: by 2002:adf:a35e:: with SMTP id d30mr7103515wrb.53.1596707602334;
-        Thu, 06 Aug 2020 02:53:22 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id m126sm5943543wmf.3.2020.08.06.02.53.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 02:53:21 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 05:53:18 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
-Message-ID: <20200806055008-mutt-send-email-mst@kernel.org>
-References: <20200728143741.2718593-1-vkuznets@redhat.com>
- <20200805201851-mutt-send-email-mst@kernel.org>
- <873650p1vo.fsf@vitty.brq.redhat.com>
+        bh=7h1NwChE7k/KZnYmQuWPK12OfyVN6+DmIy8syMh+/Ks=;
+        b=0en1W3foTyJQ/a3ORD69xVDuy6RGBmSpumUZOiO+zNNjdZ98YVdw025EVEVh0vFD7aYK5L
+        I7/sw6SwqJ06boKGugm4ApL7T7jZi+K3MSw9qlCNmFfu9EErsq8zZIiorKQ3pqjJO/xSAH
+        dXWv/P+S53NyOmxXmnn1hUvYJr7J6VS8rDiEaRTxqjuOzhYYRsVWfUQwB6kW+jys94AT4a
+        HEswFNxvCS+6lkzecrs4K1zQ+a1c6eK50+ACvB9c97Pt0WIT9KYaegmfP1iAwrvUpKUUKx
+        cr6Twjjgi6OcvnBtrgXF9m3y8Ei6KtDwlkecdJqbBsOGPUVfBIIARWxzghzVxQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596706866;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7h1NwChE7k/KZnYmQuWPK12OfyVN6+DmIy8syMh+/Ks=;
+        b=4eBnpOGf08nGpnL+jnNqH5dmgNbgf5eT0rVBjjVBHEiNG3JQgMsYvX+22Ccpdz12hJBVUZ
+        WJupblTyigLCvCCw==
+To:     peterz@infradead.org,
+        Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
+In-Reply-To: <20200805153120.GU2674@hirez.programming.kicks-ass.net>
+References: <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt> <87lfiwm2bj.fsf@nanos.tec.linutronix.de> <20200803114112.mrcuupz4ir5uqlp6@skbuf> <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com> <875z9zmt4i.fsf@nanos.tec.linutronix.de> <20200805134002.GQ2674@hirez.programming.kicks-ass.net> <jhja6z9i4bi.mognet@arm.com> <20200805153120.GU2674@hirez.programming.kicks-ass.net>
+Date:   Thu, 06 Aug 2020 11:41:06 +0200
+Message-ID: <874kpgi025.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <873650p1vo.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 11:19:55AM +0200, Vitaly Kuznetsov wrote:
-> "Michael S. Tsirkin" <mst@redhat.com> writes:
-> 
-> > On Tue, Jul 28, 2020 at 04:37:38PM +0200, Vitaly Kuznetsov wrote:
-> >> This is a continuation of "[PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES
-> >> memory" work: 
-> >> https://lore.kernel.org/kvm/20200514180540.52407-1-vkuznets@redhat.com/
-> >> and pairs with Julia's "x86/PCI: Use MMCONFIG by default for KVM guests":
-> >> https://lore.kernel.org/linux-pci/20200722001513.298315-1-jusual@redhat.com/
-> >> 
-> >> PCIe config space can (depending on the configuration) be quite big but
-> >> usually is sparsely populated. Guest may scan it by accessing individual
-> >> device's page which, when device is missing, is supposed to have 'pci
-> >> hole' semantics: reads return '0xff' and writes get discarded.
-> >> 
-> >> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
-> >> I observed 8193 accesses to PCI hole memory. When such exit is handled
-> >> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
-> >> Handling the same exit in userspace is six times slower (0.000006 sec) so
-> >> the overal; difference is 0.04 sec. This may be significant for 'microvm'
-> >> ideas.
-> >> 
-> >> Note, the same speed can already be achieved by using KVM_MEM_READONLY
-> >> but doing this would require allocating real memory for all missing
-> >> devices and e.g. 8192 pages gives us 32mb. This will have to be allocated
-> >> for each guest separately and for 'microvm' use-cases this is likely
-> >> a no-go.
-> >> 
-> >> Introduce special KVM_MEM_PCI_HOLE memory: userspace doesn't need to
-> >> back it with real memory, all reads from it are handled inside KVM and
-> >> return '0xff'. Writes still go to userspace but these should be extremely
-> >> rare.
-> >> 
-> >> The original 'KVM_MEM_ALLONES' idea had additional optimizations: KVM
-> >> was mapping all 'PCI hole' pages to a single read-only page stuffed with
-> >> 0xff. This is omitted in this submission as the benefits are unclear:
-> >> KVM will have to allocate SPTEs (either on demand or aggressively) and
-> >> this also consumes time/memory.
-> >
-> > Curious about this: if we do it aggressively on the 1st fault,
-> > how long does it take to allocate 256 huge page SPTEs?
-> > And the amount of memory seems pretty small then, right?
-> 
-> Right, this could work but we'll need a 2M region (one per KVM host of
-> course) filled with 0xff-s instead of a single 4k page.
+peterz@infradead.org writes:
+> On Wed, Aug 05, 2020 at 02:56:49PM +0100, Valentin Schneider wrote:
+>
+>> I've been tempted to say the test case is a bit bogus, but am not familiar
+>> enough with the RT throttling details to stand that ground. That said, from
+>> both looking at the execution and the stress-ng source code, it seems to
+>> unconditionally spawn 32 FIFO-50 tasks (there's even an option to make
+>> these FIFO-99!!!), which is quite a crowd on monoCPU systems.
+>
+> Oh, so it's a case of: we do stupid without tuning and the system falls
+> over. I can live with that.
 
-Given it's global doesn't sound too bad.
+It's not a question of whether you can live with that behaviour for a
+particular silly test case.
 
-> 
-> Generally, I'd like to reach an agreement on whether this feature (and
-> the corresponding Julia's patch addding PV feature bit) is worthy. In
-> case it is (meaning it gets merged in this simplest form), we can
-> suggest further improvements. It would also help if firmware (SeaBIOS,
-> OVMF) would start recognizing the PV feature bit too, this way we'll be
-> seeing even bigger improvement and this may or may not be a deal-breaker
-> when it comes to the 'aggressive PTE mapping' idea.
+The same happens with a single RT runaway task with enough interrupt
+load on a UP machine. Just validated that. And that has nothing to do
+with a silly test case. Sporadic runaways due to a bug in a once per
+week code path simply can happen and having the safety net working
+depending on a config option selected or not is just wrong.
 
-About the feature bit, I am not sure why it's really needed. A single
-mmio access is cheaper than two io accesses anyway, right? So it makes
-sense for a kvm guest whether host has this feature or not.
-We need to be careful and limit to a specific QEMU implementation
-to avoid tripping up bugs, but it seems more appropriate to
-check it using pci host IDs.
+Thanks,
 
-> -- 
-> Vitaly
+        tglx
+
+
+
 
