@@ -2,126 +2,147 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8042C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C5320792
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8719A21744
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="b/7dhTmo";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cZferUtO"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ATC+m0yl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgHFCBV (ORCPT
+        id S1726923AbgHFCDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:01:21 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:17254 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHFCBO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:01:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596679274; x=1628215274;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=XUU65niR14ZvEgUOqy3aOFOYZkbINWsDgKOB8fd2lbU=;
-  b=b/7dhTmoEbWFIpSACWX5PBxqHQeaXS4npVDLVEX9I3RJngvlctrTT75F
-   RJOh2OsS12loy7rwld6i2UvwxiyWtOcVgNh+o0O7koDisnFYJDb+D/bZd
-   HI1m0fvjbGXItJrfa3vr6uiY2/FgGueyOS6eHqVaL7h5soMuj5VaB0cEV
-   jdC+NCw3VuttVWNzJmtEfQ2NxLTBVW3R37sNeikXs4fVGd90isFBf6F/F
-   XWg9sVQsiSJsLHAcd+n5aOi0ZctH3LSKzQ1OQ0b/rWs+QiL4z+yUqrz5Z
-   9bAd66zrIYla6jUYguL2tS85P1fgHhZl1CgFEasCxh9dFZayfkCLTeNpe
-   w==;
-IronPort-SDR: ercSSR1c9DOYqTrjVHA+HGc7Yb9aPqY6lMAFv9clziynM5zh0Jb8QNh/yoHoN5XgOxCWgpEDgU
- BC8N6VRWcVa28Z8gH0FqyYbuqYRhZ3Evp293R1TQI4e6YlhFtRNQGG1exCdn2GZgOLqfpctt8d
- rfyigD0q6MCBcyid7aQSorptG2S3O+pn/FQAHnpoXR3r3mRwfUkcPfQHV4T/G/RvA4Ugc2MDw6
- +O7gwnws4Qyek8Fua5b1UM+dgpFGMFqSgM2rKA6M8dgBT+RplAootkFujIoS7mcxpTeXsllB3E
- GmU=
-X-IronPort-AV: E=Sophos;i="5.75,440,1589212800"; 
-   d="scan'208";a="253612735"
-Received: from mail-co1nam11lp2173.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.173])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Aug 2020 10:01:13 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SmM7t2pItx4YtKqyHBsiDS6Hc+zjKvjfcOntF8KkVMmsTR4q4wF+tP0g1dkh3MxCxCPJGbjpAr97FU0Ww53ONMRvGh1wFf15Pa5r5pya1CvpHTkKkdUIXRM7JMc5jItuoESJTVHl0SZfgoIRkcmVUAePhH3OwSqDRPaMBINVXrX98m9jCfg/No37TbM8gXTUQtRhoTWR1EAd8nJUgOGgMy16QEkwdc1H55GShpPt5i1Qn69eqIRNB0ADkxEtyD+frz07hHpE6IHSRQjyGOqfdAKe1xendBIAc/XGlMRRBm0dm+FfyBCkVUjHz0Bq5i4baKvHIVIvTsNmVPNFkaGRMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XUU65niR14ZvEgUOqy3aOFOYZkbINWsDgKOB8fd2lbU=;
- b=DjMRmMH4w0baldCr21cdgs7ptNF+nYw1yJBo4T9zw/EDCD1RWFVpzZNiODnK/XZIeagTHky4gYbKrMAhXTFmfrfQ+ww5ZH7LcMi+WrXF2bp9VOTrQNutv/GrZcFcdz49IGOKZH9kiFZ53MVREKp9656nXGnflHTM+u2U924o+Z9Q10USpT0UCK3fl9f9EaiCSFWAN9Q1jVbel5qd7Q1Qg+F20H7aGeViZa+amLH3iGH1tozaAZ0NuIdSa5ZP5Zk9lUfT55QXrot1YaZws7yXnZxSEH+Y+wvR77KMcbsiHdc4I9FZztqqee5qKj50xFGrQFf61ZG2BSsGr5GfPxxK5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XUU65niR14ZvEgUOqy3aOFOYZkbINWsDgKOB8fd2lbU=;
- b=cZferUtODEXq9gm8lFFPXkKZqZeUW0UUh7+SGpfAhqALt7q/mzyVdMM1PrdEBr7hYm5yfde52Pivdq/u/7BHoKNQHImBrL1BIIBnpfTyx/cdc0CG9YoB8d0EMJHGGp4QJOzdGWTXle+SVWlIQau/7nlAbjtYc0qk6z0skLroO74=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB5525.namprd04.prod.outlook.com (2603:10b6:a03:f1::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Thu, 6 Aug
- 2020 02:01:12 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::98a4:d2c9:58c5:dee4]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::98a4:d2c9:58c5:dee4%5]) with mapi id 15.20.3239.023; Thu, 6 Aug 2020
- 02:01:12 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Sagi Grimberg <sagi@grimberg.me>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-CC:     "hch@lst.de" <hch@lst.de>
-Subject: Re: [PATCH] nvmet: fix opps in nvmet_execute_passthru_cmd()
-Thread-Topic: [PATCH] nvmet: fix opps in nvmet_execute_passthru_cmd()
-Thread-Index: AQHWa4WuB/SmK4DZYEq5V/CCHY245Q==
-Date:   Thu, 6 Aug 2020 02:01:12 +0000
-Message-ID: <BYAPR04MB4965A923FA197947CB02CCFB86480@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20200806000804.6345-1-chaitanya.kulkarni@wdc.com>
- <4c0eab62-d29a-f1d9-7856-78af8d6fcf48@grimberg.me>
- <BYAPR04MB4965F41CEFC7DAE474CD3D1586480@BYAPR04MB4965.namprd04.prod.outlook.com>
- <c31c1600-7b9c-f2cc-57fe-e8c16d857d2c@grimberg.me>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: grimberg.me; dkim=none (message not signed)
- header.d=none;grimberg.me; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6f8b4e96-1216-4ee1-6ad9-08d839ac9878
-x-ms-traffictypediagnostic: BYAPR04MB5525:
-x-microsoft-antispam-prvs: <BYAPR04MB55257E49D1F9AC3D91D53DBE86480@BYAPR04MB5525.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1850;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9RDdVcGj6x7G9PSERFO6czgLx3xeiT3vnp0yLGu/Qzdz8TDacvi3fSXy9dsSShllSgK8XQnVtfE5ILlRoz171whqDvhCgDvcLSuv4OtZ7ZgWDjk4SRdI57crGGrJjijW4gKOQMUcuHJgLeTmA+cFTSgxiw809ctIPKs7saEVeiROBrG9EzTpmAWslqlgB1IrjnYEfTXZ+6hRadcpebJBbMtNzXXl5xa0ALmzBLx0eL9VHdrfo7nrXPUB8Qyz/REIUlBUDSjY53UTClToaUc5Giyg9L5CFlLbB6I3GGKO0mpjL1jhyhx/93jjR4YKYOdRwUwGZs+tQEU2PL/jqICxKA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(110136005)(9686003)(53546011)(55016002)(26005)(478600001)(6506007)(33656002)(86362001)(186003)(4326008)(7696005)(558084003)(66476007)(66446008)(64756008)(66556008)(71200400001)(8676002)(76116006)(316002)(66946007)(8936002)(52536014)(5660300002)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Vq8kDyKDrCfBMUe+1oUZSy/y18OpUSwM28H55XdbCaFHy6THZIwMN2Jer5yWvyq/YtP/JHwbd9L2uQEkqXvxPuE1GIDBaEZ9vqGP4VgQdsBLybCBMYTTLExtgoiJPWh8BOhePnf7qXORrUUZwWyvl9GVnx8nwVdZCAnAlqMy1Fr7pHrx6Z0FdnLyI1YCUJ69+Tkza51vJ6rr2VN7vSL1iWSQCVMifDyAUxSwRjtmkRsXkm49zky4pykh1KxwptiecKx8issy6+WflOTE26dtvBHtk5WRWCjCRNzpHgJQSXFGfeFf7JdS7B4YCS1GIAS40bZTKqmGUDN4zPkwSyVjxVSl8SBLWFJ6yDe2hIF2JYxdShMypZJKVvBU7Fa8YoBdkcOp2C3n3iOGFEkx3GF3HgkWYStg/03mWQ0muTkf4sfBSBpST9PmJ9BhvnCyVxHPrWSMRW6lJwiTG1hDzptP2yYNAxVwcktDWkaUf7jp3utSLBJErBWWG1RbKicjUeD9YNP/EV69MJzBa3Bjy8Ty3IY5aNfZjqaWKvnlM1g/8sjOp7z51okCzhPDt1IQPflQu2nrCsttcN3DO9144J47TGFgqOzhHHHA3eXjWHJCUqXQpw3NyBD8Z1ofdlTyXOYXWh4HCC7btQtMEs0dnXaXzg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Aug 2020 22:03:45 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40043 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbgHFCDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 22:03:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BMWxQ0tC6z9sPC;
+        Thu,  6 Aug 2020 12:03:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1596679421;
+        bh=L//yJHWbHVRpreWBMXxnk8oP5TZkpSP3UMUfWWjPDB4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ATC+m0ylO/cnYUwq5zBrFLw4yIqF8B38lyf13k+5sws6nAXv+IfWsPlr0/8ggd0S0
+         Z3Kq0xYNwERrKWngZbb6FC5Pl7W4MK4QRPjK8eO8UiYNAK8LK3FpQcJ74wbO66n0fz
+         UA9n64PmnfdllxDpQdP5OP9ydjogwSPi6RbmSOY9wsIhA1ahx9xmwR8P9Budg5TrYq
+         8C+lzNb8gjr+d9uOT03UnI7mS3aMLsepebQeddvmYYKEXfiyXfjEgd2OEAHUqwQl+l
+         K0soc0YNNG1IVRKNX2INYuszYCeijMhLt19v8BLK4uUCRXZXSil9IluUq8VIzi6alx
+         Ysz2L2iNN2c1g==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, nathanl@linux.ibm.com,
+        linux-arch@vger.kernel.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org,
+        Tulio Magno Quites Machado Filho <tuliom@linux.ibm.com>,
+        luto@kernel.org, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v8 5/8] powerpc/vdso: Prepare for switching VDSO to generic C implementation.
+In-Reply-To: <20200805133505.GN6753@gate.crashing.org>
+References: <cover.1588079622.git.christophe.leroy@c-s.fr> <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr> <878sflvbad.fsf@mpe.ellerman.id.au> <65fd7823-cc9d-c05a-0816-c34882b5d55a@csgroup.eu> <87wo2dy5in.fsf@mpe.ellerman.id.au> <20200805133505.GN6753@gate.crashing.org>
+Date:   Thu, 06 Aug 2020 12:03:33 +1000
+Message-ID: <87r1sky1hm.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f8b4e96-1216-4ee1-6ad9-08d839ac9878
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2020 02:01:12.7213
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PceZo+IiY3xEhkEKjXMnbzkZGmgxAwcc69nelwdqXy8Jf4Wem2Iuxxz3fKKUMpwinIc5YUeRhuL4URIqIXx9x3Irj843GzAocSX2KWwiU/U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5525
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/20 18:15, Sagi Grimberg wrote:=0A=
-> It doesn't have the patch. can you resend?=0A=
-Okay.=0A=
+Segher Boessenkool <segher@kernel.crashing.org> writes:
+> On Wed, Aug 05, 2020 at 04:24:16PM +1000, Michael Ellerman wrote:
+>> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>> > Indeed, 32-bit doesn't have a redzone, so I believe it needs a stack 
+>> > frame whenever it has anything to same.
+>> 
+>> Yeah OK that would explain it.
+>> 
+>> > Here is what I have in libc.so:
+>> >
+>> > 000fbb60 <__clock_gettime>:
+>> >     fbb60:	94 21 ff e0 	stwu    r1,-32(r1)
+>
+> This is the *only* place where you can use a negative offset from r1:
+> in the stwu to extend the stack (set up a new stack frame, or make the
+> current one bigger).
+
+(You're talking about 32-bit code here right?)
+
+>> > diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h 
+>> > b/arch/powerpc/include/asm/vdso/gettimeofday.h
+>> > index a0712a6e80d9..0b6fa245d54e 100644
+>> > --- a/arch/powerpc/include/asm/vdso/gettimeofday.h
+>> > +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+>> > @@ -10,6 +10,7 @@
+>> >     .cfi_startproc
+>> >   	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
+>> >   	mflr		r0
+>> > +	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
+>> >     .cfi_register lr, r0
+>> 
+>> The cfi_register should come directly after the mflr I think.
+>
+> That is the idiomatic way to write it, and most obviously correct.  But
+> as long as the value in LR at function entry is available in multiple
+> places (like, in LR and in R0 here), it is fine to use either for
+> unwinding.  Sometimes you can use this to optimise the unwind tables a
+> bit -- not really worth it in hand-written code, it's more important to
+> make it legible ;-)
+
+OK. Because LR still holds the LR value until it's clobbered later, by
+which point the cfi_register has taken effect.
+
+But yeah I think for readability it's best to keep the cfi_register next
+to the mflr.
+
+>> >> There's also no code to load/restore the TOC pointer on BE, which I
+>> >> think we'll need to handle.
+>> >
+>> > I see no code in the generated vdso64.so doing anything with r2, but if 
+>> > you think that's needed, just let's do it:
+>> 
+>> Hmm, true.
+>> 
+>> The compiler will use the toc for globals (and possibly also for large
+>> constants?)
+>
+> And anything else it bloody well wants to, yeah :-)
+
+Haha yeah OK.
+
+>> AFAIK there's no way to disable use of the toc, or make it a build error
+>> if it's needed.
+>
+> Yes.
+>
+>> At the same time it's much safer for us to just save/restore r2, and
+>> probably in the noise performance wise.
+>
+> If you want a function to be able to work with ABI-compliant code safely
+> (in all cases), you'll have to make it itself ABI-compliant as well,
+> yes :-)
+
+True. Except this is the VDSO which has previously been a bit wild west
+as far as ABI goes :)
+
+>> So yeah we should probably do as below.
+>
+> [ snip ]
+>
+> Looks good yes.
+
+Thanks for reviewing.
+
+cheers
