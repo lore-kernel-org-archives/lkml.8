@@ -2,122 +2,133 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE244C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6250FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B71F12075A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60837221E5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FbxkZDKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgHFWm6 (ORCPT
+        id S1726339AbgHFWnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:42:58 -0400
-Received: from 15.mo6.mail-out.ovh.net ([188.165.39.161]:57388 "EHLO
-        15.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgHFWm5 (ORCPT
+        Thu, 6 Aug 2020 18:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbgHFWnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:42:57 -0400
-X-Greylist: delayed 12599 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 18:42:56 EDT
-Received: from player695.ha.ovh.net (unknown [10.110.171.30])
-        by mo6.mail-out.ovh.net (Postfix) with ESMTP id 3974021E3F8
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 18:13:22 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player695.ha.ovh.net (Postfix) with ESMTPSA id 41BAC14F12692;
-        Thu,  6 Aug 2020 16:13:16 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-96R0017a5c1c93-e9a5-4fdb-9f0b-f187a326bc09,
-                    9D5F4B8471F7AF6BEF45141B8B52B4DEEC6DEFE4) smtp.auth=steve@sk2.org
-Date:   Thu, 6 Aug 2020 18:13:05 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH] docs: remove the 2.6 "Upgrading I2C Drivers" guide
-Message-ID: <20200806181305.26777f7c@heffalump.sk2.org>
-In-Reply-To: <20200806083339.GA1549@kunai>
-References: <20200805183149.21647-1-steve@sk2.org>
-        <20200805215351.GB2182@kunai>
-        <20200806090800.08b77d4a@heffalump.sk2.org>
-        <20200806083339.GA1549@kunai>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 6 Aug 2020 18:43:21 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95354C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 15:43:21 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id p25so116576qkp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 15:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b+1ry44sHxvv4KXqzeNT9YyGHdp3tNCfWY1mccMksCA=;
+        b=FbxkZDKr5sG/xvWst2LK41bbtukdW5ZZMFu+oYE1TGshv/unqZZOIpzT6poyKLm4Gm
+         iDGHP8Od63rRrq817YwjMdp4BUZOP9sFdATNUdKS3TfkFKpRdsB8ePQ7jGaCcxYwp3kC
+         G+gRcgd59VoXXkQP+piBtfQA2jBEo/sUNr/9m/DUt0ynekmQH6HWNGUW90udBb3SLi/X
+         Z779D1hEL3w22PUzyxb0hEQKTB7iSCa8I5ookM0VXqWbxfIuBGHfjBdU/6Q4mZcs25n8
+         0wgVj6SiuEUS8gsPrtL4ei4b6DYTv/EkJtYZZN9uS3FmAI6qxnou5vxxayCvhzbFKhPz
+         Uz4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b+1ry44sHxvv4KXqzeNT9YyGHdp3tNCfWY1mccMksCA=;
+        b=F3AaAxwUHl+hWQy01B13uCTPCagPS/8HmCJ54cXRzIz1oyCSjkfpAu/MFtaYr4zaIZ
+         DmbiAoOcKAifaCQb9Ww3MmzGmVSleuymkQkFy/zIEFAdusP2ee8xqrLDipq8nvKVfUuC
+         sdt1lmj7oTTbVkufZg39icH2VjqrMhc/+wi5sgmawwzrn9Q88Ocp698ZSWbgLkyZokI1
+         5XR5OlAh9cB2AhQspn/JZ0Xw+bQrHF+4a+w7s0haGIXPfQiAVkBYyUQnQElVk9LIuQWg
+         u9Rdt1sNreuJJJ2ItoOofIlp6Ay8jjl/ZyeS/JMELe6JqfDLukKq/Kvs9OckRDnLhNlX
+         Subw==
+X-Gm-Message-State: AOAM533jnG+qbnHfeJK74pi8gHFvIMlZKcSaoHXY9BdQLzcDMqbrDp6P
+        qKJ94z9CR/gNbAMC3UowCMu5Qw==
+X-Google-Smtp-Source: ABdhPJyk2tlCoRxKg3WlLar97JCSwlt2F3Eo4+MM3g3LceM2ipQAWCTJw4bWRRyK5I7MIlPEyBdfSA==
+X-Received: by 2002:a37:d97:: with SMTP id 145mr10653488qkn.218.1596753800801;
+        Thu, 06 Aug 2020 15:43:20 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i20sm5042334qka.17.2020.08.06.15.43.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 15:43:20 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 18:43:14 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     torvalds@linux-foundation.org, daniel.diaz@linaro.org,
+        tytso@mit.edu, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sfr@canb.auug.org.au, linux-next@vger.kernel.org
+Subject: Re: [PATCH] random: fix a compilation error on arm64
+Message-ID: <20200806224313.GA36490@lca.pw>
+References: <20200806135836.31736-1-cai@lca.pw>
+ <4edcf552-ef82-cdd2-3fda-38d42ebfecc7@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/GpoHHLK2k0P4x+Ck5RFNKd7"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 3179822812265467244
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedtgddutddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieelhedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4edcf552-ef82-cdd2-3fda-38d42ebfecc7@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GpoHHLK2k0P4x+Ck5RFNKd7
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 06, 2020 at 07:50:23AM -0700, Guenter Roeck wrote:
+> On 8/6/20 6:58 AM, Qian Cai wrote:
+> > linux-next failed to compile using this .config,
+> > https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
+> > 
+> > arch/arm64/kernel/kaslr.c: In function 'kaslr_early_init':
+> > arch/arm64/kernel/kaslr.c:128:6: error: implicit declaration of function
+> > '__early_cpu_has_rndr'; did you mean '__early_pfn_to_nid'?
+> > [-Werror=implicit-function-declaration]
+> >   if (__early_cpu_has_rndr()) {
+> >       ^~~~~~~~~~~~~~~~~~~~
+> >       __early_pfn_to_nid
+> > arch/arm64/kernel/kaslr.c:131:7: error: implicit declaration of function
+> > '__arm64_rndr' [-Werror=implicit-function-declaration]
+> >    if (__arm64_rndr(&raw))
+> >        ^~~~~~~~~~~~
+> > cc1: some warnings being treated as errors
+> > 
+> 
+> This happens because ARCH_RANDOM is disabled. May be I am wrong, but I
+> would argue that __arm64_rndr() should not be called directly in the
+> first place. arch_get_random_seed_long_early() should be called instead.
 
-Hi Jon,
+I am not sure about if that would cure possible ARCH_RANDOM=n compiling
+failures on all arches. Since my patch would not compile on mips etc, an
+alternative is to revert the buggy commit 585524081ecd for now. Any thought?
 
-You=E2=80=99ll see v2 of this patch show up soon, see the context below =E2=
-=80=94 this is a
-patch on top of Mauro=E2=80=99s conversion of the i2c docs to .rst.
-
-Regards,
-
-Stephen
-
-
-On Thu, 6 Aug 2020 10:33:56 +0200, Wolfram Sang <wsa@the-dreams.de> wrote:
-
-> > > Maybe because I don't have the commit in my tree? Can you rebase on t=
-op
-> > > of 5.8? =20
-> >=20
-> > Ah, yes, the commit is on top of Linus=E2=80=99 current master, followi=
-ng the
-> > merge of docs-5.9 from Jon=E2=80=99s tree. In 5.8 the file is a .txt fi=
-le, but
-> > Mauro converted it to .rst for 5.9, and this patch removes the latter
-> > file (to avoid a merge conflict later on...). If you prefer, I can subm=
-it
-> > it to the docs tree instead! =20
->=20
-> I see. Thanks for the heads up!
->=20
-> > > And please also remove the reference in Documentation/i2c/index.rst =
-=20
-> >=20
-> > Oops, yes, I=E2=80=99ll do that in v2 once we decide where it should go=
-. =20
->=20
-> I am fine with either it going via the doc-tree or you sending me v2
-> again after 5.9-rc1. For the first case:
->=20
-> Acked-by: Wolfram Sang <wsa@kernel.org>
->=20
-
---Sig_/GpoHHLK2k0P4x+Ck5RFNKd7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl8sLBEACgkQgNMC9Yht
-g5yRgg/9Epmyf8KbpXV7TBXzcezJGcky3j9GSC4cj7bQQxeV5Nlf8K0lvLQbSv7A
-tU5Ry0vhSJih1GbWvh9eL+UXmW8Lg/wKzl8mKP7Ni08MzUxsE77TD577zClaxk8R
-4bsWosh/J2gm0xiM7GobnDfiWaM0OwECb7i69x5Yg9NVJ6HVz+jvAlURCp1YzASP
-knLFewEVpVbbEEx0a8KewRMIXf1XzKT7DIOCb22zaEPlXKdgBjjfKfHpLmc0Mmoo
-sL95ukBOURiO7fePThg6OpxgkfE9rPyQy0kKmLhIkAbNXZeN/DLgfiFfm/S6ZLJA
-iwqbZPh6M8fP1ulJfPLUX+xY66YAILH3lA9ets8pISmExp08UFX8P3ngGDNClmgv
-p2l1u7VMH8X9zbIV5Q4y50r86/OJnBjAzBoIycuxsuIT78qCZ1pq0dD3lK09PrnG
-hQ9HRe6t0HB1hDGNlkGwv3ej1AcpzNkox8meqT49FWBSfDa2lobr8kbLgACyjFoa
-uhKJGjVb93d3E4PRZPFHxWiwhdf5X8mt4+MQ3mbJA/GRAZ+X74ZGeVbyIkHj4bx8
-HCLdoi8MuJBxhyH5/o2FSUVxkx9EmALhwS+oUOcT72owAG4+qIBtoQ3cySIA6LCw
-C5ZCU7mKw/9oMTkPR5VuPnLCQMcSeIyMYjdXsHcR8cxgvAsUvlw=
-=S2+b
------END PGP SIGNATURE-----
-
---Sig_/GpoHHLK2k0P4x+Ck5RFNKd7--
+> 
+> Thanks,
+> Guenter
+> 
+> > Fixes: 585524081ecd ("random: random.h should include archrandom.h, not the other way around")
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >  include/linux/random.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/include/linux/random.h b/include/linux/random.h
+> > index f45b8be3e3c4..da782c16c20c 100644
+> > --- a/include/linux/random.h
+> > +++ b/include/linux/random.h
+> > @@ -12,6 +12,8 @@
+> >  #include <linux/list.h>
+> >  #include <linux/once.h>
+> >  
+> > +#include <asm/archrandom.h>
+> > +
+> >  #include <uapi/linux/random.h>
+> >  
+> >  struct random_ready_callback {
+> > 
+> 
