@@ -2,130 +2,151 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A670C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A63C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 412EA22CF6
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601182177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Jx8yPjar"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hdyP32H7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgHFTd4 (ORCPT
+        id S1726256AbgHFTeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:33:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59006 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbgHFTdz (ORCPT
+        Thu, 6 Aug 2020 15:34:05 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16791 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgHFTeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:33:55 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076FDKla152834;
-        Thu, 6 Aug 2020 15:15:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=1AolOzPIOMQfffxKB/08KHsr7Q43v8tlBZ0VC1SgVt0=;
- b=Jx8yPjarhGqYqBChfic+cjx/BI/ITyQWMId9lGoivE/0I7swJiFhYUNxa0WEUbMWt/v/
- Z1S3CkmvxQWeVAElcXL9Jsf42P34si+clZMrb87bA7oVBZVJ/3vg5EgocSfzkryra2gP
- Ai+jJhSR0TPgOudRPLlGaNPI8EsjO51252JYAntus0KSTK5GANtYIt0yHqx2tmU4reYY
- QrJq4G8+gM1/Y7yh02eMb3tqIPlFwhqGb3N7tvfZhI3p0l7XNDCz1kRurw2w8N8aOybY
- wxKcCdKOEIRPQxXmdmask8dYuICptSbXEbvifLmlSmILL6EqzYqEJKknDX8CBRxt2gjD kA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32r6gwukgt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 06 Aug 2020 15:15:34 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076FD0oh121832;
-        Thu, 6 Aug 2020 15:13:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 32pdnwmrks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Aug 2020 15:13:34 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 076FDWUG023250;
-        Thu, 6 Aug 2020 15:13:33 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Aug 2020 08:13:32 -0700
-Date:   Thu, 6 Aug 2020 08:13:31 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-Message-ID: <20200806151331.GD6107@magnolia>
-References: <20200806150527.2283029-1-devel@etsukata.com>
+        Thu, 6 Aug 2020 15:34:05 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c5af90000>; Thu, 06 Aug 2020 12:33:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 12:34:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 12:34:04 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 19:33:57 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 6 Aug 2020 19:33:57 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f2c5b250001>; Thu, 06 Aug 2020 12:33:57 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+CC:     Randy Dunlap <rdunlap@infradead.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH] mm/migrate: fix migrate_pgmap_owner w/o CONFIG_MMU_NOTIFIER
+Date:   Thu, 6 Aug 2020 12:33:53 -0700
+Message-ID: <20200806193353.7124-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806150527.2283029-1-devel@etsukata.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 spamscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008060109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
- phishscore=0 clxscore=1011 suspectscore=2 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008060109
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596742393; bh=p8Y/nFQLLNnrnLBeQIsBixY5c1DG7LMFlrm6+gZS1x4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=hdyP32H7zn64syR4uT2rTRA19/BK9LVSo77ZlfxRaEaWLAN9mN4aJNIUt0HN/YTno
+         Q5j7tY7uT8QkwqqGnkx0bKi0Y9UrLXoNzmJv2+TxP4b2KxXKY6f+2z7sn5TSA6ATRx
+         fC+yCpHqC7Can5iuWzDaw6m0J+BixA/WeX6uH1YwnBjVmQiC55p9vv27jYpQmRFXa5
+         eqMZADCP3xNirIgSXPKn2gpzqk00mHnO/ehVgyaH07L1Hr+P/uA99z34Xsp2l7BXjA
+         mbQWdpwCL/GmJBsBtTsCNwQyk7GYyu404Ag2zVnmus/QgY3qPUgLiVwY0lVtA1hoD1
+         hfs/l3kW4xWAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 12:05:27AM +0900, Eiichi Tsukata wrote:
-> If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
-> shows the following warning:
+On x86_64, when CONFIG_MMU_NOTIFIER is not set/enabled, there is a
+compiler error:
 
-This needs to be sent to the xfs mailing list, per get_maintainers.pl.
+../mm/migrate.c: In function 'migrate_vma_collect':
+../mm/migrate.c:2481:7: error: 'struct mmu_notifier_range' has no member
+named 'migrate_pgmap_owner'
+  range.migrate_pgmap_owner =3D migrate->pgmap_owner;
+       ^
 
---D
+Fixes: 998427b3ad2c ("mm/notifier: add migration invalidation type")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+---
 
->   UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
->   member access within null pointer of type 'struct xfs_kobj'
->   Call Trace:
->    dump_stack+0x10e/0x195
->    ubsan_type_mismatch_common+0x241/0x280
->    __ubsan_handle_type_mismatch_v1+0x32/0x40
->    init_xfs_fs+0x12b/0x28f
->    do_one_initcall+0xdd/0x1d0
->    do_initcall_level+0x151/0x1b6
->    do_initcalls+0x50/0x8f
->    do_basic_setup+0x29/0x2b
->    kernel_init_freeable+0x19f/0x20b
->    kernel_init+0x11/0x1e0
->    ret_from_fork+0x22/0x30
-> 
-> Fix it by checking parent_kobj before the code accesses its member.
-> 
-> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-> ---
->  fs/xfs/xfs_sysfs.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
-> index e9f810fc6731..aad67dc4ab5b 100644
-> --- a/fs/xfs/xfs_sysfs.h
-> +++ b/fs/xfs/xfs_sysfs.h
-> @@ -32,9 +32,9 @@ xfs_sysfs_init(
->  	struct xfs_kobj		*parent_kobj,
->  	const char		*name)
->  {
-> +	struct kobject *parent = parent_kobj ? &parent_kobj->kobject : NULL;
->  	init_completion(&kobj->complete);
-> -	return kobject_init_and_add(&kobj->kobject, ktype,
-> -				    &parent_kobj->kobject, "%s", name);
-> +	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
->  }
->  
->  static inline void
-> -- 
-> 2.26.2
-> 
+This is based on the latest linux and is for Andrew Morton's mm tree.
+MMU_NOTIFIER is selected automatically by a number of other config
+options so I missed this in my own testing. Thanks to Randy Dunlap for
+finding it.
+
+ include/linux/mmu_notifier.h | 13 +++++++++++++
+ mm/migrate.c                 |  6 +++---
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index c6f0708195cd..b8200782dede 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -521,6 +521,16 @@ static inline void mmu_notifier_range_init(struct mmu_=
+notifier_range *range,
+ 	range->flags =3D flags;
+ }
+=20
++static inline void mmu_notifier_range_init_migrate(
++			struct mmu_notifier_range *range, unsigned int flags,
++			struct vm_area_struct *vma, struct mm_struct *mm,
++			unsigned long start, unsigned long end, void *pgmap)
++{
++	mmu_notifier_range_init(range, MMU_NOTIFY_MIGRATE, flags, vma, mm,
++				start, end);
++	range->migrate_pgmap_owner =3D pgmap;
++}
++
+ #define ptep_clear_flush_young_notify(__vma, __address, __ptep)		\
+ ({									\
+ 	int __young;							\
+@@ -645,6 +655,9 @@ static inline void _mmu_notifier_range_init(struct mmu_=
+notifier_range *range,
+=20
+ #define mmu_notifier_range_init(range,event,flags,vma,mm,start,end)  \
+ 	_mmu_notifier_range_init(range, start, end)
++#define mmu_notifier_range_init_migrate(range, flags, vma, mm, start, end,=
+ \
++					pgmap) \
++	_mmu_notifier_range_init(range, start, end)
+=20
+ static inline bool
+ mmu_notifier_range_blockable(const struct mmu_notifier_range *range)
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 4fcc465736ff..d179657f8685 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2386,9 +2386,9 @@ static void migrate_vma_collect(struct migrate_vma *m=
+igrate)
+ 	 * that the registered device driver can skip invalidating device
+ 	 * private page mappings that won't be migrated.
+ 	 */
+-	mmu_notifier_range_init(&range, MMU_NOTIFY_MIGRATE, 0, migrate->vma,
+-			migrate->vma->vm_mm, migrate->start, migrate->end);
+-	range.migrate_pgmap_owner =3D migrate->pgmap_owner;
++	mmu_notifier_range_init_migrate(&range, 0, migrate->vma,
++		migrate->vma->vm_mm, migrate->start, migrate->end,
++		migrate->pgmap_owner);
+ 	mmu_notifier_invalidate_range_start(&range);
+=20
+ 	walk_page_range(migrate->vma->vm_mm, migrate->start, migrate->end,
+--=20
+2.20.1
+
