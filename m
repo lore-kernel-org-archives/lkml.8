@@ -2,103 +2,111 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84308C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39582C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D91642086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF362311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PHMfc5Ax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgHFQyJ (ORCPT
+        id S1729699AbgHFQy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:54:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32940 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729699AbgHFQxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:53:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 36FEEADE1;
-        Thu,  6 Aug 2020 15:13:22 +0000 (UTC)
-Subject: Re: [PATCH v2] mm, dump_page: do not crash with bad
- compound_mapcount()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        cai@lca.pw, kirill@shutemov.name, rppt@linux.ibm.com,
-        william.kucharski@oracle.com,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200804214807.169256-1-jhubbard@nvidia.com>
- <ac97deea-4638-badd-9495-c9ca313837bb@suse.cz>
- <20200806134851.GN23808@casper.infradead.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <790ae9a4-6874-ac34-d2a2-28a2137335cb@suse.cz>
-Date:   Thu, 6 Aug 2020 17:13:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200806134851.GN23808@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Aug 2020 12:54:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729759AbgHFQyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:54:13 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A89C0A3BD0
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:54:11 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id d30so14305784qve.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=rCm9cY6ajxJ7usQ3AHKrWox7W/sIb0CRigoftU0dpEI=;
+        b=PHMfc5AxB5CnXqLw5iAjfPAjw6WolNBPr/1vdUHJd1AEFoh7clU9JHC/sqqOUj+riM
+         pHOVnHgkDYQ6gDD4TSr0Qt1sZZ6haTuBWdiyXgUv3p334IQRsmrCJtSqn7rDA5JJFq7U
+         FZB2xOwlw3vgmdtsJjISSZjuzXy5q/6iucfcKQLhaUNv5mVCWHpRl4SjU47YEuT5PJJf
+         QErCeYe4YECdbsGWYTrlvRzKz3C5oiJSLJ1sNSJDlyMfX+1ZGYFluOH1Dc52izdTH8YK
+         qlEQS1BWZRa3Mh38M4pPBs04tjmwhIepZGBJzJHnRrDD0cXu1RmcNswMPetBtdMshnll
+         2PJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=rCm9cY6ajxJ7usQ3AHKrWox7W/sIb0CRigoftU0dpEI=;
+        b=UrWtHB1lpZ58AvSHw/KBobZ5sJvsQluC7Ybcvi3r+wo0cdOrf0Od7PbQApziEoKsMh
+         IxVh9yTqTkE+Zs169sCyTcYzSejrMOxIkWZ0B+C6ZD4fXo9smRi4XgOcSwfVYlHeYfEy
+         PgmnoYANL4LCYPBAlZ5hsBS6D/yOLG2eeeM2bl+TNpGRcVWps6zHAJgtsxJTZ/bwUv9X
+         zIWoJ7SNPCvHsLySoKKkn4uaVJvLfE1cmcZ/EiIgen7NfwNPC/A+450v9/tL8rgQ//6s
+         4DcdV2CW3DghH8Py0HmcIvuWsE1RWTz3QceeqNBhfRkIzHGuKNy/SWznv8r3UzjoNsqe
+         BqAw==
+X-Gm-Message-State: AOAM533F4rPuK8Jl/Q5we0YxGvNZd0vzkylX3kcNJfiZZ/pqgSV0pZdL
+        ub9cHZGvtQM16RBqixn7wq9obL3lMw==
+X-Google-Smtp-Source: ABdhPJxKMwuPDKBYR+NJXzoJwI9ymXY2JTIR/CIMWdANcc0jRgvGsIlnEHvb2S29PQ10EUHf5fUrNicbyA==
+X-Received: by 2002:ad4:56ee:: with SMTP id cr14mr10244737qvb.119.1596732850548;
+ Thu, 06 Aug 2020 09:54:10 -0700 (PDT)
+Date:   Thu,  6 Aug 2020 18:53:59 +0200
+Message-Id: <20200806165359.2381483-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH] binder: Remove bogus warning on failed same-process transaction
+From:   Jann Horn <jannh@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/20 3:48 PM, Matthew Wilcox wrote:
-> On Thu, Aug 06, 2020 at 01:45:11PM +0200, Vlastimil Babka wrote:
->> How about this additional patch now that we have head_mapcoun()? (I wouldn't
->> go for squashing as the goal and scope is too different).
-> 
-> I like it.  It bothers me that the compiler doesn't know that
-> compound_head(compound_head(x)) == compound_head(x).  I updated
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=32911 with a request to be
-> able to tell the compiler that compound_head() is idempotent.
+While binder transactions with the same binder_proc as sender and recipient
+are forbidden, transactions with the same task_struct as sender and
+recipient are possible (even though currently there is a weird check in
+binder_transaction() that rejects them in the target==0 case).
+Therefore, task_struct identities can't be used to distinguish whether
+the caller is running in the context of the sender or the recipient.
 
-Yeah it would be nice to get the benefits everywhere automatically. But I guess
-the compiler would have to discard the idempotence assumptions if there are
-multiple consecutive (perhaps hidden behind page flag access)
-compound_head(page) from a function, as soon as we modify the struct page somewhere.
+Since I see no easy way to make this WARN_ON() useful and correct, let's
+just remove it.
 
->> The bloat-o-meter difference without DEBUG_VM is the following:
->> 
->> add/remove: 0/0 grow/shrink: 1/4 up/down: 32/-56 (-24)
->> Function                                     old     new   delta
->> __split_huge_pmd                            2867    2899     +32
->> shrink_page_list                            3860    3847     -13
->> reuse_swap_page                              762     748     -14
->> page_trans_huge_mapcount                     153     139     -14
->> total_mapcount                               187     172     -15
->> Total: Before=8687306, After=8687282, chg -0.00%
-> 
-> That's great.  I'm expecting improvements from my thp_head() macro when
-> that lands (currently in Andrew's tree).  I have been reluctant to replace
-> current callers of compound_head() with thp_head(), but I suspect PF_HEAD
-> could use thp_head() and save a few bytes on a tinyconfig build.
-> 
->> +++ b/mm/huge_memory.c
->> @@ -2125,7 +2125,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->>  	 * Set PG_double_map before dropping compound_mapcount to avoid
->>  	 * false-negative page_mapped().
->>  	 */
->> -	if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
->> +	if (head_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
-> 
-> I'm a little nervous about this one.  The page does actually come from
-> pmd_page(), and today that's guaranteed to be a head page.  But I'm
-> not convinced that's going to still be true in twenty years.  With the
-> current THP patchset, I won't allocate pages larger than PMD order, but
-> I can see there being interest in tracking pages in chunks larger than
-> 2MB in the future.  And then pmd_page() might well return a tail page.
-> So it might be a good idea to not convert this one.
+Fixes: 44d8047f1d87 ("binder: use standard functions to allocate fds")
+Reported-by: syzbot+e113a0b970b7b3f394ba@syzkaller.appspotmail.com
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ drivers/android/binder.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Hmm the function converts the compound mapcount of the whole page to a
-HPAGE_PMD_NR of base pages. If suddenly the compound page was bigger than a pmd,
-then I guess this wouldn't work properly anymore without changes anyway?
-Maybe we could stick something like VM_BUG_ON(PageTransHuge(page)) there as
-"enforced documentation" for now?
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index f936530a19b0..5b0376344dbe 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2344,8 +2344,6 @@ static void binder_transaction_buffer_release(struct binder_proc *proc,
+ 			 * file is done when the transaction is torn
+ 			 * down.
+ 			 */
+-			WARN_ON(failed_at &&
+-				proc->tsk == current->group_leader);
+ 		} break;
+ 		case BINDER_TYPE_PTR:
+ 			/*
+
+base-commit: 47ec5303d73ea344e84f46660fff693c57641386
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
