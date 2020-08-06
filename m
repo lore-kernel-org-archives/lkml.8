@@ -2,108 +2,233 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AF8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4510CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0762086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKtgqXyM"
+	by mail.kernel.org (Postfix) with ESMTP id 7F7542086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgHFQxp (ORCPT
+        id S1729744AbgHFQxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:53:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729352AbgHFQut (ORCPT
+        Thu, 6 Aug 2020 12:53:53 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:58524 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729701AbgHFQxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:50:49 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05AEEC002172;
-        Thu,  6 Aug 2020 09:13:44 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id d2so20782820lfj.1;
-        Thu, 06 Aug 2020 09:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MmVura5RdAnpr7fQMyfSzUsj8YChs1506fdeSTUofBA=;
-        b=cKtgqXyMnWAhAXx07h6MqHavPWnX+8vXN9E3//RSzZrZbRq/c5xK4c3KEh+FuEAUsr
-         sUmOhnTKG4o6G4tAlFBd34n2g7jgUAJ1pmlPWRXqeq4RIO6bYlb6uIIIVHUBGrlr3yCB
-         JVWuF90zqMAtaVrlgRDv2u5AOYCVWSTnQL7HKFCIDDRZT7ZgmLEg2YBkdE1/Yan5LJA9
-         vB2G/v8lSG5MgS23J6HzSe+XRoEjUSb/yAfBGuuXZd2PWH2glivmm7E7VVcQoPGzzShk
-         rl5AFSHzVbyAhRAzcIbLDbrT7vhF1A2E07b/dz7NNT4hVAy5scVNkcaYqKTo05qb/ELK
-         dm8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MmVura5RdAnpr7fQMyfSzUsj8YChs1506fdeSTUofBA=;
-        b=dMBv2BeMaxnRGmLhCxVasCTfvwSld5znC5C8FDaVmlgmvqfDUol9nNlwlPYW95siXE
-         tJLaoRVyXXdL5P3EkyU5ncKOzERw/2qd7znz60wdTLXLk90BFke7Qkf+qds5kCRXFg0l
-         BvR5UTc5jQ8LoGr994BJGRSUIaROy3DwGPsFf41s8MTsxmkuRnonBBC8WdvHQqgCNX17
-         QAkQ8o6RL6kks9eT6u+Z1ZWIVVrlz7jQEnD8GSLMmRj8sobOMLYscc14eBaltNS2eZgG
-         d4catp8WQ8wEda9NjoA5/OZNK37Bv+KniZ+j457qKK31XMxZDPwgO7hYWEtScT04HpUT
-         QNFQ==
-X-Gm-Message-State: AOAM533ovDejqT8diYMVSPhxp+Ja4nCKn2Bqw4+ITS7Av5OJyRdede7e
-        a92hX05cmLP+rVYIUI2NXJFgifpC
-X-Google-Smtp-Source: ABdhPJxyQ5DUwhm0mMp316XsoDHXatr2AKM4d69hS19HNWsjohoDpk8gx0kZj8bJ5qSAUfPGeLHkvw==
-X-Received: by 2002:a19:c68b:: with SMTP id w133mr4214252lff.189.1596730420623;
-        Thu, 06 Aug 2020 09:13:40 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id d13sm2905531lfl.89.2020.08.06.09.13.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 09:13:39 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9deaee09-c422-5694-7c19-d85354b9b703@gmail.com>
-Date:   Thu, 6 Aug 2020 19:13:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 12:53:44 -0400
+Received: from relay7-d.mail.gandi.net (unknown [217.70.183.200])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 9524F3AF934;
+        Thu,  6 Aug 2020 15:57:38 +0000 (UTC)
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 3A1B820006;
+        Thu,  6 Aug 2020 15:52:15 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 17:52:15 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 09/14] media: uapi: h264: Clarify SLICE_BASED mode
+Message-ID: <20200806155215.GC1621078@aptenodytes>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+ <20200806151310.98624-10-ezequiel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Qbvjkv9qwOGw/5Fx"
+Content-Disposition: inline
+In-Reply-To: <20200806151310.98624-10-ezequiel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.08.2020 18:59, Sowjanya Komatineni пишет:
-..
-> We cant use active status check for specific pads under calibration.
-> This is common bit for all pads.
 
-I'm not sure why this is a problem.
+--Qbvjkv9qwOGw/5Fx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu 06 Aug 20, 12:13, Ezequiel Garcia wrote:
+> Currently, the SLICE_BASED and FRAME_BASED modes documentation
+> is misleading and not matching the intended use-cases.
+>=20
+> Drop non-required fields SLICE_PARAMS 'start_byte_offset' and
+> DECODE_PARAMS 'num_slices' and clarify the decoding modes in the
+> documentation.
+>=20
+> On SLICE_BASED mode, a single slice is expected per OUTPUT buffer,
+> and therefore 'start_byte_offset' is not needed (since the offset
+> to the slice is the start of the buffer).
+
+Same comment as for the size: how do we plan on managing multiple slices
+in a single output buffer later on after removing this?
+
+Cheers,
+
+Paul
+
+> This mode requires the use of CAPTURE buffer holding, and so
+> the number of slices shall not be required.
+>=20
+> On FRAME_BASED mode, the devices are expected to take care of slice
+> parsing. Neither SLICE_PARAMS are required (and shouldn't be
+> exposed by frame-based drivers), nor the number of slices.
+>=20
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  .../media/v4l/ext-ctrls-codec.rst             | 39 +++++--------------
+>  include/media/h264-ctrls.h                    |  4 --
+>  2 files changed, 10 insertions(+), 33 deletions(-)
+>=20
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index fff74b7bf32a..b3963c1acc2c 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1748,9 +1748,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>         This compound control is not yet part of the public kernel API
+>         and it is expected to change.
+> =20
+> -       This structure is expected to be passed as an array, with one
+> -       entry for each slice included in the bitstream buffer.
+> -
+>  .. c:type:: v4l2_ctrl_h264_slice_params
+> =20
+>  .. cssclass:: longtable
+> @@ -1760,17 +1757,9 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
+ -
+>      :stub-columns: 0
+>      :widths:       1 1 2
+> =20
+> -    * - __u32
+> -      - ``start_byte_offset``
+> -        Offset (in bytes) from the beginning of the OUTPUT buffer to the=
+ start
+> -        of the slice. If the slice starts with a start code, then this i=
+s the
+> -        offset to such start code. When operating in slice-based decodin=
+g mode
+> -        (see :c:type:`v4l2_mpeg_video_h264_decode_mode`), this field sho=
+uld
+> -        be set to 0. When operating in frame-based decoding mode, this f=
+ield
+> -        should be 0 for the first slice.
+>      * - __u32
+>        - ``header_bit_size``
+> -      -
+> +      - Offset in bits to slice_data() from the beginning of this slice.
+>      * - __u32
+>        - ``first_mb_in_slice``
+>        -
+> @@ -1998,12 +1987,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
+ -
+>      * - struct :c:type:`v4l2_h264_dpb_entry`
+>        - ``dpb[16]``
+>        -
+> -    * - __u16
+> -      - ``num_slices``
+> -      - Number of slices needed to decode the current frame/field. When
+> -        operating in slice-based decoding mode (see
+> -        :c:type:`v4l2_mpeg_video_h264_decode_mode`), this field
+> -        should always be set to one.
+>      * - __u16
+>        - ``nal_ref_idc``
+>        - NAL reference ID value coming from the NAL Unit header
+> @@ -2121,22 +2104,20 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_typ=
+e -
+>      * - ``V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED``
+>        - 0
+>        - Decoding is done at the slice granularity.
+> -        In this mode, ``num_slices`` field in struct
+> -        :c:type:`v4l2_ctrl_h264_decode_params` should be set to 1,
+> -        and ``start_byte_offset`` in struct
+> -        :c:type:`v4l2_ctrl_h264_slice_params` should be set to 0.
+>          The OUTPUT buffer must contain a single slice.
+> +        When this mode is selected, the ``V4L2_CID_MPEG_VIDEO_H264_SLICE=
+_PARAMS``
+> +        control shall be set. When multiple slices compose a frame,
+> +        use of ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` flag
+> +        is required.
+>      * - ``V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED``
+>        - 1
+> -      - Decoding is done at the frame granularity.
+> -        In this mode, ``num_slices`` field in struct
+> -        :c:type:`v4l2_ctrl_h264_decode_params` should be set to the numb=
+er
+> -        of slices in the frame, and ``start_byte_offset`` in struct
+> -        :c:type:`v4l2_ctrl_h264_slice_params` should be set accordingly
+> -        for each slice. For the first slice, ``start_byte_offset`` should
+> -        be zero.
+> +      - Decoding is done at the frame granularity,
+>          The OUTPUT buffer must contain all slices needed to decode the
+>          frame. The OUTPUT buffer must also contain both fields.
+> +        This mode will be supported by devices that
+> +        parse the slice(s) header(s) in hardware. When this mode is
+> +        selected, the ``V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS``
+> +        control shall not be set.
+> =20
+>  ``V4L2_CID_MPEG_VIDEO_H264_START_CODE (enum)``
+>      Specifies the H264 slice start code expected for each slice.
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index f74736fcfa00..ea8c8c93305b 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -158,9 +158,6 @@ struct v4l2_h264_reference {
+>  };
+> =20
+>  struct v4l2_ctrl_h264_slice_params {
+> -	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
+> -	__u32 start_byte_offset;
+> -
+>  	/* Offset in bits to slice_data() from the beginning of this slice. */
+>  	__u32 header_bit_size;
+> =20
+> @@ -219,7 +216,6 @@ struct v4l2_h264_dpb_entry {
+> =20
+>  struct v4l2_ctrl_h264_decode_params {
+>  	struct v4l2_h264_dpb_entry dpb[V4L2_H264_NUM_DPB_ENTRIES];
+> -	__u16 num_slices;
+>  	__u16 nal_ref_idc;
+>  	__s32 top_field_order_cnt;
+>  	__s32 bottom_field_order_cnt;
+> --=20
+> 2.27.0
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--Qbvjkv9qwOGw/5Fx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl8sJy8ACgkQ3cLmz3+f
+v9FX6wgAoLxd25vNiCRwFeLA5Y7OuzOZYlhR/37nBCHTqFERK0c+ScDXvSILbfuX
+nM2sRhRmjQvjAJO1fGBWEdFk1h0JUitPZk39NrUsT+aiJSbfTvAbcDyGERuEz7XI
+oDwFQ5PwYqXmEYFFp6nJvwBgK2O5zr6ztrZ747NqaqzxedN1F9bmcuDtUIH34Fdz
+qK8JFSb6CuEQu6SkIHbj7Mel7G9UoX+aSpoRBUQwEENmD/MPI4RmYRU/ag5r25pw
+dnTxJC02M0UFwKRglhOXyIsvKzCUyAyGyfgvdaK0VoC+N8QmzMGggYyAVbc/VCk+
+ymrtDBlLXJVMj4fVx2K66p1/oJGNpg==
+=2OoY
+-----END PGP SIGNATURE-----
+
+--Qbvjkv9qwOGw/5Fx--
