@@ -2,72 +2,259 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B266BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2766EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA18D221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A90221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgHFTXg (ORCPT
+        id S1726201AbgHFTZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:23:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33610 "EHLO mx2.suse.de"
+        Thu, 6 Aug 2020 15:25:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35473 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgHFTXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:23:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 545E9AF19;
-        Thu,  6 Aug 2020 19:23:52 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 21:23:33 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/mm changes for v5.9
-Message-ID: <20200806192333.GB24304@suse.de>
-References: <20200803190354.GA1293087@gmail.com>
- <20200805110348.GA108872@zx2c4.com>
- <CAHk-=wiq+7sW3Lk5iQ0-zY5XWES4rSxK505vXsgFY=za88+RZw@mail.gmail.com>
- <20200806131034.GA2067370@gmail.com>
- <20200806185723.GA24304@suse.de>
- <CAHk-=wg7PHCUMD1xY=YCCeVHspAhw0YNEhyO3CnHfRPwsf6P8A@mail.gmail.com>
+        id S1725272AbgHFTZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:25:03 -0400
+IronPort-SDR: +X/sFRIIiqa4fROpFfNeHDxaYVm/AtAHwlOuKEn8buZEzpglfFPgU0dt98RggZd4VZ7518BOQP
+ ee6Be0lxaSxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="132461178"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="132461178"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:25:02 -0700
+IronPort-SDR: IhZ+OmZJvoHu0nRl894FD1fpUugxCkPCwBxfLQI7HR2oL7YK69RhEB67/hDZvmTIx2Hs+PQpi1
+ N1PyiQEWmoqg==
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="293409049"
+Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.166.190])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:25:00 -0700
+Message-ID: <df539dc3a4791d0f873aec9b303f49b64237a6e8.camel@linux.intel.com>
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com
+Date:   Thu, 06 Aug 2020 12:24:58 -0700
+In-Reply-To: <20200806153258.GB2131635@gmail.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+         <20200806153258.GB2131635@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg7PHCUMD1xY=YCCeVHspAhw0YNEhyO3CnHfRPwsf6P8A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 12:02:40PM -0700, Linus Torvalds wrote:
-> But you may obviously have different settings for CONFIG_X86_5LEVEL,
-> and maybe that ends up changing something?
+Hi Mingo, thanks for taking a look, I am glad you like the idea. Some
+replies below:
+
+On Thu, 2020-08-06 at 17:32 +0200, Ingo Molnar wrote:
+> * Kristen Carlson Accardi <kristen@linux.intel.com> wrote:
 > 
-> But since apparently it's not immediately obvious what the problem is,
-> I'll revert it for now.
+> > Function Granular Kernel Address Space Layout Randomization
+> > (fgkaslr)
+> > -----------------------------------------------------------------
+> > ----
+> > 
+> > This patch set is an implementation of finer grained kernel address
+> > space
+> > randomization. It rearranges your kernel code at load time 
+> > on a per-function level granularity, with only around a second
+> > added to
+> > boot time.
+> 
+> This is a very nice feature IMO, and it should be far more effective 
+> at randomizing the kernel, due to the sheer number of randomization 
+> bits that kernel function granular randomization presents.
+> 
+> If this is a good approximation of fg-kaslr randomization depth:
+> 
+>   thule:~/tip> grep ' [tT] ' /proc/kallsyms  | wc -l
+>   88488
+> 
+> ... then that's 80K bits of randomization instead of the mere
+> handful 
+> of kaslr bits we have today. Very nice!
+> 
+> > In order to hide our new layout, symbols reported through 
+> > /proc/kallsyms will be displayed in a random order.
+> 
+> Neat. :-)
+> 
+> > Performance Impact
+> > ------------------
+> > * Run time
+> > The performance impact at run-time of function reordering varies by
+> > workload.
+> > Using kcbench, a kernel compilation benchmark, the performance of a
+> > kernel
+> > build with finer grained KASLR was about 1% slower than a kernel
+> > with standard
+> > KASLR. Analysis with perf showed a slightly higher percentage of 
+> > L1-icache-load-misses. Other workloads were examined as well, with
+> > varied
+> > results. Some workloads performed significantly worse under
+> > FGKASLR, while
+> > others stayed the same or were mysteriously better. In general, it
+> > will
+> > depend on the code flow whether or not finer grained KASLR will
+> > impact
+> > your workload, and how the underlying code was designed. Because
+> > the layout
+> > changes per boot, each time a system is rebooted the performance of
+> > a workload
+> > may change.
+> 
+> I'd guess that the biggest performance impact comes from tearing
+> apart 
+> 'groups' of functions that particular workloads are using.
+> 
+> In that sense it might be worthwile to add a '__kaslr_group'
+> function 
+> tag to key functions, which would keep certain performance critical 
+> functions next to each other.
+> 
+> This shouldn't really be a problem, as even with generous amount of 
+> grouping the number of randomization bits is incredibly large.
 
-Yes, that's the best for now. My gut feeling is that the fault Jason is
-seeing didn't happen on a vmalloc address, but I can't prove that yet.
+So my strategy so far was to try to get a very basic non-performance
+optimized fgkaslr mode merged first, then add performance optimized
+options as a next step. For example, a user might pass in
+fgkaslr="group" to the fgkaslr kernel parameter to select a layout
+which groups some things by whatever criteria we want to mitigate some
+of the performance impact of full randomization, or they might chose
+fgkaslr="full", which just randomizes everything (the current
+implementation). If people think it's worth adding the performance
+optimizations for the initial merge, I can certainly work on those, but
+i thought it might be better to keep it super simple at first.
 
-And if this is true it means that more work is needed before the syncing
-on x86-64 can be removed, so reverting is the best for now.
+> 
+> > Future work could identify hot areas that may not be randomized and
+> > either
+> > leave them in the .text section or group them together into a
+> > single section
+> > that may be randomized. If grouping things together helps, one
+> > other thing to
+> > consider is that if we could identify text blobs that should be
+> > grouped together
+> > to benefit a particular code flow, it could be interesting to
+> > explore
+> > whether this security feature could be also be used as a
+> > performance
+> > feature if you are interested in optimizing your kernel layout for
+> > a
+> > particular workload at boot time. Optimizing function layout for a
+> > particular
+> > workload has been researched and proven effective - for more
+> > information
+> > read the Facebook paper "Optimizing Function Placement for Large-
+> > Scale
+> > Data-Center Applications" (see references section below).
+> 
+> I'm pretty sure the 'grouping' solution would address any real 
+> slowdowns.
+> 
+> I'd also suggest allowing the passing in of a boot-time pseudo-
+> random 
+> generator seed number, which would allow the creation of a 
+> pseudo-randomized but repeatable layout across reboots.
 
-Jason, can you share more details about the test setup which triggers
-this? Like the .config and the machine setup, ideally a qemu
-command-line, and how to reproduce it on that setup.
+We talked during the RFC stage of porting the chacha20 code to this
+early boot stage to use as a prand generator. Ultimately, this means
+you now have a secret you have to protect (the seed), and so I've
+dropped this for now. I could see maybe having this as a debug option?
+I certainly use a prand myself even now when I'm still debugging
+functional issues (although the one I use for my own debugging isn't
+suitable for merging).
 
-Thanks,
+> 
+> > Image Size
+> > ----------
+> > Adding additional section headers as a result of compiling with
+> > -ffunction-sections will increase the size of the vmlinux ELF file.
+> > With a standard distro config, the resulting vmlinux was increased
+> > by
+> > about 3%. The compressed image is also increased due to the header
+> > files,
+> > as well as the extra relocations that must be added. You can expect
+> > fgkaslr
+> > to increase the size of the compressed image by about 15%.
+> 
+> What is the increase of the resulting raw kernel image? Additional 
+> relocations might increase its size (unless I'm missing something) - 
+> it would be nice to measure this effect. I'd expect this to be
+> really 
+> low.
 
-	Joerg
+By raw kernel image, do you mean just what eventually gets copied into
+memory after decompression minus the relocation table? If so, this is
+almost no difference - the only difference is that there is a little
+bit of change in the padding between sections vs what the non-
+randomized kernel is because of alignment differences with the new
+layout. so you wind up with a few extra bytes give or take.
+
+> 
+> vmlinux or compressed kernel size doesn't really matter on x86-64, 
+> it's a boot time only expense well within typical system resource 
+> limits.
+> 
+> > Disabling
+> > ---------
+> > Disabling normal KASLR using the nokaslr command line option also
+> > disables
+> > fgkaslr. It is also possible to disable fgkaslr separately by
+> > booting with
+> > fgkaslr=off on the commandline.
+> 
+> I'd suggest to also add a 'nofgkaslr' boot option if it doesn't yet 
+> exist, to keep usage symmetric with kaslr.
+> 
+> Likewise, there should probably be a 'kaslr=off' option as well.
+> 
+> The less random our user interfaces are, the better ...
+> 
+> >  arch/x86/boot/compressed/Makefile             |   9 +-
+> >  arch/x86/boot/compressed/fgkaslr.c            | 811
+> > ++++++++++++++++++
+> >  arch/x86/boot/compressed/kaslr.c              |   4 -
+> >  arch/x86/boot/compressed/misc.c               | 157 +++-
+> >  arch/x86/boot/compressed/misc.h               |  30 +
+> >  arch/x86/boot/compressed/utils.c              |  11 +
+> >  arch/x86/boot/compressed/vmlinux.symbols      |  17 +
+> >  arch/x86/include/asm/boot.h                   |  15 +-
+> >  arch/x86/kernel/vmlinux.lds.S                 |  17 +-
+> >  arch/x86/lib/kaslr.c                          |  18 +-
+> >  arch/x86/tools/relocs.c                       | 143 ++-
+> >  arch/x86/tools/relocs.h                       |   4 +-
+> >  arch/x86/tools/relocs_common.c                |  15 +-
+> >  include/asm-generic/vmlinux.lds.h             |  18 +-
+> >  include/linux/decompress/mm.h                 |  12 +-
+> >  include/uapi/linux/elf.h                      |   1 +
+> >  init/Kconfig                                  |  26 +
+> >  kernel/kallsyms.c                             | 163 +++-
+> >  kernel/module.c                               |  81 ++
+> >  tools/objtool/elf.c                           |   8 +-
+> >  26 files changed, 1670 insertions(+), 85 deletions(-)
+> >  create mode 100644 Documentation/security/fgkaslr.rst
+> >  create mode 100644 arch/x86/boot/compressed/fgkaslr.c
+> >  create mode 100644 arch/x86/boot/compressed/utils.c
+> >  create mode 100644 arch/x86/boot/compressed/vmlinux.symbols
+> 
+> This looks surprisingly lean overall.
+
+Most of the changes outside of fgkaslr.c, module.c, and kallsyms.c were
+little tweaks here and there to accommodate using -ffunction-sections
+and handling >64K elf sections, otherwise yes, I tried to keep it very
+self contained and non-invasive.
+
+
