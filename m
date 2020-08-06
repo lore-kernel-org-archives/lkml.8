@@ -2,289 +2,101 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE96C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 695D720823
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66AEA2245C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbHtTavw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgHFC0f (ORCPT
+        id S1726927AbgHFC2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:26:35 -0400
-Received: from mga18.intel.com ([134.134.136.126]:43952 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbgHFC0e (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:26:34 -0400
-IronPort-SDR: q2i9GI7K+MI8CZjwKAYJlqye2EbpCFYolos/mjhCiN5QGt6XNP5x8nP0mdIrt1nfPGG7rvXOhc
- ovzbTx1Qfr/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="140302011"
-X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
-   d="scan'208";a="140302011"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 19:26:33 -0700
-IronPort-SDR: eteMGA0s2kFKljO5qpRAA1xpJY5M6m9Dnh87psf9zQ/SzIcbv04wpjiLcgnq4gGs58+uf9NU2g
- 29hBP8OFZYFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
-   d="scan'208";a="323288687"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by orsmga008.jf.intel.com with ESMTP; 05 Aug 2020 19:26:30 -0700
-Subject: Re: [PATCH v1 2/2] perf/core: Fake regs for leaked kernel samples
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
-References: <20200731025617.16243-1-yao.jin@linux.intel.com>
- <20200731025617.16243-2-yao.jin@linux.intel.com>
- <20200804114900.GI2657@hirez.programming.kicks-ass.net>
- <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
- <20200805124454.GP2657@hirez.programming.kicks-ass.net>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <797aa4de-c618-f340-ad7b-cef38c96b035@linux.intel.com>
-Date:   Thu, 6 Aug 2020 10:26:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 5 Aug 2020 22:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgHFC2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 22:28:13 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 321D3C061574;
+        Wed,  5 Aug 2020 19:28:13 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u20so2147542pfn.0;
+        Wed, 05 Aug 2020 19:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=BJzx13SAAD8E0rIJfj6pRh0FzKS0NoLgCdQQcttiUsQ=;
+        b=QbHtTavwBm6EOBB0ka3itQYmyguF1rko1UQ9BY5T+7R/8UFmfF++gwLsjfJtr9WS0E
+         wZJ+66z1CU8nGBpiQqH65mFo3g9t2H21qWyyERjiVDKmhwM4sK28T1Nr85R6h3ETxoKz
+         TELWZXY6faffzQyuw6SwvLBc3hQZG9M2txsYKlg7dEt33M6xvl/pJb87hM6syowD0Vji
+         O0xLsyolCYllqiociky9nrF+9rrrWQ/4R2WSCUzVS+ERDFNBxxKIBbBSzuHqDeg5UOLp
+         YhSJ1RFH0uZBhvW+g/yeKbr8MkJAQndea2z+c4Wx4iaB5H3QYQiGLXgeyZIGuOGIwOz6
+         tllQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=BJzx13SAAD8E0rIJfj6pRh0FzKS0NoLgCdQQcttiUsQ=;
+        b=cUeQNsrP6QxYNOBxfgzqLs6fnH6pTTo2QADxsiU/3JH9oBk5ol6CZGzItWJz5USWWq
+         vPAJVp9MUW2JdnRXK1U9JoY6toLulZ5u6Rxwi2tiwHD2o6TLrZ3cTiQWvnzHNcz4BJTg
+         JqlQClsG69Nj3vts3ZANWU/e8nQi8kh4bjvGijfv6EYvnEv9uHGxqYu1FpqfmbCu83TV
+         iyhjKM4n619WRaVx/0vR4sJ0MO6IvDTF6l2TLLte0d8GuF2hN5OAZfwm+j279V74HWOS
+         WfyjVyy9Xgko6k7jHUd8d0nzT47NHpEmIYNDkt6w2aUb6NtciqdbnQA7LWFJIJcb6Jsa
+         wqHQ==
+X-Gm-Message-State: AOAM533lqGvA1DendOhqld5rgWMi68pDRa6KAolZPtQP5+X8pT5DxTG2
+        DAvIplZ7XJWi4Q0L2+LkYVj5128X
+X-Google-Smtp-Source: ABdhPJy+oHC+2kRMLWgauFJIm4yUmEdu2ksQqI906QPw/bPz+gxG5Un9Kp1u2KpZ6sTKAU3pyjmryQ==
+X-Received: by 2002:aa7:95b8:: with SMTP id a24mr5893703pfk.219.1596680892349;
+        Wed, 05 Aug 2020 19:28:12 -0700 (PDT)
+Received: from oppo (69-172-89-151.static.imsbiz.com. [69.172.89.151])
+        by smtp.gmail.com with ESMTPSA id a184sm5674137pfa.83.2020.08.05.19.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 19:28:11 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 10:28:08 +0800
+From:   Qingyu Li <ieatmuttonchuan@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nfc: enforce CAP_NET_RAW for raw sockets When creating a raw
+ AF_NFC socket, CAP_NET_RAW needs to be checked first.
+Message-ID: <20200806022808.GA17066@oppo>
 MIME-Version: 1.0
-In-Reply-To: <20200805124454.GP2657@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
+---
+ net/nfc/rawsock.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On 8/5/2020 8:44 PM, peterz@infradead.org wrote:
-> On Wed, Aug 05, 2020 at 10:15:26AM +0800, Jin, Yao wrote:
->> Hi Peter,
->>
->> On 8/4/2020 7:49 PM, peterz@infradead.org wrote:
->>> On Fri, Jul 31, 2020 at 10:56:17AM +0800, Jin Yao wrote:
->>>> @@ -6973,7 +6973,8 @@ static struct perf_callchain_entry __empty_callchain = { .nr = 0, };
->>>>    struct perf_callchain_entry *
->>>>    perf_callchain(struct perf_event *event, struct pt_regs *regs)
->>>>    {
->>>> -	bool kernel = !event->attr.exclude_callchain_kernel;
->>>> +	bool kernel = !event->attr.exclude_callchain_kernel &&
->>>> +		      !event->attr.exclude_kernel;
->>>
->>> This seems weird; how can we get there. Also it seems to me that if you
->>> have !exclude_callchain_kernel you already have permission for kernel
->>> bits, so who cares.
->>>
->>
->> In perf tool, exclude_callchain_kernel is set to 1 when perf-record only
->> collects the user callchains and exclude_kernel is set to 1 when events are
->> configured to run in user space.
->>
->> So if an event is configured to run in user space, that should make sense we
->> don't need it's kernel callchains.
->>
->> But it seems to me there is no code logic in perf tool which can make sure
->> !exclude_callchain_kernel -> !exclude_kernel.
->>
->> Jiri, Arnaldo, is my understanding correct?
-> 
-> What the perf tool does or does not do is irrelevant. It is a valid,
-> (albeit slightly silly) configuration to have:
-> 
-> 	exclude_kernel && !exclude_callchain_kernel
-> 
-> You're now saying that when you configure things like this you're not
-> allowed kernel IPs, that's wrong I think.
-> 
-> Also, !exclude_callchain_kernel should require privilidge, whcih needs
-> fixing, see below.
-> 
+diff --git a/net/nfc/rawsock.c b/net/nfc/rawsock.c
+index ba5ffd3badd3..c1302b689a98 100644
+--- a/net/nfc/rawsock.c
++++ b/net/nfc/rawsock.c
+@@ -332,8 +332,11 @@ static int rawsock_create(struct net *net, struct socket *sock,
+ 	if ((sock->type != SOCK_SEQPACKET) && (sock->type != SOCK_RAW))
+ 		return -ESOCKTNOSUPPORT;
 
-I see you add '!exclude_callchain_kernel' check before perf_allow_kernel() at syscall entry in below 
-code.
+-	if (sock->type == SOCK_RAW)
++	if (sock->type == SOCK_RAW){
++		if (!capable(CAP_NET_RAW))
++			return -EPERM;
+ 		sock->ops = &rawsock_raw_ops;
++	}
+ 	else
+ 		sock->ops = &rawsock_ops;
 
-So if we allow callchain_kernel collection that means we allow kernel by default. That makes sense, 
-thanks!
 
->> So the new code looks like:
->>
->> if (event->attr.exclude_kernel && !user_mode(regs)) {
->> 	if (!(current->flags & PF_KTHREAD)) {
->> 		regs_fake = task_pt_regs(current);
->> 		if (!regs_fake)
->> 			instruction_pointer_set(regs, -1L);
->> 	} else {
->> 		instruction_pointer_set(regs, -1L);
->> 	}
-> 
-> Again:
-> 
-> 	if (!(current->flags & PF_KTHREAD))
-> 		regs_fake = task_pt_regs(current);
-> 
-> 	if (!regs_fake)
-> 		instruction_pointer_set(regs, -1L);
-> 
-> Is much simpler and more readable.
-> 
 
-Yes, agree. Your code is much simpler and better.
-
->>>> +		if ((header->misc & PERF_RECORD_MISC_CPUMODE_MASK) ==
->>>> +		     PERF_RECORD_MISC_KERNEL) {
->>>> +			header->misc &= ~PERF_RECORD_MISC_CPUMODE_MASK;
->>>> +			header->misc |= PERF_RECORD_MISC_USER;
->>>> +		}
->>>
->>> Why the conditional? At this point it had better be unconditionally
->>> user, no?
->>>
->>> 		headers->misc &= ~PERF_RECORD_MISC_CPUMODE_MASK;
->>> 		headers->misc |= PERF_RECORD_MISC_USER;
->>>
->>
->> #define PERF_RECORD_MISC_CPUMODE_MASK		(7 << 0)
->> #define PERF_RECORD_MISC_CPUMODE_UNKNOWN	(0 << 0)
->> #define PERF_RECORD_MISC_KERNEL			(1 << 0)
->> #define PERF_RECORD_MISC_USER			(2 << 0)
->> #define PERF_RECORD_MISC_HYPERVISOR		(3 << 0)
->> #define PERF_RECORD_MISC_GUEST_KERNEL		(4 << 0)
->> #define PERF_RECORD_MISC_GUEST_USER		(5 << 0)
->>
->> If we unconditionally set user, it will reset for hypervisor, guest
->> kernel and guest_user.
-> 
-> At the same time :u had better not get any of those either. Which seems
-> to suggest we're going about this wrong.
-> 
-> Also, if we call this before perf_misc_flags() we don't need to fix it
-> up.
-> 
-> How's this?
-> 
-> ---
->   kernel/events/core.c | 38 +++++++++++++++++++++++++++++++++-----
->   1 file changed, 33 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7c436d705fbd..3e4e328b521a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6988,23 +6988,49 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
->   	return callchain ?: &__empty_callchain;
->   }
->   
-> +/*
-> + * Due to interrupt latency (skid), we may enter the kernel before taking the
-> + * PMI, even if the PMU is configured to only count user events. To avoid
-> + * leaking kernel addresses, use task_pt_regs(), when available.
-> + */
-> +static struct pt_regs *sanitize_sample_regs(struct perf_event *event, struct pt_regs *regs)
-> +{
-> +	struct pt_regs *sample_regs = regs;
-> +
-> +	/* user only */
-> +	if (!event->attr.exclude_kernel || !event->attr.exclude_hv ||
-> +	    !event->attr.exclude_host   || !event->attr.exclude_guest)
-> +		return sample_regs;
-> +
-
-Is this condition correct?
-
-Say counting user event on host, exclude_kernel = 1 and exclude_host = 0. It will go "return 
-sample_regs" path.
-
-> +	if (sample_regs(regs))
-> +		return sample_regs;
-> +
-
-In your another mail, you said it should be:
-
-	if (user_regs(regs))
-		return sample_regs;
-
-> +	if (!(current->flags & PF_KTHREAD)) {
-
-No '{', you mentioned in another mail.
-
-> +		sample_regs = task_pt_regs(current);
-> +	else
-> +		instruction_pointer_set(regs, -1L);
-> +
-> +	return sample_regs;
-> +}
-> +
->   void perf_prepare_sample(struct perf_event_header *header,
->   			 struct perf_sample_data *data,
->   			 struct perf_event *event,
->   			 struct pt_regs *regs)
->   {
-> +	struct pt_regs *sample_regs = sanitize_sample_regs(event, regs);
->   	u64 sample_type = event->attr.sample_type;
->   
->   	header->type = PERF_RECORD_SAMPLE;
->   	header->size = sizeof(*header) + event->header_size;
->   
->   	header->misc = 0;
-> -	header->misc |= perf_misc_flags(regs);
-> +	header->misc |= perf_misc_flags(sample_regs);
->   
->   	__perf_event_header__init_id(header, data, event);
->   
->   	if (sample_type & PERF_SAMPLE_IP)
-> -		data->ip = perf_instruction_pointer(regs);
-> +		data->ip = perf_instruction_pointer(sample_regs);
->   
->   	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
->   		int size = 1;
-> @@ -7054,9 +7080,10 @@ void perf_prepare_sample(struct perf_event_header *header,
->   		header->size += size;
->   	}
->   
-> -	if (sample_type & (PERF_SAMPLE_REGS_USER | PERF_SAMPLE_STACK_USER))
-> +	if (sample_type & (PERF_SAMPLE_REGS_USER | PERF_SAMPLE_STACK_USER)) {
->   		perf_sample_regs_user(&data->regs_user, regs,
->   				      &data->regs_user_copy);
-> +	}
->   
->   	if (sample_type & PERF_SAMPLE_REGS_USER) {
->   		/* regs dump ABI info */
-> @@ -7099,7 +7126,7 @@ void perf_prepare_sample(struct perf_event_header *header,
->   		/* regs dump ABI info */
->   		int size = sizeof(u64);
->   
-> -		perf_sample_regs_intr(&data->regs_intr, regs);
-> +		perf_sample_regs_intr(&data->regs_intr, sample_regs);
->   
->   		if (data->regs_intr.regs) {
->   			u64 mask = event->attr.sample_regs_intr;
-> @@ -11609,7 +11636,8 @@ SYSCALL_DEFINE5(perf_event_open,
->   	if (err)
->   		return err;
->   
-> -	if (!attr.exclude_kernel) {
-> +	if (!attr.exclude_kernel || !attr.exclude_callchain_kernel ||
-> +	    !attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest) {
->   		err = perf_allow_kernel(&attr);
->   		if (err)
->   			return err;
-> 
-
-I can understand the conditions "!attr.exclude_kernel || !attr.exclude_callchain_kernel".
-
-But I'm not very sure about the "!attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest".
-
-On host, exclude_hv = 1, exclude_guest = 1 and exclude_host = 0, right?
-
-So even exclude_kernel = 1 but exclude_host = 0, we will still go perf_allow_kernel path. Please 
-correct me if my understanding is wrong.
-
-Thanks
-Jin Yao
