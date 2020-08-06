@@ -2,122 +2,106 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0500C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF5120823
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="lgdrE31e"
+	by mail.kernel.org (Postfix) with ESMTP id 03D482086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgHFCm0 (ORCPT
+        id S1726551AbgHFCqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:42:26 -0400
-Received: from mail6.tencent.com ([220.249.245.26]:50822 "EHLO
-        mail6.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgHFCmY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:42:24 -0400
-Received: from EX-SZ023.tencent.com (unknown [10.28.6.89])
-        by mail6.tencent.com (Postfix) with ESMTP id 479A3CC20F;
-        Thu,  6 Aug 2020 10:43:33 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
-        s=s202002; t=1596681813;
-        bh=wKOV/o30dU9/jeWeVsG9+DiOLXyLVKPXQ6qCdEovapA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=lgdrE31e992IrGJ8fUPfHqtQ6pdLx7STu1M+JF6CyASUzTOhLpBPQcTdU5i5Dlkjh
-         tNrYK05umoBPvxW6lenHymqG6/xjnhcdXsF7PhwJsMP/MV4+LpVyfnZpT59bpnWVdL
-         FJYVV1aE0MmBURfL+g4GMkTgUze9qa4jBQHVEJz8=
-Received: from EX-SZ005.tencent.com (10.28.6.29) by EX-SZ023.tencent.com
- (10.28.6.89) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Thu, 6 Aug 2020
- 10:42:21 +0800
-Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ005.tencent.com
- (10.28.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Thu, 6 Aug 2020
- 10:42:20 +0800
-Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
- EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
- 15.01.1847.007; Thu, 6 Aug 2020 10:42:20 +0800
-From:   =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-CC:     Jiang Biao <benbjiang@gmail.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] sched/fair: simplfy the work when reweighting entity
-Thread-Topic: [PATCH RFC] sched/fair: simplfy the work when reweighting entity
-Thread-Index: AQHWa5s0xag9SN0O3UOdnwnx3ZtsQA==
-Date:   Thu, 6 Aug 2020 02:42:20 +0000
-Message-ID: <8FA38F12-3CB4-46A9-B654-92DC384D3103@tencent.com>
-References: <20200804071222.31675-1-benbjiang@tencent.com>
- <f9eab9a5-c7c2-dbf3-834b-abd9c376f92c@arm.com>
-In-Reply-To: <f9eab9a5-c7c2-dbf3-834b-abd9c376f92c@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.14.87.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0F75082341898C4C9D861FBDF1A65741@tencent.com>
-Content-Transfer-Encoding: base64
+        Wed, 5 Aug 2020 22:46:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:31727 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbgHFCqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 22:46:54 -0400
+IronPort-SDR: km/KR8PRN/Nij8Go8vonj+fuLrQJGI0rBINlR1H33UWfEaklJz7hFSnwwJ9NvDfmf6OhnV58A0
+ VlOo6gior4xw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="152669288"
+X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
+   d="scan'208";a="152669288"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 19:46:53 -0700
+IronPort-SDR: JMPts0zLGa2TK4nZ6M81SgCrSmtUhNnShl1R21rIm7wIaMLTD6VNClCV3MU7E412fJa7zMqZVG
+ GxMj3meML9Mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
+   d="scan'208";a="437387590"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga004.jf.intel.com with ESMTP; 05 Aug 2020 19:46:51 -0700
+Date:   Thu, 6 Aug 2020 10:43:22 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH v3 2/4] fpga: dfl: map feature mmio resources in their
+ own  feature drivers
+Message-ID: <20200806024322.GA7179@yilunxu-OptiPlex-7050>
+References: <1596524715-18038-1-git-send-email-yilun.xu@intel.com>
+ <1596524715-18038-3-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819B8C6D19C351CC9366685854B0@DM6PR11MB3819.namprd11.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB3819B8C6D19C351CC9366685854B0@DM6PR11MB3819.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gQXVnIDYsIDIwMjAsIGF0IDEyOjIxIEFNLCBEaWV0bWFyIEVnZ2VtYW5uIDxkaWV0
-bWFyLmVnZ2VtYW5uQGFybS5jb20+IHdyb3RlOg0KPiANCj4gT24gMDQvMDgvMjAyMCAwOToxMiwg
-SmlhbmcgQmlhbyB3cm90ZToNCj4+IElmIGEgc2UgaXMgb25fcnEgd2hlbiByZXdlaWdodGluZyBl
-bnRpdHksIGFsbCB3ZSBuZWVkIHNob3VsZCBiZQ0KPj4gdXBkYXRpbmcgdGhlIGxvYWQgb2YgY2Zz
-X3JxLCBvdGhlciBkZXF1ZXVlL2VucXVldWUgd29ya3MgY291bGQgYmUNCj4+IHJlZHVuZGFudCwg
-c3VjaCBhcywNCj4+ICogYWNjb3VudF9udW1hX2RlcXVldWUvYWNjb3VudF9udW1hX2VucXVldWUN
-Cj4+ICogbGlzdF9kZWwvbGlzdF9hZGQgZnJvbS9pbnRvIGNmc190YXNrcw0KPj4gKiBucl9ydW5u
-aW5nLS0vbnJfcnVubmluZysrDQo+IA0KPiBJIHRoaW5rIHRoaXMgY291bGQgbWFrZSBzZW5zZS4g
-SGF2ZSB5b3Ugc3BvdHRlZCBhIGNvZGUgcGF0aCB3aGVyZSB0aGlzDQo+IGdpdmVzIHlvdSBhIGNo
-YW5nZT8NCj4gDQo+IEkgZ3Vlc3Mgb25seSBmb3IgYSB0YXNrIG9uIHRoZSBycSwgc286IGVudGl0
-eV9pc190YXNrKHNlKSAmJiBzZS0+b25fcnENClllcywgeW91J3JlIHJpZ2h0LiBObyBvdGhlciBj
-b2RlIHBhdGggSSBzcG90dGVkIGV4Y2VwdCB3aGF0IHlvdSBsaXN0IGJlbG93Lg0KDQo+IA0KPj4g
-SnVzdCBzaW1wbGZ5IHRoZSB3b3JrLiBDb3VsZCBiZSBoZWxwZnVsIGZvciB0aGUgaG90IHBhdGgu
-DQo+IA0KPiBJTUhPIGhvdHBhdGggaXMgdXBkYXRlX2Nmc19ncm91cCgpIC0+IHJld2VpZ2h0X2Vu
-dGl0eSgpIGJ1dCB0aGlzIGlzIG9ubHkNCj4gY2FsbGVkIGZvciAnIWVudGl0eV9pc190YXNrKHNl
-KScuDQo+IA0KPiBTZWUNCj4gDQo+IDMyOTAgICAgICAgICBpZiAoIWdjZnNfcnEpDQo+IDMyOTEg
-ICAgICAgICAgICAgICAgIHJldHVybjsNCj4gDQo+IGluIHVwZGF0ZV9jZnNfZ3JvdXAoKS4NClll
-cywgSXQgaXMuDQpCdXQgKm5yX3J1bm5pbmctLS9ucl9ydW5uaW5nKysqIHdvcmtzIGFyZSBzdGls
-bCByZWR1bmRhbnQgZm9yDQrigJghZW50aXR5X2lzX3Rhc2soc2UpJyBob3QgcGF0aC4gOikNCkJl
-c2lkZXMsIEkgZ3Vlc3Mgd2UgY291bGQgc2ltcGxpZnkgdGhlIGxvZ2ljIGFuZCBtYWtlIGl0IGNs
-ZWFuZXIgYW5kDQptb3JlIHJlYWRhYmxlIHdpdGggdGhpcyBwYXRjaC4NCklmIGl0IGNvdWxkIG1h
-a2Ugc2Vuc2UgdG8geW91LCB3b3VsZCB5b3UgbWluZCBpZiBJIHJlc2VuZCB0aGUgcGF0Y2gNCndp
-dGggdGhlIGNvbW1pdCBsb2cgYW1lbmRlZD8NCg0KPiANCj4gVGhlICdlbnRpdHlfaXNfdGFzayhz
-ZSknIGNhc2UgaXMNCj4gDQo+IHNldF9sb2FkX3dlaWdodChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnAs
-IC4uLikgLT4gcmV3ZWlnaHRfdGFzayhwLCAuLi4pIC0+DQo+IHJld2VpZ2h0X2VudGl0eSguLi4s
-ICZwLT5zZSwgLi4uKQ0KPiANCj4gYnV0IGhlcmUgIXNlLT5vbl9ycS4NClllcywgaW5kZWVkLg0K
-DQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMuDQpSZWdhcmRzLA0KSmlhbmcNCg0KPiAN
-Cj4+IFNpZ25lZC1vZmYtYnk6IEppYW5nIEJpYW8gPGJlbmJqaWFuZ0B0ZW5jZW50LmNvbT4NCj4+
-IC0tLQ0KPj4ga2VybmVsL3NjaGVkL2ZhaXIuYyB8IDQgKystLQ0KPj4gMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2tl
-cm5lbC9zY2hlZC9mYWlyLmMgYi9rZXJuZWwvc2NoZWQvZmFpci5jDQo+PiBpbmRleCAwNGZhOGRi
-Y2ZhNGQuLjE4YThmYzdiZDBkZSAxMDA2NDQNCj4+IC0tLSBhL2tlcm5lbC9zY2hlZC9mYWlyLmMN
-Cj4+ICsrKyBiL2tlcm5lbC9zY2hlZC9mYWlyLmMNCj4+IEBAIC0zMDg2LDcgKzMwODYsNyBAQCBz
-dGF0aWMgdm9pZCByZXdlaWdodF9lbnRpdHkoc3RydWN0IGNmc19ycSAqY2ZzX3JxLCBzdHJ1Y3Qg
-c2NoZWRfZW50aXR5ICpzZSwNCj4+IAkJLyogY29tbWl0IG91dHN0YW5kaW5nIGV4ZWN1dGlvbiB0
-aW1lICovDQo+PiAJCWlmIChjZnNfcnEtPmN1cnIgPT0gc2UpDQo+PiAJCQl1cGRhdGVfY3Vycihj
-ZnNfcnEpOw0KPj4gLQkJYWNjb3VudF9lbnRpdHlfZGVxdWV1ZShjZnNfcnEsIHNlKTsNCj4+ICsJ
-CXVwZGF0ZV9sb2FkX3N1YigmY2ZzX3JxLT5sb2FkLCBzZS0+bG9hZC53ZWlnaHQpOw0KPj4gCX0N
-Cj4+IAlkZXF1ZXVlX2xvYWRfYXZnKGNmc19ycSwgc2UpOw0KPj4gDQo+PiBAQCAtMzEwMiw3ICsz
-MTAyLDcgQEAgc3RhdGljIHZvaWQgcmV3ZWlnaHRfZW50aXR5KHN0cnVjdCBjZnNfcnEgKmNmc19y
-cSwgc3RydWN0IHNjaGVkX2VudGl0eSAqc2UsDQo+PiANCj4+IAllbnF1ZXVlX2xvYWRfYXZnKGNm
-c19ycSwgc2UpOw0KPj4gCWlmIChzZS0+b25fcnEpDQo+PiAtCQlhY2NvdW50X2VudGl0eV9lbnF1
-ZXVlKGNmc19ycSwgc2UpOw0KPj4gKwkJdXBkYXRlX2xvYWRfYWRkKCZjZnNfcnEtPmxvYWQsIHNl
-LT5sb2FkLndlaWdodCk7DQo+PiANCj4+IH0NCj4gDQoNCg==
+On Wed, Aug 05, 2020 at 08:15:27PM +0800, Wu, Hao wrote:
+> > Subject: [PATCH v3 2/4] fpga: dfl: map feature mmio resources in their own
+> > feature drivers
+> >
+> > +static int dfl_binfo_prepare(struct build_feature_devs_info *binfo,
+> > +     resource_size_t start, resource_size_t len)
+> > +{
+> > +struct device *dev = binfo->dev;
+> > +void __iomem *ioaddr;
+> > +
+> > +if (!devm_request_mem_region(dev, start, len, dev_name(dev))) {
+> > +dev_err(dev, "request region fail, start:%pa, len:%pa\n",
+> > +&start, &len);
+> > +return -EBUSY;
+> > +}
+> > +
+> > +ioaddr = devm_ioremap(dev, start, len);
+> > +if (!ioaddr) {
+> > +dev_err(dev, "ioremap region fail, start:%pa, len:%pa\n",
+> > +&start, &len);
+> > +devm_release_mem_region(dev, start, len);
+> 
+> as it's devm_request_mem_region, do we still need to release it here?
+
+Yes, I could delete it.
+
+> > @@ -869,24 +935,24 @@ static int parse_feature_private(struct
+> > build_feature_devs_info *binfo,
+> >   *
+> >   * @binfo: build feature devices information.
+> >   * @dfl: device feature list to parse
+> 
+> Remove this line.
+
+Yes.
+
+Thanks,
+Yilun.
+
+> 
+> Other place looks good to me.
+> 
+> Thanks
+> Hao 
