@@ -2,139 +2,174 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E0FC4743E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC6DC49EBC
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 908BE22D06
+	by mail.kernel.org (Postfix) with ESMTP id B7EFA22CAE
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgHFIaT (ORCPT
+        id S1728888AbgHFIcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:30:19 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11088 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbgHFIaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:30:15 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BMhWR2RVVz9v0TL;
-        Thu,  6 Aug 2020 10:30:11 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id tFMet-3MCDpc; Thu,  6 Aug 2020 10:30:11 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMhWR1h5Wz9v0TJ;
-        Thu,  6 Aug 2020 10:30:11 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A447B8B7FA;
-        Thu,  6 Aug 2020 10:30:12 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id rPm5gnB6BF8Y; Thu,  6 Aug 2020 10:30:12 +0200 (CEST)
-Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 741AA8B7F9;
-        Thu,  6 Aug 2020 10:30:12 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/uaccess: simplify the get_fs() set_fs() logic
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <dd2876b808ea38eb7b7f760ecd6ce06096c61fb5.1580295551.git.christophe.leroy@c-s.fr>
- <87mu3nyh3w.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <2d0b777d-f1aa-08a1-f287-47ac68efbd99@csgroup.eu>
-Date:   Thu, 6 Aug 2020 10:29:56 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 6 Aug 2020 04:32:23 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:37830 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727768AbgHFIcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 04:32:22 -0400
+Received: from [10.130.0.75] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP9wNwCtfckAFAA--.925S3;
+        Thu, 06 Aug 2020 16:32:15 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Introduce cmdline argument writecombine=
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+References: <1596697741-3561-1-git-send-email-yangtiezhu@loongson.cn>
+ <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <cc0c8b89-748d-0d38-bcc8-1c2dbb0996bf@loongson.cn>
+Date:   Thu, 6 Aug 2020 16:32:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <87mu3nyh3w.fsf@mpe.ellerman.id.au>
+In-Reply-To: <10e04885-b775-e7db-b927-6400382fd32d@flygoat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9DxP9wNwCtfckAFAA--.925S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFyDCrWkZFyrZFWxJrWrZrb_yoWrJrWUpF
+        WDG3ZxGr4fKr1jyF9xArnFqrWYvrn3AF9xAr1UGr1UZas09r1kKFn2qrWagF4kZryxKa40
+        yFW09FyUKw10y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        c2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+        AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280
+        aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
+        ZEXa7IUYbjjPUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 25/07/2020 à 13:22, Michael Ellerman a écrit :
-> Hi Christophe,
-> 
-> Unfortunately this would collide messily with "uaccess: remove
-> segment_eq" in linux-next, so I'll ask you to do a respin based on that,
-> some comments below.
-
-Done, sent as v3, together with the 2 patchs from Linux next to get it 
-build and boot.
-
-> 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> On powerpc, we only have USER_DS and KERNEL_DS
+On 08/06/2020 03:39 PM, Jiaxun Yang wrote:
+>
+>
+> 在 2020/8/6 下午3:09, Tiezhu Yang 写道:
+>> Loongson processors have a writecombine issue that maybe failed to
+>> write back framebuffer used with ATI Radeon or AMD GPU at times,
+>> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+>> mapping for MIPS"), there exists some errors such as blurred screen
+>> and lockup, and so on.
 >>
->> Today, this is managed as an 'unsigned long' data space limit
->> which is used to compare the passed address with, plus a bit
->> in the thread_info flags that is set whenever modifying the limit
->> to enable the verification in addr_limit_user_check()
+>> With this patch, disable writecombine by default for Loongson64 to
+>> work well with ATI Radeon or AMD GPU, and it has no influence on the
+>> other platforms due to writecombine is enabled by default.
 >>
->> The limit is either the last address of user space when USER_DS is
->> set, and the last address of address space when KERNEL_DS is set.
->> In both cases, the limit is a compiletime constant.
+>> Additionally, if it is necessary, writecombine=on can be set manually
+>> in the cmdline to enhance the performance for Loongson LS7A integrated
+>> graphics in the future.
 >>
->> get_fs() returns the limit, which is part of thread_info struct
->> set_fs() updates the limit then set the TI_FSCHECK flag.
->> addr_limit_user_check() check the flag, and if it is set it checks
->> the limit is the user limit, then unsets the TI_FSCHECK flag.
+>> [   60.958721] radeon 0000:03:00.0: ring 0 stalled for more than 
+>> 10079msec
+>> [   60.965315] radeon 0000:03:00.0: GPU lockup (current fence id 
+>> 0x0000000000000112 last fence id 0x000000000000011d on ring 0)
+>> [   60.976525] radeon 0000:03:00.0: ring 3 stalled for more than 
+>> 10086msec
+>> [   60.983156] radeon 0000:03:00.0: GPU lockup (current fence id 
+>> 0x0000000000000374 last fence id 0x00000000000003a8 on ring 3)
+> Hi Tiezhu,
+>
+> Thanks for your patch.
+> Personally I didn't have any issue with writecombine on my test 
+> systems, but there
+> are some complains about unstable graphic card from users. So 
+> generally a cmdline
+> writecombine switch is necessary.
+>
 >>
->> In addition, when the flag is set the syscall exit work is involved.
->> This exit work is heavy compared to normal syscall exit as it goes
->> through normal exception exit instead of the fast syscall exit.
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   arch/mips/include/asm/pgtable.h |  4 ++++
+>>   arch/mips/kernel/cpu-probe.c    | 19 +++++++++++++++++++
+>>   2 files changed, 23 insertions(+)
 >>
->> Rename this TI_FSCHECK flag to TIF_KERNEL_DS flag which tells whether
->> KERNEL_DS or USER_DS is set. Get mm_segment_t be redifined as a bool
->> struct that is either false (for USER_DS) or true (for KERNEL_DS).
->> When TIF_KERNEL_DS is set, the limit is ~0UL. Otherwise it is
->> TASK_SIZE_USER (resp TASK_SIZE_USER64 on PPC64). When KERNEL_DS is
->> set, there is no range to check. Define TI_FSCHECK as an alias to
->> TIF_KERNEL_DS.
-> 
-> I'd rather avoid the "DS" name any more than we have to. Maybe it means
-> "data space" but that's not a very common term.
+>> diff --git a/arch/mips/include/asm/pgtable.h 
+>> b/arch/mips/include/asm/pgtable.h
+>> index dd7a0f5..34869f7 100644
+>> --- a/arch/mips/include/asm/pgtable.h
+>> +++ b/arch/mips/include/asm/pgtable.h
+>> @@ -473,6 +473,10 @@ static inline pgprot_t pgprot_noncached(pgprot_t 
+>> _prot)
+>>   static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+>>   {
+>>       unsigned long prot = pgprot_val(_prot);
+>> +    extern bool mips_writecombine;
+>> +
+>> +    if (!mips_writecombine)
+>> +        return pgprot_noncached(_prot);
+>
+> You can simply override c->writecombine to _CACHE_UNCACHED in 
+> cpu-probe.c with
+> out this kind of hijack.
+>
+>>         /* cpu_data[0].writecombine is already shifted by 
+>> _CACHE_SHIFT */
+>>       prot = (prot & ~_CACHE_MASK) | cpu_data[0].writecombine;
+>> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+>> index e2955f1..98777ca 100644
+>> --- a/arch/mips/kernel/cpu-probe.c
+>> +++ b/arch/mips/kernel/cpu-probe.c
+>> @@ -459,6 +459,25 @@ static int __init ftlb_disable(char *s)
+>>     __setup("noftlb", ftlb_disable);
+>>   +#ifdef CONFIG_MACH_LOONGSON64
+>> +bool mips_writecombine; /* initialise to false by default */
+>> +#else
+>> +bool mips_writecombine = true;
+>> +#endif
+>> +EXPORT_SYMBOL(mips_writecombine);
+> There is no need to export this symbol, see comment before.
+>> +
+>> +static int __init writecombine_setup(char *str)
+>> +{
+>> +    if (strcmp(str, "on") == 0)
+>> +        mips_writecombine = true;
+>> +    else if (strcmp(str, "off") == 0)
+>> +        mips_writecombine = false;
+>> +
+>> +    return 1;
+>> +}
+>> +
+>> +__setup("writecombine=", writecombine_setup);
+>
+> Use early_param here seems more reasonable, it will be probed earlier.
 
-I thought it was a reference to the ds/fs/gs ... segment registers in 
-the 8086 ?
+Hi Jiaxun,
 
-> 
-> The generic helper these days is called uaccess_kernel(), which returns
-> true when uaccess routines are allowed to access the kernel.
-> 
-> So calling it TIF_UACCESS_KERNEL would work I think?
+Thanks for your suggestion, it looks better.
 
-ok
+I will modify and test it, then I will send v2 with another
+document patch to explain this cmdline argument.
 
-> 
-> The bool could be called uaccess_kernel.
-> And END_OF_USER_DS could be USER_ADDR_MAX.
+Thanks,
+Tiezhu
 
-ok
+>
+>> +
+>>   /*
+>>    * Check if the CPU has per tc perf counters
+>>    */
+> Thanks
+>
+> - Jiaxun
 
-> 
->> On exit, involve exit work when the bit is set, i.e. when KERNEL_DS
->> is set. addr_limit_user_check() will clear the bit and kill the
->> user process.
-> 
-> I guess this is safe. The check was added to make sure we never return
-> to userspace with KERNEL_DS set, but using the actual TIF flag to
-> determine the address limit should be equally safe, and avoid the
-> overhead of the check in the good case.
-
-That's the purpose indeed, yes.
-
-
-christophe
