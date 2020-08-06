@@ -2,133 +2,178 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6250FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B79C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60837221E5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FbxkZDKr"
+	by mail.kernel.org (Postfix) with ESMTP id 4E174221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596754530;
+	bh=/VESiY4Js1fvb74yAYdJ93LE7nAEj6Wi/7SluXHk63A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=licaUnicMx09M2bT8/F1IDVbjl3Zdgt7VnpwL6S+8Gk8oAXoRCUaH1Ruc1lfW4vLC
+	 JWynbtKzb3KdYRtewvHtwsJf6jKPYPuX6SRHF1sNdoPOlPz33SVvqhrbvCnQ36SST2
+	 gkLA1HsJblOULgv5nKLZDZKSCfEmm9Mh8FnCP4sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgHFWnX (ORCPT
+        id S1726201AbgHFWz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgHFWnV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:43:21 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95354C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 15:43:21 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id p25so116576qkp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 15:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b+1ry44sHxvv4KXqzeNT9YyGHdp3tNCfWY1mccMksCA=;
-        b=FbxkZDKr5sG/xvWst2LK41bbtukdW5ZZMFu+oYE1TGshv/unqZZOIpzT6poyKLm4Gm
-         iDGHP8Od63rRrq817YwjMdp4BUZOP9sFdATNUdKS3TfkFKpRdsB8ePQ7jGaCcxYwp3kC
-         G+gRcgd59VoXXkQP+piBtfQA2jBEo/sUNr/9m/DUt0ynekmQH6HWNGUW90udBb3SLi/X
-         Z779D1hEL3w22PUzyxb0hEQKTB7iSCa8I5ookM0VXqWbxfIuBGHfjBdU/6Q4mZcs25n8
-         0wgVj6SiuEUS8gsPrtL4ei4b6DYTv/EkJtYZZN9uS3FmAI6qxnou5vxxayCvhzbFKhPz
-         Uz4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b+1ry44sHxvv4KXqzeNT9YyGHdp3tNCfWY1mccMksCA=;
-        b=F3AaAxwUHl+hWQy01B13uCTPCagPS/8HmCJ54cXRzIz1oyCSjkfpAu/MFtaYr4zaIZ
-         DmbiAoOcKAifaCQb9Ww3MmzGmVSleuymkQkFy/zIEFAdusP2ee8xqrLDipq8nvKVfUuC
-         sdt1lmj7oTTbVkufZg39icH2VjqrMhc/+wi5sgmawwzrn9Q88Ocp698ZSWbgLkyZokI1
-         5XR5OlAh9cB2AhQspn/JZ0Xw+bQrHF+4a+w7s0haGIXPfQiAVkBYyUQnQElVk9LIuQWg
-         u9Rdt1sNreuJJJ2ItoOofIlp6Ay8jjl/ZyeS/JMELe6JqfDLukKq/Kvs9OckRDnLhNlX
-         Subw==
-X-Gm-Message-State: AOAM533jnG+qbnHfeJK74pi8gHFvIMlZKcSaoHXY9BdQLzcDMqbrDp6P
-        qKJ94z9CR/gNbAMC3UowCMu5Qw==
-X-Google-Smtp-Source: ABdhPJyk2tlCoRxKg3WlLar97JCSwlt2F3Eo4+MM3g3LceM2ipQAWCTJw4bWRRyK5I7MIlPEyBdfSA==
-X-Received: by 2002:a37:d97:: with SMTP id 145mr10653488qkn.218.1596753800801;
-        Thu, 06 Aug 2020 15:43:20 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i20sm5042334qka.17.2020.08.06.15.43.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 15:43:20 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 18:43:14 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     torvalds@linux-foundation.org, daniel.diaz@linaro.org,
-        tytso@mit.edu, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org
-Subject: Re: [PATCH] random: fix a compilation error on arm64
-Message-ID: <20200806224313.GA36490@lca.pw>
-References: <20200806135836.31736-1-cai@lca.pw>
- <4edcf552-ef82-cdd2-3fda-38d42ebfecc7@roeck-us.net>
+        Thu, 6 Aug 2020 18:55:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgHFWz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:55:27 -0400
+Received: from localhost (130.sub-72-107-113.myvzw.com [72.107.113.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6837A20748;
+        Thu,  6 Aug 2020 22:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596754526;
+        bh=/VESiY4Js1fvb74yAYdJ93LE7nAEj6Wi/7SluXHk63A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lCJJkuGRpcJx1pxHEywPN+rD8n9Sy310mqPNIytSzSIBBciBOHBITaFNkYzihMKug
+         YmJP7gKfZAqa1351peWLwFqUpz47Fw9Cd7pbYZLPFs4OuU70k2X2sqjDsP41+SHDPW
+         9IP9/4vXLefHtNu5pVVJbAJX8ULjaop8TORWV7GA=
+Date:   Thu, 6 Aug 2020 17:55:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        patches@amperecomputing.com, Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
+Message-ID: <20200806225525.GA706347@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4edcf552-ef82-cdd2-3fda-38d42ebfecc7@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0A228AB4-25C4-40D8-ABA1-CB9C774825B5@amperemail.onmicrosoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 07:50:23AM -0700, Guenter Roeck wrote:
-> On 8/6/20 6:58 AM, Qian Cai wrote:
-> > linux-next failed to compile using this .config,
-> > https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
-> > 
-> > arch/arm64/kernel/kaslr.c: In function 'kaslr_early_init':
-> > arch/arm64/kernel/kaslr.c:128:6: error: implicit declaration of function
-> > '__early_cpu_has_rndr'; did you mean '__early_pfn_to_nid'?
-> > [-Werror=implicit-function-declaration]
-> >   if (__early_cpu_has_rndr()) {
-> >       ^~~~~~~~~~~~~~~~~~~~
-> >       __early_pfn_to_nid
-> > arch/arm64/kernel/kaslr.c:131:7: error: implicit declaration of function
-> > '__arm64_rndr' [-Werror=implicit-function-declaration]
-> >    if (__arm64_rndr(&raw))
-> >        ^~~~~~~~~~~~
-> > cc1: some warnings being treated as errors
-> > 
+On Thu, Aug 06, 2020 at 03:40:41PM -0700, Tuan Phan wrote:
 > 
-> This happens because ARCH_RANDOM is disabled. May be I am wrong, but I
-> would argue that __arm64_rndr() should not be called directly in the
-> first place. arch_get_random_seed_long_early() should be called instead.
+> > On Aug 6, 2020, at 3:27 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > On Thu, Aug 06, 2020 at 02:57:34PM -0700, Tuan Phan wrote:
+> >> Ampere Altra SOC supports only 32-bit ECAM reading. Therefore,
+> >> add an MCFG quirk for the platform.
+> > 
+> > This is interesting.  So this host bridge supports sub 32-bit config
+> > *writes*, but not reads?
+> > 
+> > I actually don't know whether that complies with the spec or not.  If
+> > config registers are not allowed to have side effects on read, this
+> > *would* be compliant.
+> > 
+> > PCIe r5.0, sec 7.4, doesn't list any register types with read side
+> > effects, so there shouldn't be any in the registers defined by the
+> > spec.  But I would think device-specific registers could do whatever
+> > they wanted, e.g., reading an interrupt status register or something
+> > could clear it.
+> > 
+> > And I think sec 7.2.2 about ECAM implicitly requires sub 32-bit
+> > accesses because it mentions the access size and byte enables.
+> > 
+> > Is this a one-off situation where future hardware will allow sub
+> > 32-bit reads and writes?  We don't want a stream of quirks for future
+> > devices.
+> 
+> Actually, this is a silicon bug inside current Altra Soc. Our SOC
+> supports sub 32-bit reads and writes. But using byte read for some
+> devices like AMD graphic card causing corrupted data due to host
+> controller HW errata.
+> 
+> Future devices will have this issue fixed so this quirk applies only
+> for current Altra Soc.
+> 
+> So you think I can drop the “non-compliant” as there are no read
+> side effects for all registers?
 
-I am not sure about if that would cure possible ARCH_RANDOM=n compiling
-failures on all arches. Since my patch would not compile on mips etc, an
-alternative is to revert the buggy commit 585524081ecd for now. Any thought?
+No, I actually said that I don't think any *architected* config
+registers have read side effects, but I think it *is* allowed for
+device-specific registers to have read side effects.
 
-> 
-> Thanks,
-> Guenter
-> 
-> > Fixes: 585524081ecd ("random: random.h should include archrandom.h, not the other way around")
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> >  include/linux/random.h | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/include/linux/random.h b/include/linux/random.h
-> > index f45b8be3e3c4..da782c16c20c 100644
-> > --- a/include/linux/random.h
-> > +++ b/include/linux/random.h
-> > @@ -12,6 +12,8 @@
-> >  #include <linux/list.h>
-> >  #include <linux/once.h>
-> >  
-> > +#include <asm/archrandom.h>
-> > +
-> >  #include <uapi/linux/random.h>
-> >  
-> >  struct random_ready_callback {
-> > 
+Glad this will be fixed in future devices!
+
+> >> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+> >> ---
+> >> drivers/acpi/pci_mcfg.c  | 20 ++++++++++++++++++++
+> >> drivers/pci/ecam.c       | 10 ++++++++++
+> >> include/linux/pci-ecam.h |  1 +
+> >> 3 files changed, 31 insertions(+)
+> >> 
+> >> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> >> index 54b36b7ad47d..e526571e0ebd 100644
+> >> --- a/drivers/acpi/pci_mcfg.c
+> >> +++ b/drivers/acpi/pci_mcfg.c
+> >> @@ -142,6 +142,26 @@ static struct mcfg_fixup mcfg_quirks[] = {
+> >> 	XGENE_V2_ECAM_MCFG(4, 0),
+> >> 	XGENE_V2_ECAM_MCFG(4, 1),
+> >> 	XGENE_V2_ECAM_MCFG(4, 2),
+> >> +
+> >> +#define ALTRA_ECAM_QUIRK(rev, seg) \
+> >> +	{ "Ampere", "Altra   ", rev, seg, MCFG_BUS_ANY, &pci_32b_read_ops }
+> >> +
+> >> +	ALTRA_ECAM_QUIRK(1, 0),
+> >> +	ALTRA_ECAM_QUIRK(1, 1),
+> >> +	ALTRA_ECAM_QUIRK(1, 2),
+> >> +	ALTRA_ECAM_QUIRK(1, 3),
+> >> +	ALTRA_ECAM_QUIRK(1, 4),
+> >> +	ALTRA_ECAM_QUIRK(1, 5),
+> >> +	ALTRA_ECAM_QUIRK(1, 6),
+> >> +	ALTRA_ECAM_QUIRK(1, 7),
+> >> +	ALTRA_ECAM_QUIRK(1, 8),
+> >> +	ALTRA_ECAM_QUIRK(1, 9),
+> >> +	ALTRA_ECAM_QUIRK(1, 10),
+> >> +	ALTRA_ECAM_QUIRK(1, 11),
+> >> +	ALTRA_ECAM_QUIRK(1, 12),
+> >> +	ALTRA_ECAM_QUIRK(1, 13),
+> >> +	ALTRA_ECAM_QUIRK(1, 14),
+> >> +	ALTRA_ECAM_QUIRK(1, 15),
+> >> };
+> >> 
+> >> static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+> >> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
+> >> index 8f065a42fc1a..b54d32a31669 100644
+> >> --- a/drivers/pci/ecam.c
+> >> +++ b/drivers/pci/ecam.c
+> >> @@ -168,4 +168,14 @@ const struct pci_ecam_ops pci_32b_ops = {
+> >> 		.write		= pci_generic_config_write32,
+> >> 	}
+> >> };
+> >> +
+> >> +/* ECAM ops for 32-bit read only (non-compliant) */
+> >> +const struct pci_ecam_ops pci_32b_read_ops = {
+> >> +	.bus_shift	= 20,
+> >> +	.pci_ops	= {
+> >> +		.map_bus	= pci_ecam_map_bus,
+> >> +		.read		= pci_generic_config_read32,
+> >> +		.write		= pci_generic_config_write,
+> >> +	}
+> >> +};
+> >> #endif
+> >> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> >> index 1af5cb02ef7f..033ce74f02e8 100644
+> >> --- a/include/linux/pci-ecam.h
+> >> +++ b/include/linux/pci-ecam.h
+> >> @@ -51,6 +51,7 @@ extern const struct pci_ecam_ops pci_generic_ecam_ops;
+> >> 
+> >> #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+> >> extern const struct pci_ecam_ops pci_32b_ops;	/* 32-bit accesses only */
+> >> +extern const struct pci_ecam_ops pci_32b_read_ops; /* 32-bit read only */
+> >> extern const struct pci_ecam_ops hisi_pcie_ops;	/* HiSilicon */
+> >> extern const struct pci_ecam_ops thunder_pem_ecam_ops; /* Cavium ThunderX 1.x & 2.x */
+> >> extern const struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+> >> -- 
+> >> 2.18.4
+> >> 
 > 
