@@ -2,169 +2,179 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9633BC43458
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEACC433FC
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B9B22D04
+	by mail.kernel.org (Postfix) with ESMTP id 3ED1122D05
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JKMC/oac"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDn2Fk6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgHFI6F (ORCPT
+        id S1728935AbgHFIwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:58:05 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:52404 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgHFI6E (ORCPT
+        Thu, 6 Aug 2020 04:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgHFIwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:58:04 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200806085802epoutp012487025b4012079b171d0e43f873f422~oohW_fMWV1316913169epoutp017
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:58:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200806085802epoutp012487025b4012079b171d0e43f873f422~oohW_fMWV1316913169epoutp017
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596704282;
-        bh=xzBtohQMolPYLu+HF6qIVaI9vjI8Vh5DyEiki5Cz6gk=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=JKMC/oacLjCArCL2K6l+rKcgQjI8oyoqBMhLtqntrvkEQM7+MGwrhhNKBj4G4Awzg
-         eF40AduBDvtC/zZQlH/RGwWE/qZBBQrgW+NTcOzA0bEBRP61gifdu46F1r4YZpzL4i
-         c5TA5sy+33Gu8ROq695/NM2qQVIKLUYt3k/G8ZCU=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200806085801epcas1p2e0877043b40df7bb3c8e683cc07f4c5c~oohWluq2N2479624796epcas1p2L;
-        Thu,  6 Aug 2020 08:58:01 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        Daejun Park <daejun7.park@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
-Date:   Thu, 06 Aug 2020 16:32:57 +0900
-X-CMS-MailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
-References: <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
+        Thu, 6 Aug 2020 04:52:01 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3D0C061575
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 01:52:00 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p16so29004425ile.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 01:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VaSV/iOvU4KTpuYFNqKMq1HFqHP5k5kT1iej1ya7KdQ=;
+        b=tDn2Fk6RhwRhI/ZdCNLFMXX8oTnr1BGydvcryTFZLifDcdTJ33JCpN+J6BYeM6k9KO
+         KFJHdLqpNuisjDFG3rCZd2ReM2Ho8wGVuZXeISHpl56E18GE/M3qz7Oz3a3MBkfRcN62
+         p1kdotbeYQCoOX9pepWkSv0jP8T/nqmFBaUUQ++cxyOUgmyFmA5kraGMewqOKpjAXw0o
+         /x3EwYzg+AC3ywQdAUCNWUnilEdTNQDJktiVhls1MdZ02dqfXUmWuylPb8YbjX0PqKrH
+         yLU8Hm1PU0lxGm17SbjBihDIV/NWX4X/tTj8lxQfcrxLiNnBtz61+WBs5rkAoZqOaChG
+         +eFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VaSV/iOvU4KTpuYFNqKMq1HFqHP5k5kT1iej1ya7KdQ=;
+        b=EG//mfmG4GSjdCxWFdCnRF83yAMA8SogndbWa9moMMay1gqbyt8dTmulPEnDYfmWxB
+         R69fxVa4u6v+GWuexDfaRdknA0PWYwfS/SfBMkuNdHmy3sxmUJShS0GYtib4UGYZZp0l
+         9JZr4S9VUDVGx62pRdUZHGseZtwt7erL2r4bpCOGiPtsG4L/YxUGevePfi2ypM/0VTY8
+         99eakmBwvHEvuHGmimFTG467OzI+/HPZ+emzKpsisYBPkVOtVr+rIVdnRyfzRqq7UB8u
+         vp7Pwahyjc1cPOLwMyj8NbrPbIMVHMsQs/tSCc7oqqqVGq34/dyrhrZEIVER1w3GV+7X
+         yHBg==
+X-Gm-Message-State: AOAM5321jJ0KedBkeaG4X8A/l/NOsK+mnDwt4r5TKR+r6mlRgpWUvkJi
+        o9ctdMhQ5w4Es8RNnIW6l6bnjQUqf2ykX1O/+/3H95wicR3J/A==
+X-Google-Smtp-Source: ABdhPJzGpNbmtnmC6ma4yk3rvNm7OdHnI1PDjmt9Qpv76QdRLXqmmEKMgXT9m4eEF1glYKlS2oM8/jelYTGC7QG/uZQ=
+X-Received: by 2002:a92:1d1:: with SMTP id 200mr9616426ilb.71.1596703919933;
+ Thu, 06 Aug 2020 01:51:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200805153507.053638231@linuxfoundation.org>
+In-Reply-To: <20200805153507.053638231@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 6 Aug 2020 14:21:48 +0530
+Message-ID: <CA+G9fYujKYgN1r168ot8Kvx2SNtYOgAj8gBCYxQ6ek9mUzndrg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 0/9] 5.4.57-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changelog:
+On Wed, 5 Aug 2020 at 21:23, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.57 release.
+> There are 9 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 07 Aug 2020 15:34:53 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.57-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-v7 -> v8
-Remove wrongly added tags.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-v6 -> v7
-1. Remove UFS feature layer.
-2. Cleanup for sparse error.
+Summary
+------------------------------------------------------------------------
 
-v5 -> v6
-Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
+kernel: 5.4.57-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 1c4819817cd892724f91e5d253eec5f746243602
+git describe: v5.4.56-10-g1c4819817cd8
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.56-10-g1c4819817cd8
 
-v4 -> v5
-Delete unused macro define.
 
-v3 -> v4
-1. Cleanup.
+No regressions (compared to build v5.4.55-87-g47b594b8993f)
 
-v2 -> v3
-1. Add checking input module parameter value.
-2. Change base commit from 5.8/scsi-queue to 5.9/scsi-queue.
-3. Cleanup for unused variables and label.
+No fixes (compared to build v5.4.55-87-g47b594b8993f)
 
-v1 -> v2
-1. Change the full boilerplate text to SPDX style.
-2. Adopt dynamic allocation for sub-region data structure.
-3. Cleanup.
+Ran 35321 total tests in the following environments and test suites.
 
-NAND flash memory-based storage devices use Flash Translation Layer (FTL)
-to translate logical addresses of I/O requests to corresponding flash
-memory addresses. Mobile storage devices typically have RAM with
-constrained size, thus lack in memory to keep the whole mapping table.
-Therefore, mapping tables are partially retrieved from NAND flash on
-demand, causing random-read performance degradation.
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
-To improve random read performance, JESD220-3 (HPB v1.0) proposes HPB
-(Host Performance Booster) which uses host system memory as a cache for the
-FTL mapping table. By using HPB, FTL data can be read from host memory
-faster than from NAND flash memory. 
+Test Suites
+-----------
+* install-android-platform-tools-r2800
+* kvm-unit-tests
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* v4l2-compliance
+* ltp-dio-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-math-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* igt-gpu-tools
 
-The current version only supports the DCM (device control mode).
-This patch consists of 3 parts to support HPB feature.
-
-1) HPB probe and initialization process
-2) READ -> HPB READ using cached map information
-3) L2P (logical to physical) map management
-
-In the HPB probe and init process, the device information of the UFS is
-queried. After checking supported features, the data structure for the HPB
-is initialized according to the device information.
-
-A read I/O in the active sub-region where the map is cached is changed to
-HPB READ by the HPB.
-
-The HPB manages the L2P map using information received from the
-device. For active sub-region, the HPB caches through ufshpb_map
-request. For the in-active region, the HPB discards the L2P map.
-When a write I/O occurs in an active sub-region area, associated dirty
-bitmap checked as dirty for preventing stale read.
-
-HPB is shown to have a performance improvement of 58 - 67% for random read
-workload. [1]
-
-This series patches are based on the 5.9/scsi-queue branch.
-
-[1]:
-https://www.usenix.org/conference/hotstorage17/program/presentation/jeong
-
-Daejun park (4):
- scsi: ufs: Add UFS feature related parameter
- scsi: ufs: Introduce HPB feature
- scsi: ufs: L2P map management for HPB read
- scsi: ufs: Prepare HPB read for cached sub-region
- 
- drivers/scsi/ufs/Kconfig  |   18 +
- drivers/scsi/ufs/Makefile |    1 +
- drivers/scsi/ufs/ufs.h    |   12 +
- drivers/scsi/ufs/ufshcd.c |   42 +
- drivers/scsi/ufs/ufshcd.h |    9 +
- drivers/scsi/ufs/ufshpb.c | 1926 ++++++++++++++++++++++++++++++++++++++++
- drivers/scsi/ufs/ufshpb.h |  241 +++++
- 7 files changed, 2249 insertions(+)
- created mode 100644 drivers/scsi/ufs/ufshpb.c
- created mode 100644 drivers/scsi/ufs/ufshpb.h
+--=20
+Linaro LKFT
+https://lkft.linaro.org
