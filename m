@@ -2,104 +2,60 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88570C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C48C38154
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4435206B5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vetr8OK9"
+	by mail.kernel.org (Postfix) with ESMTP id 5D57723125
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgHFKJu (ORCPT
+        id S1729229AbgHFJkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 06:09:50 -0400
-Received: from mail-eopbgr20045.outbound.protection.outlook.com ([40.107.2.45]:55175
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729120AbgHFKJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 06:09:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BLWYDMiqTiD8QdJJ8rsHR7e7yPsyymdNFDVsPWbIcTJQxuwB+mc64j1bfqdcRIVHzYJSxzd+I4nRQfrqDY79Sv/J+4bNt4wu7LhR6eN7LCKiOIqIkio55BddfjtxJy8jUQJZg67sploYiAG7sbha2nP+R2ocIMSTL9N4dcCj1jj6Ht2JcTySv4MePmruDzLfPtfl4plp9WTKeC/goOVmwDLqmUSpjwO29BYY+pSSUc1nkr7c3RzKE2dD8senaJ1UQ56CWvB+EK+jeCeC0IDakKfD3MQwsQPHDTm3iKI7yLEnw26QN8waaKBfdtCLTvYEgzMP1dz8EuzXFjn7EnEwUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A40D78dl5W0DQmLSEXDvpeLJhkMUoqqrwkFnVtJWXok=;
- b=UTcob4/0sSWDjBQOV9eDewAVARqSGharqIYPkbJuvOeV0u5z7Id1XfahfCrfY15wP5oL5Xp/8EdVv/hNOHXBMEpl0vr4bmurTu72tWUhLBUgBVf7sXIXOHyzIY9rCUNmN6z4DrXXHA9xIRm56FKvPzC9lManEWYLG5/dHIxs5vyLkiA2wWiSkRfQWMARCUJ9XYdVWVLjyfXwcqxZsxh3FmCaEB6JMFas/nWn2OpHd1zAzM3dbLBc9Tysfn95r+oWCl8VnBE4lyOIJ6gnftzoCew3h2zxY4aj3Jol/qNvL0T+EkClp9Q+VPzULU3Q2NtIiUOIeGIyK+VnRkz0Dc9oJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A40D78dl5W0DQmLSEXDvpeLJhkMUoqqrwkFnVtJWXok=;
- b=Vetr8OK9Uz4dc25udX5TpLbOs0c6vkSybqH8Hpn4mfAGT6g4+9catRz0uZY4yKZYFmVv6eAPqcDyGf/9t2Jpd4sovxKkfn0dStViKEH1URafKfmVQMSsnKcf2T3ecO7BUi+FYm+FnCBv/ceZVnGaHDZ0a17SwC3LQqLQegMP0FU=
-Received: from VI1PR0402MB3824.eurprd04.prod.outlook.com
- (2603:10a6:803:22::18) by VI1PR04MB7167.eurprd04.prod.outlook.com
- (2603:10a6:800:12a::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 6 Aug
- 2020 10:09:36 +0000
-Received: from VI1PR0402MB3824.eurprd04.prod.outlook.com
- ([fe80::167:b586:586e:e024]) by VI1PR0402MB3824.eurprd04.prod.outlook.com
- ([fe80::167:b586:586e:e024%5]) with mapi id 15.20.3261.018; Thu, 6 Aug 2020
- 10:09:36 +0000
-From:   Jason Liu <jason.hui.liu@nxp.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask if it
- already masked
-Thread-Topic: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask if it
- already masked
-Thread-Index: AQHWaj3ZMAA/XWH8SkmG3qCWNnZEoaknx/iAgAALMQCAAQxYoIAAVj6AgAGoCSA=
-Date:   Thu, 6 Aug 2020 10:09:36 +0000
-Message-ID: <VI1PR0402MB38245CE471A2BB33CE27C33FAE480@VI1PR0402MB3824.eurprd04.prod.outlook.com>
-References: <20200804085657.10776-1-jason.hui.liu@nxp.com>
- <b4444c737f9d6fd8fd99dbb809d35a0f@kernel.org> <20200804113850.GB15199@bogus>
- <VI1PR0402MB38243230C51FDB1C3F490853AE4B0@VI1PR0402MB3824.eurprd04.prod.outlook.com>
- <20200805084748.GA4818@bogus>
-In-Reply-To: <20200805084748.GA4818@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5143661b-12b7-4fd3-facf-08d839f0d31e
-x-ms-traffictypediagnostic: VI1PR04MB7167:
-x-microsoft-antispam-prvs: <VI1PR04MB7167F8DFE7602B4EE122E836AE480@VI1PR04MB7167.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xqET+pK/xbF7g4Klvj24VZ2RU67ADtPZOZxyAztxSXRR47/JiD9D02i0oYOvOSywosb7v9CSL9zjEtC+19AOHOpw8VRqdPzFp9cmF1qA2T4tMa3sX9Zht6xrzkkYMNPQmmhgeEXd+vprz8TpY3OrcMV6pkN5KP2DE5KQO94lqdwxiWi/PQquU132SfcN6ZNxx6oJgGkPvJtuD+MPefUVW5hteeiznLYoDdJB7g2FnEOTkr7qRsEY01tru1nR1TtaJcVIUiDPHWY6x4yyvPVEezy8WdMh0iJfwYkXFMTxPnTvgi5gYqLFMSnO9vW7PvpCf6tFtWeVBWpUUIXiGBtC9g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3824.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(66476007)(316002)(54906003)(6506007)(8676002)(76116006)(8936002)(7696005)(66946007)(53546011)(55016002)(9686003)(5660300002)(83380400001)(33656002)(66556008)(2906002)(52536014)(4326008)(6916009)(64756008)(71200400001)(26005)(66446008)(186003)(86362001)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2NER6oGy4jrk0JJ1t4NUN4IshvXeiQc2WmI9ZLvvnwtZoxgliSp9Naq24i6HpdPYuPBY7L9d1Nfyv/nTZDAN37oClygSpHf6+TNSVir6iAmQNwGdOApfxhwIe3UyeebA95kVGR6pVTdquu4jXrY3qsr+ZRAPoe5VDQvMxcIAV3ZNMaZwgIZqBHQgaJGmC7g2Vo3XIziIZgaQWfHQtuv55x4cSNHQGwHntPjXiUfJpXf6W9cTN5PVnxWy9tok/X2p3ya8yzddzmUSKy5Uedyb5P/wznrgp/f3uXDLE41osZ+KvviSrTnqfHzC4N3fezrK8zJGpfX2PsC2CmM4ZmKzlOFpFEa3457fJ1kiu7VxX5PKdUs0Cdx4NXsIQLFkJU1nW6coJq2TvhkdvdNDJOkIraApkhRyuDK47lOMM5BpLo7s0pLDVB5x6BkNZq4TlwntciYl3Zuji8LpWHEyCfBRPF4CpoSCqK5yzwH4In0lb6hhZ6i2EVDf7qjZyYOX7m6Cg+bZvy2rsyFPBhf06kDdmCf+TwyVXl+6x9ePLJdNLoz2f/2hrxodeUOt8M9U29qthTAV9b44Nvor9x6hvykfeS5alhwTlr7lCZoiTFUqCIv56ox4iQhRFeKc1ZvsIt4RdB6H5L2Lsc3jKLesKOVO1g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Aug 2020 05:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgHFJWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:22:45 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9CB3C061574;
+        Thu,  6 Aug 2020 02:21:59 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 86484296DAB
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        hans.verkuil@cisco.com, sakari.ailus@linux.intel.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        zhengsq@rock-chips.com, Jacob Chen <cc@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com>
+ <20190816001323.GF5011@pendragon.ideasonboard.com>
+ <30b6367d-9088-d755-d041-904ff2a48130@collabora.com>
+ <20200722152459.GC1828171@chromium.org>
+ <32a95f66-0328-dfe7-c05c-657aba0d1b25@collabora.com>
+Message-ID: <05fb7b03-22b5-c981-2602-bbe877943d58@collabora.com>
+Date:   Thu, 6 Aug 2020 11:21:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3824.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5143661b-12b7-4fd3-facf-08d839f0d31e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2020 10:09:36.9642
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ot0a5D7qZpWaif2UptQ1rRN0+KEYkMigH8sSi2HtNRi987tz5ReARgiKnhfZi77aUBV6K7pWh8kd1A8HgDWWLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7167
+In-Reply-To: <32a95f66-0328-dfe7-c05c-657aba0d1b25@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -107,38 +63,301 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> Sent: Wednesday, August 5, 2020 4:48 PM
-> To: Jason Liu <jason.hui.liu@nxp.com>
-> Cc: Marc Zyngier <maz@kernel.org>; catalin.marinas@arm.com;
-> will@kernel.org; sashal@kernel.org; linux-kernel@vger.kernel.org; Sudeep
-> Holla <sudeep.holla@arm.com>; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask i=
-f it
-> already masked
->=20
-> On Wed, Aug 05, 2020 at 06:31:20AM +0000, Jason Liu wrote:
-> > >
-> > > Indeed, the runtime PM ops in that driver looks dodgy. Any calls to
-> > > mask_irq from drivers or anywhere with irqchip suspended with just
-> > > blows up the system.
-> >
-> > If you look at the chip->irq_mask implementation on different
-> > platforms, almost all with directly access the register of the irqchip =
-including
-> irqsteer.
-> > There are fine due to driver will use the common mask_irq API.
-> >
->=20
-> That still doesn't explain how you can prevent system from blowing up if
-> chip->irq_mask gets called with irqchip suspended ?
+Am 05.08.20 um 23:10 schrieb Dafna Hirschfeld:
+> Hi
+> 
+> On 22.07.20 17:24, Tomasz Figa wrote:
+>> Hi Dafna,
+>>
+>> On Sat, Jul 11, 2020 at 01:04:31PM +0200, Dafna Hirschfeld wrote:
+>>> Hi Laurent,
+>>>
+>>> On 16.08.19 02:13, Laurent Pinchart wrote:
+>>>> Hello Helen,
+>>>>
+>>>> Thank you for the patch.
+>>>>
+>>>> On Tue, Jul 30, 2019 at 03:42:47PM -0300, Helen Koike wrote:
+>> [snip]
+>>>>> +static void rkisp1_isp_queue_event_sof(struct rkisp1_isp_subdev *isp)
+>>>>> +{
+>>>>> +    struct v4l2_event event = {
+>>>>> +        .type = V4L2_EVENT_FRAME_SYNC,
+>>>>> +        .u.frame_sync.frame_sequence =
+>>>>> +            atomic_inc_return(&isp->frm_sync_seq) - 1,
+>>>>
+>>>> I would move the increment to the caller, hiding it in this function is
+>>>> error-prone (and if you look at the caller I'm pointing out one possible
+>>>> error :-)).
+>>>>
+>>>> In general usage of frm_sync_seq through the driver seems to be very
+>>>> race-prone. It's read in various IRQ handling functions, all coming from
+>>>> the same IRQ, so that part is fine (and wouldn't require an atomic
+>>>> variable), but when read from the buffer queue handlers I really get a
+>>>> red light flashing in my head. I'll try to investigate more when
+>>>> reviewing the next patches.
+>>>
+>>> I see that the only place were 'frame_sequence' is read outside of the irq
+>>> handlers is in the capture in 'rkisp1_vb2_buf_queue':
+>>>
+>>>     /*
+>>>           * If there's no next buffer assigned, queue this buffer directly
+>>>           * as the next buffer, and update the memory interface.
+>>>           */
+>>>          if (cap->is_streaming && !cap->buf.next &&
+>>>              atomic_read(&cap->rkisp1->isp.frame_sequence) == -1) {
+>>>                  cap->buf.next = ispbuf;
+>>>                  rkisp1_set_next_buf(cap);
+>>>          } else {
+>>>                  list_add_tail(&ispbuf->queue, &cap->buf.queue);
+>>>          }
+>>> This "if" condition seems very specific, a case where we already stream but v-start was not yet received.
+>>> I think it is possible to remove the test 'atomic_read(&cap->rkisp1->isp.frame_sequence) == -1'
+>>> from the above condition so that the next buffer is updated in case it is null not just before the first
+>>> v-start signal.
+>>>
+>>
+>> We don't have this special case in the Chrome OS code.
+>>
+>> I suppose it would make it possible to resume the capture 1 frame
+>> earlier after a queue underrun, as otherwise the new buffer would be
+>> only programmed after the next frame start interrupt and used for the
+>> next-next frame.  However, it's racy, because programming of the buffer
+>> addresses is not atomic and could end up with the hardware using few
+>> plane addresses from the new buffer and few from the dummy buffer.
+>>
+>> Given that and also the fact that a queue underrun is a very special
+>> case, where the system was already having problems catching up, I'd just
+>> remove this special case.
+>>
+>> [snip]
+>>>>> +void rkisp1_isp_isr(unsigned int isp_mis, struct rkisp1_device *dev)
+>>>>> +{
+>>>>> +    void __iomem *base = dev->base_addr;
+>>>>> +    unsigned int isp_mis_tmp = 0;
+>>>>
+>>>> _tmp are never good names :-S
+>>>>
+>>>>> +    unsigned int isp_err = 0;
+>>>>
+>>>> Neither of these variable need to be initialised to 0.
+>>>>
+>>>>> +
+>>>>> +    /* start edge of v_sync */
+>>>>> +    if (isp_mis & CIF_ISP_V_START) {
+>>>>> +        rkisp1_isp_queue_event_sof(&dev->isp_sdev);
+>>>>
+>>>> This will increment the frame sequence number. What if the interrupt is
+>>>> slightly delayed and the next frame starts before we get a change to
+>>>> copy the sequence number to the buffers (before they will complete
+>>>> below) ?
+>>>
+>>> Do you mean that we get two sequental v-start signals and then the next
+>>> frame-end signal in MI_MIS belongs to the first v-start signal of the two?
+>>> How can this be solved? I wonder if any v-start signal has a later signal
+>>> that correspond to the same frame so that we can follow it?
+>>>
+>>> Maybe we should have one counter that is incremented on v-start signal,
+>>> and another counter that is incremented uppon some other signal?
+>>>
+>>
+>> We're talking about a hard IRQ. I can't imagine the interrupt handler
+>> being delayed for a time close to a full frame interval (~16ms for 60
+>> fps) to trigger such scenario.
+>>
+>>>>
+>>>>> +
+>>>>> +        writel(CIF_ISP_V_START, base + CIF_ISP_ICR);
+>>>>
+>>>> Do you need to clear all interrupt bits individually, can't you write
+>>>> isp_mis to CIF_ISP_ICR at the beginning of the function to clear them
+>>>> all in one go ?
+>>>>
+>>>>> +        isp_mis_tmp = readl(base + CIF_ISP_MIS);
+>>>>> +        if (isp_mis_tmp & CIF_ISP_V_START)
+>>>>> +            v4l2_err(&dev->v4l2_dev, "isp icr v_statr err: 0x%x\n",
+>>>>> +                 isp_mis_tmp);
+>>>>
+>>>> This require some explanation. It looks like a naive way to protect
+>>>> against something, but I think it could trigger under normal
+>>>> circumstances if IRQ handling is delayed, and wouldn't do much anyway.
+>>>> Same for the similar constructs below.
+>>>>
+>>>>> +    }
+>>>>> +
+>>>>> +    if ((isp_mis & CIF_ISP_PIC_SIZE_ERROR)) {
+>>>>> +        /* Clear pic_size_error */
+>>>>> +        writel(CIF_ISP_PIC_SIZE_ERROR, base + CIF_ISP_ICR);
+>>>>> +        isp_err = readl(base + CIF_ISP_ERR);
+>>>>> +        v4l2_err(&dev->v4l2_dev,
+>>>>> +             "CIF_ISP_PIC_SIZE_ERROR (0x%08x)", isp_err);
+>>>>
+>>>> What does this mean ?
+>>>>
+>>>>> +        writel(isp_err, base + CIF_ISP_ERR_CLR);
+>>>>> +    } else if ((isp_mis & CIF_ISP_DATA_LOSS)) {
+>>>>
+>>>> Are CIF_ISP_PIC_SIZE_ERROR and CIF_ISP_DATA_LOSS mutually exclusive ?
+>>>>
+>>>>> +        /* Clear data_loss */
+>>>>> +        writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
+>>>>> +        v4l2_err(&dev->v4l2_dev, "CIF_ISP_DATA_LOSS\n");
+>>>>> +        writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
+>>>>> +    }
+>>>>> +
+>>>>> +    /* sampled input frame is complete */
+>>>>> +    if (isp_mis & CIF_ISP_FRAME_IN) {
+>>>>> +        writel(CIF_ISP_FRAME_IN, base + CIF_ISP_ICR);
+>>>>> +        isp_mis_tmp = readl(base + CIF_ISP_MIS);
+>>>>> +        if (isp_mis_tmp & CIF_ISP_FRAME_IN)
+>>>>> +            v4l2_err(&dev->v4l2_dev, "isp icr frame_in err: 0x%x\n",
+>>>>> +                 isp_mis_tmp);
+>>>>> +    }
+>>>>> +
+>>>>> +    /* frame was completely put out */
+>>>>
+>>>> "put out" ? :-) What's the difference between ISP_FRAME_IN and ISP_FRAME
+>>>> ? The two comments could do with a bit of brush up, and I think the
+>>>> ISP_FRAME_IN interrupt could be disabled as it doesn't perform any
+>>>> action.
+>>>
+>>> Those two oneline comments are just copy-paste from the datasheet.
+>>>
+>>> ""
+>>> 5 MIS_FRAME_IN sampled input frame is complete
+>>> 1 MIS_FRAME frame was completely put out
+>>> ""
+>>>
+>>> Unfrotunately, the datasheet does not add any further explanation about those signals.
+>>>
+>>>
+>>
+>> My loose recollection is that the former is signaled when then frame
+>> is fully input to the ISP and the latter when the ISP completes
+>> outputting the frame to the next block in the pipeline, but someone
+>> would need to verify this, for example by printing timestamps for all
+>> the various interrupts.
+>>
+>>>>
+>>>>> +    if (isp_mis & CIF_ISP_FRAME) {
+>>>>> +        u32 isp_ris = 0;
+>>>>
+>>>> No need to initialise this to 0.
+>>>>
+>>>>> +        /* Clear Frame In (ISP) */
+>>>>> +        writel(CIF_ISP_FRAME, base + CIF_ISP_ICR);
+>>>>> +        isp_mis_tmp = readl(base + CIF_ISP_MIS);
+>>>>> +        if (isp_mis_tmp & CIF_ISP_FRAME)
+>>>>> +            v4l2_err(&dev->v4l2_dev,
+>>>>> +                 "isp icr frame end err: 0x%x\n", isp_mis_tmp);
+>>>>> +
+>>>>> +        isp_ris = readl(base + CIF_ISP_RIS);
+>>>>> +        if (isp_ris & (CIF_ISP_AWB_DONE | CIF_ISP_AFM_FIN |
+>>>>> +                   CIF_ISP_EXP_END | CIF_ISP_HIST_MEASURE_RDY))
+>>>>> +            rkisp1_stats_isr(&dev->stats_vdev, isp_ris);
+>>>>
+>>>> Is there a guarantee that the statistics will be fully written out
+>>>> before the video frame itself ? And doesn't this test if any of the
+>>>> statistics is complete, not all of them ? I think the logic is wrong, it
+>>>
+>>> The datasheet does not add any explanation of what is expected to come first.
+>>> Should we wait until all statistics measurements are done? In the struct
+>>> sent to userspace there is a bitmaks for which of the statistics are read.
+>>> I think that if only part of the statistics are ready, we can already send the once
+>>> that are ready to userspace.
+>>>
+>>
+>> If we look further into the code, rkisp1_stats_isr() checks the
+>> interrupt status mask passed to it and reads out only the parameters
+>> with indicated completion. The statistics metadata buffer format
+>> includes a bit mask which tells the userspace which measurements are
+>> available.
+>>
+>> However, I think I've spotted a bug there. At the beginning of
+>> rkisp1_stats_isr(), all the 4 interrupt status bits are cleared,
+>> regardless of the mask used later to decide which readouts need to be
+>> done. This could mean that with an unfortunate timing, some measurements
+>> would be lost. So at least the code should be fixed to only clear the
+>> interrupts bits really handled.
+> 
+> I'll fix that
 
-Do you mean driver, the driver will not call chip->irq_mask when irqchip wa=
-s in suspend.
-if it does, it will be big BUG. I believe we don't do that in the driver.
+I actually don't think this is a bug. The statistics interrupts are not
+enabled and are read from the raw interrupts register. This means
+that if we missed a statistics for the current frame and we don't reset it
+then we will read it only when the next frame comes out, so it will be
+wrongly set as statistics for the next frame although it is actually for the
+current frame.
 
->=20
-> --
-> Regards,
-> Sudeep
+Thanks,
+Dafna
+
+> 
+>>
+>> As for whether to send separate buffers for each measurement, I guess
+>> it's not a bad thing to let the userspace access the ones available
+>> earlier. Now I only don't recall why we decided to put all the
+>> measurements into one metadata structure, rather than splitting the 4
+>> into their own structures and buffer queues...
+> 
+> Is it possible to have several queues to the same video node?
+> 
+>>
+>>>> seems it should be moved out of the CIF_ISP_FRAME test, to a test of its
+>>>> own. It's hard to tell for sure without extra information though (for
+>>>> instance why are the stats-related bits read from CIF_ISP_RIS, when
+>>>> they seem to be documented as valid in CIF_ISP_ISR), but this should be
+>>>> validated, and most probably fixed. Care should be taken to keep
+>>>> synchronisation of sequence number between the different queues.
+>>>
+>>> I see that the capture buffers are done before incrementing the frame_sequence with
+>>> the following explanation:
+>>>
+>>>     /*
+>>>           * Call rkisp1_capture_isr() first to handle the frame that
+>>>           * potentially completed using the current frame_sequence number before
+>>>           * it is potentially incremented by rkisp1_isp_isr() in the vertical
+>>>           * sync.
+>>>           */
+>>>
+>>> I think reading the stats/params should also be done before calling rkisp1_capture_isr
+>>> for the same reason. (so to match the correct frame_sequence)
+>>
+>> My recollection of the sequence of interrupts in this hardware is like
+>> this:
+>>
+>> CIF_ISP_V_START (frame 0)
+>>    CIF_ISP_FRAME_IN (frame 0)
+>>      CIF_ISP_FRAME (frame 0)
+>>        CIF_ISP_AWB_DONE
+>>        CIF_ISP_AFM_FIN
+>>        CIF_ISP_EXP_END
+>>        CIF_ISP_HIST_MEASURE_RDY
+>>        CIF_MI_FRAME*
+>>        CIF_ISP_V_START (frame 1)
+>>          CIF_ISP_FRAME_IN (frame 1)
+>>            CIF_ISP_FRAME (frame 1)
+>>              ...
+>>
+>> where the interrupts at the same indentation level can happen
+>> independently of each other. Again, someone would have to verify this.
+> 
+> I wrote this patch to print the interrupts and the time difference between interrupts:
+> https://gitlab.collabora.com/dafna/linux/-/commit/9b9c5ddc2f06a6b87d2c1b210219f69de83296c5
+> 
+> I got this output: http://ix.io/2tl8,
+> there is a repeating pattern where only v-start interrupt is sent, indicated by the prints "isp mis 0x00000040" then about 23 milisec later are the other interrupts
+> (FRAME_IN, FRAME, MI_FRAME* ) and about 10 milisec the v-start interrupt again.
+> 
+> I am still not sure why the mi_frame interrupt should be handled first. If it happen for example that all the interrupts arrive at once, how can
+> we know that the MI_FRAME interrupt relates to the previous v-start interrupt and not the current one?
+> I think that for that we need a code that keep track of the previous interrupt.
+> 
+> Thanks,
+> Dafna
+> 
+> 
+>>
+>> Best regards,
+>> Tomasz
+>>
