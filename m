@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E22C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3356221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDEF221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739271;
-	bh=0MX3E7Ne/rPTcgcCD1XqjJDdOiBT4MRY8ces7kKdkI0=;
+	s=default; t=1596739286;
+	bh=jrfTfMqqNK4Bu08uryiHCRmAlSmR+sRWLonChf0RUVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jnwoG8c/8jQFzWlMJb/zYNNG4OU2/UzBXygLRIgZvoNTVOQ+35XRx1CO9xNvgQbUC
-	 9Y/9xs4ikRfD5uORTiRFIHDNCn0thci4/xvHZIUhWJliRMsLalLIyT1nKcWG0UixYF
-	 AI3ROlQK4akxS4zWv5BZyzCwKUwSRf5tn/C+cVMY=
+	b=wZoMYNHv7dynrqIRYeehxtVKDsmOnDlNlSshcUCIabc0+y4Gel8MOCdMIerEb4+mg
+	 gLXKRNcUpEw5NdkTvcPi7o5fOhUcv4n5DPP/AyV5EOlbsJTvcb9Fqi7dBC+RR0JXkX
+	 8EC5hSNsDt+b4Wcp2MlRmyP3l1HyHpSuwsE8feto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgHFSlK (ORCPT
+        id S1729485AbgHFSlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:41:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729985AbgHFSkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729989AbgHFSkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:40:23 -0400
 Received: from localhost.localdomain (unknown [194.230.155.117])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB5D22E01;
-        Thu,  6 Aug 2020 18:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6E9422EBD;
+        Thu,  6 Aug 2020 18:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738239;
-        bh=0MX3E7Ne/rPTcgcCD1XqjJDdOiBT4MRY8ces7kKdkI0=;
+        s=default; t=1596738259;
+        bh=jrfTfMqqNK4Bu08uryiHCRmAlSmR+sRWLonChf0RUVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fpd7yEIes202ZGrwsi7XioG0nprsSaGhvANyXicNmF1IjIGUhWmE9/7lvAIMALBiK
-         UzCilFjlVt/VkB23Su1aGrP5eF+NC20P24Jgxn8ZBHgS+WWTblxxxZzbJVt0dH1P3e
-         DdO2vM6jvaB47RBJfmB1NZYiu8fsK4bL7CWPXc3A=
+        b=s1m6Niw69C99kV9/wFls7VY3aooYZo58lNSDxmPoeT3N05Ac+qqHtOwpvIBmwewtn
+         Cj0y+jDgdQWZHi/wwx3p+oGGdAhCGVXSKu00oIsXJS+eFZM+uuSesef27ST3Tv3tui
+         l0XEBnV9iSiieJK6h+8Yr7I8B0YTwNKWidMKHhGk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 31/41] ARM: s3c24xx: spi: avoid hardcoding fiq number in driver
-Date:   Thu,  6 Aug 2020 20:20:48 +0200
-Message-Id: <20200806182059.2431-31-krzk@kernel.org>
+Subject: [PATCH v2 34/41] cpufreq: s3c24xx: split out registers
+Date:   Thu,  6 Aug 2020 20:20:51 +0200
+Message-Id: <20200806182059.2431-34-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
 References: <20200806181932.2253-1-krzk@kernel.org>
@@ -61,130 +61,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The IRQ_EINT0 constant is a platform detail that is
-defined in mach/irqs.h and not visible to drivers once
-that header is made private.
-
-Since the same calculation already happens in s3c24xx_set_fiq,
-just return the value from there.
+Each of the cpufreq drivers uses a fixed set of register
+bits, copy those definitions into the drivers to avoid
+including mach/regs-clock.h.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[krzk: Fix build by copying also S3C2410_LOCKTIME]
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/mach-s3c24xx/irq-s3c24xx.c | 12 +++++++++---
- drivers/spi/spi-s3c24xx.c           | 18 ++----------------
- include/linux/spi/s3c24xx.h         |  2 +-
- 3 files changed, 12 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/mach-s3c24xx/irq-s3c24xx.c b/arch/arm/mach-s3c24xx/irq-s3c24xx.c
-index b0e879ee14c1..3965347cacf0 100644
---- a/arch/arm/mach-s3c24xx/irq-s3c24xx.c
-+++ b/arch/arm/mach-s3c24xx/irq-s3c24xx.c
-@@ -376,14 +376,17 @@ asmlinkage void __exception_irq_entry s3c24xx_handle_irq(struct pt_regs *regs)
- /**
-  * s3c24xx_set_fiq - set the FIQ routing
-  * @irq: IRQ number to route to FIQ on processor.
-+ * @ack_ptr: pointer to a location for storing the bit mask
-  * @on: Whether to route @irq to the FIQ, or to remove the FIQ routing.
-  *
-  * Change the state of the IRQ to FIQ routing depending on @irq and @on. If
-  * @on is true, the @irq is checked to see if it can be routed and the
-  * interrupt controller updated to route the IRQ. If @on is false, the FIQ
-  * routing is cleared, regardless of which @irq is specified.
-+ *
-+ * returns the mask value for the register.
-  */
--int s3c24xx_set_fiq(unsigned int irq, bool on)
-+int s3c24xx_set_fiq(unsigned int irq, u32 *ack_ptr, bool on)
- {
- 	u32 intmod;
- 	unsigned offs;
-@@ -391,15 +394,18 @@ int s3c24xx_set_fiq(unsigned int irq, bool on)
- 	if (on) {
- 		offs = irq - FIQ_START;
- 		if (offs > 31)
--			return -EINVAL;
-+			return 0;
+---
+
+Changes since v1:
+1. Copy also S3C2410_LOCKTIME to the driver.
+---
+ drivers/cpufreq/s3c2410-cpufreq.c | 11 +++++++++--
+ drivers/cpufreq/s3c2412-cpufreq.c | 20 +++++++++++++++++++-
+ drivers/cpufreq/s3c2440-cpufreq.c | 24 ++++++++++++++++++++++--
+ drivers/cpufreq/s3c24xx-cpufreq.c |  5 ++++-
+ 4 files changed, 54 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/cpufreq/s3c2410-cpufreq.c b/drivers/cpufreq/s3c2410-cpufreq.c
+index 0c4f2ccd7e22..5c6cb590b63f 100644
+--- a/drivers/cpufreq/s3c2410-cpufreq.c
++++ b/drivers/cpufreq/s3c2410-cpufreq.c
+@@ -20,11 +20,18 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
  
- 		intmod = 1 << offs;
- 	} else {
- 		intmod = 0;
- 	}
+-#include <mach/regs-clock.h>
+-
+ #include <plat/cpu.h>
+ #include <plat/cpu-freq-core.h>
  
-+	if (ack_ptr)
-+		*ack_ptr = intmod;
- 	writel_relaxed(intmod, S3C2410_INTMOD);
--	return 0;
++#include <mach/map.h>
 +
-+	return intmod;
- }
++#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
++
++#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
++
++#define S3C2410_CLKDIVN_PDIVN	     (1<<0)
++#define S3C2410_CLKDIVN_HDIVN	     (1<<1)
++
+ /* Note, 2410A has an extra mode for 1:4:4 ratio, bit 2 of CLKDIV */
  
- EXPORT_SYMBOL_GPL(s3c24xx_set_fiq);
-diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
-index e7a4732590db..d6f51695ca5b 100644
---- a/drivers/spi/spi-s3c24xx.c
-+++ b/drivers/spi/spi-s3c24xx.c
-@@ -229,17 +229,6 @@ struct spi_fiq_code {
- 	u8	data[];
- };
+ static void s3c2410_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
+diff --git a/drivers/cpufreq/s3c2412-cpufreq.c b/drivers/cpufreq/s3c2412-cpufreq.c
+index 53385a9ab957..d922d0d47c80 100644
+--- a/drivers/cpufreq/s3c2412-cpufreq.c
++++ b/drivers/cpufreq/s3c2412-cpufreq.c
+@@ -23,12 +23,30 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
  
--/**
-- * ack_bit - turn IRQ into IRQ acknowledgement bit
-- * @irq: The interrupt number
-- *
-- * Returns the bit to write to the interrupt acknowledge register.
-- */
--static inline u32 ack_bit(unsigned int irq)
--{
--	return 1 << (irq - IRQ_EINT0);
--}
+-#include <mach/regs-clock.h>
+ #include <mach/s3c2412.h>
+ 
+ #include <plat/cpu.h>
+ #include <plat/cpu-freq-core.h>
+ 
++#include <mach/map.h>
++
++#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
++
++#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
++
++#define S3C2412_CLKDIVN_PDIVN		(1<<2)
++#define S3C2412_CLKDIVN_HDIVN_MASK	(3<<0)
++#define S3C2412_CLKDIVN_ARMDIVN		(1<<3)
++#define S3C2412_CLKDIVN_DVSEN		(1<<4)
++#define S3C2412_CLKDIVN_HALFHCLK	(1<<5)
++#define S3C2412_CLKDIVN_USB48DIV	(1<<6)
++#define S3C2412_CLKDIVN_UARTDIV_MASK	(15<<8)
++#define S3C2412_CLKDIVN_UARTDIV_SHIFT	(8)
++#define S3C2412_CLKDIVN_I2SDIV_MASK	(15<<12)
++#define S3C2412_CLKDIVN_I2SDIV_SHIFT	(12)
++#define S3C2412_CLKDIVN_CAMDIV_MASK	(15<<16)
++#define S3C2412_CLKDIVN_CAMDIV_SHIFT	(16)
++
+ /* our clock resources. */
+ static struct clk *xtal;
+ static struct clk *fclk;
+diff --git a/drivers/cpufreq/s3c2440-cpufreq.c b/drivers/cpufreq/s3c2440-cpufreq.c
+index 3f772ba8896e..5fe7a891fa13 100644
+--- a/drivers/cpufreq/s3c2440-cpufreq.c
++++ b/drivers/cpufreq/s3c2440-cpufreq.c
+@@ -24,11 +24,31 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ 
+-#include <mach/regs-clock.h>
 -
- /**
-  * s3c24xx_spi_tryfiq - attempt to claim and setup FIQ for transfer
-  * @hw: The hardware state.
-@@ -256,6 +245,7 @@ static void s3c24xx_spi_tryfiq(struct s3c24xx_spi *hw)
- 	struct pt_regs regs;
- 	enum spi_fiq_mode mode;
- 	struct spi_fiq_code *code;
-+	u32 *ack_ptr = NULL;
- 	int ret;
+ #include <plat/cpu.h>
+ #include <plat/cpu-freq-core.h>
  
- 	if (!hw->fiq_claimed) {
-@@ -282,8 +272,6 @@ static void s3c24xx_spi_tryfiq(struct s3c24xx_spi *hw)
- 	set_fiq_regs(&regs);
++#include <mach/map.h>
++
++#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
++#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
++#define S3C2440_CAMDIVN	    S3C2410_CLKREG(0x18)
++
++#define S3C2440_CLKDIVN_PDIVN	     (1<<0)
++#define S3C2440_CLKDIVN_HDIVN_MASK   (3<<1)
++#define S3C2440_CLKDIVN_HDIVN_1      (0<<1)
++#define S3C2440_CLKDIVN_HDIVN_2      (1<<1)
++#define S3C2440_CLKDIVN_HDIVN_4_8    (2<<1)
++#define S3C2440_CLKDIVN_HDIVN_3_6    (3<<1)
++#define S3C2440_CLKDIVN_UCLK         (1<<3)
++
++#define S3C2440_CAMDIVN_CAMCLK_MASK  (0xf<<0)
++#define S3C2440_CAMDIVN_CAMCLK_SEL   (1<<4)
++#define S3C2440_CAMDIVN_HCLK3_HALF   (1<<8)
++#define S3C2440_CAMDIVN_HCLK4_HALF   (1<<9)
++#define S3C2440_CAMDIVN_DVSEN        (1<<12)
++
++#define S3C2442_CAMDIVN_CAMCLK_DIV3  (1<<5)
++
+ static struct clk *xtal;
+ static struct clk *fclk;
+ static struct clk *hclk;
+diff --git a/drivers/cpufreq/s3c24xx-cpufreq.c b/drivers/cpufreq/s3c24xx-cpufreq.c
+index ed0e713b1b57..cf0571e8fafb 100644
+--- a/drivers/cpufreq/s3c24xx-cpufreq.c
++++ b/drivers/cpufreq/s3c24xx-cpufreq.c
+@@ -28,9 +28,12 @@
+ #include <plat/cpu.h>
+ #include <plat/cpu-freq-core.h>
  
- 	if (hw->fiq_mode != mode) {
--		u32 *ack_ptr;
--
- 		hw->fiq_mode = mode;
+-#include <mach/regs-clock.h>
++#include <mach/map.h>
  
- 		switch (mode) {
-@@ -303,12 +291,10 @@ static void s3c24xx_spi_tryfiq(struct s3c24xx_spi *hw)
- 		BUG_ON(!code);
+ /* note, cpufreq support deals in kHz, no Hz */
++#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
++#define S3C2410_LOCKTIME    S3C2410_CLKREG(0x00)
++#define S3C2410_MPLLCON     S3C2410_CLKREG(0x04)
  
- 		ack_ptr = (u32 *)&code->data[code->ack_offset];
--		*ack_ptr = ack_bit(hw->irq);
--
- 		set_fiq_handler(&code->data, code->length);
- 	}
- 
--	s3c24xx_set_fiq(hw->irq, true);
-+	s3c24xx_set_fiq(hw->irq, ack_ptr, true);
- 
- 	hw->fiq_mode = mode;
- 	hw->fiq_inuse = 1;
-diff --git a/include/linux/spi/s3c24xx.h b/include/linux/spi/s3c24xx.h
-index c91d10b82f08..440a71593162 100644
---- a/include/linux/spi/s3c24xx.h
-+++ b/include/linux/spi/s3c24xx.h
-@@ -20,6 +20,6 @@ struct s3c2410_spi_info {
- 	void (*set_cs)(struct s3c2410_spi_info *spi, int cs, int pol);
- };
- 
--extern int s3c24xx_set_fiq(unsigned int irq, bool on);
-+extern int s3c24xx_set_fiq(unsigned int irq, u32 *ack_ptr, bool on);
- 
- #endif /* __LINUX_SPI_S3C24XX_H */
+ static struct cpufreq_driver s3c24xx_driver;
+ static struct s3c_cpufreq_config cpu_cur;
 -- 
 2.17.1
 
