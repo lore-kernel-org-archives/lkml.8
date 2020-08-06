@@ -2,131 +2,193 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53360C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD51204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:33:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="srEzXbtV"
+	by mail.kernel.org (Postfix) with ESMTP id 9FCB5204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHFQdG (ORCPT
+        id S1727951AbgHFQd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgHFQcF (ORCPT
+        Thu, 6 Aug 2020 12:33:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50308 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728614AbgHFQce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:32:05 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C53C0086D1
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:31:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id p14so9388800wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8EjdHovA6pZhCGDIxpXlqTI6MPX2VaDhsI56ZjDVyws=;
-        b=srEzXbtVUdgu44HdzXkXf2AxcnIqodA/urxiuekKMnDaoiGV2acenxFr53rvkguLUf
-         dpASK/e72i8vVBbrtPa6ilthaekLyW9TgiLQxLjx0zIiNBiyzL5inBgxCzp/tHG2/keR
-         2Uj+FjF0ybIbPmYi55Sj/c3uFKzn6YSRiTOyNdCs8V8mwutMqzsWnpghadwHvsAH9E+G
-         HySprz3wc+JOVzTCPowsQaHape+e7GYavYYmHFGcRJJQghf4/VeIe7Rwe7H1ZlE6g/hb
-         +qf8FnvXGSiZ7OpV351VShW4oZcGHB6q2RLhQYzEnHBy7fOg0CvurHy0MbgHtjMShV67
-         3ZuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8EjdHovA6pZhCGDIxpXlqTI6MPX2VaDhsI56ZjDVyws=;
-        b=YQE5vxkjbbliBdbZCp6T8iGlgHkGp7+FzZM22p+UAvI3txUXUmNTUDKXCFvOtS2rLl
-         hjUCxObDhCw8Y4o9MvdDOux2Y9yvN1RBNuUMqbm5KA+FLkChYyHkiMEmFXzpgeOomlC/
-         JKmuNJmpFESl3qZZgxASZWmDyp1pkj4jFeKzGlU1tSAF7ZX0kC2lpmZJF/AeWotyKmll
-         z1pzsVjn3oi2XM0t10+fnVo0UN/+B0JiluRf0lq8bXAgliusXgRNa3+yJCrcmCtwa9ol
-         si820gQ7umf0LJyOv4sAMCUkWfBsmIIcllqBpaV9y5tyjBP2rZMrT+cgFt76Uahj1pGA
-         qEMg==
-X-Gm-Message-State: AOAM532hrkJHzDojiPzMFLff32KMxsUySheasxvRjiyQ9zX8hdIaCLa0
-        RlVaUUw6EkKVuaXTZGp9bB/Npw==
-X-Google-Smtp-Source: ABdhPJypiYwGRpysEd1neDA1eIk52zMbC2H9K1CR8BaJUNaCtbcDui/TRhD4tJ0nfK9bVv3n+mzotQ==
-X-Received: by 2002:a7b:c1c3:: with SMTP id a3mr9046794wmj.111.1596731488952;
-        Thu, 06 Aug 2020 09:31:28 -0700 (PDT)
-Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id i66sm7468537wma.35.2020.08.06.09.31.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Aug 2020 09:31:27 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
-        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/7] interconnect: Introduce xlate_extended()
-Date:   Thu,  6 Aug 2020 19:31:19 +0300
-Message-Id: <20200806163126.22667-1-georgi.djakov@linaro.org>
+        Thu, 6 Aug 2020 12:32:34 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k3dQL-0005mp-8Q; Thu, 06 Aug 2020 10:47:01 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next][V2] staging: wfx: fix a handful of spelling mistakes
+Date:   Thu,  6 Aug 2020 11:47:01 +0100
+Message-Id: <20200806104701.46123-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the interconnect framework provides the xlate() callback for
-mapping the endpoints from phandle arguments in DT. This is implemented
-by the provider drivers. But the endpoints (or the path between the
-endpoints) might have an additional attributes, which should be parsed
-and populated. During previous discussions [1], it was suggested that
-adding more and more DT properties will not scale very well. So instead
-of adding DT properties, such data should be put into the 'interconnects'
-arguments.
+From: Colin Ian King <colin.king@canonical.com>
 
-This patchset is introducing a new xlate_extended() callback, which
-would allow the interconnect provider drivers to parse additional data
-(such as path tags) and allow the framework to make use of them.
+There are various spelling mistakes in comments and error messages.
+Fix these.
 
-Thanks to Sibi for the preliminary feedback and testing this patchset
-on the sc7180 platform.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
 
-The patchset is based on linux-next (next-20200723).
+V2: add in some more fixes as spotted by Randy Dunlap
 
-Changelog:
-v2:
-* Add a patch to update the DT documentation, which i missed initially.
-* Minor changes in commit text of patch 1/7. (Sibi)
-* Remove a useless null check in patch 4/7. (Sibi)
-* Print a warning if the number of DT args is higher than what we expect
-  in patch 3/7. (Matthias)
-* Pick Reviewed-by/Tested-by tags.
-* TODO: Replace tag IDs with macros in patches 5/7 and 7/7 when [2] lands.
+---
+ drivers/staging/wfx/data_rx.c | 2 +-
+ drivers/staging/wfx/data_tx.c | 2 +-
+ drivers/staging/wfx/debug.c   | 6 +++---
+ drivers/staging/wfx/hif_rx.c  | 2 +-
+ drivers/staging/wfx/hif_tx.c  | 4 ++--
+ drivers/staging/wfx/main.c    | 2 +-
+ drivers/staging/wfx/main.h    | 2 +-
+ drivers/staging/wfx/sta.c     | 2 +-
+ 8 files changed, 11 insertions(+), 11 deletions(-)
 
-v1: http://lore.kernel.org/r/20200723130942.28491-1-georgi.djakov@linaro.org
-
-[1] https://lore.kernel.org/linux-devicetree/20200519185836.GA469006@bogus/
-[2] https://lore.kernel.org/r/20200801033215.1440-2-mdtipton@codeaurora.org
-
-Georgi Djakov (5):
-  interconnect: Introduce xlate_extended() callback
-  dt-bindings: interconnect: Document the support of optional path tag
-  interconnect: qcom: Implement xlate_extended() to parse tags
-  interconnect: qcom: sdm845: Replace xlate with xlate_extended
-  arm64: dts: qcom: sdm845: Increase the number of interconnect cells
-
-Sibi Sankar (2):
-  interconnect: qcom: sc7180: Replace xlate with xlate_extended
-  arm64: dts: qcom: sc7180: Increase the number of interconnect cells
-
- .../bindings/interconnect/interconnect.txt    |  24 +-
- arch/arm64/boot/dts/qcom/sc7180.dtsi          | 216 +++++++++---------
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |  44 ++--
- drivers/interconnect/core.c                   |  73 ++++--
- drivers/interconnect/qcom/icc-rpmh.c          |  27 +++
- drivers/interconnect/qcom/icc-rpmh.h          |   1 +
- drivers/interconnect/qcom/sc7180.c            |   2 +-
- drivers/interconnect/qcom/sdm845.c            |   2 +-
- include/linux/interconnect-provider.h         |  17 +-
- 9 files changed, 248 insertions(+), 158 deletions(-)
+diff --git a/drivers/staging/wfx/data_rx.c b/drivers/staging/wfx/data_rx.c
+index 6fb078880742..7fcbbfc53416 100644
+--- a/drivers/staging/wfx/data_rx.c
++++ b/drivers/staging/wfx/data_rx.c
+@@ -73,7 +73,7 @@ void wfx_rx_cb(struct wfx_vif *wvif,
+ 	if (arg->rx_flags.encryp)
+ 		hdr->flag |= RX_FLAG_DECRYPTED;
+ 
+-	// Block ack negociation is offloaded by the firmware. However,
++	// Block ack negotiation is offloaded by the firmware. However,
+ 	// re-ordering must be done by the mac80211.
+ 	if (ieee80211_is_action(frame->frame_control) &&
+ 	    mgmt->u.action.category == WLAN_CATEGORY_BACK &&
+diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.c
+index 3acf4eb0214d..41f9afd41e14 100644
+--- a/drivers/staging/wfx/data_tx.c
++++ b/drivers/staging/wfx/data_tx.c
+@@ -234,7 +234,7 @@ static void wfx_tx_fixup_rates(struct ieee80211_tx_rate *rates)
+ 	int i;
+ 	bool finished;
+ 
+-	// Firmware is not able to mix rates with differents flags
++	// Firmware is not able to mix rates with different flags
+ 	for (i = 0; i < IEEE80211_TX_MAX_RATES; i++) {
+ 		if (rates[0].flags & IEEE80211_TX_RC_SHORT_GI)
+ 			rates[i].flags |= IEEE80211_TX_RC_SHORT_GI;
+diff --git a/drivers/staging/wfx/debug.c b/drivers/staging/wfx/debug.c
+index 3f1712b7c919..99c53e1afece 100644
+--- a/drivers/staging/wfx/debug.c
++++ b/drivers/staging/wfx/debug.c
+@@ -267,7 +267,7 @@ static ssize_t wfx_send_hif_msg_write(struct file *file,
+ 	if (count < sizeof(struct hif_msg))
+ 		return -EINVAL;
+ 
+-	// wfx_cmd_send() chekc that reply buffer is wide enough, but do not
++	// wfx_cmd_send() checks that reply buffer is wide enough, but does not
+ 	// return precise length read. User have to know how many bytes should
+ 	// be read. Filling reply buffer with a memory pattern may help user.
+ 	memset(context->reply, 0xFF, sizeof(context->reply));
+@@ -299,8 +299,8 @@ static ssize_t wfx_send_hif_msg_read(struct file *file, char __user *user_buf,
+ 		return ret;
+ 	if (context->ret < 0)
+ 		return context->ret;
+-	// Be carefull, write() is waiting for a full message while read()
+-	// only return a payload
++	// Be careful, write() is waiting for a full message while read()
++	// only returns a payload
+ 	if (copy_to_user(user_buf, context->reply, count))
+ 		return -EFAULT;
+ 
+diff --git a/drivers/staging/wfx/hif_rx.c b/drivers/staging/wfx/hif_rx.c
+index cc7c0cf226ba..1d32973d8ec1 100644
+--- a/drivers/staging/wfx/hif_rx.c
++++ b/drivers/staging/wfx/hif_rx.c
+@@ -118,7 +118,7 @@ static int hif_keys_indication(struct wfx_dev *wdev,
+ 
+ 	// SL_PUB_KEY_EXCHANGE_STATUS_SUCCESS is used by legacy secure link
+ 	if (body->status && body->status != HIF_STATUS_SLK_NEGO_SUCCESS)
+-		dev_warn(wdev->dev, "secure link negociation error\n");
++		dev_warn(wdev->dev, "secure link negotiation error\n");
+ 	memcpy(pubkey, body->ncp_pub_key, sizeof(pubkey));
+ 	memreverse(pubkey, sizeof(pubkey));
+ 	wfx_sl_check_pubkey(wdev, pubkey, body->ncp_pub_key_mac);
+diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
+index 5110f9b93762..3b5f4dcc469c 100644
+--- a/drivers/staging/wfx/hif_tx.c
++++ b/drivers/staging/wfx/hif_tx.c
+@@ -78,7 +78,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *request,
+ 
+ 	wfx_bh_request_tx(wdev);
+ 
+-	// NOTE: no timeout is catched async is enabled
++	// NOTE: no timeout is caught async is enabled
+ 	if (async)
+ 		return 0;
+ 
+@@ -125,7 +125,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *request,
+ 
+ // This function is special. After HIF_REQ_ID_SHUT_DOWN, chip won't reply to any
+ // request anymore. We need to slightly hack struct wfx_hif_cmd for that job. Be
+-// carefull to only call this funcion during device unregister.
++// careful to only call this function during device unregister.
+ int hif_shutdown(struct wfx_dev *wdev)
+ {
+ 	int ret;
+diff --git a/drivers/staging/wfx/main.c b/drivers/staging/wfx/main.c
+index 11dfa088fc86..4263f912760b 100644
+--- a/drivers/staging/wfx/main.c
++++ b/drivers/staging/wfx/main.c
+@@ -384,7 +384,7 @@ int wfx_probe(struct wfx_dev *wdev)
+ 	err = wfx_sl_init(wdev);
+ 	if (err && wdev->hw_caps.capabilities.link_mode == SEC_LINK_ENFORCED) {
+ 		dev_err(wdev->dev,
+-			"chip require secure_link, but can't negociate it\n");
++			"chip require secure_link, but can't negotiate it\n");
+ 		goto err0;
+ 	}
+ 
+diff --git a/drivers/staging/wfx/main.h b/drivers/staging/wfx/main.h
+index c59d375dd3ad..2457cb595b0f 100644
+--- a/drivers/staging/wfx/main.h
++++ b/drivers/staging/wfx/main.h
+@@ -19,7 +19,7 @@ struct wfx_dev;
+ struct hwbus_ops;
+ 
+ struct wfx_platform_data {
+-	/* Keyset and ".sec" extention will appended to this string */
++	/* Keyset and ".sec" extension will be appended to this string */
+ 	const char *file_fw;
+ 	const char *file_pds;
+ 	struct gpio_desc *gpio_wakeup;
+diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
+index 4e30ab17a93d..ad63332f690c 100644
+--- a/drivers/staging/wfx/sta.c
++++ b/drivers/staging/wfx/sta.c
+@@ -214,7 +214,7 @@ static int wfx_get_ps_timeout(struct wfx_vif *wvif, bool *enable_ps)
+ 	if (chan0 && chan1 && chan0->hw_value != chan1->hw_value &&
+ 	    wvif->vif->type != NL80211_IFTYPE_AP) {
+ 		// It is necessary to enable powersave if channels
+-		// are differents.
++		// are different.
+ 		if (enable_ps)
+ 			*enable_ps = true;
+ 		if (wvif->wdev->force_ps_timeout > -1)
+-- 
+2.27.0
 
