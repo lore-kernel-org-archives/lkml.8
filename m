@@ -2,265 +2,219 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EDDC47437
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0B1C47427
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1BCE2313F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2286204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tDH0SpBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgHFIXP (ORCPT
+        id S1728751AbgHFIHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:23:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:1712 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbgHFIXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:23:14 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BMhML21kJz9v0TM;
-        Thu,  6 Aug 2020 10:23:10 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id JAc1_NBpuyfq; Thu,  6 Aug 2020 10:23:10 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMhML1CRlz9v0St;
-        Thu,  6 Aug 2020 10:23:10 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E9FF8B7FF;
-        Thu,  6 Aug 2020 10:23:11 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id MF6ErjQ8BmQa; Thu,  6 Aug 2020 10:23:11 +0200 (CEST)
-Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D28148B75E;
-        Thu,  6 Aug 2020 10:23:10 +0200 (CEST)
-Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id C7D0065BC9; Thu,  6 Aug 2020 08:23:10 +0000 (UTC)
-Message-Id: <cf39cb8e42cffe323393b8cecdc59a7230298eab.1596702117.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <a6e62627d25fb7ae9b91d8bf553e707689e37498.1596702117.git.christophe.leroy@csgroup.eu>
-References: <a6e62627d25fb7ae9b91d8bf553e707689e37498.1596702117.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v3 3/3] powerpc/uaccess: simplify the get_fs() set_fs() logic
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu,  6 Aug 2020 08:23:10 +0000 (UTC)
+        Thu, 6 Aug 2020 04:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728578AbgHFIFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 04:05:16 -0400
+Received: from mail-ej1-x649.google.com (mail-ej1-x649.google.com [IPv6:2a00:1450:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4334FC061757
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 01:04:28 -0700 (PDT)
+Received: by mail-ej1-x649.google.com with SMTP id gg11so7323201ejb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 01:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=mOjwTlI4LaDoFAqHd/CEHg0Dqi+LihgQr+xeS1gXpis=;
+        b=tDH0SpBJOVvaIUzPtmVuxUqyvnBSUCyMqFtYcMgVXHcDWUdJhLlmnBIESBCuGGSaNx
+         AaAhbxZ2UhI28l81X3oB1EvwtIp1jgDi94nEgfOaNF2GVnHSpfYzELKPV5+2zEWAYCTr
+         TWUkhoUsSXqNwPDg7Z0DUPSWlbins9V/M57xz4QQrPSG5eKVSJG22crM5gBg2HjWWM9P
+         T34JtrSBzKMDvT7G6B0UvX+2439Pcg3AYzBn+vjjcorqRMI96vNu7DyKJvdF2Tb8bwDn
+         HExshd30yG8HkERycM93BJ3soZw0kipbgYCmreSVmwsjTEAMxNuA1GUZBMwXXeXQlpoA
+         P4Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=mOjwTlI4LaDoFAqHd/CEHg0Dqi+LihgQr+xeS1gXpis=;
+        b=UpnF1VgsUxtWr6RgZr/FMKPmVb+u8HWD/NwT3jsM5sgvUgNePvSwKHFnp82kk9qM97
+         KSqCZfGgJxV7aqNu1WFwJJmMWr0s5LVr4C3wmBiVqcwJXfKdSi0t4Q4+XPk3jeqjQPab
+         N6G51oAtBffaTUfsDF77t1d6LCmNIlF9IpQIkBSkBL0Ji6luawqNGYLHk7BtpztTtJ9c
+         ruCDazFrUlDmRt4SZNiI4mF8e2vccbg+0NLZ8vW8BabqjzqFIYanMZ6N11VvcCO5dM0x
+         mvQxvyBkc3psgXemnoyT++WG3JAE0rcENDptCaNND3Ozg09kfe3295nrkq/tF/xhuxTC
+         YKkg==
+X-Gm-Message-State: AOAM5309MItNcy+HEcyO5SqvdOQ6f2RdAdZuB8dn6WFdZP8FBTHsFjcW
+        ZkWL62cMDEHOj3IBxZByIHDT9VEJrg==
+X-Google-Smtp-Source: ABdhPJw7+h3SDa+sB/Btd5MvQIu+UhCAl+l3KSnK/otVP3qHgJoDEOH9thLaoxF8EfWtBx/+v1vbL4HEQg==
+X-Received: by 2002:a05:6402:297:: with SMTP id l23mr2957498edv.145.1596701065565;
+ Thu, 06 Aug 2020 01:04:25 -0700 (PDT)
+Date:   Thu,  6 Aug 2020 10:03:42 +0200
+In-Reply-To: <20200806080358.3124505-1-tweek@google.com>
+Message-Id: <20200806080358.3124505-2-tweek@google.com>
+Mime-Version: 1.0
+References: <20200806080358.3124505-1-tweek@google.com>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH 2/2] selinux: add attributes to avc tracepoint
+From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On powerpc, we only have USER_DS and KERNEL_DS
+From: Peter Enderborg <peter.enderborg@sony.com>
 
-Today, this is managed as an 'unsigned long' data space limit
-which is used to compare the passed address with, plus a bit
-in the thread_info flags that is set whenever modifying the limit
-to enable the verification in addr_limit_user_check()
+Add further attributes to filter the trace events from AVC.
 
-The limit is either the last address of user space when USER_DS is
-set, and the last address of address space when KERNEL_DS is set.
-In both cases, the limit is a compiletime constant.
-
-get_fs() returns the limit, which is part of thread_info struct
-set_fs() updates the limit then set the TI_FSCHECK flag.
-addr_limit_user_check() check the flag, and if it is set it checks
-the limit is the user limit, then unsets the TI_FSCHECK flag.
-
-In addition, when the flag is set the syscall exit work is involved.
-This exit work is heavy compared to normal syscall exit as it goes
-through normal exception exit instead of the fast syscall exit.
-
-Rename this TI_FSCHECK flag to TIF_UACCESS_KERNEL flag which tells
-whether KERNEL_DS or USER_DS is set. Get mm_segment_t be redifined as
-a bool struct that is either false (for USER_DS) or true (for
-KERNEL_DS). When TIF_UACCESS_KERNEL is set, the limit is ~0UL.
-Otherwise it is TASK_SIZE_USER (resp TASK_SIZE_USER64 on PPC64). When
-KERNEL_DS is set, there is no range to check. Define TI_FSCHECK as an
-alias to TIF_UACCESS_KERNEL.
-
-On exit, involve exit work when the bit is set, i.e. when KERNEL_DS
-is set. addr_limit_user_check() will clear the bit and kill the
-user process.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+Reviewed-by: Thi=C3=A9baud Weksteen <tweek@google.com>
 ---
-v3: Rebased and taken into account removal of segment_eq() and comments from mpe
----
- arch/powerpc/include/asm/processor.h   |  5 +---
- arch/powerpc/include/asm/thread_info.h |  9 ++++---
- arch/powerpc/include/asm/uaccess.h     | 35 +++++++++++++-------------
- arch/powerpc/lib/sstep.c               |  2 +-
- 4 files changed, 25 insertions(+), 26 deletions(-)
+ include/trace/events/avc.h | 41 ++++++++++++++++++++++++++++----------
+ security/selinux/avc.c     | 22 +++++++++++---------
+ 2 files changed, 44 insertions(+), 19 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-index ed0d633ab5aa..86a9c4395b99 100644
---- a/arch/powerpc/include/asm/processor.h
-+++ b/arch/powerpc/include/asm/processor.h
-@@ -84,7 +84,7 @@ void start_thread(struct pt_regs *regs, unsigned long fdptr, unsigned long sp);
- void release_thread(struct task_struct *);
- 
- typedef struct {
--	unsigned long seg;
-+	bool uaccess_kernel;
- } mm_segment_t;
- 
- #define TS_FPR(i) fp_state.fpr[i][TS_FPROFFSET]
-@@ -148,7 +148,6 @@ struct thread_struct {
- 	unsigned long	ksp_vsid;
- #endif
- 	struct pt_regs	*regs;		/* Pointer to saved register state */
--	mm_segment_t	addr_limit;	/* for get_fs() validation */
- #ifdef CONFIG_BOOKE
- 	/* BookE base exception scratch space; align on cacheline */
- 	unsigned long	normsave[8] ____cacheline_aligned;
-@@ -295,7 +294,6 @@ struct thread_struct {
- #define INIT_THREAD { \
- 	.ksp = INIT_SP, \
- 	.ksp_limit = INIT_SP_LIMIT, \
--	.addr_limit = KERNEL_DS, \
- 	.pgdir = swapper_pg_dir, \
- 	.fpexc_mode = MSR_FE0 | MSR_FE1, \
- 	SPEFSCR_INIT \
-@@ -303,7 +301,6 @@ struct thread_struct {
- #else
- #define INIT_THREAD  { \
- 	.ksp = INIT_SP, \
--	.addr_limit = KERNEL_DS, \
- 	.fpexc_mode = 0, \
- }
- #endif
-diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
-index ca6c97025704..123232a63ee7 100644
---- a/arch/powerpc/include/asm/thread_info.h
-+++ b/arch/powerpc/include/asm/thread_info.h
-@@ -69,7 +69,7 @@ struct thread_info {
- #define INIT_THREAD_INFO(tsk)			\
- {						\
- 	.preempt_count = INIT_PREEMPT_COUNT,	\
--	.flags =	0,			\
-+	.flags =	_TIF_UACCESS_KERNEL,		\
- }
- 
- #define THREAD_SIZE_ORDER	(THREAD_SHIFT - PAGE_SHIFT)
-@@ -90,7 +90,8 @@ void arch_setup_new_exec(void);
- #define TIF_SYSCALL_TRACE	0	/* syscall trace active */
- #define TIF_SIGPENDING		1	/* signal pending */
- #define TIF_NEED_RESCHED	2	/* rescheduling necessary */
--#define TIF_FSCHECK		3	/* Check FS is USER_DS on return */
-+#define TIF_UACCESS_KERNEL	3	/* KERNEL_DS is set */
-+#define TIF_FSCHECK	TIF_UACCESS_KERNEL
- #define TIF_SYSCALL_EMU		4	/* syscall emulation active */
- #define TIF_RESTORE_TM		5	/* need to restore TM FP/VEC/VSX */
- #define TIF_PATCH_PENDING	6	/* pending live patching update */
-@@ -130,7 +131,7 @@ void arch_setup_new_exec(void);
- #define _TIF_SYSCALL_TRACEPOINT	(1<<TIF_SYSCALL_TRACEPOINT)
- #define _TIF_EMULATE_STACK_STORE	(1<<TIF_EMULATE_STACK_STORE)
- #define _TIF_NOHZ		(1<<TIF_NOHZ)
--#define _TIF_FSCHECK		(1<<TIF_FSCHECK)
-+#define _TIF_UACCESS_KERNEL	(1 << TIF_UACCESS_KERNEL)
- #define _TIF_SYSCALL_EMU	(1<<TIF_SYSCALL_EMU)
- #define _TIF_SYSCALL_DOTRACE	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
- 				 _TIF_SECCOMP | _TIF_SYSCALL_TRACEPOINT | \
-@@ -139,7 +140,7 @@ void arch_setup_new_exec(void);
- #define _TIF_USER_WORK_MASK	(_TIF_SIGPENDING | _TIF_NEED_RESCHED | \
- 				 _TIF_NOTIFY_RESUME | _TIF_UPROBE | \
- 				 _TIF_RESTORE_TM | _TIF_PATCH_PENDING | \
--				 _TIF_FSCHECK)
-+				 _TIF_UACCESS_KERNEL)
- #define _TIF_PERSYSCALL_MASK	(_TIF_RESTOREALL|_TIF_NOERROR)
- 
- /* Bits in local_flags */
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index 00699903f1ef..8567bec6f939 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -15,48 +15,49 @@
-  *
-  * For historical reasons, these macros are grossly misnamed.
-  *
-- * The fs/ds values are now the highest legal address in the "segment".
-+ * The fs/ds values are now a bool which tells the "segment" is user or kernel.
-  * This simplifies the checking in the routines below.
-  */
- 
- #define MAKE_MM_SEG(s)  ((mm_segment_t) { (s) })
- 
--#define KERNEL_DS	MAKE_MM_SEG(~0UL)
--#ifdef __powerpc64__
--/* We use TASK_SIZE_USER64 as TASK_SIZE is not constant */
--#define USER_DS		MAKE_MM_SEG(TASK_SIZE_USER64 - 1)
--#else
--#define USER_DS		MAKE_MM_SEG(TASK_SIZE - 1)
--#endif
-+#define KERNEL_DS	MAKE_MM_SEG(true)
-+#define USER_DS		MAKE_MM_SEG(false)
- 
--#define get_fs()	(current->thread.addr_limit)
-+#define get_fs()	(MAKE_MM_SEG(test_thread_flag(TIF_UACCESS_KERNEL)))
- 
- static inline void set_fs(mm_segment_t fs)
- {
--	current->thread.addr_limit = fs;
--	/* On user-mode return check addr_limit (fs) is correct */
--	set_thread_flag(TIF_FSCHECK);
-+	update_thread_flag(TIF_UACCESS_KERNEL, fs.uaccess_kernel);
- }
- 
--#define uaccess_kernel() (get_fs().seg == KERNEL_DS.seg)
--#define user_addr_max()	(get_fs().seg)
-+#define uaccess_kernel() (get_fs().uaccess_kernel)
-+#define user_addr_max()	(get_fs().uaccess_kernel ? ~0UL : USER_ADDR_MAX - 1)
- 
- #ifdef __powerpc64__
-+
-+#define USER_ADDR_MAX		TASK_SIZE_USER64
-+
+diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
+index 07c058a9bbcd..ac5ef2e1c2c5 100644
+--- a/include/trace/events/avc.h
++++ b/include/trace/events/avc.h
+@@ -1,6 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * This check is sufficient because there is a large enough
-  * gap between user addresses and the kernel addresses
+- * Author: Thi=C3=A9baud Weksteen <tweek@google.com>
++ * Authors:	Thi=C3=A9baud Weksteen <tweek@google.com>
++ *		Peter Enderborg <Peter.Enderborg@sony.com>
   */
- #define __access_ok(addr, size, segment)	\
--	(((addr) <= (segment).seg) && ((size) <= (segment).seg))
-+	segment.uaccess_kernel ?	\
-+	1 : (addr) < USER_ADDR_MAX && ((size) < USER_ADDR_MAX)
- 
- #else
- 
-+#define USER_ADDR_MAX		TASK_SIZE
-+
- static inline int __access_ok(unsigned long addr, unsigned long size,
- 			mm_segment_t seg)
- {
--	if (addr > seg.seg)
-+	if (seg.uaccess_kernel)
-+		return 1;
-+	if (addr >= USER_ADDR_MAX)
- 		return 0;
--	return (size == 0 || size - 1 <= seg.seg - addr);
-+	return addr + size <= USER_ADDR_MAX;
- }
- 
+ #undef TRACE_SYSTEM
+ #define TRACE_SYSTEM avc
+@@ -12,23 +13,43 @@
+=20
+ TRACE_EVENT(selinux_audited,
+=20
+-	TP_PROTO(struct selinux_audit_data *sad),
++	TP_PROTO(struct selinux_audit_data *sad,
++		char *scontext,
++		char *tcontext,
++		const char *tclass
++	),
+=20
+-	TP_ARGS(sad),
++	TP_ARGS(sad, scontext, tcontext, tclass),
+=20
+ 	TP_STRUCT__entry(
+-		__field(unsigned int, tclass)
+-		__field(unsigned int, audited)
++		__field(u32, requested)
++		__field(u32, denied)
++		__field(u32, audited)
++		__field(int, result)
++		__string(scontext, scontext)
++		__string(tcontext, tcontext)
++		__string(tclass, tclass)
++		__field(u32, ssid)
++		__field(u32, tsid)
+ 	),
+=20
+ 	TP_fast_assign(
+-		__entry->tclass =3D sad->tclass;
+-		__entry->audited =3D sad->audited;
++		__entry->requested	=3D sad->requested;
++		__entry->denied		=3D sad->denied;
++		__entry->audited	=3D sad->audited;
++		__entry->result		=3D sad->result;
++		__entry->ssid		=3D sad->ssid;
++		__entry->tsid		=3D sad->tsid;
++		__assign_str(tcontext, tcontext);
++		__assign_str(scontext, scontext);
++		__assign_str(tclass, tclass);
+ 	),
+=20
+-	TP_printk("tclass=3D%u audited=3D%x",
+-		__entry->tclass,
+-		__entry->audited)
++	TP_printk("requested=3D0x%x denied=3D0x%x audited=3D0x%x result=3D%d ssid=
+=3D%u tsid=3D%u scontext=3D%s tcontext=3D%s tclass=3D%s",
++		__entry->requested, __entry->denied, __entry->audited, __entry->result,
++		__entry->ssid, __entry->tsid, __get_str(scontext), __get_str(tcontext),
++		__get_str(tclass)
++	)
+ );
+=20
  #endif
-diff --git a/arch/powerpc/lib/sstep.c b/arch/powerpc/lib/sstep.c
-index caee8cc77e19..e10b642566ba 100644
---- a/arch/powerpc/lib/sstep.c
-+++ b/arch/powerpc/lib/sstep.c
-@@ -112,7 +112,7 @@ static nokprobe_inline long address_ok(struct pt_regs *regs,
- 		return 1;
- 	if (__access_ok(ea, 1, USER_DS))
- 		/* Access overlaps the end of the user region */
--		regs->dar = USER_DS.seg;
-+		regs->dar = USER_ADDR_MAX;
- 	else
- 		regs->dar = ea;
- 	return 0;
--- 
-2.25.0
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index b0a0af778b70..7de5cc5169af 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -705,35 +705,39 @@ static void avc_audit_post_callback(struct audit_buff=
+er *ab, void *a)
+ {
+ 	struct common_audit_data *ad =3D a;
+ 	struct selinux_audit_data *sad =3D ad->selinux_audit_data;
+-	char *scontext;
++	char *scontext =3D NULL;
++	char *tcontext =3D NULL;
++	const char *tclass =3D NULL;
+ 	u32 scontext_len;
++	u32 tcontext_len;
+ 	int rc;
+=20
+-	trace_selinux_audited(sad);
+-
+ 	rc =3D security_sid_to_context(sad->state, sad->ssid, &scontext,
+ 				     &scontext_len);
+ 	if (rc)
+ 		audit_log_format(ab, " ssid=3D%d", sad->ssid);
+ 	else {
+ 		audit_log_format(ab, " scontext=3D%s", scontext);
+-		kfree(scontext);
+ 	}
+=20
+-	rc =3D security_sid_to_context(sad->state, sad->tsid, &scontext,
+-				     &scontext_len);
++	rc =3D security_sid_to_context(sad->state, sad->tsid, &tcontext,
++				     &tcontext_len);
+ 	if (rc)
+ 		audit_log_format(ab, " tsid=3D%d", sad->tsid);
+ 	else {
+-		audit_log_format(ab, " tcontext=3D%s", scontext);
+-		kfree(scontext);
++		audit_log_format(ab, " tcontext=3D%s", tcontext);
+ 	}
+=20
+-	audit_log_format(ab, " tclass=3D%s", secclass_map[sad->tclass-1].name);
++	tclass =3D secclass_map[sad->tclass-1].name;
++	audit_log_format(ab, " tclass=3D%s", tclass);
+=20
+ 	if (sad->denied)
+ 		audit_log_format(ab, " permissive=3D%u", sad->result ? 0 : 1);
+=20
++	trace_selinux_audited(sad, scontext, tcontext, tclass);
++	kfree(tcontext);
++	kfree(scontext);
++
+ 	/* in case of invalid context report also the actual context string */
+ 	rc =3D security_sid_to_context_inval(sad->state, sad->ssid, &scontext,
+ 					   &scontext_len);
+--=20
+2.28.0.163.g6104cc2f0b6-goog
 
