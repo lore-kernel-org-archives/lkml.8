@@ -2,183 +2,125 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90873C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B22221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739135;
-	bh=2kQR9I4zXt/WNULI01GY/ypUOHIRns3YKmoIz1UaEr4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iXbHIhzVN7wA7TePAsDB4oysLHxbHsUQ0uSP57BIMZV+qWUyesoyvRzj4oRdPF8fs
-	 yL+zO65Rz01IYQNnNO019SKXIToFShGPhmxuyVYD0rZx8evC4JQKtRPee24/T/9JZD
-	 TL1wpr28lIjzro+9jbw4fzet9qSPI38cTQQFk144=
+	by mail.kernel.org (Postfix) with ESMTP id 41F7B221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgHFSiy (ORCPT
+        id S1729341AbgHFSjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgHFSin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:38:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 6 Aug 2020 14:39:02 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:42184 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728431AbgHFSbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:31:02 -0400
+Received: from dispatch1-us1.ppe-hosted.com (localhost.localdomain [127.0.0.1])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 17AA9B684B;
+        Thu,  6 Aug 2020 18:18:15 +0000 (UTC)
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.65.62])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 886C060070;
+        Thu,  6 Aug 2020 18:17:54 +0000 (UTC)
+Received: from us4-mdac16-4.ut7.mdlocal (unknown [10.7.65.72])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 840958009B;
+        Thu,  6 Aug 2020 18:17:54 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.66.35])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 09249280074;
+        Thu,  6 Aug 2020 18:17:54 +0000 (UTC)
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 878AF221E3;
-        Thu,  6 Aug 2020 18:38:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596739123;
-        bh=2kQR9I4zXt/WNULI01GY/ypUOHIRns3YKmoIz1UaEr4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fRTYpEGCjZWeocG4aY97dzfbZvAO437sqaVl2VpUuxiYy7sElhR1g3gUyoezzPBMS
-         9hojTb0yDIbtJjxuXpZpdoi+mIF/q0DYfIMi0exfQeg05CMS6LCSTCIOG/8qsYEX3X
-         ydTPApw7fIA7o+rGUqq8tYAhmdGBDpfk9d4phDC4=
-Date:   Thu, 6 Aug 2020 19:38:38 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 11/15] iio: sx9310: Use variable to hold &client->dev
-Message-ID: <20200806193838.092d1567@archlinux>
-In-Reply-To: <20200803175559.v5.11.If9d9c0fe089e43ea2dbc7900b6d61cd05c66f1f7@changeid>
-References: <20200803235815.778997-1-campello@chromium.org>
-        <20200803175559.v5.11.If9d9c0fe089e43ea2dbc7900b6d61cd05c66f1f7@changeid>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id B7DEF480079;
+        Thu,  6 Aug 2020 18:17:53 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 6 Aug 2020
+ 19:17:47 +0100
+Subject: Re: [linux-next:master 13398/13940]
+ drivers/net/ethernet/sfc/ef100_nic.c:610: undefined reference to `__umoddi3'
+To:     kernel test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>, netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <202008060723.1gNgVvUi%lkp@intel.com>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <487d9159-41f8-2757-2e93-01426a527fb5@solarflare.com>
+Date:   Thu, 6 Aug 2020 19:17:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <202008060723.1gNgVvUi%lkp@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25586.005
+X-TM-AS-Result: No-12.452600-8.000000-10
+X-TMASE-MatchedRID: oHOSwQSJZWhq0U6EhO9EE4lSWYvdSPSY4cLBHAw1BRZske+tckkBoiGU
+        b2JNxi1qvPtSCmwHhL0W+rN4H33dkbWPvW6oP7NyLIrMljt3aduPzv8sr7ayoxpX1zEL4nq3Hf4
+        4ullC212/lkj6wDcDigSuWRuEnLXhV9nX7lX9OjRyMswwR1sr6zAuMzu3eJGjdroFpVy5w+mHhM
+        8qmux3Sb9ULgvDfUo5vdBFVbH6wdjqRl2OKU4dKpzEHTUOuMX3eouvej40T4gd0WOKRkwsh1ymR
+        v3NQjsEYnBhoG388QPQHiCKHhKOgW7vEKjEI8LySHCU59h5KrG0em6xcBVoDI4iwAQuovtYru70
+        Q5pawzYAb9Rn+iNx0xQAmj5Up3IVn/nVWd4TWXeMrYi9PmoV29i5W7Rf+s6Qi8VrlddQxsZwASG
+        rGM67O2HuJNcKeM9f6lUt9vnbi+9O8fMZwaqIgp4CIKY/Hg3AnCGS1WQEGtD8V77yhJRgo6u6xV
+        HLhqfxIAcCikR3vq86XuPdvRHcl9hjjqZSWk1w1xY6ykLB0sx3lZ6s0ZOX6ajcaKKxOnis
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--12.452600-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25586.005
+X-MDID: 1596737874-pEQT5DErUjQB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Aug 2020 17:58:11 -0600
-Daniel Campello <campello@chromium.org> wrote:
+On 06/08/2020 00:48, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> head:   d15fe4ec043588beee823781602ddb51d0bc84c8
+> commit: adcfc3482ffff813fa2c34e5902005853f79c2aa [13398/13940] sfc_ef100: read Design Parameters at probe time
+> config: microblaze-randconfig-r032-20200805 (attached as .config)
+> compiler: microblaze-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout adcfc3482ffff813fa2c34e5902005853f79c2aa
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=microblaze 
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    microblaze-linux-ld: drivers/net/ethernet/sfc/ef100_nic.o: in function `ef100_process_design_param':
+>>> drivers/net/ethernet/sfc/ef100_nic.c:610: undefined reference to `__umoddi3'
+>    605			/* Our TXQ and RXQ sizes are always power-of-two and thus divisible by
+>    606			 * EFX_MIN_DMAQ_SIZE, so we just need to check that
+>    607			 * EFX_MIN_DMAQ_SIZE is divisible by GRANULARITY.
+>    608			 * This is very unlikely to fail.
+>    609			 */
+>  > 610			if (EFX_MIN_DMAQ_SIZE % reader->value) {
+So, this is (unsigned long) % (u64), whichI guess doesn't go quite
+ as smoothly 32-bit microcontrollers (though the thought of plugging
+ a 100-gig smartNIC into a microblaze boggles the mind a little ;).
+And none of the math64.h functions seem to have the shape we want —
+ div_u64_rem() wants to write the remainder through a pointer, and
+ do_div() wants to modify the dividend (which is a constant in this
+ case).  So whatever I do, it's gonna be ugly :(
 
-> Improves readability by storing &client->dev in a local variable.
-> 
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-This one needed some tweaking to apply as the parent is now
-set by the core code.
+Maybe I should add a
 
-Applied (and the ones before I didn't metion) to the togreg branch
-of iio.git and pushed out as testing,
+static inline u32 mod_u64(u64 dividend, u32 divisor)
+{
+        return do_div(dividend, divisor);
+}
 
-Thanks,
-
-Jonathan
-
-> ---
-> 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
->  - Added '\n' to dev_err()
-> 
->  drivers/iio/proximity/sx9310.c | 30 +++++++++++++++---------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index adb707e2d79612..589052d2d1146e 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -887,11 +887,12 @@ static int sx9310_set_indio_dev_name(struct device *dev,
->  static int sx9310_probe(struct i2c_client *client)
->  {
->  	int ret;
-> +	struct device *dev = &client->dev;
->  	struct iio_dev *indio_dev;
->  	struct sx9310_data *data;
->  
-> -	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> -	if (indio_dev == NULL)
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +	if (!indio_dev)
->  		return -ENOMEM;
->  
->  	data = iio_priv(indio_dev);
-> @@ -905,17 +906,16 @@ static int sx9310_probe(struct i2c_client *client)
->  
->  	ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
->  	if (ret) {
-> -		dev_err(&client->dev, "error in reading WHOAMI register: %d",
-> -			ret);
-> +		dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
->  		return ret;
->  	}
->  
-> -	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
-> +	ret = sx9310_set_indio_dev_name(dev, indio_dev, data->whoami);
->  	if (ret)
->  		return ret;
->  
-> -	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(&client->dev));
-> -	indio_dev->dev.parent = &client->dev;
-> +	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(dev));
-> +	indio_dev->dev.parent = dev;
->  	indio_dev->channels = sx9310_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(sx9310_channels);
->  	indio_dev->info = &sx9310_info;
-> @@ -927,7 +927,7 @@ static int sx9310_probe(struct i2c_client *client)
->  		return ret;
->  
->  	if (client->irq) {
-> -		ret = devm_request_threaded_irq(&client->dev, client->irq,
-> +		ret = devm_request_threaded_irq(dev, client->irq,
->  						sx9310_irq_handler,
->  						sx9310_irq_thread_handler,
->  						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> @@ -935,29 +935,29 @@ static int sx9310_probe(struct i2c_client *client)
->  		if (ret)
->  			return ret;
->  
-> -		data->trig =
-> -			devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
-> -					       indio_dev->name, indio_dev->id);
-> +		data->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
-> +						    indio_dev->name,
-> +						    indio_dev->id);
->  		if (!data->trig)
->  			return -ENOMEM;
->  
-> -		data->trig->dev.parent = &client->dev;
-> +		data->trig->dev.parent = dev;
->  		data->trig->ops = &sx9310_trigger_ops;
->  		iio_trigger_set_drvdata(data->trig, indio_dev);
->  
-> -		ret = devm_iio_trigger_register(&client->dev, data->trig);
-> +		ret = devm_iio_trigger_register(dev, data->trig);
->  		if (ret)
->  			return ret;
->  	}
->  
-> -	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
-> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
->  					      iio_pollfunc_store_time,
->  					      sx9310_trigger_handler,
->  					      &sx9310_buffer_setup_ops);
->  	if (ret)
->  		return ret;
->  
-> -	return devm_iio_device_register(&client->dev, indio_dev);
-> +	return devm_iio_device_register(dev, indio_dev);
->  }
->  
->  static int __maybe_unused sx9310_suspend(struct device *dev)
-
+to include/linux/math64.h?  At least that way the ugly is centralised
+ in the header file.
