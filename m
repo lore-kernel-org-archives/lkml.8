@@ -2,163 +2,428 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD99C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9F472173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33A82173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="hxFMiVO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHFVHO (ORCPT
+        id S1726175AbgHFVMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 17:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54878 "EHLO
+        Thu, 6 Aug 2020 17:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgHFVHN (ORCPT
+        with ESMTP id S1725812AbgHFVMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 17:07:13 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45704C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 14:07:13 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3n6U-00023A-Em; Thu, 06 Aug 2020 23:07:10 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3n6T-0004ZV-BT; Thu, 06 Aug 2020 23:07:09 +0200
-Date:   Thu, 6 Aug 2020 23:07:09 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
-Message-ID: <20200806210709.5etazgtsfgkdnoui@pengutronix.de>
-References: <20200804091603.541-1-a.fatoum@pengutronix.de>
- <20200805061753.5o63zu4ionhgjab4@pengutronix.de>
- <871rkkhy7v.fsf@nanos.tec.linutronix.de>
- <CACRpkdaOysS1-Y=3ghQ+1qbMTR8yi3bHg=_+gUOPo_EcmGmJiw@mail.gmail.com>
- <87r1sjham2.fsf@nanos.tec.linutronix.de>
- <20200806194608.bdhvltvwxi3opykk@pengutronix.de>
- <87eeojh5vh.fsf@nanos.tec.linutronix.de>
+        Thu, 6 Aug 2020 17:12:07 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B6CC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 14:12:07 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id m19so11309132ejd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 14:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=melexis.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=alK2uwXjJAvvcKN2M/uKq75VCc1VISRu/NQMjzV3t8s=;
+        b=hxFMiVO3mhka7ST8sBWILQi6+MaLZ3qRJESk14ttBORIZnU85XyFourhDDh3IZ1HB7
+         hRBLrnvVqWASg/nOwS3h0FsgFsl436VAEjFuKo84MKTfF9z76sfjV5JSCTXbtLaZnEyd
+         JWQn0B43sCS97Nd5Jkurtf2DcldyBuvoXPlTejJ7yNqDylcgtEbabE520LhuDR12VpVN
+         0V1jAvNnN4n3ftXnAgRJJaoQNMWwbdqkEJFhWtS8C8jvDfPSxw5h2fVtRPTiFxHOrdat
+         DcUTRKdDjFn5fhgOO9EaRpHUUfkrMhUNa7UFO0N6FYr/azrVc+4qprCckAznL2gcyHsH
+         XxKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=alK2uwXjJAvvcKN2M/uKq75VCc1VISRu/NQMjzV3t8s=;
+        b=Xcjv1aQKhdYqCVnEXxB1Y8QxBX8eWhTMBd5SHm+InJGhQFkYgo4WQxQr2MStlqg1AV
+         KxpdAR1BDj5cjKLiUc0mTciQ2RsvF9tiHv1z8Ux1YzskJCXGhsWSGuFRssxTZP49/r9M
+         JM9P2h3t1CQ+++uRBNRrIGqALoJpsbTbXzcgcBkE3cXilB5z+ho/HprM7BowCfH6BfjC
+         F4YNPT3yN7LYqxDgNBHkdjXORO3gH5VEDgQJGgDhfvCR9yQeUOxJKQgNwia3CA/8d2Qo
+         Y62hrnOGMjyoqpUqCuAQ1VTgXbWUbnJSixzCcSsyPZog/6qiKDm964UYUfsbqk4Uri51
+         qUCQ==
+X-Gm-Message-State: AOAM532uVG9Sq7Ngb3Tv5yTVFCFnovcWrDzeIkvG/Oso3VkWa5rS2I/W
+        nVSYYUqq1hWekOc8VeyDIQL/pQ==
+X-Google-Smtp-Source: ABdhPJxYfnWOZ2tpqh1XhVvxg2kRg0PYSlP6Y+JklmMjXEpNhCqAu1xRJokQ9OI4M8woin1vSBGuwg==
+X-Received: by 2002:a17:906:743:: with SMTP id z3mr6191861ejb.216.1596748325623;
+        Thu, 06 Aug 2020 14:12:05 -0700 (PDT)
+Received: from localhost.localdomain (ptr-4xajgyum9863qf6si3v.18120a2.ip6.access.telenet.be. [2a02:1810:a421:dd00:2092:7f6b:4676:cab])
+        by smtp.gmail.com with ESMTPSA id bx22sm4521246ejc.18.2020.08.06.14.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 14:12:04 -0700 (PDT)
+From:   Crt Mori <cmo@melexis.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Crt Mori <cmo@melexis.com>
+Subject: [PATCH] iio:temperature:mlx90632: Adding extended calibration option
+Date:   Thu,  6 Aug 2020 23:11:34 +0200
+Message-Id: <20200806211134.921671-1-cmo@melexis.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="75n4mrucr4xkreqh"
-Content-Disposition: inline
-In-Reply-To: <87eeojh5vh.fsf@nanos.tec.linutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For some time market wants medical grade accuracy in medical range,
+while still retaining the declared accuracy outside of the medical range
+within the same sensor. That is why we created extended calibration
+which is automatically switched to when object temperature is too high.
 
---75n4mrucr4xkreqh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch also introduces the object_ambient_temperature variable which
+is needed for more accurate calculation of the object infra-red
+footprint as sensor's ambient temperature might be totally different
+than what the ambient temperature is at object and that is why we can
+have some more error which can be eliminated. Currently this temperature
+is fixed at 25, but interface to adjust it by user (with external sensor
+or just IR measurement of the another object which acts as ambient),
+will be introduced in another commit.
 
-Hello Thomas,
+Signed-off-by: Crt Mori <cmo@melexis.com>
+---
+ drivers/iio/temperature/mlx90632.c | 219 ++++++++++++++++++++++++++++-
+ 1 file changed, 217 insertions(+), 2 deletions(-)
 
-On Thu, Aug 06, 2020 at 10:33:06PM +0200, Thomas Gleixner wrote:
-> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> writes:
-> > On Thu, Aug 06, 2020 at 08:50:45PM +0200, Thomas Gleixner wrote:
-> >> handle_nested_irq() does not care. It cares about thread context,
-> >> external reentrancy protection for the same nested interrupt and that
-> >> the nested interrupt has a thread handler.
-> >>=20
-> >> The latter is what goes belly up because w/o that threaded bit set the
-> >> GPIO core fails to set nested thread. So if a consumer requests an
-> >> interrupt with request_any_context_irq() then that fails to select
-> >> thread mode which means the threaded handler is not set causing
-> >> handle_nested_irq() to fail.
-> >
-> > For a caller of request_threaded_irq() that passes a relevant hardirq
-> > handler the hardirq handler is never called but request_threaded_irq()
-> > doesn't fail. The handler is just replaced by irq_nested_primary_handler
-> > in __setup_irq(). Is that a bug? (I didn't test, just read the code, so=
- I
-> > might have missed something.)
->=20
-> Depends on what the threaded handler expects what the primary handler
-> has done. It might just work or not :)
-
-So we need something like:
-
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 48c38e09c673..31777a0b79df 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1393,12 +1393,18 @@ __setup_irq(unsigned int irq, struct irq_desc *desc=
-, struct irqaction *new)
- 			ret =3D -EINVAL;
- 			goto out_mput;
- 		}
--		/*
--		 * Replace the primary handler which was provided from
--		 * the driver for non nested interrupt handling by the
--		 * dummy function which warns when called.
--		 */
--		new->handler =3D irq_nested_primary_handler;
+diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
+index 763a148a0095..bb35a65bb9f0 100644
+--- a/drivers/iio/temperature/mlx90632.c
++++ b/drivers/iio/temperature/mlx90632.c
+@@ -58,6 +58,8 @@
+ /* Control register address - volatile */
+ #define MLX90632_REG_CONTROL	0x3001 /* Control Register address */
+ #define   MLX90632_CFG_PWR_MASK		GENMASK(2, 1) /* PowerMode Mask */
++#define   MLX90632_CFG_MTYP_MASK		GENMASK(8, 4) /* Meas select Mask */
 +
-+		if (new->handler =3D=3D NULL) {
-+			/* Scream loud if the primary handler gets called */
-+			new->handler =3D irq_nested_primary_handler;
-+		} else {
-+			/*
-+			 * The handler won't be called as the requestor expects,
-+			 * so refuse to install the handler
-+			 */
-+			ret =3D -EINVAL;
-+			goto out_mput;
-+		}
- 	} else {
- 		if (irq_settings_can_thread(desc)) {
- 			ret =3D irq_setup_forced_threading(new);
+ /* PowerModes statuses */
+ #define MLX90632_PWR_STATUS(ctrl_val) (ctrl_val << 1)
+ #define MLX90632_PWR_STATUS_HALT MLX90632_PWR_STATUS(0) /* hold */
+@@ -65,6 +67,18 @@
+ #define MLX90632_PWR_STATUS_STEP MLX90632_PWR_STATUS(2) /* step */
+ #define MLX90632_PWR_STATUS_CONTINUOUS MLX90632_PWR_STATUS(3) /* continuous*/
+ 
++/* Measurement types */
++#define MLX90632_MTYP_MEDICAL 0
++#define MLX90632_MTYP_EXTENDED 17
++
++/* Measurement type select*/
++#define MLX90632_MTYP_STATUS(ctrl_val) (ctrl_val << 4)
++#define MLX90632_MTYP_STATUS_MEDICAL MLX90632_MTYP_STATUS(MLX90632_MTYP_MEDICAL)
++#define MLX90632_MTYP_STATUS_EXTENDED MLX90632_MTYP_STATUS(MLX90632_MTYP_EXTENDED)
++
++/* I2C command register - volatile */
++#define MLX90632_REG_I2C_CMD    0x3005 /* I2C command Register address */
++
+ /* Device status register - volatile */
+ #define MLX90632_REG_STATUS	0x3fff /* Device status register */
+ #define   MLX90632_STAT_BUSY		BIT(10) /* Device busy indicator */
+@@ -81,6 +95,8 @@
+ /* Magic constants */
+ #define MLX90632_ID_MEDICAL	0x0105 /* EEPROM DSPv5 Medical device id */
+ #define MLX90632_ID_CONSUMER	0x0205 /* EEPROM DSPv5 Consumer device id */
++#define MLX90632_ID_EXTENDED	0x0505 /* EEPROM DSPv5 Extended range device id */
++#define MLX90632_ID_MASK	GENMASK(14, 0) /* DSP version and device ID in EE_VERSION */
+ #define MLX90632_DSP_VERSION	5 /* DSP version */
+ #define MLX90632_DSP_MASK	GENMASK(7, 0) /* DSP version in EE_VERSION */
+ #define MLX90632_RESET_CMD	0x0006 /* Reset sensor (address or global) */
+@@ -88,16 +104,20 @@
+ #define MLX90632_REF_3		12LL /**< ResCtrlRef value of Channel 3 */
+ #define MLX90632_MAX_MEAS_NUM	31 /**< Maximum measurements in list */
+ #define MLX90632_SLEEP_DELAY_MS 3000 /**< Autosleep delay */
++#define MLX90632_EXTENDED_LIMIT 27000 /* Extended mode raw value limit */
+ 
+ struct mlx90632_data {
+ 	struct i2c_client *client;
+ 	struct mutex lock; /* Multiple reads for single measurement */
+ 	struct regmap *regmap;
+ 	u16 emissivity;
++	u8 mtyp; /* measurement type - to enable extended range calculations */
++	u32 object_ambient_temperature;
+ };
+ 
+ static const struct regmap_range mlx90632_volatile_reg_range[] = {
+ 	regmap_reg_range(MLX90632_REG_I2C_ADDR, MLX90632_REG_CONTROL),
++	regmap_reg_range(MLX90632_REG_I2C_CMD, MLX90632_REG_I2C_CMD),
+ 	regmap_reg_range(MLX90632_REG_STATUS, MLX90632_REG_STATUS),
+ 	regmap_reg_range(MLX90632_RAM_1(0),
+ 			 MLX90632_RAM_3(MLX90632_MAX_MEAS_NUM)),
+@@ -113,6 +133,7 @@ static const struct regmap_range mlx90632_read_reg_range[] = {
+ 	regmap_reg_range(MLX90632_EE_CTRL, MLX90632_EE_I2C_ADDR),
+ 	regmap_reg_range(MLX90632_EE_Ha, MLX90632_EE_Hb),
+ 	regmap_reg_range(MLX90632_REG_I2C_ADDR, MLX90632_REG_CONTROL),
++	regmap_reg_range(MLX90632_REG_I2C_CMD, MLX90632_REG_I2C_CMD),
+ 	regmap_reg_range(MLX90632_REG_STATUS, MLX90632_REG_STATUS),
+ 	regmap_reg_range(MLX90632_RAM_1(0),
+ 			 MLX90632_RAM_3(MLX90632_MAX_MEAS_NUM)),
+@@ -199,6 +220,28 @@ static int mlx90632_perform_measurement(struct mlx90632_data *data)
+ 	return (reg_status & MLX90632_STAT_CYCLE_POS) >> 2;
+ }
+ 
++static int mlx90632_set_meas_type(struct regmap *regmap, u8 type)
++{
++	int ret;
++
++	if ((type != MLX90632_MTYP_MEDICAL) & (type != MLX90632_MTYP_EXTENDED))
++		return -EINVAL;
++
++	ret = regmap_write(regmap, MLX90632_REG_I2C_CMD, MLX90632_RESET_CMD);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_write_bits(regmap, MLX90632_REG_CONTROL,
++				 (MLX90632_CFG_MTYP_MASK | MLX90632_CFG_PWR_MASK),
++				 (MLX90632_MTYP_STATUS(type) | MLX90632_PWR_STATUS_HALT));
++	if (ret < 0)
++		return ret;
++
++	mlx90632_pwr_continuous(regmap);
++
++	return ret;
++}
++
+ static int mlx90632_channel_new_select(int perform_ret, uint8_t *channel_new,
+ 				       uint8_t *channel_old)
+ {
+@@ -300,6 +343,106 @@ static int mlx90632_read_all_channel(struct mlx90632_data *data,
+ 	return ret;
+ }
+ 
++static int mlx90632_read_ambient_raw_extended(struct regmap *regmap,
++					      s16 *ambient_new_raw, s16 *ambient_old_raw)
++{
++	int ret;
++	unsigned int read_tmp;
++
++	ret = regmap_read(regmap, MLX90632_RAM_3(17), &read_tmp);
++	if (ret < 0)
++		return ret;
++	*ambient_new_raw = (s16)read_tmp;
++
++	ret = regmap_read(regmap, MLX90632_RAM_3(18), &read_tmp);
++	if (ret < 0)
++		return ret;
++	*ambient_old_raw = (s16)read_tmp;
++
++	return ret;
++}
++
++static int mlx90632_read_object_raw_extended(struct regmap *regmap, s16 *object_new_raw)
++{
++	int ret;
++	unsigned int read_tmp;
++	s32 read;
++
++	ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
++	if (ret < 0)
++		return ret;
++	read = (s16)read_tmp;
++
++	ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
++	if (ret < 0)
++		return ret;
++	read = read - (s16)read_tmp;
++
++	ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
++	if (ret < 0)
++		return ret;
++	read = read - (s16)read_tmp;
++
++	ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
++	if (ret < 0)
++		return ret;
++	read = (read + (s16)read_tmp) / 2;
++
++	ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
++	if (ret < 0)
++		return ret;
++	read = read + (s16)read_tmp;
++
++	ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);
++	if (ret < 0)
++		return ret;
++	read = read + (s16)read_tmp;
++
++	if (read > 32767 || read < -32768)
++		return -EINVAL;
++
++	*object_new_raw = (int16_t)read;
++
++	return ret;
++}
++
++static int mlx90632_read_all_channel_extended(struct mlx90632_data *data, s16 *object_new_raw,
++					      s16 *ambient_new_raw, s16 *ambient_old_raw)
++{
++	s32 ret;
++	int tries = 4;
++
++	mutex_lock(&data->lock);
++	ret = mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_EXTENDED);
++	if (ret < 0)
++		goto read_unlock;
++
++	while (tries-- > 0) {
++		ret = mlx90632_perform_measurement(data);
++		if (ret < 0)
++			goto read_unlock;
++
++		if (ret == 19)
++			break;
++	}
++	if (tries < 0) {
++		ret = -ETIMEDOUT;
++		goto read_unlock;
++	}
++
++	ret = mlx90632_read_object_raw_extended(data->regmap, object_new_raw);
++	if (ret < 0)
++		goto read_unlock;
++
++	ret = mlx90632_read_ambient_raw_extended(data->regmap, ambient_new_raw, ambient_old_raw);
++
++read_unlock:
++	(void) mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_MEDICAL);
++
++	mutex_unlock(&data->lock);
++	return ret;
++}
++
+ static int mlx90632_read_ee_register(struct regmap *regmap, u16 reg_lsb,
+ 				     s32 *reg_value)
+ {
+@@ -354,9 +497,23 @@ static s64 mlx90632_preprocess_temp_obj(s16 object_new_raw, s16 object_old_raw,
+ 	return div64_s64((tmp << 19ULL), 1000LL);
+ }
+ 
++static s64 mlx90632_preprocess_temp_obj_extended(s16 object_new_raw, s16 ambient_new_raw,
++						 s16 ambient_old_raw, s16 Ka)
++{
++	s64 VR_IR, kKa, tmp;
++
++	kKa = ((s64)Ka * 1000LL) >> 10ULL;
++	VR_IR = (s64)ambient_old_raw * 1000000LL +
++		kKa * div64_s64(((s64)ambient_new_raw * 1000LL),
++			(MLX90632_REF_3));
++	tmp = div64_s64(
++			div64_s64((((s64)object_new_raw) * 1000000000000LL), MLX90632_REF_12),
++			VR_IR);
++	return div64_s64((tmp << 19ULL), 1000LL);
++}
++
+ static s32 mlx90632_calc_temp_ambient(s16 ambient_new_raw, s16 ambient_old_raw,
+-				      s32 P_T, s32 P_R, s32 P_G, s32 P_O,
+-				      s16 Gb)
++				      s32 P_T, s32 P_R, s32 P_G, s32 P_O, s16 Gb)
+ {
+ 	s64 Asub, Bsub, Ablock, Bblock, Cblock, AMB, sum;
+ 
+@@ -423,6 +580,37 @@ static s32 mlx90632_calc_temp_object(s64 object, s64 ambient, s32 Ea, s32 Eb,
+ 	return temp;
+ }
+ 
++static s32 mlx90632_calc_temp_object_extended(s64 object, s64 ambient, s64 reflected,
++					      s32 Ea, s32 Eb, s32 Fa, s32 Fb, s32 Ga,
++					      s16 Ha, s16 Hb, u16 tmp_emi)
++{
++	s64 kTA, kTA0, TAdut, TAdut4, Tr4, TaTr4;
++	s64 temp = 25000;
++	s8 i;
++
++	kTA = (Ea * 1000LL) >> 16LL;
++	kTA0 = (Eb * 1000LL) >> 8LL;
++	TAdut = div64_s64(((ambient - kTA0) * 1000000LL), kTA) + 25 * 1000000LL;
++	Tr4 = (div64_long(reflected, 10) + 27315) *
++		(div64_long(reflected, 10) + 27315) *
++		(div64_long(reflected, 10) + 27315) *
++		(div64_long(reflected, 10) + 27315);
++	TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
++		(div64_s64(TAdut, 10000LL) + 27315) *
++		(div64_s64(TAdut, 10000LL)  + 27315) *
++		(div64_s64(TAdut, 10000LL) + 27315);
++	TaTr4 = Tr4 - div64_long(Tr4 - TAdut4, tmp_emi) * 1000;
++
++	/* Iterations of calculation as described in datasheet */
++	for (i = 0; i < 5; ++i) {
++		temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut, TaTr4,
++							   Fa / 2, Fb, Ga, Ha, Hb,
++							   tmp_emi);
++	}
++
++	return temp;
++}
++
+ static int mlx90632_calc_object_dsp105(struct mlx90632_data *data, int *val)
+ {
+ 	s32 ret;
+@@ -470,6 +658,26 @@ static int mlx90632_calc_object_dsp105(struct mlx90632_data *data, int *val)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	if (object_new_raw > MLX90632_EXTENDED_LIMIT &&
++	    data->mtyp == MLX90632_MTYP_EXTENDED) {
++		ret = mlx90632_read_all_channel_extended(data, &object_new_raw,
++							 &ambient_new_raw, &ambient_old_raw);
++		if (ret < 0)
++			return ret;
++
++		/* Use extended mode calculations */
++		ambient = mlx90632_preprocess_temp_amb(ambient_new_raw,
++						       ambient_old_raw, Gb);
++		object = mlx90632_preprocess_temp_obj_extended(object_new_raw,
++							       ambient_new_raw,
++							       ambient_old_raw, Ka);
++		*val = mlx90632_calc_temp_object_extended(object, ambient,
++							  data->object_ambient_temperature,
++							  Ea, Eb, Fa, Fb, Ga,
++							  Ha, Hb, data->emissivity);
++		return 0;
++	}
++
+ 	ambient = mlx90632_preprocess_temp_amb(ambient_new_raw,
+ 					       ambient_old_raw, Gb);
+ 	object = mlx90632_preprocess_temp_obj(object_new_raw,
+@@ -643,6 +851,7 @@ static int mlx90632_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, indio_dev);
+ 	mlx90632->client = client;
+ 	mlx90632->regmap = regmap;
++	mlx90632->mtyp = MLX90632_MTYP_MEDICAL;
+ 
+ 	mutex_init(&mlx90632->lock);
+ 	indio_dev->name = id->name;
+@@ -662,12 +871,17 @@ static int mlx90632_probe(struct i2c_client *client,
+ 		dev_err(&client->dev, "read of version failed: %d\n", ret);
+ 		return ret;
+ 	}
++	read = read & MLX90632_ID_MASK;
+ 	if (read == MLX90632_ID_MEDICAL) {
+ 		dev_dbg(&client->dev,
+ 			"Detected Medical EEPROM calibration %x\n", read);
+ 	} else if (read == MLX90632_ID_CONSUMER) {
+ 		dev_dbg(&client->dev,
+ 			"Detected Consumer EEPROM calibration %x\n", read);
++	} else if (read == MLX90632_ID_EXTENDED) {
++		dev_dbg(&client->dev,
++			"Detected Extended range EEPROM calibration %x\n", read);
++		mlx90632->mtyp = MLX90632_MTYP_EXTENDED;
+ 	} else if ((read & MLX90632_DSP_MASK) == MLX90632_DSP_VERSION) {
+ 		dev_dbg(&client->dev,
+ 			"Detected Unknown EEPROM calibration %x\n", read);	
+@@ -679,6 +893,7 @@ static int mlx90632_probe(struct i2c_client *client,
+ 	}
+ 
+ 	mlx90632->emissivity = 1000;
++	mlx90632->object_ambient_temperature = 25000; /* 25 degrees Celsius */
+ 
+ 	pm_runtime_disable(&client->dev);
+ 	ret = pm_runtime_set_active(&client->dev);
+-- 
+2.25.1
 
-? Do we need to care for other allowed values of new->handler? Maybe
-irq_default_primary_handler?
-
-> > Is this bad enough to justify sending this patch to stable?
->=20
-> Yes, a Cc: stable and a Fixes: tag is justified.
-
-That would be
-
-Fixes: be8c8facc707 ("gpio: new driver to work with a 8x12 siox")
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---75n4mrucr4xkreqh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8scPoACgkQwfwUeK3K
-7AnQjwf+NVenm0tilv5dLcz2EM4fNz/Drg4QN3+GejSqC91vKU3VrTjbNcb0YxR8
-qHMTARruuR0CTOAo4L21onsw+9svN8b4ykl+yeqQ2NAa0mWMv7FQvJzUl0HscMwv
-imS7eusbaIVSPCDKI4B736GpMlARYzNvvwDT+i7MlqLrRlqvFN/sTvy7o5lvNDZG
-Zo2Hn6DKHwo+xBEm08Lad05BMf5s/1/oAwlNfPg2SMR8sxQ3ptrCDm+BqDuib6jy
-UCXH5/rWqI3V0fRPMc3VOvvyYvi/XwAICQ/Jd0e/BkKj0odeGxqNLgMC+IRwTwk6
-O+UsW9NscENYju1C7cbu2EBeBf5FcQ==
-=qFCN
------END PGP SIGNATURE-----
-
---75n4mrucr4xkreqh--
