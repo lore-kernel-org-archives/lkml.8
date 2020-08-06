@@ -2,370 +2,120 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3155C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D81E72311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D392086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzDR8/m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgHFQwu (ORCPT
+        id S1729476AbgHFQxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:52:50 -0400
-Received: from 20.mo1.mail-out.ovh.net ([188.165.45.168]:41145 "EHLO
-        20.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729231AbgHFQwb (ORCPT
+        Thu, 6 Aug 2020 12:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728618AbgHFQvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:52:31 -0400
-X-Greylist: delayed 2103 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 12:52:27 EDT
-Received: from player791.ha.ovh.net (unknown [10.110.115.229])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 77EF91CEBB8
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 18:15:19 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player791.ha.ovh.net (Postfix) with ESMTPSA id 9F80915002624;
-        Thu,  6 Aug 2020 16:15:13 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-104R0059bfe411c-1641-46b4-891b-cf95eaa2adb0,
-                    9D5F4B8471F7AF6BEF45141B8B52B4DEEC6DEFE4) smtp.auth=steve@sk2.org
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v2] docs: remove the 2.6 "Upgrading I2C Drivers" guide
-Date:   Thu,  6 Aug 2020 18:14:56 +0200
-Message-Id: <20200806161456.8680-1-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 3213036861844639109
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedtgddutdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeeluddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+        Thu, 6 Aug 2020 12:51:02 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D064C0086B0;
+        Thu,  6 Aug 2020 08:33:13 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g33so9518531pgb.4;
+        Thu, 06 Aug 2020 08:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=CN7uHlPIi8/iD7OlGD8kFHlcRvOdmfTdi7G7UlWQ4cQ=;
+        b=bzDR8/m7lhxxuexHxN8XtssGQWJGqBJsSmWiN7jtIMtLvoVdn94DwJr9Su2QJRQGZs
+         k29+mHOG9x2wsoA5CWruJlqxflFi2bQ36Fb4xCsxBDz0a4ERJHPuU3xI02EXlQ+SkaZH
+         78yOyQGOyE48KySnZY/Sy1Y+focpKatwdt9yJashzTjxCyZTHB9YC1HUnzEEgYE92HoS
+         FDTceYg/sfB8KHsQ17SJtCKTQPWE45ziA2Wv+u9hJyWiyfogXran7AefBZ+tUZFHswWp
+         wbomNsX73S4/jwlA9GAGPqMzo5hMGGlvNrBxKIqRHvjIV9uG588ZV3PUV18kEvbugH7f
+         1uCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references;
+        bh=CN7uHlPIi8/iD7OlGD8kFHlcRvOdmfTdi7G7UlWQ4cQ=;
+        b=tPGtnioMhCujeNsvzRD1tjq6+2uVbE6hwa48hqFAYZbPb+//R4vA9Co5x/TSZ7nMzm
+         iCW0rAXQm6DV/dluzj8XnljQMkIK/016MWYsYw6/X9rNQ2U862iEyn1VQizWJ4hiu8OY
+         P4wHuOL24PIKKh8srutLGJYjkv817+BV/ZWewg4W6iC+p5/i7h5rZJ66irNh81uZ6eso
+         OZZSYDsRuX69mRhD5cr5tLZ+quyJMovmyl9W/2gb/Yh5ZDQO8PhJrgFBxBZTNXVUdB8i
+         nE38A345n8E/RYp+FkYL38ShwOWkW7FPMfNyNu+RaYcsPAoZXPNtj3RCXIy55ymFpqv8
+         kopw==
+X-Gm-Message-State: AOAM530TZiAhp8WmeHY9GgGvMSf773eoiP3TjBmJaj6v+6Y9rIPtIn7h
+        gJU2pne7QKMCk9ami0+jGSo=
+X-Google-Smtp-Source: ABdhPJxhsDhjaMYsKZs6gAAdwc4LekHYCqv+Ibr7AR7BKYdy6R2x5nFLfZMsGjMySWEvo48m78m2Zg==
+X-Received: by 2002:a63:f24a:: with SMTP id d10mr7739694pgk.4.1596727992856;
+        Thu, 06 Aug 2020 08:33:12 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g12sm8159035pfb.190.2020.08.06.08.33.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Aug 2020 08:33:12 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v4 1/7] iio: cros_ec: Accept -EOPNOTSUPP as 'not supported' error code
+Date:   Thu,  6 Aug 2020 08:33:02 -0700
+Message-Id: <20200806153308.204605-2-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806153308.204605-1-linux@roeck-us.net>
+References: <20200806153308.204605-1-linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the drivers have long since been upgraded, and all the important
-information here is also included in the "Implementing I2C device
-drivers" guide.
+A follow-up patch will extend the number of errors reported by
+cros_ec_cmd_xfer_status(). Specifically, the function will return
+-EOPNOTSUPP if a command is not supported by the EC. Prepare for it.
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>
+Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc: Prashant Malani <pmalani@chromium.org>
+Cc: Brian Norris <briannorris@chromium.org>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- Documentation/i2c/index.rst             |   1 -
- Documentation/i2c/upgrading-clients.rst | 285 ------------------------
- 2 files changed, 286 deletions(-)
- delete mode 100644 Documentation/i2c/upgrading-clients.rst
+v4: No change
+v3: No change
+v2: No change
 
-diff --git a/Documentation/i2c/index.rst b/Documentation/i2c/index.rst
-index fee4744475df..8a2ad3845191 100644
---- a/Documentation/i2c/index.rst
-+++ b/Documentation/i2c/index.rst
-@@ -62,7 +62,6 @@ Legacy documentation
- .. toctree::
-    :maxdepth: 1
- 
--   upgrading-clients
-    old-module-parameters
- 
- .. only::  subproject and html
-diff --git a/Documentation/i2c/upgrading-clients.rst b/Documentation/i2c/upgrading-clients.rst
-deleted file mode 100644
-index 1708090d7b8f..000000000000
---- a/Documentation/i2c/upgrading-clients.rst
-+++ /dev/null
-@@ -1,285 +0,0 @@
--=================================================
--Upgrading I2C Drivers to the new 2.6 Driver Model
--=================================================
--
--Ben Dooks <ben-linux@fluff.org>
--
--Introduction
--------------
--
--This guide outlines how to alter existing Linux 2.6 client drivers from
--the old to the new binding methods.
--
--
--Example old-style driver
--------------------------
--
--::
--
--  struct example_state {
--	struct i2c_client	client;
--	....
--  };
--
--  static struct i2c_driver example_driver;
--
--  static unsigned short ignore[] = { I2C_CLIENT_END };
--  static unsigned short normal_addr[] = { OUR_ADDR, I2C_CLIENT_END };
--
--  I2C_CLIENT_INSMOD;
--
--  static int example_attach(struct i2c_adapter *adap, int addr, int kind)
--  {
--	struct example_state *state;
--	struct device *dev = &adap->dev;  /* to use for dev_ reports */
--	int ret;
--
--	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
--	if (state == NULL) {
--		dev_err(dev, "failed to create our state\n");
--		return -ENOMEM;
--	}
--
--	example->client.addr    = addr;
--	example->client.flags   = 0;
--	example->client.adapter = adap;
--
--	i2c_set_clientdata(&state->i2c_client, state);
--	strscpy(client->i2c_client.name, "example", sizeof(client->i2c_client.name));
--
--	ret = i2c_attach_client(&state->i2c_client);
--	if (ret < 0) {
--		dev_err(dev, "failed to attach client\n");
--		kfree(state);
--		return ret;
--	}
--
--	dev = &state->i2c_client.dev;
--
--	/* rest of the initialisation goes here. */
--
--	dev_info(dev, "example client created\n");
--
--	return 0;
--  }
--
--  static int example_detach(struct i2c_client *client)
--  {
--	struct example_state *state = i2c_get_clientdata(client);
--
--	i2c_detach_client(client);
--	kfree(state);
--	return 0;
--  }
--
--  static int example_attach_adapter(struct i2c_adapter *adap)
--  {
--	return i2c_probe(adap, &addr_data, example_attach);
--  }
--
--  static struct i2c_driver example_driver = {
--	.driver		= {
--		.owner		= THIS_MODULE,
--		.name		= "example",
--		.pm		= &example_pm_ops,
--	},
--	.attach_adapter = example_attach_adapter,
--	.detach_client	= example_detach,
--  };
--
--
--Updating the client
---------------------
--
--The new style binding model will check against a list of supported
--devices and their associated address supplied by the code registering
--the busses. This means that the driver .attach_adapter and
--.detach_client methods can be removed, along with the addr_data,
--as follows::
--
--  - static struct i2c_driver example_driver;
--
--  - static unsigned short ignore[] = { I2C_CLIENT_END };
--  - static unsigned short normal_addr[] = { OUR_ADDR, I2C_CLIENT_END };
--
--  - I2C_CLIENT_INSMOD;
--
--  - static int example_attach_adapter(struct i2c_adapter *adap)
--  - {
--  - 	return i2c_probe(adap, &addr_data, example_attach);
--  - }
--
--    static struct i2c_driver example_driver = {
--  -	.attach_adapter = example_attach_adapter,
--  -	.detach_client	= example_detach,
--    }
--
--Add the probe and remove methods to the i2c_driver, as so::
--
--   static struct i2c_driver example_driver = {
--  +	.probe		= example_probe,
--  +	.remove		= example_remove,
--   }
--
--Change the example_attach method to accept the new parameters
--which include the i2c_client that it will be working with::
--
--  - static int example_attach(struct i2c_adapter *adap, int addr, int kind)
--  + static int example_probe(struct i2c_client *client,
--  +			   const struct i2c_device_id *id)
--
--Change the name of example_attach to example_probe to align it with the
--i2c_driver entry names. The rest of the probe routine will now need to be
--changed as the i2c_client has already been setup for use.
--
--The necessary client fields have already been setup before
--the probe function is called, so the following client setup
--can be removed::
--
--  -	example->client.addr    = addr;
--  -	example->client.flags   = 0;
--  -	example->client.adapter = adap;
--  -
--  -	strscpy(client->i2c_client.name, "example", sizeof(client->i2c_client.name));
--
--The i2c_set_clientdata is now::
--
--  -	i2c_set_clientdata(&state->client, state);
--  +	i2c_set_clientdata(client, state);
--
--The call to i2c_attach_client is no longer needed, if the probe
--routine exits successfully, then the driver will be automatically
--attached by the core. Change the probe routine as so::
--
--  -	ret = i2c_attach_client(&state->i2c_client);
--  -	if (ret < 0) {
--  -		dev_err(dev, "failed to attach client\n");
--  -		kfree(state);
--  -		return ret;
--  -	}
--
--
--Remove the storage of 'struct i2c_client' from the 'struct example_state'
--as we are provided with the i2c_client in our example_probe. Instead we
--store a pointer to it for when it is needed.
--
--::
--
--  struct example_state {
--  -	struct i2c_client	client;
--  +	struct i2c_client	*client;
--
--the new i2c client as so::
--
--  -	struct device *dev = &adap->dev;  /* to use for dev_ reports */
--  + 	struct device *dev = &i2c_client->dev;  /* to use for dev_ reports */
--
--And remove the change after our client is attached, as the driver no
--longer needs to register a new client structure with the core::
--
--  -	dev = &state->i2c_client.dev;
--
--In the probe routine, ensure that the new state has the client stored
--in it::
--
--  static int example_probe(struct i2c_client *i2c_client,
--			 const struct i2c_device_id *id)
--  {
--	struct example_state *state;
--	struct device *dev = &i2c_client->dev;
--	int ret;
--
--	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
--	if (state == NULL) {
--		dev_err(dev, "failed to create our state\n");
--		return -ENOMEM;
--	}
--
--  +	state->client = i2c_client;
--
--Update the detach method, by changing the name to _remove and
--to delete the i2c_detach_client call. It is possible that you
--can also remove the ret variable as it is not needed for any
--of the core functions.
--
--::
--
--  - static int example_detach(struct i2c_client *client)
--  + static int example_remove(struct i2c_client *client)
--  {
--	struct example_state *state = i2c_get_clientdata(client);
--
--  -	i2c_detach_client(client);
--
--And finally ensure that we have the correct ID table for the i2c-core
--and other utilities::
--
--  + struct i2c_device_id example_idtable[] = {
--  +       { "example", 0 },
--  +       { }
--  +};
--  +
--  +MODULE_DEVICE_TABLE(i2c, example_idtable);
--
--  static struct i2c_driver example_driver = {
--	.driver		= {
--		.owner		= THIS_MODULE,
--		.name		= "example",
--	},
--  +	.id_table	= example_ids,
--
--
--Our driver should now look like this::
--
--  struct example_state {
--	struct i2c_client	*client;
--	....
--  };
--
--  static int example_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
--  {
--	struct example_state *state;
--	struct device *dev = &client->dev;
--
--	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
--	if (state == NULL) {
--		dev_err(dev, "failed to create our state\n");
--		return -ENOMEM;
--	}
--
--	state->client = client;
--	i2c_set_clientdata(client, state);
--
--	/* rest of the initialisation goes here. */
--
--	dev_info(dev, "example client created\n");
--
--	return 0;
--  }
--
--  static int example_remove(struct i2c_client *client)
--  {
--	struct example_state *state = i2c_get_clientdata(client);
--
--	kfree(state);
--	return 0;
--  }
--
--  static struct i2c_device_id example_idtable[] = {
--	{ "example", 0 },
--	{ }
--  };
--
--  MODULE_DEVICE_TABLE(i2c, example_idtable);
--
--  static struct i2c_driver example_driver = {
--	.driver		= {
--		.owner		= THIS_MODULE,
--		.name		= "example",
--		.pm		= &example_pm_ops,
--	},
--	.id_table	= example_idtable,
--	.probe		= example_probe,
--	.remove		= example_remove,
--  };
+ drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-base-commit: 2324d50d051ec0f14a548e78554fb02513d6dcef
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+index a66941fdb385..e3aff95493dd 100644
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+@@ -73,7 +73,7 @@ static int cros_ec_sensors_read(struct iio_dev *indio_dev,
+ 		st->core.param.sensor_offset.flags = 0;
+ 
+ 		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
+-		if (ret == -EPROTO) {
++		if (ret == -EPROTO || ret == -EOPNOTSUPP) {
+ 			/* Reading calibscale is not supported on older EC. */
+ 			*val = 1;
+ 			*val2 = 0;
 -- 
-2.20.1
+2.17.1
 
