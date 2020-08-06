@@ -2,135 +2,180 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC8AC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8512C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDC52224D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:00:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="o/dd2D3f"
+	by mail.kernel.org (Postfix) with ESMTP id 9FD5F20748
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596751249;
+	bh=OmPyAHrc8XMXpip9NvERg00Q2YyQjkyAT/0lynti33s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=toueyE3tH9Dg+nuhgPo2GqMNgnSWhC/Scm4a16UCXTJJviZcDa85PTH0Zl4iW8dY5
+	 ocjUngOcmYzEsw6fox87pOlBPelT51ygyfHE8YYgGu5EgRfciD+GabrTVkjkOWtmqU
+	 Ga5Y5t9tUWKb5vtsK17ws7r+soQNn4WaWUdCsKEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgHFWAI (ORCPT
+        id S1726627AbgHFWAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:00:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4596 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725817AbgHFWAI (ORCPT
+        Thu, 6 Aug 2020 18:00:48 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:19146 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgHFWAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:00:08 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076LqDi5131695;
-        Thu, 6 Aug 2020 17:59:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=cxTZzcb4aMf7WDm8Yvfasmnlo1/3FhGlzPTgL7YlmKQ=;
- b=o/dd2D3fn8snErUYFYK/U7j4E1/t8rQMpVd3xFKd6KrsGskjDKFdUD3LkHN53ADD+VnD
- dZu3aybdwPpgmRihyYL+6ywq0JpVZCZZMEYSxTgz4hk1vGhBt95YDoH+FqKLkMkwn8tm
- MhFVscsjgcMtSYBJj2ArF0dPEmV0rCVGbI/LkG7q8j2EBNlnx2gDL9DinKDBw/76sFFV
- P2NiFNTGuPxhehPsFXTP6alURkslAn9gMLbGz1VKWKMaZj8Y5nFXfRzbaZ1CIf9t0NJO
- js95XVm08yi1BvS/gpuuvavquEclE3ylnXuoN7tmx+lxtDOJ2J24zpPqeyvcmqDDvWep Lg== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rntyeq7e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 17:59:59 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076LjouV026006;
-        Thu, 6 Aug 2020 21:59:56 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 32n018bkby-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 21:59:56 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076LxrEC29295026
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 21:59:53 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A80035204E;
-        Thu,  6 Aug 2020 21:59:53 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.117.136])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8B43552051;
-        Thu,  6 Aug 2020 21:59:50 +0000 (GMT)
-Message-ID: <cd7e4fdabf563792d31bbcb8f6df6483570e7221.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 09/17] LSM: Introduce kernel_post_load_data() hook
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Takashi Iwai <tiwai@suse.de>, Jessica Yu <jeyu@kernel.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 06 Aug 2020 17:59:46 -0400
-In-Reply-To: <20200729175845.1745471-10-keescook@chromium.org>
-References: <20200729175845.1745471-1-keescook@chromium.org>
-         <20200729175845.1745471-10-keescook@chromium.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_17:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060141
+        Thu, 6 Aug 2020 18:00:47 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 076M0TUn006651;
+        Fri, 7 Aug 2020 07:00:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 076M0TUn006651
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596751230;
+        bh=Xfs85PHXdOhRcMjUjbm4/NBLl7dcQvPuB0IgyJvQcNY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xItFWfax66V1ZlVuvEA/5RZID3kXTCWeBtcMORvBRgSfWXPwamCAkrwdwA0S8/b/k
+         /154VHpCDvYt7vYSXrKjIz0Y8CPUmE9GkVL2xNRNFxKKJyMO8QRKxjDC/2iNVbLyUg
+         bYHXHjmXKfqxuRglfmAYs6gqFzpxtWrr+LQOl+aeIrraoJ40THoJRZuS/Sz9oh1rPz
+         7HtXBZh6y7B2IHNbSxim8Giv6ZhkXqc26FALl+KIQAV2fu2N9aGrjU75pLdIEjGLD6
+         V601vnzM/ZBII0ObJyn9TfYh4Iqc1CWGBbEjTHIRthG73/QOPOnxPvEOKPbM6WaIcy
+         6E9R3JceQurXA==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id n25so11186415vsq.6;
+        Thu, 06 Aug 2020 15:00:29 -0700 (PDT)
+X-Gm-Message-State: AOAM5334jNectuqMkMvnDpY6yL+quG3Pj7Qbptv/VvLyCko/eK76tK1e
+        ArbT0Nb8VUfgBxoIUNUVzassql2sGbFuGBVgCxQ=
+X-Google-Smtp-Source: ABdhPJzz7ZZOU/6VCnvmI3r7gzwomd0hOWCZWY3UlQMHSS3+9qv2lWLJwLf6DZJtEiuUw3mJA7PzeBefGQiHc/jfmQ8=
+X-Received: by 2002:a67:d908:: with SMTP id t8mr8112536vsj.215.1596751228524;
+ Thu, 06 Aug 2020 15:00:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200702233929.181409-1-danny@kdrag0n.dev> <20200705024318.GA433@Ryzen-9-3900X.localdomain>
+In-Reply-To: <20200705024318.GA433@Ryzen-9-3900X.localdomain>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 7 Aug 2020 06:59:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ1VqK=zwMUdWCqh2ZmKbQ7p80QBZ0XB9wJyzKgefwY-Q@mail.gmail.com>
+Message-ID: <CAK7LNAQ1VqK=zwMUdWCqh2ZmKbQ7p80QBZ0XB9wJyzKgefwY-Q@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Allow Clang global merging if !MODULES
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Danny Lin <danny@kdrag0n.dev>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-29 at 10:58 -0700, Kees Cook wrote:
-> There are a few places in the kernel where LSMs would like to have
-> visibility into the contents of a kernel buffer that has been loaded or
-> read. While security_kernel_post_read_file() (which includes the
-> buffer) exists as a pairing for security_kernel_read_file(), no such
-> hook exists to pair with security_kernel_load_data().
-> 
-> Earlier proposals for just using security_kernel_post_read_file() with a
-> NULL file argument were rejected (i.e. "file" should always be valid for
-> the security_..._file hooks, but it appears at least one case was
-> left in the kernel during earlier refactoring. (This will be fixed in
-> a subsequent patch.)
-> 
-> Since not all cases of security_kernel_load_data() can have a single
-> contiguous buffer made available to the LSM hook (e.g. kexec image
-> segments are separately loaded), there needs to be a way for the LSM to
-> reason about its expectations of the hook coverage. In order to handle
-> this, add a "contents" argument to the "kernel_load_data" hook that
-> indicates if the newly added "kernel_post_load_data" hook will be called
-> with the full contents once loaded. That way, LSMs requiring full contents
-> can choose to unilaterally reject "kernel_load_data" with contents=false
-> (which is effectively the existing hook coverage), but when contents=true
-> they can allow it and later evaluate the "kernel_post_load_data" hook
-> once the buffer is loaded.
-> 
-> With this change, LSMs can gain coverage over non-file-backed data loads
-> (e.g. init_module(2) and firmware userspace helper), which will happen
-> in subsequent patches.
-> 
-> Additionally prepare IMA to start processing these cases.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Sun, Jul 5, 2020 at 11:43 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Hi Danny,
+>
+> On Thu, Jul 02, 2020 at 04:39:29PM -0700, Danny Lin wrote:
+> > The old reasoning for disabling Clang's global merging optimization is
+> > that it breaks modpost by coalescing many symbols into _MergedGlobals.
+> > However, modpost is only used in builds with dynamic modules;
+> > vmlinux.symvers is still created during standalone builds, but it's
+> > effectively just an empty dummy file.
 
-Thanks, Kees.   Other than a missing "name" field, it looks good.
+I am not convinced with this statement.
 
-The security_kernel_post_load_data hook may be used to verify appended
-signatures and to measure the buffer data.  Passing the kernel module
-(load_info.name) and firmware (fw_name) names is critical at least for
-IMA-measurement.
+modpost is used even if CONFIG_MODULES=n
 
-thanks,
+You can see the following log for allnoconfig.
 
-Mimi
+  MODPOST vmlinux.symvers
 
+
+Yes, vmlinux.symver is empty.
+This is because EXPORT_SYMBOL is no-op when CONFIG_MODULES=n.
+
+
+
+> >
+> > Enabling the optimization whenever possible allows us to reap the
+> > benefits of reduced register pressure when many global variables are
+> > used in the same function.
+>
+> Have you run into any place within the kernel that this is the case or
+> this more of a "could help if this ever happens" type of deal?
+>
+> > An x86 defconfig kernel built with this optimization boots fine in qemu,
+> > and a downstream 4.14 kernel has been used on arm64 for nearly a year
+> > without any issues caused by this optimization.
+>
+> If I am reading LLVM's source correctly, this option only seems relevant
+> for ARM and AArch64?
+>
+> $ rg --no-heading createGlobalMergePass
+> llvm/lib/CodeGen/GlobalMerge.cpp:679:Pass *llvm::createGlobalMergePass(const TargetMachine *TM, unsigned Offset,
+> llvm/lib/Target/AArch64/AArch64TargetMachine.cpp:524:    addPass(createGlobalMergePass(TM, 4095, OnlyOptimizeForSize,
+> llvm/lib/Target/ARM/ARMTargetMachine.cpp:456:    addPass(createGlobalMergePass(TM, 127, OnlyOptimizeForSize,
+> llvm/include/llvm/CodeGen/Passes.h:419:  Pass *createGlobalMergePass(const TargetMachine *TM, unsigned MaximalOffset,
+>
+> Otherwise, I think this is probably okay. According to [1], when the
+> optimization level is less than -O3, we get a less aggressive version of
+> this optimization level, which is good for code size:
+>
+> https://github.com/llvm/llvm-project/commit/8207641251706ea808df6d2a1ea8f87b8ee04c6d
+
+
+I do not understand how -mglobal-merge works.
+Do you have test code to generate _MergedGlobals ?
+
+
+Thanks.
+
+
+
+
+
+> However, we do potentially get merging of extern globals if we do not
+> specify -mglobal-merge (if I am reading the source correctly), which
+> this commit claims might hurt performance? Not sure if there is any way
+> to test or verify that?
+>
+> https://github.com/llvm/llvm-project/commit/de73404b8c4332190750537eb93ce0d5b6451300
+>
+> > Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+> > ---
+> >  Makefile | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index a60c98519c37..f04c3639cf61 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -772,10 +772,13 @@ ifdef CONFIG_CC_IS_CLANG
+> >  KBUILD_CPPFLAGS += -Qunused-arguments
+> >  KBUILD_CFLAGS += -Wno-format-invalid-specifier
+> >  KBUILD_CFLAGS += -Wno-gnu
+> > +
+> > +ifdef CONFIG_MODULES
+> >  # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
+> >  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+> >  # See modpost pattern 2
+> >  KBUILD_CFLAGS += -mno-global-merge
+> > +endif
+> >  else
+> >
+> >  # These warnings generated too much noise in a regular build.
+> > --
+> > 2.27.0
+> >
+>
+> Cheers,
+> Nathan
+
+
+
+--
+Best Regards
+Masahiro Yamada
