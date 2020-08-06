@@ -2,105 +2,167 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E429FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA582311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F11623119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596732495;
-	bh=fIcGRzA8iSE5aYRClbTn+TFozKD1F4bTWoRgTAtda9c=;
+	s=default; t=1596732499;
+	bh=RDm3gl0Uxr6dxdsLlUrcFLzvueJ/vGVG+WrmJzHA6KU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tagvp3WwHozp/P8YbLIBwT8SCqFOYx1M7cfo8wVAUJVa8/Dg7J7UMbXIf0787Vxhr
-	 adhO5oOOrrU6r4Jf5IFSHdUI/Opnh9TvDVBYeNZ/9lhLrC3MPsyqBuhoktl1YG/c7O
-	 JiSfSlBXKRN5g33TKW48K0q3GokOcetgja30ob0Q=
+	b=AkP4pjZfjZG8kYK3Kgt45g0W4xVZKSxSt/I2LL2PRnxeofscZlT2h4aamE2sIrntX
+	 Mry5cUA5Mw+zNGvQiPSFiwOTbpFNm8dW2DnfPTA/2TuaSmak2S/eXFdprAeEzbH5xR
+	 kLm1KBck3ej38mfOxG6IIKUgt+mwQTiwfW6z0N14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgHFQsJ (ORCPT
+        id S1728459AbgHFQsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:48:09 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39918 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbgHFQmu (ORCPT
+        Thu, 6 Aug 2020 12:48:16 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43481 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729009AbgHFQmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:42:50 -0400
-Received: by mail-io1-f65.google.com with SMTP id z6so50313543iow.6;
-        Thu, 06 Aug 2020 09:42:29 -0700 (PDT)
+        Thu, 6 Aug 2020 12:42:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b18so4487958edv.10;
+        Thu, 06 Aug 2020 09:42:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Xm0fEuCIzwDzQykroFSnT+aLdkyYmWsu6Ftt9JukdD8=;
-        b=pQJ5Wbk0onBVVfm9KbkO0nmaavZycrP8XIUYtq43nQTVhrVaoIj+HDrpXaQeHZoj59
-         bNGNwgQnjRvBDVB/vPd0DsKWMA1sfz2rPl5hAU8wwG+FozqCsYo5t6auZZmEqQJVG2Mh
-         /xn53eG5weFyiy3aFt7BcE6R5TgqTEFj2EdR5jSMimAxO8Lx0LgSWY/ZDfj9ItB+8pGk
-         kLmKTY4CqlgBxFS59tfv9jMQGLq3KrnNAD77oiUFLKD863sr+Lr0UH5FAd0CAgAhkGpW
-         vX0cWACmID12vfpA3D69yKou7Nnb2gE/F6Ew0H2+5tZbjba0LjR4QBgG1jSf3kmWOAhI
-         hjHQ==
-X-Gm-Message-State: AOAM530Kbs0aPqTvXwfU4E/hDBIMWRR2hASQtLdH+SGIeDHupjYJifa3
-        akdjR06qiDIpvz3F5Uhx4JO9CxY=
-X-Google-Smtp-Source: ABdhPJyjT8GHER76WNSFqjmQvUAzAjClMjTAIIg56K2M86QwRA9rbhDENI7nQUMj/Vpq8VKa/Li+pA==
-X-Received: by 2002:a92:1589:: with SMTP id 9mr11145233ilv.234.1596725235912;
-        Thu, 06 Aug 2020 07:47:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s74sm4198158ilb.44.2020.08.06.07.47.14
+        bh=O7b6zzBbEswhT1r045fM/qsaYWnifcvdI3BJNWUghN0=;
+        b=dPs2Jf9mdsFOSfeP4RUxvVmNpO9ZC6St6BomLKCPcZiRclaDf7jZybK2NP+tjv8TdX
+         0xDi5O+UJIIk7CMl4g4WzT+b9BJli7e37ijstJo/E1GDs+xtMvbjJAZvHJ9UFiITNOZS
+         5zHqT+Vny61OrrUX24RQPyUJ0qVEY5nbMrfkkcn+RRRUExRev+B+Xqe+MPfoyOF7+xxC
+         cWiGIrpUs2peC+OieaEUQR9KbzyWN6TQB0FtVQXxcCB5LSOrCds4B+1k/DOmEYHdI/z+
+         Xfa2+7KD9OlT1Jpb/QTX4T/RJHnjisgB4rv9BmZIp69dNwxEOURZEWGCuJqwLWzy5z70
+         ymow==
+X-Gm-Message-State: AOAM530G/8vm2/bR+rIiC+oVpApKlXg9ut+u7HeZ0UxxQbr0GxBulMmj
+        UKCY0/OZopQB11o5Kr/JXIIIRs0vPUY=
+X-Google-Smtp-Source: ABdhPJyHniBgsghgZjB//lGvj5nz1YqjaBKR9ZEZZ2nKGP7t+QwlCAdzva9yQdEXnpi9Gds5MbvK5g==
+X-Received: by 2002:ac2:4d4f:: with SMTP id 15mr3791625lfp.163.1596717213497;
+        Thu, 06 Aug 2020 05:33:33 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id o23sm2658274lfr.67.2020.08.06.05.33.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:47:15 -0700 (PDT)
-Received: (nullmailer pid 834882 invoked by uid 1000);
-        Thu, 06 Aug 2020 14:47:13 -0000
-Date:   Thu, 6 Aug 2020 08:47:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>, pisa@cmp.felk.cvut.cz
-Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        mkl@pengutronix.de, socketcan@hartkopp.net, wg@grandegger.com,
-        davem@davemloft.net, mark.rutland@arm.com, c.emde@osadl.org,
-        armbru@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
-        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
-        porazil@pikron.com
-Subject: Re: [PATCH v4 2/6] dt-bindings: net: can: binding for CTU CAN FD
- open-source IP core.
-Message-ID: <20200806144713.GA829771@bogus>
-References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
- <701442883f2b439637ff84544745725bdee7bcf8.1596408856.git.pisa@cmp.felk.cvut.cz>
- <20200804091817.yuf6s26bclehpwwi@duo.ucw.cz>
- <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz>
+        Thu, 06 Aug 2020 05:33:32 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1k3f5T-0003Cq-KO; Thu, 06 Aug 2020 14:33:36 +0200
+Date:   Thu, 6 Aug 2020 14:33:35 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com, linus.walleij@linaro.org,
+        mchehab+huawei@kernel.org
+Subject: Re: [RESEND PATCH v4 1/3] usb: serial: Add MaxLinear/Exar USB to
+ Serial driver
+Message-ID: <20200806123335.GS3634@localhost>
+References: <20200607162350.21297-1-mani@kernel.org>
+ <20200607162350.21297-2-mani@kernel.org>
+ <20200701103433.GC3334@localhost>
+ <20200726154928.GA12036@Mani-XPS-13-9360>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz>
+In-Reply-To: <20200726154928.GA12036@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 11:20:21AM +0200, Pavel Machek wrote:
-> On Tue 2020-08-04 11:18:17, Pavel Machek wrote:
-> > Hi!
-> > 
-> > > The commit text again to make checkpatch happy.
-> > 
-> > ?
-> > 
-> > 
-> > > +    oneOf:
-> > > +      - items:
-> > > +          - const: ctu,ctucanfd
-> > > +          - const: ctu,canfd-2
-> > > +      - const: ctu,ctucanfd
-> > 
-> > For consistency, can we have ctu,canfd-1, ctu,canfd-2?
+On Sun, Jul 26, 2020 at 09:19:28PM +0530, Manivannan Sadhasivam wrote:
+> Hi,
 > 
-> Make it ctu,ctucanfd-1, ctu,ctucanfd-2... to make it consistent with
-> the file names.
+> Sorry for the late reply!
 
-If you are going to do version numbers, please define where they come 
-from. Hopefully some tag of the h/w IP version...
+No worries at all.
 
-Better yet, put version numbers in the h/w registers itself and you 
-don't need different compatibles.
+> On Wed, Jul 01, 2020 at 12:34:33PM +0200, Johan Hovold wrote:
+> > On Sun, Jun 07, 2020 at 09:53:48PM +0530, Manivannan Sadhasivam wrote:
+> > > Add support for MaxLinear/Exar USB to Serial converters. This driver
+> > > only supports XR21V141X series but it can be extended to other series
+> > > from Exar as well in future.
+> > > 
+> > > This driver is inspired from the initial one submitted by Patong Yang:
+> > > 
+> > > https://patchwork.kernel.org/patch/10543261/
+> > 
+> > You've also copied code from that driver so you need to maintain its
+> > copyright as well.
+> > 
+> > Probably better you link to lore than patchwork. Do that in the file
+> > header as well.
+> > 
+> > > While the initial driver was a custom tty USB driver exposing whole
+> > > new serial interface ttyXRUSBn, this version is completely based on USB
+> > > serial core thus exposing the interfaces as ttyUSBn. This will avoid
+> > > the overhead of exposing a new USB serial interface which the userspace
+> > > tools are unaware of.
+> > > 
+> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Tested-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> > > ---
+> > >  drivers/usb/serial/Kconfig     |   9 +
+> > >  drivers/usb/serial/Makefile    |   1 +
+> > >  drivers/usb/serial/xr_serial.c | 650 +++++++++++++++++++++++++++++++++
+> > >  3 files changed, 660 insertions(+)
+> > >  create mode 100644 drivers/usb/serial/xr_serial.c
 
-Rob
+> > > +#define XR21V141X_CLOCK_DIVISOR_0	0x4
+> > > +#define XR21V141X_CLOCK_DIVISOR_1	0x5
+> > > +#define XR21V141X_CLOCK_DIVISOR_2	0x6
+> > > +#define XR21V141X_TX_CLOCK_MASK_0	0x7
+> > > +#define XR21V141X_TX_CLOCK_MASK_1	0x8
+> > > +#define XR21V141X_RX_CLOCK_MASK_0	0x9
+> > > +#define XR21V141X_RX_CLOCK_MASK_1	0xa
+> > 
+> > Please 0-pad these are they are registers.
+> 
+> You mean adding 0 after 0x?
+
+Yes, exactly.
+
+> > > +static int xr_attach(struct usb_serial *serial)
+> > > +{
+> > > +	/* Do not register tty device for the control interface */
+> > > +	if (serial->interface->cur_altsetting->desc.bInterfaceNumber == 0)
+> > > +		return 1;
+> > 
+> > Ok, so you went for my first suggestion here instead of explicitly
+> > claiming the sibling interface.
+> > 
+> > I still think you should bind to the data interface and then explicitly
+> > claim the control interface instead, since that better reflects that
+> > these interfaces are used together (and allows for unbinding through
+> > sysfs etc).
+> 
+> How about something like below?
+> 
+> static int xr_probe(struct usb_serial *serial, const struct usb_device_id *id)
+> {
+>         struct usb_device *usb_dev = interface_to_usbdev(serial->interface);
+>         struct usb_driver *driver = serial->type->usb_driver;
+>         struct usb_interface *control_interface;
+> 
+>         /* Don't bind to control interface */
+>         if (serial->interface->cur_altsetting->desc.bInterfaceNumber == 0)
+>                 return -ENODEV;
+> 
+>         /* But claim the control interface during data interface probe */
+>         control_interface = usb_ifnum_to_if(usb_dev, 0);
+>         if (usb_driver_claim_interface(driver, control_interface, NULL) != 0)
+>                 dev_err(serial->interface->dev, "Can't claim control interface");
+> 
+>         return 0;
+> }
+
+Yes, something like that, but with error handling and a '\n' added to
+the error message. ;)
+
+Johan
