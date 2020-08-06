@@ -2,129 +2,99 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D87C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEF252086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB79E23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgHFQ6F (ORCPT
+        id S1729903AbgHFQ6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 12:58:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49498 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbgHFQ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:57:13 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3F4C2086A;
-        Thu,  6 Aug 2020 16:57:12 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 12:57:10 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Sean Paul <sean@poorly.run>
-Subject: tracing: Add trace_array_init_printk() to initialize instance
- trace_printk() buffers
-Message-ID: <20200806125710.3e9bd355@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1729764AbgHFQ6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:58:00 -0400
+IronPort-SDR: WLdqZe4tV5KZW1xn3O0Emg85d3+Vn67AdmIpBEeCjw+MwRhCIGI+pIKGeAkwjR+T4S2gA+e6rA
+ T+4+HRfk57BA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="153943831"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="153943831"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 07:25:09 -0700
+IronPort-SDR: ah2anX3z0TQP0vyEw5c+uaJdOGWBrH1WybS8y6rEptf+myvDgodfHn1Rz3Xu4D9TCsXM8cp6EV
+ +g8yWwfENwGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="437557111"
+Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.140])
+  by orsmga004.jf.intel.com with ESMTP; 06 Aug 2020 07:25:08 -0700
+Date:   Thu, 6 Aug 2020 22:37:35 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Shannon Nelson <snelson@pensando.io>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: drivers/net/ethernet/pensando/ionic/ionic_txrx.c:608:3: warning:
+ Variable 'done' is modified but its new value is never used.
+Message-ID: <20200806143735.GA9232@xsang-OptiPlex-9020>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   fffe3ae0ee84e25d2befe2ae59bc32aa2b6bc77b
+commit: f9c00e2cf258d215a1ed2a7b2ae5b91ac2f29582 ionic: clean tx queue of unfinished requests
+date:   4 months ago
+:::::: branch date: 5 hours ago
+:::::: commit date: 4 months ago
+compiler: ia64-linux-gcc (GCC) 9.3.0
 
-As trace_array_printk() used with not global instances will not add noise to
-the main buffer, they are OK to have in the kernel (unlike trace_printk()).
-This require the subsystem to create their own tracing instance, and the
-trace_array_printk() only writes into those instances.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-Add trace_array_init_printk() to initialize the trace_printk() buffers
-without printing out the WARNING message.
 
-Reported-by: Sean Paul <sean@poorly.run>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+cppcheck warnings: (new ones prefixed by >>)
+
+>> drivers/net/ethernet/pensando/ionic/ionic_txrx.c:608:3: warning: Variable 'done' is modified but its new value is never used. [unreadVariable]
+     done++;
+     ^
+
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f9c00e2cf258d215a1ed2a7b2ae5b91ac2f29582
+git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git remote update linus
+git checkout f9c00e2cf258d215a1ed2a7b2ae5b91ac2f29582
+vim +/done +608 drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+
+0f3154e6bcb3549 Shannon Nelson 2019-09-03  595  
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  596  void ionic_tx_empty(struct ionic_queue *q)
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  597  {
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  598  	struct ionic_desc_info *desc_info;
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  599  	int done = 0;
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  600  
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  601  	/* walk the not completed tx entries, if any */
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  602  	while (q->head != q->tail) {
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  603  		desc_info = q->tail;
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  604  		q->tail = desc_info->next;
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  605  		ionic_tx_clean(q, desc_info, NULL, desc_info->cb_arg);
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  606  		desc_info->cb = NULL;
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  607  		desc_info->cb_arg = NULL;
+f9c00e2cf258d21 Shannon Nelson 2020-03-27 @608  		done++;
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  609  	}
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  610  }
+f9c00e2cf258d21 Shannon Nelson 2020-03-27  611  
+
 ---
- kernel/trace/trace.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 06c0feae5ff9..48b608d9c5b1 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3129,6 +3129,9 @@ static int alloc_percpu_trace_buffer(void)
- {
- 	struct trace_buffer_struct *buffers;
- 
-+	if (trace_percpu_buffer)
-+		return 0;
-+
- 	buffers = alloc_percpu(struct trace_buffer_struct);
- 	if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
- 		return -ENOMEM;
-@@ -3331,6 +3334,26 @@ int trace_array_vprintk(struct trace_array *tr,
- 	return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
- }
- 
-+/**
-+ * trace_array_printk - Print a message to a specific instance
-+ * @tr: The instance trace_array descriptor
-+ * @ip: The instruction pointer that this is called from.
-+ * @fmt: The format to print (printf format)
-+ *
-+ * If a subsystem sets up its own instance, they have the right to
-+ * printk strings into their tracing instance buffer using this
-+ * function. Note, this function will not write into the top level
-+ * buffer (use trace_printk() for that), as writing into the top level
-+ * buffer should only have events that can be individually disabled.
-+ * trace_printk() is only used for debugging a kernel, and should not
-+ * be ever encorporated in normal use.
-+ *
-+ * trace_array_printk() can be used, as it will not add noise to the
-+ * top level tracing buffer.
-+ *
-+ * Note, trace_array_init_printk() must be called on @tr before this
-+ * can be used.
-+ */
- __printf(3, 0)
- int trace_array_printk(struct trace_array *tr,
- 		       unsigned long ip, const char *fmt, ...)
-@@ -3355,6 +3378,26 @@ int trace_array_printk(struct trace_array *tr,
- }
- EXPORT_SYMBOL_GPL(trace_array_printk);
- 
-+/**
-+ * trace_array_init_printk - Initialize buffers for trace_array_printk()
-+ * @tr: The trace array to initialize the buffers for
-+ *
-+ * As trace_array_printk() only writes into instances, they are OK to
-+ * have in the kernel (unlike trace_printk()). This needs to be called
-+ * before trace_array_printk() can be used on a trace_array.
-+ */
-+int trace_array_init_printk(struct trace_array *tr)
-+{
-+	if (!tr)
-+		return -ENOENT;
-+
-+	/* This is only allowed for created instances */
-+	if (tr == &global_trace)
-+		return -EINVAL;
-+
-+	return alloc_percpu_trace_buffer();
-+}
-+
- __printf(3, 4)
- int trace_array_printk_buf(struct trace_buffer *buffer,
- 			   unsigned long ip, const char *fmt, ...)
--- 
-2.25.4
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
