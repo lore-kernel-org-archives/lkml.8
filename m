@@ -2,232 +2,135 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 13:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E007CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 14:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4A2E22DD6
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 13:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068C82312B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 14:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dl0t+LAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHFNSe (ORCPT
+        id S1727890AbgHFO0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 09:18:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58898 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbgHFNIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 09:08:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 74907AFCD;
-        Thu,  6 Aug 2020 12:43:01 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
- objects
-To:     Xunlei Pang <xlpang@linux.alibaba.com>,
-        Christoph Lameter <cl@linux.com>,
+        Thu, 6 Aug 2020 10:26:21 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24382 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726471AbgHFOTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 10:19:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596723571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=wHZ2raiEJsmE7b+b4KkQpXcSJs3TbM2XVf9QAwoeDic=;
+        b=Dl0t+LAWolNYAGCnm8N271xWmYVZ7FQhhkU0Kr/GOktlvQDCajRYX/ToseF5AXne960+Q7
+        V9u1331UYRKyp5Rm+8dqi4cKmxwKAD2JTdBXwZR3EZepNWcxzO470gP3LiAxSg5huBkTss
+        tuAisabFayC7dg5tODQ8M20tUUFCXFg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-gwu5IrLfMymD2Yr0lA4Mmg-1; Thu, 06 Aug 2020 10:19:22 -0400
+X-MC-Unique: gwu5IrLfMymD2Yr0lA4Mmg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAFA558;
+        Thu,  6 Aug 2020 14:19:20 +0000 (UTC)
+Received: from [10.36.112.9] (ovpn-112-9.ams2.redhat.com [10.36.112.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6DB98BD61;
+        Thu,  6 Aug 2020 14:19:15 +0000 (UTC)
+Subject: Re: [PATCH v2 4/6] mm/page_isolation: cleanup
+ set_migratetype_isolate()
+To:     Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        David Rientjes <rientjes@google.com>
-References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <a53f9039-5cba-955b-009e-12e8c5ffb345@suse.cz>
-Date:   Thu, 6 Aug 2020 14:42:44 +0200
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <20200730093416.36210-1-david@redhat.com>
+ <20200730093416.36210-5-david@redhat.com>
+ <74a25986-87cb-7ab6-e7a9-0c2aefcabe4a@suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <ff7d689c-786c-ee32-c05b-d07baf0dd4ac@redhat.com>
+Date:   Thu, 6 Aug 2020 16:19:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+In-Reply-To: <74a25986-87cb-7ab6-e7a9-0c2aefcabe4a@suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 10:32 AM, Xunlei Pang wrote:
-> The node list_lock in count_partial() spend long time iterating
-> in case of large amount of partial page lists, which can cause
-> thunder herd effect to the list_lock contention, e.g. it cause
-> business response-time jitters when accessing "/proc/slabinfo"
-> in our production environments.
+On 06.08.20 15:35, Vlastimil Babka wrote:
+> On 7/30/20 11:34 AM, David Hildenbrand wrote:
+>> Let's clean it up a bit, simplifying error handling and getting rid of
+>> the label.
 > 
-> This patch introduces two counters to maintain the actual number
-> of partial objects dynamically instead of iterating the partial
-> page lists with list_lock held.
+> Nit: the label was already removed by patch 1/6?
 > 
-> New counters of kmem_cache_node are: pfree_objects, ptotal_objects.
-> The main operations are under list_lock in slow path, its performance
-> impact is minimal.
-> 
-> Co-developed-by: Wen Yang <wenyang@linux.alibaba.com>
-> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
 
-This or similar things seem to be reported every few months now, last time was
-here [1] AFAIK. The solution was to just stop counting at some point.
+Ack, leftover from reshuffling - thanks!
 
-Shall we perhaps add these counters under CONFIG_SLUB_DEBUG then and be done
-with it? If anyone needs the extreme performance and builds without
-CONFIG_SLUB_DEBUG, I'd assume they also don't have userspace programs reading
-/proc/slabinfo periodically anyway?
+-- 
+Thanks,
 
-[1]
-https://lore.kernel.org/linux-mm/158860845968.33385.4165926113074799048.stgit@buzz/
-
-> ---
->  mm/slab.h |  2 ++
->  mm/slub.c | 38 +++++++++++++++++++++++++++++++++++++-
->  2 files changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 7e94700..5935749 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -616,6 +616,8 @@ struct kmem_cache_node {
->  #ifdef CONFIG_SLUB
->  	unsigned long nr_partial;
->  	struct list_head partial;
-> +	atomic_long_t pfree_objects; /* partial free objects */
-> +	atomic_long_t ptotal_objects; /* partial total objects */
->  #ifdef CONFIG_SLUB_DEBUG
->  	atomic_long_t nr_slabs;
->  	atomic_long_t total_objects;
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 6589b41..53890f3 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1775,10 +1775,24 @@ static void discard_slab(struct kmem_cache *s, struct page *page)
->  /*
->   * Management of partially allocated slabs.
->   */
-> +
-> +static inline void
-> +__update_partial_free(struct kmem_cache_node *n, long delta)
-> +{
-> +	atomic_long_add(delta, &n->pfree_objects);
-> +}
-> +
-> +static inline void
-> +__update_partial_total(struct kmem_cache_node *n, long delta)
-> +{
-> +	atomic_long_add(delta, &n->ptotal_objects);
-> +}
-> +
->  static inline void
->  __add_partial(struct kmem_cache_node *n, struct page *page, int tail)
->  {
->  	n->nr_partial++;
-> +	__update_partial_total(n, page->objects);
->  	if (tail == DEACTIVATE_TO_TAIL)
->  		list_add_tail(&page->slab_list, &n->partial);
->  	else
-> @@ -1798,6 +1812,7 @@ static inline void remove_partial(struct kmem_cache_node *n,
->  	lockdep_assert_held(&n->list_lock);
->  	list_del(&page->slab_list);
->  	n->nr_partial--;
-> +	__update_partial_total(n, -page->objects);
->  }
->  
->  /*
-> @@ -1842,6 +1857,7 @@ static inline void *acquire_slab(struct kmem_cache *s,
->  		return NULL;
->  
->  	remove_partial(n, page);
-> +	__update_partial_free(n, -*objects);
->  	WARN_ON(!freelist);
->  	return freelist;
->  }
-> @@ -2174,8 +2190,11 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
->  				"unfreezing slab"))
->  		goto redo;
->  
-> -	if (lock)
-> +	if (lock) {
-> +		if (m == M_PARTIAL)
-> +			__update_partial_free(n, page->objects - page->inuse);
->  		spin_unlock(&n->list_lock);
-> +	}
->  
->  	if (m == M_PARTIAL)
->  		stat(s, tail);
-> @@ -2241,6 +2260,7 @@ static void unfreeze_partials(struct kmem_cache *s,
->  			discard_page = page;
->  		} else {
->  			add_partial(n, page, DEACTIVATE_TO_TAIL);
-> +			__update_partial_free(n, page->objects - page->inuse);
->  			stat(s, FREE_ADD_PARTIAL);
->  		}
->  	}
-> @@ -2915,6 +2935,14 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
->  		head, new.counters,
->  		"__slab_free"));
->  
-> +	if (!was_frozen && prior) {
-> +		if (n)
-> +			__update_partial_free(n, cnt);
-> +		else
-> +			__update_partial_free(get_node(s, page_to_nid(page)),
-> +					cnt);
-> +	}
-> +
->  	if (likely(!n)) {
->  
->  		/*
-> @@ -2944,6 +2972,7 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
->  	if (!kmem_cache_has_cpu_partial(s) && unlikely(!prior)) {
->  		remove_full(s, n, page);
->  		add_partial(n, page, DEACTIVATE_TO_TAIL);
-> +		__update_partial_free(n, page->objects - page->inuse);
->  		stat(s, FREE_ADD_PARTIAL);
->  	}
->  	spin_unlock_irqrestore(&n->list_lock, flags);
-> @@ -2955,6 +2984,7 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
->  		 * Slab on the partial list.
->  		 */
->  		remove_partial(n, page);
-> +		__update_partial_free(n, page->inuse - page->objects);
->  		stat(s, FREE_REMOVE_PARTIAL);
->  	} else {
->  		/* Slab must be on the full list */
-> @@ -3364,6 +3394,8 @@ static inline int calculate_order(unsigned int size)
->  	n->nr_partial = 0;
->  	spin_lock_init(&n->list_lock);
->  	INIT_LIST_HEAD(&n->partial);
-> +	atomic_long_set(&n->pfree_objects, 0);
-> +	atomic_long_set(&n->ptotal_objects, 0);
->  #ifdef CONFIG_SLUB_DEBUG
->  	atomic_long_set(&n->nr_slabs, 0);
->  	atomic_long_set(&n->total_objects, 0);
-> @@ -3437,6 +3469,7 @@ static void early_kmem_cache_node_alloc(int node)
->  	 * initialized and there is no concurrent access.
->  	 */
->  	__add_partial(n, page, DEACTIVATE_TO_HEAD);
-> +	__update_partial_free(n, page->objects - page->inuse);
->  }
->  
->  static void free_kmem_cache_nodes(struct kmem_cache *s)
-> @@ -3747,6 +3780,7 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
->  	list_for_each_entry_safe(page, h, &n->partial, slab_list) {
->  		if (!page->inuse) {
->  			remove_partial(n, page);
-> +			__update_partial_free(n, page->objects - page->inuse);
->  			list_add(&page->slab_list, &discard);
->  		} else {
->  			list_slab_objects(s, page,
-> @@ -4045,6 +4079,8 @@ int __kmem_cache_shrink(struct kmem_cache *s)
->  			if (free == page->objects) {
->  				list_move(&page->slab_list, &discard);
->  				n->nr_partial--;
-> +				__update_partial_free(n, -free);
-> +				__update_partial_total(n, -free);
->  			} else if (free <= SHRINK_PROMOTE_MAX)
->  				list_move(&page->slab_list, promote + free - 1);
->  		}
-> 
+David / dhildenb
 
