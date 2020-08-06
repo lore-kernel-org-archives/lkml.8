@@ -2,93 +2,150 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD732086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7B12086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pid4EmHR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWwFoqGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgHFWgZ (ORCPT
+        id S1726167AbgHFWjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
+        Thu, 6 Aug 2020 18:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHFWgY (ORCPT
+        with ESMTP id S1725947AbgHFWjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:36:24 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656D6C061574;
-        Thu,  6 Aug 2020 15:36:24 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id e4so7610437pjd.0;
-        Thu, 06 Aug 2020 15:36:24 -0700 (PDT)
+        Thu, 6 Aug 2020 18:39:01 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9F4C061574;
+        Thu,  6 Aug 2020 15:39:01 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id l204so190990oib.3;
+        Thu, 06 Aug 2020 15:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w4IfUAcAutpmT5dJoKcHzIX9fVgapPrm5OqXG0bL93U=;
-        b=pid4EmHRv7skHhgScFGDMWe8FlLY2ii3rHjKbprTDDLFyEsWJnNniN3NXcpr2AY+Oc
-         j4DmgJ827ZGithgtR5WnXbExi4g4tLA73d6DLBsBj9QqW38Ftg6Er76EKWUCde7nycHi
-         KHJfI/Xf+e4Q0O/9sl5B2mh32Pr6cpByk0R6DkfQ8eGZfrFkeUcyb75UJ6K9s7nf222+
-         uKKTDqieR8MCnZg9cZse3WvCKFeU7otcmyIOZssOmrcKWyTgzlK9X1lQO9psbT1mBvyG
-         VPGuXEd6hNDm025/C8eA8K2TXt7ocux0JKkUswfbrtWgCDsZlMLe6PYiMpzpjlR+v5rb
-         50Ew==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ne1iYZprPZsaiWqWZFllfuyUnxnmRkcPCgewhYs7+po=;
+        b=oWwFoqGba2t65iV+0hVJvoo34WVzexMPem5bmNrBL2po0vMgi7NmTYQnYyI/pK9BPL
+         JEeCUzLouqqweosS1VJ3yAv/DIUZ58V2TeGJV+2vBVGcGw5DgK0PIliW/SRbGaYI69RM
+         aw/fTT5Kwv9QtuMRO1O32xkqGq6citRBosNGQc1Fkf8vgCgxzsXc+iuZfcjFVa+9W9mJ
+         P95qUCukRV+2zlroNs8CYWd8S7AuoLWQns9qNS/q4DiPOzzAg9r3uSEah1PBfRMaEVw8
+         xHHv0C9s3+5LRHBRnuAQDkWMUPjzLeV5xx9lgb8J1li9YC6gpmudNnGNnS7ByakiCOH6
+         MafQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w4IfUAcAutpmT5dJoKcHzIX9fVgapPrm5OqXG0bL93U=;
-        b=orCIc9dcJlli/XftBXWeRvE0JGWn/J5Y0rKWpecWxxKN/PmCKlPcp9/s8XeWrWd6YJ
-         OU62rRpZIfUhIppqJuy8YUin0fG5f3eIIpkqrxZaDTQmyp/ejrNQL13uEWLNk7LehybY
-         0GR+eojF0xsb5I7s2tZ7iXgs0EpyWVcrd2a00aoYq6cL031J2h1QBOH9+kO1IqrTdBLp
-         bpGQFUUqkAq16myliFv98o0Ns517BFvl34rTETCIgB+sJx4xqk3h12CJruvbKRxfu8S8
-         tR9IjtX7BXQlydnscl5COjCM+2T7w3bxpuGQg9R0Mp7l0hjmtBKqgTEFNvX4fV2Co8Vj
-         VRrg==
-X-Gm-Message-State: AOAM5311KKosje5kg97GSZfH6nkGOT55qGG2+Dl10MdcZtmmII+3NwjV
-        TajzjLXgCqj4jdodt7M21Jo=
-X-Google-Smtp-Source: ABdhPJwBC8Tn08nTgvrXN3WCkQ1zuXEB5jVrCV24g02LDUW21mitaI+mTyZ0yFPpj4BrowQMhYWIoQ==
-X-Received: by 2002:a17:90b:1106:: with SMTP id gi6mr11068384pjb.2.1596753383816;
-        Thu, 06 Aug 2020 15:36:23 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id e3sm8515463pgu.40.2020.08.06.15.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 15:36:23 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 15:36:21 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Tai-hwa Liang <avatar@sentelic.com>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] input: sentelic: fix error return when fsp_reg_write
- fails
-Message-ID: <20200806223621.GM1665100@dtor-ws>
-References: <20200603141218.131663-1-colin.king@canonical.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ne1iYZprPZsaiWqWZFllfuyUnxnmRkcPCgewhYs7+po=;
+        b=qUm2jD7p7OgbeKqYkM8m+uiyc0ASrxRykyyPX4qUfoLaq6ydsHcI8rOpFQxu1xqQgV
+         cB8+AUIXWC2gVLHFVuyydBCnPhjxrVKWcjVoomC2jjSHttrxGeWgHHMesjwLNfirMYg+
+         2UvlBB7KOiWfAD7bV8HXY8KehYMgKkr+COl47Usqt+rXqzNNmgyASdGbOvAMAwrQPKhD
+         htmrpplY4UuJRtWAh1uBvriJVCVGR2lTGLHKOpKN3HK2qWytfmOm5RewCkUZ1LnfVvhM
+         Y/ncV+wZIwUqIUPxT8Yl2MuEbtc2OPwUYTNbIie3qno0RKnI2jEhVuNFJIe+Ca64iCge
+         vpvg==
+X-Gm-Message-State: AOAM533MjdhcnFheyJMQlCuSrFli8N7pevcbgHBgrNzhzloVTQvpN7/V
+        lRz2eXgPt6K2Q3cXTPbYVk2tzJ22z/BkGhUxIn0=
+X-Google-Smtp-Source: ABdhPJw24FLE0cOWVKOoxoFIzofMAQlqhvnejmnRS9N4YG08WW27U7QHzTUC4wI/BCAaa2dgO3tta2o3+MD5w0Lq8pI=
+X-Received: by 2002:aca:2306:: with SMTP id e6mr9080081oie.108.1596753539610;
+ Thu, 06 Aug 2020 15:38:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603141218.131663-1-colin.king@canonical.com>
+References: <20200730205112.2099429-1-ndesaulniers@google.com> <20200730205112.2099429-3-ndesaulniers@google.com>
+In-Reply-To: <20200730205112.2099429-3-ndesaulniers@google.com>
+From:   Nathan Huckleberry <nhuck15@gmail.com>
+Date:   Thu, 6 Aug 2020 17:38:46 -0500
+Message-ID: <CAN=-Rxty=Ux5rj-VQSZH-ryj1RiNJvy7mRE7uyx_YAndGtcq7Q@mail.gmail.com>
+Subject: Re: [PATCH 2/4] ARM: backtrace-clang: add fixup for lr dereference
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Lvqiang Huang <lvqiang.huang@unisoc.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miles Chen <miles.chen@mediatek.com>, stable@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:12:18PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently when the call to fsp_reg_write fails -EIO is not being returned
-> because the count is being returned instead of the return value in retval.
-> Fix this by returning the value in retval instead of count.
-> 
-> Addresses-Coverity: ("Unused value")
-> Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Mostly looks good to me. Just a minor nit.
 
-Applied, thank you.
+On Thu, Jul 30, 2020 at 3:51 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> If the value of the link register is not correct (tail call from asm
+> that didn't set it, stack corruption, memory no longer mapped), then
+> using it for an address calculation may trigger an exception.  Without a
+> fixup handler, this will lead to a panic, which will unwind, which will
+> trigger the fault repeatedly in an infinite loop.
+>
+> We don't observe such failures currently, but we have. Just to be safe,
+> add a fixup handler here so that at least we don't have an infinite
+> loop.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: commit 6dc5fd93b2f1 ("ARM: 8900/1: UNWINDER_FRAME_POINTER implementation for Clang")
+> Reported-by: Miles Chen <miles.chen@mediatek.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  arch/arm/lib/backtrace-clang.S | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/lib/backtrace-clang.S b/arch/arm/lib/backtrace-clang.S
+> index 5388ac664c12..40eb2215eaf4 100644
+> --- a/arch/arm/lib/backtrace-clang.S
+> +++ b/arch/arm/lib/backtrace-clang.S
+> @@ -146,7 +146,7 @@ for_each_frame:     tst     frame, mask             @ Check for address exceptions
+>
+>                 tst     sv_lr, #0               @ If there's no previous lr,
+>                 beq     finished_setup          @ we're done.
+> -               ldr     r0, [sv_lr, #-4]        @ get call instruction
+> +prev_call:     ldr     r0, [sv_lr, #-4]        @ get call instruction
+>                 ldr     r3, .Lopcode+4
+>                 and     r2, r3, r0              @ is this a bl call
+>                 teq     r2, r3
+> @@ -206,6 +206,13 @@ finished_setup:
+>                 mov     r2, frame
+>                 bl      printk
+>  no_frame:      ldmfd   sp!, {r4 - r9, fp, pc}
+> +/*
+> + * Accessing the address pointed to by the link register triggered an
+> + * exception, don't try to unwind through it.
+> + */
+> +bad_lr:                mov     sv_fp, #0
 
--- 
-Dmitry
+It might be nice to emit a warning here since we'll
+only hit this case if something fishy is going on
+with the saved lr.
+
+> +               mov     sv_lr, #0
+> +               b       finished_setup
+>  ENDPROC(c_backtrace)
+>                 .pushsection __ex_table,"a"
+>                 .align  3
+> @@ -214,6 +221,7 @@ ENDPROC(c_backtrace)
+>                 .long   1003b, 1006b
+>                 .long   1004b, 1006b
+>                 .long   1005b, 1006b
+> +               .long   prev_call, bad_lr
+>                 .popsection
+>
+>  .Lbad:         .asciz  "%sBacktrace aborted due to bad frame pointer <%p>\n"
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
+
+Thanks,
+Huck
