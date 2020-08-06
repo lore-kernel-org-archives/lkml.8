@@ -2,175 +2,102 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341B5C47429
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D086C47435
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27132221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVS4O7bv"
+	by mail.kernel.org (Postfix) with ESMTP id 9BAA123142
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgHFIH7 (ORCPT
+        id S1728840AbgHFIXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728678AbgHFIF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:05:58 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73339C061574;
-        Thu,  6 Aug 2020 01:05:49 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id c10so4378331pjn.1;
-        Thu, 06 Aug 2020 01:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Gvp/wmpdcbsDD44F7FznYVLBzaBcr2CE7TDbqpCKwbU=;
-        b=LVS4O7bvmc+JPqtBelCbg8GGxi6WGmozkQmlelPXT13ddLBLKLCC+o8/XdLfU/04Mx
-         41mYpUktmB+EEYY/iIMTOmXAFjhugSv4Bc+MwjRmOyG2gsvGXTUl4WEmcfjzZjyCdpf8
-         V1Zy75NR0ITGyBTcCHW6HHgCDjWJ7llfmREAM2DczFwzm0zUrazm8YqjSkex4Kov43NR
-         GzM2NhjSMzHWMwLHGOoP3FvghbXdmKDOtBgGIo9CKrg+1wacsC95YvEsGXmhMQMK+dTL
-         5qcJmCXW6HOVwxCAQrN7TDftejgpNZchWiEKplPzgtNF1oT7P95aOmfmZbY7kN4xp9hv
-         Naqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gvp/wmpdcbsDD44F7FznYVLBzaBcr2CE7TDbqpCKwbU=;
-        b=Lc/HNk613VCVXPMmK7+VRl/yztWxFfmfg/6M36s/mtESFw6j9qzCgXAmQ/ia4IDPBk
-         yVGVGWBq3WGn0PBYgaecFnpSX+V69RxRgnCIW+PkqRwz/jmx+yO4/O5tqVMHnCg78li8
-         eQji5QvG2VNceTwVXwc5GTMAL6Fn/LUQN8kvhCBYlRunEPCm6NlbOF5SmsdZwjBkkSVs
-         uH1hVw1ARudzYgOVCh9D6JazvhpZ0QEtaXW44BoiCSIvgvowCfD4td2eed0wqH+Xa+BO
-         T3R9sTXNaUIm5u8x2oFEnzz5wlQy096SQJlKMEoYNwYHPQyROOPMfltIkgmHydy/uner
-         ckPA==
-X-Gm-Message-State: AOAM5339DLzReZTBT+Jgem8UrHoE6X8G9ODgAQWMKasyIbs0vbiIlNTu
-        TMiaUDaKH6DSh5wyMMfZJCU=
-X-Google-Smtp-Source: ABdhPJz7G7hkX91BoQ5RlVkjBTZKCspgkfr419sacZ/yxk05eABOpYQDgpGIC6gHk6dvBfA5N67Lvg==
-X-Received: by 2002:a17:902:be17:: with SMTP id r23mr6624739pls.284.1596701143493;
-        Thu, 06 Aug 2020 01:05:43 -0700 (PDT)
-Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
-        by smtp.gmail.com with ESMTPSA id d22sm6939369pfd.42.2020.08.06.01.05.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 01:05:42 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 01:05:40 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
-        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
-        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
- expose namespaces lineary
-Message-ID: <20200806080540.GA18865@gmail.com>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <87k0yl5axy.fsf@x220.int.ebiederm.org>
- <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
- <875za43b3w.fsf@x220.int.ebiederm.org>
- <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
+        Thu, 6 Aug 2020 04:23:13 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:18272 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727768AbgHFIXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 04:23:12 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BMhMH72hCz9v0TH;
+        Thu,  6 Aug 2020 10:23:07 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id IHruyvwNIS1G; Thu,  6 Aug 2020 10:23:07 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMhMH65Wxz9v0St;
+        Thu,  6 Aug 2020 10:23:07 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 415D38B7F9;
+        Thu,  6 Aug 2020 10:23:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id XCcAL8QChux9; Thu,  6 Aug 2020 10:23:09 +0200 (CEST)
+Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 08EBC8B75E;
+        Thu,  6 Aug 2020 10:23:09 +0200 (CEST)
+Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B0CBA65BC9; Thu,  6 Aug 2020 08:23:08 +0000 (UTC)
+Message-Id: <a6e62627d25fb7ae9b91d8bf553e707689e37498.1596702117.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v3 1/3] syscalls: use uaccess_kernel in addr_limit_user_check
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  6 Aug 2020 08:23:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 01:03:17PM +0300, Kirill Tkhai wrote:
-> On 31.07.2020 01:13, Eric W. Biederman wrote:
-> > Kirill Tkhai <ktkhai@virtuozzo.com> writes:
-> > 
-> >> On 30.07.2020 17:34, Eric W. Biederman wrote:
-> >>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
-> >>>
-> >>>> Currently, there is no a way to list or iterate all or subset of namespaces
-> >>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
-> >>>> but some also may be as open files, which are not attached to a process.
-> >>>> When a namespace open fd is sent over unix socket and then closed, it is
-> >>>> impossible to know whether the namespace exists or not.
-> >>>>
-> >>>> Also, even if namespace is exposed as attached to a process or as open file,
-> >>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
-> >>>> this multiplies at tasks and fds number.
-> >>>
-> >>> I am very dubious about this.
-> >>>
-> >>> I have been avoiding exactly this kind of interface because it can
-> >>> create rather fundamental problems with checkpoint restart.
-> >>
-> >> restart/restore :)
-> >>
-> >>> You do have some filtering and the filtering is not based on current.
-> >>> Which is good.
-> >>>
-> >>> A view that is relative to a user namespace might be ok.    It almost
-> >>> certainly does better as it's own little filesystem than as an extension
-> >>> to proc though.
-> >>>
-> >>> The big thing we want to ensure is that if you migrate you can restore
-> >>> everything.  I don't see how you will be able to restore these files
-> >>> after migration.  Anything like this without having a complete
-> >>> checkpoint/restore story is a non-starter.
-> >>
-> >> There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
-> >>
-> >> CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
-> >> As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
-> >> problem here.
-> > 
-> > An obvious diffference is that you are adding the inode to the inode to
-> > the file name.  Which means that now you really do have to preserve the
-> > inode numbers during process migration.
-> >
-> > Which means now we have to do all of the work to make inode number
-> > restoration possible.  Which means now we need to have multiple
-> > instances of nsfs so that we can restore inode numbers.
-> > 
-> > I think this is still possible but we have been delaying figuring out
-> > how to restore inode numbers long enough that may be actual technical
-> > problems making it happen.
-> 
-> Yeah, this matters. But it looks like here is not a dead end. We just need
-> change the names the namespaces are exported to particular fs and to support
-> rename().
-> 
-> Before introduction a principally new filesystem type for this, can't
-> this be solved in current /proc?
+From: Christoph Hellwig <hch@lst.de>
 
-do you mean to introduce names for namespaces which users will be able
-to change? By default, this can be uuid.
+Patch series "clean up address limit helpers", v2.
 
-And I have a suggestion about the structure of /proc/namespaces/.
+In preparation for eventually phasing out direct use of set_fs(), this
+series removes the segment_eq() arch helper that is only used to implement
+or duplicate the uaccess_kernel() API, and then adds descriptive helpers
+to force the kernel address limit.
 
-Each namespace is owned by one of user namespaces. Maybe it makes sense
-to group namespaces by their user-namespaces?
+This patch (of 6):
 
-/proc/namespaces/
-                 user
-                 mnt-X
-                 mnt-Y
-                 pid-X
-                 uts-Z
-                 user-X/
-                        user
-                        mnt-A
-                        mnt-B
-                        user-C
-                        user-C/
-                               user
-                 user-Y/
-                        user
+Use the uaccess_kernel helper instead of duplicating it.
 
-Do we try to invent cgroupfs for namespaces?
+Link: http://lkml.kernel.org/r/20200714105505.935079-1-hch@lst.de
+Link: http://lkml.kernel.org/r/20200710135706.537715-1-hch@lst.de
+Link: http://lkml.kernel.org/r/20200710135706.537715-2-hch@lst.de
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Nick Hu <nickhu@andestech.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ include/linux/syscalls.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Andrei
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index b951a87da987..e933a43d4a69 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -263,7 +263,7 @@ static inline void addr_limit_user_check(void)
+ 		return;
+ #endif
+ 
+-	if (CHECK_DATA_CORRUPTION(!segment_eq(get_fs(), USER_DS),
++	if (CHECK_DATA_CORRUPTION(uaccess_kernel(),
+ 				  "Invalid address limit on user-mode return"))
+ 		force_sig(SIGKILL);
+ 
+-- 
+2.25.0
+
