@@ -2,298 +2,233 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F940C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE68206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A962206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="L8BkBjPT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fi2vJDR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbgHFRq7 (ORCPT
+        id S1727783AbgHFRrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:46:59 -0400
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:57504
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728919AbgHFQh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:37:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D1y00xQoTgVZwvVHEZHnCMmcMgIMPJH2dNiqbLA5ARCUW5amCJrfeUAtLaP9rb2+KTNtN2nEuw9l9AE+3hKxfE7m2kUy25Tav0YbhgC0prK18NVCfGkt406KMce3b4sIvZAb2trmJpU/KELUHvwMEJ7Nzzig+uio/uZbu9TBVZoC6XiS7SKyTE1vkknIHCuLxAuQWLm+9iG0NxW5OZl9/9HzHFxlkkZFXTBpgwot9Z/7co47yO4qaloXcgN5lDWjVOtu/nrBJkBQ2olvGPxRD4Yomcpg/fEz1uL8K68F8QQuEJx+WnaKOgmK26QTRrUvt+cUiwB3chuiQdBNfJfLgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NG2G62cTP09RqCfsYGO6Dz0qWH/f02540G3LYJKbnCY=;
- b=YarYoQ0+Jm2PxGtV+O+3JA4Fkm42oKiIZUwdgSifrxjudZh57ozP1LX1YRSZ7B7QTuyO705Prd3TGazqWCd/6vjvNUblWfYoX0WNZVO3MbznN1DX7gyTn0anG7bzHYeDM/+8Mk3AuV97gsCILIiRWpPcF55VL8t3OSO/1F5W0VUHbt2wQFp+43KxV/LONDDSUCLPotqstL3GMk5Di8kwEY9U5bLmo5niEAEwIXF818jD3F6qBORRlzI/+LvAtgy2FxhYtVDziBmHu+08v3XDTS2KbdhbUoX4K3R95ETyUiIYgYDsI/WjUhLPvTLdRsvvGU9CUW7r2BfbaXB/nV7aqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NG2G62cTP09RqCfsYGO6Dz0qWH/f02540G3LYJKbnCY=;
- b=L8BkBjPTCBZrZ0qA9ZicXYY+KJyIzZg7SC1d/Y4jL/O1e06zbIp05iFg7BJ3zNDylsYQ+oBraBXAQzU5LCwhg6OktlB7gUJXfLGq97ap5gREUZGPET23GKsHP8kof4FLx1Btgv9SZUTVUhWsdB6+Aij367z0T0JnhR/xw7YGQBM=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
- by VI1PR04MB4992.eurprd04.prod.outlook.com (2603:10a6:803:51::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 6 Aug
- 2020 16:36:14 +0000
-Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
- ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
- ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
- 16:36:14 +0000
-From:   Andrei Botila <andrei.botila@oss.nxp.com>
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 3/9] crypto: caam/qi2 - add fallback for XTS with more than 8B IV
-Date:   Thu,  6 Aug 2020 19:35:45 +0300
-Message-Id: <20200806163551.14395-4-andrei.botila@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806163551.14395-1-andrei.botila@oss.nxp.com>
-References: <20200806163551.14395-1-andrei.botila@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: AM4PR0902CA0015.eurprd09.prod.outlook.com
- (2603:10a6:200:9b::25) To VE1PR04MB6608.eurprd04.prod.outlook.com
- (2603:10a6:803:125::12)
+        Thu, 6 Aug 2020 13:47:09 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:28858 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbgHFQhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:37:07 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200806163703epoutp031c5433807a0a9a50cfe6b30a3a58af83~ouyIdjvDR1299312993epoutp03T
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 16:37:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200806163703epoutp031c5433807a0a9a50cfe6b30a3a58af83~ouyIdjvDR1299312993epoutp03T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596731823;
+        bh=VH6Uk9hXy1i54YJbLiVkYrPKRALnqeliBx0oNQ7Voag=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Fi2vJDR0gTQT63/cxUCBieYoozV4V2CcQZPmxBlfsY5tG6Wj7+IWCOQtNo1FjXFbb
+         tTavDQVxvzd2weVORyEAjWrI3vtnRs3AoYa+dW6TBEmYNtWGFVMWaFBkv24w1MUOXd
+         IbFX7eOBsVagpN0/Ayo2ptQQ0e9vwXs083KRNM0o=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200806163701epcas5p1db131f7d2920ff4a16efe4516091f17b~ouyG2jB_u1936119361epcas5p1u;
+        Thu,  6 Aug 2020 16:37:01 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        04.A6.40333.DA13C2F5; Fri,  7 Aug 2020 01:37:01 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200806163700epcas5p2f15235fc7fa635bd1c585a8805c0e82f~ouyGCmQI02779327793epcas5p2T;
+        Thu,  6 Aug 2020 16:37:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200806163700epsmtrp12f79450068a6fb97a6145b24f76e108f~ouyGBtJpD1924019240epsmtrp1f;
+        Thu,  6 Aug 2020 16:37:00 +0000 (GMT)
+X-AuditID: b6c32a4a-991ff70000019d8d-50-5f2c31adccd3
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        29.81.08382.CA13C2F5; Fri,  7 Aug 2020 01:37:00 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200806163656epsmtip132442238b883b277caec9fd30a45b942~ouyCCuleF1971319713epsmtip1J;
+        Thu,  6 Aug 2020 16:36:56 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Avri Altman'" <Avri.Altman@wdc.com>,
+        "'Bean Huo'" <huobean@gmail.com>, <daejun7.park@samsung.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <asutoshd@codeaurora.org>, <beanhuo@micron.com>,
+        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
+        <bvanassche@acm.org>, <tomas.winkler@intel.com>
+Cc:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Sang-yoon Oh'" <sangyoon.oh@samsung.com>,
+        "'Sung-Jun Park'" <sungjun07.park@samsung.com>,
+        "'yongmyung lee'" <ymhungry.lee@samsung.com>,
+        "'Jinyoung CHOI'" <j-young.choi@samsung.com>,
+        "'Adel Choi'" <adel.choi@samsung.com>,
+        "'BoRam Shin'" <boram.shin@samsung.com>
+In-Reply-To: <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+Subject: RE: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
+Date:   Thu, 6 Aug 2020 22:06:54 +0530
+Message-ID: <000001d66c0f$ce9615a0$6bc240e0$@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM4PR0902CA0015.eurprd09.prod.outlook.com (2603:10a6:200:9b::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Thu, 6 Aug 2020 16:36:13 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6d48b07f-4ba4-49ed-a879-08d83a26d5cb
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4992:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB49926EDD0370308C5DD66910B4480@VI1PR04MB4992.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tMuCEIIvzl66aLMT/SieQygwtxeo9kODObOi7jg429+QUiGGNrXus55tkpGOymRScoMF/aO7Usxqdi97ODn/NfRxhAUDqFBqYeG6WVYZ2d9NHBqtNLNeJ4SE4y5e1nMf+mNm6iq6fM0HYR0lIhtTLn8mKUA8JvkbQCAe0ctcf+ZjVK4G4LSJEYaW33oNEU2VRWs4u+vg/g8xUyebiujevCpJFCGxXDOqZW/4RsIfPBMbYUkNsPj3nWBaGK/GK0shKuuj0EphlnzJea5PvwMD81rwKIMavKPvWnbk146R84i8t2Yz2JhQ9EwKYGoKX+G7PPjQ3y3L7QvMVeLoS0dWPdYbiTPxxICmMAXaQG//ra2GTVpvJ38fuBbCCYgz5Ph/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(66476007)(86362001)(26005)(6512007)(16526019)(186003)(66556008)(66946007)(1076003)(110136005)(8936002)(316002)(8676002)(478600001)(2906002)(6506007)(4326008)(44832011)(2616005)(956004)(83380400001)(6486002)(6666004)(52116002)(5660300002)(309714004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1RPuCCQP99Ztp5gCImHlNVdIe8M/MzdJJnx/6DgyI4znqHTafpE8HYusv2XdIYoKqLj7HruvWPZhLtEARt7dvJnC18Dz8J9oZj1EVhwqCeBXDYBUl3Uq5IMitV8+rGHTuIG19htTvWAmzi2kS7tjFpGQbZHZLXEK2a0r6WMuZDOQhsj655kHolmVlsP4Nhe6CQrvXe5sKSAJF39fg4otqrP3yWdjlhI4J33hbk1OZpAlcip0vyeXnpnyN5eGCliYKOpHIYhEz+u1DESACL2UyouGV56Vikx/aCC7vvNtu4g9ss3dBgOs2PBm3QhBoEK2+IMxbBfAVQJG4BtpyQAhOiVHtgCoCkkYof7TLFOI3+LIJTUdfgrIl6730YMKvILh5V7AiXJI3R55JAlnB7xPXrOTpUjOsUoW+lXCZF8IN/8F6qcqqT3KTyiVxGJcjnyJ+5SBtj0IFodETHfzxr5QKePZZdvQH41N+I9/Oi5iEw2leISwRuQjR+gu/m2mxJKDCIME/38aZW/hGhSCkxhkTpPCQWdPwV7D+xP/14Sgt2LYfhXwYJEpdHJhA8vCigqgSL9PmO3kJ/OZEV9N743Kzm+hoId6TkGxfSQTuSpAeC2utmUizNQaW4xUWU6nOi+1ECyMDOrlneTXFyQIIGCp6Q==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d48b07f-4ba4-49ed-a879-08d83a26d5cb
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 16:36:14.4356
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2lAWihSl2V7tqzyOruGmWDe4hgZ7VAgh2iCUI6jqV5mf2oaFXyYuDVnIPBPsLCIQF4i7VdP8isgLgwLIQCeLsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4992
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHovAFSoGP6ZRyR0Aq0xZECqCS8dQHRLDtFAaVJrv8ByaQP4gJtbFJ8AarogNsB85vfPQF8QABUqKBgc9A=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOKsWRmVeSWpSXmKPExsWy7bCmlu5aQ514g+sTeS023n3FarG37QS7
+        xcufV9ksDj7sZLE4fPsdu8W0Dz+ZLT6tX8ZqsepBuMWcsw1MFr39W9ksFt3YxmRxedccNovu
+        6zvYLJYf/8dkMeHlEhaLpVtvMlp0Tl/DYvGhp85i0cLdLA7CHpeveHtc7utl8tg56y67x+I9
+        L5k8Jiw6wOjRcnI/i8f39R1sHh+f3mLx6NuyitHj8yY5j/YD3UwB3FFcNimpOZllqUX6dglc
+        GV+fzGcsOCZV8f7IKcYGxvuiXYycHBICJhJnlxxn6WLk4hAS2M0oserXPyjnE6PE/7Xv2UGq
+        hAS+MUpMmMgG03Hv0HU2iKK9jBLbf69nhHDeMErsnXCOEaSKTUBXYsfiNrAqEYEdTBKrFzQz
+        gTjMAheYJO59v80KUsUpECtxZPERJhBbWMBb4semJSwgNouAisScvXfBbF4BS4lpfQ3MELag
+        xMmZT8DizALaEssWvmaGuElB4ufTZWAzRQSSJKZ+WcQEUSMucfRnDzPIYgmB6ZwSx//MZoJo
+        cJH4fuE1lC0s8er4FnYIW0riZX8bkM0BZGdL9OwyhgjXSCydd4wFwraXOHBlDgtICbOApsT6
+        XfoQq/gken8/YYLo5JXoaBOCqFaVaH53FapTWmJidzcrhO0h8f7MVZYJjIqzkDw2C8ljs5A8
+        MAth2QJGllWMkqkFxbnpqcWmBUZ5qeV6xYm5xaV56XrJ+bmbGMFpU8trB+PDBx/0DjEycTAe
+        YpTgYFYS4c16oR0vxJuSWFmVWpQfX1Sak1p8iFGag0VJnFfpx5k4IYH0xJLU7NTUgtQimCwT
+        B6dUA1OSjjLjfYmzJqJTjj25JXf05o6u2feSTx6cu0UyXF4oyzrXken8qaufNX/oCQv8n82w
+        s3BXjOqVzMLIOFv+XX27NmwTs195pfje9lsXJkT17d96iitMMGNZWqdNr9KsWtvLDus3nvor
+        ePDaSrOtQgmRuwOC73i/aFfccZ/VnaOt4mnrz0edmc6yUzlunZu5/7lbvJ9Hy/m7Au4aZz6x
+        z19hKi/FbvnQL1ZoC98b6X6WzMCknwkM/14XHzS8lCJwvP4zd9q+ijiZSq0Z/Hy3HrXcU51a
+        8rKmJN+mYNN27knz6pS2CE4x+fxi88SE1pJvQVoaPPucd5U33p6o8Hf9jH+JjVrKUn/28zyV
+        CnRev0yJpTgj0VCLuag4EQDodLKoCgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsWy7bCSnO4aQ514g469EhYb775itdjbdoLd
+        4uXPq2wWBx92slgcvv2O3WLah5/MFp/WL2O1WPUg3GLO2QYmi97+rWwWi25sY7K4vGsOm0X3
+        9R1sFsuP/2OymPByCYvF0q03GS06p69hsfjQU2exaOFuFgdhj8tXvD0u9/UyeeycdZfdY/Ge
+        l0weExYdYPRoObmfxeP7+g42j49Pb7F49G1ZxejxeZOcR/uBbqYA7igum5TUnMyy1CJ9uwSu
+        jINvrjIWzJGq+PJkAmMD40bRLkZODgkBE4l7h66zdTFycQgJ7GaUWLp7FhNEQlri+sYJ7BC2
+        sMTKf8/ZIYpeMUrM2fyfGSTBJqArsWNxGxuILSJwhEmieUIFSBGzwDUmiT8fP0ONXcEisf3m
+        ERaQKk6BWIkji4+ArRAW8Jb4sWkJWJxFQEVizt67YDavgKXEtL4GZghbUOLkzCdgcWYBbYmn
+        N5/C2csWvmaGOE9B4ufTZawQVyRJTP2yiAmiRlzi6M8e5gmMwrOQjJqFZNQsJKNmIWlZwMiy
+        ilEytaA4Nz232LDAMC+1XK84Mbe4NC9dLzk/dxMjOAFoae5g3L7qg94hRiYOxkOMEhzMSiK8
+        WS+044V4UxIrq1KL8uOLSnNSiw8xSnOwKInz3ihcGCckkJ5YkpqdmlqQWgSTZeLglGpgsl8W
+        auuTe+MvR/+9g9+XM3/2XndL2vn/zYN/3tineiRfid/9SePDgmWNX8SWBvxoeGUUujxm7855
+        a7467ntr6TprWsD293xCF4L4Fbqn7J4RFnXZL47nkLhQY/Xes50JW+8m/tm68taza0afmlcm
+        te/eGc2jXODYrBrm9W6vZOdhFyF1s9tOjnmLg0uZ/t6s09rv86Xlw0LvTSu+ba3I3JqXtW/K
+        m69KNZN3NaVsn2Dx2mLmlK0C1o5xtxvnaM54c/5TyYQzx2pmLjHuMvxXut93gjhf/P1tEyTn
+        WVfZfvp9zOjEoaL4zN/vVX5nyE3NN5388ZCmy+qMDSGTV2z6kV/y/Mpn5n18Rc1GbOdNRc2U
+        WIozEg21mIuKEwF2nffQbwMAAA==
+X-CMS-MailID: 20200806163700epcas5p2f15235fc7fa635bd1c585a8805c0e82f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
+References: <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
+        <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+        <7c59c7abf7b00c368228b3096e1bea8c9e2b2e80.camel@gmail.com>
+        <SN6PR04MB4640CE297AAB3CF4D37EE002FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <39c546268abead68f4c00f17dc47c1597f3e0273.camel@gmail.com>
+        <SN6PR04MB4640210D586CBA053F56DCF0FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <e3aba7fba7c208ac58c638139bd615c871d2e52e.camel@gmail.com>
+        <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Botila <andrei.botila@nxp.com>
 
-A hardware limitation exists for CAAM until Era 9 which restricts
-the accelerator to IVs with only 8 bytes. When CAAM has a lower era
-a fallback is necessary to process 16 bytes IV.
 
-Fixes: 226853ac3ebe ("crypto: caam/qi2 - add skcipher algorithms")
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
----
- drivers/crypto/caam/caamalg_qi2.c | 79 +++++++++++++++++++++++++++++--
- drivers/crypto/caam/caamalg_qi2.h |  2 +
- 2 files changed, 77 insertions(+), 4 deletions(-)
+> -----Original Message-----
+> From: Avri Altman <Avri.Altman=40wdc.com>
+> Sent: 06 August 2020 19:27
+> To: Bean Huo <huobean=40gmail.com>; daejun7.park=40samsung.com;
+> jejb=40linux.ibm.com; martin.petersen=40oracle.com; asutoshd=40codeaurora=
+.org;
+> beanhuo=40micron.com; stanley.chu=40mediatek.com; cang=40codeaurora.org;
+> bvanassche=40acm.org; tomas.winkler=40intel.com; ALIM AKHTAR
+> <alim.akhtar=40samsung.com>
+> Cc: linux-scsi=40vger.kernel.org; linux-kernel=40vger.kernel.org; Sang-yo=
+on Oh
+> <sangyoon.oh=40samsung.com>; Sung-Jun Park
+> <sungjun07.park=40samsung.com>; yongmyung lee
+> <ymhungry.lee=40samsung.com>; Jinyoung CHOI <j-young.choi=40samsung.com>;
+> Adel Choi <adel.choi=40samsung.com>; BoRam Shin
+> <boram.shin=40samsung.com>
+> Subject: RE: =5BPATCH v8 0/4=5D scsi: ufs: Add Host Performance Booster S=
+upport
+>=20
+>=20
+> >
+> > On Thu, 2020-08-06 at 10:12 +0000, Avri Altman wrote:
+> > > > >
+> > > >
+> > > > we didn't see you Acked-by in the pathwork, would you like to add
+> > > > them?
+> > > > Just for reminding us that you have agreed to mainline this series
+> > > > patchset.
+> > >
+> > > I acked it -
+> > > https://protect2.fireeye.com/url?k=3D039c5a1c-5e48e674-039dd153-0cc47=
+a
+> > > 3356b2-
+> 66867eb5b9700b6a&q=3D1&u=3Dhttps%3A%2F%2Fwww.spinics.net%2Flists%
+> > > 2Flinux-scsi%2Fmsg144660.html
+> > > And asked Martin to move forward -
+> > > https://protect2.fireeye.com/url?k=3D94dceb38-c9085750-94dd6077-0cc47=
+a
+> > > 3356b2-
+> 19ab1f41f48ff179&q=3D1&u=3Dhttps%3A%2F%2Fwww.spinics.net%2Flists%
+> > > 2Flinux-scsi%2Fmsg144738.html Which he did, and got some sparse
+> > > errors:
+> > > https://protect2.fireeye.com/url?k=3Da40e2dd1-f9da91b9-a40fa69e-0cc47=
+a
+> > > 3356b2-
+> 81fae05297aebb0e&q=3D1&u=3Dhttps%3A%2F%2Fwww.spinics.net%2Flists%
+> > > 2Flinux-scsi%2Fmsg144977.html
+> > > Which I asked Daejun to fix -
+> > > https://protect2.fireeye.com/url?k=3D6badf100-36794d68-6bac7a4f-0cc47=
+a
+> > > 3356b2-
+> f84580e236611583&q=3D1&u=3Dhttps%3A%2F%2Fwww.spinics.net%2Flists%
+> > > 2Flinux-scsi%2Fmsg144987.html
+> > >
+> > > For the next chain of events I guess you can follow by yourself.
+> > >
+> > > Thanks,
+> > > Avri
+> >
+> > Avri
+> > Sorry for making you confusing. yes, I knew that, and following.
+> > I mean Acked-by tag in the patchset, then we see your acked in the
+> > patchwork, and let others know that you acked it, rather than going
+> > backtrack history email.
+> >
+> > Hi Daejun
+> > I think you can add Avri's Acked-by tag in your patchset, just for
+> > quickly moving forward and reminding.
+> Ahhh - One moment please -
+> While rebasing the v8 on my platform, I noticed some substantial changes =
+since
+> v6.
+> e.g. the hpb lun ref counting isn't there anymore, as well as some more s=
+tuff.
+> While those changes might be only for the best,  I think any tested-by ta=
+g should
+> be re-assign.
+>=20
+> Anyway, as for myself, I am not planning to put any more time in this, un=
+til there
+> is a clear decision where this series is going to.
+>=20
+> Martin - Are you considering to merge the HPB feature eventually to mainl=
+ine
+> kernel?
+>=20
+V8 has removed the =22UFS feature layer=22 which was  the main topic of dis=
+cussion. What else we thing is blocking this to be in mainline?
+Bart / Martin, any thought?
 
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index 66ae1d581168..a0b13bf6b528 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -19,6 +19,7 @@
- #include <linux/fsl/mc.h>
- #include <soc/fsl/dpaa2-io.h>
- #include <soc/fsl/dpaa2-fd.h>
-+#include <asm/unaligned.h>
- 
- #define CAAM_CRA_PRIORITY	2000
- 
-@@ -80,6 +81,7 @@ struct caam_ctx {
- 	struct alginfo adata;
- 	struct alginfo cdata;
- 	unsigned int authsize;
-+	struct crypto_skcipher *fallback;
- };
- 
- static void *dpaa2_caam_iova_to_virt(struct dpaa2_caam_priv *priv,
-@@ -1056,12 +1058,17 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 	struct device *dev = ctx->dev;
- 	struct caam_flc *flc;
- 	u32 *desc;
-+	int err;
- 
- 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
- 		dev_dbg(dev, "key size mismatch\n");
- 		return -EINVAL;
- 	}
- 
-+	err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
-+	if (err)
-+		return err;
-+
- 	ctx->cdata.keylen = keylen;
- 	ctx->cdata.key_virt = key;
- 	ctx->cdata.key_inline = true;
-@@ -1443,6 +1450,20 @@ static void skcipher_decrypt_done(void *cbk_ctx, u32 status)
- 	skcipher_request_complete(req, ecode);
- }
- 
-+static bool xts_skcipher_ivsize(struct skcipher_request *req)
-+{
-+	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
-+	unsigned int ivsize = crypto_skcipher_ivsize(skcipher);
-+	u64 size = 0;
-+
-+	if (IS_ALIGNED((unsigned long)req->iv, __alignof__(u64)))
-+		size = *(u64 *)(req->iv + (ivsize / 2));
-+	else
-+		size = get_unaligned((u64 *)(req->iv + (ivsize / 2)));
-+
-+	return !!size;
-+}
-+
- static int skcipher_encrypt(struct skcipher_request *req)
- {
- 	struct skcipher_edesc *edesc;
-@@ -1454,6 +1475,18 @@ static int skcipher_encrypt(struct skcipher_request *req)
- 	if (!req->cryptlen)
- 		return 0;
- 
-+	if (ctx->fallback && xts_skcipher_ivsize(req)) {
-+		skcipher_request_set_tfm(&caam_req->fallback_req, ctx->fallback);
-+		skcipher_request_set_callback(&caam_req->fallback_req,
-+					      req->base.flags,
-+					      req->base.complete,
-+					      req->base.data);
-+		skcipher_request_set_crypt(&caam_req->fallback_req, req->src,
-+					   req->dst, req->cryptlen, req->iv);
-+
-+		return crypto_skcipher_encrypt(&caam_req->fallback_req);
-+	}
-+
- 	/* allocate extended descriptor */
- 	edesc = skcipher_edesc_alloc(req);
- 	if (IS_ERR(edesc))
-@@ -1484,6 +1517,19 @@ static int skcipher_decrypt(struct skcipher_request *req)
- 
- 	if (!req->cryptlen)
- 		return 0;
-+
-+	if (ctx->fallback && xts_skcipher_ivsize(req)) {
-+		skcipher_request_set_tfm(&caam_req->fallback_req, ctx->fallback);
-+		skcipher_request_set_callback(&caam_req->fallback_req,
-+					      req->base.flags,
-+					      req->base.complete,
-+					      req->base.data);
-+		skcipher_request_set_crypt(&caam_req->fallback_req, req->src,
-+					   req->dst, req->cryptlen, req->iv);
-+
-+		return crypto_skcipher_decrypt(&caam_req->fallback_req);
-+	}
-+
- 	/* allocate extended descriptor */
- 	edesc = skcipher_edesc_alloc(req);
- 	if (IS_ERR(edesc))
-@@ -1537,9 +1583,29 @@ static int caam_cra_init_skcipher(struct crypto_skcipher *tfm)
- 	struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
- 	struct caam_skcipher_alg *caam_alg =
- 		container_of(alg, typeof(*caam_alg), skcipher);
-+	struct caam_ctx *ctx = crypto_skcipher_ctx(tfm);
-+	u32 alg_aai = caam_alg->caam.class1_alg_type & OP_ALG_AAI_MASK;
- 
- 	crypto_skcipher_set_reqsize(tfm, sizeof(struct caam_request));
--	return caam_cra_init(crypto_skcipher_ctx(tfm), &caam_alg->caam, false);
-+
-+	if (alg_aai == OP_ALG_AAI_XTS) {
-+		const char *tfm_name = crypto_tfm_alg_name(&tfm->base);
-+		struct crypto_skcipher *fallback;
-+
-+		fallback = crypto_alloc_skcipher(tfm_name, 0,
-+						 CRYPTO_ALG_NEED_FALLBACK);
-+		if (IS_ERR(fallback)) {
-+			pr_err("Failed to allocate %s fallback: %ld\n",
-+			       tfm_name, PTR_ERR(fallback));
-+			return PTR_ERR(fallback);
-+		}
-+
-+		ctx->fallback = fallback;
-+		crypto_skcipher_set_reqsize(tfm, sizeof(struct caam_request) +
-+					    crypto_skcipher_reqsize(fallback));
-+	}
-+
-+	return caam_cra_init(ctx, &caam_alg->caam, false);
- }
- 
- static int caam_cra_init_aead(struct crypto_aead *tfm)
-@@ -1562,7 +1628,11 @@ static void caam_exit_common(struct caam_ctx *ctx)
- 
- static void caam_cra_exit(struct crypto_skcipher *tfm)
- {
--	caam_exit_common(crypto_skcipher_ctx(tfm));
-+	struct caam_ctx *ctx = crypto_skcipher_ctx(tfm);
-+
-+	if (ctx->fallback)
-+		crypto_free_skcipher(ctx->fallback);
-+	caam_exit_common(ctx);
- }
- 
- static void caam_cra_exit_aead(struct crypto_aead *tfm)
-@@ -1665,6 +1735,7 @@ static struct caam_skcipher_alg driver_algs[] = {
- 			.base = {
- 				.cra_name = "xts(aes)",
- 				.cra_driver_name = "xts-aes-caam-qi2",
-+				.cra_flags = CRYPTO_ALG_NEED_FALLBACK,
- 				.cra_blocksize = AES_BLOCK_SIZE,
- 			},
- 			.setkey = xts_skcipher_setkey,
-@@ -2912,8 +2983,8 @@ static void caam_skcipher_alg_init(struct caam_skcipher_alg *t_alg)
- 	alg->base.cra_module = THIS_MODULE;
- 	alg->base.cra_priority = CAAM_CRA_PRIORITY;
- 	alg->base.cra_ctxsize = sizeof(struct caam_ctx);
--	alg->base.cra_flags = CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY |
--			      CRYPTO_ALG_KERN_DRIVER_ONLY;
-+	alg->base.cra_flags |= (CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY |
-+			      CRYPTO_ALG_KERN_DRIVER_ONLY);
- 
- 	alg->init = caam_cra_init_skcipher;
- 	alg->exit = caam_cra_exit;
-diff --git a/drivers/crypto/caam/caamalg_qi2.h b/drivers/crypto/caam/caamalg_qi2.h
-index f29cb7bd7dd3..d35253407ade 100644
---- a/drivers/crypto/caam/caamalg_qi2.h
-+++ b/drivers/crypto/caam/caamalg_qi2.h
-@@ -13,6 +13,7 @@
- #include <linux/netdevice.h>
- #include "dpseci.h"
- #include "desc_constr.h"
-+#include <crypto/skcipher.h>
- 
- #define DPAA2_CAAM_STORE_SIZE	16
- /* NAPI weight *must* be a multiple of the store size. */
-@@ -186,6 +187,7 @@ struct caam_request {
- 	void (*cbk)(void *ctx, u32 err);
- 	void *ctx;
- 	void *edesc;
-+	struct skcipher_request fallback_req;
- };
- 
- /**
--- 
-2.17.1
+
+> Thanks,
+> Avri
+> >
+> > thanks,
+> > Bean
+
 
