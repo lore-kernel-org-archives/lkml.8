@@ -2,94 +2,90 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66656C47274
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F27FC47272
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988F522D02
+	by mail.kernel.org (Postfix) with ESMTP id 4129B22D04
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0en1W3fo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4eBnpOGf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ISelayjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgHFJlh (ORCPT
+        id S1729233AbgHFJi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:41:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57040 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgHFJlJ (ORCPT
+        Thu, 6 Aug 2020 05:38:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23481 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729223AbgHFJg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:41:09 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596706866;
+        Thu, 6 Aug 2020 05:36:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596706615;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7h1NwChE7k/KZnYmQuWPK12OfyVN6+DmIy8syMh+/Ks=;
-        b=0en1W3foTyJQ/a3ORD69xVDuy6RGBmSpumUZOiO+zNNjdZ98YVdw025EVEVh0vFD7aYK5L
-        I7/sw6SwqJ06boKGugm4ApL7T7jZi+K3MSw9qlCNmFfu9EErsq8zZIiorKQ3pqjJO/xSAH
-        dXWv/P+S53NyOmxXmnn1hUvYJr7J6VS8rDiEaRTxqjuOzhYYRsVWfUQwB6kW+jys94AT4a
-        HEswFNxvCS+6lkzecrs4K1zQ+a1c6eK50+ACvB9c97Pt0WIT9KYaegmfP1iAwrvUpKUUKx
-        cr6Twjjgi6OcvnBtrgXF9m3y8Ei6KtDwlkecdJqbBsOGPUVfBIIARWxzghzVxQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596706866;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7h1NwChE7k/KZnYmQuWPK12OfyVN6+DmIy8syMh+/Ks=;
-        b=4eBnpOGf08nGpnL+jnNqH5dmgNbgf5eT0rVBjjVBHEiNG3JQgMsYvX+22Ccpdz12hJBVUZ
-        WJupblTyigLCvCCw==
-To:     peterz@infradead.org,
-        Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
-In-Reply-To: <20200805153120.GU2674@hirez.programming.kicks-ass.net>
-References: <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt> <87lfiwm2bj.fsf@nanos.tec.linutronix.de> <20200803114112.mrcuupz4ir5uqlp6@skbuf> <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com> <875z9zmt4i.fsf@nanos.tec.linutronix.de> <20200805134002.GQ2674@hirez.programming.kicks-ass.net> <jhja6z9i4bi.mognet@arm.com> <20200805153120.GU2674@hirez.programming.kicks-ass.net>
-Date:   Thu, 06 Aug 2020 11:41:06 +0200
-Message-ID: <874kpgi025.fsf@nanos.tec.linutronix.de>
+        bh=2SRXYqR/w4ZPmQdMHnc72Nwp3MhKm+bh3iVJiUJELNE=;
+        b=ISelayjvZq0aFt5mkkgJVvzj00VbSJBZZGgzsuTGeH067PsenEEvUsUj8IzBONYtRK45qG
+        DFfO1pZSfqPSjhjSYbQhVh7c3w7SspCH/jhpZOamrjoheNH5Fz5ZPWyGyEUih7A+dWfDYi
+        oklV5b2Y/xb4Ir2hxGemH6lri1uGUok=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-H-9PRI80Pv28O2DYRxpUzg-1; Thu, 06 Aug 2020 05:36:53 -0400
+X-MC-Unique: H-9PRI80Pv28O2DYRxpUzg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1B39D1940922;
+        Thu,  6 Aug 2020 09:36:52 +0000 (UTC)
+Received: from gondolin (ovpn-113-2.ams2.redhat.com [10.36.113.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E70F5C6D9;
+        Thu,  6 Aug 2020 09:36:48 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 11:36:45 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio-pci: Avoid recursive read-lock usage
+Message-ID: <20200806113645.47de0bfa.cohuck@redhat.com>
+In-Reply-To: <159665024415.30380.4401928486051321567.stgit@gimli.home>
+References: <159665024415.30380.4401928486051321567.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-peterz@infradead.org writes:
-> On Wed, Aug 05, 2020 at 02:56:49PM +0100, Valentin Schneider wrote:
->
->> I've been tempted to say the test case is a bit bogus, but am not familiar
->> enough with the RT throttling details to stand that ground. That said, from
->> both looking at the execution and the stress-ng source code, it seems to
->> unconditionally spawn 32 FIFO-50 tasks (there's even an option to make
->> these FIFO-99!!!), which is quite a crowd on monoCPU systems.
->
-> Oh, so it's a case of: we do stupid without tuning and the system falls
-> over. I can live with that.
+On Wed, 05 Aug 2020 11:58:05 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-It's not a question of whether you can live with that behaviour for a
-particular silly test case.
+> A down_read on memory_lock is held when performing read/write accesses
+> to MMIO BAR space, including across the copy_to/from_user() callouts
+> which may fault.  If the user buffer for these copies resides in an
+> mmap of device MMIO space, the mmap fault handler will acquire a
+> recursive read-lock on memory_lock.  Avoid this by reducing the lock
+> granularity.  Sequential accesses requiring multiple ioread/iowrite
+> cycles are expected to be rare, therefore typical accesses should not
+> see additional overhead.
+> 
+> VGA MMIO accesses are expected to be non-fatal regardless of the PCI
+> memory enable bit to allow legacy probing, this behavior remains with
+> a comment added.  ioeventfds are now included in memory access testing,
+> with writes dropped while memory space is disabled.
+> 
+> Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_private.h |    2 +
+>  drivers/vfio/pci/vfio_pci_rdwr.c    |  120 ++++++++++++++++++++++++++++-------
+>  2 files changed, 98 insertions(+), 24 deletions(-)
 
-The same happens with a single RT runaway task with enough interrupt
-load on a UP machine. Just validated that. And that has nothing to do
-with a silly test case. Sporadic runaways due to a bug in a once per
-week code path simply can happen and having the safety net working
-depending on a config option selected or not is just wrong.
-
-Thanks,
-
-        tglx
-
-
-
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
