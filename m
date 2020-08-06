@@ -2,188 +2,106 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD52C4363F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC1522CBB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F327822CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqCb6gas"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IEYujYIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgHFGMM (ORCPT
+        id S1728303AbgHFGlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:12:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgHFGMJ (ORCPT
+        Thu, 6 Aug 2020 02:41:21 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32410 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727800AbgHFGlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:12:09 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D998EC061574
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 23:12:08 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w25so14958869ljo.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 23:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3lg769i6ESd9+yFvgCTcrA71u1CCKdaazplbdD339OQ=;
-        b=qqCb6gaszZMEF69Qou9EINe7FP2GiyFrcwvuWpDSf6gXUV3uKkERKD2LVJh2bWO5z3
-         B1/dhoPl6Vec8dngb4dype3A9Ip5Npb6bKRGF8Avp8c742h7Yzdv9cw6/t5cKzMKE4aR
-         aCUJc0kJcNIKefeCfEk2uGxaRiTf8O48UNEQIeIFrLL8zbGOEDkT7R5BmupXn6+v1yDV
-         q4fpIBuYjsVuJiz4aVQr1OADiTZEPMYTlzmcbLJvdQC6P8rgIpiUg9bleMamjf7zGtIf
-         iLIrwNepo9C1bne0Db1xpp6CIgLH9yALqo5MPRJ3PYZ3+wgdJxYjMDtFvnWrkxTOPjQI
-         TtQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3lg769i6ESd9+yFvgCTcrA71u1CCKdaazplbdD339OQ=;
-        b=cL2gYaqSHBCfG5m5RqxVyoezpnsOXutamAlRxZ6PaVvYi1JNLQUEHCTnbbc5mVJfwz
-         NXAkJtyEb/MKKPMk9wQe55+GKYryz8hCJ1dsOPfsPno2QVe3ZmxfQoo9UWVMxmCpKZwS
-         oOifwR+Jz2Y2M60ZosusQ8L+vLp2onNZCPushXv0GHoLlPKfsiapGhQZn5QGvCGBYDT1
-         g0CNK6fa9s+LpMKb1n2KI4fIeNAkVz7KKkkR58znhTsvP+tJ8InhfehXMjRWUFHy3LfY
-         ddi6Yb8ozuTzwNErn6pxWGmVbFNDPBWJMdOewFI+cmnAjlhY1sMuVIiKlqkA3nG4dCwy
-         Dkcg==
-X-Gm-Message-State: AOAM532dedmWS6PnQAZOc3V/UPaWGIX4xpfm61vUqyQZbyXGLJYu+byZ
-        kpYtigo0xwyzQWdzvxUT+O8U66Yj6g9YWgLb87qmxQ==
-X-Google-Smtp-Source: ABdhPJyGyvjKik9oGhRsGgM1zYd8Ds5ektvkg6IwcuaviG+0omujPqq7qpYNXSAFvYQ3PAYyJa9UnraLn57anHQWdUs=
-X-Received: by 2002:a2e:b6cc:: with SMTP id m12mr2784456ljo.256.1596694324935;
- Wed, 05 Aug 2020 23:12:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200723084622.31134-1-jorge@foundries.io> <20200723084622.31134-2-jorge@foundries.io>
- <CAFA6WYPQ3GGYostoHU=6qg4c_LqoqOZVbZ8gbQbGkNfyGydQjQ@mail.gmail.com>
- <20200724142305.GA24164@trex> <CAFA6WYOGu4DPzd93h-yFLJvLmRH=ZroN70+ZNY6xCOOM+TJOSA@mail.gmail.com>
- <20200805203817.GA12229@trex>
-In-Reply-To: <20200805203817.GA12229@trex>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 6 Aug 2020 11:41:53 +0530
-Message-ID: <CAFA6WYPKGTb6Qj7emETpB9-XXO8vcf6v2ONKD4pt+M9F-=HWbQ@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] hwrng: optee: fix wait use case
-To:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, ricardo@foundries.io,
-        Michael Scott <mike@foundries.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        op-tee@lists.trustedfirmware.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Aug 2020 02:41:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596696071; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Up7I/CriwmOnAvRCo5VD/fL2c6xGM0a9cxYx/5GGg1k=; b=IEYujYIFP527boyNXal3p55m93CuG0he8PG+sd22b1s53H7YP+44JUjfxFv/LdrG/FdvEJyP
+ sseLQWoYMOiFwu+Ze/8Gqsr1/pTI4gnRoLIKfXB3/nvX+/TJs9Hrb0sZI+uwNTN8njini4Op
+ mjOIY9YA61IRfGF98SnYQiNhnwA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5f2ba607d96d28d61e2e4b96 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 06:41:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 088B2C433CA; Thu,  6 Aug 2020 06:41:11 +0000 (UTC)
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51DB2C433A1;
+        Thu,  6 Aug 2020 06:41:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51DB2C433A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+From:   Hemant Kumar <hemantk@codeaurora.org>
+To:     gregkh@linuxfoundation.org, manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org,
+        Hemant Kumar <hemantk@codeaurora.org>
+Subject: [PATCH v5 2/4] bus: mhi: core: Move MHI_MAX_MTU to external header file
+Date:   Wed,  5 Aug 2020 23:41:01 -0700
+Message-Id: <1596696063-17802-3-git-send-email-hemantk@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
+References: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 at 02:08, Jorge Ramirez-Ortiz, Foundries
-<jorge@foundries.io> wrote:
->
-> On 05/08/20, Sumit Garg wrote:
-> > Apologies for my delayed response as I was busy with some other tasks
-> > along with holidays.
->
-> no pb! was just making sure this wasnt falling through some cracks.
->
-> >
-> > On Fri, 24 Jul 2020 at 19:53, Jorge Ramirez-Ortiz, Foundries
-> > <jorge@foundries.io> wrote:
-> > >
-> > > On 24/07/20, Sumit Garg wrote:
-> > > > On Thu, 23 Jul 2020 at 14:16, Jorge Ramirez-Ortiz <jorge@foundries.io> wrote:
-> > > > >
-> > > > > The current code waits for data to be available before attempting a
-> > > > > second read. However the second read would not be executed as the
-> > > > > while loop exits.
-> > > > >
-> > > > > This fix does not wait if all data has been read and reads a second
-> > > > > time if only partial data was retrieved on the first read.
-> > > > >
-> > > > > This fix also does not attempt to read if not data is requested.
-> > > >
-> > > > I am not sure how this is possible, can you elaborate?
-> > >
-> > > currently, if the user sets max 0, get_optee_rng_data will regardless
-> > > issuese a call to the secure world requesting 0 bytes from the RNG
-> > >
-> >
-> > This case is already handled by core API: rng_dev_read().
->
-> ah ok good point, you are right
-> but yeah, there is no consequence to the actual patch.
->
+Currently this macro is defined in internal MHI header as
+a TRE length mask. Moving it to external header allows MHI
+client drivers to set this upper bound for the transmit
+buffer size.
 
-So, at least you could get rid of the corresponding text from commit message.
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+---
+ drivers/bus/mhi/core/internal.h | 1 -
+ include/linux/mhi.h             | 3 +++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-> >
-> > > with this patch, this request is avoided.
-> > >
-> > > >
-> > > > >
-> > > > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
-> > > > > ---
-> > > > >  v2: tidy up the while loop to avoid reading when no data is requested
-> > > > >
-> > > > >  drivers/char/hw_random/optee-rng.c | 4 ++--
-> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/char/hw_random/optee-rng.c b/drivers/char/hw_random/optee-rng.c
-> > > > > index 5bc4700c4dae..a99d82949981 100644
-> > > > > --- a/drivers/char/hw_random/optee-rng.c
-> > > > > +++ b/drivers/char/hw_random/optee-rng.c
-> > > > > @@ -122,14 +122,14 @@ static int optee_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> > > > >         if (max > MAX_ENTROPY_REQ_SZ)
-> > > > >                 max = MAX_ENTROPY_REQ_SZ;
-> > > > >
-> > > > > -       while (read == 0) {
-> > > > > +       while (read < max) {
-> > > > >                 rng_size = get_optee_rng_data(pvt_data, data, (max - read));
-> > > > >
-> > > > >                 data += rng_size;
-> > > > >                 read += rng_size;
-> > > > >
-> > > > >                 if (wait && pvt_data->data_rate) {
-> > > > > -                       if (timeout-- == 0)
-> > > > > +                       if ((timeout-- == 0) || (read == max))
-> > > >
-> > > > If read == max, would there be any sleep?
-> > >
-> > > no but I see no reason why there should be a wait since we already have
-> > > all the data that we need; the msleep is only required when we need to
-> > > wait for the RNG to generate entropy for the number of bytes we are
-> > > requesting. if we are requesting 0 bytes, the entropy is already
-> > > available. at leat this is what makes sense to me.
-> > >
-> >
-> > Wouldn't it lead to a call as msleep(0); that means no wait as well?
->
-> I dont understand: there is no reason to wait if read == max and this
-> patch will not wait: if read == max it calls 'return read'
->
-> am I misunderstanding your point?
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index 7989269..4abf0cf 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -453,7 +453,6 @@ enum mhi_pm_state {
+ #define CMD_EL_PER_RING			128
+ #define PRIMARY_CMD_RING		0
+ #define MHI_DEV_WAKE_DB			127
+-#define MHI_MAX_MTU			0xffff
+ #define MHI_RANDOM_U32_NONZERO(bmsk)	(prandom_u32_max(bmsk) + 1)
+ 
+ enum mhi_er_type {
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index 6565528..610f3b0 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -16,6 +16,9 @@
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
+ 
++/* MHI client drivers to set this upper bound for tx buffer */
++#define MHI_MAX_MTU 0xffff
++
+ #define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
+ 
+ struct mhi_chan;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-What I mean is that we shouldn't require this extra check here as
-there wasn't any wait if read == max with existing implementation too.
-
--Sumit
-
->
-> >
-> > -Sumit
-> >
-> > >
-> > > >
-> > > > -Sumit
-> > > >
-> > > > >                                 return read;
-> > > > >                         msleep((1000 * (max - read)) / pvt_data->data_rate);
-> > > > >                 } else {
-> > > > > --
-> > > > > 2.17.1
-> > > > >
