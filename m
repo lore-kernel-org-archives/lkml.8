@@ -2,178 +2,151 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B36D02311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1952311C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUFT7XZ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYFtD1vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbgHFRYE (ORCPT
+        id S1729429AbgHFRYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:24:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
+        Thu, 6 Aug 2020 13:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729517AbgHFREq (ORCPT
+        with ESMTP id S1728798AbgHFREp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:04:46 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66610C034623;
-        Thu,  6 Aug 2020 06:32:25 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x24so8792812lfe.11;
-        Thu, 06 Aug 2020 06:32:25 -0700 (PDT)
+        Thu, 6 Aug 2020 13:04:45 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694B5C0619CF;
+        Thu,  6 Aug 2020 06:50:04 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id e11so11993641otk.4;
+        Thu, 06 Aug 2020 06:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LZxvFQGifO+67iYKjeLuydYAgFkWMKjwGTRkNaAuRmA=;
-        b=WUFT7XZ6WlGDd8EaFKldHEkscNGOKMwPso2gE4g0kMoDMtrhul6ymRofEzEiWmgRsq
-         Ka68NNykTmXUo+gX944jueoFOnF8+CCcQ/JoVMB+UI5LOfXim3dkjWg8BQvN29RWNN7w
-         QYmnXQOLo9rm53R6MlNAvUb5mLLZZgxf0IcqvsOmsg9X+sBXPKNjKxSBaT7/6d9fMAPU
-         Qc8g7y7+sQGW/kQr9gbxaO/x25VC1UvUEQLYYHZDXQ7cQPK24fSO0ucJKZeiZs7fhq/u
-         JrPPwqu3xrE7kwq3DnK5EXHeHPAktkwcIu3ePAZXv6TO+W282wFLa/B+jQbRI+8zuSHL
-         9Ywg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SEjQBZlrTFsQloK4tn/llXwept9F2hPUgYtTajnb1LA=;
+        b=MYFtD1vgNVKOxnDpEWoSNTcqVqARbDQ4iS+ttYasNnJ2A1Rymefw8vFcH2aHdZ4fye
+         GG0GarjIsVRgTSxlorHMu76c0fQH4leeKMyq3Qp+mtVhv05KN0PVzAs/syXyvgvtjpA2
+         SXQQJ2fdCSlmi/tWZxKRI1zoZLoa63MUWdHV+S0E1cu9rouZrjPORjmndPu05a/1Kz/+
+         dy/CwGAqKZ1WG5gYYfgl86uxvWAORJ5Mx+oxIfngtOVXyH+qzhpRzl5BIW4h+NvzFPCU
+         8+xW+Q5DoC8gRPMtzE4pPnwpiMY21vrjrVOuKS/p0YXelP9PTFMnP3Coh3qv116+54n3
+         0dgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LZxvFQGifO+67iYKjeLuydYAgFkWMKjwGTRkNaAuRmA=;
-        b=VMgyrvABh6bQli/5LaDEDfl8KvY20yKpzSNZ3+9s2jSQi9WZx/GfffNFnT7P9RBxx0
-         9108b0uxF7Cl3hyiwbLE66VAekOjCIhGRuLOoW0QV/GhgaxIlnJdYFnu8WzqNq7kZaRp
-         u9CT91Ne7J+LXF98OcuplQENkRtBZTenBOVs4l1DxPb9WxAZqrtQWth+NGPwgY8E5Yt+
-         lxtQRHSSH//rt7Nf02MxyU8h8s1jLbu8jriOTr2XwPaZfl8dhGPHNTMGV+C6RI/Ztpgr
-         2r4tf51yfWeOUQcPs+B2z7JdBp4buLHM55cMUW5Osta4+iSK0HAnLIA9rzPVdXxXFcZJ
-         rQHg==
-X-Gm-Message-State: AOAM531uuXU/piZPq693vttir9VWBhJdlK4CGE62JPx6iOQJ9nar6Rs3
-        rgdZVXfQHV8aonhY9aNcNggIVTs2
-X-Google-Smtp-Source: ABdhPJxNWwksICqD/uuo/XKUFPyGL1DYzGZiOXNL9vJy0Ic/lvuGHHKkvbseSJ8PTHofY2GlvQOcsA==
-X-Received: by 2002:ac2:4d31:: with SMTP id h17mr3834171lfk.144.1596720736814;
-        Thu, 06 Aug 2020 06:32:16 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id h14sm2387225ljb.53.2020.08.06.06.32.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 06:32:14 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
-Date:   Thu, 6 Aug 2020 16:32:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SEjQBZlrTFsQloK4tn/llXwept9F2hPUgYtTajnb1LA=;
+        b=Jvqp5xtZLZpZd5N2KzIr4AM0wCrC09IChuLOj06IEvZ00M1Elwc7ds0uN5KlTKZkxt
+         Nodv+r8o4vGuHJV2p82xSDySrFUWTL3pPuhT90kkbCfUqn3/kLdd7SgFeKqMGy2NHkZo
+         7rPclGILKIBJuXCLliJq8V0E1UTSpXbE4Y+pVfm7ORpKJ8xqkdw+giw0/5LG8nXFJbgy
+         ptnfL4MimUnq5SscIgu6huXxi3kp+lCDRWbj19Z1qcbL0ECtSsr8epd+LjU4e6ClBnwb
+         GznBWw3H6TZRLL0V6F02hpQpeHVI4M71jUZmnNl7Za38HR3h7hjZ6rgWpdkYxeTLwQhM
+         LnFQ==
+X-Gm-Message-State: AOAM533JpofGkhaIuR0UjfUTNL6e5pZ1T1iEfBnOrAZAHsxnmNqyUDyB
+        ToHyO7jb3qfm3IB6l12whRhvCsT1V2VVdIbaQLU=
+X-Google-Smtp-Source: ABdhPJw4ecP6H//vDHHZvBTuxT/QGbR+ZI3XNBXLHzPCazzTrLsqEggBwLft6DcjEwmJkWIfi5p6NHkE5D1PCLV+MYw=
+X-Received: by 2002:a9d:67d3:: with SMTP id c19mr7420766otn.162.1596721798604;
+ Thu, 06 Aug 2020 06:49:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200806080358.3124505-1-tweek@google.com> <20200806080358.3124505-2-tweek@google.com>
+ <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com> <8627d780-0e19-6755-0de5-c686deb0f5de@sony.com>
+ <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com> <07e2c48d-3918-6ceb-a6b2-4e2f18f9ea01@gmail.com>
+In-Reply-To: <07e2c48d-3918-6ceb-a6b2-4e2f18f9ea01@gmail.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 6 Aug 2020 09:49:47 -0400
+Message-ID: <CAEjxPJ4no_GqMp8aw43zpwmwq42Wi_1dvP+ZBs1a-mnReDt5Og@mail.gmail.com>
+Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
+To:     peter enderborg <peter.enderborg@sony.com>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.08.2020 03:47, Sowjanya Komatineni пишет:
-> 
-> On 8/5/20 11:06 AM, Sowjanya Komatineni wrote:
->>
->> On 8/5/20 10:46 AM, Sowjanya Komatineni wrote:
->>>
->>> On 8/5/20 10:34 AM, Dmitry Osipenko wrote:
->>>> 05.08.2020 20:29, Sowjanya Komatineni пишет:
->>>> ...
->>>>> UART_FST_MIPI_CAL is the clock used for calibration logic which is FSM
->>>>> that goes thru sequence codes and when done waits for pads to be in
->>>>> LP-11 to apply results.
->>>>>
->>>>> MIPI_CLK is controller gate clock which is also need to be kept
->>>>> enabled
->>>>> as incase if it sees LP-11 it updates registers so its recommended to
->>>>> have this clock enabled.
->>>>>
->>>>> We can cancel_calibration() in CSI only when csi/sensor stream on
->>>>> fails
->>>>> and in which case there will be no LP-11 so we can unconditionally
->>>>> disable MIPI_CLK.
->>>>>
->>>> There is no guarantee that the fail comes before the LP-11. For
->>>> example,
->>>> some odd camera driver may have a complicated enable sequence which may
->>>> fail after enabling the hardware streaming.
->>>
->>> MIPI_CLK to keep enable is for calibration logic to update results,
->>> but like I said calibration logic uses UART_FST_MIPI_CAL clock. So
->>> even in case if fail happens from sensor after having pads in LP-11
->>> then, calibration logic will still be running but result update will
->>> not happen with clock disabled. But HW will not stuck as this is
->>> confirmed from HW designer.
->>
->> If LP-11 happens from sensor stream (followed by fail) and by that
->> time if calibration FSM is done and if calibration logic sees LP-11
->> then results will be applied to pads.
->>
->> We did start of calibration before CSI stream so by the time we do
->> sensor stream enable, calibration logic might have done with FSM and
->> waiting for LP-11
->>
->> Also if we see any special case, we always can use
->> finish_calibration() instead of cancel_calibration() as well.
+On Thu, Aug 6, 2020 at 9:45 AM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> On 8/6/20 8:32 AM, Stephen Smalley wrote:
+>
+> > On 8/6/20 8:24 AM, peter enderborg wrote:
+> >
+> >> On 8/6/20 2:11 PM, Stephen Smalley wrote:
+> >>> On 8/6/20 4:03 AM, Thi=C3=A9baud Weksteen wrote:
+> >>>
+> >>>> From: Peter Enderborg <peter.enderborg@sony.com>
+> >>>>
+> >>>> Add further attributes to filter the trace events from AVC.
+> >>> Please include sample usage and output in the description.
+> >>>
+> >>>
+> >> Im not sure where you want it to be.
+> >>
+> >> In the commit message or in a Documentation/trace/events-avc.rst ?
+> >
+> > I was just asking for it in the commit message / patch description.  I
+> > don't know what is typical for Documentation/trace.
+>
+> For example, I just took the patches for a spin, running the
+> selinux-testsuite under perf like so:
+>
+> sudo perf record -e avc:selinux_audited -g make test
+>
+> and then ran:
+>
+> sudo perf report -g
+>
+> and a snippet of sample output included:
+>
+>       6.40%     6.40%  requested=3D0x800000 denied=3D0x800000
+> audited=3D0x800000 result=3D-13 ssid=3D922 tsid=3D922
+> scontext=3Dunconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+> tcontext=3Dunconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+> tclass=3Dcapability
 
-Why not to do it right now?
+So then the question becomes how do you use the above information,
+e.g. is that sufficient to correlate it to an actual avc: denied
+message, how do you decode the requested/denied/audited fields (or
+should the code do that for you and just report the string name(s) of
+the permission(s), do you need all three of those fields separately,
+is it useful to log the ssid/tsid at all given that you have the
+contexts and sids are dynamically assigned, etc.
 
-Then the code could look like this:
-
-src_subdev = tegra_channel_get_remote_source_subdev(chan);
-ret = v4l2_subdev_call(src_subdev, video, s_stream, true);
-err = tegra_mipi_finish_calibration(csi_chan->mipi);
-
-if (ret < 0 && ret != -ENOIOCTLCMD)
-	goto err_disable_csi_stream;
-
-if (err < 0)
-	dev_warn(csi_chan->csi->dev,
-		 "MIPI calibration failed: %d\n", err);
-
->> finish_calibration() has extra 250ms wait time polling done bit and we
->> can ignore its return code during fail pathway.
->>
-> Confirmed from HW designer, calibration FSM to finish takes worst case
-> 72uS so by the time it gets to sensor stream it will be done its
-> sequence and will be waiting for DONE bit.
-> 
-> So disabling MIPI CAL clock on sensor stream fails is safe.
-
-
-72us is quite a lot of time, what will happen if LP-11 happens before
-FSM finished calibration?
-
-Maybe the finish_calibration() needs to split into two parts:
-
- 1. wait for CAL_STATUS_ACTIVE before enabling sensor
- 2. wait for CAL_STATUS_DONE after enabling sensor
+>              |
+>              ---0x495641000028933d
+>                 __libc_start_main
+>                 |
+>                 |--4.60%--__GI___ioctl
+>                 |          entry_SYSCALL_64
+>                 |          do_syscall_64
+>                 |          __x64_sys_ioctl
+>                 |          ksys_ioctl
+>                 |          binder_ioctl
+>                 |          binder_set_nice
+>                 |          can_nice
+>                 |          capable
+>                 |          security_capable
+>                 |          cred_has_capability.isra.0
+>                 |          slow_avc_audit
+>                 |          common_lsm_audit
+>                 |          avc_audit_post_callback
+>                 |          avc_audit_post_callback
