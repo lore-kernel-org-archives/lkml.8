@@ -2,133 +2,127 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E277206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bMeu9VLD"
+	by mail.kernel.org (Postfix) with ESMTP id 966D2206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596735356;
+	bh=iNFLlgEhiYwp8ZRVI4J6gnGFP+JhjSTOqd0S/pIkyto=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=BArkfmF12YY44ce5iu6VnQxNs/oyrskd/2d9V+JBGBBwTaxeNgujG4q8LKJg4cB7N
+	 dPX2sbFo3IgOp2LFge0npzz8VzrO1GUoKOSgT5FL5Pb42cTJiRfcr0xZE1wQMBjwEc
+	 j2PZq0Kn7WrCdVdsv/1XXmUPnzJfnUmsyKzYFxKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730594AbgHFRe4 (ORCPT
+        id S1730629AbgHFRfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:34:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39642 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729382AbgHFRbn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:31:43 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076EXCZP003778;
-        Thu, 6 Aug 2020 10:33:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=MrweLZr65tdDL5CZMf8GqFvMQW1Pa0eEhdhRCa8/Rl8=;
- b=bMeu9VLDdOGfRt59JZ1nCfEW4qn+TnVsKMh7ZkE8Rbrz6IK6zZ/7V46qw6msXhAK3x3X
- WjoZCzT0Ehh04xKqenqoLHPKjddYRzPlVLlwo0rvNkJONfmMk9hWFUn3gGoi9qORgbef
- 32sJwQ/xgAERC6vf3KcXSSnnB965i3l14tRIlHRYbOCneBpg7S9UM2Paxc44hy9tP/1b
- pFNra3BULZG4i/NbCagg6W43vHCisfiqrky2Mcd4icM8ZW2zw6zVwKEzYc7YfS/ZtwdJ
- VEY1Kcrpu3t5N+mG7D02qhqDv/Gl7cvl1TlVuzBDna74gIikinGUNqb1lsXYhKz0nv7R JQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rhhk4k4a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 10:33:33 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076EXXS5005245;
-        Thu, 6 Aug 2020 10:33:33 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rhhk4k38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 10:33:32 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076EVGC6007671;
-        Thu, 6 Aug 2020 14:33:30 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 32n018bdfn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 14:33:30 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076EW1RT62521766
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 14:32:01 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D7DB4A4054;
-        Thu,  6 Aug 2020 14:33:27 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A08B0A405B;
-        Thu,  6 Aug 2020 14:33:22 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.58.181])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Aug 2020 14:33:22 +0000 (GMT)
-Message-ID: <eb7a2f5b5cd22cf9231aa0fd8fdb77c729a83428.camel@linux.ibm.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Morris <jmorris@namei.org>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com, paul@paul-moore.com,
-        corbet@lwn.net, nramas@linux.microsoft.com, serge@hallyn.com,
-        pasha.tatashin@soleen.com, jannh@google.com,
-        linux-block@vger.kernel.org, viro@zeniv.linux.org.uk,
-        axboe@kernel.dk, mdsakib@microsoft.com,
-        linux-kernel@vger.kernel.org, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Thu, 06 Aug 2020 10:33:21 -0400
-In-Reply-To: <alpine.LRH.2.21.2008060949410.20084@namei.org>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-           <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-           <20200802143143.GB20261@amd>
-           <1596386606.4087.20.camel@HansenPartnership.com>
-           <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-         <1596639689.3457.17.camel@HansenPartnership.com>
-          <alpine.LRH.2.21.2008050934060.28225@namei.org>
-         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
-         <alpine.LRH.2.21.2008060949410.20084@namei.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_09:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 bulkscore=0 impostorscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060104
+        Thu, 6 Aug 2020 13:35:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729339AbgHFRfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:35:23 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D180823131;
+        Thu,  6 Aug 2020 15:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596726464;
+        bh=iNFLlgEhiYwp8ZRVI4J6gnGFP+JhjSTOqd0S/pIkyto=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y05pH6hS7jyZT5I8hGUXIH6dhp6PsUwz5DjbgHn90eVss5blosSYAtqvXLAZi0cru
+         f/6d9Z2uXGUfy8Dt/nLbxnBREXGcOJF2eIAY58tqgMl8+/8KY3/bfqo+hawGgia2CQ
+         XCtAqh4Tnn0mF+9oROVTrcDvkJ111VpXtBDsG5RA=
+Date:   Thu, 6 Aug 2020 08:07:43 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, riteshh@linux.ibm.com,
+        rgoldwyn@suse.de, agruenba@redhat.com, linux-btrfs@vger.kernel.org
+Subject: [GIT PULL v2] iomap: new code for 5.9-rc1
+Message-ID: <20200806150743.GC6090@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-06 at 09:51 +1000, James Morris wrote:
-> On Wed, 5 Aug 2020, Mimi Zohar wrote:
-> 
-> > If block layer integrity was enough, there wouldn't have been a need
-> > for fs-verity.   Even fs-verity is limited to read only filesystems,
-> > which makes validating file integrity so much easier.  From the
-> > beginning, we've said that fs-verity signatures should be included in
-> > the measurement list.  (I thought someone signed on to add that support
-> > to IMA, but have not yet seen anything.)
-> > 
-> > Going forward I see a lot of what we've accomplished being incorporated
-> > into the filesystems.  When IMA will be limited to defining a system
-> > wide policy, I'll have completed my job.
-> 
-> What are your thoughts on IPE being a standalone LSM? Would you prefer to 
-> see its functionality integrated into IMA?
+Hi Linus,
 
-Improving the integrity subsystem would be preferred.
+Please pull these new changes to the iomap code for 5.9.  The most
+notable changes are:
 
-Mimi
+1) iomap no longer invalidate the page cache when performing a direct
+read, since doing so is unnecessary and the old directio code doesn't do
+that either.
 
+2) iomap embraced the use of returning ENOTBLK from a direct write to
+trigger falling back to a buffered write since ext4 already did this and
+btrfs wants it for their port.
+
+3) iomap falls back to buffered writes if we're doing a direct write and
+the page cache invalidation after the flush fails; this was necessary to
+handle a corner case in the btrfs port.
+
+4) Remove email virus scanner detritus that was accidentally included in
+yesterday's pull request.  Clearly I need(ed) to update my git branch
+checker scripts. :(
+
+The branch merges cleanly with your HEAD branch as of a few minutes ago.
+Please let me know if there are any strange problems.
+
+--D
+
+The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
+
+  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.9-merge-5
+
+for you to fetch changes up to 60263d5889e6dc5987dc51b801be4955ff2e4aa7:
+
+  iomap: fall back to buffered writes for invalidation failures (2020-08-05 09:24:16 -0700)
+
+----------------------------------------------------------------
+New code for 5.9:
+- Make sure we call ->iomap_end with a failure code if ->iomap_begin
+  failed in any way; some filesystems need to try to undo things.
+- Don't invalidate the page cache during direct reads since we already
+  sync'd the cache with disk.
+- Make direct writes fall back to the page cache if the pre-write
+  cache invalidation fails.  This avoids a cache coherency problem.
+- Fix some idiotic virus scanner warning bs in the previous tag.
+
+----------------------------------------------------------------
+Andreas Gruenbacher (1):
+      iomap: Make sure iomap_end is called after iomap_begin
+
+Christoph Hellwig (2):
+      xfs: use ENOTBLK for direct I/O to buffered I/O fallback
+      iomap: fall back to buffered writes for invalidation failures
+
+Dave Chinner (1):
+      iomap: Only invalidate page cache pages on direct IO writes
+
+ fs/ext4/file.c       |  2 ++
+ fs/gfs2/file.c       |  3 ++-
+ fs/iomap/apply.c     | 13 +++++++++----
+ fs/iomap/direct-io.c | 37 +++++++++++++++++++++----------------
+ fs/iomap/trace.h     |  1 +
+ fs/xfs/xfs_file.c    |  8 ++++----
+ fs/zonefs/super.c    |  7 +++++--
+ 7 files changed, 44 insertions(+), 27 deletions(-)
