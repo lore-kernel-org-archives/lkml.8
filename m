@@ -2,101 +2,118 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8589C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E04AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1896C22DCC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C5822DCC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wzydsvz+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="unzLLfAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgHFR2g (ORCPT
+        id S1729855AbgHFR2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:28:36 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38867 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730422AbgHFR2O (ORCPT
+        Thu, 6 Aug 2020 13:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729701AbgHFRA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:28:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596734892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MwHd6CcJYEmEuf+YoO55dE8m5E0R87S7YH74U/aXf1A=;
-        b=Wzydsvz+CgFV08PnSwCga3m51Yl0+Yh98F/ELo+/7zTJMQIwrdni7S5cuddE4bVPl3k70D
-        n7zVtcl+KMA1fkDj25156nCeq6nH3cMzzsmOXalPwxzAMLxPGgsTZEPwKSpXJi7vQYUdBg
-        cUUxwACifn8/+2iPNocajYDVCPiq6Zc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-yw4yRZZJNTKvU8TjJjHtNg-1; Thu, 06 Aug 2020 13:28:10 -0400
-X-MC-Unique: yw4yRZZJNTKvU8TjJjHtNg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34FF6106F8C4;
-        Thu,  6 Aug 2020 17:28:09 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-112-23.rdu2.redhat.com [10.10.112.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D74767C0E5;
-        Thu,  6 Aug 2020 17:28:02 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 47886220441; Thu,  6 Aug 2020 13:28:02 -0400 (EDT)
-Date:   Thu, 6 Aug 2020 13:28:02 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 31/38] virtio_fs: convert to LE accessors
-Message-ID: <20200806172802.GD367847@redhat.com>
-References: <20200805134226.1106164-1-mst@redhat.com>
- <20200805134226.1106164-32-mst@redhat.com>
+        Thu, 6 Aug 2020 13:00:58 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B37C0611E2;
+        Thu,  6 Aug 2020 04:55:55 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id bo3so27355717ejb.11;
+        Thu, 06 Aug 2020 04:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i/S5/6ro5vnkPW0QsQGxfYyHXJsq3PWIkSz7FKePTT4=;
+        b=unzLLfAH+rZML4MlQOvgwH6d4GmVqwjYK94T/kAmj17VHRJbmSeKf/ii0FBScS+rEB
+         GtPClBQgD6vTvW1tdb+J6xefIU2V2MSKTCSADqI0Di9xNpW07VzYSJMdPsJrT7eCxKjG
+         llef3L6bbJ34pmh1ji9vZQ1aBz4YR0nRjbSgUQvBtIWY9E+HhUP+8zkqRW+cC8TBW0t0
+         g7Jov0HEYjz3WohDLrpA4AhI4LvFouGU7QSJc6rVD9lSVjjXj0iwuo18wMQtESw7w5+x
+         GOsw85vFQjlZGCMuDZXm1ESOhYU/fbs5+/gBLpNQgV1bCsIfDINaa1a7zLGNvR2MMt4j
+         WcjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i/S5/6ro5vnkPW0QsQGxfYyHXJsq3PWIkSz7FKePTT4=;
+        b=MhAd2NRGr0h4cjvD6MOE4B8qGBZjGGXPLzx9BqPefxDxkCjolv+jkiE6y/t1nEjkT2
+         2nlfbHkMbETW9+ZrovKpjo/pxc8yUctFU0MIFaRx8oJSrD2sgIuHG4RUWsZb4d+50CTy
+         zzipvH7hrCjXH2/Lf6yu35FZcCWnef+Gm9PXhGqUvhglRpZGF/Z8PbrjWIH+6GEVYQQ8
+         8y/Td4q7MkZB0vRgXY+b/Rk0P0loDqkhdRviuZcuYAjmULuG8he6C0o1NQbri+HP8yQG
+         ppU4caq66P8QNzXYMYJT99Ip2uuwK/DmgwZpeNA9Cl85pK7Q+Kzd3n+j1GWCc0P6b8uS
+         YePQ==
+X-Gm-Message-State: AOAM530X4PSPhTrRTXVhC8c+5hRcsmsSNyCU6d1xDvVabNbY41IYkBlS
+        BrIkqJQhp3AUIP9u+PpZ1pE=
+X-Google-Smtp-Source: ABdhPJweP3zqc4d6VrXhoiDQpQN9FYCJdIjzjviNT+ke6aNdM34mOc0oCp9NcnOOzpKpooZ8wA4puw==
+X-Received: by 2002:a17:907:94ce:: with SMTP id dn14mr3816428ejc.351.1596714954327;
+        Thu, 06 Aug 2020 04:55:54 -0700 (PDT)
+Received: from ci00583-linux.xsens-tech.local (2001-1c06-0702-ba00-2186-bbad-ad24-4c2a.cable.dynamic.v6.ziggo.nl. [2001:1c06:702:ba00:2186:bbad:ad24:4c2a])
+        by smtp.googlemail.com with ESMTPSA id gh24sm3628420ejb.45.2020.08.06.04.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 04:55:53 -0700 (PDT)
+From:   Patrick Riphagen <ppriphagen@gmail.com>
+X-Google-Original-From: Patrick Riphagen <patrick.riphagen@xsens.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     patrick.riphagen@xsens.com, stable@vger.kernel.org
+Subject: [PATCH V2] USB: serial: ftdi_sio: add IDs for Xsens Mti USB converter
+Date:   Thu,  6 Aug 2020 13:55:47 +0200
+Message-Id: <20200806115547.8007-1-patrick.riphagen@xsens.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805134226.1106164-32-mst@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 09:44:39AM -0400, Michael S. Tsirkin wrote:
-> Virtio fs is modern-only. Use LE accessors for config space.
-> 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+From: Patrick Riphagen <patrick.riphagen@xsens.com>
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+The device added has an FTDI chip inside.
+The device is used to connect Xsens USB Motion Trackers.
 
-Vivek
+Cc: stable@vger.kernel.org
+Signed-off-by: Patrick Riphagen <patrick.riphagen@xsens.com>
+---
+ drivers/usb/serial/ftdi_sio.c     | 1 +
+ drivers/usb/serial/ftdi_sio_ids.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-> ---
->  fs/fuse/virtio_fs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index 4c4ef5d69298..104f35de5270 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -606,8 +606,8 @@ static int virtio_fs_setup_vqs(struct virtio_device *vdev,
->  	unsigned int i;
->  	int ret = 0;
->  
-> -	virtio_cread(vdev, struct virtio_fs_config, num_request_queues,
-> -		     &fs->num_request_queues);
-> +	virtio_cread_le(vdev, struct virtio_fs_config, num_request_queues,
-> +			&fs->num_request_queues);
->  	if (fs->num_request_queues == 0)
->  		return -EINVAL;
->  
-> -- 
-> MST
-> 
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 9ad44a96dfe3..2c08cad32f1d 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -713,6 +713,7 @@ static const struct usb_device_id id_table_combined[] = {
+ 	{ USB_DEVICE(XSENS_VID, XSENS_AWINDA_STATION_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_CONVERTER_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_MTDEVBOARD_PID) },
++	{ USB_DEVICE(XSENS_VID, XSENS_MTIUSBCONVERTER_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_MTW_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_OMNI1509) },
+ 	{ USB_DEVICE(MOBILITY_VID, MOBILITY_USB_SERIAL_PID) },
+diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
+index e8373528264c..b5ca17a5967a 100644
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -160,6 +160,7 @@
+ #define XSENS_AWINDA_DONGLE_PID 0x0102
+ #define XSENS_MTW_PID		0x0200	/* Xsens MTw */
+ #define XSENS_MTDEVBOARD_PID	0x0300	/* Motion Tracker Development Board */
++#define XSENS_MTIUSBCONVERTER_PID	0x0301	/* MTi USB converter */
+ #define XSENS_CONVERTER_PID	0xD00D	/* Xsens USB-serial converter */
+ 
+ /* Xsens devices using FTDI VID */
+-- 
+2.25.1
+V2: Added CC to stable, From line to match SoB and version in subject
 
