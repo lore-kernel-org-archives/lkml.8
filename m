@@ -2,156 +2,157 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE75EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA4BD2177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1YGcJOr"
+	by mail.kernel.org (Postfix) with ESMTP id EBE9F221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgHFTZ1 (ORCPT
+        id S1726346AbgHFTZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFTZ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:25:26 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 959EDC061574;
-        Thu,  6 Aug 2020 12:25:25 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id d6so37708767ejr.5;
-        Thu, 06 Aug 2020 12:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7jVwnXfyUDIWvKJ1IvnWj3XFejD3cmlEaNN5rkbj01Y=;
-        b=j1YGcJOrlCx12S2/u9y1lwQC6QC0RvQ1N/LWinIdJBaERrp8+HWF1adDxm1KGOGhJn
-         t1MNmPLUvhRP8S10NF3B4YXK7AYRXTSY3IfqahPVl4bahprHbAcIwDz8CI77ZuFdVvYN
-         PjqE6AVCaZbEdGHDUfr0dkP6tgOeMUF12mDstHDMB6hvWrm0UKn0x11PWUkch8st2EV1
-         milBRW+DtIRW+XZHFvl7/+Xnje4LsSWT17wu98CSUN6vjpgn1BVT38Prbrswp4C3W71l
-         8nhRUlXCqJPv/ax2VzwctjLXWoS9tvJjIrXsvWHeejaxdbJwSwiOJABfKhwBQ1Y1PEBB
-         jLrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7jVwnXfyUDIWvKJ1IvnWj3XFejD3cmlEaNN5rkbj01Y=;
-        b=RNFY9+yZYGxxXXp2Sw0XD6hY2AuFtbAz+HtQs+y0LZh4lTyqsTq6KvFB8VsxLVZ3GQ
-         4VZ1pMCslJQoshqNak+t0Xoj6kQmMXEu7FlkM5sZG3TyNGMJ3F3jwdzJ8JC6sCV3udC0
-         sosROQG+lAkvhhEIaBTzh1ciEgTsPqGyXaGHnghaEJUoss33xXPRq8s06w47A0co/8un
-         2mksPzNHds4/KGCnxgjYrGtZyD0X+dUd9Sn5a6jP3pPjPmX0c5u8cDnUxZKwJiX5bwHQ
-         V+9zdT1fxe5fbLe8nZMHYzMeiwD1I1Voeh+oGb68Edj+NRCF78Hu5EjQ9HitUFWunRsC
-         SkPA==
-X-Gm-Message-State: AOAM532KUdFyuwrbkdl2P8XiTzP0NPl51hNiG3AnY+NNIQkx1Lo638e7
-        JlqukOwZYIO1I6xOI46QrkI=
-X-Google-Smtp-Source: ABdhPJwwGeqSWHegNz5iETTFvyjQkDlTTMaYqwPsp1MBVYv3O7KsNk0D3J/dFC3k9LolfYo+BwM0Qw==
-X-Received: by 2002:a17:906:3291:: with SMTP id 17mr6119918ejw.370.1596741924280;
-        Thu, 06 Aug 2020 12:25:24 -0700 (PDT)
-Received: from skbuf ([188.26.57.97])
-        by smtp.gmail.com with ESMTPSA id p3sm4014962edx.75.2020.08.06.12.25.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 12:25:23 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 22:25:21 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: net: dsa: sja1105: use detected device id instead of DT one on
- mismatch
-Message-ID: <20200806192521.hhr34kuh3y44vehk@skbuf>
-References: <60d2d8f9-1376-2047-b958-7bdbbde1538e@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60d2d8f9-1376-2047-b958-7bdbbde1538e@canonical.com>
+        Thu, 6 Aug 2020 15:25:51 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17834 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725272AbgHFTZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:25:51 -0400
+IronPort-SDR: S93U1g4Kzx9e9Bladk0irKIg5lURiFrJrPoJOFr+7L/Am/fWtajNRexhSYKivPLTX0qsKJZ0V1
+ x2ixX9CuN9eA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="150637117"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="150637117"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:25:50 -0700
+IronPort-SDR: nVMEfMzQrFS2qrV8CO5TL2tsnf0ZZDvw2SEgJxnRR7yUkRFScyeLZ6jWA7IcaFWboeuR1ClA8t
+ 7LrGnk3/ZCVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="323534422"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga008.jf.intel.com with ESMTP; 06 Aug 2020 12:25:49 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org
+Subject: [PATCH v3] x86/cpu: Use SERIALIZE in sync_core() when available
+Date:   Thu,  6 Aug 2020 12:25:31 -0700
+Message-Id: <20200806192531.25136-1-ricardo.neri-calderon@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 05:27:11PM +0100, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis with Coverity has detected a potential issue with the
-> following commit:
-> 
-> commit 0b0e299720bb99428892a23ecbd2b4b7f61ccf6d
-> Author: Vladimir Oltean <olteanv@gmail.com>
-> Date:   Mon Aug 3 19:48:23 2020 +0300
-> 
->     net: dsa: sja1105: use detected device id instead of DT one on mismatch
-> 
-> The analysis is as follows:
-> 
-> Array compared against 0 (NO_EFFECT)array_null: Comparing an array to
-> null is not useful: match->compatible, since the test will always
-> evaluate as true.
-> 
->     Was match->compatible formerly declared as a pointer?
-> 
-> 3418        for (match = sja1105_dt_ids; match->compatible; match++) {
-> 3419                const struct sja1105_info *info = match->data;
-> 3420
-> 
-> I'm not sure what the original intention was, so I was unable to fix
-> this hence I'm sending this report as I think it needs addressing.
-> 
-> Colin
+The SERIALIZE instruction gives software a way to force the processor to
+complete all modifications to flags, registers and memory from previous
+instructions and drain all buffered writes to memory before the next
+instruction is fetched and executed. Thus, it serves the purpose of
+sync_core(). Use it when available.
 
-The intention was to loop through sja1105_dt_ids and stop at the
-sentinel:
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Cathy Zhang <cathy.zhang@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kyung Min Park <kyung.min.park@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: linux-edac@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+This is a v3 from my two previous submissions [1], [2]. The first three
+patches of the series have been merged into Linus' tree. Hence, I am
+submitting only this patch for review.
 
-static const struct of_device_id sja1105_dt_ids[] = {
-	{ .compatible = "nxp,sja1105e", .data = &sja1105e_info },
-	{ .compatible = "nxp,sja1105t", .data = &sja1105t_info },
-	{ .compatible = "nxp,sja1105p", .data = &sja1105p_info },
-	{ .compatible = "nxp,sja1105q", .data = &sja1105q_info },
-	{ .compatible = "nxp,sja1105r", .data = &sja1105r_info },
-	{ .compatible = "nxp,sja1105s", .data = &sja1105s_info },
-	{ /* sentinel */ },
-};
+[1]. https://lkml.org/lkml/2020/7/27/8
+[2]. https://lkml.org/lkml/2020/8/4/1090
 
-I should have looked at the definition of struct of_device_id:
+Changes since v2:
+ * Support serialize with static_cpu_has() instead of using alternative
+   runtime patching directly. (Borislav Petkov)
 
-/*
- * Struct used for matching a device
- */
-struct of_device_id {
-	char	name[32];
-	char	type[32];
-	char	compatible[128];
-	const void *data;
-};
+Changes since v1:
+ * Support SERIALIZE using alternative runtime patching.
+   (Peter Zijlstra, H. Peter Anvin)
+ * Added a note to specify which version of binutils supports SERIALIZE.
+   (Peter Zijlstra)
+ * Verified that (::: "memory") is used. (H. Peter Anvin)
+---
+ arch/x86/include/asm/special_insns.h | 2 ++
+ arch/x86/include/asm/sync_core.h     | 9 ++++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-Honestly, I had thought it's "const char *compatible" rather than "char
-compatible[128]". I'm still not 100% clear why it isn't doing just that,
-though, I think it has to do with some weird usage patterns such as this
-one in UIO:
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 59a3e13204c3..25cd67801dda 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -10,6 +10,8 @@
+ #include <linux/irqflags.h>
+ #include <linux/jump_label.h>
+ 
++/* Instruction opcode for SERIALIZE; supported in binutils >= 2.35. */
++#define __ASM_SERIALIZE ".byte 0xf, 0x1, 0xe8"
+ /*
+  * Volatile isn't enough to prevent the compiler from reordering the
+  * read/write functions for the control registers and messing everything up.
+diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
+index fdb5b356e59b..b74580413a0b 100644
+--- a/arch/x86/include/asm/sync_core.h
++++ b/arch/x86/include/asm/sync_core.h
+@@ -5,6 +5,7 @@
+ #include <linux/preempt.h>
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
++#include <asm/special_insns.h>
+ 
+ #ifdef CONFIG_X86_32
+ static inline void iret_to_self(void)
+@@ -54,7 +55,8 @@ static inline void iret_to_self(void)
+ static inline void sync_core(void)
+ {
+ 	/*
+-	 * There are quite a few ways to do this.  IRET-to-self is nice
++	 * Hardware can do this for us if SERIALIZE is available. Otherwise,
++	 * there are quite a few ways to do this.  IRET-to-self is nice
+ 	 * because it works on every CPU, at any CPL (so it's compatible
+ 	 * with paravirtualization), and it never exits to a hypervisor.
+ 	 * The only down sides are that it's a bit slow (it seems to be
+@@ -75,6 +77,11 @@ static inline void sync_core(void)
+ 	 * Like all of Linux's memory ordering operations, this is a
+ 	 * compiler barrier as well.
+ 	 */
++	if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
++		asm volatile(__ASM_SERIALIZE ::: "memory");
++		return;
++	}
++
+ 	iret_to_self();
+ }
+ 
+-- 
+2.17.1
 
-static struct of_device_id uio_of_genirq_match[] = {
-	{ /* This is filled with module_parm */ },
-	{ /* Sentinel */ },
-};
-MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-module_param_string(of_id, uio_of_genirq_match[0].compatible, 128, 0);
-MODULE_PARM_DESC(of_id, "Openfirmware id of the device to be handled by uio");
-
-So I had 2 options for this patch: either break the loop on
-match->compatible, or on match->data. And it looks like I made the wrong
-one.
-
-Thanks,
--Vladimif
