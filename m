@@ -2,130 +2,77 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F2CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CACDA2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596677443;
-	bh=j8cz0jkeIZa3/Qm+IkMRnxzTHWlX6p/ubrCWK/DfFbk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TGSWXVi+71RwUyDru6aIa5yqp3MtPRv32EveLzETZulDyQmoWljiJoWejzsfl88w4
-	 UCTIf85StgRIshIAMEoZwvDWcBqi93bEZG+Gs8KZzJhfTFkZOAiUo/0Y2JuCKqan+1
-	 rpRp05eMFrhmRWNFs4Zx7FK3Nx3a45QjWKI2ZkI4=
+	by mail.kernel.org (Postfix) with ESMTP id 004022173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgHFBam (ORCPT
+        id S1726844AbgHFBeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 21:30:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgHFBal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 21:30:41 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D50A206B6;
-        Thu,  6 Aug 2020 01:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596677441;
-        bh=j8cz0jkeIZa3/Qm+IkMRnxzTHWlX6p/ubrCWK/DfFbk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bGlBvdhV0IINzDDxY+ebHRZWc6E5LXVWNeJetqkKvZ+FGUsEtC4H4fUiPEX+vLnG7
-         GStprFmbi0s1dSFEpmAAHhDNqmhclPmlpMjYfq7qA2xzZlNM9SUZNvewR2WkmZEVx1
-         CrqaNCZC6yFbCKERNMfFt7gQCy6/r4k2aNLWZq/M=
-Date:   Thu, 6 Aug 2020 10:30:35 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, davem@davemloft.net,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        sfr@canb.auug.org.au, mingo@kernel.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] kprobes: fix compiler warning for
- !CONFIG_KPROBES_ON_FTRACE
-Message-Id: <20200806103035.3359153c2753e9f52d17d353@kernel.org>
-In-Reply-To: <20200805172046.19066-1-songmuchun@bytedance.com>
-References: <20200805172046.19066-1-songmuchun@bytedance.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 5 Aug 2020 21:34:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8770 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725998AbgHFBeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 21:34:03 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6E60EC939619170D8DC9;
+        Thu,  6 Aug 2020 09:34:00 +0800 (CST)
+Received: from [127.0.0.1] (10.74.173.29) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 6 Aug 2020
+ 09:33:51 +0800
+Subject: Re: [v4 01/10] crypto: hisilicon/qm - fix wrong release after using
+ strsep
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Sihang Chen <chensihang1@hisilicon.com>,
+        <linux-crypto@vger.kernel.org>
+References: <96ffa633-dda1-7ad1-72da-5563906c1561@web.de>
+ <425f4bdd-cf55-6537-28bf-0377564b531b@huawei.com>
+ <5554863d-f0d7-a396-7d13-e187fa9ca6bf@web.de>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+From:   "shenyang (M)" <shenyang39@huawei.com>
+Message-ID: <e470a745-c59e-2baa-426d-816ae64d052f@huawei.com>
+Date:   Thu, 6 Aug 2020 09:33:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <5554863d-f0d7-a396-7d13-e187fa9ca6bf@web.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.173.29]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Aug 2020 01:20:46 +0800
-Muchun Song <songmuchun@bytedance.com> wrote:
-
-> Fix compiler warning(as show below) for !CONFIG_KPROBES_ON_FTRACE.
-> 
-> kernel/kprobes.c: In function 'kill_kprobe':
-> kernel/kprobes.c:1116:33: warning: statement with no effect
-> [-Wunused-value]
->  1116 | #define disarm_kprobe_ftrace(p) (-ENODEV)
->       |                                 ^
-> kernel/kprobes.c:2154:3: note: in expansion of macro
-> 'disarm_kprobe_ftrace'
->  2154 |   disarm_kprobe_ftrace(p);
-> 
-> Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you!
-
-> ---
->  kernel/kprobes.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 503add629599..d36e2b017588 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1114,9 +1114,20 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
->  		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
->  }
->  #else	/* !CONFIG_KPROBES_ON_FTRACE */
-> -#define prepare_kprobe(p)	arch_prepare_kprobe(p)
-> -#define arm_kprobe_ftrace(p)	(-ENODEV)
-> -#define disarm_kprobe_ftrace(p)	(-ENODEV)
-> +static inline int prepare_kprobe(struct kprobe *p)
-> +{
-> +	return arch_prepare_kprobe(p);
-> +}
-> +
-> +static inline int arm_kprobe_ftrace(struct kprobe *p)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline int disarm_kprobe_ftrace(struct kprobe *p)
-> +{
-> +	return -ENODEV;
-> +}
->  #endif
->  
->  /* Arm a kprobe with text_mutex */
-> -- 
-> 2.11.0
-> 
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+On 2020/8/5 14:04, Markus Elfring wrote:
+>> Thanks for your review. There is only one error branch need to do
+>> something uninit. So I think the jump is not necessary and will
+>> affect code reading.:)
+>
+> How does this concern fit to the Linux coding style?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=4da9f3302615f4191814f826054846bf843e24fa#n481
+>
+> Regards,
+> Markus
+>
+> .
+>
+
+Got it, I'll fix this.
+
+Thanks,
+Yang
+
