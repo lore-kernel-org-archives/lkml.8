@@ -2,144 +2,301 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C63C206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aiclBWRQ"
+	by mail.kernel.org (Postfix) with ESMTP id D8B232224D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596736585;
+	bh=Ko6EMrokn2zl/9MuT100PIK32SrkIjcyEGTGRbhmZas=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=D2haZWbJMYkqb9dPuGPE/xbwx47ob3ji2rnOo1HHAZqaMw6AgSA6nhp1xcfF3F02/
+	 3l2VI4scb5xO660c18Kg+zZFQZzB2LMBI/Igyeq6Kpmv5faeilEu/oRv7Ts0ViCPfK
+	 eCuVOhmCWf4VnwNZMTH68CFqddZ7w+kuSHSamoL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgHFR4H (ORCPT
+        id S1729521AbgHFR4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730358AbgHFR4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:56:00 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F3FC061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 10:55:59 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a15so44835784wrh.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 10:55:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=VLToQkSGb9Fyj+rMmCyIoE12BtD4sRvLhirgEOkP9W4=;
-        b=aiclBWRQsaqlr4rxoQqEFfHk424DkMeqTmreM/zu7IQoemedoiGmY1RO05MmpZR6+P
-         w7xGe9fU76E3VMZ7Isj9CVyq5FEg4I8VDs+q0YobHeP9Ohy4GB5+BKuoR/WEUbUXJdph
-         UquQ9WkUAjpPvjtyL6o6gTPDC/x9qzlzrlEYI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=VLToQkSGb9Fyj+rMmCyIoE12BtD4sRvLhirgEOkP9W4=;
-        b=ZmlagJCKYN9ntCKFfDGpb1Z8jB+wj8MYTE1pxKvvcrj3ncv3NK453oCpxtDINGPPyF
-         78Bl98V1tcJ23zhuxRTO3Xn8yqm7CwVSf1Z1kLUu/UAOOdeS1rWjdTMxOabV8v0Tbm/f
-         hqqye8z1ewOSZx5u3lbIcwiHBE2GhirVi5pZSXpmYfqiMVlGoBW3YjmxTywzl5dxuhks
-         RQasZbGf5LSxdETxTvurPYSGE6SvFoL4DWsBdwyvJ9Op5Nzgklq4Is4RZf5Gn+X67AhY
-         Efq3IR32NE/4vkt3n3D6auNJUimx/VBycukMFBPWfw/ldO2vGd53Wn6JGIQTaxoxs9+3
-         pJDQ==
-X-Gm-Message-State: AOAM531TKHe/jPi31WRAIEmKoxyqebx0AflPPD7KcvNaBj4A1Gl5yHAJ
-        JKMcu5FwxxNtoneGWBwqfH/684B5/5PJUyNVP0oC23dr9YA6sQUzgZ4kTmJ8oOtn0nHGUTiRy8Y
-        cMTHQRxS1xHl02OpfoE3So44pSkunQil+wwomGUQJxDfUU9cDPuSGkibzoIPbAeYvQ8VqOwRHRa
-        RDzrvMda4P
-X-Google-Smtp-Source: ABdhPJzbtHnvN2YvogoQjvg6Nr1wWat0eDA9t2hrW3lsNiU9zCFscq1A7+T3HDp3Wo7bjV+9E+cWiQ==
-X-Received: by 2002:adf:bb07:: with SMTP id r7mr8403518wrg.102.1596736558012;
-        Thu, 06 Aug 2020 10:55:58 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id l11sm6978590wme.11.2020.08.06.10.55.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 10:55:57 -0700 (PDT)
-Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        ray.jui@broadcom.com, helgaas@kernel.org, sbranden@broadcom.com,
-        f.fainelli@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <16cbd3f5-722a-cf8b-487e-82a0bbf95053@broadcom.com>
-Date:   Thu, 6 Aug 2020 10:55:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 13:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgHFQSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:18:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0512722CF7;
+        Thu,  6 Aug 2020 12:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596717219;
+        bh=Ko6EMrokn2zl/9MuT100PIK32SrkIjcyEGTGRbhmZas=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P8pL3q4gr0T4k1UEo4RGdqG35VLYWLP7A7oysMfbW+7EtEENrJHhoCvnu1t7gv495
+         KwPJhXw+HCTcV+ZsKk5z2CIPlxkfs9S+kwk9eCpjBxBsNoYE+Ri5PoGzU6mFHDqpjO
+         WDv5yZCXX/b5z+0OPCoYi7IUgqgEpmafzIfeITt4=
+Date:   Thu, 6 Aug 2020 14:33:54 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY/Serial driver patches for 5.9-rc1
+Message-ID: <20200806123354.GA2858200@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-CA
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good.
+The following changes since commit 92ed301919932f777713b9172e525674157e983d:
 
-On 2020-08-05 9:14 p.m., Mark Tomlinson wrote:
-> For hardware that only supports 32-bit writes to PCI there is the
-> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
-> messages was introduced by fb2659230120, but rate-limiting is not the
-> best choice here. Some devices may not show the warnings they should if
-> another device has just produced a bunch of warnings. Also, the number
-> of messages can be a nuisance on devices which are otherwise working
-> fine.
->
-> This patch changes the ratelimit to a single warning per bus. This
-> ensures no bus is 'starved' of emitting a warning and also that there
-> isn't a continuous stream of warnings. It would be preferable to have a
-> warning per device, but the pci_dev structure is not available here, and
-> a lookup from devfn would be far too slow.
->
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-> ---
-> changes in v4:
->  - Use bitfield rather than bool to save memory (was meant to be in v3).
->
->  drivers/pci/access.c | 9 ++++++---
->  include/linux/pci.h  | 1 +
->  2 files changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 79c4a2ef269a..b452467fd133 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
->  	 * write happen to have any RW1C (write-one-to-clear) bits set, we
->  	 * just inadvertently cleared something we shouldn't have.
->  	 */
-> -	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
-> -			     size, pci_domain_nr(bus), bus->number,
-> -			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
-> +	if (!bus->unsafe_warn) {
-> +		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
-> +			 size, pci_domain_nr(bus), bus->number,
-> +			 PCI_SLOT(devfn), PCI_FUNC(devfn), where);
-> +		bus->unsafe_warn = 1;
-> +	}
->  
->  	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
->  	tmp = readl(addr) & mask;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 34c1c4f45288..85211a787f8b 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -626,6 +626,7 @@ struct pci_bus {
->  	struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
->  	struct bin_attribute	*legacy_mem;	/* Legacy mem */
->  	unsigned int		is_added:1;
-> +	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
->  };
->  
->  #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
+  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.9-rc1
+
+for you to fetch changes up to f6c6eb2fe8223f8e64babcdaad2838ba6ede277d:
+
+  MAINTAINERS: enlist Greg formally for console stuff (2020-08-04 09:41:22 +0200)
+
+----------------------------------------------------------------
+TTY/Serial patches for 5.9-rc1
+
+Here is the large set of TTY and Serial driver patches for 5.9-rc1.
+
+Lots of bugfixes in here, thanks to syzbot fuzzing for serial and vt and
+console code.
+
+Other highlights include:
+	- much needed vt/vc code cleanup from Jiri Slaby
+	- 8250 driver fixes and additions
+	- various serial driver updates and feature enhancements
+	- locking cleanup for serial/console initializations
+	- other minor cleanups
+
+All of these have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Ahmad Fatoum (1):
+      serial: imx: use hrtimers for rs485 delays
+
+Alexander A. Klimov (4):
+      tty: vt: Replace HTTP links with HTTPS ones
+      tty: serial: Replace HTTP links with HTTPS ones
+      tty: serial: uartlite: Replace HTTP links with HTTPS ones
+      serial: altera_jtaguart: Replace HTTP links with HTTPS ones
+
+Alexey Kardashevskiy (1):
+      tty/vt: Do not warn when huge selection requested
+
+Andy Shevchenko (12):
+      serial: 8250_em: Switch to use platform_get_irq()
+      serial: 8250_omap: Switch to use platform_get_irq()
+      serial: 8250_pxa: Switch to use platform_get_irq()
+      serial: 8250_ingenic: Switch to use platform_get_irq()
+      serial: 8250_mtk: Switch to use platform_get_irq()
+      Revert "serial: sunhv: Initialize lock for non-registered console"
+      Revert "serial: amba-pl011: Make sure we initialize the port.lock spinlock"
+      Revert "tty: serial: add missing spin_lock_init for SiFive serial console"
+      Revert "serial: imx: Initialize lock for non-registered console"
+      Revert "serial: sh-sci: Initialize spinlock for uart console"
+      serial: 8250: Let serial core initialise spin lock
+      Revert "serial: 8250: Let serial core initialise spin lock"
+
+Christoph Hellwig (1):
+      tty/synclink: remove leftover bits of non-PCI card support
+
+Dan Carpenter (1):
+      tty: serial: qcom_geni_serial: Clean up an ARRAY_SIZE() vs sizeof()
+
+Daniel Vetter (1):
+      MAINTAINERS: enlist Greg formally for console stuff
+
+Denis Efremov (1):
+      tty/vt: check allocation size in con_set_unimap()
+
+Douglas Anderson (1):
+      serial: kgdboc: Fix bad line wrapping in comment
+
+Erwan Le Ray (2):
+      dt-bindings: serial: add generic DT binding for announcing RTS/CTS lines
+      serial: stm32: Use generic DT binding for announcing RTS/CTS lines
+
+Flavio Suligoi (1):
+      tty: fix spelling mistake
+
+Fugang Duan (2):
+      tty: serial: imx: enable imx serial console port as module
+      tty: serial: imx: add imx earlycon driver
+
+Greg Kroah-Hartman (2):
+      Merge 5.8-rc6 into tty-next
+      Merge 5.8-rc7 into tty-next
+
+Gustavo A. R. Silva (3):
+      tty: Avoid the use of one-element arrays
+      tty: Fix identation issues in struct serial_struct32
+      tty: Use the preferred form for passing the size of a structure type
+
+Jiri Slaby (41):
+      um: line, remove put_char
+      vc: separate state
+      vt: introduce enum vc_intensity for intensity
+      vc: switch state to bool
+      vt: deduplicate setGx code
+      vt: switch G0/1_charset to an array
+      vt: convert vc_tab_stop to bitmap
+      vt: remove 25 years stale comment
+      vt: use tty_insert_flip_string in respond_string
+      vt: get rid of VT10.ID macros
+      vt: move vc_translate to vt.c and rename it
+      vt: use modern types in do_con_write
+      vt: separate unicode handling into vc_translate_unicode
+      vt: rearrange vc_translate_unicode
+      vt: extract attribute inversion to vc_invert_attr
+      vt: move rescan_last_byte label earlier
+      vc: move translation out of do_con_write
+      vc: introduce struct vc_draw_region
+      vc: extract detecting control characters from do_con_write
+      vc: move normal char processing from do_con_write
+      vc: simplify condition in vc_con_write_normal
+      vt: simplify vc_attr handling in vc_con_write_normal
+      vt: make tc write more obvious in vc_con_write_normal
+      vt: synchronize types and use min in csi_X
+      vt: whitespace and paren cleanup in add_softcursor
+      vt: redefine world of cursor macros
+      vt: use newly defined CUR_* macros
+      vt: remove superfluous parens in invert_screen and build_attr
+      vt: simplify noncolor attributes in build_attr
+      vt_ioctl: eliminate ret & breaks in vt_ioctl
+      vt_ioctl: eliminate use of uival and ucval
+      vt_ioctl: move K* ioctls to a separate function
+      vt_ioctl: move io ioctls to a separate function
+      vt_ioctl: move vt_setactivate out of vt_ioctl
+      vt_ioctl: move vt_reldisp out of vt_ioctl
+      vt_ioctl: move vt_resizex out of vt_ioctl
+      vt_ioctl: move vt_io_fontreset out of vt_io_ioctl
+      vt_ioctl: move vt_kdsetmode out of vt_k_ioctl
+      vt_ioctl: move perm checks level up
+      newport_con: vc_color is now in state
+      tty: keyboard, do not speculate on func_table index
+
+Johan Hovold (3):
+      serial: core: drop unnecessary gpio include
+      serial: pmac_zilog: add sparse context annotation
+      serial: msm_serial: add sparse context annotation
+
+Krzysztof Kozlowski (1):
+      serial: samsung: Minor whitespace cleanups
+
+Marek Vasut (1):
+      serial: stm32: Add RS485 RTS GPIO control
+
+Pavel Machek (1):
+      8250-men-mcb: fix signed/unsigned confusion
+
+Randolph Maaßen (1):
+      serial: serial-tegra: reduce irq-latency after rx errors
+
+Serge Semin (4):
+      serial: 8250: Add 8250 port clock update method
+      serial: 8250_dw: Simplify the ref clock rate setting procedure
+      serial: 8250_dw: Pass the same rate to the clk round and set rate methods
+      serial: 8250_dw: Fix common clocks usage race condition
+
+Tamseel Shams (2):
+      serial: samsung: fix spelling mistake
+      serial: core: Fix Coding Style
+
+Tiezhu Yang (1):
+      serial: Remove duplicated macro definition of port type
+
+Uwe Kleine-König (1):
+      serial: imx: implement rts delaying for rs485
+
+Vabhav Sharma (1):
+      tty: serial: fsl_lpuart: minimum baud rate support
+
+Vaibhav Gupta (1):
+      serial: pch_uart: use generic power management
+
+Yunhai Zhang (1):
+      vgacon: Fix for missing check in scrollback handling
+
+ .../devicetree/bindings/serial/st,stm32-uart.yaml  |    4 +-
+ Documentation/driver-api/serial/n_gsm.rst          |    2 +-
+ MAINTAINERS                                        |    6 +
+ arch/um/drivers/line.c                             |    5 -
+ arch/um/drivers/line.h                             |    1 -
+ arch/um/drivers/ssl.c                              |    1 -
+ arch/um/drivers/stdio_console.c                    |    1 -
+ drivers/accessibility/braille/braille_console.c    |   10 +-
+ drivers/staging/speakup/main.c                     |   28 +-
+ drivers/tty/moxa.h                                 |    2 +-
+ drivers/tty/serial/8250/8250_dw.c                  |  120 ++-
+ drivers/tty/serial/8250/8250_em.c                  |   16 +-
+ drivers/tty/serial/8250/8250_ingenic.c             |   16 +-
+ drivers/tty/serial/8250/8250_men_mcb.c             |    4 +-
+ drivers/tty/serial/8250/8250_mtk.c                 |   16 +-
+ drivers/tty/serial/8250/8250_omap.c                |   16 +-
+ drivers/tty/serial/8250/8250_port.c                |   41 +
+ drivers/tty/serial/8250/8250_pxa.c                 |   14 +-
+ drivers/tty/serial/8250/Kconfig                    |    4 +-
+ drivers/tty/serial/Kconfig                         |   17 +-
+ drivers/tty/serial/altera_jtaguart.c               |    2 +-
+ drivers/tty/serial/amba-pl011.c                    |    1 -
+ drivers/tty/serial/fsl_lpuart.c                    |    3 +
+ drivers/tty/serial/imx.c                           |  207 ++--
+ drivers/tty/serial/imx_earlycon.c                  |   50 +
+ drivers/tty/serial/jsm/jsm_driver.c                |    2 +-
+ drivers/tty/serial/kgdboc.c                        |    3 +-
+ drivers/tty/serial/msm_serial.c                    |    2 +
+ drivers/tty/serial/pch_uart.c                      |   34 +-
+ drivers/tty/serial/pmac_zilog.c                    |    1 +
+ drivers/tty/serial/qcom_geni_serial.c              |    2 +-
+ drivers/tty/serial/samsung_tty.c                   |   24 +-
+ drivers/tty/serial/serial-tegra.c                  |    6 +-
+ drivers/tty/serial/serial_core.c                   |    5 +-
+ drivers/tty/serial/sh-sci.c                        |    3 -
+ drivers/tty/serial/sifive.c                        |    1 -
+ drivers/tty/serial/stm32-usart.c                   |   13 +-
+ drivers/tty/serial/sunhv.c                         |    3 -
+ drivers/tty/serial/uartlite.c                      |    2 +-
+ drivers/tty/synclink.c                             |  350 ++----
+ drivers/tty/tty_io.c                               |   52 +-
+ drivers/tty/vt/consolemap.c                        |    2 +-
+ drivers/tty/vt/keyboard.c                          |    3 +-
+ drivers/tty/vt/selection.c                         |    2 +-
+ drivers/tty/vt/vt.c                                |  982 +++++++++--------
+ drivers/tty/vt/vt_ioctl.c                          | 1109 ++++++++++----------
+ drivers/usb/misc/sisusbvga/sisusb_con.c            |   11 +-
+ drivers/video/console/mdacon.c                     |   20 +-
+ drivers/video/console/newport_con.c                |   10 +-
+ drivers/video/console/sticon.c                     |   14 +-
+ drivers/video/console/vgacon.c                     |   40 +-
+ drivers/video/fbdev/core/bitblit.c                 |   10 +-
+ drivers/video/fbdev/core/fbcon.c                   |   10 +-
+ drivers/video/fbdev/core/fbcon_ccw.c               |    8 +-
+ drivers/video/fbdev/core/fbcon_cw.c                |    8 +-
+ drivers/video/fbdev/core/fbcon_ud.c                |    8 +-
+ drivers/video/fbdev/core/tileblit.c                |    6 +-
+ include/linux/console.h                            |   13 +-
+ include/linux/console_struct.h                     |   93 +-
+ include/linux/serial_8250.h                        |    2 +
+ include/linux/serial_core.h                        |    2 +-
+ include/linux/vt_kern.h                            |    3 -
+ include/uapi/linux/serial_core.h                   |   14 -
+ 63 files changed, 1847 insertions(+), 1613 deletions(-)
+ create mode 100644 drivers/tty/serial/imx_earlycon.c
