@@ -2,122 +2,176 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14576C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDBFC4346E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDCBD22CAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3B922CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TOq2IlZQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLHgg2FD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgHFGmD (ORCPT
+        id S1728350AbgHFHYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:42:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:24246 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgHFGlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:41:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596696072; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=y4puZpwgg//JDZy+2Q3u7RfwKCMl4fLcPSjBRmNaB4A=; b=TOq2IlZQl3149TCkvfsU48RaJ/MKL8to7mWBLDNusWdBvrfr0Ae3ebTRhGk4wf6lBL+UDBlH
- yx2owuCGTEb4nXVq3BwQNnaIL2MfR17h/KlOYFrcBs0etE4IvBHzCJdRotGQhkpoegDihNxm
- 2BiRsuLzCiueiBdXOIDGJGAjrnc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5f2ba60646ed996674e0c802 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 06:41:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 94CC2C433C6; Thu,  6 Aug 2020 06:41:10 +0000 (UTC)
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCFE7C433CA;
-        Thu,  6 Aug 2020 06:41:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCFE7C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-From:   Hemant Kumar <hemantk@codeaurora.org>
-To:     gregkh@linuxfoundation.org, manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org, bbhatt@codeaurora.org,
-        Hemant Kumar <hemantk@codeaurora.org>
-Subject: [PATCH v5 1/4] bus: mhi: core: Add helper API to return number of free TREs
-Date:   Wed,  5 Aug 2020 23:41:00 -0700
-Message-Id: <1596696063-17802-2-git-send-email-hemantk@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
-References: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
+        Thu, 6 Aug 2020 03:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbgHFHYl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 03:24:41 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D23BC061574;
+        Thu,  6 Aug 2020 00:24:40 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id x6so11034054pgx.12;
+        Thu, 06 Aug 2020 00:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XxdgRFlQigk4lLEnKCMOhpL5rmLS0bgdeVzH2zzhbYk=;
+        b=gLHgg2FDEjjPLyXBuhI/MzcN+g8tUjZ6ANigM+BEjYlSOioVM7Q9mJoOou77/wLgP8
+         q3C36bh00vAMR7Mp/11TiYzH7VLQ2jMkFJtu6v2kMh+VLDOSgOEtGHAMW/s9lQ81uO+T
+         L2DaDX7s1IYVTYdWEySZujl4UvhM8Wedfmaa5CJGbWShekQ8rroNHX8kwQmWWtf024vt
+         KquJx56ldPRmTa2VbMawPrCO/bME6t0aq3G/aJwcphoKKU3tugxrpsYV9oP5m5ltuACw
+         nzrPTPcOm3YiygFmsRLUSOiudU9l5EpOuVHAcpHhmr9RANsg9iUqu9pckY1beFS+dIiy
+         3b9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XxdgRFlQigk4lLEnKCMOhpL5rmLS0bgdeVzH2zzhbYk=;
+        b=HIkhZXoSJqhqFdiu9zjfJ2hprsRSaNmeyI3iaXE1qI+Go/L2JGID4SY8TGhZdbunw6
+         0KDw3+4DjYf50tQCRwWVxsw4eHy9CE/50RXZmE6j7GleKQaIOalE4r+YzS8pBZ5Ortiq
+         yajxeideoSkDy8QkFJ9yjQD2lK+IQZv6hfbT43tyVWuqs8baS7s8FpYBrDu7QhrlShjI
+         CQm4ACGr7A/Gk136+z+2oQy2NfzKKL5Ezzoaux+4SvL3yoND/gLnYJPddsgoJCIHisCo
+         XUTsDzhW9DQIHt2klXH75PaM6OxdFmfJoTWrGJiuUUfG4J1zLDm6RQNE86nutJn3z8jK
+         N9DQ==
+X-Gm-Message-State: AOAM533cadU/U0EQOWVjsJV8MLsXhzTBxFZQfO8gj56x2XV0dKv+VAjd
+        FrPzKnFUsO2JqMI/VOeu4xs=
+X-Google-Smtp-Source: ABdhPJy5IRLInbKEewuJcoFWlYSZ7y95C3u9BHwPJBs5gSkClT1546uXOobVCr9Tbi0huxbgv3FyPg==
+X-Received: by 2002:a62:d084:: with SMTP id p126mr5801419pfg.287.1596698679368;
+        Thu, 06 Aug 2020 00:24:39 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id t28sm5665205pgn.81.2020.08.06.00.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 00:24:38 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1 0/2] video: fbdev: radeonfb: PCI PM framework upgrade and fix-ups.
+Date:   Thu,  6 Aug 2020 12:52:54 +0530
+Message-Id: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce mhi_get_no_free_descriptors() API to return number
-of TREs available to queue buffer. MHI clients can use this
-API to know before hand if ring is full without calling queue
-API.
+Linux Kernel Mentee: Remove Legacy Power Management. 
 
-Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
----
- drivers/bus/mhi/core/main.c | 12 ++++++++++++
- include/linux/mhi.h         |  9 +++++++++
- 2 files changed, 21 insertions(+)
+The original goal of the patch series is to upgrade the power management
+framework of radeonfb fbdev driver. This has been done by upgrading .suspend()
+and .resume() callbacks.
 
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 2cff5dd..0599e7d 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -258,6 +258,18 @@ int mhi_destroy_device(struct device *dev, void *data)
- 	return 0;
- }
- 
-+int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
-+				enum dma_data_direction dir)
-+{
-+	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-+	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ?
-+		mhi_dev->ul_chan : mhi_dev->dl_chan;
-+	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
-+
-+	return get_nr_avail_ring_elements(mhi_cntrl, tre_ring);
-+}
-+EXPORT_SYMBOL_GPL(mhi_get_no_free_descriptors);
-+
- void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
- {
- 	struct mhi_driver *mhi_drv;
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index a35d876..6565528 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -600,6 +600,15 @@ void mhi_set_mhi_state(struct mhi_controller *mhi_cntrl,
- void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason);
- 
- /**
-+ * mhi_get_no_free_descriptors - Get transfer ring length
-+ * Get # of TD available to queue buffers
-+ * @mhi_dev: Device associated with the channels
-+ * @dir: Direction of the channel
-+ */
-+int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
-+				enum dma_data_direction dir);
-+
-+/**
-  * mhi_prepare_for_power_up - Do pre-initialization before power up.
-  *                            This is optional, call this before power up if
-  *                            the controller does not want bus framework to
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
+
+During this process, it was found that "#if defined(CONFIG_PM)" at line 1434 is
+redundant. This was introduced in the commit
+42ddb453a0cd ("radeon: Conditionally compile PM code").
+
+------------
+
+Before 42ddb453a0cd:
+$ git show 65122f7e80b5:drivers/video/aty/radeon_pm.c | grep -n "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
+
+Based on output in terminal:
+
+547:#ifdef CONFIG_PM
+       |-- 959:#ifdef CONFIG_PPC_PMAC
+       |-- 972:#endif
+       |-- 1291:#ifdef CONFIG_PPC_OF
+       |-- 1301:#endif /* CONFIG_PPC_OF */
+       |-- 1943:#ifdef CONFIG_PPC_OF
+                   |-- 2206:#if 0 /* Not ready yet */
+                   |-- 2508:#endif /* 0 */
+       |-- 2510:#endif /* CONFIG_PPC_OF */
+       |-- 2648:#ifdef CONFIG_PPC_PMAC
+       |-- 2654:#endif /* CONFIG_PPC_PMAC */
+       |-- 2768:#ifdef CONFIG_PPC_PMAC
+       |-- 2774:#endif /* CONFIG_PPC_PMAC */
+       |-- 2791:#ifdef CONFIG_PPC_OF__disabled
+       |-- 2801:#endif /* CONFIG_PPC_OF */
+2803:#endif /* CONFIG_PM */
+
+------------
+
+After 42ddb453a0cd:
+$ git show 42ddb453a0cd:drivers/video/aty/radeon_pm.c | grep -n "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
+
+Based on output in terminal:
+
+547:#ifdef CONFIG_PM
+       |-- 959:#ifdef CONFIG_PPC_PMAC
+       |-- 972:#endif
+       |-- 1291:#ifdef CONFIG_PPC_OF
+       |-- 1301:#endif /* CONFIG_PPC_OF */
+       |-- 1430:#if defined(CONFIG_PM)
+                   |-- 1431:#if defined(CONFIG_X86) || defined(CONFIG_PPC_PMAC)
+                   |-- 1944:#endif
+                   |-- 1946:#ifdef CONFIG_PPC_OF
+                               |-- 1947:#ifdef CONFIG_PPC_PMAC
+                               |-- 2208:#endif
+                   |-- 2209:#endif
+                   |-- 2211:#if 0 /* Not ready yet */
+                   |-- 2513:#endif /* 0 */
+       |-- 2515:#endif /* CONFIG_PPC_OF */
+       |-- 2653:#ifdef CONFIG_PPC_PMAC
+       |-- 2659:#endif /* CONFIG_PPC_PMAC */
+       |-- 2773:#ifdef CONFIG_PPC_PMAC
+       |-- 2779:#endif /* CONFIG_PPC_PMAC */
+       |-- 2796:#ifdef CONFIG_PPC_OF__disabled
+       |-- 2806:#endif /* CONFIG_PPC_OF */
+2808:#endif /* CONFIG_PM */
+
+------------
+
+This also affected the CONFIG_PPC_OF container (line 1943 at commit 65122f7e80b5)
+
+The patch-series fixes it along with PM upgrade.
+
+All patches are compile-tested only.
+
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (2):
+  video: fbdev: aty: radeon_pm: remove redundant CONFIG_PM container
+  fbdev: radeonfb:use generic power management
+
+ drivers/video/fbdev/aty/radeon_base.c | 10 ++++---
+ drivers/video/fbdev/aty/radeon_pm.c   | 38 ++++++++++++++++++++-------
+ drivers/video/fbdev/aty/radeonfb.h    |  3 +--
+ 3 files changed, 35 insertions(+), 16 deletions(-)
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.27.0
 
