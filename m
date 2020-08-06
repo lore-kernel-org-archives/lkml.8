@@ -2,176 +2,121 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE80A2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA9823119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dXe6RGc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgHFQ7I (ORCPT
+        id S1729838AbgHFQ7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:59:08 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:40360 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728652AbgHFQ6o (ORCPT
+        Thu, 6 Aug 2020 12:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728975AbgHFQ6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:58:44 -0400
-Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 15E803A5156;
-        Thu,  6 Aug 2020 15:55:52 +0000 (UTC)
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 44E35FF806;
-        Thu,  6 Aug 2020 15:50:29 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 17:50:28 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v2 08/14] media: uapi: h264: Drop SLICE_PARAMS 'size'
- field
-Message-ID: <20200806155028.GB1621078@aptenodytes>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
- <20200806151310.98624-9-ezequiel@collabora.com>
+        Thu, 6 Aug 2020 12:58:38 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE290C0A3BD0
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:58:37 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l4so51022940ejd.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1XBlSxPFXmmwC9ml0NMR2WdlXom4n6CpwebB65mVnUs=;
+        b=dXe6RGc6/xXA7dnes7IB/pkAiTFvxhcpMvvtqW5JIhIYAIOZZskja/irTxfuzn7ZLl
+         BBhgrAchBiS9dj4kiDmcC0lEGAn06HCfFv6nA5dXmdYahycy0MfXQ2ZMAd65HnYzIU0G
+         OvEJar8x1W8NIm/obNQnQmKoMi94gth0dQhd0cO/R5GP/Ep+6wW2lP44E7m8Pd8S2Z06
+         PaKtvZp+Y7P3sMXXRTWk1rDK3tszZaurMvD748iPm+CVVqeCD3YJFeKNkRQvWm3wJGOY
+         VJd9cVLog2o4YEJ6H4NSw2R88nYq7Bg1mQOzd2aOlgIjNcz2oSZP6yf04FCk4EHCIoAH
+         /l9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1XBlSxPFXmmwC9ml0NMR2WdlXom4n6CpwebB65mVnUs=;
+        b=LYGX00miFV1fJlU5tJlkde/NDCOtwscz82eYp3jcC7kLxYDfNtJgzHfALyPJuHqLBH
+         efnrg/vLcE/1GbWjphqvnG9KsDFEesBziAEwRBVQBCgBxTlnN4ejWXUHYvzKT6HTmJUp
+         0T396ELot0THM9YXy7iU33briKfSICemXk2pgrQt6Th8KuHu2FmlYln1ByaNjyaa/GW7
+         yeOxW8wGqzX96PEkm08jN568rAoSKhhsCatgxrXGIBXh8HYMfD2p93NqlddLp+rK0h+2
+         SK1gOFT4OdsgZLBMhyhoTbiZlPLbv2TLGyJ+kCWWVVZ9o2nBL8cvOVck1jB5TJV5++53
+         BwCA==
+X-Gm-Message-State: AOAM533G4Z4C+2q0nS9U4bZme2MgSr5j/ZprFgaQUmHs2aYZBG+Knxpq
+        ZFe4+qcDaImhet2KaRyB8dpD2xuMsUnszTSv1jRSOg==
+X-Google-Smtp-Source: ABdhPJwRwr7iyIOMmsIdXrbJrtDmOHJSdVosW8f7X72dl0j3AzF5hsJa5Lkjawzt3dSCmXDg7a+kSdYK+wDCeczJkfM=
+X-Received: by 2002:a17:907:208e:: with SMTP id pv14mr5596998ejb.438.1596733116143;
+ Thu, 06 Aug 2020 09:58:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
-Content-Disposition: inline
-In-Reply-To: <20200806151310.98624-9-ezequiel@collabora.com>
+References: <20200806165359.2381483-1-jannh@google.com>
+In-Reply-To: <20200806165359.2381483-1-jannh@google.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Thu, 6 Aug 2020 09:58:23 -0700
+Message-ID: <CAHRSSEwgfaQhqgHhfKWKpd78WAT20aj49exUgbJqhVXp7NBY_w@mail.gmail.com>
+Subject: Re: [PATCH] binder: Remove bogus warning on failed same-process transaction
+To:     Jann Horn <jannh@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 6, 2020 at 9:54 AM Jann Horn <jannh@google.com> wrote:
+>
+> While binder transactions with the same binder_proc as sender and recipient
+> are forbidden, transactions with the same task_struct as sender and
+> recipient are possible (even though currently there is a weird check in
+> binder_transaction() that rejects them in the target==0 case).
+> Therefore, task_struct identities can't be used to distinguish whether
+> the caller is running in the context of the sender or the recipient.
+>
+> Since I see no easy way to make this WARN_ON() useful and correct, let's
+> just remove it.
+>
+> Fixes: 44d8047f1d87 ("binder: use standard functions to allocate fds")
+> Reported-by: syzbot+e113a0b970b7b3f394ba@syzkaller.appspotmail.com
+> Signed-off-by: Jann Horn <jannh@google.com>
 
---4bRzO86E/ozDv8r1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Todd Kjos <tkjos@google.com>
 
-Hi,
-
-On Thu 06 Aug 20, 12:13, Ezequiel Garcia wrote:
-> The SLICE_PARAMS control is intended for slice-based
-> devices. In this mode, the OUTPUT buffer contains
-> a single slice, and so the buffer's plane payload size
-> can be used to query the slice size.
-
-If we later extend the API for supporting multiple slices with dynamic array
-controls, I guess we'll need to know the size of each slice in each control
-elements. So I'd rather keep that even if it's indeed redundant with
-vb2_get_plane_payload in single-slice mode.
-
-What do you think?
-
-Paul
-
-> To reduce the API surface drop the size from the
-> SLICE_PARAMS control.
->=20
-> A follow-up change will remove other members in SLICE_PARAMS
-> so we don't need to add padding fields here.
->=20
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > ---
->  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 ---
->  drivers/staging/media/sunxi/cedrus/cedrus_h264.c          | 7 +++----
->  include/media/h264-ctrls.h                                | 3 ---
->  3 files changed, 3 insertions(+), 10 deletions(-)
->=20
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index 427fc5727ec0..fff74b7bf32a 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1760,9 +1760,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->      :stub-columns: 0
->      :widths:       1 1 2
-> =20
-> -    * - __u32
-> -      - ``size``
-> -      -
->      * - __u32
->        - ``start_byte_offset``
->          Offset (in bytes) from the beginning of the OUTPUT buffer to the=
- start
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h264.c
-> index a9ba78b15907..8b6f05aadbe8 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> @@ -324,17 +324,16 @@ static void cedrus_set_params(struct cedrus_ctx *ct=
-x,
->  	struct vb2_buffer *src_buf =3D &run->src->vb2_buf;
->  	struct cedrus_dev *dev =3D ctx->dev;
->  	dma_addr_t src_buf_addr;
-> -	u32 len =3D slice->size * 8;
-> +	size_t slice_bytes =3D vb2_get_plane_payload(src_buf, 0);
->  	unsigned int pic_width_in_mbs;
->  	bool mbaff_pic;
->  	u32 reg;
-> =20
-> -	cedrus_write(dev, VE_H264_VLD_LEN, len);
-> +	cedrus_write(dev, VE_H264_VLD_LEN, slice_bytes * 8);
->  	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
-> =20
->  	src_buf_addr =3D vb2_dma_contig_plane_dma_addr(src_buf, 0);
-> -	cedrus_write(dev, VE_H264_VLD_END,
-> -		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
-> +	cedrus_write(dev, VE_H264_VLD_END, src_buf_addr + slice_bytes);
->  	cedrus_write(dev, VE_H264_VLD_ADDR,
->  		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
->  		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index 4f05ee265997..f74736fcfa00 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -158,9 +158,6 @@ struct v4l2_h264_reference {
->  };
-> =20
->  struct v4l2_ctrl_h264_slice_params {
-> -	/* Size in bytes, including header */
-> -	__u32 size;
-> -
->  	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
->  	__u32 start_byte_offset;
-> =20
-> --=20
-> 2.27.0
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---4bRzO86E/ozDv8r1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl8sJsQACgkQ3cLmz3+f
-v9GziAf/aWLfWuyKKjVuqFynldaS4RSWzbw6EJfK4ufM4h4s7Mv1daAa2UgJw0Vo
-zow7RsiuGlB66zWBGumoUKPpM3HHu2MQ0yed9OpzRAuNWJH+v0SBHCUbJ85b9VeH
-0XQ+VeVIewp9Vud0ddtOZlrtoKS5MXXOatJ1jUtWveTRSHKiCZXZfYizSemxfJWh
-bKVPdKM3jXsDL/Q91eRC4rKAQTlTqG9DnO2hwbW8bTZx1tFzyU+qLSyjrHtiv8mG
-/go8eJzl+Y00DoI6YDt+E6PBSFPZkFsXv3Xsm+v4ZHUO9p2WTs80Me+RkjlOTWZ+
-Sly1KTP5SiIuH11EXTOciAlKNeqCtw==
-=qVuK
------END PGP SIGNATURE-----
-
---4bRzO86E/ozDv8r1--
+>  drivers/android/binder.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index f936530a19b0..5b0376344dbe 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -2344,8 +2344,6 @@ static void binder_transaction_buffer_release(struct binder_proc *proc,
+>                          * file is done when the transaction is torn
+>                          * down.
+>                          */
+> -                       WARN_ON(failed_at &&
+> -                               proc->tsk == current->group_leader);
+>                 } break;
+>                 case BINDER_TYPE_PTR:
+>                         /*
+>
+> base-commit: 47ec5303d73ea344e84f46660fff693c57641386
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
