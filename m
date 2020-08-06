@@ -2,88 +2,101 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F4C43639
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9C922CAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8566A221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SN5MGle4"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="M+qtjXCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgHFGiB (ORCPT
+        id S1728089AbgHFFzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:38:01 -0400
-Received: from m12-15.163.com ([220.181.12.15]:32968 "EHLO m12-15.163.com"
+        Thu, 6 Aug 2020 01:55:09 -0400
+Received: from cmta18.telus.net ([209.171.16.91]:48262 "EHLO cmta18.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgHFGiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:38:00 -0400
-X-Greylist: delayed 939 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 02:37:57 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=b4Vljfz11N5B3BsXB/
-        jU+jLNNdpMd3l8kupGK/FIHnQ=; b=SN5MGle4MIp3KSKXRDPu290DgzSt7dTQJD
-        fGhFwn8vRFwNlRWqFKLxUn2oEe0BV14NgDRduHZobrliuXmYHOJ//xfcrpLKwMIP
-        59FW5K294r5swrb4TWJ8RACE+6l2YZtwag5bk3BtF9mRAlrnhko4xTdMAarFnO+B
-        bwUdHtark=
-Received: from localhost.localdomain (unknown [58.33.126.62])
-        by smtp11 (Coremail) with SMTP id D8CowADnbcp1oStf0rT5EQ--.55997S3;
-        Thu, 06 Aug 2020 14:21:48 +0800 (CST)
-From:   Grant Feng <von81@163.com>
-To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] DT: leds: Add an optional property named 'sdb-gpios'
-Date:   Thu,  6 Aug 2020 14:21:30 +0800
-Message-Id: <20200806062130.25187-2-von81@163.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806062130.25187-1-von81@163.com>
-References: <20200806062130.25187-1-von81@163.com>
-X-CM-TRANSID: D8CowADnbcp1oStf0rT5EQ--.55997S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4fCFWfXFW7XFy3XrWfAFb_yoWkKFX_G3
-        Z7JrsFqas8uF1vgr4qvr15Wr43Cr47AF1kCw15ZF48Aw1fXas09FZ7t34Yyr15WFZxurZx
-        C3ykCr4qqr17GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0_Oz5UUUUU==
-X-Originating-IP: [58.33.126.62]
-X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiNxx4OlWBhkubuAAAsT
+        id S1728000AbgHFFzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 01:55:08 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id 3YrokNSMVqUs33YrpkBwBc; Wed, 05 Aug 2020 23:55:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1596693307; bh=UdY9SBhzelhDfX04xJQMe/tnrZmIn+bwMhQh/d7gS14=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=M+qtjXCmrA7/G/ymG1TyeaJgy2oPWxHrtGABymuDkulMYUHYEQMRm72rghu6tr00J
+         GeNOqke41SHjOELaOF4GAV8QVwnu26wbWCIEjehINnlesMVoIbp6LJAw4emlBHT33n
+         uu8ivc0EN0J394QKemMHBPvSsKKrI+FrIYMrNU6sgX0/Hry66VunxBfUx4gRDzsTbH
+         SJ4jQYm0RY0Q8rj01jjLgvXG74nzreIBfi8bGqNaXN0xXXXYsJ2GYvEBmUwTSI5Ohi
+         EshHRPxqMW/k8xnjkABIyxUGj+JcODXWPDhH81fT/JCWtBauriO2h6/s9Y0mxNKndW
+         52EjvC48f+CmA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=Mo8sFFSe c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=BksG-UogcMQq9l1sBr8A:9
+ a=WNjDzcG3-xvNU-Du:21 a=sI7P83wg1hG2aD_E:21 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher> <3226770.pJcYkdRNc2@kreacher>
+In-Reply-To: <3226770.pJcYkdRNc2@kreacher>
+Subject: RE: [PATCH v7] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+Date:   Wed, 5 Aug 2020 22:55:03 -0700
+Message-ID: <004701d66bb6$22a11410$67e33c30$@net>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdZrSU4IfOy1pyhARg2cUO2gNUQGyAAbEZuQ
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfE4hLMxmYldtWQ0VrnqMmaky8OnCKk9AJ11DLo7lGr1p7mIp04Qio1Ieh3xJEu5B/w5yZyrcESGncqPlckt23ApEzliATAfPpUCKfWKbTU29WS9eMOOG
+ Ifmh10zUQD19Lbp5dS3q6xnLUftetkQjOZqJ5MzhHqydyJovoM0OT1nDsY7KJspil15dMl0Gn5rC4E+1NVmkNi7bp00PgUwUYVgeyPRVV4shsoJHO9a9Adhx
+ 7jbAE0Kmpcnf5bGmwR5t9OnJp5E0AowyzTh0zvUC0DVdze5FoBPC/qWx+lYEfzFTmQ8g1Ocq9VmjFhD4iNCRYM5D96/ruSpprz0XE1QlkucD3PIf2OLpQO/8
+ yVgv40IlP6llcuRGUkbUbaNf+g6LoXe66FRT5BNjoacWEBPmoZ5ETIt+AGbca657bVigugIyMtXVcI/RKoJuoN3iDH7HEI6/XtBJpEg5ugbz4fjGqLU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chip enters hardware shutdown when the SDB pin is pulled low.
-The chip releases hardware shutdown when the SDB pin is pulled high.
+On 2020.08.05 09:56 Rafael J. Wysocki wrote:
 
-Signed-off-by: Grant Feng <von81@163.com>
+> v6 -> v7:
+>    * Cosmetic changes in store_energy_performance_prefernce() to reduce the
+>      LoC number and make it a bit easier to read.  No intentional functional
+>      impact.
+
+??
+V7 is identical to V6.
+
+Diff:
+
+$ diff hwppassive-v6-2-2.patch hwppassive-v7-2-2.patch
+2c2
+< Sent: August 4, 2020 8:11 AM
 ---
- Documentation/devicetree/bindings/leds/leds-is31fl319x.txt | 2 ++
- 1 file changed, 2 insertions(+)
+> Sent: August 5, 2020 9:56 AM
+5c5
+< Subject: [PATCH v6] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+---
+> Subject: [PATCH v7] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+76a77,81
+>
+> v6 -> v7:
+>    * Cosmetic changes in store_energy_performance_prefernce() to reduce the
+>      LoC number and make it a bit easier to read.  No intentional functional
+>      impact.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
-index fc2603484544..e8bef4be57dc 100644
---- a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
-@@ -16,6 +16,7 @@ Optional properties:
- - audio-gain-db : audio gain selection for external analog modulation input.
- 	Valid values: 0 - 21, step by 3 (rounded down)
- 	Default: 0
-+- sdb-gpios : Specifier of the GPIO connected to SDB pin.
- 
- Each led is represented as a sub-node of the issi,is31fl319x device.
- There can be less leds subnodes than the chip can support but not more.
-@@ -44,6 +45,7 @@ fancy_leds: leds@65 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	reg = <0x65>;
-+	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
- 
- 	red_aux: led@1 {
- 		label = "red:aux";
--- 
-2.17.1
+... Doug
 
 
