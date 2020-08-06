@@ -2,259 +2,134 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2766EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C01C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40A90221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EDF82177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwDiI7JR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgHFTZD (ORCPT
+        id S1726219AbgHFTZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:25:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:35473 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgHFTZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:25:03 -0400
-IronPort-SDR: +X/sFRIIiqa4fROpFfNeHDxaYVm/AtAHwlOuKEn8buZEzpglfFPgU0dt98RggZd4VZ7518BOQP
- ee6Be0lxaSxg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="132461178"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="132461178"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:25:02 -0700
-IronPort-SDR: IhZ+OmZJvoHu0nRl894FD1fpUugxCkPCwBxfLQI7HR2oL7YK69RhEB67/hDZvmTIx2Hs+PQpi1
- N1PyiQEWmoqg==
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="293409049"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.166.190])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:25:00 -0700
-Message-ID: <df539dc3a4791d0f873aec9b303f49b64237a6e8.camel@linux.intel.com>
-Subject: Re: [PATCH v4 00/10] Function Granular KASLR
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com
-Date:   Thu, 06 Aug 2020 12:24:58 -0700
-In-Reply-To: <20200806153258.GB2131635@gmail.com>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
-         <20200806153258.GB2131635@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 6 Aug 2020 15:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgHFTZI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:25:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1046C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:19:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id y3so45050444wrl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nBU/pM3MYlEmZitwD1KhBWl8EEKhumB4q1qsW3XKr34=;
+        b=DwDiI7JRoKfd2/50mvMUbKhYmterRGUW3oT7ZbKdfmD00qEpTgvlqq6Liqo6Xxq2Ac
+         IDEOFJ9vfek3fTe4GivTbNOJSxdhPpmYXFlG57g17ii07PgbfsVHG/PdwRMVORw53WhR
+         CTrupnia/072ruKaZKastIIW0MsEV7IeTagJyKabuBJpTF2SfOUA7lHgugcV47mvMl7o
+         KN7OP25lO6CSsllz3c4NUUJNcoDAnhkK8ilWKZhHoDBgUSZX1tXrUddmHUzttCx9FhCU
+         ySZGj/NdrmNx6vnPhU8CVcNRKqMPbudi25jZNGC/qzQZvjZQCx2aywWcIkn/XfHWm3jE
+         2khg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nBU/pM3MYlEmZitwD1KhBWl8EEKhumB4q1qsW3XKr34=;
+        b=trQUw2R8h80RQGahzE08MVDbnX6mcbBy9/D3lr8yLCLfKUYjQFDM8ddHUZIQs8PayV
+         HdiTY40O5rhg8xLEFJWltmfjwUiHOLIXtMv/bz300M/3KPyamUB9yhOyzUI/6a+RD0s+
+         6drSkScVMEaY8VYtih0G5EAcpzTXH2xYXE4N4Z7W8p1kJFszfFO6WgmZH51pA4Q1vWSK
+         FJT3HETU06jUnLQgdbEe1ejYCkM6l15yI6c1xnj7wFp3IL4qHDlaPPQ+fyjLPbObMoYl
+         PApDzY5Ahjeddy97QunCdlj4saxVJkztSjO98pfNL+GSgZwZzxNhoEI438PZsH5OUquG
+         af4A==
+X-Gm-Message-State: AOAM531jRFkzBcdp/2UEwYX54+OBL5vDWTpjmkvt53h0TBNSHm5Ms+na
+        kBqtC/1rxHn+Dz3GVpEqeW0=
+X-Google-Smtp-Source: ABdhPJwspMhA4inynCobhK/0zh+GzIEbqrp0SK1AaC9F08HZ3N5eUOyCbQjr+bHQfeHCb/tplUMHgg==
+X-Received: by 2002:adf:9e8b:: with SMTP id a11mr8464291wrf.309.1596741545387;
+        Thu, 06 Aug 2020 12:19:05 -0700 (PDT)
+Received: from localhost.localdomain (cpc83647-brig20-2-0-cust926.3-3.cable.virginm.net. [82.19.195.159])
+        by smtp.gmail.com with ESMTPSA id f15sm7172154wmj.39.2020.08.06.12.19.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 12:19:04 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Eli Cohen <eli@mellanox.com>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] vdpa/mlx5: Fix erroneous null pointer checks
+Date:   Thu,  6 Aug 2020 20:18:39 +0100
+Message-Id: <20200806191849.82189-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mingo, thanks for taking a look, I am glad you like the idea. Some
-replies below:
+In alloc_inout() in net/mlx5_vnet.c, there are a few places where memory
+is allocated to *in and *out, but only the values of in and out are
+null-checked (i.e. there is a missing dereference). Fix this.
 
-On Thu, 2020-08-06 at 17:32 +0200, Ingo Molnar wrote:
-> * Kristen Carlson Accardi <kristen@linux.intel.com> wrote:
-> 
-> > Function Granular Kernel Address Space Layout Randomization
-> > (fgkaslr)
-> > -----------------------------------------------------------------
-> > ----
-> > 
-> > This patch set is an implementation of finer grained kernel address
-> > space
-> > randomization. It rearranges your kernel code at load time 
-> > on a per-function level granularity, with only around a second
-> > added to
-> > boot time.
-> 
-> This is a very nice feature IMO, and it should be far more effective 
-> at randomizing the kernel, due to the sheer number of randomization 
-> bits that kernel function granular randomization presents.
-> 
-> If this is a good approximation of fg-kaslr randomization depth:
-> 
->   thule:~/tip> grep ' [tT] ' /proc/kallsyms  | wc -l
->   88488
-> 
-> ... then that's 80K bits of randomization instead of the mere
-> handful 
-> of kaslr bits we have today. Very nice!
-> 
-> > In order to hide our new layout, symbols reported through 
-> > /proc/kallsyms will be displayed in a random order.
-> 
-> Neat. :-)
-> 
-> > Performance Impact
-> > ------------------
-> > * Run time
-> > The performance impact at run-time of function reordering varies by
-> > workload.
-> > Using kcbench, a kernel compilation benchmark, the performance of a
-> > kernel
-> > build with finer grained KASLR was about 1% slower than a kernel
-> > with standard
-> > KASLR. Analysis with perf showed a slightly higher percentage of 
-> > L1-icache-load-misses. Other workloads were examined as well, with
-> > varied
-> > results. Some workloads performed significantly worse under
-> > FGKASLR, while
-> > others stayed the same or were mysteriously better. In general, it
-> > will
-> > depend on the code flow whether or not finer grained KASLR will
-> > impact
-> > your workload, and how the underlying code was designed. Because
-> > the layout
-> > changes per boot, each time a system is rebooted the performance of
-> > a workload
-> > may change.
-> 
-> I'd guess that the biggest performance impact comes from tearing
-> apart 
-> 'groups' of functions that particular workloads are using.
-> 
-> In that sense it might be worthwile to add a '__kaslr_group'
-> function 
-> tag to key functions, which would keep certain performance critical 
-> functions next to each other.
-> 
-> This shouldn't really be a problem, as even with generous amount of 
-> grouping the number of randomization bits is incredibly large.
+Addresses-Coverity: ("CID 1496603: (REVERSE_INULL)")
+Fixes: 1a86b377aa21 ("vdpa/mlx5: Add VDPA driver for supported mlx5 devices")
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/vdpa/mlx5/net/mlx5_vnet.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-So my strategy so far was to try to get a very basic non-performance
-optimized fgkaslr mode merged first, then add performance optimized
-options as a next step. For example, a user might pass in
-fgkaslr="group" to the fgkaslr kernel parameter to select a layout
-which groups some things by whatever criteria we want to mitigate some
-of the performance impact of full randomization, or they might chose
-fgkaslr="full", which just randomizes everything (the current
-implementation). If people think it's worth adding the performance
-optimizations for the initial merge, I can certainly work on those, but
-i thought it might be better to keep it super simple at first.
-
-> 
-> > Future work could identify hot areas that may not be randomized and
-> > either
-> > leave them in the .text section or group them together into a
-> > single section
-> > that may be randomized. If grouping things together helps, one
-> > other thing to
-> > consider is that if we could identify text blobs that should be
-> > grouped together
-> > to benefit a particular code flow, it could be interesting to
-> > explore
-> > whether this security feature could be also be used as a
-> > performance
-> > feature if you are interested in optimizing your kernel layout for
-> > a
-> > particular workload at boot time. Optimizing function layout for a
-> > particular
-> > workload has been researched and proven effective - for more
-> > information
-> > read the Facebook paper "Optimizing Function Placement for Large-
-> > Scale
-> > Data-Center Applications" (see references section below).
-> 
-> I'm pretty sure the 'grouping' solution would address any real 
-> slowdowns.
-> 
-> I'd also suggest allowing the passing in of a boot-time pseudo-
-> random 
-> generator seed number, which would allow the creation of a 
-> pseudo-randomized but repeatable layout across reboots.
-
-We talked during the RFC stage of porting the chacha20 code to this
-early boot stage to use as a prand generator. Ultimately, this means
-you now have a secret you have to protect (the seed), and so I've
-dropped this for now. I could see maybe having this as a debug option?
-I certainly use a prand myself even now when I'm still debugging
-functional issues (although the one I use for my own debugging isn't
-suitable for merging).
-
-> 
-> > Image Size
-> > ----------
-> > Adding additional section headers as a result of compiling with
-> > -ffunction-sections will increase the size of the vmlinux ELF file.
-> > With a standard distro config, the resulting vmlinux was increased
-> > by
-> > about 3%. The compressed image is also increased due to the header
-> > files,
-> > as well as the extra relocations that must be added. You can expect
-> > fgkaslr
-> > to increase the size of the compressed image by about 15%.
-> 
-> What is the increase of the resulting raw kernel image? Additional 
-> relocations might increase its size (unless I'm missing something) - 
-> it would be nice to measure this effect. I'd expect this to be
-> really 
-> low.
-
-By raw kernel image, do you mean just what eventually gets copied into
-memory after decompression minus the relocation table? If so, this is
-almost no difference - the only difference is that there is a little
-bit of change in the padding between sections vs what the non-
-randomized kernel is because of alignment differences with the new
-layout. so you wind up with a few extra bytes give or take.
-
-> 
-> vmlinux or compressed kernel size doesn't really matter on x86-64, 
-> it's a boot time only expense well within typical system resource 
-> limits.
-> 
-> > Disabling
-> > ---------
-> > Disabling normal KASLR using the nokaslr command line option also
-> > disables
-> > fgkaslr. It is also possible to disable fgkaslr separately by
-> > booting with
-> > fgkaslr=off on the commandline.
-> 
-> I'd suggest to also add a 'nofgkaslr' boot option if it doesn't yet 
-> exist, to keep usage symmetric with kaslr.
-> 
-> Likewise, there should probably be a 'kaslr=off' option as well.
-> 
-> The less random our user interfaces are, the better ...
-> 
-> >  arch/x86/boot/compressed/Makefile             |   9 +-
-> >  arch/x86/boot/compressed/fgkaslr.c            | 811
-> > ++++++++++++++++++
-> >  arch/x86/boot/compressed/kaslr.c              |   4 -
-> >  arch/x86/boot/compressed/misc.c               | 157 +++-
-> >  arch/x86/boot/compressed/misc.h               |  30 +
-> >  arch/x86/boot/compressed/utils.c              |  11 +
-> >  arch/x86/boot/compressed/vmlinux.symbols      |  17 +
-> >  arch/x86/include/asm/boot.h                   |  15 +-
-> >  arch/x86/kernel/vmlinux.lds.S                 |  17 +-
-> >  arch/x86/lib/kaslr.c                          |  18 +-
-> >  arch/x86/tools/relocs.c                       | 143 ++-
-> >  arch/x86/tools/relocs.h                       |   4 +-
-> >  arch/x86/tools/relocs_common.c                |  15 +-
-> >  include/asm-generic/vmlinux.lds.h             |  18 +-
-> >  include/linux/decompress/mm.h                 |  12 +-
-> >  include/uapi/linux/elf.h                      |   1 +
-> >  init/Kconfig                                  |  26 +
-> >  kernel/kallsyms.c                             | 163 +++-
-> >  kernel/module.c                               |  81 ++
-> >  tools/objtool/elf.c                           |   8 +-
-> >  26 files changed, 1670 insertions(+), 85 deletions(-)
-> >  create mode 100644 Documentation/security/fgkaslr.rst
-> >  create mode 100644 arch/x86/boot/compressed/fgkaslr.c
-> >  create mode 100644 arch/x86/boot/compressed/utils.c
-> >  create mode 100644 arch/x86/boot/compressed/vmlinux.symbols
-> 
-> This looks surprisingly lean overall.
-
-Most of the changes outside of fgkaslr.c, module.c, and kallsyms.c were
-little tweaks here and there to accommodate using -ffunction-sections
-and handling >64K elf sections, otherwise yes, I tried to keep it very
-self contained and non-invasive.
-
+diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+index 3ec44a4f0e45..bcb6600c2839 100644
+--- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
++++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+@@ -867,7 +867,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+ 		*outlen = MLX5_ST_SZ_BYTES(qp_2rst_out);
+ 		*in = kzalloc(*inlen, GFP_KERNEL);
+ 		*out = kzalloc(*outlen, GFP_KERNEL);
+-		if (!in || !out)
++		if (!*in || !*out)
+ 			goto outerr;
+ 
+ 		MLX5_SET(qp_2rst_in, *in, opcode, cmd);
+@@ -879,7 +879,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+ 		*outlen = MLX5_ST_SZ_BYTES(rst2init_qp_out);
+ 		*in = kzalloc(*inlen, GFP_KERNEL);
+ 		*out = kzalloc(MLX5_ST_SZ_BYTES(rst2init_qp_out), GFP_KERNEL);
+-		if (!in || !out)
++		if (!*in || !*out)
+ 			goto outerr;
+ 
+ 		MLX5_SET(rst2init_qp_in, *in, opcode, cmd);
+@@ -896,7 +896,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+ 		*outlen = MLX5_ST_SZ_BYTES(init2rtr_qp_out);
+ 		*in = kzalloc(*inlen, GFP_KERNEL);
+ 		*out = kzalloc(MLX5_ST_SZ_BYTES(init2rtr_qp_out), GFP_KERNEL);
+-		if (!in || !out)
++		if (!*in || !*out)
+ 			goto outerr;
+ 
+ 		MLX5_SET(init2rtr_qp_in, *in, opcode, cmd);
+@@ -914,7 +914,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+ 		*outlen = MLX5_ST_SZ_BYTES(rtr2rts_qp_out);
+ 		*in = kzalloc(*inlen, GFP_KERNEL);
+ 		*out = kzalloc(MLX5_ST_SZ_BYTES(rtr2rts_qp_out), GFP_KERNEL);
+-		if (!in || !out)
++		if (!*in || !*out)
+ 			goto outerr;
+ 
+ 		MLX5_SET(rtr2rts_qp_in, *in, opcode, cmd);
+-- 
+2.28.0
 
