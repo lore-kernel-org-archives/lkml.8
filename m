@@ -2,169 +2,162 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4438AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A421123119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134DE23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QlI0bZD7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+oNYnKJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbgHFRMy (ORCPT
+        id S1730436AbgHFRNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:12:54 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:34522 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730214AbgHFRKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:10:06 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3CA68200878;
-        Thu,  6 Aug 2020 13:55:11 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5FD21200869;
-        Thu,  6 Aug 2020 13:55:07 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5255040252;
-        Thu,  6 Aug 2020 13:55:02 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: imx6sll-evk: Add audio sound card node
-Date:   Thu,  6 Aug 2020 19:50:29 +0800
-Message-Id: <1596714629-16425-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 6 Aug 2020 13:13:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58908 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728618AbgHFRKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:10:02 -0400
+Date:   Thu, 06 Aug 2020 17:09:59 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596733800;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WhBBokSrF82ZbtYUJtgHD6hRn4a5Q1lGUgPRNYgGxaY=;
+        b=QlI0bZD7UqOf7F4mJ/iXBonlcM7WVGludLM5Bo4k2eeDaSQXZzH5vQgrDNKbtv02udM6gf
+        +hbw/QxF5J0aR/+Lvvj+C0LLVY/TIXxxhSFOUTf1pFJHda/lwdboqIdfEY7sySnkAlr0+9
+        TjJNIy5yUeVTJkDrQvBgN385RyJGuratHEYbwFWhIKKr7l2a9vbB2NGZJguI1SEInlvDSZ
+        cGwzKv4WVrXA7Jk0IOyvsB2RwrBJTlJPNb6FVoWX22FG6wYjic0ZkvxCAsb7xaaftEoovW
+        /CZV6nT2cM8woBckuWsU1lJCAEmrxNU9rl3AqAgaMCDWONWZsav7Jy/3xFB12w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596733800;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WhBBokSrF82ZbtYUJtgHD6hRn4a5Q1lGUgPRNYgGxaY=;
+        b=+oNYnKJt2YMCi46UVL3Gp0IrESwEl9dtwRoGF1+/pFPph45UK6+R5IqHN6zCaC6jUHqJAQ
+        99jKyR4ZOzMbC5DQ==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] posix-cpu-timers: Split run_posix_cpu_timers()
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200730102337.677439437@linutronix.de>
+References: <20200730102337.677439437@linutronix.de>
+MIME-Version: 1.0
+Message-ID: <159673379934.3192.4700870784395015756.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add audio sound card node, which depends on codec node,
-SSI node, audmux node.
+The following commit has been merged into the timers/core branch of tip:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Commit-ID:     820903c784a01bf6e143253418508da4f5790cff
+Gitweb:        https://git.kernel.org/tip/820903c784a01bf6e143253418508da4f5790cff
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 30 Jul 2020 12:14:05 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 06 Aug 2020 16:50:59 +02:00
+
+posix-cpu-timers: Split run_posix_cpu_timers()
+
+Split it up as a preparatory step to move the heavy lifting out of
+interrupt context.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200730102337.677439437@linutronix.de
 ---
- arch/arm/boot/dts/imx6sll-evk.dts | 74 +++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ kernel/time/posix-cpu-timers.c | 43 ++++++++++++++++++---------------
+ 1 file changed, 24 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-index 5ace9e6acf85..45bf5e61e960 100644
---- a/arch/arm/boot/dts/imx6sll-evk.dts
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -132,6 +132,29 @@ panel_in: endpoint {
- 			};
- 		};
- 	};
-+
-+	sound {
-+		compatible = "fsl,imx6sl-evk-wm8962", "fsl,imx-audio-wm8962";
-+		model = "wm8962-audio";
-+		audio-cpu = <&ssi2>;
-+		audio-codec = <&codec>;
-+		audio-routing =
-+			"Headphone Jack", "HPOUTL",
-+			"Headphone Jack", "HPOUTR",
-+			"Ext Spk", "SPKOUTL",
-+			"Ext Spk", "SPKOUTR",
-+			"AMIC", "MICBIAS",
-+			"IN3R", "AMIC";
-+		mux-int-port = <2>;
-+		mux-ext-port = <3>;
-+		hp-det-gpio = <&gpio4 24 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux3>;
-+	status = "okay";
- };
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 1651179..e5ad873 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1080,32 +1080,15 @@ static inline bool fastpath_timer_check(struct task_struct *tsk)
+ 	return false;
+ }
  
- &cpu0 {
-@@ -247,6 +270,27 @@ vgen6_reg: vgen6 {
- 	};
- };
+-/*
+- * This is called from the timer interrupt handler.  The irq handler has
+- * already updated our counts.  We need to check if any timers fire now.
+- * Interrupts are disabled.
+- */
+-void run_posix_cpu_timers(void)
++static void __run_posix_cpu_timers(struct task_struct *tsk)
+ {
+-	struct task_struct *tsk = current;
+ 	struct k_itimer *timer, *next;
+ 	unsigned long flags;
+ 	LIST_HEAD(firing);
  
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+
-+	codec: wm8962@1a {
-+		compatible = "wlf,wm8962";
-+		reg = <0x1a>;
-+		clocks = <&clks IMX6SLL_CLK_EXTERN_AUDIO>;
-+		DCVDD-supply = <&vgen3_reg>;
-+		DBVDD-supply = <&reg_aud3v>;
-+		AVDD-supply = <&vgen3_reg>;
-+		CPVDD-supply = <&vgen3_reg>;
-+		MICVDD-supply = <&reg_aud3v>;
-+		PLLVDD-supply = <&vgen3_reg>;
-+		SPKVDD1-supply = <&reg_aud4v>;
-+		SPKVDD2-supply = <&reg_aud4v>;
-+	};
-+};
-+
- &lcdif {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_lcd>;
-@@ -273,6 +317,10 @@ &snvs_pwrkey {
- 	status = "okay";
- };
+-	lockdep_assert_irqs_disabled();
+-
+-	/*
+-	 * The fast path checks that there are no expired thread or thread
+-	 * group timers.  If that's so, just return.
+-	 */
+-	if (!fastpath_timer_check(tsk))
++	if (!lock_task_sighand(tsk, &flags))
+ 		return;
  
-+&ssi2 {
-+	status = "okay";
-+};
+-	lockdep_posixtimer_enter();
+-	if (!lock_task_sighand(tsk, &flags)) {
+-		lockdep_posixtimer_exit();
+-		return;
+-	}
+ 	/*
+ 	 * Here we take off tsk->signal->cpu_timers[N] and
+ 	 * tsk->cpu_timers[N] all the timers that are firing, and
+@@ -1147,6 +1130,28 @@ void run_posix_cpu_timers(void)
+ 			cpu_timer_fire(timer);
+ 		spin_unlock(&timer->it_lock);
+ 	}
++}
 +
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -329,6 +377,25 @@ &wdog1 {
- };
++/*
++ * This is called from the timer interrupt handler.  The irq handler has
++ * already updated our counts.  We need to check if any timers fire now.
++ * Interrupts are disabled.
++ */
++void run_posix_cpu_timers(void)
++{
++	struct task_struct *tsk = current;
++
++	lockdep_assert_irqs_disabled();
++
++	/*
++	 * The fast path checks that there are no expired thread or thread
++	 * group timers.  If that's so, just return.
++	 */
++	if (!fastpath_timer_check(tsk))
++		return;
++
++	lockdep_posixtimer_enter();
++	__run_posix_cpu_timers(tsk);
+ 	lockdep_posixtimer_exit();
+ }
  
- &iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_audmux3: audmux3grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_AUD_TXC__AUD3_TXC		0x4130b0
-+			MX6SLL_PAD_AUD_TXFS__AUD3_TXFS		0x4130b0
-+			MX6SLL_PAD_AUD_TXD__AUD3_TXD		0x4110b0
-+			MX6SLL_PAD_AUD_RXD__AUD3_RXD		0x4130b0
-+			MX6SLL_PAD_AUD_MCLK__AUDIO_CLK_OUT	0x4130b0
-+		>;
-+	};
-+
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_GPIO4_IO24__GPIO4_IO24 0x17059 /* HP DETECT */
-+		>;
-+	};
-+
- 	pinctrl_reg_sd3_vmmc: sd3vmmcgrp {
- 		fsl,pins = <
- 			MX6SLL_PAD_KEY_COL6__GPIO4_IO04 0x17059
-@@ -448,6 +515,13 @@ MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x4001b8b1
- 		>;
- 	};
- 
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_AUD_RXFS__I2C3_SCL  0x4041b8b1
-+			MX6SLL_PAD_AUD_RXC__I2C3_SDA   0x4041b8b1
-+		>;
-+	};
-+
- 	pinctrl_lcd: lcdgrp {
- 		fsl,pins = <
- 			MX6SLL_PAD_LCD_DATA00__LCD_DATA00	0x79
--- 
-2.27.0
-
