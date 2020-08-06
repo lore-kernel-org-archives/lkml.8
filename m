@@ -2,132 +2,94 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B76C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B60C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51695221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596746357;
-	bh=q8V+QooAedDTCZwwSoD3LNTl7TcgV2NB4V/wTSRx1Pg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=VT2IEECLQI2VRM/Qp33K5uV3gdXYqnN4H3+tLgeUniSeNa+t8+/OQkSn898wE/Pwr
-	 GF/YOdUB748rsf+BcEKAGlBhdkcDiimckPstg7iDbsykTSHa4keAJUlW97iNGDvAiH
-	 fKE0LqOIMOzuggZyKh/DBEDFoioDCNyPqE++u5qI=
+	by mail.kernel.org (Postfix) with ESMTP id 10FCA221E5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgHFUjQ (ORCPT
+        id S1726396AbgHFUkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48374 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 16:40:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:48080 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgHFUjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:39:15 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB00A20855;
-        Thu,  6 Aug 2020 20:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596746355;
-        bh=q8V+QooAedDTCZwwSoD3LNTl7TcgV2NB4V/wTSRx1Pg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=LDZwk8Jookz+8ELmpEdSs4hIHa/yqQi0yTAmATPUiu/FQwE9I9q7uc7L0m5bL1qOa
-         htHvVr1Bk8XaKx/NbkCTIpAx20ycbLK6+vBMOV+kij4dUJOUjXMAjsiRXhiptghsnp
-         mxzb9Pi0G4qkJ0rrLs168mHtyVl7FtLJozYPA2Oc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A95F23520734; Thu,  6 Aug 2020 13:39:14 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 13:39:14 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     peterz@infradead.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, mw@semihalf.com, leoyang.li@nxp.com,
-        vladimir.oltean@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level
- IRQ time accounting
-Message-ID: <20200806203914.GQ4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <87k0ybha0z.fsf@nanos.tec.linutronix.de>
+        id S1725272AbgHFUkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 16:40:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D93E30E;
+        Thu,  6 Aug 2020 13:40:19 -0700 (PDT)
+Received: from [10.57.35.143] (unknown [10.57.35.143])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 414D43F7D7;
+        Thu,  6 Aug 2020 13:40:18 -0700 (PDT)
+Subject: Re: [tip: perf/core] perf/core: Fix endless multiplex timer
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>
+References: <20200305123851.GX2596@hirez.programming.kicks-ass.net>
+ <158470908175.28353.4859180707604949658.tip-bot2@tip-bot2>
+ <abd1dde6-2761-ae91-195c-cd7c4e4515c6@arm.com>
+ <20200806185353.GA2942033@kroah.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3a89fe47-e143-885a-d116-d3805e0712a0@arm.com>
+Date:   Thu, 6 Aug 2020 21:40:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k0ybha0z.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200806185353.GA2942033@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 09:03:24PM +0200, Thomas Gleixner wrote:
-> Paul,
+On 2020-08-06 19:53, Greg KH wrote:
+> On Thu, Aug 06, 2020 at 07:11:24PM +0100, Robin Murphy wrote:
+>> On 2020-03-20 12:58, tip-bot2 for Peter Zijlstra wrote:
+>>> The following commit has been merged into the perf/core branch of tip:
+>>>
+>>> Commit-ID:     90c91dfb86d0ff545bd329d3ddd72c147e2ae198
+>>> Gitweb:        https://git.kernel.org/tip/90c91dfb86d0ff545bd329d3ddd72c147e2ae198
+>>> Author:        Peter Zijlstra <peterz@infradead.org>
+>>> AuthorDate:    Thu, 05 Mar 2020 13:38:51 +01:00
+>>> Committer:     Peter Zijlstra <peterz@infradead.org>
+>>> CommitterDate: Fri, 20 Mar 2020 13:06:22 +01:00
+>>>
+>>> perf/core: Fix endless multiplex timer
+>>>
+>>> Kan and Andi reported that we fail to kill rotation when the flexible
+>>> events go empty, but the context does not. XXX moar
+>>>
+>>> Fixes: fd7d55172d1e ("perf/cgroups: Don't rotate events for cgroups unnecessarily")
+>>
+>> Can this patch (commit 90c91dfb86d0 ("perf/core: Fix endless multiplex
+>> timer") upstream) be applied to stable please? For PMU drivers built as
+>> modules, the bug can actually kill the system, since the runaway hrtimer
+>> loop keeps calling pmu->{enable,disable} after all the events have been
+>> closed and dropped their references to pmu->module. Thus legitimately
+>> unloading the module once things have got into this state quickly results in
+>> a crash when those callbacks disappear.
+>>
+>> (FWIW I spent about two days fighting with this while testing a new driver
+>> as a module against the 5.3 kernel installed on someone else's machine,
+>> assuming it was a bug in my code...)
 > 
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > On Thu, Aug 06, 2020 at 01:45:45PM +0200, peterz@infradead.org wrote:
-> >> The safety thing is concerned with RT tasks. It doesn't pretend to help
-> >> with runnaway IRQs, never has, never will.
-> >
-> > Getting into the time machine back to the 1990s...
-> >
-> > DYNIX/ptx had a discretionary mechanism to deal with excessive interrupts.
-> > There was a function that long-running interrupt handlers were supposed
-> > to call periodically that would return false if the system felt that
-> > the CPU had done enough interrupts for the time being.  In that case,
-> > the interrupt handler was supposed to schedule itself for a later time,
-> > but leave the interrupt unacknowledged in order to prevent retriggering
-> > in the meantime.
-> >
-> > Of course, this mechanism would be rather less helpful in Linux.
-> >
-> > For one, Linux has way more device drivers and way more oddball devices.
-> > In contrast, the few devices that DYNIX/ptx supported were carefully
-> > selected, and the selection criteria included being able to put up
-> > with this sort of thing.  Also, the fact that there was but a handful
-> > of device drivers meant that changes like this could be more easily
-> > propagated through all drivers.
-> 
-> We could do that completely at the core interrupt handling level. 
+> What exactly kernel(s) do you wish for it to be applied to?  It's
+> already in the latest stable releases of 5.7.y.
 
-Ah, true enough if the various NAPI-like devices give up the CPU from
-time to time.  Which they might well do for all I know.
+Sorry, I implicitly meant 5.4.y there - the buggy commit was merged in 
+5.3, the fix in 5.7, so I think that's the only "stable" branch in 
+between that warrants explicit action. Apologies if I'm getting the 
+terminology wrong.
 
-> > Also, Linux supports way more workloads.  In contrast, DYNIX/ptx could
-> > pick a small percentage of each CPU that would be permitted to be used
-> > by hardware interrupt handlers.  As in there are probably Linux workloads
-> > that run >90% of some poor CPU within hardware interrupt handlers.
-> 
-> Yet another tunable. /me runs
-
-;-) ;-) ;-)
-
-If there are workloads that would like to be able to keep one or more
-CPUs completely busy handling interrupts, it should be possible to
-create something that is used sort of like cond_resched() to keep RCU,
-the scheduler, and the various watchdogs and lockup detectors at bay.
-
-For example, RCU could supply a function that checked to make sure that
-it was in an interrupt from idle, and if so report a quiescent state
-for that CPU.  So if the CPU was idle and there wasn't anything pending
-for it, that CPU could safely stay in a hardirq handler indefinitely.
-I suppose that the function should return an indication in cases such
-as interrupt from non-idle.
-
-Sort of like NO_HZ_FULL, but for hardirq handlers, and also allowing
-those handlers to use RCU read-side critical sections.
-
-Or we could do what all the cool kids do these days, namely just apply
-machine learning, thus automatically self-tuning in real time.
-
-/me runs...
-
-							Thanx, Paul
+Cheers,
+Robin.
