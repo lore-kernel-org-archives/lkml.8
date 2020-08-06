@@ -2,138 +2,250 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6431C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8F8206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B496206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K6nhdIPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgHFRwd convert rfc822-to-8bit (ORCPT
+        id S1730492AbgHFRwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:52:33 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:8045 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728399AbgHFQbU (ORCPT
+        Thu, 6 Aug 2020 13:52:42 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2682 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728399AbgHFRwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:31:20 -0400
-Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>
-CC:     Nick Kralevich <nnk@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-References: <20200806080358.3124505-1-tweek@google.com>
- <20200806080358.3124505-2-tweek@google.com>
- <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com>
- <8627d780-0e19-6755-0de5-c686deb0f5de@sony.com>
- <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com>
- <07e2c48d-3918-6ceb-a6b2-4e2f18f9ea01@gmail.com>
- <CAEjxPJ4no_GqMp8aw43zpwmwq42Wi_1dvP+ZBs1a-mnReDt5Og@mail.gmail.com>
-From:   peter enderborg <peter.enderborg@sony.com>
-Message-ID: <dfeac808-b40d-77fd-0d31-f66f279083eb@sony.com>
-Date:   Thu, 6 Aug 2020 16:51:53 +0200
+        Thu, 6 Aug 2020 13:52:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c43000001>; Thu, 06 Aug 2020 10:50:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 10:52:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 10:52:37 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 17:52:36 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
+ <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
+ <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
+ <6ff57c38-9847-42b0-643b-0d167c13779f@gmail.com>
+ <c6ef5e77-2b0a-1712-ca58-dbd8d232e1f1@nvidia.com>
+Message-ID: <ed79b201-85ba-f725-c5fa-fcde0761bc3d@nvidia.com>
+Date:   Thu, 6 Aug 2020 10:52:38 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ4no_GqMp8aw43zpwmwq42Wi_1dvP+ZBs1a-mnReDt5Og@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-GB
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=frmim2wf c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=pGLkceISAAAA:8 a=z6gsHLkEAAAA:8 a=Fbti1pkVs00Xad8lyQgA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+In-Reply-To: <c6ef5e77-2b0a-1712-ca58-dbd8d232e1f1@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596736256; bh=CS+W4xiYVifNlDvQtAoKvNJ1SxgXVP8asa+INgRDbKA=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=K6nhdIPU86mcumxZoU9u24TPt4lhoYatIyHCBBHXSuGOa21WFcwdL8nwnBkAeUxKD
+         EW9RTS/+PXiKpJsVBqhs9gy/PEpqXddrFTSpoWE+Ebm9ep5EX86+khaLWRWzfKyrUW
+         m1bg3xIVfYXMYGYdILfuS1R03yh2VtHN+AItP1Ddyxxx8+1saSZQuAvNUNJ/jc2PgN
+         zSjC/0/czumePpKc1Zm4bZ4/yb1yzXQUlSP8RdbO7z7BCcr6Ed7dW5uaGpb5/5v8hZ
+         Jnqg4obHOggVcX5xoFbniTd0I1Mwaf5st48dk3mEk9gITCBObnwkvBtBHo7/s22JBf
+         wadD5eQywyG5g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/20 3:49 PM, Stephen Smalley wrote:
-> On Thu, Aug 6, 2020 at 9:45 AM Stephen Smalley
-> <stephen.smalley.work@gmail.com> wrote:
->> On 8/6/20 8:32 AM, Stephen Smalley wrote:
->>
->>> On 8/6/20 8:24 AM, peter enderborg wrote:
->>>
->>>> On 8/6/20 2:11 PM, Stephen Smalley wrote:
->>>>> On 8/6/20 4:03 AM, Thiébaud Weksteen wrote:
->>>>>
->>>>>> From: Peter Enderborg <peter.enderborg@sony.com>
->>>>>>
->>>>>> Add further attributes to filter the trace events from AVC.
->>>>> Please include sample usage and output in the description.
->>>>>
->>>>>
->>>> Im not sure where you want it to be.
->>>>
->>>> In the commit message or in a Documentation/trace/events-avc.rst ?
->>> I was just asking for it in the commit message / patch description.  I
->>> don't know what is typical for Documentation/trace.
->> For example, I just took the patches for a spin, running the
->> selinux-testsuite under perf like so:
->>
->> sudo perf record -e avc:selinux_audited -g make test
->>
->> and then ran:
->>
->> sudo perf report -g
->>
->> and a snippet of sample output included:
->>
->>       6.40%     6.40%  requested=0x800000 denied=0x800000
->> audited=0x800000 result=-13 ssid=922 tsid=922
->> scontext=unconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
->> tcontext=unconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
->> tclass=capability
-> So then the question becomes how do you use the above information,
-> e.g. is that sufficient to correlate it to an actual avc: denied
-> message, how do you decode the requested/denied/audited fields (or
-> should the code do that for you and just report the string name(s) of
-> the permission(s), do you need all three of those fields separately,
-> is it useful to log the ssid/tsid at all given that you have the
-> contexts and sids are dynamically assigned, etc.
+
+On 8/6/20 10:44 AM, Sowjanya Komatineni wrote:
 >
->>              |
->>              ---0x495641000028933d
->>                 __libc_start_main
->>                 |
->>                 |--4.60%--__GI___ioctl
->>                 |          entry_SYSCALL_64
->>                 |          do_syscall_64
->>                 |          __x64_sys_ioctl
->>                 |          ksys_ioctl
->>                 |          binder_ioctl
->>                 |          binder_set_nice
->>                 |          can_nice
->>                 |          capable
->>                 |          security_capable
->>                 |          cred_has_capability.isra.0
->>                 |          slow_avc_audit
->>                 |          common_lsm_audit
->>                 |          avc_audit_post_callback
->>                 |          avc_audit_post_callback
+> On 8/6/20 10:27 AM, Dmitry Osipenko wrote:
+>> 06.08.2020 20:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> On 8/6/20 9:41 AM, Sowjanya Komatineni wrote:
+>>>> On 8/6/20 9:10 AM, Dmitry Osipenko wrote:
+>>>>> 06.08.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> ...
+>>>>>>>> Confirmed from HW designer, calibration FSM to finish takes worst
+>>>>>>>> case
+>>>>>>>> 72uS so by the time it gets to sensor stream it will be done its
+>>>>>>>> sequence and will be waiting for DONE bit.
+>>>>>>>>
+>>>>>>>> So disabling MIPI CAL clock on sensor stream fails is safe.
+>>>>>>> 72us is quite a lot of time, what will happen if LP-11 happens=20
+>>>>>>> before
+>>>>>>> FSM finished calibration?
+>>>>>>>
+>>>>>>> Maybe the finish_calibration() needs to split into two parts:
+>>>>>>>
+>>>>>>> =C2=A0=C2=A0=C2=A0 1. wait for CAL_STATUS_ACTIVE before enabling se=
+nsor
+>>>>>>> =C2=A0=C2=A0=C2=A0 2. wait for CAL_STATUS_DONE after enabling senso=
+r
+>>>>>> I don't think we need to split for active and done. Active will=20
+>>>>>> be 1 as
+>>>>>> long as other pads are in calibration as well.
+>>>>>>
+>>>>>> We cant use active status check for specific pads under calibration.
+>>>>>> This is common bit for all pads.
+>>>>> Does hardware have a single FSM block shared by all pads or there=20
+>>>>> is FSM
+>>>>> per group of pads?
+>>>> MIPI CAL status register has DONE bits for individual pads status and
+>>>> single ACTIVE bit.
+>>>>
+>>>> ACTIVE bit set to 1 indicates auto calibration is active which is the
+>>>> case even when other pads (other CSI pads from other ports streaming
+>>>> in case of parallel stream) are under calibration. Also DSI is shared
+>>>> as well.
+>>>>
+>>>> We do calibration for individual pads. So, we should not rely on
+>>>> ACTIVE bit.
+>>>>
+>>>>
+>>>> MIPI driver checks for condition ACTIVE =3D=3D 1 && DONE =3D=3D 1 from=
+ the
+>>>> beginning.
+>>>>
+>>>> But I think this also should be fixed as in case of parallel streams
+>>>> calibration can happen in parallel waiting for ACTIVE to be cleared
+>>>> makes all calibration callers to wait for longer than needed as ACTIVE
+>>>> is common for all pads.
+>>>>
+>>>>>> Unfortunately HW don't have separate status indicating when=20
+>>>>>> sequence is
+>>>>>> done to indicate its waiting for LP11.
+>>>>>>
+>>>>>>
+>>>>>> To avoid all this, will remove cancel_calibration() totally and use
+>>>>>> same
+>>>>>> finish calibration even in case of stream failure then.
+>>>>>>
+>>>>> What about to add 72us delay to the end of start_calibration() in=20
+>>>>> order
+>>>>> to ensure that FSM is finished before LP-11?
+>>>> Why we should add 72uS in start_calibration() when can use same
+>>>> finish_calibration() for both pass/fail cases?
+>>>>
+>>>> Only timing loose we see is in case of failure we still wait for 250ms
+>>>> and as this is failing case I hope should be ok.
+>>>>
+>>> Also as we don't need cancel_calibration(), keeping tegra_mipi_wait()
+>>> like earlier makes sense I believe as we are letting it finish going
+>>> thru sequence.
+>>>
+>>> So I think below are fixes,
+>>>
+>>> 1. Existing MIPI driver, tegra_mipi_wait() to not use status ACTIVE bit
+>>> to be 0 and use only DONE bit to be 1 for wait condition=C2=A0 as we ar=
+e
+>>> calibrating separately for individual pads and this ACTIVE bit is=20
+>>> common
+>>> for all pads where it will not be 0 in case of other parallel streams
+>>> which may also be under calibration.
+>> Yes, looks like it's a mistake of the current MIPI driver that it polls
+>> the ACTIVE bit.
+>>
+>>> 2. No need for separate cancel_calibration. So, probably earlier names
+>>> tegra_mipi_calibrate() and tegra_mipi_wait() hols good as we are=20
+>>> waiting
+>>> for calibration sequence to finish irrespective of fail/pass.
+>> The new names reflect better what those functions actually do, IMO.
+> ok Will keep same names.
+>>
+>> What about to make finish_calibration() to take an additional argument
+>> which corresponds to the awaited HW bits? For example if it's CSIA, then
+>> it could be:
+>>
+>> =C2=A0=C2=A0 tegra_mipi_finish_calibration(csi_chan->mipi, MIPI_CAL_CSIA=
+);
+> MIPI device is separate for each stream so waiting for only those=20
+> corresponding DONE bits happen currently and no need to pass argument.
+>>
+>>
+>> Also, is it okay that DSI and CSI could change MIPI_CAL_CTRL after DSI
+>> or CSI already started calibration?
+>>
+>> Looking at the current start_calibration(), I think the mutex should be
+>> kept locked and then finish_calibration() should unlock it.
 
-The real cool thing happen when you enable "user-stack-trace" too.
+Right mutex_unlock should happen at end of finish_calibration.
 
-           <...>-4820  [007] .... 85878.897553: selinux_audited: requested=0x4000000 denied=0x4000000 audited=0x4000000 result=-13 ssid=341 tsid=61 scontext=system_u:system_r:ntpd_t:s0 tcontext=system_u:object_r:bin_t:s0 tclass=file
-           <...>-4820  [007] .... 85878.897572: <user stack trace>
- =>  <00007f07d99bb45b>
- =>  <0000555ecd89ca57>
+With keeping mutex locked in start, we dont have to check for active to=20
+be 0 to issue start as mutex will keep it locked and other pads=20
+calibration can only go thru when current one is done.
 
-The fields are useful for filter what you what to see and what you can ignore.  Having the ssid and text was from the part where it is called.
-The numeric can be used for two things. When you dont have any context. Same same reason as in post_callback. We need to be static
-in format so it need  be there if it ever can happen. And it is also useful for faster filtering.
+So instead of below sequence, its simpler to do this way?
 
-You can do "ssid!=42 && ssid!=43 && tsid==666".  From my view it would be good to have all fields there. But they need to right typed to be able
-to use the filter mechanism. There must me some trade-off too where the argument filtering get bigger than the processing, but I think we can
-add a lot more before we reach that threshold.
+start_calibration()
 
+- mutex_lock
+
+- wait for 72uS after start
+
+finish_calibration()
+
+- keep check for ACTIVE =3D 0 and DONE =3D 1
+
+- mutex_unlock()
+
+>
+> Confirmed with HW designer.
+>
+> ACTIVE is common bit for all pads where we see it 1 as long as all=20
+> pads (DSI + all CSI Pads) are under calibration.
+>
+> While MIPI CAL is doing calibration for certain pads, before issuing=20
+> other start it has to wait for ACTIVE to be 0.
+>
+>
+> Earlier driver (before split) checks for ACTIVE to be 0 along with=20
+> DONE bit to be 1 as it does both calibrate and wait in same API.
+>
+> With the split, looks like we need below sequence to be safe.
+>
+> 1. tegra_mipi_start_calibration(): wait for ACTIVE to be 0 before=20
+> issuing START and after issuing start wait for 72uS to let calibration=20
+> code sequence finish so it will be ready to see LP-11 after that.
+>
+> In case of parallel streams, call to start_calibration can happen when=20
+> pads of other stream are under calibration.
+>
+> 2. tegra_mipi_finish_calibration(): check for DONE bit to be 1
+>
+>
+>
