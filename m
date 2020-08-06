@@ -2,92 +2,163 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46584C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 855A6206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFF720748
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FcxToDvS"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R6Q0ESn3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fXJRubCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgHFUUW (ORCPT
+        id S1726464AbgHFUVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:20:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36526 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgHFUUW (ORCPT
+        Thu, 6 Aug 2020 16:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgHFUVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:20:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 076KJqPn085323;
-        Thu, 6 Aug 2020 15:19:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596745192;
-        bh=ZUrVIV9a/HB6pdfYWlnxoyCs4L1mTouSCTB1BHdWEwE=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=FcxToDvSFg82La4qIiBDrzEoU622ni3NoRCndwjCBW7eMDK/jLFosVY08NMlWChAY
-         t/Mjryolm2Zgto/ZxVb2pvO99xXlnUxJDYJ40QGj7vH9r2G3kYSBf43fyG/Ozik9mv
-         /anuIAGHUyfaBiqhqL0sHAL63mkYk57/8FIzgdq8=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 076KJqsr020504
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Aug 2020 15:19:52 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
- 2020 15:19:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 6 Aug 2020 15:19:51 -0500
-Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076KJp1M112395;
-        Thu, 6 Aug 2020 15:19:51 -0500
-Subject: Re: [net-next iproute2 PATCH v3 1/2] iplink: hsr: add support for
- creating PRP device similar to HSR
-To:     David Ahern <dsahern@gmail.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
-        <vinicius.gomes@intel.com>, <stephen@networkplumber.org>,
-        <kuznet@ms2.inr.ac.ru>
-References: <20200717152205.826-1-m-karicheri2@ti.com>
- <e6ac459e-b81c-48ee-d82c-36a533e2aa29@ti.com>
- <6632128c-1c4b-4538-81a9-48dd752c8ab3@gmail.com>
-From:   Murali Karicheri <m-karicheri2@ti.com>
-Message-ID: <9bc91459-73f1-df6e-176a-b078a7cc309f@ti.com>
-Date:   Thu, 6 Aug 2020 16:19:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 16:21:18 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF37C061574;
+        Thu,  6 Aug 2020 13:21:16 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596745273;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xtHNLCxJfzsiJSCp6/W+TfOKxP2aJ6UgREgy+loBHMI=;
+        b=R6Q0ESn3y1nFnbdCuyGK0a83rqiXG8o7/o8w7zgwZPTxcrxycOlwCP9+kCI/nt8ak7n7Mg
+        g6Fgmkcr/k7pm/ulgLm4xEo+wxRiaRf5Ov3SHz1fIwIeAt+frnBgPWY1ZpLV0T0Gh4mWMx
+        lxTmOBiTx4Zt4fkY9zIv8/dbw0BUyPXIIbKc/W7VT8dguTXihqNIaqifWjlr3dkYQwPPy7
+        4E9Xj5KIHhrChnRxs5vRovcAPlvzVFcp2d1fZGEI5bZKDaPtFiVQcKpSvVSF+17+JTdpq9
+        TQmnaTen4VK/BEvUBXUp3A2OX2nGzdAwUhLJmPo6skT+IToB1D95OLH0712vUA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596745273;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xtHNLCxJfzsiJSCp6/W+TfOKxP2aJ6UgREgy+loBHMI=;
+        b=fXJRubCjssIpQgTtL/ZduGNhVfFn7HZPRc8hhVtuSscb+ctPyf0CnqZPYi2XebcAC4VBfm
+        OwvT7Zfw9fXJ0vCQ==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "Lin\, Jing" <jing.lin@intel.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com> <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com> <96a1eb5ccc724790b5404a642583919d@intel.com> <20200805221548.GK19097@mellanox.com> <70465fd3a7ae428a82e19f98daa779e8@intel.com> <20200805225330.GL19097@mellanox.com> <630e6a4dc17b49aba32675377f5a50e0@intel.com> <20200806001927.GM19097@mellanox.com> <c6a1c065ab9b46bbaf9f5713462085a5@intel.com> <87tuxfhf9u.fsf@nanos.tec.linutronix.de> <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
+Date:   Thu, 06 Aug 2020 22:21:11 +0200
+Message-ID: <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <6632128c-1c4b-4538-81a9-48dd752c8ab3@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Megha,
 
+"Dey, Megha" <megha.dey@intel.com> writes:
+> On 8/6/2020 10:10 AM, Thomas Gleixner wrote:
+>> If the DEV/MSI domain has it's own per IR unit resource management, then
+>> you need one per IR unit.
+>>
+>> If the resource management is solely per device then having a domain per
+>> device is the right choice.
+>
+> The dev-msi domain can be used by other devices if they too would want
+> to follow the vector->intel IR->dev-msi IRQ hierarchy.  I do create
+> one dev-msi IRQ domain instance per IR unit. So I guess for this case,
+> it makes most sense to have a dev-msi IRQ domain per IR unit as
+> opposed to create one per individual driver..
 
-On 8/6/20 1:12 PM, David Ahern wrote:
-> On 8/6/20 10:04 AM, Murali Karicheri wrote:
->> that the maintainers are different than the netdev maintainers. My bad.
->> The PRP driver support in kernel is merged by Dave to net-next and this
->> iproute2 change has to go with it. So please review and apply this if it
->> looks good. The kernel part merged is at
-> 
-> there was a long delay between iproute2 and commit to net-next. You need
-> to re-send the iproute2 patches.
-> 
-OK. Will do. Thanks
--- 
-Murali Karicheri
-Texas Instruments
+I'm not really convinced. I looked at the idxd driver and that has it's
+own interrupt related resource management for the IMS slots and provides
+the mask,unmask callbacks for the interrupt chip via this crude platform
+data indirection.
+
+So I don't see the value of the dev-msi domain per IR unit. The domain
+itself does not provide much functionality other than indirections and
+you clearly need per device interrupt resource management on the side
+and a customized irq chip. I rather see it as a plain layering
+violation.
+
+The point is that your IDXD driver manages the per device IMS slots
+which is a interrupt related resource. The story would be different if
+the IMS slots would be managed by some central or per IR unit entity,
+but in that case you'd need IMS specific domain(s).
+
+So the obvious consequence of the hierarchical irq design is:
+
+   vector -> IR -> IDXD
+
+which makes the control flow of allocating an interrupt for a subdevice
+straight forward following the irq hierarchy rules.
+
+This still wants to inherit the existing msi domain functionality, but
+the amount of code required is small and removes all these pointless
+indirections and integrates the slot management naturally.
+
+If you expect or know that there are other devices coming up with IMS
+integrated then most of that code can be made a common library. But for
+this to make sense, you really want to make sure that these other
+devices do not require yet another horrible layer of indirection.
+
+A side note: I just read back on the specification and stumbled over
+the following gem:
+
+ "IMS may also optionally support per-message masking and pending bit
+  status, similar to the per-vector mask and pending bit array in the
+  PCI Express MSI-X capability."
+
+Optionally? Please tell the hardware folks to make this mandatory. We
+have enough pain with non maskable MSI interrupts already so introducing
+yet another non maskable interrupt trainwreck is not an option.
+
+It's more than a decade now that I tell HW people not to repeat the
+non-maskable MSI failure, but obviously they still think that
+non-maskable interrupts are a brilliant idea. I know that HW folks
+believe that everything they omit can be fixed in software, but they
+have to finally understand that this particular issue _cannot_ be fixed
+at all.
+
+Thanks,
+
+        tglx
