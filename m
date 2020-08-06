@@ -2,204 +2,237 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7384C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5F44206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28256206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:58:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V4GqZD3E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqOUSExp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725817AbgHFR6M (ORCPT
+        id S1728212AbgHFR60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:58:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49682 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFR6K (ORCPT
+        Thu, 6 Aug 2020 13:58:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgHFR6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:58:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076D27CE176546;
-        Thu, 6 Aug 2020 13:17:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : in-reply-to : references : date : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=xeQh4UwI5BYb0rFkOfOqf85p8ALQ3Km95tWCw+dneU0=;
- b=V4GqZD3E80QaR3bTb+QGtayZjdsIoQKe5MeCDAW2nKaiOSWZb/GCKMD2eNBIaQKeT9Q1
- YXwYXaln8m7XAaQr54etsrv/obofZQbCIK9lWM7Gi+YtHKuiqpGxmf2J+uBisydwsSmW
- PcBWXVpV62OaJ3g4+bG2OKI7hPlSvRy6nfBrSp5cLB7aaw4rx8w+uKl5zf5ZWCJVn34J
- R+SUItZpWq00NrHAgY87XnHyZLZ5nbWAUi8cX23lLKDR4KQ4MoALI7M6zRdcC8AjPEKW
- 0zLc8BhNX18GxGsJKoln9+ndvvhcpB4mNoDSubSWgD5rkV3FBRk/gAPfArXOGu5OCLQ3 xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 32r6ep2uph-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 06 Aug 2020 13:17:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076Cwxmu172996;
-        Thu, 6 Aug 2020 13:17:56 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32pdnwc24c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Aug 2020 13:17:56 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 076DHrHX018618;
-        Thu, 6 Aug 2020 13:17:54 GMT
-Received: from starbug-mbp.localdomain (/79.97.215.145)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Aug 2020 06:17:53 -0700
-Received: by starbug-mbp.localdomain (Postfix, from userid 501)
-        id D1895F04A2B; Thu,  6 Aug 2020 14:17:47 +0100 (IST)
-From:   Darren Kenny <darren.kenny@oracle.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 06/24] x86/cpu/intel: Detect SGX support
-In-Reply-To: <20200716135303.276442-7-jarkko.sakkinen@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-7-jarkko.sakkinen@linux.intel.com>
-Date:   Thu, 06 Aug 2020 14:17:47 +0100
-Message-ID: <m2zh77rk04.fsf@oracle.com>
+        Thu, 6 Aug 2020 13:58:25 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73275C061574;
+        Thu,  6 Aug 2020 10:58:25 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id m200so22002427ybf.10;
+        Thu, 06 Aug 2020 10:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=38zt7R0RJPvUtymX3Nw4Froxt2V5VzBCbTJwdCMITjk=;
+        b=JqOUSExpWEr6MrFaSCly9Ovija/fz43XDW+gr6PI61X+B+JCPytJ2Vf1F9JIMC7LuV
+         t7EG7svIbvbImejCECaNF0WFsDqeEaBI8FZLkOA4kechvVj2051f6rhhB5xk3iIaSM2F
+         qYK8KCMLC6dNC0Tfl6UL8+lfIKSER1HbggNtkRJmBZdFbHfchW1bj2qfa9PLbR/q0I5a
+         zdje0Orjx+M8gmCTn0POcb7PLabdLmbaSAF3CtQ5qikd0OzNB9IwRYIiJYLKSrqnfw7z
+         uuLv0PUSZrw5TxyVDFCVyRVXR6zSHQP6tZ4e19lTYqrHa41MutsJkkPJ4gf/2bfvdJbZ
+         Nd/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=38zt7R0RJPvUtymX3Nw4Froxt2V5VzBCbTJwdCMITjk=;
+        b=K0/fjFvLtQcIT+ZGB9G7Nib41xduzR+TRp7PwE9dKRtl9DZjtp287ryAL8LjKe2cbw
+         qX4TEW/Fj+dZBcYh2P/T6f6KVIUYUBkxy/mSqxp2hpuCHSs4huVqoCz/5j6gygtz8UBT
+         p8ch8haGeJvZb/k/6QX+guurkY1gmoJMiAB2p1JowMNS7kHYOeG9N4g1yOniTGv2t/jB
+         6zKv3JpBuSRQskTEFPOvoW1GAR4NSXJin6tfBNqtRQxikoIVHluOPZVgcSfoGoHrnkmw
+         yULdASGrANLAyvldw06GbfiGEgbR5nUhcaSbRSiAqUyVzqdJ82xqbHGLhYSV33Bc8l8D
+         gwrw==
+X-Gm-Message-State: AOAM53183e0cowIqhH2+4iaeYB/ru9gtVGr2bHKgCwNwGKvMMpHMVHU3
+        PCfMW7v0ciKFZ3gxgQwwe2ppb8zGzUUcy0zETB4=
+X-Google-Smtp-Source: ABdhPJz355Ybf7YZoM14a0jlC2NgBFxprVG+YySjYZNVzQuSWG8GFbt/H3f/xBFH7oB6PrZTgeImqQGI4NkzBYFnW3k=
+X-Received: by 2002:a25:84cd:: with SMTP id x13mr14685208ybm.425.1596736702777;
+ Thu, 06 Aug 2020 10:58:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008060094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060094
+References: <20200722054314.2103880-1-irogers@google.com> <CAEf4BzaBYaFJ3eUinS9nHeykJ0xEbZpwLts33ZDp1PT=bkyjww@mail.gmail.com>
+ <CAP-5=fXMUWFs6YtQVuxjenCrOmKtKYCqZE3YofwdR=ArDYSwbQ@mail.gmail.com> <CAEf4BzYiY30de5qmiKeazG4ewyziXtdhHFFH4vjp1wi4iAXqiw@mail.gmail.com>
+In-Reply-To: <CAEf4BzYiY30de5qmiKeazG4ewyziXtdhHFFH4vjp1wi4iAXqiw@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 6 Aug 2020 10:58:12 -0700
+Message-ID: <CAEf4BzZ_67M6nJZFL73ANYYARiErmv9aiYygw8JwJW4qyWGNog@mail.gmail.com>
+Subject: Re: [RFC PATCH] bpftool btf: Add prefix option to dump C
+To:     Ian Rogers <irogers@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, 2020-07-16 at 16:52:45 +03, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Fri, Jul 31, 2020 at 8:47 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> Configure SGX as part of feature control MSR initialization and update
-> the associated X86_FEATURE flags accordingly.  Because the kernel will
-> require the LE hash MSRs to be writable when running native enclaves,
-> disable X86_FEATURE_SGX (and all derivatives) if SGX Launch Control is
-> not (or cannot) be fully enabled via feature control MSR.
+> On Fri, Jul 31, 2020 at 6:47 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Tue, Jul 21, 2020 at 11:58 PM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Tue, Jul 21, 2020 at 10:44 PM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > When bpftool dumps types and enum members into a header file for
+> > > > inclusion the names match those in the original source. If the same
+> > > > header file needs to be included in the original source and the bpf
+> > > > program, the names of structs, unions, typedefs and enum members will
+> > > > have naming collisions.
+> > >
+> > > vmlinux.h is not really intended to be used from user-space, because
+> > > it's incompatible with pretty much any other header that declares any
+> > > type. Ideally we should make this better, but that might require some
+> > > compiler support. We've been discussing with Yonghong extending Clang
+> > > with a compile-time check for whether some type is defined or not,
+> > > which would allow to guard every type and only declare it
+> > > conditionally, if it's missing. But that's just an idea at this point.
+> >
+> > Thanks Andrii! We're not looking at user-space code but the BPF code.
+> > The prefix idea comes from a way to solve this problem in C++ with
+> > namespaces:
+> >
+> > namespace vmlinux {
+> > #include "vmlinux.h"
+> > }
+> >
+> > As the BPF programs are C code then the prefix acts like the
+> > namespace. It seems strange to need to extend the language.
 >
-> The check is done for every CPU, not just BSP, in order to verify that
-> MSR_IA32_FEATURE_CONTROL is correctly configured on all CPUs. The other
-> parts of the kernel, like the enclave driver, expect the same
-> configuration from all CPUs.
+> This is a classic case of jumping to designing a solution without
+> discussing a real problem first :)
 >
-> Note, unlike VMX, clear the X86_FEATURE_SGX* flags for all CPUs if any
-> CPU lacks SGX support as the kernel expects SGX to be available on all
-> CPUs.  X86_FEATURE_VMX is intentionally cleared only for the current CPU
-> so that KVM can provide additional information if KVM fails to load,
-> e.g. print which CPU doesn't support VMX.  KVM/VMX requires additional
-> per-CPU enabling, e.g. to set CR4.VMXE and do VMXON, and so already has
-> the necessary infrastructure to do per-CPU checks.  SGX on the other
-> hand doesn't require additional enabling, so clearing the feature flags
-> on all CPUs means the SGX subsystem doesn't need to manually do support
-> checks on a per-CPU basis.
+> You don't need to use any of the kernel headers together with
+> vmlinux.h (and it won't work as well), because vmlinux.h is supposed
+> to have all the **used** types from the kernel. So BPF programs only
+> include vmlinux.h and few libbpf-provided headers with helpers. Which
+> is why I assumed that you are trying to use it from user-space. But
+> see below on what went wrong.
 >
-> Acked-by: Jethro Beekman <jethro@fortanix.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >
+> > > Regardless, vmlinux.h is also very much Clang-specific, and shouldn't
+> > > work well with GCC. Could you elaborate on the specifics of the use
+> > > case you have in mind? That could help me see what might be the right
+> > > solution. Thanks!
+> >
+> > So the use-case is similar to btf_iter.h:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/testing/selftests/bpf/progs/bpf_iter.h
+> > To avoid collisions with somewhat cleaner macro or not games.
+> >
+> > Prompted by your concern I was looking into changing bpf_iter.h to use
+> > a prefix to show what the difference would be like. I also think that
+> > there may be issues with our kernel and tool set up that may mean that
+> > the prefix is unnecessary, if I fix something else. Anyway, to give an
+> > example I needed to build the selftests but this is failing for me.
+> > What I see is:
+> >
+> > $ git clone git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+> > $ cd bpf-next
+> > $ make defconfig
+> > $ cat >>.config <<EOF
+> > CONFIG_DEBUG_INFO=y
+> > CONFIG_DEBUG_INFO_BTF=y
+> > EOF
+> > $ make -j all
+> > $ mkdir /tmp/selftests
+> > $ make O=/tmp/selftests/ TARGETS=bpf kselftest
+> > ...
+> >   CLANG    /tmp/selftests//kselftest/bpf/tools/build/bpftool/profiler.bpf.o
+> > skeleton/profiler.bpf.c:18:21: error: invalid application of 'sizeof'
+> > to an incomplete type 'struct bpf_perf_event_value'
+> >         __uint(value_size, sizeof(struct bpf_perf_event_value));
+> >                            ^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Checking with bpftool the vmlinux lacks struct bpf_perf_event_value
+> > but as this is unconditionally defined in bpf.h this seems wrong. Do
+> > you have any suggestions and getting a working build?
+>
+> It is unconditionally defined in bpf.h, but unless kernel code really
+> uses that type for something, compiler won't generate DWARF
+> information for that type, which subsequently won't get into BTF.
+> Adding CONFIG_DEBUG_INFO_BTF=y ensures you get BTF type info
+> generated, but only for subsystems that were compiled into vmlinux
+> according to your kernel config.
+>
+> In this case, default config doesn't enable CONFIG_BPF_EVENTS, which
+> is a requirement to compile kernel/trace/bpf_trace.c, which in turn
+> uses struct bpf_perf_event_value in the helper signature.
+>
+> So the solution in your case would be to use a slightly richer kernel
+> config, which enables more of the BPF subsystem. You can check
+> selftests/bpf/config for a list of options we typically enable to run
+> of selftests, for instance.
+>
 
-Reviewed-by: Darren Kenny <darren.kenny@oracle.com>
+So we've discussed this and related issues today at BPF office hours
+and few more thoughts occurred to me after I left the call.
 
-> ---
->  arch/x86/kernel/cpu/feat_ctl.c | 32 +++++++++++++++++++++++++++++++-
->  1 file changed, 31 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
-> index 29a3bedabd06..c3afcd2e4342 100644
-> --- a/arch/x86/kernel/cpu/feat_ctl.c
-> +++ b/arch/x86/kernel/cpu/feat_ctl.c
-> @@ -93,16 +93,35 @@ static void init_vmx_capabilities(struct cpuinfo_x86 *c)
->  }
->  #endif /* CONFIG_X86_VMX_FEATURE_NAMES */
->  
-> +static void clear_sgx_caps(void)
-> +{
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX);
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX1);
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX2);
-> +}
-> +
->  void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
->  {
->  	bool tboot = tboot_enabled();
-> +	bool enable_sgx;
->  	u64 msr;
->  
->  	if (rdmsrl_safe(MSR_IA32_FEAT_CTL, &msr)) {
->  		clear_cpu_cap(c, X86_FEATURE_VMX);
-> +		clear_sgx_caps();
->  		return;
->  	}
->  
-> +	/*
-> +	 * Enable SGX if and only if the kernel supports SGX and Launch Control
-> +	 * is supported, i.e. disable SGX if the LE hash MSRs can't be written.
-> +	 */
-> +	enable_sgx = cpu_has(c, X86_FEATURE_SGX) &&
-> +		     cpu_has(c, X86_FEATURE_SGX1) &&
-> +		     cpu_has(c, X86_FEATURE_SGX_LC) &&
-> +		     IS_ENABLED(CONFIG_INTEL_SGX);
-> +
->  	if (msr & FEAT_CTL_LOCKED)
->  		goto update_caps;
->  
-> @@ -124,13 +143,16 @@ void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
->  			msr |= FEAT_CTL_VMX_ENABLED_INSIDE_SMX;
->  	}
->  
-> +	if (enable_sgx)
-> +		msr |= FEAT_CTL_SGX_ENABLED | FEAT_CTL_SGX_LC_ENABLED;
-> +
->  	wrmsrl(MSR_IA32_FEAT_CTL, msr);
->  
->  update_caps:
->  	set_cpu_cap(c, X86_FEATURE_MSR_IA32_FEAT_CTL);
->  
->  	if (!cpu_has(c, X86_FEATURE_VMX))
-> -		return;
-> +		goto update_sgx;
->  
->  	if ( (tboot && !(msr & FEAT_CTL_VMX_ENABLED_INSIDE_SMX)) ||
->  	    (!tboot && !(msr & FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX))) {
-> @@ -143,4 +165,12 @@ void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
->  		init_vmx_capabilities(c);
->  #endif
->  	}
-> +
-> +update_sgx:
-> +	if (!(msr & FEAT_CTL_SGX_ENABLED) ||
-> +	    !(msr & FEAT_CTL_SGX_LC_ENABLED) || !enable_sgx) {
-> +		if (enable_sgx)
-> +			pr_err_once("SGX disabled by BIOS\n");
-> +		clear_sgx_caps();
-> +	}
->  }
-> -- 
-> 2.25.1
+You don't really have to use vmlinux.h, if it's inconvenient. Unless
+you want to use some internal kernel type that's not available in
+kernel-headers. Otherwise feel free to use normal kernel header
+includes and don't use vmlinux.h. If you are using BPF_CORE_READ(),
+any type is automatically CO-RE-relocatable, even if they come from
+#include <linux/whatever.h>. If you need to use direct memory accesses
+with programs like fentry/fexit, then adding:
+
+#pragma clang attribute push (__attribute__((preserve_access_index)),
+apply_to = record)
+
+before you include any headers would make types in those headers
+automatically CO-RE-relocatable even for direct memory accesses. So
+this is just something to keep in mind.
+
+
+But the way we've been handling this was like this.
+
+On BPF program side:
+
+#include "vmlinux.h"
+#include "my_custom_types.h"
+
+...
+
+
+On user-space program side:
+
+#include <stdint.h> /* and whatever else is needed */
+#include "my_custom_types.h"
+
+Then in my_custom_types.h you just assume all the needed types are
+defined (in either vmlinux.h or in user-space header includes):
+
+
+struct my_struct {
+    uint64_t whatever;
+};
+
+So far worked fine. It still sucks you can't include some of the
+kernel headers to get some useful macro, but to solve that we'd need
+Clang extension to check that some type X is already defined, as we
+discussed in the call.
+
+Hope this helps a bit.
+
+
+
+[...]
