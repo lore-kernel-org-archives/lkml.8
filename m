@@ -2,141 +2,100 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20851C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFA7423119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6784A2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9eLeCdx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSuw0JUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgHFQzT (ORCPT
+        id S1729848AbgHFQzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:55:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
+        Thu, 6 Aug 2020 12:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729556AbgHFQuN (ORCPT
+        with ESMTP id S1729759AbgHFQzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:50:13 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D9FC0086B1;
-        Thu,  6 Aug 2020 08:33:15 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g33so9518639pgb.4;
-        Thu, 06 Aug 2020 08:33:15 -0700 (PDT)
+        Thu, 6 Aug 2020 12:55:20 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7F8C0A889D;
+        Thu,  6 Aug 2020 07:50:05 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id i80so26235480lfi.13;
+        Thu, 06 Aug 2020 07:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=e2z5ihEKycv93uWBiu5MSP57xzQDMSDWIawsJEucN+M=;
-        b=E9eLeCdxGuq5X89zbRq6hxl0SP+c1Di9JG9QW4eGxsspqaGWWSy1v7UBgnETqNvA/H
-         J55vtc7st60z+Px4TmpjTSb3Xu2+5qsSUpDq6w5NmQ0+9cPTbmXU2STD1mVe5SHc6Aw1
-         Z5RfLJVavTilBJvxKdxX56opDiw7mR0a9mDLCuFVMjNCQqjy8RigNHj/tnTH5pD+kVSL
-         RtE3eVMGoHd9KwBzJTJFDxeaoyNIZmKUossFb7evT8f7Jzi5cAt6gB7wR3jO/91HKEHP
-         Rtrp1mRB3FmSOC9QZ2QfqYjznOtbLUfjepkOGeyZqODnxGIYZdq5bZijSprym0wrVX7n
-         9rmQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q+Uq8k5re7cUqp6WIZR8xEDOrcjWzDvNdEqOcxf2ZGk=;
+        b=YSuw0JUD4BI9mDqWniQI7oBkON85+Hily9832Miaihip0RlifaExWnpi46k72Ylx/0
+         j8dBhGbQtkX23MvMAlBA1VcS6Er1XNDPV8EThtSUBYVSUhGp9LIWaD3ne1uwJiyqBXw1
+         D5nGpPcknk3s4yzbaepxnRvrXbtI3MQYlZhj+YMBawEoaiPHRu5D5fDv0ORa5GEPxNy+
+         TEPhCrzev0zQKsSKVx4MVxamstlMxS7DGaUkHQbmcfS5aju9oQpDxX9yxs81BgmeUJUc
+         lT2FfL7PXRm8I8Im19vcypzAr8t0DyX0QiTF28F1RqyMcZybK2R5+weOFDGowmeYHxJn
+         NusQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=e2z5ihEKycv93uWBiu5MSP57xzQDMSDWIawsJEucN+M=;
-        b=MfWrn5A+/LvEJ26p+CP+HX+yEy/HBPMNUV4e+TBiikwMc/9c8bqR4+NpWCOQuDaaNg
-         ulOsZO/LkGzzE4+ZoDfeG8Eyu/dFX+kTKvi6O6gtxv2dYJKpk07ePmIqA5seUf4gEO90
-         rRUqzWpS6PLdunowGkpQQDqzMtSY5hD7ZW+wqCh3+VJBdwD8cXQ3GPJRpMLNWIPEX543
-         zgNG8Ev2JP/jqXeGKuphnLTpDBzdBD4hPHJVKxF1jm+J5TuxdZKHCa4G/zXbKLTCX8SU
-         bRJJW2ZBCJFWVyaBpZzc3jIH/uQ0Ncwkwkge71Dsa7P6mSv3n6KQxWQ1RR5FZ5Tbc6wr
-         1M4Q==
-X-Gm-Message-State: AOAM532I+x6h/8+JsfmJJbxHoelawE1DI5+tDLWb2ojqGx8nbgYOrr3g
-        R4cg6x+8RmGpGFkCqPU73Vs=
-X-Google-Smtp-Source: ABdhPJyrW4Oh9jNEwChjzEenHkBb7qSdo656ODjCJZgJFlkavMZN0tNmhmfUlRsR6Y+ywfHWI5oXIQ==
-X-Received: by 2002:a62:d149:: with SMTP id t9mr8822019pfl.59.1596727994750;
-        Thu, 06 Aug 2020 08:33:14 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s185sm8581193pgc.18.2020.08.06.08.33.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Aug 2020 08:33:14 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v4 2/7] cros_ec_lightbar: Accept more error codes from cros_ec_cmd_xfer_status
-Date:   Thu,  6 Aug 2020 08:33:03 -0700
-Message-Id: <20200806153308.204605-3-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806153308.204605-1-linux@roeck-us.net>
-References: <20200806153308.204605-1-linux@roeck-us.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q+Uq8k5re7cUqp6WIZR8xEDOrcjWzDvNdEqOcxf2ZGk=;
+        b=AKt7yYQTc0AJTJrtAuxJ0IyyhOBvkwbCfuwP/EFdLmYnvnQmr9FE7hv/fTmZGGIyWL
+         qvDfEyvbkzHFEcE5UlItPdM5o7Mz2Vj6LgOQIo/EVvUfLWjqnCm2HlWSvBHTIMM4kgcz
+         VNmFhH9mvw2z/9X3UEe/OVwF7aQjd8Z3dT3GdkqonHtUKR5HDKtpeFMGIlG254R7zQES
+         /icejXIVDAxy2lbbQQk6FJxtYM97jLfydzQ5mQv1d/onZkltegY7ipQFudFX6hPVl1Oa
+         g/Y+yfVhIMkvw6QLWa743AvxAjjZBo9xE5pePbHwVilzMHxEV7yrJ7dHdxj9B+iPdl3M
+         ssjw==
+X-Gm-Message-State: AOAM530pM2j2Bg5TwrfrypyWNnkzDvp+0qe/EN1MX8voytv2hghEnHCu
+        QD/unB4/fO6lZni3VIDDf1w=
+X-Google-Smtp-Source: ABdhPJzWUE2bNkTWRtmo+gsMb7ug+grnXRR4hPLQdhUh80mdWnmTJ62sNdD6tPJa0sgHU3CrS+mq1Q==
+X-Received: by 2002:a19:457:: with SMTP id 84mr4141422lfe.191.1596725401282;
+        Thu, 06 Aug 2020 07:50:01 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id a16sm2739927ljj.108.2020.08.06.07.49.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 07:50:00 -0700 (PDT)
+Subject: Re: [Patch v2 2/4] dmaengine: tegra: Add Tegra GPC DMA driver
+To:     Rajesh Gumasta <rgumasta@nvidia.com>, ldewangan@nvidia.com,
+        jonathanh@nvidia.com, vkoul@kernel.org, dan.j.williams@intel.com,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kyarlagadda@nvidia.com, Pavan Kunapuli <pkunapuli@nvidia.com>
+References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
+ <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <93b20bf7-1cb8-c8cf-06ef-1c15b7ce7ff2@gmail.com>
+Date:   Thu, 6 Aug 2020 17:49:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit c5cd2b47b203 ("platform/chrome: cros_ec_proto: Report command
-not supported") we can no longer assume that cros_ec_cmd_xfer_status()
-reports -EPROTO for all errors returned by the EC itself. A follow-up
-patch will change cros_ec_cmd_xfer_status() to report additional errors
-reported by the EC as distinguished Linux error codes.
+06.08.2020 10:30, Rajesh Gumasta пишет:
+> +static struct dma_async_tx_descriptor *tegra_dma_prep_dma_memset(
+> +	struct dma_chan *dc, dma_addr_t dest, int value, size_t len,
+> +	unsigned long flags)
+> +{
 
-Handle this change by no longer assuming that -EPROTO is used to report
-all errors returned by the EC itself. Since errors reported by the EC are
-already reported in text form through sysfs attributes, extend this form
-of error reporting to all errors reported by cros_ec_cmd_xfer_status().
+This looks and reads okay, although the following style of code's
+formatting is a bit more common for the kernel:
 
-Cc: Gwendal Grignou <gwendal@chromium.org>
-Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc: Prashant Malani <pmalani@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v4: No change
-v3: No change
-v2: Added patch
+static struct dma_async_tx_descriptor *
+tegra_dma_prep_dma_memset(struct dma_chan *dc, dma_addr_t dest,
+			  int value, size_t len, unsigned long flags)
 
- drivers/platform/chrome/cros_ec_lightbar.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-index b59180bff5a3..8445cda57927 100644
---- a/drivers/platform/chrome/cros_ec_lightbar.c
-+++ b/drivers/platform/chrome/cros_ec_lightbar.c
-@@ -117,7 +117,7 @@ static int get_lightbar_version(struct cros_ec_dev *ec,
- 	param = (struct ec_params_lightbar *)msg->data;
- 	param->cmd = LIGHTBAR_CMD_VERSION;
- 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
--	if (ret < 0) {
-+	if (ret < 0 && ret != -EINVAL) {
- 		ret = 0;
- 		goto exit;
- 	}
-@@ -298,11 +298,9 @@ static ssize_t sequence_show(struct device *dev,
- 		goto exit;
- 
- 	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
--	if (ret == -EPROTO) {
--		ret = scnprintf(buf, PAGE_SIZE,
--				"ERROR: EC returned %d\n", msg->result);
--		goto exit;
--	} else if (ret < 0) {
-+	if (ret < 0) {
-+		ret = scnprintf(buf, PAGE_SIZE, "XFER / EC ERROR %d / %d\n",
-+				ret, msg->result);
- 		goto exit;
- 	}
- 
--- 
-2.17.1
-
+You could make this small improvement in a v3. Same for all similar
+cases in the code.
