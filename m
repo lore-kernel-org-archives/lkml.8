@@ -2,173 +2,119 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F19AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41376C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EE82065C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0492065C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 00:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="sFsK+4VI"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UIitZfc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgHFAqZ (ORCPT
+        id S1726979AbgHFAqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 20:46:25 -0400
-Received: from mail-eopbgr20069.outbound.protection.outlook.com ([40.107.2.69]:23524
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726150AbgHFAqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 20:46:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gU3jKzOapUa2EP9Z1bZcKYFrxljklgPZXMErl83g5Lfr+IclgWHrJRrvODN3rXIR7RbLVR5HAai59AXkI8ZiOaZVgKkTWL5H+yZyFsM9eX8r/nfTn7EbIoylFaMC9TfdMCxYNNjFp4ofg0+B0w/S7u39MnuNsRAqSQirq2neao4DHhMEcqGxiNsQZutQHTPSN8ZWfDh2ZxcqDy42bBiyx7CbRfpdLGwddPqXF1qxXfOiblnojE2Iutczsbw3pMJuoZ/743gfdeiMtRJ3h9+LvCdFz7RNZIQ248ThF5E7X3GnoJmXy+PerS0MfN4gjNMfyFj5WgkdNPIeb6Khtp58dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wJVQBcW4hT256/PgomfUcWtiFllxl/LoBaMm6CzjBHI=;
- b=OOBMI2xmNnZxJ2NfUqssc6Pju/rQJff7mL1lVazqcCG2Ii4bGkrA0WDMAEedDwtDIq65J43SNYWP2/xSRgIiRfIGMlXGU2gyFyLHKEgurc3j8OCsR3i93Z/gRKr6GB+Te/Fm+KQhKQ33JvI3VNt2cBgCUJh1f/sFvgmjb1UmKvPWQgSRYgYTJfa+j66cK8KVy6u71QS99i5yH9RammC+GaqnsKcNoS/ChaWeZ24htUNbLnBrY9bHhMr/kznxwUJJgcYwDjTI8IHxrY3wYNaywXRngSWG3rVG9W0Ip+tCcWenm2LlyfmWVeG5Ohv3Eoznwj1WOHOTnouPmiu3eoIVFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wJVQBcW4hT256/PgomfUcWtiFllxl/LoBaMm6CzjBHI=;
- b=sFsK+4VIHDqgaCmzqhJif4T2jOrAM321UmOVn/QPYgVzMBtTfGZG8wpWe18ytDnw8mJWOCEHKWOVJWSdZXyphH5V9Yj9/KfjeJoSknp1lAty9Bm+McKDIJ0iWfOqiAUcjS3GGqnJk4E9yTEb4yZUjJJptR5lpfmEE8G+yz4nPsk=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB4493.eurprd05.prod.outlook.com (2603:10a6:803:45::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Thu, 6 Aug
- 2020 00:46:18 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a%4]) with mapi id 15.20.3261.016; Thu, 6 Aug 2020
- 00:46:18 +0000
-Date:   Wed, 5 Aug 2020 21:46:14 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Dey, Megha" <megha.dey@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Message-ID: <20200806004614.GN19097@mellanox.com>
-References: <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <878sfbxtzi.wl-maz@kernel.org>
- <20200722195928.GN2021248@mellanox.com>
- <96a1eb5ccc724790b5404a642583919d@intel.com>
- <20200805221548.GK19097@mellanox.com>
- <70465fd3a7ae428a82e19f98daa779e8@intel.com>
- <20200805225330.GL19097@mellanox.com>
- <630e6a4dc17b49aba32675377f5a50e0@intel.com>
- <20200806001927.GM19097@mellanox.com>
- <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
-X-ClientProxiedBy: MN2PR19CA0026.namprd19.prod.outlook.com
- (2603:10b6:208:178::39) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR19CA0026.namprd19.prod.outlook.com (2603:10b6:208:178::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Thu, 6 Aug 2020 00:46:18 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1k3U2w-0041x8-JR; Wed, 05 Aug 2020 21:46:14 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3d4d3e80-06bb-4a2b-8f3a-08d839a22186
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4493:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB4493762000332FAEAC859519CF480@VI1PR05MB4493.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JffkrB6OM3UAs62K6bgfuq825jMtU4VGZe+aWplJBQvPQZMcG1Z48VWJFUigDE1SA6tgigBdCrNGwu4X0WVMbKpWMOIY2ttO650BIv7b8WY0oIjr0bPr90vCYOy1v3wJnRHI1EIU4hIDV5dXdgpgjyUx52eDa8Bm2M9YN6vypFOhZv7aOy9XjusONXRp/rDhebdWloIRpI5CJF/96stNA/iBNfefscev7DC6EtOvwl1z2RgKKldQi4C80SK0jPSA+Qp/gPBmgVxVhA2bH4aTWNHFzpjIa2+6jIhxt6USMtctYpoH4MBFI6yA/pJ7A7PNV4cqy7QY0HBIR3us+t1yQQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(346002)(396003)(376002)(6916009)(2616005)(36756003)(86362001)(2906002)(5660300002)(54906003)(7416002)(66946007)(8676002)(316002)(66556008)(66476007)(7406005)(4326008)(1076003)(33656002)(8936002)(9746002)(9786002)(186003)(426003)(26005)(478600001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: zEmWJwMljiMzHl9+XMBCAkjGE8oPdvQo21+ny3BFALNp6ou0iot2xrLISXMgAdbuhzxlqDBKoUPSHwBWvSrFM5nKNN1WTF1vqLRmgjzjbMW++wzyB6ctSaQQK5Kdo55pDBaDkP6XxfzL815sUaQb00gAVDHc2cBzqaYUueneSa7vHu6gzNJ32NTF4cZe9L/pZcbH3OxDFZGEHKHIDSXMCDrZq5CDp5uNqQYIKccarKf9DJupsO57vfc8+GVqAFYlr3UkASchMZjIsrgaWzNFI8HeHEn0dtGr38WIzHsX9Gt+Oqk47piM0mL4wp13khmDBWCJ+S7QjyQrOFpRCrMcshhxpEl5lpcGpwB9JCE6Bl3pgaS1iaFruJwMxmESmUNyOcpMpru578xCDBllsm431qN3kkpMLR9nTDnC7UWYxNFaApG1Y9MvOPIInD6oYZgea53HN6ZpwjJTbjUfbhdyP79+Wuk9ShOlL1HxgN2RUP48fJaMiJ8pbzih01Ko/3Aqfa94yA0zyNSRRmb3fs1KYTQQIuoaf9DZDJPOoR86QSCuOygCVnnq0GoZ8yWhP/wnfIea6T6NUIsnnRy5+NGPQTXqBjlbKB5ewciE+zEmatw9l4zO/mVF7JqX3B7bbqOQxxhEW4lXUBUhvDb2ZTS3iQ==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d4d3e80-06bb-4a2b-8f3a-08d839a22186
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 00:46:18.5275
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q7vYwNhVu3UGT+zk/7Vfmxg9IGrIQp+MN7E32Gd0BI97oLLxOUKAZF9PxiZmDDToXAvv6qR59q4Q0nCp9Xlcuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4493
+        Wed, 5 Aug 2020 20:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgHFAqo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 20:46:44 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06DFC061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 17:46:43 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f1so41793974wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 17:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=AvthtXx6kNmBbpW2Loz0kXBTU3ty0PjFeNcZDHCZDYE=;
+        b=UIitZfc8XfgaMR8z/QIrNVR4gMcLmGYSsG0b3nne78h3fCARuLXu/nflHFi7aYCS+n
+         eOsl4quX1lPwhTdQbkXmRla+EpksFR2G1Hj6QGwxVnJT89q/DfDlR65S4bOLddww9K2O
+         /gwKgjLn3/wxQXlq1khXJezYpmPThk8jk35to=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AvthtXx6kNmBbpW2Loz0kXBTU3ty0PjFeNcZDHCZDYE=;
+        b=SNnJ9as9dwL+FtcoOIUg17gzvc1qCnFOC661uOQBlr33Bz391QjhAlZ7rXXEVj8sR0
+         /RRNWsoNriIoMT7g2qFzp3B7Pj6VynRBAqa/CB4wb/O1LBOyyEl4XpbUdeA65Gsm82Ts
+         zCEXeZmB17SmNngYweUAmYrm0ecPqj5j/j+/btISjiVpdraMuVhydzv9Mbo/uuUOi5OS
+         4bbr7xSE4AOzerI/y0yI5zPzTo210VmAqjmjFlS7SBGA2Q17c6av5T2G3AqzWrFJGL4q
+         y2LDUDknmbTvyRnxQIJjjNekOZafZnxFOlRGL3OzVZztzjd34M/hFsXYwrJnpq8sEpZz
+         MohA==
+X-Gm-Message-State: AOAM5313IAUMzJNKTH4dRYIAQzRLAMdGabMKUT5TJcN5oc+qrz4ZLFIF
+        14Q+aeJOG+chzLlAdOaLmahOeQ==
+X-Google-Smtp-Source: ABdhPJw46siNu+N+Rs6Uqg8CH2ckpMHqpnmzu5GpcKZalxogdzJgpXJ8tSxpZR+LIX6hsPP2vvgv/Q==
+X-Received: by 2002:adf:cf10:: with SMTP id o16mr4536729wrj.380.1596674802446;
+        Wed, 05 Aug 2020 17:46:42 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id c17sm4665745wrc.42.2020.08.05.17.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 17:46:41 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Scott Branden <scott.branden@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH v2 0/3] Add Broadcom VK driver
+Date:   Wed,  5 Aug 2020 17:46:28 -0700
+Message-Id: <20200806004631.8102-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 12:32:31AM +0000, Dey, Megha wrote:
-> > Oops, I was thinking of platform_msi_domain_alloc_irqs() not
-> > create_device_domain()
-> > 
-> > ie call it in the device driver that wishes to consume the extra MSIs.
-> > 
-> > Is there a harm if each device driver creates a new irq_domain for its use?
-> 
-> Well, the only harm is if we want to reuse the irq domain.
-> 
-> As of today, we only have DSA mdev which uses the dev-msi domain. In the IRQ domain hierarchy,
-> We will have this:
-> 
-> Vector-> intel-ir->dev-msi 
-> 
-> So tmrw if we have a new device, which would also want to have the
-> intel-ir as the parent and use the same domain ops, we will simply
-> be creating a copy of this IRQ domain, which may not be very
-> fruitful.
->
-> But apart from that, I don't think there are any issues..
-> 
-> What do you think is the best approach here?
+This patch series drops previous patches in [1]
+that were incorporated by Kees Cook into patch series
+"Introduce partial kernel_read_file() support" [2].
 
-I've surely forgotten these details, I can't advise if duplicate
-irq_domains are very bad.
+Remaining patches are contained in this series to add Broadcom VK driver.
+(which depends on request_firmware_into_buf API addition in
+other patch series [2] being applied first).
 
-A single domain per parent irq_domain does seem more elegant, but I'm
-not sure it is worth the extra work to do it?
+Please note this patch series will not compile without [2].
 
-In any event the API seems cleaner if it is all contained in the
-platform_msi and strongly connected to the driver, not spread to the
-iommu as well. If it had to create single dev-msi domain per parent
-irq_domain then it certainly could be done in a few ways.
+[1] https://lore.kernel.org/lkml/20200706232309.12010-1-scott.branden@broadcom.com/
+[2] https://lore.kernel.org/lkml/20200729175845.1745471-1-keescook@chromium.org/
 
-Jason
+Changes from v1:
+ - declare bcm_vk_intf_ver_chk as static
+
+Scott Branden (3):
+  bcm-vk: add bcm_vk UAPI
+  misc: bcm-vk: add Broadcom VK driver
+  MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
+
+ MAINTAINERS                      |    7 +
+ drivers/misc/Kconfig             |    1 +
+ drivers/misc/Makefile            |    1 +
+ drivers/misc/bcm-vk/Kconfig      |   29 +
+ drivers/misc/bcm-vk/Makefile     |   11 +
+ drivers/misc/bcm-vk/bcm_vk.h     |  424 +++++++++
+ drivers/misc/bcm-vk/bcm_vk_dev.c | 1369 +++++++++++++++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_msg.c | 1514 ++++++++++++++++++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_msg.h |  211 +++++
+ drivers/misc/bcm-vk/bcm_vk_sg.c  |  275 ++++++
+ drivers/misc/bcm-vk/bcm_vk_sg.h  |   61 ++
+ drivers/misc/bcm-vk/bcm_vk_tty.c |  365 +++++++
+ include/uapi/linux/misc/bcm_vk.h |   99 ++
+ 13 files changed, 4367 insertions(+)
+ create mode 100644 drivers/misc/bcm-vk/Kconfig
+ create mode 100644 drivers/misc/bcm-vk/Makefile
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_dev.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_tty.c
+ create mode 100644 include/uapi/linux/misc/bcm_vk.h
+
+-- 
+2.17.1
+
