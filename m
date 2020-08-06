@@ -2,129 +2,120 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0366C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE5C2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596732936;
-	bh=xGt61VXl0JXC+OP2QjtwWPAk9TtHHrvDaRrvwx763jA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xmX77g6AmxBWIPw96ihqO74I203GMhhGQXG+4wxcskf50FU6rPlRjDBMbLo7B3dpn
-	 q7RTIIDNUoAqonh6fukm+wTHnfqDhqJRafEVQY0HOYigbMud5fU9fp3mF+c7WvkORA
-	 wdbJF7bxKiY3zrDwiUM0l5H04rAfTL4iVGOtdW1c=
+	by mail.kernel.org (Postfix) with ESMTP id 89D5F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgHFQza (ORCPT
+        id S1729385AbgHFQzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:55:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729828AbgHFQzR (ORCPT
+        Thu, 6 Aug 2020 12:55:49 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:33314 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbgHFQzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:55:17 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5264FC0A8895
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 07:45:37 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c15so25673405edj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 07:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yYVuBVabzbzwKa6QXgVhZky/17L0x8BFmX65otxgpTI=;
-        b=XKYy8IuTF3Kcgk3+NCYYk35dOiKkzZQpswgbR1Z8aRUyW1omIB1koVTJMQuWvGhaXy
-         a6OYG1ElcCAB9PTbfxkN8JSQIcOm+XE9iOXVVpivKdIpHXNgX3kB4u67mISjzca5SHr1
-         4ucC8ReziEal1HCTrJMjqgRmxpe9+OPxsDiZgmZSXimlQk2mzNQHMElHjjaZGTFv+PY2
-         b/HT8N9QsacZGbpFmYW62YPcFv5t63jz7oX73Nnm1jYM83izwZNT2a6jO+Slzn7BbvRH
-         3lA1+DWNmuVI3rFKxc031YQ8MNdEs1nn0IUVz/ngVR9McQKwE5EYzA4NltBlsdic2Hp9
-         uvJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=yYVuBVabzbzwKa6QXgVhZky/17L0x8BFmX65otxgpTI=;
-        b=QwoI2KVcFLrJxu06k0gA942QxUgk/z6e0PMFUt9E4uSSjs13Tg7i59Gtyr2VJujpw6
-         gidpJCbl9lwd4eH2NtYvJ20sw7qpPS83M8ceWgdklc7Dd3e3/mmuZjaBztAcSveBj+5W
-         UArz3aR8Q+CWgxiI2OIE6LMsy8YpJIRlCP908f5PCnNRKY2g+Ke9Ed4oJZ6D2LtGUqWg
-         ZWqcgYGWQtWC6JAII804eYGZNN4NdsE+y4yeo5JTJ6UtXxw+R3SMMx34V3YX59ixsIZW
-         2LDsZ7i0eIH7VY8sayMm4JyNJL3ShsqyaU7b7zmSmVoWuzv8xS604DASx8V7GauEKn0y
-         E0lw==
-X-Gm-Message-State: AOAM531aNU7h+fOeXkN7U/e51Ax7ykpW9uWfTucVfPmagLSxTppjtrd+
-        oz9P2dis8clh1QwC4yQz2kE=
-X-Google-Smtp-Source: ABdhPJy5Adtz5OUMX+QruORlC+ggIIh8g6p8eKEuoHSCOc/OlOCUCLa/ueOHhp5KbtbGCX5wiwmflw==
-X-Received: by 2002:aa7:c697:: with SMTP id n23mr4310500edq.50.1596725136036;
-        Thu, 06 Aug 2020 07:45:36 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i5sm3648201edt.52.2020.08.06.07.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:45:34 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 16:45:33 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Qi Zheng <arch0.zheng@gmail.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/core: add unlikely in group_has_capacity()
-Message-ID: <20200806144533.GA2123716@gmail.com>
-References: <20200730135423.232776-1-arch0.zheng@gmail.com>
+        Thu, 6 Aug 2020 12:55:47 -0400
+Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 8EC6B3B2C33;
+        Thu,  6 Aug 2020 14:37:42 +0000 (UTC)
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 75B25C000F;
+        Thu,  6 Aug 2020 14:32:18 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 16:35:59 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: ov772x: Document endpoint
+ properties
+Message-ID: <20200806143559.ha6amfa4gq2o4jbi@uno.localdomain>
+References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200730135423.232776-1-arch0.zheng@gmail.com>
+In-Reply-To: <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prabhakar,
 
-* Qi Zheng <arch0.zheng@gmail.com> wrote:
-
-> 1. The group_has_capacity() function is only called in
->    group_classify().
-> 2. Before calling the group_has_capacity() function,
->    group_is_overloaded() will first judge the following
->    formula, if it holds, the group_classify() will directly
->    return the group_overloaded.
-> 
-> 	(sgs->group_capacity * imbalance_pct) <
->                         (sgs->group_runnable * 100)
-> 
-> Therefore, when the group_has_capacity() is called, the
-> probability that the above formalu holds is very small. Hint
-> compilers about that.
-> 
-> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+On Mon, Aug 03, 2020 at 12:39:11PM +0100, Lad Prabhakar wrote:
+> Document endpoint properties required for parallel interface
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  kernel/sched/fair.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 2ba8f230feb9..9074fd5e23b2 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8234,8 +8234,8 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
->  	if (sgs->sum_nr_running < sgs->group_weight)
->  		return true;
->  
-> -	if ((sgs->group_capacity * imbalance_pct) <
-> -			(sgs->group_runnable * 100))
-> +	if (unlikely((sgs->group_capacity * imbalance_pct) <
-> +			(sgs->group_runnable * 100)))
->  		return false;
+>  .../devicetree/bindings/media/i2c/ov772x.txt     | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> index 0b3ede5b8e6a..1f4153484717 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> @@ -21,6 +21,22 @@ subnode for its digital output video port, in accordance with the video
+>  interface bindings defined in Documentation/devicetree/bindings/media/
+>  video-interfaces.txt.
+>
+> +Endpoint node required properties for parallel connection are:
+> +- remote-endpoint: a phandle to the bus receiver's endpoint node.
 
-Isn't the probability that this second check will match around 0%?
+we allow endpoints without a remote end connected usually. They can be
+filled in later, in example, with an overlay.
 
-I.e. wouldn't the right fix be to remove the duplicate check from 
-group_has_capacity(), because it's already been checked in 
-group_classify()? Maybe while leaving a comment in place?
+> +- bus-width: shall be set to <8> for 8 bits parallel bus
+> +	     or <10> for 10 bits parallel bus
+> +- data-shift: shall be set to <2> for 8 bits parallel bus
+> +	      (lines 9:2 are used) or <0> for 10 bits parallel bus
 
-Thanks,
+defining what is required or optional might be hard. I don't see the
+driver enforcing their presence and I assume they have safe default.
+Maybe make them optional and specify what the defaul value is ?
 
-	Ingo
+
+> +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> +		(Not required for bus-type equal 6)
+> +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> +		(Not required for bus-type equal 6)
+
+If they're not required, they're optional, aren't they ? :)
+
+> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> +	       signal. (Not required for bus-type equal 6)
+
+Why the pclk polarity is does not apply to BT.656 ?
+
+> +- bus-type: data bus type. Possible values are:
+> +	    5 - Parallel
+> +	    6 - Bt.656
+
+Are we making this required, or do we expect this to be deduced
+depending on which other properties have been specified ? Sakari it
+seems you would like this to become a properties that has to be
+specified most of the times, right ? (I tend to agree with that FWIW),
+but does it impact retro-compatibility ?
+
+> +
+>  Example:
+>
+>  &i2c0 {
+> --
+> 2.17.1
+>
