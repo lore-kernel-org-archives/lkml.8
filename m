@@ -2,86 +2,190 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48670C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B605EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2B9221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082D4221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596739321;
+	bh=uTq56Rd/BLEMRLRt2a4oFDY8yngnlcDiHPMoyXV8GIg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2IRmXAe0WeEKQAZCZHr4w9PD8aNw0w0vY50NYwe3XFPxzvVsi7WhE6Qm8TI8Dt+Cq
+	 sbMJVdH65FP0j8QClqoo/ctPhXy0Qh2RqWh47uEKZGLI2oYoBcluw+faMeYCdLMXwf
+	 NI1RDlSsxKkvvYXNsQRTmXTJxV8Gd/b3GEzzAyjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHFS1j (ORCPT
+        id S1730102AbgHFSl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:27:39 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27886 "EHLO mga12.intel.com"
+        Thu, 6 Aug 2020 14:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbgHFSVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:21:03 -0400
-IronPort-SDR: noAHKqFJIQV3sD5SUhb4a/r8pkm8jihDVMMa6s+aJI6nF3YNTFBlYfyQiehKjbdDCO8GePPCv3
- g+192+pulvQQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="132448828"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="132448828"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 11:18:28 -0700
-IronPort-SDR: exZ+VA/4rPSrLhgnrM0hOuqyMMY99Ay6UL5nlXad7g94VaZuIZ5HNAbkEidoLHlkkDTLQl3E+w
- Eo/pXnnAf8fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="316248781"
-Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Aug 2020 11:18:26 -0700
-Received: from kbuild by 37a337f97289 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k3kTB-0001fc-MR; Thu, 06 Aug 2020 18:18:25 +0000
-Date:   Fri, 7 Aug 2020 02:18:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, ast@kernel.org, daniel@iogearbox.net,
-        kernel-team@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org,
-        brouer@redhat.com, dlxu@fb.com
-Subject: [RFC PATCH] bpf: user_verifier_ops can be static
-Message-ID: <20200806181814.GA5058@26715c783541>
-References: <20200801084721.1812607-2-songliubraving@fb.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200801084721.1812607-2-songliubraving@fb.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728347AbgHFSXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:23:32 -0400
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 741DE22D02;
+        Thu,  6 Aug 2020 18:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596738127;
+        bh=uTq56Rd/BLEMRLRt2a4oFDY8yngnlcDiHPMoyXV8GIg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r0ViwZBXaFQbX362Dpv2JFrMYMI5J1wOw2cwslKuXc+tZj/TKJXPBQXzjxka3jFE+
+         vZ8o27tl3/wsKhN5EVICaurW9DCiSzca4wy/PnhzernJs6DaORwPzdoPTlIg/04N7T
+         uBt+HXxvWTPrOKwVHhjxAsYmwChdVeBMFhS9QdOc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCH v2 06/41] ARM: s3c24xx: pass pointer to clk driver via platform data
+Date:   Thu,  6 Aug 2020 20:20:23 +0200
+Message-Id: <20200806182059.2431-6-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
+References: <20200806181932.2253-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Passing pointers directly as platform data is fragile and undocumented.
+Better to create a platform data structure which explicitly documents
+what is passed to the driver.
 
-Signed-off-by: kernel test robot <lkp@intel.com>
+Suggested-by: Tomasz Figa <tomasz.figa@gmail.com>
+[krzk: Update maintainer's entry]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
 ---
- bpf_trace.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index cbe789bc1b986..4b8f380694a10 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1852,12 +1852,12 @@ user_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	}
- }
+Changes since v1:
+1. Update maintainer's entry.
+---
+ MAINTAINERS                               |  1 +
+ arch/arm/mach-s3c24xx/common.c            |  7 ++++++-
+ drivers/clk/samsung/clk-s3c2410-dclk.c    |  7 ++++++-
+ include/linux/platform_data/clk-s3c2410.h | 19 +++++++++++++++++++
+ 4 files changed, 32 insertions(+), 2 deletions(-)
+ create mode 100644 include/linux/platform_data/clk-s3c2410.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5675fc9bfa00..81046738cba9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15295,6 +15295,7 @@ F:	Documentation/devicetree/bindings/clock/samsung,s5p*
+ F:	drivers/clk/samsung/
+ F:	include/dt-bindings/clock/exynos*.h
+ F:	include/linux/clk/samsung.h
++F:	include/linux/platform_data/clk-s3c2410.h
  
--const struct bpf_verifier_ops user_verifier_ops = {
-+static const struct bpf_verifier_ops user_verifier_ops = {
- 	.get_func_proto		= user_prog_func_proto,
- 	.is_valid_access	= user_prog_is_valid_access,
+ SAMSUNG SPI DRIVERS
+ M:	Kukjin Kim <kgene@kernel.org>
+diff --git a/arch/arm/mach-s3c24xx/common.c b/arch/arm/mach-s3c24xx/common.c
+index 222238e8acbb..c476a673d07f 100644
+--- a/arch/arm/mach-s3c24xx/common.c
++++ b/arch/arm/mach-s3c24xx/common.c
+@@ -17,6 +17,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/platform_data/clk-s3c2410.h>
+ #include <linux/platform_data/dma-s3c24xx.h>
+ #include <linux/dmaengine.h>
+ #include <linux/clk/samsung.h>
+@@ -663,13 +664,17 @@ static struct resource s3c2410_dclk_resource[] = {
+ 	[0] = DEFINE_RES_MEM(0x56000084, 0x4),
  };
  
--const struct bpf_prog_ops user_prog_ops = {
-+static const struct bpf_prog_ops user_prog_ops = {
- 	.test_run	= bpf_prog_test_run_user,
++static struct s3c2410_clk_platform_data s3c_clk_platform_data = {
++	.modify_misccr = s3c2410_modify_misccr,
++};
++
+ struct platform_device s3c2410_device_dclk = {
+ 	.name		= "s3c2410-dclk",
+ 	.id		= 0,
+ 	.num_resources	= ARRAY_SIZE(s3c2410_dclk_resource),
+ 	.resource	= s3c2410_dclk_resource,
+ 	.dev		= {
+-		.platform_data = s3c2410_modify_misccr,
++		.platform_data = &s3c_clk_platform_data,
+ 	},
  };
+ #endif
+diff --git a/drivers/clk/samsung/clk-s3c2410-dclk.c b/drivers/clk/samsung/clk-s3c2410-dclk.c
+index 3e0f23e8ec21..f5e0a6ba2d12 100644
+--- a/drivers/clk/samsung/clk-s3c2410-dclk.c
++++ b/drivers/clk/samsung/clk-s3c2410-dclk.c
+@@ -11,6 +11,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
++#include <linux/platform_data/clk-s3c2410.h>
+ #include <linux/module.h>
+ #include "clk.h"
  
+@@ -89,10 +90,14 @@ static struct clk_hw *s3c24xx_register_clkout(struct device *dev,
+ 		const char *name, const char **parent_names, u8 num_parents,
+ 		u8 shift, u32 mask)
+ {
++	struct s3c2410_clk_platform_data *pdata = dev_get_platdata(dev);
+ 	struct s3c24xx_clkout *clkout;
+ 	struct clk_init_data init;
+ 	int ret;
+ 
++	if (!pdata)
++		return ERR_PTR(-EINVAL);
++
+ 	/* allocate the clkout */
+ 	clkout = kzalloc(sizeof(*clkout), GFP_KERNEL);
+ 	if (!clkout)
+@@ -107,7 +112,7 @@ static struct clk_hw *s3c24xx_register_clkout(struct device *dev,
+ 	clkout->shift = shift;
+ 	clkout->mask = mask;
+ 	clkout->hw.init = &init;
+-	clkout->modify_misccr = dev->platform_data;
++	clkout->modify_misccr = pdata->modify_misccr;
+ 
+ 	ret = clk_hw_register(dev, &clkout->hw);
+ 	if (ret)
+diff --git a/include/linux/platform_data/clk-s3c2410.h b/include/linux/platform_data/clk-s3c2410.h
+new file mode 100644
+index 000000000000..7eb1cfa5409b
+--- /dev/null
++++ b/include/linux/platform_data/clk-s3c2410.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2020 Krzysztof Kozlowski <krzk@kernel.org>
++ */
++
++#ifndef __LINUX_PLATFORM_DATA_CLK_S3C2410_H_
++#define __LINUX_PLATFORM_DATA_CLK_S3C2410_H_
++
++/**
++ * struct s3c2410_clk_platform_data - platform data for S3C2410 clock driver
++ *
++ * @modify_misccr: Function to modify the MISCCR and return the new value
++ */
++struct s3c2410_clk_platform_data {
++	unsigned int (*modify_misccr)(unsigned int clr, unsigned int chg);
++};
++
++#endif /* __LINUX_PLATFORM_DATA_CLK_S3C2410_H_ */
++
+-- 
+2.17.1
+
