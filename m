@@ -2,172 +2,79 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8462C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D965920792
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:23:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJnh3Px5"
+	by mail.kernel.org (Postfix) with ESMTP id 8D1B120792
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 03:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbgHFDX6 (ORCPT
+        id S1730470AbgHFDZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 23:23:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26836 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726817AbgHFDX5 (ORCPT
+        Wed, 5 Aug 2020 23:25:10 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:55062 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730146AbgHFDZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 23:23:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596684235;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F6EdwxxPxToRlRVjg4VjqE/IKz5jwoBOjp4Hl0tx224=;
-        b=TJnh3Px5WXR2jUl5y1F9KZkkWQxFjdp+dnm961O+JhlxCyKLz9t7BNhm0Mmx4y5YvMRx3s
-        /xsbeYvkCX+Pb6d2VFPksWVPH1i0C8OZV/v0u/XHKB0UcowkCVEoHL/CyMD8JrpuCuM4Uk
-        iudAasKqKSCDC8yHyMSu5mh4o2KClEc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-497-q58d4V6iNR67iVGqe8xPng-1; Wed, 05 Aug 2020 23:23:52 -0400
-X-MC-Unique: q58d4V6iNR67iVGqe8xPng-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3023358;
-        Thu,  6 Aug 2020 03:23:51 +0000 (UTC)
-Received: from [10.72.13.140] (ovpn-13-140.pek2.redhat.com [10.72.13.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB2335D9E2;
-        Thu,  6 Aug 2020 03:23:46 +0000 (UTC)
-Subject: Re: [PATCH v2 22/24] vdpa_sim: fix endian-ness of config space
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20200803205814.540410-1-mst@redhat.com>
- <20200803205814.540410-23-mst@redhat.com>
- <dd24f2e6-4aef-4a26-374c-2349fe1e6a66@redhat.com>
- <20200805080434-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0ad1b5e6-52a8-aa4c-ec5f-a44a5727d84d@redhat.com>
-Date:   Thu, 6 Aug 2020 11:23:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 23:25:05 -0400
+Received: by mail-il1-f200.google.com with SMTP id a17so13234660ilb.21
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 20:25:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=PGyhv+RRFzosio5aiRxqPTJSOPnLEgYHzjRgxNcNcJM=;
+        b=UHkSBTuPJkaQm/XHAoVwKFPcwxUBuD+uJv64Lm3iSREKMQ1bZYeV/pgeqBc1HDq6Rb
+         ZlZF15qURsa6baeKF9xU1YRy+WG1+LGNT33rXZTIv94QI5HisXT8zOaR7TeKK26wLRU/
+         H3C2+ieQ/1Sd1DGTK+k8WXGU9BTH5BwJjTFF+oDKhCzL4NYKY68XAF8L6j3H276mDBHv
+         FesAkW4eivwTyk+I1ICqINoVjH/OMaGItY9SY4oIbAyFnSYOePULdfsPvMtf9A0bQwJm
+         MwYE79Ft52rsBXPzpJmtuhJotPKjsN/X7jYJ7yIXd7gR6QmrmQmpkrN1EPOFkQ+CF+ry
+         KmhA==
+X-Gm-Message-State: AOAM533GMIInwNlAbE3B6VMqw00TpDemyk6KQO1XRmOAM5/ISmcJdFkl
+        Gwjml6xgDi5zkbYZOgUr9mWKgl2SZ6wH/5zJrf1/sC0Lc6au
+X-Google-Smtp-Source: ABdhPJxN9h7tsirIK4Go1MLKweo1tMD2JSQJduOjcZJ6N2j9EP6Wauz92Wl+rQLa9pUMa4RjoLIkOxE0iMTpUzONhZC22w+m4MJZ
 MIME-Version: 1.0
-In-Reply-To: <20200805080434-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Received: by 2002:a02:234c:: with SMTP id u73mr6578278jau.141.1596684304793;
+ Wed, 05 Aug 2020 20:25:04 -0700 (PDT)
+Date:   Wed, 05 Aug 2020 20:25:04 -0700
+In-Reply-To: <00000000000039638605a991eca7@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ce496c05ac2d0857@google.com>
+Subject: Re: WARNING in rxrpc_recvmsg
+From:   syzbot <syzbot+1a68d5c4e74edea44294@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com, kuba@kernel.org,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        marc.dionne@auristor.com, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot suspects this issue was fixed by commit:
 
-On 2020/8/5 下午8:06, Michael S. Tsirkin wrote:
-> On Wed, Aug 05, 2020 at 02:21:07PM +0800, Jason Wang wrote:
->> On 2020/8/4 上午5:00, Michael S. Tsirkin wrote:
->>> VDPA sim accesses config space as native endian - this is
->>> wrong since it's a modern device and actually uses LE.
->>>
->>> It only supports modern guests so we could punt and
->>> just force LE, but let's use the full virtio APIs since people
->>> tend to copy/paste code, and this is not data path anyway.
->>>
->>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
->>> ---
->>>    drivers/vdpa/vdpa_sim/vdpa_sim.c | 31 ++++++++++++++++++++++++++-----
->>>    1 file changed, 26 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
->>> index a9bc5e0fb353..fa05e065ff69 100644
->>> --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
->>> +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
->>> @@ -24,6 +24,7 @@
->>>    #include <linux/etherdevice.h>
->>>    #include <linux/vringh.h>
->>>    #include <linux/vdpa.h>
->>> +#include <linux/virtio_byteorder.h>
->>>    #include <linux/vhost_iotlb.h>
->>>    #include <uapi/linux/virtio_config.h>
->>>    #include <uapi/linux/virtio_net.h>
->>> @@ -72,6 +73,23 @@ struct vdpasim {
->>>    	u64 features;
->>>    };
->>> +/* TODO: cross-endian support */
->>> +static inline bool vdpasim_is_little_endian(struct vdpasim *vdpasim)
->>> +{
->>> +	return virtio_legacy_is_little_endian() ||
->>> +		(vdpasim->features & (1ULL << VIRTIO_F_VERSION_1));
->>> +}
->>> +
->>> +static inline u16 vdpasim16_to_cpu(struct vdpasim *vdpasim, __virtio16 val)
->>> +{
->>> +	return __virtio16_to_cpu(vdpasim_is_little_endian(vdpasim), val);
->>> +}
->>> +
->>> +static inline __virtio16 cpu_to_vdpasim16(struct vdpasim *vdpasim, u16 val)
->>> +{
->>> +	return __cpu_to_virtio16(vdpasim_is_little_endian(vdpasim), val);
->>> +}
->>> +
->>>    static struct vdpasim *vdpasim_dev;
->>>    static struct vdpasim *vdpa_to_sim(struct vdpa_device *vdpa)
->>> @@ -306,7 +324,6 @@ static const struct vdpa_config_ops vdpasim_net_config_ops;
->>>    static struct vdpasim *vdpasim_create(void)
->>>    {
->>> -	struct virtio_net_config *config;
->>>    	struct vdpasim *vdpasim;
->>>    	struct device *dev;
->>>    	int ret = -ENOMEM;
->>> @@ -331,10 +348,7 @@ static struct vdpasim *vdpasim_create(void)
->>>    	if (!vdpasim->buffer)
->>>    		goto err_iommu;
->>> -	config = &vdpasim->config;
->>> -	config->mtu = 1500;
->>> -	config->status = VIRTIO_NET_S_LINK_UP;
->>> -	eth_random_addr(config->mac);
->>> +	eth_random_addr(vdpasim->config.mac);
->>>    	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
->>>    	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
->>> @@ -448,6 +462,7 @@ static u64 vdpasim_get_features(struct vdpa_device *vdpa)
->>>    static int vdpasim_set_features(struct vdpa_device *vdpa, u64 features)
->>>    {
->>>    	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
->>> +	struct virtio_net_config *config = &vdpasim->config;
->>>    	/* DMA mapping must be done by driver */
->>>    	if (!(features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
->>> @@ -455,6 +470,12 @@ static int vdpasim_set_features(struct vdpa_device *vdpa, u64 features)
->>>    	vdpasim->features = features & vdpasim_features;
->>> +	/* We only know whether guest is using the legacy interface here, so
->>> +	 * that's the earliest we can set config fields.
->>> +	 */
->> We check whether or not ACCESS_PLATFORM is set before which is probably a
->> hint that only modern device is supported. So I wonder just force LE and
->> fail if VERSION_1 is not set is better?
->>
->> Thanks
-> So how about I add a comment along the lines of
->
-> /*
->   * vdpasim ATM requires VIRTIO_F_ACCESS_PLATFORM, so we don't need to
->   * support legacy guests. Keep transitional device code around for
->   * the benefit of people who might copy-and-paste this into transitional
->   * device code.
->   */
+commit 65550098c1c4db528400c73acf3e46bfa78d9264
+Author: David Howells <dhowells@redhat.com>
+Date:   Tue Jul 28 23:03:56 2020 +0000
 
+    rxrpc: Fix race between recvmsg and sendmsg on immediate call failure
 
-That's fine.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10bd3bcc900000
+start commit:   7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7be693511b29b338
+dashboard link: https://syzkaller.appspot.com/bug?extid=1a68d5c4e74edea44294
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a5022f100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150932a7100000
 
-Thanks
+If the result looks correct, please mark the issue as fixed by replying with:
 
+#syz fix: rxrpc: Fix race between recvmsg and sendmsg on immediate call failure
 
->
->
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
