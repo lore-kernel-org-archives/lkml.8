@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5029EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C622311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31BE204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="jJttFqxp"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="EZ1tU9v+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgHFQka (ORCPT
+        id S1727103AbgHFQlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:40:30 -0400
-Received: from mail-eopbgr50047.outbound.protection.outlook.com ([40.107.5.47]:49991
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Thu, 6 Aug 2020 12:41:17 -0400
+Received: from mail-eopbgr20066.outbound.protection.outlook.com ([40.107.2.66]:11170
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728296AbgHFQhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726150AbgHFQhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:37:01 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GaDJWDp2DmHBnR8eSsyo2iBWrWWozZktZUCrl3OgkuNYARebVgv/rc0Li/6Q/t//SYj7GFALIlMb5F84jIIAsKZItAkUeS+GoETUz/9pq9q7OqTD+L/RBY991f1s0AKXOiIF+BkgknFaWjebmjV7G5siKWkqa2GQmimpGJWbDqkAmLlbB32HMYu5GKSa28abNViHdi/m55L/SIGJX8E0wUKaRhk4c5PoyrRXWWXbQ6Tja+dXf8RRBgZoAPFfWIRKJtjHsIzoH1rj98gW2Lqr6uyEfYhTVrPhexBgN+aFcu4JAbxCG3zfOw8yH/ZN+vE/ZKU+XUOK46RUlLHpVegcmg==
+ b=UdQXJkqZV3aC95HSrMF7CWRNmm9yFa1V/5YSY4Lkf8AzpMaDyXQcXB+/nkfphKK6ZOHSKmPjIRSO7g+PQRLiBudKCCx/ga+Ui+ieRoSBaLltJL3qX4BnZ8YzU/+YpjA+TcmfEjvOQcCyCrKpfr3z+mTBQIbRY7yqPahZaqNbG/0l2tRqbnUMlHMa1+wpTCTgEP0X46xTarNEYduETOSyof4XJ83HwYkfPKxVjTe50Ea3e6bthiMKHBjbVA2m4p5Vk1sXsHWL+qtF6b9xC5f459ny5zD/e6dcfqjH1/KGSGWvpys0k3K7tZ/8yoy4Tg27ydWZ8EbxRkV5I5Fcc2tzag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LNBBN/dlZHg6cx7Sgg/A0XQBWdADCmK/YWU/bQrtkn8=;
- b=M1fV6nLzGd3xumnTO3rWH2YpnsTBh7qsIaV7D5yZlzMedtKoz0RoOraN+QWKYdUaWseB12eeBe0wujRtsdFBOOrl/uSE7u5KeDQcuLyo71RdWmy2xkY6STEj/3hntWuMC5k/t3gq0Qtz8l4H+eWKXuQYu4AWBvKoQAAriliwuMKFpXcGESkUJP/V2RaiZKdpXRjU7Mtw6pJt/F3PArvHfyAEMgRoqwD2dv2obCjIZqqY5LyJYl7GZGjCcIhB1KC0P2V9172b3AnDaAifs+2/V0YH+bt6ZXIjISskzfvVkseTb/UnvmPKvyXH0YmjijZJ6dw0XICvDZup8ACKs7+Pug==
+ bh=sDRzb6gtsB5DKKZ1Z/MpbHsUH5Rk8IEXaG8qesk44IQ=;
+ b=CJkI7tDzsTXBdTdrUCoOqLs+GmnfGYzVRcpeES3Bbq/zWygD/yNv/M14MHGC55uAZDYu4JM7ZBcaWtkN35RoZqQWOkhqniFvM1YfSFaN5e6oX8un8ce3YeT6IcINdOxYDSW/BLRj/E4A1Hd/yD4f5ujFJTEif2QXrbsarlQ3ocIvvmebgvdcxr/9PFIM2ZG3QaUbUnR3dyQ/O7M2jvZeQCRnzvxpo3UW2nl/ll9XEs7LvQL23Dz6atUoo1nkldwxCY86qQM8UY+bB7bb8mSPMFCHhA8T2owO+RUDwb5HfukPqiF270j0id3E2rMpnoPOK+fWj2OuweWdvl6tLElikw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LNBBN/dlZHg6cx7Sgg/A0XQBWdADCmK/YWU/bQrtkn8=;
- b=jJttFqxpT8AIeapV0UOCHqyK57jovL+sjWp2KuAAneB1rYIbfyM6xzAwlHJiCE3cDI5nrqgg9OTqeijtdU9tG7sgZnEBlXn771ZJ3PKvh3R6vKECqF44RF2d27QcguoxHnsbmUvuz5QLDfeC3KlG/82MYeVdjC5AWB0fm6Db10I=
+ bh=sDRzb6gtsB5DKKZ1Z/MpbHsUH5Rk8IEXaG8qesk44IQ=;
+ b=EZ1tU9v+GSDXEPhn8CjndWeWnQUhp7dUyu2NnAdUT38NoUDhFXjrmAK98jA/ww9DGa41fEvzl9tOBf3hKAtIH+X15c3Ux/K2+BLzVbwBA3uB27MAELRz3lUIkBrX8IHDOIxDOzxEWnIOE9Owl/LRxg66xAQNvEz6iRno2gtSguw=
 Authentication-Results: nxp.com; dkim=none (message not signed)
  header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
 Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
- by VI1PR04MB6959.eurprd04.prod.outlook.com (2603:10a6:803:139::18) with
+ by VI1PR04MB4992.eurprd04.prod.outlook.com (2603:10a6:803:51::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 6 Aug
- 2020 16:36:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 6 Aug
+ 2020 16:36:12 +0000
 Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
  ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
  ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
- 16:36:22 +0000
+ 16:36:12 +0000
 From:   Andrei Botila <andrei.botila@oss.nxp.com>
 To:     Horia Geanta <horia.geanta@nxp.com>,
         Aymen Sghaier <aymen.sghaier@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 7/9] crypto: caam/jr - add support for XTS with 16B IV
-Date:   Thu,  6 Aug 2020 19:35:49 +0300
-Message-Id: <20200806163551.14395-8-andrei.botila@oss.nxp.com>
+Subject: [PATCH RESEND 2/9] crypto: caam/qi - add fallback for XTS with more than 8B IV
+Date:   Thu,  6 Aug 2020 19:35:44 +0300
+Message-Id: <20200806163551.14395-3-andrei.botila@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806163551.14395-1-andrei.botila@oss.nxp.com>
 References: <20200806163551.14395-1-andrei.botila@oss.nxp.com>
@@ -67,33 +67,33 @@ X-ClientProxiedBy: AM4PR0902CA0015.eurprd09.prod.outlook.com
  (2603:10a6:803:125::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM4PR0902CA0015.eurprd09.prod.outlook.com (2603:10a6:200:9b::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Thu, 6 Aug 2020 16:36:21 +0000
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM4PR0902CA0015.eurprd09.prod.outlook.com (2603:10a6:200:9b::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Thu, 6 Aug 2020 16:36:11 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [83.217.231.2]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b4a774a6-8665-4e8c-973f-08d83a26da85
-X-MS-TrafficTypeDiagnostic: VI1PR04MB6959:
+X-MS-Office365-Filtering-Correlation-Id: 02b2b428-e56b-451d-b569-08d83a26d49d
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4992:
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB6959519F1C4BF0F17F62532FB4480@VI1PR04MB6959.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Microsoft-Antispam-PRVS: <VI1PR04MB4992F891A93C2A04ED884207B4480@VI1PR04MB4992.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sQ8oaijAsMuHUS6eCkXQcdAgEdi8b8OjBo1vjNrtumV8JiDnTZK9c4tC47McsaJTjuo3XMgoE9iF6tSPLlKXVCElzR/NZuYRrh43b8/FLxzz+kmBItF1v9JxQP5ed5RVPEgiihzsgYNwm8Qe6ZnQcBx6Y8mpBKzev8sfRTJUr2m5zV3YBPqwjss2BlcXWoN3BqzKPJxoH5H77QRCpzX2+8ElJtuBdbwQV3D2ERSOeDh/4hIQL3ha9OXGMyx5jIGHjSVkS6EDnaCw+HR1+w/IzetkIQFDkoGdOQMKPmSy2svtWKOxqT1RFWZeeT4RXaesp+p7qpEB41JfFEgWIZmWVQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(186003)(2906002)(16526019)(6486002)(8676002)(4326008)(6512007)(26005)(83380400001)(5660300002)(2616005)(956004)(6506007)(478600001)(8936002)(44832011)(66946007)(316002)(86362001)(66476007)(66556008)(110136005)(1076003)(6666004)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ow/Q3uUS15ESNnZ9GrAWrcPyKG/C/+9snQ4XXhGXjK8dzOCZWAoJjjPzEyoujDimzc+oTnQP8S2eXSiyFOKOhl+QqBsukF380AVBM1in65mJyAc5D54ku1Im3AgnQq+Exr+Htw02U7yX0gXntlngflJ3g3N32yLmlRfXobZlm3XE1ssOnlgGlPaTgFr5EJSAe+gOENx6g4yOAvm6Cdn+/c/O53kFkIZsoM4gVjV8wz/Acaaa2dOXCZwkOXH1dvPxqlQ2Slnnu9DOy9YmvUauGW60+ILvHRvtlkGdX4GZEWJ7p9SVgXs8JAQkMmsCUv07kiFEonGYSRXcLleTMFPpNftBrBtBLKj88AdaTJGCoW6/l/FXmsfHHnpZ7Xag9XlC8+Z577z8Ld4nvo/m/fhruM9MD8sb6L+XE1JC6i/7DWkXKF4ISzUlAvv+Q7qb1gPaNmwAnZvlFD+JExnvLk+qCqbBm9v1KKkQb6Svrn6KEerGNHuEHdm79brngXxChQwVGHMmvH/HuwbNo4zQCZ95xo5ZhPHJr0i1Lc5CVHa1cJlgwasW8kodaxAuRWavXM1aKO7fA1GAoTLb3gEZUbAVV6WDL5TLNybfCmSd3LgRhMxlwH6eKtfTne2Setd69JGUlUqqDI8zUQ2SOJ5Y/jf5cg==
+X-Microsoft-Antispam-Message-Info: WEAdijcsUtzWHBC5C2ooah05TMXOsaWuIZF6vo7gyyLpbX2fo7g8fAlWQjep/bSDELl4zfOQAl0KUvMRK3A/FmQEwFs63lB/CPvjzg2wUXHudKlWgt93SmGS4POVvaDrDQBJm/0T6YfRhTJPUYJ3LVrXMpF6pCY0XW0bpGewfdBaZ62MUnF3JpfuY3QT9fiAx9UYPwdrcS/kohIjrPsw9Qvx9za1o3kMIsY7K7GYBbxSND0jpPLvTH+lyi51f+BZolDiYSzQ8WaLX6j6jtQrD++yYXlx7Prz9Af7l/BGImsm57AswMYcZzZeyu+3QGctSqMtFzNTg/NvtIQmn2hvIMJ/DXQJhUZgzN4NVoBYZJbPaPE7a8Y+/fdI9pAVkC2O
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(66476007)(86362001)(26005)(6512007)(16526019)(186003)(66556008)(66946007)(1076003)(110136005)(8936002)(316002)(8676002)(478600001)(2906002)(6506007)(4326008)(44832011)(2616005)(956004)(83380400001)(6486002)(6666004)(52116002)(5660300002)(309714004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ZVtY05+0CaDuiwhYQ77+kgfGsgr0122qzlcNLSmKk66HMn0nAGg4tZDUDrGpepQEdZscT8iffwlhGWiXNQPWGEef9c7NtCZ+wsRaxOJjjg6vPGwwnuWSfeeptgsW22KQkZY7tJOqYQ9s7BmspU3Oqt5kPqfFQeVQkUaUiOCu4940DXEmLYBf9e28wJYL4fNwS8761Xpng0rdueyxvLJ7mDxZGM0eh8svmd7TKF0P6N4nS+tTLtFegCjgmCak0pVHLWail8etIUOYeEflvb/gY8CHEJjpR4bpgEj39/EkLPZkh781wiKGN2KO27Mc+zinBa0PHKfkdq5TX4v8KlyVQq9w4E0FoODSeOh+nFRoSNEVgub2HJ+F+PJv1vow2UpM/sNtA23htFaNWHQeiQrMCrvedRUCqXo9dwBS2YipFQDB3Bjwasn/Q2dnIvsMicfUcZQ5mJ2GVMuJIk26b0dFM8TvBQ2UV67SqEmJYPmDjQjbv7TN4FzYPefRMH4o2sGGZ46KqliVN8oMle4oT07i9bLtj1CU5VSX9yYhY3z/cj8gHfY41Lo67wXrufH/0+N7hxe0fjPPQP8gEe16u++NqxuI7nt0YX9SsIyT05mjkV74XJa5HMZ9bvj4cBC3hEhpjVguQH/nsvvAEUwnZMTDBg==
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4a774a6-8665-4e8c-973f-08d83a26da85
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02b2b428-e56b-451d-b569-08d83a26d49d
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 16:36:22.3480
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 16:36:12.5067
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZYWcn+e81mVuLMyzJm5pc5wuhNF+6GaICnW5hzR4f5FRzcYnMHEFadqOjyfXYpaFgoI+E4OGFWfxMbmCiU3IXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6959
+X-MS-Exchange-CrossTenant-UserPrincipalName: +nDKoCJcK4NeRcI4pSUR4DJ0RGkvfQXNGaJdFoJzI/Dz6egEsIccTiJWmKcEjiPxtoidrBthqJCp5Nr8Yw4gQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4992
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -101,128 +101,164 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrei Botila <andrei.botila@nxp.com>
 
-Newer CAAM versions (Era 9+) support 16B IVs. Since for these devices
-the HW limitation is no longer present newer version should process the
-requests containing 16B IVs directly in hardware without using a fallback.
+A hardware limitation exists for CAAM until Era 9 which restricts
+the accelerator to IVs with only 8 bytes. When CAAM has a lower era
+a fallback is necessary to process 16 bytes IV.
 
+Fixes: b189817cf789 ("crypto: caam/qi - add ablkcipher and authenc algorithms")
+Cc: <stable@vger.kernel.org> # v4.12+
 Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
 ---
- drivers/crypto/caam/caamalg.c      | 13 +++++++++----
- drivers/crypto/caam/caamalg_desc.c | 27 ++++++++++++++++-----------
- 2 files changed, 25 insertions(+), 15 deletions(-)
+ drivers/crypto/caam/caamalg_qi.c | 73 +++++++++++++++++++++++++++++---
+ 1 file changed, 68 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index a5447ae430b0..7e03854252b0 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -833,6 +833,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- {
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index bb1c0106a95c..05cb50561381 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -18,6 +18,7 @@
+ #include "qi.h"
+ #include "jr.h"
+ #include "caamalg_desc.h"
++#include <asm/unaligned.h>
+ 
+ /*
+  * crypto alg
+@@ -67,6 +68,11 @@ struct caam_ctx {
+ 	struct device *qidev;
+ 	spinlock_t lock;	/* Protects multiple init of driver context */
+ 	struct caam_drv_ctx *drv_ctx[NUM_OP];
++	struct crypto_skcipher *fallback;
++};
++
++struct caam_skcipher_req_ctx {
++	struct skcipher_request fallback_req;
+ };
+ 
+ static int aead_set_sh_desc(struct crypto_aead *aead)
+@@ -726,12 +732,17 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
  	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
  	struct device *jrdev = ctx->jrdev;
-+	struct caam_drv_private *ctrlpriv = dev_get_drvdata(jrdev->parent);
- 	u32 *desc;
- 	int err;
+ 	int ret = 0;
++	int err;
  
-@@ -842,9 +843,12 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 		return err;
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+ 		dev_dbg(jrdev, "key size mismatch\n");
+ 		return -EINVAL;
  	}
  
--	err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
--	if (err)
--		return err;
-+	if (ctrlpriv->era <= 8 || (keylen != 2 * AES_KEYSIZE_128 &&
-+				   keylen != 2 * AES_KEYSIZE_256)) {
-+		err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
-+		if (err)
-+			return err;
-+	}
- 
++	err = crypto_skcipher_setkey(ctx->fallback, key, keylen);
++	if (err)
++		return err;
++
  	ctx->cdata.keylen = keylen;
  	ctx->cdata.key_virt = key;
-@@ -1786,13 +1790,14 @@ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
- 	struct device *jrdev = ctx->jrdev;
- 	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
-+	struct caam_drv_private *ctrlpriv = dev_get_drvdata(jrdev->parent);
- 	u32 *desc;
- 	int ret = 0;
+ 	ctx->cdata.key_inline = true;
+@@ -1373,6 +1384,20 @@ static struct skcipher_edesc *skcipher_edesc_alloc(struct skcipher_request *req,
+ 	return edesc;
+ }
  
++static bool xts_skcipher_ivsize(struct skcipher_request *req)
++{
++	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
++	unsigned int ivsize = crypto_skcipher_ivsize(skcipher);
++	u64 size = 0;
++
++	if (IS_ALIGNED((unsigned long)req->iv, __alignof__(u64)))
++		size = *(u64 *)(req->iv + (ivsize / 2));
++	else
++		size = get_unaligned((u64 *)(req->iv + (ivsize / 2)));
++
++	return !!size;
++}
++
+ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
+ {
+ 	struct skcipher_edesc *edesc;
+@@ -1383,6 +1408,21 @@ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
  	if (!req->cryptlen)
  		return 0;
  
--	if (ctx->fallback && (xts_skcipher_ivsize(req) ||
-+	if (ctx->fallback && ((ctrlpriv->era <= 8 && xts_skcipher_ivsize(req)) ||
- 			      (ctx->cdata.keylen != 2 * AES_KEYSIZE_128 &&
- 			       ctx->cdata.keylen != 2 * AES_KEYSIZE_256))) {
- 		struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
-diff --git a/drivers/crypto/caam/caamalg_desc.c b/drivers/crypto/caam/caamalg_desc.c
-index d6c58184bb57..433d6d5cd582 100644
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -1550,13 +1550,14 @@ void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cdata)
- 	set_jump_tgt_here(desc, key_jump_cmd);
++	if (ctx->fallback && xts_skcipher_ivsize(req)) {
++		struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
++
++		skcipher_request_set_tfm(&rctx->fallback_req, ctx->fallback);
++		skcipher_request_set_callback(&rctx->fallback_req,
++					      req->base.flags,
++					      req->base.complete,
++					      req->base.data);
++		skcipher_request_set_crypt(&rctx->fallback_req, req->src,
++					   req->dst, req->cryptlen, req->iv);
++
++		return encrypt ? crypto_skcipher_encrypt(&rctx->fallback_req) :
++				  crypto_skcipher_decrypt(&rctx->fallback_req);
++	}
++
+ 	if (unlikely(caam_congested))
+ 		return -EAGAIN;
  
- 	/*
--	 * create sequence for loading the sector index
--	 * Upper 8B of IV - will be used as sector index
--	 * Lower 8B of IV - will be discarded
-+	 * create sequence for loading the sector index / 16B tweak value
-+	 * Lower 8B of IV - sector index / tweak lower half
-+	 * Upper 8B of IV - upper half of 16B tweak
- 	 */
- 	append_seq_load(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
- 			(0x20 << LDST_OFFSET_SHIFT));
--	append_seq_fifo_load(desc, 8, FIFOLD_CLASS_SKIP);
-+	append_seq_load(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
-+			(0x30 << LDST_OFFSET_SHIFT));
+@@ -1507,6 +1547,7 @@ static struct caam_skcipher_alg driver_algs[] = {
+ 			.base = {
+ 				.cra_name = "xts(aes)",
+ 				.cra_driver_name = "xts-aes-caam-qi",
++				.cra_flags = CRYPTO_ALG_NEED_FALLBACK,
+ 				.cra_blocksize = AES_BLOCK_SIZE,
+ 			},
+ 			.setkey = xts_skcipher_setkey,
+@@ -2440,9 +2481,27 @@ static int caam_cra_init(struct crypto_skcipher *tfm)
+ 	struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
+ 	struct caam_skcipher_alg *caam_alg =
+ 		container_of(alg, typeof(*caam_alg), skcipher);
++	struct caam_ctx *ctx = crypto_skcipher_ctx(tfm);
++	u32 alg_aai = caam_alg->caam.class1_alg_type & OP_ALG_AAI_MASK;
++
++	if (alg_aai == OP_ALG_AAI_XTS) {
++		const char *tfm_name = crypto_tfm_alg_name(&tfm->base);
++		struct crypto_skcipher *fallback;
++
++		fallback = crypto_alloc_skcipher(tfm_name, 0,
++						 CRYPTO_ALG_NEED_FALLBACK);
++		if (IS_ERR(fallback)) {
++			pr_err("Failed to allocate %s fallback: %ld\n",
++			       tfm_name, PTR_ERR(fallback));
++			return PTR_ERR(fallback);
++		}
++
++		ctx->fallback = fallback;
++		crypto_skcipher_set_reqsize(tfm, sizeof(struct skcipher_request) +
++					    crypto_skcipher_reqsize(fallback));
++	}
  
- 	/* Load operation */
- 	append_operation(desc, cdata->algtype | OP_ALG_AS_INITFINAL |
-@@ -1565,9 +1566,11 @@ void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cdata)
- 	/* Perform operation */
- 	skcipher_append_src_dst(desc);
+-	return caam_init_common(crypto_skcipher_ctx(tfm), &caam_alg->caam,
+-				false);
++	return caam_init_common(ctx, &caam_alg->caam, false);
+ }
  
--	/* Store upper 8B of IV */
-+	/* Store lower 8B and upper 8B of IV */
- 	append_seq_store(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
- 			 (0x20 << LDST_OFFSET_SHIFT));
-+	append_seq_store(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
-+			 (0x30 << LDST_OFFSET_SHIFT));
+ static int caam_aead_init(struct crypto_aead *tfm)
+@@ -2468,7 +2527,11 @@ static void caam_exit_common(struct caam_ctx *ctx)
  
- 	print_hex_dump_debug("xts skcipher enc shdesc@" __stringify(__LINE__)
- 			     ": ", DUMP_PREFIX_ADDRESS, 16, 4,
-@@ -1609,23 +1612,25 @@ void cnstr_shdsc_xts_skcipher_decap(u32 * const desc, struct alginfo *cdata)
- 	set_jump_tgt_here(desc, key_jump_cmd);
+ static void caam_cra_exit(struct crypto_skcipher *tfm)
+ {
+-	caam_exit_common(crypto_skcipher_ctx(tfm));
++	struct caam_ctx *ctx = crypto_skcipher_ctx(tfm);
++
++	if (ctx->fallback)
++		crypto_free_skcipher(ctx->fallback);
++	caam_exit_common(ctx);
+ }
  
- 	/*
--	 * create sequence for loading the sector index
--	 * Upper 8B of IV - will be used as sector index
--	 * Lower 8B of IV - will be discarded
-+	 * create sequence for loading the sector index / 16B tweak value
-+	 * Lower 8B of IV - sector index / tweak lower half
-+	 * Upper 8B of IV - upper half of 16B tweak
- 	 */
- 	append_seq_load(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
- 			(0x20 << LDST_OFFSET_SHIFT));
--	append_seq_fifo_load(desc, 8, FIFOLD_CLASS_SKIP);
--
-+	append_seq_load(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
-+			(0x30 << LDST_OFFSET_SHIFT));
- 	/* Load operation */
- 	append_dec_op1(desc, cdata->algtype);
+ static void caam_aead_exit(struct crypto_aead *tfm)
+@@ -2502,8 +2565,8 @@ static void caam_skcipher_alg_init(struct caam_skcipher_alg *t_alg)
+ 	alg->base.cra_module = THIS_MODULE;
+ 	alg->base.cra_priority = CAAM_CRA_PRIORITY;
+ 	alg->base.cra_ctxsize = sizeof(struct caam_ctx);
+-	alg->base.cra_flags = CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY |
+-			      CRYPTO_ALG_KERN_DRIVER_ONLY;
++	alg->base.cra_flags |= (CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY |
++				CRYPTO_ALG_KERN_DRIVER_ONLY);
  
- 	/* Perform operation */
- 	skcipher_append_src_dst(desc);
- 
--	/* Store upper 8B of IV */
-+	/* Store lower 8B and upper 8B of IV */
- 	append_seq_store(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
- 			 (0x20 << LDST_OFFSET_SHIFT));
-+	append_seq_store(desc, 8, LDST_SRCDST_BYTE_CONTEXT | LDST_CLASS_1_CCB |
-+			 (0x30 << LDST_OFFSET_SHIFT));
- 
- 	print_hex_dump_debug("xts skcipher dec shdesc@" __stringify(__LINE__)
- 			     ": ", DUMP_PREFIX_ADDRESS, 16, 4, desc,
+ 	alg->init = caam_cra_init;
+ 	alg->exit = caam_cra_exit;
 -- 
 2.17.1
 
