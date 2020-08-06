@@ -2,125 +2,118 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F7B221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C39622C9F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UXnpUM3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbgHFSjC (ORCPT
+        id S1729449AbgHFSjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:39:02 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:42184 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728431AbgHFSbC (ORCPT
+        Thu, 6 Aug 2020 14:39:00 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9611 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgHFSbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:31:02 -0400
-Received: from dispatch1-us1.ppe-hosted.com (localhost.localdomain [127.0.0.1])
-        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 17AA9B684B;
-        Thu,  6 Aug 2020 18:18:15 +0000 (UTC)
-Received: from mx1-us1.ppe-hosted.com (unknown [10.7.65.62])
-        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 886C060070;
-        Thu,  6 Aug 2020 18:17:54 +0000 (UTC)
-Received: from us4-mdac16-4.ut7.mdlocal (unknown [10.7.65.72])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 840958009B;
-        Thu,  6 Aug 2020 18:17:54 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mx1-us1.ppe-hosted.com (unknown [10.7.66.35])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 09249280074;
-        Thu,  6 Aug 2020 18:17:54 +0000 (UTC)
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id B7DEF480079;
-        Thu,  6 Aug 2020 18:17:53 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 6 Aug 2020
- 19:17:47 +0100
-Subject: Re: [linux-next:master 13398/13940]
- drivers/net/ethernet/sfc/ef100_nic.c:610: undefined reference to `__umoddi3'
-To:     kernel test robot <lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>, netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <202008060723.1gNgVvUi%lkp@intel.com>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <487d9159-41f8-2757-2e93-01426a527fb5@solarflare.com>
-Date:   Thu, 6 Aug 2020 19:17:43 +0100
+        Thu, 6 Aug 2020 14:31:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c4abf0001>; Thu, 06 Aug 2020 11:24:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 11:24:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 11:24:13 -0700
+Received: from [10.26.73.183] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 18:24:07 +0000
+Subject: Re: [PATCH v5 09/11] arm64: defconfig: Build ADMA and ACONNECT driver
+To:     Sameer Pujar <spujar@nvidia.com>, <broonie@kernel.org>,
+        <perex@perex.cz>, <tiwai@suse.com>,
+        <kuninori.morimoto.gx@renesas.com>, <robh+dt@kernel.org>,
+        <lgirdwood@gmail.com>
+CC:     <thierry.reding@gmail.com>, <digetx@gmail.com>,
+        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
+        <swarren@nvidia.com>, <nicoleotsuka@gmail.com>
+References: <1595134890-16470-1-git-send-email-spujar@nvidia.com>
+ <1595134890-16470-10-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <86606b00-8ec8-608e-4b94-eff3e6ad2723@nvidia.com>
+Date:   Thu, 6 Aug 2020 19:24:03 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <202008060723.1gNgVvUi%lkp@intel.com>
+In-Reply-To: <1595134890-16470-10-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25586.005
-X-TM-AS-Result: No-12.452600-8.000000-10
-X-TMASE-MatchedRID: oHOSwQSJZWhq0U6EhO9EE4lSWYvdSPSY4cLBHAw1BRZske+tckkBoiGU
-        b2JNxi1qvPtSCmwHhL0W+rN4H33dkbWPvW6oP7NyLIrMljt3aduPzv8sr7ayoxpX1zEL4nq3Hf4
-        4ullC212/lkj6wDcDigSuWRuEnLXhV9nX7lX9OjRyMswwR1sr6zAuMzu3eJGjdroFpVy5w+mHhM
-        8qmux3Sb9ULgvDfUo5vdBFVbH6wdjqRl2OKU4dKpzEHTUOuMX3eouvej40T4gd0WOKRkwsh1ymR
-        v3NQjsEYnBhoG388QPQHiCKHhKOgW7vEKjEI8LySHCU59h5KrG0em6xcBVoDI4iwAQuovtYru70
-        Q5pawzYAb9Rn+iNx0xQAmj5Up3IVn/nVWd4TWXeMrYi9PmoV29i5W7Rf+s6Qi8VrlddQxsZwASG
-        rGM67O2HuJNcKeM9f6lUt9vnbi+9O8fMZwaqIgp4CIKY/Hg3AnCGS1WQEGtD8V77yhJRgo6u6xV
-        HLhqfxIAcCikR3vq86XuPdvRHcl9hjjqZSWk1w1xY6ykLB0sx3lZ6s0ZOX6ajcaKKxOnis
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--12.452600-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25586.005
-X-MDID: 1596737874-pEQT5DErUjQB
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596738240; bh=cTftzqwrcOCcgqbdPCuAeNHtGbe/8tzV0BRaVzfY7L0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UXnpUM3bOKlamWewcwTU7jrr8O+fpdIHdPil6rIITe74wWhK8MxNAeF6W612FQ9vu
+         Rt865JY8RIwKW2kYND7ndjYPgp4o5S3Rngy6jAY+iFLxkotNI8IEu2eKOJxfsJP5LH
+         hTjjrL12auCb+M6VlbOwTPaw7h8WX9gzrp/++lrfe0bcdZGH4shJ7TOm5aYm5DpK5X
+         u8+MDuaR0uEcuVzGRDIgTEi1FSUQgMO3ry5ZxonAqulla0irV2tlZeG78ChNyJNyJv
+         qKAIY0O1b+46+uIs4UV1Mb6o+QmR/wOF0qidaZyvmF9GIVXDYej13ZOYfv8+ChYlgs
+         XaXnFdu+uADRg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/08/2020 00:48, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> head:   d15fe4ec043588beee823781602ddb51d0bc84c8
-> commit: adcfc3482ffff813fa2c34e5902005853f79c2aa [13398/13940] sfc_ef100: read Design Parameters at probe time
-> config: microblaze-randconfig-r032-20200805 (attached as .config)
-> compiler: microblaze-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout adcfc3482ffff813fa2c34e5902005853f79c2aa
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=microblaze 
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->    microblaze-linux-ld: drivers/net/ethernet/sfc/ef100_nic.o: in function `ef100_process_design_param':
->>> drivers/net/ethernet/sfc/ef100_nic.c:610: undefined reference to `__umoddi3'
->    605			/* Our TXQ and RXQ sizes are always power-of-two and thus divisible by
->    606			 * EFX_MIN_DMAQ_SIZE, so we just need to check that
->    607			 * EFX_MIN_DMAQ_SIZE is divisible by GRANULARITY.
->    608			 * This is very unlikely to fail.
->    609			 */
->  > 610			if (EFX_MIN_DMAQ_SIZE % reader->value) {
-So, this is (unsigned long) % (u64), whichI guess doesn't go quite
- as smoothly 32-bit microcontrollers (though the thought of plugging
- a 100-gig smartNIC into a microblaze boggles the mind a little ;).
-And none of the math64.h functions seem to have the shape we want —
- div_u64_rem() wants to write the remainder through a pointer, and
- do_div() wants to modify the dividend (which is a constant in this
- case).  So whatever I do, it's gonna be ugly :(
 
-Maybe I should add a
+On 19/07/2020 06:01, Sameer Pujar wrote:
+> This commit builds ADMA and ACONNECT drivers which can be used on
+> Tegra210 and later platforms to transfer audio data to/from AHUB
+> (Audio Hub).
+> 
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  arch/arm64/configs/defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4976e1a..7bc093a 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -219,6 +219,7 @@ CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
+>  CONFIG_HISILICON_LPC=y
+>  CONFIG_SIMPLE_PM_BUS=y
+>  CONFIG_FSL_MC_BUS=y
+> +CONFIG_TEGRA_ACONNECT=m
+>  CONFIG_MTD=y
+>  CONFIG_MTD_BLOCK=y
+>  CONFIG_MTD_CFI=y
+> @@ -788,6 +789,7 @@ CONFIG_MV_XOR_V2=y
+>  CONFIG_OWL_DMA=y
+>  CONFIG_PL330_DMA=y
+>  CONFIG_TEGRA20_APB_DMA=y
+> +CONFIG_TEGRA210_ADMA=m
+>  CONFIG_QCOM_BAM_DMA=y
+>  CONFIG_QCOM_HIDMA_MGMT=y
+>  CONFIG_QCOM_HIDMA=y
 
-static inline u32 mod_u64(u64 dividend, u32 divisor)
-{
-        return do_div(dividend, divisor);
-}
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
-to include/linux/math64.h?  At least that way the ugly is centralised
- in the header file.
+Thanks!
+Jon
+
+-- 
+nvpublic
