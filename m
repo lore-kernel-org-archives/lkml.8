@@ -2,123 +2,152 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8974CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23C3620855
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5524206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9dW3ysc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o18xQCF5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r43De36c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgHFSuS (ORCPT
+        id S1729552AbgHFSuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgHFSuH (ORCPT
+        Thu, 6 Aug 2020 14:50:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59504 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728574AbgHFSuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:50:07 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89EF4C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:50:07 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id r4so17607654pls.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 11:50:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=q96l39vKYd7IRXWt1EwDmgBCl4Rsm+1NIezF6mciM4E=;
-        b=E9dW3yscPVP6RVcDUq47mGdZrysJ2Y2xuRGdoD91TZWH5t/JUh2muJuwL694zqkPC0
-         DEH4YDFqsrDR1qX670wy1moZlPfDElRst8R7BtycOLc2ZLIzhpqHtwMGjtyOkSLBdl88
-         mWF6Jux0286C+SZ2QRRURZfTdnxMVVFbbU/BS6dtYSRLI5cfmFUp/Qq/X9QxGxixAeCs
-         KZ+iv3V8/T55lk/nBJiwiRDxgQWKPikmr70iHQ8zj/EdKUdY0ooz/NJN/H/R8B0Dthri
-         HoCuq/IViLUTM9H3sSPr0QRuQFc6PXmcEvo+JydfIwT1u5Ud2hn4ck9uaHZxk6BGHQVd
-         +lTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=q96l39vKYd7IRXWt1EwDmgBCl4Rsm+1NIezF6mciM4E=;
-        b=lsWBbhw8UtWA2LP57whjyfGjbFMMJyQZf8cpAxS1C9+yacvHcjGqtoeV1exJY8royz
-         +19DlLAu2fTEAjbJQF2Vpcfw15NLilUfhaERAnRfwapNFQAegUaKlgJ906cupbvFbOPv
-         Vc9PC9AJvhO2jFV6IQkTAcEm9eL60kSOhaWef08OENZog4e/24TeSXcbLIFQNdACHn8Z
-         LCKcI8AVl3/OxyIdbd62N1ccCwReWGcUf+hlrlbh4baTUc3pEnm1Jpj32Hx2gWOGMR9H
-         obHfn7A7uakdjyROG+pvq/VgSbj7dz1LAPe6NIHL6djKhMaLcduXHQp0597g6b0czXe4
-         so8A==
-X-Gm-Message-State: AOAM530YeNYRvuYxevu9ps4I4wI9AW7Veu0m4YOE9npnI7Y2QM1ql9xR
-        4+CsfFMWfZuoZ27bQAzfaw==
-X-Google-Smtp-Source: ABdhPJzyAOl6f8GurQSE/pAb6JOOOWA70SkAjYtrFV/WXE9aqoYXoBRZ9K9AEkMSU7inSVE5k+6IoA==
-X-Received: by 2002:a17:90a:1fca:: with SMTP id z10mr9642021pjz.209.1596739807113;
-        Thu, 06 Aug 2020 11:50:07 -0700 (PDT)
-Received: from ip-172-31-41-194.ap-northeast-1.compute.internal (ec2-52-199-21-241.ap-northeast-1.compute.amazonaws.com. [52.199.21.241])
-        by smtp.gmail.com with ESMTPSA id u24sm9096730pfm.20.2020.08.06.11.50.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 11:50:06 -0700 (PDT)
-From:   nao.horiguchi@gmail.com
-To:     linux-mm@kvack.org
-Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
-        mike.kravetz@oracle.com, osalvador@suse.de, tony.luck@intel.com,
-        david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
-        zeil@yandex-team.ru, cai@lca.pw, naoya.horiguchi@nec.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 12/12] mm,hwpoison: double-check page count in __get_any_page()
-Date:   Thu,  6 Aug 2020 18:49:23 +0000
-Message-Id: <20200806184923.7007-13-nao.horiguchi@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806184923.7007-1-nao.horiguchi@gmail.com>
-References: <20200806184923.7007-1-nao.horiguchi@gmail.com>
+        Thu, 6 Aug 2020 14:50:17 -0400
+Date:   Thu, 06 Aug 2020 18:50:13 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596739814;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CEms7WvfXWEM83cireifolNM9kUFjf0kjE5lCr1yXlM=;
+        b=o18xQCF5eA1vXUJo1CGPgH0fgKSsnr27BrSD6iXowVSPU4Fj2eTjE8Pni8goS1lqn4J2hf
+        olBbCxiH62QEMl3ycs9istA1o0T0O+D5R5TmJ1u5Hj54D6X47W5nJeyTOCccQueDjuxHKG
+        MqNtU+x9na9lxxXcwn6H6OwKFmn84ndP56iZVaMZHNIw9m3Uj4Y88ITGgwYin8yWO7/RL6
+        TlRpAAdrxqxEgqazgcMoGb3h7aYZewPjNJuw/hIdyoGkGZdNb8LYPaKdbEbywxBIyVsc06
+        ZUiavHr3sww4EFNQ72U3a1bwVLxzhQhxfIC54vETNda6+BNPChEmhnELwslTyw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596739814;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CEms7WvfXWEM83cireifolNM9kUFjf0kjE5lCr1yXlM=;
+        b=r43De36c5dcsjoIsffKdrU/RcoiHbHB5ezRPkvN8yOj9MDd/Qb2FybrXxmspwbnXu1mEbC
+        BFSegMoUNcFYrLAw==
+From:   "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/bugs/multihit: Fix mitigation reporting when
+ VMX is not in use
+Cc:     Nelson Dsouza <nelson.dsouza@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: =?utf-8?q?=3C0ba029932a816179b9d14a30db38f0f11ef1f166=2E15949?=
+ =?utf-8?q?25782=2Egit=2Epawan=2Ekumar=2Egupta=40linux=2Eintel=2Ecom=3E?=
+References: =?utf-8?q?=3C0ba029932a816179b9d14a30db38f0f11ef1f166=2E159492?=
+ =?utf-8?q?5782=2Egit=2Epawan=2Ekumar=2Egupta=40linux=2Eintel=2Ecom=3E?=
+MIME-Version: 1.0
+Message-ID: <159673981325.3192.5057160198465079415.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <naoya.horiguchi@nec.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-Soft offlining could fail with EIO due to the race condition with
-hugepage migration. This issuse became visible due to the change by
-previous patch that makes soft offline handler take page refcount
-by its own.  We have no way to directly pin zero refcount page, and
-the page considered as a zero refcount page could be allocated just
-after the first check.
+Commit-ID:     31dccf7df081364045bff196bdc060ddda97f2e9
+Gitweb:        https://git.kernel.org/tip/31dccf7df081364045bff196bdc060ddda97f2e9
+Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+AuthorDate:    Thu, 16 Jul 2020 12:23:59 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 06 Aug 2020 19:04:51 +02:00
 
-This patch adds the second check to find the race and gives us
-chance to handle it more reliably.
+x86/bugs/multihit: Fix mitigation reporting when VMX is not in use
 
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
+On systems that have virtualization disabled or unsupported, sysfs
+mitigation for X86_BUG_ITLB_MULTIHIT is reported incorrectly as:
+
+  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
+  KVM: Vulnerable
+
+System is not vulnerable to DoS attack from a rogue guest when
+virtualization is disabled or unsupported in the hardware. Change the
+mitigation reporting for these cases.
+
+Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
+Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/0ba029932a816179b9d14a30db38f0f11ef1f166.1594925782.git.pawan.kumar.gupta@linux.intel.com
 ---
- mm/memory-failure.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/admin-guide/hw-vuln/multihit.rst | 4 ++++
+ arch/x86/kernel/cpu/bugs.c                     | 8 +++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git v5.8-rc7-mmotm-2020-07-27-18-18/mm/memory-failure.c v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/memory-failure.c
-index bed4b6aac9a0..e6f6559d573e 100644
---- v5.8-rc7-mmotm-2020-07-27-18-18/mm/memory-failure.c
-+++ v5.8-rc7-mmotm-2020-07-27-18-18_patched/mm/memory-failure.c
-@@ -1700,6 +1700,9 @@ static int __get_any_page(struct page *p, unsigned long pfn, int flags)
- 		} else if (is_free_buddy_page(p)) {
- 			pr_info("%s: %#lx free buddy page\n", __func__, pfn);
- 			ret = 0;
-+		} else if (page_count(p)) {
-+			/* raced with allocation */
-+			ret = -EBUSY;
- 		} else {
- 			pr_info("%s: %#lx: unknown zero refcount page type %lx\n",
- 				__func__, pfn, p->flags);
-@@ -1716,6 +1719,9 @@ static int get_any_page(struct page *page, unsigned long pfn, int flags)
- {
- 	int ret = __get_any_page(page, pfn, flags);
+diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
+index ba9988d..140e4ce 100644
+--- a/Documentation/admin-guide/hw-vuln/multihit.rst
++++ b/Documentation/admin-guide/hw-vuln/multihit.rst
+@@ -80,6 +80,10 @@ The possible values in this file are:
+        - The processor is not vulnerable.
+      * - KVM: Mitigation: Split huge pages
+        - Software changes mitigate this issue.
++     * - KVM: Mitigation: VMX unsupported
++       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is not supported.
++     * - KVM: Mitigation: VMX disabled
++       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is disabled.
+      * - KVM: Vulnerable
+        - The processor is vulnerable, but no mitigation enabled
  
-+	if (ret == -EBUSY)
-+		ret = __get_any_page(page, pfn, flags);
-+
- 	if (ret == 1 && !PageHuge(page) &&
- 	    !PageLRU(page) && !__PageMovable(page)) {
- 		/*
--- 
-2.17.1
-
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index f0b743a..d3f0db4 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -31,6 +31,7 @@
+ #include <asm/intel-family.h>
+ #include <asm/e820/api.h>
+ #include <asm/hypervisor.h>
++#include <asm/tlbflush.h>
+ 
+ #include "cpu.h"
+ 
+@@ -1549,7 +1550,12 @@ static ssize_t l1tf_show_state(char *buf)
+ 
+ static ssize_t itlb_multihit_show_state(char *buf)
+ {
+-	if (itlb_multihit_kvm_mitigation)
++	if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
++	    !boot_cpu_has(X86_FEATURE_VMX))
++		return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
++	else if (!(cr4_read_shadow() & X86_CR4_VMXE))
++		return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
++	else if (itlb_multihit_kvm_mitigation)
+ 		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
+ 	else
+ 		return sprintf(buf, "KVM: Vulnerable\n");
