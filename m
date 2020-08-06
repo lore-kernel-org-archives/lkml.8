@@ -2,180 +2,176 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA171C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C3F20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD87221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="XnJKUdpr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="igUkUtxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgHFV2z (ORCPT
+        id S1726202AbgHFVcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 17:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
+        Thu, 6 Aug 2020 17:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHFV2y (ORCPT
+        with ESMTP id S1725999AbgHFVcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 17:28:54 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208F6C061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 14:28:54 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so42815plr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 14:28:54 -0700 (PDT)
+        Thu, 6 Aug 2020 17:32:46 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9C3C061575
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 14:32:46 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id z18so16102otk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 14:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2lJRJTwvENpDAW5AwuYPZPT385WPYs9MEp7IL4/DPVc=;
-        b=XnJKUdprMfzxCjaz5Mp+ypgnNPEmyUdmYP2bZrClNW5XZgBhDpcwgX7CiSIc7Qn+LY
-         cHcpL1vCehuqd9WlCMzUDzq0Cc7sYpWlSF8+aQwhqDgFn/XiwP2D6f8KMKXgfZtYVr6l
-         WfG+qVcFeEIKkKT0aWXQ5ASQpxOVI+nWWGbO9+/scatNDkh+eAOsojbrc6jh19Cxir0/
-         2+EonkdyKVwJeN7Z3h0WRSEWiZ85uGfxy+0WGDz72dhhSY0/B2Sjen9pY7aicMMhJV8T
-         6v8xz0o3yqJmGEGHrHehcngf3c9XxDHuFwErg/qKdM792rcJMa44YUQfXE4SviUqa7FW
-         dhMg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bMdUvR5cvJpWBqS4UuMvvAwpXkYNV4aiHJRiohzePLg=;
+        b=igUkUtxNZ6QY8ZC0CF73xy8YqEiLjqFpG9/3LS9S27kT9ZRuFxZgQ7Gz02TrcYyeHb
+         P7M3oF0HvZj84He4lV1336ZVwTZMWwbSOWdqjsdJcRz7oft8mSVSfC+UfSk+dgDi5sFX
+         rpgjLVZ/+elZdeH/FimeO1H1/Zu5CLcwMgxER0IdCDHnlfHVA1z85CN84XEmUHwVTIpp
+         8b8ifZ/vNnV5iNVAQvFMgEDLR4mA6j2OKYOk0PSM69IjLpWZIvLCD4Mv6BYMg8qT/S5f
+         HXseBtqpzHZUONovVBLxoihOGl0jfHKRFQyuDS2KnMAv6DLy/0fwtCXFRp6I/lHlwPEX
+         RhKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=2lJRJTwvENpDAW5AwuYPZPT385WPYs9MEp7IL4/DPVc=;
-        b=KTdcQKO14tYd2sytKZlqnaHxGNQpQKWtriHrKVXjvVzBq3j7sOxaZRA4FOuVVSRqJ0
-         j2aa/CRx94xpyynDQB4YdrhImTXVa0XS+g+yB4GOy5rH4svgMZpBMFQfIaZ47B0LYb4f
-         juzpKFspeLuNH56ZxYTY5+NOR48R3Tl/ZOvjhTKJM2vJqGkWQ/6xhEVzBTVU+eHShALe
-         cjxJf2212rFEDZYMKwlfCtw6tAmsn4MEeoQeOi2eYb+A4HaeC9IEhOLJs/Tw/INBkYeD
-         COZ8LGgsLdb9u5kILZ948eTWjh7x+Mpq7MvuoK8jjJP81MZXQ+vpk8/4Xj1Iyvjll3CV
-         AjQg==
-X-Gm-Message-State: AOAM533TaO1HecknLO3Y1uP4vH/zCLo5SbCsADYqUEhAxJ6xcg7Srn6D
-        KbmHFmEIFEICsRthUb3GPEnxLRDFujqNfg==
-X-Google-Smtp-Source: ABdhPJwy+rJvKCRaUwOO4BKsqLhD4Va9EKI3SIzQOljlTakdytgaT2CmeZym7V77h+qQyX2E50LMjg==
-X-Received: by 2002:a17:90a:ff85:: with SMTP id hf5mr10028161pjb.79.1596749332986;
-        Thu, 06 Aug 2020 14:28:52 -0700 (PDT)
-Received: from Etsukata.local (p14232-ipngn10801marunouchi.tokyo.ocn.ne.jp. [122.24.13.232])
-        by smtp.gmail.com with ESMTPSA id 207sm9334233pfz.203.2020.08.06.14.28.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Aug 2020 14:28:52 -0700 (PDT)
-Subject: Re: [PATCH] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200806150527.2283029-1-devel@etsukata.com>
- <20200806151331.GD6107@magnolia>
-From:   Eiichi Tsukata <devel@etsukata.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=devel@etsukata.com; keydata=
- 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
-Message-ID: <953af7c9-73bb-ccc4-bb69-083b585d1dd3@etsukata.com>
-Date:   Fri, 7 Aug 2020 06:28:49 +0900
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bMdUvR5cvJpWBqS4UuMvvAwpXkYNV4aiHJRiohzePLg=;
+        b=XgaiHqL/AhoYlIHt1M33b2odTZBpp5sixNtCrHvRUyuf5yRfOyGsbcqqZjzVe1HKSy
+         fokbDWxi7YDgnPLHcgfieL4rjebjFiTcFuwZi6E/UVV34Nl2l49g8Le0N7xwirr/DAje
+         pJEtAe0ydG+Ry8yRy+VJIauWw2SgPMsmJFiSbdm/VplHGDC3exKOSS32mq+Ybfx5iQA+
+         MtbYi5A185MFE4jyUS5TnK8mgRnPKQFLnD4WLDiAxUTmowOZxTXsOQSFLFZrJzhaGFG8
+         X1FILkJukHTej3m6NvKlAEdoKkxidOdo2U5CcpnwJEuyrhiewycl+BDMN6bA8RLa5MQC
+         Pjyg==
+X-Gm-Message-State: AOAM531uaHslHe0xdwqX7W0mebqVhEslX7+UOBM06FCSAonVG364+ynS
+        HJsN4g86O2/qDwsX0AqHJMoxtX88AWavMdV7Aw49RA==
+X-Google-Smtp-Source: ABdhPJx/Hxhcn35FYgvdCjsHnqMZ2uPaHzIqV74EY0tHiSr6yJAFi2hvz3eL78Cw58pEOzQveLpUre0/Lum6uk6Kzkk=
+X-Received: by 2002:a9d:65ca:: with SMTP id z10mr9442637oth.295.1596749565185;
+ Thu, 06 Aug 2020 14:32:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200806151331.GD6107@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200714015732.32426-1-sean.j.christopherson@intel.com> <084a332afc149c0c647e86f71fea49bb0665a843.camel@redhat.com>
+In-Reply-To: <084a332afc149c0c647e86f71fea49bb0665a843.camel@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 6 Aug 2020 14:32:33 -0700
+Message-ID: <CALMp9eR94d9Xbt7ZTiaezL3hSuTQTCNX8pxiDFE9tHCpDRjrQg@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode
+ is enabled
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, I sent it to linux-xfs ML. I had some trouble with gmail server.
+On Wed, Aug 5, 2020 at 12:04 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+>
+> On Mon, 2020-07-13 at 18:57 -0700, Sean Christopherson wrote:
+> > Don't attempt to load PDPTRs if EFER.LME=1, i.e. if 64-bit mode is
+> > enabled.  A recent change to reload the PDTPRs when CR0.CD or CR0.NW is
+> > toggled botched the EFER.LME handling and sends KVM down the PDTPR path
+> > when is_paging() is true, i.e. when the guest toggles CD/NW in 64-bit
+> > mode.
+> >
+> > Split the CR0 checks for 64-bit vs. 32-bit PAE into separate paths.  The
+> > 64-bit path is specifically checking state when paging is toggled on,
+> > i.e. CR0.PG transititions from 0->1.  The PDPTR path now needs to run if
+> > the new CR0 state has paging enabled, irrespective of whether paging was
+> > already enabled.  Trying to shave a few cycles to make the PDPTR path an
+> > "else if" case is a mess.
+> >
+> > Fixes: d42e3fae6faed ("kvm: x86: Read PDPTEs on CR0.CD and CR0.NW changes")
+> > Cc: Jim Mattson <jmattson@google.com>
+> > Cc: Oliver Upton <oupton@google.com>
+> > Cc: Peter Shier <pshier@google.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >
+> > The other way to fix this, with a much smaller diff stat, is to simply
+> > move the !is_page(vcpu) check inside (vcpu->arch.efer & EFER_LME).  But
+> > that results in a ridiculous amount of nested conditionals for what is a
+> > very straightforward check e.g.
+> >
+> >       if (cr0 & X86_CR0_PG) {
+> >               if (vcpu->arch.efer & EFER_LME) }
+> >                       if (!is_paging(vcpu)) {
+> >                               ...
+> >                       }
+> >               }
+> >       }
+> >
+> > Since this doesn't need to be backported anywhere, I didn't see any value
+> > in having an intermediate step.
+> >
+> >  arch/x86/kvm/x86.c | 24 ++++++++++++------------
+> >  1 file changed, 12 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 95ef629228691..5f526d94c33f3 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -819,22 +819,22 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+> >       if ((cr0 & X86_CR0_PG) && !(cr0 & X86_CR0_PE))
+> >               return 1;
+> >
+> > -     if (cr0 & X86_CR0_PG) {
+> >  #ifdef CONFIG_X86_64
+> > -             if (!is_paging(vcpu) && (vcpu->arch.efer & EFER_LME)) {
+> > -                     int cs_db, cs_l;
+> > +     if ((vcpu->arch.efer & EFER_LME) && !is_paging(vcpu) &&
+> > +         (cr0 & X86_CR0_PG)) {
+> > +             int cs_db, cs_l;
+> >
+> > -                     if (!is_pae(vcpu))
+> > -                             return 1;
+> > -                     kvm_x86_ops.get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
+> > -                     if (cs_l)
+> > -                             return 1;
+> > -             } else
+> > -#endif
+> > -             if (is_pae(vcpu) && ((cr0 ^ old_cr0) & pdptr_bits) &&
+> > -                 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu)))
+> > +             if (!is_pae(vcpu))
+> > +                     return 1;
+> > +             kvm_x86_ops.get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
+> > +             if (cs_l)
+> >                       return 1;
+> >       }
+> > +#endif
+> > +     if (!(vcpu->arch.efer & EFER_LME) && (cr0 & X86_CR0_PG) &&
+> > +         is_pae(vcpu) && ((cr0 ^ old_cr0) & pdptr_bits) &&
+> > +         !load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu)))
+> > +             return 1;
 
-Eiichi
+It might be worth commenting on the subtlety of the test below being
+skipped if the PDPTEs were loaded above. I'm assuming that the PDPTEs
+shouldn't be loaded if the instruction faults.
 
-On 2020/08/07 0:13, Darrick J. Wong wrote:
-> On Fri, Aug 07, 2020 at 12:05:27AM +0900, Eiichi Tsukata wrote:
->> If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
->> shows the following warning:
-> 
-> This needs to be sent to the xfs mailing list, per get_maintainers.pl.
-> 
-> --D
-> 
->>   UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
->>   member access within null pointer of type 'struct xfs_kobj'
->>   Call Trace:
->>    dump_stack+0x10e/0x195
->>    ubsan_type_mismatch_common+0x241/0x280
->>    __ubsan_handle_type_mismatch_v1+0x32/0x40
->>    init_xfs_fs+0x12b/0x28f
->>    do_one_initcall+0xdd/0x1d0
->>    do_initcall_level+0x151/0x1b6
->>    do_initcalls+0x50/0x8f
->>    do_basic_setup+0x29/0x2b
->>    kernel_init_freeable+0x19f/0x20b
->>    kernel_init+0x11/0x1e0
->>    ret_from_fork+0x22/0x30
->>
->> Fix it by checking parent_kobj before the code accesses its member.
->>
->> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
->> ---
->>  fs/xfs/xfs_sysfs.h | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
->> index e9f810fc6731..aad67dc4ab5b 100644
->> --- a/fs/xfs/xfs_sysfs.h
->> +++ b/fs/xfs/xfs_sysfs.h
->> @@ -32,9 +32,9 @@ xfs_sysfs_init(
->>  	struct xfs_kobj		*parent_kobj,
->>  	const char		*name)
->>  {
->> +	struct kobject *parent = parent_kobj ? &parent_kobj->kobject : NULL;
->>  	init_completion(&kobj->complete);
->> -	return kobject_init_and_add(&kobj->kobject, ktype,
->> -				    &parent_kobj->kobject, "%s", name);
->> +	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
->>  }
->>  
->>  static inline void
->> -- 
->> 2.26.2
->>
+> >       if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
+> >               return 1;
+>
+> I also investigated this issue (also same thing, OVMF doesn't boot),
+> and after looking at the intel and amd's PRM, this looks like correct solution.
+> I also tested this and it works.
+>
+>
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+>
+> Best regards,
+>         Maxim Levitsky
+>
