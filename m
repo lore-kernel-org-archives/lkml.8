@@ -2,89 +2,101 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20695C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA523C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2E123119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8872086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596733035;
-	bh=9bx/m5KJGlL6iI4Ot1s02fouYxRcpi6AchvVLqflqRw=;
+	s=default; t=1596733070;
+	bh=PoWQddXtujhSCVkBqg8jlbbT/TOIWo3jPZgW3tFasjw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sz53k/sKJFwWOWuz6qsDxI7U9yj2csECPRuY+CxXXETDFN8ApiAHoQuCsm40BLVgV
-	 GAnUYanpCLGUbVIcMZxnzeqmXphsO1TP//YWnmChG3/D3kWsmGHQTqa/8ryuedYZUs
-	 cdA+G2fnlv5kk8fCIZtOYqES2h1G87ggLRaDlac0=
+	b=IjwOgypTubLAfTXMGiqBdmkHkXDORaIKlCJH8Hnryxz97Y1iVDL8/ysShfO/zOa6M
+	 JgzU4LixXOle42lOE/xRvBWCUOLsBLnliLjDrNe8jY4/+4DTkka/sR6RcSp5I/C8f6
+	 8XNb3UxL0cwEGUTdpxqHVqnAZyOALnIuz08CedtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbgHFQ5M (ORCPT
+        id S1729524AbgHFQ5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728959AbgHFQkm (ORCPT
+        Thu, 6 Aug 2020 12:57:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36648 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbgHFQkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:40:42 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E13C0086BA;
-        Thu,  6 Aug 2020 08:39:01 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id z17so25696467ill.6;
-        Thu, 06 Aug 2020 08:39:01 -0700 (PDT)
+Received: by mail-pg1-f194.google.com with SMTP id p3so27121834pgh.3;
+        Thu, 06 Aug 2020 09:39:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=K/3We8AGMWDx9mNTiTs/sOpLR+yCgqCzpB93qqwd4xg=;
-        b=YQmE464gOXatIJgW4wBruhfeDMsoedxtYKDSDdwlqSco27XKoB6YpoyxAiGHFyOH56
-         9aBPYNIDDTpw4IQr2siOCpymcA0w750p7NIh9NgjtJt77Z0UGuSLRhh+QP8g8d1Gyzl7
-         NwPSNOggrwD5viuGGjIEHaHCZuX0NghGYYyGd8WoX4y5LQeo+WQOt15+tPeOIzQgCpT4
-         hlqo2C0S6mntSTmH+GectnV20/Pl2QTb3fb09UH3y/rNje1zE690h+jUJX9g2Gg2wqSp
-         i+o/T9jHXWrLGUD/7+3Ikzudg7ybxxb4v5b2wLydfRSoxA4aunpab5PWT90KvTCgKGMk
-         7uhA==
-X-Gm-Message-State: AOAM532Yd90LjKvcGM0N3wB+NehosS+c/Skg+3qlFoPhkfUp0lapRHCj
-        HcVYBbkiw0EK5pD7poIO0K/D/Rk=
-X-Google-Smtp-Source: ABdhPJxIIJY14/wDGJG1LlEcpKWPQN9KGSXYigWRU+8ra5vZCkBoygTzV2YMWGy2Cnsuuto1f8jrlg==
-X-Received: by 2002:a6b:c3cf:: with SMTP id t198mr10069332iof.164.1596724203177;
-        Thu, 06 Aug 2020 07:30:03 -0700 (PDT)
+        bh=NGFLJxMeBxJCNtUDHjRW6ZiLVs82vJu7FA4KSa9s8BU=;
+        b=ZCPVEgjElsHlVvJFI36AFgZD2tNn/l0eRBgVjjNS3JYOwTnpUesShQ64aaQwziztbg
+         hNS2kNv/jZWdMMypyaXYOLOf1gK0lwohQnM2IuUTgnPM+pzkqhAOPYd9s3zfA6Vb2t6Z
+         nH1hT0Xeq1UVIW+HqUyIyuGrVzfJnSX5FHLlNVCrT8SGcU/Wf9YtG0qgmw3A5gRqCb+S
+         5gH9zRtoFheT4myIHFBFrX8u//LKvDXTwmOuz3ZScaTlbR1bawzPlURrf11M740PNG2H
+         EPTS99wPwEYaVIksq+qij8ptMZl5IAsheWyWQmWIeYqjtMm7m5kb/O/LOylbv3pPgKSF
+         fnTA==
+X-Gm-Message-State: AOAM530qhH3iew1NiCRmMKQP9mDUaZTgVmVHCEtMKicywPqteTiJN2dg
+        COlVdatINMoMRr8rabbbY7jECEY=
+X-Google-Smtp-Source: ABdhPJylkZQ+5iAfHEgte0gd4yrfCNYNVomE5IG2p4UtcVZBqQMjGgI/WCTWEagKSExRTf0dapNetA==
+X-Received: by 2002:a6b:3bd4:: with SMTP id i203mr10428163ioa.205.1596723384461;
+        Thu, 06 Aug 2020 07:16:24 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s6sm4071541ilq.73.2020.08.06.07.30.00
+        by smtp.gmail.com with ESMTPSA id a16sm1583882ilh.12.2020.08.06.07.16.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:30:02 -0700 (PDT)
-Received: (nullmailer pid 807481 invoked by uid 1000);
-        Thu, 06 Aug 2020 14:29:59 -0000
-Date:   Thu, 6 Aug 2020 08:29:59 -0600
+        Thu, 06 Aug 2020 07:16:23 -0700 (PDT)
+Received: (nullmailer pid 782817 invoked by uid 1000);
+        Thu, 06 Aug 2020 14:16:22 -0000
+Date:   Thu, 6 Aug 2020 08:16:22 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Rohit kumar <rohitkr@codeaurora.org>
-Cc:     lgirdwood@gmail.com, devicetree@vger.kernel.org,
-        plai@codeaurora.org, bgoswami@codeaurora.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        broonie@kernel.org, tiwai@suse.com, agross@kernel.org,
-        srinivas.kandagatla@linaro.org, alsa-devel@alsa-project.org,
-        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, perex@perex.cz
-Subject: Re: [PATCH v5 07/12] dt-bindings: sound: lpass-cpu: Add sc7180 lpass
- cpu node
-Message-ID: <20200806142959.GA807423@bogus>
-References: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
- <1596528453-11437-8-git-send-email-rohitkr@codeaurora.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] dt-bindings: cpufreq: Document Krait CPU Cache
+ scaling
+Message-ID: <20200806141622.GA782018@bogus>
+References: <20200805131200.3234-1-ansuelsmth@gmail.com>
+ <20200805131200.3234-3-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596528453-11437-8-git-send-email-rohitkr@codeaurora.org>
+In-Reply-To: <20200805131200.3234-3-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Aug 2020 13:37:28 +0530, Rohit kumar wrote:
-> Add dt-bindings to support "qcom,lpass-cpu-sc7180" node.
+On Wed, 05 Aug 2020 15:11:59 +0200, Ansuel Smith wrote:
+> Document dedicated Krait CPU Cache Scaling driver.
 > 
-> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 55 +++++++++++++++++++++-
->  1 file changed, 53 insertions(+), 2 deletions(-)
+>  .../bindings/cpufreq/krait-cache-scale.yaml   | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: l2-cpufreq: [[384000, 600000, 1200000]] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: l2-rates: [[384000000, 1000000000, 1200000000]] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: l2-volt: [[1100000, 1100000, 1150000]] is too short
+
+
+See https://patchwork.ozlabs.org/patch/1341295
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
