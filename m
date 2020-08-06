@@ -2,172 +2,170 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90869C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C4D23135
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB76D204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:36:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="C0hb9rQJ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="nbuN/6Sd"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="reVsNquZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgHFQf4 (ORCPT
+        id S1728724AbgHFQgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:35:56 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:60815 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbgHFQfB (ORCPT
+        Thu, 6 Aug 2020 12:36:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728852AbgHFQfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:35:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596731700; x=1628267700;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=VHA0qeH2yw2/AFVvg+W+xai59mP7Ch4SKf3p3G4a/8U=;
-  b=C0hb9rQJqNg4rFoJK3BPrZMTw4+AoZAooZWYNpfO3mZXBlQytiEJHK4D
-   CAutoGe0QodOidfXpDYstP+FvtwDKnz8rMnZScexWAejvkYmyn8JcrcXM
-   V3KmJ2Sx+ght1XLrac+yq94wikSN+iMnXUIDhUqWxDsXuNVXt93GiKOjd
-   PdfbUvm0zB77AJkUJ5vZ+sXPmRwUDIpLQZkBqPzPhaSszNfn2GDJfpWDz
-   102QRiFfP/zwSyhppqOfMuzhrGLMJEPpbopf2m9e+Qgm+vWVLkKFk0tgx
-   sXSdSOrGjM7iSPoKwWznkOQUqqhaUeNvci8eiN/c9x8rk88jXPllyTsgJ
-   g==;
-IronPort-SDR: S2graD+maO8V3MUMC6/irBlXw/+xFjLL1aXaxrc7OmODdd4R5JRnZiQzA7hCtzXbrxXnUYvkq+
- Z21iyjLJU+l4Zn4tRqSiWTDS/jjfjOfnG45Kk+lvPGdOI+Y3BbHyrUNwPEvwqHVvEIQxo/nDXg
- lbtViR/bayiX96wzcSgiU/MMNrp3WzT4IBZxOXppGe1Ne3zQHMHzR4lYpyvHz1yeakBJyqbXDA
- 2geFw/Ep8PDOt8HpeHb/bUre+7tbgUsJqpgrhtVWlrFNrVyS6Nsu/pE76odadfZKJJ6jl/pm30
- 2MM=
-X-IronPort-AV: E=Sophos;i="5.75,441,1589212800"; 
-   d="scan'208";a="148614339"
-Received: from mail-dm6nam11lp2168.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.168])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Aug 2020 21:56:36 +0800
+        Thu, 6 Aug 2020 12:35:16 -0400
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03on0606.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0a::606])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AC3C00215D
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:02:38 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z/RsLpu0vqiE20yYYlhwWwgLgCMixPpStiUT4ZClZImR5/KShmqetgVZv60K6zX4JPNPU9YU/89JWfreQVib7ztglKqvKV+dTqDuUdbM/bdw5x4eF81NUdTwNoh8scxsoMoC7n3WIXIsqG5CigahpPNDuk7EODaH3zZjXJ6/Opa+V0YAoFdF3DFVti/aC8tRi9VsVq3e4m3qaTCBe+cpm4x5pC2sDyLluziWKx+RtU00jvCUu/qoAJMmqG2x3+iNQvRIc1RlwBWUcf3g3P2pX+PHwJ4RAW3px323WhJ20PmIcBXpiK1Ma8nByXF6k4Ty2dIw8mFUleDrmSir9vZEVQ==
+ b=RD8xgo43a6T2SGFjAcWDjV+r4fjzoY8b6B8Mxy98sWXkZNyIEDqP9gqLZuLaF94uXmsKvOzHM5wBYDt33M2G0wqjQNf5bER2SYJwoE7ygSgeoicrhHYwXuzJiMSbeYMx+ZetpH1S0iX63tcZ7Z4f6ds4h/b5HyVAXt7oOv5SrmxTTjzG1u3EBToIkN+zo4VGFWAD/nu85CCf7eIe8BzAlWTn+GS8bwtIk6S2Zt2yLS15/BBqY3rvNumTBX9g4GkRhy/bn3PxxiuQzCytJDrRtDeQ394w1fDQ2Ib/tzf03RrSB0Ctfo1Q6AtYEP+j5AZtmhBK8B7/cVC07oI8bKLWFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VHA0qeH2yw2/AFVvg+W+xai59mP7Ch4SKf3p3G4a/8U=;
- b=CBd6kIQCWPAKIQ80q27e/qYh68xRctio5ALkVyULb/QzhF3FDsobO1WbzPaJq3lkF4Y7X9aRrlTgnMcwMLAOSWJ4lFaj6Cp+4mtIvIEAiW1xdj3XmZLq5MVs2m/AZpWD/2d/Ibfii8poYXe8SLu3ooyxPCbYUT/xQ8fTWM5KgGRM0bYVeNZU/yGoWoNykdNo//MemdD/6wGZW7RRYVqe2Ey6Y55xB/uFc3KS+HDd+s8xqtSDA9ZJa7twIwwXnXBcDoL109XWEJEdQRTgYS5PvwXKhAAlBVR/MWNrKsqMajH77ebxyVuDtbu3PE85sDbTQdcp2NIc3R+D4QbMyDaAnw==
+ bh=DLqJ0miimQRl3JojoWiGKToPRHUPoM8wNVkepgL6SQg=;
+ b=lnXMYx7V9iSBw3xE6NsSk5cxP553ydfP74bwFG4yUE8btt0npzVlBv8HVnzi3kjeNGuSqW4tBp00M90djfVe0yJPtVG2IrcapN+DQIrIW9oD+AjB+SJZAdyARoAOoO14cdK2+2fpWHs2f/ZBKJ0Eua0JhXUu+Zs9shF8aSVAzOrFVOE5GiGWqj/YSZmaJ1xc4ZOIlhGGaqrvxptekaqiGbXDLWgfLzNuf1DtCdMMB16rhOV2jWBc914FsmRnz4RKDSTOL801VbbRsoX3hDnr9RKPsqqUuk6pDyLT8bXzypiJHRkxtUAUM1hDUIZd/fcNTMTShe3Y0fAzXtVz6Lnitg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VHA0qeH2yw2/AFVvg+W+xai59mP7Ch4SKf3p3G4a/8U=;
- b=nbuN/6SdaqUgdDxWzOEXIJ/tzKwEoRorgAk1IVJNVuPv+YR0ljZPRQoteXVVxh+CDf4TQpX9gMa2CVjZO52o0jMHzhgxVr4m0UB3z4avWtqPFa7nfTWsZZuJVJJxic8vsD7ReGARABlGc7Tdd9bF7fFJ/MO2TG01Y6BdqlWvAH8=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4720.namprd04.prod.outlook.com (2603:10b6:805:b2::10) with
+ bh=DLqJ0miimQRl3JojoWiGKToPRHUPoM8wNVkepgL6SQg=;
+ b=reVsNquZ1rhlqHKc/+DtjcfpPD4xs4VfGbUVvXNfDDnKDdu3Yc1uXV2e7vzh95DrHSUNjVfvCJ71vL4WQvpBwzNaziCSTkMTlvAVQ1uWzkvDA5XMOl6HB3+5evvJWbCYYUJY/XuMRVllSBgpgmGGu0PvKiZuk0btZyMY1Zci4Rw=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
+ by AM0PR05MB4900.eurprd05.prod.outlook.com (2603:10a6:208:cb::29) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 6 Aug
- 2020 13:56:34 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2%4]) with mapi id 15.20.3239.022; Thu, 6 Aug 2020
- 13:56:34 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bean Huo <huobean@gmail.com>,
-        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Thu, 6 Aug
+ 2020 12:10:10 +0000
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::9186:8b7:3cf7:7813]) by AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::9186:8b7:3cf7:7813%7]) with mapi id 15.20.3239.021; Thu, 6 Aug 2020
+ 12:10:10 +0000
+Date:   Thu, 6 Aug 2020 15:10:02 +0300
+From:   Eli Cohen <eli@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: RE: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
-Thread-Topic: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
-Thread-Index: AQHWa8+0AqkNRErINUCUKezc5qYxwKkq1vwAgAAAvyCAAAH2AIAAATCQgAAGPQCAADW7EA==
-Date:   Thu, 6 Aug 2020 13:56:34 +0000
-Message-ID: <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
-         <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
-         <7c59c7abf7b00c368228b3096e1bea8c9e2b2e80.camel@gmail.com>
-         <SN6PR04MB4640CE297AAB3CF4D37EE002FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <39c546268abead68f4c00f17dc47c1597f3e0273.camel@gmail.com>
-         <SN6PR04MB4640210D586CBA053F56DCF0FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
- <e3aba7fba7c208ac58c638139bd615c871d2e52e.camel@gmail.com>
-In-Reply-To: <e3aba7fba7c208ac58c638139bd615c871d2e52e.camel@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3d9560ee-e826-4b8c-a659-08d83a1087c9
-x-ms-traffictypediagnostic: SN6PR04MB4720:
-x-microsoft-antispam-prvs: <SN6PR04MB4720F25BA7308FFB4AACE8ABFC480@SN6PR04MB4720.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rWvYa1MNZPJaX72FUBFi8GdO6Vwr4N3TOZ6cyGA51/9jB/ep+cJU2+qztCIiaQje19ouqTzc3N3HAUKr7ZuwCm7jAu0aodSa7FiV/vSOrUv2pes0hsQwgbvFCbg3fz4xG3bmvFluqqEl3VpMtfd2LhFdsItNC0y3VRzIuhWruzU9nkPV0eqMLP/7jvc6RzJ3BQQ2qCYT3LeQS4bkNMkHH3vJK4nfjb62Z4BpcLkOQttSHMp62AV8tVY9apef0FNTSKZkRq5j+jeJ0knpbzVjATyJbvhF/k8kJcf3AtdqO9ojZflDr2/rPji18mTdJO5Y74cryQgoAK71MlUDE5+D+ExOylb7Dpyv5g3J9FDY9rjvV1SGGOzuUQj9Ms2RRmHCzGXskyLla6RhRjKDbyocXEd3AeRnGc06lmnJsCd1H/ils2kVPCPvvhEnGa5/0REN
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(39860400002)(346002)(396003)(316002)(54906003)(8676002)(5660300002)(33656002)(9686003)(2906002)(110136005)(71200400001)(8936002)(4326008)(55016002)(66946007)(186003)(26005)(52536014)(83380400001)(966005)(478600001)(6506007)(66556008)(66446008)(76116006)(66476007)(7696005)(64756008)(7416002)(86362001)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: xHnkRP75LoPfqfgCa3LwSrHx6qZ2YOpXEUj06lGwqP660DsVl1SXKwXqcdrdXaX5mtkDnCGItwcpY9/fCCtT+SKGEX5wMqHXf2nNkZVWwV1cLhLhOUIGW0pSXFt8G76U0TsA3aknsY6KxLmZIrBjq2Jkc7Vxyb8/DePAk9ZHVlvofUZp6z2zHD3qtsrBmYGKjByfzn+xp50TvGb9b4DfI8sElCnrUQPu+YYNBhrrPslKP4KwB8Gla2TjtANWL4jsS48ncYwAEhdiEr/oFvwdQseRIIMqTZwYtaCOovxufyJRZydhhkD2cfqPMiUmNtTGEsAeUWk8x6BiFDgxH6Ka84MdXh/OjDj+fe2ZMNg6YIY3xM32obT0doDRQ1oP5BB+oUIordzXsgdjOQkXuDyJL0fJiUsdOKA/Yc0ld1u8wkEB3Bmcm7u1v7DAtOA9tpt3wbtOGZFXx2YPJpLxQby9mym+BnatEL3n+bsQO7RAiNgL5wpvz9OaOB1//CwPoxAjviAAaKWLP79MdIjJMVjKcXlrdqDOJI8gGCb5cfPKaZJQIUkV1dtF2QesYAyPLDCz9WGU06bAOmPrkgFyXIM6rYQ3Asiz8rVyFstq421P70NLIXwNhzDlN6S90s1X9t/GSWIVVMbyhSuhx4eZnjTQdg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>,
+        "gdawar@xilinx.com" <gdawar@xilinx.com>,
+        "saugatm@xilinx.com" <saugatm@xilinx.com>,
+        "vmireyno@marvell.com" <vmireyno@marvell.com>,
+        "zhangweining@ruijie.com.cn" <zhangweining@ruijie.com.cn>
+Subject: Re: [PATCH 1/4] vdpa: introduce config op to get valid iova range
+Message-ID: <20200806121002.GA171574@mtl-vdi-166.wap.labs.mlnx>
+References: <20200617032947.6371-1-jasowang@redhat.com>
+ <20200617032947.6371-2-jasowang@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617032947.6371-2-jasowang@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-ClientProxiedBy: AM0PR05CA0075.eurprd05.prod.outlook.com
+ (2603:10a6:208:136::15) To AM0PR05MB4786.eurprd05.prod.outlook.com
+ (2603:10a6:208:b3::15)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mtl-vdi-166.wap.labs.mlnx (94.188.199.18) by AM0PR05CA0075.eurprd05.prod.outlook.com (2603:10a6:208:136::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Thu, 6 Aug 2020 12:10:08 +0000
+X-Originating-IP: [94.188.199.18]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ef9a659e-936a-47a2-4194-08d83a01aa33
+X-MS-TrafficTypeDiagnostic: AM0PR05MB4900:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR05MB4900A014E6839CE2227D2131C5480@AM0PR05MB4900.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1051;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kHanc3JHLU/I1xq/QrHA4qMmqSDF+tBPez6FGK0a3a+17tc0NZ/AVuT49eQZwoMpPtXysyM3NnRgmzYKkrbhRO+xNIiWunKiY8ZvUsfMpTwaKjiz2LQB+4Eazgpm/9QknQhCOhJANnj3TfQIvZ5anpztVTjPwxTr/iq7T5nv7AHY6eOUzTZnBjzOzYqis6dN3EQW2avtlLnBAQu63GEQ95fMgbM8GFiZyOU4GfQ+sd4YaLt6fItkE7PjxWRnrvkQP6AcgeGYqY7GAYye6r7EZ0c0ka+SAr25okNSd0x7+3hW6lZL996S2Dinnap9NljJy8ni5O4IDqzDu3mv2ctGJw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4786.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(26005)(186003)(6506007)(66556008)(52116002)(66946007)(7696005)(83380400001)(956004)(1076003)(54906003)(16526019)(33656002)(66476007)(5660300002)(86362001)(6666004)(316002)(4326008)(2906002)(7416002)(478600001)(8676002)(9686003)(55016002)(6916009)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: X0pl5mAtk+FTVMqFnpy41em+Qof4ftxxZZGaOnV7i/dFbs1/+WUh8Ajd1yArPlwpI8ZHnyf7wU5Ae++C/iqPYlP5FheDodcXH1aUTERK9cAsm9kSCtBgz7OCQew+ydVYPC1FDAo1pEh5JlWlvNlx2SQg9bmQ8FZqUj6DWSi0iYJpvcgYJF6MU4YLjomWaFssnNJa9aaf2y+bmrvf0NK+NRk5pEN8JckXDW0OdmweFJuyykDA15z4Su+yT49jrKzuxormlS1SOG4j6HBBOhE5Bpq96rWsBAmPfUjKgME7Zz3f9jhRgKJy36wV7FmYxn3Ii1FGsMc9q9WGR/kKYQPUgRrUdASVjly/5DEYVoe1GZ2MSZsRYq1f8nQuZ3gMVqwXz9JVKA8CGn/DMCh8+VpnTFWRG6ghC+swolXaEJ7TGNPXifLntNV3xh02RmdCrsiIZHTIDYTT6EywfJd5nIcb3dxOqXaSgbbd4pnISwQLu/6aaumg+DzR8roXoZGLthlBgCRU7To7dz3ul4H7+2ODknQgcW8j8u/+Gm6GYgjonqnGxH5tu9u4NXZZGBpoYwLQ25/5P6irNCNI3plFMYxrpinmG6MiF+M19f9KhzkBgboqqg5g7mI+pwHUDSztvjWeZsRt89OviZr9bGokB3Xl7w==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef9a659e-936a-47a2-4194-08d83a01aa33
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4786.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d9560ee-e826-4b8c-a659-08d83a1087c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2020 13:56:34.3333
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 12:10:10.0457
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6yWbxX9ej76PDiehPMh4n92KJnoIGLuk3qAFCYYi4DPdZQ5/8T1pgq9+yZ5G16X5XnrM0vxaz49h5AlbGnC65Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4720
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mFAkiKODoRNjNaUipZ6P4IeGOI5Jv5+VdwNd0n/l8WRtC2iOws8feC0YKuSKGuuDFHFXtOlteG9piqUsF5Fnig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4900
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA0KPiANCj4gT24gVGh1LCAyMDIwLTA4LTA2IGF0IDEwOjEyICswMDAwLCBBdnJpIEFsdG1hbiB3
-cm90ZToNCj4gPiA+ID4NCj4gPiA+DQo+ID4gPiB3ZSBkaWRuJ3Qgc2VlIHlvdSBBY2tlZC1ieSBp
-biB0aGUgcGF0aHdvcmssIHdvdWxkIHlvdSBsaWtlIHRvIGFkZA0KPiA+ID4gdGhlbT8NCj4gPiA+
-IEp1c3QgZm9yIHJlbWluZGluZyB1cyB0aGF0IHlvdSBoYXZlIGFncmVlZCB0byBtYWlubGluZSB0
-aGlzIHNlcmllcw0KPiA+ID4gcGF0Y2hzZXQuDQo+ID4NCj4gPiBJIGFja2VkIGl0IC0gaHR0cHM6
-Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtc2NzaS9tc2cxNDQ2NjAuaHRtbA0KPiA+IEFu
-ZCBhc2tlZCBNYXJ0aW4gdG8gbW92ZSBmb3J3YXJkIC0NCj4gPiBodHRwczovL3d3dy5zcGluaWNz
-Lm5ldC9saXN0cy9saW51eC1zY3NpL21zZzE0NDczOC5odG1sDQo+ID4gV2hpY2ggaGUgZGlkLCBh
-bmQgZ290IHNvbWUgc3BhcnNlIGVycm9yczoNCj4gPiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9s
-aXN0cy9saW51eC1zY3NpL21zZzE0NDk3Ny5odG1sDQo+ID4gV2hpY2ggSSBhc2tlZCBEYWVqdW4g
-dG8gZml4IC0NCj4gPiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1zY3NpL21z
-ZzE0NDk4Ny5odG1sDQo+ID4NCj4gPiBGb3IgdGhlIG5leHQgY2hhaW4gb2YgZXZlbnRzIEkgZ3Vl
-c3MgeW91IGNhbiBmb2xsb3cgYnkgeW91cnNlbGYuDQo+ID4NCj4gPiBUaGFua3MsDQo+ID4gQXZy
-aQ0KPiANCj4gQXZyaQ0KPiBTb3JyeSBmb3IgbWFraW5nIHlvdSBjb25mdXNpbmcuIHllcywgSSBr
-bmV3IHRoYXQsIGFuZCBmb2xsb3dpbmcuDQo+IEkgbWVhbiBBY2tlZC1ieSB0YWcgaW4gdGhlIHBh
-dGNoc2V0LCB0aGVuIHdlIHNlZSB5b3VyIGFja2VkIGluIHRoZQ0KPiBwYXRjaHdvcmssIGFuZCBs
-ZXQgb3RoZXJzIGtub3cgdGhhdCB5b3UgYWNrZWQgaXQsIHJhdGhlciB0aGFuIGdvaW5nDQo+IGJh
-Y2t0cmFjayBoaXN0b3J5IGVtYWlsLg0KPiANCj4gSGkgRGFlanVuDQo+IEkgdGhpbmsgeW91IGNh
-biBhZGQgQXZyaSdzIEFja2VkLWJ5IHRhZyBpbiB5b3VyIHBhdGNoc2V0LCBqdXN0IGZvcg0KPiBx
-dWlja2x5IG1vdmluZyBmb3J3YXJkIGFuZCByZW1pbmRpbmcuDQpBaGhoIC0gT25lIG1vbWVudCBw
-bGVhc2UgLSANCldoaWxlIHJlYmFzaW5nIHRoZSB2OCBvbiBteSBwbGF0Zm9ybSwgSSBub3RpY2Vk
-IHNvbWUgc3Vic3RhbnRpYWwgY2hhbmdlcyBzaW5jZSB2Ni4NCmUuZy4gdGhlIGhwYiBsdW4gcmVm
-IGNvdW50aW5nIGlzbid0IHRoZXJlIGFueW1vcmUsIGFzIHdlbGwgYXMgc29tZSBtb3JlIHN0dWZm
-Lg0KV2hpbGUgdGhvc2UgY2hhbmdlcyBtaWdodCBiZSBvbmx5IGZvciB0aGUgYmVzdCwgIEkgdGhp
-bmsgYW55IHRlc3RlZC1ieSB0YWcgc2hvdWxkIGJlIHJlLWFzc2lnbi4NCg0KQW55d2F5LCBhcyBm
-b3IgbXlzZWxmLCBJIGFtIG5vdCBwbGFubmluZyB0byBwdXQgYW55IG1vcmUgdGltZSBpbiB0aGlz
-LA0KdW50aWwgdGhlcmUgaXMgYSBjbGVhciBkZWNpc2lvbiB3aGVyZSB0aGlzIHNlcmllcyBpcyBn
-b2luZyB0by4NCg0KTWFydGluIC0gQXJlIHlvdSBjb25zaWRlcmluZyB0byBtZXJnZSB0aGUgSFBC
-IGZlYXR1cmUgZXZlbnR1YWxseSB0byBtYWlubGluZSBrZXJuZWw/DQoNClRoYW5rcywNCkF2cmkN
-Cj4gDQo+IHRoYW5rcywNCj4gQmVhbg0KDQo=
+On Wed, Jun 17, 2020 at 06:29:44AM +0300, Jason Wang wrote:
+> This patch introduce a config op to get valid iova range from the vDPA
+> device.
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  include/linux/vdpa.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+> index 239db794357c..b7633ed2500c 100644
+> --- a/include/linux/vdpa.h
+> +++ b/include/linux/vdpa.h
+> @@ -41,6 +41,16 @@ struct vdpa_device {
+>  	unsigned int index;
+>  };
+>  
+> +/**
+> + * vDPA IOVA range - the IOVA range support by the device
+> + * @start: start of the IOVA range
+> + * @end: end of the IOVA range
+> + */
+> +struct vdpa_iova_range {
+> +	u64 start;
+> +	u64 end;
+> +};
+> +
+
+What do you do with this information? Suppose some device tells you it
+supports some limited range, say, from 0x40000000 to 0x80000000. What
+does qemu do with this information?
+
+>  /**
+>   * vDPA_config_ops - operations for configuring a vDPA device.
+>   * Note: vDPA device drivers are required to implement all of the
+> @@ -134,6 +144,9 @@ struct vdpa_device {
+>   * @get_generation:		Get device config generation (optional)
+>   *				@vdev: vdpa device
+>   *				Returns u32: device generation
+> + * @get_iova_range:		Get supported iova range (on-chip IOMMU)
+> + *				@vdev: vdpa device
+> + *				Returns the iova range supported by the device
+>   * @set_map:			Set device memory mapping (optional)
+>   *				Needed for device that using device
+>   *				specific DMA translation (on-chip IOMMU)
+> @@ -195,6 +208,7 @@ struct vdpa_config_ops {
+>  	void (*set_config)(struct vdpa_device *vdev, unsigned int offset,
+>  			   const void *buf, unsigned int len);
+>  	u32 (*get_generation)(struct vdpa_device *vdev);
+> +	struct vdpa_iova_range (*get_iova_range)(struct vdpa_device *vdev);
+>  
+>  	/* DMA ops */
+>  	int (*set_map)(struct vdpa_device *vdev, struct vhost_iotlb *iotlb);
+> -- 
+> 2.20.1
+> 
