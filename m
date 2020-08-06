@@ -2,309 +2,183 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A966AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B05BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DC120786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA29B20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KPp8gYow"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aXAMg6wc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbgHFRHz (ORCPT
+        id S1729390AbgHFRIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730002AbgHFRGm (ORCPT
+        Thu, 6 Aug 2020 13:08:24 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:56788 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729357AbgHFRGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:06:42 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9880C06179E
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 10:05:50 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id e4so7219025pgv.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 10:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=H3dGzahstvfIu8LFQ0q2SpynGz08Mul/xIBFXR8P1IE=;
-        b=KPp8gYowjhn3T+7qizpLEfCg0waltPeddgh0U5j1xFoAtXpr0bzT/0Eq48eG9u8jI8
-         3ocjWmhhmTnTvq00jJR4mTx7UUTquRGMWm62RIx/lTYOuc7TBgsWGRUFUnT2PafnODC8
-         UmxTCZ93Nz3rwGT3V+ps5CHqAqUPUueE+3RwuE4xD3NwIdzxJcoeipV/Q6F/ZK43p5Hb
-         BQg5PVLcO1VGbG03VIFvoIB+oqUNLRvHQye9onUJjN/0V7A958GDbstFIUOm1CYoAWlF
-         OWzzRCIprRmnwcze2nKDSL0KgMhU9ZlwfW9kVChL255YbnBi7Ll1DLzy7ljIZCZ3nyxn
-         05tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=H3dGzahstvfIu8LFQ0q2SpynGz08Mul/xIBFXR8P1IE=;
-        b=OQ7roNT14o810bxjEQ037a+lwruRgjB1vCuHgZbOGsMzOzkBhFc5pzMJYvVvPcokR2
-         rbtE7JUREUx1OIjlCoJX42G04zZmd2eNxcGhc/glw9XXkmB7lV5e3DvxsFYZBa25wZF0
-         7YXecoA1yZqGTZsF9G3oDzaJqXqynSUMbkyE0MQ63pxEwxqzKhqeWPM9S3f5stbwqLse
-         z6CrQ0vTcy8FwOZqwdb6JRF+4uQ1EVwGKCtdgTNdgosOARYNCcTTM3QRoQQWirlFuT8f
-         KtPdxj6VD6YEhxC3MeuTgEWwZllhCRgjtaqqVS+2thqgrOlgnZ0K9fwqBNaTXspijwtC
-         BpxQ==
-X-Gm-Message-State: AOAM532niGs3yG8eS6drTFOvwkFZ/RSAHUzPXPkRIPKdZKNOHsuO6xCM
-        WJujF7INF2mijZZkXuaJeea1ujXO
-X-Google-Smtp-Source: ABdhPJwE8nAASukMgb+9LvSC30OpQ5i9OVImgRmmoUGIhkFG8zZGO/pwVDIh5D3QrK0T/HJyZqp0wekK
-X-Received: by 2002:a65:5349:: with SMTP id w9mr7745181pgr.243.1596733550192;
- Thu, 06 Aug 2020 10:05:50 -0700 (PDT)
-Date:   Thu,  6 Aug 2020 10:05:44 -0700
-In-Reply-To: <20200806170544.382140-1-posk@google.com>
-Message-Id: <20200806170544.382140-2-posk@google.com>
-Mime-Version: 1.0
-References: <20200806170544.382140-1-posk@google.com>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH 2/2 v2] rseq/selftests: test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
-From:   Peter Oskolkov <posk@google.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>,
-        Peter Oskolkov <posk@posk.io>, Peter Oskolkov <posk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Aug 2020 13:06:35 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 05EBF20B4908;
+        Thu,  6 Aug 2020 08:46:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 05EBF20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596728798;
+        bh=KG2C6RbvLQBgLP+0NWNVA/7hHclgHh703Y6EXT9pNkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aXAMg6wcqdwOoZdGIULELD41c4SAJhF4XYK8WNDNhmldx9W/PmQVnJb83CT/mqp4d
+         ZDHRVzKvbhts3VJKMjZBX1Psyz0BOoN18dI37/BVFR2LwW3pQHbIZ6M7Z/hrydcRF4
+         OtV0jXI+OHmzpKsa8SVpRidB/XRbUFc2MJ9rhfhg=
+Date:   Thu, 6 Aug 2020 10:46:36 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Nayna <nayna@linux.vnet.ibm.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 1/2] ima: Pre-parse the list of keyrings in a KEY_CHECK
+ rule
+Message-ID: <20200806154636.GB55159@sequoia>
+References: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
+ <20200727140831.64251-2-tyhicks@linux.microsoft.com>
+ <8f749594-1214-9f2d-4614-d360772a2ab6@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8f749594-1214-9f2d-4614-d360772a2ab6@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on Google-internal RSEQ work done by
-Paul Turner and Andrew Hunter.
+On 2020-08-06 11:34:43, Nayna wrote:
+> 
+> On 7/27/20 10:08 AM, Tyler Hicks wrote:
+> > The ima_keyrings buffer was used as a work buffer for strsep()-based
+> > parsing of the "keyrings=" option of an IMA policy rule. This parsing
+> > was re-performed each time an asymmetric key was added to a kernel
+> > keyring for each loaded policy rule that contained a "keyrings=" option.
+> > 
+> > An example rule specifying this option is:
+> > 
+> >   measure func=KEY_CHECK keyrings=a|b|c
+> > 
+> > The rule says to measure asymmetric keys added to any of the kernel
+> > keyrings named "a", "b", or "c". The size of the buffer size was
+> > equal to the size of the largest "keyrings=" value seen in a previously
+> > loaded rule (5 + 1 for the NUL-terminator in the previous example) and
+> > the buffer was pre-allocated at the time of policy load.
+> > 
+> > The pre-allocated buffer approach suffered from a couple bugs:
+> > 
+> > 1) There was no locking around the use of the buffer so concurrent key
+> >     add operations, to two different keyrings, would result in the
+> >     strsep() loop of ima_match_keyring() to modify the buffer at the same
+> >     time. This resulted in unexpected results from ima_match_keyring()
+> >     and, therefore, could cause unintended keys to be measured or keys to
+> >     not be measured when IMA policy intended for them to be measured.
+> > 
+> > 2) If the kstrdup() that initialized entry->keyrings in ima_parse_rule()
+> >     failed, the ima_keyrings buffer was freed and set to NULL even when a
+> >     valid KEY_CHECK rule was previously loaded. The next KEY_CHECK event
+> >     would trigger a call to strcpy() with a NULL destination pointer and
+> >     crash the kernel.
+> > 
+> > Remove the need for a pre-allocated global buffer by parsing the list of
+> > keyrings in a KEY_CHECK rule at the time of policy load. The
+> > ima_rule_entry will contain an array of string pointers which point to
+> > the name of each keyring specified in the rule. No string processing
+> > needs to happen at the time of asymmetric key add so iterating through
+> > the list and doing a string comparison is all that's required at the
+> > time of policy check.
+> > 
+> > In the process of changing how the "keyrings=" policy option is handled,
+> > a couple additional bugs were fixed:
+> > 
+> > 1) The rule parser accepted rules containing invalid "keyrings=" values
+> >     such as "a|b||c", "a|b|", or simply "|".
+> > 
+> > 2) The /sys/kernel/security/ima/policy file did not display the entire
+> >     "keyrings=" value if the list of keyrings was longer than what could
+> >     fit in the fixed size tbuf buffer in ima_policy_show().
+> > 
+> > Fixes: 5c7bac9fb2c5 ("IMA: pre-allocate buffer to hold keyrings string")
+> > Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > ---
+> >   security/integrity/ima/ima_policy.c | 138 +++++++++++++++++++---------
+> >   1 file changed, 93 insertions(+), 45 deletions(-)
+> > 
+> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > index 07f033634b27..c328cfa0fc49 100644
+> > --- a/security/integrity/ima/ima_policy.c
+> > +++ b/security/integrity/ima/ima_policy.c
+> > @@ -59,6 +59,11 @@ enum policy_types { ORIGINAL_TCB = 1, DEFAULT_TCB };
+> >   enum policy_rule_list { IMA_DEFAULT_POLICY = 1, IMA_CUSTOM_POLICY };
+> > +struct ima_rule_opt_list {
+> > +	size_t count;
+> > +	char *items[];
+> > +};
+> > +
+> >   struct ima_rule_entry {
+> >   	struct list_head list;
+> >   	int action;
+> > @@ -78,7 +83,7 @@ struct ima_rule_entry {
+> >   		int type;	/* audit type */
+> >   	} lsm[MAX_LSM_RULES];
+> >   	char *fsname;
+> > -	char *keyrings; /* Measure keys added to these keyrings */
+> > +	struct ima_rule_opt_list *keyrings; /* Measure keys added to these keyrings */
+> >   	struct ima_template_desc *template;
+> >   };
+> > @@ -206,10 +211,6 @@ static LIST_HEAD(ima_policy_rules);
+> >   static LIST_HEAD(ima_temp_rules);
+> >   static struct list_head *ima_rules = &ima_default_rules;
+> > -/* Pre-allocated buffer used for matching keyrings. */
+> > -static char *ima_keyrings;
+> > -static size_t ima_keyrings_len;
+> > -
+> >   static int ima_policy __initdata;
+> >   static int __init default_measure_policy_setup(char *str)
+> > @@ -253,6 +254,72 @@ static int __init default_appraise_policy_setup(char *str)
+> >   }
+> >   __setup("ima_appraise_tcb", default_appraise_policy_setup);
+> > +static struct ima_rule_opt_list *ima_alloc_rule_opt_list(const substring_t *src)
+> > +{
+> > +	struct ima_rule_opt_list *opt_list;
+> > +	size_t count = 0;
+> > +	char *src_copy;
+> > +	char *cur, *next;
+> > +	size_t i;
+> > +
+> > +	src_copy = match_strdup(src);
+> > +	if (!src_copy)
+> > +		return NULL;
+> 
+> The caller of this function checks for IS_ERR(..) and not
+> IS_ERR_OR_NULL(..). Shouldn't it return ERR_PTR(-EINVAL) instead of NULL ?
 
-This patch adds a selftest for MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU.
-The test quite often fails without the previous patch in this patchset,
-but consistently passes with it.
+Yes! Thank you for catching this.
 
-Signed-off-by: Peter Oskolkov <posk@google.com>
----
- .../selftests/rseq/basic_percpu_ops_test.c    | 181 ++++++++++++++++++
- 1 file changed, 181 insertions(+)
+I switched this function to returning an ERR_PTR() towards the end of my
+development for this series and missed this particular return.
 
-diff --git a/tools/testing/selftests/rseq/basic_percpu_ops_test.c b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-index eb3f6db36d36..147c80deac19 100644
---- a/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-+++ b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-@@ -3,16 +3,21 @@
- #include <assert.h>
- #include <pthread.h>
- #include <sched.h>
-+#include <stdatomic.h>
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <stddef.h>
-+#include <syscall.h>
-+#include <unistd.h>
- 
- #include "rseq.h"
- 
- #define ARRAY_SIZE(arr)	(sizeof(arr) / sizeof((arr)[0]))
- 
-+#define MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU	(1<<7)
-+
- struct percpu_lock_entry {
- 	intptr_t v;
- } __attribute__((aligned(128)));
-@@ -289,6 +294,180 @@ void test_percpu_list(void)
- 	assert(sum == expected_sum);
- }
- 
-+struct test_membarrier_thread_args {
-+	int stop;
-+	intptr_t percpu_list_ptr;
-+};
-+
-+/* Worker threads modify data in their "active" percpu lists. */
-+void *test_membarrier_worker_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	const int iters = 10 * 1000 * 1000;
-+	int i;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	for (i = 0; i < iters; ++i) {
-+		while (true) {
-+			int cpu, ret;
-+			struct percpu_list *list_ptr = (struct percpu_list *)
-+				atomic_load(&args->percpu_list_ptr);
-+
-+			if (!list_ptr)
-+				continue;  /* Not yet initialized. */
-+
-+			cpu = rseq_cpu_start();
-+			struct percpu_list_node *node = list_ptr->c[cpu].head;
-+			const intptr_t prev = node->data;
-+
-+			ret = rseq_cmpeqv_cmpeqv_storev(&node->data, prev,
-+					&args->percpu_list_ptr,
-+					(intptr_t)list_ptr, prev + 1, cpu);
-+			if (!ret)
-+				break;  /* Success. */
-+		}
-+	}
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+void test_membarrier_init_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	memset(list, 0, sizeof(*list));
-+	for (i = 0; i < CPU_SETSIZE; i++) {
-+		struct percpu_list_node *node;
-+
-+		node = malloc(sizeof(*node));
-+		assert(node);
-+		node->data = 0;
-+		node->next = NULL;
-+		list->c[i].head = node;
-+	}
-+}
-+
-+void test_membarrier_free_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		free(list->c[i].head);
-+}
-+
-+static int sys_membarrier(int cmd, int flags)
-+{
-+	return syscall(__NR_membarrier, cmd, flags);
-+}
-+
-+/*
-+ * The manager thread swaps per-cpu lists that worker threads see,
-+ * and validates that there are no unexpected modifications.
-+ */
-+void *test_membarrier_manager_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	struct percpu_list list_a, list_b;
-+	intptr_t expect_a = 0, expect_b = 0;
-+	int cpu_a = 0, cpu_b = 0;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	/* Init lists. */
-+	test_membarrier_init_percpu_list(&list_a);
-+	test_membarrier_init_percpu_list(&list_b);
-+
-+	atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+
-+	while (!atomic_load(&args->stop)) {
-+		/* list_a is "active". */
-+		cpu_a = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_b is "inactive", we should never see changes
-+		 * to list_b.
-+		 */
-+		if (expect_b != atomic_load(&list_b.c[cpu_b].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_b "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_b);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU, cpu_a);
-+		/*
-+		 * Cpu A should now only modify list_b, so we values
-+		 * in list_a should be stable.
-+		 */
-+		expect_a = atomic_load(&list_a.c[cpu_a].head->data);
-+
-+		cpu_b = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_a is "inactive", we should never see changes
-+		 * to list_a.
-+		 */
-+		if (expect_a != atomic_load(&list_a.c[cpu_a].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_a "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU, cpu_b);
-+		/* Remember a value from list_b. */
-+		expect_b = atomic_load(&list_b.c[cpu_b].head->data);
-+	}
-+
-+	test_membarrier_free_percpu_list(&list_a);
-+	test_membarrier_free_percpu_list(&list_b);
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+/* Test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU membarrier command. */
-+void test_membarrier(void)
-+{
-+	struct test_membarrier_thread_args thread_args;
-+	pthread_t worker_threads[CPU_SETSIZE];
-+	pthread_t manager_thread;
-+	int i;
-+
-+	thread_args.stop = 0;
-+	thread_args.percpu_list_ptr = 0;
-+	pthread_create(&manager_thread, NULL,
-+		       test_membarrier_manager_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_create(&worker_threads[i], NULL,
-+		       test_membarrier_worker_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_join(worker_threads[i], NULL);
-+
-+	atomic_store(&thread_args.stop, 1);
-+	pthread_join(manager_thread, NULL);
-+}
-+
- int main(int argc, char **argv)
- {
- 	if (rseq_register_current_thread()) {
-@@ -300,6 +479,8 @@ int main(int argc, char **argv)
- 	test_percpu_spinlock();
- 	printf("percpu_list\n");
- 	test_percpu_list();
-+	printf("membarrier\n");
-+	test_membarrier();
- 	if (rseq_unregister_current_thread()) {
- 		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
- 			errno, strerror(errno));
--- 
-2.28.0.163.g6104cc2f0b6-goog
+I'll send out a v2 ASAP.
 
+Tyler
+
+> 
+> Thanks & Regards,
+> 
+>     - Nayna
