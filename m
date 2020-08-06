@@ -2,133 +2,69 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13692C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68CD023119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTazq0sC"
+	by mail.kernel.org (Postfix) with ESMTP id C2F3B23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgHFRYt (ORCPT
+        id S1729840AbgHFRY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
+        Thu, 6 Aug 2020 13:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729912AbgHFREE (ORCPT
+        with ESMTP id S1729842AbgHFRDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:04:04 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC65C0A888F;
-        Thu,  6 Aug 2020 07:41:59 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id z17so25520368ill.6;
-        Thu, 06 Aug 2020 07:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=e+hO/GQg5P+bxQrVbS65C7Iq18WrIeXspRsLAKl6TmY=;
-        b=TTazq0sCZRjto6OkfUWBKf1/2X3NxXYV0alJTRb9iha5CV4YG5RQoIkNcndd1jABiR
-         6arDxJ3PjTvaYsRp6BllbjuvMHvBuTNR+lg4jQNgZ5AVcQMLBVKGZ4UAUBzSxWzbVYg2
-         tTCnPg13nUaa3FAtnSUfhTAaz6PZe1omA4g5kN0i1eII5KKVMcO8E3f9lC8xg0C0jB5J
-         Zyv4OffZSOkiwZ0V+e4ueUrTF9n2C5jfgfZ8t5TfeDmduvFro3ac3U6b0PBCIfSbloiq
-         vgfcxRw9yG6TqBpCInEUWFfmcDx/FTzkyt4QDblpYEgmTXYWO4goZnIgoPEGA2Kxd943
-         fRxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=e+hO/GQg5P+bxQrVbS65C7Iq18WrIeXspRsLAKl6TmY=;
-        b=PE17qnaI6U7NeC2sVe1T5BRFs9IWbbpsX4sQEVwcHM9aj5HFHexTRCnmza2oAnkPyB
-         v5PqyhdsuBPNQjk1tXowe0wSvBcYagzcGamV+RXWkrtWYL7RgMC7P5uHI+q0+pfujyXY
-         BevgpdGRnwJkxxSC3MQKEI3Mtm1WXcg+5k5fknc97Kpz/YcQNmI+xjAZk64QEWUGSasJ
-         0XLAC3zdFrqr54afaBWGe63Dx7u57u3Mh/kkwKyHQtXKXuTVtRpbsaIMJxuttSwKWkGw
-         La1BlR1+jH6naBss5ugnoN5McKiFnq8mawpfMErScJgi4v48YDUv7BQbHbL30uWG4ChJ
-         ulfQ==
-X-Gm-Message-State: AOAM530GByZIduTZWbb80Yts9UI0R82Tmk7Mw4t/Kaumn1bxEEQW8yyy
-        G9iZQo8ekxj8WT5eBHAHio/8GC081TW2XlGhl6I=
-X-Google-Smtp-Source: ABdhPJyMYILla6HQYNcIPeMni5KOhLnUAjTEmattKCsp0+w1QGXrfuR6V4jG4VzEak6WOHcFfOeQS6f4Hb4mhukcP+E=
-X-Received: by 2002:a92:5b12:: with SMTP id p18mr3323594ilb.95.1596724918389;
- Thu, 06 Aug 2020 07:41:58 -0700 (PDT)
+        Thu, 6 Aug 2020 13:03:24 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2D8C061A19;
+        Thu,  6 Aug 2020 05:09:12 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3ehe-00ATwx-OM; Thu, 06 Aug 2020 12:08:58 +0000
+Date:   Thu, 6 Aug 2020 13:08:58 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] net: Set fput_needed iff FDPUT_FPUT is set
+Message-ID: <20200806120858.GA2497432@ZenIV.linux.org.uk>
+References: <1596714796-25298-1-git-send-email-linmiaohe@huawei.com>
+ <20200806115915.GO1236603@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-14-git-send-email-alex.shi@linux.alibaba.com>
- <9b906469-38fb-8a4e-9a47-d617c7669579@linux.alibaba.com> <CAKgT0Ud1+FkJcTXR0MxZYFxd7mr=opdXfXKTqkmiu4NNMyT4bg@mail.gmail.com>
- <f9fa46a4-b341-2470-ce18-03379b9ea5c2@linux.alibaba.com>
-In-Reply-To: <f9fa46a4-b341-2470-ce18-03379b9ea5c2@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 6 Aug 2020 07:41:47 -0700
-Message-ID: <CAKgT0Ud-z4PH_d824KVgXtakwGNGXhd3Avvx4drBGmGh0nMcZw@mail.gmail.com>
-Subject: Re: [PATCH v17 13/21] mm/lru: introduce TestClearPageLRU
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806115915.GO1236603@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 6:54 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
->
->
-> =E5=9C=A8 2020/8/6 =E4=B8=8A=E5=8D=886:43, Alexander Duyck =E5=86=99=E9=
-=81=93:
-> >> @@ -878,9 +877,8 @@ void release_pages(struct page **pages, int nr)
-> >>                                 spin_lock_irqsave(&locked_pgdat->lru_l=
-ock, flags);
-> >>                         }
-> >>
-> >> -                       lruvec =3D mem_cgroup_page_lruvec(page, locked=
-_pgdat);
-> >> -                       VM_BUG_ON_PAGE(!PageLRU(page), page);
-> >>                         __ClearPageLRU(page);
-> >> +                       lruvec =3D mem_cgroup_page_lruvec(page, locked=
-_pgdat);
-> >>                         del_page_from_lru_list(page, lruvec, page_off_=
-lru(page));
-> >>                 }
-> >>
-> > The more I look at this piece it seems like this change wasn't really
-> > necessary. If anything it seems like it could catch potential bugs as
-> > it was testing for the PageLRU flag before and then clearing it
-> > manually anyway. In addition it doesn't reduce the critical path by
-> > any significant amount so I am not sure these changes are providing
-> > any benefit.
->
-> Don't know hat kind of bug do you mean here, since the page is no one usi=
-ng, means
-> no one could ClearPageLRU in other place,  so if you like to keep the VM_=
-BUG_ON_PAGE,
-> that should be ok.
+On Thu, Aug 06, 2020 at 12:59:16PM +0100, Al Viro wrote:
+> On Thu, Aug 06, 2020 at 07:53:16PM +0800, linmiaohe wrote:
+> > From: Miaohe Lin <linmiaohe@huawei.com>
+> > 
+> > We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
+> > accordingly.
+> > 
+> > Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
+> 
+> Explain, please.  We are getting it from fdget(); what else can we get in flags there?
 
-You kind of answered your own question. Basically the bug it would
-catch is if another thread were to clear the flag without getting a
-reference to the page first. My preference would be to leave this code
-as is for now. There isn't much value in either moving the lruvec or
-removing the VM_BUG_ON_PAGE call since the critical path size would
-barely be effected as it is only one or two operations anyway. What it
-comes down to is that the less unnecessary changes we make the better.
+FWIW, struct fd ->flags may have two bits set: FDPUT_FPUT and FDPUT_POS_UNLOCK.
+The latter is set only by __fdget_pos() and its callers, and that only for
+regular files and directories.
+
+Nevermind that sockfd_lookup_light() does *not* use ..._pos() family of
+primitives, even if it started to use e.g. fdget_pos() it *still* would
+not end up with anything other than FDPUT_FPUT to deal with on that
+path - it checks that what it got is a socket.  Anything else is dropped
+right there, without leaving fput() to caller.
+
+So could you explain what exactly the bug is - if you are seeing some
+breakage and this patch fixes it, something odd is definitely going on
+and it would be nice to figure out what that something is.
+
