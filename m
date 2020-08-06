@@ -4,63 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E185FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99361C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40EBF23119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C9323119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K1WKd77c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GQ928T2l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RWFCzw5A";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jIGFwuAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbgHFROi (ORCPT
+        id S1729985AbgHFROq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:14:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58862 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730204AbgHFRJ5 (ORCPT
+        Thu, 6 Aug 2020 13:14:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730206AbgHFRJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:09:57 -0400
-Date:   Thu, 06 Aug 2020 17:09:53 -0000
+        Thu, 6 Aug 2020 13:09:56 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B0EC061574;
+        Thu,  6 Aug 2020 10:09:55 -0700 (PDT)
+Date:   Thu, 06 Aug 2020 17:09:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596733794;
+        s=2020; t=1596733793;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z7Ezb+fQEneajcgalNOzKnlkvZJhSLgdHeTzhR2VDIk=;
-        b=K1WKd77c76FJ+eGWRi/+XneZsO1BMM+nOOIPacCjS0eTOu/yiWqxLe7QYnURpTdtpw2B2A
-        PQukdQ4u9AGkCK1RZNdBzNTl18byJAQZUu6fYMLvVWVkDP+CZYgX1u8cxrBB5siLNmvN9b
-        wZBQ4eKf4gdeCWLfQ4jXSXJvncouaiwKE1ujlqgA+M6RY/uQObkdQin9jYD+Fuxjtgj2vw
-        twPPXBBfcyubPbLYFIgr7ftxOo/W0vBNt4X3AwJETvgiTu6/ZIwHWlwkPUHXEjlEXY8suL
-        KKZ4LShygv93B8z7/mKHNmSoQX2asVqyrklvnhO+fHGV5emfhnnnSu28m73HlQ==
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=0IfDYCyrpOkq4cmxc1Tqa4VZc19IKhfIyezM8UnI2Pg=;
+        b=RWFCzw5AvxwIuVk3MEpBqIPepmQuV2m3tPeZOAcF1Hd4xJjna2IIHpEfkGO4ErOLhPkGxe
+        VDGQEzxkAvukHWgMc7vmH7OHI6g0CxIU+rJX9MdKTRMtwkGIFANBu8X3qOjnSwYQLy29ki
+        0hg3z3p6zE8e6+Su4lKV5MPbMSxr+sKXn4Py+GHdFDCW7QTzuIFC3hNwdkUfKiG7yDTK+K
+        QwLMpO2Ns9C2Q8m+32Q6Yi7G3ywoLSLy3MxKpUlAumc7uSxG/8z7/5gb8nokhDmsEn92RL
+        c5sVK0oErMQ5mTf/iUGR6RJ4TCFm8wbocleBDFyC4xH4gVPLqJAy25M4dGHj+Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596733794;
+        s=2020e; t=1596733793;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z7Ezb+fQEneajcgalNOzKnlkvZJhSLgdHeTzhR2VDIk=;
-        b=GQ928T2lXbltuQOFu/z8BJzLU09MjCQxqyOHnuqYODfQ66g6SuEkgloDS1lwJkffotB5I8
-        Xl2zPkAIflVO0GDA==
-From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=0IfDYCyrpOkq4cmxc1Tqa4VZc19IKhfIyezM8UnI2Pg=;
+        b=jIGFwuAIXvTsnDCz+IY8ShcX6rnpSfQYztmes6UQ1o8JBBbXSXkYWV8i/1SssAGwITWnVl
+        o68fCXUWTdgThEAw==
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: Take over CAP_SYS_PTRACE creds to
- CAP_PERFMON capability
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
+Subject: [tip: perf/urgent] kprobes: Remove show_registers() function prototype
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <6e8392ff-4732-0012-2949-e1587709f0f6@linux.intel.com>
-References: <6e8392ff-4732-0012-2949-e1587709f0f6@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159673379364.3192.13552645526544222331.tip-bot2@tip-bot2>
+Message-ID: <159673379297.3192.4747957589177383846.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -72,50 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     45fd22da97c6125d8d0d35bd1791e7c0c4175279
-Gitweb:        https://git.kernel.org/tip/45fd22da97c6125d8d0d35bd1791e7c0c4175279
-Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate:    Wed, 05 Aug 2020 10:56:56 +03:00
+Commit-ID:     09fc67b500c7f0bb1b5ed774197ac7f2c5285655
+Gitweb:        https://git.kernel.org/tip/09fc67b500c7f0bb1b5ed774197ac7f2c5285655
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Fri, 17 Jul 2020 17:42:55 +09:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 06 Aug 2020 15:03:20 +02:00
+CommitterDate: Thu, 06 Aug 2020 17:52:28 +02:00
 
-perf/core: Take over CAP_SYS_PTRACE creds to CAP_PERFMON capability
+kprobes: Remove show_registers() function prototype
 
-Open access to per-process monitoring for CAP_PERFMON only
-privileged processes [1]. Extend ptrace_may_access() check
-in perf_events subsystem with perfmon_capable() to simplify
-user experience and make monitoring more secure by reducing
-attack surface.
+Remove show_registers() function prototype because this function
+has been renamed by commit:
 
-[1] https://lore.kernel.org/lkml/7776fa40-6c65-2aa6-1322-eb3a01201000@linux.intel.com/
+  57da8b960b9a ("x86: Avoid double stack traces with show_regs()")
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+and this commit has removed the caller in kprobes altogether:
+
+  80006dbee674 ("kprobes/x86: Remove jprobe implementation")
+
+So this doesn't exist anymore - remove the orphan prototype.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/6e8392ff-4732-0012-2949-e1587709f0f6@linux.intel.com
 ---
- kernel/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/kprobes.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 78e69e1..41e0cef 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11689,7 +11689,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 			goto err_task;
- 
- 		/*
--		 * Reuse ptrace permission checks for now.
-+		 * Preserve ptrace permission check for backwards compatibility.
- 		 *
- 		 * We must hold exec_update_mutex across this and any potential
- 		 * perf_install_in_context() call for this new event to
-@@ -11697,7 +11697,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 		 * perf_event_exit_task() that could imply).
- 		 */
- 		err = -EACCES;
--		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-+		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
- 			goto err_cred;
- 	}
- 
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 45b8cdc..9be1bff 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -227,7 +227,6 @@ extern int arch_prepare_kprobe(struct kprobe *p);
+ extern void arch_arm_kprobe(struct kprobe *p);
+ extern void arch_disarm_kprobe(struct kprobe *p);
+ extern int arch_init_kprobes(void);
+-extern void show_registers(struct pt_regs *regs);
+ extern void kprobes_inc_nmissed_count(struct kprobe *p);
+ extern bool arch_within_kprobe_blacklist(unsigned long addr);
+ extern int arch_populate_kprobe_blacklist(void);
