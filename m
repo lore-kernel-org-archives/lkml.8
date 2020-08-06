@@ -2,153 +2,228 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4688C38156
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:58 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC7322CA1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CA2C43468
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:57 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 2598722D03
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RzpR63zK"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Y6mpNRSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgHFH3r (ORCPT
+        id S1726050AbgHFHMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:29:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46405 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727105AbgHFH3p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 03:29:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596698983;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=dKfLP2WsOO0DoS1htlz+rZvWwcLh1hzTgsjS9Oy3p40=;
-        b=RzpR63zKTU/nFO2dqFW8eejNmlkBoukviXMU8e+vxm7Zc+yTE7WAMmvVGTc3Z0fNJ8KLY6
-        5FRfDcGTUoOR0cX0NaCCLf5Pa2DxwVq1DtGjLam0AmqDnzIANQVA5p4mVmTFC575Ocar/A
-        8cb9olMJLmcB3Q1cw1jzlS1AiGXcs6U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-cK-Uki64P1WPAFHyru1Kkg-1; Thu, 06 Aug 2020 03:29:40 -0400
-X-MC-Unique: cK-Uki64P1WPAFHyru1Kkg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71D3D8015F7;
-        Thu,  6 Aug 2020 07:29:39 +0000 (UTC)
-Received: from [10.36.112.9] (ovpn-112-9.ams2.redhat.com [10.36.112.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B4DEC74F4D;
-        Thu,  6 Aug 2020 07:29:37 +0000 (UTC)
-Subject: Re: [Patch v2] mm/sparse: only sub-section aligned range would be
- populated
-To:     Wei Yang <richard.weiyang@gmail.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200703031828.14645-1-richard.weiyang@linux.alibaba.com>
- <20200805214955.ds7y3nwjoz2ms37h@master>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <1c817ced-8ad9-ce91-2992-94092bc065b3@redhat.com>
-Date:   Thu, 6 Aug 2020 09:29:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200805214955.ds7y3nwjoz2ms37h@master>
-Content-Type: text/plain; charset=utf-8
+        Thu, 6 Aug 2020 03:12:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1221 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728649AbgHFHLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 03:11:53 -0400
+IronPort-SDR: Na2SoKLRMIkgEN3L7n3Wghr+3FNHMHrP4SOKtzjQ7dT0MQ59fCc4PB5mwwvBiY2SJV5y6s9yj7
+ FEENRgDSZRZA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="150485878"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="150485878"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 00:11:16 -0700
+IronPort-SDR: aJdL+AtRMUGyrLzZ2ojIWp7WH8WVU/EyZ2u3dDK5kTFencTga7qmxYMUbb/uoGpUR3QVS2LUBq
+ f5DQGrEK6jBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="467749531"
+Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
+  by orsmga005.jf.intel.com with ESMTP; 06 Aug 2020 00:11:16 -0700
+Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
+ ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 6 Aug 2020 00:11:16 -0700
+Received: from orsmsx115.amr.corp.intel.com (10.22.240.11) by
+ orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 6 Aug 2020 00:11:16 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX115.amr.corp.intel.com (10.22.240.11) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Aug 2020 00:11:16 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.103)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Aug 2020 00:11:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jV+LJzo9msQ9sfJSORm2Dji26dyE4xlfuaHCdACbsB0f0BfoW8zxugP0JrtAuRKbh0YH48Ythk+OV5H6AHw6B1ZSVd353cWPBP4L60Qwfv8CJHGVjaAYjiXAYfqN9xCAu4e3sH9DFnQFoZushMtbxwb0uZJ9eE3YKruBPDymick+m4gVNC8T9zF8SHcuTwWJjohlWT1z52FmYzZErozcnKVhnARnxXKH79Nks6MRm9AMVGp1lHQG1H+r17RUVBRbsL5dy7xcyyPEm8iDVmAH1Bk8tQj7HcLY8XiQfhOyd1nJ8Pe1WWxLtB/uu5rXzh3ajCnWjztvE19C2It+T/ObJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6AcVd2QVMhQ+q/PtkP/POKGTqm55siO9yPSn78E2z9M=;
+ b=kBgzr5ibwZ+wMGQDXLKIhYOW08sTTXbSsO/9kge0QCPLoyR4fFHT3m9iOSOw/ZeBRWimhVJ6c2cvDabeK/ppQw3cBeKSgzwWkcn9RytMa5fnPgKXxhiT8Ga2byF9BDt6nlY4lACvs/VObow7/lAJeMuOrVbPGFMne0yweX+yjfTUMWspAVvt20K2f2NHb9TrFXtOElPHCbIyPPJ8JCPoXfak+Xw3KNRa/8FaRt1sQBCDnPHBKz4wTGYnTESzenm1XRdoLdNIehNRkMaOni/6rfT6V66rFzhvmk5IspINe9QyjGFe+kEcNlTu92c6Rnlmf573YnWbN5ZZaYB4BTLlMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6AcVd2QVMhQ+q/PtkP/POKGTqm55siO9yPSn78E2z9M=;
+ b=Y6mpNRSdgifdBE/mEF30dI6q/divIxG0G3Q66foXqZ0qZU/a9twUegSnVlvehDL81JVRTMhXLURaN7669Vua+awNkgaGlfdgHiwI48IvGA5XJpmEimjGSkC8S6OmMXEM9jDZciZ2s0gHr73RcpQJiOwWMMRU7FD4Udad4qnzW7Q=
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
+ by DM6PR11MB3547.namprd11.prod.outlook.com (2603:10b6:5:136::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Thu, 6 Aug
+ 2020 07:11:14 +0000
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a]) by DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::c1c1:6930:f17d:a80a%4]) with mapi id 15.20.3239.023; Thu, 6 Aug 2020
+ 07:11:14 +0000
+From:   "Wu, Hao" <hao.wu@intel.com>
+To:     "Xu, Yilun" <yilun.xu@intel.com>
+CC:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: RE: [PATCH v3 3/4] fpga: dfl: create a dfl bus type to support DFL
+  devices
+Thread-Topic: [PATCH v3 3/4] fpga: dfl: create a dfl bus type to support DFL
+  devices
+Thread-Index: AQHWa7gKHPA4kjNeIEyhNYURQcBeeKkqmtZA
+Date:   Thu, 6 Aug 2020 07:11:14 +0000
+Message-ID: <DM6PR11MB3819D5CFD0A46DCE02C9EF1A85480@DM6PR11MB3819.namprd11.prod.outlook.com>
+References: <1596524715-18038-1-git-send-email-yilun.xu@intel.com>
+ <1596524715-18038-4-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB38194B629A3DC70FC0E8A010854B0@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200806060257.GB7179@yilunxu-OptiPlex-7050>
+In-Reply-To: <20200806060257.GB7179@yilunxu-OptiPlex-7050>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 31662033-03db-447b-f17a-08d839d7e80d
+x-ms-traffictypediagnostic: DM6PR11MB3547:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB3547EB769C08F7EB4D302B2A85480@DM6PR11MB3547.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MBUECcOPRGOXMA41PVShk/zZUbLG2Zn6dCCaWjdIyixbWkG6K/8MNHWnynl5/4TlT7oLhYE0Jih4pa+7pWcoIPhMwPVRCAqOBmXYm8MzIkF9T7VIoYwguqygCcExyJfGXG2aD8dy4hSbrJEv3HcQ8CchaPQEOy2fO0ALssep+yUgvhh7TDNLLkbQExX0rjWsHdYK5KAO7qfT19DcLWnouPc1eSZ/VeiMHP2ynSmC/k/M1ROMEliOvYDGLsVY8a1ko5XMqoaPdc1pXi7+Qo0a6enZNyIafIyPP3llTYmiUr9cqqGrGtMbGTG1QPeM++x8bMlPatssqxUv4Grn9MqImA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(86362001)(54906003)(2906002)(8676002)(33656002)(83380400001)(71200400001)(316002)(66556008)(6506007)(5660300002)(64756008)(52536014)(6636002)(4326008)(76116006)(186003)(66946007)(26005)(66476007)(6862004)(9686003)(7696005)(8936002)(478600001)(55016002)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ECezboYGnnDUQabHXGnq4AAtLsXydn8cTQXyexCqoNyA6Ye2SIB5KMWwXjPFejgYrLrZ8eo465xpR2tDWaF7kgnhKSwPudCSJKiZOYntBwWpMFPO/0ddnPnwpAXfs76yHTufJlisbrpYe/H3CFUXWLrBy6fz3I30xFCfEyZKfu6lgVJDzuaDejshzc81dMDJoiRQ3BP1kVGb8h8CXjA1c99+BaKLdMVfoPjo0RSXT/BG8iNjE8sQ1qozqcHyPCS2NI/j8O3b7kyBq4AtNXDgwWCYs9YBJW/uHLTmk3W1pVRmTOju7/dGAadt+THC/wazTypZ4pDnBoNihol75itRxOBUPGd505gIlVgymxXbd7k8cJmiviYAA1mA4yMDcS1NQDRJctNswsoYFyOxw4+8PyJyUM/7FLnX+c7AdGyHC0rn5dcxJfRicRapu6LGvvkvc2ya40FfYA1N+bKwOKTT8sC4XzuQllqdONTWSCeGADmbpWRIO4/cbVPBoEasBudTEAfQEl46U5ADzdyTG2IdWOv2ugWc7VFYak+8Tu3ZwWEsor8GfmcqqeL9n+VJrE5W9JuxTCjwzJHl0b2gl7FWx2mz/VedumRt8VGKSoodBhZPNba6zcMDPmj9cvkrbemOnRYnxmJehSNHol7QnZ1/bQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31662033-03db-447b-f17a-08d839d7e80d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2020 07:11:14.5795
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iAZF7lam+gBu23CDO9vvyI/cRbLzSGG0gDX230oo5JEH92QDpCO5Cg752Uto96p7yeBx4QPe236NMsEOdF2WnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3547
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.08.20 23:49, Wei Yang wrote:
-> On Fri, Jul 03, 2020 at 11:18:28AM +0800, Wei Yang wrote:
->> There are two code path which invoke __populate_section_memmap()
->>
->>  * sparse_init_nid()
->>  * sparse_add_section()
->>
->> For both case, we are sure the memory range is sub-section aligned.
->>
->>  * we pass PAGES_PER_SECTION to sparse_init_nid()
->>  * we check range by check_pfn_span() before calling
->>    sparse_add_section()
->>
->> Also, the counterpart of __populate_section_memmap(), we don't do such
->> calculation and check since the range is checked by check_pfn_span() in
->> __remove_pages().
->>
->> Clear the calculation and check to keep it simple and comply with its
->> counterpart.
->>
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->>
-> 
-> Hi, Andrew,
-> 
-> Is this one picked up?
+> > > +static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env
+> *env)
+> > > +{
+> > > +struct dfl_device *ddev =3D to_dfl_dev(dev);
+> > > +
+> > > +return add_uevent_var(env, "MODALIAS=3Ddfl:t%08Xf%04X",
+> > > +      ddev->type, ddev->feature_id);
+> >
+> > Then we only print 12bit of feature_id will be enough?
+> > should we make type shorter as well as feature id?
+>=20
+> I could envision that we need a struct
+>=20
+>  struct dfl_feature_id {
+> 	u16 id: 12;
+>  }
+>=20
+> for it.
+>=20
+> But it seems more complex and I didn't see the benifit. We don't have to
+> worry about the invalid values cause we parse all the ddev->feature_id in
+> dfl driver, and ensures it will not be larger than 12bit value.
 
-I can spot it in -next via the -mm tree:
+Ideally type is only 4bits per spec, but looks like it's adding more zero b=
+efore
+the type value, and also the feature id. This may not be a real problem, bu=
+t
+may look a little wired, isn't it?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=68ad9becb23be14622e39ed36e5b0621a90a41d9
+>=20
+> > And do you think if we should add a new field for dfl version?
+>=20
+> I think it may not be necessary now. If we support dfl v1 in future, we
+> still could try to check uuid first, then fall back to type &
+> feature_id.
 
+I think it's all about the uevent and it's user, and for users, they may ha=
+ve to=20
+deal with different versions, right? As you mentioned, if the event will be
+different format for v1 and it's not compatible with v0, anyway we need
+the version sooner or later, is my understanding correct?
 
--- 
-Thanks,
+>=20
+> Do you have any idea for the potential usage of dfl version.
+>=20
 
-David / dhildenb
+> > > +/* then add irq resource */
+> > > +if (feature->nr_irqs) {
+> > > +ddev->irqs =3D kcalloc(feature->nr_irqs,
+> > > +     sizeof(*ddev->irqs), GFP_KERNEL);
+> > > +if (!ddev->irqs) {
+> > > +ret =3D -ENOMEM;
+> > > +goto put_dev;
+> > > +}
+> > > +
+> > > +for (i =3D 0; i < feature->nr_irqs; i++)
+> > > +ddev->irqs[i] =3D feature->irq_ctx[i].irq;
+> > > +
+> > > +ddev->num_irqs =3D feature->nr_irqs;
+> >
+> > Do we need to consider using IORESOURCE_IRQ here as well?
+>=20
+> The helper functions for IORESOURCE_IRQ are all for platform_devices,
+> We need to define a set of functions similar to them, I think current
+> implementation is simpler, for dfl bus and drivers.
+
+If some case that it's going to reuse some platform device driver,
+then dfl_device driver will create platform device, it has to pass the mmio
+and irq resources to platform device driver, how you plan to do that?
+
+> > > +static int dfl_devs_init(struct platform_device *pdev)
+> > > +{
+> > > +struct dfl_feature_platform_data *pdata =3D dev_get_platdata(&pdev-
+> > > >dev);
+> > > +struct dfl_feature *feature;
+> > > +struct dfl_device *ddev;
+> > > +
+> > > +dfl_fpga_dev_for_each_feature(pdata, feature) {
+> > > +if (feature->ioaddr || feature->priv)
+> >
+> > Why checks priv here?
+>=20
+> I want to make sure the dfl_device is not already created.
+
+Is that a valid case that we expected? or sounds like error code needs=20
+to be returned?
+
+Thanks
+Hao
 
