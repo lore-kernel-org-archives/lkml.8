@@ -2,132 +2,180 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F76C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C79C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A6B206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D618206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tS2mJ8Ub"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aA9V4euY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgHFRnf (ORCPT
+        id S1729996AbgHFRn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:43:35 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:11892 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728862AbgHFRna (ORCPT
+        Thu, 6 Aug 2020 13:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729184AbgHFRne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:43:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596735809; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=ggOg6zyHd/BJyz6p09BxDxipcYys+9vo5wRtRWDV+Dw=; b=tS2mJ8Ub0u94CgYFT8OEriZCdjnAlhmSrtGy+cINM+lAmRkBBIzihWwfPBL1skbkrSSKmQAz
- tiq299hP1/y/zKzfjUDPePgFdAJUXYoV4xqXBoDBR53k8EEP07vlFprI2qVm6tdZHxhks9cD
- IKVx46psV0dKCWoGZenLK3FA79c=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5f2c1da548ee73b1c7a30a67 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 15:11:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 75D15C4339C; Thu,  6 Aug 2020 15:11:32 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 62261C433C9;
-        Thu,  6 Aug 2020 15:11:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 62261C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v5 00/12] ASoC: qcom: Add support for SC7180 lpass variant
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <1aa197e8-0c11-e2f1-d067-c74c1a185b8a@codeaurora.org>
-Date:   Thu, 6 Aug 2020 20:41:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 6 Aug 2020 13:43:34 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE95AC061574;
+        Thu,  6 Aug 2020 10:43:33 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id j8so38132579ioe.9;
+        Thu, 06 Aug 2020 10:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jtseolvN6/zqJafrwR5VIYhs3afaZVZdwVkAVHy2pBs=;
+        b=aA9V4euYlejLZQThC2d3rF9HpjylCMKqoNz9AwDb4EvLfi3W85WDy1HnkRH2atXD5o
+         GIL8JomlJmGRj0GnLlTu6tEgjlGnGI0Z1ly/VrIuADBdG2iIRne5+CLLvxE5HRXGHaXP
+         4MSmdhA6pZovFOwhds3M/0iUFnY/zu+I+gxutvsItvOsC+M1cWE5kp1Q0WaaZB0M2z4n
+         C/hfv60cnjiHnsbnw07kBYlusOiLp0oBwfuKKJoyzd44rnPEoXTXoxKFeF+jr+OAbavu
+         YWUskcItQoEQOeKWU4ax8soMjUmRR4o5+GPAsHXcJDoOMZlHApFuEWvtVmyvqHC7hCPk
+         q7VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jtseolvN6/zqJafrwR5VIYhs3afaZVZdwVkAVHy2pBs=;
+        b=OpEnmwZ/RHH2clDTaltSesGPp7za+/ejXVzoqaPcHvMI6z9DfrEi0ZRqklwUeK8fBi
+         /nVkBR2+oFdJatrFT06c7+kH/8SEcIYT9F0IR9ivvL5FeRHCLgCkjObIxsPVWcHSYpjL
+         DqD2VLIQ0+BHu9V0C2NowOqlzRZ8vNLCFHDpKobVxx6Vv5UqLdpEOwluM5A40KUNUWqr
+         mvIyCLSv3TSN//bDFvDKM9Az0U5RcXNu/KcCUC4zb+66iO6dTkWjidJuje4r+ex0XDTy
+         bWrg70CZnZPTJKOGmDHSLRZsIFqjapn/nKiK/4c8Ri2g6hy2R8Pea2WIGA9tnXsMx0j9
+         b30A==
+X-Gm-Message-State: AOAM532xGM4pRzAkGBHm/G95InQiWFyv0XmfcHr2kbL0T9oC1fMk/8CP
+        J38h/I4ZCttJZnXdseAnhKs=
+X-Google-Smtp-Source: ABdhPJzgjbcTJKDIFR57h75jmG/TQwAYddjmkuxNs5NJXyh6TtguA5NN32BeZdwACBpyXDHhGaJC9A==
+X-Received: by 2002:a6b:e31a:: with SMTP id u26mr53739ioc.162.1596735812434;
+        Thu, 06 Aug 2020 10:43:32 -0700 (PDT)
+Received: from urieldev.c.googlers.com.com (243.199.238.35.bc.googleusercontent.com. [35.238.199.243])
+        by smtp.gmail.com with ESMTPSA id s74sm4750141ilb.44.2020.08.06.10.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 10:43:31 -0700 (PDT)
+From:   Uriel Guajardo <urielguajardojr@gmail.com>
+To:     brendanhiggins@google.com
+Cc:     urielguajardo@google.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Uriel Guajardo <urielguajardojr@gmail.com>
+Subject: [PATCH 1/2] kunit: support failure from dynamic analysis tools
+Date:   Thu,  6 Aug 2020 17:43:25 +0000
+Message-Id: <20200806174326.3577537-1-urielguajardojr@gmail.com>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 MIME-Version: 1.0
-In-Reply-To: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mark,
+Adds an API to allow dynamic analysis tools to fail the currently
+running KUnit test case.
 
-Other than patch 12, there is no comment on other patches from anyone as 
-of now.
+- Always places the kunit test in the task_struct to allow other tools
+to access the currently running KUnit test.
 
-[PATCH v5 12/12] dt-bindings: sound: lpass-cpu: Move to yaml format
+- Creates a new header file to avoid circular dependencies that could be
+created from the test.h file.
 
-I will plan to post patch12 only with comments addressed if other
-changes does not have any comment. Please let me know your inputs.
+Requires KASAN-KUnit integration patch to access the kunit test from
+task_struct:
+https://lore.kernel.org/linux-kselftest/20200606040349.246780-2-davidgow@google.com/
 
-Thanks,
-Rohit
-On 8/4/2020 1:37 PM, Rohit kumar wrote:
-> This patch chain add audio support for SC7180 soc by doing the required
-> modification in existing common lpass-cpu/lpass-platform driver.
-> This also fixes some concurrency issue.
->
-> This patch series is already tested by Srinivas on Dragon Board 410c.
-> Changes since v4:
->          - Updated compatible string for sc7180 lpass cpu as suggested by Rob
->          - Addressed comments by Rob in yaml Documentation.
->
-> Ajit Pandey (4):
->    ASoC: qcom: Add common array to initialize soc based core clocks
->    ASoC: qcom: lpass-platform: Replace card->dev with component->dev
->    include: dt-bindings: sound: Add sc7180-lpass bindings header
->    ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
->
-> Rohit kumar (8):
->    ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
->    ASoC: qcom: lpass-platform: fix memory leak
->    ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
->    ASoC: qcom: lpass-cpu: fix concurrency issue
->    dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
->    ASoC: qcom: lpass-cpu: Use platform_get_resource
->    ASoC: qcom: lpass-platform: Use platform_get_irq
->    dt-bindings: sound: lpass-cpu: Move to yaml format
->
->   .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
->   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 179 +++++++++++++++++
->   include/dt-bindings/sound/sc7180-lpass.h           |  10 +
->   sound/soc/qcom/Kconfig                             |   5 +
->   sound/soc/qcom/Makefile                            |   2 +
->   sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
->   sound/soc/qcom/lpass-cpu.c                         | 204 ++++++++++---------
->   sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
->   sound/soc/qcom/lpass-lpaif-reg.h                   | 157 ++++++++-------
->   sound/soc/qcom/lpass-platform.c                    | 155 +++++++++++----
->   sound/soc/qcom/lpass-sc7180.c                      | 216 +++++++++++++++++++++
->   sound/soc/qcom/lpass.h                             |  63 +++++-
->   12 files changed, 924 insertions(+), 299 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->   create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
->   create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
->   create mode 100644 sound/soc/qcom/lpass-sc7180.c
->
+Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+---
+ include/kunit/test-bug.h | 24 ++++++++++++++++++++++++
+ include/kunit/test.h     |  1 +
+ lib/kunit/test.c         | 10 ++++++----
+ 3 files changed, 31 insertions(+), 4 deletions(-)
+ create mode 100644 include/kunit/test-bug.h
+
+diff --git a/include/kunit/test-bug.h b/include/kunit/test-bug.h
+new file mode 100644
+index 000000000000..283c19ec328f
+--- /dev/null
++++ b/include/kunit/test-bug.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * KUnit API allowing dynamic analysis tools to interact with KUnit tests
++ *
++ * Copyright (C) 2020, Google LLC.
++ * Author: Uriel Guajardo <urielguajardo@google.com>
++ */
++
++#ifndef _KUNIT_TEST_BUG_H
++#define _KUNIT_TEST_BUG_H
++
++#if IS_ENABLED(CONFIG_KUNIT)
++
++extern void kunit_fail_current_test(void);
++
++#else
++
++static inline void kunit_fail_current_test(void)
++{
++}
++
++#endif
++
++#endif /* _KUNIT_TEST_BUG_H */
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 3391f38389f8..81bf43a1abda 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -11,6 +11,7 @@
+ 
+ #include <kunit/assert.h>
+ #include <kunit/try-catch.h>
++#include <kunit/test-bug.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index dcc35fd30d95..d8189d827368 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -16,6 +16,12 @@
+ #include "string-stream.h"
+ #include "try-catch-impl.h"
+ 
++void kunit_fail_current_test(void)
++{
++	if (current->kunit_test)
++		kunit_set_failure(current->kunit_test);
++}
++
+ static void kunit_print_tap_version(void)
+ {
+ 	static bool kunit_has_printed_tap_version;
+@@ -284,9 +290,7 @@ static void kunit_try_run_case(void *data)
+ 	struct kunit_suite *suite = ctx->suite;
+ 	struct kunit_case *test_case = ctx->test_case;
+ 
+-#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+ 	current->kunit_test = test;
+-#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
+ 
+ 	/*
+ 	 * kunit_run_case_internal may encounter a fatal error; if it does,
+@@ -602,9 +606,7 @@ void kunit_cleanup(struct kunit *test)
+ 		spin_unlock(&test->lock);
+ 		kunit_remove_resource(test, res);
+ 	}
+-#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+ 	current->kunit_test = NULL;
+-#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
+ }
+ EXPORT_SYMBOL_GPL(kunit_cleanup);
+ 
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+2.28.0.163.g6104cc2f0b6-goog
 
