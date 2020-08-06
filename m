@@ -2,146 +2,178 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ECAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 590B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35F52311A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596734640;
-	bh=ll51haRcfUUGpNWUeqW2uD1NJ+9leuM0WTfnjz3Zyb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MB0bN8FV9nLjR5TvKE89/2PZq9ppvxqMwA2pglgLKHSUahx83iITNHYWUY7cGauSO
-	 T051LmxDOOZRpU1PeTFzRzIqq9KjQ1kUJa3snUqGCZqqFsQ6ELCY/aRqslYJfaSo65
-	 4lWgzcx8ibPAqZ+RU9BW9WVD8SEJbuVWgIyAhunY=
+	by mail.kernel.org (Postfix) with ESMTP id B36D02311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUFT7XZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgHFRXd (ORCPT
+        id S1729497AbgHFRYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45060 "EHLO
+        Thu, 6 Aug 2020 13:24:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729932AbgHFRFG (ORCPT
+        with ESMTP id S1729517AbgHFREq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:05:06 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A579FC034612
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:10:38 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l4so50184292ejd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 06:10:38 -0700 (PDT)
+        Thu, 6 Aug 2020 13:04:46 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66610C034623;
+        Thu,  6 Aug 2020 06:32:25 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x24so8792812lfe.11;
+        Thu, 06 Aug 2020 06:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y37dSXMpF9i5zwI93ayCq0fr59uu6XSE2Odw+I/dNvE=;
-        b=q8sjFvgHM0X7asxHMfSQI0E/0lUVZpTLaBQcdNapsY+haLKU8yj/yOcAyd4yHoL/Zn
-         8OzL+aiIWsTkZpCbQa+rYja3b/wX2wdfiT0slTbbsm2SLoLUXXrX6+hvNmST2j9bigTh
-         Q1ApEcKJv0hhJ7l7i64LTfxnekJQ46Fi5Uh5XnHEHPNQOQiI4qW8vL6VXbmNgJ/aVhhm
-         CI+1dtK7bu7+uIsAmcxnW1J7GHDqhFqx9tCozej3QWGWkgUFsd5SK4sV2dDw/IC0xs/i
-         BrWrvwVWRcHozdyGMqN69MKQveO7MQmMSFiwTMr/ziyhwI6NbngQt++5fhxTCbyxnTYV
-         V5Vg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LZxvFQGifO+67iYKjeLuydYAgFkWMKjwGTRkNaAuRmA=;
+        b=WUFT7XZ6WlGDd8EaFKldHEkscNGOKMwPso2gE4g0kMoDMtrhul6ymRofEzEiWmgRsq
+         Ka68NNykTmXUo+gX944jueoFOnF8+CCcQ/JoVMB+UI5LOfXim3dkjWg8BQvN29RWNN7w
+         QYmnXQOLo9rm53R6MlNAvUb5mLLZZgxf0IcqvsOmsg9X+sBXPKNjKxSBaT7/6d9fMAPU
+         Qc8g7y7+sQGW/kQr9gbxaO/x25VC1UvUEQLYYHZDXQ7cQPK24fSO0ucJKZeiZs7fhq/u
+         JrPPwqu3xrE7kwq3DnK5EXHeHPAktkwcIu3ePAZXv6TO+W282wFLa/B+jQbRI+8zuSHL
+         9Ywg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Y37dSXMpF9i5zwI93ayCq0fr59uu6XSE2Odw+I/dNvE=;
-        b=DklcmGsXu1rUBxK5swHvi645piJ3dEgA0Pnft7kwz612pgGnngmOs2NB5Mq7rUsVdq
-         YtsK8nex5kh02ytSBE7v91PVzqxUL5Bwt2r/G69j97FXRmkBx3D6iGvepmZzmwoyNk6R
-         EFyVy9KmfrnKetMI6Kb54FGxxztOzGQ/3RCeLzzS9IXT4i0lCzE43fMYt0qOfqAXG4zK
-         NHQXRaVGFU/lNCcXB1YbTbVMzSxWHmLJZchrIjZqIO8F+f4mytqoE9K6DIjTX5PDDqmN
-         1AIIJR2izdufYxj5H3ZhkOloX3SJWYyzThGBu9X81npuHJfFB2afsxS/W40QfN6dUHmu
-         hLMw==
-X-Gm-Message-State: AOAM533GIAneEUWO6xsmKdOt/n8WC9/l1QGcf8rvabas9yiZhOAf695M
-        rDhTC2hZAL7nJwLdOXJKri0=
-X-Google-Smtp-Source: ABdhPJw8FI8o0LJCCc4YFIXvzfnQAjaWtw1rRx4JdSipZ0NvrLS7FIMh5tpaW1eYj1ORhmiInoxG0g==
-X-Received: by 2002:a17:906:5a8a:: with SMTP id l10mr4031628ejq.397.1596719437400;
-        Thu, 06 Aug 2020 06:10:37 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id x1sm3625544ejc.119.2020.08.06.06.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 06:10:36 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 15:10:34 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [GIT PULL] x86/mm changes for v5.9
-Message-ID: <20200806131034.GA2067370@gmail.com>
-References: <20200803190354.GA1293087@gmail.com>
- <20200805110348.GA108872@zx2c4.com>
- <CAHk-=wiq+7sW3Lk5iQ0-zY5XWES4rSxK505vXsgFY=za88+RZw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LZxvFQGifO+67iYKjeLuydYAgFkWMKjwGTRkNaAuRmA=;
+        b=VMgyrvABh6bQli/5LaDEDfl8KvY20yKpzSNZ3+9s2jSQi9WZx/GfffNFnT7P9RBxx0
+         9108b0uxF7Cl3hyiwbLE66VAekOjCIhGRuLOoW0QV/GhgaxIlnJdYFnu8WzqNq7kZaRp
+         u9CT91Ne7J+LXF98OcuplQENkRtBZTenBOVs4l1DxPb9WxAZqrtQWth+NGPwgY8E5Yt+
+         lxtQRHSSH//rt7Nf02MxyU8h8s1jLbu8jriOTr2XwPaZfl8dhGPHNTMGV+C6RI/Ztpgr
+         2r4tf51yfWeOUQcPs+B2z7JdBp4buLHM55cMUW5Osta4+iSK0HAnLIA9rzPVdXxXFcZJ
+         rQHg==
+X-Gm-Message-State: AOAM531uuXU/piZPq693vttir9VWBhJdlK4CGE62JPx6iOQJ9nar6Rs3
+        rgdZVXfQHV8aonhY9aNcNggIVTs2
+X-Google-Smtp-Source: ABdhPJxNWwksICqD/uuo/XKUFPyGL1DYzGZiOXNL9vJy0Ic/lvuGHHKkvbseSJ8PTHofY2GlvQOcsA==
+X-Received: by 2002:ac2:4d31:: with SMTP id h17mr3834171lfk.144.1596720736814;
+        Thu, 06 Aug 2020 06:32:16 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id h14sm2387225ljb.53.2020.08.06.06.32.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 06:32:14 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+Date:   Thu, 6 Aug 2020 16:32:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiq+7sW3Lk5iQ0-zY5XWES4rSxK505vXsgFY=za88+RZw@mail.gmail.com>
+In-Reply-To: <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+06.08.2020 03:47, Sowjanya Komatineni пишет:
+> 
+> On 8/5/20 11:06 AM, Sowjanya Komatineni wrote:
+>>
+>> On 8/5/20 10:46 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 8/5/20 10:34 AM, Dmitry Osipenko wrote:
+>>>> 05.08.2020 20:29, Sowjanya Komatineni пишет:
+>>>> ...
+>>>>> UART_FST_MIPI_CAL is the clock used for calibration logic which is FSM
+>>>>> that goes thru sequence codes and when done waits for pads to be in
+>>>>> LP-11 to apply results.
+>>>>>
+>>>>> MIPI_CLK is controller gate clock which is also need to be kept
+>>>>> enabled
+>>>>> as incase if it sees LP-11 it updates registers so its recommended to
+>>>>> have this clock enabled.
+>>>>>
+>>>>> We can cancel_calibration() in CSI only when csi/sensor stream on
+>>>>> fails
+>>>>> and in which case there will be no LP-11 so we can unconditionally
+>>>>> disable MIPI_CLK.
+>>>>>
+>>>> There is no guarantee that the fail comes before the LP-11. For
+>>>> example,
+>>>> some odd camera driver may have a complicated enable sequence which may
+>>>> fail after enabling the hardware streaming.
+>>>
+>>> MIPI_CLK to keep enable is for calibration logic to update results,
+>>> but like I said calibration logic uses UART_FST_MIPI_CAL clock. So
+>>> even in case if fail happens from sensor after having pads in LP-11
+>>> then, calibration logic will still be running but result update will
+>>> not happen with clock disabled. But HW will not stuck as this is
+>>> confirmed from HW designer.
+>>
+>> If LP-11 happens from sensor stream (followed by fail) and by that
+>> time if calibration FSM is done and if calibration logic sees LP-11
+>> then results will be applied to pads.
+>>
+>> We did start of calibration before CSI stream so by the time we do
+>> sensor stream enable, calibration logic might have done with FSM and
+>> waiting for LP-11
+>>
+>> Also if we see any special case, we always can use
+>> finish_calibration() instead of cancel_calibration() as well.
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Why not to do it right now?
 
-> On Wed, Aug 5, 2020 at 4:03 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> >
-> > The commit 8bb9bf242d1f ("x86/mm/64: Do not sync vmalloc/ioremap
-> > mappings") causes the OOPS below, in Linus' tree and in linux-next,
-> > unearthed by my CI on <https://www.wireguard.com/build-status/>.
-> > Bisecting reveals 8bb9bf242d1f, and reverting this makes the OOPS go
-> > away.
-> 
-> The oops happens early in the function, and the "Code:" line actually
-> gets almost the whole function prologue in it (missing first two bytes
-> are probably "push %rbp"):
-> 
->    0: 41 56                push   %r14
->    2: 41 55                push   %r13
->    4: 41 54                push   %r12
->    6: 55                    push   %rbp
->    7: 48 89 f5              mov    %rsi,%rbp
->    a: 53                    push   %rbx
->    b: 48 89 fb              mov    %rdi,%rbx
->    e: 48 83 ec 08          sub    $0x8,%rsp
->   12: 48 8b 06              mov    (%rsi),%rax
->   15: 4c 8b 67 40          mov    0x40(%rdi),%r12
->   19: 49 89 c6              mov    %rax,%r14
->   1c: 45 30 f6              xor    %r14b,%r14b
->   1f: a8 04                test   $0x4,%al
->   21: b8 00 00 00 00        mov    $0x0,%eax
->   26: 4c 0f 44 f0          cmove  %rax,%r14
->   2a:* 49 8b 46 08          mov    0x8(%r14),%rax <-- trapping instruction
-> 
-> 
-> > BUG: unable to handle page fault for address: ffffe8ffffd00608
-> > #PF: supervisor read access in kernel mode
-> > #PF: error_code(0x0000) - not-present page
-> > PGD 0 P4D 0
-> 
-> Yeah, missing page table because it wasn't copied.
-> 
-> Presumably because that kthread is using the active_mm of some random
-> user space process that didn't get sync'ed.
-> 
-> And the sync_global_pgds() may have ended up being sufficient
-> synchronization with whoever allocated thigns, even if it wasn't about
-> the TLB contents themselves.
-> 
-> So apparently the "the page-table pages are all pre-allocated now" is
-> simply not true. Joerg?
-> 
-> Unless somebody can figure this out fairly quickly, I think it should
-> just be reverted.
+Then the code could look like this:
 
-Agreed. Joerg?
+src_subdev = tegra_channel_get_remote_source_subdev(chan);
+ret = v4l2_subdev_call(src_subdev, video, s_stream, true);
+err = tegra_mipi_finish_calibration(csi_chan->mipi);
 
-Thanks,
+if (ret < 0 && ret != -ENOIOCTLCMD)
+	goto err_disable_csi_stream;
 
-	Ingo
+if (err < 0)
+	dev_warn(csi_chan->csi->dev,
+		 "MIPI calibration failed: %d\n", err);
+
+>> finish_calibration() has extra 250ms wait time polling done bit and we
+>> can ignore its return code during fail pathway.
+>>
+> Confirmed from HW designer, calibration FSM to finish takes worst case
+> 72uS so by the time it gets to sensor stream it will be done its
+> sequence and will be waiting for DONE bit.
+> 
+> So disabling MIPI CAL clock on sensor stream fails is safe.
+
+
+72us is quite a lot of time, what will happen if LP-11 happens before
+FSM finished calibration?
+
+Maybe the finish_calibration() needs to split into two parts:
+
+ 1. wait for CAL_STATUS_ACTIVE before enabling sensor
+ 2. wait for CAL_STATUS_DONE after enabling sensor
