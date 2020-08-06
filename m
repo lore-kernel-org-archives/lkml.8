@@ -2,216 +2,145 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133EBC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7677C433E1
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A23D2311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E5323119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QKumoDKS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VmoCVrPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgHFQr0 (ORCPT
+        id S1729442AbgHFQr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:47:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25398 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729212AbgHFQpP (ORCPT
+        Thu, 6 Aug 2020 12:47:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43670 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbgHFQpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:45:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596732313;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=yq06NoGira3XJqUtq4OjZJOaAZeoUPCFVsdiIYhXg5k=;
-        b=QKumoDKSyhlrP3AWcV+Ky64NMseRT+67caqbtGZnqxP/ZNgjxsBmP0VeUSKO6H4czJwwny
-        ri5aMhpVUtN/enEgF3g4nF+qaBifs/yuovp13eZCXYeGBfSdnCp1kY8EPRhQD7erN1ubSI
-        0uiirNnL0MA9Y3DdY2HsNM/lmtgLlUQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-504-07Wt8F2CPnqXy1snbvub0g-1; Thu, 06 Aug 2020 11:28:17 -0400
-X-MC-Unique: 07Wt8F2CPnqXy1snbvub0g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5BFF1005504;
-        Thu,  6 Aug 2020 15:28:16 +0000 (UTC)
-Received: from thinkpad.redhat.com (ovpn-113-9.ams2.redhat.com [10.36.113.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A8D05DA6B;
-        Thu,  6 Aug 2020 15:28:15 +0000 (UTC)
-From:   Laurent Vivier <lvivier@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Amit Shah <amit@kernel.org>,
-        Laurent Vivier <lvivier@redhat.com>
-Subject: [PATCH] hwrng: core - allocate a one page buffer
-Date:   Thu,  6 Aug 2020 17:28:14 +0200
-Message-Id: <20200806152814.1325776-1-lvivier@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Thu, 6 Aug 2020 12:45:14 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076EXSii075967;
+        Thu, 6 Aug 2020 14:43:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=theamiPcOekYRX6Mv+pKryKVA4+IUThIhqCbFzscYqY=;
+ b=VmoCVrPZHrL4uHzHSvj14hJdREyXwOFtbXUrsaMLAjjWGwMww/GLYv/sxUgO/6Rf42CJ
+ OJlG6zZ8A5l52eMYKNdzy9S2bKZN+XZIP8K5lw/15OWzCABQdEY0Gih0UbDzNLy/vEDs
+ yq6cJQizIstrW3kNpYZo497C8qUAlWVtzsJDTQpFltRWEfwa8LHcRolIT3KQGZI8LT9f
+ tufp8yPamsnMOLDSLQN9XxtbAerBX4frvFiwPKYys8MtzIEZFX28gNn3sRw0V9+kSeFx
+ RcucPHUZbLd4RwSNh0i7LnjimFbh/eF0ikoWiq6VPbuwytvBoLZjc1fr5eX34J10TnS2 7Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32r6gwucgc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 06 Aug 2020 14:43:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076Egxms192395;
+        Thu, 6 Aug 2020 14:43:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 32pdnwj85k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Aug 2020 14:43:01 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 076EgjIB005861;
+        Thu, 6 Aug 2020 14:42:45 GMT
+Received: from localhost.uk.oracle.com (/10.175.182.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Aug 2020 07:42:45 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     ast@kernel.org, daniel@iogearbox.net, andriin@fb.com, yhs@fb.com
+Cc:     linux@rasmusvillemoes.dk, andriy.shevchenko@linux.intel.com,
+        pmladek@suse.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org, shuah@kernel.org,
+        rdna@fb.com, scott.branden@broadcom.com, quentin@isovalent.com,
+        cneirabustos@gmail.com, jakub@cloudflare.com, mingo@redhat.com,
+        rostedt@goodmis.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [RFC PATCH bpf-next 1/4] bpf: provide function to get vmlinux BTF information
+Date:   Thu,  6 Aug 2020 15:42:22 +0100
+Message-Id: <1596724945-22859-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1596724945-22859-1-git-send-email-alan.maguire@oracle.com>
+References: <1596724945-22859-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008060105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
+ phishscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008060104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the driver to move bigger data block when the backend allows
-it.
+It will be used later for BPF structure display support
 
-Add a backend buffer_size for this purpose. For the moment only
-virtio-rng defines it.
-
-Using bigger buffer with virtio-rng improves performance from:
-
-  # dd if=/dev/hwrng of=/dev/null bs=1024 count=1024000
-  1048576000 bytes (1.0 GB, 1000 MiB) copied, 674.303 s, 1.6 MB/s
-  # dd if=/dev/hwrng of=/dev/null bs=4096 count=256000
-  1048576000 bytes (1.0 GB, 1000 MiB) copied, 622.394 s, 1.7 MB/s
-
-to
-
-  # dd if=/dev/hwrng of=/dev/null bs=1024 count=1024000
-  1048576000 bytes (1.0 GB, 1000 MiB) copied, 41.0579 s, 25.5 MB/s
-  # dd if=/dev/hwrng of=/dev/null bs=4096 count=256000
-  1048576000 bytes (1.0 GB, 1000 MiB) copied, 14.394 s, 72.8 MB/s
-
-Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 ---
- drivers/char/hw_random/core.c       | 37 ++++++++++++++++++++---------
- drivers/char/hw_random/virtio-rng.c |  1 +
- include/linux/hw_random.h           |  2 ++
- 3 files changed, 29 insertions(+), 11 deletions(-)
+ include/linux/bpf.h   |  2 ++
+ kernel/bpf/verifier.c | 18 ++++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
-index 8c1c47dd9f46..3d8ce3c4d79c 100644
---- a/drivers/char/hw_random/core.c
-+++ b/drivers/char/hw_random/core.c
-@@ -56,15 +56,25 @@ static void start_khwrngd(void);
- static inline int rng_get_data(struct hwrng *rng, u8 *buffer, size_t size,
- 			       int wait);
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index cef4ef0..55eb67d 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1290,6 +1290,8 @@ int bpf_check(struct bpf_prog **fp, union bpf_attr *attr,
+ 	      union bpf_attr __user *uattr);
+ void bpf_patch_call_args(struct bpf_insn *insn, u32 stack_depth);
  
--static size_t rng_buffer_size(void)
-+static size_t rng_min_buffer_size(void)
- {
--	return SMP_CACHE_BYTES < 32 ? 32 : SMP_CACHE_BYTES;
-+	return max_t(size_t, 32, SMP_CACHE_BYTES);
-+}
++struct btf *bpf_get_btf_vmlinux(void);
 +
-+static size_t rng_max_buffer_size(struct hwrng *rng)
-+{
-+	size_t size;
-+
-+	size = max_t(size_t, rng->buffer_size, SMP_CACHE_BYTES);
-+
-+	/* rng_buffer can store up to PAGE_SIZE */
-+	return min(PAGE_SIZE, size);
+ /* Map specifics */
+ struct xdp_buff;
+ struct sk_buff;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index b6ccfce..05dfc41 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -11064,6 +11064,17 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 	}
  }
  
- static void add_early_randomness(struct hwrng *rng)
++struct btf *bpf_get_btf_vmlinux(void)
++{
++	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
++		mutex_lock(&bpf_verifier_lock);
++		if (!btf_vmlinux)
++			btf_vmlinux = btf_parse_vmlinux();
++		mutex_unlock(&bpf_verifier_lock);
++	}
++	return btf_vmlinux;
++}
++
+ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
+ 	      union bpf_attr __user *uattr)
  {
- 	int bytes_read;
--	size_t size = min_t(size_t, 16, rng_buffer_size());
-+	size_t size = min_t(size_t, 16, rng_min_buffer_size());
+@@ -11097,12 +11108,7 @@ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
+ 	env->ops = bpf_verifier_ops[env->prog->type];
+ 	is_priv = bpf_capable();
  
- 	mutex_lock(&reading_mutex);
- 	bytes_read = rng_get_data(rng, rng_buffer, size, 0);
-@@ -226,9 +236,14 @@ static ssize_t rng_dev_read(struct file *filp, char __user *buf,
- 			goto out_put;
- 		}
- 		if (!data_avail) {
--			bytes_read = rng_get_data(rng, rng_buffer,
--				rng_buffer_size(),
--				!(filp->f_flags & O_NONBLOCK));
-+			size_t to_read;
-+			/* read at least 32 bytes, up to rng_max_buffer_size()
-+			 * but no more than size
-+			 */
-+			to_read = max_t(size_t, 32,
-+					min(size, rng_max_buffer_size(rng)));
-+			bytes_read = rng_get_data(rng, rng_buffer, to_read,
-+						  !(filp->f_flags & O_NONBLOCK));
- 			if (bytes_read < 0) {
- 				err = bytes_read;
- 				goto out_unlock_reading;
-@@ -440,7 +455,7 @@ static int hwrng_fillfn(void *unused)
- 			break;
- 		mutex_lock(&reading_mutex);
- 		rc = rng_get_data(rng, rng_fillbuf,
--				  rng_buffer_size(), 1);
-+				  rng_min_buffer_size(), 1);
- 		mutex_unlock(&reading_mutex);
- 		put_rng(rng);
- 		if (rc <= 0) {
-@@ -614,11 +629,11 @@ static int __init hwrng_modinit(void)
- 	int ret;
+-	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
+-		mutex_lock(&bpf_verifier_lock);
+-		if (!btf_vmlinux)
+-			btf_vmlinux = btf_parse_vmlinux();
+-		mutex_unlock(&bpf_verifier_lock);
+-	}
++	bpf_get_btf_vmlinux();
  
- 	/* kmalloc makes this safe for virt_to_page() in virtio_rng.c */
--	rng_buffer = kmalloc(rng_buffer_size(), GFP_KERNEL);
-+	rng_buffer = (u8 *)get_zeroed_page(GFP_KERNEL);
- 	if (!rng_buffer)
- 		return -ENOMEM;
- 
--	rng_fillbuf = kmalloc(rng_buffer_size(), GFP_KERNEL);
-+	rng_fillbuf = kmalloc(rng_min_buffer_size(), GFP_KERNEL);
- 	if (!rng_fillbuf) {
- 		kfree(rng_buffer);
- 		return -ENOMEM;
-@@ -627,7 +642,7 @@ static int __init hwrng_modinit(void)
- 	ret = register_miscdev();
- 	if (ret) {
- 		kfree(rng_fillbuf);
--		kfree(rng_buffer);
-+		free_page((unsigned long)rng_buffer);
- 	}
- 
- 	return ret;
-@@ -637,7 +652,7 @@ static void __exit hwrng_modexit(void)
- {
- 	mutex_lock(&rng_mutex);
- 	BUG_ON(current_rng);
--	kfree(rng_buffer);
-+	free_page((unsigned long)rng_buffer);
- 	kfree(rng_fillbuf);
- 	mutex_unlock(&rng_mutex);
- 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index a90001e02bf7..b71c137fcd05 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -104,6 +104,7 @@ static int probe_common(struct virtio_device *vdev)
- 
- 	vi->hwrng = (struct hwrng) {
- 		.read = virtio_read,
-+		.buffer_size = PAGE_SIZE,
- 		.cleanup = virtio_cleanup,
- 		.priv = (unsigned long)vi,
- 		.name = vi->name,
-diff --git a/include/linux/hw_random.h b/include/linux/hw_random.h
-index 8e6dd908da21..582c8787f808 100644
---- a/include/linux/hw_random.h
-+++ b/include/linux/hw_random.h
-@@ -31,6 +31,7 @@
-  * @read:		New API. drivers can fill up to max bytes of data
-  *			into the buffer. The buffer is aligned for any type
-  *			and max is a multiple of 4 and >= 32 bytes.
-+ * @buffer_size:	Optional. if not 0, optimal buffer size.
-  * @priv:		Private data, for use by the RNG driver.
-  * @quality:		Estimation of true entropy in RNG's bitstream
-  *			(in bits of entropy per 1024 bits of input;
-@@ -43,6 +44,7 @@ struct hwrng {
- 	int (*data_present)(struct hwrng *rng, int wait);
- 	int (*data_read)(struct hwrng *rng, u32 *data);
- 	int (*read)(struct hwrng *rng, void *data, size_t max, bool wait);
-+	size_t buffer_size;
- 	unsigned long priv;
- 	unsigned short quality;
- 
+ 	/* grab the mutex to protect few globals used by verifier */
+ 	if (!is_priv)
 -- 
-2.26.2
+1.8.3.1
 
