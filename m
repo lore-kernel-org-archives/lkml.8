@@ -2,111 +2,95 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C23C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4345C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A532A221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eVUIpkTh"
+	by mail.kernel.org (Postfix) with ESMTP id 3B023221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596734908;
+	bh=28d+J4ZbPNl40lknGronK+mAA8lqbwQ540gjSOJtLs8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bypjV7REmXmlT3IJ+3qj92KEqzfeDYmTUcMVnFYRQizXR9BqY6qWoVVZZvx1tFU3+
+	 QosbupUWQrlDnU/VD8ivMJy40zzx6lUViZ/+wrgIECxGkbvnkS2NJ+QI8LKF8q/zj/
+	 2ffkKETBHhKSJN5UGhIfjje1gQF8jnRvK4aAjM3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgHFR2I (ORCPT
+        id S1730388AbgHFR2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45058 "EHLO
+        Thu, 6 Aug 2020 13:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729795AbgHFRBX (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
+        with ESMTP id S1729716AbgHFRBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:01:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E7BC0617A2
-        for <Linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 04:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uPvg2X3v/p/lXfd6jcp/t8NGbBzcgZV+OIEIyK+LKHM=; b=eVUIpkThwVZu3ji7f/oUjKFYso
-        3gtqKsitPC1QmRkSe4U3nEPyNmPEnefLRMCo5sTMIhMmsAo7rrouRruRScmwOfc/xgh6AMdGsyF5Q
-        AzkzS8Lh8wzUsycVR2vCmpIuie+z4tWJE3edoxbGVCPwoK4+GnvvTPVgQOlDVYOzBu5hxCjRskzbt
-        bsz2bfskqSKPvaS8MoSFxcqund85paa9509EvdrYenlcCkrrykeY9Kbb9a/RR8hbXFGs830bPiguB
-        0PmI8z+W3NGLjtEyGEx+YT3z++rWpHN0ohih1lJBfFVSFbs/38lgX5y582Qj4/HSRiPasAV2A/TuO
-        S7QxncBg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3ddg-0004n2-EA; Thu, 06 Aug 2020 11:00:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8E638301A66;
-        Thu,  6 Aug 2020 13:00:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D3E22123A1E7; Thu,  6 Aug 2020 13:00:46 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 13:00:46 +0200
-From:   peterz@infradead.org
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
-Subject: Re: [PATCH v1 2/2] perf/core: Fake regs for leaked kernel samples
-Message-ID: <20200806110046.GF35926@hirez.programming.kicks-ass.net>
-References: <20200731025617.16243-1-yao.jin@linux.intel.com>
- <20200731025617.16243-2-yao.jin@linux.intel.com>
- <20200804114900.GI2657@hirez.programming.kicks-ass.net>
- <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
- <20200805124454.GP2657@hirez.programming.kicks-ass.net>
- <797aa4de-c618-f340-ad7b-cef38c96b035@linux.intel.com>
- <20200806091827.GY2674@hirez.programming.kicks-ass.net>
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96066C00215C;
+        Thu,  6 Aug 2020 09:00:10 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id g19so37061742ejc.9;
+        Thu, 06 Aug 2020 09:00:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SBTEh2IqzApKPGLI0KaDJEQ6Ul4GdQLwfypsWEkduQY=;
+        b=sWjQn00opEh3ysIjn9yrPdAgeXjcTwuT3o3t+i2zi0JErjCRanMTXP8fROnEfry+1L
+         Gk/hwXzq47+3x95GBseIKNxOkYYjuJnhdnCqVO6mt19wQMYUCkFU9BqEZP3CjitmJtTT
+         0Cfb+o4flyogFkMcTqzg22VcOsRU3k5G21fD1D/NQC0jFydcYdPgeqgHWHkJ0zzGb9BS
+         XfqLowVMxF0M3BHl0pIlFOIgCT08E33Xik6CJLT9M2u++R+R/QUtikuyd3jWspZV6Gp0
+         0p62Yc067oGjj24xI583NYwBbv+S9TCTPXi64M9qzdv7Xd2ThvJo0ty2pMf6L/RHUZvX
+         ZpSQ==
+X-Gm-Message-State: AOAM532GnkCcsu3tTenh8v9iKLjMNJhQ1DvLRfLnvWFaWK04hk0PK8DB
+        wPE5Fn8hZe2rj6YlmaHwGDuamBWk4cI=
+X-Google-Smtp-Source: ABdhPJzYCjbGWFMLwI24xTvZK2FCGeO8yRGXSjriQhaEyChLhcMZZcy8l1jLyxcGio03Lm1BK6EgYg==
+X-Received: by 2002:a2e:b175:: with SMTP id a21mr3732433ljm.385.1596714135558;
+        Thu, 06 Aug 2020 04:42:15 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id r1sm2553077lff.55.2020.08.06.04.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 04:42:14 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1k3eHp-0002pY-QG; Thu, 06 Aug 2020 13:42:17 +0200
+Date:   Thu, 6 Aug 2020 13:42:17 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Patrick Riphagen <ppriphagen@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patrick.riphagen@xsens.com, stable@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: ftdi_sio: add IDs for Xsens Mti USB
+ converter
+Message-ID: <20200806114217.GQ3634@localhost>
+References: <20200806090234.4130-1-patrick.riphagen@xsens.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200806091827.GY2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200806090234.4130-1-patrick.riphagen@xsens.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 11:18:27AM +0200, peterz@infradead.org wrote:
-
-> Suppose we have nested virt:
+On Thu, Aug 06, 2020 at 11:02:34AM +0200, Patrick Riphagen wrote:
+> The device added has an FTDI chip inside.
+> The device is used to connect Xsens USB Motion Trackers.
 > 
-> 	L0-hv
-> 	|
-> 	G0/L1-hv
-> 	   |
-> 	   G1
-> 
-> And we're running in G0, then:
-> 
->  - 'exclude_hv' would exclude L0 events
->  - 'exclude_host' would ... exclude L1-hv events?
->  - 'exclude_guest' would ... exclude G1 events?
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Patrick Riphagen <patrick.riphagen@xsens.com>
+> ---
 
-So in arch/x86/events/intel/core.c we have:
+Almost there; would you mind resending with an added From: line before
+the commit message so that the authorship matches the SoB?
 
-static inline void intel_set_masks(struct perf_event *event, int idx)
-{
-	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+Also, whenever you update a patch, please add a version number in the
+Subject line (e.g. "[PATCH v2]: USB: serial: ...") so we can keep track
+of which version is the latest one. You should also include a short
+changelog here under the "---" line so we know what changed.
 
-	if (event->attr.exclude_host)
-		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-	if (event->attr.exclude_guest)
-		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-	if (event_is_checkpointed(event))
-		__set_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
-}
-
-which is, afaict, just plain wrong. Should that not be something like:
-
-	if (!event->attr.exclude_host)
-		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-	if (!event->attr.exclude_guest)
-		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-
-
-Also, ARM64 seems to also implement this stuff, Mark, do you have any
-insight on how all this is 'supposed' to work?
+Thanks,
+Johan
