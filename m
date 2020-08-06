@@ -2,201 +2,125 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CA4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F53AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFDEF221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A806B221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739286;
-	bh=jrfTfMqqNK4Bu08uryiHCRmAlSmR+sRWLonChf0RUVQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZoMYNHv7dynrqIRYeehxtVKDsmOnDlNlSshcUCIabc0+y4Gel8MOCdMIerEb4+mg
-	 gLXKRNcUpEw5NdkTvcPi7o5fOhUcv4n5DPP/AyV5EOlbsJTvcb9Fqi7dBC+RR0JXkX
-	 8EC5hSNsDt+b4Wcp2MlRmyP3l1HyHpSuwsE8feto=
+	s=default; t=1596739288;
+	bh=44fEtW2caAEFXbE7fawJjZxMVIwDcVHgxMSMWD9dt9I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ndbDOEFHx8AygRlc6JABNeTs2xb4AzWY6tbs1gYF0VEFf6cDDnyeSVkQ1G3enmOKJ
+	 OPZx69CJkhwd2j77fCM14sSFRbmymj1aNqw9jXk8hmGNu0YHiqiJ3HbN6MO8wIZC31
+	 uDEhKXjK/PA5OwhnS7Ms9TCYsebSnnDEbffTVdy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgHFSlY (ORCPT
+        id S1730062AbgHFSl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:41:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbgHFSkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729991AbgHFSkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:40:23 -0400
-Received: from localhost.localdomain (unknown [194.230.155.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6E9422EBD;
-        Thu,  6 Aug 2020 18:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68B1221E2;
+        Thu,  6 Aug 2020 18:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738259;
-        bh=jrfTfMqqNK4Bu08uryiHCRmAlSmR+sRWLonChf0RUVQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1m6Niw69C99kV9/wFls7VY3aooYZo58lNSDxmPoeT3N05Ac+qqHtOwpvIBmwewtn
-         Cj0y+jDgdQWZHi/wwx3p+oGGdAhCGVXSKu00oIsXJS+eFZM+uuSesef27ST3Tv3tui
-         l0XEBnV9iSiieJK6h+8Yr7I8B0YTwNKWidMKHhGk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 34/41] cpufreq: s3c24xx: split out registers
-Date:   Thu,  6 Aug 2020 20:20:51 +0200
-Message-Id: <20200806182059.2431-34-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
-References: <20200806181932.2253-1-krzk@kernel.org>
+        s=default; t=1596738333;
+        bh=44fEtW2caAEFXbE7fawJjZxMVIwDcVHgxMSMWD9dt9I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pGb2mHgQfkiIS0YL5xHX/68+l4GHFu4EJCbRNO3qHj0hAlJLmlRvBiVSWp1v2pdZR
+         s5dCjtvXrxDYZ2889wT/B88/eE9EVkBWx+mX692WZH7x29D/Ti8kEE7SCRIhEsVa1Z
+         BY2BtiaRGKiNprz+j2KZ/gP7yVosJq1OrmKft654=
+Date:   Thu, 6 Aug 2020 11:25:30 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+Message-ID: <20200806112530.0588b3ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200805110258.GA2169@nanopsycho>
+References: <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+        <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+        <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
+        <20200803141442.GB2290@nanopsycho>
+        <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200804100418.GA2210@nanopsycho>
+        <20200804133946.7246514e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200805110258.GA2169@nanopsycho>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 5 Aug 2020 13:02:58 +0200 Jiri Pirko wrote:
+> Tue, Aug 04, 2020 at 10:39:46PM CEST, kuba@kernel.org wrote:
+> >AFAIU the per-driver default is needed because we went too low 
+> >level with what the action constitutes. We need maintain the higher
+> >level actions.
+> >
+> >The user clearly did not care if FW was reset during devlink reload
+> >before this set, so what has changed? The objective user has is to  
+> 
+> Well for mlxsw, the user is used to this flow:
+> devlink dev flash - flash new fw
+> devlink dev reload - new fw is activated and reset and driver instances
+> are re-created.
 
-Each of the cpufreq drivers uses a fixed set of register
-bits, copy those definitions into the drivers to avoid
-including mach/regs-clock.h.
+Ugh, if the current behavior already implies fw-activation for some
+drivers then the default has to probably be "do all the things" :S
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[krzk: Fix build by copying also S3C2410_LOCKTIME]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >activate their config / FW / move to different net ns. 
+> >
+> >Reloading the driver or resetting FW is a low level detail which
+> >achieves different things for different implementations. So it's 
+> >not a suitable abstraction -> IOW we need the driver default.  
+> 
+> I'm confused. So you think we need the driver default?
 
----
+No, I'm talking about the state of this patch set. _In this patchset_ 
+we need a driver default because of the unsuitable abstraction.
 
-Changes since v1:
-1. Copy also S3C2410_LOCKTIME to the driver.
----
- drivers/cpufreq/s3c2410-cpufreq.c | 11 +++++++++--
- drivers/cpufreq/s3c2412-cpufreq.c | 20 +++++++++++++++++++-
- drivers/cpufreq/s3c2440-cpufreq.c | 24 ++++++++++++++++++++++--
- drivers/cpufreq/s3c24xx-cpufreq.c |  5 ++++-
- 4 files changed, 54 insertions(+), 6 deletions(-)
+Better design would not require it.
 
-diff --git a/drivers/cpufreq/s3c2410-cpufreq.c b/drivers/cpufreq/s3c2410-cpufreq.c
-index 0c4f2ccd7e22..5c6cb590b63f 100644
---- a/drivers/cpufreq/s3c2410-cpufreq.c
-+++ b/drivers/cpufreq/s3c2410-cpufreq.c
-@@ -20,11 +20,18 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/regs-clock.h>
--
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
-+#include <mach/map.h>
-+
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+
-+#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
-+
-+#define S3C2410_CLKDIVN_PDIVN	     (1<<0)
-+#define S3C2410_CLKDIVN_HDIVN	     (1<<1)
-+
- /* Note, 2410A has an extra mode for 1:4:4 ratio, bit 2 of CLKDIV */
- 
- static void s3c2410_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
-diff --git a/drivers/cpufreq/s3c2412-cpufreq.c b/drivers/cpufreq/s3c2412-cpufreq.c
-index 53385a9ab957..d922d0d47c80 100644
---- a/drivers/cpufreq/s3c2412-cpufreq.c
-+++ b/drivers/cpufreq/s3c2412-cpufreq.c
-@@ -23,12 +23,30 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/regs-clock.h>
- #include <mach/s3c2412.h>
- 
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
-+#include <mach/map.h>
-+
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+
-+#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
-+
-+#define S3C2412_CLKDIVN_PDIVN		(1<<2)
-+#define S3C2412_CLKDIVN_HDIVN_MASK	(3<<0)
-+#define S3C2412_CLKDIVN_ARMDIVN		(1<<3)
-+#define S3C2412_CLKDIVN_DVSEN		(1<<4)
-+#define S3C2412_CLKDIVN_HALFHCLK	(1<<5)
-+#define S3C2412_CLKDIVN_USB48DIV	(1<<6)
-+#define S3C2412_CLKDIVN_UARTDIV_MASK	(15<<8)
-+#define S3C2412_CLKDIVN_UARTDIV_SHIFT	(8)
-+#define S3C2412_CLKDIVN_I2SDIV_MASK	(15<<12)
-+#define S3C2412_CLKDIVN_I2SDIV_SHIFT	(12)
-+#define S3C2412_CLKDIVN_CAMDIV_MASK	(15<<16)
-+#define S3C2412_CLKDIVN_CAMDIV_SHIFT	(16)
-+
- /* our clock resources. */
- static struct clk *xtal;
- static struct clk *fclk;
-diff --git a/drivers/cpufreq/s3c2440-cpufreq.c b/drivers/cpufreq/s3c2440-cpufreq.c
-index 3f772ba8896e..5fe7a891fa13 100644
---- a/drivers/cpufreq/s3c2440-cpufreq.c
-+++ b/drivers/cpufreq/s3c2440-cpufreq.c
-@@ -24,11 +24,31 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/regs-clock.h>
--
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
-+#include <mach/map.h>
-+
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
-+#define S3C2440_CAMDIVN	    S3C2410_CLKREG(0x18)
-+
-+#define S3C2440_CLKDIVN_PDIVN	     (1<<0)
-+#define S3C2440_CLKDIVN_HDIVN_MASK   (3<<1)
-+#define S3C2440_CLKDIVN_HDIVN_1      (0<<1)
-+#define S3C2440_CLKDIVN_HDIVN_2      (1<<1)
-+#define S3C2440_CLKDIVN_HDIVN_4_8    (2<<1)
-+#define S3C2440_CLKDIVN_HDIVN_3_6    (3<<1)
-+#define S3C2440_CLKDIVN_UCLK         (1<<3)
-+
-+#define S3C2440_CAMDIVN_CAMCLK_MASK  (0xf<<0)
-+#define S3C2440_CAMDIVN_CAMCLK_SEL   (1<<4)
-+#define S3C2440_CAMDIVN_HCLK3_HALF   (1<<8)
-+#define S3C2440_CAMDIVN_HCLK4_HALF   (1<<9)
-+#define S3C2440_CAMDIVN_DVSEN        (1<<12)
-+
-+#define S3C2442_CAMDIVN_CAMCLK_DIV3  (1<<5)
-+
- static struct clk *xtal;
- static struct clk *fclk;
- static struct clk *hclk;
-diff --git a/drivers/cpufreq/s3c24xx-cpufreq.c b/drivers/cpufreq/s3c24xx-cpufreq.c
-index ed0e713b1b57..cf0571e8fafb 100644
---- a/drivers/cpufreq/s3c24xx-cpufreq.c
-+++ b/drivers/cpufreq/s3c24xx-cpufreq.c
-@@ -28,9 +28,12 @@
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
--#include <mach/regs-clock.h>
-+#include <mach/map.h>
- 
- /* note, cpufreq support deals in kHz, no Hz */
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+#define S3C2410_LOCKTIME    S3C2410_CLKREG(0x00)
-+#define S3C2410_MPLLCON     S3C2410_CLKREG(0x04)
- 
- static struct cpufreq_driver s3c24xx_driver;
- static struct s3c_cpufreq_config cpu_cur;
--- 
-2.17.1
+> >The work flow for the user is:
+> >
+> >0. download fw to /lib/firmware
+> >1. devlink flash $dev $fw
+> >2. if live activation is enabled
+> >   yes - devlink reload $dev $live-activate
+> >   no - report machine has to be drained for reboot
+> >
+> >fw-reset can't be $live-activate, because as Jake said fw-reset does
+> >not activate the new image for Intel. So will we end up per-driver
+> >defaults in the kernel space, and user space maintaining a mapping from  
+> 
+> Well, that is what what is Moshe's proposal. Per-driver kernel default..
+> I'm not sure what we are arguing about then :/
 
+The fact that if I do a pure "driver reload" it will active new
+firmware for mlxsw but not for mlx5. In this patchset for mlx5 I need
+driver reload fw-reset. And for Intel there is no suitable option.
+
+> >a driver to what a "level" of reset implies.
+> >
+> >I hope this makes things crystal clear. Please explain what problems
+> >you're seeing and extensions you're expecting. A list of user scenarios
+> >you foresee would be v. useful.  
