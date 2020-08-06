@@ -2,204 +2,127 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13363C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A34C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42081204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878D92311A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoPd66cT"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QUJyF20P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgHFQpA (ORCPT
+        id S1729190AbgHFQpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:45:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbgHFQoq (ORCPT
+        Thu, 6 Aug 2020 12:45:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33558 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728720AbgHFQo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:44:46 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FDA5C0A8921;
-        Thu,  6 Aug 2020 09:44:46 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c10so5921598edk.6;
-        Thu, 06 Aug 2020 09:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7j5tR0m8H3OjMJuPim98FwiN1aMkbIjxdxVhuyjo0Ew=;
-        b=eoPd66cTTjH9l86GoO63fQ8X+ctw+Tj6hSPmE5nYp/Vdw7ql/bdp4r9RzKYlJMfuc6
-         Uv8D1gdE4B+TP1mfI9optHvVmRoSLmApmaSXNVcECB65pZ8tz+2AyjO9ruPRFC25iy7P
-         GUKejLwQ/2ZaTbOxLdkbRqTHAS7Pf8nC9vskid09nzG5twd6YAD24ztc9/h6xh5r/wS8
-         IxPxwM73RIb7oiyYJwFcLdvxiVLKrNZLEgBmui6leAyfg2ByBszOKKDeCehFyiG9JPsm
-         K4eQ1HVC6piC9IOLSV2KMGGIbEXbSenlSoNegi0W7skQxYA720JZqAWd99NG0vJG3oe2
-         rXFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7j5tR0m8H3OjMJuPim98FwiN1aMkbIjxdxVhuyjo0Ew=;
-        b=hAkF1lbYeNCZFijXsiDk3SbtrBrVXg8sZ86tD+Aayf8RUylTCerVFt6frl2MMMwqfQ
-         k755u8odwthqIgOnX++qrN1IIIHTZXnbVQj9xENANWVgBYypEbrJTkj+ayywWzrcNmw/
-         uLTiUpME1QgJvW9mQTdwnlPv9qSSGDY8L98N+25zB5SG35SDzjsCgw5cCLXSaoHXgQHo
-         LStdYKt7a07CKKjSyBUVZhBcwd2OhxgImD8eZBk5MPIKBVJzhwTbGA+LLA+IBMrut2GS
-         cpx9bYo7qAu3yZbP+8aoHq5rSHjapwKZUJygOhQZTLgNoaR/B5yBSfAXk0bxyfJG1BNB
-         uBbw==
-X-Gm-Message-State: AOAM533TpVzbHddcFJSZv+bontlBIJ8h3uqTg6J/0RtZa9TSXM173UQk
-        IB7TM1bD6u5QlGD2i5QfsC2Ir43VmVb85rqUR/s=
-X-Google-Smtp-Source: ABdhPJwR1WrcmmYyv3xVh2Lg73XDm1Qy31RKbQCdDoen+3KsX/nStphPf+QMMn9o4Ud82k5K1qcstkFDVwFQJCjr5Ao=
-X-Received: by 2002:a05:6402:a5b:: with SMTP id bt27mr5003305edb.120.1596732284503;
- Thu, 06 Aug 2020 09:44:44 -0700 (PDT)
+        Thu, 6 Aug 2020 12:44:29 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076Cm3kU143057;
+        Thu, 6 Aug 2020 08:53:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pp1; bh=kLXKmSnVlmdtUZjHTj796ycXcVrQoTJVvUMMwy3L9uQ=;
+ b=QUJyF20PNAG4Ka4uAR7bLNxR0pMVq3Z1fVJpqLDi83iBffcGSb7gFtX72O/tEvMITdFV
+ Es5cXi44KlzbCrzbSb+ceiuskAjUSlk2EZyvorzfrB800X/Mkz1jHB0LkrhE4i/K2UAa
+ 6/7shZVjkrBDIG6yiAf3h7neuGDQlqbvvK2F9d6fv/5QE0/QXL6Jjc+aJLIinzalruX7
+ 0xIC3aLpBGJSOE+7MKp9tempq+kfGBcgT3o7B1N1srVeVZqOEK5Nc6NFWANVtL2ybgcT
+ Gc1JGFIwSPC3sbzUUgnjJCjdWPglA2dfzDj5NWB4/I8GPyqUlOQ61fWi5ZltO/y/gKrs Fg== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32rgnf3335-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 08:53:53 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076CiKeN019063;
+        Thu, 6 Aug 2020 12:53:51 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 32n0185fhe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 12:53:50 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076CrmrX53412194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 12:53:48 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 719F7A4060;
+        Thu,  6 Aug 2020 12:53:48 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 162FCA405B;
+        Thu,  6 Aug 2020 12:53:46 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Thu,  6 Aug 2020 12:53:45 +0000 (GMT)
+Date:   Thu, 6 Aug 2020 18:23:45 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     peterz@infradead.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
+Message-ID: <20200806125345.GB31068@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
+ <20200804104520.GB2657@hirez.programming.kicks-ass.net>
+ <20200804121007.GJ24375@linux.vnet.ibm.com>
+ <20200804124755.GJ2674@hirez.programming.kicks-ass.net>
+ <87ft90z6dy.fsf@mpe.ellerman.id.au>
+ <20200806085429.GX2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com> <1101abba0c8082da196f36636ef07a84@codeaurora.org>
-In-Reply-To: <1101abba0c8082da196f36636ef07a84@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 6 Aug 2020 09:45:28 -0700
-Message-ID: <CAF6AEGu2Lfb94kjnd7+GU_c93z0Zw2SgQ==UcrjPg3Wah=24ng@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm/dpu: Fix reservation failures in modeset
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200806085429.GX2674@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 suspectscore=1 clxscore=1015 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 7:46 AM <kalyan_t@codeaurora.org> wrote:
->
-> On 2020-08-05 21:18, Rob Clark wrote:
-> > On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org>
-> > wrote:
-> >>
-> >> In TEST_ONLY commit, rm global_state will duplicate the
-> >> object and request for new reservations, once they pass
-> >> then the new state will be swapped with the old and will
-> >> be available for the Atomic Commit.
-> >>
-> >> This patch fixes some of missing links in the resource
-> >> reservation sequence mentioned above.
-> >>
-> >> 1) Creation of a duplicate state in test_only commit (Rob)
-> >> 2) Allow resource release only during crtc_active false.
-> >>
-> >> For #2
-> >> In a modeset operation, swap state happens well before disable.
-> >> Hence clearing reservations in disable will cause failures
-> >> in modeset enable.
-> >>
-> >> Sequence:
-> >>     Swap state --> old, new
-> >>     modeset disables --> virt disable
-> >>     modeset enable --> virt modeset
-> >>
-> >> Allow reservations to be cleared only when crtc active is false
-> >> as in that case there wont be any modeset enable after disable.
-> >>
-> >> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> >> ---
-> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
-> >>  1 file changed, 5 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> index 63976dc..b85a576 100644
-> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
-> >>         dpu_kms = to_dpu_kms(priv->kms);
-> >>         mode = &crtc_state->mode;
-> >>         adj_mode = &crtc_state->adjusted_mode;
-> >> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> >> +       global_state = dpu_kms_get_global_state(crtc_state->state);
-> >>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
-> >>
-> >>         /*
-> >> @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct
-> >> drm_encoder *drm_enc)
-> >>         struct msm_drm_private *priv;
-> >>         struct dpu_kms *dpu_kms;
-> >>         struct dpu_global_state *global_state;
-> >> +       struct drm_crtc_state *crtc_state;
-> >>         int i = 0;
-> >>
-> >>         if (!drm_enc) {
-> >> @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct
-> >> drm_encoder *drm_enc)
-> >>         priv = drm_enc->dev->dev_private;
-> >>         dpu_kms = to_dpu_kms(priv->kms);
-> >>         global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> >> +       crtc_state = drm_enc->crtc->state;
-> >>
-> >>         trace_dpu_enc_disable(DRMID(drm_enc));
-> >>
-> >> @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct
-> >> drm_encoder *drm_enc)
-> >>
-> >>         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
-> >>
-> >> -       dpu_rm_release(global_state, drm_enc);
-> >> +       if (crtc_state->active_changed && !crtc_state->active)
-> >> +               dpu_rm_release(global_state, drm_enc);
-> >
-> > I still think releasing the state in the atomic_commit() path is the
-> > wrong thing to do.  In the commit path, the various state objects
-> > should be immutable.. ie. in the atomic_test() path you derive the new
-> > hw state (including assignment/release of resources), and
-> > atomic_commit() is simply pushing the state down to the hw.
-> >
-> > Otherwise, this looks better than v1.
-> >
-> > BR,
-> > -R
-> >
-> okay. Should we avoid reservation all together if active=0 on that crtc
-> and trigger rm_release on the enc during atomic_check ?
-> how do you see the approach ?
+* peterz@infradead.org <peterz@infradead.org> [2020-08-06 10:54:29]:
 
-Yeah, I suppose something like:
+> On Thu, Aug 06, 2020 at 03:32:25PM +1000, Michael Ellerman wrote:
+> 
+> > That brings with it a bunch of problems, such as existing software that
+> > has been developed/configured for Power8 and expects to see SMT8.
+> > 
+> > We also allow LPARs to be live migrated from Power8 to Power9 (and back), so
+> > maintaining the illusion of SMT8 is considered a requirement to make that work.
+> 
+> So how does that work if the kernel booted on P9 and demuxed the SMT8
+> into 2xSMT4? If you migrate that state onto a P8 with actual SMT8 you're
+> toast again.
+> 
 
-   if (drm_atomic_crtc_needs_modeset()) {
-      reserve()
-   } else if (active_changed && !active) {
-      release()
-   }
+To add to what Michael already said, the reason we don't expose the demux of
+SMT8 into 2xSMT4 to userspace, is to make the userspace believe they are on
+a SMT8. When the kernel is live migrated from P8 to P9, till the time of reboot
+they would only have the older P8 topology. After reboot the kernel topology
+would change, but the userspace is made to believe that they are running on
+SMT8 core by way of keeping the sibling_cpumask at SMT8 core level.
 
-I think it could happen (at least with atomic api) that you get a
-modeset without active_changed, so we might need to release() and then
-reserve() in that case?  (This is probably where starting to run more
-IGT tests would be useful)
-
-BR,
--R
-
-> -Kalyan
-> >>
-> >>         mutex_unlock(&dpu_enc->enc_lock);
-> >>  }
-> >> --
-> >> 1.9.1
-> >>
-> > _______________________________________________
-> > Freedreno mailing list
-> > Freedreno@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+-- 
+Thanks and Regards
+Srikar Dronamraju
