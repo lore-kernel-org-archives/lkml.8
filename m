@@ -2,234 +2,166 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F497C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF72620786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596733686;
-	bh=7Ca2EcNrZ0boJZGykMHg7vEz6vxxX93xe8FjxQdMS+g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tFXqczAZBF2c4VjFvvdUE7RYsZ68cf3zryOKPo74vxcU4IIkB6Z3K3IAkSS1rghv9
-	 SXPNWWt0ntlUW+n0GY8aN6AcJPmlm+jPOQuOv273vzT8w0yZFQtSnMpnJA2p0EFJLs
-	 hhsDWbMXn3CS5GN6t7GNOa5vf/FquypCwNzfL3uM=
+	by mail.kernel.org (Postfix) with ESMTP id DBC8920786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VZp0+VHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbgHFRIE (ORCPT
+        id S1729833AbgHFRIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        Thu, 6 Aug 2020 13:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbgHFRH3 (ORCPT
+        with ESMTP id S1729136AbgHFRGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:07:29 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEA7C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 10:07:28 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t6so39677231ljk.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 10:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G1kr/KdpK7K9+qK2pAcuXU9ZXE5iljjpY3Xz6lkPqcA=;
-        b=DyVEOZIvpemWX45QvIyHU7p+FW8ROOAiHMLZP/MfDL5jMXwT4OnaTgFAvllLRSmGzN
-         kiOcI3NxCw2hT+BunwlQyoaN+TpElz9ro8Z49hhUuVxhLaOxfXjjWrpD1iyalveQItlv
-         zlFmGg1A/SvoPOeealIBy2lbKw7zB3B9QmAqs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G1kr/KdpK7K9+qK2pAcuXU9ZXE5iljjpY3Xz6lkPqcA=;
-        b=dyMENIPRvp2xQ2+Mbwrm6O7CS0p4sNWs47m3/BxlDgJSF0djduLnRS/vNCpileAtaV
-         bS57Z4qEYVAOqEFCBt4lQfa1rkqd7CRADCV+qj60ZNENJT+bEmlzM3925jAMjwT8eq9n
-         +bXd+RugZj7rzDUA+OeMJM3i7Hr/rPF2MNaoKqC4f7JEIWi9CbmPMHn/13/6rWyDtxP5
-         uLX0Uf0UuW8Ap2wieHJP9rT38E+7NMp4gHGUCa1tJvA4xXPSWew+BfI1/Z7T/ftfw1Uy
-         aLKKVjnKxtsBJUjshPy3icpu5rXlNfUlOxismN6G2OV5JAKd6IKUw51OREOW2ZonNlnv
-         dgiA==
-X-Gm-Message-State: AOAM533crnyTDzRHUGuq0SD7symwr7ggIuSUDoxTFBSXRqfIOZ4fEgDX
-        iNgdZBH1lYq5R60NYvI3XYOphlaadRQ=
-X-Google-Smtp-Source: ABdhPJwbec6RTEEI6jLKqB/xN1HA5yLxliWF8PiKPncsaBoRw93qBI6vwByWwr5BOZO2UoYOQmN6Aw==
-X-Received: by 2002:a2e:80cd:: with SMTP id r13mr4229321ljg.148.1596733646821;
-        Thu, 06 Aug 2020 10:07:26 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id y19sm2962998lfe.77.2020.08.06.10.07.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 10:07:24 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id w14so22775213ljj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 10:07:24 -0700 (PDT)
-X-Received: by 2002:a05:651c:503:: with SMTP id o3mr2102500ljp.312.1596733644177;
- Thu, 06 Aug 2020 10:07:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
- <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
- <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
- <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
- <alpine.LSU.2.11.2007231549540.1016@eggly.anvils> <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
- <20200724152424.GC17209@redhat.com> <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
- <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
- <20200725101445.GB3870@redhat.com> <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
- <alpine.LSU.2.11.2007251343370.3804@eggly.anvils> <alpine.LSU.2.11.2007252100230.5376@eggly.anvils>
- <alpine.LSU.2.11.2007261246530.6812@eggly.anvils> <alpine.LSU.2.11.2008052105040.8716@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2008052105040.8716@eggly.anvils>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 6 Aug 2020 10:07:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whf7wCUV2oTDUg0eeNafhhk_OhJBT2SbHZXwgtmAzNeTg@mail.gmail.com>
-Message-ID: <CAHk-=whf7wCUV2oTDUg0eeNafhhk_OhJBT2SbHZXwgtmAzNeTg@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
+        Thu, 6 Aug 2020 13:06:40 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A6AC00039B
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SYlFjm0mwqc1/fLu0yjS/vwFC4Hl2/w3ahTiDqtfULI=; b=VZp0+VHrvA/ss+thlumVpoS9l
+        msQUgYqdXu8vSwI729+ZVuDv1CLlf22ILfwawlPVDf/Afffgb9LNeU3GYftSJKKu8KU3fWsn2mobg
+        Ev1a9GcJyWXNav5OfbfbgHTl4CXilPehVT0uAonCtmdikoFj2tLyyn0IRoZwmEryJwiuxJ/raz1Sj
+        GYLCC9wJTxK44Ia5RznOBlNKdPyqRW7LfrlGoJq+wu93B9xQT60aTPIaIECAawOALg+zzuRCBhI5n
+        4Ku8mi+DwbUgVwDi22RJ8w1Si28OlJMf8lj6YfmBDSneCweCl+JzspzbhWxmWE0Ih40y6YOwA0pqk
+        x+hol8PhQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49120)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k3i1Z-0004nQ-U7; Thu, 06 Aug 2020 16:41:45 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k3i1Y-0006Ie-Mj; Thu, 06 Aug 2020 16:41:44 +0100
+Date:   Thu, 6 Aug 2020 16:41:44 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Pratyush Anand <panand@redhat.com>,
+        Pavel Labath <labath@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: multipart/mixed; boundary="000000000000a9dffa05ac388522"
+        Kazuhiro Inaba <kinaba@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
+Message-ID: <20200806154144.GD1551@shell.armlinux.org.uk>
+References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
+ <20191120191813.GD4799@willie-the-truck>
+ <CAD=FV=Wntf0TCwdtNNvPY-CXX1VL_SZK8Y8yw1r=UfeayHfwgw@mail.gmail.com>
+ <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000a9dffa05ac388522
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Aug 06, 2020 at 08:05:10AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Dec 2, 2019 at 8:36 AM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Nov 20, 2019 at 11:18 AM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
+> > > > This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
+> > > > watchpoint addresses") but ported to arm32, which has the same
+> > > > problem.
+> > > >
+> > > > This problem was found by Android CTS tests, notably the
+> > > > "watchpoint_imprecise" test [1].  I tested locally against a copycat
+> > > > (simplified) version of the test though.
+> > > >
+> > > > [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
+> > > >
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > ---
+> > > >
+> > > >  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
+> > > >  1 file changed, 70 insertions(+), 26 deletions(-)
+> > >
+> > > Sorry for taking so long to look at this. After wrapping my head around the
+> > > logic again
+> >
+> > Yeah.  It was a little weird and (unfortunately) arbitrarily different
+> > in some places compared to the arm64 code.
+> >
+> >
+> > > I think it looks fine, so please put it into the patch system
+> > > with my Ack:
+> > >
+> > > Acked-by: Will Deacon <will@kernel.org>
+> >
+> > Thanks!  Submitted as:
+> >
+> > https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8944/1
+> 
+> Oddly, I found that if I go visit that page now I see:
+> 
+> > - - - Note 2 submitted by Russell King on 17 Jan 2020 11:16:34 (UTC) - - -
+> > Moved to applied
+> >
+> > Applied to git-curr (misc branch).
+> 
+> Yet if I go check mainline the patch is not there.  This came to my
+> attention since we had my patch picked to the Chrome OS 4.19 tree and
+> suddenly recently got a stable merge conflict with "ARM: 8986/1:
+> hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints".
+> 
+> Anyone know what happened here?
 
-On Wed, Aug 5, 2020 at 10:21 PM Hugh Dickins <hughd@google.com> wrote:
->
-> Something I was interested to realize in looking at this: trylock_page()
-> on a contended lock is now much less likely to jump the queue and
-> succeed than before, since your lock holder hands off the page lock to
-> the next holder: much smaller window than waiting for the next to wake
-> to take it. Nothing wrong with that, but effect might be seen somewhere.
+Yes.  Stephen Rothwell raised a complaint against it, which you were
+copied with:
 
-Yeah, the window is smaller, but it's not gone.
+> Hi all,
+> 
+> Commit
+> 
+>   116375be0461 ("ARM: 8944/1: hw_breakpoint: Handle inexact watchpoint addresses")
+> 
+> is missing a Signed-off-by from its author.
 
-It *might* be interesting to actually do the handover directly from
-"unlock_page()", and avoid clearing (and then setting) the bit
-entirely.
+My reply to Stephen's email was:
 
-Something like the attached TOTALLY UNTESTED patch.
+> Thanks Stephen, patch dropped.
+> 
+> It looks like Doug used his "m.disordat.com" address to submit the
+> patch through the web interface, and there was no From: in the patch
+> itself, so that was used as the patch author.  However, as you spotted,
+> it was signed off using Doug's "chromium.org" address.
+> 
+> I think it's time to make the patch system a bit more strict, checking
+> that the submission address is mentioned in a signed-off-by tag
+> somewhere in the commit message.
+> 
+> Doug, the patch system does have your "chromium.org" address, if that's
+> the one you want to use as the author, please submit using that instead.
+> Thanks.
+> 
+> Russell.
 
-NOTE! Sometimes when I say something is untested, I think the patch is
-fine because it's simple and straightforward, I just didn't test it.
+Neither email got a response from you, so the patch was dropped and
+nothing further happened.
 
-This time it's both untested and very very subtle indeed. Did I get
-the hand-over case SMP memory barriers right? Did I screw something
-else up?
-
-So this might be complete garbage. I really don't know. But it might
-close the window for an unfair trylock (or lucky page_lock())
-entirely.
-
-Or maybe it just makes page locking break entirely. It's a very real risk.
-
-The upside may not be worth it.
-
-               Linus
-
---000000000000a9dffa05ac388522
-Content-Type: application/octet-stream; name=patch
-Content-Disposition: attachment; filename=patch
-Content-Transfer-Encoding: base64
-Content-ID: <f_kdj1z0ge0>
-X-Attachment-Id: f_kdj1z0ge0
-
-IGluY2x1ZGUvbGludXgvd2FpdC5oIHwgIDIgKy0KIGtlcm5lbC9zY2hlZC93YWl0LmMgIHwgIDkg
-KysrKysrKy0tCiBtbS9maWxlbWFwLmMgICAgICAgICB8IDUxICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLQogMyBmaWxlcyBjaGFuZ2VkLCA0NiBpbnNl
-cnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3dh
-aXQuaCBiL2luY2x1ZGUvbGludXgvd2FpdC5oCmluZGV4IDg5OGM4OTBmYzE1My4uNWFiM2RmNTM1
-ZjM5IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L3dhaXQuaAorKysgYi9pbmNsdWRlL2xpbnV4
-L3dhaXQuaApAQCAtMjAwLDcgKzIwMCw3IEBAIF9fcmVtb3ZlX3dhaXRfcXVldWUoc3RydWN0IHdh
-aXRfcXVldWVfaGVhZCAqd3FfaGVhZCwgc3RydWN0IHdhaXRfcXVldWVfZW50cnkgKndxCiAKIHZv
-aWQgX193YWtlX3VwKHN0cnVjdCB3YWl0X3F1ZXVlX2hlYWQgKndxX2hlYWQsIHVuc2lnbmVkIGlu
-dCBtb2RlLCBpbnQgbnIsIHZvaWQgKmtleSk7CiB2b2lkIF9fd2FrZV91cF9sb2NrZWRfa2V5KHN0
-cnVjdCB3YWl0X3F1ZXVlX2hlYWQgKndxX2hlYWQsIHVuc2lnbmVkIGludCBtb2RlLCB2b2lkICpr
-ZXkpOwotdm9pZCBfX3dha2VfdXBfbG9ja2VkX2tleV9ib29rbWFyayhzdHJ1Y3Qgd2FpdF9xdWV1
-ZV9oZWFkICp3cV9oZWFkLAoraW50IF9fd2FrZV91cF9sb2NrZWRfa2V5X2Jvb2ttYXJrKHN0cnVj
-dCB3YWl0X3F1ZXVlX2hlYWQgKndxX2hlYWQsCiAJCXVuc2lnbmVkIGludCBtb2RlLCB2b2lkICpr
-ZXksIHdhaXRfcXVldWVfZW50cnlfdCAqYm9va21hcmspOwogdm9pZCBfX3dha2VfdXBfc3luY19r
-ZXkoc3RydWN0IHdhaXRfcXVldWVfaGVhZCAqd3FfaGVhZCwgdW5zaWduZWQgaW50IG1vZGUsIHZv
-aWQgKmtleSk7CiB2b2lkIF9fd2FrZV91cF9sb2NrZWRfc3luY19rZXkoc3RydWN0IHdhaXRfcXVl
-dWVfaGVhZCAqd3FfaGVhZCwgdW5zaWduZWQgaW50IG1vZGUsIHZvaWQgKmtleSk7CmRpZmYgLS1n
-aXQgYS9rZXJuZWwvc2NoZWQvd2FpdC5jIGIva2VybmVsL3NjaGVkL3dhaXQuYwppbmRleCAwMWY1
-ZDMwMjA1ODkuLjU3OGY0ZjRhNDAwZCAxMDA2NDQKLS0tIGEva2VybmVsL3NjaGVkL3dhaXQuYwor
-KysgYi9rZXJuZWwvc2NoZWQvd2FpdC5jCkBAIC0xNTgsMTAgKzE1OCwxNSBAQCB2b2lkIF9fd2Fr
-ZV91cF9sb2NrZWRfa2V5KHN0cnVjdCB3YWl0X3F1ZXVlX2hlYWQgKndxX2hlYWQsIHVuc2lnbmVk
-IGludCBtb2RlLCB2bwogfQogRVhQT1JUX1NZTUJPTF9HUEwoX193YWtlX3VwX2xvY2tlZF9rZXkp
-OwogCi12b2lkIF9fd2FrZV91cF9sb2NrZWRfa2V5X2Jvb2ttYXJrKHN0cnVjdCB3YWl0X3F1ZXVl
-X2hlYWQgKndxX2hlYWQsCisvKgorICogVGhpcyByZXR1cm5zIHRydWUgaWYgaXQgd29rZSB1cCBh
-biBleGNsdXNpdmUgd2FpdGVyIChpZQorICogJ25yX2V4Y2x1c2l2ZScgZHJvcHBlZCBmcm9tIDEg
-dG8gMCkuIE1heSBiZSB1c2VmdWwgZm9yCisgKiBsb2NrIGhhbmRvZmYuCisgKi8KK2ludCBfX3dh
-a2VfdXBfbG9ja2VkX2tleV9ib29rbWFyayhzdHJ1Y3Qgd2FpdF9xdWV1ZV9oZWFkICp3cV9oZWFk
-LAogCQl1bnNpZ25lZCBpbnQgbW9kZSwgdm9pZCAqa2V5LCB3YWl0X3F1ZXVlX2VudHJ5X3QgKmJv
-b2ttYXJrKQogewotCV9fd2FrZV91cF9jb21tb24od3FfaGVhZCwgbW9kZSwgMSwgMCwga2V5LCBi
-b29rbWFyayk7CisJcmV0dXJuICFfX3dha2VfdXBfY29tbW9uKHdxX2hlYWQsIG1vZGUsIDEsIDAs
-IGtleSwgYm9va21hcmspOwogfQogRVhQT1JUX1NZTUJPTF9HUEwoX193YWtlX3VwX2xvY2tlZF9r
-ZXlfYm9va21hcmspOwogCmRpZmYgLS1naXQgYS9tbS9maWxlbWFwLmMgYi9tbS9maWxlbWFwLmMK
-aW5kZXggOWYxMzFmMWNmZGUzLi4xZTI1MzZiOTgwMDAgMTAwNjQ0Ci0tLSBhL21tL2ZpbGVtYXAu
-YworKysgYi9tbS9maWxlbWFwLmMKQEAgLTk5OCw4ICs5OTgsOSBAQCBzdGF0aWMgaW50IHdha2Vf
-cGFnZV9mdW5jdGlvbih3YWl0X3F1ZXVlX2VudHJ5X3QgKndhaXQsIHVuc2lnbmVkIG1vZGUsIGlu
-dCBzeW5jLAogCQlyZXR1cm4gMDsKIAogCS8qCi0JICogSWYgaXQncyBhbiBleGNsdXNpdmUgd2Fp
-dCwgd2UgZ2V0IHRoZSBiaXQgZm9yIGl0LCBhbmQKLQkgKiBzdG9wIHdhbGtpbmcgaWYgd2UgY2Fu
-J3QuCisJICogSWYgaXQncyBhbiBleGNsdXNpdmUgd2FpdCwgd2UganVzdCB0ZWxsIHRoZSB3YWtl
-ciB0aGF0CisJICogd2UgaGF2ZSBkb25lIHRoZSBleGNsdXNpdmUgd2FpdC4gSXQgd2lsbCBrbm93
-IG5ldmVyIHRvCisJICogYWN0dWFsbHkgZXZlbiBjbGVhciB0aGUgYml0LgogCSAqCiAJICogSWYg
-aXQncyBhIG5vbi1leGNsdXNpdmUgd2FpdCwgdGhlbiB0aGUgZmFjdCB0aGF0IHRoaXMKIAkgKiB3
-YWtlIGZ1bmN0aW9uIHdhcyBjYWxsZWQgbWVhbnMgdGhhdCB0aGUgYml0IGFscmVhZHkKQEAgLTEw
-MDcsMTEgKzEwMDgsOCBAQCBzdGF0aWMgaW50IHdha2VfcGFnZV9mdW5jdGlvbih3YWl0X3F1ZXVl
-X2VudHJ5X3QgKndhaXQsIHVuc2lnbmVkIG1vZGUsIGludCBzeW5jLAogCSAqIHJlLXRvb2sgaXQu
-CiAJICovCiAJcmV0ID0gMDsKLQlpZiAod2FpdC0+ZmxhZ3MgJiBXUV9GTEFHX0VYQ0xVU0lWRSkg
-ewotCQlpZiAodGVzdF9hbmRfc2V0X2JpdChrZXktPmJpdF9uciwgJmtleS0+cGFnZS0+ZmxhZ3Mp
-KQotCQkJcmV0dXJuIC0xOworCWlmICh3YWl0LT5mbGFncyAmIFdRX0ZMQUdfRVhDTFVTSVZFKQog
-CQlyZXQgPSAxOwotCX0KIAl3YWl0LT5mbGFncyB8PSBXUV9GTEFHX1dPS0VOOwogCiAJd2FrZV91
-cF9zdGF0ZSh3YWl0LT5wcml2YXRlLCBtb2RlKTsKQEAgLTEwMjksMTIgKzEwMjcsMTMgQEAgc3Rh
-dGljIGludCB3YWtlX3BhZ2VfZnVuY3Rpb24od2FpdF9xdWV1ZV9lbnRyeV90ICp3YWl0LCB1bnNp
-Z25lZCBtb2RlLCBpbnQgc3luYywKIAlyZXR1cm4gcmV0OwogfQogCi1zdGF0aWMgdm9pZCB3YWtl
-X3VwX3BhZ2VfYml0KHN0cnVjdCBwYWdlICpwYWdlLCBpbnQgYml0X25yKQorc3RhdGljIGludCB3
-YWtlX3VwX3BhZ2VfYml0KHN0cnVjdCBwYWdlICpwYWdlLCBpbnQgYml0X25yKQogewogCXdhaXRf
-cXVldWVfaGVhZF90ICpxID0gcGFnZV93YWl0cXVldWUocGFnZSk7CiAJc3RydWN0IHdhaXRfcGFn
-ZV9rZXkga2V5OwogCXVuc2lnbmVkIGxvbmcgZmxhZ3M7CiAJd2FpdF9xdWV1ZV9lbnRyeV90IGJv
-b2ttYXJrOworCWludCBleGNsdXNpdmU7CiAKIAlrZXkucGFnZSA9IHBhZ2U7CiAJa2V5LmJpdF9u
-ciA9IGJpdF9ucjsKQEAgLTEwNDYsNyArMTA0NSw3IEBAIHN0YXRpYyB2b2lkIHdha2VfdXBfcGFn
-ZV9iaXQoc3RydWN0IHBhZ2UgKnBhZ2UsIGludCBiaXRfbnIpCiAJSU5JVF9MSVNUX0hFQUQoJmJv
-b2ttYXJrLmVudHJ5KTsKIAogCXNwaW5fbG9ja19pcnFzYXZlKCZxLT5sb2NrLCBmbGFncyk7Ci0J
-X193YWtlX3VwX2xvY2tlZF9rZXlfYm9va21hcmsocSwgVEFTS19OT1JNQUwsICZrZXksICZib29r
-bWFyayk7CisJZXhjbHVzaXZlID0gX193YWtlX3VwX2xvY2tlZF9rZXlfYm9va21hcmsocSwgVEFT
-S19OT1JNQUwsICZrZXksICZib29rbWFyayk7CiAKIAl3aGlsZSAoYm9va21hcmsuZmxhZ3MgJiBX
-UV9GTEFHX0JPT0tNQVJLKSB7CiAJCS8qCkBAIC0xMDU4LDcgKzEwNTcsNyBAQCBzdGF0aWMgdm9p
-ZCB3YWtlX3VwX3BhZ2VfYml0KHN0cnVjdCBwYWdlICpwYWdlLCBpbnQgYml0X25yKQogCQlzcGlu
-X3VubG9ja19pcnFyZXN0b3JlKCZxLT5sb2NrLCBmbGFncyk7CiAJCWNwdV9yZWxheCgpOwogCQlz
-cGluX2xvY2tfaXJxc2F2ZSgmcS0+bG9jaywgZmxhZ3MpOwotCQlfX3dha2VfdXBfbG9ja2VkX2tl
-eV9ib29rbWFyayhxLCBUQVNLX05PUk1BTCwgJmtleSwgJmJvb2ttYXJrKTsKKwkJZXhjbHVzaXZl
-IHw9IF9fd2FrZV91cF9sb2NrZWRfa2V5X2Jvb2ttYXJrKHEsIFRBU0tfTk9STUFMLCAma2V5LCAm
-Ym9va21hcmspOwogCX0KIAogCS8qCkBAIC0xMDgxLDYgKzEwODAsNyBAQCBzdGF0aWMgdm9pZCB3
-YWtlX3VwX3BhZ2VfYml0KHN0cnVjdCBwYWdlICpwYWdlLCBpbnQgYml0X25yKQogCQkgKi8KIAl9
-CiAJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmcS0+bG9jaywgZmxhZ3MpOworCXJldHVybiBleGNs
-dXNpdmU7CiB9CiAKIHN0YXRpYyB2b2lkIHdha2VfdXBfcGFnZShzdHJ1Y3QgcGFnZSAqcGFnZSwg
-aW50IGJpdCkKQEAgLTEzMzksMTEgKzEzMzksMzYgQEAgc3RhdGljIGlubGluZSBib29sIGNsZWFy
-X2JpdF91bmxvY2tfaXNfbmVnYXRpdmVfYnl0ZShsb25nIG5yLCB2b2xhdGlsZSB2b2lkICptZW0K
-ICAqLwogdm9pZCB1bmxvY2tfcGFnZShzdHJ1Y3QgcGFnZSAqcGFnZSkKIHsKLQlCVUlMRF9CVUdf
-T04oUEdfd2FpdGVycyAhPSA3KTsKKwl1bnNpZ25lZCBsb25nIGZsYWdzOworCiAJcGFnZSA9IGNv
-bXBvdW5kX2hlYWQocGFnZSk7Ci0JVk1fQlVHX09OX1BBR0UoIVBhZ2VMb2NrZWQocGFnZSksIHBh
-Z2UpOwotCWlmIChjbGVhcl9iaXRfdW5sb2NrX2lzX25lZ2F0aXZlX2J5dGUoUEdfbG9ja2VkLCAm
-cGFnZS0+ZmxhZ3MpKQotCQl3YWtlX3VwX3BhZ2VfYml0KHBhZ2UsIFBHX2xvY2tlZCk7CisKKwlm
-bGFncyA9IFJFQURfT05DRShwYWdlLT5mbGFncyk7CisJVk1fQlVHX09OX1BBR0UoIShmbGFncyAm
-ICgxIDw8IFBHX2xvY2tlZCkpLCBwYWdlKTsKKworCWZvciAoOzspIHsKKwkJdW5zaWduZWQgbG9u
-ZyBuZXc7CisKKwkJLyoKKwkJICogSWYgd2FrZV91cF9wYWdlX2JpdCgpIHdha2VzIGFuIGV4Y2x1
-c2l2ZQorCQkgKiB3YWl0ZXIsIGl0IHdpbGwgaGF2ZSBoYW5kZWQgdGhlIGxvY2sgb3ZlcgorCQkg
-KiBkaXJlY3RseS4KKwkJICovCisJCWlmIChmbGFncyAmICgxIDw8IFBHX3dhaXRlcnMpKSB7CisJ
-CQkvKgorCQkJICogTG9jayBoYW5kLW92ZXIgc2VyaWFsaXphdGlvbi4gVGhlIGF0b21pYyBpcyB0
-aGUKKwkJCSAqIHNwaW5sb2NrIHdha2VfdXBfcGFnZV9iaXQoKSB3aWxsIGRvLgorCQkJICovCisJ
-CQlzbXBfbWJfX2JlZm9yZV9hdG9taWMoKTsKKwkJCWlmICh3YWtlX3VwX3BhZ2VfYml0KHBhZ2Us
-IFBHX2xvY2tlZCkpCisJCQkJcmV0dXJuOworCQl9CisJCW5ldyA9IGNtcHhjaGdfcmVsZWFzZSgm
-cGFnZS0+ZmxhZ3MsIGZsYWdzLCBmbGFncyAmIH4oMSA8PCBQR19sb2NrZWQpKTsKKwkJaWYgKGxp
-a2VseShuZXcgPT0gZmxhZ3MpKQorCQkJcmV0dXJuOworCisJCWZsYWdzID0gbmV3OworCX0KIH0K
-IEVYUE9SVF9TWU1CT0wodW5sb2NrX3BhZ2UpOwogCg==
---000000000000a9dffa05ac388522--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
