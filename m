@@ -2,152 +2,96 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8974CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5524206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o18xQCF5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r43De36c"
+	by mail.kernel.org (Postfix) with ESMTP id E81BE206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596739828;
+	bh=cTDFY6e9XbsVg5M5M8qrth0ZUAqNLBrGztIVgptNGgo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ylCpmSTxtAhMb5PKxZwfRZZLRjhOoQIB1uWoHLXBTGNzYLvRPzTdH3lJIO/k7ie1I
+	 yAl+cns3xYS0gxs+rSm3KuJxRC8ciFa9rROVquAX/bsHNgbIqWtlnBdZvb1brGaMzj
+	 jv6QrclNf1mo0xaeTWf5r6Lx4Mo2Ro/S7SnE66E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgHFSuW (ORCPT
+        id S1729576AbgHFSu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Aug 2020 14:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729548AbgHFSuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:50:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59504 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728574AbgHFSuR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:50:17 -0400
-Date:   Thu, 06 Aug 2020 18:50:13 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596739814;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CEms7WvfXWEM83cireifolNM9kUFjf0kjE5lCr1yXlM=;
-        b=o18xQCF5eA1vXUJo1CGPgH0fgKSsnr27BrSD6iXowVSPU4Fj2eTjE8Pni8goS1lqn4J2hf
-        olBbCxiH62QEMl3ycs9istA1o0T0O+D5R5TmJ1u5Hj54D6X47W5nJeyTOCccQueDjuxHKG
-        MqNtU+x9na9lxxXcwn6H6OwKFmn84ndP56iZVaMZHNIw9m3Uj4Y88ITGgwYin8yWO7/RL6
-        TlRpAAdrxqxEgqazgcMoGb3h7aYZewPjNJuw/hIdyoGkGZdNb8LYPaKdbEbywxBIyVsc06
-        ZUiavHr3sww4EFNQ72U3a1bwVLxzhQhxfIC54vETNda6+BNPChEmhnELwslTyw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596739814;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CEms7WvfXWEM83cireifolNM9kUFjf0kjE5lCr1yXlM=;
-        b=r43De36c5dcsjoIsffKdrU/RcoiHbHB5ezRPkvN8yOj9MDd/Qb2FybrXxmspwbnXu1mEbC
-        BFSegMoUNcFYrLAw==
-From:   "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/bugs/multihit: Fix mitigation reporting when
- VMX is not in use
-Cc:     Nelson Dsouza <nelson.dsouza@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: =?utf-8?q?=3C0ba029932a816179b9d14a30db38f0f11ef1f166=2E15949?=
- =?utf-8?q?25782=2Egit=2Epawan=2Ekumar=2Egupta=40linux=2Eintel=2Ecom=3E?=
-References: =?utf-8?q?=3C0ba029932a816179b9d14a30db38f0f11ef1f166=2E159492?=
- =?utf-8?q?5782=2Egit=2Epawan=2Ekumar=2Egupta=40linux=2Eintel=2Ecom=3E?=
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08A0D206A2;
+        Thu,  6 Aug 2020 18:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596737641;
+        bh=cTDFY6e9XbsVg5M5M8qrth0ZUAqNLBrGztIVgptNGgo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Zco0Fv7OomTblCt+TSZIE7kmS4eZOhsPBYtALr7GSSmJ/F+cWPQ2NRbt9Tpmko0NC
+         UxR0BhR7NPP1nCdv2OndPM8SMyyu4j4LZsA4WCLN/8P3c+h5UR6kXSSZ6RaqpC0bSj
+         GCtnswe0Qen27QfRnSOFxIaDUXtVOiG2QXouYm/k=
+Date:   Thu, 6 Aug 2020 11:13:58 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, oss-drivers@netronome.com,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alex Elder <elder@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH v2 0/2 net] bitfield.h cleanups
+Message-ID: <20200806111358.2b23887c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <CAKwvOd=YBL_igN-Z1V9bePdt9+GOqkKq-H4Wg8GBZvBsdOHeOw@mail.gmail.com>
+References: <20200708230402.1644819-1-ndesaulniers@google.com>
+        <CAKwvOdmXtFo8YoNd7pgBnTQEwTZw0nGx-LypDiFKRR_HzZm9aA@mail.gmail.com>
+        <CAKwvOdkGmgdh6-4VRUGkd1KRC-PgFcGwP5vKJvO9Oj3cB_Qh6Q@mail.gmail.com>
+        <20200720.163458.475401930020484350.davem@davemloft.net>
+        <CAKwvOdmU+Eh0BF+o4yqSBFRXkokLOzvy-Qni27DcXOSKv5KOtQ@mail.gmail.com>
+        <CAKwvOd=YBL_igN-Z1V9bePdt9+GOqkKq-H4Wg8GBZvBsdOHeOw@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <159673981325.3192.5057160198465079415.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Wed, 5 Aug 2020 10:44:30 -0700 Nick Desaulniers wrote:
+> Hi David,
+> I read through https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html#q-how-often-do-changes-from-these-trees-make-it-to-the-mainline-linus-tree
+> and noticed http://vger.kernel.org/~davem/net-next.html.  Since the
+> merge window just opened, it sounds like I'll need to wait 2 weeks for
+> it to close before resending? Is that correct? Based on:
+> 
+> > IMPORTANT: Do not send new net-next content to netdev during the period during which net-next tree is closed.  
+> 
+> Then based on the next section in the doc, it sounds like I was
+> missing which tree to put the patch in, in the subject? I believe
+> these patches should target net-next (not net) since they're not
+> addressing regressions from the most recent cycle.
+> 
+> Do I have all that right?
 
-Commit-ID:     31dccf7df081364045bff196bdc060ddda97f2e9
-Gitweb:        https://git.kernel.org/tip/31dccf7df081364045bff196bdc060ddda97f2e9
-Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-AuthorDate:    Thu, 16 Jul 2020 12:23:59 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 06 Aug 2020 19:04:51 +02:00
+Nick, please repost the first patch only (to:dave, cc:netdev,...,
+subject "[PATCH net resend] ...") and I'm pretty sure Dave will
+re-consider it, it's a build fix after all. In any case reviewing 
+a patch with a short explanation under the commit message on why it's
+resend is easier [1] for a maintainer to process than digging through
+conversations.
 
-x86/bugs/multihit: Fix mitigation reporting when VMX is not in use
-
-On systems that have virtualization disabled or unsupported, sysfs
-mitigation for X86_BUG_ITLB_MULTIHIT is reported incorrectly as:
-
-  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
-  KVM: Vulnerable
-
-System is not vulnerable to DoS attack from a rogue guest when
-virtualization is disabled or unsupported in the hardware. Change the
-mitigation reporting for these cases.
-
-Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
-Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
-Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/0ba029932a816179b9d14a30db38f0f11ef1f166.1594925782.git.pawan.kumar.gupta@linux.intel.com
----
- Documentation/admin-guide/hw-vuln/multihit.rst | 4 ++++
- arch/x86/kernel/cpu/bugs.c                     | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
-index ba9988d..140e4ce 100644
---- a/Documentation/admin-guide/hw-vuln/multihit.rst
-+++ b/Documentation/admin-guide/hw-vuln/multihit.rst
-@@ -80,6 +80,10 @@ The possible values in this file are:
-        - The processor is not vulnerable.
-      * - KVM: Mitigation: Split huge pages
-        - Software changes mitigate this issue.
-+     * - KVM: Mitigation: VMX unsupported
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is not supported.
-+     * - KVM: Mitigation: VMX disabled
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is disabled.
-      * - KVM: Vulnerable
-        - The processor is vulnerable, but no mitigation enabled
- 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index f0b743a..d3f0db4 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -31,6 +31,7 @@
- #include <asm/intel-family.h>
- #include <asm/e820/api.h>
- #include <asm/hypervisor.h>
-+#include <asm/tlbflush.h>
- 
- #include "cpu.h"
- 
-@@ -1549,7 +1550,12 @@ static ssize_t l1tf_show_state(char *buf)
- 
- static ssize_t itlb_multihit_show_state(char *buf)
- {
--	if (itlb_multihit_kvm_mitigation)
-+	if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
-+	    !boot_cpu_has(X86_FEATURE_VMX))
-+		return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
-+	else if (!(cr4_read_shadow() & X86_CR4_VMXE))
-+		return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
-+	else if (itlb_multihit_kvm_mitigation)
- 		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
- 	else
- 		return sprintf(buf, "KVM: Vulnerable\n");
+[1] may be related to the use of patchwork on netdev
