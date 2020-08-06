@@ -2,135 +2,218 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F1B2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0DE2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 21:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyMVZ1mf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5j3I6tZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgHFVrE (ORCPT
+        id S1726204AbgHFVtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 17:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32780 "EHLO
+        Thu, 6 Aug 2020 17:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgHFVrD (ORCPT
+        with ESMTP id S1725812AbgHFVtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 17:47:03 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27F9DC061574;
-        Thu,  6 Aug 2020 14:47:03 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id c16so31530941ejx.12;
-        Thu, 06 Aug 2020 14:47:03 -0700 (PDT)
+        Thu, 6 Aug 2020 17:49:03 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6FEC061574;
+        Thu,  6 Aug 2020 14:49:02 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 74so17574315pfx.13;
+        Thu, 06 Aug 2020 14:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=EKBk8NjHQ8J7NnALNiPvVq0O4gNAFuSjWQHfJh6hX3Q=;
-        b=fyMVZ1mfs7ZNX8WrgRQAtDq/CVbg6yXJS7spNFiJcM93nszqRdxL2ZMchvZY6QCrR3
-         3+cOEG+Y1xd9YnJJWM+wuZK3xWCYzZOhhiYj6q+AeDkeffUbYDZ6NLIBd8NAmSID7Bxq
-         7MWy9ewu7VDOlROulsvOX06/q0VfB0EWNYhvtFjviolKpMBrD9Pov0hiPtD+DG7EFTUw
-         ohrlvq78eyZ5tCtF5Ykju4O2WfenMaCb+Y9So1NFk5Caq1vNOgeHmartDSqJ0huwC929
-         PDXUu57h8dU+hs2aD3gazbZfU7AddyOEDWfRHs9I41U8OH23gHwTUTo/CVRRIL9AuzEI
-         F8qA==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=eRp4U9SP0iKmSK29lXmPFC3mt2TOlKgz21+WagTHOxw=;
+        b=g5j3I6tZPvtli62eEwRcRGGGjv33s3QQkXJjLQPSao9z95lS9IIS3HKo7oc8ye1Qk8
+         t7fWTQ3RoO1lGJmsJ5qHoDlz8eoPHyZ4N9sWUDdNG/0KOBJRcd8wJGovndkkEpzCmnhu
+         xjzaNQ12kQM5+3DyCI2sMu85pAJnNJwedxrtHaCfqZhJt0f2cvvncERfZ+D5sDZ2vC7n
+         iQxZDCz9ayRedzeA3Y3e18rb+mQgZov3whYaxh7VmseY/AezvVjJ3kFxpTmXmOkFNPFZ
+         5H7/dw3AvAREkKnvODpI4kCqcrK9U0adydGsRFsxsTLLTDzITOxaYkyIoZ55DkHUYYQs
+         0Wmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=EKBk8NjHQ8J7NnALNiPvVq0O4gNAFuSjWQHfJh6hX3Q=;
-        b=LwmSZ9zREP62w61JzoN5vN59NAQ8pm8WjHwhwxNnMYAUIlBysSYJOQm+ZIuab13RXn
-         r7VI7Y6QwIbVvLVk6PfoTsMTq7WcIT6bp0Xc3ZKUu9w1/3Rn/oRVV25/MIG+EP+4xNot
-         9dngOgyT0nyFIbTiHnylYK+/oZ0qAJHYSzoSN6PKNkhmx9SNzyJ+LsM7SujH2YO8CEmo
-         HW0XzLp8m7VscTztEivXyXLCwRoaPCm40X4ifUdMvq9/eMG2PEPmFHsQJnt2Qagi8jl5
-         EzaNEmRD2yzw8DLMvQZ4ZyxEd4xh9Fq4GX1Vq6SYf0BWrxxQu+NOo6nnaTW24mZKcfNa
-         MrCA==
-X-Gm-Message-State: AOAM531ZjWys1UIaKqf8N3HhMbSw5jPOgPnPX98yTToUYP62xU52wsh2
-        FVBNcZQgBF0IJy63LW4Xt6ctWq1UZ5EGya9/dBZtU/FPl5zh4Q==
-X-Google-Smtp-Source: ABdhPJwwKcFOQnDy3MFNnAzspeHWWrM9iSOw1kCgSpPXNGBRFgvLY8WrybmvuwIViEpqFrhMWwDVGwx5qDFY0wjkYYA=
-X-Received: by 2002:a17:906:57cc:: with SMTP id u12mr6755423ejr.422.1596750421772;
- Thu, 06 Aug 2020 14:47:01 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=eRp4U9SP0iKmSK29lXmPFC3mt2TOlKgz21+WagTHOxw=;
+        b=hYbrHNp4dlOk5O+E7YtBXpTgo+5MurAwo8lecu8fgIvY6eWnuvU1DAgMqPXrtGX2YW
+         LbfmYMNrIibZOfoecaVM8pcTL7Bqtbec3P1J63V+HAw4q8l1Y5fUVGnoeQhd1ZCzeoQA
+         HxmwawsFYm429epyWZVqFE2m3Cqaqpr3lX6DpKkOUQ9DJsH3/i7NMuMMec9IBy53E22r
+         6haU3lZtT9+5mkQgrFZWo03rwvrweapOS8wEq6tKPRyDLNd/zTxgCTctpZKTmE2bIH/S
+         e1gF4UOrafkosrBoYb1S2/xF96z3Cq7a2Rurjt27097vWPVXP/7YTTQP70YERjw9nAWA
+         HdkQ==
+X-Gm-Message-State: AOAM53347fQde0jb+Z61bQi2e5inNSYnhGEcsLrnH/6xE9EKr7AC2iQT
+        VkUmZ28byL9hNuAhZrCahrTvl5B6
+X-Google-Smtp-Source: ABdhPJwgJBZFo35+H6lhT4MbY/AhvsAW4u5TATluI7qAcwqiXIeqFMbsn71qXQZMITRT3ZINydFubQ==
+X-Received: by 2002:a63:d912:: with SMTP id r18mr9108609pgg.358.1596750542162;
+        Thu, 06 Aug 2020 14:49:02 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id np4sm8570690pjb.4.2020.08.06.14.49.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 14:49:00 -0700 (PDT)
+Subject: Re: [PATCH] hwmon/pmbus: use simple i2c probe function
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200806161645.9437-1-steve@sk2.org>
+ <5f7b5828-cb7c-127a-e454-6c8b8d98777b@roeck-us.net>
+ <20200806221232.278c3878@heffalump.sk2.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <e378e4e6-73b3-0a11-bca6-ec0d4225a010@roeck-us.net>
+Date:   Thu, 6 Aug 2020 14:48:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Thu, 6 Aug 2020 17:46:50 -0400
-Message-ID: <CAMdYzYoqKcG+LtFZy+TeYWB=GJo8Ya60r3Los4T5j7j3Okdbtw@mail.gmail.com>
-Subject: [PATCH] arm: Add support for ZSTD compressed kernel
-To:     nolange79@gmail.com
-Cc:     linux-kernel@vger.kernel.org, Petr Malat <oss@malat.biz>,
-        Kees Cook <keescook@chromium.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Terrell <terrelln@fb.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200806221232.278c3878@heffalump.sk2.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="JccBE59ttU0QeWUvWVkkHKm2Lyq60I0Lk"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good Evening,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--JccBE59ttU0QeWUvWVkkHKm2Lyq60I0Lk
+Content-Type: multipart/mixed; boundary="uzMnt8ADmlW4McDEqjBrCCOiz0KUI32b0"
 
-I had attempted to get this working as well, but have run into
-difficulties with both my implementation and yours as well.
-My implementation was almost the same as yours, with the exception of
-also changing:
-@@ -303,7 +305,7 @@ restart: adr r0, LC1
+--uzMnt8ADmlW4McDEqjBrCCOiz0KUI32b0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
- #ifndef CONFIG_ZBOOT_ROM
-  /* malloc space is above the relocated stack (64k max) */
-- add r10, sp, #0x10000
-+ add r10, sp, #0x30000
- #else
-  /*
-  * With ZBOOT_ROM the bss/stack is non relocatable,
+On 8/6/20 1:12 PM, Stephen Kitt wrote:
+> On Thu, 6 Aug 2020 12:15:55 -0700, Guenter Roeck <linux@roeck-us.net> w=
+rote:
+>> On 8/6/20 9:16 AM, Stephen Kitt wrote:
+>>> pmbus_do_probe doesn't use the id information provided in its second
+>>> argument, so this can be removed, which then allows using the
+>>> single-parameter i2c probe function ("probe_new") for probes which
+>>> don't use the id information either.
+>>>
+>>> This avoids scanning the identifier tables during probes.
+>>>
+>>> Additionally, in cases where the id information (driver_data) isn't
+>>> used, the corresponding declarations are removed from the id_table,
+>>> and .name is specified explicitly.
+>>>  =20
+>>
+>> The ultimate idea seems to be to remove the "old" i2c probe function
+>> entirely. This means we'll have to touch the various drivers again
+>> to make that happen if they are not converted to probe_new.
+>>
+>> With that in mind, since we are at it, why not use probe_new() in
+>> every driver and call i2c_match_id() in cases where it is actually
+>> needed/used ?
+>=20
+> Yes, I was planning on doing that in a second phase, but I can do it ri=
+ght
+> now (perhaps as a patch series) if that would be better.
+>=20
+>> Also, I am not convinced that replacements such as
+>>
+>> -	{ "ipsps1", 0 },
+>> +	{ .name =3D "ipsps1" },
+>>
+>> are an improvement. I would suggest to leave that alone for
+>> consistency (and to make it easier to add more devices to the
+>> various drivers if that happens in the future).
+>=20
+> From reading through all the drivers using id_table, it seems to me tha=
+t we
+> could do away with driver_data altogether and move all that to driver-l=
+ocal
+> structures, in many cases covering more than just an id. By only initia=
+lising
+> the elements of the structure that are really needed, I was hoping to (=
+a)
+> make it more obvious that driver_data isn=E2=80=99t used, and (b) allow=
+ removing it
+> without touching all the code again.
+>=20
 
-On QEMU this implementation works fine.
-However on bare metal tegra30, I get the following error:
+I don't see it as an improvement to replace a common data structure with
+per-driver data structures. That sounds too much like "let's re-invent
+the wheel over and over again". If that is where things are going, I'd
+rather have it implemented everywhere else first. I am ok with the other
+changes, but not with this.
 
-Jumping to kernel at:4861 ms
+Guenter
 
-C:0x80A000C0-0x8112BA40->0x8152C700-0x81C58080
-Uncompressing Linux...
 
-ZSTD-compressed dstSize is too small
+--uzMnt8ADmlW4McDEqjBrCCOiz0KUI32b0--
 
- -- System halted
+--JccBE59ttU0QeWUvWVkkHKm2Lyq60I0Lk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-The only difference between the bare metal test and the qemu test is
-the zImage with appended dtb is packaged in the android boot format
-for the bare metal test.
-Otherwise it's exactly the same file.
+-----BEGIN PGP SIGNATURE-----
 
-I had to modify the original zstd error message because it grouped
-several errors together.
-Here is my patch for that:
+iQIzBAEBCAAdFiEEiHPvMQj9QTOCiqgVyx8mb86fmYEFAl8sesoACgkQyx8mb86f
+mYFGGhAAjZ4ELzmvCho06PCAT1uB6L2Xz1dNjhBCEMyRaG5mBENI0EIDwFvIwSaB
+kCYE5c5T92F+OdiPAT5w0OlI35QAsC8j4DDikoTrryLxEmZP9FwPbK97lj4fUQ6+
+RQxo5O+ysf8JaS/oueqyBfCyihV6Pgth2OLvyflzOld39PSX5fuJHDZlf9jnMALY
+k16C7bCiNC5WEFiKkwn9v18Hwl0uT6UPCYNISV+bjZ9AmNPYj59tsH7E6lTI3wfX
+89R8pHPXd1G0Rd0XXDzUXxPHeqFEFgbtG9jvJDOfgo4OItdlGOSFmw06ucCQOESu
+JdNSvimbBwdorVzG9AuD8r0AqXm+jJulzzLVvre2xnyAAMczUvz5PQ6P7V78DafJ
+bKN5tk22DncwYUfx01dkXyPzzcUny9sgWTkP8cky2Adab0c4Wng4mJIhhXcymumt
+ZMJ5Q6M8d0ydPg7wyJibOOia88nvJ5slhlPfiJGlCWOnMvKWsGJ9K2vWoYbvFpP0
+mahNGpOAbmp3jLwXKGbzLrFnusz4cJ+SYkPR0GJx8naZrgYTRzuXmozn++tqXpEc
+NZZTwfl1OX95aAP5Z45EDnA5TuGwJXirowI3y2bHoZsKxe38Jc1liGisWoAWQ7Nb
+o+fwA4oAJCcVImra79Zf+sDLDmjRZ7xWKen2bBsGtdOWrGcrQtY=
+=vPja
+-----END PGP SIGNATURE-----
 
-diff --git a/lib/decompress_unzstd.c b/lib/decompress_unzstd.c
-index 062617bb0afe..89ac73e900ce 100644
---- a/lib/decompress_unzstd.c
-+++ b/lib/decompress_unzstd.c
-@@ -103,10 +103,14 @@ static int INIT handle_zstd_error(size_t ret,
-void (*error)(char *x))
-  error("Input is not in the ZSTD format (wrong magic bytes)");
-  break;
-  case ZSTD_error_dstSize_tooSmall:
-+ error("ZSTD-compressed dstSize is too small");
-+ break;
-  case ZSTD_error_corruption_detected:
-- case ZSTD_error_checksum_wrong:
-  error("ZSTD-compressed data is corrupt");
-  break;
-+ case ZSTD_error_checksum_wrong:
-+ error("ZSTD-compressed data checksum is wrong");
-+ break;
-  default:
-  error("ZSTD-compressed data is probably corrupt");
-  break;
-
-Very Respectfully,
-Peter Geis
+--JccBE59ttU0QeWUvWVkkHKm2Lyq60I0Lk--
