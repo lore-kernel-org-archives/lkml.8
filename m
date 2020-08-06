@@ -5,137 +5,112 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD1EC4347E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F03C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF4222D37
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A88C22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Zxy6kdsh"
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="M3hQ0f4L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgHFKU6 (ORCPT
+        id S1729268AbgHFJ7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 06:20:58 -0400
-Received: from mail-eopbgr690050.outbound.protection.outlook.com ([40.107.69.50]:7516
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729146AbgHFKUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 06:20:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fTae+7Sj+AGN2g7GR/qRZcWL54z1zSWWhgrNawmOJQvR9eZldE3Dxvji9fUC5hmX4nPxVjFUrDVqbQKv6HJ8IVPdjWLrtvwgxkdI6k5CaEZ/8ohrFHx/p1sE+TBkjUVKnyo/9/zm/YJg+bJTC0lQxtBPfD2BPFUoEgOPYwZaIhyKBFHN9MWKNgXGfzOgHhJCl7RjVjpGCgmSrFVoqFr5hWlSYMph6E9wCU5Zv5KBCOG4UPRWnqImYc8XqoxZoNcrlv71gk7fuuYYIxTf4xxvMzVgLyIPscDsZXdFtuF9FDx9Urza2dq3hnY7TIhgpn95R+Eu01nNfF7ZaLsvKLHrcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3VyfaXDNa7Hma5eJuOzSgefADULYJJJwfduBrclNEME=;
- b=nUOfpRpKRsqIW5BgvYIxqjsae0pCJ6/ilhVVus2p2gA/MD3xvQxXS906Nvcx5J9OzZHngaWT5zyOGZBNh/F0FYc3ipcDDPNnZXcXE7pcuCAYoDLrklGiCXh+expPUVnJ+bclMApLzFoaVivV6l39oVX4mkYXDIMUHvFtP8UV/9ojm0511gzxXl23i8b8Xuv9nrWgG7Q5H50AoKhcZcQXZSdclG5TNRvC3Ume3mgF7xYLX1A5x6EQ1brMEzSEGIbAhXPAYnkgXrDtThi42DlQ8z/863fC+jqQgmIxikQZFR31npZWs82Bd7hGl3CQonvj0GFqxyosn4MBPTOqLax2zA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
+        Thu, 6 Aug 2020 05:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgHFJ6w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:58:52 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE562C061757
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 02:58:51 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a15so43378064wrh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:58:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3VyfaXDNa7Hma5eJuOzSgefADULYJJJwfduBrclNEME=;
- b=Zxy6kdshfws6qOdKz0Y+bOyd/1GYy9A7hyIY6FxIANP2060GM/McppGaJGlGEe/+YpE20cmvRm6lYcOIlPhjOal4fXMpnGf2YusY/+5ZgAmXGOE1McT0JhvffLWBSlWJjiP1VGGIrdMMQdiO1OSP4wGFAi6KtmcKc0OjPP+pDyA=
-Received: from BN6PR13CA0061.namprd13.prod.outlook.com (2603:10b6:404:11::23)
- by BN6PR1201MB2499.namprd12.prod.outlook.com (2603:10b6:404:b2::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Thu, 6 Aug
- 2020 10:20:20 +0000
-Received: from BN8NAM11FT018.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:11:cafe::90) by BN6PR13CA0061.outlook.office365.com
- (2603:10b6:404:11::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.13 via Frontend
- Transport; Thu, 6 Aug 2020 10:20:20 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- BN8NAM11FT018.mail.protection.outlook.com (10.13.176.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3261.16 via Frontend Transport; Thu, 6 Aug 2020 10:20:20 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Aug 2020
- 05:20:20 -0500
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Aug 2020
- 05:20:20 -0500
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Thu, 6 Aug 2020 05:20:13 -0500
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Jaroslav Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: amd: Replacing component->name with codec_dai->name
-Date:   Thu, 6 Aug 2020 15:44:12 +0530
-Message-ID: <20200806101451.7918-1-Vishnuvardhanrao.Ravulapati@amd.com>
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=IjCAb6ElutCFPhXtiRRhexkYUeHi/3Oyyo9f5qPCuTw=;
+        b=M3hQ0f4LkSWB8thUbjJc+2oJa6y5cmCLs5eD1KoJQkMPuLQbkCSP5TGo61vhJUeK/x
+         okUOHv5gpWr71ku2i/E36Skxdbfnn18rmL3eBJWrH+0mYVz8okIXXR53bQDWRM4TxMP9
+         F+WT5h45ad3rWeJjwT0ygsg4yvC6H/6m9hivJlY3OWDsq0ODZmdxUxpF/P/UBC2jXGpK
+         OhGd+Oegw56eEjiekzwedj9yzzMzY99ZpiyBy7A0qJZLnr0RiclFMXaA32e1fEeijQ7Q
+         yD4AYk6PV8a0dusI2VcgtO4BYhK0SK16GMfSWoSG06raXRA5r1h1S+GM0meA+9tmSTYD
+         AsUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IjCAb6ElutCFPhXtiRRhexkYUeHi/3Oyyo9f5qPCuTw=;
+        b=OJNZb4u3+b8LrE6hNuW/tnScSjAq6Mt8nu4D1kdryXTpc+QTDHXmPTwebPnBzUGjym
+         6W8XmnmI35Ojl+QCw5WRyUekdJMEqstk9KeqRIG7fQ4B+5qgwN4gHCFUp10lvsA3W2Xo
+         /PuB5miuCiNQ4fYAMmKX1XmOam0C4tQJY/2BR8KyKfVcs1FZa0YB0GkV9uMZznH2lD1j
+         V0CyOeVTmvmrz9scieL9rEehzSNB1ZvXVi2ub0WGRXE3wP2ZTHT6CXYB+b2pQYmDUGvd
+         6MlDBRRMTwNQo+eupqaBrpxLgy93Zm9DUHYHcNslOckllsFKByVBLegsVF836ZJXmL/Z
+         vsUQ==
+X-Gm-Message-State: AOAM532xDnuXbWozLjzcYtO9M4mFenp/o4mQdPaHmSrvS01f7ebbyEG+
+        Kc1iOENjc3poX9/INh6PEj+h5g==
+X-Google-Smtp-Source: ABdhPJwn+3pUhsigOTALX0nYV9hiGuaZwXe1U6BCXbpNO1wYrek2IXuJiZU9Zca5n1jK+Wg7rHfjpg==
+X-Received: by 2002:adf:9e90:: with SMTP id a16mr7074410wrf.40.1596707930696;
+        Thu, 06 Aug 2020 02:58:50 -0700 (PDT)
+Received: from localhost.localdomain (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
+        by smtp.gmail.com with ESMTPSA id z66sm5793181wme.16.2020.08.06.02.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 02:58:50 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge@foundries.io>
+To:     jorge@foundries.io, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org
+Cc:     herbert@gondor.apana.org.au, mpm@selenic.com, arnd@arndb.de,
+        ricardo@foundries.io, mike@foundries.io,
+        gregkh@linuxfoundation.org, op-tee@lists.trustedfirmware.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv3 2/2] hwrng: optee: fix wait use case
+Date:   Thu,  6 Aug 2020 11:58:45 +0200
+Message-Id: <20200806095845.20288-2-jorge@foundries.io>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 807df74e-d080-4a60-8765-08d839f252c5
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB2499:
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB2499B00BD57B72053857CA97E7480@BN6PR1201MB2499.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1122;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VNEE8EYIWloaO8Xb37+TP9MAuhKuO/ACUM1ZCpPa9WJpyEmv5ijgCq3DuSq/96OouIIdZR84TrXc/JD5pFp6Kn3fRPK3yom/H+lEeTBWs4W1O/68BJ93kuOstfCv750u0Ie+ace9+JqbJiZdHDCPxflRuJoFfnG81TOEUc/mSxSKqSjOJojjWa6P+E8YJKIvhOzmfe4mu0sXZdRA+mkE8DZiQJ8s+a1dQa52a8sraLt8U+009bdUVwuCvaMbhyAt5XMlUm2cmXbNwyOUZ1jm25yuOfdXocGNfr8oHKDfTntxtYNkvmtzEwICeRkOi3+b6HylRJSoo7fpTQOSAcQCgss5UAYBkHSJxn941P0UHC6W3VmkmscxUx0y/0jykNiH0K31+07Pu3w8lsYF+yR4r24JSHHMcTKDnb3TIUPmdIM=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB01.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(46966005)(82310400002)(356005)(47076004)(186003)(7696005)(81166007)(336012)(26005)(2906002)(86362001)(478600001)(83380400001)(82740400003)(109986005)(426003)(54906003)(1076003)(316002)(8936002)(5660300002)(70206006)(70586007)(4744005)(4326008)(8676002)(2616005)(36756003)(266003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 10:20:20.6031
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 807df74e-d080-4a60-8765-08d839f252c5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT018.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB2499
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replacing string compare with codec_dai->name instead of comparing with
-codec_dai->component->name in hw_params.
+The current code waits for data to be available before attempting a
+second read. However the second read would not be executed as the
+while loop will exit.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+This fix does not wait if all data has been read (skips the call to
+msleep(0)) and reads a second time if partial data was retrieved on
+the first read.
+
+Worth noticing that since msleep(0) schedules a one jiffy timeout is
+better to skip such a call.
+
+Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- sound/soc/amd/acp3x-rt5682-max9836.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/hw_random/optee-rng.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index 55815fdaa1aa..406526e79af3 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -138,7 +138,7 @@ static int acp3x_1015_hw_params(struct snd_pcm_substream *substream,
- 	srate = params_rate(params);
+diff --git a/drivers/char/hw_random/optee-rng.c b/drivers/char/hw_random/optee-rng.c
+index 5bc4700c4dae..a99d82949981 100644
+--- a/drivers/char/hw_random/optee-rng.c
++++ b/drivers/char/hw_random/optee-rng.c
+@@ -122,14 +122,14 @@ static int optee_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+ 	if (max > MAX_ENTROPY_REQ_SZ)
+ 		max = MAX_ENTROPY_REQ_SZ;
  
- 	for_each_rtd_codec_dais(rtd, i, codec_dai) {
--		if (strcmp(codec_dai->component->name, "rt1015-aif"))
-+		if (strcmp(codec_dai->name, "rt1015-aif"))
- 			continue;
- 		ret = snd_soc_dai_set_bclk_ratio(codec_dai, 64);
- 		if (ret < 0)
+-	while (read == 0) {
++	while (read < max) {
+ 		rng_size = get_optee_rng_data(pvt_data, data, (max - read));
+ 
+ 		data += rng_size;
+ 		read += rng_size;
+ 
+ 		if (wait && pvt_data->data_rate) {
+-			if (timeout-- == 0)
++			if ((timeout-- == 0) || (read == max))
+ 				return read;
+ 			msleep((1000 * (max - read)) / pvt_data->data_rate);
+ 		} else {
 -- 
 2.17.1
 
