@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E81FC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EB3C433DF
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C6B221E3
+	by mail.kernel.org (Postfix) with ESMTP id BFA8C22CAF
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1596739058;
-	bh=pG1MboF8wBXISDiULzH8o82ZTtVx8IQwYibmbEjCkVI=;
+	bh=D1+9AmB8yaDm6+iMV1TG40QRlTP2+KI+dVoYAxhwdPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohqOveHjqCSrH7JRMsWduFCT03gfDUecDzn3xETzI8UX1gwFf0X89JdQM/IkhSaJS
-	 Tb7Ai3u4LTHXpUhRVhqR87SJYnR8YhO7vY969lxN1OrtBI1Gj4BchBZgd/ydlxzbiK
-	 vqpgiNxWqOehri2SqL41Bc1rnOFvdyGUxytxfhnc=
+	b=iOc6kl8goRZUnZXjUdij24YGdZfKUFrWjW1QqQA2exhQoiqqtvNNL0rTyqZPjube/
+	 dBzOGTvE7xbrkhaNfGX43Xs3tcHW12Ynp5YPVrC2ut1sB7ZZrAWNPyNyRzT6EeA3++
+	 e3e1litraWepMB3e2CICpzKNPEM09epBDbzC2ZwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgHFShY (ORCPT
+        id S1729659AbgHFShg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:37:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbgHFSf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728932AbgHFSf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:35:59 -0400
 Received: from localhost.localdomain (unknown [194.230.155.117])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39E6C22D73;
-        Thu,  6 Aug 2020 18:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E9122D0A;
+        Thu,  6 Aug 2020 18:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738182;
-        bh=pG1MboF8wBXISDiULzH8o82ZTtVx8IQwYibmbEjCkVI=;
+        s=default; t=1596738155;
+        bh=D1+9AmB8yaDm6+iMV1TG40QRlTP2+KI+dVoYAxhwdPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oEnc8CMfHBKNgXuR4UcoX7Y8DV1CrAjiplAv0RiLVN59kmo15s7NwCxanfHok5Qt4
-         Mpq5IW2plSmQS7nby0x+knH5yA4CNQMZiVyJJZj26mx+0+HLnh4axxciMBIBXiLoRr
-         9WWPdvXKdDFL5WLNH2iIgtfyMSE9rs4MmsKyiX9c=
+        b=dZghzyiY7vh/WaG7QyfBJJNLyAJj4CZvSwPvbbLXKiTw1JWEv6YBCwyE+W9d262W4
+         KQXW9RC5Lb0J6wPcDvm4PEx1PqOtYCLu1SyBz9d9WgNbHAX0/cVeO/jsdGdpsD1XJC
+         jprsOp4IfKMewZ3GlB0OldO01mCjUp6dxJWf8TYM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 21/41] ARM: s3c24xx: move irqchip driver back into platform
-Date:   Thu,  6 Aug 2020 20:20:38 +0200
-Message-Id: <20200806182059.2431-21-krzk@kernel.org>
+        linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: [PATCH v2 15/41] ARM: exynos: stop selecting PLAT_SAMSUNG
+Date:   Thu,  6 Aug 2020 20:20:32 +0200
+Message-Id: <20200806182059.2431-15-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
 References: <20200806181932.2253-1-krzk@kernel.org>
@@ -62,48 +61,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-It was a good idea to move it out at first, but the irqchip code
-is still tightly connected to the s3c24xx platform code and uses
-multiple internal header files, so just move it back for the
-time being to avoid those dependencies.
+Now that no code in arch/arm is shared between mach-exynos and the
+others, make the split formal.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/mach-s3c24xx/Makefile                           | 1 +
- {drivers/irqchip => arch/arm/mach-s3c24xx}/irq-s3c24xx.c | 0
- drivers/irqchip/Makefile                                 | 1 -
- 3 files changed, 1 insertion(+), 1 deletion(-)
- rename {drivers/irqchip => arch/arm/mach-s3c24xx}/irq-s3c24xx.c (100%)
+ arch/arm/Kconfig.debug        | 8 ++++----
+ arch/arm/Makefile             | 1 -
+ arch/arm/mach-exynos/Makefile | 4 ----
+ arch/arm/plat-samsung/Kconfig | 4 ++--
+ drivers/mmc/host/Kconfig      | 2 +-
+ 5 files changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/mach-s3c24xx/Makefile b/arch/arm/mach-s3c24xx/Makefile
-index 6692f2de71b2..8c31f84f8c97 100644
---- a/arch/arm/mach-s3c24xx/Makefile
-+++ b/arch/arm/mach-s3c24xx/Makefile
-@@ -8,6 +8,7 @@
- # core
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 7c34cf5c4a5b..153a9a35dd20 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -1005,7 +1005,7 @@ choice
+ 		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
  
- obj-y				+= common.o
-+obj-y				+= irq-s3c24xx.o
+ 	config DEBUG_S3C_UART0
+-		depends on PLAT_SAMSUNG
++		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+@@ -1017,7 +1017,7 @@ choice
+ 		  by the boot-loader before use.
  
- obj-$(CONFIG_CPU_S3C2410)	+= s3c2410.o
- obj-$(CONFIG_S3C2410_PLL)	+= pll-s3c2410.o
-diff --git a/drivers/irqchip/irq-s3c24xx.c b/arch/arm/mach-s3c24xx/irq-s3c24xx.c
-similarity index 100%
-rename from drivers/irqchip/irq-s3c24xx.c
-rename to arch/arm/mach-s3c24xx/irq-s3c24xx.c
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 133f9c45744a..8c983ad774f6 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -16,7 +16,6 @@ obj-$(CONFIG_ARCH_LPC32XX)		+= irq-lpc32xx.o
- obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
- obj-$(CONFIG_IRQ_MXS)			+= irq-mxs.o
- obj-$(CONFIG_ARCH_TEGRA)		+= irq-tegra.o
--obj-$(CONFIG_ARCH_S3C24XX)		+= irq-s3c24xx.o
- obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
- obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
- obj-$(CONFIG_OMPIC)			+= irq-ompic.o
+ 	config DEBUG_S3C_UART1
+-		depends on PLAT_SAMSUNG
++		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+@@ -1029,7 +1029,7 @@ choice
+ 		  by the boot-loader before use.
+ 
+ 	config DEBUG_S3C_UART2
+-		depends on PLAT_SAMSUNG
++		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+@@ -1041,7 +1041,7 @@ choice
+ 		  by the boot-loader before use.
+ 
+ 	config DEBUG_S3C_UART3
+-		depends on PLAT_SAMSUNG && (ARCH_EXYNOS || ARCH_S5PV210)
++		depends on ARCH_EXYNOS || ARCH_S5PV210
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+ 		select DEBUG_S5PV210_UART if ARCH_S5PV210
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 4e877354515f..826613a20b7d 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -232,7 +232,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
+ 
+ # Platform directory name.  This list is sorted alphanumerically
+ # by CONFIG_* macro name.
+-plat-$(CONFIG_ARCH_EXYNOS)	+= samsung
+ plat-$(CONFIG_ARCH_OMAP)	+= omap
+ plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
+ plat-$(CONFIG_ARCH_S5PV210)	+= samsung
+diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
+index 0fd3fcf8bfb0..53fa363c8e44 100644
+--- a/arch/arm/mach-exynos/Makefile
++++ b/arch/arm/mach-exynos/Makefile
+@@ -3,10 +3,6 @@
+ # Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
+ #		http://www.samsung.com/
+ 
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) += -I$(srctree)/$(src)/include -I$(srctree)/arch/arm/plat-samsung/include
+-
+-# Core
+-
+ obj-$(CONFIG_ARCH_EXYNOS)	+= exynos.o exynos-smc.o firmware.o
+ 
+ obj-$(CONFIG_EXYNOS_CPU_SUSPEND) += pm.o sleep.o
+diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
+index c3d18b0aad75..920931c3fefd 100644
+--- a/arch/arm/plat-samsung/Kconfig
++++ b/arch/arm/plat-samsung/Kconfig
+@@ -4,7 +4,7 @@
+ 
+ config PLAT_SAMSUNG
+ 	bool
+-	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_EXYNOS || ARCH_S5PV210
++	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
+ 	default y
+ 	select GENERIC_IRQ_CHIP
+ 	select NO_IOPORT_MAP
+@@ -240,7 +240,7 @@ config SAMSUNG_PM_DEBUG
+ 	bool "Samsung PM Suspend debug"
+ 	depends on PM && DEBUG_KERNEL
+ 	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
+-	depends on DEBUG_EXYNOS_UART || DEBUG_S3C24XX_UART || DEBUG_S3C2410_UART
++	depends on DEBUG_S3C24XX_UART || DEBUG_S3C2410_UART
+ 	help
+ 	  Say Y here if you want verbose debugging from the PM Suspend and
+ 	  Resume code. See <file:Documentation/arm/samsung-s3c24xx/suspend.rst>
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 9c89a5b780e8..ddce8e62280c 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -289,7 +289,7 @@ config MMC_SDHCI_TEGRA
+ 
+ config MMC_SDHCI_S3C
+ 	tristate "SDHCI support on Samsung S3C SoC"
+-	depends on MMC_SDHCI && PLAT_SAMSUNG
++	depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_EXYNOS)
+ 	help
+ 	  This selects the Secure Digital Host Controller Interface (SDHCI)
+ 	  often referrered to as the HSMMC block in some of the Samsung S3C
 -- 
 2.17.1
 
