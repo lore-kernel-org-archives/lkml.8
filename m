@@ -2,104 +2,124 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63D7C4363E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:27 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB9E4221E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159FFC4332E
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:26 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id E45AD22CF6
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DGutri21"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9i0qvly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgHFGlP (ORCPT
+        id S1728152AbgHFGaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:41:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:64384 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbgHFGlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:41:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596696070; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Af/VYpmvsEYjvi37Y3sUb2zwrhWwLcQmLuM0BoB0o78=; b=DGutri21PFQEkpTW1hkPIcYO0VUoEVSZF0xVn+jThfH7bFgkB2NsNbKKsoRM9Ka1YvERyr7M
- 6XQo/+X9aWaYlvsBeCEnmumikRsnYnxgjlpxhiXYY0Jf9XgvtpNrthDdz/RwePtoaHQEl//v
- 9AWQMVzXGTlZd9bk4J6ihDtpgKk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f2ba6063f2ce11020000664 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 06:41:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 30381C433C9; Thu,  6 Aug 2020 06:41:10 +0000 (UTC)
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54765C433C9;
-        Thu,  6 Aug 2020 06:41:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54765C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-From:   Hemant Kumar <hemantk@codeaurora.org>
-To:     gregkh@linuxfoundation.org, manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org, bbhatt@codeaurora.org,
-        Hemant Kumar <hemantk@codeaurora.org>
-Subject: [PATCH v5 0/4] user space client interface driver
-Date:   Wed,  5 Aug 2020 23:40:59 -0700
-Message-Id: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Aug 2020 02:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726051AbgHFGa3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 02:30:29 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA40C061574;
+        Wed,  5 Aug 2020 23:30:29 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so42865215wrw.1;
+        Wed, 05 Aug 2020 23:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=TGBk281x4usHvdNF4g8zlmo5D8Bhv5Q8McyHFyF9+HM=;
+        b=S9i0qvlyIu7dYtrctjS8zURJfTNuaHUJFmsq4RntwuztGPv3fezc0gZ2Inj8VFKNBP
+         4rhI8IZMOrILBx/Nbiu+ecCVYOd6XKJ4IIXi84lO/jr0ffXbsSPR8BVfOXcKV+7zVLPv
+         5lQyCgYIBncfg0vVH+zfq4RCtq4+YpON6IY+zrQI0YuRYdezFn4PU8pDKr4sX20MPbR6
+         iO36Y7WznBJxbke2ec0xKTU746X/WAqFqCAY5rM1p/koUVFiGPSoZEyXvJKrKc8Nd69L
+         6j+pSMvOmWkc9u17AydlJuDf+u2HEQLwt1/sWDZjwKMIlzOfkgzmIOW7+l5pz6QcMiri
+         A/9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TGBk281x4usHvdNF4g8zlmo5D8Bhv5Q8McyHFyF9+HM=;
+        b=tWZm01VGgzcptqn4kiDBEGyvnaOeCxCzwmkDgKpbLdRMt20qTjAbnv6IJoRi9jkgdM
+         gXt0LOKZV5TN1G0lGly+XpNb7egoZu8nj09SsZ10e+gvvQwu+cq2bfpIqMaHYozP6t4i
+         ZQw5Qac8CyZv/PGDCHCCVF92HWBDfovO35kA1YHh8jje36SHlcCwV7cOn075ZahCU0Tj
+         9pHnSiLVjBiAdd40Miyzq0i2W1tuMZUdFbty5kADInUU2pjSCwrGNGYO6YpciXYcnb4d
+         4TyMIRItiohezjZHWlxtx1PXSK7tdRw/Jzm7YXhb2CdMqYVDcTdkBv3gAX0mNKmnRjX9
+         QFvA==
+X-Gm-Message-State: AOAM533NP/V2xhE4ny9TTZS+GH+g68gqnvKAaW7eLY7T7Sr35McsX2xV
+        twAHMdpj4XgrPnr09P/tRVs=
+X-Google-Smtp-Source: ABdhPJz3fQId2Mfvo2IM9cPHd13bLT4jFeUUbQi44lKhwcEHOz/i4+jVOl9dhB1/oKwPNdmuXVjHIA==
+X-Received: by 2002:adf:b1ca:: with SMTP id r10mr6294501wra.150.1596695427645;
+        Wed, 05 Aug 2020 23:30:27 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.117.232])
+        by smtp.gmail.com with ESMTPSA id t11sm4967586wrs.66.2020.08.05.23.30.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 23:30:26 -0700 (PDT)
+Subject: Re: [PATCH v3 0/4] add i2c support for mt8192
+To:     wsa@the-dreams.de, Qii Wang <qii.wang@mediatek.com>,
+        robh+dt@kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        srv_heupstream@mediatek.com
+References: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
+ <20200805214242.GA2182@kunai>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <249df8b3-6125-6ebd-2835-ab703f05b85a@gmail.com>
+Date:   Thu, 6 Aug 2020 08:30:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200805214242.GA2182@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V5:
-- Removed mhi_uci_drv structure.
-- Used idr instead of creating global list of uci devices.
-- Used kref instead of local ref counting for uci device and
-  open count.
-- Removed unlikely macro.
 
-V4:
-- Fix locking to protect proper struct members.
-- Updated documentation describing uci client driver use cases.
-- Fixed uci ref counting in mhi_uci_open for error case.
-- Addressed style related review comments.
 
-V3: Added documentation for MHI UCI driver.
+On 05/08/2020 23:42, wsa@the-dreams.de wrote:
+> On Wed, Aug 05, 2020 at 06:52:18PM +0800, Qii Wang wrote:
+>> This series are based on 5.8-rc1 and we provide four i2c patches
+>> to support mt8192 SoC.
+>>
+>> Main changes compared to v2:
+>> --delete unused I2C_DMA_4G_MODE
+>>
+>> Main changes compared to v1:
+>> --modify the commit with access more than 8GB dram
+>> --add Reviewed-by and Acked-by from Yingjoe, Matthias and Rob
+>>
+>> Qii Wang (4):
+>>    i2c: mediatek: Add apdma sync in i2c driver
+>>    i2c: mediatek: Add access to more than 8GB dram in i2c driver
+>>    dt-bindings: i2c: update bindings for MT8192 SoC
+>>    i2c: mediatek: Add i2c compatible for MediaTek MT8192
+>>
+>>   .../devicetree/bindings/i2c/i2c-mt65xx.txt         |  1 +
+> 
+> Applied to for-next, thanks!
+> 
+> Sidenote: I get these warnings when compiling the driver:
+> 
+> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_low_ns' not described in 'i2c_spec_values'
+> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_high_ns' not described in 'i2c_spec_values'
+> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_su_sta_ns' not described in 'i2c_spec_values'
+> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'max_hd_dat_ns' not described in 'i2c_spec_values'
+> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_su_dat_ns' not described in 'i2c_spec_values'
+> 
+> Is someone interested to fix these?
+> 
 
-V2: Added mutex lock to prevent multiple readers to access same
-mhi buffer which can result into use after free.
+I just send a fix for that.
 
-Hemant Kumar (4):
-  bus: mhi: core: Add helper API to return number of free TREs
-  bus: mhi: core: Move MHI_MAX_MTU to external header file
-  docs: Add documentation for userspace client interface
-  bus: mhi: clients: Add userspace client interface driver
-
- Documentation/mhi/index.rst      |   1 +
- Documentation/mhi/uci.rst        |  39 +++
- drivers/bus/mhi/Kconfig          |   6 +
- drivers/bus/mhi/Makefile         |   1 +
- drivers/bus/mhi/clients/Kconfig  |  15 +
- drivers/bus/mhi/clients/Makefile |   3 +
- drivers/bus/mhi/clients/uci.c    | 662 +++++++++++++++++++++++++++++++++++++++
- drivers/bus/mhi/core/internal.h  |   1 -
- drivers/bus/mhi/core/main.c      |  12 +
- include/linux/mhi.h              |  12 +
- 10 files changed, 751 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/mhi/uci.rst
- create mode 100644 drivers/bus/mhi/clients/Kconfig
- create mode 100644 drivers/bus/mhi/clients/Makefile
- create mode 100644 drivers/bus/mhi/clients/uci.c
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Regards,
+Matthias
