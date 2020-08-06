@@ -2,157 +2,88 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41862C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBE9F221E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C8C221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgHFTZv (ORCPT
+        id S1726375AbgHFT0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:25:51 -0400
-Received: from mga11.intel.com ([192.55.52.93]:17834 "EHLO mga11.intel.com"
+        Thu, 6 Aug 2020 15:26:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:16245 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgHFTZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:25:51 -0400
-IronPort-SDR: S93U1g4Kzx9e9Bladk0irKIg5lURiFrJrPoJOFr+7L/Am/fWtajNRexhSYKivPLTX0qsKJZ0V1
- x2ixX9CuN9eA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="150637117"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="150637117"
+        id S1725272AbgHFT0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 15:26:19 -0400
+IronPort-SDR: 0YwRtNaPrNoPInVYLv4y764QNkcTaNatjSypA5KS6E+Mzum4ORSrLpXof0lLeIgZLmD8Td5MGU
+ yXZBTBM2Q32Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="237762621"
+X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
+   d="scan'208";a="237762621"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:25:50 -0700
-IronPort-SDR: nVMEfMzQrFS2qrV8CO5TL2tsnf0ZZDvw2SEgJxnRR7yUkRFScyeLZ6jWA7IcaFWboeuR1ClA8t
- 7LrGnk3/ZCVw==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 12:25:58 -0700
+IronPort-SDR: 1J++mHly7JMLbXnbQvdotUfwoonPHaDEiQz1Yj+f2h4WOUcVed8vm6wQm75BDPH8yXRlM/ioHZ
+ 8xLrTr1odK2A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="323534422"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga008.jf.intel.com with ESMTP; 06 Aug 2020 12:25:49 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: [PATCH v3] x86/cpu: Use SERIALIZE in sync_core() when available
-Date:   Thu,  6 Aug 2020 12:25:31 -0700
-Message-Id: <20200806192531.25136-1-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="397360030"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Aug 2020 12:25:58 -0700
+Date:   Thu, 6 Aug 2020 12:25:58 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jane Chu <jane.chu@oracle.com>
+Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, jmoyer@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] libnvdimm/security: fix a typo
+Message-ID: <20200806192557.GK1573827@iweiny-DESK2.sc.intel.com>
+References: <1596494499-9852-1-git-send-email-jane.chu@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596494499-9852-1-git-send-email-jane.chu@oracle.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SERIALIZE instruction gives software a way to force the processor to
-complete all modifications to flags, registers and memory from previous
-instructions and drain all buffered writes to memory before the next
-instruction is fetched and executed. Thus, it serves the purpose of
-sync_core(). Use it when available.
+On Mon, Aug 03, 2020 at 04:41:37PM -0600, Jane Chu wrote:
+> commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+> introduced a typo, causing a 'nvdimm->sec.flags' update being overwritten
+> by the subsequent update meant for 'nvdimm->sec.ext_flags'.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Fixes: d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Cathy Zhang <cathy.zhang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kyung Min Park <kyung.min.park@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-This is a v3 from my two previous submissions [1], [2]. The first three
-patches of the series have been merged into Linus' tree. Hence, I am
-submitting only this patch for review.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-[1]. https://lkml.org/lkml/2020/7/27/8
-[2]. https://lkml.org/lkml/2020/8/4/1090
-
-Changes since v2:
- * Support serialize with static_cpu_has() instead of using alternative
-   runtime patching directly. (Borislav Petkov)
-
-Changes since v1:
- * Support SERIALIZE using alternative runtime patching.
-   (Peter Zijlstra, H. Peter Anvin)
- * Added a note to specify which version of binutils supports SERIALIZE.
-   (Peter Zijlstra)
- * Verified that (::: "memory") is used. (H. Peter Anvin)
----
- arch/x86/include/asm/special_insns.h | 2 ++
- arch/x86/include/asm/sync_core.h     | 9 ++++++++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 59a3e13204c3..25cd67801dda 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -10,6 +10,8 @@
- #include <linux/irqflags.h>
- #include <linux/jump_label.h>
- 
-+/* Instruction opcode for SERIALIZE; supported in binutils >= 2.35. */
-+#define __ASM_SERIALIZE ".byte 0xf, 0x1, 0xe8"
- /*
-  * Volatile isn't enough to prevent the compiler from reordering the
-  * read/write functions for the control registers and messing everything up.
-diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
-index fdb5b356e59b..b74580413a0b 100644
---- a/arch/x86/include/asm/sync_core.h
-+++ b/arch/x86/include/asm/sync_core.h
-@@ -5,6 +5,7 @@
- #include <linux/preempt.h>
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
-+#include <asm/special_insns.h>
- 
- #ifdef CONFIG_X86_32
- static inline void iret_to_self(void)
-@@ -54,7 +55,8 @@ static inline void iret_to_self(void)
- static inline void sync_core(void)
- {
- 	/*
--	 * There are quite a few ways to do this.  IRET-to-self is nice
-+	 * Hardware can do this for us if SERIALIZE is available. Otherwise,
-+	 * there are quite a few ways to do this.  IRET-to-self is nice
- 	 * because it works on every CPU, at any CPL (so it's compatible
- 	 * with paravirtualization), and it never exits to a hypervisor.
- 	 * The only down sides are that it's a bit slow (it seems to be
-@@ -75,6 +77,11 @@ static inline void sync_core(void)
- 	 * Like all of Linux's memory ordering operations, this is a
- 	 * compiler barrier as well.
- 	 */
-+	if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
-+		asm volatile(__ASM_SERIALIZE ::: "memory");
-+		return;
-+	}
-+
- 	iret_to_self();
- }
- 
--- 
-2.17.1
-
+> ---
+>  drivers/nvdimm/security.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+> index 4cef69b..8f3971c 100644
+> --- a/drivers/nvdimm/security.c
+> +++ b/drivers/nvdimm/security.c
+> @@ -457,7 +457,7 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
+>  	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
+>  	put_device(&nvdimm->dev);
+>  	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+> -	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
+> +	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
+>  }
+>  
+>  void nvdimm_security_overwrite_query(struct work_struct *work)
+> -- 
+> 1.8.3.1
+> 
