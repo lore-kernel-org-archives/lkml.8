@@ -2,77 +2,116 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA92C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2760A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DE72073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 01:15:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZTv9isO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgHFBPC (ORCPT
+        id S1726799AbgHFBPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 21:15:02 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34168 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgHFBO7 (ORCPT
+        Wed, 5 Aug 2020 21:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgHFBPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 21:14:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f7so42413025wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 18:14:58 -0700 (PDT)
+        Wed, 5 Aug 2020 21:15:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544F4C061574;
+        Wed,  5 Aug 2020 18:15:25 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l60so5797003pjb.3;
+        Wed, 05 Aug 2020 18:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uDEn5WbaWPVjadOM3efG6b6rzYHXFUMjTCE/PXxN2KE=;
+        b=ZZTv9isO88CSv/2LFGhQydIXIteR0kDnWuGu9LcmtfQAuhHQaMkTzAI/mlUltgQJeq
+         idhJXGMWU9pPOAhHnwDHOL93WIgorsG6AScMcoO6Gt6fVsaYl5Hj38BYKlLCvDtft2ri
+         rYHogv6eqz27qHK6OWYkTt0aJoZKovydZnIIMpGJxYr/SL+VaVDV4opscaaKsCVu7Qdy
+         Ou8tF69bwv2eXbYcgoaqB8YGZZ9llWewGSplxLPPOL0en3ucj0vc/cZNzJI+gk60idIb
+         ynzqsEQTXwFppNx5lU072pCBCcxt8cbDOXuOtIioSVo4ensuyYG6RhCku4H0NqHqpxpr
+         1rtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IMwzmeUWlIUMBkzoWUqLg8C7tOu2SeHgF4lmZs2oBQs=;
-        b=gW/V39euzkyW+/A9tR7aiC0g/MBkQcRs7Qwv4zSgadwTRzodZIF3AUK2qDNfD16SOD
-         igikE1SbtTYadSH0fVPOwJqP8W3ySEUQXbxIDN45mdPoqc4HwDTs1cNjlPyL13JZQnEK
-         RpeA5im1x8H02nM/GwZRFABh+1kRvHPeUUdULmfXE31wo2jBqcpEP4vGqN9Zs4bG30VE
-         D3qqLfTbo8D0RQYmd4S+akHo4XUZGdDznTV3Ek2ApIzHDAu+GpbNv4+f5/U7B8sQdnAy
-         j1iPA6qxy5kQYVLh8DNQ+SJUt0c6WxBi6ojxJIJA1ErHPy1WCQ7SOPswBeDxZsCCtmBK
-         J40Q==
-X-Gm-Message-State: AOAM5316mdnOwkLa+/knQvpJIXdeg+DAoZEUaPjqrWRiGCHa7l/bGN/V
-        R3yVQCiprDbtXBmjK9Im3ByqT2QA
-X-Google-Smtp-Source: ABdhPJwdbef6jXmE+jN4Pl9BBz1qDXxUWRKEm8jm+fUg0/0xhV9D/uT919vQNvtPF63Psh/G8aDoWg==
-X-Received: by 2002:a5d:4144:: with SMTP id c4mr4940678wrq.200.1596676497600;
-        Wed, 05 Aug 2020 18:14:57 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:2803:3684:5e52:5417? ([2601:647:4802:9070:2803:3684:5e52:5417])
-        by smtp.gmail.com with ESMTPSA id 111sm4632767wrc.53.2020.08.05.18.14.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 18:14:57 -0700 (PDT)
-Subject: Re: [PATCH] nvmet: fix opps in nvmet_execute_passthru_cmd()
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Cc:     "hch@lst.de" <hch@lst.de>
-References: <20200806000804.6345-1-chaitanya.kulkarni@wdc.com>
- <4c0eab62-d29a-f1d9-7856-78af8d6fcf48@grimberg.me>
- <BYAPR04MB4965F41CEFC7DAE474CD3D1586480@BYAPR04MB4965.namprd04.prod.outlook.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <c31c1600-7b9c-f2cc-57fe-e8c16d857d2c@grimberg.me>
-Date:   Wed, 5 Aug 2020 18:14:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uDEn5WbaWPVjadOM3efG6b6rzYHXFUMjTCE/PXxN2KE=;
+        b=SXvxlG5RPlqYUMieX7mm3zcfru23UkOXyxgCb5RxJmOYvqdJ/0sM7CLFXY13uzseSY
+         R4/CHN6FQyNdvUr85OKYPsdH6EAADbpxl1lPIwpGZFDjihlet9tU5u0A//O6iQ/TjPHR
+         nn4LKe7a+Hz0xA/RVC9QoZ0gYdOJPJqnKP+geVrgbquOXxi/NkVeAN0Zu3Fn8g4eWM9S
+         xOKi1bSUrZsiLySeBMqJQuhIOixH/S+3HRF0snB+GNHgoVHsCuucqnUaDiurTh/JR+Lt
+         m2Ha4tff4AvkxsDn5vvNXVaphhdPJKLLZ6CNwj5bb26ChgXh/SltSRA9zg0Br/QOyYil
+         7SkQ==
+X-Gm-Message-State: AOAM531hLdynP08if66u+mkhvQ/S4ro+krWe9aMYHdUEtF4hX/ITt5B6
+        5FMB1AuVx88448QXiYd3Rws=
+X-Google-Smtp-Source: ABdhPJyOmYwF9Id6mbrkyH3Esv4bGEUBzv9uDe9HT13fBibOHw/90OO4CkX8gxUnjkiPmnr+gmYbhQ==
+X-Received: by 2002:a17:90a:e381:: with SMTP id b1mr5781174pjz.218.1596676519021;
+        Wed, 05 Aug 2020 18:15:19 -0700 (PDT)
+Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id a13sm5170877pfo.49.2020.08.05.18.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 18:15:18 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 09:15:13 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 02/18] gpio: uapi: define uAPI v2
+Message-ID: <20200806011513.GC11890@sol>
+References: <20200725041955.9985-1-warthog618@gmail.com>
+ <20200725041955.9985-3-warthog618@gmail.com>
+ <CAMpxmJXocdDTvC7_76UwZ9FONn86p0MjZtorRKTR5bxN7PJy6g@mail.gmail.com>
+ <20200805051853.GA122005@sol>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR04MB4965F41CEFC7DAE474CD3D1586480@BYAPR04MB4965.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805051853.GA122005@sol>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 05, 2020 at 01:18:53PM +0800, Kent Gibson wrote:
+> On Tue, Aug 04, 2020 at 07:42:34PM +0200, Bartosz Golaszewski wrote:
+> > On Sat, Jul 25, 2020 at 6:20 AM Kent Gibson <warthog618@gmail.com> wrote:
 
->>> This patch adds a check in nvmet_execute_passthru_cmd() to prevent the
->>> following oops :-
->>
->> Why LKML and not linux-nvme?
->>
+[snip]
+
+> > > config, info, info_changed and event structs receive updated versions,
+> > > and the first three new ioctls.
+> > >
+> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > ---
+> > 
+> > Hi Kent,
+> > 
+> > Thanks a lot for your work on this. Please see comments below.
+> > 
+> > One thing I'd change globally for better readability is to have all
+> > new symbols marked as v2 - even if they have no counterparts in v1. I
+> > know libgpiod will wrap it all anyway but I think it's still a good
+> > way to make our work in user-space easier.
+> > 
 > 
-> My bad (+linux-nvme).
+> Fair enough.  Oh joy.
+> 
 
-It doesn't have the patch. can you resend?
+Given that the intent is to highlight that the symbols are related to the
+v2 of the GPIO uAPI, and not the second version of a particular type, it
+makes more sense to me that the v2 is placed adjacent to the GPIO in the
+name.  e.g. gpioline_flag_v2 would become gpiov2line_flag.
+
+Does that work for you?
+
+Cheers,
+Kent.
+
