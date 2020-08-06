@@ -2,138 +2,166 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657EBC43470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEB8C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3B922B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2596522D05
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oyj/A4qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgHFFqc (ORCPT
+        id S1727821AbgHFFVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:46:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:40016 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgHFFqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 01:46:32 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BMctW4D6qz9tytV;
-        Thu,  6 Aug 2020 07:46:27 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Cn2j-KJGPYQE; Thu,  6 Aug 2020 07:46:27 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMctW21YWz9tysQ;
-        Thu,  6 Aug 2020 07:46:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 50E668B770;
-        Thu,  6 Aug 2020 07:46:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9Cs47VjaX3ER; Thu,  6 Aug 2020 07:46:28 +0200 (CEST)
-Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E77838B75E;
-        Thu,  6 Aug 2020 07:46:27 +0200 (CEST)
-Subject: Re: [PATCH v10 2/5] powerpc/vdso: Prepare for switching VDSO to
- generic C implementation.
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        anton@ozlabs.org, linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        vincenzo.frascino@arm.com, linuxppc-dev@lists.ozlabs.org
-References: <cover.1596611196.git.christophe.leroy@csgroup.eu>
- <348528c33cd4007f3fee7fe643ef160843d09a6c.1596611196.git.christophe.leroy@csgroup.eu>
- <20200805140307.GO6753@gate.crashing.org>
- <3db2a590-b842-83db-ed2b-f3ee62595f18@csgroup.eu>
- <20200805184054.GQ6753@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <24b9a5ea-f860-3b38-aee8-4d5676453d50@csgroup.eu>
-Date:   Thu, 6 Aug 2020 05:46:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 6 Aug 2020 01:21:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgHFFVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 01:21:35 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9797DC061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 22:21:34 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id e6so21585487oii.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 22:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=NawncW6kcN7J/8qHcLn2vH5R5YQS2/laJgJm6p/2YCk=;
+        b=oyj/A4qtZQFmUNx3d8X6GCw9WEuOghnm1XwugQyROixks1XkjMb3pWc838vhBkvDR+
+         dQ4776yWmKpUGQKAR/vPQWeCIcnXjSdbqeaMRKbakwt6AEf94LgWKI1IyCg82bM38xKV
+         V7/eANJ7VR9Lb8Y5Tlv7QYbXRG4p6FEPFNaZHUKDKGasYuXfp+t501S28LB9KgmB45Gf
+         5c6BuP0WDKhsJEYi2P5UIwlvfsrzmob+gsJwOZgqgGCL36oOb1v64lzzvLvvboVs3Xst
+         FeIIw7QihwkcTJNwXuQh7N/mRKJXi9E20nesrqi05PydTk8ZyPueKMlil21ChOC9pbD8
+         YmIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=NawncW6kcN7J/8qHcLn2vH5R5YQS2/laJgJm6p/2YCk=;
+        b=jDaB4kkMdZj0XPOAQIUfb63peDVPFeelKhJnekv25koC2/iGUNzRuVm0xr/lqp6fVU
+         qg7RIeCzZci7cQO5gxekuwGvmC8xUrep+S6sdZQWGjNKX7wbIxhF5orqQFqvu38oq4Jv
+         lawVxnI1V4KnmxNrxfzi+u7vPIcl5iYL3QbgAqNSkKjmEB/QuX/5LmtPUcfsr3TCUBZZ
+         BPOxka4d667hxrhfG9hyYIClKl8fzr9ESVf1mc9wAz5+Cwc/sOuHAr/NXbs8xK6QAumr
+         L9Fatua7Xu/uS61HmiRCW8nUBiZHk3XaCmX5BAzRvhvgPTRteDlS56QJU6LmD9JdZ0/a
+         Ioyg==
+X-Gm-Message-State: AOAM531b+egVFZVtF1jVc+pum6N9WtX4qhglSeX/V7CaqR8xVAgQRTYX
+        6yKIRs18aeywsB/WGi5RtevX1A==
+X-Google-Smtp-Source: ABdhPJwP0SUs4y6xBmSM+VlR4LZd/gb+f0cyUOs/WRnv2k3YOa6BUmM28Erezs7jF6n/63Hheq1okQ==
+X-Received: by 2002:aca:5585:: with SMTP id j127mr5299089oib.120.1596691293575;
+        Wed, 05 Aug 2020 22:21:33 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id t83sm945595oot.22.2020.08.05.22.21.31
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Wed, 05 Aug 2020 22:21:32 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 22:21:18 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Hugh Dickins <hughd@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+In-Reply-To: <alpine.LSU.2.11.2007261246530.6812@eggly.anvils>
+Message-ID: <alpine.LSU.2.11.2008052105040.8716@eggly.anvils>
+References: <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com> <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com> <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
+ <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com> <alpine.LSU.2.11.2007231549540.1016@eggly.anvils> <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com> <20200724152424.GC17209@redhat.com>
+ <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com> <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com> <20200725101445.GB3870@redhat.com> <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
+ <alpine.LSU.2.11.2007251343370.3804@eggly.anvils> <alpine.LSU.2.11.2007252100230.5376@eggly.anvils> <alpine.LSU.2.11.2007261246530.6812@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <20200805184054.GQ6753@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Nice to see the +130.0% this morning.
 
-On 08/05/2020 06:40 PM, Segher Boessenkool wrote:
-> Hi!
+I got back on to this on Monday, here's some follow-up.
+
+On Sun, 26 Jul 2020, Hugh Dickins wrote:
 > 
-> On Wed, Aug 05, 2020 at 04:40:16PM +0000, Christophe Leroy wrote:
->>> It cannot optimise it because it does not know shift < 32.  The code
->>> below is incorrect for shift equal to 32, fwiw.
->>
->> Is there a way to tell it ?
+> The comparison runs have not yet completed (except for the one started
+> early), but they have all got past the most interesting tests, and it's
+> clear that they do not have the "failure"s seen with your patches.
 > 
-> Sure, for example the &31 should work (but it doesn't, with the GCC
-> version you used -- which version is that?)
+> From that I can only conclude that your patches make a difference.
+> 
+> I've deduced nothing useful from the logs, will have to leave that
+> to others here with more experience of them.  But my assumption now
+> is that you have successfully removed one bottleneck, so the tests
+> get somewhat further and now stick in the next bottleneck, whatever
+> that may be.  Which shows up as "failure", where the unlock_page()
+> wake_up_page_bit() bottleneck had allowed the tests to proceed in
+> a more serially sedate way.
 
-GCC 10.1
+Yes, that's still how it appears to me. The test failures, all
+of them, came from fork() returning ENOSPC, which originated from
+alloc_pid()'s idr_alloc_cyclic(). I did try doubling our already
+large pid_max, that did not work out well, there are probably good
+reasons for it to be where it is and I was wrong to dabble with it.
+I also tried an rcu_barrier() and retry when getting -ENOSPC there,
+thinking maybe RCU was not freeing them up fast enough, but that
+didn't help either.
+
+I think (but didn't quite make the effort to double-check with
+an independent count) it was simply running out of pids: that your
+change speeds up the forking enough, that exiting could not quite keep
+up (SIGCHLD is SIG_IGNed); whereas before your change, the unlock_page()
+in do_wp_page(), on a PageAnon stack page, slowed the forking down enough
+when heavily contended.
+
+(I think we could improve the checks there, to avoid taking page lock in
+more cases; but I don't know if that would help any real-life workload -
+I see now that Michal's case is do_read_fault() not do_wp_page().)
+
+And FWIW a further speedup there is the opposite of what these tests
+are wanting: for the moment I've enabled a delay to get them passing
+as before.
+
+Something I was interested to realize in looking at this: trylock_page()
+on a contended lock is now much less likely to jump the queue and
+succeed than before, since your lock holder hands off the page lock to
+the next holder: much smaller window than waiting for the next to wake
+to take it. Nothing wrong with that, but effect might be seen somewhere.
 
 > 
->>> What does the compiler do for just
->>>
->>> static __always_inline u64 vdso_shift_ns(u64 ns, unsigned long shift)
->>> 	return ns >> (shift & 31);
->>> }
->>>
->>
->> Worse:
+> The xhci handle_cmd_completion list_del bugs (on an older version
+> of the driver): weird, nothing to do with page wakeups, I'll just
+> have to assume that it's some driver bug exposed by the greater
+> stress allowed down, and let driver people investigate (if it
+> still manifests) when we take in your improvements.
+
+Complete red herring. I'll give Greg more info in response to his
+mail, and there may be an xhci bug in there; but when I looked back,
+found I'd come across the same bug back in October, and find that
+occasionally it's been seen in our fleet. Yes, it's odd that your
+change coincided with it becoming more common on that machine
+(which I've since replaced by another), yes it's funny that it's
+in __list_del_entry_valid(), which is exactly where I got crashes
+on pages with your initial patch; but it's just a distraction.
+
 > 
-> I cannot make heads or tails of all that branch spaghetti, sorry.
+> One nice thing from the comparison runs without your patches:
+> watchdog panic did crash one of those with exactly the unlock_page()
+> wake_up_page_bit() softlockup symptom we've been fighting, that did
+> not appear with your patches.  So although the sample size is much
+> too small to justify a conclusion, it does tend towards confirming
+> your changes.
 > 
->>   73c:	55 8c 06 fe 	clrlwi  r12,r12,27
->>   740:	7f c8 f0 14 	addc    r30,r8,r30
->>   744:	7c c6 4a 14 	add     r6,r6,r9
->>   748:	7c c6 e1 14 	adde    r6,r6,r28
->>   74c:	34 6c ff e0 	addic.  r3,r12,-32
->>   750:	41 80 00 70 	blt     7c0 <__c_kernel_clock_gettime+0x114>
+> Thank you for your work on this! And I'm sure you'd have preferred
+> some hard data back, rather than a diary of my mood swings, but...
+> we do what we can.
 > 
-> This branch is always true.  Hrm.
-
-As a standalone function:
-
-With your suggestion:
-
-000006ac <vdso_shift_ns>:
-  6ac:	54 a5 06 fe 	clrlwi  r5,r5,27
-  6b0:	35 25 ff e0 	addic.  r9,r5,-32
-  6b4:	41 80 00 10 	blt     6c4 <vdso_shift_ns+0x18>
-  6b8:	7c 64 4c 30 	srw     r4,r3,r9
-  6bc:	38 60 00 00 	li      r3,0
-  6c0:	4e 80 00 20 	blr
-  6c4:	54 69 08 3c 	rlwinm  r9,r3,1,0,30
-  6c8:	21 45 00 1f 	subfic  r10,r5,31
-  6cc:	7c 84 2c 30 	srw     r4,r4,r5
-  6d0:	7d 29 50 30 	slw     r9,r9,r10
-  6d4:	7c 63 2c 30 	srw     r3,r3,r5
-  6d8:	7d 24 23 78 	or      r4,r9,r4
-  6dc:	4e 80 00 20 	blr
-
-
-With the version as is in my series:
-
-000006ac <vdso_shift_ns>:
-  6ac:	21 25 00 20 	subfic  r9,r5,32
-  6b0:	7c 69 48 30 	slw     r9,r3,r9
-  6b4:	7c 84 2c 30 	srw     r4,r4,r5
-  6b8:	7d 24 23 78 	or      r4,r9,r4
-  6bc:	7c 63 2c 30 	srw     r3,r3,r5
-  6c0:	4e 80 00 20 	blr
-
-
-Christophe
+> Hugh
