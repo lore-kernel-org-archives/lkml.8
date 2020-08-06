@@ -2,139 +2,172 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3999423119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457FF23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qe0AHxKY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cledxagv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgHFQvQ (ORCPT
+        id S1729571AbgHFQve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
+        Thu, 6 Aug 2020 12:51:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbgHFQur (ORCPT
+        with ESMTP id S1729461AbgHFQu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:50:47 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A465C002145;
-        Thu,  6 Aug 2020 08:48:51 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g33so9556133pgb.4;
-        Thu, 06 Aug 2020 08:48:51 -0700 (PDT)
+        Thu, 6 Aug 2020 12:50:57 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D349FC0A88AC
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 07:50:26 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 74so16816335pfx.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 07:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=O4fFNtupII4G3GGho31c/AZ+b/qF/UUJtsnTVBsXCWQ=;
-        b=Qe0AHxKYEd9paOfHikjpuE8sGQp696XvNaD8W3DahCu5M7sEFlNJNvAh9DJSbDzo2k
-         wLTyOY91Jl5e6ZHEnaARkpVYICAxLtbL93ynS+hilvB/gdQFh1a2nZ7/0N4OU03WUWQy
-         mE0F+8w5iI0rlA1rJZavPbSB/VZ+TK2D1cKsQArlVhvBIx8i1wIwDUX78REVE2AAGSzA
-         nk0aT0hCXgNkoE6fO2AnBmW/wWqPBwQxLeTbNys1MsXZ4goh6G+QgY1HLGZz6yr9B75f
-         fo9XxYBqcD0J+fvBKD7VLsLV6w7oHEgMtqGpa/PpjlFbo0AznYv/5Y70V4iCcVMZchBK
-         DPPA==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m441G42Dw2WA9biOCbEC37yIb+vN9wJnSWpEb0R2V68=;
+        b=Cledxagv6nAMt7v27o6YgUP9m5QB9CGCXnaH7AZ6bfcv6uloE7ZOwWdiAi884qPWXU
+         nsMKzrVONYBXUhr9LKbqaqsq8eHvS27d7N6O/c9rnICXjUimLSwqqHBAE2PNJqRJN554
+         +faXNAnPmyXY+emn9rHNcurNW9PpoeJI4TaRQxPk48vVuQnm37r8nU5LXkOg16ryaD8q
+         /OGzANa6yCr5OzEJcEeHc2DH9IBCdv6DZhWnui5h85+QlXyo/1kPilHKftaoJTplTNSD
+         SrChY1voDzVzNo7leiBxHNXpjMmUsV8aNgGi6ZXr7A34HUx7bxCsTKTfqGkSlF3VBPKf
+         hfjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=O4fFNtupII4G3GGho31c/AZ+b/qF/UUJtsnTVBsXCWQ=;
-        b=eTe3+TNKuSiMxgGA44yc8CniXRXVJukqlO2mPWK4qhiu5cWos1fYYscaDez2X/L26v
-         2PXISZ4vgM92g0Nc9WzWmPrIiJdK10Pcw+4bYKfHwOu3QesjunbtmQgHG/3Vi6TuAxio
-         x7E5xukL9Ne3uN9+dpHIQ4AkhWSigXCr2rB/ucZ58fiJuc3ajH2+x8OeTNmA2JmEGZTJ
-         5zFE5cFqQ6W+Tk39a18USr1WWwcuiHsm6ELUAxD+I0z+Bt2XCwcX3ey42F0b6XmMXK8m
-         6DFL9c3yBTpL3BMNJtaqUvJWfGtJfacSRin75ot536b9xA/J3gmgSd1oJon7iCpnem+J
-         HU7A==
-X-Gm-Message-State: AOAM532xi3liQqv0xUtjrhi417+AX33hlBwM/KUV8q7ezULdmhVIHdFd
-        3+Sx3pfaQrRjgEPg/RNp3oHGs1efQrI=
-X-Google-Smtp-Source: ABdhPJwjxTDldD4lbT7Tg3xiJNgOhHHqyCxRvl290V9QfB+Zm4xmX12EtTp0dNKbfe7bxHFShHTOug==
-X-Received: by 2002:a62:c182:: with SMTP id i124mr2596803pfg.225.1596728930820;
-        Thu, 06 Aug 2020 08:48:50 -0700 (PDT)
-Received: from localhost.localdomain ([123.201.68.255])
-        by smtp.gmail.com with ESMTPSA id f6sm8375856pje.16.2020.08.06.08.48.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Aug 2020 08:48:50 -0700 (PDT)
-From:   Raag Jadav <raagjadav@gmail.com>
-To:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=m441G42Dw2WA9biOCbEC37yIb+vN9wJnSWpEb0R2V68=;
+        b=XPb2CGjQfXLj2MGzBgt9XqxPupPxqq6sIvR+1Fomxl6rqVJXFosBhguRMXn1I5kDaX
+         z6vWMHNphDefHFc42rTTrBvkWjufWZnzDBFNGrYiDVT5+ff6Z83N5EFtf8dy0MvjYnpi
+         yBCphTstEVC/jvDi06dz/X+iLQLLowJcIeyoMyVH4SlxXxgkWchgDLyq2RqjLKq379FF
+         qioKKyROP/+8eB4ozptd6q75IzhA5jx0uqAR9C7JibxI4AOiI+nXi34QUIEViv2uPbdq
+         jugo073grzvKcyP3+gHCRNUjn6u9C6npMHOnO0DMKSxe8uf7veykPSudUfTXELEGh0UY
+         10Tg==
+X-Gm-Message-State: AOAM5327UZCmdue3swVkY7oLWY5JV+Bm2laIMI5D8SYexcrR6w/CkSiv
+        XsvtADGKhVTvaDHHvLATXHG+D+ak
+X-Google-Smtp-Source: ABdhPJwVePxwBGETaMABZuy3jh92a5kranZesLy3lqWNemyvYhONO+jdmgqrBb4ELoQd7C0vOYVECA==
+X-Received: by 2002:a63:3fcf:: with SMTP id m198mr7408374pga.342.1596725426212;
+        Thu, 06 Aug 2020 07:50:26 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i1sm8890519pfo.212.2020.08.06.07.50.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 07:50:25 -0700 (PDT)
+Subject: Re: [PATCH] random: fix a compilation error on arm64
+To:     Qian Cai <cai@lca.pw>, torvalds@linux-foundation.org
+Cc:     daniel.diaz@linaro.org, tytso@mit.edu, catalin.marinas@arm.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Cc:     wsa+renesas@sang-engineering.com, jacopo@jmondi.org,
-        akinobu.mita@gmail.com, sakari.ailus@linux.intel.com,
-        mchehab@kernel.org, Raag Jadav <raagjadav@gmail.com>
-Subject: [PATCH v2] media: ov7740: use SCCB regmap
-Date:   Thu,  6 Aug 2020 21:18:27 +0530
-Message-Id: <1596728907-32120-1-git-send-email-raagjadav@gmail.com>
-X-Mailer: git-send-email 2.7.4
+References: <20200806135836.31736-1-cai@lca.pw>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <4edcf552-ef82-cdd2-3fda-38d42ebfecc7@roeck-us.net>
+Date:   Thu, 6 Aug 2020 07:50:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200806135836.31736-1-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of SCCB APIs for regmap operations.
-Remove i2c_check_functionality as devm_regmap_init_sccb
-does it for us.
+On 8/6/20 6:58 AM, Qian Cai wrote:
+> linux-next failed to compile using this .config,
+> https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
+> 
+> arch/arm64/kernel/kaslr.c: In function 'kaslr_early_init':
+> arch/arm64/kernel/kaslr.c:128:6: error: implicit declaration of function
+> '__early_cpu_has_rndr'; did you mean '__early_pfn_to_nid'?
+> [-Werror=implicit-function-declaration]
+>   if (__early_cpu_has_rndr()) {
+>       ^~~~~~~~~~~~~~~~~~~~
+>       __early_pfn_to_nid
+> arch/arm64/kernel/kaslr.c:131:7: error: implicit declaration of function
+> '__arm64_rndr' [-Werror=implicit-function-declaration]
+>    if (__arm64_rndr(&raw))
+>        ^~~~~~~~~~~~
+> cc1: some warnings being treated as errors
+> 
 
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
----
-Changes since v1:
-- Changed commit message.
-- Added SCCB config for ov7740.
+This happens because ARCH_RANDOM is disabled. May be I am wrong, but I
+would argue that __arm64_rndr() should not be called directly in the
+first place. arch_get_random_seed_long_early() should be called instead.
 
- drivers/media/i2c/Kconfig  |  2 +-
- drivers/media/i2c/ov7740.c | 10 +---------
- 2 files changed, 2 insertions(+), 10 deletions(-)
+Thanks,
+Guenter
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index da11036..c7d5722 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -1001,7 +1001,7 @@ config VIDEO_OV7670
- config VIDEO_OV7740
- 	tristate "OmniVision OV7740 sensor support"
- 	depends on I2C && VIDEO_V4L2
--	select REGMAP_I2C
-+	select REGMAP_SCCB
- 	help
- 	  This is a Video4Linux2 sensor driver for the OmniVision
- 	  OV7740 VGA camera sensor.
-diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
-index 732655f..5832461 100644
---- a/drivers/media/i2c/ov7740.c
-+++ b/drivers/media/i2c/ov7740.c
-@@ -1068,13 +1068,6 @@ static int ov7740_probe(struct i2c_client *client)
- 	struct v4l2_subdev *sd;
- 	int ret;
- 
--	if (!i2c_check_functionality(client->adapter,
--				     I2C_FUNC_SMBUS_BYTE_DATA)) {
--		dev_err(&client->dev,
--			"OV7740: I2C-Adapter doesn't support SMBUS\n");
--		return -EIO;
--	}
--
- 	ov7740 = devm_kzalloc(&client->dev, sizeof(*ov7740), GFP_KERNEL);
- 	if (!ov7740)
- 		return -ENOMEM;
-@@ -1091,7 +1084,7 @@ static int ov7740_probe(struct i2c_client *client)
- 	if (ret)
- 		return ret;
- 
--	ov7740->regmap = devm_regmap_init_i2c(client, &ov7740_regmap_config);
-+	ov7740->regmap = devm_regmap_init_sccb(client, &ov7740_regmap_config);
- 	if (IS_ERR(ov7740->regmap)) {
- 		ret = PTR_ERR(ov7740->regmap);
- 		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-@@ -1100,7 +1093,6 @@ static int ov7740_probe(struct i2c_client *client)
- 	}
- 
- 	sd = &ov7740->subdev;
--	client->flags |= I2C_CLIENT_SCCB;
- 	v4l2_i2c_subdev_init(sd, client, &ov7740_subdev_ops);
- 
- #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
--- 
-2.7.4
+> Fixes: 585524081ecd ("random: random.h should include archrandom.h, not the other way around")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  include/linux/random.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/random.h b/include/linux/random.h
+> index f45b8be3e3c4..da782c16c20c 100644
+> --- a/include/linux/random.h
+> +++ b/include/linux/random.h
+> @@ -12,6 +12,8 @@
+>  #include <linux/list.h>
+>  #include <linux/once.h>
+>  
+> +#include <asm/archrandom.h>
+> +
+>  #include <uapi/linux/random.h>
+>  
+>  struct random_ready_callback {
+> 
 
