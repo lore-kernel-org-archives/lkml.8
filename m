@@ -1,110 +1,90 @@
-Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CF0C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E15A20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE28221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1cvZF9i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQbpfTRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgHJVSy (ORCPT
+        id S1726248AbgHFWcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 17:18:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45908 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726825AbgHJVSw (ORCPT
+        Thu, 6 Aug 2020 18:32:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgHFWcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 17:18:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597094331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kW9eqzFeo7XlW3/tLhwNHZrS1FoKXiUbx92pJ7Yvqb0=;
-        b=O1cvZF9iM/tjZtsfmxcg1lYqqsuZhFeR/32cBg0JubyfySqTp11TlY20yinXqzgEyyAqGY
-        dCKl+naqJIcAncQhxFDQCHFIm3RSgHFTXcZXPcuAE3oUsPaUcIUzfqXQkhURY+W58XYZNz
-        9PG+6vC9RzTy1TvtWfWp7o8MI4W/k90=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-WAWVdh2YMMe-UXPgslRwkg-1; Mon, 10 Aug 2020 17:18:49 -0400
-X-MC-Unique: WAWVdh2YMMe-UXPgslRwkg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A22A1009600;
-        Mon, 10 Aug 2020 21:18:47 +0000 (UTC)
-Received: from Ruby.redhat.com (ovpn-114-28.rdu2.redhat.com [10.10.114.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C232979CF3;
-        Mon, 10 Aug 2020 21:18:46 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
-        GEFORCE/QUADRO GPUS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] drm/nouveau/kms/nv50-: Don't call HEAD_SET_CRC_CONTROL in head907d_mode()
-Date:   Mon, 10 Aug 2020 17:18:38 -0400
-Message-Id: <20200810211838.37862-3-lyude@redhat.com>
-In-Reply-To: <20200810211838.37862-1-lyude@redhat.com>
-References: <20200810211838.37862-1-lyude@redhat.com>
+        Thu, 6 Aug 2020 18:32:01 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94C1C061574;
+        Thu,  6 Aug 2020 15:32:00 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id f24so13615ejx.6;
+        Thu, 06 Aug 2020 15:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cIR5gjbU+Mwah1iH8pBqwUm77E/30L+bDjha2zH7UhE=;
+        b=tQbpfTRkaS+EXC5hy7iflWYywPq7iEufj6aXlB0TgQTb4TQkXon9cRnEm8WosLXENG
+         hdHnfb26i3aqMVgLEjcrgp73pcoJsU8vcW57sHbqIDrCa7UWxIbPy4MnSiJzPQ1NBnjF
+         UqEnuoFt0nmCRpawn+xt8Pu31IdHy7zdY1TOsmivMXYv0Rhl/vEKtE5nTu/31c7rYvHm
+         uugsPVaTXaRJD6HPrLbm0GOm3IH9DjnGJqfNGFo0KAsyex1lXpx4nJ5tC+eAUEiKjfhl
+         LsXVt3QEWWVyAXDwWthkhGRnHT1jdufUAqDPedjmVy3CkqDRAnnqcenv2g67L1CojxtY
+         rXyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cIR5gjbU+Mwah1iH8pBqwUm77E/30L+bDjha2zH7UhE=;
+        b=BpSJrZqgl47Q3qnvblLH0L/dSyJvJ6ODTGgaXI35n3Ltf/U1XOHiXlhuPqKeS+xdAs
+         +IWkaoaAmsKM7535P6sys/uMsmzeYPitIHGoJIHF7LIAPBy6LeqRPfguYWDCLxQyEuVc
+         FWl4krsbc5jzwmtAhWcROXAGlDL3HuYN1+M+I2SJpvcg78L/uSLCv/n4Kfn06I6gcFoB
+         4pM71cEY4SZmeUTPPOgCbDpQC0cBnrW0kU2J1x4WeedaIQ2aeuQbZL4CqEhhtWEDaH89
+         I3teGwrPuVif4HgcdJN6xQQOxCGjHpcA+avylAbKMscSWRF3xT2nOm27TtqBrxKQomNw
+         ywyg==
+X-Gm-Message-State: AOAM531S+qVnNAFxjcNeiVix/NtHU77yDkKMjHwp2DMMaP3zJ5W9XIHr
+        mcsSAlSl0EFgzGNDksM9rm4=
+X-Google-Smtp-Source: ABdhPJyOMmGi6mKgUkgfCV3kgswvOuijmfxLZUafhcyHeXGR/0cNk7pXbcQl3AoLWZikRuoaTya/0Q==
+X-Received: by 2002:a17:906:1f53:: with SMTP id d19mr6408582ejk.327.1596753119566;
+        Thu, 06 Aug 2020 15:31:59 -0700 (PDT)
+Received: from localhost.localdomain (abae50.neoplus.adsl.tpnet.pl. [83.6.168.50])
+        by smtp.googlemail.com with ESMTPSA id k22sm4411316edo.24.2020.08.06.15.31.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 15:31:59 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     amit.pundir@linaro.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, john.stultz@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, sumit.semwal@linaro.org,
+        Konrad Dybcio <konradybcio@gmail.com>
+Subject: 
+Date:   Fri,  7 Aug 2020 00:31:34 +0200
+Message-Id: <20200806223134.42748-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
+References: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was a mistake that was present before, but never got noticed until
-we converted over to using nvidia's class headers for display
-programming. Luckily though it never caused any problems, since we
-always end up calling crc907d_set_src() after head907d_mode().
+Subject: Re: [PATCH v4] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
 
-So, let's get rid of this.
+>// This removed_region is needed to boot the device
+>               // TODO: Find out the user of this reserved memory
+>               removed_region: memory@88f00000 {
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/nouveau/dispnv50/head907d.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+This region seems to belong to the Trust Zone. When Linux tries to access it, TZ bites and shuts the device down.
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/head907d.c b/drivers/gpu/drm/nouveau/dispnv50/head907d.c
-index 8f860e9c52247..85648d790743f 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/head907d.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/head907d.c
-@@ -322,7 +322,7 @@ head907d_mode(struct nv50_head *head, struct nv50_head_atom *asyh)
- 	const int i = head->base.index;
- 	int ret;
- 
--	if ((ret = PUSH_WAIT(push, 14)))
-+	if ((ret = PUSH_WAIT(push, 13)))
- 		return ret;
- 
- 	PUSH_MTHD(push, NV907D, HEAD_SET_OVERSCAN_COLOR(i),
-@@ -353,14 +353,7 @@ head907d_mode(struct nv50_head *head, struct nv50_head_atom *asyh)
- 	PUSH_MTHD(push, NV907D, HEAD_SET_DEFAULT_BASE_COLOR(i),
- 		  NVVAL(NV907D, HEAD_SET_DEFAULT_BASE_COLOR, RED, 0) |
- 		  NVVAL(NV907D, HEAD_SET_DEFAULT_BASE_COLOR, GREEN, 0) |
--		  NVVAL(NV907D, HEAD_SET_DEFAULT_BASE_COLOR, BLUE, 0),
--
--				HEAD_SET_CRC_CONTROL(i),
--		  NVDEF(NV907D, HEAD_SET_CRC_CONTROL, CONTROLLING_CHANNEL, CORE) |
--		  NVDEF(NV907D, HEAD_SET_CRC_CONTROL, EXPECT_BUFFER_COLLAPSE, FALSE) |
--		  NVDEF(NV907D, HEAD_SET_CRC_CONTROL, TIMESTAMP_MODE, FALSE) |
--		  NVDEF(NV907D, HEAD_SET_CRC_CONTROL, PRIMARY_OUTPUT, NONE) |
--		  NVDEF(NV907D, HEAD_SET_CRC_CONTROL, SECONDARY_OUTPUT, NONE));
-+		  NVVAL(NV907D, HEAD_SET_DEFAULT_BASE_COLOR, BLUE, 0));
- 
- 	PUSH_MTHD(push, NV907D, HEAD_SET_PIXEL_CLOCK_FREQUENCY(i),
- 		  NVVAL(NV907D, HEAD_SET_PIXEL_CLOCK_FREQUENCY, HERTZ, m->clock * 1000) |
--- 
-2.26.2
-
+Konrad
