@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7564C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3037C22D00
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB2922CB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739036;
-	bh=mPsC61lMZKmtzeLxo601e47DlSg2SAAoFQgjc4SYv8o=;
+	s=default; t=1596739038;
+	bh=/PMFfjSk9NUyRsvmP0bvVqx8N1FcZ6fBEHmpqrMucOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1qy03Z40WVEY4Ir7jWRVr24t3Xl0DMCC0nz0yufFIR5Y0Lw6oERbcJmAjNdX4ndm
-	 ck5A6DMj+eB01QOqGfw3Oz1/5SO/hEladluu4SJfygKcL5xZyLzNnmjn4o+p5ZtC55
-	 cts4QHJOM7RUld1pZRl8VvTKIobnndfvn4gKvbS8=
+	b=tU6MNqNu4McANLfftulKxgO56uY2RX2L7DqfHZUO7kFtjMhb6SEsZv0ml0OMOrydw
+	 MgzL/xwnqyK5llGzd/SkrCx9RdwXt0E36oB2CZWhwmBaWDTx+4kTLf4oysWbzWkRvy
+	 46nQ3aZVMk3hzlvTOJxXs8SXOvGdpte79Kv1IBKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbgHFShO (ORCPT
+        id S1729585AbgHFShP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58956 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729277AbgHFSf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729246AbgHFSf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 14:35:59 -0400
 Received: from localhost.localdomain (unknown [194.230.155.117])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F5F822DA7;
-        Thu,  6 Aug 2020 18:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 082BF22D6D;
+        Thu,  6 Aug 2020 18:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738201;
-        bh=mPsC61lMZKmtzeLxo601e47DlSg2SAAoFQgjc4SYv8o=;
+        s=default; t=1596738152;
+        bh=/PMFfjSk9NUyRsvmP0bvVqx8N1FcZ6fBEHmpqrMucOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o3fhH0niDfjMM09Vzx/0teVjpyo+Nhlg9HvKFFa582tyrB5jzqOMQZGtqYlYakm/u
-         Un2t3ZKkAd3r4V59qdigc4NxmGn6gi7TgSQeyxY3CjyXCDLa8PRM4MYwDFrZ9P17pj
-         xoB+z2V0hITRznxzE5WRaKXmEb6fwq4bdCmo5pTQ=
+        b=1S4zLTBmIHGjPEL4OKjzgFV4utfJ4dcw40HvBwh1wzYezEOz5Za+hDxp8wJjLfdzt
+         iBrk6tWN3kstsDQrv76NuOhxCXd88m202qMfFVS0YLkbp1a+6/DmKb2Lab4/Kg7Lfy
+         331LMtu5hVk5T+XSDC3/yAUcXA54WZuZR1Ja77UI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Russell King <linux@armlinux.org.uk>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
-Subject: [PATCH v2 26/41] ASoC: samsung: rx1950: turn into platform driver
-Date:   Thu,  6 Aug 2020 20:20:43 +0200
-Message-Id: <20200806182059.2431-26-krzk@kernel.org>
+        Kukjin Kim <kgene@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v2 14/41] ARM: exynos: use private samsung_cpu_id copy
+Date:   Thu,  6 Aug 2020 20:20:31 +0200
+Message-Id: <20200806182059.2431-14-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200806181932.2253-1-krzk@kernel.org>
 References: <20200806181932.2253-1-krzk@kernel.org>
@@ -64,190 +62,236 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Avoid machine specific headers by using a gpio lookup table
-combined with a platform_driver for this board.
+The only part of plat-samsung that is shared with arch-exynos
+is the CPU identification code.
+
+Having a separate exynos_cpu_id variable makes the two completely
+independent and is actually a bit less code in total.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/mach-s3c24xx/mach-rx1950.c | 16 +++++++
- sound/soc/samsung/rx1950_uda1380.c  | 72 +++++++++--------------------
- 2 files changed, 39 insertions(+), 49 deletions(-)
+ arch/arm/mach-exynos/common.h                |  6 +++---
+ arch/arm/mach-exynos/exynos.c                | 21 ++++++++++++++++----
+ arch/arm/mach-exynos/include/mach/map.h      | 18 -----------------
+ arch/arm/mach-exynos/platsmp.c               |  4 +---
+ arch/arm/mach-exynos/pm.c                    |  8 ++++----
+ arch/arm/plat-samsung/cpu.c                  | 17 ----------------
+ arch/arm/plat-samsung/include/plat/cpu.h     |  3 ---
+ arch/arm/plat-samsung/include/plat/map-s5p.h |  2 --
+ 8 files changed, 25 insertions(+), 54 deletions(-)
+ delete mode 100644 arch/arm/mach-exynos/include/mach/map.h
 
-diff --git a/arch/arm/mach-s3c24xx/mach-rx1950.c b/arch/arm/mach-s3c24xx/mach-rx1950.c
-index 65440c39500e..a5461b2227bd 100644
---- a/arch/arm/mach-s3c24xx/mach-rx1950.c
-+++ b/arch/arm/mach-s3c24xx/mach-rx1950.c
-@@ -727,6 +727,20 @@ static struct i2c_board_info rx1950_i2c_devices[] = {
- 	},
- };
+diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+index afd988a92836..29eb075b24a4 100644
+--- a/arch/arm/mach-exynos/common.h
++++ b/arch/arm/mach-exynos/common.h
+@@ -24,12 +24,12 @@
+ #define EXYNOS5800_SOC_ID	0xE5422000
+ #define EXYNOS5_SOC_MASK	0xFFFFF000
  
-+static struct gpiod_lookup_table rx1950_audio_gpio_table = {
-+	.dev_id = "rx1950-audio",
-+	.table = {
-+		GPIO_LOOKUP("GPIOG", 12, "hp-gpio", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("GPIOA", 1, "speaker-power", GPIO_ACTIVE_HIGH),
-+		{ },
-+	},
-+};
-+
-+static struct platform_device rx1950_audio = {
-+	.name = "rx1950-audio",
-+	.id = -1,
-+};
-+
- static struct platform_device *rx1950_devices[] __initdata = {
- 	&s3c2410_device_dclk,
- 	&s3c_device_lcd,
-@@ -745,6 +759,7 @@ static struct platform_device *rx1950_devices[] __initdata = {
- 	&power_supply,
- 	&rx1950_battery,
- 	&rx1950_leds,
-+	&rx1950_audio,
- };
+-extern unsigned long samsung_cpu_id;
++extern unsigned long exynos_cpu_id;
  
- static void __init rx1950_map_io(void)
-@@ -812,6 +827,7 @@ static void __init rx1950_init_machine(void)
- 	gpio_direction_output(S3C2410_GPJ(6), 0);
- 
- 	pwm_add_table(rx1950_pwm_lookup, ARRAY_SIZE(rx1950_pwm_lookup));
-+	gpiod_add_lookup_table(&rx1950_audio_gpio_table);
- 	platform_add_devices(rx1950_devices, ARRAY_SIZE(rx1950_devices));
- 
- 	i2c_register_board_info(0, rx1950_i2c_devices,
-diff --git a/sound/soc/samsung/rx1950_uda1380.c b/sound/soc/samsung/rx1950_uda1380.c
-index 08f7c82aedb6..400a7f77c711 100644
---- a/sound/soc/samsung/rx1950_uda1380.c
-+++ b/sound/soc/samsung/rx1950_uda1380.c
-@@ -12,16 +12,13 @@
- //          Vasily Khoruzhick <anarsoul@gmail.com>
- 
- #include <linux/types.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- 
- #include <sound/soc.h>
- #include <sound/jack.h>
- 
--#include <mach/gpio-samsung.h>
- #include "regs-iis.h"
--#include <asm/mach-types.h>
--
- #include "s3c24xx-i2s.h"
- 
- static int rx1950_uda1380_init(struct snd_soc_pcm_runtime *rtd);
-@@ -58,7 +55,6 @@ static struct snd_soc_jack_pin hp_jack_pins[] = {
- 
- static struct snd_soc_jack_gpio hp_jack_gpios[] = {
- 	[0] = {
--		.gpio			= S3C2410_GPG(12),
- 		.name			= "hp-gpio",
- 		.report			= SND_JACK_HEADPHONE,
- 		.invert			= 1,
-@@ -123,8 +119,6 @@ static struct snd_soc_card rx1950_asoc = {
- 	.num_dapm_routes = ARRAY_SIZE(audio_map),
- };
- 
--static struct platform_device *s3c24xx_snd_device;
--
- static int rx1950_startup(struct snd_pcm_substream *substream)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
-@@ -134,13 +128,15 @@ static int rx1950_startup(struct snd_pcm_substream *substream)
- 					&hw_rates);
+ #define IS_SAMSUNG_CPU(name, id, mask)		\
+ static inline int is_samsung_##name(void)	\
+ {						\
+-	return ((samsung_cpu_id & mask) == (id & mask));	\
++	return ((exynos_cpu_id & mask) == (id & mask));	\
  }
  
-+struct gpio_desc *gpiod_speaker_power;
+ IS_SAMSUNG_CPU(exynos3250, EXYNOS3250_SOC_ID, EXYNOS3_SOC_MASK)
+@@ -147,7 +147,7 @@ extern struct cpuidle_exynos_data cpuidle_coupled_exynos_data;
+ 
+ extern void exynos_set_delayed_reset_assertion(bool enable);
+ 
+-extern unsigned int samsung_rev(void);
++extern unsigned int exynos_rev(void);
+ extern void exynos_core_restart(u32 core_id);
+ extern int exynos_set_boot_addr(u32 core_id, unsigned long boot_addr);
+ extern int exynos_get_boot_addr(u32 core_id, unsigned long *boot_addr);
+diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+index 36c37444485a..3503274e5875 100644
+--- a/arch/arm/mach-exynos/exynos.c
++++ b/arch/arm/mach-exynos/exynos.c
+@@ -19,11 +19,12 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ 
+-#include <mach/map.h>
+-#include <plat/cpu.h>
+-
+ #include "common.h"
+ 
++#define S3C_ADDR_BASE	0xF6000000
++#define S3C_ADDR(x)	((void __iomem __force *)S3C_ADDR_BASE + (x))
++#define S5P_VA_CHIPID	S3C_ADDR(0x02000000)
 +
- static int rx1950_spk_power(struct snd_soc_dapm_widget *w,
- 				struct snd_kcontrol *kcontrol, int event)
+ static struct platform_device exynos_cpuidle = {
+ 	.name              = "exynos_cpuidle",
+ #ifdef CONFIG_ARM_EXYNOS_CPUIDLE
+@@ -36,6 +37,14 @@ void __iomem *sysram_base_addr __ro_after_init;
+ phys_addr_t sysram_base_phys __ro_after_init;
+ void __iomem *sysram_ns_base_addr __ro_after_init;
+ 
++unsigned long exynos_cpu_id;
++static unsigned int exynos_cpu_rev;
++
++unsigned int exynos_rev(void)
++{
++	return exynos_cpu_rev;
++}
++
+ void __init exynos_sysram_init(void)
  {
- 	if (SND_SOC_DAPM_EVENT_ON(event))
--		gpio_set_value(S3C2410_GPA(1), 1);
-+		gpiod_set_value(gpiod_speaker_power, 1);
- 	else
--		gpio_set_value(S3C2410_GPA(1), 0);
-+		gpiod_set_value(gpiod_speaker_power, 0);
+ 	struct device_node *node;
+@@ -86,7 +95,11 @@ static void __init exynos_init_io(void)
+ 	of_scan_flat_dt(exynos_fdt_map_chipid, NULL);
  
- 	return 0;
- }
-@@ -214,57 +210,35 @@ static int rx1950_uda1380_init(struct snd_soc_pcm_runtime *rtd)
- 	return 0;
+ 	/* detect cpu id and rev. */
+-	s5p_init_cpu(S5P_VA_CHIPID);
++	exynos_cpu_id = readl_relaxed(S5P_VA_CHIPID);
++	exynos_cpu_rev = exynos_cpu_id & 0xFF;
++
++	pr_info("Samsung CPU ID: 0x%08lx\n", exynos_cpu_id);
++
  }
  
--static int __init rx1950_init(void)
-+static int rx1950_probe(struct platform_device *pdev)
+ /*
+diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+deleted file mode 100644
+index 8d58faa54ff7..000000000000
+--- a/arch/arm/mach-exynos/include/mach/map.h
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
+- *		http://www.samsung.com/
+- *
+- * Exynos - Memory map definitions
+- */
+-
+-#ifndef __ASM_ARCH_MAP_H
+-#define __ASM_ARCH_MAP_H __FILE__
+-
+-#include <plat/map-base.h>
+-
+-#include <plat/map-s5p.h>
+-
+-#define EXYNOS_PA_CHIPID		0x10000000
+-
+-#endif /* __ASM_ARCH_MAP_H */
+diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
+index 0cbbae8bf1f8..d7fedbb2eefe 100644
+--- a/arch/arm/mach-exynos/platsmp.c
++++ b/arch/arm/mach-exynos/platsmp.c
+@@ -22,8 +22,6 @@
+ #include <asm/smp_scu.h>
+ #include <asm/firmware.h>
+ 
+-#include <mach/map.h>
+-
+ #include "common.h"
+ 
+ extern void exynos4_secondary_startup(void);
+@@ -188,7 +186,7 @@ void exynos_scu_enable(void)
+ 
+ static void __iomem *cpu_boot_reg_base(void)
  {
--	int ret;
--
--	if (!machine_is_rx1950())
--		return -ENODEV;
-+	struct device *dev = &pdev->dev;
+-	if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_1_1)
++	if (soc_is_exynos4210() && exynos_rev() == EXYNOS4210_REV_1_1)
+ 		return pmu_base_addr + S5P_INFORM5;
+ 	return sysram_base_addr;
+ }
+diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
+index 78af34cc89cc..30f4e55bf39e 100644
+--- a/arch/arm/mach-exynos/pm.c
++++ b/arch/arm/mach-exynos/pm.c
+@@ -26,18 +26,18 @@
  
- 	/* configure some gpios */
--	ret = gpio_request(S3C2410_GPA(1), "speaker-power");
--	if (ret)
--		goto err_gpio;
+ static inline void __iomem *exynos_boot_vector_addr(void)
+ {
+-	if (samsung_rev() == EXYNOS4210_REV_1_1)
++	if (exynos_rev() == EXYNOS4210_REV_1_1)
+ 		return pmu_base_addr + S5P_INFORM7;
+-	else if (samsung_rev() == EXYNOS4210_REV_1_0)
++	else if (exynos_rev() == EXYNOS4210_REV_1_0)
+ 		return sysram_base_addr + 0x24;
+ 	return pmu_base_addr + S5P_INFORM0;
+ }
+ 
+ static inline void __iomem *exynos_boot_vector_flag(void)
+ {
+-	if (samsung_rev() == EXYNOS4210_REV_1_1)
++	if (exynos_rev() == EXYNOS4210_REV_1_1)
+ 		return pmu_base_addr + S5P_INFORM6;
+-	else if (samsung_rev() == EXYNOS4210_REV_1_0)
++	else if (exynos_rev() == EXYNOS4210_REV_1_0)
+ 		return sysram_base_addr + 0x20;
+ 	return pmu_base_addr + S5P_INFORM1;
+ }
+diff --git a/arch/arm/plat-samsung/cpu.c b/arch/arm/plat-samsung/cpu.c
+index e1ba88ba31d8..8acba21bbf4b 100644
+--- a/arch/arm/plat-samsung/cpu.c
++++ b/arch/arm/plat-samsung/cpu.c
+@@ -14,13 +14,6 @@
+ #include <plat/cpu.h>
+ 
+ unsigned long samsung_cpu_id;
+-static unsigned int samsung_cpu_rev;
 -
--	ret = gpio_direction_output(S3C2410_GPA(1), 0);
--	if (ret)
--		goto err_gpio_conf;
--
--	s3c24xx_snd_device = platform_device_alloc("soc-audio", -1);
--	if (!s3c24xx_snd_device) {
--		ret = -ENOMEM;
--		goto err_plat_alloc;
--	}
--
--	platform_set_drvdata(s3c24xx_snd_device, &rx1950_asoc);
--	ret = platform_device_add(s3c24xx_snd_device);
--
--	if (ret) {
--		platform_device_put(s3c24xx_snd_device);
--		goto err_plat_add;
-+	gpiod_speaker_power = devm_gpiod_get(dev, "speaker-power", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_speaker_power)) {
-+		dev_err(dev, "cannot get gpio\n");
-+		return PTR_ERR(gpiod_speaker_power);
+-unsigned int samsung_rev(void)
+-{
+-	return samsung_cpu_rev;
+-}
+-EXPORT_SYMBOL(samsung_rev);
+ 
+ void __init s3c64xx_init_cpu(void)
+ {
+@@ -34,15 +27,5 @@ void __init s3c64xx_init_cpu(void)
+ 		samsung_cpu_id = readl_relaxed(S3C_VA_SYS + 0xA1C);
  	}
  
--	return 0;
+-	samsung_cpu_rev = 0;
 -
--err_plat_add:
--err_plat_alloc:
--err_gpio_conf:
--	gpio_free(S3C2410_GPA(1));
-+	hp_jack_gpios[0].gpiod_dev = dev;
-+	rx1950_asoc.dev = dev;
- 
--err_gpio:
--	return ret;
-+	return devm_snd_soc_register_card(dev, &rx1950_asoc);
- }
- 
--static void __exit rx1950_exit(void)
--{
--	platform_device_unregister(s3c24xx_snd_device);
--	gpio_free(S3C2410_GPA(1));
+-	pr_info("Samsung CPU ID: 0x%08lx\n", samsung_cpu_id);
 -}
-+struct platform_driver rx1950_audio = {
-+	.driver = {
-+		.name = "rx1950-audio",
-+		.pm = &snd_soc_pm_ops,
-+	},
-+	.probe = rx1950_probe,
-+};
+-
+-void __init s5p_init_cpu(const void __iomem *cpuid_addr)
+-{
+-	samsung_cpu_id = readl_relaxed(cpuid_addr);
+-	samsung_cpu_rev = samsung_cpu_id & 0xFF;
+-
+ 	pr_info("Samsung CPU ID: 0x%08lx\n", samsung_cpu_id);
+ }
+diff --git a/arch/arm/plat-samsung/include/plat/cpu.h b/arch/arm/plat-samsung/include/plat/cpu.h
+index fadcddbea064..93ecd7127831 100644
+--- a/arch/arm/plat-samsung/include/plat/cpu.h
++++ b/arch/arm/plat-samsung/include/plat/cpu.h
+@@ -109,9 +109,6 @@ extern void s3c_init_cpu(unsigned long idcode,
+ extern void s3c24xx_init_io(struct map_desc *mach_desc, int size);
  
--module_init(rx1950_init);
--module_exit(rx1950_exit);
-+module_platform_driver(rx1950_audio);
+ extern void s3c64xx_init_cpu(void);
+-extern void s5p_init_cpu(const void __iomem *cpuid_addr);
+-
+-extern unsigned int samsung_rev(void);
  
- /* Module information */
- MODULE_AUTHOR("Vasily Khoruzhick");
- MODULE_DESCRIPTION("ALSA SoC RX1950");
- MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:rx1950-audio");
+ extern void s3c24xx_init_uarts(struct s3c2410_uartcfg *cfg, int no);
+ 
+diff --git a/arch/arm/plat-samsung/include/plat/map-s5p.h b/arch/arm/plat-samsung/include/plat/map-s5p.h
+index d69a0ca09fb5..3812085f8761 100644
+--- a/arch/arm/plat-samsung/include/plat/map-s5p.h
++++ b/arch/arm/plat-samsung/include/plat/map-s5p.h
+@@ -9,8 +9,6 @@
+ #ifndef __ASM_PLAT_MAP_S5P_H
+ #define __ASM_PLAT_MAP_S5P_H __FILE__
+ 
+-#define S5P_VA_CHIPID		S3C_ADDR(0x02000000)
+-
+ #define VA_VIC(x)		(S3C_VA_IRQ + ((x) * 0x10000))
+ #define VA_VIC0			VA_VIC(0)
+ #define VA_VIC1			VA_VIC(1)
 -- 
 2.17.1
 
