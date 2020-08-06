@@ -2,200 +2,188 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99045C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05EA72311B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE2A23119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QfqsPOEO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7/PjSq2q"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uu02hQeX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1ench/3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgHFRML (ORCPT
+        id S1730355AbgHFRMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:12:11 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58930 "EHLO
+        Thu, 6 Aug 2020 13:12:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58938 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729559AbgHFRKI (ORCPT
+        with ESMTP id S1729728AbgHFRKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 13:10:08 -0400
-Date:   Thu, 06 Aug 2020 17:10:04 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596733804;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        s=2020; t=1596733806;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=QWuB12Tkvbyicpk4HqqE975tqqLrqqA2GtHdwKepYjo=;
-        b=QfqsPOEOuq/aq1ITtHegz8YmBFGYtHXcdBiGvmxqSHZaBmarzUZIbpnAFvOGFy+0pvSub3
-        T41thEACUaWHusglQP5Ru94L7ZGf7N6nHWL0y2vnfB44fuxOPUXVl1pQNb1VV8jbQHqWUi
-        z912oEu1DkPBqJfmxnLfoq3+FDYixIcarxGLW9UhrNofDL72ITfSrMIohqZf2Wgqi9RiHa
-        9iPhYX4hoH+l7ccJp7uRquqSP9s4OyR3TKYx68YV4lZOnFekDbjnte+rtoKyfVyD47ntv2
-        hNQHgXpBBrkrCEzWK/lz56oEsKUXaQ1qOfXwk8PK1N7h/zrIuSPSEXhlJsxnSA==
+        bh=yKVD0ICRirwJxf/czTIoL9qaNHOqC5llD5fZwtykD6w=;
+        b=Uu02hQeXnceW1clbDFU34w01Na01ihe8gw5vdOZssFKm0ZWXV+ig/hiWrMPj3DyEDWsWmp
+        d5q6kG0wmvOmqMIX3dWRl6kqRLWtU/fisAqjfMYs/MNmgVZG/RmheVA60Im0TeiUhxBCZi
+        9hqt3C2EPyjAChYbG+bZD0bMlT5GYo2qRQV4t2yqJImq4xW2cQe2ctC176iuoCQtFZxNNG
+        MI4kIWnaPSegaZ8F6XUsUtUkLhfST8e4RlThO9ng/MYX/egAzO5ulxnw6h/KaTv4bLrWqA
+        /2u4RF35uMj/YCiBZQtAEM2JK91u6lf5m4pEzA64GZc0kJ2gbDtWTsZWc4f9MQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596733804;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        s=2020e; t=1596733806;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=QWuB12Tkvbyicpk4HqqE975tqqLrqqA2GtHdwKepYjo=;
-        b=7/PjSq2q2reY32Iav6+xO/yFy4EUiO2rLi0gqFiz+rYhr0mbg8MN1qYs1q8Z77StQnjCtb
-        EuOtYvmz71qI4SDw==
-From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/fpu/xstate: Fix an xstate size check warning
- with architectural LBRs
-Cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1595253051-75374-1-git-send-email-kan.liang@linux.intel.com>
-References: <1595253051-75374-1-git-send-email-kan.liang@linux.intel.com>
+        bh=yKVD0ICRirwJxf/czTIoL9qaNHOqC5llD5fZwtykD6w=;
+        b=1ench/3Yz4ELlGwrmwd8zDNRPuZX7xmwBO6TcJKMNpbwZC7PP+JR9mKgtVvQyp3pUUu5qC
+        WOvTlcXJ7KEJIRBQ==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "Lin\, Jing" <jing.lin@intel.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com> <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com> <96a1eb5ccc724790b5404a642583919d@intel.com> <20200805221548.GK19097@mellanox.com> <70465fd3a7ae428a82e19f98daa779e8@intel.com> <20200805225330.GL19097@mellanox.com> <630e6a4dc17b49aba32675377f5a50e0@intel.com> <20200806001927.GM19097@mellanox.com> <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
+Date:   Thu, 06 Aug 2020 19:10:05 +0200
+Message-ID: <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159673380407.3192.2479353729110712986.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Megha,
 
-Commit-ID:     ec8602b79088b0f3556d9c7a3a05313bc4e4a96f
-Gitweb:        https://git.kernel.org/tip/ec8602b79088b0f3556d9c7a3a05313bc4e4a96f
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Mon, 20 Jul 2020 06:50:51 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 06 Aug 2020 17:11:59 +02:00
+"Dey, Megha" <megha.dey@intel.com> writes:
 
-x86/fpu/xstate: Fix an xstate size check warning with architectural LBRs
+>> -----Original Message-----
+>> From: Jason Gunthorpe <jgg@mellanox.com>
+<SNIP>
+>> Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+>> irq domain
 
-An xstate size check warning is triggered on machines which support
-Architectural LBRs.
+can you please fix your mail client not to copy the whole header of the
+mail you are replying to into the mail body?
 
-    XSAVE consistency problem, dumping leaves
-    WARNING: CPU: 0 PID: 0 at arch/x86/kernel/fpu/xstate.c:649 fpu__init_system_xstate+0x4d4/0xd0e
-    Modules linked in:
-    CPU: 0 PID: 0 Comm: swapper Not tainted intel-arch_lbr+
-    RIP: 0010:fpu__init_system_xstate+0x4d4/0xd0e
+>> > > Well, I had suggested to pass in the parent struct device, but it
+>> Oops, I was thinking of platform_msi_domain_alloc_irqs() not
+>> create_device_domain()
+>> 
+>> ie call it in the device driver that wishes to consume the extra MSIs.
+>> 
+>> Is there a harm if each device driver creates a new irq_domain for its use?
+>
+> Well, the only harm is if we want to reuse the irq domain.
 
-The xstate size check routine, init_xstate_size(), compares the size
-retrieved from the hardware with the size of task->fpu, which is
-calculated by the software.
+You cannot reuse the irq domain if you create a domain per driver. The
+way how hierarchical domains work is:
 
-The size from the hardware is the total size of the enabled xstates in
-XCR0 | IA32_XSS. Architectural LBR state is a dynamic supervisor
-feature, which sets the corresponding bit in the IA32_XSS at boot time.
-The size from the hardware includes the size of the Architectural LBR
-state.
+vector --- DMAR-MSI
+       |
+       |-- ....
+       |
+       |-- IR-0 --- IO/APIC-0
+       |        | 
+       |        |-- IO/APIC-1
+       |        |
+       |        |-- PCI/MSI-0
+       |        |
+       |        |-- HPET/MSI-0
+       |
+       |-- IR-1 --- PCI/MSI-1
+       |        |
 
-However, a dynamic supervisor feature doesn't allocate a buffer in the
-task->fpu. The size of task->fpu doesn't include the size of the
-Architectural LBR state. The mismatch will trigger the warning.
+The outermost domain is what the actual device driver uses. I.e. for
+PCI-MSI it's the msi domain which is associated to the bus the device is
+connected to. Each domain has its own interrupt chip instance and its
+own data set.
 
-Three options as below were considered to fix the issue:
+Domains of the same type share the code, but neither the data nor the
+interrupt chip instance.
 
-- Correct the size from the hardware by subtracting the size of the
-  dynamic supervisor features.
-  The purpose of the check is to compare the size CPU told with the size
-  of the XSAVE buffer, which is calculated by the software. If the
-  software mucks with the number from hardware, it removes the value of
-  the check.
-  This option is not a good option.
+Also there is a strict parent child relationship in terms of resources.
+Let's look at PCI.
 
-- Prevent the hardware from counting the size of the dynamic supervisor
-  feature by temporarily removing the corresponding bits in IA32_XSS.
-  Two extra MSR writes are required to flip the IA32_XSS. The option is
-  not pretty, but it is workable. The check is only called once at early
-  boot time. The synchronization or context-switching doesn't need to be
-  worried.
-  This option is implemented here.
+PCI/MSI-0 depends on IR-0 which depends on the vector domain. That's
+reflecting both the flow of the interrupt and the steps required for
+various tasks, e.g. allocation/deallocation and also interrupt chip
+operations. In order to allocate a PCI/MSI interrupt in domain PCI/MSI-0
+a slot in the remapping unit and a vector needs to be allocated.
 
-- Remove the check entirely, because the check hasn't found any real
-  problems. The option may be an alternative as option 2.
-  This option is not implemented here.
+If you disable interrupt remapping all the outermost domains in the
+scheme above become childs of the vector domain.
 
-Add a new function, get_xsaves_size_no_dynamic(), which retrieves the
-total size without the dynamic supervisor features from the hardware.
-The size will be used to compare with the size of task->fpu.
+So if we look at DEV/MSI as a infrastructure domain then the scheme
+looks like this:
 
-Fixes: f0dccc9da4c0 ("x86/fpu/xstate: Support dynamic supervisor feature for LBR")
-Reported-by: Chang S. Bae <chang.seok.bae@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lore.kernel.org/r/1595253051-75374-1-git-send-email-kan.liang@linux.intel.com
----
- arch/x86/kernel/fpu/xstate.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+vector --- DMAR-MSI
+       |
+       |-- ....
+       |
+       |-- IR-0 --- IO/APIC-0
+       |        | 
+       |        |-- IO/APIC-1
+       |        |
+       |        |-- PCI/MSI-0
+       |        |
+       |        |-- HPET/MSI-0
+       |        |
+       |        |-- DEV/MSI-0
+       |
+       |-- IR-1 --- PCI/MSI-1
+       |        |
+       |        |-- DEV/MSI-1
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index be2a68a..6073e34 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -611,6 +611,10 @@ static void check_xstate_against_struct(int nr)
-  * This essentially double-checks what the cpu told us about
-  * how large the XSAVE buffer needs to be.  We are recalculating
-  * it to be safe.
-+ *
-+ * Dynamic XSAVE features allocate their own buffers and are not
-+ * covered by these checks. Only the size of the buffer for task->fpu
-+ * is checked here.
-  */
- static void do_extra_xstate_size_checks(void)
- {
-@@ -673,6 +677,33 @@ static unsigned int __init get_xsaves_size(void)
- 	return ebx;
- }
- 
-+/*
-+ * Get the total size of the enabled xstates without the dynamic supervisor
-+ * features.
-+ */
-+static unsigned int __init get_xsaves_size_no_dynamic(void)
-+{
-+	u64 mask = xfeatures_mask_dynamic();
-+	unsigned int size;
-+
-+	if (!mask)
-+		return get_xsaves_size();
-+
-+	/* Disable dynamic features. */
-+	wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor());
-+
-+	/*
-+	 * Ask the hardware what size is required of the buffer.
-+	 * This is the size required for the task->fpu buffer.
-+	 */
-+	size = get_xsaves_size();
-+
-+	/* Re-enable dynamic features so XSAVES will work on them again. */
-+	wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor() | mask);
-+
-+	return size;
-+}
-+
- static unsigned int __init get_xsave_size(void)
- {
- 	unsigned int eax, ebx, ecx, edx;
-@@ -710,7 +741,7 @@ static int __init init_xstate_size(void)
- 	xsave_size = get_xsave_size();
- 
- 	if (boot_cpu_has(X86_FEATURE_XSAVES))
--		possible_xstate_size = get_xsaves_size();
-+		possible_xstate_size = get_xsaves_size_no_dynamic();
- 	else
- 		possible_xstate_size = xsave_size;
- 
+
+But if you make it per device then you have multiple DEV/MSI domains per
+IR unit.
+
+What's the right thing to do?
+
+If the DEV/MSI domain has it's own per IR unit resource management, then
+you need one per IR unit.
+
+If the resource management is solely per device then having a domain per
+device is the right choice.
+
+Thanks,
+
+        tglx
