@@ -2,157 +2,129 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B45C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADEF206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24BC206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:54:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="D1Q6EoCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgHFRyX (ORCPT
+        id S1729825AbgHFRyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40128 "EHLO
+        Thu, 6 Aug 2020 13:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgHFQay (ORCPT
+        with ESMTP id S1728166AbgHFQaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:30:54 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3004FC014CCB;
-        Thu,  6 Aug 2020 08:13:53 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 359C1299596
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 07/14] media: uapi: h264: Increase size of DPB entry pic_num
-Date:   Thu,  6 Aug 2020 12:13:03 -0300
-Message-Id: <20200806151310.98624-8-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200806151310.98624-1-ezequiel@collabora.com>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
+        Thu, 6 Aug 2020 12:30:23 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF464C002176
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SfddbmLFlUQ0+2CTU0mFNxT8HQmZBOw2XCU66BDvkhs=; b=D1Q6EoCdlM8ll41mrAcZKGhTm
+        pVW2jMOhfFTnt2JXtVqIaZ+mZQW6opyRTrizzkANylnv5MBDdHdW045799Oo0VejOaxfXeh0s2vNd
+        63Vdl8ja/0pFIHKfux22Yh2UgYpCxDbjilE755ube/ntYMY9SPWjs2XxcanigYvmnY8fVxreZ/7+B
+        tQqdbXuLK5y+BOvELwtrNI/s2rcrRf7b78FyRgbFYxHUYMAUZ5OI0N6rGSXClGfh5vRNciXOUhtCY
+        1XaQo+LRdyfIT4nvvZoll6dJEWXe6yA3HnJzA5K1AIlxqsP5qlKEoAdMJs5BbgtPReWFVub/SwLGf
+        kskdKohPQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49130)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k3iZW-0004re-CI; Thu, 06 Aug 2020 17:16:50 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k3iZV-0006Jp-NZ; Thu, 06 Aug 2020 17:16:49 +0100
+Date:   Thu, 6 Aug 2020 17:16:49 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Pratyush Anand <panand@redhat.com>,
+        Pavel Labath <labath@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kazuhiro Inaba <kinaba@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
+Message-ID: <20200806161649.GB1605@shell.armlinux.org.uk>
+References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
+ <20191120191813.GD4799@willie-the-truck>
+ <CAD=FV=Wntf0TCwdtNNvPY-CXX1VL_SZK8Y8yw1r=UfeayHfwgw@mail.gmail.com>
+ <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
+ <20200806154144.GD1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806154144.GD1551@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DPB entry PicNum maximum value is 2*MaxFrameNum for interlaced
-content (field_pic_flag=1).
+On Thu, Aug 06, 2020 at 04:41:44PM +0100, Russell King - ARM Linux admin wrote:
+> On Thu, Aug 06, 2020 at 08:05:10AM -0700, Doug Anderson wrote:
+> > Yet if I go check mainline the patch is not there.  This came to my
+> > attention since we had my patch picked to the Chrome OS 4.19 tree and
+> > suddenly recently got a stable merge conflict with "ARM: 8986/1:
+> > hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints".
+> > 
+> > Anyone know what happened here?
+> 
+> Yes.  Stephen Rothwell raised a complaint against it, which you were
+> copied with:
+> 
+> > Hi all,
+> > 
+> > Commit
+> > 
+> >   116375be0461 ("ARM: 8944/1: hw_breakpoint: Handle inexact watchpoint addresses")
+> > 
+> > is missing a Signed-off-by from its author.
+> 
+> My reply to Stephen's email was:
+> 
+> > Thanks Stephen, patch dropped.
+> > 
+> > It looks like Doug used his "m.disordat.com" address to submit the
+> > patch through the web interface, and there was no From: in the patch
+> > itself, so that was used as the patch author.  However, as you spotted,
+> > it was signed off using Doug's "chromium.org" address.
+> > 
+> > I think it's time to make the patch system a bit more strict, checking
+> > that the submission address is mentioned in a signed-off-by tag
+> > somewhere in the commit message.
+> > 
+> > Doug, the patch system does have your "chromium.org" address, if that's
+> > the one you want to use as the author, please submit using that instead.
+> > Thanks.
+> > 
+> > Russell.
+> 
+> Neither email got a response from you, so the patch was dropped and
+> nothing further happened.
 
-As specified, MaxFrameNum is 2^(log2_max_frame_num_minus4 + 4)
-and log2_max_frame_num_minus4 is in the range of 0 to 12,
-which means pic_num should be a 32-bit field.
+I should've also said, there's two ways to avoid that problem:
 
-The v4l2_h264_dpb_entry struct needs to be padded to avoid a hole,
-which might be also useful to allow future uAPI extensions.
+1. Provide a From: line in the standard way to tell the patch system
+   who the author of the patch is (the author defaults to the known
+   login email address.)
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- .../userspace-api/media/v4l/ext-ctrls-codec.rst     |  5 ++++-
- drivers/media/v4l2-core/v4l2-ctrls.c                | 13 +++++++++++++
- include/media/h264-ctrls.h                          |  3 ++-
- include/media/v4l2-h264.h                           |  2 +-
- 4 files changed, 20 insertions(+), 3 deletions(-)
+2. Update your login email address in the system to the one you
+   normally author patches.
 
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index 966b52ddcf4c..427fc5727ec0 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -2054,7 +2054,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-     * - __u16
-       - ``frame_num``
-       -
--    * - __u16
-+    * - __u8
-+      - ``reserved[2]``
-+      - Applications and drivers must set this to zero.
-+    * - __u32
-       - ``pic_num``
-       -
-     * - __s32
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 76c8dc8fb31c..b9457789fa55 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1725,6 +1725,8 @@ static void std_log(const struct v4l2_ctrl *ctrl)
- 
- #define zero_padding(s) \
- 	memset(&(s).padding, 0, sizeof((s).padding))
-+#define zero_reserved(s) \
-+	memset(&(s).reserved, 0, sizeof((s).reserved))
- 
- /*
-  * Compound controls validation requires setting unused fields/flags to zero
-@@ -1735,6 +1737,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
- {
- 	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
- 	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
-+	struct v4l2_ctrl_h264_decode_params *p_h264_dec_params;
- 	struct v4l2_ctrl_hevc_sps *p_hevc_sps;
- 	struct v4l2_ctrl_hevc_pps *p_hevc_pps;
- 	struct v4l2_ctrl_hevc_slice_params *p_hevc_slice_params;
-@@ -1796,7 +1799,17 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
- 	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
- 	case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
- 	case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
-+		break;
-+
- 	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-+		p_h264_dec_params = p;
-+
-+		for (i = 0; i < V4L2_H264_NUM_DPB_ENTRIES; i++) {
-+			struct v4l2_h264_dpb_entry *dpb_entry =
-+				&p_h264_dec_params->dpb[i];
-+
-+			zero_reserved(*dpb_entry);
-+		}
- 		break;
- 
- 	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
-diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-index 6a95d39f4d15..4f05ee265997 100644
---- a/include/media/h264-ctrls.h
-+++ b/include/media/h264-ctrls.h
-@@ -209,7 +209,8 @@ struct v4l2_ctrl_h264_slice_params {
- struct v4l2_h264_dpb_entry {
- 	__u64 reference_ts;
- 	__u16 frame_num;
--	__u16 pic_num;
-+	__u8 reserved[2];
-+	__u32 pic_num;
- 	/* Note that field is indicated by v4l2_buffer.field */
- 	__s32 top_field_order_cnt;
- 	__s32 bottom_field_order_cnt;
-diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
-index bc9ebb560ccf..1a5f26fc2a9a 100644
---- a/include/media/v4l2-h264.h
-+++ b/include/media/v4l2-h264.h
-@@ -33,7 +33,7 @@ struct v4l2_h264_reflist_builder {
- 	struct {
- 		s32 pic_order_count;
- 		int frame_num;
--		u16 pic_num;
-+		u32 pic_num;
- 		u16 longterm : 1;
- 	} refs[V4L2_H264_NUM_DPB_ENTRIES];
- 	s32 cur_pic_order_count;
 -- 
-2.27.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
