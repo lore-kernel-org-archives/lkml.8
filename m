@@ -2,102 +2,126 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83451C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B532067C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:00:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="csMUSrDv"
+	by mail.kernel.org (Postfix) with ESMTP id D79B020678
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgHFSAg (ORCPT
+        id S1728599AbgHFSAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgHFSAe (ORCPT
+        Thu, 6 Aug 2020 14:00:39 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:35748 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgHFSAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:00:34 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079DCC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=MT2ki/o/y2NYLP7okz7irOUiWq3okJ0oQaW4u8dEtZ8=; b=csMUSrDvvlCdx4/Ssvp4kGJ1TP
-        hb8CaqPBTZ0O6u68hn+qsG4db4LRN2L9ruW/eoh+735CKrmBOPiKcOwMWmilgOcj59zdVjMbGzIVd
-        6LJ9QGeUu74MwL03AW1zgIOKemRZHL0lm+slWK6gnSFuWZ+0mQdIaMd9Ws1Z/wHXukNj/oo1eVuIW
-        /+rYYtfZ+iBiyS9aX9GIQvrR7ewNTl4X2/kigsQYm98XrU3amMXE2HfECxXFW750jaFDcmKszXWQP
-        rF3QRj7zout7ThNZg9lS55fU0aKje9K4e+28hjVV5tZMLZB01cs+kR/TrEQE+irvMA6gqU4BJkJ44
-        zGudRwug==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3kBk-0007g8-HC; Thu, 06 Aug 2020 18:00:24 +0000
-Date:   Thu, 6 Aug 2020 19:00:24 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Hugh Dickins <hughd@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-Message-ID: <20200806180024.GB17456@casper.infradead.org>
-References: <20200724152424.GC17209@redhat.com>
- <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
- <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
- <20200725101445.GB3870@redhat.com>
- <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
- <alpine.LSU.2.11.2007251343370.3804@eggly.anvils>
- <alpine.LSU.2.11.2007252100230.5376@eggly.anvils>
- <alpine.LSU.2.11.2007261246530.6812@eggly.anvils>
- <alpine.LSU.2.11.2008052105040.8716@eggly.anvils>
- <CAHk-=whf7wCUV2oTDUg0eeNafhhk_OhJBT2SbHZXwgtmAzNeTg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whf7wCUV2oTDUg0eeNafhhk_OhJBT2SbHZXwgtmAzNeTg@mail.gmail.com>
+        Thu, 6 Aug 2020 14:00:37 -0400
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 06:17:54 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 06:17:51 -0700
+Received: from c-mansur-linux.qualcomm.com ([10.204.90.208])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 06 Aug 2020 18:47:41 +0530
+Received: by c-mansur-linux.qualcomm.com (Postfix, from userid 461723)
+        id 2018F21C62; Thu,  6 Aug 2020 18:47:40 +0530 (IST)
+From:   Mansur Alisha Shaik <mansur@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org,
+        Mansur Alisha Shaik <mansur@codeaurora.org>
+Subject: [PATCH 1/3] venus: core: handle race condititon for core ops
+Date:   Thu,  6 Aug 2020 18:47:33 +0530
+Message-Id: <1596719855-1725-2-git-send-email-mansur@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596719855-1725-1-git-send-email-mansur@codeaurora.org>
+References: <1596719855-1725-1-git-send-email-mansur@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:07:07AM -0700, Linus Torvalds wrote:
-> On Wed, Aug 5, 2020 at 10:21 PM Hugh Dickins <hughd@google.com> wrote:
-> > Something I was interested to realize in looking at this: trylock_page()
-> > on a contended lock is now much less likely to jump the queue and
-> > succeed than before, since your lock holder hands off the page lock to
-> > the next holder: much smaller window than waiting for the next to wake
-> > to take it. Nothing wrong with that, but effect might be seen somewhere.
-> 
-> Yeah, the window is smaller, but it's not gone.
-> 
-> It *might* be interesting to actually do the handover directly from
-> "unlock_page()", and avoid clearing (and then setting) the bit
-> entirely.
-> 
-> Something like the attached TOTALLY UNTESTED patch.
-> 
-> NOTE! Sometimes when I say something is untested, I think the patch is
-> fine because it's simple and straightforward, I just didn't test it.
-> 
-> This time it's both untested and very very subtle indeed. Did I get
-> the hand-over case SMP memory barriers right? Did I screw something
-> else up?
-> 
-> So this might be complete garbage. I really don't know. But it might
-> close the window for an unfair trylock (or lucky page_lock())
-> entirely.
+For core ops we are having only write protect but
+there is no read protect, because of this in mult
+-threading and concurrency, one CPU core is readi
+-ing without waiting which is causing the NULL
+pointer dereferece crash.
 
-It wasn't clear to me whether Hugh thought it was an improvement or
-not that trylock was now less likely to jump the queue.  There're
-the usual "fair is the opposite of throughput" kind of arguments.
+one such scenario is as show below, where in one
+core core->ops becoming NULL and in another core
+calling core->ops->session_init().
 
+CPU: 7(core):
+Call trace:
+ hfi_session_init+0x180/0x1dc [venus_core]
+ vdec_queue_setup+0x9c/0x364 [venus_dec]
+ vb2_core_reqbufs+0x1e4/0x368 [videobuf2_common]
+ vb2_reqbufs+0x4c/0x64 [videobuf2_v4l2]
+ v4l2_m2m_reqbufs+0x50/0x84 [v4l2_mem2mem]
+ v4l2_m2m_ioctl_reqbufs+0x2c/0x38 [v4l2_mem2mem]
+ v4l_reqbufs+0x4c/0x5c
+__video_do_ioctl+0x2b0/0x39c
+
+CPU: 0(core):
+Call trace:
+ venus_shutdown+0x98/0xfc [venus_core]
+ venus_sys_error_handler+0x64/0x148 [venus_core]
+ process_one_work+0x210/0x3d0
+ worker_thread+0x248/0x3f4
+ kthread+0x11c/0x12c
+
+Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
+---
+ drivers/media/platform/qcom/venus/core.c | 2 +-
+ drivers/media/platform/qcom/venus/hfi.c  | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 203c653..fe99c83 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -64,8 +64,8 @@ static void venus_sys_error_handler(struct work_struct *work)
+ 	pm_runtime_get_sync(core->dev);
+ 
+ 	hfi_core_deinit(core, true);
+-	hfi_destroy(core);
+ 	mutex_lock(&core->lock);
++	hfi_destroy(core);
+ 	venus_shutdown(core);
+ 
+ 	pm_runtime_put_sync(core->dev);
+diff --git a/drivers/media/platform/qcom/venus/hfi.c b/drivers/media/platform/qcom/venus/hfi.c
+index a211eb9..2eeb31f 100644
+--- a/drivers/media/platform/qcom/venus/hfi.c
++++ b/drivers/media/platform/qcom/venus/hfi.c
+@@ -195,7 +195,7 @@ EXPORT_SYMBOL_GPL(hfi_session_create);
+ int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
+ {
+ 	struct venus_core *core = inst->core;
+-	const struct hfi_ops *ops = core->ops;
++	const struct hfi_ops *ops;
+ 	int ret;
+ 
+ 	if (inst->state != INST_UNINIT)
+@@ -204,10 +204,13 @@ int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
+ 	inst->hfi_codec = to_codec_type(pixfmt);
+ 	reinit_completion(&inst->done);
+ 
++	mutex_lock(&core->lock);
++	ops = core->ops;
+ 	ret = ops->session_init(inst, inst->session_type, inst->hfi_codec);
+ 	if (ret)
+ 		return ret;
+ 
++	mutex_unlock(&core->lock);
+ 	ret = wait_session_msg(inst);
+ 	if (ret)
+ 		return ret;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
 
