@@ -2,82 +2,96 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DC6C47434
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5358BC49EC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBC422CAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EB9204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgHFIQc (ORCPT
+        id S1728943AbgHFIeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:16:32 -0400
-Received: from elvis.franken.de ([193.175.24.41]:36318 "EHLO elvis.franken.de"
+        Thu, 6 Aug 2020 04:34:09 -0400
+Received: from sauhun.de ([88.99.104.3]:52276 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbgHFIQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:16:26 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k3b4Z-0000ze-00; Thu, 06 Aug 2020 10:16:23 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 7F708C0C58; Thu,  6 Aug 2020 10:16:05 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 10:16:05 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     WANG Xuerui <git@xen0n.name>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2] MIPS: Provide Kconfig option for default IEEE 754
- conformance mode
-Message-ID: <20200806081605.GA5715@alpha.franken.de>
-References: <20200801061147.1412187-1-jiaxun.yang@flygoat.com>
- <d03a350c-842c-c041-f11b-017ec68e3de4@flygoat.com>
+        id S1726844AbgHFIeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 04:34:02 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        by pokefinder.org (Postfix) with ESMTPSA id AF5732C0845;
+        Thu,  6 Aug 2020 10:33:56 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 10:33:56 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: remove the 2.6 "Upgrading I2C Drivers" guide
+Message-ID: <20200806083339.GA1549@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+        Stephen Kitt <steve@sk2.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200805183149.21647-1-steve@sk2.org>
+ <20200805215351.GB2182@kunai>
+ <20200806090800.08b77d4a@heffalump.sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d03a350c-842c-c041-f11b-017ec68e3de4@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200806090800.08b77d4a@heffalump.sk2.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 09:59:15PM +0800, Jiaxun Yang wrote:
-> 
-> 
-> 在 2020/8/1 14:11, Jiaxun Yang 写道:
-> >Requested by downstream distros, a Kconfig option for default
-> >IEEE 754 conformance mode allows them to set their mode to
-> >relaxed by default.
-> >
-> >Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >Reviewed-by: WANG Xuerui <git@xen0n.name>
-> >Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> >Reviewed-by: Huacai Chen <chenhc@lemote.com>
-> >
-> >--
-> >v2: Reword according to Xuerui's suggestion.
-> >---
-> Hi Thomas,
-> 
-> Is it possible to get this patch into 5.9 merge window?
-> I think it have got enough review tag, and the config option was requested
-> by a Debian developer. The next Debian release will take 5.9 lts kernel and
-> they don't want to ship a non-bootable kernel in a major release.
 
-no I won't include it into 5.9, I need to first go through links pointed
-to by Maciej and fully understand what a proper solution could be.
+--f2QGlHpHGjS2mn6Y
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thomas.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> > Maybe because I don't have the commit in my tree? Can you rebase on top
+> > of 5.8?
+>=20
+> Ah, yes, the commit is on top of Linus=E2=80=99 current master, following=
+ the merge
+> of docs-5.9 from Jon=E2=80=99s tree. In 5.8 the file is a .txt file, but =
+Mauro
+> converted it to .rst for 5.9, and this patch removes the latter file (to
+> avoid a merge conflict later on...). If you prefer, I can submit it to the
+> docs tree instead!
+
+I see. Thanks for the heads up!
+
+> > And please also remove the reference in Documentation/i2c/index.rst
+>=20
+> Oops, yes, I=E2=80=99ll do that in v2 once we decide where it should go.
+
+I am fine with either it going via the doc-tree or you sending me v2
+again after 5.9-rc1. For the first case:
+
+Acked-by: Wolfram Sang <wsa@kernel.org>
+
+
+--f2QGlHpHGjS2mn6Y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8rwHQACgkQFA3kzBSg
+KbZHXQ//c9DIYXPOW2Pp6OWXKnsA47NLi/SQHWhhINgm/Q9zZpC/guVJbgpoQb35
+7FOj3e2RxarfIZOkaDFTZuPv+I4noKF3cAVHQTARbB9zDMWm0KKCkn3lkokWvToO
+Bw1sZDus7kNi2soeXzbfF1CnlmgjAXSIj1tnG9nUt5iqETY+ov+jq/biAZc3tVhD
+R/ODgJLQolvlZs5z8u95D3SLLL1Zi+zSRCGpNMFpS/6RaxOd369vWUlw9xH6+S6C
+aqcP6q6pMtIY51R3roWremGcFuWX0OGMG5grucwsY3Vs/kwt1zP+JrwsTLz9Tsjr
+fTdS8N7DzUBG21axjhR3FcwonFI8xocPGyuAWHTiEC3nfVbF8Hf2dkm92H5cLKN7
+jO8zdNf3wd4UeCkRyU/NU6gn6ohbnJCM+qda5ooKuTgUpsVNSg2vLRL/YdvOODMC
+utnLwVwvWr5l/H331fRfrdEL+aoO/wt6iE3rx7+0wXXRvx6/NECwlPGZZ0M9JT4W
+oYJk+qsmtcrj46ura0v6Lmy/t2vPyPpmH5zgfFxl4ek3ZMYenWu7Msxtn6TMdzWK
+ReouigCAeM+6hwJSsNEz8+2RdDF2iejIS1K/yldqKuFmZGQIgMyDlWQyr/JySWuM
+sk9qHULjnlZsuvS+W8HIhOB3282Rtdr6OvFEzhid2nVEnxje98U=
+=KhdI
+-----END PGP SIGNATURE-----
+
+--f2QGlHpHGjS2mn6Y--
