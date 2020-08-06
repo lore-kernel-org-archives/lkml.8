@@ -2,112 +2,71 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF17AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C27002224D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596752141;
-	bh=6V+A6F9WaUs3FGFH0cDcq6c0VYlcrNfuScxXobnpo3k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=y7rjYY5kJbTUMw+ummjgZLPnF3xO+uPJDpw5Hp2eTHA/egUe5AgtOY/T8KjNSXN8O
-	 M9ugUBGT99/Ku3ZoPsY4Zejuh/KOVPo2frt2+jU2YuGFX0udHVnSGB0IRKbeXjVG4s
-	 qRm6g0mtLJt6qNjS9iycBeZQOjFVnbfvgtURl4XU=
+	by mail.kernel.org (Postfix) with ESMTP id C719E221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgHFWPk (ORCPT
+        id S1726197AbgHFWTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728986AbgHFWPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:15:40 -0400
-Received: from localhost (130.sub-72-107-113.myvzw.com [72.107.113.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA49221E2;
-        Thu,  6 Aug 2020 22:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596752139;
-        bh=6V+A6F9WaUs3FGFH0cDcq6c0VYlcrNfuScxXobnpo3k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fhmU7icYI+Tc7SdZpy0wowfM7RZbgqmTi3wJpP/mfqdrweNF2ylB0kgeJmvGZP+SC
-         r6T8pC2+JbWbuIfXwHpyb7GEcnAV5L7TkPgsr2rCnf03hFchFiYc9G78EvO+K8Lugb
-         sQim6ONph1cpwxAKr9aO6oLqE148o0w5L0GKqqtg=
-Date:   Thu, 6 Aug 2020 17:15:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Cengiz Can <cengiz@kernel.wtf>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Subject: Re: [PATCH] staging: atomisp: move null check to earlier point
-Message-ID: <20200806221537.GA703560@bjorn-Precision-5520>
+        Thu, 6 Aug 2020 18:19:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34232 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725998AbgHFWTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:19:31 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 731AB3CBB8624B1C4D7D;
+        Thu,  6 Aug 2020 22:08:42 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 6 Aug 2020
+ 22:08:37 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <timur@kernel.org>, <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH net] net: qcom/emac: Fix missing clk_disable_unprepare() in error path of emac_probe
+Date:   Thu, 6 Aug 2020 22:06:47 +0800
+Message-ID: <20200806140647.43099-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730084545.GB1793@kadam>
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:45:45AM +0300, Dan Carpenter wrote:
-> On Wed, Jul 29, 2020 at 06:13:44PM +0300, Andy Shevchenko wrote:
-> > On Wed, Jul 29, 2020 at 5:00 PM Cengiz Can <cengiz@kernel.wtf> wrote:
-> > >
-> > > `find_gmin_subdev` function that returns a pointer to `struct
-> > > gmin_subdev` can return NULL.
-> > >
-> > > In `gmin_v2p8_ctrl` there's a call to this function but the possibility
-> > > of a NULL was not checked before its being dereferenced. ie:
-> > >
-> > > ```
-> > > /* Acquired here --------v */
-> > > struct gmin_subdev *gs = find_gmin_subdev(subdev);
-> > > int ret;
-> > > int value;
-> > >
-> > > /*  v------Dereferenced here */
-> > > if (gs->v2p8_gpio >= 0) {
-> > >         pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
-> > >                 gs->v2p8_gpio);
-> > >         ret = gpio_request(gs->v2p8_gpio, "camera_v2p8");
-> > >         if (!ret)
-> > >                 ret = gpio_direction_output(gs->v2p8_gpio, 0);
-> > >         if (ret)
-> > >                 pr_err("V2P8 GPIO initialization failed\n");
-> > > }
-> > > ```
-> > >
-> > > I have moved the NULL check before deref point.
-> > 
-> > "Move the NULL check..."
-> > See Submitting Patches documentation how to avoid "This patch", "I", "we", etc.
-> 
-> I always feel like this is a pointless requirement.  We're turning
-> into bureaucrats.
+In emac_clks_phase1_init() of emac_probe(), there may be a situation
+in which some clk_prepare_enable() succeed and others fail.
+If emac_clks_phase1_init() fails, goto err_undo_clocks to clean up
+the clk that was successfully clk_prepare_enable().
 
-There is a danger of that, and I'm more guilty than most.  But I do
-think there's value in consistent style because it allows readers to
-focus on the content instead of being distracted by different margins,
-grammar ("move vs. moved"), paragraph styles, quoting conventions,
-etc.
+Fixes: b9b17debc69d ("net: emac: emac gigabit ethernet controller driver")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ drivers/net/ethernet/qualcomm/emac/emac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ideally we would scan previous commit logs (and the existing code!)
-and make new changes fit seamlessly so it looks like everything was
-done at the same time by the same person.
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
+index 20b1b43a0e39..7520c02eec12 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac.c
+@@ -628,7 +628,7 @@ static int emac_probe(struct platform_device *pdev)
+ 	ret = emac_clks_phase1_init(pdev, adpt);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "could not initialize clocks\n");
+-		goto err_undo_netdev;
++		goto err_undo_clocks;
+ 	}
+ 
+ 	netdev->watchdog_timeo = EMAC_WATCHDOG_TIME;
+-- 
+2.17.1
 
-But often that doesn't happen.  Sometimes I take the liberty to tweak
-things as I apply them to try to avoid trivial rework.
-
-Bjorn
