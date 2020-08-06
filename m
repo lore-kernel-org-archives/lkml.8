@@ -2,189 +2,132 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68957C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E18C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C80423119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD63E23117
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bcrgi5QW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t+y4Obij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgHFQ1s (ORCPT
+        id S1727964AbgHFQ2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38120 "EHLO
+        Thu, 6 Aug 2020 12:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbgHFQSr (ORCPT
+        with ESMTP id S1727868AbgHFQSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 12:18:47 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39601C0D942B
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:45:28 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id r7so8551051vsq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:45:28 -0700 (PDT)
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37AD3C002168
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 09:06:59 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id h16so16524036oti.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 09:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xElNgfkVHDPC4sqUWluN88xy7lPnIILHrEinFfAygbQ=;
-        b=Bcrgi5QWbcUXRBVbnwaHLfdfY8Iw9QYXkPVVl5h73OgZ2XPOkoet/e1plhnYnmHcxn
-         VrthHnb7hjFtEf59ZKcfQLfdZJI/8/Eju4AcM1js70HAuA0ir1XeNBc7anyAImyFiiNU
-         gREefwt423+uA+HS6v26+6PSpLBMLo8bSmq1w=
+        bh=kRzJPbiSWqPMYf9cXUnubjz9KwLdR0t2PlxbglQqDmQ=;
+        b=t+y4ObijkT9CwJCdosVyvo3hNb0ZL2IQqYE+OfodlfDj45ikA05n+fCWNnY5GD4pZ8
+         ZnMT0RRGiqj1cgMNTKenHMDNmTSR0lUMYqDGgYq45E9L/SP5axhkyDqluQIuqi8uSEmX
+         PGfLd1vme9MOv4ADHA4yxeORytbopb4k9g+NSiKNdn+vkAT5YmfhIO2yIhgVvzTGM+q+
+         R2LpxADUnvKlV6epXzLdAiAbZfIw+gx0o2rOwcziRgP13Cpqwth84og51FzOZwqP8hAh
+         5G22Wr1oLKPn0gpw0Mg4Iclbh0omDHMj4XcLiz4/3MiUIIXZv6PmXo9I1D+ab/4F4+/C
+         QH6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xElNgfkVHDPC4sqUWluN88xy7lPnIILHrEinFfAygbQ=;
-        b=Js53i9zBTFXg8oTshLvjVZ7r0TJAu6G/gcnGPxLSutR+kCYH4eMRnryf/d0Ic1kYjd
-         LgeHPFLgkIGvplMgiPbKaqCRXiuuf9BkmCgkVw699k+9mvg7FTt45C3fI+KZuUS0PGMA
-         mXRNIHt25q1aF7l6cL6ZIxS1QQF+f0sReC78/RueXy5pJUfr4X50SvzK5j5xyvZR8FQy
-         +4gclCP92AHlTqUbGRliVimyS2abccJ9wCuvmhcF0ATRJPF+DfVp7kwxFOFZm5TIbPmN
-         /7h1IOTU+tIh9QXctKbThSQqWyLgTNdxlwbwlLQz2BV7Y6kdL9H+Q+EYKmFt6TT6LyB/
-         mdlQ==
-X-Gm-Message-State: AOAM531f7nb2g+OL4hKzM2YlrHiTcYNQvmicz7SFs1kK3kgVSedeF7WM
-        vP2joytygrUFIix1Jy7GhPd44zPiDWY=
-X-Google-Smtp-Source: ABdhPJzur+Vo8KF7qvTZklv3F76db/KrvrILFCJE4rnA++TGqyo6baadUzbN4XfnUK8taMQixzUyKg==
-X-Received: by 2002:a67:fb0f:: with SMTP id d15mr7317338vsr.83.1596728726424;
-        Thu, 06 Aug 2020 08:45:26 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id n62sm1084402vke.12.2020.08.06.08.45.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 08:45:26 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id r7so8550994vsq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:45:25 -0700 (PDT)
-X-Received: by 2002:a67:fd67:: with SMTP id h7mr6443874vsa.121.1596728724905;
- Thu, 06 Aug 2020 08:45:24 -0700 (PDT)
+        bh=kRzJPbiSWqPMYf9cXUnubjz9KwLdR0t2PlxbglQqDmQ=;
+        b=p9W77EOGC9ZpcNjki6Ne08E5rXpKfTMsIFrivnEVg01KlbpG8woJWffhlgTk3cHFd9
+         j8I1qdodLJF5bcrvnYUiSvS9htcjrWZkmA/w/6ucHYoapdQy5CO/1QbTkMxIWUhI9yZg
+         jFmIbcI4NoPnK5l5bXBnqopVAF2o8X/geRlUKyknMrcnvwgMahaEOkx53s8OsDESjZQv
+         YajI649BO+VFXGuynsDWzIDNZzPTqosAAEl0DY1kq5Ypgi5xC8WYSAQHXlFMQOz+ACy2
+         OEyoD/WN3zB85+gg3DplXMZqccz0CD6bg5NtOB+t7SwkJ/+AHONqxbD4PdHtTkrSox5C
+         zZJA==
+X-Gm-Message-State: AOAM531rSmVDDvnVbweFYMqSqy+owbG9GA/pj+7zHmKJ/NBcafJv5XuF
+        fFl0xirhRd9M4GLXPdi7r+ngAmhSwTKZzVuoK/XPQA==
+X-Google-Smtp-Source: ABdhPJwJIAVQosWtiZxAR5ukKpi9U77jc1CvocrDPXa9RPmKehtYj1ngcb2n5vTsNgDi2+Vf46JBBmJ/ZE4zEtXVcoI=
+X-Received: by 2002:a9d:65d3:: with SMTP id z19mr8224587oth.233.1596730016189;
+ Thu, 06 Aug 2020 09:06:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
- <20191120191813.GD4799@willie-the-truck> <CAD=FV=Wntf0TCwdtNNvPY-CXX1VL_SZK8Y8yw1r=UfeayHfwgw@mail.gmail.com>
- <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com> <20200806154144.GD1551@shell.armlinux.org.uk>
-In-Reply-To: <20200806154144.GD1551@shell.armlinux.org.uk>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 6 Aug 2020 08:45:13 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XBinO0+uSt_sDTw_YFiZC4Gf8RMSC9ycDg+RWH=63Tog@mail.gmail.com>
-Message-ID: <CAD=FV=XBinO0+uSt_sDTw_YFiZC4Gf8RMSC9ycDg+RWH=63Tog@mail.gmail.com>
-Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Pratyush Anand <panand@redhat.com>,
-        Pavel Labath <labath@google.com>,
+References: <0000000000007d3b2d05ac1c303e@google.com> <20200805132629.GA87338@elver.google.com>
+ <20200805134232.GR2674@hirez.programming.kicks-ass.net> <20200805135940.GA156343@elver.google.com>
+ <20200805141237.GS2674@hirez.programming.kicks-ass.net> <20200805141709.GD35926@hirez.programming.kicks-ass.net>
+ <CANpmjNN6FWZ+MsAn3Pj+WEez97diHzqF8hjONtHG15C2gSpSgw@mail.gmail.com>
+ <CANpmjNNy3XKQqgrjGPPKKvXhAoF=mae7dk8hmoS4k4oNnnB=KA@mail.gmail.com>
+ <20200806074723.GA2364872@elver.google.com> <20200806113236.GZ2674@hirez.programming.kicks-ass.net>
+ <20200806131702.GA3029162@elver.google.com>
+In-Reply-To: <20200806131702.GA3029162@elver.google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 6 Aug 2020 18:06:43 +0200
+Message-ID: <CANpmjNNqt8YrCad4WqgCoXvH47pRXtSLpnTKhD8W8+UpoYJ+jQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*() helpers
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Kazuhiro Inaba <kinaba@google.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>, yu-cheng.yu@intel.com,
+        jgross@suse.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Aug 6, 2020 at 8:41 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+On Thu, 6 Aug 2020 at 15:17, Marco Elver <elver@google.com> wrote:
 >
-> On Thu, Aug 06, 2020 at 08:05:10AM -0700, Doug Anderson wrote:
-> > Hi,
+> On Thu, Aug 06, 2020 at 01:32PM +0200, peterz@infradead.org wrote:
+> > On Thu, Aug 06, 2020 at 09:47:23AM +0200, Marco Elver wrote:
+> > > Testing my hypothesis that raw then nested non-raw
+> > > local_irq_save/restore() breaks IRQ state tracking -- see the reproducer
+> > > below. This is at least 1 case I can think of that we're bound to hit.
+> ...
 > >
-> > On Mon, Dec 2, 2019 at 8:36 AM Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Wed, Nov 20, 2019 at 11:18 AM Will Deacon <will@kernel.org> wrote:
-> > > >
-> > > > On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
-> > > > > This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
-> > > > > watchpoint addresses") but ported to arm32, which has the same
-> > > > > problem.
-> > > > >
-> > > > > This problem was found by Android CTS tests, notably the
-> > > > > "watchpoint_imprecise" test [1].  I tested locally against a copycat
-> > > > > (simplified) version of the test though.
-> > > > >
-> > > > > [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
-> > > > >
-> > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > > ---
-> > > > >
-> > > > >  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
-> > > > >  1 file changed, 70 insertions(+), 26 deletions(-)
-> > > >
-> > > > Sorry for taking so long to look at this. After wrapping my head around the
-> > > > logic again
-> > >
-> > > Yeah.  It was a little weird and (unfortunately) arbitrarily different
-> > > in some places compared to the arm64 code.
-> > >
-> > >
-> > > > I think it looks fine, so please put it into the patch system
-> > > > with my Ack:
-> > > >
-> > > > Acked-by: Will Deacon <will@kernel.org>
-> > >
-> > > Thanks!  Submitted as:
-> > >
-> > > https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8944/1
+> > /me goes ponder things...
 > >
-> > Oddly, I found that if I go visit that page now I see:
+> > How's something like this then?
 > >
-> > > - - - Note 2 submitted by Russell King on 17 Jan 2020 11:16:34 (UTC) - - -
-> > > Moved to applied
-> > >
-> > > Applied to git-curr (misc branch).
-> >
-> > Yet if I go check mainline the patch is not there.  This came to my
-> > attention since we had my patch picked to the Chrome OS 4.19 tree and
-> > suddenly recently got a stable merge conflict with "ARM: 8986/1:
-> > hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints".
-> >
-> > Anyone know what happened here?
+> > ---
+> >  include/linux/sched.h |  3 ---
+> >  kernel/kcsan/core.c   | 62 ++++++++++++++++++++++++++++++++++++---------------
+> >  2 files changed, 44 insertions(+), 21 deletions(-)
 >
-> Yes.  Stephen Rothwell raised a complaint against it, which you were
-> copied with:
-
-Was a mailing list copied?  If so, do you have a lore.kernel.org link?
- I certainly don't see the email so I can only assume it made it to
-spam.  That's unfortunate.
-
-
-> > Hi all,
-> >
-> > Commit
-> >
-> >   116375be0461 ("ARM: 8944/1: hw_breakpoint: Handle inexact watchpoint addresses")
-> >
-> > is missing a Signed-off-by from its author.
+> Thank you! That approach seems to pass syzbot (also with
+> CONFIG_PARAVIRT) and kcsan-test tests.
 >
-> My reply to Stephen's email was:
+> I had to modify it some, so that report.c's use of the restore logic
+> works and not mess up the IRQ trace printed on KCSAN reports (with
+> CONFIG_KCSAN_VERBOSE).
 >
-> > Thanks Stephen, patch dropped.
-> >
-> > It looks like Doug used his "m.disordat.com" address to submit the
-> > patch through the web interface, and there was no From: in the patch
-> > itself, so that was used as the patch author.  However, as you spotted,
-> > it was signed off using Doug's "chromium.org" address.
-> >
-> > I think it's time to make the patch system a bit more strict, checking
-> > that the submission address is mentioned in a signed-off-by tag
-> > somewhere in the commit message.
-> >
-> > Doug, the patch system does have your "chromium.org" address, if that's
-> > the one you want to use as the author, please submit using that instead.
-> > Thanks.
-> >
-> > Russell.
->
-> Neither email got a response from you, so the patch was dropped and
-> nothing further happened.
+> I still need to fully convince myself all is well now and we don't end
+> up with more fixes. :-) If it passes further testing, I'll send it as a
+> real patch (I want to add you as Co-developed-by, but would need your
+> Signed-off-by for the code you pasted, I think.)
 
-OK, I guess I'll have to rebase and resend.
+With CONFIG_PARAVIRT=y (without the notrace->noinstr patch), I still
+get lockdep DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled()), although
+it takes longer for syzbot to hit them. But I think that's expected
+because we can still get the recursion that I pointed out, and will
+need that patch.
 
--Doug
+I also get some "BUG: MAX_LOCKDEP_CHAINS too low!" on syzbot (KCSAN is
+not in the stacktrace). Although it may be unrelated:
+https://lore.kernel.org/lkml/0000000000005613c705aaf88e04@google.com/
+-- when are they expected?
+
+Thanks,
+-- Marco
