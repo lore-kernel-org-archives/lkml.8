@@ -2,175 +2,131 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0DCC43445
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61015C4345F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7277222D05
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92BAB22D06
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GHA0WgQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgHFIyI (ORCPT
+        id S1728999AbgHFJDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:54:08 -0400
-Received: from mga11.intel.com ([192.55.52.93]:12501 "EHLO mga11.intel.com"
+        Thu, 6 Aug 2020 05:03:42 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:53827 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbgHFIyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:54:06 -0400
-IronPort-SDR: 8riitl7awcECN3o2wbk13vGeGzfMPGMok5606GAPhdt5VIXfEPB8BJL8W+fzzu+9/ujc+akih5
- m4o/EKj9f0fg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="150498635"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="150498635"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 01:54:05 -0700
-IronPort-SDR: InD2z2LzvaoEpB1qIUDjK4uckbvUGxbnedd0SgcCWvZeFkxTjiopNMxEng1nNiYcDnpaPK2q48
- MyN9lEd/qgJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="493125492"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Aug 2020 01:54:03 -0700
-Date:   Thu, 6 Aug 2020 16:50:33 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     "Wu, Hao" <hao.wu@intel.com>
-Cc:     "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        "Weight, Russell H" <russell.h.weight@intel.com>
-Subject: Re: [PATCH v3 3/4] fpga: dfl: create a dfl bus type to support DFL
-   devices
-Message-ID: <20200806085033.GA13943@yilunxu-OptiPlex-7050>
-References: <1596524715-18038-1-git-send-email-yilun.xu@intel.com>
- <1596524715-18038-4-git-send-email-yilun.xu@intel.com>
- <DM6PR11MB38194B629A3DC70FC0E8A010854B0@DM6PR11MB3819.namprd11.prod.outlook.com>
- <20200806060257.GB7179@yilunxu-OptiPlex-7050>
- <DM6PR11MB3819D5CFD0A46DCE02C9EF1A85480@DM6PR11MB3819.namprd11.prod.outlook.com>
+        id S1725927AbgHFJDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:03:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596704617; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ZIO+8hqUYeBnO7dLtKhWRl9zvjGqCBhvytYo3OMVUuM=;
+ b=GHA0WgQ+GSzWEIt7x2KR3I3vl2mQIh8UbGFBYdm6+OBtwAg7qrj6sxbDFnyRoYg0RV9fGT4M
+ fmWhPYlPX1xlM7Mm2rvngeX0g4857KOqoN3zy8GQlHdm1wx9eHf1bv8zXWJn9DPv4zXMbKFH
+ NaTx1RUIAtvWXiS0QaJ0uWArDzo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5f2bc768c85a1092b01860e6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 09:03:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 53DF3C433AF; Thu,  6 Aug 2020 09:03:36 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 56FC7C433C6;
+        Thu,  6 Aug 2020 09:03:35 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB3819D5CFD0A46DCE02C9EF1A85480@DM6PR11MB3819.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Aug 2020 17:03:35 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Bean Huo <huobean@gmail.com>
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] scsi: ufs: no need to send one Abort Task TM in case
+ the task in DB was cleared
+In-Reply-To: <20200804123534.29104-1-huobean@gmail.com>
+References: <20200804123534.29104-1-huobean@gmail.com>
+Message-ID: <a68a1bdf74bdf8ada29808537290b35b@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 03:11:14PM +0800, Wu, Hao wrote:
-> > > > +static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env
-> > *env)
-> > > > +{
-> > > > +struct dfl_device *ddev = to_dfl_dev(dev);
-> > > > +
-> > > > +return add_uevent_var(env, "MODALIAS=dfl:t%08Xf%04X",
-> > > > +      ddev->type, ddev->feature_id);
-> > >
-> > > Then we only print 12bit of feature_id will be enough?
-> > > should we make type shorter as well as feature id?
-> >
-> > I could envision that we need a struct
-> >
-> >  struct dfl_feature_id {
-> > u16 id: 12;
-> >  }
-> >
-> > for it.
-> >
-> > But it seems more complex and I didn't see the benifit. We don't have to
-> > worry about the invalid values cause we parse all the ddev->feature_id in
-> > dfl driver, and ensures it will not be larger than 12bit value.
-> 
-> Ideally type is only 4bits per spec, but looks like it's adding more zero before
-> the type value, and also the feature id. This may not be a real problem, but
-> may look a little wired, isn't it?
+Hi Bean,
 
-OK, I could change the print.
-
+On 2020-08-04 20:35, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
 > 
-> >
-> > > And do you think if we should add a new field for dfl version?
-> >
-> > I think it may not be necessary now. If we support dfl v1 in future, we
-> > still could try to check uuid first, then fall back to type &
-> > feature_id.
+> If the bit corresponds to a task in the Doorbell register has been
+> cleared, no need to poll the status of the task on the device side
+> and to send an Abort Task TM.
+> This patch also deletes dispensable dev_err() in case of the task
+> already completed.
 > 
-> I think it's all about the uevent and it's user, and for users, they may have to
-> deal with different versions, right? As you mentioned, if the event will be
-> different format for v1 and it's not compatible with v0, anyway we need
-> the version sooner or later, is my understanding correct?
-
-The version is not needed for uevent. The different formats of
-uevents explain themselves (dfl v0 or dfl v1), is it?
-If we add the dfl version in uevent then we should also add
-the version in struct dfl_device_id, and all dfl driver should fill the
-version info in its id_table. But actually that's redundent work to
-driver developer.
-
-The version in struct dfl_device may simplify the internal code on how
-to format the uevent. But considering the only extension of dflv1 I
-think checking the null uuid is also simply enough.
-
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
 > 
-> >
-> > Do you have any idea for the potential usage of dfl version.
-> >
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 307622284239..581b4ab52bf4 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -6425,19 +6425,16 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+>  		return ufshcd_eh_host_reset_handler(cmd);
 > 
-> > > > +/* then add irq resource */
-> > > > +if (feature->nr_irqs) {
-> > > > +ddev->irqs = kcalloc(feature->nr_irqs,
-> > > > +     sizeof(*ddev->irqs), GFP_KERNEL);
-> > > > +if (!ddev->irqs) {
-> > > > +ret = -ENOMEM;
-> > > > +goto put_dev;
-> > > > +}
-> > > > +
-> > > > +for (i = 0; i < feature->nr_irqs; i++)
-> > > > +ddev->irqs[i] = feature->irq_ctx[i].irq;
-> > > > +
-> > > > +ddev->num_irqs = feature->nr_irqs;
-> > >
-> > > Do we need to consider using IORESOURCE_IRQ here as well?
-> >
-> > The helper functions for IORESOURCE_IRQ are all for platform_devices,
-> > We need to define a set of functions similar to them, I think current
-> > implementation is simpler, for dfl bus and drivers.
+>  	ufshcd_hold(hba, false);
+> -	reg = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
+>  	/* If command is already aborted/completed, return SUCCESS */
+> -	if (!(test_bit(tag, &hba->outstanding_reqs))) {
+> -		dev_err(hba->dev,
+> -			"%s: cmd at tag %d already completed, outstanding=0x%lx, 
+> doorbell=0x%x\n",
+> -			__func__, tag, hba->outstanding_reqs, reg);
+> +	if (!(test_bit(tag, &hba->outstanding_reqs)))
+>  		goto out;
+> -	}
 > 
-> If some case that it's going to reuse some platform device driver,
-> then dfl_device driver will create platform device, it has to pass the mmio
-> and irq resources to platform device driver, how you plan to do that?
+> +	reg = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
+>  	if (!(reg & (1 << tag))) {
+>  		dev_err(hba->dev,
+>  		"%s: cmd was completed, but without a notifying intr, tag = %d",
+>  		__func__, tag);
+> +		goto out;
 
-I think even we create struct resource array for dfl_devices, the dfl
-driver still has to create and fill its pdev resource as needed. There
-is little chance the driver could just memcpy them. So the dfl driver
-could fill the irq resources of pdev according to ddev->irqs & num_irqs.
+Please check Stanley's recent change to ufshcd_abort, you may
+want to rebase your change on his and do goto cleanup here.
+@Stanley correct me if I am wrong.
 
-> 
-> > > > +static int dfl_devs_init(struct platform_device *pdev)
-> > > > +{
-> > > > +struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev-
-> > > > >dev);
-> > > > +struct dfl_feature *feature;
-> > > > +struct dfl_device *ddev;
-> > > > +
-> > > > +dfl_fpga_dev_for_each_feature(pdata, feature) {
-> > > > +if (feature->ioaddr || feature->priv)
-> > >
-> > > Why checks priv here?
-> >
-> > I want to make sure the dfl_device is not already created.
-> 
-> Is that a valid case that we expected? or sounds like error code needs
-> to be returned?
+But even if you do a goto cleanup here, we still lost the
+chances to dump host infos/regs like it does in the old code.
+If a cmd was completed but without a notifying intr, this is
+kind of a problem that we/host should look into, because it's
+pasted at least 30 sec since the cmd was sent, so those dumps
+are necessary to debug the problem. How about moving blow prints
+in front of this part?
 
-OK. It is invalid, I could error out in this case.
+Thanks,
 
+Can Guo.
+
+>  	}
 > 
-> Thanks
-> Hao
+>  	/* Print Transfer Request of aborted task */
