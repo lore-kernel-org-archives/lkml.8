@@ -2,158 +2,112 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAF520866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DFD221E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RG/OxOWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgHFXAc (ORCPT
+        id S1726209AbgHFXCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:00:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:12686 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgHFXA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:00:27 -0400
-IronPort-SDR: AIShFFshf5NuX2Z28vB8ACYMZO7F8HeEg+N04g1eqcPNfzUB37Pqm+nRaac4lq7dQkzeiwNmSV
- 4W+oaOAguCuw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="214480786"
-X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
-   d="scan'208";a="214480786"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 16:00:26 -0700
-IronPort-SDR: 4+acerHBJN/b22fYHJsd7PsyHOFkCqHb7EqL+PoDnx4H/pIfBQ13AHC9RVbVf+fFUK04UZjbJ/
- JMuOh0BaaDrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,443,1589266800"; 
-   d="scan'208";a="289432634"
-Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2020 16:00:25 -0700
-Received: from kbuild by 37a337f97289 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k3os3-0001qn-R7; Thu, 06 Aug 2020 23:00:23 +0000
-Date:   Fri, 07 Aug 2020 06:59:43 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:timers/urgent] BUILD SUCCESS
- d60d7de3e16d7cea998bad17d87366a359625894
-Message-ID: <5f2c8b5f.Jd9XGbAJakoMZklU%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 6 Aug 2020 19:02:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49817 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725999AbgHFXCB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 19:02:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596754920;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Xesw/0R7dO8ukumL0049322cMVGw9mWIzQSjuD9xFrA=;
+        b=RG/OxOWb6ftBbHUIdOXUjYp3B3tUL5bd1wvqf26wuFEOg1lkkdm7PqUAEJ3oLep4PCoDzp
+        fEJ6bXVug1PCgRS4lwZM54EFBW9nvRjZdvlbEL7X79ESnCqE2eToU9HqVLGd9S1K7+qsqv
+        sryhvdPQBB8OcX0gcW6Nyw9QPyk26Js=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-8qtPoFiXOM-dqQZRmzKUyg-1; Thu, 06 Aug 2020 19:01:56 -0400
+X-MC-Unique: 8qtPoFiXOM-dqQZRmzKUyg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02E7A106B243;
+        Thu,  6 Aug 2020 23:01:55 +0000 (UTC)
+Received: from Whitewolf.redhat.com (unknown [10.10.119.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 874145D994;
+        Thu,  6 Aug 2020 23:01:53 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org
+Cc:     stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Nirmoy Das <nirmoy.aiemd@gmail.com>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
+        GEFORCE/QUADRO GPUS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/nouveau/kms/nv50-: Program notifier offset before requesting disp caps
+Date:   Thu,  6 Aug 2020 19:01:29 -0400
+Message-Id: <20200806230129.324035-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/urgent
-branch HEAD: d60d7de3e16d7cea998bad17d87366a359625894  lib/vdso: Allow to add architecture-specific vdso data
+Not entirely sure why this never came up when I originally tested this
+(maybe some BIOSes already have this setup?) but the ->caps_init vfunc
+appears to cause the display engine to throw an exception on driver
+init, at least on my ThinkPad P72:
 
-elapsed time: 725m
+nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c 0000102b
 
-configs tested: 87
-configs skipped: 2
+This is magic nvidia speak for "You need to have the DMA notifier offset
+programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
+this by doing that.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm64                            allyesconfig
-arm                       mainstone_defconfig
-sh                   sh7770_generic_defconfig
-mips                       rbtx49xx_defconfig
-ia64                         bigsur_defconfig
-arm                          simpad_defconfig
-m68k                       m5249evb_defconfig
-sh                        dreamcast_defconfig
-mips                     loongson1b_defconfig
-powerpc64                           defconfig
-sh                         apsh4a3a_defconfig
-sh                            hp6xx_defconfig
-m68k                       m5475evb_defconfig
-powerpc                    mvme5100_defconfig
-riscv                            alldefconfig
-sh                          sdk7786_defconfig
-mips                       bmips_be_defconfig
-s390                          debug_defconfig
-sh                           se7722_defconfig
-ia64                            zx1_defconfig
-mips                 decstation_r4k_defconfig
-openrisc                    or1ksim_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200806
-i386                 randconfig-a004-20200806
-i386                 randconfig-a001-20200806
-i386                 randconfig-a002-20200806
-i386                 randconfig-a003-20200806
-i386                 randconfig-a006-20200806
-i386                 randconfig-a011-20200805
-i386                 randconfig-a012-20200805
-i386                 randconfig-a013-20200805
-i386                 randconfig-a014-20200805
-i386                 randconfig-a015-20200805
-i386                 randconfig-a016-20200805
-x86_64               randconfig-a006-20200806
-x86_64               randconfig-a001-20200806
-x86_64               randconfig-a004-20200806
-x86_64               randconfig-a005-20200806
-x86_64               randconfig-a003-20200806
-x86_64               randconfig-a002-20200806
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for DP interlacing support")
+Cc: <stable@vger.kernel.org> # v5.8+
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/gpu/drm/nouveau/dispnv50/core507d.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+index ad1f09a143aa4..c984080ce99f2 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+@@ -80,11 +80,19 @@ core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
+ 	struct nvif_push *push = disp->core->chan.push;
+ 	int ret;
+ 
+-	if ((ret = PUSH_WAIT(push, 2)))
++	if ((ret = PUSH_WAIT(push, 4)))
+ 		return ret;
+ 
++	PUSH_MTHD(push, NV507D, SET_NOTIFIER_CONTROL,
++		  NVDEF(NV507D, SET_NOTIFIER_CONTROL, MODE, WRITE) |
++		  NVVAL(NV507D, SET_NOTIFIER_CONTROL, OFFSET, NV50_DISP_CORE_NTFY >> 2) |
++		  NVDEF(NV507D, SET_NOTIFIER_CONTROL, NOTIFY, ENABLE));
+ 	PUSH_MTHD(push, NV507D, GET_CAPABILITIES, 0x00000000);
+-	return PUSH_KICK(push);
++	ret = PUSH_KICK(push);
++	if (ret)
++		return ret;
++
++	return 0;
+ }
+ 
+ int
+-- 
+2.26.2
+
