@@ -2,106 +2,156 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B943FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03D482086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E322177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tr0jNjne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgHFCqy (ORCPT
+        id S1726604AbgHFC4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:46:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31727 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgHFCqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:46:54 -0400
-IronPort-SDR: km/KR8PRN/Nij8Go8vonj+fuLrQJGI0rBINlR1H33UWfEaklJz7hFSnwwJ9NvDfmf6OhnV58A0
- VlOo6gior4xw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="152669288"
-X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
-   d="scan'208";a="152669288"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 19:46:53 -0700
-IronPort-SDR: JMPts0zLGa2TK4nZ6M81SgCrSmtUhNnShl1R21rIm7wIaMLTD6VNClCV3MU7E412fJa7zMqZVG
- GxMj3meML9Mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
-   d="scan'208";a="437387590"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga004.jf.intel.com with ESMTP; 05 Aug 2020 19:46:51 -0700
-Date:   Thu, 6 Aug 2020 10:43:22 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     "Wu, Hao" <hao.wu@intel.com>
-Cc:     "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        "Weight, Russell H" <russell.h.weight@intel.com>
-Subject: Re: [PATCH v3 2/4] fpga: dfl: map feature mmio resources in their
- own  feature drivers
-Message-ID: <20200806024322.GA7179@yilunxu-OptiPlex-7050>
-References: <1596524715-18038-1-git-send-email-yilun.xu@intel.com>
- <1596524715-18038-3-git-send-email-yilun.xu@intel.com>
- <DM6PR11MB3819B8C6D19C351CC9366685854B0@DM6PR11MB3819.namprd11.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB3819B8C6D19C351CC9366685854B0@DM6PR11MB3819.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 5 Aug 2020 22:56:39 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:59037 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725999AbgHFC4i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 22:56:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596682596; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=GSqGnDAtFz2eN+4a/6d10DfESlZhpkDU0wGAOPxxqGE=; b=tr0jNjnevfsB2VkW/M3/bgkfPLY67SyvGagUl7yn1WjRQIxB6hZkD/O1/4+EFtMZ8lz35NWN
+ 8LwvSa8e/+a243nMKluJFbt7JQCH9C9derkSKM5hIWt5rM8LjUVMNBNKLWOUYwa29+bd+rlq
+ Hew+bfVH9YZc2bg0ja6L/sb2W28=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
+ 5f2b71646372cee9a8eba3dc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 02:56:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A3A64C43391; Thu,  6 Aug 2020 02:56:35 +0000 (UTC)
+Received: from cgoldswo-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cgoldswo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37839C433CA;
+        Thu,  6 Aug 2020 02:56:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37839C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cgoldswo@codeaurora.org
+From:   Chris Goldsworthy <cgoldswo@codeaurora.org>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pratikp@codeaurora.org,
+        pdaly@codeaurora.org, sudraja@codeaurora.org,
+        iamjoonsoo.kim@lge.com,
+        Chris Goldsworthy <cgoldswo@codeaurora.org>,
+        Susheel Khiani <skhiani@codeaurora.org>,
+        Vinayak Menon <vinmenon@codeaurora.org>
+Subject: [PATCH] mm: cma: retry allocations in cma_alloc
+Date:   Wed,  5 Aug 2020 19:56:22 -0700
+Message-Id: <1596682582-29139-2-git-send-email-cgoldswo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596682582-29139-1-git-send-email-cgoldswo@codeaurora.org>
+References: <1596682582-29139-1-git-send-email-cgoldswo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 08:15:27PM +0800, Wu, Hao wrote:
-> > Subject: [PATCH v3 2/4] fpga: dfl: map feature mmio resources in their own
-> > feature drivers
-> >
-> > +static int dfl_binfo_prepare(struct build_feature_devs_info *binfo,
-> > +     resource_size_t start, resource_size_t len)
-> > +{
-> > +struct device *dev = binfo->dev;
-> > +void __iomem *ioaddr;
-> > +
-> > +if (!devm_request_mem_region(dev, start, len, dev_name(dev))) {
-> > +dev_err(dev, "request region fail, start:%pa, len:%pa\n",
-> > +&start, &len);
-> > +return -EBUSY;
-> > +}
-> > +
-> > +ioaddr = devm_ioremap(dev, start, len);
-> > +if (!ioaddr) {
-> > +dev_err(dev, "ioremap region fail, start:%pa, len:%pa\n",
-> > +&start, &len);
-> > +devm_release_mem_region(dev, start, len);
-> 
-> as it's devm_request_mem_region, do we still need to release it here?
+CMA allocations will fail if 'pinned' pages are in a CMA area, since we
+cannot migrate pinned pages. The _refcount of a struct page being greater
+than _mapcount for that page can cause pinning for anonymous pages.  This
+is because try_to_unmap(), which (1) is called in the CMA allocation path,
+and (2) decrements both _refcount and _mapcount for a page, will stop
+unmapping a page from VMAs once the _mapcount for a page reaches 0.  This
+implies that after try_to_unmap() has finished successfully for a page
+where _recount > _mapcount, that _refcount will be greater than 0.  Later
+in the CMA allocation path in migrate_page_move_mapping(), we will have one
+more reference count than intended for anonymous pages, meaning the
+allocation will fail for that page.
 
-Yes, I could delete it.
+One example of where _refcount can be greater than _mapcount for a page we
+would not expect to be pinned is inside of copy_one_pte(), which is called
+during a fork. For ptes for which pte_present(pte) == true, copy_one_pte()
+will increment the _refcount field followed by the  _mapcount field of a
+page. If the process doing copy_one_pte() is context switched out after
+incrementing _refcount but before incrementing _mapcount, then the page
+will be temporarily pinned.
 
-> > @@ -869,24 +935,24 @@ static int parse_feature_private(struct
-> > build_feature_devs_info *binfo,
-> >   *
-> >   * @binfo: build feature devices information.
-> >   * @dfl: device feature list to parse
-> 
-> Remove this line.
+So, inside of cma_alloc(), instead of giving up when alloc_contig_range()
+returns -EBUSY after having scanned a whole CMA-region bitmap, perform
+retries with sleeps to give the system an opportunity to unpin any pinned
+pages.
 
-Yes.
+Signed-off-by: Chris Goldsworthy <cgoldswo@codeaurora.org>
+Co-developed-by: Susheel Khiani <skhiani@codeaurora.org>
+Signed-off-by: Susheel Khiani <skhiani@codeaurora.org>
+Co-developed-by: Vinayak Menon <vinmenon@codeaurora.org>
+Signed-off-by: Vinayak Menon <vinmenon@codeaurora.org>
+---
+ mm/cma.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-Thanks,
-Yilun.
+diff --git a/mm/cma.c b/mm/cma.c
+index 7f415d7..7b85fe6 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -32,6 +32,7 @@
+ #include <linux/highmem.h>
+ #include <linux/io.h>
+ #include <linux/kmemleak.h>
++#include <linux/delay.h>
+ #include <trace/events/cma.h>
+ 
+ #include "cma.h"
+@@ -418,6 +419,8 @@ struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
+ 	size_t i;
+ 	struct page *page = NULL;
+ 	int ret = -ENOMEM;
++	int num_attempts = 0;
++	int max_retries = 5;
+ 
+ 	if (!cma || !cma->count || !cma->bitmap)
+ 		return NULL;
+@@ -442,8 +445,25 @@ struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
+ 				bitmap_maxno, start, bitmap_count, mask,
+ 				offset);
+ 		if (bitmap_no >= bitmap_maxno) {
+-			mutex_unlock(&cma->lock);
+-			break;
++			if ((num_attempts < max_retries) && (ret == -EBUSY)) {
++				mutex_unlock(&cma->lock);
++
++				/*
++				 * Page may be momentarily pinned by some other
++				 * process which has been scheduled out, e.g.
++				 * in exit path, during unmap call, or process
++				 * fork and so cannot be freed there. Sleep
++				 * for 100ms and retry the allocation.
++				 */
++				start = 0;
++				ret = -ENOMEM;
++				msleep(100);
++				num_attempts++;
++				continue;
++			} else {
++				mutex_unlock(&cma->lock);
++				break;
++			}
+ 		}
+ 		bitmap_set(cma->bitmap, bitmap_no, bitmap_count);
+ 		/*
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> 
-> Other place looks good to me.
-> 
-> Thanks
-> Hao 
