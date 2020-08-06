@@ -2,118 +2,114 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D440EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB01C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 342BF206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EEF206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgHFRz0 (ORCPT
+        id S1729490AbgHFRz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:55:26 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50308 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgHFQ2w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:28:52 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3ijY-0003ET-2S; Thu, 06 Aug 2020 16:27:12 +0000
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: re: net: dsa: sja1105: use detected device id instead of DT one on
- mismatch
-Message-ID: <60d2d8f9-1376-2047-b958-7bdbbde1538e@canonical.com>
-Date:   Thu, 6 Aug 2020 17:27:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Aug 2020 13:55:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41868 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728057AbgHFQ2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:28:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1BF2BAC48;
+        Thu,  6 Aug 2020 16:28:48 +0000 (UTC)
+Date:   Thu, 06 Aug 2020 18:28:30 +0200
+Message-ID: <s5himdvbuxd.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, ckeepax@opensource.cirrus.com
+Subject: Re: [RFC PATCH v2 0/6] ALSA: compress: add support to change codec profile in gapless playback
+In-Reply-To: <20200806043010.GC12965@vkoul-mobl>
+References: <20200721170007.4554-1-srinivas.kandagatla@linaro.org>
+        <s5hpn8mqudq.wl-tiwai@suse.de>
+        <20200723130522.GB12965@vkoul-mobl>
+        <s5hlfjaqsk7.wl-tiwai@suse.de>
+        <20200723155612.GC12965@vkoul-mobl>
+        <s5hy2naotsa.wl-tiwai@suse.de>
+        <20200806043010.GC12965@vkoul-mobl>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 06 Aug 2020 13:08:13 +0200,
+Vinod Koul wrote:
+> 
+> On 23-07-20, 22:33, Takashi Iwai wrote:
+> > On Thu, 23 Jul 2020 17:56:12 +0200,
+> > Vinod Koul wrote:
+> > > 
+> > > On 23-07-20, 15:17, Takashi Iwai wrote:
+> > > > On Thu, 23 Jul 2020 15:05:22 +0200,
+> > > > Vinod Koul wrote:
+> > > > > 
+> > > > > On 23-07-20, 14:38, Takashi Iwai wrote:
+> > > > > > On Tue, 21 Jul 2020 19:00:01 +0200,
+> > > > > > Srinivas Kandagatla wrote:
+> > > > > > > 
+> > > > > > > For gapless playback it is possible that each track can have different
+> > > > > > > codec profile with same decoder, for example we have WMA album,
+> > > > > > > we may have different tracks as WMA v9, WMA v10 and so on
+> > > > > > > Or if DSP's like QDSP have abililty to switch decoders on single stream
+> > > > > > > for each track, then this call could be used to set new codec parameters.
+> > > > > > > 
+> > > > > > > Existing code does not allow to change this profile while doing gapless
+> > > > > > > playback.
+> > > > > > > 
+> > > > > > > This patchset adds new SNDRV_COMPRESS_SET_CODEC_PARAMS IOCTL along with
+> > > > > > > flags in capablity structure to allow userspace to set this new
+> > > > > > > parameters required which switching codec profile, either for gapless
+> > > > > > > or cross fade usecase.
+> > > > > > 
+> > > > > > One idea that came up at the previous audio conference regarding this
+> > > > > > implementation was to just allow SET_PARAMS during the stream is
+> > > > > > running (only if the driver sets the capability) instead of
+> > > > > > introducing yet a new ioctl and an ops.
+> > > > > > Would it make sense?
+> > > > > 
+> > > > > That does sound good but only issue would be that we need to somehow
+> > > > > mark/document that buffer info is useless and would be discarded, how do
+> > > > > we do that?
+> > > > 
+> > > > Yes, the buffer and no_wake_mode can be ignored in the gapless
+> > > > re-setup.  Is your concern only about the documentation?  Or something
+> > > > else needs to be changed significantly?  It's a new scheme in anyway,
+> > > > so the documentation update is required...
+> > > 
+> > > My concern is potential abuse of API down the road, if you feel it is
+> > > okay, I am okay with the proposal
+> > 
+> > If this can be potentially dangerous, it shouldn't be used, of course.
+> > What kind of scenario could it be?
+> 
+> I can think of users trying to invoke this incorrectly, right now we
+> would reject this.
+> 
+> Maybe, we can add checks like, if next_track is set and then copy the
+> codec params only to prevent any misuse.
+> 
+> Do you think that would be okay?
 
-Static analysis with Coverity has detected a potential issue with the
-following commit:
+Yes, it's the same condition check that was proposed for the new
+ioctl.
 
-commit 0b0e299720bb99428892a23ecbd2b4b7f61ccf6d
-Author: Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon Aug 3 19:48:23 2020 +0300
 
-    net: dsa: sja1105: use detected device id instead of DT one on mismatch
-
-The analysis is as follows:
-
-Array compared against 0 (NO_EFFECT)array_null: Comparing an array to
-null is not useful: match->compatible, since the test will always
-evaluate as true.
-
-    Was match->compatible formerly declared as a pointer?
-
-3418        for (match = sja1105_dt_ids; match->compatible; match++) {
-3419                const struct sja1105_info *info = match->data;
-3420
-
-I'm not sure what the original intention was, so I was unable to fix
-this hence I'm sending this report as I think it needs addressing.
-
-Colin
+Takashi
