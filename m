@@ -7,58 +7,62 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E107421744
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC9821744
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k+Qg19D2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3aR/53vW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NYk3aP8b";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xD8/l9sT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgHFXjy (ORCPT
+        id S1726627AbgHFXi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:39:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60984 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgHFXi7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Aug 2020 19:38:59 -0400
-Date:   Thu, 06 Aug 2020 23:38:56 -0000
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgHFXis (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 19:38:48 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52446C061574;
+        Thu,  6 Aug 2020 16:38:48 -0700 (PDT)
+Date:   Thu, 06 Aug 2020 23:38:46 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757137;
+        s=2020; t=1596757126;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eXjoTKFCZ+Y/MWw/mqSyAJJ5aTDFDN/BMU0AUdWPDUk=;
-        b=k+Qg19D2vX5oaDEgRrOSK9NMYreIk6OVDc8NeaUEf5DiBpLL0D3/XcbPQPrOD91URIVQit
-        mrwJwwDkb69/Rk//43DnjEY/UhZk+4yL3n3QDBkBdrkB7OzZZxkmM1uXWce+TG2w0WigEn
-        EM7qdA028b+1f5QucJj9Jz42gd+gBOA0vxxjzmVtbnQiqcEjjJeZ1WzBMtFiIOth67jEyh
-        EBYSlIVYBdHlIsIvG5rOV9ogGyC7082wsjbaHOpEeHt7+Yfc6cK881wiS4Bd3no8uPtX0f
-        VDgohjJ36GVPuroLTFsB8ZYxVexZi4vmV1FSYxSkgEFO4asnTDUECoqz7V3bnA==
+        bh=Hd4O0m85sH388k9+gMMkBCM/FtfvMXzNaeJ6lUqneq8=;
+        b=NYk3aP8bsDA/CehLZ52kgOfMT7HAeqhM+971+SV9d8WGw4S4EwwK74v+y/+Wtxpd1RYG4+
+        ioED5q7coXpR7Ok4FGwelUx0aS0iP+Jng+OL6OGsJpwUbVxYrKC872SV4Bpz6StnaiG3R+
+        cqnWyFwRYciRWRQA4LRKmSbN3j51KE7M9INiFruRaqU5J2STay+UDJMOTKYD4z/rha/F1O
+        Z7dI6vz+z6tiMYlvqDmjs+COG0bDrHn6anDEFi65aVAzNwowJ/XyRCHxgFxpyeL7YOLiqr
+        TfyjmF3r1dPET9hEuFEcCEayPFNyImkWdK3e8zFseTW/vpPqDHJ2HyYN6FU8LA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757137;
+        s=2020e; t=1596757126;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eXjoTKFCZ+Y/MWw/mqSyAJJ5aTDFDN/BMU0AUdWPDUk=;
-        b=3aR/53vW0DM1zbIj0V74y4mbzn17eC144fQQ0+OiE/6qmo5RVTjBfyYjmP/bzyiHroQ8+Z
-        egSYxKbqCwTtJHAg==
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+        bh=Hd4O0m85sH388k9+gMMkBCM/FtfvMXzNaeJ6lUqneq8=;
+        b=xD8/l9sThlJtDVRrSgiq3I/vEnhNyOTyaMtATcb3Dhm8MHCGgbPtlED0NMW2ZkmEA7lA40
+        4a2XGnI8aYKSPnAA==
+From:   "tip-bot2 for Lianbo Jiang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kaslr] x86/kaslr: Short-circuit gb_huge_pages on x86-32
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: x86/urgent] x86/crash: Correct the address boundary of function
+ parameters
+Cc:     Lianbo Jiang <lijiang@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Dave Young <dyoung@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200728225722.67457-12-nivedita@alum.mit.edu>
-References: <20200728225722.67457-12-nivedita@alum.mit.edu>
+In-Reply-To: <20200804044933.1973-2-lijiang@redhat.com>
+References: <20200804044933.1973-2-lijiang@redhat.com>
 MIME-Version: 1.0
-Message-ID: <159675713698.3192.5462555690750286629.tip-bot2@tip-bot2>
+Message-ID: <159675712611.3192.9276107273934429682.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -68,47 +72,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/kaslr branch of tip:
+The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     50def2693a900dfb1d91872056dc8164245820fc
-Gitweb:        https://git.kernel.org/tip/50def2693a900dfb1d91872056dc8164245820fc
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Tue, 28 Jul 2020 18:57:12 -04:00
+Commit-ID:     a3e1c3bb24e2ff2927af5e30c2bebe669bb84196
+Gitweb:        https://git.kernel.org/tip/a3e1c3bb24e2ff2927af5e30c2bebe669bb84196
+Author:        Lianbo Jiang <lijiang@redhat.com>
+AuthorDate:    Tue, 04 Aug 2020 12:49:31 +08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 31 Jul 2020 11:08:17 +02:00
+CommitterDate: Fri, 07 Aug 2020 01:32:00 +02:00
 
-x86/kaslr: Short-circuit gb_huge_pages on x86-32
+x86/crash: Correct the address boundary of function parameters
 
-32-bit does not have GB pages, so don't bother checking for them. Using
-the IS_ENABLED() macro allows the compiler to completely remove the
-gb_huge_pages code.
+Let's carefully handle the boundary of the function parameter to make
+sure that the arguments passed doesn't exceed the address range.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200728225722.67457-12-nivedita@alum.mit.edu
+Acked-by: Dave Young <dyoung@redhat.com>
+Link: https://lore.kernel.org/r/20200804044933.1973-2-lijiang@redhat.com
 ---
- arch/x86/boot/compressed/kaslr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/crash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 0df513e..3727e97 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -303,7 +303,7 @@ static void handle_mem_options(void)
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index fd87b59..a8f3af2 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -230,7 +230,7 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
+ 	int ret = 0;
  
- 		if (!strcmp(param, "memmap")) {
- 			mem_avoid_memmap(PARSE_MEMMAP, val);
--		} else if (strstr(param, "hugepages")) {
-+		} else if (IS_ENABLED(CONFIG_X86_64) && strstr(param, "hugepages")) {
- 			parse_gb_huge_pages(param, val);
- 		} else if (!strcmp(param, "mem")) {
- 			char *p = val;
-@@ -551,7 +551,7 @@ process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
- 	struct mem_vector tmp;
- 	int i = 0;
+ 	/* Exclude the low 1M because it is always reserved */
+-	ret = crash_exclude_mem_range(cmem, 0, 1<<20);
++	ret = crash_exclude_mem_range(cmem, 0, (1<<20)-1);
+ 	if (ret)
+ 		return ret;
  
--	if (!max_gb_huge_pages) {
-+	if (!IS_ENABLED(CONFIG_X86_64) || !max_gb_huge_pages) {
- 		store_slot_info(region, image_size);
- 		return;
- 	}
