@@ -2,147 +2,216 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ED3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B29DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC7723119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2+mFfU3n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TosHXgtW"
+	by mail.kernel.org (Postfix) with ESMTP id D199323119
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbgHFRND (ORCPT
+        id S1730321AbgHFRO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:13:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58912 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730213AbgHFRKD (ORCPT
+        Thu, 6 Aug 2020 13:14:27 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:35152 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730195AbgHFRJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:10:03 -0400
-Date:   Thu, 06 Aug 2020 17:10:00 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596733801;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s/zdo6N3kr6DwXPfg4F5UGxVXyrpPOOGwsHDs97g2I4=;
-        b=2+mFfU3njFmL3l5dT7cX2MUSyLPXOwaND6Pn93DWxCr4BNfKd/8pU6PEcTdParl9Bd4vfN
-        fweYOIajGt6fL4fAU2eCAicyxdOwcAE8Esi0JX16LfAb1vjVQCJ0zYpq+XldJwQEG2bY13
-        v1fxmkR+az/QkBUVG/CfRkVyGuCH3VDtVVAMBoS15qrHxpSjHIcd976YxPK3tmA4wqfrvf
-        3s00/b+/cbudVTAj5I5yKhDfyf1UJF05cidP+KHkuOijPnwoFBs6FffJKm3+7CyShy5aOj
-        nKdGJiPNxjn22XWeawNScwApbiOsyb4XQbOGGm1SMzKvapgY67E7j/DmhdDX6A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596733801;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s/zdo6N3kr6DwXPfg4F5UGxVXyrpPOOGwsHDs97g2I4=;
-        b=TosHXgtWzY4CxwZWNRoZnAvUVfxakvzK0R70YJhLD717j/YklCEArBcWaLkK8VvAZAgsuS
-        pwMuYZCnfaLZhKDA==
-From:   "tip-bot2 for Sven Schnelle" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] lib/vdso: Allow to add architecture-specific vdso data
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200804150124.41692-2-svens@linux.ibm.com>
-References: <20200804150124.41692-2-svens@linux.ibm.com>
+        Thu, 6 Aug 2020 13:09:58 -0400
+Received: from relay11.mail.gandi.net (unknown [217.70.178.231])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 1F3A23B2C0F;
+        Thu,  6 Aug 2020 14:46:57 +0000 (UTC)
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id CA24C100006;
+        Thu,  6 Aug 2020 14:41:30 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 16:45:11 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] media: i2c: ov772x: Add support for BT656 mode
+Message-ID: <20200806144511.6ajoqyynowglnbpm@uno.localdomain>
+References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596454753-13612-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Message-ID: <159673380055.3192.7751211345799683003.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1596454753-13612-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Mon, Aug 03, 2020 at 12:39:12PM +0100, Lad Prabhakar wrote:
+> Add support to read the bus-type and enable BT656 mode if needed.
+>
+> The driver defaults to parallel mode if bus-type is not specified in DT.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+>  drivers/media/i2c/ov772x.c | 40 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>
+> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> index 2cc6a678069a..2de9248e3689 100644
+> --- a/drivers/media/i2c/ov772x.c
+> +++ b/drivers/media/i2c/ov772x.c
+> @@ -31,6 +31,7 @@
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-event.h>
+> +#include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-image-sizes.h>
+>  #include <media/v4l2-subdev.h>
+>
+> @@ -434,6 +435,7 @@ struct ov772x_priv {
+>  #ifdef CONFIG_MEDIA_CONTROLLER
+>  	struct media_pad pad;
+>  #endif
+> +	struct v4l2_fwnode_endpoint ep;
+>  };
+>
+>  /*
+> @@ -574,6 +576,7 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+>  {
+>  	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>  	struct ov772x_priv *priv = to_ov772x(sd);
+> +	unsigned int val;
+>  	int ret = 0;
+>
+>  	mutex_lock(&priv->lock);
+> @@ -581,6 +584,22 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+>  	if (priv->streaming == enable)
+>  		goto done;
+>
+> +	if (priv->ep.bus_type == V4L2_MBUS_BT656 && enable) {
+> +		ret = regmap_read(priv->regmap, COM7, &val);
+> +		if (ret)
+> +			goto done;
+> +		val |= ITU656_ON_OFF;
+> +		ret = regmap_write(priv->regmap, COM7, val);
+> +	} else if (priv->ep.bus_type == V4L2_MBUS_BT656 && !enable) {
 
-Commit-ID:     d60d7de3e16d7cea998bad17d87366a359625894
-Gitweb:        https://git.kernel.org/tip/d60d7de3e16d7cea998bad17d87366a359625894
-Author:        Sven Schnelle <svens@linux.ibm.com>
-AuthorDate:    Tue, 04 Aug 2020 17:01:22 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 06 Aug 2020 10:57:30 +02:00
+is the !enable intentional ? (sorry I don't have access to the sensor
+manual). If not, see below:
 
-lib/vdso: Allow to add architecture-specific vdso data
+> +		ret = regmap_read(priv->regmap, COM7, &val);
+> +		if (ret)
+> +			goto done;
+> +		val &= ~ITU656_ON_OFF;
+> +		ret = regmap_write(priv->regmap, COM7, val);
+> +	}
+> +	if (ret)
+> +		goto done;
 
-The initial assumption that all VDSO related data can be completely generic
-does not hold. S390 needs architecture specific storage to access the clock
-steering information.
+Could you write this as:
 
-Add struct arch_vdso_data to the vdso data struct. For architectures which
-do not need extra data this defaults to an empty struct. Architectures
-which require it, enable CONFIG_ARCH_HAS_VDSO_DATA and provide their
-specific struct in asm/vdso/data.h.
+static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	struct ov772x_priv *priv = to_ov772x(sd);
+	int ret = 0;
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200804150124.41692-2-svens@linux.ibm.com
+	mutex_lock(&priv->lock);
 
----
- arch/Kconfig            |  3 +++
- include/vdso/datapage.h | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+	if (priv->streaming == enable)
+		goto done;
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index a112448..b44dd6b 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -975,6 +975,9 @@ config HAVE_SPARSE_SYSCALL_NR
- 	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
- 	  related optimizations for a given architecture.
- 
-+config ARCH_HAS_VDSO_DATA
-+	bool
-+
- source "kernel/gcov/Kconfig"
- 
- source "scripts/gcc-plugins/Kconfig"
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index ee810ca..73eb622 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -19,6 +19,12 @@
- #include <vdso/time32.h>
- #include <vdso/time64.h>
- 
-+#ifdef CONFIG_ARCH_HAS_VDSO_DATA
-+#include <asm/vdso/data.h>
-+#else
-+struct arch_vdso_data {};
-+#endif
-+
- #define VDSO_BASES	(CLOCK_TAI + 1)
- #define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
- 			 BIT(CLOCK_MONOTONIC)		| \
-@@ -64,6 +70,8 @@ struct vdso_timestamp {
-  * @tz_dsttime:		type of DST correction
-  * @hrtimer_res:	hrtimer resolution
-  * @__unused:		unused
-+ * @arch_data:		architecture specific data (optional, defaults
-+ *			to an empty struct)
-  *
-  * vdso_data will be accessed by 64 bit and compat code at the same time
-  * so we should be careful before modifying this structure.
-@@ -97,6 +105,8 @@ struct vdso_data {
- 	s32			tz_dsttime;
- 	u32			hrtimer_res;
- 	u32			__unused;
-+
-+	struct arch_vdso_data	arch_data;
- };
- 
- /*
+	if (enable) {
+		ret = regmap_read(priv->regmap, COM7, &val);
+		if (ret)
+			goto done;
+
+	        if (priv->ep.bus_type == V4L2_MBUS_BT656)
+		        val |= ITU656_ON_OFF;
+                else /* if you accept my suggestion to consider othe
+                        bus types as errors */
+		        val &= ~ITU656_ON_OFF;
+
+		ret = regmap_write(priv->regmap, COM7, val);
+		if (ret)
+			goto done;
+
+		dev_dbg(&client->dev, "format %d, win %s\n",
+			priv->cfmt->code, priv->win->name);
+	}
+
+	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+				 enable ? 0 : SOFT_SLEEP_MODE);
+	if (ret)
+		goto done;
+	priv->streaming = enable;
+
+done:
+	mutex_unlock(&priv->lock);
+
+	return ret;
+}
+
+
+>  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+>  				 enable ? 0 : SOFT_SLEEP_MODE);
+>  	if (ret)
+> @@ -1354,6 +1373,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+>
+>  static int ov772x_probe(struct i2c_client *client)
+>  {
+> +	struct fwnode_handle *endpoint;
+>  	struct ov772x_priv	*priv;
+>  	int			ret;
+>  	static const struct regmap_config ov772x_regmap_config = {
+> @@ -1415,6 +1435,26 @@ static int ov772x_probe(struct i2c_client *client)
+>  		goto error_clk_put;
+>  	}
+>
+> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> +						  NULL);
+> +	if (!endpoint) {
+> +		dev_err(&client->dev, "endpoint node not found\n");
+> +		ret = -EINVAL;
+> +		goto error_clk_put;
+> +	}
+> +
+> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
+> +	fwnode_handle_put(endpoint);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Could not parse endpoint\n");
+> +		goto error_clk_put;
+> +	}
+> +
+> +	/* fallback to parallel mode */
+> +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
+> +	    priv->ep.bus_type != V4L2_MBUS_BT656)
+> +		priv->ep.bus_type = V4L2_MBUS_PARALLEL;
+
+shouldn't this be an error ? It's either the bus type has not been
+specified on DT (which is fine, otherwise old DTB without that
+properties will fail) and the bus identification routine implemented
+in v4l2_fwnode_endpoint_parse() detected a bus type which is not
+supported, hence the DT properties are wrong, and this should be an
+error. If you plan to expand the parsing routine to support, say
+bus-width and pclk polarity please break this out to a new function.
+
+Thanks
+   j
+
+> +
+>  	ret = ov772x_video_probe(priv);
+>  	if (ret < 0)
+>  		goto error_gpio_put;
+> --
+> 2.17.1
+>
