@@ -2,307 +2,118 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB02C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9019F2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FA62086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="tOwdgn1x";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="MUPEndLz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilW+et5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgHFQy4 (ORCPT
+        id S1729693AbgHFQy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:54:56 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:41298 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729553AbgHFQuP (ORCPT
+        Thu, 6 Aug 2020 12:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729557AbgHFQuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:50:15 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076BPHEA021976;
-        Thu, 6 Aug 2020 04:34:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
- b=tOwdgn1xj8iQeTTNkWlbqv/Z7e5ov9tvfiACiFqqopM4nQrVYB+LJCaA0vqzGpBsyl4i
- ECDKkaYuiq4CC1riaV41jEDfvhF4zFp0JMI4TchpIAIhcaN/9ZJ1F3ZXTAGC15PDVQa8
- /VTNEoWgcrSutU3nXHrKNafweVcFrpH+XTrcD2Qjl5eyAoANUpr0cbkBFGlp+W2OT9p7
- HfH0INjkF1/OjxH4dNDQTiCn3JnaW3A4+OXCK5Um+5zad1jvHRcNxYMSSvqtv/fumFWx
- L6D0HupBOseuNMYBexEJ2xwy+oKU0dqcgDSqfcAMTH6i2Obilvgk9dEotgT8u7H2hYNT Rw== 
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2104.outbound.protection.outlook.com [104.47.58.104])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 32n8gy1uv9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 04:34:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B6KIIb228bj11R77OeOpZU3wXab7L/Deq63qL90YrW8r1snK5Fir0jb1vhcZbGwVfZ1cBJ/C8dd94gXAlax5fLWKe1qv2xbczaFr+5VR/GpEd3LvNXOtkcSZZsaCvVIVOJ37g2RMZT5YSGdYqnRmh+QaHqOdzM5RNLX8TCXUYeYtBF/paurW8ZCg/4lX5xJ0a1uRQTseEJtmR/t6mui88a3jcNyphA0P/K5+7aeE09rS72oaJmLqRGtOHY0ihcKIvFPjrryiLUexaT7sZv1QknhX0JSHq+y9sUFs2aguvZSmiI9Sy5fG+MHyJsIJekhQN/T7sPgPu+dpeN2u99Zn6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
- b=fcVnIMqkk2K8LYcjX25IVMJzZzoC6qYP0PlOnM65d4ceW3P+ZsDPOeQMJqns5I9OBrnqvWYAiInK4LJVEW1DfiiL5LqdVdtga4kq6VtV9PgtaUymtG6Yuy+RVt9yggO+/XXoJSCOn9gAR+M7upGHaTF/H1lrjtKRjKh8m87YMln1R+EjE7neWFxCBO8gSWY+8nKVxpKo+Aeoc8XMJ9H4b0PLgSaoKUOAQ+0055fyPBMkF8xFitlv79haqHFFEmy3j1FzGa9kZBooiuD/m8Gny7GVi3kyEFyLSc9D49Q17xyq9W64xqwZUg3HYfVkPLFaTlOpG5N2thi/7BI8B8dicQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 64.207.220.244) smtp.rcpttodomain=samsung.com smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
- b=MUPEndLzT8+BVNZStgGY/AiFobRpIJ4wHQ6BfmpJkM6uxfR7laTDmDcCEjRsKMLNv5mYNH1vuGSLGWGZ/Aa4ouNmI9u9b5YzIXa2c17jEpTIJcnxNN80rEIDABIQqkGWArbIfdizPuW+oBn77tFjP9hMd+/9oS9x7HQgrplJiFA=
-Received: from MWHPR21CA0040.namprd21.prod.outlook.com (2603:10b6:300:129::26)
- by BN7PR07MB4835.namprd07.prod.outlook.com (2603:10b6:406:f0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Thu, 6 Aug
- 2020 11:34:48 +0000
-Received: from MW2NAM12FT039.eop-nam12.prod.protection.outlook.com
- (2603:10b6:300:129:cafe::14) by MWHPR21CA0040.outlook.office365.com
- (2603:10b6:300:129::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.0 via Frontend
- Transport; Thu, 6 Aug 2020 11:34:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
- smtp.mailfrom=cadence.com; samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=pass action=none header.from=cadence.com;
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
- client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
-Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
- MW2NAM12FT039.mail.protection.outlook.com (10.13.181.39) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.10 via Frontend Transport; Thu, 6 Aug 2020 11:34:46 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 076BYZWm083124
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 04:34:37 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Thu, 6 Aug 2020 13:34:35 +0200
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 6 Aug 2020 13:34:35 +0200
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 076BYZLq008204;
-        Thu, 6 Aug 2020 13:34:35 +0200
-Received: (from sjakhade@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 076BYZd7008203;
-        Thu, 6 Aug 2020 13:34:35 +0200
-From:   Swapnil Jakhade <sjakhade@cadence.com>
-To:     <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <Laurent.pinchart@ideasonboard.com>, <robh+dt@kernel.org>,
-        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
-        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
-        <nsekhar@ti.com>, <praneeth@ti.com>
-Subject: [PATCH v8 1/3] dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings
-Date:   Thu, 6 Aug 2020 13:34:30 +0200
-Message-ID: <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
-X-Mailer: git-send-email 2.4.5
-In-Reply-To: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bd2c18fb-e488-464f-70c8-08d839fcb8d4
-X-MS-TrafficTypeDiagnostic: BN7PR07MB4835:
-X-Microsoft-Antispam-PRVS: <BN7PR07MB4835FC8D026B146DE90B33EDC5480@BN7PR07MB4835.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VE7roeJIKnK+Jfd7Ulve5dZTvD8CxfqyBVlj/HnwVk62aPU6H9hcvuZGifUCPFU4ImF/3gyrcbi/AyYM0n4P97MDopg20ZKR5pzWJf7rwA1VwNogV6uTy6OnychY6ZfZrnzryQhrBc9TA6i3EqhQDSBPnb1GkE+EFjln3Py6NMjaSQ5DxXs4KJ7EdypN+qNX5KQpr91jdsLm/vDUw2EQZ37nA4mFsk06La3YoNxghnJw3JWnwNhTpSZ3nIXbQvu+GZljRRqpsqKJeLL92U8o0jgwpQW3zKkk4a9YyuNDUO6kBzeqtNBkrzRyUoAVgsHf06C7djiC8SNipfY2N7b1puZgTz+tBOcYiQSnwRlGg8sk3cYMRG/cEdDHUzbZoNpt++PZtlY2M69kxtW980Ol/3BqdOBlARjnJNvivqur+Iu4Riqv73IsVRkBi9Mlx4LF4Qnoc7vgbSQ3LO6n/nmYIvhFh+rGcU+9/hkrWC51fSjmjYLyAWcDeGMTgW12slciaYO2oL5sY5SHnYUKhMldEvvwIL0SznhuQCFvMrpGogyDJZyu86Yg9yulHqUW/zEUr7efnR6kCCASagt0+L/W6g==
-X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(36092001)(46966005)(8936002)(8676002)(7416002)(47076004)(4326008)(82740400003)(70586007)(478600001)(36756003)(186003)(81166007)(70206006)(26005)(83380400001)(82310400002)(356005)(86362001)(6666004)(36906005)(2616005)(336012)(426003)(2906002)(316002)(54906003)(42186006)(110136005)(5660300002)(921003)(21314003)(2101003)(83996005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:34:46.7797
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd2c18fb-e488-464f-70c8-08d839fcb8d4
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-AuthSource: MW2NAM12FT039.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR07MB4835
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
- phishscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
- bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 clxscore=1015
- adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008060083
+        Thu, 6 Aug 2020 12:50:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5FCC0086AF;
+        Thu,  6 Aug 2020 08:33:10 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q17so27722716pls.9;
+        Thu, 06 Aug 2020 08:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=TA50xo6IgAS3A5s1Mvlt9oYR8AHuJvVW3cujvShV5qo=;
+        b=ilW+et5q4do3rnqHcfn4dodyp8p68vxF5XtEr6dtTGJsgefedL8UWq/Qlo6mg7h0Bn
+         w9t2OaShgDXkK1V00XT1XfxNrjwmYMzLZjFAZrmzuDeBA3Qso3G1e1gGmzAzhBnEiZ7C
+         yqFU+1fx0IJC/n0S8QJ+kriZ+rqPJNchtbWuvjFs0DgxS+YwDDJvfQvf/M7FLCVYwQVy
+         QTUqoozqDWKjgo0OLVREsUejwa11NW3t5yQiuQa5zCPxswr5vfqky1jR38opkgbKad2a
+         RSmoCqPzvqHnwBwFeYjjf2WKJuHFobbRHoTY+b1DiCV1tDKzLfzTFPTTdq3f7gfT6Fkc
+         EQmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=TA50xo6IgAS3A5s1Mvlt9oYR8AHuJvVW3cujvShV5qo=;
+        b=FNR+nhfmzDmTzpOEwySjjZ18E3djLKIXMXgnbMRvswtGoBAaJVj6A6Z3Maiv0VspLj
+         HGa5KR32OVRKiBzefGFWPB1StTKwprfYCfgQe1WdHsXuq5RqCj6n53KqaappUoysoqIE
+         QJT1eN5ea0zcHgZseXQbQwgyxZYUqIa0DnBew9MhRdQKgelij3buQIvxoK35E9dxmudr
+         OdVxnjxnIdxdhZQoV3ib+Rtk2SK4UgEcWTKfPL++wI/4FXhVMtQYCF2TQ3hrGPah2Wwb
+         LgTP52dmQfR4l3gasSuCGf99VsllzvO/HQPqPO2dlhNHtr4lDHQds3jxTnLLViJh5wta
+         WjAg==
+X-Gm-Message-State: AOAM5333cAA/92O/vePkHiLiP2Xqa3Sdl9rucvymaI42r8Rw60rkFQG7
+        UeETo221CuialjtFwketwtQ=
+X-Google-Smtp-Source: ABdhPJwbyxgGfTHFyyc9OLeOYww6J9oVuKfCR/uomTBYf69xrCEOZb9n7VvxlE4wCUtF5IWu/Bpf0w==
+X-Received: by 2002:a17:90a:d56:: with SMTP id 22mr9080012pju.58.1596727990104;
+        Thu, 06 Aug 2020 08:33:10 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 2sm4783536pfv.27.2020.08.06.08.33.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Aug 2020 08:33:09 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/7] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
+Date:   Thu,  6 Aug 2020 08:33:01 -0700
+Message-Id: <20200806153308.204605-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuti Amonkar <yamonkar@cadence.com>
+The EC reports a variety of error codes. Most of those, with the exception
+of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
+to Linux error codes to report a more meaningful error to the caller to aid
+debugging.
 
-Document the bindings used for the Cadence MHDP DPI/DP bridge in
-yaml format.
+To prepare for this change, handle error codes other than -EPROTO for all
+callers of cros_ec_cmd_xfer_status(). Specifically, no longer assume that
+-EPROTO reflects an error from the EC and all other error codes reflect a
+transfer error.
 
-Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- .../bindings/display/bridge/cdns,mhdp.yaml    | 139 ++++++++++++++++++
- 1 file changed, 139 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+v2: Add patches 1/4 to 3/4 to handle callers of cros_ec_cmd_xfer_status()
+v3: Add patches 4/6 and 5/6 to handle additional callers of
+	cros_ec_cmd_xfer_status()
+    Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
+    Implement function to convert error codes
+v4: Add coments describing the functionality of cros_ec_num_pwms().
+    Add patch 7/7 to clean up cros_ec_num_pwms() after the new error code
+    support has been implemented.
+    Rebased series to v5.8.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-new file mode 100644
-index 000000000000..dabccefe0983
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-@@ -0,0 +1,139 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Cadence MHDP bridge
-+
-+maintainers:
-+  - Swapnil Jakhade <sjakhade@cadence.com>
-+  - Yuti Amonkar <yamonkar@cadence.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - cdns,mhdp8546
-+      - ti,j721e-mhdp8546
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description:
-+          Register block of mhdptx apb registers up to PHY mapped area (AUX_CONFIG_P).
-+          The AUX and PMA registers are not part of this range, they are instead
-+          included in the associated PHY.
-+      - description:
-+          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-+
-+  reg-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: mhdptx
-+      - const: j721e-intg
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      DP bridge clock, used by the IP to know how to translate a number of
-+      clock cycles into a time (which is used to comply with DP standard timings
-+      and delays).
-+
-+  phys:
-+    maxItems: 1
-+    description:
-+      phandle to the DisplayPort PHY.
-+
-+  ports:
-+    type: object
-+    description:
-+      Ports as described in Documentation/devicetree/bindings/graph.txt.
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description:
-+          Input port representing the DP bridge input.
-+
-+      port@1:
-+        type: object
-+        description:
-+          Output port representing the DP bridge output.
-+
-+    required:
-+      - port@0
-+      - port@1
-+      - '#address-cells'
-+      - '#size-cells'
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,j721e-mhdp8546
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+        reg-names:
-+          minItems: 2
-+    else:
-+      properties:
-+        reg:
-+          maxItems: 1
-+        reg-names:
-+          maxItems: 1
-+
-+required:
-+  - compatible
-+  - clocks
-+  - reg
-+  - reg-names
-+  - phys
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        mhdp: dp-bridge@f0fb000000 {
-+            compatible = "cdns,mhdp8546";
-+            reg = <0xf0 0xfb000000 0x0 0x1000000>;
-+            reg-names = "mhdptx";
-+            clocks = <&mhdp_clock>;
-+            phys = <&dp_phy>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    dp_bridge_input: endpoint {
-+                        remote-endpoint = <&xxx_dpi_output>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    dp_bridge_output: endpoint {
-+                        remote-endpoint = <&xxx_dp_connector_input>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+...
--- 
-2.26.1
+----------------------------------------------------------------
+Guenter Roeck (7):
+      iio: cros_ec: Accept -EOPNOTSUPP as 'not supported' error code
+      cros_ec_lightbar: Accept more error codes from cros_ec_cmd_xfer_status
+      platform/chrome: cros_ec_sysfs: Report range of error codes from EC
+      pwm: cros-ec: Accept more error codes from cros_ec_cmd_xfer_status
+      platform/input: cros_ec: Replace -ENOTSUPP with -ENOPROTOOPT
+      platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
+      pwm: cros-ec: Simplify EC error handling
 
+ .../iio/common/cros_ec_sensors/cros_ec_sensors.c   |  2 +-
+ drivers/input/keyboard/cros_ec_keyb.c              |  2 +-
+ drivers/platform/chrome/cros_ec_lightbar.c         | 10 ++---
+ drivers/platform/chrome/cros_ec_proto.c            | 52 +++++++++++++++++-----
+ drivers/platform/chrome/cros_ec_sysfs.c            | 24 ++++------
+ drivers/pwm/pwm-cros-ec.c                          | 37 +++++++--------
+ 6 files changed, 74 insertions(+), 53 deletions(-)
