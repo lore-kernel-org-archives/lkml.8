@@ -2,140 +2,160 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C400D20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 775C320855
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:37:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cwu9s6a6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2gEUSsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgHFUhl (ORCPT
+        id S1726429AbgHFUhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:37:41 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40068 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFUhl (ORCPT
+        Thu, 6 Aug 2020 16:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgHFUhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:37:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 076KbEDn073880;
-        Thu, 6 Aug 2020 15:37:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596746234;
-        bh=TyyBmEg+oDtkNBxbb3CoGvlfAFNE8UNFA/P2Wsl2LMM=;
-        h=From:To:Subject:Date:In-Reply-To:References;
-        b=cwu9s6a61+ZCK48D0Hx9xq5V0ZeOJqeUKFYNLXDfgVlB/D8zjafzgXC5SQb7PxKTi
-         NyLjWa3Jt3nMF2iytcKiTbWkPPXFSJt5rdnFuhvTG+ub85GgbCEBEDfN79hMWz99a/
-         zQ7cfOiXzX+Oh+smZzq0l3jtfgU7hkO3SU0eXxk8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 076KbEap046259
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Aug 2020 15:37:14 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
- 2020 15:37:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 6 Aug 2020 15:37:13 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076KbCei075449;
-        Thu, 6 Aug 2020 15:37:13 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <vinicius.gomes@intel.com>,
-        <stephen@networkplumber.org>, <kuznet@ms2.inr.ac.ru>
-Subject: [net-next iproute2 PATCH v4 1/2] iplink: hsr: add support for creating PRP device similar to HSR
-Date:   Thu, 6 Aug 2020 16:37:11 -0400
-Message-ID: <20200806203712.2712-2-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806203712.2712-1-m-karicheri2@ti.com>
-References: <20200806203712.2712-1-m-karicheri2@ti.com>
+        Thu, 6 Aug 2020 16:37:53 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF00FC061574;
+        Thu,  6 Aug 2020 13:37:53 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id p13so13120947ilh.4;
+        Thu, 06 Aug 2020 13:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2EUQnG2l6qLmqDOtR01uNvp1OtWUBbv6CVlH5VJ/upA=;
+        b=P2gEUSsMof7b6ViogZD3uCFVls5nvq48VK5f43Z803L0yET33De0snU8QwhvEUD6jZ
+         LNR6Phk87IzjP9m63CEx7i0Vl3JIgiNmaftlP8CcJ2kvQLrg5GVPVvyS44fGT8TA5nMw
+         493YKRu4aZMSl5RZgeLLi6VEbTdD9a7MHadyLFQUiaO2QQ/0jpZBcFs42EerbWyC1oM4
+         tlICyYpt6QpPHsQMAZwf7S+xt4FdEe7rwcPn+qXEVnJl6LNFZGmb/ZgSZmlTdmlhhb0z
+         KWgRelHdl2jgX985FY/rasAD/FKOYBbhlDiVlPKZxGxXOc7kZdj4y94amZkO0NrIehxN
+         925w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2EUQnG2l6qLmqDOtR01uNvp1OtWUBbv6CVlH5VJ/upA=;
+        b=H0kt9EtbQA1W8HjRrg1CyHwGWwc3+ujcuFyF9j6nO8Gu+DJS142LoqR5U22Nm2o6g1
+         n+nBTUIlgLig/Javw5u4P7t45p4w/jooxG6EL9mUHzcbKUQ3Ou3cmI4VP4JrI1xwVpkt
+         Mr4Ku57hEdXtZBL6ULfNgraQkwdvXV9wPKQNRP3yJM3yr6+i7loY38vfVa9iM/NnGxg7
+         M0pLMS+/9Yw7AX8OCDO+ttP0S9ETl+1OmKA/F3yGaMj8rhJg+R/oju7Wga3qDIxL5X5q
+         xNZLRbiUXDtMkHUAdcDE5ahdaI3KaSJVe30GGcJGuUFDCXgqJXz33MyM7oNBEra0oI/g
+         xE/Q==
+X-Gm-Message-State: AOAM530KJR4mtfzRHV1VShCIwuywfr7VHfH9qM/S4EPJHrqQKArxTLRg
+        5IL9xNEtm81gytPV/QiWv/c=
+X-Google-Smtp-Source: ABdhPJxduj7u+Yg2hpoz2CG1rr2Wdw7xb72k4gFDEdDT3fWpRLg8zaMww4XHzfoQBwbnVt67egcjsw==
+X-Received: by 2002:a92:d40f:: with SMTP id q15mr882407ilm.208.1596746272969;
+        Thu, 06 Aug 2020 13:37:52 -0700 (PDT)
+Received: from urieldev.c.googlers.com.com (243.199.238.35.bc.googleusercontent.com. [35.238.199.243])
+        by smtp.gmail.com with ESMTPSA id g15sm4198666ilb.37.2020.08.06.13.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 13:37:52 -0700 (PDT)
+From:   Uriel Guajardo <urielguajardojr@gmail.com>
+To:     brendanhiggins@google.com
+Cc:     urielguajardo@google.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kunit: added lockdep support
+Date:   Thu,  6 Aug 2020 20:37:37 +0000
+Message-Id: <20200806203737.3636830-1-urielguajardojr@gmail.com>
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enhances the iplink command to add a proto parameters to
-create PRP device/interface similar to HSR. Both protocols are
-quite similar and requires a pair of Ethernet interfaces. So re-use
-the existing HSR iplink command to create PRP device/interface as
-well. Use proto parameter to differentiate the two protocols.
+From: Uriel Guajardo <urielguajardo@google.com>
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+KUnit tests will now fail if lockdep detects an error during a test
+case.
+
+The idea comes from how lib/locking-selftest [1] checks for lock errors: we
+first if lock debugging is turned on. If not, an error must have
+occurred, so we fail the test and restart lockdep for the next test case.
+
+Like the locking selftests, we also fix possible preemption count
+corruption from lock bugs.
+
+Depends on kunit: support failure from dynamic analysis tools [2]
+
+[1] https://elixir.bootlin.com/linux/v5.7.12/source/lib/locking-selftest.c#L1137
+
+[2] https://lore.kernel.org/linux-kselftest/20200806174326.3577537-1-urielguajardojr@gmail.com/
+
+Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
 ---
- ip/iplink_hsr.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ lib/kunit/test.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/ip/iplink_hsr.c b/ip/iplink_hsr.c
-index 7d9167d4e6a3..6ea138a23cbc 100644
---- a/ip/iplink_hsr.c
-+++ b/ip/iplink_hsr.c
-@@ -25,7 +25,7 @@ static void print_usage(FILE *f)
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index d8189d827368..0838ececa005 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -11,6 +11,8 @@
+ #include <linux/kref.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched.h>
++#include <linux/lockdep.h>
++#include <linux/debug_locks.h>
+ 
+ #include "debugfs.h"
+ #include "string-stream.h"
+@@ -22,6 +24,26 @@ void kunit_fail_current_test(void)
+ 		kunit_set_failure(current->kunit_test);
+ }
+ 
++static inline void kunit_check_locking_bugs(struct kunit *test,
++					    unsigned long saved_preempt_count)
++{
++	preempt_count_set(saved_preempt_count);
++#ifdef CONFIG_TRACE_IRQFLAGS
++	if (softirq_count())
++		current->softirqs_enabled = 0;
++	else
++		current->softirqs_enabled = 1;
++#endif
++#if IS_ENABLED(CONFIG_LOCKDEP)
++	local_irq_disable();
++	if (!debug_locks) {
++		kunit_set_failure(test);
++		lockdep_reset();
++	}
++	local_irq_enable();
++#endif
++}
++
+ static void kunit_print_tap_version(void)
  {
- 	fprintf(f,
- 		"Usage:\tip link add name NAME type hsr slave1 SLAVE1-IF slave2 SLAVE2-IF\n"
--		"\t[ supervision ADDR-BYTE ] [version VERSION]\n"
-+		"\t[ supervision ADDR-BYTE ] [version VERSION] [proto PROTOCOL]\n"
- 		"\n"
- 		"NAME\n"
- 		"	name of new hsr device (e.g. hsr0)\n"
-@@ -35,7 +35,9 @@ static void print_usage(FILE *f)
- 		"	0-255; the last byte of the multicast address used for HSR supervision\n"
- 		"	frames (default = 0)\n"
- 		"VERSION\n"
--		"	0,1; the protocol version to be used. (default = 0)\n");
-+		"	0,1; the protocol version to be used. (default = 0)\n"
-+		"PROTOCOL\n"
-+		"	0 - HSR, 1 - PRP. (default = 0 - HSR)\n");
+ 	static bool kunit_has_printed_tap_version;
+@@ -289,6 +311,7 @@ static void kunit_try_run_case(void *data)
+ 	struct kunit *test = ctx->test;
+ 	struct kunit_suite *suite = ctx->suite;
+ 	struct kunit_case *test_case = ctx->test_case;
++	unsigned long saved_preempt_count = preempt_count();
+ 
+ 	current->kunit_test = test;
+ 
+@@ -298,7 +321,8 @@ static void kunit_try_run_case(void *data)
+ 	 * thread will resume control and handle any necessary clean up.
+ 	 */
+ 	kunit_run_case_internal(test, suite, test_case);
+-	/* This line may never be reached. */
++	/* These lines may never be reached. */
++	kunit_check_locking_bugs(test, saved_preempt_count);
+ 	kunit_run_case_cleanup(test, suite);
  }
  
- static void usage(void)
-@@ -49,6 +51,7 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
- 	int ifindex;
- 	unsigned char multicast_spec;
- 	unsigned char protocol_version;
-+	unsigned char protocol = HSR_PROTOCOL_HSR;
- 
- 	while (argc > 0) {
- 		if (matches(*argv, "supervision") == 0) {
-@@ -64,6 +67,13 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
- 				invarg("version is invalid", *argv);
- 			addattr_l(n, 1024, IFLA_HSR_VERSION,
- 				  &protocol_version, 1);
-+		} else if (matches(*argv, "proto") == 0) {
-+			NEXT_ARG();
-+			if (!(get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_HSR ||
-+			      get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_PRP))
-+				invarg("protocol is invalid", *argv);
-+			addattr_l(n, 1024, IFLA_HSR_PROTOCOL,
-+				  &protocol, 1);
- 		} else if (matches(*argv, "slave1") == 0) {
- 			NEXT_ARG();
- 			ifindex = ll_name_to_index(*argv);
-@@ -140,6 +150,11 @@ static void hsr_print_opt(struct link_util *lu, FILE *f, struct rtattr *tb[])
- 					 RTA_PAYLOAD(tb[IFLA_HSR_SUPERVISION_ADDR]),
- 					 ARPHRD_VOID,
- 					 b1, sizeof(b1)));
-+	if (tb[IFLA_HSR_PROTOCOL])
-+		print_int(PRINT_ANY,
-+			  "proto",
-+			  "proto %d ",
-+			  rta_getattr_u8(tb[IFLA_HSR_PROTOCOL]));
- }
- 
- static void hsr_print_help(struct link_util *lu, int argc, char **argv,
 -- 
-2.17.1
+2.28.0.236.gb10cc79966-goog
 
