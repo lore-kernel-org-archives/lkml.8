@@ -2,91 +2,78 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70270C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9D7221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596738806;
-	bh=0j/Gs+HBIfouG9/zhyHY47+RDgMJzkzUWkX/o6OMrro=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gQH4mbuGrrpyHHCvwFhW0ME5l0cqs0UvoFgRV7aRATWvMRlY+i7EcCoVJXfAeB1q6
-	 bz2ik80BP3DOrhC2ptLevBlmYP99lJOJPt7mSow1hJak9yjMmLWe8rvIEhmmIflm1D
-	 lb801jtOz6OAokUoG0p0Vv2uHgQEd7klp8uKfsOY=
+	by mail.kernel.org (Postfix) with ESMTP id 460AB2310F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgHFSdD (ORCPT
+        id S1729060AbgHFSde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:33:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbgHFSbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:31:12 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE27E221E3;
-        Thu,  6 Aug 2020 18:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738630;
-        bh=0j/Gs+HBIfouG9/zhyHY47+RDgMJzkzUWkX/o6OMrro=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I+OXd6pPB0yUX7nf+Xu+8HYNDCXGzahILClI6a/xnXVm2yFkVypzmMi0jgo6k4KB8
-         eyAC++GbawumtRkuQ5JAY0yk4r6DEPb8zZpgDKPLe5xbFORRxFXru59lgOabQCrufM
-         g1RnGbbbLaU6CieM3JvArku0QjxQwVa0+LXDrqtE=
-Date:   Thu, 6 Aug 2020 11:30:26 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Qingyu Li <ieatmuttonchuan@gmail.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfc: enforce CAP_NET_RAW for raw sockets When creating
- a raw AF_NFC socket, CAP_NET_RAW needs to be checked first.
-Message-ID: <20200806113026.64b7f755@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200806022808.GA17066@oppo>
-References: <20200806022808.GA17066@oppo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Aug 2020 14:33:34 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:6655 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728578AbgHFScL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:32:11 -0400
+X-IronPort-AV: E=Sophos;i="5.75,441,1589209200"; 
+   d="scan'208";a="53860054"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 07 Aug 2020 03:32:09 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 358CB400C0A8;
+        Fri,  7 Aug 2020 03:32:07 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 4/5] dt-bindings: pwm: renesas,tpu-pwm: Document r8a7742 support
+Date:   Thu,  6 Aug 2020 19:31:51 +0100
+Message-Id: <20200806183152.11809-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 10:28:08 +0800 Qingyu Li wrote:
+Document r8a7742 specific compatible strings. No driver change is
+needed as the fallback compatible string "renesas,tpu" activates the
+right code in the driver.
 
-Commit message is required. Perhaps shorten the subject and put more
-info here.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
-> ---
->  net/nfc/rawsock.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/nfc/rawsock.c b/net/nfc/rawsock.c
-> index ba5ffd3badd3..c1302b689a98 100644
-> --- a/net/nfc/rawsock.c
-> +++ b/net/nfc/rawsock.c
-> @@ -332,8 +332,11 @@ static int rawsock_create(struct net *net, struct socket *sock,
->  	if ((sock->type != SOCK_SEQPACKET) && (sock->type != SOCK_RAW))
->  		return -ESOCKTNOSUPPORT;
-> 
-> -	if (sock->type == SOCK_RAW)
-> +	if (sock->type == SOCK_RAW){
-> +		if (!capable(CAP_NET_RAW))
-> +			return -EPERM;
->  		sock->ops = &rawsock_raw_ops;
-> +	}
-
-please run checkpatch.pl --strict and fix the issues.
-
->  	else
->  		sock->ops = &rawsock_ops;
-> 
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
+index 4bf62a3d5bba..aa9a4570c906 100644
+--- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
+@@ -15,6 +15,7 @@ properties:
+       - enum:
+           - renesas,tpu-r8a73a4   # R-Mobile APE6
+           - renesas,tpu-r8a7740   # R-Mobile A1
++          - renesas,tpu-r8a7742   # RZ/G1H
+           - renesas,tpu-r8a7743   # RZ/G1M
+           - renesas,tpu-r8a7744   # RZ/G1N
+           - renesas,tpu-r8a7745   # RZ/G1E
+-- 
+2.17.1
 
