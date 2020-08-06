@@ -2,96 +2,121 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E81BE206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739828;
-	bh=cTDFY6e9XbsVg5M5M8qrth0ZUAqNLBrGztIVgptNGgo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ylCpmSTxtAhMb5PKxZwfRZZLRjhOoQIB1uWoHLXBTGNzYLvRPzTdH3lJIO/k7ie1I
-	 yAl+cns3xYS0gxs+rSm3KuJxRC8ciFa9rROVquAX/bsHNgbIqWtlnBdZvb1brGaMzj
-	 jv6QrclNf1mo0xaeTWf5r6Lx4Mo2Ro/S7SnE66E8=
+	by mail.kernel.org (Postfix) with ESMTP id C3407206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NMoTZ2qG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VvvJ3lQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgHFSu0 (ORCPT
+        id S1729580AbgHFSu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbgHFSuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:50:22 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08A0D206A2;
-        Thu,  6 Aug 2020 18:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596737641;
-        bh=cTDFY6e9XbsVg5M5M8qrth0ZUAqNLBrGztIVgptNGgo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Zco0Fv7OomTblCt+TSZIE7kmS4eZOhsPBYtALr7GSSmJ/F+cWPQ2NRbt9Tpmko0NC
-         UxR0BhR7NPP1nCdv2OndPM8SMyyu4j4LZsA4WCLN/8P3c+h5UR6kXSSZ6RaqpC0bSj
-         GCtnswe0Qen27QfRnSOFxIaDUXtVOiG2QXouYm/k=
-Date:   Thu, 6 Aug 2020 11:13:58 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, oss-drivers@netronome.com,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alex Elder <elder@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v2 0/2 net] bitfield.h cleanups
-Message-ID: <20200806111358.2b23887c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAKwvOd=YBL_igN-Z1V9bePdt9+GOqkKq-H4Wg8GBZvBsdOHeOw@mail.gmail.com>
-References: <20200708230402.1644819-1-ndesaulniers@google.com>
-        <CAKwvOdmXtFo8YoNd7pgBnTQEwTZw0nGx-LypDiFKRR_HzZm9aA@mail.gmail.com>
-        <CAKwvOdkGmgdh6-4VRUGkd1KRC-PgFcGwP5vKJvO9Oj3cB_Qh6Q@mail.gmail.com>
-        <20200720.163458.475401930020484350.davem@davemloft.net>
-        <CAKwvOdmU+Eh0BF+o4yqSBFRXkokLOzvy-Qni27DcXOSKv5KOtQ@mail.gmail.com>
-        <CAKwvOd=YBL_igN-Z1V9bePdt9+GOqkKq-H4Wg8GBZvBsdOHeOw@mail.gmail.com>
+        Thu, 6 Aug 2020 14:50:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59514 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHFSu7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:50:59 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596739855;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5jOLT7KjLh6KR3yDe2c8CCevF4wz5e+CIVgPqY2iFXs=;
+        b=NMoTZ2qGTnYTY5RybCmhNFvlH2w4I4wqw515nHmsI/tI8w8wQiFP4ab4zLbvFjKsdgXN7Z
+        MygJD4/gXv+1cZoTEUpMrzX9yJdp6AgARSEMwY4zFeP6FaiVZt3GbsELmk60znO6A7Mf58
+        QUnseDIHwxNikREi49J6IfHR48B46vIZ/t7jFCLkMy8/A+4GO6LHzmfZSNbaW0SY+ONo9j
+        R9ws3VnyP3TE4k6NIuPxoAkERyrLjkuNkZSp18QS0JOudmJldoiZbQUsEjSl4HEjc9D1fr
+        BLiTn/6FLcLXVVdbFUmQaF4INiSZtBPq7K3t4a7p1QDojUZ1Dte/npAFtbXblA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596739855;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5jOLT7KjLh6KR3yDe2c8CCevF4wz5e+CIVgPqY2iFXs=;
+        b=VvvJ3lQ19xcZiry0/mPfqDVRDMByaLviePUWBVgpYxg6+mP8KW5cbdeWEezZNcHqOq+9IB
+        0C73AlN4M9UafNAQ==
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
+In-Reply-To: <CACRpkdaOysS1-Y=3ghQ+1qbMTR8yi3bHg=_+gUOPo_EcmGmJiw@mail.gmail.com>
+References: <20200804091603.541-1-a.fatoum@pengutronix.de> <20200805061753.5o63zu4ionhgjab4@pengutronix.de> <871rkkhy7v.fsf@nanos.tec.linutronix.de> <CACRpkdaOysS1-Y=3ghQ+1qbMTR8yi3bHg=_+gUOPo_EcmGmJiw@mail.gmail.com>
+Date:   Thu, 06 Aug 2020 20:50:45 +0200
+Message-ID: <87r1sjham2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Aug 2020 10:44:30 -0700 Nick Desaulniers wrote:
-> Hi David,
-> I read through https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html#q-how-often-do-changes-from-these-trees-make-it-to-the-mainline-linus-tree
-> and noticed http://vger.kernel.org/~davem/net-next.html.  Since the
-> merge window just opened, it sounds like I'll need to wait 2 weeks for
-> it to close before resending? Is that correct? Based on:
-> 
-> > IMPORTANT: Do not send new net-next content to netdev during the period during which net-next tree is closed.  
-> 
-> Then based on the next section in the doc, it sounds like I was
-> missing which tree to put the patch in, in the subject? I believe
-> these patches should target net-next (not net) since they're not
-> addressing regressions from the most recent cycle.
-> 
-> Do I have all that right?
+Linus Walleij <linus.walleij@linaro.org> writes:
+> On Thu, Aug 6, 2020 at 12:20 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>> So the solution for this driver is either to make the dispatch handler
+>> threaded or use the hard interrupt variant of dispatching the
+>> demultiplexed GPIO interrupts.
+>
+> The struct gpio_irq_chip .threaded bool that the patch
+> sets just instructs the gpio core to issue
+> irq_set_nested_thread(irq, 1) on the child IRQ.
+>
+> This is a driver of type "struct siox_driver" handling the
+> IRQ through the special .get_data callback supplied in the
+> driver struct and it calls handle_nested_irq(irq) so with
+> this fix it percolated up to the parent as intended.
+>
+> So far so good. So I think the patch should be applied.
+>
+> But what is behind this .get_data() callback for siox drivers?
+>
+> The siox driver framework in drivers/siox dispatches calls
+> to .get_data() from a polling thread which is just some ordinary
+> kthread. It looks like this because the SIOX (I think) needs
+> to do polled I/O. (drivers/siox/siox-core.c)
+>
+> So this is a thread but it is not an irq thread from the irq core,
+> however it is treated like such by the driver, and in a way what
+> happens is events, just polled by a thread.
 
-Nick, please repost the first patch only (to:dave, cc:netdev,...,
-subject "[PATCH net resend] ...") and I'm pretty sure Dave will
-re-consider it, it's a build fix after all. In any case reviewing 
-a patch with a short explanation under the commit message on why it's
-resend is easier [1] for a maintainer to process than digging through
-conversations.
+As Uwe just explained.
 
-[1] may be related to the use of patchwork on netdev
+> So when we call handle_nested_irq() ... we are not really
+> calling that from an irq handler.
+>
+> I don't know if the IRQ core even sees a difference between which
+> thread it gets interfaced with. I suppose it does? :/
+
+handle_nested_irq() does not care. It cares about thread context,
+external reentrancy protection for the same nested interrupt and that
+the nested interrupt has a thread handler.
+
+The latter is what goes belly up because w/o that threaded bit set the
+GPIO core fails to set nested thread. So if a consumer requests an
+interrupt with request_any_context_irq() then that fails to select
+thread mode which means the threaded handler is not set causing
+handle_nested_irq() to fail.
+
+The polling kthread is a slight but clever abomination, but it just
+works because it provides thread context and cannot run concurrently.
+
+So Ahmad's patch is correct, just the changelog needs polishing.
+
+Thanks,
+
+        tglx
