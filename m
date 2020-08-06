@@ -2,421 +2,169 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063DEC43465
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9633BC43458
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36C3A22D06
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B9B22D04
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ctIk/0x6"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JKMC/oac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgHFJJN (ORCPT
+        id S1728932AbgHFI6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:09:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36153 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727768AbgHFJJF (ORCPT
+        Thu, 6 Aug 2020 04:58:05 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:52404 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgHFI6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:09:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596704940;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9yJ7XfkuAxUj/j7kgX33C1Z1dZHcUKpge/t8PlTR2PI=;
-        b=ctIk/0x64dpoimTsJ9a780icPSrbi9rKvM/SjrtyWELFwFRRqJ0yiWw2QfH95RAkJy5Xxb
-        7KaQ4b0b30v6frfzDvOfK+YIxijq+lwgBqgxr4rkjGiUBsff/JptHSNEy9nqrmgFVSh4g+
-        XlKphOq5xWpe34VE643FudKuvJprf4E=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-m__9f1GFNP6pycv5Hdsm3Q-1; Thu, 06 Aug 2020 05:08:57 -0400
-X-MC-Unique: m__9f1GFNP6pycv5Hdsm3Q-1
-Received: by mail-ed1-f70.google.com with SMTP id b39so4845218edf.15
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:08:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=9yJ7XfkuAxUj/j7kgX33C1Z1dZHcUKpge/t8PlTR2PI=;
-        b=qnH4nwrwNv8nTKR7H+8/gzEEryOyL9aOtEIi84Pf0h3xTYFf9qf+zl7vo3zGKXgXrL
-         i/JaVsI8nFSkY5HT7eVL5sb40NYj+P6VAKTXnvGTz+t3Ais8clCsT2ktVfIEc9/hfinv
-         cBnPv85qOLboOtV0SSY3IwKmkXyHR7NtZA59AGh8z5HtVhPklQxWQpAVgE0JFYYNYCeB
-         xXu1wED6jXHTxeBSQz2SmKipfL9duP/rR2jASGub4uxh6rX0lGRPTEG7SsLNPUQvK+ko
-         w8CKXkeCHC3J4eyB01SEswmr+CwbL4fYLbJ5N0AWKRhKBT/H7Y7JSo0pjUdNhRuJmQf6
-         0PDA==
-X-Gm-Message-State: AOAM533a6Dtbypz+hs3wSZJbMcOt8KScIMr+VSaOdat7QQAyYaKaY84D
-        Svxj68XsQYEyQYeviJRRsoT6FS0M/T7P34zGl17KowLb+03FmSEQ0EDmmHI4LuEQMJY/9fQGrul
-        z94kDzdptQBpByfYuzOIz0icD
-X-Received: by 2002:a50:bf07:: with SMTP id f7mr3227272edk.356.1596704935677;
-        Thu, 06 Aug 2020 02:08:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxYg63KM8Q1SiSQH0hGWqiHK/Z/18SI01LpSJdiY8Rj4MhCod/17viTWMcS+jxy/sz/658YWA==
-X-Received: by 2002:a50:bf07:: with SMTP id f7mr3227235edk.356.1596704935300;
-        Thu, 06 Aug 2020 02:08:55 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id i26sm3004115edv.70.2020.08.06.02.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 02:08:54 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>, Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
-In-Reply-To: <20200805151843.yii4ufv7ubc7hqb5@kamzik.brq.redhat.com>
-References: <20200728143741.2718593-1-vkuznets@redhat.com> <20200728143741.2718593-3-vkuznets@redhat.com> <20200805151843.yii4ufv7ubc7hqb5@kamzik.brq.redhat.com>
-Date:   Thu, 06 Aug 2020 11:08:53 +0200
-Message-ID: <878sesp2e2.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 6 Aug 2020 04:58:04 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200806085802epoutp012487025b4012079b171d0e43f873f422~oohW_fMWV1316913169epoutp017
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:58:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200806085802epoutp012487025b4012079b171d0e43f873f422~oohW_fMWV1316913169epoutp017
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596704282;
+        bh=xzBtohQMolPYLu+HF6qIVaI9vjI8Vh5DyEiki5Cz6gk=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=JKMC/oacLjCArCL2K6l+rKcgQjI8oyoqBMhLtqntrvkEQM7+MGwrhhNKBj4G4Awzg
+         eF40AduBDvtC/zZQlH/RGwWE/qZBBQrgW+NTcOzA0bEBRP61gifdu46F1r4YZpzL4i
+         c5TA5sy+33Gu8ROq695/NM2qQVIKLUYt3k/G8ZCU=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200806085801epcas1p2e0877043b40df7bb3c8e683cc07f4c5c~oohWluq2N2479624796epcas1p2L;
+        Thu,  6 Aug 2020 08:58:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+Date:   Thu, 06 Aug 2020 16:32:57 +0900
+X-CMS-MailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
+References: <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Jones <drjones@redhat.com> writes:
+Changelog:
 
-> On Tue, Jul 28, 2020 at 04:37:40PM +0200, Vitaly Kuznetsov wrote:
->> PCIe config space can (depending on the configuration) be quite big but
->> usually is sparsely populated. Guest may scan it by accessing individual
->> device's page which, when device is missing, is supposed to have 'pci
->> hole' semantics: reads return '0xff' and writes get discarded. Compared
->> to the already existing KVM_MEM_READONLY, VMM doesn't need to allocate
->> real memory and stuff it with '0xff'.
->> 
->> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  Documentation/virt/kvm/api.rst  | 19 +++++++++++-----
->>  arch/x86/include/uapi/asm/kvm.h |  1 +
->>  arch/x86/kvm/mmu/mmu.c          |  5 ++++-
->>  arch/x86/kvm/mmu/paging_tmpl.h  |  3 +++
->>  arch/x86/kvm/x86.c              | 10 ++++++---
->>  include/linux/kvm_host.h        |  7 +++++-
->>  include/uapi/linux/kvm.h        |  3 ++-
->>  virt/kvm/kvm_main.c             | 39 +++++++++++++++++++++++++++------
->>  8 files changed, 68 insertions(+), 19 deletions(-)
->> 
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index 644e5326aa50..fbbf533a331b 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -1241,6 +1241,7 @@ yet and must be cleared on entry.
->>    /* for kvm_memory_region::flags */
->>    #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
->>    #define KVM_MEM_READONLY	(1UL << 1)
->> +  #define KVM_MEM_PCI_HOLE		(1UL << 2)
->>  
->>  This ioctl allows the user to create, modify or delete a guest physical
->>  memory slot.  Bits 0-15 of "slot" specify the slot id and this value
->> @@ -1268,12 +1269,18 @@ It is recommended that the lower 21 bits of guest_phys_addr and userspace_addr
->>  be identical.  This allows large pages in the guest to be backed by large
->>  pages in the host.
->>  
->> -The flags field supports two flags: KVM_MEM_LOG_DIRTY_PAGES and
->> -KVM_MEM_READONLY.  The former can be set to instruct KVM to keep track of
->> -writes to memory within the slot.  See KVM_GET_DIRTY_LOG ioctl to know how to
->> -use it.  The latter can be set, if KVM_CAP_READONLY_MEM capability allows it,
->> -to make a new slot read-only.  In this case, writes to this memory will be
->> -posted to userspace as KVM_EXIT_MMIO exits.
->> +The flags field supports the following flags: KVM_MEM_LOG_DIRTY_PAGES,
->> +KVM_MEM_READONLY, KVM_MEM_READONLY:
->
-> The second KVM_MEM_READONLY should be KVM_MEM_PCI_HOLE. Or just drop the
-> list here, as they're listed below anyway
->
->> +- KVM_MEM_LOG_DIRTY_PAGES can be set to instruct KVM to keep track of writes to
->> +  memory within the slot.  See KVM_GET_DIRTY_LOG ioctl to know how to use it.
->> +- KVM_MEM_READONLY can be set, if KVM_CAP_READONLY_MEM capability allows it,
->> +  to make a new slot read-only.  In this case, writes to this memory will be
->> +  posted to userspace as KVM_EXIT_MMIO exits.
->> +- KVM_MEM_PCI_HOLE can be set, if KVM_CAP_PCI_HOLE_MEM capability allows it,
->> +  to create a new virtual read-only slot which will always return '0xff' when
->> +  guest reads from it. 'userspace_addr' has to be set to NULL. This flag is
->> +  mutually exclusive with KVM_MEM_LOG_DIRTY_PAGES/KVM_MEM_READONLY. All writes
->> +  to this memory will be posted to userspace as KVM_EXIT_MMIO exits.
->
-> I see 2/3's of this text is copy+pasted from above, but how about this
->
->  - KVM_MEM_LOG_DIRTY_PAGES: log writes.  Use KVM_GET_DIRTY_LOG to retreive
->    the log.
->  - KVM_MEM_READONLY: exit to userspace with KVM_EXIT_MMIO on writes.  Only
->    available when KVM_CAP_READONLY_MEM is present.
->  - KVM_MEM_PCI_HOLE: always return 0xff on reads, exit to userspace with
->    KVM_EXIT_MMIO on writes.  Only available when KVM_CAP_PCI_HOLE_MEM is
->    present.  When setting the memory region 'userspace_addr' must be NULL.
->    This flag is mutually exclusive with KVM_MEM_LOG_DIRTY_PAGES and with
->    KVM_MEM_READONLY.
+v7 -> v8
+Remove wrongly added tags.
 
-Sound better, thanks! Will add in v2.
+v6 -> v7
+1. Remove UFS feature layer.
+2. Cleanup for sparse error.
 
->
->>  
->>  When the KVM_CAP_SYNC_MMU capability is available, changes in the backing of
->>  the memory region are automatically reflected into the guest.  For example, an
->> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
->> index 17c5a038f42d..cf80a26d74f5 100644
->> --- a/arch/x86/include/uapi/asm/kvm.h
->> +++ b/arch/x86/include/uapi/asm/kvm.h
->> @@ -48,6 +48,7 @@
->>  #define __KVM_HAVE_XSAVE
->>  #define __KVM_HAVE_XCRS
->>  #define __KVM_HAVE_READONLY_MEM
->> +#define __KVM_HAVE_PCI_HOLE_MEM
->>  
->>  /* Architectural interrupt line count. */
->>  #define KVM_NR_INTERRUPTS 256
->> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
->> index 8597e8102636..c2e3a1deafdd 100644
->> --- a/arch/x86/kvm/mmu/mmu.c
->> +++ b/arch/x86/kvm/mmu/mmu.c
->> @@ -3253,7 +3253,7 @@ static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
->>  		return PG_LEVEL_4K;
->>  
->>  	slot = gfn_to_memslot_dirty_bitmap(vcpu, gfn, true);
->> -	if (!slot)
->> +	if (!slot || (slot->flags & KVM_MEM_PCI_HOLE))
->>  		return PG_LEVEL_4K;
->>  
->>  	max_level = min(max_level, max_page_level);
->> @@ -4104,6 +4104,9 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
->>  
->>  	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
->>  
->> +	if (!write && slot && (slot->flags & KVM_MEM_PCI_HOLE))
->> +		return RET_PF_EMULATE;
->> +
->>  	if (try_async_pf(vcpu, slot, prefault, gfn, gpa, &pfn, write,
->>  			 &map_writable))
->>  		return RET_PF_RETRY;
->> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
->> index 5c6a895f67c3..27abd69e69f6 100644
->> --- a/arch/x86/kvm/mmu/paging_tmpl.h
->> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
->> @@ -836,6 +836,9 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
->>  
->>  	slot = kvm_vcpu_gfn_to_memslot(vcpu, walker.gfn);
->>  
->> +	if (!write_fault && slot && (slot->flags & KVM_MEM_PCI_HOLE))
->> +		return RET_PF_EMULATE;
->> +
->>  	if (try_async_pf(vcpu, slot, prefault, walker.gfn, addr, &pfn,
->>  			 write_fault, &map_writable))
->>  		return RET_PF_RETRY;
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 95ef62922869..dc312b8bfa05 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -3515,6 +3515,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->>  	case KVM_CAP_EXCEPTION_PAYLOAD:
->>  	case KVM_CAP_SET_GUEST_DEBUG:
->>  	case KVM_CAP_LAST_CPU:
->> +	case KVM_CAP_PCI_HOLE_MEM:
->>  		r = 1;
->>  		break;
->>  	case KVM_CAP_SYNC_REGS:
->> @@ -10115,9 +10116,11 @@ static int kvm_alloc_memslot_metadata(struct kvm_memory_slot *slot,
->>  		ugfn = slot->userspace_addr >> PAGE_SHIFT;
->>  		/*
->>  		 * If the gfn and userspace address are not aligned wrt each
->> -		 * other, disable large page support for this slot.
->> +		 * other, disable large page support for this slot. Also,
->> +		 * disable large page support for KVM_MEM_PCI_HOLE slots.
->>  		 */
->> -		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1)) {
->> +		if (slot->flags & KVM_MEM_PCI_HOLE || ((slot->base_gfn ^ ugfn) &
->
-> Please add () around the first expression
->
+v5 -> v6
+Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
 
-Ack
+v4 -> v5
+Delete unused macro define.
 
->> +				      (KVM_PAGES_PER_HPAGE(level) - 1))) {
->>  			unsigned long j;
->>  
->>  			for (j = 0; j < lpages; ++j)
->> @@ -10179,7 +10182,8 @@ static void kvm_mmu_slot_apply_flags(struct kvm *kvm,
->>  	 * Nothing to do for RO slots or CREATE/MOVE/DELETE of a slot.
->>  	 * See comments below.
->>  	 */
->> -	if ((change != KVM_MR_FLAGS_ONLY) || (new->flags & KVM_MEM_READONLY))
->> +	if ((change != KVM_MR_FLAGS_ONLY) || (new->flags & KVM_MEM_READONLY) ||
->> +	    (new->flags & KVM_MEM_PCI_HOLE))
->
-> How about
->
->  if ((change != KVM_MR_FLAGS_ONLY) ||
->      (new->flags & (KVM_MEM_READONLY|KVM_MEM_PCI_HOLE)))
->
+v3 -> v4
+1. Cleanup.
 
-Ack
+v2 -> v3
+1. Add checking input module parameter value.
+2. Change base commit from 5.8/scsi-queue to 5.9/scsi-queue.
+3. Cleanup for unused variables and label.
 
->>  		return;
->>  
->>  	/*
->> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
->> index 989afcbe642f..63c2d93ef172 100644
->> --- a/include/linux/kvm_host.h
->> +++ b/include/linux/kvm_host.h
->> @@ -1081,7 +1081,12 @@ __gfn_to_memslot(struct kvm_memslots *slots, gfn_t gfn)
->>  static inline unsigned long
->>  __gfn_to_hva_memslot(struct kvm_memory_slot *slot, gfn_t gfn)
->>  {
->> -	return slot->userspace_addr + (gfn - slot->base_gfn) * PAGE_SIZE;
->> +	if (likely(!(slot->flags & KVM_MEM_PCI_HOLE))) {
->> +		return slot->userspace_addr +
->> +			(gfn - slot->base_gfn) * PAGE_SIZE;
->> +	} else {
->> +		BUG();
->
-> Debug code you forgot to remove? I see below you've modified
-> __gfn_to_hva_many() to return KVM_HVA_ERR_BAD already when
-> given a PCI hole slot. I think that's the only check we should add.
+v1 -> v2
+1. Change the full boilerplate text to SPDX style.
+2. Adopt dynamic allocation for sub-region data structure.
+3. Cleanup.
 
-No, this was intentional. We have at least two users of
-__gfn_to_hva_memslot() today and in case we ever reach here with a
-KVM_MEM_PCI_HOLE slot we're doomed anyway but it would be much easier to
-debug the immediate BUG() than an invalid pointer access some time
-later.
+NAND flash memory-based storage devices use Flash Translation Layer (FTL)
+to translate logical addresses of I/O requests to corresponding flash
+memory addresses. Mobile storage devices typically have RAM with
+constrained size, thus lack in memory to keep the whole mapping table.
+Therefore, mapping tables are partially retrieved from NAND flash on
+demand, causing random-read performance degradation.
 
-Anyway, I don't really feel strong and I'm fine with dropping the
-check. Alternatively, I can suggest we add
+To improve random read performance, JESD220-3 (HPB v1.0) proposes HPB
+(Host Performance Booster) which uses host system memory as a cache for the
+FTL mapping table. By using HPB, FTL data can be read from host memory
+faster than from NAND flash memory. 
 
-BUG_ON(!slot->userspace_addr);
+The current version only supports the DCM (device control mode).
+This patch consists of 3 parts to support HPB feature.
 
-to the beginning of __gfn_to_hva_memslot() intead.
+1) HPB probe and initialization process
+2) READ -> HPB READ using cached map information
+3) L2P (logical to physical) map management
 
->
->> +	}
->>  }
->>  
->>  static inline int memslot_id(struct kvm *kvm, gfn_t gfn)
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index 2c73dcfb3dbb..59d631cbb71d 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -109,6 +109,7 @@ struct kvm_userspace_memory_region {
->>   */
->>  #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
->>  #define KVM_MEM_READONLY	(1UL << 1)
->> +#define KVM_MEM_PCI_HOLE		(1UL << 2)
->>  
->>  /* for KVM_IRQ_LINE */
->>  struct kvm_irq_level {
->> @@ -1034,7 +1035,7 @@ struct kvm_ppc_resize_hpt {
->>  #define KVM_CAP_ASYNC_PF_INT 183
->>  #define KVM_CAP_LAST_CPU 184
->>  #define KVM_CAP_SMALLER_MAXPHYADDR 185
->> -
->> +#define KVM_CAP_PCI_HOLE_MEM 186
->>  
->>  #ifdef KVM_CAP_IRQ_ROUTING
->>  
->> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->> index 2c2c0254c2d8..3f69ae711021 100644
->> --- a/virt/kvm/kvm_main.c
->> +++ b/virt/kvm/kvm_main.c
->> @@ -1107,6 +1107,10 @@ static int check_memory_region_flags(const struct kvm_userspace_memory_region *m
->>  	valid_flags |= KVM_MEM_READONLY;
->>  #endif
->>  
->> +#ifdef __KVM_HAVE_PCI_HOLE_MEM
->> +	valid_flags |= KVM_MEM_PCI_HOLE;
->> +#endif
->> +
->>  	if (mem->flags & ~valid_flags)
->>  		return -EINVAL;
->>  
->> @@ -1284,11 +1288,26 @@ int __kvm_set_memory_region(struct kvm *kvm,
->>  		return -EINVAL;
->>  	if (mem->guest_phys_addr & (PAGE_SIZE - 1))
->>  		return -EINVAL;
->> -	/* We can read the guest memory with __xxx_user() later on. */
->> -	if ((mem->userspace_addr & (PAGE_SIZE - 1)) ||
->> -	     !access_ok((void __user *)(unsigned long)mem->userspace_addr,
->> -			mem->memory_size))
->> +
->> +	/*
->> +	 * KVM_MEM_PCI_HOLE is mutually exclusive with KVM_MEM_READONLY/
->> +	 * KVM_MEM_LOG_DIRTY_PAGES.
->> +	 */
->> +	if ((mem->flags & KVM_MEM_PCI_HOLE) &&
->> +	    (mem->flags & (KVM_MEM_READONLY | KVM_MEM_LOG_DIRTY_PAGES)))
->>  		return -EINVAL;
->> +
->> +	if (!(mem->flags & KVM_MEM_PCI_HOLE)) {
->> +		/* We can read the guest memory with __xxx_user() later on. */
->> +		if ((mem->userspace_addr & (PAGE_SIZE - 1)) ||
->> +		    !access_ok((void __user *)(unsigned long)mem->userspace_addr,
->> +			       mem->memory_size))
->> +			return -EINVAL;
->> +	} else {
->> +		if (mem->userspace_addr)
->> +			return -EINVAL;
->> +	}
->> +
->>  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_MEM_SLOTS_NUM)
->>  		return -EINVAL;
->>  	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
->> @@ -1328,7 +1347,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
->>  	} else { /* Modify an existing slot. */
->>  		if ((new.userspace_addr != old.userspace_addr) ||
->>  		    (new.npages != old.npages) ||
->> -		    ((new.flags ^ old.flags) & KVM_MEM_READONLY))
->> +		    ((new.flags ^ old.flags) & KVM_MEM_READONLY) ||
->> +		    ((new.flags ^ old.flags) & KVM_MEM_PCI_HOLE))
->>  			return -EINVAL;
->>  
->>  		if (new.base_gfn != old.base_gfn)
->> @@ -1715,13 +1735,13 @@ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
->>  
->>  static bool memslot_is_readonly(struct kvm_memory_slot *slot)
->>  {
->> -	return slot->flags & KVM_MEM_READONLY;
->> +	return slot->flags & (KVM_MEM_READONLY | KVM_MEM_PCI_HOLE);
->>  }
->>  
->>  static unsigned long __gfn_to_hva_many(struct kvm_memory_slot *slot, gfn_t gfn,
->>  				       gfn_t *nr_pages, bool write)
->>  {
->> -	if (!slot || slot->flags & KVM_MEMSLOT_INVALID)
->> +	if (!slot || (slot->flags & (KVM_MEMSLOT_INVALID | KVM_MEM_PCI_HOLE)))
->>  		return KVM_HVA_ERR_BAD;
->>  
->>  	if (memslot_is_readonly(slot) && write)
->> @@ -2318,6 +2338,11 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
->>  	int r;
->>  	unsigned long addr;
->>  
->> +	if (unlikely(slot && (slot->flags & KVM_MEM_PCI_HOLE))) {
->> +		memset(data, 0xff, len);
->> +		return 0;
->> +	}
->> +
->>  	addr = gfn_to_hva_memslot_prot(slot, gfn, NULL);
->>  	if (kvm_is_error_hva(addr))
->>  		return -EFAULT;
->> -- 
->> 2.25.4
->>
->
-> I didn't really review this patch, as it's touching lots of x86 mm
-> functions that I didn't want to delve into, but I took a quick look
-> since I was curious about the feature.
+In the HPB probe and init process, the device information of the UFS is
+queried. After checking supported features, the data structure for the HPB
+is initialized according to the device information.
 
-x86 part is really negligible, I think it would be very easy to expand
-the scope to other arches if needed.
+A read I/O in the active sub-region where the map is cached is changed to
+HPB READ by the HPB.
 
-Thanks!
+The HPB manages the L2P map using information received from the
+device. For active sub-region, the HPB caches through ufshpb_map
+request. For the in-active region, the HPB discards the L2P map.
+When a write I/O occurs in an active sub-region area, associated dirty
+bitmap checked as dirty for preventing stale read.
 
--- 
-Vitaly
+HPB is shown to have a performance improvement of 58 - 67% for random read
+workload. [1]
 
+This series patches are based on the 5.9/scsi-queue branch.
+
+[1]:
+https://www.usenix.org/conference/hotstorage17/program/presentation/jeong
+
+Daejun park (4):
+ scsi: ufs: Add UFS feature related parameter
+ scsi: ufs: Introduce HPB feature
+ scsi: ufs: L2P map management for HPB read
+ scsi: ufs: Prepare HPB read for cached sub-region
+ 
+ drivers/scsi/ufs/Kconfig  |   18 +
+ drivers/scsi/ufs/Makefile |    1 +
+ drivers/scsi/ufs/ufs.h    |   12 +
+ drivers/scsi/ufs/ufshcd.c |   42 +
+ drivers/scsi/ufs/ufshcd.h |    9 +
+ drivers/scsi/ufs/ufshpb.c | 1926 ++++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshpb.h |  241 +++++
+ 7 files changed, 2249 insertions(+)
+ created mode 100644 drivers/scsi/ufs/ufshpb.c
+ created mode 100644 drivers/scsi/ufs/ufshpb.h
