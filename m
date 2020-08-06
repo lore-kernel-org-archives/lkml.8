@@ -2,102 +2,78 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A572C4363A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94787C3527F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7519722CAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8139C22CAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="a3YFdVFv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LOGJ0PUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgHFGiF (ORCPT
+        id S1728314AbgHFGsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:38:05 -0400
-Received: from m12-15.163.com ([220.181.12.15]:33391 "EHLO m12-15.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgHFGiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 02:38:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=PtRFGMacX+QscZqfbZ
-        +Lu5FxPAgj+Rd4K44h0HnDPoQ=; b=a3YFdVFvhVRmHICzbfsIWhBZQD/rgvhTWF
-        QqabZ3we7Z8X5pN69cI6TvMH1VIjmZR24IqQUE1PQZ6UUsGIgQVv/D8llXC6y/zg
-        PcYOV6m9LG0jEZU2WJ5hxBgFM89l2A2GItkWczwvO75skBqUglVeD0sJvnjbohyj
-        fEJhsVyNM=
-Received: from localhost.localdomain (unknown [58.33.126.62])
-        by smtp11 (Coremail) with SMTP id D8CowADnbcp1oStf0rT5EQ--.55997S2;
-        Thu, 06 Aug 2020 14:21:45 +0800 (CST)
-From:   Grant Feng <von81@163.com>
-To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low pulse when startup
-Date:   Thu,  6 Aug 2020 14:21:29 +0800
-Message-Id: <20200806062130.25187-1-von81@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: D8CowADnbcp1oStf0rT5EQ--.55997S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AF17try8JrWDGr18ur48WFg_yoW8GF4UpF
-        1DCFyrZFW3J3y2g3WfZFW7u345ta18KrZrJrWxXa4Sv3WkK3Wvga4ktFnIvF13XFWxuay5
-        ZanxtFW8Gr4vyw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j73kZUUUUU=
-X-Originating-IP: [58.33.126.62]
-X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiRBp4OlSIgamPWgAAs9
+        Thu, 6 Aug 2020 02:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbgHFGsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 02:48:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B84CDC061574;
+        Wed,  5 Aug 2020 23:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0ETtt3bGMW4XUze5AkKh67V3N6Iw1g4CzmBpAFLh8dA=; b=LOGJ0PUyOjZnOZ6qc8Gbcev0hM
+        nGf4lIqxQMzNZJSOHwUvWg1h8K8UgxSgcVRfGOxT4q6ry9ij9JdSqbLtCvjxKlLZ63dWBKIE/0dMh
+        gbOcqmzPuSeU8P/Vv2nPxzZ6h6s4mSIAMHrYHJsZWLaQoSE1W4p1F2MOmyo/P7aO9Cp9bPWhzHYgs
+        QvFsEeXdQoGtxe0X8ZEsVuU5dIlEArBlUzMBV+COpY6H+BsBvce4wOSV3BgoozGc3vqbtZFEgaGbB
+        OuEVL3rH0Asa2Y9fgK9dnmTDWiYc11Dbsaq9pbdQWiweknpTqAY/eZI7FrIXSSd1R2HRgezDNBNdr
+        qq0MBRaQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3ZhP-0002MU-JT; Thu, 06 Aug 2020 06:48:23 +0000
+Date:   Thu, 6 Aug 2020 07:48:23 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     peterz@infradead.org
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        NeilBrown <neilb@suse.de>, Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Minor RST rant
+Message-ID: <20200806064823.GA7292@infradead.org>
+References: <20200724132200.51fd2065@oasis.local.home>
+ <20200724113325.44923f75@lwn.net>
+ <20200724144234.3227b501@oasis.local.home>
+ <877dusv5lc.fsf@notabene.neil.brown.name>
+ <20200729124445.GB2638@hirez.programming.kicks-ass.net>
+ <1e60ff85-4965-92cb-e50b-8ea9ccf6788e@oracle.com>
+ <20200805151230.GT2674@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805151230.GT2674@hirez.programming.kicks-ass.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-generate a 5ms low pulse on sdb pin when startup, then the chip
-becomes more stable in the complex EM environment.
+On Wed, Aug 05, 2020 at 05:12:30PM +0200, peterz@infradead.org wrote:
+> On Wed, Aug 05, 2020 at 04:49:50PM +0200, Vegard Nossum wrote:
+> > FWIW, I *really* like how the extra markup renders in a browser, and I
+> > don't think I'm the only one.
+> 
+> The thing is, I write code in a text editor, not a browser. When a
+> header file says: read Documentation/foo I do 'gf' and that file gets
+> opened in a buffer.
+> 
+> Needing a browser is a fail.
 
-Signed-off-by: Grant Feng <von81@163.com>
----
- drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
-index ca6634b8683c..b4f70002cec9 100644
---- a/drivers/leds/leds-is31fl319x.c
-+++ b/drivers/leds/leds-is31fl319x.c
-@@ -16,6 +16,8 @@
- #include <linux/of_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- 
- /* register numbers */
- #define IS31FL319X_SHUTDOWN		0x00
-@@ -61,6 +63,7 @@
- struct is31fl319x_chip {
- 	const struct is31fl319x_chipdef *cdef;
- 	struct i2c_client               *client;
-+	struct gpio_desc		*sdb_pin;
- 	struct regmap                   *regmap;
- 	struct mutex                    lock;
- 	u32                             audio_gain_db;
-@@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
- 		is31->audio_gain_db = min(is31->audio_gain_db,
- 					  IS31FL319X_AUDIO_GAIN_DB_MAX);
- 
-+	is31->sdb_pin = gpiod_get(dev, "sdb", GPIOD_ASIS);
-+	if (IS_ERR(is31->sdb_pin)) {
-+		dev_warn(dev, "failed to get gpio_sdb, try default\r\n");
-+	} else {
-+		gpiod_direction_output(is31->sdb_pin, 0);
-+		mdelay(5);
-+		gpiod_direction_output(is31->sdb_pin, 1);
-+	}
-+
- 	return 0;
- 
- put_child_node:
--- 
-2.17.1
-
-
+And that is my main problem with all the RST craze.  It optmizes for
+shiny display in a browser, but copletely messed up the typical
+developer flow.
