@@ -2,100 +2,138 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD63C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6431C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23197206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8F8206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgHFRwR (ORCPT
+        id S1730377AbgHFRwd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:52:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50371 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgHFQbo (ORCPT
+        Thu, 6 Aug 2020 13:52:33 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:8045 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728399AbgHFQbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:31:44 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3egl-0003Dm-JH; Thu, 06 Aug 2020 12:08:03 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rtw88: fix spelling mistake: "unsupport" -> "unsupported"
-Date:   Thu,  6 Aug 2020 13:08:03 +0100
-Message-Id: <20200806120803.60113-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 6 Aug 2020 12:31:20 -0400
+Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+CC:     Nick Kralevich <nnk@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+References: <20200806080358.3124505-1-tweek@google.com>
+ <20200806080358.3124505-2-tweek@google.com>
+ <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com>
+ <8627d780-0e19-6755-0de5-c686deb0f5de@sony.com>
+ <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com>
+ <07e2c48d-3918-6ceb-a6b2-4e2f18f9ea01@gmail.com>
+ <CAEjxPJ4no_GqMp8aw43zpwmwq42Wi_1dvP+ZBs1a-mnReDt5Og@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <dfeac808-b40d-77fd-0d31-f66f279083eb@sony.com>
+Date:   Thu, 6 Aug 2020 16:51:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAEjxPJ4no_GqMp8aw43zpwmwq42Wi_1dvP+ZBs1a-mnReDt5Og@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=frmim2wf c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=pGLkceISAAAA:8 a=z6gsHLkEAAAA:8 a=Fbti1pkVs00Xad8lyQgA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 8/6/20 3:49 PM, Stephen Smalley wrote:
+> On Thu, Aug 6, 2020 at 9:45 AM Stephen Smalley
+> <stephen.smalley.work@gmail.com> wrote:
+>> On 8/6/20 8:32 AM, Stephen Smalley wrote:
+>>
+>>> On 8/6/20 8:24 AM, peter enderborg wrote:
+>>>
+>>>> On 8/6/20 2:11 PM, Stephen Smalley wrote:
+>>>>> On 8/6/20 4:03 AM, Thiébaud Weksteen wrote:
+>>>>>
+>>>>>> From: Peter Enderborg <peter.enderborg@sony.com>
+>>>>>>
+>>>>>> Add further attributes to filter the trace events from AVC.
+>>>>> Please include sample usage and output in the description.
+>>>>>
+>>>>>
+>>>> Im not sure where you want it to be.
+>>>>
+>>>> In the commit message or in a Documentation/trace/events-avc.rst ?
+>>> I was just asking for it in the commit message / patch description.  I
+>>> don't know what is typical for Documentation/trace.
+>> For example, I just took the patches for a spin, running the
+>> selinux-testsuite under perf like so:
+>>
+>> sudo perf record -e avc:selinux_audited -g make test
+>>
+>> and then ran:
+>>
+>> sudo perf report -g
+>>
+>> and a snippet of sample output included:
+>>
+>>       6.40%     6.40%  requested=0x800000 denied=0x800000
+>> audited=0x800000 result=-13 ssid=922 tsid=922
+>> scontext=unconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+>> tcontext=unconfined_u:unconfined_r:test_binder_mgr_t:s0-s0:c0.c1023
+>> tclass=capability
+> So then the question becomes how do you use the above information,
+> e.g. is that sufficient to correlate it to an actual avc: denied
+> message, how do you decode the requested/denied/audited fields (or
+> should the code do that for you and just report the string name(s) of
+> the permission(s), do you need all three of those fields separately,
+> is it useful to log the ssid/tsid at all given that you have the
+> contexts and sids are dynamically assigned, etc.
+>
+>>              |
+>>              ---0x495641000028933d
+>>                 __libc_start_main
+>>                 |
+>>                 |--4.60%--__GI___ioctl
+>>                 |          entry_SYSCALL_64
+>>                 |          do_syscall_64
+>>                 |          __x64_sys_ioctl
+>>                 |          ksys_ioctl
+>>                 |          binder_ioctl
+>>                 |          binder_set_nice
+>>                 |          can_nice
+>>                 |          capable
+>>                 |          security_capable
+>>                 |          cred_has_capability.isra.0
+>>                 |          slow_avc_audit
+>>                 |          common_lsm_audit
+>>                 |          avc_audit_post_callback
+>>                 |          avc_audit_post_callback
 
-There are some spelling mistakes in rtw_info messages. Fix these.
+The real cool thing happen when you enable "user-stack-trace" too.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/realtek/rtw88/rtw8822b.c | 4 ++--
- drivers/net/wireless/realtek/rtw88/rtw8822c.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+           <...>-4820  [007] .... 85878.897553: selinux_audited: requested=0x4000000 denied=0x4000000 audited=0x4000000 result=-13 ssid=341 tsid=61 scontext=system_u:system_r:ntpd_t:s0 tcontext=system_u:object_r:bin_t:s0 tclass=file
+           <...>-4820  [007] .... 85878.897572: <user stack trace>
+ =>  <00007f07d99bb45b>
+ =>  <0000555ecd89ca57>
 
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822b.c b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-index 351cd055a295..b7a98dbbb09c 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-@@ -1009,12 +1009,12 @@ static int rtw8822b_set_antenna(struct rtw_dev *rtwdev,
- 		antenna_tx, antenna_rx);
- 
- 	if (!rtw8822b_check_rf_path(antenna_tx)) {
--		rtw_info(rtwdev, "unsupport tx path 0x%x\n", antenna_tx);
-+		rtw_info(rtwdev, "unsupported tx path 0x%x\n", antenna_tx);
- 		return -EINVAL;
- 	}
- 
- 	if (!rtw8822b_check_rf_path(antenna_rx)) {
--		rtw_info(rtwdev, "unsupport rx path 0x%x\n", antenna_rx);
-+		rtw_info(rtwdev, "unsupported rx path 0x%x\n", antenna_rx);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822c.c b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-index 426808413baa..ed1c14af082b 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-@@ -2014,7 +2014,7 @@ static int rtw8822c_set_antenna(struct rtw_dev *rtwdev,
- 	case BB_PATH_AB:
- 		break;
- 	default:
--		rtw_info(rtwdev, "unsupport tx path 0x%x\n", antenna_tx);
-+		rtw_info(rtwdev, "unsupported tx path 0x%x\n", antenna_tx);
- 		return -EINVAL;
- 	}
- 
-@@ -2024,7 +2024,7 @@ static int rtw8822c_set_antenna(struct rtw_dev *rtwdev,
- 	case BB_PATH_AB:
- 		break;
- 	default:
--		rtw_info(rtwdev, "unsupport rx path 0x%x\n", antenna_rx);
-+		rtw_info(rtwdev, "unsupported rx path 0x%x\n", antenna_rx);
- 		return -EINVAL;
- 	}
- 
--- 
-2.27.0
+The fields are useful for filter what you what to see and what you can ignore.  Having the ssid and text was from the part where it is called.
+The numeric can be used for two things. When you dont have any context. Same same reason as in post_callback. We need to be static
+in format so it need  be there if it ever can happen. And it is also useful for faster filtering.
+
+You can do "ssid!=42 && ssid!=43 && tsid==666".  From my view it would be good to have all fields there. But they need to right typed to be able
+to use the filter mechanism. There must me some trade-off too where the argument filtering get bigger than the processing, but I think we can
+add a lot more before we reach that threshold.
 
