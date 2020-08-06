@@ -2,94 +2,167 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B60C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FCA221E5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4978120855
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 20:43:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Auy2akYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgHFUkU (ORCPT
+        id S1726202AbgHFUnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:40:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:48080 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgHFUkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 16:40:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D93E30E;
-        Thu,  6 Aug 2020 13:40:19 -0700 (PDT)
-Received: from [10.57.35.143] (unknown [10.57.35.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 414D43F7D7;
-        Thu,  6 Aug 2020 13:40:18 -0700 (PDT)
-Subject: Re: [tip: perf/core] perf/core: Fix endless multiplex timer
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>
-References: <20200305123851.GX2596@hirez.programming.kicks-ass.net>
- <158470908175.28353.4859180707604949658.tip-bot2@tip-bot2>
- <abd1dde6-2761-ae91-195c-cd7c4e4515c6@arm.com>
- <20200806185353.GA2942033@kroah.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3a89fe47-e143-885a-d116-d3805e0712a0@arm.com>
-Date:   Thu, 6 Aug 2020 21:40:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 6 Aug 2020 16:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgHFUnw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 16:43:52 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4DBC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 13:43:52 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id k63so6999388oob.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 13:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T6Ysoq0U1zVmxOP6risM52XyEbhlxIpm08Hb7kCGz70=;
+        b=Auy2akYzBH3AZup7SZnPiLijTH+mPW/zHHW0rr1XxDtwoGUS4L4D4xMhT+VV/NP2kK
+         okYdK6X5WRe3jPL2HdYTKlMkVWwgbI7njMZTuAs/tkzEByjP0yHdXW2kNAutO4PY0cIK
+         qN+u8mRlPwOl/KwI7CSnjSkXHrWGDPGjNXe003V2G7Vgf+js9Lz5iqT70sFcbREyAOg9
+         MpiGZUwBzC9bXMbfgGpJ7giwkDrI2fpqzx6RMxVRTTE9DZ6aRQMBiAWjijqqaCOQLYwV
+         SNeKbHjpQjgF6v21u4yvAVsiIElYCgaV25xyuUjLK01QTy8aIaZTIFyMVy7YfpQhj9pO
+         L5Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T6Ysoq0U1zVmxOP6risM52XyEbhlxIpm08Hb7kCGz70=;
+        b=eTqMwwALnUCk1JIVjewkf8qka8fLuQoVVb+EM9PUKB8Hz/5GOlyvwpVJAkG8gEpfzH
+         nai5SuKlpvV4o5BBFQIw31vmYCAMyhJ4r4is4tAp5MT4EmZCiuQPbRRwYiAERnrH6mOB
+         mH+lEOzMZzwNjOtPFg8E7bKzb4hpCAkfSl2FpGceOxeYENRpnb8ihuyxI362kFbxYgp8
+         RsICMb04V2lbw3xZ7fIjaK+9/eOWpJQMomaaW+Fvh1GT1yjKhBcq01MYreAQ/DIlQz0O
+         0SdeqxDkNiKPjqY6G+vCz5INXg1zKSg0H2LxaTDX2snQjfGNAacnB2j+2rdluOODaD8c
+         C5ng==
+X-Gm-Message-State: AOAM53358PC1mPW/KXyyJK0Q6U7O0Zl3HO/tJK1svHL3psYBjH8HRqgJ
+        +8apg8WlUt6K8xdhD161IMaMHCnjYjhtrLyhT3DIcA==
+X-Google-Smtp-Source: ABdhPJye2wLcbFAcX97AxwywoWC014e53L4CA/hfLv/hQn7FiMsxUdVou4ZNW/bOCBr12ua4G88pdrxiroFaHmpmP6I=
+X-Received: by 2002:a4a:d04f:: with SMTP id x15mr9627153oor.87.1596746631868;
+ Thu, 06 Aug 2020 13:43:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200806185353.GA2942033@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200806203737.3636830-1-urielguajardojr@gmail.com>
+In-Reply-To: <20200806203737.3636830-1-urielguajardojr@gmail.com>
+From:   Uriel Guajardo <urielguajardo@google.com>
+Date:   Thu, 6 Aug 2020 15:43:39 -0500
+Message-ID: <CAG30EedgwNJMCXX6Eo3b8heMa228N4=RLd=BgAQhS8AZ51bU0A@mail.gmail.com>
+Subject: Re: [PATCH] kunit: added lockdep support
+To:     Uriel Guajardo <urielguajardojr@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-06 19:53, Greg KH wrote:
-> On Thu, Aug 06, 2020 at 07:11:24PM +0100, Robin Murphy wrote:
->> On 2020-03-20 12:58, tip-bot2 for Peter Zijlstra wrote:
->>> The following commit has been merged into the perf/core branch of tip:
->>>
->>> Commit-ID:     90c91dfb86d0ff545bd329d3ddd72c147e2ae198
->>> Gitweb:        https://git.kernel.org/tip/90c91dfb86d0ff545bd329d3ddd72c147e2ae198
->>> Author:        Peter Zijlstra <peterz@infradead.org>
->>> AuthorDate:    Thu, 05 Mar 2020 13:38:51 +01:00
->>> Committer:     Peter Zijlstra <peterz@infradead.org>
->>> CommitterDate: Fri, 20 Mar 2020 13:06:22 +01:00
->>>
->>> perf/core: Fix endless multiplex timer
->>>
->>> Kan and Andi reported that we fail to kill rotation when the flexible
->>> events go empty, but the context does not. XXX moar
->>>
->>> Fixes: fd7d55172d1e ("perf/cgroups: Don't rotate events for cgroups unnecessarily")
->>
->> Can this patch (commit 90c91dfb86d0 ("perf/core: Fix endless multiplex
->> timer") upstream) be applied to stable please? For PMU drivers built as
->> modules, the bug can actually kill the system, since the runaway hrtimer
->> loop keeps calling pmu->{enable,disable} after all the events have been
->> closed and dropped their references to pmu->module. Thus legitimately
->> unloading the module once things have got into this state quickly results in
->> a crash when those callbacks disappear.
->>
->> (FWIW I spent about two days fighting with this while testing a new driver
->> as a module against the 5.3 kernel installed on someone else's machine,
->> assuming it was a bug in my code...)
-> 
-> What exactly kernel(s) do you wish for it to be applied to?  It's
-> already in the latest stable releases of 5.7.y.
+On Thu, Aug 6, 2020 at 3:37 PM Uriel Guajardo <urielguajardojr@gmail.com> wrote:
+>
+> From: Uriel Guajardo <urielguajardo@google.com>
+>
+> KUnit tests will now fail if lockdep detects an error during a test
+> case.
+>
+> The idea comes from how lib/locking-selftest [1] checks for lock errors: we
+> first if lock debugging is turned on. If not, an error must have
+> occurred, so we fail the test and restart lockdep for the next test case.
+>
+> Like the locking selftests, we also fix possible preemption count
+> corruption from lock bugs.
+>
+> Depends on kunit: support failure from dynamic analysis tools [2]
+>
+> [1] https://elixir.bootlin.com/linux/v5.7.12/source/lib/locking-selftest.c#L1137
+>
+> [2] https://lore.kernel.org/linux-kselftest/20200806174326.3577537-1-urielguajardojr@gmail.com/
+>
+> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+> ---
+>  lib/kunit/test.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index d8189d827368..0838ececa005 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -11,6 +11,8 @@
+>  #include <linux/kref.h>
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched.h>
+> +#include <linux/lockdep.h>
+> +#include <linux/debug_locks.h>
+>
+>  #include "debugfs.h"
+>  #include "string-stream.h"
+> @@ -22,6 +24,26 @@ void kunit_fail_current_test(void)
+>                 kunit_set_failure(current->kunit_test);
+>  }
+>
+> +static inline void kunit_check_locking_bugs(struct kunit *test,
+> +                                           unsigned long saved_preempt_count)
+> +{
+> +       preempt_count_set(saved_preempt_count);
+> +#ifdef CONFIG_TRACE_IRQFLAGS
+> +       if (softirq_count())
+> +               current->softirqs_enabled = 0;
+> +       else
+> +               current->softirqs_enabled = 1;
+> +#endif
 
-Sorry, I implicitly meant 5.4.y there - the buggy commit was merged in 
-5.3, the fix in 5.7, so I think that's the only "stable" branch in 
-between that warrants explicit action. Apologies if I'm getting the 
-terminology wrong.
+I am not entirely sure why lib/locking-selftests enables/disables
+softirqs, but I suspect it has to do with the fact that preempt_count
+became corrupted, and somehow softirqs became incorrectly
+enabled/disabled as a result. The resetting of the preemption count
+will undo the enabling/disabling accordingly. Any insight on this
+would be appreciated!
 
-Cheers,
-Robin.
+> +#if IS_ENABLED(CONFIG_LOCKDEP)
+> +       local_irq_disable();
+> +       if (!debug_locks) {
+> +               kunit_set_failure(test);
+> +               lockdep_reset();
+> +       }
+> +       local_irq_enable();
+> +#endif
+> +}
+> +
+>  static void kunit_print_tap_version(void)
+>  {
+>         static bool kunit_has_printed_tap_version;
+> @@ -289,6 +311,7 @@ static void kunit_try_run_case(void *data)
+>         struct kunit *test = ctx->test;
+>         struct kunit_suite *suite = ctx->suite;
+>         struct kunit_case *test_case = ctx->test_case;
+> +       unsigned long saved_preempt_count = preempt_count();
+>
+>         current->kunit_test = test;
+>
+> @@ -298,7 +321,8 @@ static void kunit_try_run_case(void *data)
+>          * thread will resume control and handle any necessary clean up.
+>          */
+>         kunit_run_case_internal(test, suite, test_case);
+> -       /* This line may never be reached. */
+> +       /* These lines may never be reached. */
+> +       kunit_check_locking_bugs(test, saved_preempt_count);
+>         kunit_run_case_cleanup(test, suite);
+>  }
+>
+> --
+> 2.28.0.236.gb10cc79966-goog
+>
