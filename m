@@ -2,106 +2,108 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B53C3527E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34AAC38152
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B8F22D06
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3FE22D0B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LOB/IZab"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kN9sYWpF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MLXgfR34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgHFJaZ (ORCPT
+        id S1729272AbgHFJhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:30:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:38463 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729157AbgHFJXy (ORCPT
+        Thu, 6 Aug 2020 05:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729074AbgHFJey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:23:54 -0400
-X-UUID: cffde7ae370a4f24a6aa521c9dd52791-20200806
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=dAz5+dikMY45dDgsG5MgvToc8YR8PWJHsZfl2lLC1rs=;
-        b=LOB/IZabiPTsKLZdckI2YeZYgnUF7ubZYCiDTvad1xcuxONCXhtNFlp1m1oxW4+xXSkixTta1hPJwUlR6RJJF7oFRw9PwY6PWGhTIJ7nqHS+3jFI1c22VJqqUm4qpS3rLsbw7Fzx5iadLySxP9s7ikEM0ij4GXLqdRr0vz1mNng=;
-X-UUID: cffde7ae370a4f24a6aa521c9dd52791-20200806
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 866418727; Thu, 06 Aug 2020 17:22:03 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 6 Aug 2020 17:22:00 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 6 Aug 2020 17:22:00 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v17 08/12] soc: mediatek: Add extra sram control
-Date:   Thu, 6 Aug 2020 17:21:51 +0800
-Message-ID: <1596705715-15320-9-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1596705715-15320-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1596705715-15320-1-git-send-email-weiyi.lu@mediatek.com>
+        Thu, 6 Aug 2020 05:34:54 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD03BC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 02:34:53 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596706483;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fQkbKY9HMHdIDVxo57b/7ooYqvcFkMgq0/3YSoWs1eI=;
+        b=kN9sYWpFBqxH8i+Q+XfIJ8K3gXFkwExErJzky6iYhLWWPcVa2Z+p+OkEvD+GisZSXAeaLZ
+        /oJ9kuejzW+IncznugGgptjhxw1+7hzVMcsFt7Y1Oq4issSKGHiO8rU7Rs5jqhzql0diX2
+        2oG3d8F9RifH6uyXVYIIZqNNKOuJmzgMFr7kSEomrSqabk5OASsk4BB+EN+HwRxo7IqWBZ
+        zoRt4BEcLoNSg66M2m8QbTb2dRdkf7tE/7hJ4bjWqnvjmFwRE7dmSMQT6GFb35Fxk9YSpH
+        n8j4k/ev4EXmFfg2P1UeeSmzVNT1JD2pVHXwXZN5cCxzYfIGBmWpyeLkIjCxzA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596706483;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fQkbKY9HMHdIDVxo57b/7ooYqvcFkMgq0/3YSoWs1eI=;
+        b=MLXgfR34ZN2c7p471X0+h9DeZYNO1M5vJ4NsJRZZh/+fSvjbiWc5sKSQu+R2OqaUwHFJ4S
+        b72tNLPsH2m+vSBA==
+To:     peterz@infradead.org
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
+In-Reply-To: <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
+References: <877dumbtoi.fsf@kurt> <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt> <87lfiwm2bj.fsf@nanos.tec.linutronix.de> <20200803114112.mrcuupz4ir5uqlp6@skbuf> <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com> <875z9zmt4i.fsf@nanos.tec.linutronix.de> <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
+Date:   Thu, 06 Aug 2020 11:34:42 +0200
+Message-ID: <877duci0ct.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 136E1D456467830D06C2796C988E92E6E87735DDE12877E946BEB67FF3B99FB22000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rm9yIHNvbWUgcG93ZXIgZG9tYWlucyBsaWtlIHZwdV9jb3JlIG9uIE1UODE4MyB3aG9zZSBzcmFt
-IG5lZWQgdG8NCmRvIGNsb2NrIGFuZCBpbnRlcm5hbCBpc29sYXRpb24gd2hpbGUgcG93ZXIgb24v
-b2ZmIHNyYW0uDQpXZSBhZGQgYSBjYXAgIk1US19TQ1BEX1NSQU1fSVNPIiB0byBqdWRnZSBpZiB3
-ZSBuZWVkIHRvIGRvDQp0aGUgZXh0cmEgc3JhbSBpc29sYXRpb24gY29udHJvbCBvciBub3QuDQoN
-ClNpZ25lZC1vZmYtYnk6IFdlaXlpIEx1IDx3ZWl5aS5sdUBtZWRpYXRlay5jb20+DQpSZXZpZXdl
-ZC1ieTogTmljb2xhcyBCb2ljaGF0IDxkcmlua2NhdEBjaHJvbWl1bS5vcmc+DQotLS0NCiBkcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMgfCAyMiArKysrKysrKysrKysrKysrKysrKy0t
-DQogMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMgYi9kcml2ZXJzL3Nv
-Yy9tZWRpYXRlay9tdGstc2Nwc3lzLmMNCmluZGV4IGVjNjIxNDMuLjQ1ODdjZWYgMTAwNjQ0DQot
-LS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMNCisrKyBiL2RyaXZlcnMvc29j
-L21lZGlhdGVrL210ay1zY3BzeXMuYw0KQEAgLTI2LDYgKzI2LDcgQEANCiANCiAjZGVmaW5lIE1U
-S19TQ1BEX0FDVElWRV9XQUtFVVAJCUJJVCgwKQ0KICNkZWZpbmUgTVRLX1NDUERfRldBSVRfU1JB
-TQkJQklUKDEpDQorI2RlZmluZSBNVEtfU0NQRF9TUkFNX0lTTwkJQklUKDIpDQogI2RlZmluZSBN
-VEtfU0NQRF9DQVBTKF9zY3BkLCBfeCkJKChfc2NwZCktPmRhdGEtPmNhcHMgJiAoX3gpKQ0KIA0K
-ICNkZWZpbmUgU1BNX1ZERV9QV1JfQ09OCQkJMHgwMjEwDQpAQCAtNTcsNiArNTgsOCBAQA0KICNk
-ZWZpbmUgUFdSX09OX0JJVAkJCUJJVCgyKQ0KICNkZWZpbmUgUFdSX09OXzJORF9CSVQJCQlCSVQo
-MykNCiAjZGVmaW5lIFBXUl9DTEtfRElTX0JJVAkJCUJJVCg0KQ0KKyNkZWZpbmUgUFdSX1NSQU1f
-Q0xLSVNPX0JJVAkJQklUKDUpDQorI2RlZmluZSBQV1JfU1JBTV9JU09JTlRfQl9CSVQJCUJJVCg2
-KQ0KIA0KICNkZWZpbmUgUFdSX1NUQVRVU19DT05OCQkJQklUKDEpDQogI2RlZmluZSBQV1JfU1RB
-VFVTX0RJU1AJCQlCSVQoMykNCkBAIC0yOTAsNiArMjkzLDE0IEBAIHN0YXRpYyBpbnQgc2Nwc3lz
-X3NyYW1fZW5hYmxlKHN0cnVjdCBzY3BfZG9tYWluICpzY3BkLCB2b2lkIF9faW9tZW0gKmN0bF9h
-ZGRyKQ0KIAkJCXJldHVybiByZXQ7DQogCX0NCiANCisJaWYgKE1US19TQ1BEX0NBUFMoc2NwZCwg
-TVRLX1NDUERfU1JBTV9JU08pKQl7DQorCQl2YWwgPSByZWFkbChjdGxfYWRkcikgfCBQV1JfU1JB
-TV9JU09JTlRfQl9CSVQ7DQorCQl3cml0ZWwodmFsLCBjdGxfYWRkcik7DQorCQl1ZGVsYXkoMSk7
-DQorCQl2YWwgJj0gflBXUl9TUkFNX0NMS0lTT19CSVQ7DQorCQl3cml0ZWwodmFsLCBjdGxfYWRk
-cik7DQorCX0NCisNCiAJcmV0dXJuIDA7DQogfQ0KIA0KQEAgLTI5OSw4ICszMTAsMTUgQEAgc3Rh
-dGljIGludCBzY3BzeXNfc3JhbV9kaXNhYmxlKHN0cnVjdCBzY3BfZG9tYWluICpzY3BkLCB2b2lk
-IF9faW9tZW0gKmN0bF9hZGRyKQ0KIAl1MzIgcGRuX2FjayA9IHNjcGQtPmRhdGEtPnNyYW1fcGRu
-X2Fja19iaXRzOw0KIAlpbnQgdG1wOw0KIA0KLQl2YWwgPSByZWFkbChjdGxfYWRkcik7DQotCXZh
-bCB8PSBzY3BkLT5kYXRhLT5zcmFtX3Bkbl9iaXRzOw0KKwlpZiAoTVRLX1NDUERfQ0FQUyhzY3Bk
-LCBNVEtfU0NQRF9TUkFNX0lTTykpCXsNCisJCXZhbCA9IHJlYWRsKGN0bF9hZGRyKSB8IFBXUl9T
-UkFNX0NMS0lTT19CSVQ7DQorCQl3cml0ZWwodmFsLCBjdGxfYWRkcik7DQorCQl2YWwgJj0gflBX
-Ul9TUkFNX0lTT0lOVF9CX0JJVDsNCisJCXdyaXRlbCh2YWwsIGN0bF9hZGRyKTsNCisJCXVkZWxh
-eSgxKTsNCisJfQ0KKw0KKwl2YWwgPSByZWFkbChjdGxfYWRkcikgfCBzY3BkLT5kYXRhLT5zcmFt
-X3Bkbl9iaXRzOw0KIAl3cml0ZWwodmFsLCBjdGxfYWRkcik7DQogDQogCS8qIEVpdGhlciB3YWl0
-IHVudGlsIFNSQU1fUEROX0FDSyBhbGwgMSBvciAwICovDQotLSANCjEuOC4xLjEuZGlydHkNCg==
+peterz@infradead.org writes:
+> On Mon, Aug 03, 2020 at 09:22:53PM +0200, Thomas Gleixner wrote:
+>
+>>    totaltime = irqtime + tasktime
+>> 
+>> Ignoring irqtime and pretending that totaltime is what the scheduler
+>> can control and deal with is naive at best.
+>
+> Well no, that's what we call system overhead and is assumed to be
+> included in the 'error margin'.
+>
+> The way things are set up is that we say that, by default, RT tasks can
+> consume 95% of cputime and the remaining 5% is sufficient to keep the
+> system alive.
+>
+> Those 5% include all system overhead, IRQs, RCU, !RT workqueues etc..
+>
+> Obviously IRQ_TIME accounting changes the balance a bit, but that's what
+> it is. We can't really do anything better.
+>
+> Apparently this SoC has significant IRQ time for some reason. Also,
+> relying on RT throttling for 'correct' behaviour is also wrong. What
+> needs to be done is find who is using all this RT time and why, that
+> isn't right.
 
+It's a test case and we know already who is using the time. But that's
+not the point.
+
+A runaway RT task resulting in a RCU stall or whatever lockup of the
+system is definitely not the right answer.
+
+The throttler, as much as it's a horrible hack, is there to prevent this
+and to give the admin a chance to pinpoint and kill that thing instead
+of having to press the reset button and scratching head what might have
+caused this.
+
+Thanks,
+
+        tglx
