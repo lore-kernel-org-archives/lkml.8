@@ -2,123 +2,148 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE92C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E77DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 628BE21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A535F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rzKES9e0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vIRQpDGm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DjrxABI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgHFXkU (ORCPT
+        id S1727789AbgHFXkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
+        Thu, 6 Aug 2020 19:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgHFXiw (ORCPT
+        with ESMTP id S1727118AbgHFXkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:38:52 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C43C061575;
-        Thu,  6 Aug 2020 16:38:52 -0700 (PDT)
-Date:   Thu, 06 Aug 2020 23:38:50 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757131;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zDxatrwO+co72myHzmJiVqhEcOcAAOjarE+tDUP3zz0=;
-        b=rzKES9e0H1m5Nm6KXCA6vSDrWrdNJHMtiDPI/5LrnNgOggaF7wIoh74AoT5B65rK1j2YGa
-        WHML9va4Uu+gWnMSVKQSemYzFa9DmsWSuXfeIdfvNYPcT122SI5D2DITvh61kWHpvk8+VB
-        kvB4/+ZqejjuokyUC1/pZSHXKhTQMRL3xiIjjxlzLT7EJriZ5DJENYnfsoiRuIUQkwj0fB
-        qSetmEqbttvWzhy5TE/upOJw2p1A6h4FxiO95Blhko0lod27CPwli9r/qlEd1flr+Iux6n
-        avwM0yk2cMntgUxwUSQdYX7qrXD8Q6IVhpl5gsQtfZcB6xzUXxdUozKEXNrOOQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757131;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zDxatrwO+co72myHzmJiVqhEcOcAAOjarE+tDUP3zz0=;
-        b=vIRQpDGmT0wZfMPayECEODhFEAxr/x4RCFzpOqM21Kk/qNBIy57BEcRnpyuxfs2VMBTLUt
-        S4+3ucjKHYtSk3CQ==
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kaslr] x86/kaslr: Add a check that the random address is in range
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200728225722.67457-22-nivedita@alum.mit.edu>
-References: <20200728225722.67457-22-nivedita@alum.mit.edu>
+        Thu, 6 Aug 2020 19:40:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DDCC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 16:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Cx6kuJs2fnuW++ZonZph6Cow0fGYF3cdpbifew/elsk=; b=DjrxABI3slRHNCjwj68WOXMDm3
+        UggGtCeLk7PoiiXjQVdoBQNQ1hGRaCc3p6xVeI64JtDmyaJfX3qFqUwwdvo5Tk+FTC2LWZWyvajwv
+        Koe85h9A1dFxFAnXgrrqUzfS5lVddozusp1OQpDilcAuRu8y75a8XjZS1ZCi2yQ7GdHnnC7Q5Qgby
+        +BXT6J4LPGzUFsC1Lrrt91r7zleCHSU9iM/gg0s+CTPqUFOOY2pGJwdIWG+wwnV7ZgnC9/+3DlGQ2
+        UMnRMixc8nPbv7bf72TA4pL5klWN4h97W2ELXOBHK3ZJ6sxji7bYNpAoBhtV5gPV9E1xX8FtbIu3o
+        IL8/0ytA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3pUP-00082G-Pq; Thu, 06 Aug 2020 23:40:02 +0000
+Subject: Re: [PATCH] mm/migrate: fix migrate_pgmap_owner w/o
+ CONFIG_MMU_NOTIFIER
+To:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200806193353.7124-1-rcampbell@nvidia.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a093b5ed-4ea6-7e02-f9da-19799f3cd59a@infradead.org>
+Date:   Thu, 6 Aug 2020 16:39:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159675713045.3192.895736711102672509.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200806193353.7124-1-rcampbell@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/kaslr branch of tip:
+On 8/6/20 12:33 PM, Ralph Campbell wrote:
+> On x86_64, when CONFIG_MMU_NOTIFIER is not set/enabled, there is a
+> compiler error:
+> 
+> ../mm/migrate.c: In function 'migrate_vma_collect':
+> ../mm/migrate.c:2481:7: error: 'struct mmu_notifier_range' has no member
+> named 'migrate_pgmap_owner'
+>   range.migrate_pgmap_owner = migrate->pgmap_owner;
+>        ^
+> 
+> Fixes: 998427b3ad2c ("mm/notifier: add migration invalidation type")
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
 
-Commit-ID:     f49236ae424d499d02ee3ce35fb9130ddf95b03f
-Gitweb:        https://git.kernel.org/tip/f49236ae424d499d02ee3ce35fb9130ddf95b03f
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Tue, 28 Jul 2020 18:57:22 -04:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 31 Jul 2020 11:08:17 +02:00
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-x86/kaslr: Add a check that the random address is in range
+Thanks.
 
-Check in find_random_phys_addr() that the chosen address is inside the
-range that was required.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200728225722.67457-22-nivedita@alum.mit.edu
----
- arch/x86/boot/compressed/kaslr.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+> ---
+> 
+> This is based on the latest linux and is for Andrew Morton's mm tree.
+> MMU_NOTIFIER is selected automatically by a number of other config
+> options so I missed this in my own testing. Thanks to Randy Dunlap for
+> finding it.
+> 
+>  include/linux/mmu_notifier.h | 13 +++++++++++++
+>  mm/migrate.c                 |  6 +++---
+>  2 files changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+> index c6f0708195cd..b8200782dede 100644
+> --- a/include/linux/mmu_notifier.h
+> +++ b/include/linux/mmu_notifier.h
+> @@ -521,6 +521,16 @@ static inline void mmu_notifier_range_init(struct mmu_notifier_range *range,
+>  	range->flags = flags;
+>  }
+>  
+> +static inline void mmu_notifier_range_init_migrate(
+> +			struct mmu_notifier_range *range, unsigned int flags,
+> +			struct vm_area_struct *vma, struct mm_struct *mm,
+> +			unsigned long start, unsigned long end, void *pgmap)
+> +{
+> +	mmu_notifier_range_init(range, MMU_NOTIFY_MIGRATE, flags, vma, mm,
+> +				start, end);
+> +	range->migrate_pgmap_owner = pgmap;
+> +}
+> +
+>  #define ptep_clear_flush_young_notify(__vma, __address, __ptep)		\
+>  ({									\
+>  	int __young;							\
+> @@ -645,6 +655,9 @@ static inline void _mmu_notifier_range_init(struct mmu_notifier_range *range,
+>  
+>  #define mmu_notifier_range_init(range,event,flags,vma,mm,start,end)  \
+>  	_mmu_notifier_range_init(range, start, end)
+> +#define mmu_notifier_range_init_migrate(range, flags, vma, mm, start, end, \
+> +					pgmap) \
+> +	_mmu_notifier_range_init(range, start, end)
+>  
+>  static inline bool
+>  mmu_notifier_range_blockable(const struct mmu_notifier_range *range)
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 4fcc465736ff..d179657f8685 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -2386,9 +2386,9 @@ static void migrate_vma_collect(struct migrate_vma *migrate)
+>  	 * that the registered device driver can skip invalidating device
+>  	 * private page mappings that won't be migrated.
+>  	 */
+> -	mmu_notifier_range_init(&range, MMU_NOTIFY_MIGRATE, 0, migrate->vma,
+> -			migrate->vma->vm_mm, migrate->start, migrate->end);
+> -	range.migrate_pgmap_owner = migrate->pgmap_owner;
+> +	mmu_notifier_range_init_migrate(&range, 0, migrate->vma,
+> +		migrate->vma->vm_mm, migrate->start, migrate->end,
+> +		migrate->pgmap_owner);
+>  	mmu_notifier_invalidate_range_start(&range);
+>  
+>  	walk_page_range(migrate->vma->vm_mm, migrate->start, migrate->end,
+> 
 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 80cdd20..735fcb2 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -803,6 +803,8 @@ static void process_e820_entries(unsigned long minimum,
- static unsigned long find_random_phys_addr(unsigned long minimum,
- 					   unsigned long image_size)
- {
-+	u64 phys_addr;
-+
- 	/* Bail out early if it's impossible to succeed. */
- 	if (minimum + image_size > mem_limit)
- 		return 0;
-@@ -816,7 +818,15 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
- 	if (!process_efi_entries(minimum, image_size))
- 		process_e820_entries(minimum, image_size);
- 
--	return slots_fetch_random();
-+	phys_addr = slots_fetch_random();
-+
-+	/* Perform a final check to make sure the address is in range. */
-+	if (phys_addr < minimum || phys_addr + image_size > mem_limit) {
-+		warn("Invalid physical address chosen!\n");
-+		return 0;
-+	}
-+
-+	return (unsigned long)phys_addr;
- }
- 
- static unsigned long find_random_virt_addr(unsigned long minimum,
+
+-- 
+~Randy
