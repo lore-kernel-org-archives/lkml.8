@@ -2,174 +2,220 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD80C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D12023119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F23E2311B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PN8wgwt6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ye1VrZbm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WOxDiAq+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbgHFRMV (ORCPT
+        id S1730381AbgHFRM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:12:21 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2932 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729728AbgHFRMP (ORCPT
+        Thu, 6 Aug 2020 13:12:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58916 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730215AbgHFRKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:12:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2c39e10000>; Thu, 06 Aug 2020 10:12:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 10:12:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 10:12:15 -0700
-Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 17:12:14 +0000
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
- <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
- <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
-Message-ID: <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
-Date:   Thu, 6 Aug 2020 10:12:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 13:10:06 -0400
+Date:   Thu, 06 Aug 2020 17:10:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596733801;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WqGPH07pzHO47/xm9n06evZRKuSJhzUmUKmbO1v96+E=;
+        b=Ye1VrZbm2fG74IfDotWAi5nfNJSP1bi31yteIDYG9HWKtdvY2JxF8ZliICEcb1P8cnBokq
+        C/aJkO9shrF1RFok2C8Nd7RRiN9pWHsfchHnbJ47JByoKo4yLVNvQL5xph1KNOimvUSAgv
+        /XPSJzk0zC0rXM8ImENqSSwgB+Y2QApjMM46y5VwsUFdsl2dt2I0SIfaP718NgPh/5Bxw8
+        lkNJPPTmAWdV3zfa3oVG6lJK1ufJUj6D9Ife104+d9g18OB3GwKQumKKEih9Zfo6JDp0T/
+        Ygjx2HEMX+r8Qmjih19PQ4wMx2XMHKxAvZ9WAhT5/GdmvM2o1iTmGFNbBNguUg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596733801;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WqGPH07pzHO47/xm9n06evZRKuSJhzUmUKmbO1v96+E=;
+        b=WOxDiAq+txKabkOs0K+aE484kQD5IEVOtUIk3SESpDUr0NfwNtjagRkbUsf7dageqCPL+Z
+        VnFdsSKB1CzKU1Aw==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] timekeeping/vsyscall: Provide vdso_update_begin/end()
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sven Schnelle <svens@linux.ibm.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200804150124.41692-3-svens@linux.ibm.com>
+References: <20200804150124.41692-3-svens@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596733921; bh=8R4NwntznSiP6O5k0i98yl5vksbAueRfRDWej6dHhRc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=PN8wgwt6ALE6zdY6YvNQGyrb1FNErEKu+7Pey8d02YYIMkCBwkUbxgJQNRFGl9BZl
-         RHI7aicJhNvbYl82P4hOkAvDdRq+xd3S83SlJjRzh9tXFurNGW8B2MqigplyvScKlR
-         J8YLGTDys0E+/PelzyZtdZi1Aw5QHcD3SoWDbvfoakSyxkWIbx4/WN67D/ceu0uJVC
-         1EGTuTzVBVy8nQJwDMHYRFNKh7WynIlOhC7OrbO7b4g9EpmRAMSs+1M9JnPhk6wg/H
-         r6Dw5ONZ0EuFeU710fBBgvvnv6CIZ29VM45cDZp4fdJAxDVgGU2rWKAPu9Qd3sgWLU
-         jdrkFVU3r1vdw==
+Message-ID: <159673380118.3192.11120762582178305899.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the timers/urgent branch of tip:
 
-On 8/6/20 9:41 AM, Sowjanya Komatineni wrote:
->
-> On 8/6/20 9:10 AM, Dmitry Osipenko wrote:
->> 06.08.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>>>> Confirmed from HW designer, calibration FSM to finish takes worst=20
->>>>> case
->>>>> 72uS so by the time it gets to sensor stream it will be done its
->>>>> sequence and will be waiting for DONE bit.
->>>>>
->>>>> So disabling MIPI CAL clock on sensor stream fails is safe.
->>>> 72us is quite a lot of time, what will happen if LP-11 happens before
->>>> FSM finished calibration?
->>>>
->>>> Maybe the finish_calibration() needs to split into two parts:
->>>>
->>>> =C2=A0=C2=A0 1. wait for CAL_STATUS_ACTIVE before enabling sensor
->>>> =C2=A0=C2=A0 2. wait for CAL_STATUS_DONE after enabling sensor
->>> I don't think we need to split for active and done. Active will be 1 as
->>> long as other pads are in calibration as well.
->>>
->>> We cant use active status check for specific pads under calibration.
->>> This is common bit for all pads.
->> Does hardware have a single FSM block shared by all pads or there is FSM
->> per group of pads?
->
-> MIPI CAL status register has DONE bits for individual pads status and=20
-> single ACTIVE bit.
->
-> ACTIVE bit set to 1 indicates auto calibration is active which is the=20
-> case even when other pads (other CSI pads from other ports streaming=20
-> in case of parallel stream) are under calibration. Also DSI is shared=20
-> as well.
->
-> We do calibration for individual pads. So, we should not rely on=20
-> ACTIVE bit.
->
->
-> MIPI driver checks for condition ACTIVE =3D=3D 1 && DONE =3D=3D 1 from th=
-e=20
-> beginning.
->
-> But I think this also should be fixed as in case of parallel streams=20
-> calibration can happen in parallel waiting for ACTIVE to be cleared=20
-> makes all calibration callers to wait for longer than needed as ACTIVE=20
-> is common for all pads.
->
->>
->>> Unfortunately HW don't have separate status indicating when sequence is
->>> done to indicate its waiting for LP11.
->>>
->>>
->>> To avoid all this, will remove cancel_calibration() totally and use=20
->>> same
->>> finish calibration even in case of stream failure then.
->>>
->> What about to add 72us delay to the end of start_calibration() in order
->> to ensure that FSM is finished before LP-11?
->
-> Why we should add 72uS in start_calibration() when can use same=20
-> finish_calibration() for both pass/fail cases?
->
-> Only timing loose we see is in case of failure we still wait for 250ms=20
-> and as this is failing case I hope should be ok.
->
-Also as we don't need cancel_calibration(), keeping tegra_mipi_wait()=20
-like earlier makes sense I believe as we are letting it finish going=20
-thru sequence.
+Commit-ID:     19d0070a2792181f79df01277fe00b83b9f7eda7
+Gitweb:        https://git.kernel.org/tip/19d0070a2792181f79df01277fe00b83b9f7eda7
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 04 Aug 2020 17:01:23 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 06 Aug 2020 10:57:30 +02:00
 
-So I think below are fixes,
+timekeeping/vsyscall: Provide vdso_update_begin/end()
 
-1. Existing MIPI driver, tegra_mipi_wait() to not use status ACTIVE bit=20
-to be 0 and use only DONE bit to be 1 for wait condition=C2=A0 as we are=20
-calibrating separately for individual pads and this ACTIVE bit is common=20
-for all pads where it will not be 0 in case of other parallel streams=20
-which may also be under calibration.
+Architectures can have the requirement to add additional architecture
+specific data to the VDSO data page which needs to be updated independent
+of the timekeeper updates.
 
-2. No need for separate cancel_calibration. So, probably earlier names=20
-tegra_mipi_calibrate() and tegra_mipi_wait() hols good as we are waiting=20
-for calibration sequence to finish irrespective of fail/pass.
+To protect these updates vs. concurrent readers and a conflicting update
+through timekeeping, provide helper functions to make such updates safe.
 
+vdso_update_begin() takes the timekeeper_lock to protect against a
+potential update from timekeeper code and increments the VDSO sequence
+count to signal data inconsistency to concurrent readers. vdso_update_end()
+makes the sequence count even again to signal data consistency and drops
+the timekeeper lock.
+
+[ Sven: Add interrupt disable handling to the functions ]
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200804150124.41692-3-svens@linux.ibm.com
+
+---
+ include/vdso/vsyscall.h            |  3 ++-
+ kernel/time/timekeeping.c          |  2 +-
+ kernel/time/timekeeping_internal.h | 11 +++++---
+ kernel/time/vsyscall.c             | 41 +++++++++++++++++++++++++++++-
+ 4 files changed, 53 insertions(+), 4 deletions(-)
+
+diff --git a/include/vdso/vsyscall.h b/include/vdso/vsyscall.h
+index 2c6134e..b0fdc9c 100644
+--- a/include/vdso/vsyscall.h
++++ b/include/vdso/vsyscall.h
+@@ -6,6 +6,9 @@
+ 
+ #include <asm/vdso/vsyscall.h>
+ 
++unsigned long vdso_update_begin(void);
++void vdso_update_end(unsigned long flags);
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* __VDSO_VSYSCALL_H */
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 63a632f..4c7212f 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -50,7 +50,7 @@ static struct {
+ 	.seq = SEQCNT_ZERO(tk_core.seq),
+ };
+ 
+-static DEFINE_RAW_SPINLOCK(timekeeper_lock);
++DEFINE_RAW_SPINLOCK(timekeeper_lock);
+ static struct timekeeper shadow_timekeeper;
+ 
+ /**
+diff --git a/kernel/time/timekeeping_internal.h b/kernel/time/timekeeping_internal.h
+index bcbb52d..4ca2787 100644
+--- a/kernel/time/timekeeping_internal.h
++++ b/kernel/time/timekeeping_internal.h
+@@ -1,12 +1,14 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _TIMEKEEPING_INTERNAL_H
+ #define _TIMEKEEPING_INTERNAL_H
+-/*
+- * timekeeping debug functions
+- */
++
+ #include <linux/clocksource.h>
++#include <linux/spinlock.h>
+ #include <linux/time.h>
+ 
++/*
++ * timekeeping debug functions
++ */
+ #ifdef CONFIG_DEBUG_FS
+ extern void tk_debug_account_sleep_time(const struct timespec64 *t);
+ #else
+@@ -31,4 +33,7 @@ static inline u64 clocksource_delta(u64 now, u64 last, u64 mask)
+ }
+ #endif
+ 
++/* Semi public for serialization of non timekeeper VDSO updates. */
++extern raw_spinlock_t timekeeper_lock;
++
+ #endif /* _TIMEKEEPING_INTERNAL_H */
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index 54ce6eb..88e6b8e 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -13,6 +13,8 @@
+ #include <vdso/helpers.h>
+ #include <vdso/vsyscall.h>
+ 
++#include "timekeeping_internal.h"
++
+ static inline void update_vdso_data(struct vdso_data *vdata,
+ 				    struct timekeeper *tk)
+ {
+@@ -127,3 +129,42 @@ void update_vsyscall_tz(void)
+ 
+ 	__arch_sync_vdso_data(vdata);
+ }
++
++/**
++ * vdso_update_begin - Start of a VDSO update section
++ *
++ * Allows architecture code to safely update the architecture specific VDSO
++ * data. Disables interrupts, acquires timekeeper lock to serialize against
++ * concurrent updates from timekeeping and invalidates the VDSO data
++ * sequence counter to prevent concurrent readers from accessing
++ * inconsistent data.
++ *
++ * Returns: Saved interrupt flags which need to be handed in to
++ * vdso_update_end().
++ */
++unsigned long vdso_update_begin(void)
++{
++	struct vdso_data *vdata = __arch_get_k_vdso_data();
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&timekeeper_lock, flags);
++	vdso_write_begin(vdata);
++	return flags;
++}
++
++/**
++ * vdso_update_end - End of a VDSO update section
++ * @flags:	Interrupt flags as returned from vdso_update_begin()
++ *
++ * Pairs with vdso_update_begin(). Marks vdso data consistent, invokes data
++ * synchronization if the architecture requires it, drops timekeeper lock
++ * and restores interrupt flags.
++ */
++void vdso_update_end(unsigned long flags)
++{
++	struct vdso_data *vdata = __arch_get_k_vdso_data();
++
++	vdso_write_end(vdata);
++	__arch_sync_vdso_data(vdata);
++	raw_spin_unlock_irqrestore(&timekeeper_lock, flags);
++}
