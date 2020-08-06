@@ -2,119 +2,113 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189D9C433F1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0B5C433F7
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC3C22D2C
+	by mail.kernel.org (Postfix) with ESMTP id DAE8522D04
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUkysNgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgHFIp4 (ORCPT
+        id S1728599AbgHFIuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbgHFIpy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:45:54 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7FBC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 01:45:54 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id a5so33530129ioa.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 01:45:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b581h/DwwqCtloal8vDOli1r/qOdK2w3K3dkhJG5PnA=;
-        b=bUkysNgoI/3DolrnPuLM+/o0BheysqbMk/Gnm3+hhcZD3pgCZEhmWMtDB0aGT7PzcS
-         VrnonLKgLaBJy1HYiWsdumIc1hZmzaZWwMBY/xE9EfOOom8OvBZkoH54e7KFuyuVFy58
-         7eTkBclebOf6NWr8VMFAVIjTcNDJnaIJhkgNlPG5nDnUZlsSfo/h/SrMt3ptnw5o+44f
-         5aK1FFzw3/8HAIgr2H2plYwUBqtSYZh7Am1Jmb/KBHjoI7MEwz5qGCzjL+6QtayOdcdB
-         JmpKGe1xl+hQEQ4BjMOI7yCdERrwzOyrQYswFpTk29jwCGf8pmw+DfagMZOPwdNeHF9F
-         OBnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b581h/DwwqCtloal8vDOli1r/qOdK2w3K3dkhJG5PnA=;
-        b=LpprW2dyJBvyDP0pQPDK9aJ5va89AQ4arbvbEF0lg16uklS85Z0J11V/otaagwTpz5
-         uI7QwZEIVrFPtz/Tfw69Cus5e/+fFHtFTtq+vJRWWsUB6z6FLbQJd2V3Cyyw+AdBJcHV
-         3jYRAP++eB8myoxlNqRKFnP1gLiuqxEl8zDCchM5XqqqVURoChG35SQCxb/5gxreJo74
-         KZ9GAXoVuRO2NFjOonUg6JnRm9IEWXg4e9qXzD9SbW4WPFhTjIpFDlH6+QrIm8AIFeiz
-         49ziu4qFCTYtUCUbtBZ5o5AO93EXplNRVwNzkfnJUw+sEcCkKfcBnKz4Et9eFlt7i+ZD
-         KBOQ==
-X-Gm-Message-State: AOAM530b9ePfDk1RUSEwSzaj+iHyBCamhoJUTTFsnz04ySCW5L601B2b
-        DTqaMSUBDnFdZ5rChuq2qLVu0+Zh4MKGWMXDMBY=
-X-Google-Smtp-Source: ABdhPJxnWFvSNqwXeK/mpjkJ8o8HCPWOQSHfKteaXTYMTVC8hoN9rkWePN/omzlZ1+tmo9qPAKdqR6sXTAOiK5iT3xc=
-X-Received: by 2002:a5e:dd02:: with SMTP id t2mr8159451iop.90.1596703553451;
- Thu, 06 Aug 2020 01:45:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200805230555.84214-1-nolange79@gmail.com> <20200806003042.GB1551@shell.armlinux.org.uk>
-In-Reply-To: <20200806003042.GB1551@shell.armlinux.org.uk>
-From:   Norbert Lange <nolange79@gmail.com>
-Date:   Thu, 6 Aug 2020 10:45:42 +0200
-Message-ID: <CADYdroPtiEfk9e3Loj-2qyyPqgx9GG-h3S2P2Uz49zrk4wVSTw@mail.gmail.com>
-Subject: Re: [PATCH] arm: Add support for ZSTD compressed kernel
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Terrell <terrelln@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Aug 2020 04:50:25 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:42872 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727015AbgHFIuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 04:50:22 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BMhyg3Nfcz9v0TG;
+        Thu,  6 Aug 2020 10:50:19 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id VhIF0KbsPeBM; Thu,  6 Aug 2020 10:50:19 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMhyg2Wcfz9v0St;
+        Thu,  6 Aug 2020 10:50:19 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B26658B7FA;
+        Thu,  6 Aug 2020 10:50:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id o0efautfMvDK; Thu,  6 Aug 2020 10:50:20 +0200 (CEST)
+Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 89F438B75E;
+        Thu,  6 Aug 2020 10:50:20 +0200 (CEST)
+Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 765F965BC9; Thu,  6 Aug 2020 08:50:20 +0000 (UTC)
+Message-Id: <04169f40c09682ce5747518268ca84285bc17fbc.1596703345.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] powerpc/signal: Move and simplify get_clean_sp()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  6 Aug 2020 08:50:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Do., 6. Aug. 2020 um 02:30 Uhr schrieb Russell King - ARM Linux
-admin <linux@armlinux.org.uk>:
->
-> On Thu, Aug 06, 2020 at 01:05:55AM +0200, Norbert Lange wrote:
-> > diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-> > index 434a16982e34..1af01bfe6638 100644
-> > --- a/arch/arm/boot/compressed/head.S
-> > +++ b/arch/arm/boot/compressed/head.S
-> > @@ -614,7 +614,11 @@ not_relocated:   mov     r0, #0
-> >   */
-> >               mov     r0, r4
-> >               mov     r1, sp                  @ malloc space above stack
-> > +#if defined(CONFIG_KERNEL_ZSTD)
-> > +             add     r2, sp, #0x30000        @ Context needs ~160K
->
-> That's going to mess up kexec:
->
->         /*
->          * The zImage length does not include its stack (4k) or its
->          * malloc space (64k).  Include this.
->          */
->         len += 0x11000;
->
-> I guess we need to add this to the information provided to kexec.
+get_clean_sp() is only used in kernel/signal.c . Move it there.
 
-Ouch, I guess it's rather impossible to load a new ZSTD kernel with a old
-kexec version in that case.
+And GCC is smart enough to reduce the function when on PPC32, no
+need of a special PPC32 simple version.
 
-Some ideas to fix that would be:
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/include/asm/processor.h | 14 --------------
+ arch/powerpc/kernel/signal.c         |  7 +++++++
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
--   Increase the padding to "192K + 4K is enough for everyone" in kexec
--   Add the required/recommended stack+heap size to zImage so kexec can use it.
--   change boot logic to place heap before/after the *output* range.
-    with the various ways of booting arm this will likely cause other
-issues in some combinations.
--   try to reduce zstd context size safetly below 64K.
-    I believe the entropy tables are computed once and never modified,
-so those could be part of the zImage
-    (at some loss of compression rate of course). Would need some host
-tool to inject those.
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index ed0d633ab5aa..5c20b6d509ae 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -404,20 +404,6 @@ static inline void prefetchw(const void *x)
+ 
+ #define HAVE_ARCH_PICK_MMAP_LAYOUT
+ 
+-#ifdef CONFIG_PPC64
+-static inline unsigned long get_clean_sp(unsigned long sp, int is_32)
+-{
+-	if (is_32)
+-		return sp & 0x0ffffffffUL;
+-	return sp;
+-}
+-#else
+-static inline unsigned long get_clean_sp(unsigned long sp, int is_32)
+-{
+-	return sp;
+-}
+-#endif
+-
+ /* asm stubs */
+ extern unsigned long isa300_idle_stop_noloss(unsigned long psscr_val);
+ extern unsigned long isa300_idle_stop_mayloss(unsigned long psscr_val);
+diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+index d15a98c758b8..bd0ba7c5e2cf 100644
+--- a/arch/powerpc/kernel/signal.c
++++ b/arch/powerpc/kernel/signal.c
+@@ -171,6 +171,13 @@ inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
+ 
+ int show_unhandled_signals = 1;
+ 
++static unsigned long get_clean_sp(unsigned long sp, int is_32)
++{
++	if (is_32)
++		return sp & 0x0ffffffffUL;
++	return sp;
++}
++
+ /*
+  * Allocate space for the signal frame
+  */
+-- 
+2.25.0
 
-Norbert
