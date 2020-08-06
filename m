@@ -2,121 +2,119 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668C623119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7932221E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mN0bUej5"
+	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="YKSScdMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbgHFRZT (ORCPT
+        id S1730033AbgHFRZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:25:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
+        Thu, 6 Aug 2020 13:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729466AbgHFRDB (ORCPT
+        with ESMTP id S1728735AbgHFRDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:03:01 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D474CC0617B1
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 04:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mb6Pcn8GA5zfSJfRuHB/gTx/1/FB8gTP4+5zdNlmjw4=; b=mN0bUej55+bDD24xUR681m+tcG
-        ZB+jUoAwwJi6Gl04PymXuUnXRU+GAYQndtdvwKjFt78vP+XYFznahcCJZydD337JRLxZHyYXoy9Jk
-        GQzh7jleA1wnTGkCGKk5Ekch+iU0Vxm2YhVSnub0AGBvR70dx0+7r4UN2b+wghZI3LXy8LPvy6oOn
-        RG4w9ujsEHcqSiC/iNVhVjJuChPM1kCFrs3k4L7mJQ6u2woPIMyznJ59SW8wMI0RfyBfyoBTslya9
-        vLGoz7GUsA3GKoT03uk0SZthK0XrevlLBEcB2RyH9Nv4QTNz/OWuCIslqGHMXa7OIMot3719dAmbr
-        3xZ3HOcQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3eLC-0006pL-Cf; Thu, 06 Aug 2020 11:45:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AECBF301A66;
-        Thu,  6 Aug 2020 13:45:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8CCD2220F91B8; Thu,  6 Aug 2020 13:45:45 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 13:45:45 +0200
-From:   peterz@infradead.org
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level
- IRQ time accounting
-Message-ID: <20200806114545.GA2674@hirez.programming.kicks-ass.net>
-References: <873654m9zi.fsf@kurt>
- <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
- <20200803114112.mrcuupz4ir5uqlp6@skbuf>
- <87d047n4oh.fsf@nanos.tec.linutronix.de>
- <jhjh7tjivew.mognet@arm.com>
- <875z9zmt4i.fsf@nanos.tec.linutronix.de>
- <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
- <jhja6z9i4bi.mognet@arm.com>
- <20200805153120.GU2674@hirez.programming.kicks-ass.net>
- <874kpgi025.fsf@nanos.tec.linutronix.de>
+        Thu, 6 Aug 2020 13:03:02 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF19CC034615
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 06:19:13 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s15so15145180pgc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 06:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V1nnod0YcV7H2TUfC8Gd96YGz+LSO9JcTYXXX1K5F8M=;
+        b=YKSScdMPWzgWF7wSGiSqP95WaTCqorzQjkBnqwiKacTI0pfodkP5JNyOASut44yJ3s
+         l5WouG2nks7VRPeOnmuKSKOFIZh8Ic0u8UuUxx45NqhalbT1S4f/9zdk9NtVZOzxRZIQ
+         5aiTXswxQAVqbhKii8Csr+ntnUijgnCyA7hcfIOHIXy36EYCI/cakomgU/tpxjmQzq1D
+         2pwabp9JoYYNme1qeEGLFdWuN+eKF79/Trev97gkXlSZWXu0VOo/HKohGN680R/9FDPI
+         Ere7hd6MEpRJtverCfv4jb0jqpZkVGowXiQuFo/kT+QYEJlC6cIka8DF1SLC/s5p6s+X
+         Ichw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V1nnod0YcV7H2TUfC8Gd96YGz+LSO9JcTYXXX1K5F8M=;
+        b=iF7i09/mKC/fAy3lFE5KN6mkPl4wgMnktQdGl8cUqf1QAnC/CETovUk3ZgGjh1dMxh
+         TLFbxlawUXLOBtOdDkRQ5PAi5XouEEDfa/sxvkH+o0ct5OO3h11u3R2xM86de5tN1z02
+         VfdPBQa1KdRLMf/x78vJcWTBoUX/UrSO89auS0IF6wdkXlOEwL19TyNct2Fv+OguGLNj
+         oyIpTuVL22dc+FE80qrk4O1A5qaAE/+BF6a6fycjbTcT/dd28WUYK5PuOJisZt+l3447
+         dfYlboRN1yMblxJo/qAnAUOQte45P/zYrfRmaprRyaKfCQONSms+53NtfwL2p1KGfga8
+         W/bw==
+X-Gm-Message-State: AOAM531WhGXT+6985KCiUTAfo6msZee/iwzDx5x/MSgW+emEr1JOFT/e
+        o3iG0+e/3Bv7Nr9oK4EXwLklI8WVcRI=
+X-Google-Smtp-Source: ABdhPJy5OWv4YebWEdmAk1TZNEahwpIKQsFkvMQ2u8mMNYwisz/N6njR6OtM1fCTbW1PDnm4LCQG4w==
+X-Received: by 2002:aa7:982e:: with SMTP id q14mr8418876pfl.299.1596719950852;
+        Thu, 06 Aug 2020 06:19:10 -0700 (PDT)
+Received: from localhost.localdomain (p14232-ipngn10801marunouchi.tokyo.ocn.ne.jp. [122.24.13.232])
+        by smtp.gmail.com with ESMTPSA id y72sm8790366pfg.58.2020.08.06.06.19.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 06:19:09 -0700 (PDT)
+From:   Eiichi Tsukata <devel@etsukata.com>
+To:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Eiichi Tsukata <devel@etsukata.com>
+Subject: [PATCH] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+Date:   Thu,  6 Aug 2020 22:18:47 +0900
+Message-Id: <20200806131847.2248244-1-devel@etsukata.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kpgi025.fsf@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 11:41:06AM +0200, Thomas Gleixner wrote:
-> peterz@infradead.org writes:
-> > On Wed, Aug 05, 2020 at 02:56:49PM +0100, Valentin Schneider wrote:
-> >
-> >> I've been tempted to say the test case is a bit bogus, but am not familiar
-> >> enough with the RT throttling details to stand that ground. That said, from
-> >> both looking at the execution and the stress-ng source code, it seems to
-> >> unconditionally spawn 32 FIFO-50 tasks (there's even an option to make
-> >> these FIFO-99!!!), which is quite a crowd on monoCPU systems.
-> >
-> > Oh, so it's a case of: we do stupid without tuning and the system falls
-> > over. I can live with that.
-> 
-> It's not a question of whether you can live with that behaviour for a
-> particular silly test case.
-> 
-> The same happens with a single RT runaway task with enough interrupt
-> load on a UP machine. Just validated that. 
+If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
+shows the following warning:
 
-Of course.
+  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
+  member access within null pointer of type 'struct xfs_kobj'
+  Call Trace:
+   dump_stack+0x10e/0x195
+   ubsan_type_mismatch_common+0x241/0x280
+   __ubsan_handle_type_mismatch_v1+0x32/0x40
+   init_xfs_fs+0x12b/0x28f
+   do_one_initcall+0xdd/0x1d0
+   do_initcall_level+0x151/0x1b6
+   do_initcalls+0x50/0x8f
+   do_basic_setup+0x29/0x2b
+   kernel_init_freeable+0x19f/0x20b
+   kernel_init+0x11/0x1e0
+   ret_from_fork+0x22/0x30
 
-> And that has nothing to do
-> with a silly test case. Sporadic runaways due to a bug in a once per
-> week code path simply can happen and having the safety net working
-> depending on a config option selected or not is just wrong.
+Fix it by checking parent_kobj before the code accesses its member.
 
-The safety thing is concerned with RT tasks. It doesn't pretend to help
-with runnaway IRQs, never has, never will.
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+---
+ fs/xfs/xfs_sysfs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The further extreme is an interrupt storm, those have always taken a
-machine down.
+diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
+index e9f810fc6731..aad67dc4ab5b 100644
+--- a/fs/xfs/xfs_sysfs.h
++++ b/fs/xfs/xfs_sysfs.h
+@@ -32,9 +32,9 @@ xfs_sysfs_init(
+ 	struct xfs_kobj		*parent_kobj,
+ 	const char		*name)
+ {
++	struct kobject *parent = parent_kobj ? &parent_kobj->kobject : NULL;
+ 	init_completion(&kobj->complete);
+-	return kobject_init_and_add(&kobj->kobject, ktype,
+-				    &parent_kobj->kobject, "%s", name);
++	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
+ }
+ 
+ static inline void
+-- 
+2.26.2
 
-Accounting unrelated IRQ time to RT tasks is equally wrong, the task
-execution is unrelated to the IRQs. The config option at least offers
-insight into where time goes -- and it's a config option because doing
-time accounting on interrupts adds overhead :/
-
-This really is a no-win all round.
-
-The only 'sensible' option here is threaded IRQs, where the IRQ line
-gets disabled until the handler thread has ran, that also helps with IRQ
-storms.
