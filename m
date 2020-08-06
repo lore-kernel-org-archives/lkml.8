@@ -2,113 +2,115 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0B5C433F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1C8C4345D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE8522D04
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D41822D06
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWG8V9GD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgHFIuZ (ORCPT
+        id S1728915AbgHFJC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 04:50:25 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:42872 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbgHFIuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 04:50:22 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BMhyg3Nfcz9v0TG;
-        Thu,  6 Aug 2020 10:50:19 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id VhIF0KbsPeBM; Thu,  6 Aug 2020 10:50:19 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BMhyg2Wcfz9v0St;
-        Thu,  6 Aug 2020 10:50:19 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B26658B7FA;
-        Thu,  6 Aug 2020 10:50:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id o0efautfMvDK; Thu,  6 Aug 2020 10:50:20 +0200 (CEST)
-Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 89F438B75E;
-        Thu,  6 Aug 2020 10:50:20 +0200 (CEST)
-Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 765F965BC9; Thu,  6 Aug 2020 08:50:20 +0000 (UTC)
-Message-Id: <04169f40c09682ce5747518268ca84285bc17fbc.1596703345.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH] powerpc/signal: Move and simplify get_clean_sp()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu,  6 Aug 2020 08:50:20 +0000 (UTC)
+        Thu, 6 Aug 2020 05:02:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbgHFJC6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 05:02:58 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C2CC061574;
+        Thu,  6 Aug 2020 02:02:58 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id q4so31369837edv.13;
+        Thu, 06 Aug 2020 02:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BtAZAsrc9ChZDBxja2M8CUkXA4o6z7WOsBQ2MhI4SX4=;
+        b=bWG8V9GDjLuWRiYWSTn7UBWGgM/968UMS6O8Tx/mmYR0zmowlkn5MuKiikjhedAAB5
+         EwBiDYLkx72AW0mhbdoONYQ7B3Yl7w4onYe9m8w7DaDtxpCDq5hsz4lD9Nto4OlYht/T
+         dypSlXuWgeifRwRCBkxYgFQy4N3TDKcVgo3Fts6qp60UBmbGxw0arRxB9hil5LMmhnbx
+         cp//gsQW5BEV+B/aEhBES/zY03mbQ5HotqnaIAgthtyR1uX182YIQHtr+U2HNZ7Oi/SI
+         pB0xsCFbAZFQeuVHwHrxGqALp5Pm1zNY6JuYSRRil1rKwxfRtyc8KRa99ih456Qxaopz
+         yUrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BtAZAsrc9ChZDBxja2M8CUkXA4o6z7WOsBQ2MhI4SX4=;
+        b=BE9X0uRD8nmHJZCVScXpuE4FNO7gEsvAP/pUcce42vxqaYgIgwj+JBrDiHws0uFbtj
+         R9bQF3VvPFZzC3KShU3GVisvTtx3tUcV5Ol8npdvTi8vBTPNIY1QolPY9n7D295i3kBU
+         W8PlycnKOwunpKOyewKD5/hw4+LS/fU5uaDGb8HUlprRxBg5GHAaZEAIiXptxRsUnFjL
+         EwnEdhD8DXyzVThjABu9wmxCfp5ebyzA7eDcgqtWV9y62akKeEZtnmL1/zS1MynQUPwW
+         wC2c3y6TNn1q/hbcFDXzuF6XPe9YIXlm2ORU8h1Yo+Jp5yMwfy+5O0+ODvJXAo99cacy
+         /o3w==
+X-Gm-Message-State: AOAM531u+kaxrr01poqrXzegc3Tw4EB52xBXV3S+z/LzdMVpml4D5Hu+
+        qLVM2sqH81auqbudyutVEGbLgnApAKxbYA==
+X-Google-Smtp-Source: ABdhPJxnRKDEntM+utjGsoNw8ngGGR4vhSsivH2K+Uec6jZBXKU45aCp4ORW6Vexm5d+0N3LVteGDQ==
+X-Received: by 2002:aa7:d1cc:: with SMTP id g12mr3172241edp.385.1596704570766;
+        Thu, 06 Aug 2020 02:02:50 -0700 (PDT)
+Received: from ci00583-linux.xsens-tech.local (2001-1c06-0702-ba00-88c2-8039-7a6c-c842.cable.dynamic.v6.ziggo.nl. [2001:1c06:702:ba00:88c2:8039:7a6c:c842])
+        by smtp.googlemail.com with ESMTPSA id x1sm3188987ejc.119.2020.08.06.02.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 02:02:50 -0700 (PDT)
+From:   Patrick Riphagen <ppriphagen@gmail.com>
+X-Google-Original-From: Patrick Riphagen <patrick.riphagen@xsens.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     patrick.riphagen@xsens.com, stable@vger.kernel.org
+Subject: [PATCH] USB: serial: ftdi_sio: add IDs for Xsens Mti USB converter
+Date:   Thu,  6 Aug 2020 11:02:34 +0200
+Message-Id: <20200806090234.4130-1-patrick.riphagen@xsens.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-get_clean_sp() is only used in kernel/signal.c . Move it there.
+The device added has an FTDI chip inside.
+The device is used to connect Xsens USB Motion Trackers.
 
-And GCC is smart enough to reduce the function when on PPC32, no
-need of a special PPC32 simple version.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: stable@vger.kernel.org
+Signed-off-by: Patrick Riphagen <patrick.riphagen@xsens.com>
 ---
- arch/powerpc/include/asm/processor.h | 14 --------------
- arch/powerpc/kernel/signal.c         |  7 +++++++
- 2 files changed, 7 insertions(+), 14 deletions(-)
+ drivers/usb/serial/ftdi_sio.c     | 1 +
+ drivers/usb/serial/ftdi_sio_ids.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-index ed0d633ab5aa..5c20b6d509ae 100644
---- a/arch/powerpc/include/asm/processor.h
-+++ b/arch/powerpc/include/asm/processor.h
-@@ -404,20 +404,6 @@ static inline void prefetchw(const void *x)
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 9ad44a96dfe3..2c08cad32f1d 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -713,6 +713,7 @@ static const struct usb_device_id id_table_combined[] = {
+ 	{ USB_DEVICE(XSENS_VID, XSENS_AWINDA_STATION_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_CONVERTER_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_MTDEVBOARD_PID) },
++	{ USB_DEVICE(XSENS_VID, XSENS_MTIUSBCONVERTER_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_MTW_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_OMNI1509) },
+ 	{ USB_DEVICE(MOBILITY_VID, MOBILITY_USB_SERIAL_PID) },
+diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
+index e8373528264c..b5ca17a5967a 100644
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -160,6 +160,7 @@
+ #define XSENS_AWINDA_DONGLE_PID 0x0102
+ #define XSENS_MTW_PID		0x0200	/* Xsens MTw */
+ #define XSENS_MTDEVBOARD_PID	0x0300	/* Motion Tracker Development Board */
++#define XSENS_MTIUSBCONVERTER_PID	0x0301	/* MTi USB converter */
+ #define XSENS_CONVERTER_PID	0xD00D	/* Xsens USB-serial converter */
  
- #define HAVE_ARCH_PICK_MMAP_LAYOUT
- 
--#ifdef CONFIG_PPC64
--static inline unsigned long get_clean_sp(unsigned long sp, int is_32)
--{
--	if (is_32)
--		return sp & 0x0ffffffffUL;
--	return sp;
--}
--#else
--static inline unsigned long get_clean_sp(unsigned long sp, int is_32)
--{
--	return sp;
--}
--#endif
--
- /* asm stubs */
- extern unsigned long isa300_idle_stop_noloss(unsigned long psscr_val);
- extern unsigned long isa300_idle_stop_mayloss(unsigned long psscr_val);
-diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-index d15a98c758b8..bd0ba7c5e2cf 100644
---- a/arch/powerpc/kernel/signal.c
-+++ b/arch/powerpc/kernel/signal.c
-@@ -171,6 +171,13 @@ inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
- 
- int show_unhandled_signals = 1;
- 
-+static unsigned long get_clean_sp(unsigned long sp, int is_32)
-+{
-+	if (is_32)
-+		return sp & 0x0ffffffffUL;
-+	return sp;
-+}
-+
- /*
-  * Allocate space for the signal frame
-  */
+ /* Xsens devices using FTDI VID */
 -- 
-2.25.0
+2.25.1
 
