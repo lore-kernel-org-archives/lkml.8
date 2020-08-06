@@ -2,104 +2,81 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF005C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7691C2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490382173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mixtli.metztli.it header.i=@mixtli.metztli.it header.b="JzKePvXS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cpvi4D/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHFCLC (ORCPT
+        id S1726769AbgHFCRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:11:02 -0400
-Received: from mail7.static.mailgun.info ([104.130.122.7]:58100 "EHLO
-        mail7.static.mailgun.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgHFCLB (ORCPT
+        Wed, 5 Aug 2020 22:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgHFCRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:11:01 -0400
-X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 22:11:00 EDT
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mixtli.metztli.it; q=dns/txt;
- s=mx; t=1596679860; h=From: Date: Message-Id: To: Subject: Sender;
- bh=rwFqRrukwelWii2zwN3pKKuwvo/FNdvXZl6RI6GFFhc=; b=JzKePvXSILIQvpa7Q3BB7E7EOdBpbW6Dh8aUkpJmE7cb3xXaiVh6v/nn/ctyWUCvIyeESQ2C
- Z2mCq2+9GJ0ya2IQsGnQS6rhHHxALD9uAa+ykq52PLVv4Cxif2TAJ3DuUoanOhmu/Vx/Ra71
- huLQoouKHtw9zOIYbY6AeRY5Mdg=
-X-Mailgun-Sending-Ip: 104.130.122.7
-X-Mailgun-Sid: WyIxYzIzYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgIjE3YjU0Il0=
-Received: from huitzilopochtli.metztli-it.com
- (99-130-254-3.lightspeed.sntcca.sbcglobal.net [99.130.254.3]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f2b6576668ab3fef61252fb (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Thu, 06 Aug 2020 02:05:42 GMT
-Received: by huitzilopochtli.metztli-it.com (Postfix, from userid 1000)
-        id D8E866723A77; Wed,  5 Aug 2020 19:05:40 -0700 (PDT)
-Subject: Re: PROBLEM: IO lockup on reiserfs FS.
-To:     <Hgntkwis@vfemail.net>, <torvalds@linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, <reiserfs-devel@vger.kernel.org>,
-        <edward.shishkin@gmail.com>
-X-Mailer: mail (GNU Mailutils 3.9)
-Message-Id: <20200806020540.D8E866723A77@huitzilopochtli.metztli-it.com>
-Date:   Wed,  5 Aug 2020 19:05:40 -0700 (PDT)
-From:   Metztli Information Technology <jose.r.r@metztli.com>
+        Wed, 5 Aug 2020 22:17:46 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EAEC061574;
+        Wed,  5 Aug 2020 19:17:46 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id p1so26725066pls.4;
+        Wed, 05 Aug 2020 19:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bmUoQ8Yqb0yCc2UJLmctj9moyzTmkngEF1wnWxeUUjA=;
+        b=Cpvi4D/HtWhUNAkkFFsAKMwGC/2Q+wMWFRYrgaI6B061eOtykDHlpDG6G7di55PNst
+         Fqhj/Lw8iC4XU5E3oEoGNH9X4hXLyRuyodr/GJUZaUpwnTsaVcfH/Wzr2Dmoo/C9uido
+         IjNpl20aFv6EysjFvzWA9rndSNsJahH0rH//8mGP8o4yYEfnREYwM4Jc60BOPhBupMu+
+         MMICF3QBzMWThYWEw7KASsJPs8B1s/1/2aJi8GZ2DJThVLHwdiry7WYAJX2hMTMxCAVo
+         ABbGjVD2MqkV5eLkK5bvQbvBtsgJmA1RyF2TAIqQg1P/n1U58YV8DdPUlOBV1hK5UkKe
+         n6cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bmUoQ8Yqb0yCc2UJLmctj9moyzTmkngEF1wnWxeUUjA=;
+        b=VOUIXeoIfD9yJVq3VwHh5jscwB/R8y3S4BxKvVrQiese74jJWGJgAQW7KsD/T10nXq
+         aZCSsYUYED/hTMriMBalRK3Qo5od+1CooWjgLqezzguATdtZqXzd4ZBNy2nErc2wn0gq
+         4ZmadcPOYepekefgYLY0iFLWdhRuve8kTR1TZP3qfS892/pkjxqI3IFOlvrwJ9a2QEFN
+         JBsfT0ta2cBmftxCaNntvLZwpV1/0HCcCiI4Hq+U3kmzjN3aG1UJv3BK0hzwbZhUl2gh
+         70c1FkP3r1AQv6RDXjws9IGBGqSUyV5bFb8KUwuFITnfxvb1C4efaTsDioqVMFxGxVwR
+         Riaw==
+X-Gm-Message-State: AOAM531HnTtg4TYfDdTC3ebmjXrzJHjhDZESs7HgHnuC3MDWrsFo/NGg
+        TbEy+GkIp0U+r3jn7Tn5aKU0Q319P79YL9BmRKU=
+X-Google-Smtp-Source: ABdhPJzibthz3FojelP1SXthc6kN281mI/ZPAKJFAEO1TG0OwusOyZDWU4TyJnO2ndjCz3KgYCpPufmBlUFvmzJWhhQ=
+X-Received: by 2002:a17:902:9b8f:: with SMTP id y15mr5984598plp.322.1596680265011;
+ Wed, 05 Aug 2020 19:17:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200806015040.98379-1-xie.he.0141@gmail.com>
+In-Reply-To: <20200806015040.98379-1-xie.he.0141@gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Wed, 5 Aug 2020 19:17:34 -0700
+Message-ID: <CAJht_ENdnD5u2Qbi+fMVTw+GUrYS77=dHRES1s3F+mjvttYnVA@mail.gmail.com>
+Subject: Re: [PATCH] drivers/net/wan/lapbether: Added needed_headroom and a
+ skb->len check
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Brian Norris <briannorris@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- 
-On Wed, Aug 5, 2020 at 5:01 PM <Hgntkwis@vfemail.net> wrote:
-
-> On Wed, 5 Aug 2020 12:51:41 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > On Wed, Aug 5, 2020 at 9:53 AM <Hgntkwis@vfemail.net> wrote:
-> > >
-> > > It's been over 1 week since I sent this into the reiserfs-devel
-> > > mailing list. I'm escalating this as the kernel docs recommend.
-> > > I'm still willing to help debug and test a fix for this problem.  
-> > 
-> > The thing is, you're using an ancient 4.14 kernel, 
-> 
-> Sorry, I didn't realize kernel development went that fast.
-> I did try to go to the 5.X series, but the AMDGPU drivers don't work on
-> my SI card anymore (I need to bisect which takes time and many re-boots
-> to find the problematic commit).
-> I'll try the Radeon-SI driver and see if I can reproduce this reliably.
-> 
-> > and a filesystem
-> > that isn't really maintained any more. You'll find very few people
-> > interested in trying to debug that combination.
-> > 
-> > You *might* have more luck with a more modern kernel, but even then
-> > ... reiserfs?
-> > 
-> >               Linus
-> > 
-> 
-> Why does no one (I've met others who share a similar sentiment), like
-> reiserfs?
-Could be because 'others' are all 'virtuous' individuals, employed by 'virtuous' corporations, headquartered at 'virtuous' western countries, whose 'virtuous' governments are able to finance the finest hasbara...er, propaganda, that a corporatocracy...er, 'democracy', can buy.
-
-> I'm not looking for fight, I'm incredulous. It's a great FS
-> that survives oops-es, power failures, and random crashes very very well.
-> It's the only FLOSS FS with tail packing.
-On a more sober note, Reiser4, Software Framework Release Number (SFRN) 4.0.2, is stable, and supercedes the features you appreciate in reiserfs, like Edward stated in his subsequent reply.
-> 
-> Thanks,
-> David
-
-
-Best Professional Regards.
-
--- 
-Jose R R
-http://metztli.it
----------------------------------------------------------------------------------------------
-Download Metztli Reiser4: Debian Buster w/ Linux 5.5.19 AMD64
----------------------------------------------------------------------------------------------
-feats ZSTD compression https://sf.net/projects/metztli-reiser4/
--------------------------------------------------------------------------------------------
-Official current Reiser4 resources: https://reiser4.wiki.kernel.org/
+I'm sorry I forgot to include the "net" prefix again. I remembered
+"PATCH" but not "net" this time. I'll try to remember both next time.
+If requested I can resend the patch with the correct prefix. Sorry.
