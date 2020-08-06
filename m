@@ -2,220 +2,307 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B8E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9019F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NFp7G9kd"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="tOwdgn1x";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="MUPEndLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbgHFQys (ORCPT
+        id S1729655AbgHFQy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:54:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52960 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729111AbgHFQym (ORCPT
+        Thu, 6 Aug 2020 12:54:56 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:41298 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729553AbgHFQuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:54:42 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076FVtLN001663;
-        Thu, 6 Aug 2020 11:34:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=/6OwY2FMLYMMfilDKDbdLEaroXYly6ajpHy06tH7vzE=;
- b=NFp7G9kd2x96lc9KEZiGdkoiJtZVPUeCg+siGa9Rvr+HnY3ZwjZHVOiTfqDwgSCPW+Tc
- iBDfRXr0claVrFidVYxv7V2IYQzOQwBVk4nGtfYZYPN5PqB3+pk+VMlJ0chbURrLir9W
- 1hgjui5lwxXaXhU+Ye7jMRSajeC8rMDRlotc7FrkXP1qwAwvsH/dbKvBKSfZjpEc+/J9
- GmEGWO4h5GI2Bgi+3kjgnQ1ycjz5i/zbYiF1M7Jncc+PMyFW1a0l6vOEd2d0+rLCUlDb
- UD2Ou4iJP+c3h7K4bcLdfqya0iBR0RxJd5IivrCFQIXoQduwt0WcXW5+HrqmSDhZWj8i OA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32repgumnm-1
+        Thu, 6 Aug 2020 12:50:15 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076BPHEA021976;
+        Thu, 6 Aug 2020 04:34:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
+ b=tOwdgn1xj8iQeTTNkWlbqv/Z7e5ov9tvfiACiFqqopM4nQrVYB+LJCaA0vqzGpBsyl4i
+ ECDKkaYuiq4CC1riaV41jEDfvhF4zFp0JMI4TchpIAIhcaN/9ZJ1F3ZXTAGC15PDVQa8
+ /VTNEoWgcrSutU3nXHrKNafweVcFrpH+XTrcD2Qjl5eyAoANUpr0cbkBFGlp+W2OT9p7
+ HfH0INjkF1/OjxH4dNDQTiCn3JnaW3A4+OXCK5Um+5zad1jvHRcNxYMSSvqtv/fumFWx
+ L6D0HupBOseuNMYBexEJ2xwy+oKU0dqcgDSqfcAMTH6i2Obilvgk9dEotgT8u7H2hYNT Rw== 
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2104.outbound.protection.outlook.com [104.47.58.104])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 32n8gy1uv9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 11:34:48 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076FWxK7005324;
-        Thu, 6 Aug 2020 11:34:48 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32repgumn8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 11:34:48 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076FYC00010222;
-        Thu, 6 Aug 2020 15:34:47 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 32n018jgks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Aug 2020 15:34:47 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076FYkDv60096866
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Aug 2020 15:34:46 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1999C605B;
-        Thu,  6 Aug 2020 15:34:45 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F259C6055;
-        Thu,  6 Aug 2020 15:34:44 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.160.68.187])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Aug 2020 15:34:43 +0000 (GMT)
-Subject: Re: [PATCH 1/2] ima: Pre-parse the list of keyrings in a KEY_CHECK
- rule
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
- <20200727140831.64251-2-tyhicks@linux.microsoft.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <8f749594-1214-9f2d-4614-d360772a2ab6@linux.vnet.ibm.com>
-Date:   Thu, 6 Aug 2020 11:34:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 06 Aug 2020 04:34:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B6KIIb228bj11R77OeOpZU3wXab7L/Deq63qL90YrW8r1snK5Fir0jb1vhcZbGwVfZ1cBJ/C8dd94gXAlax5fLWKe1qv2xbczaFr+5VR/GpEd3LvNXOtkcSZZsaCvVIVOJ37g2RMZT5YSGdYqnRmh+QaHqOdzM5RNLX8TCXUYeYtBF/paurW8ZCg/4lX5xJ0a1uRQTseEJtmR/t6mui88a3jcNyphA0P/K5+7aeE09rS72oaJmLqRGtOHY0ihcKIvFPjrryiLUexaT7sZv1QknhX0JSHq+y9sUFs2aguvZSmiI9Sy5fG+MHyJsIJekhQN/T7sPgPu+dpeN2u99Zn6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
+ b=fcVnIMqkk2K8LYcjX25IVMJzZzoC6qYP0PlOnM65d4ceW3P+ZsDPOeQMJqns5I9OBrnqvWYAiInK4LJVEW1DfiiL5LqdVdtga4kq6VtV9PgtaUymtG6Yuy+RVt9yggO+/XXoJSCOn9gAR+M7upGHaTF/H1lrjtKRjKh8m87YMln1R+EjE7neWFxCBO8gSWY+8nKVxpKo+Aeoc8XMJ9H4b0PLgSaoKUOAQ+0055fyPBMkF8xFitlv79haqHFFEmy3j1FzGa9kZBooiuD/m8Gny7GVi3kyEFyLSc9D49Q17xyq9W64xqwZUg3HYfVkPLFaTlOpG5N2thi/7BI8B8dicQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.244) smtp.rcpttodomain=samsung.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
+ b=MUPEndLzT8+BVNZStgGY/AiFobRpIJ4wHQ6BfmpJkM6uxfR7laTDmDcCEjRsKMLNv5mYNH1vuGSLGWGZ/Aa4ouNmI9u9b5YzIXa2c17jEpTIJcnxNN80rEIDABIQqkGWArbIfdizPuW+oBn77tFjP9hMd+/9oS9x7HQgrplJiFA=
+Received: from MWHPR21CA0040.namprd21.prod.outlook.com (2603:10b6:300:129::26)
+ by BN7PR07MB4835.namprd07.prod.outlook.com (2603:10b6:406:f0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Thu, 6 Aug
+ 2020 11:34:48 +0000
+Received: from MW2NAM12FT039.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:300:129:cafe::14) by MWHPR21CA0040.outlook.office365.com
+ (2603:10b6:300:129::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.0 via Frontend
+ Transport; Thu, 6 Aug 2020 11:34:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
+ smtp.mailfrom=cadence.com; samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
+ MW2NAM12FT039.mail.protection.outlook.com (10.13.181.39) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3261.10 via Frontend Transport; Thu, 6 Aug 2020 11:34:46 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 076BYZWm083124
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 04:34:37 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 076BYZLq008204;
+        Thu, 6 Aug 2020 13:34:35 +0200
+Received: (from sjakhade@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 076BYZd7008203;
+        Thu, 6 Aug 2020 13:34:35 +0200
+From:   Swapnil Jakhade <sjakhade@cadence.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Laurent.pinchart@ideasonboard.com>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>, <praneeth@ti.com>
+Subject: [PATCH v8 1/3] dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings
+Date:   Thu, 6 Aug 2020 13:34:30 +0200
+Message-ID: <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <20200727140831.64251-2-tyhicks@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bd2c18fb-e488-464f-70c8-08d839fcb8d4
+X-MS-TrafficTypeDiagnostic: BN7PR07MB4835:
+X-Microsoft-Antispam-PRVS: <BN7PR07MB4835FC8D026B146DE90B33EDC5480@BN7PR07MB4835.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VE7roeJIKnK+Jfd7Ulve5dZTvD8CxfqyBVlj/HnwVk62aPU6H9hcvuZGifUCPFU4ImF/3gyrcbi/AyYM0n4P97MDopg20ZKR5pzWJf7rwA1VwNogV6uTy6OnychY6ZfZrnzryQhrBc9TA6i3EqhQDSBPnb1GkE+EFjln3Py6NMjaSQ5DxXs4KJ7EdypN+qNX5KQpr91jdsLm/vDUw2EQZ37nA4mFsk06La3YoNxghnJw3JWnwNhTpSZ3nIXbQvu+GZljRRqpsqKJeLL92U8o0jgwpQW3zKkk4a9YyuNDUO6kBzeqtNBkrzRyUoAVgsHf06C7djiC8SNipfY2N7b1puZgTz+tBOcYiQSnwRlGg8sk3cYMRG/cEdDHUzbZoNpt++PZtlY2M69kxtW980Ol/3BqdOBlARjnJNvivqur+Iu4Riqv73IsVRkBi9Mlx4LF4Qnoc7vgbSQ3LO6n/nmYIvhFh+rGcU+9/hkrWC51fSjmjYLyAWcDeGMTgW12slciaYO2oL5sY5SHnYUKhMldEvvwIL0SznhuQCFvMrpGogyDJZyu86Yg9yulHqUW/zEUr7efnR6kCCASagt0+L/W6g==
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(36092001)(46966005)(8936002)(8676002)(7416002)(47076004)(4326008)(82740400003)(70586007)(478600001)(36756003)(186003)(81166007)(70206006)(26005)(83380400001)(82310400002)(356005)(86362001)(6666004)(36906005)(2616005)(336012)(426003)(2906002)(316002)(54906003)(42186006)(110136005)(5660300002)(921003)(21314003)(2101003)(83996005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:34:46.7797
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd2c18fb-e488-464f-70c8-08d839fcb8d4
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: MW2NAM12FT039.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR07MB4835
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-06_12:2020-08-06,2020-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 clxscore=1011 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060108
+ definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008060083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Yuti Amonkar <yamonkar@cadence.com>
 
-On 7/27/20 10:08 AM, Tyler Hicks wrote:
-> The ima_keyrings buffer was used as a work buffer for strsep()-based
-> parsing of the "keyrings=" option of an IMA policy rule. This parsing
-> was re-performed each time an asymmetric key was added to a kernel
-> keyring for each loaded policy rule that contained a "keyrings=" option.
->
-> An example rule specifying this option is:
->
->   measure func=KEY_CHECK keyrings=a|b|c
->
-> The rule says to measure asymmetric keys added to any of the kernel
-> keyrings named "a", "b", or "c". The size of the buffer size was
-> equal to the size of the largest "keyrings=" value seen in a previously
-> loaded rule (5 + 1 for the NUL-terminator in the previous example) and
-> the buffer was pre-allocated at the time of policy load.
->
-> The pre-allocated buffer approach suffered from a couple bugs:
->
-> 1) There was no locking around the use of the buffer so concurrent key
->     add operations, to two different keyrings, would result in the
->     strsep() loop of ima_match_keyring() to modify the buffer at the same
->     time. This resulted in unexpected results from ima_match_keyring()
->     and, therefore, could cause unintended keys to be measured or keys to
->     not be measured when IMA policy intended for them to be measured.
->
-> 2) If the kstrdup() that initialized entry->keyrings in ima_parse_rule()
->     failed, the ima_keyrings buffer was freed and set to NULL even when a
->     valid KEY_CHECK rule was previously loaded. The next KEY_CHECK event
->     would trigger a call to strcpy() with a NULL destination pointer and
->     crash the kernel.
->
-> Remove the need for a pre-allocated global buffer by parsing the list of
-> keyrings in a KEY_CHECK rule at the time of policy load. The
-> ima_rule_entry will contain an array of string pointers which point to
-> the name of each keyring specified in the rule. No string processing
-> needs to happen at the time of asymmetric key add so iterating through
-> the list and doing a string comparison is all that's required at the
-> time of policy check.
->
-> In the process of changing how the "keyrings=" policy option is handled,
-> a couple additional bugs were fixed:
->
-> 1) The rule parser accepted rules containing invalid "keyrings=" values
->     such as "a|b||c", "a|b|", or simply "|".
->
-> 2) The /sys/kernel/security/ima/policy file did not display the entire
->     "keyrings=" value if the list of keyrings was longer than what could
->     fit in the fixed size tbuf buffer in ima_policy_show().
->
-> Fixes: 5c7bac9fb2c5 ("IMA: pre-allocate buffer to hold keyrings string")
-> Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
-> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> ---
->   security/integrity/ima/ima_policy.c | 138 +++++++++++++++++++---------
->   1 file changed, 93 insertions(+), 45 deletions(-)
->
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 07f033634b27..c328cfa0fc49 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -59,6 +59,11 @@ enum policy_types { ORIGINAL_TCB = 1, DEFAULT_TCB };
->   
->   enum policy_rule_list { IMA_DEFAULT_POLICY = 1, IMA_CUSTOM_POLICY };
->   
-> +struct ima_rule_opt_list {
-> +	size_t count;
-> +	char *items[];
-> +};
-> +
->   struct ima_rule_entry {
->   	struct list_head list;
->   	int action;
-> @@ -78,7 +83,7 @@ struct ima_rule_entry {
->   		int type;	/* audit type */
->   	} lsm[MAX_LSM_RULES];
->   	char *fsname;
-> -	char *keyrings; /* Measure keys added to these keyrings */
-> +	struct ima_rule_opt_list *keyrings; /* Measure keys added to these keyrings */
->   	struct ima_template_desc *template;
->   };
->   
-> @@ -206,10 +211,6 @@ static LIST_HEAD(ima_policy_rules);
->   static LIST_HEAD(ima_temp_rules);
->   static struct list_head *ima_rules = &ima_default_rules;
->   
-> -/* Pre-allocated buffer used for matching keyrings. */
-> -static char *ima_keyrings;
-> -static size_t ima_keyrings_len;
-> -
->   static int ima_policy __initdata;
->   
->   static int __init default_measure_policy_setup(char *str)
-> @@ -253,6 +254,72 @@ static int __init default_appraise_policy_setup(char *str)
->   }
->   __setup("ima_appraise_tcb", default_appraise_policy_setup);
->   
-> +static struct ima_rule_opt_list *ima_alloc_rule_opt_list(const substring_t *src)
-> +{
-> +	struct ima_rule_opt_list *opt_list;
-> +	size_t count = 0;
-> +	char *src_copy;
-> +	char *cur, *next;
-> +	size_t i;
-> +
-> +	src_copy = match_strdup(src);
-> +	if (!src_copy)
-> +		return NULL;
+Document the bindings used for the Cadence MHDP DPI/DP bridge in
+yaml format.
 
-The caller of this function checks for IS_ERR(..) and not 
-IS_ERR_OR_NULL(..). Shouldn't it return ERR_PTR(-EINVAL) instead of NULL ?
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../bindings/display/bridge/cdns,mhdp.yaml    | 139 ++++++++++++++++++
+ 1 file changed, 139 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
 
-Thanks & Regards,
-
-     - Nayna
+diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+new file mode 100644
+index 000000000000..dabccefe0983
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+@@ -0,0 +1,139 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence MHDP bridge
++
++maintainers:
++  - Swapnil Jakhade <sjakhade@cadence.com>
++  - Yuti Amonkar <yamonkar@cadence.com>
++
++properties:
++  compatible:
++    enum:
++      - cdns,mhdp8546
++      - ti,j721e-mhdp8546
++
++  reg:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description:
++          Register block of mhdptx apb registers up to PHY mapped area (AUX_CONFIG_P).
++          The AUX and PMA registers are not part of this range, they are instead
++          included in the associated PHY.
++      - description:
++          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
++
++  reg-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: mhdptx
++      - const: j721e-intg
++
++  clocks:
++    maxItems: 1
++    description:
++      DP bridge clock, used by the IP to know how to translate a number of
++      clock cycles into a time (which is used to comply with DP standard timings
++      and delays).
++
++  phys:
++    maxItems: 1
++    description:
++      phandle to the DisplayPort PHY.
++
++  ports:
++    type: object
++    description:
++      Ports as described in Documentation/devicetree/bindings/graph.txt.
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          Input port representing the DP bridge input.
++
++      port@1:
++        type: object
++        description:
++          Output port representing the DP bridge output.
++
++    required:
++      - port@0
++      - port@1
++      - '#address-cells'
++      - '#size-cells'
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: ti,j721e-mhdp8546
++    then:
++      properties:
++        reg:
++          minItems: 2
++        reg-names:
++          minItems: 2
++    else:
++      properties:
++        reg:
++          maxItems: 1
++        reg-names:
++          maxItems: 1
++
++required:
++  - compatible
++  - clocks
++  - reg
++  - reg-names
++  - phys
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        mhdp: dp-bridge@f0fb000000 {
++            compatible = "cdns,mhdp8546";
++            reg = <0xf0 0xfb000000 0x0 0x1000000>;
++            reg-names = "mhdptx";
++            clocks = <&mhdp_clock>;
++            phys = <&dp_phy>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    dp_bridge_input: endpoint {
++                        remote-endpoint = <&xxx_dpi_output>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    dp_bridge_output: endpoint {
++                        remote-endpoint = <&xxx_dp_connector_input>;
++                    };
++                };
++            };
++        };
++    };
++...
+-- 
+2.26.1
 
