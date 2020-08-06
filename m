@@ -2,142 +2,148 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012C7206B2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D040206B2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V0kKR174"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wy/DxXqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbgHFRsM (ORCPT
+        id S1729893AbgHFRsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728952AbgHFQfr (ORCPT
+        Thu, 6 Aug 2020 13:48:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728935AbgHFQfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:35:47 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6A6C0A8937
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 08:05:26 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id g11so2336943ual.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2574RlgF+iKSb8pLYcGAdJ2nQ/imhKaFZrt0sBio8rA=;
-        b=V0kKR174Sjfx9VDdkI05TbPvA8HiaJEEicV+UecZM/xQeqVrUeFfh2LfH25y9Qpmf2
-         bNfmtysveg5dnoVC9HaJACB06LZxhE4Z+PTpsbBPyFu0+n9+8nnNFvqf2vhCbUYeKGTg
-         N68jHWYIPcG0s80seVHHpSqrJTsmH/A+xVVyg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2574RlgF+iKSb8pLYcGAdJ2nQ/imhKaFZrt0sBio8rA=;
-        b=ldQS8hvQei9M1/DmePJaBUY2HLK8q+k/VbnQIAL51loZW8mTn6HdRwuDhi/c+dvMK9
-         79qgygRWYObgUmp6Gulp8E/19aXWnWVlgbvK/wUdP3YcynTaNd3b8F4wsw6kpF5SlGQF
-         44OcbZTRSV24xQfF4wMEkhUk/hBMcUSGRvuzAdBw1FoEPxyynvvWwVIVm7bFuaEP33va
-         7ck/dzB/h6/VKFRQryT78orpgatLesk9iIhDs8t2byCuajEZ75JDJ35Kadm7rPg3X/Oj
-         DH+3NpmCF/F4+lVyLDBNXQfhW77q6LT9f2sieGwcOnDoL8xbBeoLBwTkzHA9a/HKYd1O
-         Lf+g==
-X-Gm-Message-State: AOAM531NMbFyLEDC0hRBX6/o1GdcyZJe8U/Prcl7nj2OBin9QoQfTbE1
-        8s7nA5a1TV6j5ay4KQvUHES8ITXMIRQ=
-X-Google-Smtp-Source: ABdhPJy3cnE/49We7400yEA7TOg87tBtF61LfWMa58F/BsWzxj1PRzjtonmAiqnUGAOMvY4v8vgFCA==
-X-Received: by 2002:ab0:4263:: with SMTP id i90mr6825664uai.35.1596726323559;
-        Thu, 06 Aug 2020 08:05:23 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id f10sm749888uad.5.2020.08.06.08.05.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 08:05:23 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id y8so18035254vsq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 08:05:22 -0700 (PDT)
-X-Received: by 2002:a05:6102:213a:: with SMTP id f26mr6774155vsg.6.1596726321900;
- Thu, 06 Aug 2020 08:05:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
- <20191120191813.GD4799@willie-the-truck> <CAD=FV=Wntf0TCwdtNNvPY-CXX1VL_SZK8Y8yw1r=UfeayHfwgw@mail.gmail.com>
-In-Reply-To: <CAD=FV=Wntf0TCwdtNNvPY-CXX1VL_SZK8Y8yw1r=UfeayHfwgw@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 6 Aug 2020 08:05:10 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
-Message-ID: <CAD=FV=WgoVN-scgT41R=6Toif2Zrskb3rNzZn_xbP_-ByZC1MA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
-To:     Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Pavel Labath <labath@google.com>,
-        Pratyush Anand <panand@redhat.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Kazuhiro Inaba <kinaba@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Aug 2020 12:35:45 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076E296Q092894;
+        Thu, 6 Aug 2020 10:23:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references; s=pp1;
+ bh=cK+IFbwDsM2m9d21mk++qrDlBgGZFvrkkmzPVkYIzkw=;
+ b=Wy/DxXqmIU1/ZqRoHZPqLu9oj7ath30Pv4e1FvQ7vq46Ful0fvenpSQOtpq0EmuF7yqi
+ lXH6qTHYc2W4pkoa2gm56Eb0kse8bu7mNntp3WKrKsnk8yILFR4LvmBRKgfoWc2NRK8+
+ iD+vzfe4NuI2f+VDseLvdF7i1/njOKnOjE4WU2tZpJ5YNElm5ItAAmqdidGABGuO7xqR
+ Td632cBQQ5WLo7ceohtcYfRcu/HvGe8qSBiJW/AeT+umrvjkCO0BTpjRd5Eewudh88Kw
+ pAeYb2wxa/w9KxTe/Fy7K0GB0lA3cmUkmrg5BMWSliJX77Rac9FcabcnNJKiWzlWqbDI eQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qu0w8xkc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 10:23:12 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 076E38m9098055;
+        Thu, 6 Aug 2020 10:23:11 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qu0w8xjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 10:23:11 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076EGXgN027832;
+        Thu, 6 Aug 2020 14:23:08 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 32n018bda0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 14:23:08 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076EN59J27721984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 14:23:05 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AEA6AE053;
+        Thu,  6 Aug 2020 14:23:05 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8AE7AE04D;
+        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.149.70])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Aug 2020 14:23:04 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v1 1/1] s390: virtio-ccw: PV needs VIRTIO I/O device protection
+Date:   Thu,  6 Aug 2020 16:23:02 +0200
+Message-Id: <1596723782-12798-2-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1596723782-12798-1-git-send-email-pmorel@linux.ibm.com>
+References: <1596723782-12798-1-git-send-email-pmorel@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_09:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 suspectscore=3
+ phishscore=0 mlxscore=0 bulkscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+If protected virtualization is active on s390, the virtio queues are
+not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
+negotiated. Use ccw_transport_features() to fail feature negociation
+and consequently probe if that's not the case, preventing a host
+error on access attempt.
 
-On Mon, Dec 2, 2019 at 8:36 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Wed, Nov 20, 2019 at 11:18 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
-> > > This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
-> > > watchpoint addresses") but ported to arm32, which has the same
-> > > problem.
-> > >
-> > > This problem was found by Android CTS tests, notably the
-> > > "watchpoint_imprecise" test [1].  I tested locally against a copycat
-> > > (simplified) version of the test though.
-> > >
-> > > [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > >
-> > >  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
-> > >  1 file changed, 70 insertions(+), 26 deletions(-)
-> >
-> > Sorry for taking so long to look at this. After wrapping my head around the
-> > logic again
->
-> Yeah.  It was a little weird and (unfortunately) arbitrarily different
-> in some places compared to the arm64 code.
->
->
-> > I think it looks fine, so please put it into the patch system
-> > with my Ack:
-> >
-> > Acked-by: Will Deacon <will@kernel.org>
->
-> Thanks!  Submitted as:
->
-> https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8944/1
+Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+---
+ drivers/s390/virtio/virtio_ccw.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-Oddly, I found that if I go visit that page now I see:
+diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+index 5730572b52cd..cc8d8064c6c4 100644
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -803,11 +803,23 @@ static u64 virtio_ccw_get_features(struct virtio_device *vdev)
+ 	return rc;
+ }
+ 
+-static void ccw_transport_features(struct virtio_device *vdev)
++static int ccw_transport_features(struct virtio_device *vdev)
+ {
+-	/*
+-	 * Currently nothing to do here.
+-	 */
++	if (!is_prot_virt_guest())
++		return 0;
++
++	if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
++		dev_warn(&vdev->dev,
++			 "device must provide VIRTIO_F_VERSION_1\n");
++		return -ENODEV;
++	}
++
++	if (!virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
++		dev_warn(&vdev->dev,
++			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
++		return -ENODEV;
++	}
++	return 0;
+ }
+ 
+ static int virtio_ccw_finalize_features(struct virtio_device *vdev)
+@@ -837,7 +849,9 @@ static int virtio_ccw_finalize_features(struct virtio_device *vdev)
+ 	vring_transport_features(vdev);
+ 
+ 	/* Give virtio_ccw a chance to accept features. */
+-	ccw_transport_features(vdev);
++	ret = ccw_transport_features(vdev);
++	if (ret)
++		goto out_free;
+ 
+ 	features->index = 0;
+ 	features->features = cpu_to_le32((u32)vdev->features);
+-- 
+2.25.1
 
-> - - - Note 2 submitted by Russell King on 17 Jan 2020 11:16:34 (UTC) - - -
-> Moved to applied
->
-> Applied to git-curr (misc branch).
-
-Yet if I go check mainline the patch is not there.  This came to my
-attention since we had my patch picked to the Chrome OS 4.19 tree and
-suddenly recently got a stable merge conflict with "ARM: 8986/1:
-hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints".
-
-Anyone know what happened here?
-
--Doug
