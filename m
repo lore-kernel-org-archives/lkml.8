@@ -2,270 +2,100 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ED1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB8820786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA4220786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0sTLMzAi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQuqgtfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgHFRCU (ORCPT
+        id S1729851AbgHFRDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:02:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
+        Thu, 6 Aug 2020 13:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729710AbgHFRA4 (ORCPT
+        with ESMTP id S1729687AbgHFRB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:00:56 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9924AC0617A9
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 04:32:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HOHNK/Wwh4r+dLOwnbPsU+//UraXJR2JWx5StwnIbMY=; b=0sTLMzAiW/vkKYsNYbSBHPq85f
-        7mIVV3rtllIgLSoMUwHAx9bADSCyheIH3Vr9XuIsGYReUNEAeMFktXRBu1XGBWeKZkxtRReusdh5U
-        JP2iR2+gZwXB7UvdMSRaKIlxmNQzO4osCTSBUOsGVvHgXjH/oys9VGYosHPXvwyai9EngYMt+4WJ1
-        Lqj0FhWGWo/eSn4zUPc+aABDW5olIlv2gNInI59OVWK28yozeQFOlUGnqVEd3qFbE+rc462ZjgGNA
-        mtKAu9/0zoXyyrb+scimVCT3nXnZz/RDf8/lv9RxevxiT/NPDVfZn41zArdgtRIFA3o4G3bZXHiyU
-        YgEHUOZw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3e8V-0006OU-91; Thu, 06 Aug 2020 11:32:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33BE7300446;
-        Thu,  6 Aug 2020 13:32:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0DD6F2B61F1E7; Thu,  6 Aug 2020 13:32:36 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 13:32:36 +0200
-From:   peterz@infradead.org
-To:     Marco Elver <elver@google.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Thu, 6 Aug 2020 13:01:57 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06287C061A1D;
+        Thu,  6 Aug 2020 05:11:32 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b79so44603520qkg.9;
+        Thu, 06 Aug 2020 05:11:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=oD5+bJ3r0NN3+6TONla3cei1wENXPPPflhOciZ2VB4s=;
+        b=dQuqgtfS6RBkdriO+slPy4lqyTseXAvt2kbP+a1MviCWr9QEOseah3mcpt4MMUd4AN
+         s9u0+9nplkK/NeuiuUWGtd5DDu0wFR9YgP4ezxKA6fCk+al+KkRRq6PBC4C0V0i6Slc2
+         F28jZ228C3U9HAm7NPVeisPP/d2JemUwFTyU1VDuXRqvoY5eyAnLUb6Y3Ib4ngXlnmir
+         HnbhWJhcz2HM2OFdOI+RRr0o30KwdMB6fKM3M+I9D1uHPmFeD7ZH7QKDEwIgiWvtl9hm
+         ZtQpcY+drUgwU0tLHp0JGt7/WDDogsveRySF7Of7qLekv+FulU6yqQtdvX2H9OCENWiG
+         itig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=oD5+bJ3r0NN3+6TONla3cei1wENXPPPflhOciZ2VB4s=;
+        b=gC1h/dtY5HG631euLh9C2VSHmhLklWGB/IjpZGeWv52X8Frs7ZScepECdqS2S12Qe6
+         +CGMWmWbSMqiQbAxdxxB/HvZfrmoP+/kjvFo/W5nvlMziajyJ5wobc7uVdZDJ4TZGtwh
+         De7fTiSPEpyepNCBw4aLZIqjdchgpohfueL1h/kh//0ReOToDs2b9k12ApQ8y5lEnfTV
+         TGwKzf4x/OhvAcBpITaWw0Fn79VesrTU78ezluOFp0Kn1kUn9COHOrzBAp0likF0F8h2
+         2SfhhB9Cs9yHLt06oOgZz0HIc7P1+JBv/cOiomcNRAs7cue/GEVHCDt5axCS3JsNBiK2
+         deyQ==
+X-Gm-Message-State: AOAM531ROIHQPGgZV0TljFtzan+1ROqx6opax7H31GYDmtsi4DNwLT76
+        fDGCT3UkIhurgDmFkesZc71KGwPH
+X-Google-Smtp-Source: ABdhPJzOx37xQt8ecJxvdZYrYkmBbnSyOV8Y4LF22tgQGi9lvs1/OfjNG+kYv30K1IpGIUALFHXSfA==
+X-Received: by 2002:a05:620a:a0b:: with SMTP id i11mr8653585qka.65.1596715889932;
+        Thu, 06 Aug 2020 05:11:29 -0700 (PDT)
+Received: from [192.168.1.190] (pool-68-134-6-11.bltmmd.fios.verizon.net. [68.134.6.11])
+        by smtp.gmail.com with ESMTPSA id 7sm3959910qky.89.2020.08.06.05.11.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 05:11:29 -0700 (PDT)
+Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
+To:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        yu-cheng.yu@intel.com, jgross@suse.com, sdeep@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
- helpers
-Message-ID: <20200806113236.GZ2674@hirez.programming.kicks-ass.net>
-References: <0000000000007d3b2d05ac1c303e@google.com>
- <20200805132629.GA87338@elver.google.com>
- <20200805134232.GR2674@hirez.programming.kicks-ass.net>
- <20200805135940.GA156343@elver.google.com>
- <20200805141237.GS2674@hirez.programming.kicks-ass.net>
- <20200805141709.GD35926@hirez.programming.kicks-ass.net>
- <CANpmjNN6FWZ+MsAn3Pj+WEez97diHzqF8hjONtHG15C2gSpSgw@mail.gmail.com>
- <CANpmjNNy3XKQqgrjGPPKKvXhAoF=mae7dk8hmoS4k4oNnnB=KA@mail.gmail.com>
- <20200806074723.GA2364872@elver.google.com>
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org
+References: <20200806080358.3124505-1-tweek@google.com>
+ <20200806080358.3124505-2-tweek@google.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-ID: <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com>
+Date:   Thu, 6 Aug 2020 08:11:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806074723.GA2364872@elver.google.com>
+In-Reply-To: <20200806080358.3124505-2-tweek@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 09:47:23AM +0200, Marco Elver wrote:
-> Testing my hypothesis that raw then nested non-raw
-> local_irq_save/restore() breaks IRQ state tracking -- see the reproducer
-> below. This is at least 1 case I can think of that we're bound to hit.
+On 8/6/20 4:03 AM, Thiébaud Weksteen wrote:
 
-Aaargh!
+> From: Peter Enderborg <peter.enderborg@sony.com>
+>
+> Add further attributes to filter the trace events from AVC.
 
-> diff --git a/init/main.c b/init/main.c
-> index 15bd0efff3df..0873319dcff4 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1041,6 +1041,22 @@ asmlinkage __visible void __init start_kernel(void)
->  	sfi_init_late();
->  	kcsan_init();
->  
-> +	/* DEBUG CODE */
-> +	lockdep_assert_irqs_enabled(); /* Pass. */
-> +	{
-> +		unsigned long flags1;
-> +		raw_local_irq_save(flags1);
-
-This disables IRQs but doesn't trace..
-
-> +		{
-> +			unsigned long flags2;
-> +			lockdep_assert_irqs_enabled(); /* Pass - expectedly blind. */
-
-Indeed, we didn't trace the above disable, so software state is still
-on.
-
-> +			local_irq_save(flags2);
-
-So here we save IRQ state, and unconditionally disable IRQs and trace
-them disabled.
-
-> +			lockdep_assert_irqs_disabled(); /* Pass. */
-> +			local_irq_restore(flags2);
-
-But here, we restore IRQ state to 'disabled' and explicitly trace it
-disabled *again* (which is a bit daft, but whatever).
-
-> +		}
-> +		raw_local_irq_restore(flags1);
-
-This then restores the IRQ state to enable, but no tracing.
-
-> +	}
-> +	lockdep_assert_irqs_enabled(); /* FAIL! */
-
-And we're out of sync... :/
-
-/me goes ponder things...
-
-How's something like this then?
-
----
- include/linux/sched.h |  3 ---
- kernel/kcsan/core.c   | 62 ++++++++++++++++++++++++++++++++++++---------------
- 2 files changed, 44 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 06ec60462af0..2f5aef57e687 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1193,9 +1193,6 @@ struct task_struct {
- 
- #ifdef CONFIG_KCSAN
- 	struct kcsan_ctx		kcsan_ctx;
--#ifdef CONFIG_TRACE_IRQFLAGS
--	struct irqtrace_events		kcsan_save_irqtrace;
--#endif
- #endif
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 9147ff6a12e5..9c4436bf0561 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -291,17 +291,50 @@ static inline unsigned int get_delay(void)
- 				0);
- }
- 
--void kcsan_save_irqtrace(struct task_struct *task)
-+/*
-+ * KCSAN hooks are everywhere, which means they're NMI like for interrupt
-+ * tracing. In order to present a 'normal' as possible context to the code
-+ * called by KCSAN when reporting errors we need to update the irq-tracing
-+ * state.
-+ *
-+ * Save and restore the IRQ state trace touched by KCSAN, since KCSAN's
-+ * runtime is entered for every memory access, and potentially useful
-+ * information is lost if dirtied by KCSAN.
-+ */
-+
-+struct kcsan_irq_state {
-+	unsigned long		flags;
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	int			hardirqs;
-+	struct irqtrace_events	irqtrace;
-+#endif
-+};
-+
-+void kcsan_save_irqtrace(struct kcsan_irq_state *irq_state)
- {
- #ifdef CONFIG_TRACE_IRQFLAGS
--	task->kcsan_save_irqtrace = task->irqtrace;
-+	irq_state->irqtrace = task->irqtrace;
-+	irq_state->hardirq = lockdep_hardirqs_enabled();
- #endif
-+	if (!kcsan_interrupt_watcher) {
-+		raw_local_irq_save(irq_state->flags);
-+		lockdep_hardirqs_off(CALLER_ADDR0);
-+	}
- }
- 
--void kcsan_restore_irqtrace(struct task_struct *task)
-+void kcsan_restore_irqtrace(struct kcsan_irq_state *irq_state)
- {
-+	if (!kcsan_interrupt_watcher) {
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+		if (irq_state->hardirqs) {
-+			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-+			lockdep_hardirqs_on(CALLER_ADDR0);
-+		}
-+#endif
-+		raw_local_irq_restore(irq_state->flags);
-+	}
- #ifdef CONFIG_TRACE_IRQFLAGS
--	task->irqtrace = task->kcsan_save_irqtrace;
-+	task->irqtrace = irq_state->irqtrace;
- #endif
- }
- 
-@@ -350,11 +383,13 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 	flags = user_access_save();
- 
- 	if (consumed) {
--		kcsan_save_irqtrace(current);
-+		struct kcsan_irq_state irqstate;
-+
-+		kcsan_save_irqtrace(&irqstate);
- 		kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_MAYBE,
- 			     KCSAN_REPORT_CONSUMED_WATCHPOINT,
- 			     watchpoint - watchpoints);
--		kcsan_restore_irqtrace(current);
-+		kcsan_restore_irqtrace(&irqstate);
- 	} else {
- 		/*
- 		 * The other thread may not print any diagnostics, as it has
-@@ -387,7 +422,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	unsigned long access_mask;
- 	enum kcsan_value_change value_change = KCSAN_VALUE_CHANGE_MAYBE;
- 	unsigned long ua_flags = user_access_save();
--	unsigned long irq_flags = 0;
-+	struct kcsan_irq_state irqstate;
- 
- 	/*
- 	 * Always reset kcsan_skip counter in slow-path to avoid underflow; see
-@@ -412,14 +447,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		goto out;
- 	}
- 
--	/*
--	 * Save and restore the IRQ state trace touched by KCSAN, since KCSAN's
--	 * runtime is entered for every memory access, and potentially useful
--	 * information is lost if dirtied by KCSAN.
--	 */
--	kcsan_save_irqtrace(current);
--	if (!kcsan_interrupt_watcher)
--		local_irq_save(irq_flags);
-+	kcsan_save_irqtrace(&irqstate);
- 
- 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
- 	if (watchpoint == NULL) {
-@@ -559,9 +587,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	remove_watchpoint(watchpoint);
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
--	if (!kcsan_interrupt_watcher)
--		local_irq_restore(irq_flags);
--	kcsan_restore_irqtrace(current);
-+	kcsan_restore_irqtrace(&irqstate);
- out:
- 	user_access_restore(ua_flags);
- }
+Please include sample usage and output in the description.
 
 
