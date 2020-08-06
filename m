@@ -2,139 +2,250 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDF7C433EA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8DAC433E3
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09FEC22DFA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E49D22DCC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cEoQlBQE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PtaSV2ov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgHFJWC (ORCPT
+        id S1729096AbgHFJTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 05:22:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59218 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729128AbgHFJUC (ORCPT
+        Thu, 6 Aug 2020 05:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729021AbgHFJQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 05:20:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596705599;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qbng0KIuhjnrRqPApXRDER8ey72aYykcRLaK9qO7KvA=;
-        b=cEoQlBQEuqu+qCJvvxQttxVJScTJXz19QmuG29oAhVIiZESCVvIfHPT+4/zb9KMBnse6lQ
-        RH0nCF4bcz5tZREwAz7At8ycBx9+vsrCtw+3qCWj5aMuIoxtpemKWEHl4IX4XxfpTg9X0B
-        uR6Ij5yZiIc7K9CIDtucwRsPgzQW2AE=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-MweavDV1P1Kqq0QdmHwjGA-1; Thu, 06 Aug 2020 05:19:58 -0400
-X-MC-Unique: MweavDV1P1Kqq0QdmHwjGA-1
-Received: by mail-ej1-f71.google.com with SMTP id y10so18403534ejd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:19:58 -0700 (PDT)
+        Thu, 6 Aug 2020 05:16:26 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9823C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 02:16:11 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v9so16454939ljk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 02:16:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O6y/1nusRg/opQLxoCjDaYb+pDRSmXrkyxeECnISubo=;
+        b=PtaSV2ove3y2GjUl3zgbytQS4V18ekpX8JerMyv1Z5IU2wpobpSaREpEI0uNGytpuw
+         Ms9/blsTo/qxS/fbnxhBYbah/5/clC0JT7vqsqanT3zqdxebPUvy8MZwl5w5L1JnA6Di
+         dFg1iv4GZu+akQwYkN0ML4T5Rz6RLOMKwR1oGRx8npHtNFtlXyBPYc5lD9/XAUIMKLK5
+         qchSdYBKlZ3ij7VZHHTh6kwLItkr4sIEUSITeu/YzRjAiw32gLYrb4Evl7ftXywUkXWQ
+         vpBCx6LPuz7wNUprAXH+NFNIoKSF8vcDzIgxHtyw8H/4OWCmiBqDCCNNztIvSx4Exugj
+         YnXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Qbng0KIuhjnrRqPApXRDER8ey72aYykcRLaK9qO7KvA=;
-        b=SfiwPJCPPTzQbDp9vMdM7EqYoWQpis6DWXz3CmlhwnKK66rYTzlZaVv7Y60Uc09RHJ
-         QWNGNNiVABuryUrcHzWnHQsHgTf+T1csLGj7E9QpiX0czNEi32I1ipApRmt5DtfOHfT2
-         BzOEHTnBhdhU0AmnE6vMTOeImnotaZOApF/iYDzyL6U6rDzfMjeQ4n/2UAhBZW//OOli
-         1pbeDVFe8dx1B0RdrBRllVDGWnkjpjEzscTchiEYQnG3Tft6TfJIpvlA8clqGnXf1xQs
-         A2Upoo4+Std6SCPD1baxpOFcKQvR7j3zCfQBMTZA2Xn41VTP9zSoyCyTf6vTif+t2l/b
-         /GPQ==
-X-Gm-Message-State: AOAM532fznKM/UVeQvgnn/7SKHbIeuVlnkLsgU8X+3uj8s86lq3F4Fg5
-        bhlYMP5LjqzCt3kCaGMrZBYHPlHdjgsf+UBShR+pepE0sarpigFSjgUlgY2wNaKJdIPQaCYcNMC
-        hDVE0E+Yc198nqgGZ7eu8QNqC
-X-Received: by 2002:a17:906:c1c3:: with SMTP id bw3mr3607430ejb.8.1596705596998;
-        Thu, 06 Aug 2020 02:19:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxuRhDEaObKZG/m3SESq3Y56+cff+sBnsRhNDN/4SkNQ35QaOrvvNAQiLpZKC54ekRuuLKNEA==
-X-Received: by 2002:a17:906:c1c3:: with SMTP id bw3mr3607421ejb.8.1596705596800;
-        Thu, 06 Aug 2020 02:19:56 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id i9sm3312397ejb.48.2020.08.06.02.19.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 02:19:56 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
-In-Reply-To: <20200805201851-mutt-send-email-mst@kernel.org>
-References: <20200728143741.2718593-1-vkuznets@redhat.com> <20200805201851-mutt-send-email-mst@kernel.org>
-Date:   Thu, 06 Aug 2020 11:19:55 +0200
-Message-ID: <873650p1vo.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O6y/1nusRg/opQLxoCjDaYb+pDRSmXrkyxeECnISubo=;
+        b=gM5J7YCg69g1UqjEwtmiTp6gvWvY7f8U6E9ISTixnoruvL2HcT8kWSLF25q9b7q7j5
+         mpTvSiX9OCOB2gb9JcSm5LkOgiJAmAh5yfonTFEY2oue2Qxiqtb1NivuGldFtgqTHtKV
+         bXV7cfCwWZAwuSuydMUZrME19rAC3sPQpG0eqKeejYBbkQN4ZW1rrARwOvOR4HG/7eA2
+         uHb0S13OH3PoVaZJPTK1sA1huuBnef8+4MWIW/dYdPr19t+wxLkukdPJex+5+6AmHDKq
+         Ll5/2LHEVQUdPAWPlTOKcvrwo4YgWnf+GW5rYPt/GSeae6iVCtUljp4cyvr0NKwLLatC
+         3RRQ==
+X-Gm-Message-State: AOAM533QEXmKpFOdZiQd81dMF+0tvEKnbgypVc4oLBCPACfc9yX4tuJn
+        lAU1aPE7gveBLQrH3jC4j+oYanaqLXsyI9FM10zWTQ==
+X-Google-Smtp-Source: ABdhPJzBTOaMiojdnzKyHqLEImTKlT/zfzMQhRBTIgNOjRet/iAK+RkazmypZr39sE0b3ZVCLj56/E3KimwycMfX/pQ=
+X-Received: by 2002:a2e:3202:: with SMTP id y2mr3666465ljy.30.1596705361101;
+ Thu, 06 Aug 2020 02:16:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200723084622.31134-1-jorge@foundries.io> <20200723084622.31134-2-jorge@foundries.io>
+ <CAFA6WYPQ3GGYostoHU=6qg4c_LqoqOZVbZ8gbQbGkNfyGydQjQ@mail.gmail.com>
+ <20200724142305.GA24164@trex> <CAFA6WYOGu4DPzd93h-yFLJvLmRH=ZroN70+ZNY6xCOOM+TJOSA@mail.gmail.com>
+ <20200805203817.GA12229@trex> <CAFA6WYPKGTb6Qj7emETpB9-XXO8vcf6v2ONKD4pt+M9F-=HWbQ@mail.gmail.com>
+ <20200806063040.GA27943@trex> <CAFA6WYMSXGKXx2vM2qcTLpRUugQUphM8Gn5YvPX9fTj3MHvXqQ@mail.gmail.com>
+ <20200806081437.GA21405@trex>
+In-Reply-To: <20200806081437.GA21405@trex>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 6 Aug 2020 14:45:49 +0530
+Message-ID: <CAFA6WYOH4OjwACqU6n7dJ6PtWOLC6wN5wPa=C_SGRMZNrmLrMA@mail.gmail.com>
+Subject: Re: [PATCHv2 2/2] hwrng: optee: fix wait use case
+To:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, ricardo@foundries.io,
+        Michael Scott <mike@foundries.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        op-tee@lists.trustedfirmware.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Michael S. Tsirkin" <mst@redhat.com> writes:
-
-> On Tue, Jul 28, 2020 at 04:37:38PM +0200, Vitaly Kuznetsov wrote:
->> This is a continuation of "[PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES
->> memory" work: 
->> https://lore.kernel.org/kvm/20200514180540.52407-1-vkuznets@redhat.com/
->> and pairs with Julia's "x86/PCI: Use MMCONFIG by default for KVM guests":
->> https://lore.kernel.org/linux-pci/20200722001513.298315-1-jusual@redhat.com/
->> 
->> PCIe config space can (depending on the configuration) be quite big but
->> usually is sparsely populated. Guest may scan it by accessing individual
->> device's page which, when device is missing, is supposed to have 'pci
->> hole' semantics: reads return '0xff' and writes get discarded.
->> 
->> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
->> I observed 8193 accesses to PCI hole memory. When such exit is handled
->> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
->> Handling the same exit in userspace is six times slower (0.000006 sec) so
->> the overal; difference is 0.04 sec. This may be significant for 'microvm'
->> ideas.
->> 
->> Note, the same speed can already be achieved by using KVM_MEM_READONLY
->> but doing this would require allocating real memory for all missing
->> devices and e.g. 8192 pages gives us 32mb. This will have to be allocated
->> for each guest separately and for 'microvm' use-cases this is likely
->> a no-go.
->> 
->> Introduce special KVM_MEM_PCI_HOLE memory: userspace doesn't need to
->> back it with real memory, all reads from it are handled inside KVM and
->> return '0xff'. Writes still go to userspace but these should be extremely
->> rare.
->> 
->> The original 'KVM_MEM_ALLONES' idea had additional optimizations: KVM
->> was mapping all 'PCI hole' pages to a single read-only page stuffed with
->> 0xff. This is omitted in this submission as the benefits are unclear:
->> KVM will have to allocate SPTEs (either on demand or aggressively) and
->> this also consumes time/memory.
+On Thu, 6 Aug 2020 at 13:44, Jorge Ramirez-Ortiz, Foundries
+<jorge@foundries.io> wrote:
 >
-> Curious about this: if we do it aggressively on the 1st fault,
-> how long does it take to allocate 256 huge page SPTEs?
-> And the amount of memory seems pretty small then, right?
+> On 06/08/20, Sumit Garg wrote:
+> > On Thu, 6 Aug 2020 at 12:00, Jorge Ramirez-Ortiz, Foundries
+> > <jorge@foundries.io> wrote:
+> > >
+> > > On 06/08/20, Sumit Garg wrote:
+> > > > On Thu, 6 Aug 2020 at 02:08, Jorge Ramirez-Ortiz, Foundries
+> > > > <jorge@foundries.io> wrote:
+> > > > >
+> > > > > On 05/08/20, Sumit Garg wrote:
+> > > > > > Apologies for my delayed response as I was busy with some other=
+ tasks
+> > > > > > along with holidays.
+> > > > >
+> > > > > no pb! was just making sure this wasnt falling through some crack=
+s.
+> > > > >
+> > > > > >
+> > > > > > On Fri, 24 Jul 2020 at 19:53, Jorge Ramirez-Ortiz, Foundries
+> > > > > > <jorge@foundries.io> wrote:
+> > > > > > >
+> > > > > > > On 24/07/20, Sumit Garg wrote:
+> > > > > > > > On Thu, 23 Jul 2020 at 14:16, Jorge Ramirez-Ortiz <jorge@fo=
+undries.io> wrote:
+> > > > > > > > >
+> > > > > > > > > The current code waits for data to be available before at=
+tempting a
+> > > > > > > > > second read. However the second read would not be execute=
+d as the
+> > > > > > > > > while loop exits.
+> > > > > > > > >
+> > > > > > > > > This fix does not wait if all data has been read and read=
+s a second
+> > > > > > > > > time if only partial data was retrieved on the first read=
+.
+> > > > > > > > >
+> > > > > > > > > This fix also does not attempt to read if not data is req=
+uested.
+> > > > > > > >
+> > > > > > > > I am not sure how this is possible, can you elaborate?
+> > > > > > >
+> > > > > > > currently, if the user sets max 0, get_optee_rng_data will re=
+gardless
+> > > > > > > issuese a call to the secure world requesting 0 bytes from th=
+e RNG
+> > > > > > >
+> > > > > >
+> > > > > > This case is already handled by core API: rng_dev_read().
+> > > > >
+> > > > > ah ok good point, you are right
+> > > > > but yeah, there is no consequence to the actual patch.
+> > > > >
+> > > >
+> > > > So, at least you could get rid of the corresponding text from commi=
+t message.
+> > > >
+> > > > > >
+> > > > > > > with this patch, this request is avoided.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> > > > > > > > > ---
+> > > > > > > > >  v2: tidy up the while loop to avoid reading when no data=
+ is requested
+> > > > > > > > >
+> > > > > > > > >  drivers/char/hw_random/optee-rng.c | 4 ++--
+> > > > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/char/hw_random/optee-rng.c b/drivers=
+/char/hw_random/optee-rng.c
+> > > > > > > > > index 5bc4700c4dae..a99d82949981 100644
+> > > > > > > > > --- a/drivers/char/hw_random/optee-rng.c
+> > > > > > > > > +++ b/drivers/char/hw_random/optee-rng.c
+> > > > > > > > > @@ -122,14 +122,14 @@ static int optee_rng_read(struct hw=
+rng *rng, void *buf, size_t max, bool wait)
+> > > > > > > > >         if (max > MAX_ENTROPY_REQ_SZ)
+> > > > > > > > >                 max =3D MAX_ENTROPY_REQ_SZ;
+> > > > > > > > >
+> > > > > > > > > -       while (read =3D=3D 0) {
+> > > > > > > > > +       while (read < max) {
+> > > > > > > > >                 rng_size =3D get_optee_rng_data(pvt_data,=
+ data, (max - read));
+> > > > > > > > >
+> > > > > > > > >                 data +=3D rng_size;
+> > > > > > > > >                 read +=3D rng_size;
+> > > > > > > > >
+> > > > > > > > >                 if (wait && pvt_data->data_rate) {
+> > > > > > > > > -                       if (timeout-- =3D=3D 0)
+> > > > > > > > > +                       if ((timeout-- =3D=3D 0) || (read=
+ =3D=3D max))
+> > > > > > > >
+> > > > > > > > If read =3D=3D max, would there be any sleep?
+> > > > > > >
+> > > > > > > no but I see no reason why there should be a wait since we al=
+ready have
+> > > > > > > all the data that we need; the msleep is only required when w=
+e need to
+> > > > > > > wait for the RNG to generate entropy for the number of bytes =
+we are
+> > > > > > > requesting. if we are requesting 0 bytes, the entropy is alre=
+ady
+> > > > > > > available. at leat this is what makes sense to me.
+> > > > > > >
+> > > > > >
+> > > > > > Wouldn't it lead to a call as msleep(0); that means no wait as =
+well?
+> > > > >
+> > > > > I dont understand: there is no reason to wait if read =3D=3D max =
+and this
+> > > > > patch will not wait: if read =3D=3D max it calls 'return read'
+> > > > >
+> > > > > am I misunderstanding your point?
+> > > >
+> > > > What I mean is that we shouldn't require this extra check here as
+> > > > there wasn't any wait if read =3D=3D max with existing implementati=
+on too.
+> > >
+> > > um, I am getting confused Sumit
+> > >
+> > > with the exisiting implementation (the one we aim to replace), if get=
+_optee_rng_data reads all the values requested on the first call (ie, read =
+=3D 0) with wait set to true, the call will wait with msleep(0). Which is u=
+nnecessary and waits for a jiffy (ie, the call to msleep 0 will schedule a =
+one jiffy timeout interrruptible)
+> > >
+> > > with this alternative implementation, msleep(0) does not get called.
+> > >
+> > > are we in synch?
+> >
+> > Ah, I see msleep(0) also by default schedules timeout for 1 jiffy. So
+> > we are in sync now. Probably you can clarify this in commit message as
+> > well to avoid confusion.
+>
+> ok will do.
+> shall I add your reviewed-by line or just resend?
+>
 
-Right, this could work but we'll need a 2M region (one per KVM host of
-course) filled with 0xff-s instead of a single 4k page.
+Yes it's fine with me to add mine reviewed-by.
 
-Generally, I'd like to reach an agreement on whether this feature (and
-the corresponding Julia's patch addding PV feature bit) is worthy. In
-case it is (meaning it gets merged in this simplest form), we can
-suggest further improvements. It would also help if firmware (SeaBIOS,
-OVMF) would start recognizing the PV feature bit too, this way we'll be
-seeing even bigger improvement and this may or may not be a deal-breaker
-when it comes to the 'aggressive PTE mapping' idea.
-
--- 
-Vitaly
-
+> >
+> > -Sumit
+> >
+> > >
+> > > >
+> > > > -Sumit
+> > > >
+> > > > >
+> > > > > >
+> > > > > > -Sumit
+> > > > > >
+> > > > > > >
+> > > > > > > >
+> > > > > > > > -Sumit
+> > > > > > > >
+> > > > > > > > >                                 return read;
+> > > > > > > > >                         msleep((1000 * (max - read)) / pv=
+t_data->data_rate);
+> > > > > > > > >                 } else {
+> > > > > > > > > --
+> > > > > > > > > 2.17.1
+> > > > > > > > >
