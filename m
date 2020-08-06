@@ -2,300 +2,102 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D323FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1328C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA22E20823
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fNIdU00H"
+	by mail.kernel.org (Postfix) with ESMTP id 937F820823
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 02:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgHFClY (ORCPT
+        id S1726955AbgHFClZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 22:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgHFClM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 22:41:12 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A032C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 19:41:12 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t11so6912407plr.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 19:41:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Jv5cjXz26GSLxrf6/cECpRDuH6bf6WlYndXHHKVBb1I=;
-        b=fNIdU00HahtimRivt2mBz5dkzmuSmDxXqfe0yOXVkoaDv0k5XuyH/kfCmi9byki2t1
-         iVSIzq2IKJixqcz+g4CEHSYe5Zr5mBuW8wHKOwQI3Ft8w0RhRHjIxPgjsxTNa9ARky+/
-         JRQvtjMl0aZ2VWg6/I1iG7zP+tDfBnRk2WE5baUAJ1erxHEacuCWzJ4d9UDEEaIuIQL/
-         qvjWHvHmw3pZg4EKR1vzcvqSy8/MayD8l24gF0xO0Md/qZk93lxFLkqWIhSqXlcBxD36
-         wQUXe6sCurLaP4mvXn4nVtc68T2Qfv0FtIj1ROnslGH8jgIcDY+rd9C7jED12EU+4lvv
-         9PmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Jv5cjXz26GSLxrf6/cECpRDuH6bf6WlYndXHHKVBb1I=;
-        b=NjNuiVgOO8oKQLJco+ZJC/BPIDzM+p0cA2YUh0nYRpcxr3IzdcI1NdN3fAIh4fsocB
-         VvwOe2PiUbJuHWfqjCjTMUWgK663mGgHJ98bkClMHrAEsoxZttH0vW89NdnWunfQFHBn
-         A0TUC8ZCtIcGFuUdToyLOgp0K/5J7MD1r4DbQXEuKuCHx7sfAkSErc/Nih/Wsr/6EtuC
-         5WlZheuoIDiYLHZQwyGwxNrcK/2fjw74QO+Vej4Qyg2zyLnyTwReldIfL2yHOG2KEYfy
-         fKcEF6Bjulxyz7fK/h+dD5F+GJUYsryhZ6n1oJQlCYLLWlTkV1Ivbb3s3mQy9zgthu2D
-         XX4g==
-X-Gm-Message-State: AOAM530+1/JesF/hdQUuvQcSCKsUPGgP3c0Cbymcqn54VlMix7ndU4Ew
-        eWGmQ3lYgha/CJRQbo83fal1qA==
-X-Google-Smtp-Source: ABdhPJwXjo4qBJv6AY4l2kSi5F53JmYwoZHKTt5fwNDIwY2qUxsB6QGpRBaymaQwAkdM4ASNDFsLfQ==
-X-Received: by 2002:a17:90a:de03:: with SMTP id m3mr5884450pjv.130.1596681670775;
-        Wed, 05 Aug 2020 19:41:10 -0700 (PDT)
-Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id mj6sm4746090pjb.15.2020.08.05.19.41.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Aug 2020 19:41:10 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Wei Li <liwei391@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 02/11] perf mem: Introduce weak function perf_mem_events__ptr()
-Date:   Thu,  6 Aug 2020 10:40:32 +0800
-Message-Id: <20200806024041.27475-3-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200806024041.27475-1-leo.yan@linaro.org>
-References: <20200806024041.27475-1-leo.yan@linaro.org>
+        Wed, 5 Aug 2020 22:41:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38932 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726490AbgHFClF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 22:41:05 -0400
+IronPort-SDR: CHsjCrtIsrDlLqh9UgVDOh4niu0qtw+uwQI8wq4Zvg5Glw1aJ6uON5gUrqEqew0ggL3JKfSc6I
+ rZyWoubSBjxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="150453242"
+X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
+   d="scan'208";a="150453242"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 19:41:04 -0700
+IronPort-SDR: 01z1oTvHs236teqMmA01Epi/XmFNPcF8IQ33M0LLSLbhaOyWO2Oj9W7sHHgOJQRWRp6m/M79fz
+ XI2g/oYpLb8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,440,1589266800"; 
+   d="scan'208";a="397112923"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Aug 2020 19:41:02 -0700
+Cc:     baolu.lu@linux.intel.com,
+        RaymondPang-oc <RaymondPang-oc@zhaoxin.com>,
+        CobeChen-oc <CobeChen-oc@zhaoxin.com>
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSN?=
+ =?UTF-8?Q?=3a_=5bPATCH=5d_iommu/vt-d=3aAdd_support_for_ACPI_device_in_RMRR?=
+To:     FelixCui-oc <FelixCui-oc@zhaoxin.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <20200802100735.2722-1-FelixCui-oc@zhaoxin.com>
+ <73d4a1e4-f6b7-efb0-e225-2e462c838657@linux.intel.com>
+ <f6759b9bb2594026b58f9a89e3ce9dc6@zhaoxin.com>
+ <9f64d9b6-16e8-73ce-2186-9d8ba49c39f4@linux.intel.com>
+ <44ff8f73fa1f49a183a1d8d6d9c2213c@zhaoxin.com>
+ <314679b4-7653-041b-9310-73baf8117766@linux.intel.com>
+ <1aea042a1b524ef88e491ca2a6d95fb7@zhaoxin.com>
+ <36da53a6-00e2-1be1-91b5-d90906a6199f@linux.intel.com>
+ <a5fda3f364da4e739736e7d7bc618972@zhaoxin.com>
+ <a2658f9c-23fa-bb72-edba-ad61e52085cd@linux.intel.com>
+ <9ba29114fcad43d58159fcc7a4d89501@zhaoxin.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <1477b1dd-ac48-b49d-77f9-107bb4555b91@linux.intel.com>
+Date:   Thu, 6 Aug 2020 10:36:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <9ba29114fcad43d58159fcc7a4d89501@zhaoxin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different architectures might use different event or different event
-parameters for memory profiling, this patch introduces weak function
-perf_mem_events__ptr(), which allows to return back architecture
-specific memory event.
+Hi Felix,
 
-After the function perf_mem_events__ptr() is introduced, the variable
-'perf_mem_events' can be accessed by using this new function; so marks
-the variable as 'static' variable, this can allow the architectures to
-define its own memory event array.
+On 8/5/20 3:37 PM, FelixCui-oc wrote:
+> Hi baolu,
+> 		Let me talk about why acpi_device_create_direct_mappings() is needed and please tell me if there is an error.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/builtin-c2c.c     | 18 ++++++++++++------
- tools/perf/builtin-mem.c     | 21 ++++++++++++++-------
- tools/perf/util/mem-events.c | 26 +++++++++++++++++++-------
- tools/perf/util/mem-events.h |  2 +-
- 4 files changed, 46 insertions(+), 21 deletions(-)
+Sure. Before that, let me sync my understanding with you. You have an
+acpi namespace device in ANDD table, it also shows up in the device
+scope of a RMRR. Current code doesn't enumerate that device for the
+RMRR, hence iommu_create_device_direct_mappings() doesn't work for this
+device.
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 5938b100eaf4..88e68f36aa62 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2914,6 +2914,7 @@ static int perf_c2c__record(int argc, const char **argv)
- 	int ret;
- 	bool all_user = false, all_kernel = false;
- 	bool event_set = false;
-+	struct perf_mem_event *e;
- 	struct option options[] = {
- 	OPT_CALLBACK('e', "event", &event_set, "event",
- 		     "event selector. Use 'perf mem record -e list' to list available events",
-@@ -2941,11 +2942,15 @@ static int perf_c2c__record(int argc, const char **argv)
- 	rec_argv[i++] = "record";
- 
- 	if (!event_set) {
--		perf_mem_events[PERF_MEM_EVENTS__LOAD].record  = true;
--		perf_mem_events[PERF_MEM_EVENTS__STORE].record = true;
-+		e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
-+		e->record = true;
-+
-+		e = perf_mem_events__ptr(PERF_MEM_EVENTS__STORE);
-+		e->record = true;
- 	}
- 
--	if (perf_mem_events[PERF_MEM_EVENTS__LOAD].record)
-+	e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
-+	if (e->record)
- 		rec_argv[i++] = "-W";
- 
- 	rec_argv[i++] = "-d";
-@@ -2953,12 +2958,13 @@ static int perf_c2c__record(int argc, const char **argv)
- 	rec_argv[i++] = "--sample-cpu";
- 
- 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
--		if (!perf_mem_events[j].record)
-+		e = perf_mem_events__ptr(j);
-+		if (!e->record)
- 			continue;
- 
--		if (!perf_mem_events[j].supported) {
-+		if (!e->supported) {
- 			pr_err("failed: event '%s' not supported\n",
--			       perf_mem_events[j].name);
-+			       perf_mem_events__name(j));
- 			free(rec_argv);
- 			return -1;
- 		}
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 3523279af6af..9a7df8d01296 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -64,6 +64,7 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
- 	const char **rec_argv;
- 	int ret;
- 	bool all_user = false, all_kernel = false;
-+	struct perf_mem_event *e;
- 	struct option options[] = {
- 	OPT_CALLBACK('e', "event", &mem, "event",
- 		     "event selector. use 'perf mem record -e list' to list available events",
-@@ -86,13 +87,18 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
- 
- 	rec_argv[i++] = "record";
- 
--	if (mem->operation & MEM_OPERATION_LOAD)
--		perf_mem_events[PERF_MEM_EVENTS__LOAD].record = true;
-+	if (mem->operation & MEM_OPERATION_LOAD) {
-+		e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
-+		e->record = true;
-+	}
- 
--	if (mem->operation & MEM_OPERATION_STORE)
--		perf_mem_events[PERF_MEM_EVENTS__STORE].record = true;
-+	if (mem->operation & MEM_OPERATION_STORE) {
-+		e = perf_mem_events__ptr(PERF_MEM_EVENTS__STORE);
-+		e->record = true;
-+	}
- 
--	if (perf_mem_events[PERF_MEM_EVENTS__LOAD].record)
-+	e = perf_mem_events__ptr(PERF_MEM_EVENTS__LOAD);
-+	if (e->record)
- 		rec_argv[i++] = "-W";
- 
- 	rec_argv[i++] = "-d";
-@@ -101,10 +107,11 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
- 		rec_argv[i++] = "--phys-data";
- 
- 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
--		if (!perf_mem_events[j].record)
-+		e = perf_mem_events__ptr(j);
-+		if (!e->record)
- 			continue;
- 
--		if (!perf_mem_events[j].supported) {
-+		if (!e->supported) {
- 			pr_err("failed: event '%s' not supported\n",
- 			       perf_mem_events__name(j));
- 			free(rec_argv);
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 35c8d175a9d2..7a5a0d699e27 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -17,7 +17,7 @@ unsigned int perf_mem_events__loads_ldlat = 30;
- 
- #define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
- 
--struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
-+static struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
- 	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"cpu/events/mem-loads"),
- 	E("ldlat-stores",	"cpu/mem-stores/P",		"cpu/events/mem-stores"),
- };
-@@ -28,19 +28,31 @@ struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
- static char mem_loads_name[100];
- static bool mem_loads_name__init;
- 
-+struct perf_mem_event * __weak perf_mem_events__ptr(int i)
-+{
-+	if (i >= PERF_MEM_EVENTS__MAX)
-+		return NULL;
-+
-+	return &perf_mem_events[i];
-+}
-+
- char * __weak perf_mem_events__name(int i)
- {
-+	struct perf_mem_event *e = perf_mem_events__ptr(i);
-+
-+	if (!e)
-+		return NULL;
-+
- 	if (i == PERF_MEM_EVENTS__LOAD) {
- 		if (!mem_loads_name__init) {
- 			mem_loads_name__init = true;
- 			scnprintf(mem_loads_name, sizeof(mem_loads_name),
--				  perf_mem_events[i].name,
--				  perf_mem_events__loads_ldlat);
-+				  e->name, perf_mem_events__loads_ldlat);
- 		}
- 		return mem_loads_name;
- 	}
- 
--	return (char *)perf_mem_events[i].name;
-+	return (char *)e->name;
- }
- 
- int perf_mem_events__parse(const char *str)
-@@ -61,7 +73,7 @@ int perf_mem_events__parse(const char *str)
- 
- 	while (tok) {
- 		for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
--			struct perf_mem_event *e = &perf_mem_events[j];
-+			struct perf_mem_event *e = perf_mem_events__ptr(j);
- 
- 			if (strstr(e->tag, tok))
- 				e->record = found = true;
-@@ -90,7 +102,7 @@ int perf_mem_events__init(void)
- 
- 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
- 		char path[PATH_MAX];
--		struct perf_mem_event *e = &perf_mem_events[j];
-+		struct perf_mem_event *e = perf_mem_events__ptr(j);
- 		struct stat st;
- 
- 		scnprintf(path, PATH_MAX, "%s/devices/%s",
-@@ -108,7 +120,7 @@ void perf_mem_events__list(void)
- 	int j;
- 
- 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
--		struct perf_mem_event *e = &perf_mem_events[j];
-+		struct perf_mem_event *e = perf_mem_events__ptr(j);
- 
- 		fprintf(stderr, "%-13s%-*s%s\n",
- 			e->tag,
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 904dad34f7f7..726a9c8103e4 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -31,13 +31,13 @@ enum {
- 	PERF_MEM_EVENTS__MAX,
- };
- 
--extern struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX];
- extern unsigned int perf_mem_events__loads_ldlat;
- 
- int perf_mem_events__parse(const char *str);
- int perf_mem_events__init(void);
- 
- char *perf_mem_events__name(int i);
-+struct perf_mem_event *perf_mem_events__ptr(int i);
- 
- void perf_mem_events__list(void);
- 
--- 
-2.17.1
+At the same time, probe_acpi_namespace_devices() doesn't work for this
+device, hence you want to add a home-made
+acpi_device_create_direct_mappings() helper.
 
+Did I get it right?
+
+> 		In the probe_acpi_namespace_devices() function, only the device in the addev->physical_node_list is probed,
+> 		but we need to establish identity mapping for the namespace device in RMRR. These are two different devices.
+
+The namespace device has been probed and put in one drhd's device list.
+Hence, it should be processed by probe_acpi_namespace_devices(). So the
+question is why there are no devices in addev->physical_node_list?
+
+> 		Therefore, the namespace device in RMRR is not mapped in probe_acpi_namespace_devices().
+> 		acpi_device_create_direct_mappings() is to create direct mappings for namespace devices in RMRR.
+
+Best regards,
+baolu
