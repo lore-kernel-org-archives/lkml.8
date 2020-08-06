@@ -7,58 +7,65 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E224C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 500732173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F032173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QhUCUpWm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3LJkmTo2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ucBCuOOo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YU56Pl9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgHFXkf (ORCPT
+        id S1727826AbgHFXkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:40:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60902 "EHLO
+        Thu, 6 Aug 2020 19:40:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60848 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgHFXit (ORCPT
+        with ESMTP id S1726339AbgHFXiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:38:49 -0400
-Date:   Thu, 06 Aug 2020 23:38:46 -0000
+        Thu, 6 Aug 2020 19:38:46 -0400
+Date:   Thu, 06 Aug 2020 23:38:42 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596757127;
+        s=2020; t=1596757123;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sbU1C4X0lV1GN1HcFt4QXmWuuCwiwsFzKG3FgR70TE4=;
-        b=QhUCUpWmK/l7cpdUOGzDeTKeql+ZZuK17qZHhSemGVYfOcwWZpN04t/IqYbcaDECG3FAyO
-        RQ0vk7NcK8zBK6hDpBA6FnhLyue6tsQLYQlh536Jda7x8l8qMGbQgSa2L1QHJzjxEEf6L0
-        iCvFFIM0RB5vYohvNJZHcYmRoIhf1WEQqQmFIJXrED/qfSzD0M8LtCBIL8MBdXOHgIAedN
-        RiqFUYJlxgWzCqmr+Iyy1anJjgHBo0RXxu/BHn983/GIDxldQLBpHusMPTYMuvIzb7xD90
-        FJIlrCqoR+vUjCx8ydWIbjmdldRQuqxJElt3tfVmlQe8oYZoxZ4eTZR4K7O9Ew==
+        bh=XfbAGyy0G4F567BE8l8EMAxNq9JDQcLzY+AVYFSF/7c=;
+        b=ucBCuOOoC6g1sKSTDdhSdTkpRagfhTO89v8oFe/mI3EUdw6h0CgT3ZFkyoa3vHY6aWVCQB
+        ffTDWMxydSW0753AYjlu5b7VJrYt35anve0s5tVDPGuye/PHq9i80CG9ORJlBsxd3JBrBl
+        vYQ4HuUEmpepGQ/Q41Y6wz5VAAZbXLP6I4Ps2H1moB2FR6sQNBLcGMH+EdKOOlXcIw3wq3
+        w/Bb3i2mnN5DXSp4Ha/3MSLMip1V1yZ248Ddp5byOv3UJPGul3Exut0iqw8hngDDV2oHZ9
+        v39b6zkJdSN/duzG0CFDtQ/s2fdKbkpbYHnmGWzcxEO/rDspQaQWCKxhQBi5jg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596757127;
+        s=2020e; t=1596757123;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sbU1C4X0lV1GN1HcFt4QXmWuuCwiwsFzKG3FgR70TE4=;
-        b=3LJkmTo2IPV1YI8ga4aI9BkHsxPC36FlLEVXIrByH79VYvAHnpucbnGHcQ1Cp1Bq+xwGeV
-        VI+lMvvEmwpNvOBg==
-From:   "tip-bot2 for Shuo Liu" <tip-bot2@linutronix.de>
+        bh=XfbAGyy0G4F567BE8l8EMAxNq9JDQcLzY+AVYFSF/7c=;
+        b=YU56Pl9dHxsoJcdL8dSlJ1qa8wpy+k6/9uaftZaP9YUT5+iP5Jda9Nh1lQ12pdc5cdbHJv
+        PhcHvIdsMCqKY5Dg==
+From:   "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/acrn: Remove redundant chars from ACRN signature
-Cc:     Shuo Liu <shuo.a.liu@intel.com>, Ingo Molnar <mingo@kernel.org>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200806114111.9448-1-shuo.a.liu@intel.com>
-References: <20200806114111.9448-1-shuo.a.liu@intel.com>
+Subject: [tip: x86/urgent] x86/bugs/multihit: Fix mitigation reporting when
+ VMX is not in use
+Cc:     Nelson Dsouza <nelson.dsouza@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: =?utf-8?q?=3C0ba029932a816179b9d14a30db38f0f11ef1f166=2E15949?=
+ =?utf-8?q?25782=2Egit=2Epawan=2Ekumar=2Egupta=40linux=2Eintel=2Ecom=3E?=
+References: =?utf-8?q?=3C0ba029932a816179b9d14a30db38f0f11ef1f166=2E159492?=
+ =?utf-8?q?5782=2Egit=2Epawan=2Ekumar=2Egupta=40linux=2Eintel=2Ecom=3E?=
 MIME-Version: 1.0
-Message-ID: <159675712671.3192.9044142725285189361.tip-bot2@tip-bot2>
+Message-ID: <159675712239.3192.13099163269991126444.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,42 +77,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     4c7bfa383efd837d4ab8f86ef05886959ed8bfe5
-Gitweb:        https://git.kernel.org/tip/4c7bfa383efd837d4ab8f86ef05886959ed8bfe5
-Author:        Shuo Liu <shuo.a.liu@intel.com>
-AuthorDate:    Thu, 06 Aug 2020 19:41:11 +08:00
+Commit-ID:     f29dfa53cc8ae6ad93bae619bcc0bf45cab344f7
+Gitweb:        https://git.kernel.org/tip/f29dfa53cc8ae6ad93bae619bcc0bf45cab344f7
+Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+AuthorDate:    Thu, 16 Jul 2020 12:23:59 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 07 Aug 2020 01:32:00 +02:00
 
-x86/acrn: Remove redundant chars from ACRN signature
+x86/bugs/multihit: Fix mitigation reporting when VMX is not in use
 
-hypervisor_cpuid_base() only handles 12 chars of the hypervisor
-signature string but is provided with 14 chars.
+On systems that have virtualization disabled or unsupported, sysfs
+mitigation for X86_BUG_ITLB_MULTIHIT is reported incorrectly as:
 
-Remove the redundancy. Additionally, replace the user space uint32_t
-with preferred kernel type u32.
+  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
+  KVM: Vulnerable
 
-Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+System is not vulnerable to DoS attack from a rogue guest when
+virtualization is disabled or unsupported in the hardware. Change the
+mitigation reporting for these cases.
+
+Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
+Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Link: https://lore.kernel.org/r/20200806114111.9448-1-shuo.a.liu@intel.com
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/0ba029932a816179b9d14a30db38f0f11ef1f166.1594925782.git.pawan.kumar.gupta@linux.intel.com
 ---
- arch/x86/kernel/cpu/acrn.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/hw-vuln/multihit.rst | 4 ++++
+ arch/x86/kernel/cpu/bugs.c                     | 8 +++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-index 3b08cdf..0b2c039 100644
---- a/arch/x86/kernel/cpu/acrn.c
-+++ b/arch/x86/kernel/cpu/acrn.c
-@@ -17,9 +17,9 @@
- #include <asm/idtentry.h>
- #include <asm/irq_regs.h>
+diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
+index ba9988d..140e4ce 100644
+--- a/Documentation/admin-guide/hw-vuln/multihit.rst
++++ b/Documentation/admin-guide/hw-vuln/multihit.rst
+@@ -80,6 +80,10 @@ The possible values in this file are:
+        - The processor is not vulnerable.
+      * - KVM: Mitigation: Split huge pages
+        - Software changes mitigate this issue.
++     * - KVM: Mitigation: VMX unsupported
++       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is not supported.
++     * - KVM: Mitigation: VMX disabled
++       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is disabled.
+      * - KVM: Vulnerable
+        - The processor is vulnerable, but no mitigation enabled
  
--static uint32_t __init acrn_detect(void)
-+static u32 __init acrn_detect(void)
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index f0b743a..d3f0db4 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -31,6 +31,7 @@
+ #include <asm/intel-family.h>
+ #include <asm/e820/api.h>
+ #include <asm/hypervisor.h>
++#include <asm/tlbflush.h>
+ 
+ #include "cpu.h"
+ 
+@@ -1549,7 +1550,12 @@ static ssize_t l1tf_show_state(char *buf)
+ 
+ static ssize_t itlb_multihit_show_state(char *buf)
  {
--	return hypervisor_cpuid_base("ACRNACRNACRN\0\0", 0);
-+	return hypervisor_cpuid_base("ACRNACRNACRN", 0);
- }
- 
- static void __init acrn_init_platform(void)
+-	if (itlb_multihit_kvm_mitigation)
++	if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
++	    !boot_cpu_has(X86_FEATURE_VMX))
++		return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
++	else if (!(cr4_read_shadow() & X86_CR4_VMXE))
++		return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
++	else if (itlb_multihit_kvm_mitigation)
+ 		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
+ 	else
+ 		return sprintf(buf, "KVM: Vulnerable\n");
