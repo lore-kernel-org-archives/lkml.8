@@ -2,186 +2,74 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F979C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B60D221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF2422C9F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739175;
-	bh=4Gk7D0MO/sNh3nZnLY13LdzWLPNi69k9gLeAgtM/VQM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jWMa6i4fmxbao1XgkY52xqiBMRSXXy4THSaD1u6c2WoxFvM84b86vAQYwFxWilnTV
-	 F994d40A4MYO03T17rrD1HReTAGBKBqLD56ZjI8LyFCZq7Jn0WneKk3QRNoNikoiWH
-	 8CPXdnBgZTW6xD7pmRIsIwt3m1OIpxJovu4z7ksc=
+	s=default; t=1596739178;
+	bh=ZrgeGz2eQCzY3et54NjiihndUZVStwHlqyFDNY4ncaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GmS7ibWa6L0Wxqk4CIRQEYhDm2+xECgrrlMMGGxu+4xXlAwMzBaciUq0NzoLbQ9fc
+	 F2hSCyFOcVCaYL/kD/vjmaHgWJRIsLES9oyvjRMJoM/2ZY0H5TuzqHynZ/AriLZV8N
+	 G7nsy2L+3AXNY6HrkulDYHRYc+Vwyi6Kkkyzv/OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgHFSjb (ORCPT
+        id S1729098AbgHFSjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:39:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55010 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 14:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbgHFS34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:29:56 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1729885AbgHFSjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:39:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D58423110;
-        Thu,  6 Aug 2020 18:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6438221E3;
+        Thu,  6 Aug 2020 18:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596738559;
-        bh=4Gk7D0MO/sNh3nZnLY13LdzWLPNi69k9gLeAgtM/VQM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=f3OdALKW3CQXK9/2MfkNE1i+JDefpBiKHak75OTvoddwQOFByg+S9NxHQ+yGkHNJp
-         zjhmkHvol1lk86n8MFOmPJT4PqceteXsA9ZXCS0EFmNBAk88Qm55vNcoNhC89hSLjk
-         W2CXV1wvhZwIM3OdDpW8rNKWEb2GtfMdmaZdQpLE=
-Date:   Thu, 6 Aug 2020 19:29:14 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 05/15] iio: sx9310: Change from .probe to .probe_new
-Message-ID: <20200806192914.71bfec22@archlinux>
-In-Reply-To: <20200803175559.v5.5.Ieb5fdf7381764835dad0b3099c7b19ba754e4c47@changeid>
-References: <20200803235815.778997-1-campello@chromium.org>
-        <20200803175559.v5.5.Ieb5fdf7381764835dad0b3099c7b19ba754e4c47@changeid>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1596739159;
+        bh=ZrgeGz2eQCzY3et54NjiihndUZVStwHlqyFDNY4ncaU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uJteJ4kYFz3S0hlJGMQXf/Ngjd7dsaLoheNZVjaSkDcbqYZTuH3mZqbQZQvuLX3Tx
+         CPyXdm9BlKeFgU8cBxqfyKY/glgT1TlxF/XnfXmThAxzlnSwjXjQr90O2dNlKjpSHH
+         nzoSmKUv6q4c9v1jEY/bI9801Infb1Xdoj+LD5gI=
+Date:   Thu, 6 Aug 2020 20:39:33 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Cengiz Can <cengiz@kernel.wtf>
+Cc:     andy.shevchenko@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, sakari.ailus@linux.intel.com,
+        mchehab@kernel.org, dan.carpenter@oracle.com,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v6] staging: atomisp: move null check to earlier point
+Message-ID: <20200806183933.GA2939128@kroah.com>
+References: <20200731083856.GF3703480@smile.fi.intel.com>
+ <20200801220101.2783-1-cengiz@kernel.wtf>
+ <173c50d7bb0.2bfa.85c738e3968116fc5c0dc2de74002084@kernel.wtf>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173c50d7bb0.2bfa.85c738e3968116fc5c0dc2de74002084@kernel.wtf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Aug 2020 17:58:05 -0600
-Daniel Campello <campello@chromium.org> wrote:
-
-> Uses .probe_new in place of .probe. Also uses device_get_match_data()
-> for whoami matching.
+On Thu, Aug 06, 2020 at 09:34:22PM +0300, Cengiz Can wrote:
+> Hello Andy,
 > 
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Applied,
+> Can I get some feedback on v6 please?
 
-Thanks,
 
-Jonathan
+It's been 4 days, in the middle of a merge window, please give people a
+chance to catch up on other things...
 
-> ---
-> 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
->  - Added '\n' to dev_err()
-> 
->  drivers/iio/proximity/sx9310.c | 39 ++++++++++++----------------------
->  1 file changed, 14 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index 9daf2b8591a0a0..66ecdd309e0ddc 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -139,7 +139,7 @@ struct sx9310_data {
->  	struct completion completion;
->  	unsigned int chan_read, chan_event;
->  	int channel_users[SX9310_NUM_CHANNELS];
-> -	int whoami;
-> +	unsigned int whoami;
->  };
->  
->  static const struct iio_event_spec sx9310_events[] = {
-> @@ -858,24 +858,15 @@ static int sx9310_init_device(struct iio_dev *indio_dev)
->  
->  static int sx9310_set_indio_dev_name(struct device *dev,
->  				     struct iio_dev *indio_dev,
-> -				     const struct i2c_device_id *id, int whoami)
-> +				     unsigned int whoami)
->  {
-> -	const struct acpi_device_id *acpi_id;
-> -
-> -	/* id will be NULL when enumerated via ACPI */
-> -	if (id) {
-> -		if (id->driver_data != whoami)
-> -			dev_err(dev, "WHOAMI does not match i2c_device_id: %s",
-> -				id->name);
-> -	} else if (ACPI_HANDLE(dev)) {
-> -		acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
-> -		if (!acpi_id)
-> -			return -ENODEV;
-> -		if (acpi_id->driver_data != whoami)
-> -			dev_err(dev, "WHOAMI does not match acpi_device_id: %s",
-> -				acpi_id->id);
-> -	} else
-> +	unsigned int long ddata;
-> +
-> +	ddata = (uintptr_t)device_get_match_data(dev);
-> +	if (ddata != whoami) {
-> +		dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
->  		return -ENODEV;
-> +	}
->  
->  	switch (whoami) {
->  	case SX9310_WHOAMI_VALUE:
-> @@ -885,15 +876,14 @@ static int sx9310_set_indio_dev_name(struct device *dev,
->  		indio_dev->name = "sx9311";
->  		break;
->  	default:
-> -		dev_err(dev, "unexpected WHOAMI response: %u", whoami);
-> +		dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
->  		return -ENODEV;
->  	}
->  
->  	return 0;
->  }
->  
-> -static int sx9310_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int sx9310_probe(struct i2c_client *client)
->  {
->  	int ret;
->  	struct iio_dev *indio_dev;
-> @@ -919,8 +909,7 @@ static int sx9310_probe(struct i2c_client *client,
->  		return ret;
->  	}
->  
-> -	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, id,
-> -					data->whoami);
-> +	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -1033,8 +1022,8 @@ static const struct acpi_device_id sx9310_acpi_match[] = {
->  MODULE_DEVICE_TABLE(acpi, sx9310_acpi_match);
->  
->  static const struct of_device_id sx9310_of_match[] = {
-> -	{ .compatible = "semtech,sx9310" },
-> -	{ .compatible = "semtech,sx9311" },
-> +	{ .compatible = "semtech,sx9310", (void *)SX9310_WHOAMI_VALUE },
-> +	{ .compatible = "semtech,sx9311", (void *)SX9311_WHOAMI_VALUE },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, sx9310_of_match);
-> @@ -1053,7 +1042,7 @@ static struct i2c_driver sx9310_driver = {
->  		.of_match_table = sx9310_of_match,
->  		.pm = &sx9310_pm_ops,
->  	},
-> -	.probe		= sx9310_probe,
-> +	.probe_new	= sx9310_probe,
->  	.id_table	= sx9310_id,
->  };
->  module_i2c_driver(sx9310_driver);
+and do not top post please.
 
+thanks,
+
+greg k-h
