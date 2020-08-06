@@ -2,291 +2,176 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D02C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5B8323119
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tEE+LFon"
+	by mail.kernel.org (Postfix) with ESMTP id BE80A2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 16:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgHFQ7C (ORCPT
+        id S1729017AbgHFQ7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728970AbgHFQkm (ORCPT
+        Thu, 6 Aug 2020 12:59:08 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:40360 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728652AbgHFQ6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:40:42 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F90C00216F;
-        Thu,  6 Aug 2020 09:11:46 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id z3so30689532ilh.3;
-        Thu, 06 Aug 2020 09:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SALjLR3myMkdR3uhiNDrkIW0bJXa5yZIDqj4S53HXjM=;
-        b=tEE+LFonFqYAn+0LuKS2dxu00jPEZm4sOUuRn1HVlbe/OlLy0N+RoxJ6GZ4stS/Fmn
-         I8gZtSAOdge7AGglK35Bd6h9WesYHuVt+kUNXr8a8f2A+Ut3lkT74tF4cRkSdhFY7Ng9
-         R7cuMrvgc/zCbcXBR7+kqPoclrHG/QgL9DURLoaSxBRtTlQKQpXG3pEv827CpN1WeKN1
-         r6u8rAoevIgAkugOORCtf5MQZ5u5ncs8CDB7zlzLPlZgwEb444xPbBIA2TTW6xM2M/+z
-         7cGBHYNRzYHs9h5op7as06Qi/MHk0oX9SpJxf6xtMnxtsdqQR1LZ/aiV/JBNsYTeEeT3
-         PJaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SALjLR3myMkdR3uhiNDrkIW0bJXa5yZIDqj4S53HXjM=;
-        b=L+/tlRS0a/PHLByNEw3qltHcRyGp7CR8FOPY8PtPVGyrg6QTiRdgQ1ybiA+qL+Lv/F
-         UXkKa+32U/wp8Co7QJjrHCQ9J9XzMeQNVuLT5XSyFIz9dfRqlBHrmPyvcqyDDEVVHxxz
-         nFUT2tENouy4UBfdXfXq8qqxyS/kzEw1d0W5/u6Q/AXr0ieSpv539OMc3/5ATIWFPc8V
-         7Ufvx/NDaAX/52w/Hjb/NCpUMEnbazq3FYmhitP+nzhz0mZeUo2RmKWOvyF3coMHUlpX
-         1GtMGa1nd8sjYwRpgXJRMH4FVRVIpSheLAISsFcB1GpbVJZk+L8C5Vrk+hujt2a4EaZw
-         kU3A==
-X-Gm-Message-State: AOAM531XZcMvMKfE4kXOtoL4btfUeeqywkosLYKxbijLJe/1tf5pk4Gn
-        b7EUS6TzlEL+qtrg924yuG3qMhPmvTOXSVIQHiY=
-X-Google-Smtp-Source: ABdhPJzCvgp1VQ7dfviQns9lRkbVGee+ASA6F4+by6tRrBJAe0uFr4NZhxA63R8qOChVpC9S+ec3LNkXQBU3xINxhQk=
-X-Received: by 2002:a92:8946:: with SMTP id n67mr12395030ild.168.1596730305803;
- Thu, 06 Aug 2020 09:11:45 -0700 (PDT)
+        Thu, 6 Aug 2020 12:58:44 -0400
+Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 15E803A5156;
+        Thu,  6 Aug 2020 15:55:52 +0000 (UTC)
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 44E35FF806;
+        Thu,  6 Aug 2020 15:50:29 +0000 (UTC)
+Date:   Thu, 6 Aug 2020 17:50:28 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 08/14] media: uapi: h264: Drop SLICE_PARAMS 'size'
+ field
+Message-ID: <20200806155028.GB1621078@aptenodytes>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+ <20200806151310.98624-9-ezequiel@collabora.com>
 MIME-Version: 1.0
-References: <CGME20200806160653eucas1p2b7fd860f5d89589cf9df0ad0f8d3981f@eucas1p2.samsung.com>
- <20200806160646.1997-1-s.nawrocki@samsung.com>
-In-Reply-To: <20200806160646.1997-1-s.nawrocki@samsung.com>
-From:   Tomasz Figa <tomasz.figa@gmail.com>
-Date:   Thu, 6 Aug 2020 18:11:32 +0200
-Message-ID: <CA+Ln22HGSj4gFRmw1rSLaTvw3TiPC9jaM6JB4Z1fbxpwsWNZWw@mail.gmail.com>
-Subject: Re: [PATCH] clk: samsung: Prevent potential endless loop in the PLL
- set_rate ops
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
+Content-Disposition: inline
+In-Reply-To: <20200806151310.98624-9-ezequiel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester,
 
-2020=E5=B9=B48=E6=9C=886=E6=97=A5(=E6=9C=A8) 18:06 Sylwester Nawrocki <s.na=
-wrocki@samsung.com>:
->
-> In the .set_rate callback for some PLLs there is a loop polling state
-> of the PLL lock bit and it may become an endless loop when something
-> goes wrong with the PLL. For some PLLs there is already (duplicated)
-> code for polling with a timeout. This patch refactors that code a bit
-> and moves it to a common helper function which is then used
-> in .set_rate callbacks for all the PLLs.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+--4bRzO86E/ozDv8r1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu 06 Aug 20, 12:13, Ezequiel Garcia wrote:
+> The SLICE_PARAMS control is intended for slice-based
+> devices. In this mode, the OUTPUT buffer contains
+> a single slice, and so the buffer's plane payload size
+> can be used to query the slice size.
+
+If we later extend the API for supporting multiple slices with dynamic array
+controls, I guess we'll need to know the size of each slice in each control
+elements. So I'd rather keep that even if it's indeed redundant with
+vb2_get_plane_payload in single-slice mode.
+
+What do you think?
+
+Paul
+
+> To reduce the API surface drop the size from the
+> SLICE_PARAMS control.
+>=20
+> A follow-up change will remove other members in SLICE_PARAMS
+> so we don't need to add padding fields here.
+>=20
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > ---
->  drivers/clk/samsung/clk-pll.c | 94 +++++++++++++----------------------
->  1 file changed, 35 insertions(+), 59 deletions(-)
->
-> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.=
-c
-> index ac70ad785d8e..0929644be99a 100644
-> --- a/drivers/clk/samsung/clk-pll.c
-> +++ b/drivers/clk/samsung/clk-pll.c
-> @@ -63,6 +63,27 @@ static long samsung_pll_round_rate(struct clk_hw *hw,
->         return rate_table[i - 1].rate;
->  }
->
-> +static int samsung_pll_lock_wait(struct samsung_clk_pll *pll,
-> +                                unsigned int reg_mask)
-> +{
-> +       ktime_t timeout;
-> +
-> +       /* Wait until the PLL is in steady locked state */
-> +       timeout =3D ktime_add_ms(ktime_get(), PLL_TIMEOUT_MS);
-> +
-> +       while (!(readl_relaxed(pll->con_reg) & reg_mask)) {
-> +               if (ktime_after(ktime_get(), timeout)) {
-> +                       pr_err("%s: Could not lock PLL %s\n",
-> +                               __func__, clk_hw_get_name(&pll->hw));
-> +                       return -EFAULT;
-> +               }
-> +
-> +               cpu_relax();
-> +       }
+>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 ---
+>  drivers/staging/media/sunxi/cedrus/cedrus_h264.c          | 7 +++----
+>  include/media/h264-ctrls.h                                | 3 ---
+>  3 files changed, 3 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index 427fc5727ec0..fff74b7bf32a 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1760,9 +1760,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>      :stub-columns: 0
+>      :widths:       1 1 2
+> =20
+> -    * - __u32
+> -      - ``size``
+> -      -
+>      * - __u32
+>        - ``start_byte_offset``
+>          Offset (in bytes) from the beginning of the OUTPUT buffer to the=
+ start
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_h264.c
+> index a9ba78b15907..8b6f05aadbe8 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -324,17 +324,16 @@ static void cedrus_set_params(struct cedrus_ctx *ct=
+x,
+>  	struct vb2_buffer *src_buf =3D &run->src->vb2_buf;
+>  	struct cedrus_dev *dev =3D ctx->dev;
+>  	dma_addr_t src_buf_addr;
+> -	u32 len =3D slice->size * 8;
+> +	size_t slice_bytes =3D vb2_get_plane_payload(src_buf, 0);
+>  	unsigned int pic_width_in_mbs;
+>  	bool mbaff_pic;
+>  	u32 reg;
+> =20
+> -	cedrus_write(dev, VE_H264_VLD_LEN, len);
+> +	cedrus_write(dev, VE_H264_VLD_LEN, slice_bytes * 8);
+>  	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
+> =20
+>  	src_buf_addr =3D vb2_dma_contig_plane_dma_addr(src_buf, 0);
+> -	cedrus_write(dev, VE_H264_VLD_END,
+> -		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
+> +	cedrus_write(dev, VE_H264_VLD_END, src_buf_addr + slice_bytes);
+>  	cedrus_write(dev, VE_H264_VLD_ADDR,
+>  		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
+>  		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index 4f05ee265997..f74736fcfa00 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -158,9 +158,6 @@ struct v4l2_h264_reference {
+>  };
+> =20
+>  struct v4l2_ctrl_h264_slice_params {
+> -	/* Size in bytes, including header */
+> -	__u32 size;
+> -
+>  	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
+>  	__u32 start_byte_offset;
+> =20
+> --=20
+> 2.27.0
+>=20
 
-Thanks for the patch! Good to have this consolidated. How about going
-one step further and using the generic
-readl_relaxed_poll_timeout_atomic() helper?
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-Best regards,
-Tomasz
+--4bRzO86E/ozDv8r1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +       return 0;
-> +}
-> +
->  static int samsung_pll3xxx_enable(struct clk_hw *hw)
->  {
->         struct samsung_clk_pll *pll =3D to_clk_pll(hw);
-> @@ -241,12 +262,9 @@ static int samsung_pll35xx_set_rate(struct clk_hw *h=
-w, unsigned long drate,
->         writel_relaxed(tmp, pll->con_reg);
->
->         /* Wait until the PLL is locked if it is enabled. */
-> -       if (tmp & BIT(pll->enable_offs)) {
-> -               do {
-> -                       cpu_relax();
-> -                       tmp =3D readl_relaxed(pll->con_reg);
-> -               } while (!(tmp & BIT(pll->lock_offs)));
-> -       }
-> +       if (tmp & BIT(pll->enable_offs))
-> +               return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
-> +
->         return 0;
->  }
->
-> @@ -318,7 +336,7 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw=
-, unsigned long drate,
->                                         unsigned long parent_rate)
->  {
->         struct samsung_clk_pll *pll =3D to_clk_pll(hw);
-> -       u32 tmp, pll_con0, pll_con1;
-> +       u32 pll_con0, pll_con1;
->         const struct samsung_pll_rate_table *rate;
->
->         rate =3D samsung_get_pll_settings(pll, drate);
-> @@ -356,13 +374,8 @@ static int samsung_pll36xx_set_rate(struct clk_hw *h=
-w, unsigned long drate,
->         pll_con1 |=3D rate->kdiv << PLL36XX_KDIV_SHIFT;
->         writel_relaxed(pll_con1, pll->con_reg + 4);
->
-> -       /* wait_lock_time */
-> -       if (pll_con0 & BIT(pll->enable_offs)) {
-> -               do {
-> -                       cpu_relax();
-> -                       tmp =3D readl_relaxed(pll->con_reg);
-> -               } while (!(tmp & BIT(pll->lock_offs)));
-> -       }
-> +       if (pll_con0 & BIT(pll->enable_offs))
-> +               return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
->
->         return 0;
->  }
-> @@ -437,7 +450,6 @@ static int samsung_pll45xx_set_rate(struct clk_hw *hw=
-, unsigned long drate,
->         struct samsung_clk_pll *pll =3D to_clk_pll(hw);
->         const struct samsung_pll_rate_table *rate;
->         u32 con0, con1;
-> -       ktime_t start;
->
->         /* Get required rate settings from table */
->         rate =3D samsung_get_pll_settings(pll, drate);
-> @@ -489,20 +501,7 @@ static int samsung_pll45xx_set_rate(struct clk_hw *h=
-w, unsigned long drate,
->         writel_relaxed(con0, pll->con_reg);
->
->         /* Wait for locking. */
-> -       start =3D ktime_get();
-> -       while (!(readl_relaxed(pll->con_reg) & PLL45XX_LOCKED)) {
-> -               ktime_t delta =3D ktime_sub(ktime_get(), start);
-> -
-> -               if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
-> -                       pr_err("%s: could not lock PLL %s\n",
-> -                                       __func__, clk_hw_get_name(hw));
-> -                       return -EFAULT;
-> -               }
-> -
-> -               cpu_relax();
-> -       }
-> -
-> -       return 0;
-> +       return samsung_pll_lock_wait(pll, PLL45XX_LOCKED);
->  }
->
->  static const struct clk_ops samsung_pll45xx_clk_ops =3D {
-> @@ -588,7 +587,6 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw=
-, unsigned long drate,
->         struct samsung_clk_pll *pll =3D to_clk_pll(hw);
->         const struct samsung_pll_rate_table *rate;
->         u32 con0, con1, lock;
-> -       ktime_t start;
->
->         /* Get required rate settings from table */
->         rate =3D samsung_get_pll_settings(pll, drate);
-> @@ -648,20 +646,7 @@ static int samsung_pll46xx_set_rate(struct clk_hw *h=
-w, unsigned long drate,
->         writel_relaxed(con1, pll->con_reg + 0x4);
->
->         /* Wait for locking. */
-> -       start =3D ktime_get();
-> -       while (!(readl_relaxed(pll->con_reg) & PLL46XX_LOCKED)) {
-> -               ktime_t delta =3D ktime_sub(ktime_get(), start);
-> -
-> -               if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
-> -                       pr_err("%s: could not lock PLL %s\n",
-> -                                       __func__, clk_hw_get_name(hw));
-> -                       return -EFAULT;
-> -               }
-> -
-> -               cpu_relax();
-> -       }
-> -
-> -       return 0;
-> +       return samsung_pll_lock_wait(pll, PLL46XX_LOCKED);
->  }
->
->  static const struct clk_ops samsung_pll46xx_clk_ops =3D {
-> @@ -1035,14 +1020,9 @@ static int samsung_pll2550xx_set_rate(struct clk_h=
-w *hw, unsigned long drate,
->                         (rate->sdiv << PLL2550XX_S_SHIFT);
->         writel_relaxed(tmp, pll->con_reg);
->
-> -       /* wait_lock_time */
-> -       do {
-> -               cpu_relax();
-> -               tmp =3D readl_relaxed(pll->con_reg);
-> -       } while (!(tmp & (PLL2550XX_LOCK_STAT_MASK
-> -                       << PLL2550XX_LOCK_STAT_SHIFT)));
-> -
-> -       return 0;
-> +       /* Wait for locking. */
-> +       return samsung_pll_lock_wait(pll,
-> +                       PLL2550XX_LOCK_STAT_MASK << PLL2550XX_LOCK_STAT_S=
-HIFT);
->  }
->
->  static const struct clk_ops samsung_pll2550xx_clk_ops =3D {
-> @@ -1132,13 +1112,9 @@ static int samsung_pll2650x_set_rate(struct clk_hw=
- *hw, unsigned long drate,
->         con1 |=3D ((rate->kdiv & PLL2650X_K_MASK) << PLL2650X_K_SHIFT);
->         writel_relaxed(con1, pll->con_reg + 4);
->
-> -       do {
-> -               cpu_relax();
-> -               con0 =3D readl_relaxed(pll->con_reg);
-> -       } while (!(con0 & (PLL2650X_LOCK_STAT_MASK
-> -                       << PLL2650X_LOCK_STAT_SHIFT)));
-> -
-> -       return 0;
-> +       /* Wait for locking. */
-> +       return samsung_pll_lock_wait(pll,
-> +                       PLL2650X_LOCK_STAT_MASK << PLL2650X_LOCK_STAT_SHI=
-FT);
->  }
->
->  static const struct clk_ops samsung_pll2650x_clk_ops =3D {
-> --
-> 2.17.1
->
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl8sJsQACgkQ3cLmz3+f
+v9GziAf/aWLfWuyKKjVuqFynldaS4RSWzbw6EJfK4ufM4h4s7Mv1daAa2UgJw0Vo
+zow7RsiuGlB66zWBGumoUKPpM3HHu2MQ0yed9OpzRAuNWJH+v0SBHCUbJ85b9VeH
+0XQ+VeVIewp9Vud0ddtOZlrtoKS5MXXOatJ1jUtWveTRSHKiCZXZfYizSemxfJWh
+bKVPdKM3jXsDL/Q91eRC4rKAQTlTqG9DnO2hwbW8bTZx1tFzyU+qLSyjrHtiv8mG
+/go8eJzl+Y00DoI6YDt+E6PBSFPZkFsXv3Xsm+v4ZHUO9p2WTs80Me+RkjlOTWZ+
+Sly1KTP5SiIuH11EXTOciAlKNeqCtw==
+=qVuK
+-----END PGP SIGNATURE-----
+
+--4bRzO86E/ozDv8r1--
