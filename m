@@ -2,109 +2,120 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB53C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59822224D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QThCNrkJ"
+	by mail.kernel.org (Postfix) with ESMTP id F03F0206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 19:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596740584;
+	bh=561ATR13rQXzuRTAtFxkvTWmpcfeNlsdzdyWuVL2DzE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iiHFGudL0avQ+XpbOYyCwxyMp5nZ3rMBNRqikqZ2+b0hezZukn+aPszKPEfW9q8eb
+	 EoWPUBVrq57d91wrZAY9nDjOc+r1C/qvRkR1bT+6jxa3fVf/TBqMxK4HOvbuhLCG5m
+	 IxllHmBJI4KwIonTYmZg5q+I7d+w6xh1q60eSNxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgHFTCe (ORCPT
+        id S1729835AbgHFTDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35676 "EHLO
+        Thu, 6 Aug 2020 15:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgHFTCc (ORCPT
+        with ESMTP id S1725272AbgHFTDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 15:02:32 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8634CC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:02:32 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id di22so28748151edb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:02:32 -0700 (PDT)
+        Thu, 6 Aug 2020 15:03:01 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4FAAC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 12:03:00 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so52991699ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yQz8jNT7jbM1zvtc9MWwIejDFC/8b3Ez/9JWOSG7lno=;
-        b=QThCNrkJPHr7s8iGlc4uJowP3s2qbSNAZJpUW7ELidrJUK4mRke6zh9BN727pTaUcX
-         s0Zdlw7Yaz2UO4I4m0bPU7i0qJgki0oxGA9nHGGa22RnjGxdNU/ZrqiH1bjNEtU3n0T7
-         QhloKmQ7m8OCCX86CWv9iFnezJNfb5LboVOUqU1SoQOpM4AATGJUIwltweLLiPN/Wtqc
-         KkE97A0v/Ob2s+fW8cVjdA1WCYb3a1f/aXSSns2Q3rWqgu1JGZm8ZFM910hEHPuSupIQ
-         fDDi8TRxAAbWx9P0lLKwFYnP0XEPve49vOaD80w93nLM17VQ5XiNOGJq6SWp+38D1SO+
-         +a0w==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3w/6rBN9gcH8mjIzzvZHXOpvgS1VvdyWbP7CAnustac=;
+        b=LAScYD2k6fWNwYZVw30EOyN6VIFM+unJeE4Ac4q6MGpK5Upggmy70yXYew/uAy1VGW
+         2t5EZC5rxF2cpYmLmUWgAbMI7Jq9mHw+U+Lm7wvautoxVNUtfmTjG7Y4SeOk+rCib/WJ
+         u8quIegVgsBFetyHqsXvomXjqzM8wZDcWUMgk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yQz8jNT7jbM1zvtc9MWwIejDFC/8b3Ez/9JWOSG7lno=;
-        b=hlTlYBELYSooFk69z34642OEXBxFD2dX7fuWqJAGVk06VASpaoDUxJ92k/ju+LTC89
-         0qui+cdL5yfq7picE3qXDgGDO856q8PWxrrRAMXivm4r8/q2EkqaxVymxrE+yJDnfCqL
-         8fIbU0PuLyPSjhDulWm8Nr2zpIX49K0bdE786ypa4WJlMvpiF7MygJbWGaY9Ngq+vTvl
-         r4PfYL4rkdZrcqJS9eVFsL2moNzl+2JhGUumdN6WoJm/ZCy98vmytfTiJ7Ny39h2t/7V
-         z2X1dAlYdZMK6Ay40lL/P3txqJF5J7mqhEHZEqQAU7qswkyvxY78PvpftYfwrauEMokx
-         uCmg==
-X-Gm-Message-State: AOAM532dT7oNSR215X109NOd1/+AvIhcU+SQNzAdjkuIAByD/DUYwx16
-        nRz5hZ2d7TPg8v5XV6GbU1o=
-X-Google-Smtp-Source: ABdhPJzm3Zj+ASLTF3FMTFHWlkAVgt69skwnKs2qqEcaZxXLYEOnyqK4lKXFT9L3QRgSHWdh9CG7uA==
-X-Received: by 2002:aa7:db10:: with SMTP id t16mr5281903eds.196.1596740551235;
-        Thu, 06 Aug 2020 12:02:31 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:a7fb:e200:d567:ec52:e0a5:f485])
-        by smtp.gmail.com with ESMTPSA id w19sm4262655ejv.92.2020.08.06.12.02.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 12:02:30 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 21:02:29 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        openrisc@lists.librecores.org
-Subject: Re: [PATCH v2 6/6] openrisc: uaccess: Add user address space check
- to access_ok
-Message-ID: <20200806190229.b7jbmkavu7qqzegy@ltop.local>
-References: <20200805210725.310301-1-shorne@gmail.com>
- <20200805210725.310301-7-shorne@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3w/6rBN9gcH8mjIzzvZHXOpvgS1VvdyWbP7CAnustac=;
+        b=ojVcPnf5wOxyWUg4nATT0hYXS8a8rKD+ovlGlB5C5Z4e5/5ZcB0T0KJ+5OtSgCoCXh
+         nzkfjDG9gftayiansg90WrE5NEutTitoCmUJlTZ7A1TgdCb1S2mOTODu4OpaCaNc22Li
+         6hxpjrmhF2hPqDNkVAx2+TK6y1+tuTFLrjbhDQyRiIIjRmZCu/sa2BgHiZYojt7BFArI
+         BpZXyH+qiMqntpI2jaLeDpppm3+nOQylKusE39fWsuwW5rnGBCcTnmdynerJ46qmvf8C
+         +uwjLQ1vgsW/36CNlA5UpqXfO24XG3/RfO0f2agOBw5wYN0/mcsdhAKtp6+Qv8Ju8R75
+         2Shw==
+X-Gm-Message-State: AOAM5301AOGo5QUDXCai6Fuz8XeQpW9fSDabFf3ZOx/VeTOEph00IKxg
+        KIxTtJUzpA9BIfx9Mlp9Bix8h1Tiy50=
+X-Google-Smtp-Source: ABdhPJw8HPpxxgxojaCbnKE9rk63nBTP8L0hV6NmTWw7gaWKyk0oIubGqHJmUKF8ztVFpbxhFAt52Q==
+X-Received: by 2002:a2e:2f02:: with SMTP id v2mr4724451ljv.391.1596740578147;
+        Thu, 06 Aug 2020 12:02:58 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id x2sm2792903ljc.123.2020.08.06.12.02.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 12:02:57 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id s9so26705699lfs.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 12:02:56 -0700 (PDT)
+X-Received: by 2002:ac2:46d0:: with SMTP id p16mr4695357lfo.142.1596740576374;
+ Thu, 06 Aug 2020 12:02:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805210725.310301-7-shorne@gmail.com>
+References: <20200803190354.GA1293087@gmail.com> <20200805110348.GA108872@zx2c4.com>
+ <CAHk-=wiq+7sW3Lk5iQ0-zY5XWES4rSxK505vXsgFY=za88+RZw@mail.gmail.com>
+ <20200806131034.GA2067370@gmail.com> <20200806185723.GA24304@suse.de>
+In-Reply-To: <20200806185723.GA24304@suse.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 6 Aug 2020 12:02:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg7PHCUMD1xY=YCCeVHspAhw0YNEhyO3CnHfRPwsf6P8A@mail.gmail.com>
+Message-ID: <CAHk-=wg7PHCUMD1xY=YCCeVHspAhw0YNEhyO3CnHfRPwsf6P8A@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/mm changes for v5.9
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 06:07:25AM +0900, Stafford Horne wrote:
-> Now that __user annotations are fixed for openrisc uaccess api's we can
-> add checking to the access_ok macro.  This patch adds the __chk_user_ptr
-> check, on normal builds the added check is a nop.
-> 
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> ---
->  arch/openrisc/include/asm/uaccess.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/openrisc/include/asm/uaccess.h b/arch/openrisc/include/asm/uaccess.h
-> index 85a55359b244..53ddc66abb3f 100644
-> --- a/arch/openrisc/include/asm/uaccess.h
-> +++ b/arch/openrisc/include/asm/uaccess.h
-> @@ -57,7 +57,8 @@ static inline int __range_ok(unsigned long addr, unsigned long size)
->  
->  #define access_ok(addr, size)						\
->  ({ 									\
-> -	__range_ok((unsigned long)(addr), (size));			\
-> +	__chk_user_ptr(addr);						\
-> +	__range_ok((__force unsigned long)(addr), (size));		\
->  })
+On Thu, Aug 6, 2020 at 11:57 AM Joerg Roedel <jroedel@suse.de> wrote:
+>
+> On Thu, Aug 06, 2020 at 03:10:34PM +0200, Ingo Molnar wrote:
+> >
+> > * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > > So apparently the "the page-table pages are all pre-allocated now" is
+> > > simply not true. Joerg?
+>
+> It pre-allocates the whole vmalloc/ioremap PUD/P4D pages, but I actually
+> only tested it with 4-level paging, as I don't have access to 5-level
+> paging hardware.
 
-Just for info, __force is not needed when casting a pointer to
-unsigned long (or uintptr_t). It's not incorrect to use one
-but I think it's to avoid __force as much as possible.
+I don't think Jason has either.
 
--- Luc
+The
+
+        PGD 0 P4D 0
+
+line tells us that "pgd_present()" is true, even though PGD is 0
+(otherwise it wouldn't print the P4D part). That means that he doesn't
+have l5 enabled.
+
+But you may obviously have different settings for CONFIG_X86_5LEVEL,
+and maybe that ends up changing something?
+
+But since apparently it's not immediately obvious what the problem is,
+I'll revert it for now.
+
+                Linus
