@@ -2,128 +2,128 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE8AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F893C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D3822C9F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596739211;
-	bh=8zguKyCfWypWM8hyJ77LIcdUtKkyyoE4Ky0FYhVvmeQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rTSfTIHIB4zVOH44kb68L0YFwposqB+aCWbaJiIk9ye1HvPnnx0MpGYBYtn8gtN4y
-	 KUkjO7RaMD4JBBlgS0He1MQfDoxUvcAsYd7LBWl7AK0/xRNTZrrp39OQUS8YImWCow
-	 ulEV6uD12RkP1U7Kwam17xqA9MSyp3MpvHw7vuJ4=
+	by mail.kernel.org (Postfix) with ESMTP id 9FBFA22C9F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 18:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgHFSkI (ORCPT
+        id S1729981AbgHFSkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727976AbgHFS3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:29:55 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D0DE20716;
-        Thu,  6 Aug 2020 18:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596737696;
-        bh=8zguKyCfWypWM8hyJ77LIcdUtKkyyoE4Ky0FYhVvmeQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uWTLvWaH5zKSmC7BVEoGDkeBuhLJku628QYEY3Ord32GNJ9AmzpLIlWbFw5RjoQqI
-         rbEK3EPMb4wpnw+6DYBPqJkEiyQgDbeKlA0WbcbyxaQyRigFd6eVt/6guY2tGNBBxU
-         VESDB94fynRaFsWvIDqU0RJXNg1TTQweMJL0dpX8=
-Date:   Thu, 6 Aug 2020 19:14:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310
- sensor
-Message-ID: <20200806191451.3ce5ec57@archlinux>
-In-Reply-To: <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com>
-References: <20200731164853.3020946-1-campello@chromium.org>
-        <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
-        <20200801160639.1410944e@archlinux>
-        <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com>
-        <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 6 Aug 2020 14:40:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729977AbgHFSkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:40:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A1CC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 11:40:07 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3ko2-0004cr-1P; Thu, 06 Aug 2020 20:39:58 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3knz-0007gi-5v; Thu, 06 Aug 2020 20:39:55 +0200
+Date:   Thu, 6 Aug 2020 20:39:55 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 2/5] dt-bindings: pwm: renesas,pwm-rcar: Add r8a7742
+ support
+Message-ID: <20200806183955.lmlwhsdrcpccwrkz@pengutronix.de>
+References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wi7zgoow7wajiuwc"
+Content-Disposition: inline
+In-Reply-To: <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 20:01:06 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
 
-> On Mon, Aug 3, 2020 at 1:00 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Jonathan Cameron (2020-08-01 08:06:39)  
-> > > On Fri, 31 Jul 2020 10:48:38 -0600
-> > > Daniel Campello <campello@chromium.org> wrote:  
-> > > > diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> > > > new file mode 100644
-> > > > index 00000000000000..5739074d3592fe
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> > > > @@ -0,0 +1,65 @@  
-> > [...]  
-> > > > +
-> > > > +  "#io-channel-cells":
-> > > > +    const: 1
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +  - "#io-channel-cells"  
-> > >
-> > > Missed this in earlier review (only noticed when I saw whilst santity
-> > > checking earlier versions.
-> > >
-> > > Fairly sure we should only need #io-channel-cells if we have
-> > > a consumer of a channel somewhere else in DT.  So it's not
-> > > required as far as I can see.
-> > >  
-> >
-> > This is mostly a decision for Rob to make, but I would make it required
-> > because the device is always an io channel provider. It may be that it
-> > isn't providing anything in the DT to something else in the DT but it is
-> > providing this information somewhere so always having to spell that out
-> > is simple and doesn't hurt.  
-> 
-> I agree. If the user is split in a board file or overlay, we don't
-> want to have to be adding it to the provider at that time.
+--wi7zgoow7wajiuwc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That is perhaps a reasonable view point for devices with channels that
-are likely to be used by consumer drivers, but in this particular case we
-are talking about a proximity sensor.  So far I don't think we
-have any consumer drivers for this type of sensor (I might have forgotten
-one of course!)
+Hello,
 
-I'm not that fussed though, so will leave it in.
+On Thu, Aug 06, 2020 at 07:31:49PM +0100, Lad Prabhakar wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
+as.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml =
+b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> index daadde9ff9c4..8b22cb110f3f 100644
+> --- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> @@ -13,6 +13,7 @@ properties:
+>    compatible:
+>      items:
+>        - enum:
+> +          - renesas,pwm-r8a7742   # RZ/G1H
+>            - renesas,pwm-r8a7743   # RZ/G1M
+>            - renesas,pwm-r8a7744   # RZ/G1N
+>            - renesas,pwm-r8a7745   # RZ/G1E
 
-The argument is a lot stronger for ADCs and such like, so we can
-start encouraging it for those.
+The typical dts has:
 
-Jonathan
+	compatible =3D "renesas,pwm-r8a7742", "renesas,pwm-rcar";
 
+so there is no need for a driver adaption.
 
-> 
-> Rob
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wi7zgoow7wajiuwc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8sTngACgkQwfwUeK3K
+7Ang/gf/VQ5o3nYBkW7YrJzYGx7rsiH9B/HWrwbVgpjOwQfNc1yCEfg1liZYHDFm
+feEMs3dkCO93YHZjdKGKeqIiXxdbHdEY94Cgmk8am1Ml9+koA79tHUD+UblJ9U28
+T9zl88KmyjU5BImc1AJSAvVRoMO6BopXbbqCKAh+PYrpspxLSHyQeEZHssl4FxXK
+ZRKfnjC3bJr0xas7F2EQ9lukFqr5wdQN+kJpkv1LIf1eDDKvimdOuCLW2710ES4O
+brIMcPs5PyJha1hcV2qVk1/5LXWlSilL2QB3mUhThWX7KtlGIlQj4DJFll/nlqyi
+SKrDlmoOl9sXyzrAAuj7K/VAz3pOZA==
+=8duc
+-----END PGP SIGNATURE-----
+
+--wi7zgoow7wajiuwc--
