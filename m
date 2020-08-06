@@ -2,235 +2,202 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7174C38154
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD01C388D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0B6204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3FF2332B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCwl2xDw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iy1UdrUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgHFH3J (ORCPT
+        id S1728526AbgHFHeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41612 "EHLO
+        Thu, 6 Aug 2020 03:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728605AbgHFH2y (ORCPT
+        with ESMTP id S1727105AbgHFHeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 03:28:54 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE43C061574;
-        Thu,  6 Aug 2020 00:28:54 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t10so21719912plz.10;
-        Thu, 06 Aug 2020 00:28:54 -0700 (PDT)
+        Thu, 6 Aug 2020 03:34:19 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30908C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 00:34:19 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so7939163wme.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 00:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=otRXxNiL4gSVNa6K+8BQSdss/DJNJyTyG/m0dhQQX4E=;
-        b=OCwl2xDwvE1snTQ5bo+L1m2eYeuMLJAcfBA+IBsEjQA1yyteEZ5hUzzWYUYFSVs7yE
-         gv135n4/e7GmIEGn47sKsk9WnNJbuZ+k3vITt26kDjAl1GLIjI3Jh9/7qWuXNXiBd30x
-         aJWw5cjXnaS7Kt0AqQxYk0THyVlQruYmNozroghu8a0R+afmWWOW9tfpoKoKfqCN8W6f
-         i+6cS6P5NhQwUQtP7SQaW7tou6klf4XncZYLp8DmdAq+EQklaNt7Zg073W60d+2c5bc1
-         QMixkQAb4VlmD5hRMbPN71xHotttPfZ0oCIgX8NsVgvUcZSkv7Zjh5D0H3kHWsNCGe+F
-         jiqw==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Hm62n5nWJfQYQSRT7FGneq7QpvGO136qnX0cS28TOP4=;
+        b=iy1UdrUQvj4AI5QzJyGQoO6FBXcrVB/n4g+YTAECDOb44jx4iDA09EXPKCIvJFoVs9
+         pLAdLlB/Yjh8tDgn7z+Pabpx2ZDO7wojvuzSPqrv/UcUB/VT/XJIu82TrcALtCdFtVeC
+         x3p892QNqvgJz6JgwOYqXmBdnRLykiYLr0LEA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=otRXxNiL4gSVNa6K+8BQSdss/DJNJyTyG/m0dhQQX4E=;
-        b=TDvn9lag5LJJU7joOjOcT4f4C9JKkrO3cBQhNs044rkFpEQt/73n2cReUheflAoJSV
-         b9kRN57ldGnq4uIQ3rPdkP1Y+clz7XzHczKXlo9ZuOaB4Nfeq59qfRCpY7c0RFX1vKfZ
-         WTAlqRszVDjPW69y51sUEfaP5Yi+pl5Tjp20ZnjAZyyffbQlCYzfBbW0OTS8EAVfVQft
-         NEN5k10m4u1gYmv0OJsIAPpCSmSO7abdPEU0/yHg4bRZNHHFBFO/Sa7SZ12790/C5cAw
-         wiw3mL1crcdYxeg6t0KDy0i3suvzRFy+Mm6GMlsupKGEllNZ5GTGNENgoCaYMaDnBsl0
-         lilA==
-X-Gm-Message-State: AOAM530z+r2YJpqW+eTJsp684RQxJM3kCNf1X/08IyUsTDndcpxdmBOD
-        f5bs2WBo/Z79cswZFlb+uTE=
-X-Google-Smtp-Source: ABdhPJxB33J8in6hVmRJzWA2XAc3HXbCnIXx134loDG2q0NXHME3BjsXKW01wmOFkf7S9wmJfTzxPg==
-X-Received: by 2002:a17:902:9a94:: with SMTP id w20mr6975803plp.59.1596698933892;
-        Thu, 06 Aug 2020 00:28:53 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id e125sm6654646pfh.69.2020.08.06.00.28.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=Hm62n5nWJfQYQSRT7FGneq7QpvGO136qnX0cS28TOP4=;
+        b=YTQU52EVbx7HDoTMIb2Hj6wbS7EvtzCqVBqoPoFgLHzjzcV1UlcsRMwKWEOxDbxkfU
+         +vGjIl1hg/Yn+jprqa50pFAYwZpf3cIx2HT6iinB3xseEhes0lyHdX4sUYW7hiPIpdlp
+         IKu6aHwXrrI4eSYxJEblGhG9K2INAN+ITERCCGf/Qbr45AqbXGWXY05BFmikr/lZ69Fb
+         3wax89emzyHYqLmnNODzDj8W5mJB7uPUFROj1++cgbKYt+N/NLP8WjmBO1nzAT/DfBcG
+         AlM2koOv4KWz2GDPC8TmHlapjfMtOzizI+rNUOGJBwBtTOkRbFfhj0ELafV/2PFC6NGc
+         6sOQ==
+X-Gm-Message-State: AOAM533+eJfQclYkdsWvIOaFETDfWR+AqBh5dc2pp+0HZsZdZgz74pg7
+        4UvEZcXM4P5uP2s7f9M2/jqq90ypTto=
+X-Google-Smtp-Source: ABdhPJxPq3ysYOKZG3ngTkjjNcApdV2mBktQcQ2Zrr47LAqC//negOwZ9ogSW5b45w3DjOfK8YMsxQ==
+X-Received: by 2002:a05:600c:2209:: with SMTP id z9mr6527177wml.70.1596699257216;
+        Thu, 06 Aug 2020 00:34:17 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id w1sm5537739wmc.18.2020.08.06.00.34.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 00:28:53 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1 2/2] fbdev: radeonfb:use generic power management
-Date:   Thu,  6 Aug 2020 12:56:58 +0530
-Message-Id: <20200806072658.592444-3-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200806072658.592444-1-vaibhavgupta40@gmail.com>
-References: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
- <20200806072658.592444-1-vaibhavgupta40@gmail.com>
+        Thu, 06 Aug 2020 00:34:16 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 09:34:14 +0200
+From:   daniel@ffwll.ch
+Cc:     Joe Perches <joe@perches.com>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Colin King <colin.king@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH] drm/amdgpu: fix spelling mistake "Falied" -> "Failed"
+Message-ID: <20200806073414.GH6419@phenom.ffwll.local>
+Mail-Followup-To: Stephen Rothwell <sfr@canb.auug.org.au>,
+        Joe Perches <joe@perches.com>, Alex Deucher <alexdeucher@gmail.com>,
+        Colin King <colin.king@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200805113510.18277-1-colin.king@canonical.com>
+ <CADnq5_NA9f2N3xkH4WAdDEP+0-5W0LkmTRy3yXqFdnWQmfsVmQ@mail.gmail.com>
+ <a8ab7d75ef9df54bd193fc88e0670b30026e7e67.camel@perches.com>
+ <CADnq5_P9hfv=Zt9+m47sFC0z202x+q-Otifv7a5z4afJamtQ2Q@mail.gmail.com>
+ <d720b466a2b4b7507a963f9a2605c7f81e82e7ba.camel@perches.com>
+ <20200806093641.5795690c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806093641.5795690c@canb.auug.org.au>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy PCI power management .suspend()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
+On Thu, Aug 06, 2020 at 09:36:41AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Wed, 05 Aug 2020 15:19:38 -0700 Joe Perches <joe@perches.com> wrote:
+> >
+> > On Wed, 2020-08-05 at 17:27 -0400, Alex Deucher wrote:
+> > > On Wed, Aug 5, 2020 at 4:53 PM Joe Perches <joe@perches.com> wrote:  
+> > > > On Wed, 2020-08-05 at 16:01 -0400, Alex Deucher wrote:  
+> > > > > On Wed, Aug 5, 2020 at 7:35 AM Colin King <colin.king@canonical.com> wrote:  
+> > > > > > From: Colin Ian King <colin.king@canonical.com>
+> > > > > > 
+> > > > > > There is a spelling mistake in a DRM_ERROR message. Fix it.
+> > > > > > 
+> > > > > > Signed-off-by: Colin Ian King <colin.king@canonical.com>  
+> > > > > 
+> > > > > This is already fixed.  
+> > > > 
+> > > > This fix is not in today's -next.
+> > > > 
+> > > > Perhaps whatever tree it's fixed in should be in -next.
+> > > >   
+> > > 
+> > > Weird.  It's in the drm-next tree as:
+> > > 
+> > > commit 4afaa61db9cf5250b5734c2531b226e7b3a3d691
+> > > Author: Colin Ian King <colin.king@canonical.com>
+> > > Date:   Fri Jul 10 09:37:58 2020 +0100
+> > > 
+> > >     drm/amdgpu: fix spelling mistake "Falied" -> "Failed"
+> > > 
+> > >     There is a spelling mistake in a DRM_ERROR error message. Fix it.
+> > > 
+> > >     Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > >     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> > > 
+> > > Alex
+> > >   
+> > > > $ git show --oneline -s
+> > > > d15fe4ec0435 (HEAD, tag: next-20200805, origin/master, origin/HEAD) Add linux-next specific files for 20200805
+> > > > 
+> > > > $ git grep -i falied drivers
+> > > > drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c:                DRM_ERROR("Falied to terminate tmr\n");
+> > > >   
+> > > > > > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c  
+> > > > []  
+> > > > > > @@ -2010,7 +2010,7 @@ static int psp_suspend(void *handle)
+> > > > > > 
+> > > > > >         ret = psp_tmr_terminate(psp);
+> > > > > >         if (ret) {
+> > > > > > -               DRM_ERROR("Falied to terminate tmr\n");
+> > > > > > +               DRM_ERROR("Failed to terminate tmr\n");
+> > > > > >                 return ret;
+> > > > > >         }  
+> > 
+> > Dunno.
+> > 
+> > Maybe it's due to some ordering of trees in
+> > how -next accumulates patches?
+> 
+> The spelling error is introduced in two commits:
+> 
+>   c564b8601ae9 ("drm/amdgpu: add TMR destory function for psp")
+> 
+> in Linus' tree between v5.8-rc4 and rc5
+> 
+>   90937420c44f ("drm/amdgpu: add TMR destory function for psp")
+> 
+> in the amdgpu tree between two merges by the drm tree.  In this same
+> interval, the error is corrected by commit
+> 
+>   4afaa61db9cf ("drm/amdgpu: fix spelling mistake "Falied" -> "Failed"")
+> 
+> so when David comes to merge the amdgpu tree in commit
+> 
+>   206739119508 ("Merge tag 'amd-drm-next-5.9-2020-07-17' of git://people.freedesktop.org/~agd5f/linux into drm-next")
+> 
+> the spelling error has been introduced on one side of the merge and
+> introduced and corrected on the other.  This would have produced a
+> conflict which David presumably resolved in haste by picking the HEAD
+> side of the merge instead of the MERGE_HEAD side (it happens).
+> 
+> This could have been avoided by not cherry-picking fix commits around
+> in the amdgpu process - instead having a fixes branch that is merged
+> into the next branch after the fixes branch has been accepted upstream
+> (that way there is only one commit for each fix and less conflicts).
+> 
+> I have to deal with these sort of conflicts (sometimes daily) due to
+> the drm processes.  Its a pain as I have to track down each conflict to
+> see if the same patches appear on both sides of merges and then try to
+> figure out what other changes occur.  (This is only slightly helped by
+> have the "cherry-picked from" tags in the fix commits.)
 
-Switch to generic power management framework using a "struct dev_pm_ops"
-variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions, as through
-the generic framework PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
+Yeah cherry-picking breaks if you only occasionally cherry-pick - then
+stuff gets lost.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/video/fbdev/aty/radeon_base.c | 10 +++++---
- drivers/video/fbdev/aty/radeon_pm.c   | 36 +++++++++++++++++++++------
- drivers/video/fbdev/aty/radeonfb.h    |  3 +--
- 3 files changed, 35 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
-index e116a3f9ad56..232dbe154666 100644
---- a/drivers/video/fbdev/aty/radeon_base.c
-+++ b/drivers/video/fbdev/aty/radeon_base.c
-@@ -2559,16 +2559,18 @@ static void radeonfb_pci_unregister(struct pci_dev *pdev)
-         framebuffer_release(info);
- }
- 
-+#ifdef CONFIG_PM
-+#define RADEONFB_PCI_PM_OPS (&radeonfb_pci_pm_ops)
-+#else
-+#define RADEONFB_PCI_PM_OPS NULL
-+#endif
- 
- static struct pci_driver radeonfb_driver = {
- 	.name		= "radeonfb",
- 	.id_table	= radeonfb_pci_table,
- 	.probe		= radeonfb_pci_register,
- 	.remove		= radeonfb_pci_unregister,
--#ifdef CONFIG_PM
--	.suspend       	= radeonfb_pci_suspend,
--	.resume		= radeonfb_pci_resume,
--#endif /* CONFIG_PM */
-+	.driver.pm	= RADEONFB_PCI_PM_OPS,
- };
- 
- #ifndef MODULE
-diff --git a/drivers/video/fbdev/aty/radeon_pm.c b/drivers/video/fbdev/aty/radeon_pm.c
-index b9af70bd656a..352d0bb4773a 100644
---- a/drivers/video/fbdev/aty/radeon_pm.c
-+++ b/drivers/video/fbdev/aty/radeon_pm.c
-@@ -2611,8 +2611,9 @@ static void radeon_set_suspend(struct radeonfb_info *rinfo, int suspend)
- 	}
- }
- 
--int radeonfb_pci_suspend(struct pci_dev *pdev, pm_message_t mesg)
-+static int radeonfb_pci_suspend_late(struct device *dev, pm_message_t mesg)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
-         struct fb_info *info = pci_get_drvdata(pdev);
-         struct radeonfb_info *rinfo = info->par;
- 
-@@ -2660,11 +2661,6 @@ int radeonfb_pci_suspend(struct pci_dev *pdev, pm_message_t mesg)
- 	pmac_suspend_agp_for_card(pdev);
- #endif /* CONFIG_PPC_PMAC */
- 
--	/* It's unclear whether or when the generic code will do that, so let's
--	 * do it ourselves. We save state before we do any power management
--	 */
--	pci_save_state(pdev);
--
- 	/* If we support wakeup from poweroff, we save all regs we can including cfg
- 	 * space
- 	 */
-@@ -2689,7 +2685,6 @@ int radeonfb_pci_suspend(struct pci_dev *pdev, pm_message_t mesg)
- 			msleep(20);
- 			OUTREG(LVDS_GEN_CNTL, INREG(LVDS_GEN_CNTL) & ~(LVDS_DIGON));
- 		}
--		pci_disable_device(pdev);
- 	}
- 	/* If we support D2, we go to it (should be fixed later with a flag forcing
- 	 * D3 only for some laptops)
-@@ -2705,6 +2700,21 @@ int radeonfb_pci_suspend(struct pci_dev *pdev, pm_message_t mesg)
- 	return 0;
- }
- 
-+static int radeonfb_pci_suspend(struct device *dev)
-+{
-+	return radeonfb_pci_suspend_late(dev, PMSG_SUSPEND);
-+}
-+
-+static int radeonfb_pci_hibernate(struct device *dev)
-+{
-+	return radeonfb_pci_suspend_late(dev, PMSG_HIBERNATE);
-+}
-+
-+static int radeonfb_pci_freeze(struct device *dev)
-+{
-+	return radeonfb_pci_suspend_late(dev, PMSG_FREEZE);
-+}
-+
- static int radeon_check_power_loss(struct radeonfb_info *rinfo)
- {
- 	return rinfo->save_regs[4] != INPLL(CLK_PIN_CNTL) ||
-@@ -2712,8 +2722,9 @@ static int radeon_check_power_loss(struct radeonfb_info *rinfo)
- 	       rinfo->save_regs[3] != INPLL(SCLK_CNTL);
- }
- 
--int radeonfb_pci_resume(struct pci_dev *pdev)
-+static int radeonfb_pci_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
-         struct fb_info *info = pci_get_drvdata(pdev);
-         struct radeonfb_info *rinfo = info->par;
- 	int rc = 0;
-@@ -2795,6 +2806,15 @@ int radeonfb_pci_resume(struct pci_dev *pdev)
- 	return rc;
- }
- 
-+const struct dev_pm_ops radeonfb_pci_pm_ops = {
-+	.suspend	= radeonfb_pci_suspend,
-+	.resume		= radeonfb_pci_resume,
-+	.freeze		= radeonfb_pci_freeze,
-+	.thaw		= radeonfb_pci_resume,
-+	.poweroff	= radeonfb_pci_hibernate,
-+	.restore	= radeonfb_pci_resume,
-+};
-+
- #ifdef CONFIG_PPC__disabled
- static void radeonfb_early_resume(void *data)
- {
-diff --git a/drivers/video/fbdev/aty/radeonfb.h b/drivers/video/fbdev/aty/radeonfb.h
-index 131b34dd65af..93f403cbb415 100644
---- a/drivers/video/fbdev/aty/radeonfb.h
-+++ b/drivers/video/fbdev/aty/radeonfb.h
-@@ -483,8 +483,7 @@ extern void radeon_delete_i2c_busses(struct radeonfb_info *rinfo);
- extern int radeon_probe_i2c_connector(struct radeonfb_info *rinfo, int conn, u8 **out_edid);
- 
- /* PM Functions */
--extern int radeonfb_pci_suspend(struct pci_dev *pdev, pm_message_t state);
--extern int radeonfb_pci_resume(struct pci_dev *pdev);
-+extern const struct dev_pm_ops radeonfb_pci_pm_ops;
- extern void radeonfb_pm_init(struct radeonfb_info *rinfo, int dynclk, int ignore_devlist, int force_sleep);
- extern void radeonfb_pm_exit(struct radeonfb_info *rinfo);
- 
+I'd say just apply it once more for the merge window fixes pull.
+-Daniel
 -- 
-2.27.0
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
