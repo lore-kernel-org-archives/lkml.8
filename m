@@ -2,149 +2,109 @@ Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D5C20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YrHgsmBL"
+	by mail.kernel.org (Postfix) with ESMTP id E880F20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgHFRHF (ORCPT
+        id S1729583AbgHFRHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:07:05 -0400
-Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:49738 "EHLO
-        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729787AbgHFRGM (ORCPT
+        Thu, 6 Aug 2020 13:07:50 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63876 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729728AbgHFRGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:06:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-        t=1596733569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y9kBOOdZEEej7ZEMsqH+ctYfRfzHs9cxAnplDiFJTdY=;
-        b=YrHgsmBLKh6A9HbLxTfRJV7y4Pc3pFBKliHXwD5Bck1U0QG5koNHcndXqGTekWB2MiIRjA
-        EJ2HH4Xjfg5l214qIqTc7x38iQY+X7E4BeFb9Nz+LOe13OkoA1FZB63rIXrAHIQWzrodmp
-        fFertizl2sml8WwrS5YuniXfi9Csgyk=
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur04lp2054.outbound.protection.outlook.com [104.47.14.54]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- de-mta-21-hcpBO9YnP6WiSjWmpHCSUg-1; Thu, 06 Aug 2020 15:35:05 +0200
-X-MC-Unique: hcpBO9YnP6WiSjWmpHCSUg-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OHtNTC/LRi/KQq3xeuhnxPzyqOWh6wd7L2eKLdTlTvveL4U/xCp4hUA8FlTEeWkKOoO6SeK+k9kgOQqencv+lLHLWjmTcZp/QI7yLOao0f3mSQljdOTa31DSACJMhNW0IrepEXOEfDkKRZ7G4/AvLtE5nWSB0vSCcm6CIqsrhCu3ZgFEU+pteT25kCAaw8IqG9fP/3MkXsBzcj+aBNXJYo9HD9ELER+GweuwYdwE/d+Yz24zgvX2Lmk7h7B0VCH1ub8wT9f9HH86eSCfTWQjiPrq0tEoEUwTfxiRLvu0kvUviCJ93G3Y4xslcZvjl4ebQeRMXNURige/+dGuIgonZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y9kBOOdZEEej7ZEMsqH+ctYfRfzHs9cxAnplDiFJTdY=;
- b=GBZuBCuwbgohQG3feJMXudne/aGqQt8iNVcfQtguklFwbvgjhkUU8O4EdYJSUkyOSwhcRSVgAPL6pqVT6KvTSE/jV694ZrAAzpJS1HlosRd768xrP0bzAx07w7c3fQM6w/cJ/xXWb/vYT40j0GMle9pZmyNK57lVaMwddgcMQ5lJ4a635xCnbkMmssuTgTvAROBEjfQbqKm1gxzrZRemNp2xUhEgb34UTJUIRUb13BtgMXeFQhGJ6rgSyT0OgnWdxusmj33pKOQgba1g6wVEyR2wCzhnLOAi8EdSl8IZCG/uIYsIgkTD+egrYUG5KHhUMrqJZQ3/QaVUIkATPGC+uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
-Received: from AM6PR04MB5366.eurprd04.prod.outlook.com (2603:10a6:20b:9d::19)
- by AM7PR04MB7141.eurprd04.prod.outlook.com (2603:10a6:20b:11d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Thu, 6 Aug
- 2020 13:35:03 +0000
-Received: from AM6PR04MB5366.eurprd04.prod.outlook.com
- ([fe80::3050:e412:7b95:de7d]) by AM6PR04MB5366.eurprd04.prod.outlook.com
- ([fe80::3050:e412:7b95:de7d%7]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
- 13:35:03 +0000
-Subject: Re: [PATCH] i2c: mediatek: Fix i2c_spec_values description
-To:     Qii Wang <qii.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     wsa@the-dreams.de, yingjoe.chen@mediatek.com,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <c410f784-7b51-0d65-7a41-3845214dd273@gmail.com>
- <1596712005.8263.4.camel@mhfsdcap03>
-From:   Matthias Brugger <mbrugger@suse.com>
-Message-ID: <6e029d96-6171-0006-a5bb-01d0d5a7391b@suse.com>
-Date:   Thu, 6 Aug 2020 15:35:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <1596712005.8263.4.camel@mhfsdcap03>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MR2P264CA0156.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:1::19) To AM6PR04MB5366.eurprd04.prod.outlook.com
- (2603:10a6:20b:9d::19)
+        Thu, 6 Aug 2020 13:06:41 -0400
+Received: from 89-64-86-116.dynamic.chello.pl (89.64.86.116) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id a0952d0a893f35a5; Thu, 6 Aug 2020 13:39:54 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        'Linux Documentation' <linux-doc@vger.kernel.org>,
+        'LKML' <linux-kernel@vger.kernel.org>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
+        'Giovanni Gherdovich' <ggherdovich@suse.cz>,
+        'Francisco Jerez' <francisco.jerez.plata@intel.com>,
+        'Linux PM' <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+Date:   Thu, 06 Aug 2020 13:39:53 +0200
+Message-ID: <5275102.Ez0hqPNOlg@kreacher>
+In-Reply-To: <004601d66bb6$199ce1a0$4cd6a4e0$@net>
+References: <3955470.QvD6XneCf3@kreacher> <2418846.A4mPlhI7ni@kreacher> <004601d66bb6$199ce1a0$4cd6a4e0$@net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ziggy.stardust (213.195.117.232) by MR2P264CA0156.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:1::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Thu, 6 Aug 2020 13:35:02 +0000
-X-Originating-IP: [213.195.117.232]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2fd860f5-0d0a-4f68-dd8d-08d83a0d860a
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7141:
-X-Microsoft-Antispam-PRVS: <AM7PR04MB7141881A84DCD725D45EFFCDBA480@AM7PR04MB7141.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lqjE1z8u6le7vfVd+Z82bTP//L7ZcsRrIPJZH7ABJEyx8cPZwgHiWs9AIZyVWwZoAzfKu7TYDi7y+Enqc3m40XyePa9CQDezVLv4uBpqFc+rjZKTkrt9GLayfgnvZNbJH67dp/SoD+M2XqUuBHRG4NGzxO22f7R+kMLNXPJ/lXw8hsYWHjYi1mymKbTe588lu28NCyO+gC8t5A6hjT2p6E7OoBJlsAy4OIy9Y1padcJpHdA4+yi+TK2NAKgtc3owPSvwBTvLww9alF3cuMvxxZXQM2nUmYt8rFJXVGw3jrKdsuS0MEVHVol+elO4GeHCNVHJU1zuEFeBeszIS4+fujtiwj5EyacDoVVot+wXQ7jnUh6vcwDgpm1SGBj9Fh1L
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(136003)(366004)(346002)(376002)(5660300002)(66556008)(86362001)(2616005)(956004)(66946007)(36756003)(66476007)(16526019)(26005)(186003)(6506007)(83380400001)(31696002)(52116002)(53546011)(478600001)(6512007)(4326008)(8676002)(31686004)(6486002)(110136005)(316002)(2906002)(8936002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 6t68Zh/YCIxYkAcg1OYO1zrAEF0ZjBuOe381HV1tZ9s0bALfwANkibiTOvC3CyfPAjUkJ5/y8bXvizmAY8nFlPdjjgOZ4Y1ina0bIClGVrnNqPU8gD6or5aC8l0QJApvpjeimkuROuGuJWhB8X2fton9TeBrN3aiEXTWul7fTenen8pZHSPaDkIowVS20xMcrhC2rgXHO8qa1jSjfNnfx1llzg3y1HyifEXDBXonF/dr0q69kLeaHPAVV0kmzVS9X9SuT6t3qpZZqqUp+ocYaxvwSlFXOvI6AYsx3+5NqlVUYJxfEeVgW0HfIF1Cr7wd2dkPR7GjmGosM/7hP7zm51a21LlsrrnWCDBwM4Y4Mg52NrOYHvmCiDO6jkCZ3pDRn8bBnJZVOLv7XmjNYVbKqtfF8F5qpI8KLotPpQGZSzbTqtTshqZavt1a2ZG77GzkJbgixYe1TA8m48r/6Q7aSLwMcgjD9ssg2tQQqxFpgqFEPBFVbhpJnQrHOxWg0zK5Ll12KoJkzpnNcRfqnydyPYAzuB7L22ASwxicCC93rw/Elca3eImvji/0vJ8hYJuaj5fxdoZOX8zIEIjPpRSSd9NFle167QZm2FljT9EZud4nDXDKyZde7A57N4FtGP3jMVxl/rcazwmZIMbvySTfCw==
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fd860f5-0d0a-4f68-dd8d-08d83a0d860a
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 13:35:03.2718
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8Rd09f+lJJ23Hn4x+zDtD+YCaLi2e5ZHcOeB4n359Ul6JG/azXeMO8BmtVlkngudAK9YGABE6pUX7/4o3NRV+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7141
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 06/08/2020 13:06, Qii Wang wrote:
-> On Thu, 2020-08-06 at 11:48 +0200, Matthias Brugger wrote:
->> The struct i2c_spec_values have it's members documented but is missing the
->> starting '@', which leads to warings like:
->>
->> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member
->> 'min_low_ns' not described in 'i2c_spec_values'
->>
->> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->> ---
->>    drivers/i2c/busses/i2c-mt65xx.c | 8 ++++----
->>    1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
->> index e889f74703e4..f51b35fc400f 100644
->> --- a/drivers/i2c/busses/i2c-mt65xx.c
->> +++ b/drivers/i2c/busses/i2c-mt65xx.c
->> @@ -253,10 +253,10 @@ struct mtk_i2c {
->>
->>    /**
->>     * struct i2c_spec_values:
->> - * min_low_ns: min LOW period of the SCL clock
+On Thursday, August 6, 2020 7:54:47 AM CEST Doug Smythies wrote:
+> On 2020.08.03 10:09 Rafael J. Wysocki wrote:
+> > On Sunday, August 2, 2020 5:17:39 PM CEST Doug Smythies wrote:
+> > > On 2020.07.19 04:43 Rafael J. Wysocki wrote:
+> > > > On Fri, Jul 17, 2020 at 3:37 PM Doug Smythies <dsmythies@telus.net> wrote:
+> > > > > On 2020.07.16 05:08 Rafael J. Wysocki wrote:
+> > > > > > On Wed, Jul 15, 2020 at 10:39 PM Doug Smythies <dsmythies@telus.net> wrote:
+> > > > > >> On 2020.07.14 11:16 Rafael J. Wysocki wrote:
+> > > > > >> >
+> > > > > >> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > >> ...
+> > > > > >> > Since the passive mode hasn't worked with HWP at all, and it is not going to
+> > > > > >> > the default for HWP systems anyway, I don't see any drawbacks related to making
+> > > > > >> > this change, so I would consider this as 5.9 material unless there are any
+> > > > > >> > serious objections.
+> > > > > >>
+> > > > > >> Good point.
+> > > > >
+> > > > > Actually, for those users that default to passive mode upon boot,
+> > > > > this would mean they would find themselves using this.
+> > > > > Also, it isn't obvious, from the typical "what driver and what governor"
+> > > > > inquiry.
+> > > >
+> > > > So the change in behavior is that after this patch
+> > > > intel_pstate=passive doesn't imply no_hwp any more.
+> > > >
+> > > > That's a very minor difference though and I'm not aware of any adverse
+> > > > effects it can cause on HWP systems anyway.
+> > >
+> > > My point was, that it will now default to something where
+> > > testing has not been completed.
+> > >
+> > > > The "what governor" is straightforward in the passive mode: that's
+> > > > whatever cpufreq governor has been selected.
+> > >
+> > > I think you might have missed my point.
+> > > From the normal methods of inquiry one does not know
+> > > if HWP is being used or not. Why? Because with
+> > > or without HWP one gets the same answers under:
+> > >
+> > > /sys/devices/system/cpu/cpu*/cpufreq/scaling_driver
+> > > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+> > 
+> > Yes, but this is also the case in the active mode, isn't it?
 > 
-> Can you help me add a description of min_high_ns. As
-> @min_high_ns: min HIGH period of the SCL clock
+> Yes, fair enough.
+> But we aren't changing what it means by default
+> between kernel 5.8 and 5.9-rc1.
 
-Right, I forgot about this one.
+No, we aren't.
 
-Actually I don't see any code which uses the value, so I think it should be 
-deleted from the struct.
+The only (expected) change is when booting with intel_pstate=passive and
+without intel_pstate=no_hwp in the command line.
 
-Do you have any thoughts on this.
+Which should be easy enough to address by adding intel_pstate=no_hwp to the
+command line in 5.9-rc1 and later (to achieve the same behavior after a
+fresh boot).
 
-Regards,
-Matthias
+Cheers!
+
+
 
