@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA32C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C027CC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2C1122CA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9220D22CA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="OcztL4JL"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="R1EeIne5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgHGQWn (ORCPT
+        id S1727803AbgHGQWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:22:43 -0400
-Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:64918
+        Fri, 7 Aug 2020 12:22:48 -0400
+Received: from mail-eopbgr140057.outbound.protection.outlook.com ([40.107.14.57]:4231
         "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726823AbgHGQWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:22:24 -0400
+        id S1727055AbgHGQWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 12:22:32 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sg5tCAPbskTxHXRcFI2IxpsbccuBWg4+DyIfw4XHQRsyUJ8ByD2IyiWIXu5z/D8Lb/2lM87KWYhQeJhGIeBsNx+q19Gf2+k9AX9fYxfv9pS8LKgKJRthtCKTKyVPtkzJ+hiZqOp2opQrUKmwdvwmbVBNXEYGSpWpL/2epSn2iBIJZ6lii69kuqe27oAohZ8MQYGRezt1sYC+1gmmCf5tcrm4uTVK4+RccOYeL4ilC7bXT+pHjKzgAugw9uPDjQqJVdWs3gMxIXVoUGKEUg+AI1kwkrmm/9+hqTYg/bpzRYjnCRDMKLLYNmyqNbmvIk2rbqr18B2Gwpuyn1sRn7pxYw==
+ b=VG2/SCkDZtVpXLFZx20kxabDUKQ1hFvvt1k4A2afvgsJd+Yboeu9JK7rd2zN02I/kHhBNBBmiAZwXHE7c4USGYZ8LO0QbDaITH18AY91NA0vOhf4MnHHl4cmD4LAOVfFqeNwpBR37Lwoemw0dB4246zjCKyHzbhxxBV+SnPZTfDMiXDBb0+T1z4gXT6hqZuCpmfMgdEKDsa08xnXP5BkQ6Sdq0C+Hu7bzebT5uGSx7ZPjhkDfMScHFapJfVRmVIv6aJQogRcT2O1sPx+VNZpZiB3lNEe80C4af0jSM+0QWrFj3+c5cSeWxTdpkK8YDTa/skYzba7eTzrjVsJlU6Nkw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wjSlTBIIU6v80akFULRYM9ogtPRvcvrubPeMrVm1zlY=;
- b=TEW4EZO4eCV2TyTw4oVn7E+eeGABzkZW3JpSOFeXFK2RY7dnS096Q6+laoYl0QQz3uM4NCh59Y9DS1FK5pBUJ3u+1DMKZXkIAowkETCdRUOkSvCn28/1Vtf+jHZTqk3OgCW1KnYSi8RIkRNHvdTk4xhSTK7iCvwIvetvMHu5ZzSbvQJYTi19fsRdk8gPej0WMxjl93eQI6Vx6RJklAeQ0+TQ6sb/jJGR4WOwDDyK45RtUiubifDqAIJ/5p8eFFd79w9Ms6xP84mAkvy/Eu877Qf9kDqpF2Y2QSkjHvCtZYKOTd2TgtUL5/N6ZfUMMZ2pVEp2QrVGe0TEEtazVqmW7Q==
+ bh=rC2ta3eGZeMUSqoWJidBs4SB3RZKyPZ2g/vOcr7fKjo=;
+ b=UVmecRbzYlU160ptsU1P9CuiNoLTwcfBMM+MCKszh2Xg7ugxX88OOkrzOaJKq2dnRxXTfsvUm5gO73V1PMGsTihd3krvzmIZBJMAN2wAY++8DpNS1rjNaViA9iNfboEdMIt01B08t229Y1A4oaUgoMJXkH9gdjpjNxSTwJvfHLVdgUyLeDwQbshqwgOx/TfJtDxVXN1UjCCFqdxHO87ALpqf/e+qM7o7rNWIwDq3PwUEU+neeoPOMJ/4NtgTDzwcpCLot471C+yB66k3cvQuRqGiXIxMNuNu/qGp0CKppBTraLmZWotlXgt3PPEAPjURwtFgwV8fKe9xEfb0cAAGkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wjSlTBIIU6v80akFULRYM9ogtPRvcvrubPeMrVm1zlY=;
- b=OcztL4JLuai4EJSflIa3WSM93yeRXif4mNhD0Won38o4eBOSaBm20z0D0BILQTzjvRobKvuWsmnIJDVzFJcOMTc31z30RR8ACC+SSpOKZ2owmrOKsOBdX5kSJJtW9bUk4mjayaqMWY5h/RL0FMY1f5wHaj+Q2sRNWeo1sdBK684=
+ bh=rC2ta3eGZeMUSqoWJidBs4SB3RZKyPZ2g/vOcr7fKjo=;
+ b=R1EeIne575dqgbhUt+iy3P4sW7peXRfp7Esh/Szi3vMTuG6wdq474LepzoI2RdpsooHs0OPE9nTSExykYKkTQPjXTfqSI/g7VXs9uipN92vj0BzxQDygVykYGlkQtoruY4LFmD/TwfYVnzVH2K25tAApLjiAGbCve8B+s5w6aoM=
 Authentication-Results: gondor.apana.org.au; dkim=none (message not signed)
  header.d=none;gondor.apana.org.au; dmarc=none action=none
  header.from=oss.nxp.com;
@@ -45,11 +45,11 @@ Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
  by VE1PR04MB7359.eurprd04.prod.outlook.com (2603:10a6:800:1a0::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Fri, 7 Aug
- 2020 16:22:11 +0000
+ 2020 16:22:21 +0000
 Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
  ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
  ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Fri, 7 Aug 2020
- 16:22:11 +0000
+ 16:22:21 +0000
 From:   Andrei Botila <andrei.botila@oss.nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
@@ -57,11 +57,12 @@ Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-s390@vger.kernel.org, x86@kernel.org,
         linux-arm-kernel@axis.com, Andrei Botila <andrei.botila@nxp.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        John Allen <john.allen@amd.com>
-Subject: [PATCH 15/22] crypto: ccp - add check for xts input length equal to zero
-Date:   Fri,  7 Aug 2020 19:20:03 +0300
-Message-Id: <20200807162010.18979-16-andrei.botila@oss.nxp.com>
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Arnaud Ebalard <arno@natisbad.org>,
+        Srujana Challa <schalla@marvell.com>
+Subject: [PATCH 20/22] crypto: octeontx - add check for xts input length equal to zero
+Date:   Fri,  7 Aug 2020 19:20:08 +0300
+Message-Id: <20200807162010.18979-21-andrei.botila@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
 References: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
@@ -71,32 +72,32 @@ X-ClientProxiedBy: AM0PR04CA0075.eurprd04.prod.outlook.com
  (2603:10a6:803:125::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR04CA0075.eurprd04.prod.outlook.com (2603:10a6:208:be::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Fri, 7 Aug 2020 16:22:10 +0000
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR04CA0075.eurprd04.prod.outlook.com (2603:10a6:208:be::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Fri, 7 Aug 2020 16:22:20 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [83.217.231.2]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4c8aea55-aa12-4cc0-c174-08d83aee098d
+X-MS-Office365-Filtering-Correlation-Id: 1287ad0b-0a4e-44e4-910b-08d83aee0fe5
 X-MS-TrafficTypeDiagnostic: VE1PR04MB7359:
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB735997D620CBE507D5B98E46B4490@VE1PR04MB7359.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-Microsoft-Antispam-PRVS: <VE1PR04MB7359F4235763E20F2478D7C8B4490@VE1PR04MB7359.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EOK+n5XPW2kbFHr0PjIzG8/ZrsoCyK2Uynv3LrD5ARVj3nsPGg47vJuiKVxr2Z/eVFq8Y+XfuTQOVGLZ4PNqooNOMKR7fxDIEw4bdcw6asCxJsAxFR1301bdNj1JlYfC+r0yva+gLx98ROyNB7eatZrClWu6ckFXNJRUKdCu3MBgbcEsqw65N7uh8FyFGQNBxpPoTFLnanPjLMtD9qcBABIk4z+vL1eyqyWFR5yD7q1FzUfTYwPEx7KFZkw7z9bXH2To539e5rRMbniXQNyS+tYa0InYiQ+UueIQ+aofeBqFKSQ27KBRR2+X486m7j6eIeck+9IjrmmEV4XanZlHjw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(44832011)(66556008)(66476007)(110136005)(7416002)(54906003)(1076003)(6506007)(4326008)(66946007)(83380400001)(8936002)(316002)(26005)(956004)(186003)(16526019)(478600001)(4744005)(86362001)(5660300002)(6666004)(6512007)(2906002)(8676002)(2616005)(52116002)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: lpJGRnJqG2qClVfiihcs5b61Exz7Wnn4qOXnUs4FW6m23pe00clos6oT3aDjz6VY0CCcWA/i3ap8ja6ATOe9QpbACguiMbKvCKcFvRkypKrVK9bZ1FrUGFsGlyuxrQiOoj6UuRi2FpaZXYjEz8fdaHdao3tWk2pMc+Mdi6zdIFFJwhAyoYd6w1rXUxLPcCAgHH+CqQVzjfRxMJYeaMK3g6AUuWIM/2HXC0TmkOwmCRKkG5+X5Ls4miQseLpJf6TFfnra5asmf7tQsqTYfk6ocY6uyHIAV4n18TRshaCPcWWn+hGsKu7k8oYdr523sidl1g8n7wdB48lEKg6XRWiURni+g2rElTfgawNCTbuu+4H3SDx7VsOZDmuD0etfgQit2iX63c6qBeDEn8CNSDHLE753h6Cybw3Wl0V1mrsuL//K1vYei0DLxI4j2QzCDyKSev0Bm2qQHFylesasoKAQmYa4dSqnAfBnxqxVGSnrpLPKv+TyS56Foyy9Qnvi9IJZOyyUoZCxkQga9886Irk1uLUloEwmup5eGuz8zxoRUUWwoYvUQXQwvWy1sKPT/la5c87IIGt0mCPdBQ+nTuLiJqUIIuDKHy3l7o55P+4aR8fvL+nvomJcUdr1HPK5e7ciWQ8bfXXHtpIWasuWbIE1hw==
+X-Microsoft-Antispam-Message-Info: v9HNqOhQEYHZCT5v71vf23mMKw79jb1iTZ1oMHqFRZ9HyVzs3d95mN7RkB0RID052oJDHOxfEJQWd8GuWJMHS310w+6mOpEemGt7ZZXQMWOGYpiaRhdy1Wne487FotzXdneQw0WCWOF/ekFpOYc91bi8wj8sWrDD+BlDmTPS6vAqnV8U+3ycSIvbDxY+rs7nJ/2r2/Q1CUHjTRXgNQ7rFs0CvMV5SBrX6hUda1ePTygfH13SAhQR5SZeKQc2lAhSEz4MpkKBg1Wk79OGz+Zqd1vxp0AlnJTqpjDNCdkoCJY/023MmhgLvwqeM00RVmSXACAkIkBf/8l/fDL//PPVxw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(44832011)(66556008)(66476007)(110136005)(7416002)(54906003)(1076003)(6506007)(4326008)(66946007)(83380400001)(8936002)(316002)(26005)(956004)(186003)(16526019)(478600001)(86362001)(5660300002)(6666004)(6512007)(2906002)(8676002)(2616005)(52116002)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: c/l7zYfx8lYpKAHXz/GGYkvExqNYmBea+2OKuw6MqcqYG458/qtgRMdWejOTfQdmTiPlNCE7IYCaalPgR739SIpo/1ZG+GrdpXb1pUMh506QViGIYEaReHSHrezXEPCWXuK02/b71qiiJ994gzxGLriqYrnXIBN806C0RJ2fa4zvfqTDc2MVN3MQmMsPHji7u3l9OjpNuj5o/UrcHAirc/KLz4mRuKO3dnjrYJgCPvxE9Am6YHse4BtNVhOYoIYbU4kax1IzOPOyr8ToTG5ctIpRooaH4sa6avMf/qvynPtxYsp3qdEIcX8Zh3s6jvon2NmxthtTdUrX0G5CArMVpgdoR0L7YC7HERlZPw3E/o0UYAEoi8UTBP3Wqx1CLp/7gAUsOUQjCBjCRVtNIS/oIp2Z6aKO7My4Uxozqc5Kzl9KvnAH6r3E0FOyHzvApYOUrGCWw238E6txDqC/eMa58zH4YJrlEquCsPCd8mJARcYyShxV1xiALidUQlfiYvbMysGSo4V8fOpaM0XWeokc0OKoZFLthQsJFKSYUBdVMqkChm+b7eN5EbIEIlUFz3HlRz52F1Aj+LH9pVv5MXDKhWWkBjVNEw6XqbSkG/KtJPuXoOXCGTzzy/N65xGgHJQnIi7FhQNPcn9BFaNZbsIx2g==
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c8aea55-aa12-4cc0-c174-08d83aee098d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1287ad0b-0a4e-44e4-910b-08d83aee0fe5
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 16:22:11.1736
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 16:22:21.7934
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EigcJqHnY4F2wXL97v4Eo4RB3trGiN4a+m8ANaUAUxjNl2juZQDJi95rfQyenyvJroXCf1hGDdVQUZ7PJJEHZg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 428x598OqYPHChYVmg9rCDQWdrzNLPXJOKgXYnaSgwD1lvTIWj/xzipfbIuTB4qnwOcXSIBHEBW6mtIlrwf2eA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7359
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -108,27 +109,35 @@ From: Andrei Botila <andrei.botila@nxp.com>
 Standardize the way input lengths equal to 0 are handled in all skcipher
 algorithms. All the algorithms return 0 for input lengths equal to zero.
 
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: John Allen <john.allen@amd.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Arnaud Ebalard <arno@natisbad.org>
+Cc: Srujana Challa <schalla@marvell.com>
 Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
 ---
- drivers/crypto/ccp/ccp-crypto-aes-xts.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/crypto/marvell/octeontx/otx_cptvf_algs.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/crypto/ccp/ccp-crypto-aes-xts.c b/drivers/crypto/ccp/ccp-crypto-aes-xts.c
-index 6849261ca47d..6a93b54d388a 100644
---- a/drivers/crypto/ccp/ccp-crypto-aes-xts.c
-+++ b/drivers/crypto/ccp/ccp-crypto-aes-xts.c
-@@ -113,6 +113,9 @@ static int ccp_aes_xts_crypt(struct skcipher_request *req,
- 	u32 unit_size;
- 	int ret;
+diff --git a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
+index 90bb31329d4b..ec13bc3f1766 100644
+--- a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
++++ b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
+@@ -340,11 +340,16 @@ static inline int cpt_enc_dec(struct skcipher_request *req, u32 enc)
+ {
+ 	struct crypto_skcipher *stfm = crypto_skcipher_reqtfm(req);
+ 	struct otx_cpt_req_ctx *rctx = skcipher_request_ctx(req);
++	struct crypto_tfm *tfm = crypto_skcipher_tfm(stfm);
++	struct otx_cpt_enc_ctx *ctx = crypto_tfm_ctx(tfm);
+ 	struct otx_cpt_req_info *req_info = &rctx->cpt_req;
+ 	u32 enc_iv_len = crypto_skcipher_ivsize(stfm);
+ 	struct pci_dev *pdev;
+ 	int status, cpu_num;
  
-+	if (!req->cryptlen)
++	if (!req->cryptlen && ctx->cipher_type == OTX_CPT_AES_XTS)
 +		return 0;
 +
- 	if (!ctx->u.aes.key_len)
- 		return -EINVAL;
- 
+ 	/* Validate that request doesn't exceed maximum CPT supported size */
+ 	if (req->cryptlen > OTX_CPT_MAX_REQ_SIZE)
+ 		return -E2BIG;
 -- 
 2.17.1
 
