@@ -2,173 +2,148 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8129FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772E4C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60E242086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508AF2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596803901;
+	bh=fEDd6WVXFZL6y21ZUytHI7qe5dgGRL3OroGXMuAeFv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l6egjWSL/A6AyEKDwE0oQfTxZHVjxIzW7DKzOCkDVZ7cj6f+YCHs8NDWWpPillgKp
+	 eLK29r6jlsTu0Nr5Fb4fCfHIXaPER6tWhPs2n7wILfYc2xqUgEMFNxmc9bf/IZfqC3
+	 ujhzr0vGC6a51NiJeSAemG8lnhjlwNHiNpYKRwKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHGMe1 (ORCPT
+        id S1728473AbgHGMiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:34:27 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:55096 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgHGMeY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 08:34:24 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 077CYD0i027808;
-        Fri, 7 Aug 2020 21:34:13 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
- Fri, 07 Aug 2020 21:34:13 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 077CYD01027803
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 7 Aug 2020 21:34:13 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: splice: infinite busy loop lockup bug
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ming Lei <ming.lei@canonical.com>
-References: <00000000000084b59f05abe928ee@google.com>
- <29de15ff-15e9-5c52-cf87-e0ebdfa1a001@I-love.SAKURA.ne.jp>
- <20200807122727.GR1236603@ZenIV.linux.org.uk>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <d96b0b3f-51f3-be3d-0a94-16471d6bf892@i-love.sakura.ne.jp>
-Date:   Fri, 7 Aug 2020 21:34:08 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 7 Aug 2020 08:38:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727783AbgHGMiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 08:38:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB552086A;
+        Fri,  7 Aug 2020 12:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596803898;
+        bh=fEDd6WVXFZL6y21ZUytHI7qe5dgGRL3OroGXMuAeFv0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sq+hm/QJyvxkysE8pjDRAg919/6DIkLyvz20wceT31jYDFyd5r5A0K8HjXkJSj8F/
+         /LHosTTh2/2dm+eb45g3bsrgrQmmm+R8P80VXgaxN/hklSZ5w8qgspx17oL+wSrXRz
+         DAP7zrm068q5ItWhpO45xqkF5I3Iytxlro9j/gEM=
+Date:   Fri, 7 Aug 2020 14:38:31 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Dey, Megha" <megha.dey@intel.com>, Marc Zyngier <maz@kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+Message-ID: <20200807123831.GA645281@kroah.com>
+References: <20200805221548.GK19097@mellanox.com>
+ <70465fd3a7ae428a82e19f98daa779e8@intel.com>
+ <20200805225330.GL19097@mellanox.com>
+ <630e6a4dc17b49aba32675377f5a50e0@intel.com>
+ <20200806001927.GM19097@mellanox.com>
+ <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
+ <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
+ <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
+ <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
+ <20200807120650.GR16789@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200807122727.GR1236603@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807120650.GR16789@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/07 21:27, Al Viro wrote:
-> On Fri, Aug 07, 2020 at 07:35:08PM +0900, Tetsuo Handa wrote:
->> syzbot is reporting hung task at pipe_release() [1], for for_each_bvec() from
->> iterate_bvec() from iterate_all_kinds() from iov_iter_alignment() from
->> ext4_unaligned_io() from ext4_dio_write_iter() from ext4_file_write_iter() from
->> call_write_iter() from do_iter_readv_writev() from do_iter_write() from
->> vfs_iter_write() from iter_file_splice_write() falls into infinite busy loop
->> with pipe->mutex held.
->>
->> The reason of falling into infinite busy loop is that iter_file_splice_write()
->> for some reason generates "struct bio_vec" entry with .bv_len=0 and .bv_offset=0
->> while for_each_bvec() cannot handle .bv_len == 0.
+On Fri, Aug 07, 2020 at 09:06:50AM -0300, Jason Gunthorpe wrote:
+> On Thu, Aug 06, 2020 at 10:21:11PM +0200, Thomas Gleixner wrote:
 > 
-> broken in 1bdc76aea115 "iov_iter: use bvec iterator to implement iterate_bvec()",
-> unless I'm misreading it...
+> > Optionally? Please tell the hardware folks to make this mandatory. We
+> > have enough pain with non maskable MSI interrupts already so introducing
+> > yet another non maskable interrupt trainwreck is not an option.
 > 
-> Zero-length segments are not disallowed; it's not all that hard to filter them
-> out in iter_file_splice_write(), but the intent had always been to have
-> iterate_all_kinds() et.al. able to cope with those.
+> Can you elaborate on the flows where Linux will need to trigger
+> masking?
 > 
-> How are these pipe_buffers with ->len == 0 generated in that reproducer, BTW?
-> There might be something else fishy going on...
+> I expect that masking will be available in our NIC HW too - but it
+> will require a spin loop if masking has to be done in an atomic
+> context.
 > 
+> > It's more than a decade now that I tell HW people not to repeat the
+> > non-maskable MSI failure, but obviously they still think that
+> > non-maskable interrupts are a brilliant idea. I know that HW folks
+> > believe that everything they omit can be fixed in software, but they
+> > have to finally understand that this particular issue _cannot_ be fixed
+> > at all.
+> 
+> Sure, the CPU should always be able to shut off an interrupt!
+> 
+> Maybe explaining the goals would help understand the HW perspective.
+> 
+> Today HW can process > 100k queues of work at once. Interrupt delivery
+> works by having a MSI index in each queue's metadata and the interrupt
+> indirects through a MSI-X table on-chip which has the
+> addr/data/mask/etc.
+> 
+> What IMS proposes is that the interrupt data can move into the queue
+> meta data (which is not required to be on-chip), eg along side the
+> producer/consumer pointers, and the central MSI-X table is not
+> needed. This is necessary because the PCI spec has very harsh design
+> requirements for a MSI-X table that make scaling it prohibitive.
+> 
+> So an IRQ can be silenced by deleting or stopping the queue(s)
+> triggering it. It can be masked by including masking in the queue
+> metadata. We can detect pending by checking the producer/consumer
+> values.
+> 
+> However synchronizing all the HW and all the state is now more
+> complicated than just writing a mask bit via MMIO to an on-die memory.
 
-OK. Indeed writing to empty pipe which returns -EFAULT allows an empty
-page to be linked to pipe's array.
+Because doing all of the work that used to be done in HW in software is
+so much faster and scalable?  Feels really wrong to me :(
 
-Now, I've just found a simple reproducer, and confirmed that this bug is
-a local lockup DoS by unprivileged user. Please fix.
+Do you all have a pointer to the spec for this newly proposed stuff
+anywhere to try to figure out how the HW wants this to all work?
 
-----------
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
+thanks,
 
-int main(int argc, char *argv[])
-{
-        static char buffer[4096];
-        const int fd = open("/tmp/testfile", O_WRONLY | O_CREAT, 0600);
-        int pipe_fd[2] = { EOF, EOF };
-        pipe(pipe_fd);
-        write(pipe_fd[1], NULL, 4096);
-        write(pipe_fd[1], buffer, 4096);
-        splice(pipe_fd[0], NULL, fd, NULL, 65536, 0);
-        return 0;
-}
-----------
-
-[  125.598898][    C0] rcu: INFO: rcu_sched self-detected stall on CPU
-[  125.601072][    C0] rcu: 	0-....: (20171 ticks this GP) idle=526/1/0x4000000000000000 softirq=7918/7918 fqs=5136 
-[  125.604874][    C0] 	(t=21006 jiffies g=9341 q=30)
-[  125.606512][    C0] NMI backtrace for cpu 0
-[  125.607931][    C0] CPU: 0 PID: 2792 Comm: a.out Not tainted 5.8.0+ #793
-[  125.610948][    C0] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 02/27/2020
-[  125.614938][    C0] Call Trace:
-[  125.616049][    C0]  <IRQ>
-[  125.617010][    C0]  dump_stack+0x5e/0x7a
-[  125.618370][    C0]  nmi_cpu_backtrace.cold.7+0x14/0x52
-[  125.620148][    C0]  ? lapic_can_unplug_cpu.cold.39+0x3a/0x3a
-[  125.622074][    C0]  nmi_trigger_cpumask_backtrace+0x92/0x9f
-[  125.624154][    C0]  arch_trigger_cpumask_backtrace+0x14/0x20
-[  125.626102][    C0]  rcu_dump_cpu_stacks+0xa0/0xd0
-[  125.627919][    C0]  rcu_sched_clock_irq.cold.95+0x121/0x39c
-[  125.629833][    C0]  ? acct_account_cputime+0x17/0x20
-[  125.631534][    C0]  ? account_system_index_time+0x8a/0xa0
-[  125.633422][    C0]  update_process_times+0x23/0x60
-[  125.635070][    C0]  tick_sched_handle.isra.22+0x20/0x60
-[  125.636870][    C0]  tick_sched_timer+0x68/0x80
-[  125.638403][    C0]  ? tick_sched_handle.isra.22+0x60/0x60
-[  125.640588][    C0]  __hrtimer_run_queues+0xf9/0x1a0
-[  125.642591][    C0]  hrtimer_interrupt+0xfc/0x210
-[  125.645033][    C0]  __sysvec_apic_timer_interrupt+0x4c/0x60
-[  125.647292][    C0]  asm_call_on_stack+0xf/0x20
-[  125.649192][    C0]  </IRQ>
-[  125.650501][    C0]  sysvec_apic_timer_interrupt+0x75/0x80
-[  125.652900][    C0]  asm_sysvec_apic_timer_interrupt+0x12/0x20
-[  125.655487][    C0] RIP: 0010:iov_iter_copy_from_user_atomic+0x19b/0x350
-[  125.658124][    C0] Code: 89 45 d0 48 c1 e6 06 48 03 37 4d 8d 3c 09 4c 89 cf e8 d9 e5 ff ff 48 8b 45 d0 45 39 eb 0f 87 35 01 00 00 49 8b 4a 18 4d 89 f9 <45> 29 dd 45 01 d8 75 12 eb 19 41 83 c4 01 41 29 c0 74 10 44 89 e0
-[  125.666132][    C0] RSP: 0018:ffffa6cdc1237aa8 EFLAGS: 00000246
-[  125.668557][    C0] RAX: 0000000000000000 RBX: 0000000000001000 RCX: ffff945035a25100
-[  125.671576][    C0] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff945035a25100
-[  125.674851][    C0] RBP: ffffa6cdc1237ad8 R08: 0000000000000000 R09: ffff945028a80000
-[  125.677989][    C0] R10: ffffa6cdc1237de0 R11: 0000000000000000 R12: 0000000000000000
-[  125.680990][    C0] R13: 0000000000001000 R14: 0000000000001000 R15: 0000000000001000
-[  125.684006][    C0]  iomap_write_actor+0xbe/0x190
-[  125.685982][    C0]  ? iomap_write_begin+0x460/0x460
-[  125.688031][    C0]  iomap_apply+0xf4/0x1a0
-[  125.689810][    C0]  ? iomap_write_begin+0x460/0x460
-[  125.691826][    C0]  iomap_file_buffered_write+0x69/0x90
-[  125.698598][    C0]  ? iomap_write_begin+0x460/0x460
-[  125.705341][    C0]  xfs_file_buffered_aio_write+0xc2/0x2c0
-[  125.707780][    C0]  xfs_file_write_iter+0xa3/0xc0
-[  125.709802][    C0]  do_iter_readv_writev+0x15b/0x1c0
-[  125.712496][    C0]  do_iter_write+0x81/0x190
-[  125.715245][    C0]  vfs_iter_write+0x14/0x20
-[  125.717221][    C0]  iter_file_splice_write+0x288/0x3e0
-[  125.719340][    C0]  do_splice_from+0x1a/0x40
-[  125.721175][    C0]  do_splice+0x2e5/0x620
-[  125.722950][    C0]  __x64_sys_splice+0x97/0x100
-[  125.724937][    C0]  do_syscall_64+0x31/0x40
-[  125.726766][    C0]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  125.729388][    C0] RIP: 0033:0x7f7515dd91c3
-[  125.731246][    C0] Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 83 3d fd dd 2c 00 00 75 13 49 89 ca b8 13 01 00 00 0f 05 <48> 3d 01 f0 ff ff 73 34 c3 48 83 ec 08 e8 2b d4 00 00 48 89 04 24
-[  125.749632][    C0] RSP: 002b:00007ffd553cde18 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
-[  125.753713][    C0] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f7515dd91c3
-[  125.756867][    C0] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000004
-[  125.759872][    C0] RBP: 0000000000000000 R08: 0000000000010000 R09: 0000000000000000
-[  125.763023][    C0] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004005a6
-[  125.766225][    C0] R13: 00007ffd553cdf10 R14: 0000000000000000 R15: 0000000000000000
-
+greg k-h
