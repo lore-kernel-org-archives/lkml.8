@@ -5,22 +5,23 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A69C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE282177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE4E22CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIXlkLlw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GUxBZ1Ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgHGJvb (ORCPT
+        id S1728295AbgHGJve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:51:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28727 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbgHGJv1 (ORCPT
+        Fri, 7 Aug 2020 05:51:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38334 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728209AbgHGJv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 05:51:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,39 +30,39 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zjAjRBZqRUxOSD09O8un2EvyPI/eihDhik4FjIAp3oQ=;
-        b=jIXlkLlw55FP7kdAYyMxixzWpuh+5+j9F3A97xC0mZpseD9UIrXVqX+brH9KUv3zAwZFwz
-        RlgFzAcVylBWaDSgqrASsHzhdcSZemn5t+w+xlMKY8a7rz2/slM45H7MHC9T+7VqOaeQ1s
-        JjLLmORuKvcHI5beHXJIVvuhA2w2hhk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-DlTKOKCpOMG0c7SRG4IuMg-1; Fri, 07 Aug 2020 05:51:23 -0400
-X-MC-Unique: DlTKOKCpOMG0c7SRG4IuMg-1
-Received: by mail-wr1-f69.google.com with SMTP id s23so540467wrb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 02:51:23 -0700 (PDT)
+        bh=b/HF9RVTQ+ZTIh7ud0STiu49WCNPHw9YdlpSFuMKv58=;
+        b=GUxBZ1UbxP72qFOWl/Yd90zbe78sFS+sFKgFD2KIj07QJg8f5subPsFD+TKIHikkysjjZF
+        PPGYHBekTxXslSUUqjRccsupO717LgLG92QeO3tciwebmS0Xe+zsGN5mlTh+BEBOKB0nLI
+        v8qMf1vvvCmH3Cn5SWyrWMqRTUpNRQs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-137-bMfRzUQaOsOm1ihVUYf_Ag-1; Fri, 07 Aug 2020 05:51:22 -0400
+X-MC-Unique: bMfRzUQaOsOm1ihVUYf_Ag-1
+Received: by mail-wm1-f70.google.com with SMTP id s4so453489wmh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 02:51:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zjAjRBZqRUxOSD09O8un2EvyPI/eihDhik4FjIAp3oQ=;
-        b=TmVVNKyyxx1eXtAlUCyqnP9kgMHvGQT7/CpX8GpIgRnw/ELHn/1FstkTq2Cgw4MxwY
-         Ytv6Jz0mVuXxGoIRTRsho2e4ZqZ1zzOYUwmnD6ThAMFbXMQ6f2INGWOr+hwtFqn3gnvQ
-         LnV0ytSCpUpxgeeY3P7K0seoz7xR8aOPbZMyL7OV0KXr1KVqH+EJF7G6tRZLgFyC+P54
-         qFVyRCwjR4tM/ndoM/YqI8UMEZISqCIqIc4o3+hRLw4Qm8RnO8BYOM3gZ5lB7IDT23Yv
-         Jy21MCUN9fUgeKPxp3aSKiDRTZVE+NAOxBdbzoh33K/Dmf47sN4O1wL96Yvz7XgSnXAk
-         xnaw==
-X-Gm-Message-State: AOAM5319pJ43BT0Xr6Loe5EyKqqfQfGAAqV+U/hCI4d7x8LC8KSgUOwd
-        0Slo4bJd3z/N9JxqaNz9MiOA29Wu+ueqngSnSKBOdwjy29bu3OQUCQ28GgABOH1YrblusBC2B6k
-        t2vUEsVcJdjY0buq9S1ct8Wq4
-X-Received: by 2002:adf:9c8c:: with SMTP id d12mr11112939wre.369.1596793882751;
-        Fri, 07 Aug 2020 02:51:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzkip5rLEQTz9TI9POQCDYsEa8Kk+JzuIIjQ//8hNa+MzW7XcP0R8ZojIy+dEPc7Ef8cI3L/g==
-X-Received: by 2002:adf:9c8c:: with SMTP id d12mr11112927wre.369.1596793882525;
-        Fri, 07 Aug 2020 02:51:22 -0700 (PDT)
+        bh=b/HF9RVTQ+ZTIh7ud0STiu49WCNPHw9YdlpSFuMKv58=;
+        b=j6amQdJsh2O5g3LhmmhiFcIE7y+8qx3HOqgT0WPnzOCW73uyQKOyU1/35WIQTvUARr
+         +2qFk4RXlOdHLP9M4Ua3EWcKohCRfoCgUDK+IqPmU4ReJs6agW1WlethBhxlPl5AsqMd
+         EsbFA/lCqPnDUohMnfIPbTJ3lghdLT2Hev+NmPsrpStnD3wv7bBG/Qm3J8GwkAZV25Ir
+         ML31js7RxnqKN231rGqyvzsYpzKEaqvnvjd+JP1nbtzVqKigp45sIU+Vc/etB6h1rwAr
+         hZqsxw0wHEfeawOcrdyCfu75d8RFWJSDJAtxgntiyOjLoQaYUeGlbvp6SgPTAe2ea3g8
+         f7Ig==
+X-Gm-Message-State: AOAM533E/S8KSknl4EMNzOdksc/jjkyGqaO7KuA9zUfl5nP9pA9vyH+I
+        dOBAHNZIQ0TN3ioccMunVit1Qt9jdDCO3NJnjur/rSz0MyXE/iZbt1nkLAJ5KBMErMQ7kQp3+TT
+        gRxgUWkOMGEFndaV+n+bpZECI
+X-Received: by 2002:adf:eb89:: with SMTP id t9mr11182825wrn.65.1596793880896;
+        Fri, 07 Aug 2020 02:51:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxVWq6bepkCG4H0mARF8/cqSTRwKYKa0bwk+v75Q1KrkoLYz1ALxZjp2ycz7XCelnea3DAEGA==
+X-Received: by 2002:adf:eb89:: with SMTP id t9mr11182803wrn.65.1596793880638;
+        Fri, 07 Aug 2020 02:51:20 -0700 (PDT)
 Received: from localhost.localdomain.com ([151.29.36.84])
-        by smtp.gmail.com with ESMTPSA id h14sm9388396wml.30.2020.08.07.02.51.20
+        by smtp.gmail.com with ESMTPSA id h14sm9388396wml.30.2020.08.07.02.51.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 02:51:21 -0700 (PDT)
+        Fri, 07 Aug 2020 02:51:19 -0700 (PDT)
 From:   Juri Lelli <juri.lelli@redhat.com>
 To:     peterz@infradead.org, mingo@redhat.com
 Cc:     rostedt@goodmis.org, tglx@linutronix.de,
@@ -70,9 +71,9 @@ Cc:     rostedt@goodmis.org, tglx@linutronix.de,
         bristot@redhat.com, dietmar.eggemann@arm.com,
         linux-rt-users@vger.kernel.org, mtosatti@redhat.com,
         williams@redhat.com, valentin.schneider@arm.com
-Subject: [RFC PATCH v2 2/6] sched/deadline: Collect sched_dl_entity initialization
-Date:   Fri,  7 Aug 2020 11:50:47 +0200
-Message-Id: <20200807095051.385985-3-juri.lelli@redhat.com>
+Subject: [RFC PATCH v2 1/6] sched: Unify runtime accounting across classes
+Date:   Fri,  7 Aug 2020 11:50:46 +0200
+Message-Id: <20200807095051.385985-2-juri.lelli@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200807095051.385985-1-juri.lelli@redhat.com>
 References: <20200807095051.385985-1-juri.lelli@redhat.com>
@@ -85,130 +86,223 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Zijlstra <peterz@infradead.org>
 
-Create a single function that initializes a sched_dl_entity.
+All classes use sched_entity::exec_start to track runtime and have
+copies of the exact same code around to compute runtime.
+
+Collapse all that.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/sched/core.c     |  5 +----
- kernel/sched/deadline.c | 22 +++++++++++++++-------
- kernel/sched/sched.h    |  5 +----
- 3 files changed, 17 insertions(+), 15 deletions(-)
+ include/linux/sched.h    |  2 +-
+ kernel/sched/deadline.c  | 17 +++-----------
+ kernel/sched/fair.c      | 50 +++++++++++++++++++++++++++++++---------
+ kernel/sched/rt.c        | 17 +++-----------
+ kernel/sched/sched.h     |  2 ++
+ kernel/sched/stop_task.c | 16 +------------
+ 6 files changed, 49 insertions(+), 55 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 12e1f3a2cabc6..6b36bf82b53c2 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3081,10 +3081,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	memset(&p->se.statistics, 0, sizeof(p->se.statistics));
- #endif
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index a6bf77c346876..f7b9ba04970bc 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -424,7 +424,7 @@ struct sched_statistics {
  
--	RB_CLEAR_NODE(&p->dl.rb_node);
--	init_dl_task_timer(&p->dl);
--	init_dl_inactive_task_timer(&p->dl);
--	__dl_clear_params(p);
-+	init_dl_entity(&p->dl);
+ 	u64				block_start;
+ 	u64				block_max;
+-	u64				exec_max;
++	s64				exec_max;
+ 	u64				slice_max;
  
- 	INIT_LIST_HEAD(&p->rt.run_list);
- 	p->rt.timeout		= 0;
+ 	u64				nr_migrations_cold;
 diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 2ece83b5991f5..8d909bdb9a119 100644
+index 3862a28cd05d0..2ece83b5991f5 100644
 --- a/kernel/sched/deadline.c
 +++ b/kernel/sched/deadline.c
-@@ -219,6 +219,8 @@ static void dl_change_utilization(struct task_struct *p, u64 new_bw)
- 	__add_rq_bw(new_bw, &rq->dl);
- }
- 
-+static void __dl_clear_params(struct sched_dl_entity *dl_se);
-+
- /*
-  * The utilization of a task cannot be immediately removed from
-  * the rq active utilization (running_bw) when the task blocks.
-@@ -317,7 +319,7 @@ static void task_non_contending(struct task_struct *p)
- 				sub_rq_bw(&p->dl, &rq->dl);
- 			raw_spin_lock(&dl_b->lock);
- 			__dl_sub(dl_b, p->dl.dl_bw, dl_bw_cpus(task_cpu(p)));
--			__dl_clear_params(p);
-+			__dl_clear_params(dl_se);
- 			raw_spin_unlock(&dl_b->lock);
- 		}
- 
-@@ -1123,7 +1125,7 @@ static enum hrtimer_restart dl_task_timer(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
--void init_dl_task_timer(struct sched_dl_entity *dl_se)
-+static void init_dl_task_timer(struct sched_dl_entity *dl_se)
+@@ -1221,9 +1221,8 @@ static void update_curr_dl(struct rq *rq)
  {
- 	struct hrtimer *timer = &dl_se->dl_timer;
+ 	struct task_struct *curr = rq->curr;
+ 	struct sched_dl_entity *dl_se = &curr->dl;
+-	u64 delta_exec, scaled_delta_exec;
++	s64 delta_exec, scaled_delta_exec;
+ 	int cpu = cpu_of(rq);
+-	u64 now;
  
-@@ -1335,7 +1337,7 @@ static enum hrtimer_restart inactive_task_timer(struct hrtimer *timer)
- 		raw_spin_lock(&dl_b->lock);
- 		__dl_sub(dl_b, p->dl.dl_bw, dl_bw_cpus(task_cpu(p)));
- 		raw_spin_unlock(&dl_b->lock);
--		__dl_clear_params(p);
-+		__dl_clear_params(dl_se);
- 
- 		goto unlock;
+ 	if (!dl_task(curr) || !on_dl_rq(dl_se))
+ 		return;
+@@ -1236,23 +1235,13 @@ static void update_curr_dl(struct rq *rq)
+ 	 * natural solution, but the full ramifications of this
+ 	 * approach need further study.
+ 	 */
+-	now = rq_clock_task(rq);
+-	delta_exec = now - curr->se.exec_start;
+-	if (unlikely((s64)delta_exec <= 0)) {
++	delta_exec = update_curr_common(rq);
++	if (unlikely(delta_exec <= 0)) {
+ 		if (unlikely(dl_se->dl_yielded))
+ 			goto throttle;
+ 		return;
  	}
-@@ -1351,7 +1353,7 @@ static enum hrtimer_restart inactive_task_timer(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
  
--void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se)
-+static void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se)
- {
- 	struct hrtimer *timer = &dl_se->inactive_timer;
- 
-@@ -2741,10 +2743,8 @@ bool __checkparam_dl(const struct sched_attr *attr)
- /*
-  * This function clears the sched_dl_entity static params.
-  */
--void __dl_clear_params(struct task_struct *p)
-+static void __dl_clear_params(struct sched_dl_entity *dl_se)
- {
--	struct sched_dl_entity *dl_se = &p->dl;
+-	schedstat_set(curr->se.statistics.exec_max,
+-		      max(curr->se.statistics.exec_max, delta_exec));
 -
- 	dl_se->dl_runtime		= 0;
- 	dl_se->dl_deadline		= 0;
- 	dl_se->dl_period		= 0;
-@@ -2759,6 +2759,14 @@ void __dl_clear_params(struct task_struct *p)
- 	dl_se->dl_overrun		= 0;
- }
+-	curr->se.sum_exec_runtime += delta_exec;
+-	account_group_exec_runtime(curr, delta_exec);
+-
+-	curr->se.exec_start = now;
+-	cgroup_account_cputime(curr, delta_exec);
+-
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
  
-+void init_dl_entity(struct sched_dl_entity *dl_se)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 2ba8f230feb9a..10a230d85104a 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -836,30 +836,58 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq, int force)
+ }
+ #endif /* CONFIG_SMP */
+ 
++static s64 update_curr_se(struct rq *rq, struct sched_entity *curr)
 +{
-+	RB_CLEAR_NODE(&dl_se->rb_node);
-+	init_dl_task_timer(dl_se);
-+	init_dl_inactive_task_timer(dl_se);
-+	__dl_clear_params(dl_se);
++	u64 now = rq_clock_task(rq);
++	s64 delta_exec;
++
++	delta_exec = now - curr->exec_start;
++	if (unlikely(delta_exec <= 0))
++		return delta_exec;
++
++	curr->exec_start = now;
++	curr->sum_exec_runtime += delta_exec;
++
++	schedstat_set(curr->statistics.exec_max,
++		      max(delta_exec, curr->statistics.exec_max));
++
++	return delta_exec;
 +}
 +
- bool dl_param_changed(struct task_struct *p, const struct sched_attr *attr)
++/*
++ * Used by other classes to account runtime.
++ */
++s64 update_curr_common(struct rq *rq)
++{
++	struct task_struct *curr = rq->curr;
++	s64 delta_exec;
++
++	delta_exec = update_curr_se(rq, &curr->se);
++	if (unlikely(delta_exec <= 0))
++		return delta_exec;
++
++	account_group_exec_runtime(curr, delta_exec);
++	cgroup_account_cputime(curr, delta_exec);
++
++	return delta_exec;
++}
++
+ /*
+  * Update the current task's runtime statistics.
+  */
+ static void update_curr(struct cfs_rq *cfs_rq)
  {
- 	struct sched_dl_entity *dl_se = &p->dl;
+ 	struct sched_entity *curr = cfs_rq->curr;
+-	u64 now = rq_clock_task(rq_of(cfs_rq));
+-	u64 delta_exec;
++	s64 delta_exec;
+ 
+ 	if (unlikely(!curr))
+ 		return;
+ 
+-	delta_exec = now - curr->exec_start;
+-	if (unlikely((s64)delta_exec <= 0))
++	delta_exec = update_curr_se(rq_of(cfs_rq), curr);
++	if (unlikely(delta_exec <= 0))
+ 		return;
+ 
+-	curr->exec_start = now;
+-
+-	schedstat_set(curr->statistics.exec_max,
+-		      max(delta_exec, curr->statistics.exec_max));
+-
+-	curr->sum_exec_runtime += delta_exec;
+ 	schedstat_add(cfs_rq->exec_clock, delta_exec);
+-
+ 	curr->vruntime += calc_delta_fair(delta_exec, curr);
+ 	update_min_vruntime(cfs_rq);
+ 
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index f215eea6a9661..196171fbf5978 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -997,26 +997,15 @@ static void update_curr_rt(struct rq *rq)
+ {
+ 	struct task_struct *curr = rq->curr;
+ 	struct sched_rt_entity *rt_se = &curr->rt;
+-	u64 delta_exec;
+-	u64 now;
++	s64 delta_exec;
+ 
+ 	if (curr->sched_class != &rt_sched_class)
+ 		return;
+ 
+-	now = rq_clock_task(rq);
+-	delta_exec = now - curr->se.exec_start;
+-	if (unlikely((s64)delta_exec <= 0))
++	delta_exec = update_curr_common(rq);
++	if (unlikely(delta_exec < 0))
+ 		return;
+ 
+-	schedstat_set(curr->se.statistics.exec_max,
+-		      max(curr->se.statistics.exec_max, delta_exec));
+-
+-	curr->se.sum_exec_runtime += delta_exec;
+-	account_group_exec_runtime(curr, delta_exec);
+-
+-	curr->se.exec_start = now;
+-	cgroup_account_cputime(curr, delta_exec);
+-
+ 	if (!rt_bandwidth_enabled())
+ 		return;
+ 
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 963c16fc27500..62304d4de99cc 100644
+index 3fd283892761d..963c16fc27500 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -255,8 +255,6 @@ struct rt_bandwidth {
- 	unsigned int		rt_period_active;
- };
+@@ -1769,6 +1769,8 @@ extern const u32		sched_prio_to_wmult[40];
  
--void __dl_clear_params(struct task_struct *p);
+ #define RETRY_TASK		((void *)-1UL)
+ 
++extern s64 update_curr_common(struct rq *rq);
++
+ struct sched_class {
+ 
+ #ifdef CONFIG_UCLAMP_TASK
+diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
+index 394bc8126a1e5..1eb1e336e18e7 100644
+--- a/kernel/sched/stop_task.c
++++ b/kernel/sched/stop_task.c
+@@ -62,21 +62,7 @@ static void yield_task_stop(struct rq *rq)
+ 
+ static void put_prev_task_stop(struct rq *rq, struct task_struct *prev)
+ {
+-	struct task_struct *curr = rq->curr;
+-	u64 delta_exec;
 -
+-	delta_exec = rq_clock_task(rq) - curr->se.exec_start;
+-	if (unlikely((s64)delta_exec < 0))
+-		delta_exec = 0;
+-
+-	schedstat_set(curr->se.statistics.exec_max,
+-			max(curr->se.statistics.exec_max, delta_exec));
+-
+-	curr->se.sum_exec_runtime += delta_exec;
+-	account_group_exec_runtime(curr, delta_exec);
+-
+-	curr->se.exec_start = rq_clock_task(rq);
+-	cgroup_account_cputime(curr, delta_exec);
++	update_curr_common(rq);
+ }
+ 
  /*
-  * To keep the bandwidth of -deadline tasks and groups under control
-  * we need some place where:
-@@ -1939,8 +1937,7 @@ extern void init_rt_bandwidth(struct rt_bandwidth *rt_b, u64 period, u64 runtime
- 
- extern struct dl_bandwidth def_dl_bandwidth;
- extern void init_dl_bandwidth(struct dl_bandwidth *dl_b, u64 period, u64 runtime);
--extern void init_dl_task_timer(struct sched_dl_entity *dl_se);
--extern void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se);
-+extern void init_dl_entity(struct sched_dl_entity *dl_se);
- 
- #define BW_SHIFT		20
- #define BW_UNIT			(1 << BW_SHIFT)
 -- 
 2.26.2
 
