@@ -2,148 +2,170 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7660AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D992173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:01:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dq+axmEt"
+	by mail.kernel.org (Postfix) with ESMTP id 676C022CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgHGEBm (ORCPT
+        id S1726096AbgHGEBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 00:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgHGEBk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 00:01:40 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6383EC061574;
-        Thu,  6 Aug 2020 21:01:40 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w14so719100ljj.4;
-        Thu, 06 Aug 2020 21:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6hXGoG7VpK7QiMqEgGEMUiXEradygc4+EQbKgcXgAnc=;
-        b=dq+axmEtzt+fsNxEocn+nvEVMNUDImOzdAuhrdiADvPgAAXGOu7W6u4LpfQL+bCoDd
-         Ny8fn2a/oHVWXxDps3MOo6wVVlf7XkqNB/3OzH3fCg+FOfSn6tSkFdRUKoOJtJBDkOVt
-         XSXTVEth/1GVsTqrQYaWX/8srj9O4hLSifoAKoZ6SM45GeylDowJcHqo8oaC81jB/Yj2
-         wovp6bg57xvxlc8qCDXQSkbUd9FG6jUZ2GkdjMmm7zWpeyne7MtB/r8sKXduCTAGVyIn
-         rv8kDoeK+kDUNGFgGV0VqgG98NdSDgfPs5OIujI9KEUwWdMsiPH9vJfEgm74GggPe8Yc
-         QJXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6hXGoG7VpK7QiMqEgGEMUiXEradygc4+EQbKgcXgAnc=;
-        b=HBYvdMygkmagkfeNPbo9iQoMiUutUF9qyN7OD+HkZ1pnJn3pNyBXfzCshxrOa9sm3C
-         LT9TE0UgvUfXSEpqUjrJGvStjVhQDQY/wYNWSAz4x7UkTqI38Ifjsc5sIHd0lAuZmJZm
-         SwcFbanF2mf/ghnqwVq13gD4QuUQBgoWdhcuhXhEhcp3eXqMAAFd5Id7x0hZotBN2t38
-         s4iVt6OySC7RP9QDCOFXOAU/Nu2IKi5UcIjDwL7aEMUaA0WuGKXnpzJRfgPxi4mqu6D2
-         berczbaZTqET2zqHc7gdmJOrc+xhLyrp/6eaYzBeRhnpKUfJ5YtBCNrLBHlrGP8SvTzi
-         u1bA==
-X-Gm-Message-State: AOAM530MMuEB+KdToVm+Qx/qSJFdBtwrP12dkIteWABxP5hpXFCsyUd2
-        hep7ip/X+DUdnB/Gqj+OziUnjyNJ
-X-Google-Smtp-Source: ABdhPJzo6Nf7QKwzHHB8TWQc7KI+xioxHV3ebroViVnk6mqUDJsg+5I756yebJODia8pYefdTKmhOA==
-X-Received: by 2002:a2e:9886:: with SMTP id b6mr4935082ljj.258.1596772898499;
-        Thu, 06 Aug 2020 21:01:38 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id j66sm3663946lfd.74.2020.08.06.21.01.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 21:01:37 -0700 (PDT)
-Subject: Re: [PATCH v9 08/10] gpu: host1x: mipi: Keep MIPI clock enabled and
- mutex locked till calibration done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
- <1596740494-19306-9-git-send-email-skomatineni@nvidia.com>
- <f2522713-6995-d6a1-e691-a5443823056b@gmail.com>
- <7ef2a6dd-d220-ff47-e6ef-7443a1779fae@nvidia.com>
- <a0a187d3-04e9-88d9-5146-1448d4bd79e9@nvidia.com>
- <54e01160-4041-f8fa-065d-f635e8d69e2f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7c47b165-8663-87f0-bff5-37036d472fb9@gmail.com>
-Date:   Fri, 7 Aug 2020 07:01:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 00:01:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725263AbgHGEBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 00:01:48 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB152173E;
+        Fri,  7 Aug 2020 04:01:46 +0000 (UTC)
+Date:   Fri, 7 Aug 2020 00:01:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH] ftrace: Fixup lockdep assert held of text_mutex
+Message-ID: <20200807000145.3d8abc81@oasis.local.home>
+In-Reply-To: <CAJF2gTRufu561K_8p6KS0C=2xTq+YdOfGLbFqkuuiapSk3_cAQ@mail.gmail.com>
+References: <1596725454-16245-1-git-send-email-guoren@kernel.org>
+        <20200806114850.051f84d0@oasis.local.home>
+        <CAJF2gTRufu561K_8p6KS0C=2xTq+YdOfGLbFqkuuiapSk3_cAQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <54e01160-4041-f8fa-065d-f635e8d69e2f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.08.2020 06:18, Sowjanya Komatineni пишет:
+On Fri, 7 Aug 2020 10:59:16 +0800
+Guo Ren <guoren@kernel.org> wrote:
+> >
+> > This looks like a bug in the lockdep_assert_held() in whatever arch
+> > (riscv) is running.  
+> Seems you think it's a bug of arch implementation with the wrong usage
+> of text_mutex?
 > 
-> On 8/6/20 8:14 PM, Sowjanya Komatineni wrote:
->>
->> On 8/6/20 8:10 PM, Sowjanya Komatineni wrote:
->>>
->>> On 8/6/20 7:31 PM, Dmitry Osipenko wrote:
->>>> 06.08.2020 22:01, Sowjanya Komatineni пишет:
->>>> ...
->>>>> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
->>>>>   {
->>>>>       const struct tegra_mipi_soc *soc = device->mipi->soc;
->>>>>       unsigned int i;
->>>>> @@ -381,12 +375,16 @@ int tegra_mipi_calibrate(struct
->>>>> tegra_mipi_device *device)
->>>>>       value |= MIPI_CAL_CTRL_START;
->>>>>       tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
->>>>>   -    mutex_unlock(&device->mipi->lock);
->>>>> -    clk_disable(device->mipi->clk);
->>>>> +    /*
->>>>> +     * Wait for min 72uS to let calibration logic finish calibration
->>>>> +     * sequence codes before waiting for pads idle state to apply the
->>>>> +     * results.
->>>>> +     */
->>>>> +    usleep_range(75, 80);
->>>> Could you please explain why the ACTIVE bit can't be polled instead of
->>>> using the fixed delay? Doesn't ACTIVE bit represents the state of the
->>>> busy FSM?
->>>
->>> Based on internal discussion, ACTIVE bit gets cleared when all
->>> enabled pads calibration is done (same time as when DONE set to 1).
->>>
->>> Will request HW designer to look into design and confirm exactly when
->>> ACTIVE bit gets cleared.
->>>
->>> Will get back on this.
->>>
->> Verified with HW designer. above is correct. ACTIVE bit update happens
->> same time as DONE bit.
->>
->> Active = !(DONE)
->>
->> In case of calibration logic waiting for LP-11 where done bit does not
->> get set, ACTIVE will still be 1 and on next start trigger new
->> calibration will start
->>
-> Based on internal design check from designer, as long as its in waiting
-> for LP-11 stage, next calibration request can be triggered again but
-> ACTIVE bit we will see it at 1. So we should check for DONE bits to
-> confirm if calibration is done or not.
+> Also @riscv maintainer,
+> How about modifying it in riscv's code? we still need to solve it.
 > 
-> To start next calibration, it can take effect as long as its in wait for
-> LP-11 mode.
+> ----------------
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> index ace8a6e..fb266c3 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -23,6 +23,12 @@ static inline unsigned long
+> ftrace_call_adjust(unsigned long addr)
+> 
+>  struct dyn_arch_ftrace {
+>  };
+> +
+> +#ifdef CONFIG_DYNAMIC_FTRACE
+> +struct dyn_ftrace;
+> +int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+> +#define ftrace_init_nop ftrace_init_nop
+> +#endif
+>  #endif
+> 
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 2ff63d0..9e9f7c0 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -97,6 +97,17 @@ int ftrace_make_nop(struct module *mod, struct
+> dyn_ftrace *rec,
+>         return __ftrace_modify_call(rec->ip, addr, false);
+>  }
+> 
+> +int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+> +{
+> +       int ret;
+> +
+> +       mutex_lock(&text_mutex);
+> +       ret = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
 
-I meant the start_calibration() will poll the ACTIVE bit (calibration
-busy), while the finish_calibration() will poll the DONE bit
-(calibration applied).
+Looking at x86, we have the following code:
+
+static int ftrace_poke_late = 0;
+
+int ftrace_arch_code_modify_prepare(void)
+    __acquires(&text_mutex)
+{
+	/*
+	 * Need to grab text_mutex to prevent a race from module loading
+	 * and live kernel patching from changing the text permissions while
+	 * ftrace has it set to "read/write".
+	 */
+	mutex_lock(&text_mutex);
+	ftrace_poke_late = 1;
+	return 0;
+}
+
+int ftrace_arch_code_modify_post_process(void)
+    __releases(&text_mutex)
+{
+	/*
+	 * ftrace_make_{call,nop}() may be called during
+	 * module load, and we need to finish the text_poke_queue()
+	 * that they do, here.
+	 */
+	text_poke_finish();
+	ftrace_poke_late = 0;
+	mutex_unlock(&text_mutex);
+	return 0;
+}
+
+And if ftrace_poke_late is not set, then ftrace_make_nop() does direct
+modification (calls text_poke_early(), which is basically a memcpy).
+
+This path doesn't have any checks against text_mutex being held,
+because it only happens at boot up.
+
+> +       mutex_unlock(&text_mutex);
+> +
+> +       return ret;
+> +}
+> +
+>  int ftrace_update_ftrace_func(ftrace_func_t func)
+>  {
+>         int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
+> -------------------
+> 
+> > > --- a/kernel/trace/ftrace.c
+> > > +++ b/kernel/trace/ftrace.c
+> > > @@ -26,6 +26,7 @@
+> > >  #include <linux/uaccess.h>
+> > >  #include <linux/bsearch.h>
+> > >  #include <linux/module.h>
+> > > +#include <linux/memory.h>
+> > >  #include <linux/ftrace.h>
+> > >  #include <linux/sysctl.h>
+> > >  #include <linux/slab.h>
+> > > @@ -6712,9 +6713,11 @@ void __init ftrace_init(void)  
+> >
+> > ftrace_init() is called before SMP is initialized. Nothing else should
+> > be running here. That means grabbing a mutex is useless.  
+> I don't agree, ftrace_init are modifying kernel text, so we should
+> give the lock of text_mutex to keep semantic consistency.
+
+
+Did you test your patch on x86 with lockdep?
+
+ftrace_process_locs() grabs the ftrace_lock, which I believe is held
+when text_mutex is taken in other locations. So this will probably not
+work anyway.
+
+text_mutex isn't to be taken at the ftrace level.
+
+-- Steve
