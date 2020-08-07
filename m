@@ -2,133 +2,127 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3475FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18813221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41331221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RDovZW0c"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UxEN48NT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHGDNd (ORCPT
+        id S1726660AbgHGDOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgHGDNd (ORCPT
+        Thu, 6 Aug 2020 23:14:39 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9244 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgHGDOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:13:33 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6119C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 20:13:32 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id z20so395439plo.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 20:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mntt/yV9g0WantW+MFUMl7qG7fGk/Oi5dRuY6kccsYw=;
-        b=RDovZW0comW5k7a9qDBhi0AemfQotZc35NVP3B/JDirQCHkb3KxYzbiNVpmHOLFuwB
-         16VvF1+r+a5Uh0LqZm/NYiMCFqw5Kg84vRSFVEvGutQZxz14IrygV9VS6q8VcYGZw/h1
-         dHG0UzmQ0xHz10DDkThhfDS9paQ9LrKO/PoEGFXs24VQWqcyQVSzNeshbKpJnxZ1mG0d
-         5Zf92IcmPVcRjaHg0tRv1sCEKsHUa8AclgHXo1FnE9oTRiP5y2Izlfzg3fZJrgzl3sqd
-         07fpIFfQH3mur+x5UUTjPLI1b9JvJd346SZpuhDJVf+98Mu6vRZ5H5WCK+dJezuiL7kq
-         YLBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mntt/yV9g0WantW+MFUMl7qG7fGk/Oi5dRuY6kccsYw=;
-        b=YlzfvzyJeoWWSOjIFO0Q+Ndl5YgoBm9CuJtQ3dcyPFN7dB4YMrFe1YDBs1ayVtNfwZ
-         SMYWyBLK/P7YNcdPBnNFl/2bGlbD06JGzK+WzsGvvXA2cjp0efrpZgYG4G/3H7ODD5DJ
-         Va6jgIEx6tVWV6GrXOTgTU7esqmUdw6vAA3eFezhHelvatxhYpGqPwlIYTvG1pO2hrHn
-         N8IuOvkExsRBDGoqiObNnNSpF1z/dUiLZKp4CckFd8A9xlOf8VifwcI4JtEaG5R7T6vM
-         CSXUpO0ztR6GXUvBc9o8NWLwQ6BS05lHDl41ByoCVWUowO5+0YBQskbt5dsWtD3H9MPZ
-         ztHw==
-X-Gm-Message-State: AOAM531m3aAhGC3NgqRGDSe082gpy2iGoW5sQ9VsEg6CF8/JUx0/lhbR
-        H8VB3vBCRfd7bTFL/UzqFj9ngkOZe69a+hyk8+RW8w==
-X-Google-Smtp-Source: ABdhPJwHf/baXL/FshABJwVK72iC4bCenNX/IrhdV9ee/TdyaNNuV/RPDLg0FYY0/FnAyGhJKXhqedgsCLoHXEgA/TY=
-X-Received: by 2002:a17:90a:1546:: with SMTP id y6mr2707909pja.93.1596770011948;
- Thu, 06 Aug 2020 20:13:31 -0700 (PDT)
+        Thu, 6 Aug 2020 23:14:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2cc7100000>; Thu, 06 Aug 2020 20:14:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 20:14:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 20:14:38 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
+ 2020 03:14:37 +0000
+Subject: Re: [PATCH v9 08/10] gpu: host1x: mipi: Keep MIPI clock enabled and
+ mutex locked till calibration done
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
+ <1596740494-19306-9-git-send-email-skomatineni@nvidia.com>
+ <f2522713-6995-d6a1-e691-a5443823056b@gmail.com>
+ <7ef2a6dd-d220-ff47-e6ef-7443a1779fae@nvidia.com>
+Message-ID: <a0a187d3-04e9-88d9-5146-1448d4bd79e9@nvidia.com>
+Date:   Thu, 6 Aug 2020 20:14:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200718000637.3632841-1-saravanak@google.com>
- <20200718000637.3632841-3-saravanak@google.com> <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
- <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
- <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org> <78ad0914-6173-f753-9eba-b7cbfbb51fd6@kali.org>
- <CALAqxLXPN9kThwF32YoWyApaWnfjthANXj3uk65Wc3ddaJQFFQ@mail.gmail.com>
- <20200807004001.GF20825@builder.lan> <CALAqxLWwY00PVUL7EM-tgbXeB5h8MsfPo7EFZTfDSzbb3P3eqQ@mail.gmail.com>
- <20200807013903.GG20825@builder.lan> <CALAqxLWmJisTA9836Rvb8f9m4hsTL7iZ=HQtz39anu2Bbgv44g@mail.gmail.com>
- <CAGETcx9Gsa9CWow8MBVPF4cgofdcK1+cFohAf_-Dqa3JT8H1bw@mail.gmail.com> <CALAqxLWR3mKrQDn5VkOV_zaaqxmwWzZwK0CCLRSfGJDU6WUXag@mail.gmail.com>
-In-Reply-To: <CALAqxLWR3mKrQDn5VkOV_zaaqxmwWzZwK0CCLRSfGJDU6WUXag@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 6 Aug 2020 20:12:56 -0700
-Message-ID: <CAGETcx-2mCg9K3th+HW_QjvKWmpb6yk=Cu3F3gOn3w+TD1RTzw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
- IRQCHIP_PLATFORM_DRIVER helper macros
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Steev Klimaszewski <steev@kali.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7ef2a6dd-d220-ff47-e6ef-7443a1779fae@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596770064; bh=6pJfOCjVj6hQbgZO0kcGHqWsN/R/wFr41mMvdHVndAA=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=UxEN48NThZ9Kv7QdDMbEimEYnq0rpfrlv1fJaMTY7zuzxKBvUlcMYErw3LyFyeRsz
+         SgTbaayJWuK5Hj152SU/trClM7pSFOwN4QhVEoVK9tGTCLk2a+P3Tl9GpUlVnTAfxH
+         XOgimo8/FrnsPHjmNtQWQG7A0ZH21wwyu7jBE6HkYTiZcf8sjtkfFoY6PkgS8qxlTD
+         HM/KgRg1RIrEjwSQN6RiKQwgsnGbmKYoAhwwxZWpXfsD6xDmCTLTwlYc67eCOB57+E
+         l2JF7b9MWiX6jkXRQGq/GB/G1irKC3wo2Y9wzaVAIH1xnLWw6EWy1x7cmEw4BbSgR+
+         RvNERFzfUgAZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 8:09 PM John Stultz <john.stultz@linaro.org> wrote:
+
+On 8/6/20 8:10 PM, Sowjanya Komatineni wrote:
 >
-> On Thu, Aug 6, 2020 at 8:02 PM Saravana Kannan <saravanak@google.com> wrote:
-> > On Thu, Aug 6, 2020 at 7:49 PM John Stultz <john.stultz@linaro.org> wrote:
-> > > On Thu, Aug 6, 2020 at 6:42 PM Bjorn Andersson
-> > > <bjorn.andersson@linaro.org> wrote:
-> > > > With all due respect, that's your downstream kernel, the upstream kernel
-> > > > should not rely on luck, out-of-tree patches or kernel parameters.
-> > >
-> > > I agree that would be preferred. But kernel parameters are often there
-> > > for these sorts of cases where we can't always do the right thing.  As
-> > > for out-of-tree patches, broken things don't get fixed until
-> > > out-of-tree patches are developed and upstreamed, and I know Saravana
-> > > is doing exactly that, and I hope his fw_devlink work helps fix it so
-> > > the module loading is not just a matter of luck.
-> >
-> > Btw, the only downstream fw_devlink change is setting itto =on (vs
-> > =permissive in upstream).
+> On 8/6/20 7:31 PM, Dmitry Osipenko wrote:
+>> 06.08.2020 22:01, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> ...
+>>> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
+>>> =C2=A0 {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct tegra_mipi_soc *soc =3D dev=
+ice->mipi->soc;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int i;
+>>> @@ -381,12 +375,16 @@ int tegra_mipi_calibrate(struct=20
+>>> tegra_mipi_device *device)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D MIPI_CAL_CTRL_START;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_mipi_writel(device->mipi, value, M=
+IPI_CAL_CTRL);
+>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 mutex_unlock(&device->mipi->lock);
+>>> -=C2=A0=C2=A0=C2=A0 clk_disable(device->mipi->clk);
+>>> +=C2=A0=C2=A0=C2=A0 /*
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Wait for min 72uS to let calibration logic =
+finish calibration
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * sequence codes before waiting for pads idle=
+ state to apply the
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * results.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>> +=C2=A0=C2=A0=C2=A0 usleep_range(75, 80);
+>> Could you please explain why the ACTIVE bit can't be polled instead of
+>> using the fixed delay? Doesn't ACTIVE bit represents the state of the
+>> busy FSM?
 >
-> I thought there was the clk_sync_state stuff as well?
-
-That's not needed to solve the module load ordering issues and
-deferred probe issues. That's only needed to keep clocks on till some
-of the modules are loaded and it depends on fw_devlink, but not really
-a part of fw_devlink IMHO. And yes, that's on my list of things to
-upstream.
-
-> > > Also I think Thierry's comments in the other thread today are also
-> > > good ideas for ways to better handle the optional dt link handling
-> > > (rather than using a timeout).
-> >
-> > Could you please give me a lore link to this thread? Just curious.
+> Based on internal discussion, ACTIVE bit gets cleared when all enabled=20
+> pads calibration is done (same time as when DONE set to 1).
 >
-> Sure: https://lore.kernel.org/lkml/20200806135251.GB3351349@ulmo/
+> Will request HW designer to look into design and confirm=C2=A0 exactly wh=
+en=20
+> ACTIVE bit gets cleared.
+>
+> Will get back on this.
+>
+Verified with HW designer. above is correct. ACTIVE bit update happens=20
+same time as DONE bit.
 
-Thanks.
+Active =3D !(DONE)
 
--Saravana
+In case of calibration logic waiting for LP-11 where done bit does not=20
+get set, ACTIVE will still be 1 and on next start trigger new=20
+calibration will start
+
+>
+>
