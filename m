@@ -2,173 +2,97 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A19C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4133C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C58520855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52E5221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rb1Aia/5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j7HC3Z5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbgHGBmo (ORCPT
+        id S1726150AbgHGBuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40730 "EHLO
+        Thu, 6 Aug 2020 21:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHGBmn (ORCPT
+        with ESMTP id S1726027AbgHGBuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:42:43 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EA2C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 18:42:42 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id s26so151525pfm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 18:42:42 -0700 (PDT)
+        Thu, 6 Aug 2020 21:50:37 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96669C061575
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 18:50:36 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id f24so390216ejx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 18:50:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cAPX6D2qzJW+cM4TwCNFgYllwmjivb9JxeuNDMu8OqY=;
-        b=Rb1Aia/5mpYUMxN9hLfbwKYrYIYeobqIFx7wpP7JvLpUfD1tC0oCip6VQfp5bQT799
-         FF4++SLrByMlkoblaNVMVj8ujTPzej6dSye2kyYbmUbPAMQciDE8DIMVCFi4QrMXLGn1
-         9mmghCPOjBC6AAwJgIeEJfLpHMo/FGQfLxgBAOMXnNlLKPq3Ou3gbd7FqihG2o9NIwKP
-         yUYAUOyMVBk3flcgqrhsDhHKey1dKx5Pa4kIxtieOqaTiyq6IoCH9F4jq0WIYPwooMw1
-         yvVTs98FXs3BnMt7vjDL+e1eCi4oSniROVL5yCD6K0erbM9xd+63A1SIAtLV5RxFlw+U
-         do2Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cD8jsk4+SBG8xPQfCCj2wmUpFVhawKwctfW4av5cjwU=;
+        b=j7HC3Z5KWqeecaZcmC3YJkQ+9fE581GofeymgTxpCPrJdWE+UU1MMGXjGjBL3tQfy8
+         537lS5kxtZrY9X0agbW+fq+ASnx+ufvq5xYa5fBh5z/aOOGPSrTa23sW4U1ceMrhFzSK
+         J4cuZa2LhzUuuEnzgxPFjP4K8a/30hM5cSK5Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cAPX6D2qzJW+cM4TwCNFgYllwmjivb9JxeuNDMu8OqY=;
-        b=SjNWRTExzOsJo/8X3Oz4em2P+Hx9VOAucwRTOwvpYMfWa3WWbIeIeV986g3JX+2aOe
-         BsrcF5XefhX7TDbz5Z6AdInAqphm8P2PZYrxpH6qyhXLp7e5YfdkkRh2Mg8FE59RsFPK
-         ixsZDqDy5coMPPkbf6rCfwRbnM1ZXI0aaWLy4z25qkohEAr/llrOUQL2fm/vLcrNoL6+
-         fIUK0whYl2gButoWZa1bvcL2FMGi0U/cxuG9C3LWBbS5FVWq1NjbMj8nqtgzttVfN+EK
-         TQZ1v2iKjSAH7wWvdSVUQj0tXrykYd38KbdWLzwsHzC24uVrVWLOpM5Uq9Io385k5nLE
-         kD+A==
-X-Gm-Message-State: AOAM5315wzgUDT2q4/zxS0URkjC3Zwt7fGx5ZDt2/CV4bp4brl8s6MrZ
-        k/TY9nvwAftjnLEfxUcsj3T4CghUKL0=
-X-Google-Smtp-Source: ABdhPJzj4zgIDD/7qY6szboPvWpWjPCrmFgpaapdZ8cQMmuJnqsLKWM/UU/+vw2kRylnHv/CMYglwQ==
-X-Received: by 2002:a63:6542:: with SMTP id z63mr10058026pgb.317.1596764561531;
-        Thu, 06 Aug 2020 18:42:41 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h12sm10507294pfr.143.2020.08.06.18.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 18:42:40 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 18:39:03 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Steev Klimaszewski <steev@kali.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
- IRQCHIP_PLATFORM_DRIVER helper macros
-Message-ID: <20200807013903.GG20825@builder.lan>
-References: <20200718000637.3632841-1-saravanak@google.com>
- <20200718000637.3632841-3-saravanak@google.com>
- <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
- <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
- <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org>
- <78ad0914-6173-f753-9eba-b7cbfbb51fd6@kali.org>
- <CALAqxLXPN9kThwF32YoWyApaWnfjthANXj3uk65Wc3ddaJQFFQ@mail.gmail.com>
- <20200807004001.GF20825@builder.lan>
- <CALAqxLWwY00PVUL7EM-tgbXeB5h8MsfPo7EFZTfDSzbb3P3eqQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cD8jsk4+SBG8xPQfCCj2wmUpFVhawKwctfW4av5cjwU=;
+        b=VB7Q7tuBvQkW0v3NMLJpAk37getbBdx6bDUFShc6kNL91vYH0GVkbYbqqryPZ+zR+4
+         k0GA+dn2AuTS8uIOsZCQGFTOr2boiM8FwsZQlKbkRSBDH8pFKp16yaUApFMrLWMUAjIQ
+         gcDxOiwB5QwjEnjrUI13cvGa/xATgNC6oAOkxbh6KV6ee9Xmr/RCAGg+EVa1c5dlNKxk
+         XNb9bcfi1yCKm+K/AQ6PiJP7IRUUDivU2pOhrx5VeT46U6gGF8tTI2LpEB3NwQA87pn2
+         BDhZemVH04JotBC2t4MiF0rgDWBwA1IFLKCaifBwnxn+UebSmK0995sRy6eAYTexGTgm
+         XMeg==
+X-Gm-Message-State: AOAM530CMdO6pirXP7ndWGpEAiBIavTGT55b6T8O1vRiXGSD7s3XUUV7
+        53bnd0F/waT791LQ7JnslwnGtYVTmr+KOMEMNLajtDvH
+X-Google-Smtp-Source: ABdhPJw8niI7X7Sw8klc/4xbPNLsxrK/3t5hOTwIymbgO2pDc9aWiI0yYJOrcmGNz7OW7xrCLVM1Q6LDAFSnP9cYNMA=
+X-Received: by 2002:a17:907:208e:: with SMTP id pv14mr7578996ejb.438.1596765034757;
+ Thu, 06 Aug 2020 18:50:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLWwY00PVUL7EM-tgbXeB5h8MsfPo7EFZTfDSzbb3P3eqQ@mail.gmail.com>
+References: <20200710144520.RESEND.1.Id0f52f486e277b5af30babac8ba6b09589962a68@changeid>
+ <20200710070332.GA1175842@kroah.com> <CANMq1KDcKWgyYYP_m0-WV7602g7zUbU0PPkvwXxbSTF5vFfKGQ@mail.gmail.com>
+In-Reply-To: <CANMq1KDcKWgyYYP_m0-WV7602g7zUbU0PPkvwXxbSTF5vFfKGQ@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 7 Aug 2020 09:50:23 +0800
+Message-ID: <CANMq1KC7CgUT+neoOUZbnr8MbDgqEikqt2vn8dxAS1rpX=C2aA@mail.gmail.com>
+Subject: Re: [RESEND PATCH] media: atomisp: Replace trace_printk by pr_info
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 06 Aug 18:22 PDT 2020, John Stultz wrote:
-
-> On Thu, Aug 6, 2020 at 5:43 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> > On Wed 05 Aug 14:57 PDT 2020, John Stultz wrote:
-> > > On Wed, Aug 5, 2020 at 2:47 PM Steev Klimaszewski <steev@kali.org> wrote:
-> > > > On 8/5/20 4:16 PM, Steev Klimaszewski wrote:
-> > > > > On 8/5/20 3:19 PM, Saravana Kannan wrote:
-> > > > >> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> wrote:
-> > > > >>> <sigh>
-> > > > >>> So this is where I bashfully admit I didn't get a chance to try this
-> > > > >>> patch series out, as I had success with a much older version of
-> > > > >>> Saravana's macro magic.
-> > > > >>>
-> > > > >>> But unfortunately, now that this has landed in mainline, I'm seeing
-> > > > >>> boot regressions on db845c. :( This is in the non-modular case,
-> > > > >>> building the driver in.
-> > > > >> Does that mean the modular version is working? Or you haven't tried
-> > > > >> that yet? I'll wait for your reply before I try to fix it. I don't
-> > > > >> have the hardware, but it should be easy to guess this issue looking
-> > > > >> at the code delta.
-> > > > > For what it's worth, I saw this too on the Lenovo C630 (started on -next
-> > > > > around 20200727, but I didn't track it down as, well, there's less way
-> > > > > to get debug output on the C630.
-> > > > >
-> > > > > In my testing, module or built-in doesn't matter, but reverting does
-> > > > > allow me to boot again.
-> > > > >
-> > > > Actually - I spoke too soon - QCOM_PDC built-in with the commit reverted
-> > > > boots, however, module (on the c630 at least) doesn't boot whether it's
-> > > > a module or built-in.
+On Fri, Jul 24, 2020 at 8:41 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> On Fri, Jul 10, 2020 at 3:03 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Jul 10, 2020 at 02:45:29PM +0800, Nicolas Boichat wrote:
+> > > trace_printk should not be used in production code, replace it
+> > > call with pr_info.
 > > >
-> > > You may need to set deferred_probe_timeout=30 to give things a bit
-> > > more grace time to load.
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > ---
+> > > Sent this before as part of a series (whose 4th patch was a
+> > > change that allows to detect such trace_printk), but maybe it's
+> > > easier to get individual maintainer attention by splitting it.
 > >
-> > With the risk of me reading more into this than what you're saying,
-> > please don't upstream anything that depend this parameter to be
-> > increased.
+> > Mauro should take this soon:
 > >
-> > Compiling any of these drivers as module should not require the user to
-> > pass additional kernel command line parameters in order to get their
-> > device to boot.
-> 
-> So, ideally I agree, and Saravana's fw_devlink work should allow us to
-> avoid it. But the reality is that it is already required (at least in
-> configurations heavily using modules) to give more time for modules
-> loaded to resolve missing dependencies after init begins (due to
-> changes in the driver core to fail loading after init so that optional
-> dt links aren't eternally looked for). This was seen when trying to
-> enable the qualcom clk drivers to modules.
-> 
+> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> Mauro: did you get a chance to look at this? (and the other similar
+> patch "media: camss: vfe: Use trace_printk for debugging only")
 
-So to clarify what you're saying, any system that boots successfully
-with the default options is a sign of pure luck - regardless of being
-builtin or modules.
+Mauro: Another gentle ping. Thanks.
 
-
-And there you have my exact argument against the deferred timeout magic
-going on in the driver core. But as you know people insist that it's
-more important to be able to boot some defunct system from NFS than a
-properly configured one reliably.
-
-> It doesn't seem necessary in this case, but I suggested it here as
-> I've got it enabled by default in my AOSP builds so that the
-> module-heavy configs for GKI boot properly (even if Saravana's
-> fw_devlink work is disabled).
-> 
-
-With all due respect, that's your downstream kernel, the upstream kernel
-should not rely on luck, out-of-tree patches or kernel parameters.
-
-Regards,
-Bjorn
+> Thanks!
