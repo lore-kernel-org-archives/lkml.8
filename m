@@ -2,265 +2,114 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63916C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3879A22D03
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FAC12177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FbP0RxUp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5fGpkuV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgHGVar (ORCPT
+        id S1726648AbgHGVdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 17:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53486 "EHLO
+        Fri, 7 Aug 2020 17:33:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgHGV3l (ORCPT
+        with ESMTP id S1725893AbgHGVdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 17:29:41 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B61BC061A27
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:29:41 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id z1so2377047qkg.23
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:29:41 -0700 (PDT)
+        Fri, 7 Aug 2020 17:33:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B203CC061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:33:22 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a15so2870353wrh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:33:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Xwhl6oTAS7prpbXCRZdZshg5xz57JrEbZ056Cu9NiLQ=;
-        b=FbP0RxUpuIXc9TPHeycYqgrsWHy+edJZOunO3xzH9xgd3XMesTsydOHKMec+qxUJFA
-         FlXnrJi21QCaDcqgirJGJT0eBkQ0v3Vq6LIzdTyTYf6I4CV8iPofNCGuawph3tfsMnfh
-         rVST9SGjyClH8eIIJqualzLP+dJgXyLWWuF3VRTq6ejnpWajSiynlSZz5Y285bh+tnSW
-         ZxEvaLhRHfrOvoRGHyx1uzFMrik/lFM8Yi0f5EOQG7sM80OuBBVAKF1eI2Nt5evM5J/V
-         ZSfJtPKRCyz4Ary7BmVgPJgTRfuuh+/bHoAJlAFzxb/0O1Zu489t0ofM9yH0JSH6UL05
-         9KPA==
+        bh=Kb51K/JMx93SnPedI+EIdFTSAF1IqBeo/q6vamdS4A8=;
+        b=j5fGpkuVmHIE5Ps7zFBfy2Pdo1F76BJ2oz5uWWb95k6tuAOeu9Lp4hnY+11pqXqX1f
+         eW1WZpc91IM6WYWcp4j7Pc0/kUgOqrwv13XpEAuwqgjmvnwoIIzpfOy3OE4k4/KCmI8w
+         ra9stYzuUfw82bKAJG8gGxGsX6WJE2a3T138c12Td/HoyQKB2GU84ST0lk/zf/LbdF/d
+         IBWP4IIg1oHczrZH/o2MdqLogojr6xaCupKt9SwIPIiPSkUipTJx5ONXLtq+8Og5YlNT
+         8S80SBjxPsK8ALFVuDrRJDapxKxuC1Z1yAZquhI6AWArhrAHO3gS9bAYqZpoMK3/hxu6
+         mVPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Xwhl6oTAS7prpbXCRZdZshg5xz57JrEbZ056Cu9NiLQ=;
-        b=KBpZiK2xUCsWiITid8cXziPdk5OUFVrrlVoTFraILQ+2MT/2tddwliLUOgYdgu/bVT
-         Us+/1FpzyuZMIyJ5hrmrTcc3fcGqGAruu73+DWyxbH/136Ey2/MW9LiQpp7PpSDBAAnp
-         75y7lmZS95mzkEc3Z8EO46TtRZiBmFPsnhO9GPU04bMxaCAXIL4bzubTMx4JI+oNqOvQ
-         nXO4N7MnUzgtbT9YmiroaYz6Zt50VN9T313Gw1RcDciNn9KUhj8XE/isQmBv7ysCqRSb
-         uNlWDtaNDj+IE/fMFrGgVCtvDpxwmfkriTmIHSUgO+wIDoxpkTtE54uK76aQGYMv/Alg
-         tr0g==
-X-Gm-Message-State: AOAM531bs51YffaZKM6oIOlxjKyr+WpZH/z2VYHWX1wP0cjZAl+iT2nQ
-        jGAVokvBlbnW9iY6diexh2ezdzejMIsB1uuifrFp9/uFZ6yMQjOhzkiTzMdWQGMUi1NOSTUbUQ2
-        KrnJ20CmfWzFiNMMtuQQiSsM2SPPfLTAldkONQdww3kXaSBxW/UeL7FGOZT6iDL/tB3d7JtU=
-X-Google-Smtp-Source: ABdhPJyLLX7R17IOCOR3CY0ZoHgSxM9yzJvgcbYl6HaF+KCt80M13Jn4ki0ErUlYpRFS5LWuyydOwJIuc87a
-X-Received: by 2002:ad4:5502:: with SMTP id az2mr16402089qvb.148.1596835779896;
- Fri, 07 Aug 2020 14:29:39 -0700 (PDT)
-Date:   Fri,  7 Aug 2020 14:29:12 -0700
-In-Reply-To: <20200807212916.2883031-1-jwadams@google.com>
-Message-Id: <20200807212916.2883031-4-jwadams@google.com>
-Mime-Version: 1.0
-References: <20200807212916.2883031-1-jwadams@google.com>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [RFC PATCH 3/7] core/metricfs: metric for kernel warnings
-From:   Jonathan Adams <jwadams@google.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jim Mattson <jmattson@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kb51K/JMx93SnPedI+EIdFTSAF1IqBeo/q6vamdS4A8=;
+        b=CX76/v7U6RezzJF8EE1sA/NPZZ/n5+HhhpbeeKEtvb4tAUa/FV3LCp9rjnSGmfExJO
+         cePM0cGA/NJzNl+imogAQb+Yv6ES22rFuFsAzHNmiVzNeWuqWhCfaAZzS3lfpzeXvIeA
+         GgqxAKSxZu3g57nzuvFLjTe7OSs9ySGJkFanONQQyzLxXrkK/v38IB3vQ6v6WuXK0UNz
+         tOPcwsuwoe38+PfyB6y0lwbtIP35waBs67K4w7GPeFi2Rfs2g1ADSFIXGNxZJ6Upr8q3
+         dhzPwpW/+ERE29wO64g/7t7WiNN77ECScGczACXa+Mbj2iEkvSb3HV5/zdz4TaN7BpRj
+         y5jg==
+X-Gm-Message-State: AOAM530GA8HCUzS7Jv/QfxniRzspSubIWeR34p3/n9APsbS01RyQO+Cc
+        1ZYPwQ0n2puF/zS8G0S6LsTt4hSmCOpqdjj9gVGeRQ==
+X-Google-Smtp-Source: ABdhPJxXQmEyH/oQ6CHELZFCo1U1iD2D6vbAatj8wgGfSPKfqffSXXd1hCvHhnXMVMh8U7IDXpV1HbyO9BWtNAzpZjA=
+X-Received: by 2002:adf:f511:: with SMTP id q17mr9909904wro.414.1596836001220;
+ Fri, 07 Aug 2020 14:33:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200806094440.14962-1-98.arpi@gmail.com> <CAHp75Vdpyr=LiOsjgoJ1YscrvFwivtfg58dePtF9aQDYp6V9-A@mail.gmail.com>
+In-Reply-To: <CAHp75Vdpyr=LiOsjgoJ1YscrvFwivtfg58dePtF9aQDYp6V9-A@mail.gmail.com>
+From:   David Gow <davidgow@google.com>
+Date:   Sat, 8 Aug 2020 05:33:09 +0800
+Message-ID: <CABVgOSmXFZL+uxKY9yAn9JVzChZxQDsucSQGAGBxM6OpOkCwJg@mail.gmail.com>
+Subject: Re: [PATCH] lib: Convert test_hexdump.c to KUnit
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Arpitha Raghunandan <98.arpi@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Count kernel warnings by function name of the caller.
+On Thu, Aug 6, 2020 at 5:53 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Aug 6, 2020 at 12:48 PM Arpitha Raghunandan <98.arpi@gmail.com> wrote:
+> >
+> > Converts test lib/test_hexdump.c to KUnit.
+> > More information about KUnit can be found at
+> > https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
+> > KUnit provides a common framework for unit tests in the kernel.
+>
+> > -config TEST_HEXDUMP
+> > -       tristate "Test functions located in the hexdump module at runtime"
+>
+> We have a nice collection of tests starting with TEST_ in the
+> configuration, now it's gone.
+> I'm strongly against this change.
+> Code itself okay, but without addressing above - NAK.
+>
 
-Each time WARN() is called, which includes WARN_ON(), increment a counter
-in a 256-entry hash table. The table key is the entry point of the calling
-function, which is found using kallsyms.
+This change is to make the test naming compliant with the proposed
+KUnit test naming guidelines:
+- https://lore.kernel.org/linux-kselftest/20200702071416.1780522-1-davidgow@google.com/
 
-We store the name of the function in the table (because it may be a
-module address); reporting the metric just walks the table and prints
-the values.
+The hope is that tests built on KUnit will all end up with the same
+[x]_KUNIT_TEST config options (which at least preserves the
+consistency of the test naming, even if they'll not all sort
+together), and should make it easier for people to know that the test
+results will be in a common format, and that the test can also be run
+using the KUnit tools.
 
-The "warnings" metric is cumulative.
-
-Signed-off-by: Jonathan Adams <jwadams@google.com>
-
----
-
-jwadams@google.com: rebased to 5.8-rc6, removed google-isms,
-	added lockdep_assert_held(), NMI handling, ..._unknown*_counts
-	and locking in warn_tbl_fn(); renamed warn_metric... to
-	warn_tbl...
-
-	The original work was done in 2012 by an engineer no longer
-	at Google.
----
- kernel/panic.c | 131 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
-
-diff --git a/kernel/panic.c b/kernel/panic.c
-index e2157ca387c8..c019b41ab387 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -31,6 +31,9 @@
- #include <linux/bug.h>
- #include <linux/ratelimit.h>
- #include <linux/debugfs.h>
-+#include <linux/utsname.h>
-+#include <linux/hash.h>
-+#include <linux/metricfs.h>
- #include <asm/sections.h>
- 
- #define PANIC_TIMER_STEP 100
-@@ -568,6 +571,133 @@ void oops_exit(void)
- 	kmsg_dump(KMSG_DUMP_OOPS);
- }
- 
-+#ifdef CONFIG_METRICFS
-+
-+/*
-+ * Hash table from function address to count of WARNs called within that
-+ * function.
-+ * So far this is an add-only hash table (ie, entries never removed), so some
-+ * simplifying assumptions are made.
-+ */
-+#define WARN_TBL_BITS (8)
-+#define WARN_TBL_SIZE (1<<WARN_TBL_BITS)
-+static struct {
-+	void *function;
-+	int count;
-+	char function_name[KSYM_NAME_LEN];
-+} warn_tbl[WARN_TBL_SIZE];
-+
-+static DEFINE_SPINLOCK(warn_tbl_lock);
-+static atomic_t warn_tbl_unknown_lookup_count = ATOMIC_INIT(0);
-+static atomic_t warn_tbl_unknown_nmi_count = ATOMIC_INIT(0);
-+static int warn_tbl_unknown_count;
-+
-+/*
-+ * Find the entry corresponding to the given function address.
-+ * Insert a new entry if one doesn't exist yet.
-+ * Returns -1 if the hash table is full.
-+ */
-+static int tbl_find(void *caller_function)
-+{
-+	int entry, start_entry;
-+
-+	lockdep_assert_held(&warn_tbl_lock);
-+
-+	start_entry = hash_ptr(caller_function, WARN_TBL_BITS);
-+	entry = start_entry;
-+	do {
-+		if (warn_tbl[entry].function == caller_function)
-+			return entry;
-+		if (warn_tbl[entry].function == NULL) {
-+			if (!kallsyms_lookup((unsigned long)caller_function,
-+					NULL, NULL, NULL,
-+					warn_tbl[entry].function_name))
-+				return -1;
-+			warn_tbl[entry].function = caller_function;
-+			return entry;
-+		}
-+		entry = (entry + 1) % (WARN_TBL_SIZE);
-+	} while (entry != start_entry);
-+
-+	return -1;
-+}
-+
-+static void tbl_increment(void *caller)
-+{
-+	void *caller_function;
-+	unsigned long caller_offset;
-+	unsigned long flags;
-+	int entry;
-+
-+	if (!kallsyms_lookup_size_offset(
-+			(unsigned long)caller, NULL, &caller_offset)) {
-+		atomic_inc(&warn_tbl_unknown_lookup_count);
-+		return;
-+	}
-+	/* use function entrypoint */
-+	caller_function = caller - caller_offset;
-+
-+	if (in_nmi()) {
-+		if (!spin_trylock_irqsave(&warn_tbl_lock, flags)) {
-+			atomic_inc(&warn_tbl_unknown_nmi_count);
-+			return;
-+		}
-+	} else {
-+		spin_lock_irqsave(&warn_tbl_lock, flags);
-+	}
-+	entry = tbl_find(caller_function);
-+	if (entry >= 0)
-+		warn_tbl[entry].count++;
-+	else
-+		warn_tbl_unknown_count++;
-+
-+	spin_unlock_irqrestore(&warn_tbl_lock, flags);
-+}
-+
-+/*
-+ * Export the hash table to metricfs.
-+ */
-+static void warn_tbl_fn(struct metric_emitter *e)
-+{
-+	int i;
-+	unsigned long flags;
-+	int unknown_count = READ_ONCE(warn_tbl_unknown_count) +
-+		atomic_read(&warn_tbl_unknown_nmi_count) +
-+		atomic_read(&warn_tbl_unknown_lookup_count);
-+
-+	if (unknown_count != 0)
-+		METRIC_EMIT_INT(e, unknown_count, "(unknown)", NULL);
-+
-+	spin_lock_irqsave(&warn_tbl_lock, flags);
-+	for (i = 0; i < WARN_TBL_SIZE; i++) {
-+		unsigned long fn = (unsigned long)warn_tbl[i].function;
-+		const char *function_name = warn_tbl[i].function_name;
-+		int count = warn_tbl[i].count;
-+
-+		if (!fn)
-+			continue;
-+
-+		// function_name[] is constant once function is non-NULL
-+		spin_unlock_irqrestore(&warn_tbl_lock, flags);
-+		METRIC_EMIT_INT(e, count, function_name, NULL);
-+		spin_lock_irqsave(&warn_tbl_lock, flags);
-+	}
-+	spin_unlock_irqrestore(&warn_tbl_lock, flags);
-+}
-+METRIC_EXPORT_COUNTER(warnings, "Count of calls to WARN().",
-+		      "function", NULL, warn_tbl_fn);
-+
-+static int __init metricfs_panic_init(void)
-+{
-+	metric_init_warnings(NULL);
-+	return 0;
-+}
-+late_initcall(metricfs_panic_init);
-+
-+#else  /* CONFIG_METRICFS */
-+inline void tbl_increment(void *caller) {}
-+#endif
-+
- struct warn_args {
- 	const char *fmt;
- 	va_list args;
-@@ -576,6 +706,7 @@ struct warn_args {
- void __warn(const char *file, int line, void *caller, unsigned taint,
- 	    struct pt_regs *regs, struct warn_args *args)
- {
-+	tbl_increment(caller);
- 	disable_trace_on_warning();
- 
- 	if (file)
--- 
-2.28.0.236.gb10cc79966-goog
-
+The naming guidelines haven't been upstreamed yet, though, so we'd
+definitely appreciate input on that thread if you've got comments more
+broadly than for this particular patch. Ultimately, I don't think it
+matters too much what we end up using, but having some consistency is
+the goal.
