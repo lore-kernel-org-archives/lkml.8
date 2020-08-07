@@ -2,90 +2,135 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2233DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A87372074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE0772074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve3N/HXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgHGUFi (ORCPT
+        id S1726238AbgHGUJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:05:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16010 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgHGUFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:05:38 -0400
-IronPort-SDR: iaVY8ZioFqIRfmMdYAlGAAF4NJih1v8u1knjiI/dbOP3EpeJAs5IEDiPF6hWzZ+TmQg79sjBnT
- lFLet/7m9Rbw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9706"; a="152397697"
-X-IronPort-AV: E=Sophos;i="5.75,446,1589266800"; 
-   d="scan'208";a="152397697"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2020 13:05:38 -0700
-IronPort-SDR: iN9afJV0a8iKNGDrKwlY/zfIRTfZOsKW1t/FEpub7fHuyHY/ALiRqNmEgG/cOqSeiy78Jgvoay
- show9POj62vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,446,1589266800"; 
-   d="scan'208";a="275462904"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2020 13:05:38 -0700
-Date:   Fri, 7 Aug 2020 13:05:38 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH v3 33/38] virtio_pmem: convert to LE accessors
-Message-ID: <20200807200537.GD2467625@iweiny-DESK2.sc.intel.com>
-References: <20200805134226.1106164-1-mst@redhat.com>
- <20200805134226.1106164-34-mst@redhat.com>
+        Fri, 7 Aug 2020 16:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGUJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:09:09 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F7EC061756;
+        Fri,  7 Aug 2020 13:09:08 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l64so2847648qkb.8;
+        Fri, 07 Aug 2020 13:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=v6shjW3mv0CzotYibzehFT5/hINT+XFxzYyCDrE83Dc=;
+        b=Ve3N/HXwsKv8ySPPGskSnRr5Uacjl8x1Kputs8iftdehBMa8UVQ30VCtrkGpg4pA1J
+         fIoi7mUMWwDUbL7lEeZUzkTSYGzk+kavkV3YwUrCg/Mwi3/cIdkw99a23kUQ7rCks1JB
+         iNXh7CbDevDlHYGKRcsjuxVLIdZXq2glnT7xi9PaTrPbe0nPQ0ZKS+DRaz/K/n9+sm/d
+         t3DWG4TtMRUPtUs1Mx8bhJOie6SGgh6iidRRoOxIxioT+YZ1N2ydkIJpRx8FGnVP8Kcb
+         6kPOrnKsaXZ70kQ0DYDruyvlDh4M8PC44n/c9Fr6354XzrS8/QYdmCjbtOcok5at1VYm
+         6ILQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v6shjW3mv0CzotYibzehFT5/hINT+XFxzYyCDrE83Dc=;
+        b=GHzdK+x32F4QVXwpqujAG2jNBg9RHkJuSMJp/VjLrK1sp9Yj8XzWH1ubAE+qQ676gg
+         9i2LFrcC9GJMfDF30vFQ//CYPF5PjIDkYWLEP2aj16sPAE4isEuti5BuP79RwUfwpaXL
+         EW6hnPWeXDfSEzJmxMyLojWvlx9Eoyb0TcV8pj9fZRXa5kOwemyF/BtXkwYRzHEMiYSJ
+         /8AWjBcmLtcPVyPde42uAgquczsjcSzmT0tDZML0zEXeWWkaCEswrvWNNx4pz/HoQ+Nw
+         yeVmDVa8r8Q9oEf7skudFxLfkSsoqSwNoKOoEq5a81QlkqirNX0MHq++yL4zup6DifW+
+         7BBA==
+X-Gm-Message-State: AOAM530tQXgDsCQIkW9VU8GV65A0tZLGKsQHzL/OG3PuTHhzeOMERYw6
+        xxg/NGJxJ4urPTAfbf45/3M=
+X-Google-Smtp-Source: ABdhPJxg6bRetxEVAOaiKqqoKUtFx4kiO3EkBtA3TT/yB2Ood5h2cAJoMzEOKPTQ/EC5B8xE+zcKBg==
+X-Received: by 2002:a37:a6c3:: with SMTP id p186mr14827311qke.135.1596830947429;
+        Fri, 07 Aug 2020 13:09:07 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id n127sm8006909qke.29.2020.08.07.13.09.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 13:09:06 -0700 (PDT)
+Subject: Re: [PATCH] drivers: watchdog: rdc321x_wdt: Fix race condition bugs
+To:     Guenter Roeck <linux@roeck-us.net>, madhuparnabhowmik10@gmail.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
+        ldv-project@linuxtesting.org
+References: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com>
+ <20200807162141.GA41980@roeck-us.net>
+ <8dca64a1-8cd9-6a41-b61d-1c4c14e5cd5e@gmail.com>
+ <bc8c5d7d-91a4-e955-854f-eef88812ac1a@roeck-us.net>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <1b9db5ad-0edf-091b-a04e-a8f3a6ac08e2@gmail.com>
+Date:   Fri, 7 Aug 2020 13:09:02 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805134226.1106164-34-mst@redhat.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <bc8c5d7d-91a4-e955-854f-eef88812ac1a@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 09:44:45AM -0400, Michael S. Tsirkin wrote:
-> Virtio pmem is modern-only. Use LE accessors for config space.
-> 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/nvdimm/virtio_pmem.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
-> index 5e3d07b47e0c..726c7354d465 100644
-> --- a/drivers/nvdimm/virtio_pmem.c
-> +++ b/drivers/nvdimm/virtio_pmem.c
-> @@ -58,9 +58,9 @@ static int virtio_pmem_probe(struct virtio_device *vdev)
->  		goto out_err;
->  	}
->  
-> -	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> +	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
->  			start, &vpmem->start);
-> -	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> +	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
->  			size, &vpmem->size);
 
-FWIW I think squashing patch 15/38 and this patch would have made more sense.
 
-Acked-by: Ira Weiny <ira.weiny@intel.com>
-
->  
->  	res.start = vpmem->start;
-> -- 
-> MST
+On 8/7/2020 12:08 PM, Guenter Roeck wrote:
+> On 8/7/20 11:08 AM, Florian Fainelli wrote:
+>>
+>>
+>> On 8/7/2020 9:21 AM, Guenter Roeck wrote:
+>>> On Fri, Aug 07, 2020 at 04:59:02PM +0530, madhuparnabhowmik10@gmail.com wrote:
+>>>> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>>>>
+>>>> In rdc321x_wdt_probe(), rdc321x_wdt_device.queue is initialized
+>>>> after misc_register(), hence if ioctl is called before its
+>>>> initialization which can call rdc321x_wdt_start() function,
+>>>> it will see an uninitialized value of rdc321x_wdt_device.queue,
+>>>> hence initialize it before misc_register().
+>>>> Also, rdc321x_wdt_device.default_ticks is accessed in reset()
+>>>> function called from write callback, thus initialize it before
+>>>> misc_register().
+>>>>
+>>>> Found by Linux Driver Verification project (linuxtesting.org).
+>>>>
+>>>> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>>>
+>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>>
+>>> Having said that ... this is yet another potentially obsolete driver.
+>>> You are really wasting your (and, fwiw, my) time.
+>>>
+>>> Florian, any thoughts if support for this chip can/should be deprecated
+>>> or even removed ?
+>>
+>> I am still using my rdc321x-based SoC, so no, this is not obsolete as
+>> far as I am concerned, time permitting, modernizing the driver is on my
+>> TODO after checking/fixing the Ethernet driver first.
+>>
 > 
+> Do you have a manual ? I'd give it a try if you can test it - conversion
+> should be simple enough (I have a coccinelle script which partially
+> automates it), but this chip seems to have a fast timeout, and the
+> comments in the code ("set the timeout to 81.92 us") seem to be quite
+> obviously wrong.
+
+Yes, there is a public manual for that SoC, search for RDC R8610 and the
+first link you find should be a 276 page long manual for the SoC.
+
+I probably won't be able to test anything until the middle of next week
+though.
+--
+Florian
