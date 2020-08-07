@@ -2,104 +2,169 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B157DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D830CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF6A206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A271C206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qlCBun+h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCUz+KQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgHGJjp (ORCPT
+        id S1728155AbgHGJkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57542 "EHLO
+        Fri, 7 Aug 2020 05:40:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgHGJjl (ORCPT
+        with ESMTP id S1727053AbgHGJkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:39:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F7E8C061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 02:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+m1NmxTmerVA7hYyNCbbSvji27rWMrnyKtnC8SpXeuw=; b=qlCBun+hYZ3NXDb+jynUBPF5jC
-        h9Q8p+P3btJMKnRDYbi2BAa/sQ74mPob6WiFPQE7IgnqvAvjrylnmYcrWJF9imSnSE5vuAFnJW6mc
-        /y/aeZjjYDdFSGbNOSq2ne5dZoxfVeJSJGt1evL6K7pnXkBi+cEGjvymLKMqvmrbfThHYTlmX1cKW
-        Io2IvfmaI+W/P6SHIXiDMP87UdS6e+JDN+LOCBA1KZFBQ34DxczGekQV+vaYBzHAOYqOYYkcnRbly
-        B7oGexBlDV3M4ABknh2jvnraRpH0zOmNsZphbhXmzYDft4HfoPllAJsfVSOHfTQFQbje2Cz2bPhXY
-        Zk297Ehw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3yqO-0001GI-HQ; Fri, 07 Aug 2020 09:39:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC842300446;
-        Fri,  7 Aug 2020 11:39:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8E2DC23EA04DA; Fri,  7 Aug 2020 11:39:16 +0200 (CEST)
-Date:   Fri, 7 Aug 2020 11:39:16 +0200
-From:   peterz@infradead.org
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v3 4/7] x86/paravirt: remove 32-bit support from
- PARAVIRT_XXL
-Message-ID: <20200807093916.GF2674@hirez.programming.kicks-ass.net>
-References: <20200807083826.16794-1-jgross@suse.com>
- <20200807083826.16794-5-jgross@suse.com>
+        Fri, 7 Aug 2020 05:40:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EEDDC061575
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 02:40:06 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g8so1154438wmk.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 02:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2ygenASuFAVHeSxyfRvlwBCfbX67rwOVVS8/a2O5+lk=;
+        b=vCUz+KQVy1TVKykoi2FIr81nxc/Dlf66XKmkkyc6xVTHk6IfWWXk8aLggri1BoX4H4
+         sd7UJ6SnzD3ZBnabDJrahu1OR8ZiELVkKEruE9wzBCo49m6qx+FmF6bBcoSBGUFMB00H
+         ewDq5c8XABr7mfCaZs0P1qvsYSwa405Uz9XwsefdjgcGd1udB3OPZSKOY+4eLYUtFX68
+         DNPTHTwYSkcuLiQBDBZKukk/kijCebWpgd3EYFC/b37S9S6QEYFlwUP1voaQvpuX6AbT
+         YhwKAZVGHquNbMMhmdZu8YrzITupoPwk6x7lTE7yu1s302i33Rhvoyp3lM7Xk1yAiD7V
+         PbNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2ygenASuFAVHeSxyfRvlwBCfbX67rwOVVS8/a2O5+lk=;
+        b=SK7GcXWr31Y1NOG0ZmUWgk/mBWCCzg1b3q+V53jX2mVgzHmHV/poXZ18EKPiTbtyRV
+         w08tZcWru4Dkes7vXoLXPq/McLg/yIPlfN4X/VC/od4Sw+HFlmH5GSj94y/QGYQaeB3+
+         VJUV+Ziq2Vif4G4jztlLH7Vh96+svjMfRLHfSt1NAwoKxiG8t0KYOkBReyMNXkJ+VAIR
+         I0zhLpMQQSvJZPLhw8eVFWgg73c7wdXRBNUVc7ZGHGXp7y2cffQS6RyMjvVKLuHwmUzG
+         cY25RhoW/nhfw3pti+YCAY5xMVRU8Wfmj8r8pZfuNQm6sOkmz+595pcb/Fn95omUfMOx
+         s44A==
+X-Gm-Message-State: AOAM533z3BjDCDd4qpVq6D06t6d6DzKoK/Z5zeYM0KDg7K7zXfnzpWTp
+        M3vyfCZ9J6CQSwPA4l8ncBuhfg==
+X-Google-Smtp-Source: ABdhPJwuqQGf4ihtasBI+Gyuf4ZsDRFnz4dqvO8MH6E2ks+1/REokqPvz45ZuYKgSxuFeG9iFggAhA==
+X-Received: by 2002:a1c:7d55:: with SMTP id y82mr11787250wmc.186.1596793204726;
+        Fri, 07 Aug 2020 02:40:04 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f457:5fc1:5262:84c? ([2a01:e34:ed2f:f020:f457:5fc1:5262:84c])
+        by smtp.googlemail.com with ESMTPSA id o10sm9397248wrw.79.2020.08.07.02.40.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 02:40:04 -0700 (PDT)
+Subject: Re: [GIT PULL] RESEND: thermal for v5.9-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Colin King <colin.king@canonical.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Lukasz Luba <Lukasz.Luba@arm.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Henry Yen <henry.yen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+References: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
+ <CAHk-=wgLt61owJ_eKwy43bBujxy3-s=xQXwsSi6VHME7SiAgiA@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b903cdd8-cbb5-1a6a-3943-9bb019f1eed7@linaro.org>
+Date:   Fri, 7 Aug 2020 11:40:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807083826.16794-5-jgross@suse.com>
+In-Reply-To: <CAHk-=wgLt61owJ_eKwy43bBujxy3-s=xQXwsSi6VHME7SiAgiA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 10:38:23AM +0200, Juergen Gross wrote:
 
-> -# else
-> -	const unsigned char	cpu_iret[1];
-> -# endif
->  };
->  
->  static const struct patch_xxl patch_data_xxl = {
-> @@ -42,7 +38,6 @@ static const struct patch_xxl patch_data_xxl = {
->  	.irq_save_fl		= { 0x9c, 0x58 },	// pushf; pop %[re]ax
->  	.mmu_read_cr2		= { 0x0f, 0x20, 0xd0 },	// mov %cr2, %[re]ax
->  	.mmu_read_cr3		= { 0x0f, 0x20, 0xd8 },	// mov %cr3, %[re]ax
-> -# ifdef CONFIG_X86_64
->  	.mmu_write_cr3		= { 0x0f, 0x22, 0xdf },	// mov %rdi, %cr3
->  	.irq_restore_fl		= { 0x57, 0x9d },	// push %rdi; popfq
->  	.cpu_wbinvd		= { 0x0f, 0x09 },	// wbinvd
-> @@ -50,19 +45,11 @@ static const struct patch_xxl patch_data_xxl = {
->  				    0x48, 0x0f, 0x07 },	// swapgs; sysretq
->  	.cpu_swapgs		= { 0x0f, 0x01, 0xf8 },	// swapgs
->  	.mov64			= { 0x48, 0x89, 0xf8 },	// mov %rdi, %rax
-> -# else
-> -	.mmu_write_cr3		= { 0x0f, 0x22, 0xd8 },	// mov %eax, %cr3
-> -	.irq_restore_fl		= { 0x50, 0x9d },	// push %eax; popf
-> -	.cpu_iret		= { 0xcf },		// iret
-> -# endif
+Hi Linus,
 
-I was looking at x86_64 paravirt the other day and found we actually
-have pv_ops.cpu.iret users there..
 
-So we want to change the above to also patch iret on x86_64 or do we
-need to fix x86_64 to not have pv-iret?
+On 07/08/2020 04:43, Linus Torvalds wrote:
+> On Thu, Aug 6, 2020 at 1:19 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>>
+>>
+>> - Add generic netlink support for userspace notifications: events,
+>> temperature
+>>   and discovery commands (Daniel Lezcano)
+> 
+> This is "default y".
+> 
+> Why?
+> 
+> The help text doesn't explain either.
+> 
+> Please explain, or remove the default y. We don't add new features and
+> then try to force people to use them by enabling them by default.
+> 
+> "default y" is mainly for when something unconditional gets split up
+> and becomes conditional (so now "default y" means that you don't break
+> peoples setups when they don't even know what it is).
+> 
+> Alternatively, "default y" is for things that are make peoples lives
+> immeasurably better somehow, and it would be a crime to not enable it
+> because it's _so_ wonderful.
+
+Well, I won't argue the netlink notification is so that fantastic but it
+is a feature that was needed since a long time. A previous partial
+implementation was directly compiled-in and then removed [1] because
+there were no user as it is and we wanted to introduce a clean new
+notification framework based in our previous discussion at Linux
+Plumbers Conference [2] but that needed some cleanups of the thermal
+core code before.
+
+This netlink framework fulfills the needs of the thermal daemons for
+Intel, Android HAL and SoC vendors which are hacking the thermal
+framework or constantly polling the temperature.
+
+Because the compilation failed if CONFIG_NET=n, the Kconfig option was
+introduced afterwards [3]. It could have been directly handled in the
+code with a 'ifdef' directive without option but it sounded more
+convenient to at least give the opportunity to opt-out the notification.
+
+It defaults to 'y' because the previous (but unused) implementation was
+unconditionally compiled-in and because of the thermal users needs.
+
+Is default=y wrong given this history?
+
+ -- Daniel
+
+
+[1] https://patchwork.kernel.org/patch/11202093/
+[2]
+https://www.linuxplumbersconf.org/event/2/contributions/185/attachments/39/46/LPC_2018_Thermal-Srinivas-Rui.pdf
+[3]
+https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/commit/?h=thermal/next&id=5b8583d3bd7fc10cea07e4a5bfa59465758a39dc
+
+
+> So far, I'm not convinced we've ever hit that second case.
+> 
+> Convince me that the thermal layer is so magical that it really
+> warrants it. Tell me why and how my life is improved by enabling it.
+> 
+>              Linus
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
