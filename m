@@ -2,149 +2,211 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C72C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E912177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B772177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPOevBWg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gbhLZdiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgHGUNh (ORCPT
+        id S1726401AbgHGUO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgHGUNg (ORCPT
+        Fri, 7 Aug 2020 16:14:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32077 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725970AbgHGUO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:13:36 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA78CC061756;
-        Fri,  7 Aug 2020 13:13:36 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id x10so1609628ybj.13;
-        Fri, 07 Aug 2020 13:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NlOBWexyY0dInNPp/mSfboYY9fzvv33AGfW2HB+4EOM=;
-        b=aPOevBWgD0Rb9PDi95sWQVC4og7b6PK74p49d64mvkRGJtjnHeMWgmAoLl6M5PVFms
-         lrf6sra716RhvYwUs0oHi9ScRiR2oDqidZj3VanxfwhRjzo5D2/d+6MAPbYsOmdbtGzg
-         roz09lyy3QJvnVybwQqG0ZME24b9vJquEWUgaanktSmqILCXUXpYl1nXUfnU48HsAgjW
-         ulaMs4ze1Eh5pDu+htXxOxffsCRSTVX0j+tLO7Mr7917ghi8Z+TQG38yOngX8yN0flZc
-         0Y1hJY+M0QMEYGaoJOu1aCrT7gWnrr2oDuJHGiXxchcglcmu+ndG/lDxc1GHtzlNC2p6
-         VlmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NlOBWexyY0dInNPp/mSfboYY9fzvv33AGfW2HB+4EOM=;
-        b=Pq2o4bTHlxY9MLHJn5YLw37sOL35BRSEl3tyUDDh0e7NfQ2IdtkaihWxNkJI+e93qi
-         zr1FpiP1KkVh9pwIHgc8iHjGm47CZBL2i2dyW/NP4uspeuCXEJ5eEHkY0PgBBxmDJZvd
-         TnWg7auB99DI87vSsGBaUUUd6nAsToJ8meYuvTksPPgDKJ86qHC94wjSEB9qGSK99Xmi
-         MDKaZ/vdSNzB1u/q5uVPopKUhRUiNJ2ins/FcDK6y5SzlgH0WDPoDtrt9s0vSRoRKYJ/
-         gotQkZAo9A2yN9v2jmS7BZbvLC3hjwOGu/sREGCOJ+uQO7H5XlyUcuVB2EDaBTqMb5ba
-         IiJg==
-X-Gm-Message-State: AOAM531QBJJhqCv2csdN5m10C6YRl11HvGGTR+lSLQn5crQh6a+9dbfG
-        KGv15dJ7FoF+5T4hV7ElcgtqZEygOpXX4ENjFJU=
-X-Google-Smtp-Source: ABdhPJxWIoNXcSUcv/qMdTJM/8d2ZcqSOWxQZVAuYfWjwDUV58Dit91Vp7rR8Jm9fnHRs5ptwSuqPscUDJRO173oYOU=
-X-Received: by 2002:a25:824a:: with SMTP id d10mr23418559ybn.260.1596831215942;
- Fri, 07 Aug 2020 13:13:35 -0700 (PDT)
+        Fri, 7 Aug 2020 16:14:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596831294;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QsmSdkCrL05ggCwSUu92b6yNnGSlgdi5jfgLpMXvbbI=;
+        b=gbhLZdiZP3Iq6eDlfqe1zGo4Yvoc3rWpZ91B4E7kiT3tGznwDwrQrS8a8K+uh/ehzNwKVd
+        X4f1zJI/t0BNd/gdT3HsMtEswGK+1A6Vo+LLzCbT7WthgeAvBQSCuy/N2/X1HJq2ypuD9J
+        SgDlM1AUwmIf7cYMGFUfpUjHKK3nbx4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-OpsRlMl1MaagiEOmJ52jiw-1; Fri, 07 Aug 2020 16:14:52 -0400
+X-MC-Unique: OpsRlMl1MaagiEOmJ52jiw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF5BD57;
+        Fri,  7 Aug 2020 20:14:51 +0000 (UTC)
+Received: from gimli.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 69A605F207;
+        Fri,  7 Aug 2020 20:14:48 +0000 (UTC)
+Subject: [PATCH] vfio/type1: Add proper error unwind for vfio_iommu_replay()
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     alex.williamson@redhat.com
+Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 07 Aug 2020 14:14:48 -0600
+Message-ID: <159683127474.1965.16929121291974112960.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-References: <20200731061600.18344-1-Jianlin.Lv@arm.com> <20200807172016.150952-1-Jianlin.Lv@arm.com>
-In-Reply-To: <20200807172016.150952-1-Jianlin.Lv@arm.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 7 Aug 2020 13:13:25 -0700
-Message-ID: <CAEf4Bza2vJYRbzo2Qbx_XRBPsS-n3dxhOaK+vzjqrhb2wUaCnQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: fix segmentation fault of test_progs
-To:     Jianlin Lv <Jianlin.Lv@arm.com>
-Cc:     bpf <bpf@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 10:21 AM Jianlin Lv <Jianlin.Lv@arm.com> wrote:
->
-> test_progs reports the segmentation fault as below
->
-> $ sudo ./test_progs -t mmap --verbose
-> test_mmap:PASS:skel_open_and_load 0 nsec
-> ......
-> test_mmap:PASS:adv_mmap1 0 nsec
-> test_mmap:PASS:adv_mmap2 0 nsec
-> test_mmap:PASS:adv_mmap3 0 nsec
-> test_mmap:PASS:adv_mmap4 0 nsec
-> Segmentation fault
->
-> This issue was triggered because mmap() and munmap() used inconsistent
-> length parameters; mmap() creates a new mapping of 3*page_size, but the
-> length parameter set in the subsequent re-map and munmap() functions is
-> 4*page_size; this leads to the destruction of the process space.
->
-> Another issue is that when unmap the second page fails, the length
-> parameter to delete tmp1 mappings should be 3*page_size.
->
-> Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
-> ---
->  tools/testing/selftests/bpf/prog_tests/mmap.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
-> index 43d0b5578f46..2070cfe19cac 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mmap.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
-> @@ -192,7 +192,7 @@ void test_mmap(void)
->         /* unmap second page: pages 1, 3 mapped */
->         err = munmap(tmp1 + page_size, page_size);
->         if (CHECK(err, "adv_mmap2", "errno %d\n", errno)) {
-> -               munmap(tmp1, map_sz);
-> +               munmap(tmp1, 3 * page_size);
+The vfio_iommu_replay() function does not currently unwind on error,
+yet it does pin pages, perform IOMMU mapping, and modify the vfio_dma
+structure to indicate IOMMU mapping.  The IOMMU mappings are torn down
+when the domain is destroyed, but the other actions go on to cause
+trouble later.  For example, the iommu->domain_list can be empty if we
+only have a non-IOMMU backed mdev attached.  We don't currently check
+if the list is empty before getting the first entry in the list, which
+leads to a bogus domain pointer.  If a vfio_dma entry is erroneously
+marked as iommu_mapped, we'll attempt to use that bogus pointer to
+retrieve the existing physical page addresses.
 
-this is a good catch, thank you!
+This is the scenario that uncovered this issue, attempting to hot-add
+a vfio-pci device to a container with an existing mdev device and DMA
+mappings, one of which could not be pinned, causing a failure adding
+the new group to the existing container and setting the conditions
+for a subsequent attempt to explode.
 
->                 goto cleanup;
->         }
->
-> @@ -207,8 +207,8 @@ void test_mmap(void)
->         CHECK(tmp1 + page_size != tmp2, "adv_mmap4",
->               "tmp1: %p, tmp2: %p\n", tmp1, tmp2);
->
-> -       /* re-map all 4 pages */
-> -       tmp2 = mmap(tmp1, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
-> +       /* re-map all 3 pages */
-> +       tmp2 = mmap(tmp1, 3 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
->                     data_map_fd, 0);
+To resolve this, we can first check if the domain_list is empty so
+that we can reject replay of a bogus domain, should we ever encounter
+this inconsistent state again in the future.  The real fix though is
+to add the necessary unwind support, which means cleaning up the
+current pinning if an IOMMU mapping fails, then walking back through
+the r-b tree of DMA entries, reading from the IOMMU which ranges are
+mapped, and unmapping and unpinning those ranges.  To be able to do
+this, we also defer marking the DMA entry as IOMMU mapped until all
+entries are processed, in order to allow the unwind to know the
+disposition of each entry.
 
-"all 3 pages" is a lie, there are 4. I'd still want to work with all 4
-pages. How about we mmap() 4 pages of anonymous memory first, then do
-all the mmap() with MAP_FIXED, re-using that memory range. That will
-ensure that we are not stepping on any other allocated memory, right?
+Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/vfio/vfio_iommu_type1.c |   71 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 66 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index e1c00de50ff9..d60432569209 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -1424,13 +1424,16 @@ static int vfio_bus_type(struct device *dev, void *data)
+ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 			     struct vfio_domain *domain)
+ {
+-	struct vfio_domain *d;
++	struct vfio_domain *d = NULL;
+ 	struct rb_node *n;
+ 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+ 	int ret;
+ 
+ 	/* Arbitrarily pick the first domain in the list for lookups */
+-	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
++	if (!list_empty(&iommu->domain_list))
++		d = list_first_entry(&iommu->domain_list,
++				     struct vfio_domain, next);
++
+ 	n = rb_first(&iommu->dma_list);
+ 
+ 	for (; n; n = rb_next(n)) {
+@@ -1448,6 +1451,11 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 				phys_addr_t p;
+ 				dma_addr_t i;
+ 
++				if (WARN_ON(!d)) { /* mapped w/o a domain?! */
++					ret = -EINVAL;
++					goto unwind;
++				}
++
+ 				phys = iommu_iova_to_phys(d->domain, iova);
+ 
+ 				if (WARN_ON(!phys)) {
+@@ -1477,7 +1485,7 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 				if (npage <= 0) {
+ 					WARN_ON(!npage);
+ 					ret = (int)npage;
+-					return ret;
++					goto unwind;
+ 				}
+ 
+ 				phys = pfn << PAGE_SHIFT;
+@@ -1486,14 +1494,67 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 
+ 			ret = iommu_map(domain->domain, iova, phys,
+ 					size, dma->prot | domain->prot);
+-			if (ret)
+-				return ret;
++			if (ret) {
++				if (!dma->iommu_mapped)
++					vfio_unpin_pages_remote(dma, iova,
++							phys >> PAGE_SHIFT,
++							size >> PAGE_SHIFT,
++							true);
++				goto unwind;
++			}
+ 
+ 			iova += size;
+ 		}
++	}
++
++	/* All dmas are now mapped, defer to second tree walk for unwind */
++	for (n = rb_first(&iommu->dma_list); n; n = rb_next(n)) {
++		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
++
+ 		dma->iommu_mapped = true;
+ 	}
++
+ 	return 0;
++
++unwind:
++	for (; n; n = rb_prev(n)) {
++		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
++		dma_addr_t iova;
++
++		if (dma->iommu_mapped) {
++			iommu_unmap(domain->domain, dma->iova, dma->size);
++			continue;
++		}
++
++		iova = dma->iova;
++		while (iova < dma->iova + dma->size) {
++			phys_addr_t phys, p;
++			size_t size;
++			dma_addr_t i;
++
++			phys = iommu_iova_to_phys(domain->domain, iova);
++			if (!phys) {
++				iova += PAGE_SIZE;
++				continue;
++			}
++
++			size = PAGE_SIZE;
++			p = phys + size;
++			i = iova + size;
++			while (i < dma->iova + dma->size &&
++			       p == iommu_iova_to_phys(domain->domain, i)) {
++				size += PAGE_SIZE;
++				p += PAGE_SIZE;
++				i += PAGE_SIZE;
++			}
++
++			iommu_unmap(domain->domain, iova, size);
++			vfio_unpin_pages_remote(dma, iova, phys >> PAGE_SHIFT,
++						size >> PAGE_SHIFT, true);
++		}
++	}
++
++	return ret;
+ }
+ 
+ /*
 
->         if (CHECK(tmp2 == MAP_FAILED, "adv_mmap5", "errno %d\n", errno)) {
->                 munmap(tmp1, 3 * page_size); /* unmap page 1 */
-> @@ -226,7 +226,7 @@ void test_mmap(void)
->         CHECK_FAIL(map_data->val[2] != 321);
->         CHECK_FAIL(map_data->val[far] != 3 * 321);
->
-> -       munmap(tmp2, 4 * page_size);
-> +       munmap(tmp2, 3 * page_size);
->
->         /* map all 4 pages, but with pg_off=1 page, should fail */
->         tmp1 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
-> --
-> 2.17.1
->
