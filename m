@@ -2,528 +2,340 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA77C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0617521744
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF9A2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benboeckel.net header.i=@benboeckel.net header.b="IIXN0ZEp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LYfCFxOh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uvfVIB+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgHGQFg (ORCPT
+        id S1726582AbgHGQF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:05:36 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38157 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbgHGQFf (ORCPT
+        Fri, 7 Aug 2020 12:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGQF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:05:35 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 01F0C5C015B;
-        Fri,  7 Aug 2020 12:05:33 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Fri, 07 Aug 2020 12:05:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
-         h=date:from:to:cc:subject:message-id:reply-to:references
-        :mime-version:content-type:in-reply-to; s=fm2; bh=rh62IHl9YuHZMS
-        MJDKHRJ0mXg8EdwUrw/jArl6piTrE=; b=IIXN0ZEp6PVS5x9/Vp3EClz+FMoKgG
-        2fytp9seT0GAVNP2yYpORg0ZdNFbBgAfPMWKdJOllfCeUDeeX3aMXfM2pcDftCAm
-        n29O/UCWQx1bqqbsPFEetbvSHXMn2k6+g6l1F0CfODkuJNl8nUhntdvjRhmSkzJm
-        lNimf0BPddqumxje6VPjnW/+LHZf0LDoXGSNC6R3XS2dSkAiywSHJzbRQQnYhuzy
-        JF8v0o2kj97MpnfN+8h8asRiB0IaI2n4naTFYnVXtrDKcXwManwKARYpUa9Dq5lH
-        6+7cIcyNwnFGnv+qM3MCFRjKCH25bj4FZXvqQ2cTfrnCFHEhGSVs2w/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:reply-to:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=rh62IHl9YuHZMSMJDKHRJ0mXg8EdwUrw/jArl6piTrE=; b=LYfCFxOh
-        rQ7uc8XGjopHtYhkpp9uVoy0Y4r9/uY0nahRjctCPnq8Yf45SzmOiXaDFG+n8dIg
-        tGdx+GQ9RWvAY9BpYwreKLDbFIUqazSRvvvtCnrkH03KEY9tUxXtLWeBhhUaYpjX
-        wdzFjOSCoKgNZj1p6IbY9oZbnwcofXI/jJj6qONKcTvI+yZVTPyYev8gj7AUFl9m
-        IOENtWMlYIi2YPj+bXPTtLXB2ejsIVfs8L4eqQy5YAZcoK24RLntfr3pQY0uBm+2
-        StQfgertICrCiw+I96lJUq+60u8pH6V0H1Pp26TuQRZLKDFgJyz2u3g0ifvwkfMf
-        R75Mool6qx4Gpw==
-X-ME-Sender: <xms:zHstX4_tVZ-uxtptoxk5FFGPsR4gjUridEGX6Jzs69LCUmY4rcVF6w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedvgdelfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkrhhfgggtuggjfgesthdtredttderjeenucfhrhhomhepuegvnhcu
-    uehovggtkhgvlhcuoehmvgessggvnhgsohgvtghkvghlrdhnvghtqeenucggtffrrghtth
-    gvrhhnpeejtddvffehtefgkedtheevgfeileegfeehjedvhedtudeiteegtdeftdelvedv
-    ffenucfkphepieelrddvtdegrdduieekrddvfeefnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepmhgvsegsvghnsghovggtkhgvlhdrnhgvth
-X-ME-Proxy: <xmx:zHstXwu8zlQrEvLZuxjMn3oOFLDXLq14mXpctKCSXp3AOJdNqJkCzA>
-    <xmx:zHstX-BKfLRDpUdGagKGD_21OZCR7J-TR-QPLnqCjc-JYg5voBt6Cw>
-    <xmx:zHstX4eNlA8bWGhhBMxRuEu-SAct77Jc_YMohnia-SrmoaJW5QOTUA>
-    <xmx:zHstXyrEosFymwiFP8ikMsx6z-TEZYoBP3OxghwoKdHdLXj2kZdlVw>
-Received: from localhost (cpe-69-204-168-233.nycap.res.rr.com [69.204.168.233])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 61ABE3060067;
-        Fri,  7 Aug 2020 12:05:32 -0400 (EDT)
-Date:   Fri, 7 Aug 2020 12:05:31 -0400
-From:   Ben Boeckel <me@benboeckel.net>
-To:     David Howells <dhowells@redhat.com>
-Cc:     mtk.manpages@gmail.com, torvalds@linux-foundation.org,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] Add a manpage for watch_queue(7)
-Message-ID: <20200807160531.GA1345000@erythro.dev.benboeckel.internal>
-Reply-To: me@benboeckel.net
-References: <159681277616.35436.11229310534842613599.stgit@warthog.procyon.org.uk>
+        Fri, 7 Aug 2020 12:05:57 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABD01C061756;
+        Fri,  7 Aug 2020 09:05:57 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so1123838pgq.1;
+        Fri, 07 Aug 2020 09:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U9291qivNKpgVEDEE5X2wGA9mdOkciyzW4Rpmz8ZcwM=;
+        b=uvfVIB+/KuUNAGP3AxUfi+nXVU/MJHf6qX7E7CWuZEik+pzyXwAcIPCnwE7UdNNCUb
+         SM/v9rj6YkQ7ebms2ih66dVolWKXNIds/hiaxV3RDYBoiOj48bftndCnh38m+LFi/44q
+         +mJGWYJiwbwd3Wta0PPuiJHLPZ1OeXEMRDNlaBSvcJaT1qffPWtNVoSjjlQhXpYmPXcX
+         pxDdSu6DPD+XV0Fzf1mIjCcQsrTq1KM8xMwrZwBePMgwXv9YVMgvaPoIHVTE+nICDImV
+         hPfoXj3fqcYqKY2Kl22Fp2oSfecPEZnfhrVA5hnDMWUHglruFLrKqki8sBiX9T2TBM7p
+         TqGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U9291qivNKpgVEDEE5X2wGA9mdOkciyzW4Rpmz8ZcwM=;
+        b=R47ixLDsuVtRsbnlSkvLLcTe8AfWhoCVQJfM06RndONVGnbF6wvV3Q/oPQLs5pylsR
+         u4IRjX+x4uFFU03XpPAj7nV0gFXbZoLm9ybPnwjEUaeiI4wkuyQWDqn++Pp+WEIiOZy+
+         VX+sJt8S0LG6y906/BauClu391ZjCk4EU1v1c/15fH84V3QFDTOHDt9CQTPVXObJfVY5
+         lDG5zjd07+sfdzbFeKztpMDE5vfPJ3tncuE81tY1Ce667oe0T8SFW0QM6kkdDp40usUr
+         tylVKMXLTNfbiYtoTDAtizWVgp70IZOnKG6U+tWfgVHOp03Tg1jlzBqrSeAsr5GBQh4r
+         6AVA==
+X-Gm-Message-State: AOAM530o7hfh9mb3XjmQ4n64XSh/Y3YPd31srpiV8dy3KzUAuM2SpUsp
+        V94fIecQT/vi95ASNf0zep5e0ybk
+X-Google-Smtp-Source: ABdhPJx8NcWrG1hGbAL0Au2ubddILAkB8LGuh3r6W9/dB5B5FlIivQTyXh2v35f/UupBp1R6AwOASw==
+X-Received: by 2002:a63:e24d:: with SMTP id y13mr12483175pgj.248.1596816356844;
+        Fri, 07 Aug 2020 09:05:56 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r134sm13526558pfc.1.2020.08.07.09.05.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Aug 2020 09:05:56 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 09:05:54 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     alexandru.tachici@analog.com
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v7 3/9] hwmon: pmbus: adm1266: Add support for GPIOs
+Message-ID: <20200807160554.GA40857@roeck-us.net>
+References: <20200727161928.14122-1-alexandru.tachici@analog.com>
+ <20200727161928.14122-4-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159681277616.35436.11229310534842613599.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+In-Reply-To: <20200727161928.14122-4-alexandru.tachici@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 16:06:16 +0100, David Howells wrote:
-> Add a manual page for the notifications/watch_queue facility.
+On Mon, Jul 27, 2020 at 07:19:22PM +0300, alexandru.tachici@analog.com wrote:
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
 > 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+> Adm1266 exposes 9 GPIOs and 16 PDIOs which are currently read-only. They
+> are controlled by the internal sequencing engine.
+> 
+> This patch makes adm1266 driver expose GPIOs and PDIOs to user-space
+> using GPIO provider kernel api.
+> 
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+
+This needs to add "select GPIOLIB" to the driver's Kconfig entry.
+
 > ---
+>  drivers/hwmon/pmbus/adm1266.c | 204 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 204 insertions(+)
 > 
->  man7/watch_queue.7 |  285 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 285 insertions(+)
->  create mode 100644 man7/watch_queue.7
-> 
-> diff --git a/man7/watch_queue.7 b/man7/watch_queue.7
-> new file mode 100644
-> index 000000000..6b22ad689
-> --- /dev/null
-> +++ b/man7/watch_queue.7
-> @@ -0,0 +1,285 @@
-> +.\"
-> +.\" Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
-> +.\" Written by David Howells (dhowells@redhat.com)
-> +.\"
-> +.\" This program is free software; you can redistribute it and/or
-> +.\" modify it under the terms of the GNU General Public Licence
-> +.\" as published by the Free Software Foundation; either version
-> +.\" 2 of the Licence, or (at your option) any later version.
-> +.\"
-> +.TH WATCH_QUEUE 7 "2020-08-07" Linux "General Kernel Notifications"
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.SH NAME
-> +General kernel notification queue
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.SH SYNOPSIS
-> +#include <linux/watch_queue.h>
-> +.EX
+> diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+> index 63975eba34ad..be911de02cf6 100644
+> --- a/drivers/hwmon/pmbus/adm1266.c
+> +++ b/drivers/hwmon/pmbus/adm1266.c
+> @@ -6,18 +6,42 @@
+>   * Copyright 2020 Analog Devices Inc.
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/crc8.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/gpio/driver.h>
+>  #include <linux/i2c.h>
+> +#include <linux/i2c-smbus.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include "pmbus.h"
+>  #include <linux/slab.h>
+>  
+> +#define ADM1266_PDIO_CONFIG	0xD4
+> +#define ADM1266_GPIO_CONFIG	0xE1
+> +#define ADM1266_PDIO_STATUS	0xE9
+> +#define ADM1266_GPIO_STATUS	0xEA
 > +
-> +pipe2(fds, O_NOTIFICATION_PIPE);
-> +ioctl(fds[0], IOC_WATCH_QUEUE_SET_SIZE, max_message_count);
-> +ioctl(fds[0], IOC_WATCH_QUEUE_SET_FILTER, &filter);
-> +keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fds[0], 0x01);
-
-What is this `0x01` magic number?
-
-(Later, from below: It's a tag to add to messages. A variable with a
-name to that effect is probably warranted in the "hello world" example
-this early in the doc.)
-
-> +for (;;) {
-> +	buf_len = read(fds[0], buffer, sizeof(buffer));
-> +	...
+> +/* ADM1266 GPIO defines */
+> +#define ADM1266_GPIO_NR			9
+> +#define ADM1266_GPIO_FUNCTIONS(x)	FIELD_GET(BIT(0), x)
+> +#define ADM1266_GPIO_INPUT_EN(x)	FIELD_GET(BIT(2), x)
+> +#define ADM1266_GPIO_OUTPUT_EN(x)	FIELD_GET(BIT(3), x)
+> +#define ADM1266_GPIO_OPEN_DRAIN(x)	FIELD_GET(BIT(4), x)
+> +
+> +/* ADM1266 PDIO defines */
+> +#define ADM1266_PDIO_NR			16
+> +#define ADM1266_PDIO_PIN_CFG(x)		FIELD_GET(GENMASK(15, 13), x)
+> +#define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
+> +#define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
+> +
+>  #define ADM1266_PMBUS_BLOCK_MAX		255
+>  
+>  struct adm1266_data {
+>  	struct pmbus_driver_info info;
+> +	struct gpio_chip gc;
+> +	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
+>  	struct i2c_client *client;
+>  	struct mutex buf_mutex;
+>  	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+> @@ -88,9 +112,185 @@ static int adm1266_pmbus_block_xfer(struct adm1266_data *data, u8 cmd, u8 w_len,
+>  	return ret;
+>  }
+>  
+> +static const unsigned int adm1266_gpio_mapping[ADM1266_GPIO_NR][2] = {
+> +	{1, 0},
+> +	{2, 1},
+> +	{3, 2},
+> +	{4, 8},
+> +	{5, 9},
+> +	{6, 10},
+> +	{7, 11},
+> +	{8, 6},
+> +	{9, 7},
+> +};
+> +
+> +static const char *adm1266_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR] = {
+> +	"GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5", "GPIO6", "GPIO7", "GPIO8",
+> +	"GPIO9", "PDIO1", "PDIO2", "PDIO3", "PDIO4", "PDIO5", "PDIO6",
+> +	"PDIO7", "PDIO8", "PDIO9", "PDIO10", "PDIO11", "PDIO12", "PDIO13",
+> +	"PDIO14", "PDIO15", "PDIO16",
+> +};
+> +
+> +static int adm1266_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	struct adm1266_data *data = gpiochip_get_data(chip);
+> +	u8 read_buf[I2C_SMBUS_BLOCK_MAX + 1];
+> +	unsigned long pins_status;
+> +	unsigned int pmbus_cmd;
+> +	int ret;
+> +
+> +	if (offset < ADM1266_GPIO_NR)
+> +		pmbus_cmd = ADM1266_GPIO_STATUS;
+> +	else
+> +		pmbus_cmd = ADM1266_PDIO_STATUS;
+> +
+> +	ret = i2c_smbus_read_block_data(data->client, pmbus_cmd, read_buf);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	pins_status = read_buf[0] + (read_buf[1] << 8);
+> +	if (offset < ADM1266_GPIO_NR)
+> +		return test_bit(adm1266_gpio_mapping[offset][1], &pins_status);
+> +
+> +	return test_bit(offset - ADM1266_GPIO_NR, &pins_status);
 > +}
-> +.EE
-> +.SH OVERVIEW
-> +.PP
-> +The general kernel notification queue is a general purpose transport for kernel
-> +notification messages to userspace.  Notification messages are marked with type
-> +information so that events from multiple sources can be distinguished.
-> +Messages are also of variable length to accommodate different information for
-> +each type.
-> +.PP
-> +Queues are implemented on top of standard pipes and multiple independent queues
-> +can be created.  After a pipe has been created, its size and filtering can be
-> +configured and event sources attached.  The pipe can then be read or polled to
-> +wait for messages.
-> +.PP
-> +Multiple messages may be read out of the queue at a time if the buffer is large
-> +enough, but messages will not get split amongst multiple reads.  If the buffer
-> +isn't large enough for a message,
-> +.B ENOBUFS
-> +will be returned.
-> +.PP
-> +In the case of message loss,
-> +.BR read (2)
-> +will fabricate a loss message and pass that to userspace immediately after the
-> +point at which the loss occurred.
-
-If multiple messages are dropped in a row, is there one loss message per
-loss message or per loss event?
-
-> +A notification pipe allocates a certain amount of locked kernel memory (so that
-> +the kernel can write a notification into it from contexts where allocation is
-> +restricted), and so is subject to pipe resource limit restrictions.
-
-A reference to the relevant manpage for resource limitations would be
-nice here. I'd assume `setrlimit(2)`, but I don't see anything
-pipe-specific there.
-
-> +Sources must be attached to a queue manually; there's no single global event
-> +source, but rather a variety of sources, each of which can be attached to by
-> +multiple queues.  Attachments can be set up by:
-> +.TP
-> +.BR keyctl_watch_key (3)
-> +Monitor a key or keyring for changes.
-> +.PP
-> +Because a source can produce a lot of different events, not all of which may be
-
-"many events" or "many types of events"?
-
-> +of interest to the watcher, a filter can be set on a queue to determine whether
-
-"a filter can be set"? If multiple filters are allowed, "filters can be
-added" might work better here to indicate that multiple filters are
-allowed. Otherwise, "a single filter" would make it clearer that only
-one is supported.
-
-> +a particular event will get inserted in a queue at the point of posting inside
-> +the kernel.
 > +
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.SH MESSAGE STRUCTURE
-> +.PP
-> +The output from reading the pipe is divided into variable length messages.
-> +Read will never split a message across two separate read calls.  Each message
-
-"read(2) will never split" perhaps?
-
-> +begins with a header of the form:
-> +.PP
-> +.in +4n
-> +.EX
-> +struct watch_notification {
-> +	__u32	type:24;
-> +	__u32	subtype:8;
-> +	__u32	info;
-> +};
-> +.EE
-> +.in
-> +.PP
-> +Where
-> +.I type
-> +indicates the general class of notification,
-> +.I subtype
-> +indicates the specific type of notification within that class and
-> +.I info
-> +includes the message length (in bytes), the watcher's ID and some type-specific
-> +information.
-> +.PP
-> +A special message type,
-> +.BR WATCH_TYPE_META ,
-> +exists to convey information about the notification facility itself.  It has a
-> +number of subtypes:
-
-"a number of" seems extraneous. How about just "It has the following
-subtypes"?
-
-> +.TP
-> +.B WATCH_META_LOSS_NOTIFICATION
-> +This indicates one or more messages were lost, probably due to a buffer
-> +overrun.
-> +.TP
-> +.B WATCH_META_REMOVAL_NOTIFICATION
-> +This indicates that a notification source went away whilst it is being watched.
-> +This comes in two lengths: a short variant that carries just the header and a
-> +long variant that includes a 64-bit identifier as well that identifies the
-> +source more precisely (which variant is used and how the identifier should be
-> +interpreted is source dependent).
-> +.PP
-> +.I info
-> +includes the following fields:
-> +.TP
-> +.B WATCH_INFO_LENGTH
-> +Bits 0-6 indicate the size of the message in bytes, and can be between 8 and
-> +127.
-> +.TP
-> +.B WATCH_INFO_ID
-> +Bits 8-15 indicate the tag given to the source binding call.  This is a number
-> +between 0 and 255 and is purely a source index for userspace's use and isn't
-> +interpreted by the kernel.
-> +.TP
-> +.B WATCH_INFO_TYPE_INFO
-> +Bits 16-31 indicate subtype-dependent information.
-
-Are there macros for extracting these fields available? Why not also
-have bitfields for these? Or is there some ABI issues with
-non-power-of-2 bitfield sizes? For clarity, which bit is bit 0? Low
-address or LSB? Is this documented in some other manpage?
-
-Also, bit 7 is unused (for alignment I assume)? Is it always 0, 1, or
-indeterminate?
-
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.SH IOCTL COMMANDS
-> +Pipes opened O_NOTIFICATION_PIPE have the following
-
-"Pipes opened with". It should probably also be ".B O_NOTIFICATION_PIPE"
-for markup purposes.
-
-> +.IR ioctl ()
-> +commands available:
-> +.TP
-> +.B IOC_WATCH_QUEUE_SET_SIZE
-> +The ioctl argument is indicates the maximum number of messages that can be
-> +inserted into the pipe.  This must be a power of two.  This command also
-> +pre-allocates memory to hold messages.
-> +.IP
-> +This may only be done once and the queue cannot be used until this command has
-> +been done.
-> +.TP
-> +.B IOC_WATCH_QUEUE_SET_FILTER
-> +This is used to set filters on the notifications that get written into the
-
-"set" -> "add"? If I call this multiple times, is only the last call
-effective or do I need to keep a list of all filters myself so I can
-append in the future (since I see no analogous GET_FILTER call)? Does
-this have implications for criu restoring a process?
-
-> +buffer.  The ioctl argument points to a structure of the following form:
-> +.IP
-> +.in +4n
-> +.EX
-> +struct watch_notification_filter {
-> +	__u32	nr_filters;
-> +	__u32	__reserved;
-> +	struct watch_notification_type_filter filters[];
-> +};
-> +.EE
-> +.in
-> +.IP
-> +Where
-> +.I nr_filters
-> +indicates the number of elements in the
-> +.IR filters []
-> +array.  Each element in the filters array specifies a filter and is of the
-> +following form:
-
-I assume `__reserved` must be 0 until it has meaning? Is that checked
-kernel-side?
-
-> +.IP
-> +.in +4n
-> +.EX
-> +struct watch_notification_type_filter {
-> +	__u32	type;
-> +	__u32	info_filter;
-> +	__u32	info_mask;
-> +	__u32	subtype_filter[8];
-> +};
-> +.EE
-> +.in
-> +.IP
-> +Where
-> +.I type
-> +refer to the type field in a notification record header, info_filter and
-
-"refers"
-
-> +info_mask refer to the info field and subtype_filter is a bit-mask of subtypes.
-
-Adding the Oxford comma here would be nicer due to the one entry using
-`and` itself, but I don't know the editorial rules on that in the docs.
-
-> +.IP
-> +If no filters are installed, all notifications are allowed by default and if
-> +one or more filters are installed, notifications are disallowed by default.
-
-Here, filters on a queue are referred to as being "installed". Some
-consistency between "set", "add", and "install" would be appreciated.
-
-> +.IP
-> +A notifications matches a filter if, for notification N and filter F:
-> +.IP
-> +.in +4n
-> +.EX
-> +N->type == F->type &&
-> +(F->subtype_filter[N->subtype >> 5] &
-> +	(1U << (N->subtype & 31))) &&
-> +(N->info & F->info_mask) == F->info_filter)
-> +.EE
-> +.in
-> +.IP
-
-The bitshifting here is a bit out-of-the-blue. There's obviously some
-structure to subtypes, but it is only mentioned tangentially in this
-algorithm. Is it worth mentioning somewhere? Given a list of subtypes I
-want to match, how do I make a filter since they're supposed to be
-opaque (modulo ABI stability)? This information belongs with each
-message type's documentation or there needs to be some way to extract it
-from any given set of message subtypes.
-
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.SH EXAMPLE
-> +To use the notification mechanism, first of all the pipe has to be opened and
-> +the size must be set:
-> +.PP
-> +.in +4n
-> +.EX
-> +int fds[2];
-> +pipe2(fd[0], O_NOTIFICATION_QUEUE);
-> +int wfd = fd[0];
+> +static int adm1266_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+> +				     unsigned long *bits)
+> +{
+> +	struct adm1266_data *data = gpiochip_get_data(chip);
+> +	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1];
+> +	unsigned long status;
+> +	unsigned int gpio_nr;
+> +	int ret;
 > +
-> +ioctl(wfd, IOC_WATCH_QUEUE_SET_SIZE, 16);
-> +.EE
-> +.in
-> +.PP
-> +From this point, the queue is open for business.
-
-"open for business" seems awfully casual compare to the rest of the
-text. Idioms are probably not best in technical docs anyways
-(translation and such). How about "From this point on, the kernel can
-place events into the queue."?
-
-Is there any benefit/error case for adding event sources and then
-setting the buffer size? Perhaps one might want all event sources to
-start delivering together rather than the buffer filling up while adding
-all of the sources?
-
->                                                    Filters can be set to
-
-Another set/add/install uniformity location.
-
-> +restrict the notifications that get inserted into the buffer from the sources
-
-"buffer" -> "queue"?
-
-> +that are being watched.  For example:
-> +.PP
-> +.in +4n
-> +.EX
-> +static struct watch_notification_filter filter = {
-> +	.nr_filters	= 1,
-> +	.__reserved	= 0,
-> +	.filters = {
-> +		[0]	= {
-> +			.type			= WATCH_TYPE_KEY_NOTIFY,
-> +			.subtype_filter[0]	= 1 << NOTIFY_KEY_LINKED,
-> +			.info_filter		= 1 << WATCH_INFO_FLAG_2,
-> +			.info_mask		= 1 << WATCH_INFO_FLAG_2,
-
-OK, so the example helps with the filter and mask, but then each event
-type probably needs to document which watch info flags each subtype
-cares about or what it means.
-
-Where are the docs for all of the available `WATCH_INFO_FLAG` macros?
-
-> +		},
-> +	},
-> +};
+> +	ret = i2c_smbus_read_block_data(data->client, ADM1266_GPIO_STATUS, read_buf);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +ioctl(wfd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
-> +.EE
-> +.in
-> +.PP
-> +will only allow key-change notifications that indicate a key is linked into a
-> +keyring and then only if type-specific flag WATCH_INFO_FLAG_2 is set on the
-> +notification.
-> +.PP
-> +Sources can then be watched, for example:
-> +.PP
-> +.in +4n
-> +.EX
-> +keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, wfd, 0x33);
-> +.EE
-> +.in
-> +.PP
-> +The first places a watch on the process's session keyring, directing the
-> +notifications to the buffer we just created and specifying that they should be
-> +tagged with 0x33 in the info ID field.
-> +.PP
-> +When it is determined that there is something in the buffer, messages can be
-> +read out of the ring with something like the following:
-> +.PP
-> +.in +4n
-> +.EX
-> +for (;;) {
-> +	unsigned char buf[128];
-
-Is 128 the maximum message size? Do we have a macro for this? If it
-isn't, shouldn't there be code for detecting ENOBUFS and using a bigger
-buffer? Or at least not rolling with a busted buffer.
-
-> +	int ret = read(fd, buf, sizeof(buf));
-
-	/* Check if the buffer was too small for a message. */
-	if (ret < 0 && errno == ENOBUFS)
-		continue;
-
-Though this seems like an infinite loop now since that too-large message
-will just clog the queue...
-
-Perfect error handling isn't necessary in example code like this, but
-could we at least stick traffic cones in the potholes?
-
-> +	struct watch_notification *n = (struct watch_notification *)buf;
-> +	switch (n->type) {
-> +	case WATCH_TYPE_META:
-
-From above, if a filter is added, all messages not matching a filter are
-dropped. Are WATCH_TYPE_META messages special in this case? If so, could
-it be mentioned somewhere that they do not observe filters (I'm partial
-to both the message type and filter docs since one might come to the
-docs for either reason individually, but at least one should mention
-it)? If they do observe filters, isn't this case block dead code?
-
-> +		switch (n->subtype) {
-> +		case WATCH_META_REMOVAL_NOTIFICATION:
-> +			saw_removal_notification(n);
-> +			break;
-> +		case WATCH_META_LOSS_NOTIFICATION:
-> +			printf("-- LOSS --\n");
-> +			break;
-
-The Rust developer in me wants to see:
-
-	default:
-		/* Subtypes may be added in future kernel versions. */
-		printf("unrecognized meta subtype: %d\n", n->subtype);
-		break;
-
-unless we're guaranteeing that no other subtypes exist for this type
-(updating the docs with new types doesn't help those who copy/paste from
-here as a seed).
-
+> +	status = read_buf[0] + (read_buf[1] << 8);
+> +
+> +	*bits = 0;
+> +	for_each_set_bit(gpio_nr, mask, ADM1266_GPIO_NR) {
+> +		if (test_bit(adm1266_gpio_mapping[gpio_nr][1], &status))
+> +			set_bit(gpio_nr, bits);
+> +	}
+> +
+> +	ret = i2c_smbus_read_block_data(data->client, ADM1266_PDIO_STATUS, read_buf);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	status = read_buf[0] + (read_buf[1] << 8);
+> +
+> +	*bits = 0;
+> +	for_each_set_bit_from(gpio_nr, mask, ADM1266_GPIO_NR + ADM1266_PDIO_STATUS) {
+> +		if (test_bit(gpio_nr - ADM1266_GPIO_NR, &status))
+> +			set_bit(gpio_nr, bits);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void adm1266_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+> +{
+> +	struct adm1266_data *data = gpiochip_get_data(chip);
+> +	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1];
+> +	unsigned long gpio_config;
+> +	unsigned long pdio_config;
+> +	unsigned long pin_cfg;
+> +	u8 write_cmd;
+> +	int ret;
+> +	int i;
+> +
+> +	for (i = 0; i < ADM1266_GPIO_NR; i++) {
+> +		write_cmd = adm1266_gpio_mapping[i][1];
+> +		ret = adm1266_pmbus_block_xfer(data, ADM1266_GPIO_CONFIG, 1, &write_cmd, read_buf);
+> +		if (ret != 2)
+> +			return;
+> +
+> +		gpio_config = read_buf[0];
+> +		seq_puts(s, adm1266_names[i]);
+> +
+> +		seq_puts(s, " ( ");
+> +		if (!ADM1266_GPIO_FUNCTIONS(gpio_config)) {
+> +			seq_puts(s, "high-Z )\n");
+> +			continue;
 > +		}
-> +		break;
-> +	case WATCH_TYPE_KEY_NOTIFY:
-> +		saw_key_change(n);
-> +		break;
+> +		if (ADM1266_GPIO_INPUT_EN(gpio_config))
+> +			seq_puts(s, "input ");
+> +		if (ADM1266_GPIO_OUTPUT_EN(gpio_config))
+> +			seq_puts(s, "output ");
+> +		if (ADM1266_GPIO_OPEN_DRAIN(gpio_config))
+> +			seq_puts(s, "open-drain )\n");
+> +		else
+> +			seq_puts(s, "push-pull )\n");
+> +	}
+> +
+> +	write_cmd = 0xFF;
+> +	ret = adm1266_pmbus_block_xfer(data, ADM1266_PDIO_CONFIG, 1, &write_cmd, read_buf);
+> +	if (ret != 32)
+> +		return;
+> +
+> +	for (i = 0; i < ADM1266_PDIO_NR; i++) {
+> +		seq_puts(s, adm1266_names[ADM1266_GPIO_NR + i]);
+> +
+> +		pdio_config = read_buf[2 * i];
+> +		pdio_config += (read_buf[2 * i + 1] << 8);
+> +		pin_cfg = ADM1266_PDIO_PIN_CFG(pdio_config);
+> +
+> +		seq_puts(s, " ( ");
+> +		if (!pin_cfg || pin_cfg > 5) {
+> +			seq_puts(s, "high-Z )\n");
+> +			continue;
+> +		}
+> +
+> +		if (pin_cfg & BIT(0))
+> +			seq_puts(s, "output ");
+> +
+> +		if (pin_cfg & BIT(1))
+> +			seq_puts(s, "input ");
+> +
+> +		seq_puts(s, ")\n");
 > +	}
 > +}
-> +.EE
-> +.in
-> +.PP
 > +
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.SH VERSIONS
-> +The notification queue driver first appeared in v5.8 of the Linux kernel.
-
-Other manpages seem to have this above examples. This is fine too, but
-just double checking to see if there are conventions about section
-ordering.
-
-> +.SH SEE ALSO
-> +.ad l
-> +.nh
-> +.BR keyctl (1),
-> +.BR ioctl (2),
-> +.BR pipe2 (2),
-> +.BR read (2),
-> +.BR keyctl_watch_key (3)
-
-Thanks,
-
---Ben
+> +static int adm1266_config_gpio(struct adm1266_data *data)
+> +{
+> +	const char *name = dev_name(&data->client->dev);
+> +	char *gpio_name;
+> +	int ret;
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(data->gpio_names); i++) {
+> +		gpio_name = devm_kasprintf(&data->client->dev, GFP_KERNEL, "adm1266-%x-%s",
+> +					   data->client->addr, adm1266_names[i]);
+> +		if (!gpio_name)
+> +			return -ENOMEM;
+> +
+> +		data->gpio_names[i] = gpio_name;
+> +	}
+> +
+> +	data->gc.label = name;
+> +	data->gc.parent = &data->client->dev;
+> +	data->gc.owner = THIS_MODULE;
+> +	data->gc.base = -1;
+> +	data->gc.names = data->gpio_names;
+> +	data->gc.ngpio = ARRAY_SIZE(data->gpio_names);
+> +	data->gc.get = adm1266_gpio_get;
+> +	data->gc.get_multiple = adm1266_gpio_get_multiple;
+> +	data->gc.dbg_show = adm1266_gpio_dbg_show;
+> +
+> +	ret = devm_gpiochip_add_data(&data->client->dev, &data->gc, data);
+> +	if (ret)
+> +		dev_err(&data->client->dev, "GPIO registering failed (%d)\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+>  static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  {
+>  	struct adm1266_data *data;
+> +	int ret;
+>  	int i;
+>  
+>  	data = devm_kzalloc(&client->dev, sizeof(struct adm1266_data), GFP_KERNEL);
+> @@ -106,6 +306,10 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
+>  	crc8_populate_msb(pmbus_crc_table, 0x7);
+>  	mutex_init(&data->buf_mutex);
+>  
+> +	ret = adm1266_config_gpio(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return pmbus_do_probe(client, id, &data->info);
+>  }
+>  
