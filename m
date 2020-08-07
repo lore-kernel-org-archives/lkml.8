@@ -2,103 +2,119 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D782C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539EB221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596793707;
-	bh=PcmJrNmkKXFSnXfYxarKgwFKdUaxsn6gLY15nHsiy+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rp17sugea7Sf0gxwm8/xplAdIKMvHMrkM4sGvz2JPnjFe+GJdQ3g9Ty/Un9sJSEEY
-	 bviUVj+eyBJQgVeYhMxhQrAINy9pQICpR+2NqLGtYjwlpngBm53Pk9OBFyBfl3q1EL
-	 cQuLg+Vc6zErOdW9kXsJfhWiP9oQTksClqymefPI=
+	by mail.kernel.org (Postfix) with ESMTP id EBACB221E5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:48:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="SJ8+3B0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgHGJsZ (ORCPT
+        id S1728237AbgHGJsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727012AbgHGJsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:48:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF779221E5;
-        Fri,  7 Aug 2020 09:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596793701;
-        bh=PcmJrNmkKXFSnXfYxarKgwFKdUaxsn6gLY15nHsiy+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VWlFBRPJWUoSvqida/H+MLdkn5zPYE2eiHgUT700CFRHSU4WWIGWrhOFZZqMXEhGZ
-         dBZ4/83WIu2m1P2cfHnH9ABh7DcVOHkuzsxDetFbqFv9soht4uZMK59kJ9EeE/V6Qq
-         OC3Bqt7FJ1bJSY7bWr1/zZYn8jpEhNsyJ+RdKMRs=
-Date:   Fri, 7 Aug 2020 11:48:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     Jiri Slaby <jirislaby@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Jason Chen =?utf-8?B?KOmZs+WFhuWFiCk=?= <Jason.Chen@moxa.com>,
-        Victor Yu =?utf-8?B?KOa4uOWLnee+qSk=?= <victor.yu@moxa.com>,
-        Danny Lin =?utf-8?B?KOael+aUv+aYkyk=?= <danny.lin@moxa.com>
-Subject: Re: [PATCH] tty: Add MOXA NPort Real TTY Driver
-Message-ID: <20200807094834.GA3069990@kroah.com>
-References: <HK2PR01MB328134FB2EF5F9D1E381BDA3FA610@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
- <7b190f5c-c2f4-032a-af89-444a1f7d9a80@gmail.com>
- <HK2PR01MB328115306D9656E2E95D85ECFA490@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        Fri, 7 Aug 2020 05:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbgHGJsm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 05:48:42 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761B0C061575
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 02:48:41 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 74so706836pfx.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 02:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JbWvohNnPXJo/dYG1vb/RrldXZGnizxAUyzSnzTjrPA=;
+        b=SJ8+3B0uxfaAA+gcYxH7Yj7PgoukbcaHJeSDbenJUgipbvSoaJRAeiRqKQb54bQ3d+
+         apaTl9J9eIdgu6u/8BwwyhzYVXC0o74JkUAduGlYZ6+mMIr4j+HnL0KpIbEnZnfKE95n
+         7R2zxqNxFUfFo/WhfPneq2U2LmhYziNlklFaA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JbWvohNnPXJo/dYG1vb/RrldXZGnizxAUyzSnzTjrPA=;
+        b=idqSFT/QpYdMvoPjlpXPDwbMtnp9dJPAKm0dzo6D3TDjLvy7G1sfqVE5LHg3GdeGPx
+         grc9wd2Xz1xdmO/L2M7k8d2gyUB53UpmAw6f8HYIAwI4dFIZra9onWbLrrr7UMwRjbD6
+         H/UbIPFMG+99cnVytjxT2oai7E7Jsk/7wnyB5UDCebdOYWj5Q9K0jy/J8qp+1+XGjFA0
+         wQyRlznvjQnK0KLAKGWFW/MyPPN65MNuQ4K5PPzUsVoPNjgy6+r9IOw+omVn2KQR3+pE
+         aKAus7eFHu0ULd0Tm4X5BHlMIZaU+5BeJS8oJcGb+fIm3vRPupKVIbIVjOfh/H3rEr/T
+         5TGg==
+X-Gm-Message-State: AOAM533HDThamYdaQ4M85id5XeQxxP09Pf51ambCNjuk5MNo/jdnsHoA
+        /AKiBjaLUQdw5e0zRTls3PyvHA==
+X-Google-Smtp-Source: ABdhPJxbpTuigBUMypuy2A8EjJZO9vXIUv2QlhlMt2DcA/3nhfZt3SE0xEMh2hHcY6EINNwVSVZinA==
+X-Received: by 2002:a63:5b5d:: with SMTP id l29mr11110552pgm.206.1596793720666;
+        Fri, 07 Aug 2020 02:48:40 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:6097:2d32:26bb:64fe])
+        by smtp.gmail.com with ESMTPSA id d65sm11412112pfc.97.2020.08.07.02.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 02:48:40 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v4 1/4] dt-bindings: arm: rockchip: Update ROCKPi 4 binding
+Date:   Fri,  7 Aug 2020 15:18:23 +0530
+Message-Id: <20200807094826.12019-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <HK2PR01MB328115306D9656E2E95D85ECFA490@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 09:18:57AM +0000, Johnson CH Chen (陳昭勳) wrote:
-> > > +	if (info->modem_control & UART_MCR_RTS)
-> > > +		nd->cmd_buffer[6] = 1;
-> > > +	else
-> > > +		nd->cmd_buffer[6] = 0;
-> > > +
-> > > +	if (termio->c_cflag & CRTSCTS) {
-> > > +		nd->cmd_buffer[7] = 1;
-> > > +		nd->cmd_buffer[8] = 1;
-> > > +	} else {
-> > > +		nd->cmd_buffer[7] = 0;
-> > > +		nd->cmd_buffer[8] = 0;
-> > > +	}
-> > > +
-> > > +	if (termio->c_iflag & IXON)
-> > > +		nd->cmd_buffer[9] = 1;
-> > > +	else
-> > > +		nd->cmd_buffer[9] = 0;
-> > > +
-> > > +	if (termio->c_iflag & IXOFF)
-> > > +		nd->cmd_buffer[10] = 1;
-> > > +	else
-> > > +		nd->cmd_buffer[10] = 0;
-> > 
-> > What is this cmd_buffer good for actually? Only to let the user know?
-> > Then -- drop it.
-> 
-> Because detailed iterations for cmd_buffer and cmd_rsp with Nport
-> server device are regarded proprietary for our company, is it good to
-> reveal value of cmd_buffer[] with macros only for upstream this
-> driver?
+ROCKPi 4 has 3 variants of hardware platforms called
+ROCKPi 4A, 4B, and 4C.
 
-There is nothing "proprietary" for Linux kernel code, sorry.  Please
-document this properly so we can understand, review, and maintain it
-over time correctly.
+- ROCKPi 4A has no Wif/BT.
+- ROCKPi 4B has AP6256 Wifi/BT, PoE.
+- ROCKPi 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enabled
+  GPIO pin change compared to 4B, 4C
 
-thanks,
+So, update the existing ROCKPi 4 binding to support
+ROCKPi 4A/B/C hardware platforms.
 
-greg k-h
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v4:
+- update binding to satisfy dt_binding_check. 
+Changes for v3:
+- new patch
+
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index db2e35796795..7025d00c06cc 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -430,8 +430,12 @@ properties:
+           - const: radxa,rock
+           - const: rockchip,rk3188
+ 
+-      - description: Radxa ROCK Pi 4
++      - description: Radxa ROCK Pi 4A/B/C
+         items:
++          - enum:
++              - radxa,rockpi4a
++              - radxa,rockpi4b
++              - radxa,rockpi4c
+           - const: radxa,rockpi4
+           - const: rockchip,rk3399
+ 
+-- 
+2.25.1
+
