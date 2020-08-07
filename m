@@ -2,60 +2,197 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 23:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF294C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 23:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706D42086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 23:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F202086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 23:23:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbgt4hQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgHGXXz (ORCPT
+        id S1726426AbgHGXX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 19:23:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42808 "EHLO
+        Fri, 7 Aug 2020 19:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgHGXXz (ORCPT
+        with ESMTP id S1726066AbgHGXX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 19:23:55 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE80DC061756;
-        Fri,  7 Aug 2020 16:23:54 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k4BiL-00BQFF-7N; Fri, 07 Aug 2020 23:23:53 +0000
-Date:   Sat, 8 Aug 2020 00:23:53 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [git pull] regression fix in syscalls-for-init series
-Message-ID: <20200807232353.GX1236603@ZenIV.linux.org.uk>
+        Fri, 7 Aug 2020 19:23:57 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E24DC061756;
+        Fri,  7 Aug 2020 16:23:57 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s15so1760337pgc.8;
+        Fri, 07 Aug 2020 16:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xeyRmBMtht9F/95S4PxaQKGge21ituHAnotfo3X2meM=;
+        b=tbgt4hQD25W0pSZ4Yo1gL5rlx4vXvb5c8AoYeLxH7hDkreXBP6TPVD9o8Zsz6/ZnyK
+         wyB0bx6N1agIUqBg8EgdLh/oVN2O9Q4tfcNsiHUHpJFzfHYWFOK6l7O3pGuheYPbSUaX
+         5iKHRtYQjY6+93o9FWMXXzPEfv96ArfmOam9O/8B4JuEn0lqDDK/48CtPbaEo2IV9Q2y
+         FQwU7zqaqgT9nGYA6i2BeZeKRkG8ybDhL58HeEucPFOdijNw5TgJBqc8s/8NazrbkEj+
+         pAlJ0fCgLFlsm8GLjX5vx07s9r+GfHpI2LuwHlextoMmBhUruN0L2ng6+kVHNrfe7/hj
+         NXNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=xeyRmBMtht9F/95S4PxaQKGge21ituHAnotfo3X2meM=;
+        b=jo8zuUEuPRVzDuCSnZ5l0m/eb+ApggHCdZ++f0MnK/bJG2dmoceinEs8ZllJbevp9F
+         bVXQCEdExhonCyAcwNyqfMfjYKLfvMqhCkZ5ooW8CW4QnZMuQflBC2/6K4biYCnKVUVb
+         jAucACc7fI/muzkqdgC5jBbcQMibQ1pqoYz39GE1wQuL4ImlwloYbouKi2H0pSg5SItQ
+         9IZ9gMymcoFmUKCkcFDg/Bzi+amO2C5jLn4zX77lmbo1WCrI5F9HuL8J4XUWZSbBp6Xq
+         rgy9dDXjkonLIRCGe4qCSCrXdhIdILc09m/UCkRv1NybgFGotFE2qX1aePtM+Xmc4pSz
+         02QA==
+X-Gm-Message-State: AOAM530PVO3U1OEglilx/nHSAmxLFmM6SS6vO+W7schxFaNtHtbDpI7I
+        ODiU060wBDnJ1Ar97EBvIZ4=
+X-Google-Smtp-Source: ABdhPJxtxxnjrXzFAkYLWm5oN6dnVTBjVXaMrPs4pgZ95x0fTux1eUaR/zbm6jwHH9YkyAPR3qH7DA==
+X-Received: by 2002:a62:7dd5:: with SMTP id y204mr16088852pfc.318.1596842636725;
+        Fri, 07 Aug 2020 16:23:56 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u21sm12165863pjn.27.2020.08.07.16.23.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 16:23:55 -0700 (PDT)
+Subject: Re: [PATCH] drivers: watchdog: rdc321x_wdt: Fix race condition bugs
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        madhuparnabhowmik10@gmail.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
+        ldv-project@linuxtesting.org
+References: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com>
+ <20200807162141.GA41980@roeck-us.net>
+ <8dca64a1-8cd9-6a41-b61d-1c4c14e5cd5e@gmail.com>
+ <bc8c5d7d-91a4-e955-854f-eef88812ac1a@roeck-us.net>
+ <1b9db5ad-0edf-091b-a04e-a8f3a6ac08e2@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <c7a03401-2c50-868b-57b0-ae3c0bd61e70@roeck-us.net>
+Date:   Fri, 7 Aug 2020 16:23:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <1b9db5ad-0edf-091b-a04e-a8f3a6ac08e2@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Florian,
 
-The following changes since commit f073531070d24bbb82cb2658952d949f4851024b:
+On 8/7/20 1:09 PM, Florian Fainelli wrote:
+> 
+> On 8/7/2020 12:08 PM, Guenter Roeck wrote:
+>> On 8/7/20 11:08 AM, Florian Fainelli wrote:
+>>>
+>>>
+>>> On 8/7/2020 9:21 AM, Guenter Roeck wrote:
+>>>> On Fri, Aug 07, 2020 at 04:59:02PM +0530, madhuparnabhowmik10@gmail.com wrote:
+>>>>> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>>>>>
+>>>>> In rdc321x_wdt_probe(), rdc321x_wdt_device.queue is initialized
+>>>>> after misc_register(), hence if ioctl is called before its
+>>>>> initialization which can call rdc321x_wdt_start() function,
+>>>>> it will see an uninitialized value of rdc321x_wdt_device.queue,
+>>>>> hence initialize it before misc_register().
+>>>>> Also, rdc321x_wdt_device.default_ticks is accessed in reset()
+>>>>> function called from write callback, thus initialize it before
+>>>>> misc_register().
+>>>>>
+>>>>> Found by Linux Driver Verification project (linuxtesting.org).
+>>>>>
+>>>>> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>>>>
+>>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>>>
+>>>> Having said that ... this is yet another potentially obsolete driver.
+>>>> You are really wasting your (and, fwiw, my) time.
+>>>>
+>>>> Florian, any thoughts if support for this chip can/should be deprecated
+>>>> or even removed ?
+>>>
+>>> I am still using my rdc321x-based SoC, so no, this is not obsolete as
+>>> far as I am concerned, time permitting, modernizing the driver is on my
+>>> TODO after checking/fixing the Ethernet driver first.
+>>>
+>>
+>> Do you have a manual ? I'd give it a try if you can test it - conversion
+>> should be simple enough (I have a coccinelle script which partially
+>> automates it), but this chip seems to have a fast timeout, and the
+>> comments in the code ("set the timeout to 81.92 us") seem to be quite
+>> obviously wrong.
+> 
+> Yes, there is a public manual for that SoC, search for RDC R8610 and the
+> first link you find should be a 276 page long manual for the SoC.
+> 
 
-  init: add an init_dup helper (2020-08-04 21:02:38 -0400)
+I found two, one for R8610 and one for R8610-G. Unfortunately, none of those
+describes the use of bit(31) in the watchdog register, nor the meaning
+of bit(12) and bit(13). Bit(31) is described in the code as "Mask",
+and it is set by a couple of commands. I _suspect_ that bit(31) has to be
+set to change some of the register bits, for example the counter value.
+That is just a wild guess, but it would explain why the driver works
+in the first place.
 
-are available in the git repository at:
+It is also not clear if the bits in the counter register are accumulative
+or if only the highest bit counts. The datasheets suggest that only the
+highest bit counts, but then the value of RDC_CLS_TMR doesn't make much
+sense since it sets two bits.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+Since you wrote the driver, I was hoping that you might have a datasheet
+which explains all this in more detail.
 
-for you to fetch changes up to 25ccd24ffd9119c452d711efa2604a7a0c35956e:
-
-  fs: fix a struct path leak in path_umount (2020-08-07 19:21:30 -0400)
-
-----------------------------------------------------------------
-Christoph Hellwig (1):
-      fs: fix a struct path leak in path_umount
-
- fs/namespace.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+Thanks,
+Guenter
