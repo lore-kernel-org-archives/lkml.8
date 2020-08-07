@@ -2,69 +2,107 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F31C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728FC20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596807576;
-	bh=djVAZ8bgNnDd5s20tDbtmbbCi6mAMF/eFolBBmMjS/4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=l3Y0aOr342rMEX6FGVoHqNcUeczfOw22fLdlaAc6U/EmjsqUGYVjuNRMWZkm6C5vy
-	 GlyPmq2gx2TJZuNzYGBh7ashcmUOgMg3GRrCpKOigI6IJuaye2StB37UB+j1WKM5MG
-	 5JXNto9da29pO9VElvzu5Ksi3S34mfmSUD98lS/U=
+	by mail.kernel.org (Postfix) with ESMTP id A8F2E20866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgHGNje (ORCPT
+        id S1726131AbgHGNmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 09:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgHGNjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:39:19 -0400
-Received: from [10.20.23.223] (unknown [12.97.180.36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C614520866;
-        Fri,  7 Aug 2020 13:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596807559;
-        bh=djVAZ8bgNnDd5s20tDbtmbbCi6mAMF/eFolBBmMjS/4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=M2t8KqC8r0URtDNpW9FSWMTYh/AqHEhN8JK9uqdfkyd61X7sFgA6WeVL9bX34Bf77
-         l80ZFYD73auUDGxQSXdi5NS03vbp3/IVW2FGapuluwwl45VS2XFJGRnUE9PdzTZKL6
-         2HjUIkDnNrxmao+96kag6Vd8PXuTAVDCR25wvCmM=
-Subject: Re: [PATCH net] net: qcom/emac: Fix missing clk_disable_unprepare()
- in error path of emac_probe
-To:     "wanghai (M)" <wanghai38@huawei.com>, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200806140647.43099-1-wanghai38@huawei.com>
- <87f41175-689e-f198-aaf6-9b9f04449ed8@kernel.org>
- <df1bad2e-2a6a-ff70-9b91-f18df20aaec8@huawei.com>
-From:   Timur Tabi <timur@kernel.org>
-Message-ID: <9ec9b9ab-48d9-9d38-8f58-27e2556c141a@kernel.org>
-Date:   Fri, 7 Aug 2020 08:38:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 09:42:10 -0400
+Received: from ms01.santannapisa.it ([193.205.80.98]:52330 "EHLO
+        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgHGNll (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 09:41:41 -0400
+Received: from [94.37.192.58] (account l.abeni@santannapisa.it HELO nowhere)
+  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
+  with ESMTPSA id 150297055; Fri, 07 Aug 2020 15:41:30 +0200
+Date:   Fri, 7 Aug 2020 15:41:20 +0200
+From:   luca abeni <luca.abeni@santannapisa.it>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        tommaso.cucinotta@santannapisa.it, alessio.balsini@gmail.com,
+        bristot@redhat.com, dietmar.eggemann@arm.com,
+        linux-rt-users@vger.kernel.org, mtosatti@redhat.com,
+        williams@redhat.com, valentin.schneider@arm.com
+Subject: Re: [RFC PATCH v2 0/6] SCHED_DEADLINE server infrastructure
+Message-ID: <20200807154120.5dc9599c@nowhere>
+In-Reply-To: <20200807133041.GQ42956@localhost.localdomain>
+References: <20200807095051.385985-1-juri.lelli@redhat.com>
+        <20200807151632.36dc6200@nowhere>
+        <20200807133041.GQ42956@localhost.localdomain>
+Organization: Scuola Superiore S.Anna
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <df1bad2e-2a6a-ff70-9b91-f18df20aaec8@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/20 8:54 PM, wanghai (M) wrote:
-> Thanks for your suggestion. May I fix it like this?
-> 
-Yes, this is what I had in mind.  Thanks.
+Hi Juri,
 
-Acked-by: Timur Tabi <timur@kernel.org>
+On Fri, 7 Aug 2020 15:30:41 +0200
+Juri Lelli <juri.lelli@redhat.com> wrote:
+[...]
+> > In the meanwhile, I have some questions/comments after a first quick
+> > look.
+> > 
+> > If I understand well, the patchset does not apply deadline servers
+> > to FIFO and RR tasks, right? How does this patchset interact with RT
+> > throttling?  
+> 
+> Well, it's something like the dual of it, in that RT Throttling
+> directly throttles RT tasks to make spare CPU cycles available to
+> fair tasks while this patchset introduces deadline servers to
+> schedule fair tasks, thus still reserving CPU time for those (when
+> needed).
+
+Ah, OK... I was thinking about using deadline servers for both RT and
+non-RT tasks. And to use them not only to throttle, but also to provide
+some kind of performance guarantees (to all the scheduling classes).
+Think about what can be done when combining this mechanism with
+cgroups/containers :)
+
+[...]
+> > I understand this is because you do not
+> > want to delay RT tasks if they are not starving other tasks. But
+> > then, maybe what you want is not deadline-based scheduling. Maybe a
+> > reservation-based scheduler based on fixed priorities is what you
+> > want? (with SCHED_DEADLINE, you could provide exact performance
+> > guarantees to SCHED_OTHER tasks, but I suspect patch 6/6 breaks
+> > these guarantees?)  
+> 
+> I agree that we are not interested in exact guarantees in this case,
+> but why not using something that it's already there and would give us
+> the functionality we need (fix starvation for fair)?
+
+Ok, if performance guarantees to non-RT tasks are not the goal, then I
+agree. I was thinking that since the patchset provides a mechanism to
+schedule various classes of tasks through deadline servers, then
+using these servers to provide some kinds of guarantees could be
+interesting ;-)
+
+
+
+			Thanks,
+				Luca
+
+> It would also
+> work well in presence of "real" deadline tasks I think, in that you
+> could account for these fair servers while performing admission
+> control.
+> 
+> Best,
+> 
+> Juri
+> 
+
