@@ -2,97 +2,172 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4133C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C7EC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52E5221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3ABF22CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j7HC3Z5K"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q1ihf0KV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgHGBuh (ORCPT
+        id S1726197AbgHGByG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHGBuh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:50:37 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96669C061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 18:50:36 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id f24so390216ejx.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 18:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cD8jsk4+SBG8xPQfCCj2wmUpFVhawKwctfW4av5cjwU=;
-        b=j7HC3Z5KWqeecaZcmC3YJkQ+9fE581GofeymgTxpCPrJdWE+UU1MMGXjGjBL3tQfy8
-         537lS5kxtZrY9X0agbW+fq+ASnx+ufvq5xYa5fBh5z/aOOGPSrTa23sW4U1ceMrhFzSK
-         J4cuZa2LhzUuuEnzgxPFjP4K8a/30hM5cSK5Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cD8jsk4+SBG8xPQfCCj2wmUpFVhawKwctfW4av5cjwU=;
-        b=VB7Q7tuBvQkW0v3NMLJpAk37getbBdx6bDUFShc6kNL91vYH0GVkbYbqqryPZ+zR+4
-         k0GA+dn2AuTS8uIOsZCQGFTOr2boiM8FwsZQlKbkRSBDH8pFKp16yaUApFMrLWMUAjIQ
-         gcDxOiwB5QwjEnjrUI13cvGa/xATgNC6oAOkxbh6KV6ee9Xmr/RCAGg+EVa1c5dlNKxk
-         XNb9bcfi1yCKm+K/AQ6PiJP7IRUUDivU2pOhrx5VeT46U6gGF8tTI2LpEB3NwQA87pn2
-         BDhZemVH04JotBC2t4MiF0rgDWBwA1IFLKCaifBwnxn+UebSmK0995sRy6eAYTexGTgm
-         XMeg==
-X-Gm-Message-State: AOAM530CMdO6pirXP7ndWGpEAiBIavTGT55b6T8O1vRiXGSD7s3XUUV7
-        53bnd0F/waT791LQ7JnslwnGtYVTmr+KOMEMNLajtDvH
-X-Google-Smtp-Source: ABdhPJw8niI7X7Sw8klc/4xbPNLsxrK/3t5hOTwIymbgO2pDc9aWiI0yYJOrcmGNz7OW7xrCLVM1Q6LDAFSnP9cYNMA=
-X-Received: by 2002:a17:907:208e:: with SMTP id pv14mr7578996ejb.438.1596765034757;
- Thu, 06 Aug 2020 18:50:34 -0700 (PDT)
+        Thu, 6 Aug 2020 21:54:06 -0400
+Received: from mail-eopbgr60065.outbound.protection.outlook.com ([40.107.6.65]:64619
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726013AbgHGByG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:54:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=COeQz/KObXZ4zSybl2AAyrlEWggYKJDzEhExf9n5RLbBL1iYa8TJsjUuccZX1BmI80G3mgKkdrx+5QIg7fktfbE+0GX7yENqbMeyO0Ne7bWHYW/RA0zSnkUNCJL7IHKqakjLXdlEHyiobh/BgXW3MtewxTL9ZXDxXeM+P33KCxKqriG594GvLxN06AexStpcRjzCKBkFRyh6aYqY6kG06zmJx2Q3+FnNUv0nU1hoEwIIsnFsWMfSDrVWPlJRGJdX6oLDcMzhIylPlIVvKMeBs6J1NIt9uqm5C+AbMfSXSHwOpLrl+LxtRDOV3HcdPcqa8yOkWVpvw0zoi44yzshM5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
+ b=XrbmlmvsagfKxkMHidGSyKcjL8IcMuxpnlNFr7zTjGs9u/2MYhjbsDRwxND8p3l6Hkf4KsFAtyl4HLeyvF1EGLP+fOp7fCAKiTmvaIAtYRK9cJyE8G187fKk/Y6c4sQoKJSP0OBRbqlRG2Th3Z8V58jRaDlkMpx+jvnB0gMrciQjOB7MXE7AeKUn8+e4NkMNdjQqUcNRHK53fG/x/s/9a3KNjJJaeZUiOlah7GSrmgayhIiVOgfOtzT3ZylVlNfvZd6GyLhK5ub0ZjvqFOktcWWcbXeTGqaFqVKhYODXrm+ke7FFByxxbsTyb7JIXbTWAxaOx2rss1bmuyclRAIcvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
+ b=Q1ihf0KVKFWCqmioH9pp8jvf7wU5Mn6H2DJbO3cK3I/cJ9uVEqAUmxILdcHYOrQsXI1lbIiHl24ScqKx3ajx3HwRNrTo2b+WX3QZH/CucI6h8SqJ2PafClTWwF9qfq91t2BIuK5ixyaFCMrSMDLRaqzLP237jTDwB73p6RPG/mc=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB7PR04MB5994.eurprd04.prod.outlook.com (2603:10a6:10:89::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Fri, 7 Aug
+ 2020 01:54:02 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8db5:8715:8570:1406]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8db5:8715:8570:1406%7]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
+ 01:54:02 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
+Thread-Topic: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
+Thread-Index: AQHWanDUsv5s6HEs8UmAXMW6+qGJdqkrIOgAgADEmlA=
+Date:   Fri, 7 Aug 2020 01:54:02 +0000
+Message-ID: <DB3PR0402MB39160FB9BEE17C4375308D57F5490@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1596553308-13190-1-git-send-email-Anson.Huang@nxp.com>
+ <20200806140718.GA766974@bogus>
+In-Reply-To: <20200806140718.GA766974@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c8118909-d4c1-48f0-7ed8-08d83a74c263
+x-ms-traffictypediagnostic: DB7PR04MB5994:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB599455B1A71014E70E135B48F5490@DB7PR04MB5994.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f8SUzQPaTIYj9mkB354UShLjRp4dv8Y4zn+x1y4/Y5oqHHzZaQvQeiAY4D270+S5Z+m5TSTfc+8boIgq1JR5N1iNwgHPZBFSbcYzBUVYfUSwu6RJ2Q7SHaqXrfMQZzOnSZ+CaRC45+eR699n3f66hI+ZfkCXDghwkMAYBcaU2EJNjoGGIyA2H1sAYLYVpNhwLURJqtihj+r9a1UkTZHIkYuY3elBnP4kKTDw50t6Xq7yarurDx3YIWFrV3I6k0HPgepWVEO67Pa0QrbrmI2NQRBhe49m8WxMl8mxU05d9AS9NZxOzFqPWgdRsO7Jf7tD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(26005)(33656002)(7696005)(8936002)(6506007)(8676002)(66556008)(5660300002)(4326008)(2906002)(64756008)(186003)(52536014)(66446008)(66476007)(76116006)(66946007)(316002)(83380400001)(55016002)(86362001)(71200400001)(9686003)(44832011)(54906003)(478600001)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hatUAiSV3BcQqaCbZo6yoZMUUZr0gHocLMZCDE4Yi9mh3QnOMHXevua4mAjsf/rQqThG2+KGIWHE1nwcgor/eA5DEI9Sgx2AZPeQqLfFPDqoZJHkD1dtR48TmeI2mW7ITieFAFKy2tq71OElienxOGaqLX/mPiDGmePT6zaVBgbDodomFnYYmLpQr/nZY8YNhCWqfjWRMjpmJqVEVG5hs46KJdOqe/qrudBZRLuk+v0V4aZUuRCTVjl4e+bR3BGcznZdYkP4/Kqrxk9GCEDt1Hj7RgqaXvcEDs4emhS7PnXwRnlr/wGfLISkZLlM6mZfB907Ud9pwCe2LJgmj4p04LgdQmBsFdw2GNmvuoHmPBxgeyRYSJtlqiGVElV2qxOOLR1qfPRxVYE3jI6Ok9fhwEJeCj0jJ2Y2v/3YRxBLfpodjxgN/exlYDfJv56pagESbuRcVHOwFxeXo2LMUSfXdj1qgFK3dWkwm7brIOVNsXbJD/saQBCY1oTicRMBJaIHVKeZpK5knl1QccY+0OtM2beYUggw6vQT3MIVteooN9VFaJFXOm3S0JTG5LkrdWR+jGngKS9krGg4LSKkXpAPoGbe6/3I2Vq8wfehD5qagn49mLCaxH57zmutKjEgAmu0PmXR834Q94I80BBaJQbUCw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200710144520.RESEND.1.Id0f52f486e277b5af30babac8ba6b09589962a68@changeid>
- <20200710070332.GA1175842@kroah.com> <CANMq1KDcKWgyYYP_m0-WV7602g7zUbU0PPkvwXxbSTF5vFfKGQ@mail.gmail.com>
-In-Reply-To: <CANMq1KDcKWgyYYP_m0-WV7602g7zUbU0PPkvwXxbSTF5vFfKGQ@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 7 Aug 2020 09:50:23 +0800
-Message-ID: <CANMq1KC7CgUT+neoOUZbnr8MbDgqEikqt2vn8dxAS1rpX=C2aA@mail.gmail.com>
-Subject: Re: [RESEND PATCH] media: atomisp: Replace trace_printk by pr_info
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8118909-d4c1-48f0-7ed8-08d83a74c263
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2020 01:54:02.4103
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kbCkXll3KVQcuMhTqVv8yME0xjK+n8ezhlFGvTwA684DciqbZ8W+FDVR5hJJillhOclcnLCqph9O6jORyoWoPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5994
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 8:41 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> On Fri, Jul 10, 2020 at 3:03 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, Jul 10, 2020 at 02:45:29PM +0800, Nicolas Boichat wrote:
-> > > trace_printk should not be used in production code, replace it
-> > > call with pr_info.
-> > >
-> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > ---
-> > > Sent this before as part of a series (whose 4th patch was a
-> > > change that allows to detect such trace_printk), but maybe it's
-> > > easier to get individual maintainer attention by splitting it.
-> >
-> > Mauro should take this soon:
-> >
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> Mauro: did you get a chance to look at this? (and the other similar
-> patch "media: camss: vfe: Use trace_printk for debugging only")
+Hi, Rob
 
-Mauro: Another gentle ping. Thanks.
 
-> Thanks!
+> Subject: Re: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
+>=20
+> On Tue, 04 Aug 2020 23:01:48 +0800, Anson Huang wrote:
+> > Convert the vf610 gpio binding to DT schema format using json-schema.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 --------------=
+---
+> >  .../devicetree/bindings/gpio/gpio-vf610.yaml       | 79
+> ++++++++++++++++++++++
+> >  2 files changed, 79 insertions(+), 63 deletions(-)  delete mode
+> > 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> >
+>=20
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio=
+/
+> gpio-vf610.example.dt.yaml: example-0: gpio@40049000:reg:0: [1074040832,
+> 4096, 1074786304, 64] is too long
+>=20
+
+I updated the dt-schema and the latest commit is as below, and there is no =
+build error
+on my side, do you know why?
+
+commit 8fd8ce7ff6bd47616ceb48f69d1a04116dee7a41
+Author: Rob Herring <robh@kernel.org>
+Date:   Wed Aug 5 10:38:08 2020 -0600
+
+    dt-extract-example: Use the C yaml parser
+
+    The 'pure' (Python) loader was needed at one time for YAML 1.2, but rua=
+mel
+    has supported 1.2 with its libyaml since 0.15.63 and we depend on versi=
+on
+    0.15.70 at least.
+
+    Signed-off-by: Rob Herring <robh@kernel.org>
+
+tools/dt-extract-example
+
+
+anson@anson-OptiPlex-790:~/workspace/stash/linux-next$ make.cross ARCH=3Dar=
+m dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/gpio=
+/gpio-vf610.yaml
+make CROSS_COMPILE=3D/opt/gcc-4.9.0-nolibc/arm-unknown-linux-gnueabi/bin/ar=
+m-unknown-linux-gnueabi- --jobs=3D8 ARCH=3Darm dt_binding_check DT_SCHEMA_F=
+ILES=3DDocumentation/devicetree/bindings/gpio/gpio-vf610.yaml
+  CHKDT   Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+/home/anson/workspace/stash/linux-next/Documentation/devicetree/bindings/pi=
+nctrl/ingenic,pinctrl.yaml: ignoring, error in schema: additionalProperties
+warning: no schema found in file: ./Documentation/devicetree/bindings/pinct=
+rl/ingenic,pinctrl.yaml
+  DTC     Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
+anson@anson-OptiPlex-790:~/workspace/stash/linux-next$
+
+Thanks,
+Anson
+
