@@ -2,234 +2,110 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D743C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D602075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:12:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDDCzqQM"
+	by mail.kernel.org (Postfix) with ESMTP id 8D2092075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596823985;
+	bh=CEqR0PL4sIYHmFanekJ0BnBNxidPs/bYrxX6xO1pKjE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FF2Q3VvDQb6p3yB6ld11mOfhN1nmlozGMDUpVLlw9Bb3etnk/8fTnNcg244BoMEaW
+	 YcBJ6SFA47/EolLwBsXzxNRJQQY3NtBffavi36Hgls3lRfAzdpDGVfTJ2tki8ImIhP
+	 G1vFv7KHj/QglEd6iksaVajTY2LN3Zhv4jK+dswU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgHGSMm (ORCPT
+        id S1726713AbgHGSNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
+        Fri, 7 Aug 2020 14:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgHGSMl (ORCPT
+        with ESMTP id S1725934AbgHGSND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:12:41 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB23EC061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:12:41 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f10so1434960plj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:12:41 -0700 (PDT)
+        Fri, 7 Aug 2020 14:13:03 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC27C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:13:03 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id t23so3165968ljc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kL3mR5oBZa4t2i/MKwrasxeLRvGcBc/sHQnLPXjcDwY=;
-        b=qDDCzqQMNn82CNd4xcit662vHZMflfcl/cJjl2y6Rf2h/iJ2NYCm4uQUJpzhbCTiSM
-         Upi8GVx8qDBBIy7VW2aAlhkTAhgdCSF3EA4Tu77gjdit1+LwN4QDoKiA1ObOYgyjp9kN
-         t6gouN/unOljNDNCvakHHUz7sz6hdnpaT9YUS7AJMnMGCdUZ1OmKUfF9TaOJVz503CU+
-         H8G5muLfTUVHpQd9uoHosckOHKYXWEbaqaRwUTFxsDR7BfjbJ5K8DePBafMyUIAwuuM1
-         Aq3DYpyMSGZnVJeUj2RpcjoWOGoTGaNoFWMb2xWDtzfb77+fWq/WZxo9a1WpYNz6wjcT
-         8tvQ==
+        bh=leE2Cykz74amz3n8V90szIGU70TUJ9qpRsnnAIasBxc=;
+        b=OE21AsDR2Yh6e0J4PH/Q+90anBoRnVpEvcC9LHTVLEhVlelx2/tMuGFoZc8H74JmJS
+         eKPlUr5Uc1yPRnpAjlcOvrk1np+0uO3nFHparP3JQQ4Y4kd6yA0K7mz/vAGLs74kexZE
+         D0+tNGggLXYbsXpwvjejbKohWdZs0q0GDu5lc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kL3mR5oBZa4t2i/MKwrasxeLRvGcBc/sHQnLPXjcDwY=;
-        b=hFSD2WblSThx1J+HxLwy51sxD49Ubwsnp0/xo9q/Vt40rXDFtbEFxDwrJfVR4AY5/6
-         X5UnxZGWdQIePQo6v3heskVyGf163dowqkN+OyyolFCeSp8KEtEzogCa6qHaBsAFkOCX
-         uTs0+eZgfI44Qnh75R4pUUP3cX/29/adaPJpDRJhB2XmBfVCXqSe3DDMz3m2N3zPNr/Y
-         bCdiy5y/A/zP8AIvEhp1ZXUd2HmsY59KDenMNNsBv4OfkACwX2jDFxHgNoTgiw93c+56
-         +KwfHdD/j7JlriFXlnjPdGbUEQiGZhkgP8ffKsyqOdIkoj0Ro1ZsJtfOPPtUjkbm0lqm
-         61gg==
-X-Gm-Message-State: AOAM533N3wcabJARToUGQcOZG8Fn28tPH572nJiMrqrSl9dtoxrhPXoY
-        xWWIvwNXrI9E9w892lp1dT0qRM7QgM1iPJt3J49epw==
-X-Google-Smtp-Source: ABdhPJzUP9BycNEANV1ccydFSurHQBFr1fKt53c4Ly+onOxBQysLPnMNlFrz2Xmne8b9+/GR+N3sOSeUyLSCzZN+QsY=
-X-Received: by 2002:a17:902:cb91:: with SMTP id d17mr13384373ply.223.1596823960860;
- Fri, 07 Aug 2020 11:12:40 -0700 (PDT)
+        bh=leE2Cykz74amz3n8V90szIGU70TUJ9qpRsnnAIasBxc=;
+        b=bWEwWvquRDwxWqoNEuwtStIe00eXzwulW9fs74SIkln6Pfek68nKBFFmy3YvjaVAsJ
+         yKczd//4Ut72MQvGtu/i0T3W6Qgsw2qdxUcyqfl8WFMK3HqFqnA/RES/KJW4GdXqDkam
+         bgsZBijfR43qzwocO0KkzfJjSnUvY9yvzfxfDcWNphDLhxBf2um7UFZLD1whILYZVcwc
+         TnHK3ak5c9FLMONeMwR0fdRJOYD4lFx/uBwCLAoFkkVADJhR6oFUTrgjhE6rTDK//L4m
+         O1+8WqckBmMBFHXoys840RmyKFJt7Jt1KbYRldmVzxNWd4mu939zzxwSrFnpnU2h4mvH
+         xt2g==
+X-Gm-Message-State: AOAM533F5+yUpeH3f1vh8POWeGllluneT/XqwPLbma8Hpm49rdC93vmM
+        cdmJlFjUHXf1A+iUFXTBneFi0n6q3w4=
+X-Google-Smtp-Source: ABdhPJzzO88ynJudN98qLgrwWP2g8iaUSqQoSpwpZM8PEq6MufAugxo0H0jxbZdbw4+OLdQjYwnI4g==
+X-Received: by 2002:a2e:b8c2:: with SMTP id s2mr7115771ljp.179.1596823981159;
+        Fri, 07 Aug 2020 11:13:01 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id s1sm4585907lfi.76.2020.08.07.11.12.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 11:13:00 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id g6so3126363ljn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:12:59 -0700 (PDT)
+X-Received: by 2002:a2e:9a11:: with SMTP id o17mr6645875lji.314.1596823979484;
+ Fri, 07 Aug 2020 11:12:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200731230820.1742553-1-keescook@chromium.org> <20200731230820.1742553-7-keescook@chromium.org>
-In-Reply-To: <20200731230820.1742553-7-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 7 Aug 2020 11:12:29 -0700
-Message-ID: <CAKwvOd=mY5=SWjGKA_KpvKnOPmJky_qMcyBYeFhskx6J=aJmNA@mail.gmail.com>
-Subject: Re: [PATCH v5 06/36] x86/boot: Remove run-time relocations from head_{32,64}.S
-To:     Kees Cook <keescook@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
+ <CAHk-=wgLt61owJ_eKwy43bBujxy3-s=xQXwsSi6VHME7SiAgiA@mail.gmail.com>
+ <b903cdd8-cbb5-1a6a-3943-9bb019f1eed7@linaro.org> <CAHk-=wgSJwbghhQYCoAVq6ewGKZ+rZvxeKvxb-o_gMt7d7-Nbw@mail.gmail.com>
+ <88678a80-4ca2-5cb0-d9c5-3e64b7f113f5@linaro.org>
+In-Reply-To: <88678a80-4ca2-5cb0-d9c5-3e64b7f113f5@linaro.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 7 Aug 2020 11:12:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whe9+soLhAtO2hctL4PgnnG67BGHpSPSyxTLAe0c2zqmQ@mail.gmail.com>
+Message-ID: <CAHk-=whe9+soLhAtO2hctL4PgnnG67BGHpSPSyxTLAe0c2zqmQ@mail.gmail.com>
+Subject: Re: [GIT PULL] RESEND: thermal for v5.9-rc1
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Colin King <colin.king@canonical.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Lukasz Luba <Lukasz.Luba@arm.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Henry Yen <henry.yen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 4:08 PM Kees Cook <keescook@chromium.org> wrote:
+On Fri, Aug 7, 2020 at 11:06 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 >
-> From: Arvind Sankar <nivedita@alum.mit.edu>
->
-> The BFD linker generates run-time relocations for z_input_len and
-> z_output_len, even though they are absolute symbols.
->
-> This is fixed for binutils-2.35 [1]. Work around this for earlier
-> versions by defining two variables input_len and output_len in addition
-> to the symbols, and use them via position-independent references.
->
-> This eliminates the last two run-time relocations in the head code and
-> allows us to drop the -z noreloc-overflow flag to the linker.
->
-> Move the -pie and --no-dynamic-linker LDFLAGS to LDFLAGS_vmlinux instead
-> of KBUILD_LDFLAGS. There shouldn't be anything else getting linked, but
-> this is the more logical location for these flags, and modversions might
-> call the linker if an EXPORT_SYMBOL is left over accidentally in one of
-> the decompressors.
->
-> [1] https://sourceware.org/bugzilla/show_bug.cgi?id=25754
->
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> Reviewed-by: Fangrui Song <maskray@google.com>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/boot/compressed/Makefile  | 12 ++----------
->  arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
->  arch/x86/boot/compressed/head_64.S |  4 ++--
->  arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
->  4 files changed, 18 insertions(+), 21 deletions(-)
->
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 489fea16bcfb..7db0102a573d 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -51,16 +51,8 @@ UBSAN_SANITIZE :=n
->  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
->  # Compressed kernel should be built as PIE since it may be loaded at any
->  # address by the bootloader.
-> -ifeq ($(CONFIG_X86_32),y)
-> -KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
-> -else
-> -# To build 64-bit compressed kernel as PIE, we disable relocation
-> -# overflow check to avoid relocation overflow error with a new linker
-> -# command-line option, -z noreloc-overflow.
-> -KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
-> -       && echo "-z noreloc-overflow -pie --no-dynamic-linker")
-> -endif
-> -LDFLAGS_vmlinux := -T
-> +LDFLAGS_vmlinux := $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
+> Ok, I will send a fix.
 
-Oh, do these still need ld-option?  bfd and lld both support these
-flags. (Though in their --help, they mention single hyphen and double
-hyphen respectively.  Also, if we don't build this as PIE because the
-linker doesn't support the option, we probably want to fail the build?
+I ended up doing it during my morning routine of looking around for,
+and applying, random patches.
 
-> +LDFLAGS_vmlinux += -T
->
->  hostprogs      := mkpiggy
->  HOST_EXTRACFLAGS += -I$(srctree)/tools/include
-> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-> index 8c1a4f5610f5..659fad53ca82 100644
-> --- a/arch/x86/boot/compressed/head_32.S
-> +++ b/arch/x86/boot/compressed/head_32.S
-> @@ -178,18 +178,17 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
->  /*
->   * Do the extraction, and jump to the new kernel..
->   */
-> -                               /* push arguments for extract_kernel: */
-> -       pushl   $z_output_len   /* decompressed length, end of relocs */
-> +       /* push arguments for extract_kernel: */
->
-> -       pushl   %ebp            /* output address */
-> -
-> -       pushl   $z_input_len    /* input_len */
-> +       pushl   output_len@GOTOFF(%ebx) /* decompressed length, end of relocs */
-> +       pushl   %ebp                    /* output address */
-> +       pushl   input_len@GOTOFF(%ebx)  /* input_len */
->         leal    input_data@GOTOFF(%ebx), %eax
-> -       pushl   %eax            /* input_data */
-> +       pushl   %eax                    /* input_data */
->         leal    boot_heap@GOTOFF(%ebx), %eax
-> -       pushl   %eax            /* heap area */
-> -       pushl   %esi            /* real mode pointer */
-> -       call    extract_kernel  /* returns kernel location in %eax */
-> +       pushl   %eax                    /* heap area */
-> +       pushl   %esi                    /* real mode pointer */
-> +       call    extract_kernel          /* returns kernel location in %eax */
->         addl    $24, %esp
->
->  /*
-> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-> index 11429092c224..9e46729cf162 100644
-> --- a/arch/x86/boot/compressed/head_64.S
-> +++ b/arch/x86/boot/compressed/head_64.S
-> @@ -534,9 +534,9 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
->         movq    %rsi, %rdi              /* real mode address */
->         leaq    boot_heap(%rip), %rsi   /* malloc area for uncompression */
->         leaq    input_data(%rip), %rdx  /* input_data */
-> -       movl    $z_input_len, %ecx      /* input_len */
-> +       movl    input_len(%rip), %ecx   /* input_len */
->         movq    %rbp, %r8               /* output target address */
-> -       movl    $z_output_len, %r9d     /* decompressed length, end of relocs */
-> +       movl    output_len(%rip), %r9d  /* decompressed length, end of relocs */
->         call    extract_kernel          /* returns kernel location in %rax */
->         popq    %rsi
->
-> diff --git a/arch/x86/boot/compressed/mkpiggy.c b/arch/x86/boot/compressed/mkpiggy.c
-> index 7e01248765b2..52aa56cdbacc 100644
-> --- a/arch/x86/boot/compressed/mkpiggy.c
-> +++ b/arch/x86/boot/compressed/mkpiggy.c
-> @@ -60,6 +60,12 @@ int main(int argc, char *argv[])
->         printf(".incbin \"%s\"\n", argv[1]);
->         printf("input_data_end:\n");
->
-> +       printf(".section \".rodata\",\"a\",@progbits\n");
-> +       printf(".globl input_len\n");
-> +       printf("input_len:\n\t.long %lu\n", ilen);
-> +       printf(".globl output_len\n");
-> +       printf("output_len:\n\t.long %lu\n", (unsigned long)olen);
-> +
->         retval = 0;
->  bail:
->         if (f)
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200731230820.1742553-7-keescook%40chromium.org.
+So it's commit 0f5d0a4c01cc ("thermal: don't make THERMAL_NETLINK
+'default y'") in my tree now.
 
-
-
--- 
-Thanks,
-~Nick Desaulniers
+                 Linus
