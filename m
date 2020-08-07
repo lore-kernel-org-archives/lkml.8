@@ -2,88 +2,150 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0629221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8455B21744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="uJ84z521";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="MQWInGY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgHGJpL (ORCPT
+        id S1727975AbgHGJpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:45:11 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:50028 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727791AbgHGJpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:45:11 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9BxG+SIIi1fvqkFAA--.1496S2;
-        Fri, 07 Aug 2020 17:44:41 +0800 (CST)
-From:   Youling Tang <tangyouling@loongson.cn>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel/debug: Fix spelling mistake in debug_core.c
-Date:   Fri,  7 Aug 2020 17:44:40 +0800
-Message-Id: <1596793480-22559-1-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9BxG+SIIi1fvqkFAA--.1496S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFy5Ar1DGr1kCw4fWF1UGFg_yoWDtFg_Kw
-        n2yws5Ca1UJ345Ar4UCw1rXFnY9w4UZFZ8Ar1agrZF9a4Dt34UXwsYqF1kGFWrWrWDXr9x
-        Ar9avr4ayr12gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2xYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8uwCF04k2
-        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-        AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
-        z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUID73DUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+        Fri, 7 Aug 2020 05:45:36 -0400
+Received: from relay1.mymailcheap.com ([144.217.248.102]:40937 "EHLO
+        relay1.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgHGJpf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 05:45:35 -0400
+X-Greylist: delayed 54956 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 05:45:34 EDT
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
+        by relay1.mymailcheap.com (Postfix) with ESMTPS id 1BC153F157;
+        Fri,  7 Aug 2020 05:45:34 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by filter1.mymailcheap.com (Postfix) with ESMTP id F2AFB2A3BD;
+        Fri,  7 Aug 2020 05:45:33 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596793534;
+        bh=t2ToXu8yhIqZ88STj/d3ONGFTA8kxJKnz/37IqJZGRM=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=uJ84z521nNKtV4R5VGcEmR9GfVXgbGZjbnPLuAd+11uWL123lN6uLnQcvIILUo1pe
+         jbAjokFSB9Gdin6IcHV0MNKpEnoX96+CN0m+DK0ERVEldPi62cUN2Ln4PIbw4ahL0C
+         beFKEjlBqj4TDpqIK366G9FKPdK9PIr5Ek1DUajM=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id U4cAgRT9TFvB; Fri,  7 Aug 2020 05:45:32 -0400 (EDT)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter1.mymailcheap.com (Postfix) with ESMTPS;
+        Fri,  7 Aug 2020 05:45:32 -0400 (EDT)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 7C68B4259A;
+        Fri,  7 Aug 2020 09:45:29 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="MQWInGY+";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [203.86.239.91])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 33B7E425A5;
+        Fri,  7 Aug 2020 09:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596793292;
+        bh=t2ToXu8yhIqZ88STj/d3ONGFTA8kxJKnz/37IqJZGRM=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=MQWInGY+u2ATCv0NCgzuj2d9PyJlN8/N2Mp7pmwP4pW3rou4d7bKSkZWhw5MRy/Xx
+         oZF1G4KWtqVlcjyHc4LXOb8FDRiNyXWgzHwFYnes7sMgc1DGTTZW6cTQI6cVUnzQZv
+         QrfkausLBTMPPnoFFNuEsrw09la0sTombiwU3OpU=
+Subject: Re: [PATCH 4/4] MIPS: BCM63xx: refactor board declarations
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200807093825.2902474-1-noltari@gmail.com>
+ <20200807093825.2902474-5-noltari@gmail.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <4ebe17b8-699d-349a-9c33-6eec5cb40fa3@flygoat.com>
+Date:   Fri, 7 Aug 2020 17:41:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200807093825.2902474-5-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Rspamd-Queue-Id: 7C68B4259A
+X-Spamd-Result: default: False [1.40 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         MID_RHS_MATCH_FROM(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         FREEMAIL_TO(0.00)[gmail.com,alpha.franken.de,broadcom.com,vger.kernel.org,lists.infradead.org];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         SUSPICIOUS_RECIPS(1.50)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "notifiter" --> "notifier"
-	  "overriden" --> "overridden"
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- kernel/debug/debug_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index b16dbc1..3eeee0a 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -80,7 +80,7 @@ static int			exception_level;
- struct kgdb_io		*dbg_io_ops;
- static DEFINE_SPINLOCK(kgdb_registration_lock);
- 
--/* Action for the reboot notifiter, a global allow kdb to change it */
-+/* Action for the reboot notifier, a global allow kdb to change it */
- static int kgdbreboot;
- /* kgdb console driver is loaded */
- static int kgdb_con_registered;
-@@ -163,7 +163,7 @@ early_param("nokgdbroundup", opt_nokgdbroundup);
- 
- /*
-  * Weak aliases for breakpoint management,
-- * can be overriden by architectures when needed:
-+ * can be overridden by architectures when needed:
-  */
- int __weak kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- {
--- 
-2.1.0
+在 2020/8/7 下午5:38, Álvaro Fernández Rojas 写道:
+> Current board declarations are a mess. Let's put some order and make them
+> follow the same structure.
+> Also remove board declarations tabs and double whitespace in the header.
+>
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>   arch/mips/bcm63xx/boards/board_bcm963xx.c | 617 +++++++++++-----------
+>   1 file changed, 306 insertions(+), 311 deletions(-)
+>
+> diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+> index ac9570b66f37..36dd356374b1 100644
+> --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
+> +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+> @@ -1,6 +1,6 @@
+>   /*
+>    * This file is subject to the terms and conditions of the GNU General Public
+> - * License.  See the file "COPYING" in the main directory of this archive
+> + * License. See the file "COPYING" in the main directory of this archive
+You'd better replace licenses text with SPDX identifier.
+>    * for more details.
+>    *
+>    * Copyright (C) 2008 Maxime Bizon <mbizon@freebox.fr>
+> @@ -41,30 +41,28 @@ static struct board_info board;
+>    */
+>
 
+Thanks
+
+- Jiaxun
