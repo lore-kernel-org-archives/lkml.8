@@ -2,105 +2,149 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C72C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E01CF214F1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E912177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcgHBwGB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPOevBWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgHGUKT (ORCPT
+        id S1726563AbgHGUNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41278 "EHLO
+        Fri, 7 Aug 2020 16:13:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGUKN (ORCPT
+        with ESMTP id S1726030AbgHGUNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:10:13 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A745C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:10:13 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id o36so661945ooi.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:10:13 -0700 (PDT)
+        Fri, 7 Aug 2020 16:13:36 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA78CC061756;
+        Fri,  7 Aug 2020 13:13:36 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id x10so1609628ybj.13;
+        Fri, 07 Aug 2020 13:13:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=soqS30MM7Lvz4xj7E5lcaM6TYNPttmmFgM0OZvhcFi4=;
-        b=TcgHBwGBV180Qzb+5Q7lmvpy+TY9LRvlMXf10V4beYwGfA/qVc1lpX5CVqk1CfysmS
-         X4D1k/PRqlhFuAUx9Z031PDqRwoJmjGiTDxBfyYOE8UD3tw+KTt82zUluR2jWQjuqYw5
-         6C0T4Pdh2RhCV4gP6N7Xvx8LVdxY82scCtfA9D9FeLG9w7AfBJqmgucGN/7e1pqTy92M
-         W7rYXB9uFHW0n1iI//YkAJW54KPct5L8KeNvMCJNqvbFkD4fzxBkZXgEKHq0v7MOLohL
-         AaiL70yDCYMyGMKa8SjPbUfr1RYw+StFHiBD7QkcbPzd+Fcfo0NItTeoms1r1jBWrStO
-         eQWg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NlOBWexyY0dInNPp/mSfboYY9fzvv33AGfW2HB+4EOM=;
+        b=aPOevBWgD0Rb9PDi95sWQVC4og7b6PK74p49d64mvkRGJtjnHeMWgmAoLl6M5PVFms
+         lrf6sra716RhvYwUs0oHi9ScRiR2oDqidZj3VanxfwhRjzo5D2/d+6MAPbYsOmdbtGzg
+         roz09lyy3QJvnVybwQqG0ZME24b9vJquEWUgaanktSmqILCXUXpYl1nXUfnU48HsAgjW
+         ulaMs4ze1Eh5pDu+htXxOxffsCRSTVX0j+tLO7Mr7917ghi8Z+TQG38yOngX8yN0flZc
+         0Y1hJY+M0QMEYGaoJOu1aCrT7gWnrr2oDuJHGiXxchcglcmu+ndG/lDxc1GHtzlNC2p6
+         VlmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=soqS30MM7Lvz4xj7E5lcaM6TYNPttmmFgM0OZvhcFi4=;
-        b=Gnll3MmrOx9F/2ekRuHVMIIltHXDOAOEe+DqADASQ5WuQ2HV4+hIsajwQaF6LKkArN
-         In7ghr78awzN+kSIAt1SDmIZRDxKR7OMjatL3Vob0uz2UsH4QD5TZNKwVpmfWoAM2oVk
-         CV2ibnTIKiTkyW5dG3FxP3BdSiXovdMUtg12jTldKyW6Ha/Gvjms5dy5xq58hpMMsr1C
-         6n84+8DeMfs5WGMHsAOtXiFnYCFSIFXWCsQQgXPHgrfpUH87BEPaS9kd+OePkMqffk5T
-         lqo+RIkUXzbdBvyi8R3ZCc7Z5jRWSux33/nG6iBJvcG3Jp/x11rxuUECuwQMob22pthp
-         raEQ==
-X-Gm-Message-State: AOAM531TXNcWzd5l4mce8JwwRHqQmWwuXPR+3qPrBwzxLGnnCP+zC0+r
-        tAAdJwel+u3RIP+KXJ9gdK0=
-X-Google-Smtp-Source: ABdhPJyAK2UqU6tVeNe21WWNq9OdVEC5p+XtuXSnZhxpZrGS3LGxm+R287zqhFmY+2lf3sd4aV2eSg==
-X-Received: by 2002:a4a:c887:: with SMTP id t7mr14059716ooq.57.1596831012751;
-        Fri, 07 Aug 2020 13:10:12 -0700 (PDT)
-Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::af38])
-        by smtp.googlemail.com with ESMTPSA id s6sm1835794otq.75.2020.08.07.13.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 13:10:11 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     jbaron@akamai.com, linux-kernel@vger.kernel.org
-Cc:     Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 0/7] dyndbg: WIP diet plan
-Date:   Fri,  7 Aug 2020 14:09:47 -0600
-Message-Id: <20200807200957.1269454-1-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NlOBWexyY0dInNPp/mSfboYY9fzvv33AGfW2HB+4EOM=;
+        b=Pq2o4bTHlxY9MLHJn5YLw37sOL35BRSEl3tyUDDh0e7NfQ2IdtkaihWxNkJI+e93qi
+         zr1FpiP1KkVh9pwIHgc8iHjGm47CZBL2i2dyW/NP4uspeuCXEJ5eEHkY0PgBBxmDJZvd
+         TnWg7auB99DI87vSsGBaUUUd6nAsToJ8meYuvTksPPgDKJ86qHC94wjSEB9qGSK99Xmi
+         MDKaZ/vdSNzB1u/q5uVPopKUhRUiNJ2ins/FcDK6y5SzlgH0WDPoDtrt9s0vSRoRKYJ/
+         gotQkZAo9A2yN9v2jmS7BZbvLC3hjwOGu/sREGCOJ+uQO7H5XlyUcuVB2EDaBTqMb5ba
+         IiJg==
+X-Gm-Message-State: AOAM531QBJJhqCv2csdN5m10C6YRl11HvGGTR+lSLQn5crQh6a+9dbfG
+        KGv15dJ7FoF+5T4hV7ElcgtqZEygOpXX4ENjFJU=
+X-Google-Smtp-Source: ABdhPJxWIoNXcSUcv/qMdTJM/8d2ZcqSOWxQZVAuYfWjwDUV58Dit91Vp7rR8Jm9fnHRs5ptwSuqPscUDJRO173oYOU=
+X-Received: by 2002:a25:824a:: with SMTP id d10mr23418559ybn.260.1596831215942;
+ Fri, 07 Aug 2020 13:13:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200731061600.18344-1-Jianlin.Lv@arm.com> <20200807172016.150952-1-Jianlin.Lv@arm.com>
+In-Reply-To: <20200807172016.150952-1-Jianlin.Lv@arm.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 7 Aug 2020 13:13:25 -0700
+Message-ID: <CAEf4Bza2vJYRbzo2Qbx_XRBPsS-n3dxhOaK+vzjqrhb2wUaCnQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: fix segmentation fault of test_progs
+To:     Jianlin Lv <Jianlin.Lv@arm.com>
+Cc:     bpf <bpf@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dynamic-debug metadata is bloated; the __dyndbg linker section is
-effectively an array of struct _ddebugs, and its 1st 3 members are
-highly repetetive, with 90%, 84%, 45% repeats.  Total reported usage
-~150kb for ~2600 callsites on my laptop config.
+On Fri, Aug 7, 2020 at 10:21 AM Jianlin Lv <Jianlin.Lv@arm.com> wrote:
+>
+> test_progs reports the segmentation fault as below
+>
+> $ sudo ./test_progs -t mmap --verbose
+> test_mmap:PASS:skel_open_and_load 0 nsec
+> ......
+> test_mmap:PASS:adv_mmap1 0 nsec
+> test_mmap:PASS:adv_mmap2 0 nsec
+> test_mmap:PASS:adv_mmap3 0 nsec
+> test_mmap:PASS:adv_mmap4 0 nsec
+> Segmentation fault
+>
+> This issue was triggered because mmap() and munmap() used inconsistent
+> length parameters; mmap() creates a new mapping of 3*page_size, but the
+> length parameter set in the subsequent re-map and munmap() functions is
+> 4*page_size; this leads to the destruction of the process space.
+>
+> Another issue is that when unmap the second page fails, the length
+> parameter to delete tmp1 mappings should be 3*page_size.
+>
+> Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
+> ---
+>  tools/testing/selftests/bpf/prog_tests/mmap.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
+> index 43d0b5578f46..2070cfe19cac 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mmap.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
+> @@ -192,7 +192,7 @@ void test_mmap(void)
+>         /* unmap second page: pages 1, 3 mapped */
+>         err = munmap(tmp1 + page_size, page_size);
+>         if (CHECK(err, "adv_mmap2", "errno %d\n", errno)) {
+> -               munmap(tmp1, map_sz);
+> +               munmap(tmp1, 3 * page_size);
 
-This patchset is one diet plan. it all holds together nicely until the
-"cache" commit, when it blows up starting init (or right after freeing
-unused kernel image, which Im hoping to do...).
+this is a good catch, thank you!
 
-last commit log has the BUG trace from a LOCKDEP build, which reports
-stuff I dont quite undertand, except that it looks bad.
+>                 goto cleanup;
+>         }
+>
+> @@ -207,8 +207,8 @@ void test_mmap(void)
+>         CHECK(tmp1 + page_size != tmp2, "adv_mmap4",
+>               "tmp1: %p, tmp2: %p\n", tmp1, tmp2);
+>
+> -       /* re-map all 4 pages */
+> -       tmp2 = mmap(tmp1, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
+> +       /* re-map all 3 pages */
+> +       tmp2 = mmap(tmp1, 3 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
+>                     data_map_fd, 0);
+
+"all 3 pages" is a lie, there are 4. I'd still want to work with all 4
+pages. How about we mmap() 4 pages of anonymous memory first, then do
+all the mmap() with MAP_FIXED, re-using that memory range. That will
+ensure that we are not stepping on any other allocated memory, right?
 
 
-Jim Cromie (7):
-  dyndbg: give %3u width in pr-format, cosmetic only
-  dyndbg: motivate a diet plan
-  dyndbg: select ZPOOL in Kconfig.debug
-  dyndbg: split struct _ddebug in 2, creating _ddebug_callsite
-  dyndbg: WIP replace __dyndbg_callsite section with a zs-pool copy.
-  dyndbg: add locking around zpool-add loop in zpool-init
-  dyndbg: enable 'cache' of active pr_debug callsites
-
- include/asm-generic/vmlinux.lds.h |   4 +
- include/linux/dynamic_debug.h     |  36 +++--
- lib/Kconfig.debug                 |   1 +
- lib/dynamic_debug.c               | 220 +++++++++++++++++++++++++-----
- 4 files changed, 218 insertions(+), 43 deletions(-)
-
--- 
-2.26.2
-
+>         if (CHECK(tmp2 == MAP_FAILED, "adv_mmap5", "errno %d\n", errno)) {
+>                 munmap(tmp1, 3 * page_size); /* unmap page 1 */
+> @@ -226,7 +226,7 @@ void test_mmap(void)
+>         CHECK_FAIL(map_data->val[2] != 321);
+>         CHECK_FAIL(map_data->val[far] != 3 * 321);
+>
+> -       munmap(tmp2, 4 * page_size);
+> +       munmap(tmp2, 3 * page_size);
+>
+>         /* map all 4 pages, but with pg_off=1 page, should fail */
+>         tmp1 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
+> --
+> 2.17.1
+>
