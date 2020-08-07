@@ -2,169 +2,88 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D830CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A271C206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:40:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCUz+KQV"
+	by mail.kernel.org (Postfix) with ESMTP id B0629221E5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgHGJkJ (ORCPT
+        id S1727908AbgHGJpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgHGJkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:40:06 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EEDDC061575
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 02:40:06 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g8so1154438wmk.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 02:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2ygenASuFAVHeSxyfRvlwBCfbX67rwOVVS8/a2O5+lk=;
-        b=vCUz+KQVy1TVKykoi2FIr81nxc/Dlf66XKmkkyc6xVTHk6IfWWXk8aLggri1BoX4H4
-         sd7UJ6SnzD3ZBnabDJrahu1OR8ZiELVkKEruE9wzBCo49m6qx+FmF6bBcoSBGUFMB00H
-         ewDq5c8XABr7mfCaZs0P1qvsYSwa405Uz9XwsefdjgcGd1udB3OPZSKOY+4eLYUtFX68
-         DNPTHTwYSkcuLiQBDBZKukk/kijCebWpgd3EYFC/b37S9S6QEYFlwUP1voaQvpuX6AbT
-         YhwKAZVGHquNbMMhmdZu8YrzITupoPwk6x7lTE7yu1s302i33Rhvoyp3lM7Xk1yAiD7V
-         PbNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2ygenASuFAVHeSxyfRvlwBCfbX67rwOVVS8/a2O5+lk=;
-        b=SK7GcXWr31Y1NOG0ZmUWgk/mBWCCzg1b3q+V53jX2mVgzHmHV/poXZ18EKPiTbtyRV
-         w08tZcWru4Dkes7vXoLXPq/McLg/yIPlfN4X/VC/od4Sw+HFlmH5GSj94y/QGYQaeB3+
-         VJUV+Ziq2Vif4G4jztlLH7Vh96+svjMfRLHfSt1NAwoKxiG8t0KYOkBReyMNXkJ+VAIR
-         I0zhLpMQQSvJZPLhw8eVFWgg73c7wdXRBNUVc7ZGHGXp7y2cffQS6RyMjvVKLuHwmUzG
-         cY25RhoW/nhfw3pti+YCAY5xMVRU8Wfmj8r8pZfuNQm6sOkmz+595pcb/Fn95omUfMOx
-         s44A==
-X-Gm-Message-State: AOAM533z3BjDCDd4qpVq6D06t6d6DzKoK/Z5zeYM0KDg7K7zXfnzpWTp
-        M3vyfCZ9J6CQSwPA4l8ncBuhfg==
-X-Google-Smtp-Source: ABdhPJwuqQGf4ihtasBI+Gyuf4ZsDRFnz4dqvO8MH6E2ks+1/REokqPvz45ZuYKgSxuFeG9iFggAhA==
-X-Received: by 2002:a1c:7d55:: with SMTP id y82mr11787250wmc.186.1596793204726;
-        Fri, 07 Aug 2020 02:40:04 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f457:5fc1:5262:84c? ([2a01:e34:ed2f:f020:f457:5fc1:5262:84c])
-        by smtp.googlemail.com with ESMTPSA id o10sm9397248wrw.79.2020.08.07.02.40.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 02:40:04 -0700 (PDT)
-Subject: Re: [GIT PULL] RESEND: thermal for v5.9-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Colin King <colin.king@canonical.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Lukasz Luba <Lukasz.Luba@arm.com>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Henry Yen <henry.yen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-References: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
- <CAHk-=wgLt61owJ_eKwy43bBujxy3-s=xQXwsSi6VHME7SiAgiA@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <b903cdd8-cbb5-1a6a-3943-9bb019f1eed7@linaro.org>
-Date:   Fri, 7 Aug 2020 11:40:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgLt61owJ_eKwy43bBujxy3-s=xQXwsSi6VHME7SiAgiA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Aug 2020 05:45:11 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:50028 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727791AbgHGJpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 05:45:11 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9BxG+SIIi1fvqkFAA--.1496S2;
+        Fri, 07 Aug 2020 17:44:41 +0800 (CST)
+From:   Youling Tang <tangyouling@loongson.cn>
+To:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [PATCH] kernel/debug: Fix spelling mistake in debug_core.c
+Date:   Fri,  7 Aug 2020 17:44:40 +0800
+Message-Id: <1596793480-22559-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9BxG+SIIi1fvqkFAA--.1496S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFy5Ar1DGr1kCw4fWF1UGFg_yoWDtFg_Kw
+        n2yws5Ca1UJ345Ar4UCw1rXFnY9w4UZFZ8Ar1agrZF9a4Dt34UXwsYqF1kGFWrWrWDXr9x
+        Ar9avr4ayr12gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2xYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8uwCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+        z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUID73DUUUU
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix typo: "notifiter" --> "notifier"
+	  "overriden" --> "overridden"
 
-Hi Linus,
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ kernel/debug/debug_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-On 07/08/2020 04:43, Linus Torvalds wrote:
-> On Thu, Aug 6, 2020 at 1:19 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->>
->>
->> - Add generic netlink support for userspace notifications: events,
->> temperature
->>   and discovery commands (Daniel Lezcano)
-> 
-> This is "default y".
-> 
-> Why?
-> 
-> The help text doesn't explain either.
-> 
-> Please explain, or remove the default y. We don't add new features and
-> then try to force people to use them by enabling them by default.
-> 
-> "default y" is mainly for when something unconditional gets split up
-> and becomes conditional (so now "default y" means that you don't break
-> peoples setups when they don't even know what it is).
-> 
-> Alternatively, "default y" is for things that are make peoples lives
-> immeasurably better somehow, and it would be a crime to not enable it
-> because it's _so_ wonderful.
-
-Well, I won't argue the netlink notification is so that fantastic but it
-is a feature that was needed since a long time. A previous partial
-implementation was directly compiled-in and then removed [1] because
-there were no user as it is and we wanted to introduce a clean new
-notification framework based in our previous discussion at Linux
-Plumbers Conference [2] but that needed some cleanups of the thermal
-core code before.
-
-This netlink framework fulfills the needs of the thermal daemons for
-Intel, Android HAL and SoC vendors which are hacking the thermal
-framework or constantly polling the temperature.
-
-Because the compilation failed if CONFIG_NET=n, the Kconfig option was
-introduced afterwards [3]. It could have been directly handled in the
-code with a 'ifdef' directive without option but it sounded more
-convenient to at least give the opportunity to opt-out the notification.
-
-It defaults to 'y' because the previous (but unused) implementation was
-unconditionally compiled-in and because of the thermal users needs.
-
-Is default=y wrong given this history?
-
- -- Daniel
-
-
-[1] https://patchwork.kernel.org/patch/11202093/
-[2]
-https://www.linuxplumbersconf.org/event/2/contributions/185/attachments/39/46/LPC_2018_Thermal-Srinivas-Rui.pdf
-[3]
-https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/commit/?h=thermal/next&id=5b8583d3bd7fc10cea07e4a5bfa59465758a39dc
-
-
-> So far, I'm not convinced we've ever hit that second case.
-> 
-> Convince me that the thermal layer is so magical that it really
-> warrants it. Tell me why and how my life is improved by enabling it.
-> 
->              Linus
-> 
-
-
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index b16dbc1..3eeee0a 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -80,7 +80,7 @@ static int			exception_level;
+ struct kgdb_io		*dbg_io_ops;
+ static DEFINE_SPINLOCK(kgdb_registration_lock);
+ 
+-/* Action for the reboot notifiter, a global allow kdb to change it */
++/* Action for the reboot notifier, a global allow kdb to change it */
+ static int kgdbreboot;
+ /* kgdb console driver is loaded */
+ static int kgdb_con_registered;
+@@ -163,7 +163,7 @@ early_param("nokgdbroundup", opt_nokgdbroundup);
+ 
+ /*
+  * Weak aliases for breakpoint management,
+- * can be overriden by architectures when needed:
++ * can be overridden by architectures when needed:
+  */
+ int __weak kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ {
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.1.0
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
