@@ -2,159 +2,92 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D319C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96A292086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F682086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dlCyQsfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHGDaE (ORCPT
+        id S1726635AbgHGDbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:30:04 -0400
-Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:60740 "EHLO
-        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726038AbgHGDaD (ORCPT
+        Thu, 6 Aug 2020 23:31:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgHGDbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:30:03 -0400
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
- (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Fri, 7 Aug 2020
- 11:30:00 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Fri, 7 Aug 2020
- 11:29:59 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416]) by
- zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416%16]) with mapi id
- 15.01.1979.003; Fri, 7 Aug 2020 11:29:59 +0800
-From:   FelixCui-oc <FelixCui-oc@zhaoxin.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David Woodhouse" <dwmw2@infradead.org>
-CC:     RaymondPang-oc <RaymondPang-oc@zhaoxin.com>,
-        CobeChen-oc <CobeChen-oc@zhaoxin.com>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlA==?=
- =?utf-8?B?5aSNOiDnrZTlpI06IFtQQVRDSF0gaW9tbXUvdnQtZDpBZGQgc3VwcG9ydCBm?=
- =?utf-8?Q?or_ACPI_device_in_RMRR?=
-Thread-Topic: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlA==?=
- =?utf-8?B?5aSNOiBbUEFUQ0hdIGlvbW11L3Z0LWQ6QWRkIHN1cHBvcnQgZm9yIEFDUEkg?=
- =?utf-8?Q?device_in_RMRR?=
-Thread-Index: AQHWaLTDQmhhOccXwUmx3ozYFRtFBKklJPeAgACMEUD//7NFgIAAiuzg//+YlYCAAIpwQIAADhiQgACAoQCAAJyo4IABEuiAgADMGDCAAMCAgIAAj7pAgADp+4CAAKaswA==
-Date:   Fri, 7 Aug 2020 03:29:59 +0000
-Message-ID: <f25e4fdf592a455594d0e88fced8fb62@zhaoxin.com>
-References: <20200802100735.2722-1-FelixCui-oc@zhaoxin.com>
- <73d4a1e4-f6b7-efb0-e225-2e462c838657@linux.intel.com>
- <f6759b9bb2594026b58f9a89e3ce9dc6@zhaoxin.com>
- <9f64d9b6-16e8-73ce-2186-9d8ba49c39f4@linux.intel.com>
- <44ff8f73fa1f49a183a1d8d6d9c2213c@zhaoxin.com>
- <314679b4-7653-041b-9310-73baf8117766@linux.intel.com>
- <1aea042a1b524ef88e491ca2a6d95fb7@zhaoxin.com>
- <36da53a6-00e2-1be1-91b5-d90906a6199f@linux.intel.com>
- <a5fda3f364da4e739736e7d7bc618972@zhaoxin.com>
- <a2658f9c-23fa-bb72-edba-ad61e52085cd@linux.intel.com>
- <9ba29114fcad43d58159fcc7a4d89501@zhaoxin.com>
- <1477b1dd-ac48-b49d-77f9-107bb4555b91@linux.intel.com>
- <06a05e49a2564909a2049eb8be401670@zhaoxin.com>
- <30ef5891-1368-d580-564a-1c21d90f47cd@linux.intel.com>
-In-Reply-To: <30ef5891-1368-d580-564a-1c21d90f47cd@linux.intel.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.29.8.19]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 6 Aug 2020 23:31:51 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B913C061574;
+        Thu,  6 Aug 2020 20:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=5oaHILrKKiQXWxtufhV2TM/f3fdYYD5OF4lGKqrdVeE=; b=dlCyQsfIx2BwAw6u3rSP80ISP0
+        E2cjisSVeJ2BogFCPmAbrfNG598MTACmDwmS3EWfwwX4U0L4NRBCETK0WM3fAyps+roo2hGIhlZM1
+        Tgh/+MvM8gXkig6mpMQ2R7gjUnyYK6E1u7lOFqXQF/wXXNciDHof+o6Cu05I453d3hidEJt70h/Zu
+        6JZz59yKqpzlAzzg24+YK3k3CzuQbYlSrLYgUZND+m6Y7EZ3jPtmatEh6Il/A8HaknmyMZnfv6heB
+        9qFfurxf0DxJJRRYzx3TRhYjjnXsKc2qR/meTOO+fJHXJ6aV8EizE0t4NBbObnIa2oZkFRMoZUwnj
+        5Oe0vPww==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3t6h-0006lQ-LG; Fri, 07 Aug 2020 03:31:48 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH] kernel: bpf: delete repeated words in comments
+Date:   Thu,  6 Aug 2020 20:31:41 -0700
+Message-Id: <20200807033141.10437-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgYmFvbHUsDQoJCUkgdW5kZXJzdGFuZCB3aGF0IHlvdSBtZWFuIGlzIHRoYXQgeW91IHdhbnQg
-dG8gcHV0IHRoZSBmb2xsb3dpbmcgcHJvY2Vzc2luZyBjb2RlIGluIHRoZSBhY3BpX2RldmljZV9j
-cmVhdGVfZGlyZWN0X21hcHBpbmdzKCkgaW50byB0aGUgcHJvYmVfYWNwaV9uYW1lc3BhY2VfZGV2
-aWNlcygpICxyaWdodD8NCgkJSWYgeW91IG1lYW4gaXQgLCBJIHRoaW5rIGl0J3MgT0suIA0KDQoJ
-aWYgKHBuX2RldiA9PSBOVUxMKSB7DQoJCWFjcGlfZGV2aWNlLT5idXMtPmlvbW11X29wcyA9ICZp
-bnRlbF9pb21tdV9vcHM7DQoJCXJldCA9IGlvbW11X3Byb2JlX2RldmljZShhY3BpX2RldmljZSk7
-DQoJCWlmIChyZXQpIHsNCgkJCXByX2VycigiYWNwaV9kZXZpY2UgcHJvYmUgZmFpbCEgcmV0OiVk
-XG4iLCByZXQpOw0KCQkJcmV0dXJuIHJldDsNCgkJfQ0KCQlyZXR1cm4gMDsNCgl9DQoNCkJlc3Qg
-cmVnYXJkcw0KRmVsaXggY3VpLW9jDQoNCg0KDQoJDQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0N
-CuWPkeS7tuS6ujogTHUgQmFvbHUgPGJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbT4gDQrlj5HpgIHm
-l7bpl7Q6IDIwMjDlubQ45pyIN+aXpSA5OjA4DQrmlLbku7bkuro6IEZlbGl4Q3VpLW9jIDxGZWxp
-eEN1aS1vY0B6aGFveGluLmNvbT47IEpvZXJnIFJvZWRlbCA8am9yb0A4Ynl0ZXMub3JnPjsgaW9t
-bXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IERhdmlkIFdvb2Rob3VzZSA8ZHdtdzJAaW5mcmFkZWFkLm9yZz4NCuaKhOmAgTogYmFvbHUu
-bHVAbGludXguaW50ZWwuY29tOyBSYXltb25kUGFuZy1vYyA8UmF5bW9uZFBhbmctb2NAemhhb3hp
-bi5jb20+OyBDb2JlQ2hlbi1vYyA8Q29iZUNoZW4tb2NAemhhb3hpbi5jb20+DQrkuLvpopg6IFJl
-OiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiBbUEFUQ0hd
-IGlvbW11L3Z0LWQ6QWRkIHN1cHBvcnQgZm9yIEFDUEkgZGV2aWNlIGluIFJNUlINCg0KSGkgRmVs
-aXgsDQoNCk9uIDIwMjAvOC82IDE0OjUxLCBGZWxpeEN1aS1vYyB3cm90ZToNCj4gSGkgIGJhb2x1
-LA0KPiAJCT5TdXJlLiBCZWZvcmUgdGhhdCwgbGV0IG1lIHN5bmMgbXkgdW5kZXJzdGFuZGluZyB3
-aXRoIHlvdS4gWW91IGhhdmUgYW4gYWNwaSBuYW1lc3BhY2UgZGV2aWNlIGluIEFOREQgdGFibGUs
-IGl0IGFsc28gc2hvd3MgdXAgaW4gdGhlIGRldmljZSBzY29wZSBvZiBhIFJNUlIuDQo+IAkJPkN1
-cnJlbnQgY29kZSBkb2Vzbid0IGVudW1lcmF0ZSB0aGF0IGRldmljZSBmb3IgdGhlIFJNUlIsIGhl
-bmNlIGlvbW11X2NyZWF0ZV9kZXZpY2VfZGlyZWN0X21hcHBpbmdzKCkgZG9lc24ndCB3b3JrIGZv
-ciB0aGlzIGRldmljZS4NCj4gDQo+IAkJPkF0IHRoZSBzYW1lIHRpbWUsIHByb2JlX2FjcGlfbmFt
-ZXNwYWNlX2RldmljZXMoKSBkb2Vzbid0IHdvcmsgZm9yIHRoaXMgZGV2aWNlLCBoZW5jZSB5b3Ug
-d2FudCB0byBhZGQgYSBob21lLW1hZGUNCj4gCQk+YWNwaV9kZXZpY2VfY3JlYXRlX2RpcmVjdF9t
-YXBwaW5ncygpIGhlbHBlci4NCj4gDQo+IAkJWW91ciB1bmRlcnN0YW5kaW5nIGlzIHJpZ2h0Lg0K
-PiAJCUJ1dCB0aGVyZSBpcyBhIHByb2JsZW0gdGhhdCBldmVuIGlmIHRoZSBuYW1lc3BhY2UgZGV2
-aWNlIGluIHJtcnIgaXMgZW51bWVyYXRlZCBpbiB0aGUgY29kZSwgcHJvYmVfYWNwaV9uYW1lc3Bh
-Y2VfZGV2aWNlcygpIGFsc28gZG9lc24ndCB3b3JrIGZvciB0aGlzIGRldmljZS4NCj4gCQlUaGlz
-IGlzIGJlY2F1c2UgdGhlIGRldiBwYXJhbWV0ZXIgb2YgdGhlIGlvbW11X2NyZWF0ZV9kZXZpY2Vf
-ZGlyZWN0X21hcHBpbmdzKCkgaXMgbm90IHRoZSBuYW1lc3BhY2UgZGV2aWNlIGluIFJNUlIuDQo+
-IAkJVGhlIGFjdHVhbCBwYXJhbWV0ZXIgcGFzc2VkIGluIGlzIHRoZSBuYW1lc3BhY2UgZGV2aWNl
-J3MgcGh5c2ljYWwgbm9kZSBkZXZpY2UuDQo+IAkJSW4gaW9tbXVfY3JlYXRlX2RldmljZV9kaXJl
-Y3RfbWFwcGluZ3MoKSwgdGhlIHBoeXNpY2FsIG5vZGUgZGV2aWNlIHBhc3NlZCBpbiBjYW5ub3Qg
-bWF0Y2ggdGhlIG5hbWVzcGFjZSBkZXZpY2UgaW4gcm1yci0+ZGV2aWNlW10scmlnaHQ/DQo+IAkJ
-V2UgbmVlZCBhY3BpX2RldmljZV9jcmVhdGVfZGlyZWN0X21hcHBpbmdzKCkgaGVscGVyID8NCj4g
-DQo+IAkJSW4gYWRkaXRpb24sIGFkZXYtPnBoeXNpY2FsX25vZGVfbGlzdCBpcyByZWxhdGVkIHRv
-IHRoZSBfX0hJRCBvZiBuYW1lc3BhY2UgZGV2aWNlIHJlcG9ydGVkIGJ5IHRoZSBiaW9zLg0KPiAJ
-CUZvciBleGFtcGxlLCBpZiB0aGUgX19ISUQgcmVwb3J0ZWQgYnkgdGhlIGJpb3MgYmVsb25ncyB0
-byBhY3BpX3BucF9kZXZpY2VfaWRzW10sIGFkZXYtPnBoeXNpY2FsX25vZGVfbGlzdCBoYXMgbm8g
-ZGV2aWNlcy4NCj4gCQlTbyBpbiBhY3BpX2RldmljZV9jcmVhdGVfZGlyZWN0X21hcHBpbmdzKCks
-IEkgYWRkZWQgdGhlIGNhc2UgdGhhdCBhZGV2LT5waHlzaWNhbF9ub2RlX2xpc3QgaXMgZW1wdHku
-DQoNCkdvdCB5b3UuIFRoYW5rcyENCg0KSGF2ZSB5b3UgZXZlciB0cmllZCB0byBoYXZlIHByb2Jl
-X2FjcGlfbmFtZXNwYWNlX2RldmljZXMoKSBoYW5kbGUgdGhlIGNhc2Ugb2YgZW1wdHkgYWRldi0+
-cGh5c2ljYWxfbm9kZV9saXN0IGF0IHRoZSBzYW1lIHRpbWU/DQoNCkJlc3QgcmVnYXJkcywNCmJh
-b2x1DQoNCj4gDQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gRmVsaXggY3VpDQo+IA0KPiANCj4gICAN
-Cj4gDQo+IC0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCj4g5Y+R5Lu25Lq6OiBMdSBCYW9sdSA8YmFv
-bHUubHVAbGludXguaW50ZWwuY29tPg0KPiDlj5HpgIHml7bpl7Q6IDIwMjDlubQ45pyINuaXpSAx
-MDozNg0KPiDmlLbku7bkuro6IEZlbGl4Q3VpLW9jIDxGZWxpeEN1aS1vY0B6aGFveGluLmNvbT47
-IEpvZXJnIFJvZWRlbCANCj4gPGpvcm9AOGJ5dGVzLm9yZz47IGlvbW11QGxpc3RzLmxpbnV4LWZv
-dW5kYXRpb24ub3JnOyANCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgRGF2aWQgV29v
-ZGhvdXNlIDxkd213MkBpbmZyYWRlYWQub3JnPg0KPiDmioTpgIE6IGJhb2x1Lmx1QGxpbnV4Lmlu
-dGVsLmNvbTsgUmF5bW9uZFBhbmctb2MgDQo+IDxSYXltb25kUGFuZy1vY0B6aGFveGluLmNvbT47
-IENvYmVDaGVuLW9jIDxDb2JlQ2hlbi1vY0B6aGFveGluLmNvbT4NCj4g5Li76aKYOiBSZTog562U
-5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW9tbXUvdnQtZDpB
-ZGQgc3VwcG9ydCBmb3IgQUNQSSANCj4gZGV2aWNlIGluIFJNUlINCj4gDQo+IEhpIEZlbGl4LA0K
-PiANCj4gT24gOC81LzIwIDM6MzcgUE0sIEZlbGl4Q3VpLW9jIHdyb3RlOg0KPj4gSGkgYmFvbHUs
-DQo+PiAJCUxldCBtZSB0YWxrIGFib3V0IHdoeSBhY3BpX2RldmljZV9jcmVhdGVfZGlyZWN0X21h
-cHBpbmdzKCkgaXMgbmVlZGVkIGFuZCBwbGVhc2UgdGVsbCBtZSBpZiB0aGVyZSBpcyBhbiBlcnJv
-ci4NCj4gDQo+IFN1cmUuIEJlZm9yZSB0aGF0LCBsZXQgbWUgc3luYyBteSB1bmRlcnN0YW5kaW5n
-IHdpdGggeW91LiBZb3UgaGF2ZSBhbiBhY3BpIG5hbWVzcGFjZSBkZXZpY2UgaW4gQU5ERCB0YWJs
-ZSwgaXQgYWxzbyBzaG93cyB1cCBpbiB0aGUgZGV2aWNlIHNjb3BlIG9mIGEgUk1SUi4gQ3VycmVu
-dCBjb2RlIGRvZXNuJ3QgZW51bWVyYXRlIHRoYXQgZGV2aWNlIGZvciB0aGUgUk1SUiwgaGVuY2Ug
-aW9tbXVfY3JlYXRlX2RldmljZV9kaXJlY3RfbWFwcGluZ3MoKSBkb2Vzbid0IHdvcmsgZm9yIHRo
-aXMgZGV2aWNlLg0KPiANCj4gQXQgdGhlIHNhbWUgdGltZSwgcHJvYmVfYWNwaV9uYW1lc3BhY2Vf
-ZGV2aWNlcygpIGRvZXNuJ3Qgd29yayBmb3IgdGhpcyANCj4gZGV2aWNlLCBoZW5jZSB5b3Ugd2Fu
-dCB0byBhZGQgYSBob21lLW1hZGUNCj4gYWNwaV9kZXZpY2VfY3JlYXRlX2RpcmVjdF9tYXBwaW5n
-cygpIGhlbHBlci4NCj4gDQo+IERpZCBJIGdldCBpdCByaWdodD8NCj4gDQo+PiAJCUluIHRoZSBw
-cm9iZV9hY3BpX25hbWVzcGFjZV9kZXZpY2VzKCkgZnVuY3Rpb24sIG9ubHkgdGhlIGRldmljZSBp
-biB0aGUgYWRkZXYtPnBoeXNpY2FsX25vZGVfbGlzdCBpcyBwcm9iZWQsDQo+PiAJCWJ1dCB3ZSBu
-ZWVkIHRvIGVzdGFibGlzaCBpZGVudGl0eSBtYXBwaW5nIGZvciB0aGUgbmFtZXNwYWNlIGRldmlj
-ZSBpbiBSTVJSLiBUaGVzZSBhcmUgdHdvIGRpZmZlcmVudCBkZXZpY2VzLg0KPiANCj4gVGhlIG5h
-bWVzcGFjZSBkZXZpY2UgaGFzIGJlZW4gcHJvYmVkIGFuZCBwdXQgaW4gb25lIGRyaGQncyBkZXZp
-Y2UgbGlzdC4NCj4gSGVuY2UsIGl0IHNob3VsZCBiZSBwcm9jZXNzZWQgYnkgcHJvYmVfYWNwaV9u
-YW1lc3BhY2VfZGV2aWNlcygpLiBTbyB0aGUgcXVlc3Rpb24gaXMgd2h5IHRoZXJlIGFyZSBubyBk
-ZXZpY2VzIGluIGFkZGV2LT5waHlzaWNhbF9ub2RlX2xpc3Q/DQo+IA0KPj4gCQlUaGVyZWZvcmUs
-IHRoZSBuYW1lc3BhY2UgZGV2aWNlIGluIFJNUlIgaXMgbm90IG1hcHBlZCBpbiBwcm9iZV9hY3Bp
-X25hbWVzcGFjZV9kZXZpY2VzKCkuDQo+PiAJCWFjcGlfZGV2aWNlX2NyZWF0ZV9kaXJlY3RfbWFw
-cGluZ3MoKSBpcyB0byBjcmVhdGUgZGlyZWN0IG1hcHBpbmdzIGZvciBuYW1lc3BhY2UgZGV2aWNl
-cyBpbiBSTVJSLg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBiYW9sdQ0KPiANCg==
+Drop repeated words in kernel/bpf/.
+{has, the}
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+---
+ kernel/bpf/core.c     |    2 +-
+ kernel/bpf/verifier.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+--- linux-next-20200806.orig/kernel/bpf/core.c
++++ linux-next-20200806/kernel/bpf/core.c
+@@ -1966,7 +1966,7 @@ void bpf_prog_array_delete_safe(struct b
+  * @index: the index of the program to replace
+  *
+  * Skips over dummy programs, by not counting them, when calculating
+- * the the position of the program to replace.
++ * the position of the program to replace.
+  *
+  * Return:
+  * * 0		- Success
+--- linux-next-20200806.orig/kernel/bpf/verifier.c
++++ linux-next-20200806/kernel/bpf/verifier.c
+@@ -8294,7 +8294,7 @@ static bool stacksafe(struct bpf_func_st
+ 		if (old->stack[spi].slot_type[i % BPF_REG_SIZE] !=
+ 		    cur->stack[spi].slot_type[i % BPF_REG_SIZE])
+ 			/* Ex: old explored (safe) state has STACK_SPILL in
+-			 * this stack slot, but current has has STACK_MISC ->
++			 * this stack slot, but current has STACK_MISC ->
+ 			 * this verifier states are not equivalent,
+ 			 * return false to continue verification of this path
+ 			 */
