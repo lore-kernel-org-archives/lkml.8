@@ -2,70 +2,70 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	GAPPY_SUBJECT,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D422C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC8321744
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707A221744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kO42LXhm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H43nUh+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgHGHpT (ORCPT
+        id S1727051AbgHGHp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
+        Fri, 7 Aug 2020 03:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgHGHpS (ORCPT
+        with ESMTP id S1725805AbgHGHp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:45:18 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEB8C061574;
-        Fri,  7 Aug 2020 00:45:18 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id x69so969265qkb.1;
-        Fri, 07 Aug 2020 00:45:18 -0700 (PDT)
+        Fri, 7 Aug 2020 03:45:27 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F31C061574;
+        Fri,  7 Aug 2020 00:45:27 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id 6so682721qtt.0;
+        Fri, 07 Aug 2020 00:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=c/a2s0M/cmgPOYNVrZ8egXbswjf81aCWAk/0fMmNfE8=;
-        b=kO42LXhmn4pYDCAupLsIqhd3W/9yIWhblj2fAaSYnorORrC22QSH7wCRTtIAtRp61f
-         UiLZQZt7XWDqegDlW0HgVyWeVd2KNZAmvQu5RznrV6eGxZqhqpsY5V4il3lhV9gQ+lyU
-         RHPnsXqL4CLMKzHegs2yqjIm0za83TTzl5E4awfqjsw5y2E4zPLkTFECoQClMF9sYcyx
-         2vrczl/FQ52s+H9gB5h+ppbwhuSlqO4HX5qJUyE4puALHAOL4rkUsUT8Ihxdy7Du+/2o
-         HaZgPZNE2mI9ZwF0Pqxr5gHOHUR9b0TjROEEnSK2/z+mNot2e2wPXaSCkqXuvzw1mQQe
-         nLdQ==
+        bh=FG0FROUYaTe04KGNWr02FTBUT0DIequTKC7GJACiEKg=;
+        b=H43nUh+7aOSwklc6p2JAHdd34OneCTSPLY/7L9Y8wGHoAcIDBGOjYhJ8XKuwkxJvGa
+         MUTl8ms7pkc1TFpk/oGgQG+LYD4ZVozHbRL74dyB5H13LmF7sM6M5CdQ8CqNnTQWxFuX
+         PEiA5Jm2Qst4VFKoFjsHfm1hMG59wnz7GkXSDbhwAF08LJIIzo8rfBU177rX+RGgvH9k
+         +jE1C25PG/7pHCZTEQeIheWKvq7wDWoCgmg+dpBRrA7J4yVjMxtHD+A6Fqy0/iVMvw+y
+         k9It4L88/Lt7QtqAXjnbfjpD7Hu33+BdfZRm3iG3xeNy5mpIQA5v4IEoJcA7nyFmSRo8
+         cO+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=c/a2s0M/cmgPOYNVrZ8egXbswjf81aCWAk/0fMmNfE8=;
-        b=RzbRqyevJmG/E6aCZjna5sBsoppu+7jyNy1PEj0gUovj/gQTxcUsCaB1XNt3MqKZ/8
-         eq7ELSjueV9DHXgzIiktxPOP1ZzSse9Cf+QLQjN8bjLiIaA3H4+o0TqQ4D+Pyqddbuts
-         CRkNQHUlYHkAEHoqxkVQJDmNikMfAJFdlUvBV5hpUZ2NIBPkJ42ZN9oE6cNme+Gf/VGe
-         9tBiqVVy/xc1JG32uDeZP6MSXNBYJQrcwYyrK+hbbr5NpAHVk4MHCoVgh9nBugeqEkrV
-         O3zeqJKqRWlJIVXfi9lyWWNob2h0o8o8J6qMITU2sasH9EuvDgwTMQ3A9OIw/Nl+Ztel
-         P3IQ==
-X-Gm-Message-State: AOAM530ZSliM3RU8n2twgWUVggGo+4D6e1iYzZBlTam4nJuqNh+Hz7bZ
-        +KHm8I9sS2bw51FUnjbH/IkyNQ3f
-X-Google-Smtp-Source: ABdhPJxgRruBEY1TanvBWcYJyj4TBD6PetZE3u6UWXGQ8+84IqAskDKMJUqo7J0FJJdj+SXJp2jmCA==
-X-Received: by 2002:a37:8107:: with SMTP id c7mr12490629qkd.22.1596786317997;
-        Fri, 07 Aug 2020 00:45:17 -0700 (PDT)
+        bh=FG0FROUYaTe04KGNWr02FTBUT0DIequTKC7GJACiEKg=;
+        b=Yls5kfFJ3Xor7GSxwCSZxu+X3lNwFsmGa85kRyrXeS7p3lBHTbKpEOK7oZL6xYBB0w
+         hYeJGTkqxUU2genklKpjyBT07e1+4HMC+wAWktm8QCYHJUrMwk3dZ5hyDzTw/tggA0MY
+         1YTTK80X1SL+i8Ku/3v95hiAjT2fp0lMv8X0JhL4y4F2ZxnBvqcAN8nkDGqQXJ5Qq/i4
+         UgILtuJe88W0EExfU9qi8TbbQAj7cusf5JM/rdqatjri9nI/QsIvb36lvPUwYVxF/nAD
+         w6f7ZIZIVFWHm3+tCfQpBJLH474uIsE5fVRgTR+xn0bEalq0FlOI7Z77fdHM30rVXIhV
+         Xkxw==
+X-Gm-Message-State: AOAM532J7Tj5CUgcJRPEZ9omjkGtSwe0cx0X9Dn/lUUsZUBUf1Huh62z
+        z865mzMHc/R2l70O+36Qd9o=
+X-Google-Smtp-Source: ABdhPJz38zy/UDoNvStSCutKJD1Z/C4QM+PGrMKxPdAgZnEJuQn8I58C4Cl/rTUbx+MUKwk+tti14g==
+X-Received: by 2002:ac8:130a:: with SMTP id e10mr13423866qtj.38.1596786326319;
+        Fri, 07 Aug 2020 00:45:26 -0700 (PDT)
 Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id n184sm6285200qkn.49.2020.08.07.00.45.17
+        by smtp.gmail.com with ESMTPSA id r48sm7497073qtr.17.2020.08.07.00.45.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Aug 2020 00:45:17 -0700 (PDT)
+        Fri, 07 Aug 2020 00:45:25 -0700 (PDT)
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 1404427C0054;
-        Fri,  7 Aug 2020 03:45:17 -0400 (EDT)
+        by mailauth.nyi.internal (Postfix) with ESMTP id 6F81727C0054;
+        Fri,  7 Aug 2020 03:45:25 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:45:17 -0400
-X-ME-Sender: <xms:jAYtX6RU6ZOb--qsPMLZU-O4HxM8uDuoDb0sR4FkQ-ONQzwnNzljCQ>
+  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:45:25 -0400
+X-ME-Sender: <xms:lQYtX0j3uAFZEdvfO98sv23DArUlo9FIkvWBF8DjxKOMPLdVO8hJRQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -73,16 +73,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdeiucetufdoteggod
     ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
     htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
     ueelnecukfhppeduudegrdekhedrudektddrvdduheenucevlhhushhtvghrufhiiigvpe
-    dvnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
+    efnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
     vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnpe
     epfhhigihmvgdrnhgrmhgvsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:jAYtX_x9iiMg6MWcADBzRxzc90V77BHMyia74-AXwljb-hCCytrk1g>
-    <xmx:jAYtX31k2DJl_kCSxyF35gyJOygnfZzF_xplmrFYQRI-XLw_-yQbvA>
-    <xmx:jAYtX2CDil48FS88ZUaIWjRjw3amr1-TCAkVIA5Cxwz3guZTifr-Ng>
-    <xmx:jQYtXzc7a7hCg4v_8QbfAS1r7udkqCp3gKs0XXf1lR-DMoGgx_pvsw>
+X-ME-Proxy: <xmx:lQYtX9AVQpju_P_8Re8PbxF2IFCYjMZ00gfoNODiHlbZYG2-BBAn_g>
+    <xmx:lQYtX8GB3KbJd62m0ycwagkCzRrmzZnPGap5WLq7gi1Rj962iltn7Q>
+    <xmx:lQYtX1QRRmkZSLqbBhwSXJr0ABQQcHJhX1113Pa5QjdO2tC11k053w>
+    <xmx:lQYtXzsV3IsP89qEtPccjHWxrb0C1hs3gi6IUsUrhopejF7zLHfpGw>
 Received: from localhost (unknown [114.85.180.215])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3E51230600B4;
-        Fri,  7 Aug 2020 03:45:14 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 57BCD30600A3;
+        Fri,  7 Aug 2020 03:45:23 -0400 (EDT)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -90,9 +90,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Waiman Long <longman@redhat.com>,
         Boqun Feng <boqun.feng@gmail.com>
-Subject: [RFC v7 12/19] lockdep: Add recursive read locks into dependency graph
-Date:   Fri,  7 Aug 2020 15:42:31 +0800
-Message-Id: <20200807074238.1632519-13-boqun.feng@gmail.com>
+Subject: [RFC v7 13/19] lockdep/selftest: Add a R-L/L-W test case specific to chain cache behavior
+Date:   Fri,  7 Aug 2020 15:42:32 +0800
+Message-Id: <20200807074238.1632519-14-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200807074238.1632519-1-boqun.feng@gmail.com>
 References: <20200807074238.1632519-1-boqun.feng@gmail.com>
@@ -103,51 +103,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we have all the fundamental to handle recursive read locks, we now
-add them into the dependency graph.
+As our chain cache doesn't differ read/write locks, so even we can
+detect a read-lock/lock-write deadlock in check_noncircular(), we can
+still be fooled if a read-lock/lock-read case(which is not a deadlock)
+comes first.
+
+So introduce this test case to test specific to the chain cache behavior
+on detecting recursive read lock related deadlocks.
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- kernel/locking/lockdep.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ lib/locking-selftest.c | 47 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 040509667798..867199c4b85d 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2808,16 +2808,6 @@ check_prev_add(struct task_struct *curr, struct held_lock *prev,
- 	if (!check_irq_usage(curr, prev, next))
- 		return 0;
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index caadc4dd3368..002d1ec09852 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -396,6 +396,49 @@ static void rwsem_ABBA1(void)
+ 	MU(Y1); // should fail
+ }
  
--	/*
--	 * For recursive read-locks we do all the dependency checks,
--	 * but we dont store read-triggered dependencies (only
--	 * write-triggered dependencies). This ensures that only the
--	 * write-side dependencies matter, and that if for example a
--	 * write-lock never takes any other locks, then the reads are
--	 * equivalent to a NOP.
--	 */
--	if (next->read == 2 || prev->read == 2)
--		return 1;
++/*
++ * read_lock(A)
++ * spin_lock(B)
++ *		spin_lock(B)
++ *		write_lock(A)
++ *
++ * This test case is aimed at poking whether the chain cache prevents us from
++ * detecting a read-lock/lock-write deadlock: if the chain cache doesn't differ
++ * read/write locks, the following case may happen
++ *
++ * 	{ read_lock(A)->lock(B) dependency exists }
++ *
++ * 	P0:
++ * 	lock(B);
++ * 	read_lock(A);
++ *
++ *	{ Not a deadlock, B -> A is added in the chain cache }
++ *
++ *	P1:
++ *	lock(B);
++ *	write_lock(A);
++ *
++ *	{ B->A found in chain cache, not reported as a deadlock }
++ *
++ */
++static void rlock_chaincache_ABBA1(void)
++{
++	RL(X1);
++	L(Y1);
++	U(Y1);
++	RU(X1);
++
++	L(Y1);
++	RL(X1);
++	RU(X1);
++	U(Y1);
++
++	L(Y1);
++	WL(X1);
++	WU(X1);
++	U(Y1); // should fail
++}
++
+ /*
+  * read_lock(A)
+  * spin_lock(B)
+@@ -2062,6 +2105,10 @@ void locking_selftest(void)
+ 	pr_cont("             |");
+ 	dotest(rwsem_ABBA3, FAILURE, LOCKTYPE_RWSEM);
+ 
++	print_testname("chain cached mixed R-L/L-W ABBA");
++	pr_cont("             |");
++	dotest(rlock_chaincache_ABBA1, FAILURE, LOCKTYPE_RWLOCK);
++
+ 	printk("  --------------------------------------------------------------------------\n");
+ 
  	/*
- 	 * Is the <prev> -> <next> dependency already present?
- 	 *
-@@ -2935,13 +2925,8 @@ check_prevs_add(struct task_struct *curr, struct held_lock *next)
- 		u16 distance = curr->lockdep_depth - depth + 1;
- 		hlock = curr->held_locks + depth - 1;
- 
--		/*
--		 * Only non-recursive-read entries get new dependencies
--		 * added:
--		 */
--		if (hlock->read != 2 && hlock->check) {
--			int ret = check_prev_add(curr, hlock, next, distance,
--						 &trace);
-+		if (hlock->check) {
-+			int ret = check_prev_add(curr, hlock, next, distance, &trace);
- 			if (!ret)
- 				return 0;
- 
 -- 
 2.28.0
 
