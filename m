@@ -2,104 +2,109 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED04C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F63F20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498802177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:31:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JX43fKQR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/NHzZGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgHGC3q (ORCPT
+        id S1726432AbgHGCbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 22:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47882 "EHLO
+        Thu, 6 Aug 2020 22:31:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgHGC3p (ORCPT
+        with ESMTP id S1726049AbgHGCbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 22:29:45 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D38C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 19:29:45 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id k18so199369pfp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 19:29:45 -0700 (PDT)
+        Thu, 6 Aug 2020 22:31:35 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F59BC061574;
+        Thu,  6 Aug 2020 19:31:34 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v12so533634ljc.10;
+        Thu, 06 Aug 2020 19:31:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KiS95mxcuAqTgPcWKhZw6vHzo/GdjTxbtnTWqIq3Ltg=;
-        b=JX43fKQRhHjSM2/3D7ZOX9BOiyM+BCPkIAmPR34QAg+oPKs9H1RbTODLvLGLO+4LV4
-         t5XF9JJ75lMYv2/8oE7PmAuILShkpLNmBwy0Jy5pYQHTzRBsdQKJhFDbKsDObhwEIX1w
-         L+icWYDoZdeH7c1IlIL0gOLpx0kbwou5KJgO+QScTX4cRJNtFyjTh9+DY7uALQrtqIaB
-         ckUEWyrsHjqN20vgE8cPtZqWu7Nzj4KhwyipHpjei9sLj87Ne2lxRToBvjAbFlB+EGPx
-         q6hK1RNWmR0jliqz/f/dHPatw5aXne/EKsswKxsIDjp42mtNORDcFvmH0INFsBNqRJm7
-         a7ow==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=++oNzzvMfEEwXBvsmOev1tS44REi+Mnxj7YfwgHFlPM=;
+        b=t/NHzZGzCIO85kYp4Vf0XtxJ/jZYzQTIh1TVK9lniUhpbhgwazniKa9EGAQvCY7G11
+         F0+fi4ZJH/zKfXWLkjPn47ZnJQlQvxX2yM2E9NVwz+k3/Eqr2jZKfWOYQc/cjqqW5Psj
+         BXHQHAEscJ4KIdlGNu5P15lw0uJdoxnj3VeZummui/RX0MyGFUY6jTbjXyIzYRm4hpLD
+         YWbxYmP010cQjSTuCxM21CbAeHD5M8hwT2jKC8mU1QCQPbJMOLb0oshVvgE9QnRoR8Go
+         e3gcBoQmW3XUyrNSOxevg5KpZtPaPLmGATyz/jFDjB6vvFzNwfm5ExnZCqcJnB6YTipt
+         8z6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KiS95mxcuAqTgPcWKhZw6vHzo/GdjTxbtnTWqIq3Ltg=;
-        b=OQaqhdVt4j9yfBeGqwlGq2hZu0faekOU0MwmTRu7wBEuh3KfbTMyHuwIJlDIyRNYoX
-         l9EufRa4NgKUxHJ4li9nYum2Ofgi9Y1c3Qxf/wqjaJWtJkgRc/8AcZnWCyiKnX0wz6cZ
-         8GbBEOagpOLSnlnuNSIvoyjSR5xZH/WVbR+y9qTu/dkOrMw4WvPm4wx6pqx8Qlz2Rcmp
-         SHyCUCeyDscxnmHMotluC4dNt4SzTyvxRu+m8PyZikv1sTWzz/ivF+MM0zN7OPYuC8H3
-         eRMegCwzxQ1L1N2gURUxcOURNh8fqIdf69Nqpzi1m+jwh53u5F2wy4A/QBHPw4/zhPjD
-         oLHg==
-X-Gm-Message-State: AOAM533ubLyndxaDSh6Lt+jDWkj7S9zGFXKRT/lzgJRO5+lGLFQzOonN
-        NizpqdY9ZCTV6mtdgvLM7VI=
-X-Google-Smtp-Source: ABdhPJwTjobPNu3nU0N9mowtEngIUhZZezCT3xGLug6ghDqMDFENSPx4ijWXiiGIawv8XP0li4Lk9w==
-X-Received: by 2002:a63:2d42:: with SMTP id t63mr9872527pgt.450.1596767384423;
-        Thu, 06 Aug 2020 19:29:44 -0700 (PDT)
-Received: from builder-PowerEdge-R730xd.mioffice.cn ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id 144sm10037681pfu.114.2020.08.06.19.29.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Aug 2020 19:29:43 -0700 (PDT)
-From:   Qianli Zhao <zhaoqianligood@gmail.com>
-To:     tglx@linutronix.de, john.stultz@linaro.org, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, zhaoqianli@xiaomi.com
-Subject: [PATCH] timer: mask unnecessary set of flags in do_init_timer
-Date:   Fri,  7 Aug 2020 10:29:38 +0800
-Message-Id: <1596767378-27241-1-git-send-email-zhaoqianligood@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=++oNzzvMfEEwXBvsmOev1tS44REi+Mnxj7YfwgHFlPM=;
+        b=N4Yd4uAifxtck6Z8tSw/zyo0xjWtL2sGrEkfbJNv2DmPe3Ccetmg+jNzJOY2goXjK4
+         GGwCeEt1hFBImp8tD00ruQVdk9eSxDJ9NWdHUh4T7htcXzIcWCfGNoVxIXYHd/2+LxIn
+         Tv59HYXbBsDSD3XCxW33/mCyDM5O9GLWfsOBnhsrcKvkt5LD2yhxAw5UgyXvvGIlpoep
+         bKulKBzKbShtWc76NJpRi/Iqi57+0PGOsL4zf7XX1dQ4Mt1kQX9twi3Lkey8B/hv9PPG
+         ZPz9cQlTI0ISY489skTlrZ/Vc/h9/5+diGS1OlVB4kNvX0O0Ymm7s/Nt8aDDETolX3pr
+         itCQ==
+X-Gm-Message-State: AOAM531tuFrlAX4MSUTGK26tEorz+YixjUhsQJumxbWj96PW7jyGMfCq
+        kdcSGRn6E62OyxFnq011Y3IgHT3i
+X-Google-Smtp-Source: ABdhPJyiRs9EKEEDAErq/zFize6tXrmF72/UmXwaK1kWK4yaZSOmuV3B1zf1qxncDuma82JUjUcOVA==
+X-Received: by 2002:a2e:9d17:: with SMTP id t23mr5184250lji.456.1596767493010;
+        Thu, 06 Aug 2020 19:31:33 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id q24sm3195272ljc.52.2020.08.06.19.31.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 19:31:31 -0700 (PDT)
+Subject: Re: [PATCH v9 08/10] gpu: host1x: mipi: Keep MIPI clock enabled and
+ mutex locked till calibration done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
+ <1596740494-19306-9-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f2522713-6995-d6a1-e691-a5443823056b@gmail.com>
+Date:   Fri, 7 Aug 2020 05:31:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1596740494-19306-9-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qianli Zhao <zhaoqianli@xiaomi.com>
+06.08.2020 22:01, Sowjanya Komatineni пишет:
+...
+> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
+>  {
+>  	const struct tegra_mipi_soc *soc = device->mipi->soc;
+>  	unsigned int i;
+> @@ -381,12 +375,16 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+>  	value |= MIPI_CAL_CTRL_START;
+>  	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+>  
+> -	mutex_unlock(&device->mipi->lock);
+> -	clk_disable(device->mipi->clk);
+> +	/*
+> +	 * Wait for min 72uS to let calibration logic finish calibration
+> +	 * sequence codes before waiting for pads idle state to apply the
+> +	 * results.
+> +	 */
+> +	usleep_range(75, 80);
 
-do_init_timer can specify flags of timer_list,
-but this function does not expect to specify the CPU or idx.
-If user invoking do_init_timer and specify CPU,
-The result may not what we expected.
-
-E.g:
-do_init_timer invoked in core2,and specify flags 0x1
-final result flags is 0x3.If the specified CPU number
-exceeds the actual number,more serious problems will happen
-
-Signed-off-by: Qianli Zhao <zhaoqianli@xiaomi.com>
----
- kernel/time/timer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 026ac01..17e3737 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -789,7 +789,7 @@ static void do_init_timer(struct timer_list *timer,
- {
- 	timer->entry.pprev = NULL;
- 	timer->function = func;
--	timer->flags = flags | raw_smp_processor_id();
-+	timer->flags = (flags & ~TIMER_BASEMASK & ~TIMER_ARRAYMASK) | raw_smp_processor_id();
- 	lockdep_init_map(&timer->lockdep_map, name, key, 0);
- }
- 
--- 
-2.7.4
-
+Could you please explain why the ACTIVE bit can't be polled instead of
+using the fixed delay? Doesn't ACTIVE bit represents the state of the
+busy FSM?
