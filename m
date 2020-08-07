@@ -7,59 +7,49 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41394C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248BC2177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741892075A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596763558;
-	bh=mA/awtDZ4yMki7SF0GBozP3n+dALHx4VvvVdvvuQTg8=;
+	s=default; t=1596763905;
+	bh=KikFKrxPdlMuyXaFyfeVCmhJS242GxglL7oAilNZm7o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KvG2ahMd7758UjQf16MNg0KPdXEgkaIBaRW1oRF88eKRDV3ipi87xpvKuX9IfRAmk
-	 n1tlxoBwIz896NHwcST1jsjZmWMOLMB1jPxkNElOdSIv5hT+4ght8W+8rsGa9dS5l7
-	 ULf4cLIdUDV585N04OtW+eaK65GVa1NaatQNUPBA=
+	b=XRLxBKuIEbIlV/ipsRV85m+vDYTSfB3llzvxF1VGBiOKgOVnheRRRisd/yztla6/o
+	 Y0NPlic8l20aNy7vvlxuWPA7lJBZznGzINHyxv0FddXs0Cy7xu03Ae207Of5NONJrd
+	 7oqUepHZoDnUt0Eoc4aHXob9jhOUVpGMlzMxUuY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgHGBZ5 (ORCPT
+        id S1726093AbgHGBbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42916 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 21:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgHGBZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:25:56 -0400
+        id S1725947AbgHGBbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:31:43 -0400
 Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B832206B5;
-        Fri,  7 Aug 2020 01:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63A292075A;
+        Fri,  7 Aug 2020 01:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596763556;
-        bh=mA/awtDZ4yMki7SF0GBozP3n+dALHx4VvvVdvvuQTg8=;
+        s=default; t=1596763902;
+        bh=KikFKrxPdlMuyXaFyfeVCmhJS242GxglL7oAilNZm7o=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dYvoJcTEvXHqFP5FwYVm1gBTYqZu8kiddHmoWKhQgx1+Lw0OXOD7nABF/x8GMbg8t
-         V7yB1BureSyuML7pk/LzSQO0CyOADWd7U7d2f0yIgK3YsTcHuGUPdEAdEX7YczjyyQ
-         aE88OvCf1CNxX9ay7Qh29SuMK2kyvvETSZj41nQw=
-Date:   Thu, 6 Aug 2020 18:25:55 -0700
+        b=n9KoeYEGT00hSajaoYWncupWY0N84Cxu6QQXrdDYJoTCpNakq8Cl3AwEN5okeUjgz
+         ozs3r9FbcsZTcdsNXLZDR+BG0kvX/SCGAcSVmUHw35NS4MzUnRd95pPVjlxZuTInOq
+         +x9zqXhUYwa7KsWgjBuvTpjOjIQKtQlv8Go84hF0=
+Date:   Thu, 6 Aug 2020 18:31:41 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm: vmstat: fix /proc/sys/vm/stat_refresh generating
- false warnings
-Message-Id: <20200806182555.d7a7fc9853b5a239ffe9f846@linux-foundation.org>
-In-Reply-To: <20200806233804.GB1217906@carbon.dhcp.thefacebook.com>
-References: <20200714173920.3319063-1-guro@fb.com>
-        <alpine.LSU.2.11.2007291902340.6363@eggly.anvils>
-        <20200730162348.GA679955@carbon.dhcp.thefacebook.com>
-        <alpine.LSU.2.11.2007302018350.2410@eggly.anvils>
-        <20200801011821.GA859734@carbon.dhcp.thefacebook.com>
-        <alpine.LSU.2.11.2007311915130.9716@eggly.anvils>
-        <20200804004012.GA1049259@carbon.dhcp.thefacebook.com>
-        <alpine.LSU.2.11.2008051913580.8184@eggly.anvils>
-        <20200806233804.GB1217906@carbon.dhcp.thefacebook.com>
+To:     Chris Goldsworthy <cgoldswo@codeaurora.org>
+Cc:     linux-mm@kvack.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pratikp@codeaurora.org,
+        pdaly@codeaurora.org, sudraja@codeaurora.org,
+        iamjoonsoo.kim@lge.com
+Subject: Re: cma_alloc(), add sleep-and-retry for temporary page pinning
+Message-Id: <20200806183141.14a4fb8d210d3bdec68e1e7f@linux-foundation.org>
+In-Reply-To: <1596682582-29139-1-git-send-email-cgoldswo@codeaurora.org>
+References: <1596682582-29139-1-git-send-email-cgoldswo@codeaurora.org>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -69,10 +59,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 16:38:04 -0700 Roman Gushchin <guro@fb.com> wrote:
+On Wed,  5 Aug 2020 19:56:21 -0700 Chris Goldsworthy <cgoldswo@codeaurora.org> wrote:
 
-> it seems that Hugh and me haven't reached a consensus here.
-> Can, you, please, not merge this patch into 5.9, so we would have
-> more time to find a solution, acceptable for all?
+> On mobile devices, failure to allocate from a CMA area constitutes a
+> functional failure.  Sometimes during CMA allocations, we have observed
+> that pages in a CMA area allocated through alloc_pages(), that we're trying
+> to migrate away to make room for a CMA allocation, are temporarily pinned.
+> This temporary pinning can occur when a process that owns the pinned page
+> is being forked (the example is explained further in the commit text).
+> This patch addresses this issue by adding a sleep-and-retry loop in
+> cma_alloc() . There's another example we know of similar to the above that
+> occurs during exit_mmap() (in zap_pte_range() specifically), but I need to
+> determine if this is still relevant today.
 
-No probs.  I already had a big red asterisk on it ;)
+Sounds fairly serious but boy, we're late for 5.9.
+
+I can queue it for 5.10 with a cc:stable so that it gets backported
+into earlier kernels a couple of months from now, if we think the
+seriousness justifies backporting(?). 
+
+Or I can do something else - thoughts?
+
+And...  it really is a sad little patch, isn't it?  Instead of fixing
+the problem, it reduces the problem's probability by 5x.  Can't we do
+better than this?
+
+
