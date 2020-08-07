@@ -2,228 +2,396 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F330C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD97CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274272086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED2A2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hgss4fYo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PG4AtesE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHGT5b (ORCPT
+        id S1726375AbgHGT74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:57:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51442 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726563AbgHGTzu (ORCPT
+        Fri, 7 Aug 2020 15:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgHGT7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:55:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596830148;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=b9oCZOt4XAQRJ9KNyevi8iZQFJ4vdGUXovGIvqFrTvk=;
-        b=Hgss4fYoY9+rpGdPKMj3lMgNJ2gkmmcMZUxzrGuUG30Mt8GBaB+jw78lxL+glmJN06C/ZO
-        A5jtN8VjbXIAqR0b83pb+4/xO57g0X52SlryM4mM2j9h5S6MM+3+mCU58Tmcl9HUK8yMni
-        RZFjH15DZnpgspGeSAv19NjobPONWtw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-2W3Pway7MyiLtOPmaj1fGg-1; Fri, 07 Aug 2020 15:55:46 -0400
-X-MC-Unique: 2W3Pway7MyiLtOPmaj1fGg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31A798014C1;
-        Fri,  7 Aug 2020 19:55:45 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-113-142.rdu2.redhat.com [10.10.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E2222DE73;
-        Fri,  7 Aug 2020 19:55:39 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id AD5DB222E43; Fri,  7 Aug 2020 15:55:38 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com
-Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm@lists.01.org
-Subject: [PATCH v2 02/20] dax: Create a range version of dax_layout_busy_page()
-Date:   Fri,  7 Aug 2020 15:55:08 -0400
-Message-Id: <20200807195526.426056-3-vgoyal@redhat.com>
-In-Reply-To: <20200807195526.426056-1-vgoyal@redhat.com>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
+        Fri, 7 Aug 2020 15:59:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F8FC061756;
+        Fri,  7 Aug 2020 12:59:55 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id p14so2706698wmg.1;
+        Fri, 07 Aug 2020 12:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=syZktjcepY0vNc63q2VaOQLWA1fKYYMREF207iDmj8M=;
+        b=PG4AtesEbVmdpNxayBlppShCjBdDC2bnYjhPF+wa3V0YTXmVsV+LXB1rZq6D56XHXd
+         Ljtxvsyn7xdzl9zcM0kLHY7xV0mqM0unWx8Z9WfzYXMJOMnltLUAVnNkdr7DIoVp38cL
+         VR6W/n6O8gZ/Zm8jaWup2PqlZZwEI6sGvuAnv7Q3pCVK69HpN00G3wf6wIMAyeFWhyBr
+         ReVfh8HxCzZHBlIdr+0+FXgM7rzoqOsOWI5ur4pRwvbvEKGr9HbV+0HrugInX/IkMtRf
+         nqvlfrJxJMfL+FhqlNs7Y9/UQKKu60CzDU0SVmKjUbK3xmzte/uHbD565BI7QSPTcXSU
+         J3pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=syZktjcepY0vNc63q2VaOQLWA1fKYYMREF207iDmj8M=;
+        b=cvbOC11WJBv254EhYpdJSsG3lzLGEBJZirKIwX7ipq97CW4varCHwl1/9bIKFNevns
+         AxqfWygyaofqm0K4hpAEst1j+eMom/pmaqOIzy7HucbFVpUVEKMC+jcVxuK0+4ztDuw7
+         DYpJ2DSThkatUj5nJYP6ZydG5nnR+m+JlPxQkVJn4iZDa8SU3zxU2+M7jkaxBms0vFmg
+         vDmi8wu0iz1wAUIE6B+4mEh3wB62+AJohoTycP4ih9EoNgfhtAHG7Zsi8wAkuTaHzDUd
+         npFDyED/IGPqTBUIx03F75n8g/eSBaVYqH+6yzFvwXjRwdcRI8slHuZiUp9ywU+lIcH8
+         Wslg==
+X-Gm-Message-State: AOAM532b6NrWuTriK5Y37aA2wT3tJ6adAuhoIjGl8V05D9HLs82ynlKG
+        19GAKj/14//GgkeLrH8pEOi/MUCu51ixx96mj8s=
+X-Google-Smtp-Source: ABdhPJx4Qzp5/KvwYGLxwbL5y+B7itSkoeGkgu40KGhxhqPxnPpNPyE08am+leRP+rX0L+h8iNqO9z4Jw4+caqkiteY=
+X-Received: by 2002:a1c:2dcb:: with SMTP id t194mr13696946wmt.94.1596830393486;
+ Fri, 07 Aug 2020 12:59:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200803193547.305660-1-jcrouse@codeaurora.org> <20200803193547.305660-10-jcrouse@codeaurora.org>
+In-Reply-To: <20200803193547.305660-10-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 7 Aug 2020 13:00:37 -0700
+Message-ID: <CAF6AEGvum9zLj41Ds+8+Q7qaMctwtcsEpC5aHGHZjb=piZO-QA@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v11 09/12] drm/msm: Add support to create a
+ local pagetable
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        David Airlie <airlied@linux.ie>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtiofs device has a range of memory which is mapped into file inodes
-using dax. This memory is mapped in qemu on host and maps different
-sections of real file on host. Size of this memory is limited
-(determined by administrator) and depending on filesystem size, we will
-soon reach a situation where all the memory is in use and we need to
-reclaim some.
+On Mon, Aug 3, 2020 at 12:36 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Add support to create a io-pgtable for use by targets that support
+> per-instance pagetables. In order to support per-instance pagetables the
+> GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
+> split pagetables enabled.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
+>  drivers/gpu/drm/msm/msm_iommu.c  | 191 ++++++++++++++++++++++++++++++-
+>  drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
+>  3 files changed, 206 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+> index 310a31b05faa..aab121f4beb7 100644
+> --- a/drivers/gpu/drm/msm/msm_gpummu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpummu.c
+> @@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
+>         }
+>
+>         gpummu->gpu = gpu;
+> -       msm_mmu_init(&gpummu->base, dev, &funcs);
+> +       msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
+>
+>         return &gpummu->base;
+>  }
+> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+> index 1b6635504069..bc6a4bbc904a 100644
+> --- a/drivers/gpu/drm/msm/msm_iommu.c
+> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> @@ -4,15 +4,202 @@
+>   * Author: Rob Clark <robdclark@gmail.com>
+>   */
+>
+> +#include <linux/io-pgtable.h>
+>  #include "msm_drv.h"
+>  #include "msm_mmu.h"
+>
+>  struct msm_iommu {
+>         struct msm_mmu base;
+>         struct iommu_domain *domain;
+> +       atomic_t pagetables;
+>  };
+> +
+>  #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
+>
+> +struct msm_iommu_pagetable {
+> +       struct msm_mmu base;
+> +       struct msm_mmu *parent;
+> +       struct io_pgtable_ops *pgtbl_ops;
+> +       phys_addr_t ttbr;
+> +       u32 asid;
+> +};
+> +static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
+> +{
+> +       return container_of(mmu, struct msm_iommu_pagetable, base);
+> +}
+> +
+> +static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
+> +               size_t size)
+> +{
+> +       struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
+> +       struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
+> +       size_t unmapped = 0;
+> +
+> +       /* Unmap the block one page at a time */
+> +       while (size) {
+> +               unmapped += ops->unmap(ops, iova, 4096, NULL);
+> +               iova += 4096;
+> +               size -= 4096;
+> +       }
+> +
+> +       iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
+> +
+> +       return (unmapped == size) ? 0 : -EINVAL;
+> +}
+> +
+> +static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
+> +               struct sg_table *sgt, size_t len, int prot)
+> +{
+> +       struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
+> +       struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
+> +       struct scatterlist *sg;
+> +       size_t mapped = 0;
+> +       u64 addr = iova;
+> +       unsigned int i;
+> +
+> +       for_each_sg(sgt->sgl, sg, sgt->nents, i) {
+> +               size_t size = sg->length;
+> +               phys_addr_t phys = sg_phys(sg);
+> +
+> +               /* Map the block one page at a time */
+> +               while (size) {
+> +                       if (ops->map(ops, addr, phys, 4096, prot, GFP_KERNEL)) {
+> +                               msm_iommu_pagetable_unmap(mmu, iova, mapped);
+> +                               return -EINVAL;
+> +                       }
+> +
+> +                       phys += 4096;
+> +                       addr += 4096;
+> +                       size -= 4096;
+> +                       mapped += 4096;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
+> +{
+> +       struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
+> +       struct msm_iommu *iommu = to_msm_iommu(pagetable->parent);
+> +
+> +       /*
+> +        * If this is the last attached pagetable for the parent,
+> +        * disable TTBR0 in the arm-smmu driver
+> +        */
+> +       if (atomic_dec_return(&iommu->pagetables) == 0)
+> +               iommu_domain_set_attr(iommu->domain,
+> +                       DOMAIN_ATTR_PGTABLE_CFG, NULL);
+> +
+> +       free_io_pgtable_ops(pagetable->pgtbl_ops);
+> +       kfree(pagetable);
+> +}
+> +
+> +int msm_iommu_pagetable_params(struct msm_mmu *mmu,
+> +               phys_addr_t *ttbr, int *asid)
+> +{
+> +       struct msm_iommu_pagetable *pagetable;
+> +
+> +       if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
+> +               return -EINVAL;
+> +
+> +       pagetable = to_pagetable(mmu);
+> +
+> +       if (ttbr)
+> +               *ttbr = pagetable->ttbr;
+> +
+> +       if (asid)
+> +               *asid = pagetable->asid;
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct msm_mmu_funcs pagetable_funcs = {
+> +               .map = msm_iommu_pagetable_map,
+> +               .unmap = msm_iommu_pagetable_unmap,
+> +               .destroy = msm_iommu_pagetable_destroy,
+> +};
+> +
+> +static void msm_iommu_tlb_flush_all(void *cookie)
+> +{
+> +}
+> +
+> +static void msm_iommu_tlb_flush_walk(unsigned long iova, size_t size,
+> +               size_t granule, void *cookie)
+> +{
+> +}
+> +
+> +static void msm_iommu_tlb_add_page(struct iommu_iotlb_gather *gather,
+> +               unsigned long iova, size_t granule, void *cookie)
+> +{
+> +}
+> +
+> +static const struct iommu_flush_ops null_tlb_ops = {
+> +       .tlb_flush_all = msm_iommu_tlb_flush_all,
+> +       .tlb_flush_walk = msm_iommu_tlb_flush_walk,
+> +       .tlb_flush_leaf = msm_iommu_tlb_flush_walk,
+> +       .tlb_add_page = msm_iommu_tlb_add_page,
+> +};
+> +
+> +struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
+> +{
+> +       struct msm_iommu *iommu = to_msm_iommu(parent);
+> +       static int next_asid = 16;
+> +       struct msm_iommu_pagetable *pagetable;
+> +       struct io_pgtable_cfg cfg;
+> +       int ret;
+> +
+> +       /* Get the pagetable configuration from the domain */
+> +       ret = iommu_domain_get_attr(iommu->domain,
+> +               DOMAIN_ATTR_PGTABLE_CFG, &cfg);
+> +       if (ret)
+> +               return ERR_PTR(ret);
+> +
+> +       pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
+> +       if (!pagetable)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
+> +               MSM_MMU_IOMMU_PAGETABLE);
+> +
+> +       /* The incoming cfg will have the TTBR1 quirk enabled */
+> +       cfg.quirks &= ~IO_PGTABLE_QUIRK_ARM_TTBR1;
+> +       cfg.tlb = &null_tlb_ops;
+> +
+> +       pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
+> +               &cfg, iommu->domain);
+> +
+> +       if (!pagetable->pgtbl_ops) {
+> +               kfree(pagetable);
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       /*
+> +        * If this is the first pagetable that we've allocated, send it back to
+> +        * the arm-smmu driver as a trigger to set up TTBR0
+> +        */
+> +       if (atomic_inc_return(&iommu->pagetables) == 1) {
+> +               ret = iommu_domain_set_attr(iommu->domain,
+> +                       DOMAIN_ATTR_PGTABLE_CFG, &cfg);
+> +               if (ret) {
+> +                       free_io_pgtable_ops(pagetable->pgtbl_ops);
+> +                       kfree(pagetable);
+> +                       return ERR_PTR(ret);
+> +               }
+> +       }
+> +
+> +       /* Needed later for TLB flush */
+> +       pagetable->parent = parent;
+> +       pagetable->ttbr = cfg.arm_lpae_s1_cfg.ttbr;
+> +
+> +       pagetable->asid = next_asid;
+> +       next_asid = (next_asid + 1)  % 255;
 
-As part of reclaim process, we will need to make sure that there are
-no active references to pages (taken by get_user_pages()) on the memory
-range we are trying to reclaim. I am planning to use
-dax_layout_busy_page() for this. But in current form this is per inode
-and scans through all the pages of the inode.
+nit: extra space before '%'
 
-We want to reclaim only a portion of memory (say 2MB page). So we want
-to make sure that only that 2MB range of pages do not have any
-references  (and don't want to unmap all the pages of inode).
+> +       if (next_asid < 16)
+> +               next_asid = 16;
 
-Hence, create a range version of this function named
-dax_layout_busy_page_range() which can be used to pass a range which
-needs to be unmapped.
+nit: next_asid = min(16, next_asid)
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-nvdimm@lists.01.org
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- fs/dax.c            | 66 ++++++++++++++++++++++++++++++++-------------
- include/linux/dax.h |  6 +++++
- 2 files changed, 54 insertions(+), 18 deletions(-)
+?
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 11b16729b86f..0d51b0fbb489 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -558,27 +558,20 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 	return xa_mk_internal(VM_FAULT_FALLBACK);
- }
- 
--/**
-- * dax_layout_busy_page - find first pinned page in @mapping
-- * @mapping: address space to scan for a page with ref count > 1
-- *
-- * DAX requires ZONE_DEVICE mapped pages. These pages are never
-- * 'onlined' to the page allocator so they are considered idle when
-- * page->count == 1. A filesystem uses this interface to determine if
-- * any page in the mapping is busy, i.e. for DMA, or other
-- * get_user_pages() usages.
-- *
-- * It is expected that the filesystem is holding locks to block the
-- * establishment of new mappings in this address_space. I.e. it expects
-- * to be able to run unmap_mapping_range() and subsequently not race
-- * mapping_mapped() becoming true.
-+/*
-+ * Partial pages are included. If end is LLONG_MAX, pages in the range from
-+ * start to end of the file are inluded.
-  */
--struct page *dax_layout_busy_page(struct address_space *mapping)
-+struct page *dax_layout_busy_page_range(struct address_space *mapping,
-+					loff_t start, loff_t end)
- {
--	XA_STATE(xas, &mapping->i_pages, 0);
- 	void *entry;
- 	unsigned int scanned = 0;
- 	struct page *page = NULL;
-+	pgoff_t start_idx = start >> PAGE_SHIFT;
-+	pgoff_t end_idx = end >> PAGE_SHIFT;
-+	XA_STATE(xas, &mapping->i_pages, start_idx);
-+	loff_t len, lstart = round_down(start, PAGE_SIZE);
- 
- 	/*
- 	 * In the 'limited' case get_user_pages() for dax is disabled.
-@@ -589,6 +582,22 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
- 	if (!dax_mapping(mapping) || !mapping_mapped(mapping))
- 		return NULL;
- 
-+	/* If end == LLONG_MAX, all pages from start to till end of file */
-+	if (end == LLONG_MAX) {
-+		end_idx = ULONG_MAX;
-+		len = 0;
-+	} else {
-+		/* length is being calculated from lstart and not start.
-+		 * This is due to behavior of unmap_mapping_range(). If
-+		 * start is say 4094 and end is on 4096 then we want to
-+		 * unamp two pages, idx 0 and 1. But unmap_mapping_range()
-+		 * will unmap only page at idx 0. If we calculate len
-+		 * from the rounded down start, this problem should not
-+		 * happen.
-+		 */
-+		len = end - lstart + 1;
-+	}
-+
- 	/*
- 	 * If we race get_user_pages_fast() here either we'll see the
- 	 * elevated page count in the iteration and wait, or
-@@ -601,10 +610,10 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
- 	 * guaranteed to either see new references or prevent new
- 	 * references from being established.
- 	 */
--	unmap_mapping_range(mapping, 0, 0, 0);
-+	unmap_mapping_range(mapping, start, len, 0);
- 
- 	xas_lock_irq(&xas);
--	xas_for_each(&xas, entry, ULONG_MAX) {
-+	xas_for_each(&xas, entry, end_idx) {
- 		if (WARN_ON_ONCE(!xa_is_value(entry)))
- 			continue;
- 		if (unlikely(dax_is_locked(entry)))
-@@ -625,6 +634,27 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
- 	xas_unlock_irq(&xas);
- 	return page;
- }
-+EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
-+
-+/**
-+ * dax_layout_busy_page - find first pinned page in @mapping
-+ * @mapping: address space to scan for a page with ref count > 1
-+ *
-+ * DAX requires ZONE_DEVICE mapped pages. These pages are never
-+ * 'onlined' to the page allocator so they are considered idle when
-+ * page->count == 1. A filesystem uses this interface to determine if
-+ * any page in the mapping is busy, i.e. for DMA, or other
-+ * get_user_pages() usages.
-+ *
-+ * It is expected that the filesystem is holding locks to block the
-+ * establishment of new mappings in this address_space. I.e. it expects
-+ * to be able to run unmap_mapping_range() and subsequently not race
-+ * mapping_mapped() becoming true.
-+ */
-+struct page *dax_layout_busy_page(struct address_space *mapping)
-+{
-+	return dax_layout_busy_page_range(mapping, 0, 0);
-+}
- EXPORT_SYMBOL_GPL(dax_layout_busy_page);
- 
- static int __dax_invalidate_entry(struct address_space *mapping,
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 6904d4e0b2e0..9016929db4c6 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -141,6 +141,7 @@ int dax_writeback_mapping_range(struct address_space *mapping,
- 		struct dax_device *dax_dev, struct writeback_control *wbc);
- 
- struct page *dax_layout_busy_page(struct address_space *mapping);
-+struct page *dax_layout_busy_page_range(struct address_space *mapping, loff_t start, loff_t end);
- dax_entry_t dax_lock_page(struct page *page);
- void dax_unlock_page(struct page *page, dax_entry_t cookie);
- #else
-@@ -171,6 +172,11 @@ static inline struct page *dax_layout_busy_page(struct address_space *mapping)
- 	return NULL;
- }
- 
-+static inline struct page *dax_layout_busy_page_range(struct address_space *mapping, pgoff_t start, pgoff_t nr_pages)
-+{
-+	return NULL;
-+}
-+
- static inline int dax_writeback_mapping_range(struct address_space *mapping,
- 		struct dax_device *dax_dev, struct writeback_control *wbc)
- {
--- 
-2.25.4
+BR,
+-R
 
+> +
+> +       return &pagetable->base;
+> +}
+> +
+>  static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+>                 unsigned long iova, int flags, void *arg)
+>  {
+> @@ -85,9 +272,11 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
+>                 return ERR_PTR(-ENOMEM);
+>
+>         iommu->domain = domain;
+> -       msm_mmu_init(&iommu->base, dev, &funcs);
+> +       msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
+>         iommu_set_fault_handler(domain, msm_fault_handler, iommu);
+>
+> +       atomic_set(&iommu->pagetables, 0);
+> +
+>         ret = iommu_attach_device(iommu->domain, dev);
+>         if (ret) {
+>                 kfree(iommu);
+> diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
+> index 3a534ee59bf6..61ade89d9e48 100644
+> --- a/drivers/gpu/drm/msm/msm_mmu.h
+> +++ b/drivers/gpu/drm/msm/msm_mmu.h
+> @@ -17,18 +17,26 @@ struct msm_mmu_funcs {
+>         void (*destroy)(struct msm_mmu *mmu);
+>  };
+>
+> +enum msm_mmu_type {
+> +       MSM_MMU_GPUMMU,
+> +       MSM_MMU_IOMMU,
+> +       MSM_MMU_IOMMU_PAGETABLE,
+> +};
+> +
+>  struct msm_mmu {
+>         const struct msm_mmu_funcs *funcs;
+>         struct device *dev;
+>         int (*handler)(void *arg, unsigned long iova, int flags);
+>         void *arg;
+> +       enum msm_mmu_type type;
+>  };
+>
+>  static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
+> -               const struct msm_mmu_funcs *funcs)
+> +               const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
+>  {
+>         mmu->dev = dev;
+>         mmu->funcs = funcs;
+> +       mmu->type = type;
+>  }
+>
+>  struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
+> @@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
+>         mmu->handler = handler;
+>  }
+>
+> +struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
+> +
+>  void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
+>                 dma_addr_t *tran_error);
+>
+> +
+> +int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
+> +               int *asid);
+> +
+>  #endif /* __MSM_MMU_H__ */
+> --
+> 2.25.1
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
