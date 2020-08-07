@@ -2,171 +2,123 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99556C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C42D02086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711222224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YUbJBStA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEtcWCE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHGT4H (ORCPT
+        id S1727074AbgHGT4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:56:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56475 "EHLO
+        Fri, 7 Aug 2020 15:56:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42354 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726766AbgHGTz5 (ORCPT
+        with ESMTP id S1726979AbgHGTz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:55:57 -0400
+        Fri, 7 Aug 2020 15:55:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1596830155;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=97H2hS3KixERoLCIQPRhmIXWdItO9tW/FdHdaaj3u7o=;
-        b=YUbJBStAmMYIcAwMx5b1CAWG0W7rCyEGnDrChpByEoO9CsAKqEYTkNGzGpHkcRaPp5IhLn
-        /PkHqJHassqNKhmrGcoU78uUwseYsGtPosFSgZ0whe/xB6PMbG8ukww08WMGQBI6V1JL4y
-        kQPd4oF81E/CqME1TJgWGSC2EKKpWNw=
+        bh=qdlNr90CBeIrDZm/k8M3WSYgAxr0kUHBQSfXY3HBR3M=;
+        b=OEtcWCE8O5fZ4rbGITleBlsU0WLxb7Ef7hxXcd01DHmtitoBa3RrwXzJ2bSNVOSz8WIaAE
+        NlVvekfuoTCWwJJjrf+rsMOUKqg4bk51ghjCsDLtUr1lYF4hBcP6eWW058k/9+i7ek5DNs
+        bTG07R6oi+v53wt4Nr0zM8gLhCGCv0g=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-R0cAJY0wPT28lloJUh2Eqg-1; Fri, 07 Aug 2020 15:55:53 -0400
-X-MC-Unique: R0cAJY0wPT28lloJUh2Eqg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-456-fTI0CLrNPD-IHN_fsiNHLQ-1; Fri, 07 Aug 2020 15:55:53 -0400
+X-MC-Unique: fTI0CLrNPD-IHN_fsiNHLQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A2C61DE0;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8351A1005510;
         Fri,  7 Aug 2020 19:55:52 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-113-142.rdu2.redhat.com [10.10.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 898665D9D5;
-        Fri,  7 Aug 2020 19:55:46 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 60A975C1D0;
+        Fri,  7 Aug 2020 19:55:52 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 0C067222E59; Fri,  7 Aug 2020 15:55:39 -0400 (EDT)
+        id 19357222E5E; Fri,  7 Aug 2020 15:55:39 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com
-Subject: [PATCH v2 14/20] fuse,dax: add DAX mmap support
-Date:   Fri,  7 Aug 2020 15:55:20 -0400
-Message-Id: <20200807195526.426056-15-vgoyal@redhat.com>
+Subject: [PATCH v2 16/20] fuse,virtiofs: Define dax address space operations
+Date:   Fri,  7 Aug 2020 15:55:22 -0400
+Message-Id: <20200807195526.426056-17-vgoyal@redhat.com>
 In-Reply-To: <20200807195526.426056-1-vgoyal@redhat.com>
 References: <20200807195526.426056-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hajnoczi <stefanha@redhat.com>
+This is done along the lines of ext4 and xfs. I primarily wanted ->writepages
+hook at this time so that I could call into dax_writeback_mapping_range().
+This in turn will decide which pfns need to be written back.
 
-Add DAX mmap() support.
-
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/file.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 1 deletion(-)
+ fs/fuse/file.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
 diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 194fe3e404a7..be7d90eb5b41 100644
+index 00ad27216cc3..54708cb24da0 100644
 --- a/fs/fuse/file.c
 +++ b/fs/fuse/file.c
-@@ -2841,10 +2841,15 @@ static const struct vm_operations_struct fuse_file_vm_ops = {
- 	.page_mkwrite	= fuse_page_mkwrite,
+@@ -2669,6 +2669,16 @@ static int fuse_writepages_fill(struct page *page,
+ 	return err;
+ }
+ 
++static int fuse_dax_writepages(struct address_space *mapping,
++				struct writeback_control *wbc)
++{
++
++	struct inode *inode = mapping->host;
++	struct fuse_conn *fc = get_fuse_conn(inode);
++
++	return dax_writeback_mapping_range(mapping, fc->dax_dev, wbc);
++}
++
+ static int fuse_writepages(struct address_space *mapping,
+ 			   struct writeback_control *wbc)
+ {
+@@ -4030,6 +4040,13 @@ static const struct address_space_operations fuse_file_aops  = {
+ 	.write_end	= fuse_write_end,
  };
  
-+static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma);
- static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	struct fuse_file *ff = file->private_data;
- 
-+	/* DAX mmap is superior to direct_io mmap */
-+	if (IS_DAX(file_inode(file)))
-+		return fuse_dax_mmap(file, vma);
-+
- 	if (ff->open_flags & FOPEN_DIRECT_IO) {
- 		/* Can't provide the coherency needed for MAP_SHARED */
- 		if (vma->vm_flags & VM_MAYSHARE)
-@@ -2863,9 +2868,63 @@ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
- 	return 0;
- }
- 
-+static vm_fault_t __fuse_dax_fault(struct vm_fault *vmf,
-+				   enum page_entry_size pe_size, bool write)
-+{
-+	vm_fault_t ret;
-+	struct inode *inode = file_inode(vmf->vma->vm_file);
-+	struct super_block *sb = inode->i_sb;
-+	pfn_t pfn;
-+
-+	if (write)
-+		sb_start_pagefault(sb);
-+
-+	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
-+
-+	if (ret & VM_FAULT_NEEDDSYNC)
-+		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
-+
-+	if (write)
-+		sb_end_pagefault(sb);
-+
-+	return ret;
-+}
-+
-+static vm_fault_t fuse_dax_fault(struct vm_fault *vmf)
-+{
-+	return __fuse_dax_fault(vmf, PE_SIZE_PTE,
-+				vmf->flags & FAULT_FLAG_WRITE);
-+}
-+
-+static vm_fault_t fuse_dax_huge_fault(struct vm_fault *vmf,
-+			       enum page_entry_size pe_size)
-+{
-+	return __fuse_dax_fault(vmf, pe_size, vmf->flags & FAULT_FLAG_WRITE);
-+}
-+
-+static vm_fault_t fuse_dax_page_mkwrite(struct vm_fault *vmf)
-+{
-+	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
-+}
-+
-+static vm_fault_t fuse_dax_pfn_mkwrite(struct vm_fault *vmf)
-+{
-+	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
-+}
-+
-+static const struct vm_operations_struct fuse_dax_vm_ops = {
-+	.fault		= fuse_dax_fault,
-+	.huge_fault	= fuse_dax_huge_fault,
-+	.page_mkwrite	= fuse_dax_page_mkwrite,
-+	.pfn_mkwrite	= fuse_dax_pfn_mkwrite,
++static const struct address_space_operations fuse_dax_file_aops  = {
++	.writepages	= fuse_dax_writepages,
++	.direct_IO	= noop_direct_IO,
++	.set_page_dirty	= noop_set_page_dirty,
++	.invalidatepage	= noop_invalidatepage,
 +};
 +
- static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma)
+ void fuse_init_file_inode(struct inode *inode)
  {
--	return -EINVAL; /* TODO */
-+	file_accessed(file);
-+	vma->vm_ops = &fuse_dax_vm_ops;
-+	vma->vm_flags |= VM_MIXEDMAP | VM_HUGEPAGE;
-+	return 0;
- }
+ 	struct fuse_inode *fi = get_fuse_inode(inode);
+@@ -4045,6 +4062,8 @@ void fuse_init_file_inode(struct inode *inode)
+ 	fi->writepages = RB_ROOT;
+ 	fi->dmap_tree = RB_ROOT_CACHED;
  
- static int convert_fuse_file_lock(struct fuse_conn *fc,
-@@ -3938,6 +3997,7 @@ static const struct file_operations fuse_file_operations = {
- 	.release	= fuse_release,
- 	.fsync		= fuse_fsync,
- 	.lock		= fuse_file_lock,
-+	.get_unmapped_area = thp_get_unmapped_area,
- 	.flock		= fuse_file_flock,
- 	.splice_read	= generic_file_splice_read,
- 	.splice_write	= iter_file_splice_write,
+-	if (fc->dax_dev)
++	if (fc->dax_dev) {
+ 		inode->i_flags |= S_DAX;
++		inode->i_data.a_ops = &fuse_dax_file_aops;
++	}
+ }
 -- 
 2.25.4
 
