@@ -2,108 +2,98 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE44EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F836C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A90922C9F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JrgHoVFb"
+	by mail.kernel.org (Postfix) with ESMTP id D69512177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596798649;
+	bh=0mfZ3tCewEYBpMJJOPz0BmMamhTElZWdvCmOX36KiAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fJqg7NYfzFMOkdnjGd7q6hBgQytVek63kpvjMXAoxFtc/zs8qVmBbUiLeImaoWaMD
+	 aO5cnNjeZw63SpF+CVlVTigs15IZha3QsPx0qqwUWdToRZveXrSStmqY8GNnhQRjRN
+	 H3FQuDLiEPgjxjzgo0qpzrCzNGOZCOzmgNHI6+DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHGLEH (ORCPT
+        id S1728309AbgHGLKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:04:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38606 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726233AbgHGKzm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 06:55:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596797712;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=dwLIkWycUo2T9/Q0kymfmBAUfQhGmHg/IIypAw8eWxY=;
-        b=JrgHoVFbgE4FDEs/md22VknySFBnRXWHAi8rpXfaqnFEKv0cGC+zLrKI/hX3aUOBpyYCsp
-        Cxs0TyE6g7eUF8bbhOvCYRAD6pv6LYJzw7Zeo1fWckvDgYwIxewdDGGY2LSPqYgLCyHB4q
-        y2SwYA2h+w4dYDAhFFynsuyaqg0RE54=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-n8usaWB9OYGy695j6f2rgw-1; Fri, 07 Aug 2020 06:55:09 -0400
-X-MC-Unique: n8usaWB9OYGy695j6f2rgw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 7 Aug 2020 07:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728181AbgHGLKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 07:10:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50D5080BCAB;
-        Fri,  7 Aug 2020 10:55:06 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 621086179D;
-        Fri,  7 Aug 2020 10:55:02 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 9513F9CBC; Fri,  7 Aug 2020 12:55:01 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] drm/qxl: don't take vga ports on rev5+
-Date:   Fri,  7 Aug 2020 12:55:01 +0200
-Message-Id: <20200807105501.24599-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        by mail.kernel.org (Postfix) with ESMTPSA id 5471B22CAE;
+        Fri,  7 Aug 2020 11:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596798588;
+        bh=0mfZ3tCewEYBpMJJOPz0BmMamhTElZWdvCmOX36KiAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vLkvaRQqeXWKNg6wKaEQ8PDKcjcIsdzCJ9bTQ0Gm5WhT6Yn5TS0QLKQnWKMdWmHvb
+         ckswyLGYNEMx5onBTEN9cgAd2RP8HSgrQbgg6jj46UlBMFD/RSTFCl30ir5D0knxp2
+         evLNGLwT+HDJvHqOxRajUIe37yRe45iMZ8SVbeQk=
+Date:   Fri, 7 Aug 2020 12:09:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
+        tytso@mit.edu, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH] arm64: kaslr: Use standard early random function
+Message-ID: <20200807110923.GA5435@sirena.org.uk>
+References: <20200807004904.72893-1-linux@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <20200807004904.72893-1-linux@roeck-us.net>
+X-Cookie: Disposable, use only once.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qemu 5.0 introduces a new qxl hardware revision 5.  Unlike revision 4
-(and below) the device doesn't switch back into vga compatibility mode
-when someone touches the vga ports.  So we don't have to reserve the
-vga ports any more to avoid that happening.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/qxl/qxl_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index 13872b882775..6e7f16f4cec7 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -96,7 +96,7 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (ret)
- 		goto disable_pci;
- 
--	if (is_vga(pdev)) {
-+	if (is_vga(pdev) && pdev->revision < 5) {
- 		ret = vga_get_interruptible(pdev, VGA_RSRC_LEGACY_IO);
- 		if (ret) {
- 			DRM_ERROR("can't get legacy vga ioports\n");
-@@ -127,7 +127,7 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- unload:
- 	qxl_device_fini(qdev);
- put_vga:
--	if (is_vga(pdev))
-+	if (is_vga(pdev) && pdev->revision < 5)
- 		vga_put(pdev, VGA_RSRC_LEGACY_IO);
- disable_pci:
- 	pci_disable_device(pdev);
-@@ -155,7 +155,7 @@ qxl_pci_remove(struct pci_dev *pdev)
- 
- 	drm_dev_unregister(dev);
- 	drm_atomic_helper_shutdown(dev);
--	if (is_vga(pdev))
-+	if (is_vga(pdev) && pdev->revision < 5)
- 		vga_put(pdev, VGA_RSRC_LEGACY_IO);
- }
- 
--- 
-2.18.4
+On Thu, Aug 06, 2020 at 05:49:04PM -0700, Guenter Roeck wrote:
 
+> Use arch_get_random_seed_long_early() instead of arm64 specific functions
+> to solve the problem. As a side effect of this change, the code no longer
+> bypasses ARCH_RANDOM, which I consider desirable (after all, ARCH_RANDOM
+> was disabled for a reason).
+
+This should be fine since the entire implementation is still static
+inline in the header other than the prints in the WARN_ON() which should
+never be triggered here so it should be fine.
+
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8tNmMACgkQJNaLcl1U
+h9DK4Qf5AVSYfMMgTTvwKue9Ks6IYBH3gzG07ukffM+vAlE/RXqck638YxoU8wHU
+208wtyCiKeAPZiO9dawkdTsF8Rcks1XWCvYYDL1VdK6HIkUetFDD14D7/JFykuwi
+y4iZFMSHXiJ6L73afGWUMzY6p7OirJiyJ1aIfgsBSMgz8kKG7DcD2xiKzo72HcFt
+0mlWjbFH/PU3zNf24sB4Z67B0qCPguNNMQ+Iu0z5ETSNYZw+Bi3pPiN7JXzoPUdB
+2O6VcYXei1jJYHWihgetLv8E/hCFkaxUOIru705kIHp1pYma/yfMhmYYmlr/dlzs
+IAJVL1LhZ7dG/PYxpYevIgoSFjkGKA==
+=dHzU
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
