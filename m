@@ -2,126 +2,151 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C92C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8B622CA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2901022CA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:12:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f/CMPYJc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TNiS7VCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgHGOMK (ORCPT
+        id S1726524AbgHGOMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 10:12:10 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54969 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726066AbgHGOLx (ORCPT
+        Fri, 7 Aug 2020 10:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgHGOMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 10:11:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596809502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3c1yw7k9X8hm0dHhBiwxK4zbTgM0Mhf/wXgVInw3T7o=;
-        b=f/CMPYJcJd4OSgP3ax8o737m6VPtV/TCMJUd3dRNjEZCoEHNhUm0bKvKRzriVCgzuvfvgn
-        jb2asCFbx01CsDiLiskrU35q0qKt/UWz+NOiWdJaeYvWF4n4jwQ1BtVhJ8AWV2aqcFH2Dd
-        qrzYqlE3qzzot+7BmkNgFoaq1GED99c=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-otYKLkrZNeOONZ2F4nI8Ug-1; Fri, 07 Aug 2020 10:11:39 -0400
-X-MC-Unique: otYKLkrZNeOONZ2F4nI8Ug-1
-Received: by mail-wm1-f69.google.com with SMTP id c124so727490wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 07:11:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3c1yw7k9X8hm0dHhBiwxK4zbTgM0Mhf/wXgVInw3T7o=;
-        b=dZlX+kRSSNRzi+Dt6sc5q5OG/ix7SfWRTK2a66c4bVnafuX3kKeMVFaZ/NeaiGdpwp
-         LYfG0OIoCEfMFiscwyPr6xRMqkWE89pavef3lOGOp5nFSWWFENGg62rsj0o53/58k1wK
-         pZvUlYnSmOcQeth9MwDMrhGpzA4x9oQvdtpkUn9eehroHnC/Ytr6+uB/2tm8690zUtoO
-         nwxvOf/rrt0SiSUSDsAMPkTM/vkrAOjFJRxupWjU85DCLryLEWa6BG88NoW8Px3R6H99
-         Db7xqcTEVymidga70wF4AhenGywb9XPdHJP8ncXMEA5tmknkgEzaNBttjf7R0ODSWGs2
-         O0QA==
-X-Gm-Message-State: AOAM532KbvtorxHxhtz64BVaz0mmcUbcvEA/dJWOohBS9qbJyFZYcW5P
-        kw1Rp6qC09OzM3xLISh1p7HBlYV659OktOSsE1obwhlPd2rjQOUhTu+1p3gVDWdHGUD2SbhHa7b
-        RrHXUQovR/r3UHvNmpmx979UG
-X-Received: by 2002:adf:81c5:: with SMTP id 63mr12748578wra.185.1596809498242;
-        Fri, 07 Aug 2020 07:11:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzvEkand5vtybeLw6SUi+cwMVVl7XbxNslOqTgZI0RMJgnMHG9r2j1ZQJPEaSceKtI6AHDGog==
-X-Received: by 2002:adf:81c5:: with SMTP id 63mr12748548wra.185.1596809497939;
-        Fri, 07 Aug 2020 07:11:37 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.36.84])
-        by smtp.gmail.com with ESMTPSA id o124sm10775755wmb.2.2020.08.07.07.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 07:11:37 -0700 (PDT)
-Date:   Fri, 7 Aug 2020 16:11:35 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     luca abeni <luca.abeni@santannapisa.it>
-Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        tommaso.cucinotta@santannapisa.it, alessio.balsini@gmail.com,
-        bristot@redhat.com, dietmar.eggemann@arm.com,
-        linux-rt-users@vger.kernel.org, mtosatti@redhat.com,
-        williams@redhat.com, valentin.schneider@arm.com
-Subject: Re: [RFC PATCH v2 6/6] sched/fair: Implement starvation monitor
-Message-ID: <20200807141135.GT42956@localhost.localdomain>
-References: <20200807095051.385985-1-juri.lelli@redhat.com>
- <20200807095604.GO42956@localhost.localdomain>
- <20200807152832.591f462e@nowhere>
- <20200807134353.GR42956@localhost.localdomain>
- <20200807155510.2b380f49@nowhere>
+        Fri, 7 Aug 2020 10:12:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA5AC061756;
+        Fri,  7 Aug 2020 07:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=X4HvivKxs4JnWuaKwX6bcx1NKb6uODngs3oeNIMTkPI=; b=TNiS7VCE4rF3DJ+iptLazUJtN0
+        nV9TbHNLVeNlNXmmcrrLWXfFtcfirlHvcYzrcpksjZtBVq57vcprsC3MEE2Lpc5Okx4pHl1Ab88+z
+        RpsMoCj+L5lZhUc0ncq33fiyaPPtSxIVHN27pGdstdTiBQUBxKngnHpXEAcgsF0Qt24dNrj63btjL
+        Z6uJWVap6trIM7vrMOF+tv7c+Uy6LOt470XNluKHuqZnbtnJ9+4m3WpEvDS1979Fz1Pz854HdJ/9b
+        x+rqHflT+6UULcnU/hlatXwLGvWDNlttB2D76HgHK6Zv8WD3LfdQURoqyRV2k1yfnlEyEdbjRf6vL
+        fNNMtzKg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k4364-0005Ld-Ot; Fri, 07 Aug 2020 14:11:48 +0000
+Date:   Fri, 7 Aug 2020 15:11:48 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: splice: infinite busy loop lockup bug
+Message-ID: <20200807141148.GD17456@casper.infradead.org>
+References: <00000000000084b59f05abe928ee@google.com>
+ <29de15ff-15e9-5c52-cf87-e0ebdfa1a001@I-love.SAKURA.ne.jp>
+ <20200807122727.GR1236603@ZenIV.linux.org.uk>
+ <20200807123854.GS1236603@ZenIV.linux.org.uk>
+ <20200807134114.GA2114050@T590>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807155510.2b380f49@nowhere>
+In-Reply-To: <20200807134114.GA2114050@T590>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08/20 15:55, luca abeni wrote:
-> On Fri, 7 Aug 2020 15:43:53 +0200
-> Juri Lelli <juri.lelli@redhat.com> wrote:
+On Fri, Aug 07, 2020 at 09:41:14PM +0800, Ming Lei wrote:
+> On Fri, Aug 07, 2020 at 01:38:54PM +0100, Al Viro wrote:
+> > FWIW, my preference would be to have for_each_bvec() advance past zero-length
+> > segments; I'll need to go through its uses elsewhere in the tree first, though
+> > (after I grab some sleep),
 > 
-> > On 07/08/20 15:28, luca abeni wrote:
-> > > Hi Juri,
-> > > 
-> > > On Fri, 7 Aug 2020 11:56:04 +0200
-> > > Juri Lelli <juri.lelli@redhat.com> wrote:
-> > >   
-> > > > Starting deadline server for lower priority classes right away
-> > > > when first task is enqueued might break guarantees  
-> > > 
-> > > Which guarantees are you thinking about, here? Response times of
-> > > fixed priority tasks?  
-> > 
-> > Response time, but also wakeup latency (which, for better or worse, is
-> > another important metric).
-> > 
-> > > If fixed priority tasks are also scheduled through deadline servers,
-> > > then you can provide response-time guarantees to them even when
-> > > lower-priority/non-real-time tasks are scheduled through deadline
-> > > servers.  
-> > 
-> > Right, but I fear we won't be able to keep current behavior for
-> > wakeups: RT with highest prio always gets scheduled right away?
+> Usually block layer doesn't allow/support zero bvec, however we can make
+> for_each_bvec() to support it only.
 > 
-> Uhm... I think this depends on how the servers' parameters are
-> designed: assigning "wrong" (or "bad") parameters to the server used to
-> schedule RT tasks, this property is broken.
+> Tetsuo, can you try the following patch?
 > 
-> (however, notice that even with the current patchset the highest
-> priority task might be scheduled with some delay --- if the SCHED_OTHER
-> deadline server is active because SCHED_OTHER tasks are being starved).
+> diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+> index ac0c7299d5b8..b03c793dd28d 100644
+> --- a/include/linux/bvec.h
+> +++ b/include/linux/bvec.h
+> @@ -117,11 +117,19 @@ static inline bool bvec_iter_advance(const struct bio_vec *bv,
+>  	return true;
+>  }
+>  
+> +static inline void bvec_iter_skip_zero_vec(const struct bio_vec *bv,
+> +		struct bvec_iter *iter)
+> +{
+> +	iter->bi_idx++;
+> +	iter->bi_bvec_done = 0;
+> +}
+> +
+>  #define for_each_bvec(bvl, bio_vec, iter, start)			\
+>  	for (iter = (start);						\
+>  	     (iter).bi_size &&						\
+> -		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);	\
+> -	     bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len))
+> +		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);		\
+> +	  (bvl).bv_len ? bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len) : \
+> +			bvec_iter_skip_zero_vec((bio_vec), &(iter)))
 
-But that's OK I think, because if the server is active it means that
-OTHER didn't get a chance to run for some time and if it continues to
-hung than worse problems than breaking FIFO assumptions will happen. :-/
+Uhm, bvec_iter_advance() already skips over zero length bio_vecs.
 
+        while (bytes && bytes >= bv[idx].bv_len) {
+                bytes -= bv[idx].bv_len;
+                idx++;
+        }
+
+The problem is when the _first_ bio_vec is zero length.  Maybe something more
+like this (which doesn't even compile, but hopefully makes my point):
+
+@@ -86,12 +86,24 @@ struct bvec_iter_all {
+        (mp_bvec_iter_page((bvec), (iter)) +                    \
+         mp_bvec_iter_page_idx((bvec), (iter)))
+ 
+-#define bvec_iter_bvec(bvec, iter)                             \
+-((struct bio_vec) {                                            \
+-       .bv_page        = bvec_iter_page((bvec), (iter)),       \
+-       .bv_len         = bvec_iter_len((bvec), (iter)),        \
+-       .bv_offset      = bvec_iter_offset((bvec), (iter)),     \
+-})
++static inline bool bvec_iter_bvec(struct bio_vec *bv, struct bio_vec *bvec,
++               struct bvec_iter *iter)
++{
++       unsigned int idx = iter->bi_idx;
++
++       if (!iter->bi_size)
++               return false;
++
++       while (!bv[idx].bv_len)
++               idx++;
++       iter->bi_idx = idx;
++
++       bv->bv_page = bvec_iter_page(bvec, *iter);
++       bv->bv_len = bvec_iter_len(bvec, *iter);
++       bv->bv_offset = bvec_iter_offset(bvec, *iter);
++
++       return true;
++}
+ 
+ static inline bool bvec_iter_advance(const struct bio_vec *bv,
+                struct bvec_iter *iter, unsigned bytes)
+@@ -119,8 +131,7 @@ static inline bool bvec_iter_advance(const struct bio_vec *bv,
+ 
+ #define for_each_bvec(bvl, bio_vec, iter, start)                       \
+        for (iter = (start);                                            \
+-            (iter).bi_size &&                                          \
+-               ((bvl = bvec_iter_bvec((bio_vec), (iter))), 1); \
++            bvec_iter_bvec(&(bvl), (bio_vec), &(iter));                \
+             bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len))
+ 
+ /* for iterating one bio from start to end */
+
+(I find the whole bvec handling a mess of confusing macros and would
+welcome more of it being inline functions, in general).
