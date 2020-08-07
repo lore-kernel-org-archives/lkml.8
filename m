@@ -3,159 +3,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA90C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5071C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3758720748
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9868F21744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:35:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePnola2T"
+	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="Po/0iH4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgHGQaZ (ORCPT
+        id S1726479AbgHGQfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgHGQaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:30:17 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAA7C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 09:30:17 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id l1so2491770ioh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 09:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=y1VmShTbODQxi97p5yhWcFP1i7Rrvf4UqZFjwZm1PaY=;
-        b=ePnola2To6a9y/LKrs8HFSLLRCb/floBdKctMto7uvpYO8RdrkLg/FSl5Vfu4LHEdu
-         I3ExqMXZYF62qXvIE0+uZYBUhlZO0wpItQ2O8agf32U9MAzg+ZMO0zDeZ+qZvDb4/G9t
-         cQZsdnCsGc0G4H1HRkCVAKUQQnfb7EtDeUX7AWevdK7F8k4frzZdZjQRSNEIPV/Bew2/
-         O4UIknznTWXhvKWD5+OR9kMFveG9B93bw6c8qwE2I/jkWDJm+vS+s9a6uNfjFiVFwReM
-         1SffnIIpPGPz72lkaVxl4R25+aFoMZrarEUB8zAIKWZsrfJb0+jdoq/t9PQG2qOkz0LN
-         trMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=y1VmShTbODQxi97p5yhWcFP1i7Rrvf4UqZFjwZm1PaY=;
-        b=LMN+WvHfFhVf5F/9aq5ZC2HDscQp8n544SIjvN5VYHw0Y8D37Cno4A7eQO6ySMpnjT
-         7wHdgUIF+kkUiqVTCN+hiMLBSoajHIUjRMAZnwCEA+4bKp6wn3MRZCssP7t78bPgtAA/
-         Ol6BP13X/kSBGXfa8nmEnGAOhaTT9lni0yI5lh/NWKb4rKFi4iGMRiyYcZVEMxXZAdAl
-         SlEoOu9tifOzf8ngangjZSJFf5JZG9CwF4wGbz9glyQAH5utU8h9q8ngeaMcPo7vjWUB
-         9RfG2Hzd1DVQCYc9r9pN64yzdPXE5yC5lK/nLssqWj3WO5D0y335FPxVfbTCpdejd1yX
-         5U5g==
-X-Gm-Message-State: AOAM532KM/yM2ERvLqso23021tqTHVgST6zdGjhWJG3Qv1WWCjb7zfwu
-        //sZ9wwcYpRcwJ4DFJlRvotNDm0DdilnvzXEybQ=
-X-Google-Smtp-Source: ABdhPJzTbhIXdP3RRjHAE9h7pNMqIoCGqK3uc6aBT7K665Vm4u5cTcQqKvNP77DzylHIruEzzmN8w1q5osXjE7cQpSc=
-X-Received: by 2002:a05:6638:2109:: with SMTP id n9mr5880105jaj.16.1596817816475;
- Fri, 07 Aug 2020 09:30:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200710095409.407087-1-peron.clem@gmail.com> <CAL_JsqLnOGVbO5T92dyzt3K-v4BRNt72yMpYR_wW-z8dpdVSvA@mail.gmail.com>
- <CAJiuCcfezzr7w9=-G6WK0p6YS=6SBAKF8jv=yAOyNFJ59X80qw@mail.gmail.com>
-In-Reply-To: <CAJiuCcfezzr7w9=-G6WK0p6YS=6SBAKF8jv=yAOyNFJ59X80qw@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 7 Aug 2020 18:30:05 +0200
-Message-ID: <CAJiuCceufQko1KWmU0rHSaJiKMKST0L3OADE0O4_7myLtV4Zjg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/14] Add regulator devfreq support to Panfrost
-To:     Rob Herring <robh@kernel.org>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Fri, 7 Aug 2020 12:35:52 -0400
+Received: from mx01-sz.bfs.de ([194.94.69.67]:48349 "EHLO mx01-sz.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgHGQfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 12:35:20 -0400
+Received: from SRVEX01-MUC.bfs.intern (unknown [10.161.90.31])
+        by mx01-sz.bfs.de (Postfix) with ESMTPS id CCA1F2010F;
+        Fri,  7 Aug 2020 18:35:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1596818114;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d6RJesMcKWo7cast7P1LaTWaXeP5IYA97+Mn3n2DTGI=;
+        b=Po/0iH4OFAIZnXPir9DzxRmtHxTeZqKL8qY7zh5APXiSgM+Cz3i8Dzmj/hjqZ71vBo98RS
+        6hCyumtsmEmrfLabPd1EAI4il0qvd0D4v94AvJRZkPDk1fP3oc0hhH9Luch7p6ncCUEi40
+        Tx2793URDUOBxVro9ch+tKB3ilcXHrYKhD5WcwkrqcHOUWI4N3olul9VA5u2UO4eyCxi8U
+        vdSwBBnsyu/kgXf406U0PhluGpkQ/jc+xKxd4L6S+Egr5XnfgZPk4cHwsanPeDkC+EsKvD
+        cPwUQ7infnjhS+XN7vLS3wrtl+d50ULen+eByEcUuvQcdSh9ah1DAHCvPkb3VA==
+Received: from SRVEX01-MUC.bfs.intern (10.161.90.31) by SRVEX01-MUC.bfs.intern
+ (10.161.90.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Fri, 7 Aug 2020
+ 18:35:14 +0200
+Received: from SRVEX01-MUC.bfs.intern ([fe80::5d64:49:5476:e21f]) by
+ SRVEX01-MUC.bfs.intern ([fe80::5d64:49:5476:e21f%4]) with mapi id
+ 15.01.2044.004; Fri, 7 Aug 2020 18:35:14 +0200
+From:   Walter Harms <wharms@bfs.de>
+To:     David Howells <dhowells@redhat.com>
+CC:     "mtk.manpages@gmail.com" <mtk.manpages@gmail.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>,
+        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: AW: AW: [PATCH 5/5] Add manpage for fsconfig(2)
+Thread-Topic: AW: [PATCH 5/5] Add manpage for fsconfig(2)
+Thread-Index: AQHWbMQ0XBZ8wH0Poku30knI5+vNu6kszUyO///m8wCAACNmbQ==
+Date:   Fri, 7 Aug 2020 16:35:14 +0000
+Message-ID: <61ef401b229f44ee8cc57ff292a3fc9c@bfs.de>
+References: <a2fe568438aa45e9a63a3a7d9d64a73f@bfs.de>
+ <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>,<159680897140.29015.15318866561972877762.stgit@warthog.procyon.org.uk>,<45107.1596817654@warthog.procyon.org.uk>
+In-Reply-To: <45107.1596817654@warthog.procyon.org.uk>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.137.16.40]
+x-tm-as-product-ver: SMEX-14.0.0.3031-8.6.1012-25590.001
+x-tm-as-result: No-10--5.127400-5.000000
+x-tmase-matchedrid: Zt7FBlK+zO7RubRCcrbc5pzEHTUOuMX33dCmvEa6IiGoLZarzrrPmVwO
+        JjUNGcWTvqKlPiBL76d3r1Dr7ZPfTM+9kIneOZlhQ10sagR2+EEA+JHhu0IR5pGhAvBSa2i/IZR
+        vYk3GLWrOOomeC9zbqKHdurFnqCT5QLBrHsp/dPMVwr9AY0ZEvXDbaRpvS7UJlwV2iaAfSWeDGx
+        /OQ1GV8t0H8LFZNFG73Yq8RVaZivUOMH2CZRwlNdjAzKACs402DiRTr+W0b8T2E7k5i1o8mSC1m
+        XJsa75A
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--5.127400-5.000000
+x-tmase-version: SMEX-14.0.0.3031-8.6.1012-25590.001
+x-tm-snts-smtp: 8C69108A6CB5A07348DE85815151D065995B2165A6263346249A422E729C119C2000:9
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Authentication-Results: mx01-sz.bfs.de;
+        none
+X-Spamd-Result: default: False [1.27 / 7.00];
+         ARC_NA(0.00)[];
+         TO_DN_EQ_ADDR_SOME(0.00)[];
+         HAS_XOIP(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         MID_RHS_MATCH_FROM(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         BAYES_HAM(-0.23)[72.43%];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.911];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,ubuntu.com];
+         RCVD_COUNT_TWO(0.00)[2];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Aug 2020 at 18:28, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
- wrote:
->
-> Hi Rob,
->
-> On Fri, 7 Aug 2020 at 18:13, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Fri, Jul 10, 2020 at 3:54 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gma=
-il.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > This serie cleans and adds regulator support to Panfrost devfreq.
-> > > This is mostly based on comment for the freshly introduced lima
-> > > devfreq.
-> > >
-> > > We need to add regulator support because on Allwinner the GPU OPP
-> > > table defines both frequencies and voltages.
-> > >
-> > > First patches [01-07] should not change the actual behavior
-> > > and introduce a proper panfrost_devfreq struct.
-> > >
-> > > Regards,
-> > > Cl=C3=A9ment
-> > >
-> > > Changes since v4:
-> > >  - Fix missed a pfdev to &pfdev->devfreq during rebase
-> > >
-> > > Changes since v3:
-> > >  - Collect Steven Price reviewed-by tags
-> > >  - Rebase on next/master (next-20200709)
-> > >
-> > > Changes since v2:
-> > >  - Collect Alyssa Rosenzweig reviewed-by tags
-> > >  - Fix opp_set_regulator before adding opp_table (introduce in v2)
-> > >  - Call err_fini in case opp_add_table failed
-> > >
-> > > Changes since v1:
-> > >  - Collect Steven Price reviewed-by tags
-> > >  - Fix spinlock comment
-> > >  - Drop OPP clock-name patch
-> > >  - Drop device_property_test patch
-> > >  - Add rename error labels patch
-> > >
-> > > Cl=C3=A9ment P=C3=A9ron (14):
-> > >   drm/panfrost: avoid static declaration
-> > >   drm/panfrost: clean headers in devfreq
-> > >   drm/panfrost: don't use pfdevfreq.busy_count to know if hw is idle
-> > >   drm/panfrost: introduce panfrost_devfreq struct
-> > >   drm/panfrost: use spinlock instead of atomic
-> > >   drm/panfrost: properly handle error in probe
-> > >   drm/panfrost: rename error labels in device_init
-> > >   drm/panfrost: move devfreq_init()/fini() in device
-> > >   drm/panfrost: dynamically alloc regulators
-> > >   drm/panfrost: add regulators to devfreq
-> > >   arm64: defconfig: Enable devfreq cooling device
-> > >   arm64: dts: allwinner: h6: Add cooling map for GPU
-> > >   [DO NOT MERGE] arm64: dts: allwinner: h6: Add GPU OPP table
-> > >   [DO NOT MERGE] arm64: dts: allwinner: force GPU regulator to be alw=
-ays
-> >
-> > Patches 1-10 applied to drm-misc.
->
-> This serie has been superseded by v5.
->
-> Could you apply the v5 instead.
+found it,
+next i will look for version not varsion
 
-Oups forget my email
 
-I got an issue with my gmail...
+________________________________________
+Von: David Howells [dhowells@redhat.com]
+Gesendet: Freitag, 7. August 2020 18:27
+An: Walter Harms
+Cc: dhowells@redhat.com; mtk.manpages@gmail.com; linux-fsdevel@vger.kernel.=
+org; christian.brauner@ubuntu.com; linux-man@vger.kernel.org; linux-api@vge=
+r.kernel.org; linux-kernel@vger.kernel.org
+Betreff: Re: AW: [PATCH 5/5] Add manpage for fsconfig(2)
 
-Thanks
+Walter Harms <wharms@bfs.de> wrote:
 
->
-> Thanks
-> Cl=C3=A9ment
->
-> >
-> > Rob
+> maybe it is obvious but i did not see it ..
+> starting with what kernel version are these features available ?
+
+See:
+
+        +.SH VERSIONS
+        +.BR fsconfig ()
+        +was added to Linux in kernel 5.1.
+
+David
+
