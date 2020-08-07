@@ -2,80 +2,95 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39022C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26BF206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="MslSwSkr"
+	by mail.kernel.org (Postfix) with ESMTP id 14BB1206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgHGJf3 (ORCPT
+        id S1727857AbgHGJgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgHGJf3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:35:29 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA45C061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 02:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gGIwDhOjA1LUWyVCPaxr0QUqfVFuaQ2aeOuDTG1FAG0=; b=MslSwSkr01gt37As8fjtp3c4L+
-        6xxPqtPSL4bh0HaSr22/l0EGjObkF7Y1b2yd2VrnO1qxWjAao21ToRnsob2Q5HbRxmUk+K7ktL12e
-        fWSA93OWvOje0tkgZmr2nk07ub+RYndaYdyv+soRH/pget70PhJuqhr+rN+PgY2iCwHGJtCohnlZg
-        v4TLPW1TL7Ywcwt3k72wJq6XiXclEFTwFNgw7x4GdYH1v54sHHX+/uCERdnN1lRTARFnk8sUiEwEi
-        Uit4ZbeeL+I0RrTXQKS5ObwCFH0AHHQtFg6tWAe7QKe14ZsFxgXUV+ABxCRIBtndf2CBx3IADZFgB
-        HQotCxuQ==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:53009 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1k3ymc-0001ze-4F; Fri, 07 Aug 2020 11:35:26 +0200
-Subject: Re: [PATCH 3/6] drm/xen-front: Add YUYV to supported formats
-To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
-        xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     intel-gfx@lists.freedesktop.org, sstabellini@kernel.org,
-        dan.carpenter@oracle.com,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-References: <20200731125109.18666-1-andr2000@gmail.com>
- <20200731125109.18666-4-andr2000@gmail.com>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <a7a3ce30-34a8-c084-5cbd-88271271ac67@tronnes.org>
-Date:   Fri, 7 Aug 2020 11:35:24 +0200
+        Fri, 7 Aug 2020 05:36:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9352 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbgHGJgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 05:36:46 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 43F3866F4F5373A0D409;
+        Fri,  7 Aug 2020 17:36:44 +0800 (CST)
+Received: from [10.174.179.72] (10.174.179.72) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 7 Aug 2020 17:36:39 +0800
+Subject: Re: [PATCH net 0/4] support multipacket broadcast message
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+CC:     <robin@protonic.nl>, <linux@rempel-privat.de>,
+        <kernel@pengutronix.de>, <socketcan@hartkopp.net>,
+        <mkl@pengutronix.de>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-can@vger.kernel.org>
+References: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
+ <20200806161027.py5ged3a23xpmxgi@pengutronix.de>
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+Message-ID: <24c3daa5-8243-0b80-9f4c-aa5883cb75da@huawei.com>
+Date:   Fri, 7 Aug 2020 17:36:38 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200731125109.18666-4-andr2000@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200806161027.py5ged3a23xpmxgi@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.72]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Oleksij,
 
+We have tested this j1939 stack according to SAE J1939-21. It works fine for
+most cases, but when we test multipacket broadcast message function we found
+the receiver can't receive those packets.
 
-Den 31.07.2020 14.51, skrev Oleksandr Andrushchenko:
-> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+You can reproduce on CAN bus or vcan, for vcan case use cangw to connect vcan0
+and vcan1:
+sudo cangw -A -s vcan0 -d vcan1 -e
+sudo cangw -A -s vcan1 -d vcan0 -e
+
+To reproduce it use following commands:
+testj1939 -B -r vcan1:0x90 &
+testj1939 -B -s20 vcan0:0x80 :,0x12300
+
+Besides, candump receives correct packets while testj1939 receives nothing.
+
+Regards,
+Zhang Changzhong
+
+On 2020/8/7 0:10, Oleksij Rempel wrote:
+> Hello,
 > 
-> Add YUYV to supported formats, so the frontend can work with the
-> formats used by cameras and other HW.
+> Thank you for your patches! Currently I'm busy, but I'll take a look at it as
+> soon possible.
 > 
-> Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-> ---
-
-Acked-by: Noralf Trønnes <noralf@tronnes.org>
+> btw. can you tell me about more of your use case/work. I would like to
+> have some feedback about this stack. You can write a personal message,
+> if it is not for public.
+> 
+> On Wed, Aug 05, 2020 at 11:50:21AM +0800, Zhang Changzhong wrote:
+>> Zhang Changzhong (4):
+>>   can: j1939: fix support for multipacket broadcast message
+>>   can: j1939: cancel rxtimer on multipacket broadcast session complete
+>>   can: j1939: abort multipacket broadcast session when timeout occurs
+>>   can: j1939: add rxtimer for multipacket broadcast session
+>>
+>>  net/can/j1939/transport.c | 48 +++++++++++++++++++++++++++++++++++------------
+>>  1 file changed, 36 insertions(+), 12 deletions(-)
+> 
+> Regards,
+> Oleksij
+> 
