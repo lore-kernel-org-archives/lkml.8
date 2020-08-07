@@ -2,307 +2,157 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA520C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDD9E221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB57322CA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BA+rcfnk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PselFkAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbgHGA3r (ORCPT
+        id S1726250AbgHGAcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
+        Thu, 6 Aug 2020 20:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHGA3r (ORCPT
+        with ESMTP id S1725998AbgHGAcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:29:47 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BDFC061574;
-        Thu,  6 Aug 2020 17:29:46 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id q16so99534ybk.6;
-        Thu, 06 Aug 2020 17:29:46 -0700 (PDT)
+        Thu, 6 Aug 2020 20:32:42 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA1AC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 17:32:41 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id x24so340911otp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 17:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QARTPsLBc7jwLL0oggVuFMbGv3FDrMyjkwPVtFxQ7Yw=;
-        b=BA+rcfnkP1ro1F1Obbfj6s/ZpxxwT6CYppR5d+CUJeTDHrLoyotRwgP3w6um7N6fRn
-         7lpPlgHfUZuRDPmqflltqkyate98YGfvTWwynEMcClAIbWE/eH8g9o6U/77kzEpY4rq2
-         C9zOa7Y36cnM2a0yPdHb7OBUh027GF9l4pJFoFoMBf5wJ+8BxDQdsMX1qGwWybTXbhVY
-         /t6jGJOWNCdk0ev+x8o+jz5LtSbBTmp9xOTltVaD7S/L7CooIqQnop63bV7cGFwM/dNF
-         HxSTdWK9SUfcKc0JNFA3JzyD7hBOkSme8T17K7XRyn0aLewY+c7B6JyntCZESHBxRNYp
-         Eo/Q==
+        bh=G7T/X+Hdz300MbabhJq6qCcx3VnFKkl/jPa3R3amrfI=;
+        b=PselFkAd+xgUoI8Sz1hEqzHw4MzaI68hCHVzBUOC0a1q3kPMu658GjTjbH0IusHnyC
+         nOrJI3uJO3oG0gwgJ9/0gf7I7++TszMXeGMSzF6NfC6GiC80PIg9prDkFgzYx07E9jNZ
+         gPFKJojWEdGHzwYsm/JDOS8J2c1YqqT7HepJs5CIzBkfCRJHfrVftApAetSDEBIdLYPw
+         MVc+Wm7I4gTNWS4INILZK0arXSEfKJGzlUGIlnkUIANSoj7m2I3sB8cM8KW/b4KFRWgV
+         +WAPPrWOq/zib0essjzcatHXvWXYUKAw9l7esBeFu3MxaclMiALrPqu+IJ5YyNI5zIE3
+         WcYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QARTPsLBc7jwLL0oggVuFMbGv3FDrMyjkwPVtFxQ7Yw=;
-        b=scabZ/znieVDX44wcGpsBEghFXPZMQ4o1+nPRqB7hyasYJ3zlh2mwV+sJpzMc+yShc
-         8zkCLeRRbkM+3xcytETnazHLQb7/PWXmPUeIotpdc/UVeFkWDXEhK2b6tmoHhd3InSew
-         QM3n/5HUKCFN3IF7eEV6Ym4KHEWcAj0hwLt4SE0JX6DFVNTni0fj82s3XIKVFiCVoE3j
-         lZu4FQF2eI9HBWRi/p0aBPKFjAVX8XIgcmKlZKxVyNot19ARA0ffHGNFqMp3DHtcDeL8
-         8nvl4apvYUwWaLlGxpA3aYgjSBI+XZPX1+Y+htgp2kz58z0Yvr28qi4a3SYtYf2lzjrG
-         BJuw==
-X-Gm-Message-State: AOAM53128PsR+xxMo/mjuGitxd+70Rv66/ygFcKCBjPvyVMEhq+TB5VX
-        APeISJBm/BGRiNc2jYql3XzxasYvXkklZjAFz7Q=
-X-Google-Smtp-Source: ABdhPJz1VVroPVEJo/vJ3a1DAqys6I8Z4MgbTAUtY4lgZnMJWdw2OF6UvSox6+BThxK9suteZRa5lKYkLbDfurk0ozA=
-X-Received: by 2002:a25:2ad3:: with SMTP id q202mr16225387ybq.27.1596760185538;
- Thu, 06 Aug 2020 17:29:45 -0700 (PDT)
+        bh=G7T/X+Hdz300MbabhJq6qCcx3VnFKkl/jPa3R3amrfI=;
+        b=G1StTNZcRQffaEwNSocxnDoemKTtN9eCSsbVhAtNZRqB8rOMWCDu87iAKqaAMLsBMZ
+         5/k8a1E2b6i+xj0+RUGufl4jmSLDhRv4Pj+1qhq8qOvLgBetwl+quTEEKSJUZLidX+Wp
+         JGhH2UcnCRCM4OQ4PNJGOx4ixY58txcad203MY5FKV4z/yBzJuQcmxjtje/IdISvAfsA
+         s01GRIieguyeDKdeO8PMQY3jd7jXPxZsCedLWPCy79NOTIYRg4L7yYbzciIJY182Rt1h
+         0fYfcLgiFiGCddfdNcJ0NkJx/ys6FXrH5bw7qh6NWhbY8qGQaOAATwUJMvuIP6u8xzLu
+         0O0w==
+X-Gm-Message-State: AOAM5332MUxCzpNpdKxKsM3WP78qsS3ZwurTndtTo9pAOFbhPJ+UqC6E
+        tp4ibN5I7AR+XTiIyKqRfx5TS/eVnoO2jj09EQAV9Q==
+X-Google-Smtp-Source: ABdhPJwyPY6wH8Y5BOxdyJPSPc1NkqW3b4kEuerTASF72tv3kfgI/n/QmxoBFWlvwgmWcJaYouIJ5eHHjI3IfvYfFgQ=
+X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr9170519oth.352.1596760361235;
+ Thu, 06 Aug 2020 17:32:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200722054314.2103880-1-irogers@google.com> <CAEf4BzaBYaFJ3eUinS9nHeykJ0xEbZpwLts33ZDp1PT=bkyjww@mail.gmail.com>
- <CAP-5=fXMUWFs6YtQVuxjenCrOmKtKYCqZE3YofwdR=ArDYSwbQ@mail.gmail.com>
- <CAEf4BzYiY30de5qmiKeazG4ewyziXtdhHFFH4vjp1wi4iAXqiw@mail.gmail.com>
- <CAEf4BzZ_67M6nJZFL73ANYYARiErmv9aiYygw8JwJW4qyWGNog@mail.gmail.com> <CAP-5=fWUsQ2c=Rm_QL1uo8zBZzx0JtqArnMXCEC7-u3xRsHLdQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fWUsQ2c=Rm_QL1uo8zBZzx0JtqArnMXCEC7-u3xRsHLdQ@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 6 Aug 2020 17:29:34 -0700
-Message-ID: <CAEf4BzbCH0s8N3QdzLD3NWUMwdAXcB2AEDyfy2+av1SVj6W96A@mail.gmail.com>
-Subject: Re: [RFC PATCH] bpftool btf: Add prefix option to dump C
-To:     Ian Rogers <irogers@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>
+References: <20200805.185559.1225246192723680518.davem@davemloft.net>
+ <CANcMJZA1pSz8T9gkRtwYHy_vVfoMj35Wd-+qqxQBg+GRaXS0_Q@mail.gmail.com> <011a0a3b-74ac-fa61-2a04-73cb9897e8e8@gmail.com>
+In-Reply-To: <011a0a3b-74ac-fa61-2a04-73cb9897e8e8@gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 6 Aug 2020 17:32:29 -0700
+Message-ID: <CALAqxLVDyTygzoktGK+aYnT2dQdOTPFAD=P=Kr1x+TmLuUC=NA@mail.gmail.com>
+Subject: Re: [GIT] Networking
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Todd Kjos <tkjos@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 12:42 PM Ian Rogers <irogers@google.com> wrote:
+On Thu, Aug 6, 2020 at 4:17 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> On 8/6/20 2:39 PM, John Stultz wrote:
+> > [   19.709492] Unable to handle kernel access to user memory outside
+> > uaccess routines at virtual address 0000006f53337070
+> > [   19.726539] Mem abort info:
+> > [   19.726544]   ESR = 0x9600000f
+> > [   19.741323]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > [   19.741326]   SET = 0, FnV = 0
+> > [   19.761185]   EA = 0, S1PTW = 0
+> > [   19.761188] Data abort info:
+> > [   19.761190]   ISV = 0, ISS = 0x0000000f
+> > [   19.761192]   CM = 0, WnR = 0
+> > [   19.761199] user pgtable: 4k pages, 39-bit VAs, pgdp=000000016e9e9000
+> > [   19.777584] [0000006f53337070] pgd=000000016e99e003,
+> > p4d=000000016e99e003, pud=000000016e99e003, pmd=000000016e99a003,
+> > pte=00e800016d3c7f53
+> > [   19.789205] Internal error: Oops: 9600000f [#1] PREEMPT SMP
+> > [   19.789211] Modules linked in:
+> > [   19.797153] CPU: 7 PID: 364 Comm: iptables-restor Tainted: G
+> > W         5.8.0-mainline-08255-gf9e74a8eb6f3 #3350
+> > [   19.797156] Hardware name: Thundercomm Dragonboard 845c (DT)
+> > [   19.797161] pstate: a0400005 (NzCv daif +PAN -UAO BTYPE=--)
+> > [   19.797177] pc : do_ipt_set_ctl+0x304/0x610
+> > [   19.807891] lr : do_ipt_set_ctl+0x50/0x610
+> > [   19.807894] sp : ffffffc0139bbba0
+> > [   19.807898] x29: ffffffc0139bbba0 x28: ffffff80f07a3800
+> > [   19.846468] x27: 0000000000000000 x26: 0000000000000000
+> > [   19.846472] x25: 0000000000000000 x24: 0000000000000698
+> > [   19.846476] x23: ffffffec8eb0cc80 x22: 0000000000000040
+> > [   19.846480] x21: b400006f53337070 x20: ffffffec8eb0c000
+> > [   19.846484] x19: ffffffec8e9e9000 x18: 0000000000000000
+> > [   19.846487] x17: 0000000000000000 x16: 0000000000000000
+> > [   19.846491] x15: 0000000000000000 x14: 0000000000000000
+> > [   19.846495] x13: 0000000000000000 x12: 0000000000000000
+> > [   19.846501] x11: 0000000000000000 x10: 0000000000000000
+> > [   19.856005] x9 : 0000000000000000 x8 : 0000000000000000
+> > [   19.856008] x7 : ffffffec8e9e9d08 x6 : 0000000000000000
+> > [   19.856012] x5 : 0000000000000000 x4 : 0000000000000213
+> > [   19.856015] x3 : 00000001ffdeffef x2 : 11ded3fb0bb85e00
+> > [   19.856019] x1 : 0000000000000027 x0 : 0000008000000000
+> > [   19.856024] Call trace:
+> > [   19.866319]  do_ipt_set_ctl+0x304/0x610
+> > [   19.866327]  nf_setsockopt+0x64/0xa8
+> > [   19.866332]  ip_setsockopt+0x21c/0x1710
+> > [   19.866338]  raw_setsockopt+0x50/0x1b8
+> > [   19.866347]  sock_common_setsockopt+0x50/0x68
+> > [   19.882672]  __sys_setsockopt+0x120/0x1c8
+> > [   19.882677]  __arm64_sys_setsockopt+0x30/0x40
+> > [   19.882686]  el0_svc_common.constprop.3+0x78/0x188
+> > [   19.882691]  do_el0_svc+0x80/0xa0
+> > [   19.882699]  el0_sync_handler+0x134/0x1a0
+> > [   19.901555]  el0_sync+0x140/0x180
+> > [   19.901564] Code: aa1503e0 97fffd3e 2a0003f5 17ffff80 (a9401ea6)
+> > [   19.901569] ---[ end trace 22010e9688ae248f ]---
+> > [   19.913033] Kernel panic - not syncing: Fatal exception
+> > [   19.913042] SMP: stopping secondary CPUs
+> > [   20.138885] Kernel Offset: 0x2c7d080000 from 0xffffffc010000000
+> > [   20.138887] PHYS_OFFSET: 0xfffffffa80000000
+> > [   20.138894] CPU features: 0x0040002,2a80a218
+> > [   20.138898] Memory Limit: none
+> >
+> > I'll continue to work on bisecting this down further, but figured I'd
+> > share now as you or someone else might be able to tell whats wrong
+> > from the trace.
+> >
 >
-> On Thu, Aug 6, 2020 at 10:58 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Fri, Jul 31, 2020 at 8:47 PM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Fri, Jul 31, 2020 at 6:47 PM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Tue, Jul 21, 2020 at 11:58 PM Andrii Nakryiko
-> > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > >
-> > > > > On Tue, Jul 21, 2020 at 10:44 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > >
-> > > > > > When bpftool dumps types and enum members into a header file for
-> > > > > > inclusion the names match those in the original source. If the same
-> > > > > > header file needs to be included in the original source and the bpf
-> > > > > > program, the names of structs, unions, typedefs and enum members will
-> > > > > > have naming collisions.
-> > > > >
-> > > > > vmlinux.h is not really intended to be used from user-space, because
-> > > > > it's incompatible with pretty much any other header that declares any
-> > > > > type. Ideally we should make this better, but that might require some
-> > > > > compiler support. We've been discussing with Yonghong extending Clang
-> > > > > with a compile-time check for whether some type is defined or not,
-> > > > > which would allow to guard every type and only declare it
-> > > > > conditionally, if it's missing. But that's just an idea at this point.
-> > > >
-> > > > Thanks Andrii! We're not looking at user-space code but the BPF code.
-> > > > The prefix idea comes from a way to solve this problem in C++ with
-> > > > namespaces:
-> > > >
-> > > > namespace vmlinux {
-> > > > #include "vmlinux.h"
-> > > > }
-> > > >
-> > > > As the BPF programs are C code then the prefix acts like the
-> > > > namespace. It seems strange to need to extend the language.
-> > >
-> > > This is a classic case of jumping to designing a solution without
-> > > discussing a real problem first :)
-> > >
-> > > You don't need to use any of the kernel headers together with
-> > > vmlinux.h (and it won't work as well), because vmlinux.h is supposed
-> > > to have all the **used** types from the kernel. So BPF programs only
-> > > include vmlinux.h and few libbpf-provided headers with helpers. Which
-> > > is why I assumed that you are trying to use it from user-space. But
-> > > see below on what went wrong.
-> > >
-> > > >
-> > > > > Regardless, vmlinux.h is also very much Clang-specific, and shouldn't
-> > > > > work well with GCC. Could you elaborate on the specifics of the use
-> > > > > case you have in mind? That could help me see what might be the right
-> > > > > solution. Thanks!
-> > > >
-> > > > So the use-case is similar to btf_iter.h:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/testing/selftests/bpf/progs/bpf_iter.h
-> > > > To avoid collisions with somewhat cleaner macro or not games.
-> > > >
-> > > > Prompted by your concern I was looking into changing bpf_iter.h to use
-> > > > a prefix to show what the difference would be like. I also think that
-> > > > there may be issues with our kernel and tool set up that may mean that
-> > > > the prefix is unnecessary, if I fix something else. Anyway, to give an
-> > > > example I needed to build the selftests but this is failing for me.
-> > > > What I see is:
-> > > >
-> > > > $ git clone git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
-> > > > $ cd bpf-next
-> > > > $ make defconfig
-> > > > $ cat >>.config <<EOF
-> > > > CONFIG_DEBUG_INFO=y
-> > > > CONFIG_DEBUG_INFO_BTF=y
-> > > > EOF
-> > > > $ make -j all
-> > > > $ mkdir /tmp/selftests
-> > > > $ make O=/tmp/selftests/ TARGETS=bpf kselftest
-> > > > ...
-> > > >   CLANG    /tmp/selftests//kselftest/bpf/tools/build/bpftool/profiler.bpf.o
-> > > > skeleton/profiler.bpf.c:18:21: error: invalid application of 'sizeof'
-> > > > to an incomplete type 'struct bpf_perf_event_value'
-> > > >         __uint(value_size, sizeof(struct bpf_perf_event_value));
-> > > >                            ^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > >
-> > > > Checking with bpftool the vmlinux lacks struct bpf_perf_event_value
-> > > > but as this is unconditionally defined in bpf.h this seems wrong. Do
-> > > > you have any suggestions and getting a working build?
-> > >
-> > > It is unconditionally defined in bpf.h, but unless kernel code really
-> > > uses that type for something, compiler won't generate DWARF
-> > > information for that type, which subsequently won't get into BTF.
-> > > Adding CONFIG_DEBUG_INFO_BTF=y ensures you get BTF type info
-> > > generated, but only for subsystems that were compiled into vmlinux
-> > > according to your kernel config.
-> > >
-> > > In this case, default config doesn't enable CONFIG_BPF_EVENTS, which
-> > > is a requirement to compile kernel/trace/bpf_trace.c, which in turn
-> > > uses struct bpf_perf_event_value in the helper signature.
-> > >
-> > > So the solution in your case would be to use a slightly richer kernel
-> > > config, which enables more of the BPF subsystem. You can check
-> > > selftests/bpf/config for a list of options we typically enable to run
-> > > of selftests, for instance.
-> > >
-> >
-> > So we've discussed this and related issues today at BPF office hours
-> > and few more thoughts occurred to me after I left the call.
->
-> Thanks for the follow-up. I need to add the office hours to my schedule.
->
-> > You don't really have to use vmlinux.h, if it's inconvenient. Unless
-> > you want to use some internal kernel type that's not available in
-> > kernel-headers. Otherwise feel free to use normal kernel header
-> > includes and don't use vmlinux.h. If you are using BPF_CORE_READ(),
-> > any type is automatically CO-RE-relocatable, even if they come from
-> > #include <linux/whatever.h>. If you need to use direct memory accesses
-> > with programs like fentry/fexit, then adding:
-> >
-> > #pragma clang attribute push (__attribute__((preserve_access_index)),
-> > apply_to = record)
-> >
-> > before you include any headers would make types in those headers
-> > automatically CO-RE-relocatable even for direct memory accesses. So
-> > this is just something to keep in mind.
-> >
-> >
-> > But the way we've been handling this was like this.
-> >
-> > On BPF program side:
-> >
-> > #include "vmlinux.h"
-> > #include "my_custom_types.h"
-> >
-> > ...
-> >
-> >
-> > On user-space program side:
-> >
-> > #include <stdint.h> /* and whatever else is needed */
-> > #include "my_custom_types.h"
-> >
-> > Then in my_custom_types.h you just assume all the needed types are
-> > defined (in either vmlinux.h or in user-space header includes):
-> >
-> >
-> > struct my_struct {
-> >     uint64_t whatever;
-> > };
-> >
-> > So far worked fine. It still sucks you can't include some of the
-> > kernel headers to get some useful macro, but to solve that we'd need
-> > Clang extension to check that some type X is already defined, as we
-> > discussed in the call.
-> >
-> > Hope this helps a bit.
->
-> Thanks, I was scratching around for examples because I was using a
-> kernel that wasn't providing me even the values present in bpf.h. I
-> looked at the bpf selftests as hopeful best practice, but that's where
-> I saw the use of macros to move definitions out of the way:
->  https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/testing/selftests/bpf/progs/bpf_iter.h
-> This felt like my point of pain, so perhaps that code needs to carry a
-> warning. Using #define to rename types, as in that file, doesn't scale
-> for something like bpf.h and so this patch - which is intended to feel
-> like a use of namespaces. There are related style issues (from the
-> #define renaming) in Google's build system because of the use of
-> modules [1] where this kind of "textual" use of headers is considered
-> an issue.
-
-This #define rename approach is definitely not a "best practice", but
-we need it for selftests to be able to **compile** them against older
-kernels. We need that as part of libbpf CI in its Github mirror. So we
-unconditionally undefine those bpf_iter types, just in case we are
-compiling on the latest kernels that already have those types.
-selftests/bpf are purposefully testing all the latest bleeding-edge
-features and generally assume latest Clang and kernel, so it has its
-own specifics.
-
-If you are looking for more realistic examples, consider looking at
-libbpf-tools in BCC repo ([0]). Those are nice self-contained
-libbpf/CO-RE-based tools. They use pre-generated and checked-in
-vmlinux.h, which is much more convenient logistically, than generating
-vmlinux.h on the fly. That, of course, depends on specific build
-system organization, but we do pre-generate vmlinux.h at Facebook for
-our production use-cases as well.
-
-  [0] https://github.com/iovisor/bcc/tree/master/libbpf-tools
+> Can you try at commit c2f12630c60ff33a9cafd221646053fc10ec59b6 ("netfilter: switch nf_setsockopt to sockptr_t")
+> (and right before it)
 
 
->
-> I'm wondering, following this conversation whether there is some tech
-> debt cleanup that could be done. For example, on the perf side I found
-> that BPF errors were being swallowed:
-> https://lore.kernel.org/lkml/20200707211449.3868944-1-irogers@google.com/
-> Perf is defining its own bpf.h:
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/perf/include/bpf/bpf.h
-> and perhaps that needs to be rethought to be more aligned with CO-RE
-> and vmlinux.h.
-> It would be nice if selftests could do a better job of building
-> dependencies with the necessary config requirements. There's a lot of
-> feeling around to make these things work, which seems less than ideal.
+So I rebased my patches ontop of that commit, but I'm not seeing the
+crash there.  I also hand applied your suggested patch when I did see
+the issue, but that didn't seem to fix it either.
 
-There is always some amount of tech debt, for sure. But I'm also not
-sure how selftests/bpf can force kernel config on users. It provides
-required config in selftests/bpf/config, but it's really easy to miss
-it, if you don't know about it already. But then again, even that is
-not enough for real-world-applicable vmlinux.h, you need to use one of
-real production kernels to generate vmlinux.h that would work well for
-production use cases. That's what we are also doing at Facebook, we
-try to follow the latest production kernel releases and periodically
-re-generate vmlinux.h to have all the new types. Hope this helps to
-clarify a bit.
+So far I've only narrowed it down to between
+65ccbbda52288527b7c48087eb33bb0757975875..530fe9d433b9e60251bb8fdc5dddecbc486a50ef.
+But I'll keep rebase-bisecting it down.
 
->
-> Thanks,
-> Ian
->
-> [1] https://clang.llvm.org/docs/Modules.html
->
-> > [...]
+thanks
+-john
