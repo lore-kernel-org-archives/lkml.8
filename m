@@ -2,117 +2,139 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6845C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2635E2224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596809303;
-	bh=Nq2JecjJJ2Z47G+FHeaADlyOH9UevSA0HjMpAG9yT1c=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=MpjMDiG0BFtpcq2Bjh31b7xJbHYNevW4fqXZ34lznvUXkfD9q8Bir0WgroCw5Hd7n
-	 NZCOl7jp5jTliMD4Hpjj2RJ3d4EQ493NHamNTXyQkorjOpClvB0oUPP+a10QDCm0V1
-	 yEW5S/kgAGppgQTi/mmoxrGRDP8s9c/dDGAaf+GM=
+	by mail.kernel.org (Postfix) with ESMTP id 7D7602224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:08:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDMavG5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgHGOIU (ORCPT
+        id S1726733AbgHGOIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 10:08:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbgHGOCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 10:02:19 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20F822224D;
-        Fri,  7 Aug 2020 14:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596808938;
-        bh=Nq2JecjJJ2Z47G+FHeaADlyOH9UevSA0HjMpAG9yT1c=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=cTdICk+EnK0Kj6gH8d7mfPrKW+er46oVHRtYd7mBBErr1mld4c1pFeiyNl7xR/F1D
-         G6FSSuWv+tXQsZx4KXMIHeKTqMVNQHSToiTHjROKhMNGAPp2iNUzdo9GA+kVR+JVMq
-         iztElsuG0IBOfqHXKU/guabRk3b3fr6J9ZNzT2BM=
-Date:   Fri, 7 Aug 2020 15:01:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     amelie.delaunay@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 02/18] spi: stm32-spi: defer probe for reset
-Message-ID: <20200807140154.GK5435@sirena.org.uk>
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
- <1596610933-32599-3-git-send-email-alain.volmat@st.com>
- <20200805104906.GB5556@sirena.org.uk>
- <20200807134254.GC12946@gnbcxd0016.gnb.st.com>
+        Fri, 7 Aug 2020 10:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgHGOAI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 10:00:08 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB80C061575;
+        Fri,  7 Aug 2020 06:59:26 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u128so1042121pfb.6;
+        Fri, 07 Aug 2020 06:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KkgC/IfZgfpRrHJateeuAuB7TNckjX9ScGM6wvRUKgI=;
+        b=gDMavG5S3kcl1rHlmaIoh4h3AYKDs61EYZN8cDWB74dcRQJBQd0+pzoVYEOzovxZ6h
+         eJWijr6Xw5aNrN6uqIKECi/C3CMLum49xD4ayGZU5SCqKI5EIhok9ewLtPGgHhEd19uT
+         /EYlh//DysbcBPh9myNWMQzxHPisMLRScDsNeoOsup5vA4gWdGhGu8be8vzbdTD8VZaS
+         TVS6/qccykmKkXJN8moBVApR9dpm8+L+Ifu5XZwHri5sFP3sqGK5xxLy+2p6JmvH7M+9
+         0IBgfEunDLgdwJAg64hXWLJ3rTkUD542IaGzrBdHgqq/MtvSXsQAdXcgy5CbwBggVq2/
+         FgMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KkgC/IfZgfpRrHJateeuAuB7TNckjX9ScGM6wvRUKgI=;
+        b=OsPnzlh2Y5QffI1aJDF3jvTqAqErGnS3arYXuqTSYhEhrhieykS7544+GjusuVO0ZG
+         J0bt7bXrBW1jaG9m2r392qjWcFH/7ZdbajlXUqGMtct9SpgBeqGb25XcRy/2mc0vz1OV
+         OXo/udPbhZiHU3sYbaCTxU2XdqqD1YDtC5VKgXrycsNLn+NjyWYh28qxEEwccm0oauJH
+         H2GAOdu1MMJuahDM4cmzMssXGXTDRy2g5JLp1XjNg5N36S4sRXq3QVyw632AoB4Mv8mZ
+         TPBjreU4XIjlQBGpGvqRI31H3tDmTkxn31JV3VPcub03Y5NSt0RBRvJrJRhMPTf2bQ/6
+         8hgA==
+X-Gm-Message-State: AOAM5316x3pKKHeQkf8jueZfTIkw2Zu7vqSZ19VgMzIoimen3CRO9iSg
+        MFsyXnHEPSxgh3KIZHUM4H3Er3WTtuBjLg==
+X-Google-Smtp-Source: ABdhPJz4Wsqd8oawH81Y8HKewsfkWQhSxRPY2Ov5elBmaChRBM6h41G4JBnG2tm9eAT+qNWOK3v2Lw==
+X-Received: by 2002:aa7:8a4d:: with SMTP id n13mr14406135pfa.143.1596808765226;
+        Fri, 07 Aug 2020 06:59:25 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id u15sm11212157pju.42.2020.08.07.06.59.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 06:59:24 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+To:     linux-bluetooth@vger.kernel.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com,
+        syzbot+305a91e025a73e4fd6ce@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] Bluetooth: Delete both L2CAP connction and HCI channel when completing destroying logical link in AMP
+Date:   Fri,  7 Aug 2020 21:59:17 +0800
+Message-Id: <20200807135918.1177869-1-coiby.xu@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wRokNccIwvMzawGl"
-Content-Disposition: inline
-In-Reply-To: <20200807134254.GC12946@gnbcxd0016.gnb.st.com>
-X-Cookie: Disposable, use only once.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When destroying a logical link (HCI_EV_DISCONN_LOGICAL_LINK_COMPLETE) in
+AMP, L2CAP connection (struct l2cap_conn) should be deleted together with
+HCI channel (struct hci_chan). Otherwise HCI channel will be deleted twice
+when unregistering a HCI device.
 
---wRokNccIwvMzawGl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+`static void l2cap_conn_del(struct hci_conn *hcon, int err)` could
+achieve this purpose. Make it a public function.
 
-On Fri, Aug 07, 2020 at 03:42:54PM +0200, Alain Volmat wrote:
-> On Wed, Aug 05, 2020 at 11:49:06AM +0100, Mark Brown wrote:
-> > On Wed, Aug 05, 2020 at 09:01:57AM +0200, Alain Volmat wrote:
+Reported-and-tested-by: syzbot+305a91e025a73e4fd6ce@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=305a91e025a73e4fd6ce
+Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+---
+ include/net/bluetooth/l2cap.h | 1 +
+ net/bluetooth/amp.c           | 2 +-
+ net/bluetooth/l2cap_core.c    | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
 
-> > > -	rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> > > -	if (!IS_ERR(rst)) {
-> > > +	rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-> > > +	if (rst) {
-> > > +		if (IS_ERR(rst)) {
-> > > +			ret = PTR_ERR(rst);
-> > > +			if (ret != -EPROBE_DEFER)
-> > > +				dev_err(&pdev->dev, "reset get failed: %d\n",
-> > > +					ret);
-> > > +			goto err_clk_disable;
-> > > +		}
+diff --git a/include/net/bluetooth/l2cap.h b/include/net/bluetooth/l2cap.h
+index 8f1e6a7a2df8..8508a433d6ac 100644
+--- a/include/net/bluetooth/l2cap.h
++++ b/include/net/bluetooth/l2cap.h
+@@ -988,6 +988,7 @@ void __l2cap_chan_add(struct l2cap_conn *conn, struct l2cap_chan *chan);
+ typedef void (*l2cap_chan_func_t)(struct l2cap_chan *chan, void *data);
+ void l2cap_chan_list(struct l2cap_conn *conn, l2cap_chan_func_t func,
+ 		     void *data);
++void l2cap_conn_del(struct hci_conn *hcon, int err);
+ void l2cap_chan_del(struct l2cap_chan *chan, int err);
+ void l2cap_send_conn_req(struct l2cap_chan *chan);
+ void l2cap_move_start(struct l2cap_chan *chan);
+diff --git a/net/bluetooth/amp.c b/net/bluetooth/amp.c
+index 9c711f0dfae3..cee02f009cef 100644
+--- a/net/bluetooth/amp.c
++++ b/net/bluetooth/amp.c
+@@ -584,5 +584,5 @@ void amp_destroy_logical_link(struct hci_chan *hchan, u8 reason)
+ {
+ 	BT_DBG("hchan %p", hchan);
 
-> > This will not provide any diagnostics when deferring which isn't very
-> > helpful if there's issues.
+-	hci_chan_del(hchan);
++	l2cap_conn_del(hchan->conn, bt_to_errno(reason));
+ }
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index fe913a5c754a..38f60fb9b515 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -1851,7 +1851,7 @@ static void l2cap_unregister_all_users(struct l2cap_conn *conn)
+ 	}
+ }
 
-> Do you mean that a message when deferring would be needed ?
+-static void l2cap_conn_del(struct hci_conn *hcon, int err)
++void l2cap_conn_del(struct hci_conn *hcon, int err)
+ {
+ 	struct l2cap_conn *conn = hcon->l2cap_data;
+ 	struct l2cap_chan *chan, *l;
+--
+2.27.0
 
-Yes, if for examaple the reset driver isn't being built then the driver
-will defer for ever waiting for it to instantiate and the user will have
-to have some method for figuring out what it's waiting for.
-
-> I am worrying that this would lead to having too much noise during boot
-> since probe deferring is kinda common. Of course it can also be due to a bad
-> configuration of the kernel as well but having looked around I think that
-> usually driver are rather silent in case of deferring.
-
-This is not something that should be open coded in your driver.
-
---wRokNccIwvMzawGl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8tXtEACgkQJNaLcl1U
-h9BqXgf9FVvSpPdiOACOZ2KYlaKp6j56CVuoPUPAXXzIt71nFzRazygx93NK217I
-gUi15e+61Sq2l+aZwLTsp709lQeMPW7PfwAh/hnpKMDuIgnJ6jczJBJ7d6qW3xWC
-xvavGmDtGplrRboW7gKWumFUqbionYJCJHgS1hT0mHbmmabyzPRoyAhfhVGXdMV0
-xh7ROAKKV2TmT3UvlcA1f8RDK9BkikFCP40l/waqnNMRli5dqEZ9jIywKb8+Ifo2
-ePtCPrbzssFSMy2QxA8YvgWYuAuTY40nE85v7JCJMcCnfvpCIwU4g7NEevdiZsAp
-ft3H/L+jZnGX3fLrE3sx1NWJf7Md8Q==
-=7mj5
------END PGP SIGNATURE-----
-
---wRokNccIwvMzawGl--
