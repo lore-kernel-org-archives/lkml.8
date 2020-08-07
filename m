@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0940DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5606DC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC9020855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBEF2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596792059;
-	bh=taNbGV1s+WsvssYEnTWNWm1NJW4IOkVZ5ZMeNigoG9Y=;
+	s=default; t=1596792066;
+	bh=pZf8DLNhLYLbG770gDKVIrtBnLM+2YNSPpia3Hm3Gmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7zHZ6UQQvwZbNnnW+EnY/FXwvSOUzgPsR1bgva4vkXxKSbChefOyx6Xf9navqJDB
-	 NOtIqsi0ATxFSnUKIXHbTlkLHYdFDPOpsaJJGak9Bo2ikdJITp/PuzXEdzhnP1KaM5
-	 W8ZTCQdjE/sUto+cRaYuvhDw14X66cOoh5RQ7Sek=
+	b=VOnDgO/u6L1JOHU17kubeSB0TjgfZpufQxsOy4RuwxYBpOBCpyAbhXIhXfouoEj8U
+	 QAC2rT2H8iEtMmF9b/gWmhtEhn/PdMYEFBuwrN3XSAjtYxNaaYvhmIM8IOptSM4D1s
+	 j4NEqW6xnECC4fyfsJqmjgvkzuPsVkJuHBlvCFRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgHGJU6 (ORCPT
+        id S1728329AbgHGJVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:20:58 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:41594 "EHLO
+        Fri, 7 Aug 2020 05:21:05 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:41482 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgHGJTk (ORCPT
+        with ESMTP id S1727889AbgHGJTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:19:40 -0400
+        Fri, 7 Aug 2020 05:19:36 -0400
 Received: from localhost.localdomain (softbank060134047170.bbtec.net [60.134.47.170]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 0779JBQ8032147;
-        Fri, 7 Aug 2020 18:19:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0779JBQ8032147
+        by conuserg-12.nifty.com with ESMTP id 0779JBQ6032147;
+        Fri, 7 Aug 2020 18:19:19 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0779JBQ6032147
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596791962;
-        bh=4uKyPxqgpR7kYRHZT9Kv76QwzC1/t5RlOrA5ow9oRUo=;
+        s=dec2015msa; t=1596791960;
+        bh=OJZVNA6euqkx7rsPqqxzydbAOptXcAX7qWXilCkQ26g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbAtpUCKwwX8Quug095DvEZBNhJuh65aWZzHVxTvgYYI0ldnI1KWbUUL/JffouoOK
-         x7ASvoNe8ef/OVvQOxSv+D1hsNOWhzqLPcn8MRwY3rXVUkSlLnfaoTZmZjnd5fiBwA
-         y550SKz0eTZwNPsFJNLzMwqbzPDLFQA1n0MAvzuio5iyHf8e1hjqtWwOcpHwCP6HDz
-         +YJHo3RsJvv2OGoJ896xJzK0VCEuACWbNtM/85mL49hTRSrSlWct4+0PHrfCIk7Afj
-         nwik3e/XOQ6FYdawxF26RTMNyYcpIylQ09FhyQCc2ebXKv0oj70iWzAewSETwTbiY9
-         iDJoO1Yy9u98g==
+        b=O4+whdfdrb1C0o7yjIV0cZWuIa01a2tZa+F2O/HuYEvh1N8ApMHqvqRt8GGmLktJh
+         anumilIRAwaAajJ7HQigmUR47T7Lg3h14L70uugs1JKsNYbRGySoRDRecd6rBIyvpO
+         oTw9Z6fgbrJYYJ9uCkK/qsNrOUigvTE9v08HJFa+PZq4cBsurqOD+HlPgS/CQWZ7wF
+         hltjlmCvxuqZGU6brOnlOD47UTDl2F0ArMeYbLSxkRt1Y9uXe50e2KRiCKK19xnolZ
+         7V176TfdmGjrM6haU1hluXScXEj2Haj/vS0rjP0duTghOh2cFGNTZl0zF7LQ9VoYQu
+         219a1uXppzOFg==
 X-Nifty-SrcIP: [60.134.47.170]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 12/19] kconfig: qconf: drop more localization code
-Date:   Fri,  7 Aug 2020 18:19:02 +0900
-Message-Id: <20200807091909.2985787-12-masahiroy@kernel.org>
+Subject: [PATCH v2 10/19] kconfig: qconf: remove unused argument from ConfigView::updateList()
+Date:   Fri,  7 Aug 2020 18:19:00 +0900
+Message-Id: <20200807091909.2985787-10-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200807091909.2985787-1-masahiroy@kernel.org>
 References: <20200807091909.2985787-1-masahiroy@kernel.org>
@@ -60,63 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a remnant of commit 694c49a7c01c ("kconfig: drop localization
-support").
-
-Get it back to the code prior to commit 3b9fa0931dd8 ("[PATCH] Kconfig
-i18n support").
+Now that ConfigList::updateList() takes no argument, the 'item' argument
+ConfigView::updateList() is no longer used.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 (no changes since v1)
 
- scripts/kconfig/qconf.cc | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ scripts/kconfig/qconf.cc | 8 ++++----
+ scripts/kconfig/qconf.h  | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 604f7855b070..230ce621d85b 100644
+index 8455f81e101f..808bc311e335 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -31,11 +31,6 @@ static ConfigSettings *configSettings;
+@@ -280,7 +280,7 @@ void ConfigLineEdit::keyPressEvent(QKeyEvent* e)
+ 	case Qt::Key_Return:
+ 	case Qt::Key_Enter:
+ 		sym_set_string_value(item->menu->sym, text().toLatin1());
+-		parent()->updateList(item);
++		parent()->updateList();
+ 		break;
+ 	default:
+ 		Parent::keyPressEvent(e);
+@@ -471,7 +471,7 @@ void ConfigList::setValue(ConfigItem* item, tristate val)
+ 			return;
+ 		if (oldval == no && item->menu->list)
+ 			item->setExpanded(true);
+-		parent()->updateList(item);
++		parent()->updateList();
+ 		break;
+ 	}
+ }
+@@ -505,7 +505,7 @@ void ConfigList::changeValue(ConfigItem* item)
+ 				item->setExpanded(true);
+ 		}
+ 		if (oldexpr != newexpr)
+-			parent()->updateList(item);
++			parent()->updateList();
+ 		break;
+ 	case S_INT:
+ 	case S_HEX:
+@@ -984,7 +984,7 @@ void ConfigList::setAllOpen(bool open)
+ 	}
+ }
  
- QAction *ConfigMainWindow::saveAction;
- 
--static inline QString qgettext(const char* str)
--{
--	return QString::fromLocal8Bit(str);
--}
--
- ConfigSettings::ConfigSettings()
- 	: QSettings("kernel.org", "qconf")
+-void ConfigView::updateList(ConfigItem* item)
++void ConfigView::updateList()
  {
-@@ -109,7 +104,7 @@ void ConfigItem::updateMenu(void)
+ 	ConfigView* v;
  
- 	sym = menu->sym;
- 	prop = menu->prompt;
--	prompt = qgettext(menu_get_prompt(menu));
-+	prompt = menu_get_prompt(menu);
+diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+index 4dc5d34a6bca..6d06ec399ff0 100644
+--- a/scripts/kconfig/qconf.h
++++ b/scripts/kconfig/qconf.h
+@@ -210,7 +210,7 @@ class ConfigView : public QWidget {
+ public:
+ 	ConfigView(QWidget* parent, const char *name = 0);
+ 	~ConfigView(void);
+-	static void updateList(ConfigItem* item);
++	static void updateList();
+ 	static void updateListAll(void);
  
- 	if (prop) switch (prop->type) {
- 	case P_MENU:
-@@ -135,7 +130,7 @@ void ConfigItem::updateMenu(void)
- 	if (!sym)
- 		goto set_prompt;
- 
--	setText(nameColIdx, QString::fromLocal8Bit(sym->name));
-+	setText(nameColIdx, sym->name);
- 
- 	type = sym_get_type(sym);
- 	switch (type) {
-@@ -265,7 +260,7 @@ void ConfigLineEdit::show(ConfigItem* i)
- {
- 	item = i;
- 	if (sym_get_string_value(item->menu->sym))
--		setText(QString::fromLocal8Bit(sym_get_string_value(item->menu->sym)));
-+		setText(sym_get_string_value(item->menu->sym));
- 	else
- 		setText(QString());
- 	Parent::show();
+ 	bool showName(void) const { return list->showName; }
 -- 
 2.25.1
 
