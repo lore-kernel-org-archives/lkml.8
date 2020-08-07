@@ -2,124 +2,118 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC81C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0552074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AAC2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVpVzgVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgHGTTp (ORCPT
+        id S1726350AbgHGT34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:19:45 -0400
-Received: from 9.mo178.mail-out.ovh.net ([46.105.75.45]:60523 "EHLO
-        9.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGTTo (ORCPT
+        Fri, 7 Aug 2020 15:29:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGT3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:19:44 -0400
-X-Greylist: delayed 97337 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 15:19:43 EDT
-Received: from player715.ha.ovh.net (unknown [10.108.42.82])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 791D1AC1D7
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 21:07:20 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player715.ha.ovh.net (Postfix) with ESMTPSA id 76BA814E9C8DB;
-        Fri,  7 Aug 2020 19:07:13 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-100R0038ca687ab-4f78-4da8-bbe2-7590c3ca912e,
-                    B1FDDFD4E508142116FDFB9194C63E8FBE397CFD) smtp.auth=steve@sk2.org
-Date:   Fri, 7 Aug 2020 21:07:07 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Subject: Re: [PATCH v3] hwmon/pmbus: use simple i2c probe function
-Message-ID: <20200807210707.7dd1d9b9@heffalump.sk2.org>
-In-Reply-To: <20200807173231.GA47449@roeck-us.net>
-References: <20200807173231.GA47449@roeck-us.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 7 Aug 2020 15:29:55 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71761C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 12:29:55 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id s23so2121876qtq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:29:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DwHxa/wKxXJOTRK09zqSMYHbouDi1S4p4xtTraM5iGA=;
+        b=YVpVzgVMyxrAA91SMgwq1uRERiYL9d2sigFhiHcc+Gb3HYQOXIe5VdR2+iTSNd3b/u
+         8ASMZA8CikFbtPxyCvOQ0Q+/AGlV6EejSTXxHP/rb2zixr7q/nX3ZHgUOcsfo7J8przL
+         L9BcRALgg3XDwa7kDV4mx2hYEqOgDymwxsfeKx//YyrR0Urdf1PzBTsthBdBanS/8Eqb
+         bdup239rJK1C1usdexrexFv0mi9S2/y5Z7mVnA+7QHANdB7L0f6vffQzhdMhVTi8Utm/
+         1ncX4gfpbz82zJ9qFBT/qwBdO7oxwEn8TfHC2XTMceUdXvaIl9yFeFTNZbzq3lC2YxZi
+         dxeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DwHxa/wKxXJOTRK09zqSMYHbouDi1S4p4xtTraM5iGA=;
+        b=ofu2u3qJVtHO9XqUf21TjOH7jUzKrjAw+eG4ZkQ+1kF5HhcZFu6snyIKQfzsYAY9ni
+         K73TidVOZi2zqfW3UFYJL3pDu+dewoOlZ27kqgvBNhzxwN+fDGm/vhtIQAGYy3q9Gsls
+         8LX6fM7KLusMWf2EVDaOCws68Va7RZqPat2pk05xhDP8Ji6tJxetphc1GrDRjmNElvuW
+         bJFT3gGCS3QA/g8pSVBJSMJ/yLTdMGNIEtXRDDwVTzNymoeX1EYXc50Z8b85Rkm+2mIR
+         9YI9BSKK0lSHetzUH7giZeiZZcHDxTcQ2rkwwkhKXc0lZJDWWhJkJlcnYnHI5tkrTJRI
+         gp7A==
+X-Gm-Message-State: AOAM532i6h1vsR8X6r9TfJbh6JIDTpPmIGoMj6Z4ysPPiy1ptUvVE6zR
+        d7I2nTnGcDvDEu//KshaG+Sw/Wt5UAMlsRxNySrP/g==
+X-Google-Smtp-Source: ABdhPJwVK8YxEVoCQuHZTJcCjYxNh0sSOhQEyT93e5WefGbitF2zu2ak5N7ORZ0X16QJ8/Swbk2HySVmZPk/OP9u4WY=
+X-Received: by 2002:ac8:67da:: with SMTP id r26mr15451206qtp.332.1596828594651;
+ Fri, 07 Aug 2020 12:29:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 11990834011428048142
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedvgdduvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeduhedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+References: <20200601091231.3794350-1-chengzhihao1@huawei.com>
+ <CAFLxGvwLSvYsQ+OPi85VS8aQ2uge_JqQRD2C8h=XMORvCej3Sw@mail.gmail.com>
+ <211afcd0-d5b3-5ac0-1fd1-dc789634a858@huawei.com> <CAFLxGvwRDfB4mqxJhOLwWvoZ3yzpVY-kuAiovYLf8T7WwJqaTg@mail.gmail.com>
+ <9caa4860-975c-70bb-c8b9-737d1db9ead4@huawei.com> <CAFLxGvycs7DNu5o5QY1WwTPfS6cTTykTh-91n9TQZ7yP_ADr4A@mail.gmail.com>
+ <2086f822-e67a-43e4-76d8-5339eaccd3ac@huawei.com> <CAFLxGvzwoC1GcjJOfwpc8V5LD79=8XiJaNV2HjOm8EdQcCbp+w@mail.gmail.com>
+ <5f7ae548-350b-cedf-3c8e-25fea06a8377@huawei.com>
+In-Reply-To: <5f7ae548-350b-cedf-3c8e-25fea06a8377@huawei.com>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Fri, 7 Aug 2020 21:29:43 +0200
+Message-ID: <CAFLxGvy-RRksDvPcB6z8GQUoMFZ_NRGxk9aM2FuTZ22UWU6Knw@mail.gmail.com>
+Subject: Re: [PATCH] ubi: check kthread_should_stop() after the setting of
+ task state
+To:     Zhihao Cheng <chengzhihao1@huawei.com>
+Cc:     linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 7, 2020 at 4:18 AM Zhihao Cheng <chengzhihao1@huawei.com> wrote=
+:
+> That's where we hold different views. I have 3 viewpoints=EF=BC=88You can=
+ point
+> out which one you disagree.=EF=BC=89:
+>
+> 1. If kthread_stop() happens at line 12, ubi thread is *marked* with
+> stop flag, it will stop at kthread_should_stop() as long as it can reach
+> the next iteration.
+>
+> 2. If task A is on runqueue and its state is TASK_RUNNING, task A will
+> be scheduled to execute.
+>
+> 3. If kthread_stop() happens at line 12, after program counter going to
+> line 14, ubi thead is on runqueue and its state is TASK_RUNNING. I have
+> explained this in situation 1 in last session.
+>
+>
+> I mean ubi thread is on runqueue with TASK_RUNNING state & stop flag
+> after the process you described.
+>
+> Line 12   kthread_stop()
+>
+>                   set_bit(mark stop flag) && wake_up_process(enqueue &&
+> set TASK_RUNNING )    =3D> TASK_RUNNING & stop flag & on runqueue
+>
+> Line 13  schedule()
+>
+>                   Do nothing but pick next task to execute
 
-On Fri, 7 Aug 2020 10:32:31 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
-> On Fri, Aug 07, 2020 at 06:28:01PM +0200, Stephen Kitt wrote:
-> > =20
-> > -static int ltc2978_probe(struct i2c_client *client,
-> > -			 const struct i2c_device_id *id)
-> > +static int ltc2978_probe(struct i2c_client *client)
-> >  {
-> >  	int i, chip_id;
-> >  	struct ltc2978_data *data;
-> > @@ -670,10 +669,10 @@ static int ltc2978_probe(struct i2c_client *clien=
-t,
-> >  		return chip_id;
-> > =20
-> >  	data->id =3D chip_id;
-> > -	if (data->id !=3D id->driver_data)
-> > +	if (strcmp(client->name, ltc2978_id[data->id].name) !=3D 0) =20
->=20
-> I was about to apply this patch, but this is problematic: It assumes that
-> __stringify(id) =3D=3D ltc2978_id[id].name and that ltc2978_id[id].driver=
-_data
-> =3D=3D id. While that is curently the case (as far as I can see), it is s=
-till
-> unsafe. I think it would be much safer to use i2c_match_id() here.
+You are perfectly right! I failed to concentrate on the state changes.
+Now all makes sense, also your comment before the if statement.
+So I don't know how to make this more clear in the code.
+Maybe it's just me being dense and in need for a vacation. ;-)
 
-I=E2=80=99m not following the __stringify assumption, but I do get your poi=
-nt about
-the driver_data being a valid index into the array; that was already baked
-into the code, as
-
-		dev_warn(&client->dev,
-			 "Device mismatch: Configured %s, detected %s\n",
-			 client->name,
-			 ltc2978_id[data->id].name);
-
-but I=E2=80=99ll fix both.
-
-Similar assumptions are present in other drivers here IIRC, I=E2=80=99ll fi=
-x those
-too.
-
-Regards,
-
-Stephen
-
---Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl8tplsACgkQgNMC9Yht
-g5zbIA//S0DouNct8J2rS/6Fe3PdwZrMiAJ7FNNKqTzQDbt7Il2R8rcdXM9HVPbH
-sxloEI7MB+HbiQFRFIXlHL5xR5oBb3cUkZzstyc+SvXo+AVjYV9B+v9vjWHKAP9Z
-GgWV65P20HCtbLAat9hDMFzTGaDcoEbBzrPOdCodPrT/mA+E287tLaubw97+uWWz
-aGaoub1huJvS4HO+DTNVX6uUBslilnZXhn/LKLDvgDOqtUMnsBIdrSI7b6bgO78r
-MVou0LxSaPOxl2+nr2xJDnQILUxzsWtOROIYWgGpU/K/xpufgHWmqk1ia0iV8lUE
-BVkF/C6uduW1Zip8QcG17c/eorIfFkkzstntnQGuicbSOWHlzvuomtUn64/zC54h
-u5gncBtmrF52+sp8YbLvhyT5EgyDDS6DY0QnPg31K+V2sfGQDACCNGeLuTGaXO5N
-qYhSzCbhYsnO4sAqonhFw4Jbyt6hbf0tLEz5ikEejRCj+7vL0BPiZYYkzEvV3qxy
-YoVDJyunjR9BIEn7DuxBRcr837TXL6gMU2ZyXB4Vu1NM/gv2VOwLoW+Ey8JcCNX9
-t4lszJmVaRseXHaNtxff0Yzp8JaLUK3v1t3NXSCsno5hGE4qTg84o9MLrW/yRGZu
-QcTEwA+udmbU8nX/Wdlm6Fih+31H95mO0ElljLfjgsUrKUP2fX8=
-=XC8G
------END PGP SIGNATURE-----
-
---Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ--
+--=20
+Thanks,
+//richard
