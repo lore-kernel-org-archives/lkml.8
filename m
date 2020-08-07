@@ -2,94 +2,92 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB82C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A652C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C37AD2075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDE222D2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:10:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mM2TU/P5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgHGPKS (ORCPT
+        id S1726382AbgHGPKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:10:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51760 "EHLO
+        Fri, 7 Aug 2020 11:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgHGPKS (ORCPT
+        with ESMTP id S1725993AbgHGPKf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:10:18 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF9DC061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 08:10:18 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <has@pengutronix.de>)
-        id 1k440Y-0006QD-If; Fri, 07 Aug 2020 17:10:10 +0200
-Received: from has by dude02.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <has@pengutronix.de>)
-        id 1k440W-00039A-Km; Fri, 07 Aug 2020 17:10:08 +0200
-From:   Holger Assmann <h.assmann@pengutronix.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Holger Assmann <h.assmann@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: stm32: lxa-mc1: Fix kernel warning about PHY delays
-Date:   Fri,  7 Aug 2020 17:03:56 +0200
-Message-Id: <20200807150355.6116-1-h.assmann@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Fri, 7 Aug 2020 11:10:35 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CE8C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 08:10:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wm+FtgUidVQX0/yTlqJZB7OVlh/P6bpND6KCyw+td38=; b=mM2TU/P5Kd/4be8Aklbm/fnP2g
+        Zlu8zyrYWUFkyS4nOAOOs1HREitcVN+m/ReHAuU5/0ZuK8pyGOoSAlbIa1rGx14LLAeiihdRJJicA
+        XTHfrsdWq0wfsoXf95vaTIi2Wi8ZizPTDRqcM4nYOHnEnNadKsVElaBtb9mpBxjLRwPBhZQ2uzaqG
+        gW8A91ELbM7xTQ6V+d8KeMzDagw1PYP8XfWTbIL2660gr7L6UD8k3JXD6yYuBBl6n49MOS/viHkx0
+        kWtVsiTZSyYbVUekUY0hcLaplnVQnSyGRSFqB3S8lqe2B0iY3bXEdsjJ3SlUyu2rVVbXjrzhXV6ys
+        7NCZuL/A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k440r-0007xU-GF; Fri, 07 Aug 2020 15:10:29 +0000
+Date:   Fri, 7 Aug 2020 16:10:29 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        cai@lca.pw, rppt@linux.ibm.com, vbabka@suse.cz,
+        william.kucharski@oracle.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v2] mm, dump_page: do not crash with bad
+ compound_mapcount()
+Message-ID: <20200807151029.GE17456@casper.infradead.org>
+References: <20200804214807.169256-1-jhubbard@nvidia.com>
+ <20200807143504.4kudtd4xeoqaroqg@box>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: has@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807143504.4kudtd4xeoqaroqg@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KSZ9031 PHY skew timings for rxc/txc, originally set to achieve
-the desired phase shift between clock- and data-signal, now trigger a
-kernel warning when used in rgmii-id mode:
+On Fri, Aug 07, 2020 at 05:35:04PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Aug 04, 2020 at 02:48:07PM -0700, John Hubbard wrote:
+> > If a compound page is being split while dump_page() is being run on that
+> > page, we can end up calling compound_mapcount() on a page that is no
+> > longer compound. This leads to a crash (already seen at least once in
+> > the field), due to the VM_BUG_ON_PAGE() assertion inside
+> > compound_mapcount().
 
- *-skew-ps values should be used only with phy-mode = "rgmii"
+[...]
+> > +static inline int head_mapcount(struct page *head)
+> > +{
+> 
+> Do we want VM_BUG_ON_PAGE(!PageHead(head), head) here?
 
-This is because commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode
-support for the KSZ9031 PHY") now configures own timings when
-phy-mode = "rgmii-id". Device trees wanting to set their own delays
-should use phy-mode "rgmii" instead as the warning prescribes.
+Well, no.  That was the point of the bug report -- by the time we called
+compound_mapcount, the page was no longer a head page.
 
-The "standard" timings now used with "rgmii-id" work fine on this
-board, so drop the explicit timings in the device tree and thereby
-silence the warning.
+> > A similar problem is possible, via compound_pincount() instead of
+> > compound_mapcount().
+> > 
+> > In order to avoid this kind of crash, make dump_page() slightly more
+> > robust, by providing a pair of simpler routines that don't contain
+> > assertions: head_mapcount() and head_pincount().
+> 
+> I find naming misleading. head_mapcount() and head_pincount() sounds like
+> a mapcount/pincount of the head page, but it's not. It's mapcount and
+> pincount of the compound page.
 
-Fixes: 666b5ca85cd3 ("ARM: dts: stm32: add STM32MP1-based Linux Automation MC-1 board")
-Signed-off-by: Holger Assmann <h.assmann@pengutronix.de>
----
- arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-index 5700e6b700d3..b85025d00943 100644
---- a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-@@ -121,8 +121,6 @@
- 			reset-gpios = <&gpiog 0 GPIO_ACTIVE_LOW>; /* ETH_RST# */
- 			interrupt-parent = <&gpioa>;
- 			interrupts = <6 IRQ_TYPE_EDGE_FALLING>; /* ETH_MDINT# */
--			rxc-skew-ps = <1860>;
--			txc-skew-ps = <1860>;
- 			reset-assert-us = <10000>;
- 			reset-deassert-us = <300>;
- 			micrel,force-master;
--- 
-2.20.1
+OK, point taken.  I might go for head_compound_mapcount()?  Or as I
+originally suggested, just opencoding it like we do in __page_mapcount().
 
