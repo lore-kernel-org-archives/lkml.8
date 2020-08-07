@@ -2,153 +2,124 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB8B214F1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:17:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfqzL8BW"
+	by mail.kernel.org (Postfix) with ESMTP id CD0552074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgHGTRB (ORCPT
+        id S1726212AbgHGTTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:17:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGTQ6 (ORCPT
+        Fri, 7 Aug 2020 15:19:45 -0400
+Received: from 9.mo178.mail-out.ovh.net ([46.105.75.45]:60523 "EHLO
+        9.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGTTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:16:58 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B09C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 12:16:58 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d188so1546137pfd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:16:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nAulkNxU9Nrr0r2Q+/oP/y0eVROiBvJb3wM5+KKQ5eM=;
-        b=UfqzL8BWBezA23AIgV8lJCXtRB83oKAQHXP40B+Y2CnU/8eLW4EQ9ejYtDvdiiOwkX
-         wPAh+O40EoFMjNWCqsOUF2+EgSRDJJc/yKiqVbZw9quOyfJORy+b50B+akPFnX0HOhB3
-         DiyIeKi/H2h6tE15XOQCKjLWwxbUJud4qH6DhM08w8eT8SAS7MhF817/+Pw+FmpcNEal
-         H5rfjlUhG9/hN1zcuAVwlkShWvvz8JlViKfMuoRFl+On6EY6qgEmUYNx/pfem7r27wBe
-         ByRK5gJcCGeh9i9K8yPg8qUz5tUIWXHdMo7iOLl1waPAe6AugLjFtlXRW57QHcwrDchK
-         Y4RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=nAulkNxU9Nrr0r2Q+/oP/y0eVROiBvJb3wM5+KKQ5eM=;
-        b=i3Q1Jupqgo0inegFmg0+EEHv7C2gcVtZseHBhlCuXbCL+jkW6objr1yQ9jK4VP5YhU
-         011wAtlfKwUmrgdQxvNsghjARP/nf4qHunrM9f2NnXo//z8dJb69cB6lczLEt4uoeZNb
-         Lyjm7y0dIAK+evO8Nu8nYOTs+QwKarIaW75coBJv7TLERgNJOjjEkFIa2dra1GlpXvIJ
-         St1KZv34ykUlPKMeVZ/HEW0pEi7juM9X+rfQktVx43mLDkoLW6oVLeSUPoWLjhAw+dNE
-         2t2h9go6vLf3ehVYX7EAlilNlg7yOPZY6FO2gqs3glYQlYYvM3DB5l/WTxSU5eGuEfUW
-         bFFA==
-X-Gm-Message-State: AOAM531zDfKgJFhMA6XLlOyIL9UN2ZX7ARjiZBdeETLqhxz2SnHR/akq
-        pJjxZvu96LgtaNEhwyi61qM=
-X-Google-Smtp-Source: ABdhPJxlcMhidUm9kO+7tjlgQ6RAcIOD9PZs5RerRs47ASqhXiA2lHjyeI0ftKa71wrIekEwLEHYzA==
-X-Received: by 2002:a65:63c8:: with SMTP id n8mr12757511pgv.232.1596827818163;
-        Fri, 07 Aug 2020 12:16:58 -0700 (PDT)
-Received: from sultan-box.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id y4sm13432665pff.44.2020.08.07.12.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 12:16:57 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Sultan Alsawaf <sultan@kerneltoast.com>
-Subject: [PATCH 2/2] locking/rwsem: Don't hog RCU read lock while optimistically spinning
-Date:   Fri,  7 Aug 2020 12:16:36 -0700
-Message-Id: <20200807191636.75045-2-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200807191636.75045-1-sultan@kerneltoast.com>
-References: <20200807191636.75045-1-sultan@kerneltoast.com>
+        Fri, 7 Aug 2020 15:19:44 -0400
+X-Greylist: delayed 97337 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 15:19:43 EDT
+Received: from player715.ha.ovh.net (unknown [10.108.42.82])
+        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 791D1AC1D7
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 21:07:20 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player715.ha.ovh.net (Postfix) with ESMTPSA id 76BA814E9C8DB;
+        Fri,  7 Aug 2020 19:07:13 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-100R0038ca687ab-4f78-4da8-bbe2-7590c3ca912e,
+                    B1FDDFD4E508142116FDFB9194C63E8FBE397CFD) smtp.auth=steve@sk2.org
+Date:   Fri, 7 Aug 2020 21:07:07 +0200
+From:   Stephen Kitt <steve@sk2.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v3] hwmon/pmbus: use simple i2c probe function
+Message-ID: <20200807210707.7dd1d9b9@heffalump.sk2.org>
+In-Reply-To: <20200807173231.GA47449@roeck-us.net>
+References: <20200807173231.GA47449@roeck-us.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 11990834011428048142
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedvgdduvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeduhedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+--Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-There's no reason to hold an RCU read lock the entire time while
-optimistically spinning for a rwsem. This can needlessly lengthen RCU
-grace periods and slow down synchronize_rcu() when it doesn't brute
-force the RCU grace period via rcupdate.rcu_expedited=1.
+On Fri, 7 Aug 2020 10:32:31 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Fri, Aug 07, 2020 at 06:28:01PM +0200, Stephen Kitt wrote:
+> > =20
+> > -static int ltc2978_probe(struct i2c_client *client,
+> > -			 const struct i2c_device_id *id)
+> > +static int ltc2978_probe(struct i2c_client *client)
+> >  {
+> >  	int i, chip_id;
+> >  	struct ltc2978_data *data;
+> > @@ -670,10 +669,10 @@ static int ltc2978_probe(struct i2c_client *clien=
+t,
+> >  		return chip_id;
+> > =20
+> >  	data->id =3D chip_id;
+> > -	if (data->id !=3D id->driver_data)
+> > +	if (strcmp(client->name, ltc2978_id[data->id].name) !=3D 0) =20
+>=20
+> I was about to apply this patch, but this is problematic: It assumes that
+> __stringify(id) =3D=3D ltc2978_id[id].name and that ltc2978_id[id].driver=
+_data
+> =3D=3D id. While that is curently the case (as far as I can see), it is s=
+till
+> unsafe. I think it would be much safer to use i2c_match_id() here.
 
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
----
- kernel/locking/rwsem.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+I=E2=80=99m not following the __stringify assumption, but I do get your poi=
+nt about
+the driver_data being a valid index into the array; that was already baked
+into the code, as
 
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index f11b9bd3431d..a1e3ceb254d1 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -723,8 +723,10 @@ rwsem_spin_on_owner(struct rw_semaphore *sem, unsigned long nonspinnable)
- 	if (state != OWNER_WRITER)
- 		return state;
- 
--	rcu_read_lock();
- 	for (;;) {
-+		bool same_owner;
-+
-+		rcu_read_lock();
- 		/*
- 		 * When a waiting writer set the handoff flag, it may spin
- 		 * on the owner as well. Once that writer acquires the lock,
-@@ -732,27 +734,32 @@ rwsem_spin_on_owner(struct rw_semaphore *sem, unsigned long nonspinnable)
- 		 * handoff bit is set.
- 		 */
- 		new = rwsem_owner_flags(sem, &new_flags);
--		if ((new != owner) || (new_flags != flags)) {
--			state = rwsem_owner_state(new, new_flags, nonspinnable);
--			break;
--		}
- 
- 		/*
--		 * Ensure we emit the owner->on_cpu, dereference _after_
--		 * checking sem->owner still matches owner, if that fails,
-+		 * Ensure sem->owner still matches owner. If that fails,
- 		 * owner might point to free()d memory, if it still matches,
- 		 * the rcu_read_lock() ensures the memory stays valid.
- 		 */
--		barrier();
-+		same_owner = new == owner && new_flags == flags;
-+		if (same_owner && !owner_on_cpu(owner))
-+			state = OWNER_NONSPINNABLE;
-+		rcu_read_unlock();
- 
--		if (need_resched() || !owner_on_cpu(owner)) {
-+		if (!same_owner) {
-+			state = rwsem_owner_state(new, new_flags, nonspinnable);
-+			break;
-+		}
-+
-+		if (state == OWNER_NONSPINNABLE)
-+			break;
-+
-+		if (need_resched()) {
- 			state = OWNER_NONSPINNABLE;
- 			break;
- 		}
- 
- 		cpu_relax();
- 	}
--	rcu_read_unlock();
- 
- 	return state;
- }
--- 
-2.28.0
+		dev_warn(&client->dev,
+			 "Device mismatch: Configured %s, detected %s\n",
+			 client->name,
+			 ltc2978_id[data->id].name);
 
+but I=E2=80=99ll fix both.
+
+Similar assumptions are present in other drivers here IIRC, I=E2=80=99ll fi=
+x those
+too.
+
+Regards,
+
+Stephen
+
+--Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl8tplsACgkQgNMC9Yht
+g5zbIA//S0DouNct8J2rS/6Fe3PdwZrMiAJ7FNNKqTzQDbt7Il2R8rcdXM9HVPbH
+sxloEI7MB+HbiQFRFIXlHL5xR5oBb3cUkZzstyc+SvXo+AVjYV9B+v9vjWHKAP9Z
+GgWV65P20HCtbLAat9hDMFzTGaDcoEbBzrPOdCodPrT/mA+E287tLaubw97+uWWz
+aGaoub1huJvS4HO+DTNVX6uUBslilnZXhn/LKLDvgDOqtUMnsBIdrSI7b6bgO78r
+MVou0LxSaPOxl2+nr2xJDnQILUxzsWtOROIYWgGpU/K/xpufgHWmqk1ia0iV8lUE
+BVkF/C6uduW1Zip8QcG17c/eorIfFkkzstntnQGuicbSOWHlzvuomtUn64/zC54h
+u5gncBtmrF52+sp8YbLvhyT5EgyDDS6DY0QnPg31K+V2sfGQDACCNGeLuTGaXO5N
+qYhSzCbhYsnO4sAqonhFw4Jbyt6hbf0tLEz5ikEejRCj+7vL0BPiZYYkzEvV3qxy
+YoVDJyunjR9BIEn7DuxBRcr837TXL6gMU2ZyXB4Vu1NM/gv2VOwLoW+Ey8JcCNX9
+t4lszJmVaRseXHaNtxff0Yzp8JaLUK3v1t3NXSCsno5hGE4qTg84o9MLrW/yRGZu
+QcTEwA+udmbU8nX/Wdlm6Fih+31H95mO0ElljLfjgsUrKUP2fX8=
+=XC8G
+-----END PGP SIGNATURE-----
+
+--Sig_/ZFB90kCEm=UKbNJ8Un9J6qQ--
