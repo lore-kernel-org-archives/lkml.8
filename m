@@ -2,67 +2,165 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E20EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8E6206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A870206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgHGIrc (ORCPT
+        id S1728112AbgHGIsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:47:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35400 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbgHGIrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 04:47:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 46C26AF06;
-        Fri,  7 Aug 2020 08:47:48 +0000 (UTC)
-Date:   Fri, 7 Aug 2020 10:47:28 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/mm changes for v5.9
-Message-ID: <20200807084728.GA29510@suse.de>
-References: <20200803190354.GA1293087@gmail.com>
- <20200805110348.GA108872@zx2c4.com>
- <CAHk-=wiq+7sW3Lk5iQ0-zY5XWES4rSxK505vXsgFY=za88+RZw@mail.gmail.com>
- <20200806131034.GA2067370@gmail.com>
- <20200806185723.GA24304@suse.de>
- <CAHk-=wg7PHCUMD1xY=YCCeVHspAhw0YNEhyO3CnHfRPwsf6P8A@mail.gmail.com>
- <20200806212019.GA2149204@gmail.com>
+        Fri, 7 Aug 2020 04:48:08 -0400
+Received: from relay.sw.ru ([185.231.240.75]:45292 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727820AbgHGIsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 04:48:07 -0400
+Received: from [192.168.15.98]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k3y2b-0007gU-S6; Fri, 07 Aug 2020 11:47:53 +0300
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+To:     Andrei Vagin <avagin@gmail.com>, adobriyan@gmail.com
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        viro@zeniv.linux.org.uk, davem@davemloft.net,
+        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <87k0yl5axy.fsf@x220.int.ebiederm.org>
+ <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
+ <875za43b3w.fsf@x220.int.ebiederm.org>
+ <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
+ <20200806080540.GA18865@gmail.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
+Date:   Fri, 7 Aug 2020 11:47:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806212019.GA2149204@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200806080540.GA18865@gmail.com>
+Content-Type: text/plain; charset=koi8-r
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 11:20:19PM +0200, Ingo Molnar wrote:
-> I've reverted it in x86/urgent as well earlier today, can send you 
-> that tree right now if you prefer that route.
+On 06.08.2020 11:05, Andrei Vagin wrote:
+> On Mon, Aug 03, 2020 at 01:03:17PM +0300, Kirill Tkhai wrote:
+>> On 31.07.2020 01:13, Eric W. Biederman wrote:
+>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+>>>
+>>>> On 30.07.2020 17:34, Eric W. Biederman wrote:
+>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+>>>>>
+>>>>>> Currently, there is no a way to list or iterate all or subset of namespaces
+>>>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
+>>>>>> but some also may be as open files, which are not attached to a process.
+>>>>>> When a namespace open fd is sent over unix socket and then closed, it is
+>>>>>> impossible to know whether the namespace exists or not.
+>>>>>>
+>>>>>> Also, even if namespace is exposed as attached to a process or as open file,
+>>>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
+>>>>>> this multiplies at tasks and fds number.
+>>>>>
+>>>>> I am very dubious about this.
+>>>>>
+>>>>> I have been avoiding exactly this kind of interface because it can
+>>>>> create rather fundamental problems with checkpoint restart.
+>>>>
+>>>> restart/restore :)
+>>>>
+>>>>> You do have some filtering and the filtering is not based on current.
+>>>>> Which is good.
+>>>>>
+>>>>> A view that is relative to a user namespace might be ok.    It almost
+>>>>> certainly does better as it's own little filesystem than as an extension
+>>>>> to proc though.
+>>>>>
+>>>>> The big thing we want to ensure is that if you migrate you can restore
+>>>>> everything.  I don't see how you will be able to restore these files
+>>>>> after migration.  Anything like this without having a complete
+>>>>> checkpoint/restore story is a non-starter.
+>>>>
+>>>> There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
+>>>>
+>>>> CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
+>>>> As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
+>>>> problem here.
+>>>
+>>> An obvious diffference is that you are adding the inode to the inode to
+>>> the file name.  Which means that now you really do have to preserve the
+>>> inode numbers during process migration.
+>>>
+>>> Which means now we have to do all of the work to make inode number
+>>> restoration possible.  Which means now we need to have multiple
+>>> instances of nsfs so that we can restore inode numbers.
+>>>
+>>> I think this is still possible but we have been delaying figuring out
+>>> how to restore inode numbers long enough that may be actual technical
+>>> problems making it happen.
+>>
+>> Yeah, this matters. But it looks like here is not a dead end. We just need
+>> change the names the namespaces are exported to particular fs and to support
+>> rename().
+>>
+>> Before introduction a principally new filesystem type for this, can't
+>> this be solved in current /proc?
+> 
+> do you mean to introduce names for namespaces which users will be able
+> to change? By default, this can be uuid.
 
-I sent a fix for preallocate_vmalloc_pages() to correctly pre-allocate
-the vmalloc PGD entries. I verified that it works and that
-swapper_pg_dir contains the correct entries now. This should also fix
-the issue Jason is seeing.
+Yes, I mean this.
 
-Sorry for screwing this up :-(
+Currently I won't give a final answer about UUID, but I planned to show some
+default names, which based on namespace type and inode num. Completely custom
+names for any /proc by default will waste too much memory.
 
-Regards,
+So, I think the good way will be:
 
-	Joerg
+1)Introduce a function, which returns a hash/uuid based on ino, ns type and some static
+random seed, which is generated on boot;
+
+2)Use the hash/uuid as default names in newly create /proc/namespaces: pid-{hash/uuid(ino, "pid")}
+
+3)Allow rename, and allocate space only for renamed names.
+
+Maybe 2 and 3 will be implemented as shrinkable dentries and non-shrinkable.
+
+> And I have a suggestion about the structure of /proc/namespaces/.
+> 
+> Each namespace is owned by one of user namespaces. Maybe it makes sense
+> to group namespaces by their user-namespaces?
+> 
+> /proc/namespaces/
+>                  user
+>                  mnt-X
+>                  mnt-Y
+>                  pid-X
+>                  uts-Z
+>                  user-X/
+>                         user
+>                         mnt-A
+>                         mnt-B
+>                         user-C
+>                         user-C/
+>                                user
+>                  user-Y/
+>                         user
+
+Hm, I don't think that user namespace is a generic key value for everybody.
+For generic people tasks a user namespace is just a namespace among another
+namespace types. For me it will look a bit strage to iterate some user namespaces
+to build container net topology.
+
+> Do we try to invent cgroupfs for namespaces?
+
+Could you clarify your thought?
