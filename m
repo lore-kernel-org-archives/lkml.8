@@ -3,109 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B67C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2092075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858FF204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596823985;
-	bh=CEqR0PL4sIYHmFanekJ0BnBNxidPs/bYrxX6xO1pKjE=;
+	s=default; t=1596824245;
+	bh=Pjl2+k1yN4Msqxm/kEU+RloXdwLPGEg7+FJjvJdDReA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FF2Q3VvDQb6p3yB6ld11mOfhN1nmlozGMDUpVLlw9Bb3etnk/8fTnNcg244BoMEaW
-	 YcBJ6SFA47/EolLwBsXzxNRJQQY3NtBffavi36Hgls3lRfAzdpDGVfTJ2tki8ImIhP
-	 G1vFv7KHj/QglEd6iksaVajTY2LN3Zhv4jK+dswU=
+	b=XIK7FBb+p9oHag3RQkIBhhQHWRith88WewFQ8LQbq6DzDNvoYEbOlZa7gkxxpJtzL
+	 jGg5CijAlTAE/ut3c/OtEgici7osBSvva6sCimapJNFnn8Bt/5K1D+Wv8ibJ4J1TMg
+	 QdhvsPPjFkJSKek0VpY8cXFymA9Qce1HaCb66mhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHGSNE (ORCPT
+        id S1726248AbgHGSRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGSND (ORCPT
+        Fri, 7 Aug 2020 14:17:24 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37531 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgHGSRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:13:03 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC27C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:13:03 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t23so3165968ljc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=leE2Cykz74amz3n8V90szIGU70TUJ9qpRsnnAIasBxc=;
-        b=OE21AsDR2Yh6e0J4PH/Q+90anBoRnVpEvcC9LHTVLEhVlelx2/tMuGFoZc8H74JmJS
-         eKPlUr5Uc1yPRnpAjlcOvrk1np+0uO3nFHparP3JQQ4Y4kd6yA0K7mz/vAGLs74kexZE
-         D0+tNGggLXYbsXpwvjejbKohWdZs0q0GDu5lc=
+        Fri, 7 Aug 2020 14:17:22 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e11so2307191otk.4;
+        Fri, 07 Aug 2020 11:17:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=leE2Cykz74amz3n8V90szIGU70TUJ9qpRsnnAIasBxc=;
-        b=bWEwWvquRDwxWqoNEuwtStIe00eXzwulW9fs74SIkln6Pfek68nKBFFmy3YvjaVAsJ
-         yKczd//4Ut72MQvGtu/i0T3W6Qgsw2qdxUcyqfl8WFMK3HqFqnA/RES/KJW4GdXqDkam
-         bgsZBijfR43qzwocO0KkzfJjSnUvY9yvzfxfDcWNphDLhxBf2um7UFZLD1whILYZVcwc
-         TnHK3ak5c9FLMONeMwR0fdRJOYD4lFx/uBwCLAoFkkVADJhR6oFUTrgjhE6rTDK//L4m
-         O1+8WqckBmMBFHXoys840RmyKFJt7Jt1KbYRldmVzxNWd4mu939zzxwSrFnpnU2h4mvH
-         xt2g==
-X-Gm-Message-State: AOAM533F5+yUpeH3f1vh8POWeGllluneT/XqwPLbma8Hpm49rdC93vmM
-        cdmJlFjUHXf1A+iUFXTBneFi0n6q3w4=
-X-Google-Smtp-Source: ABdhPJzzO88ynJudN98qLgrwWP2g8iaUSqQoSpwpZM8PEq6MufAugxo0H0jxbZdbw4+OLdQjYwnI4g==
-X-Received: by 2002:a2e:b8c2:: with SMTP id s2mr7115771ljp.179.1596823981159;
-        Fri, 07 Aug 2020 11:13:01 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id s1sm4585907lfi.76.2020.08.07.11.12.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 11:13:00 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id g6so3126363ljn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:12:59 -0700 (PDT)
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr6645875lji.314.1596823979484;
- Fri, 07 Aug 2020 11:12:59 -0700 (PDT)
+        bh=RFU9qSetmlHzp98q29/MxQ7l/3U0+Del5PqcymwLD98=;
+        b=KlhK+MXJbzVi8NX0AH94C3TTHPdOG4pvEwxx0iX+K29hyuFTWmfrs2DBkl828sWetf
+         ldPFcSGG6+bTYAn0wEPng0UywFO7P8Nv0BpI1FrUEvIt4029Chj52lYTdTz0flk9XeRD
+         pIfpy6qpDNx+QQDVIWXJtDgI0pXBayxLOQ50NXyMrdyFEccpwTdIEZRsD+HqLRVjsmKL
+         sD4pSOAOBdpH9YCrOSwAtQ4jrxOTHBXG8opj8c3PbHl6z+tDJ4AX7Gbrd43kEiQH+Yq6
+         ZgTxfbE+ZpIgAADkcROuMhwOFZbrLOO4ey8INm0mBy7GldWMFrWLhPfslWKohFDOBtx0
+         WKfg==
+X-Gm-Message-State: AOAM532VcXuuHG2njW5pdzp/Qg+sPjKYPSoXibNBuEKfLwbLuGM5ZRPW
+        lk0fzUCYOI9eN/68AQnTQDBmQ8eGHMrJuKgHmi0=
+X-Google-Smtp-Source: ABdhPJxXOPvQ7Q9jlLfe9GWsFmyrbS1fgxV3RBJTgThMjB5uy4YXGTocdhpyzRH6f2m6zycLzsfJ9F9zicUysX9aYEk=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr12907809oth.262.1596824241773;
+ Fri, 07 Aug 2020 11:17:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
- <CAHk-=wgLt61owJ_eKwy43bBujxy3-s=xQXwsSi6VHME7SiAgiA@mail.gmail.com>
- <b903cdd8-cbb5-1a6a-3943-9bb019f1eed7@linaro.org> <CAHk-=wgSJwbghhQYCoAVq6ewGKZ+rZvxeKvxb-o_gMt7d7-Nbw@mail.gmail.com>
- <88678a80-4ca2-5cb0-d9c5-3e64b7f113f5@linaro.org>
-In-Reply-To: <88678a80-4ca2-5cb0-d9c5-3e64b7f113f5@linaro.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 7 Aug 2020 11:12:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whe9+soLhAtO2hctL4PgnnG67BGHpSPSyxTLAe0c2zqmQ@mail.gmail.com>
-Message-ID: <CAHk-=whe9+soLhAtO2hctL4PgnnG67BGHpSPSyxTLAe0c2zqmQ@mail.gmail.com>
-Subject: Re: [GIT PULL] RESEND: thermal for v5.9-rc1
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Colin King <colin.king@canonical.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Lukasz Luba <Lukasz.Luba@arm.com>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Henry Yen <henry.yen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+References: <20200731133604.12512-1-akshu.agrawal@amd.com>
+In-Reply-To: <20200731133604.12512-1-akshu.agrawal@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 7 Aug 2020 20:17:10 +0200
+Message-ID: <CAJZ5v0iWuv-+ha+5Gem-hVaXCfgVJbNmCZ+6vaeKKtfjay=VoQ@mail.gmail.com>
+Subject: Re: [0/4] Extend AMD SoC general purpose clk for all versions
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
+        linux-clk <linux-clk@vger.kernel.org>,
+        rahul.tanwar@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 11:06 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On Fri, Jul 31, 2020 at 3:36 PM Akshu Agrawal <akshu.agrawal@amd.com> wrote:
 >
-> Ok, I will send a fix.
+> Hi,
+>
+> This series of patch does the following:
+> 1. Changes the name of the AMD SoC general purpose clk
+> from ST(a version of SoC) to FCH (name of the IP).
+> 2. Then make the drivers support both older and newer versions of
+> SoC.
+>
+> Thanks,
+> Akshu
+>
+> Akshu Agrawal (4):
+>   ACPI: APD: Change name from ST to FCH
+>   clk: x86: Change name from ST to FCH
+>   ACPI: APD: Add a fmw property is_raven
+>   clk: x86: Support RV architecture
+>
+>  drivers/acpi/acpi_apd.c                       |  18 ++--
+>  drivers/clk/x86/Makefile                      |   2 +-
+>  drivers/clk/x86/clk-fch.c                     | 101 ++++++++++++++++++
+>  drivers/clk/x86/clk-st.c                      |  78 --------------
+>  .../platform_data/{clk-st.h => clk-fch.h}     |  11 +-
+>  5 files changed, 119 insertions(+), 91 deletions(-)
+>  create mode 100644 drivers/clk/x86/clk-fch.c
+>  delete mode 100644 drivers/clk/x86/clk-st.c
+>  rename include/linux/platform_data/{clk-st.h => clk-fch.h} (51%)
+>
+> --
 
-I ended up doing it during my morning routine of looking around for,
-and applying, random patches.
-
-So it's commit 0f5d0a4c01cc ("thermal: don't make THERMAL_NETLINK
-'default y'") in my tree now.
-
-                 Linus
+Whole series applied as 5.9-rc1 material, thanks!
