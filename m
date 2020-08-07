@@ -2,111 +2,132 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F35C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4E42086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973EF2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:29:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WRZkwZaL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noA9x5sq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgHGV2i (ORCPT
+        id S1726932AbgHGV3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 17:28:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53286 "EHLO
+        Fri, 7 Aug 2020 17:29:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgHGV2h (ORCPT
+        with ESMTP id S1726015AbgHGV3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 17:28:37 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B292C061757
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:28:37 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c10so2233601edk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:28:37 -0700 (PDT)
+        Fri, 7 Aug 2020 17:29:19 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6931AC061756;
+        Fri,  7 Aug 2020 14:29:19 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id x69so3063884qkb.1;
+        Fri, 07 Aug 2020 14:29:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bdNucF0koSppcU0GmU9pSl6fM9HVcxNoH43SdcmhMo4=;
-        b=WRZkwZaLt55Y2h276GQIL0EwY8JZgUt+nO04eGdR+5coh476ORbcDKISCIzllLYqgr
-         7pXl9SAv+kRl9cT8mG/IIezkcnD/mOK8BF31NyqErmOkrd2TjVOko70lECZRwmQMlz1Y
-         b8cFcuQo1C617FdhnPXZESL8OsSbpCtiVGg/A=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6OCdZ+ZeCbuJb568osbDrIdPBoRSxq8uWrbOnWLeK5E=;
+        b=noA9x5sq8cTXe/XXi9Q4ba+UczIxMQ928kgCeg9juRZTOVfCH+8OjGDFymehDxoyFa
+         GlgOCtQ1HVmgoA5iKlaktjH6ZfIJCWDW8T9BC6T6Fm8dzJxZcPyZ48dhmpaiZhOcoebP
+         NBa0RjCtozFkyOfdHK0Gr0eUBqvZMDAAOgjm6Iyk/QijpWQDLy90bo4zcOYEoGl/1MnK
+         /AjQIlMBy4W0HDeUywa+vMcrn1BWFYz7rAJNNiZCE8S6Jg5QyqztFBvrRPZiP+5RvJid
+         ZDJyzjN4HEIyC8z7jRbRZZTI5SvpPfxWzakb6OLBroLkqoyw0WP3IYNb928wOYPM7dUO
+         XCug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bdNucF0koSppcU0GmU9pSl6fM9HVcxNoH43SdcmhMo4=;
-        b=nFdVlMaplROi8dThGp22BaMj2tz2PL5f+6WFgD+UObu5hmYmNzQRqutdymlf3p2WKN
-         wAVyOlBdYJkz9SQ4PUw6XGjjHxGPf2cRAO5C9M6bKR81mZXMDcyCED4GzsCNtyQOaD5I
-         7K8kRH88+KlcW9kFAHqjISpk6lEVt9isueWWOgOuD5pNOHaWdx+ZEuKSEaEKaDG64VBM
-         ZxHyUf2NRbIaXDZC/vuKVHon98u7rU0Yr2vOx5cYtWqKLVyjUx/r67OLrbzSiyF/5qP5
-         028OH0vBmr6J4hulGMdPfQ1WgGGLU4JoF/hyLYbotv1lkI6VI8lNG3XSa7Mi04AiY64c
-         2K/Q==
-X-Gm-Message-State: AOAM530f3ZFaAvdeQawBAZiutSTNar2BnBof7bQLmrXdyHjxYo/qXgxl
-        Wxpa4ZlbK4fXaiUFVUHhD3BVt3D1q3Q=
-X-Google-Smtp-Source: ABdhPJwRUhERrMBC3w6Q8l+DvsYGBeVwPgesiIWBaXEo6L5u2pbREKzcimFt0KU5GAbPenAI54A8bQ==
-X-Received: by 2002:a50:d75e:: with SMTP id i30mr11146847edj.246.1596835715971;
-        Fri, 07 Aug 2020 14:28:35 -0700 (PDT)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id g24sm6135082eds.42.2020.08.07.14.28.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 14:28:35 -0700 (PDT)
-Received: by mail-wr1-f49.google.com with SMTP id a14so2878878wra.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:28:35 -0700 (PDT)
-X-Received: by 2002:adf:fdce:: with SMTP id i14mr13480967wrs.273.1596835714967;
- Fri, 07 Aug 2020 14:28:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200730114632.6717-1-stanimir.varbanov@linaro.org> <20200730114632.6717-2-stanimir.varbanov@linaro.org>
-In-Reply-To: <20200730114632.6717-2-stanimir.varbanov@linaro.org>
-From:   Fritz Koenig <frkoenig@chromium.org>
-Date:   Fri, 7 Aug 2020 14:28:22 -0700
-X-Gmail-Original-Message-ID: <CAMfZQbx36rZc=9p8a=mGSqwvtfQ-KRO+5=8yEuo-NA+eeoBBNg@mail.gmail.com>
-Message-ID: <CAMfZQbx36rZc=9p8a=mGSqwvtfQ-KRO+5=8yEuo-NA+eeoBBNg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] venus: parser: Prepare parser for multiple invocations
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=6OCdZ+ZeCbuJb568osbDrIdPBoRSxq8uWrbOnWLeK5E=;
+        b=of+j5na8yD595Sd3duX0JMQ8hJMRZhJ7KCit0YDEADAQMylwL0RyjGThjzhhECqhTF
+         S43KA2Ze0jCRPL1YV6Jww0f+VuUMUfUbAorEsxh27M01/NJ2to6+VFAfZxwYEXQMxGWC
+         3MHxDMfUImYYICeNaAH3yW3pxVIb63RzggtH920XXpNpNC0ZRGqFfApr4EsEz2YFyrfv
+         oS0by0/kBHNd64bqlvYDWDCqJtKfoOHWEMmvk5ev4JuRfmZy7T153tXWLbowFD6g8Rtr
+         7A7ovs5PWThktKDsNCkYtTDJRj+hhAez/on2zxPDnkhc82uYAlViS4ZBXdZTeN6BRBgg
+         uvMA==
+X-Gm-Message-State: AOAM531kuhwEqYY9AsSlgEX0h81FrQdREp0GST4cuUzyrwX9CyqHuI2V
+        elELeNt0GRGkAaep12T8KOM=
+X-Google-Smtp-Source: ABdhPJxgMl4he648RZK+OwIGlkgBK6xjVlA/GQhmQeA4WNXiqRanMMXY26+OJDI0nbbGD/KTT9vmRA==
+X-Received: by 2002:a05:620a:234:: with SMTP id u20mr14935734qkm.54.1596835758328;
+        Fri, 07 Aug 2020 14:29:18 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id t93sm8636947qtd.97.2020.08.07.14.29.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 14:29:17 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 7 Aug 2020 17:29:14 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        clang-built-linux@googlegroups.com, e5ten.arch@gmail.com,
+        stable@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dmitry Golovin <dima@golovin.in>,
+        Marco Elver <elver@google.com>, Nick Terrell <terrelln@fb.com>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] x86/boot: avoid relaxable symbols with Clang
+Message-ID: <20200807212914.GB1454138@rani.riverdale.lan>
+References: <20200807194100.3570838-1-ndesaulniers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200807194100.3570838-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 4:47 AM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
->
-> Presently the hfi_parser has been called only once during driver
-> probe. To prepare the parser function to be called multiple times
-> from recovery we need to initialize few variables which are used
-> during parsing time.
->
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  drivers/media/platform/qcom/venus/hfi_parser.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
-> index 7f515a4b9bd1..363ee2a65453 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_parser.c
-> +++ b/drivers/media/platform/qcom/venus/hfi_parser.c
-> @@ -239,6 +239,9 @@ u32 hfi_parser(struct venus_core *core, struct venus_inst *inst, void *buf,
->
->         parser_init(inst, &codecs, &domain);
->
-> +       core->codecs_count = 0;
-> +       memset(core->caps, 0, sizeof(core->caps));
-> +
->         while (words_count) {
->                 data = word + 1;
->
-> --
-> 2.17.1
->
+On Fri, Aug 07, 2020 at 12:41:00PM -0700, Nick Desaulniers wrote:
+> A recent change to a default value of configuration variable
+> (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+> integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+> relocations. LLD will relax instructions with these relocations based on
+> whether the image is being linked as position independent or not.  When
+> not, then LLD will relax these instructions to use absolute addressing
+> mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with Clang
+> and linked with LLD to fail to boot.
 
-Reviewed-by: Fritz Koenig <frkoenig@chromium.org>
+It could also cause kernels compiled with gcc and linked with LLD to
+fail in the same way, no? The gcc/gas combination will generate the
+relaxed relocations from I think gas-2.26 onward. Although the only
+troublesome symbol in the case of gcc/gas is trampoline_32bit_src,
+referenced from pgtable_64.c (gcc doesn't use a GOTPC reloc for _pgtable
+etc).
+
+I'm a bit surprised you were able to boot with just _pgtable fixed
+(looking at the CBL issue), there are quite a few more GOTPC relocs with
+clang -- maybe LLD isn't doing all the optimizations it could yet.
+
+This potential issue was mentioned [0] in one of the earlier threads
+(see last paragraph).
+
+[0] https://lore.kernel.org/lkml/20200526191411.GA2380966@rani.riverdale.lan/
+
+> 
+> Also, the LLVM commit notes that these relocation types aren't supported
+> until binutils 2.26. Since we support binutils 2.23+, avoid the
+> relocations regardless of linker.
+
+Note that the GNU assembler won't support the option to disable the
+relaxations until 2.26, when they were added.
+
+However, it turns out that clang always uses the integrated assembler
+for the decompressor (and the EFI stub) because the no-integrated-as
+option gets dropped when building these pieces, due to redefinition of
+KBUILD_CFLAGS. You might want to mention this in the commit log or a
+comment to explain why using the option unconditionally is safe. It
+might need to be made conditional if the CFLAGS ever gets fixed to
+maintain no-integrated-as.
+
+Thanks.
