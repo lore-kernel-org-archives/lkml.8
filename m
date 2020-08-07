@@ -2,142 +2,129 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5F3C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A06C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F91420866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF0020866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jd8bvtZS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWj0ousn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgHGRcg (ORCPT
+        id S1726923AbgHGRcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 13:32:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36432 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726015AbgHGRcc (ORCPT
+        Fri, 7 Aug 2020 13:32:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgHGRce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 13:32:32 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 077HW45O185756;
-        Fri, 7 Aug 2020 13:32:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=Y0pKoWPeTxDyByUmLaCIWxPyH2WwR9p+/RxajWERAWo=;
- b=jd8bvtZSDyNgHw2Je8MeB+DJ4XXI9Pf45pkFwoUx+CqF1AgoBovcIE+mumIY79vc5bTf
- ns67M1Y+8W/AAFJVuVwsN1g6c6nDdNKYVu5ajSLIuEn93EDoAhq1n1CS0UncjvpDTClo
- 5/x4R8oSQrERkaRuVked3eDOR7kBxPGZbecpNpVdtwXsNTH/Z18WO4VIoVhaBhZsNgOH
- FbdQnOsCLbFjtWEZKnAjCmqvdBLzrhV6OnvzBoLfO+5Pp+EWgl2OmrR0atXyOKhl3zX5
- TGxtNZnfzXB0sK9P697OG2ojYwvTemmIMHOC5k/zgGasURdGSMvfxvc6Ucxm81nnQtXC xA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32repj1gev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 13:32:07 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 077HW4kl185730;
-        Fri, 7 Aug 2020 13:32:06 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32repj1g73-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 13:32:06 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 077HVYj4008226;
-        Fri, 7 Aug 2020 17:31:34 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03fra.de.ibm.com with ESMTP id 32nyyd3e91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 17:31:34 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 077HVVF530343660
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Aug 2020 17:31:31 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BFFE252050;
-        Fri,  7 Aug 2020 17:31:31 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.122.187])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 004F55204F;
-        Fri,  7 Aug 2020 17:31:27 +0000 (GMT)
-Message-ID: <4a764c86a824a4b931dd7f130ce7afce7df140e4.camel@linux.ibm.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Morris <jmorris@namei.org>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com, paul@paul-moore.com,
-        corbet@lwn.net, nramas@linux.microsoft.com, serge@hallyn.com,
-        pasha.tatashin@soleen.com, jannh@google.com,
-        linux-block@vger.kernel.org, viro@zeniv.linux.org.uk,
-        axboe@kernel.dk, mdsakib@microsoft.com,
-        linux-kernel@vger.kernel.org, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Fri, 07 Aug 2020 13:31:27 -0400
-In-Reply-To: <alpine.LRH.2.21.2008080240350.13040@namei.org>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-                   <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-                   <20200802143143.GB20261@amd>
-                   <1596386606.4087.20.camel@HansenPartnership.com>
-                   <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-                 <1596639689.3457.17.camel@HansenPartnership.com>
-                  <alpine.LRH.2.21.2008050934060.28225@namei.org>
-                 <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
-                 <alpine.LRH.2.21.2008060949410.20084@namei.org>
-         <eb7a2f5b5cd22cf9231aa0fd8fdb77c729a83428.camel@linux.ibm.com>
-         <alpine.LRH.2.21.2008080240350.13040@namei.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-07_15:2020-08-06,2020-08-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008070120
+        Fri, 7 Aug 2020 13:32:34 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDBFAC061756;
+        Fri,  7 Aug 2020 10:32:33 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 17so1360475pfw.9;
+        Fri, 07 Aug 2020 10:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=j0PtF8UeW2JMfBJSFYN8MSFrjhqC5IGfPsG3kkWWGuM=;
+        b=UWj0ousnn6Qs0lXhh43orig3Q/9CutWD1tdaP8c6EklXbs5nAR5p8STS83VCnQ3mop
+         5xx/tai+v35SntfFj2yQoodaREOtRMsdDt0C9VQfJRc+vJ5U8FI7Lx+6RhMWT9z9ENGj
+         QCy8MRUQ2XHS+u8EXVcHVuGhnn5AbU+5DZ371/6kR/ya1MvYLhgaQmwDg1vi5B+dFwlt
+         e96ovKOK+piPIoUFBp04hoS0Rej1DLOkVanbkvjxcGZeSCkF2j4MaTT7zUwXzsEo7WxP
+         IP54umPsh5jvsWRvngX7omqdXKMsBftwMFUrPiwak1Iky73ms0kd2hC/4w1kb/+Nvvh0
+         hSyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=j0PtF8UeW2JMfBJSFYN8MSFrjhqC5IGfPsG3kkWWGuM=;
+        b=TMKdEu7sTIPTb8V6VGzgiNO8mLDE08XyrT7d49ZF8oMD46KI0Phf6R7IqtUnwPide9
+         aBob8Y/RENqbItxipruVzFghofX0YDgrHLTP4DdL61rnL/Z2e2yog6JipCM8B9gqFS2F
+         dONhGKP2Eor4ChqkO/wQFMGPix6ysv9zlLZ3YjpJ3Fm6ZkdwEv5UIa/XiKzZ6ToE23Dy
+         R+QmMQ9btWYpSZXarA7BaW502QkaA/nxVT37PuEGfQaax+GBSmirD3+UatRE2sOec27m
+         mqUPNYw3Q/tZ6MzUEhlNOfVKAdwiDk1J/ZQl7hnOLnQMaRcACQ9qiamGWZa6EQu1jK5L
+         ibpw==
+X-Gm-Message-State: AOAM532oj8FtRNEVjV4OfNM3tN14zLd+VDivIAJEYYQqg3RU415RDl+U
+        gMPX1DvU8l7w51HvdWneY8M=
+X-Google-Smtp-Source: ABdhPJykcoMNcoXKXPMIGg4/VNmdiDpBj1nlUMTyuqeUvIz7bIU6uxTEawTLHTtqLZpiOgEBpn3G3g==
+X-Received: by 2002:a63:3d06:: with SMTP id k6mr12862975pga.316.1596821553329;
+        Fri, 07 Aug 2020 10:32:33 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id gn13sm11228445pjb.17.2020.08.07.10.32.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Aug 2020 10:32:32 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 10:32:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v3] hwmon/pmbus: use simple i2c probe function
+Message-ID: <20200807173231.GA47449@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-08 at 02:41 +1000, James Morris wrote:
-> On Thu, 6 Aug 2020, Mimi Zohar wrote:
+On Fri, Aug 07, 2020 at 06:28:01PM +0200, Stephen Kitt wrote:
+> pmbus_do_probe doesn't use the id information provided in its second
+> argument, so this can be removed, which then allows using the
+> single-parameter i2c probe function ("probe_new") for probes.
 > 
-> > On Thu, 2020-08-06 at 09:51 +1000, James Morris wrote:
-> > > On Wed, 5 Aug 2020, Mimi Zohar wrote:
-> > > 
-> > > > If block layer integrity was enough, there wouldn't have been a need
-> > > > for fs-verity.   Even fs-verity is limited to read only filesystems,
-> > > > which makes validating file integrity so much easier.  From the
-> > > > beginning, we've said that fs-verity signatures should be included in
-> > > > the measurement list.  (I thought someone signed on to add that support
-> > > > to IMA, but have not yet seen anything.)
-> > > > 
-> > > > Going forward I see a lot of what we've accomplished being incorporated
-> > > > into the filesystems.  When IMA will be limited to defining a system
-> > > > wide policy, I'll have completed my job.
-> > > 
-> > > What are your thoughts on IPE being a standalone LSM? Would you prefer to 
-> > > see its functionality integrated into IMA?
-> > 
-> > Improving the integrity subsystem would be preferred.
-> > 
+> This avoids scanning the identifier tables during probes.
 > 
-> Are you planning to attend Plumbers? Perhaps we could propose a BoF 
-> session on this topic.
+> Drivers which didn't use the id are converted as-is; drivers which did
+> are modified as follows:
+> 
+> * if the information in i2c_client is sufficient, that's used instead
+>   (client->name);
+> * configured v. probed comparisons are performed by comparing the
+>   configured name to the detected name, instead of the ids; this
+>   involves strcmp but is still cheaper than comparing all the device
+>   names when scanning the tables;
+> * anything else is handled by calling i2c_match_id() with the same
+>   level of error-handling (if any) as before.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+> Changes since v1:
+>   - i2c_device_id declarations are left unchanged;
+>   - all drivers are converted, using client info or i2c_match_id().
+> Changes since v2:
+>   - updated the documentation;
+>   - fixed unbalanced braces around the modified else in ibm-cffps.c.
+> 
 
-That sounds like a good idea.
+[ ... ]
 
-Mimi
+>  
+> -static int ltc2978_probe(struct i2c_client *client,
+> -			 const struct i2c_device_id *id)
+> +static int ltc2978_probe(struct i2c_client *client)
+>  {
+>  	int i, chip_id;
+>  	struct ltc2978_data *data;
+> @@ -670,10 +669,10 @@ static int ltc2978_probe(struct i2c_client *client,
+>  		return chip_id;
+>  
+>  	data->id = chip_id;
+> -	if (data->id != id->driver_data)
+> +	if (strcmp(client->name, ltc2978_id[data->id].name) != 0)
 
+I was about to apply this patch, but this is problematic: It assumes that
+__stringify(id) == ltc2978_id[id].name and that ltc2978_id[id].driver_data
+== id. While that is curently the case (as far as I can see), it is still
+unsafe. I think it would be much safer to use i2c_match_id() here.
 
+Thanks,
+Guenter
