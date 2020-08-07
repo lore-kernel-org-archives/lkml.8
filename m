@@ -2,129 +2,104 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC212C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71538221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11A62075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="i4lMLHig"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpp0i421"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHGO5W (ORCPT
+        id S1726350AbgHGPFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 10:57:22 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.23]:16247 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgHGO5V (ORCPT
+        Fri, 7 Aug 2020 11:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgHGPFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 10:57:21 -0400
-X-Greylist: delayed 363 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 10:57:20 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1596812239;
-        s=strato-dkim-0002; d=xenosoft.de;
-        h=Date:Message-ID:Subject:From:To:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=etPxG83tkMXiJ/hnA1T72V+lMvSf2k090VPDeSw1U3I=;
-        b=i4lMLHigxmSRgkCjW5JyTJKOftY5we0zpq89EAXRzjG20hXeIS3TCi00p8G7/6uRi7
-        hZkI4lOqc9GFy1/UEQ91+OtACqoiVn1OmrsjcUy8O3P+nGO+elYihb813kpsrtMrRk93
-        rQV4WIZmAxkOEjsVSdnY/d0GwggJBzV+WDUplUcVKP52mgKnGlcQM8+sBJRU0+bxvhuJ
-        HpY+OTZotZlRjFCI30EoS/EQG/EFi7fNtkBh5UqxybTbythCCtzG89lOx1HXuEB+Fbve
-        5SSefifMUk9kjBuNR13NyQmC63rAQ2ZtHuf0HbcIuxFJ4U0ZiWR7omM7vKObRLgvBrHA
-        QPIA==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhSI1Vi9hdbute3wuvmUTfEdg9AyQ=="
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2a02:8109:89c0:ebfc:15f9:f3ba:c3bc:6875]
-        by smtp.strato.de (RZmta 46.10.5 AUTH)
-        with ESMTPSA id 60686ew77EjEQ1K
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 7 Aug 2020 16:45:14 +0200 (CEST)
-To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        keescook@chromium.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>,
-        Darren Stevens <darren@stevens-zone.net>,
-        mad skateman <madskateman@gmail.com>
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-Subject: [Latest Git kernel/Linux-next kernel] Xorg doesn't start after the
- seccomp updates v5.9-rc1
-Message-ID: <67cd9693-10bc-5aa5-0898-ff2ac1f9c725@xenosoft.de>
-Date:   Fri, 7 Aug 2020 16:45:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 7 Aug 2020 11:05:31 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D71AC061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 08:05:31 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o23so2443619ejr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 08:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ndkXqoYXV4SRjcjs22mzin/GG9waZBtSgJal0L6r/yk=;
+        b=cpp0i421XHrpqv9BHWnksM3Y8nY1WTLJuOWw1ohGMXGpoLu3SbZ9hi707ZAw4pwd/c
+         /+ygev/hR8olZUEVF7weNEW+i63CRwJDRoO2Jir57xfi+T8akwxkNaRDlrHBH8mSYF55
+         7UKeGVq6pBKKDP30sFiJ9cZ11VGMJq1fMXsdM0Ih+OUGqmchqxVCgmgQSD24QcYEujkh
+         QezX74PVkvalNZ1T8oFsaKll7GcuQZaIjk9GxQHCiED+OcBAo+rrYC8fLxOAXqv18gih
+         eF9FC4cESf3S86DNGBKanFI/bzX3hbEhIqdWQJ5Knm+h88M2Nl5X4YLhSmrKkngHnpp8
+         BLZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ndkXqoYXV4SRjcjs22mzin/GG9waZBtSgJal0L6r/yk=;
+        b=LMGO/GIrKOggr8yvJtZnBFTyyXtB716+Z3HwIENXZDNGJf5rrDmANc/OPsEHmRj3BE
+         Gbe59o0wev0i2EWkxX0/l9dR2ld2QSj6gHLngFa7dnCYPgEloSzbI2T5zQlGbjx/6NuQ
+         FWzu90Ioaohh+JOlnSccoGLYAXwgwqBMShKGuojfW2WqOM91kIGS6PuVogLDbUpVlgVz
+         IzN9gAw1rvyjRz3PXbE+n8BmayhJofmUwDwX16e9AQJmuBDG1g9S23QfdcvZZoqx2jWW
+         pYC5sSN2qcrRywFNRWaHMUrlB2X8Euou8xjVOeMPMdjwfbUM56eBSqqw1DLZn0Wkz09V
+         PFuw==
+X-Gm-Message-State: AOAM533yGMk56d/zHOOzTwqqRPYlL90X8YewxaT3WPIxBVZSAOTW0ll6
+        o38qAoPbrHNw22PWW4+ZyEA=
+X-Google-Smtp-Source: ABdhPJxvaX5Is9P48ICEEubLyvdT8KenxYxQx5zVjTleP8VwNO2ruyRIonq6WmPhj9xrE3aKeAt7Lw==
+X-Received: by 2002:a17:906:f847:: with SMTP id ks7mr10245835ejb.402.1596812729607;
+        Fri, 07 Aug 2020 08:05:29 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:a7fb:e200:5975:4576:7691:7d5b])
+        by smtp.gmail.com with ESMTPSA id dm5sm5706647edb.32.2020.08.07.08.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 08:05:28 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 17:05:26 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: fs/erofs/zdata.c:198:22: sparse: sparse: non size-preserving
+ integer to pointer cast
+Message-ID: <20200807150526.vkbkslhiyy7gb6dc@ltop.local>
+References: <202008072005.Myrby1lg%lkp@intel.com>
+ <20200807144801.GA30258@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: de-DE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807144801.GA30258@hsiangkao-HP-ZHAN-66-Pro-G1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Aug 07, 2020 at 10:48:12PM +0800, Gao Xiang wrote:
+> On Fri, Aug 07, 2020 at 08:08:10PM +0800, kernel test robot wrote:
+> > sparse warnings: (new ones prefixed by >>)
+> > 
+> > >> fs/erofs/zdata.c:198:22: sparse: sparse: non size-preserving integer to pointer cast
+> >    fs/erofs/zdata.c:282:22: sparse: sparse: non size-preserving integer to pointer cast
+> >    fs/erofs/zdata.c:1094:24: sparse: sparse: non size-preserving integer to pointer cast
+> 
+> I don't think these are valid warnings.
 
-Xorg doesn't start with the latest Git kernel anymore on some Linux 
-distributions after the seccomp updates v5.9-rc1 [1]. For example on 
-Fienix (Debian Sid PowerPC 32-bit) and on ubuntu MATE 16.04.6 (PowerPC 
-32-bit). I tested these distributions on the A-EON AmigaOne X1000 [2], 
-A-EON AmigaOne X5000 [3], and in a virtual e5500 QEMU machine with a 
-virtio_gpu.
+Indeed, they're not.
+ 
+> All these three lines are using cmpxchg struct page * (which is equivalent to unsigned long
+> in these cmpxchg macros) and nothing special at all in my opinion (Especially the last two
+> lines).
 
-Error messages:
+What is special is that s390 use __sync_val_compare_and_swap() to implement
+cmpxchg(). This builtin has a return type which depends on its arguments
+while sparse was always using 'int' as the return type.
 
-systemd-journald[2238]: Failed to send WATCHDOG-1 notification message: 
-Connection refused
-systemd-journald[2238]: Failed to send WATCHDOG-1 notification message: 
-Transport endpoint is not connected
-systemd-journald[2238]: Failed to send WATCHDOG-1 notification message: 
-Transport endpoint is not connected
-systemd-journald[2238]: Failed to send WATCHDOG-1 notification message: 
-Transport endpoint is not connected
-systemd-journald[2238]: Failed to send WATCHDOG-1 notification message: 
-Transport endpoint is not connected
-systemd-journald[2238]: Failed to send WATCHDOG-1 notification message: 
-Transport endpoint is not connected
+A patch is on the way.
 
----
-
-But Xorg works on Ubuntu 10.04.4 (PowerPC 32-bit), openSUSE Tumbleweed 
-20190722 PPC64 and on Fedora 27 PPC64 with the latest Git kernel.
-
-I bisected today [4].
-
-Result: net/scm: Regularize compat handling of scm_detach_fds() 
-(c0029de50982c1fb215330a5f9d433cec0cfd8cc) [5] is the first bad commit.
-
-This commit has been merged with the seccomp updates v5.9-rc1 on 
-2020-08-04 14:11:08 -0700 [1]. Since these updates, Xorg doesn't start 
-anymore on some Linux distributions.
-
-Unfortunately I wasn't able to revert the first bad commit. The first 
-bad commit depends on many other commits, which unfortunately I don't 
-know. I tried to remove the modifications of the files from the first 
-bad commit but without any success. There are just too many dependencies.
-
-Additionally I compiled a linux-next kernel because of the issue with 
-the lastest Git kernel. Unfortunately this kernel doesn't boot. It can't 
-initialize the graphics card.
-
-Could you please test Xorg with the latest Git kernel on some Linux 
-distributions?
-
-Thanks,
-Christian
-
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9ecc6ea491f0c0531ad81ef9466284df260b2227
-[2] https://en.wikipedia.org/wiki/AmigaOne_X1000
-[3] http://wiki.amiga.org/index.php?title=X5000
-[4] https://forum.hyperion-entertainment.com/viewtopic.php?p=51317#p51317
-[5] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c0029de50982c1fb215330a5f9d433cec0cfd8cc
-
-
+Regards,
+-- Luc Van Oostenryck
