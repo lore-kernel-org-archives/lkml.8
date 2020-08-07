@@ -2,105 +2,129 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF440C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 798972177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WXIRFhFC"
+	by mail.kernel.org (Postfix) with ESMTP id A4C922177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgHGGf6 (ORCPT
+        id S1726150AbgHGGjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 02:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgHGGfv (ORCPT
+        Fri, 7 Aug 2020 02:39:46 -0400
+Received: from 1.mo177.mail-out.ovh.net ([178.33.107.143]:38221 "EHLO
+        1.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgHGGjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 02:35:51 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DE3C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 23:35:50 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g33so433861pgb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 23:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sArfDCPX+yKb9TQ1ON2BnB3SsuAFh3sZzLbDb6cibRU=;
-        b=WXIRFhFCe4W5I6UgKWDCW3UyMYilZ32XCNH9uee6t/xanqVry8VnS7gryJMsuZBFY/
-         yBoQD8rGfleNlkW7yfU+4wlASpGIk6kZbcI7RoTXpUe1/M1ruF8pdmz+KCAV9qOIER1N
-         AHutCbPhvDh3rzitWzIXBLnCKJ63fOFuZ5gZ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sArfDCPX+yKb9TQ1ON2BnB3SsuAFh3sZzLbDb6cibRU=;
-        b=M8ZVcCWTSmVbxxfZNLcbtG2WRSAARGvGpI/89aALpEntRAoMkY3vBMEk52RLuUI4z1
-         MCwODJJ5hTb3G0b65ZDzEt261RnjBCjpDJTTqfBi1O3CNxMZQWKar+1KaQFmvaCLNnIU
-         jzxa4gNuCNmk6i1LrpEAmc0t1wMqS9se0uwZLcL6WoGcjrQsewFhFeVrFGfYL45hrF/m
-         7y220WAnlLQsqHyCbb4WHdou3LfZBQRVVnYvPccBfWzZZw2lmpYKOnmpVkZUxM71LGpu
-         A2WG4SE0cDq+1NXGeCfFHP517vKjNjLRIl+/HrUcRWgrlZRh3J0ipuz05G9rGnpI3wt0
-         EQ3Q==
-X-Gm-Message-State: AOAM531cULd9QJyi0JeW1OZWcZRvaloZoOM0u1eVe8qsz3/SKUmlSnbA
-        vL/zLCx3jFYux8jT1lCjUsViNQ==
-X-Google-Smtp-Source: ABdhPJwYh4MTlWGIL+50lpLKghCeomuo6cIkL3bH4TI5zJoOsDhOPDjNUP7PEy8JCuaxkfuLRBFvvA==
-X-Received: by 2002:a65:614f:: with SMTP id o15mr10400330pgv.321.1596782150506;
-        Thu, 06 Aug 2020 23:35:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o192sm12514425pfg.81.2020.08.06.23.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 23:35:48 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH 0/2] module: Correctly truncate sysfs sections output
-Date:   Thu,  6 Aug 2020 23:35:37 -0700
-Message-Id: <20200807063539.2620154-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 7 Aug 2020 02:39:45 -0400
+X-Greylist: delayed 587 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 02:39:44 EDT
+Received: from player697.ha.ovh.net (unknown [10.108.42.168])
+        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 030B613C847
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 08:23:34 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player697.ha.ovh.net (Postfix) with ESMTPSA id D71D3151467EB;
+        Fri,  7 Aug 2020 06:23:28 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-98R002924d5bf1-2994-4c8b-9b6c-5998cd15a743,
+                    B1FDDFD4E508142116FDFB9194C63E8FBE397CFD) smtp.auth=steve@sk2.org
+Date:   Fri, 7 Aug 2020 08:23:27 +0200
+From:   Stephen Kitt <steve@sk2.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon/pmbus: use simple i2c probe function
+Message-ID: <20200807082327.02e8a682@heffalump.sk2.org>
+In-Reply-To: <e378e4e6-73b3-0a11-bca6-ec0d4225a010@roeck-us.net>
+References: <20200806161645.9437-1-steve@sk2.org>
+        <5f7b5828-cb7c-127a-e454-6c8b8d98777b@roeck-us.net>
+        <20200806221232.278c3878@heffalump.sk2.org>
+        <e378e4e6-73b3-0a11-bca6-ec0d4225a010@roeck-us.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/ZP=p/855_tqUdr_mQhb1AN/"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 17538705802184117518
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugddutdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieeljedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/ZP=p/855_tqUdr_mQhb1AN/
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-This fixes my sysfs module sections refactoring to take into account
-the case where the output buffer is not PAGE_SIZE. :( Thanks to 0day
-and trinity for noticing.
+On Thu, 6 Aug 2020 14:48:58 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 8/6/20 1:12 PM, Stephen Kitt wrote:
+> > On Thu, 6 Aug 2020 12:15:55 -0700, Guenter Roeck <linux@roeck-us.net>
+> > wrote: =20
+> >> On 8/6/20 9:16 AM, Stephen Kitt wrote: =20
+[...]
+> >> Also, I am not convinced that replacements such as
+> >>
+> >> -	{ "ipsps1", 0 },
+> >> +	{ .name =3D "ipsps1" },
+> >>
+> >> are an improvement. I would suggest to leave that alone for
+> >> consistency (and to make it easier to add more devices to the
+> >> various drivers if that happens in the future). =20
+> >=20
+> > From reading through all the drivers using id_table, it seems to me that
+> > we could do away with driver_data altogether and move all that to
+> > driver-local structures, in many cases covering more than just an id. By
+> > only initialising the elements of the structure that are really needed,=
+ I
+> > was hoping to (a) make it more obvious that driver_data isn=E2=80=99t u=
+sed, and
+> > (b) allow removing it without touching all the code again.
+> >  =20
+>=20
+> I don't see it as an improvement to replace a common data structure with
+> per-driver data structures. That sounds too much like "let's re-invent
+> the wheel over and over again". If that is where things are going, I'd
+> rather have it implemented everywhere else first. I am ok with the other
+> changes, but not with this.
 
-I'll let this sit in -next for a few days and then send it to Linus.
+I agree, and I wasn=E2=80=99t intending on encouraging re-inventing the whe=
+el in each
+driver. Let=E2=80=99s focus on probe_new for now...
 
--Kees
+What did you mean by =E2=80=9Cto make it easier to add more devices to the =
+various
+drivers if that happens in the future=E2=80=9D? There are already many driv=
+ers with
+multiple devices but no driver_data, dropping the explicit driver_data
+initialisation doesn=E2=80=99t necessarily make it harder to add devices, d=
+oes it?
 
-Kees Cook (2):
-  module: Correctly truncate sysfs sections output
-  selftests: splice: Check behavior of full and short splices
+Regards,
 
- kernel/module.c                               | 22 ++++++-
- tools/testing/selftests/splice/.gitignore     |  1 +
- tools/testing/selftests/splice/Makefile       |  4 +-
- tools/testing/selftests/splice/config         |  1 +
- tools/testing/selftests/splice/settings       |  1 +
- .../selftests/splice/short_splice_read.sh     | 56 ++++++++++++++++++
- tools/testing/selftests/splice/splice_read.c  | 57 +++++++++++++++++++
- 7 files changed, 137 insertions(+), 5 deletions(-)
- create mode 100644 tools/testing/selftests/splice/config
- create mode 100644 tools/testing/selftests/splice/settings
- create mode 100755 tools/testing/selftests/splice/short_splice_read.sh
- create mode 100644 tools/testing/selftests/splice/splice_read.c
+Stephen
 
--- 
-2.25.1
+--Sig_/ZP=p/855_tqUdr_mQhb1AN/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl8s818ACgkQgNMC9Yht
+g5wjxA//Ugr98eRz3F0dBjgb/dsdKZ2f7yN68V/HyjcOU+Qy/lKbqqhaICkDSBlz
+9qfG5Q6fZFzZTSIJKJMBdBX/LimJP8EdqqsvqMv+oTdFF2rk/xU+GEa5GO2GBGR4
+rY6fMZwkaQAT2tFrmjj9DkGyCN1oOXuTjESGWvRNZddNCG/0jn3JmjAI3cfRIJdm
+CFcpu5aPGO/kEBEM9iwWdY3BnGXisaxMkpqblJ3IfI+O+qNDu+I74TfHEKeuTbxv
+xwbew9yP8DveTOJmRaJqJLlHYVReWH4lw01u6XJ/oxeYwK5KvG1b52c9pBug6SlK
+HmKfr9fPBhd0jY11UJf6tdLbD6lYY4Sl4pXQ+MMOWYiyzkkxXHEx4RXrZGCtlhfQ
+vMfhpw1YtRvaye6D9cbiAbR/xlAtFp0FlA2dH9kepy352pAWjHa5LZg0nGqjYtE9
+zN0JJkTmumYjvyCzcia9XNJB83kz5vU5gvlDZpMvUO47jwHTBlpUWW1cy2K0WfTW
+Y3hhxGB+NkbfxbEUStbIiA4BEBn0yEK3LT3CZ7prExgLsy8SqulTCA3m2jdoIIVq
+P/S6ZMpMHZAhxEG4Ygjl77mJ6gZlrnGY3SL1POOUpwJ9F3yGbneNBXaywpSrEzQq
+IWFlrTjVIcg6MD97OR2muSRnTKKdcToMqwPSkHNRwtd9oCycZug=
+=sd2Z
+-----END PGP SIGNATURE-----
+
+--Sig_/ZP=p/855_tqUdr_mQhb1AN/--
