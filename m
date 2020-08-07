@@ -2,114 +2,158 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E200C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B09BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02EC2075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:22:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XJSka808"
+	by mail.kernel.org (Postfix) with ESMTP id 605162075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgHGKWT (ORCPT
+        id S1728114AbgHGKYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 06:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35844 "EHLO
+        Fri, 7 Aug 2020 06:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgHGKWS (ORCPT
+        with ESMTP id S1726619AbgHGKYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 06:22:18 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F76C061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 03:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=4/VCHM/wzhSgd4qyRAmAC4AWdDxulH6gS0+92poTPxI=; b=XJSka808E+4ltstGU3BqwdVOtZ
-        hXkd+8kwG+mMF3YBC9gYdFKqQ0shdnwEeGlVgLK2rKX9zQM0cV+cX2kJ4LmaDy9pbGemoN/OFohKt
-        qnuXOPc82zBE1eZRt+Hlbu7DoTyuXW9ud2aYWjPMUx5Dw/3JDO4mQ3YCdTM4HEoCeY/awHrW5ttq7
-        yGPXiF6gmAUlT3tKwYWzxUSDGRDD8KGANnAswpVZO8evJINZiqIYWUR2sglBnT5anAp66EWDa3CPF
-        1DOFDSa4vUFlAE+qdQ+8lQ3yc5sir2LRPdpMuROK+/SSyWXy9+HBgPYjDo4knnSw2IjRdxZeDX7ZH
-        TrODYMfA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3zVg-0002mK-4n; Fri, 07 Aug 2020 10:22:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A12A33012DC;
-        Fri,  7 Aug 2020 12:21:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 89ED32B84E245; Fri,  7 Aug 2020 12:21:58 +0200 (CEST)
-Date:   Fri, 7 Aug 2020 12:21:58 +0200
-From:   peterz@infradead.org
-To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Andy Lutomirski <luto@kernel.org>,
+        Fri, 7 Aug 2020 06:24:53 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DCEC061574
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 03:24:53 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3zYO-0001jw-TK; Fri, 07 Aug 2020 12:24:48 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k3zYI-0003e8-3P; Fri, 07 Aug 2020 12:24:42 +0200
+Date:   Fri, 7 Aug 2020 12:24:41 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v3 4/7] x86/paravirt: remove 32-bit support from
- PARAVIRT_XXL
-Message-ID: <20200807102158.GG2674@hirez.programming.kicks-ass.net>
-References: <20200807083826.16794-1-jgross@suse.com>
- <20200807083826.16794-5-jgross@suse.com>
- <20200807093916.GF2674@hirez.programming.kicks-ass.net>
- <3a0712ee-efca-5684-d321-3b789e01fc16@suse.com>
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200807102441.qcshhsc36nzj7bpn@pengutronix.de>
+References: <20200803093559.12289-1-michael@walle.cc>
+ <20200803093559.12289-7-michael@walle.cc>
+ <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+ <e288ca6cfee819223395712e04159dd9@walle.cc>
+ <20200807074543.pfbwlhtegl3oc4zp@pengutronix.de>
+ <92116be9aa56250becc4019c6c7a1538@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ui3bvps5z2hxjh32"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a0712ee-efca-5684-d321-3b789e01fc16@suse.com>
+In-Reply-To: <92116be9aa56250becc4019c6c7a1538@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 12:02:59PM +0200, Jürgen Groß wrote:
-> On 07.08.20 11:39, peterz@infradead.org wrote:
-> > On Fri, Aug 07, 2020 at 10:38:23AM +0200, Juergen Gross wrote:
-> > 
-> > > -# else
-> > > -	const unsigned char	cpu_iret[1];
-> > > -# endif
-> > >   };
-> > >   static const struct patch_xxl patch_data_xxl = {
-> > > @@ -42,7 +38,6 @@ static const struct patch_xxl patch_data_xxl = {
-> > >   	.irq_save_fl		= { 0x9c, 0x58 },	// pushf; pop %[re]ax
-> > >   	.mmu_read_cr2		= { 0x0f, 0x20, 0xd0 },	// mov %cr2, %[re]ax
-> > >   	.mmu_read_cr3		= { 0x0f, 0x20, 0xd8 },	// mov %cr3, %[re]ax
-> > > -# ifdef CONFIG_X86_64
-> > >   	.mmu_write_cr3		= { 0x0f, 0x22, 0xdf },	// mov %rdi, %cr3
-> > >   	.irq_restore_fl		= { 0x57, 0x9d },	// push %rdi; popfq
-> > >   	.cpu_wbinvd		= { 0x0f, 0x09 },	// wbinvd
-> > > @@ -50,19 +45,11 @@ static const struct patch_xxl patch_data_xxl = {
-> > >   				    0x48, 0x0f, 0x07 },	// swapgs; sysretq
-> > >   	.cpu_swapgs		= { 0x0f, 0x01, 0xf8 },	// swapgs
-> > >   	.mov64			= { 0x48, 0x89, 0xf8 },	// mov %rdi, %rax
-> > > -# else
-> > > -	.mmu_write_cr3		= { 0x0f, 0x22, 0xd8 },	// mov %eax, %cr3
-> > > -	.irq_restore_fl		= { 0x50, 0x9d },	// push %eax; popf
-> > > -	.cpu_iret		= { 0xcf },		// iret
-> > > -# endif
-> > 
-> > I was looking at x86_64 paravirt the other day and found we actually
-> > have pv_ops.cpu.iret users there..
-> 
-> On x86_64 we have (without PARAVIRT_XXL):
-> 
-> #define INTERRUPT_RETURN        jmp native_iret
-> 
-> and with PARAVIRT_XXL this is basically a jmp *pv_ops.cpu.iret which
-> will then be patched to either jmp native_iret or jmp xen_iret.
 
-Ah, okay. Clearly I didn't look hard enough. Thanks!
+--ui3bvps5z2hxjh32
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Michael,
+
+On Fri, Aug 07, 2020 at 09:55:19AM +0200, Michael Walle wrote:
+> Am 2020-08-07 09:45, schrieb Uwe Kleine-K=F6nig:
+> > On Fri, Aug 07, 2020 at 09:28:31AM +0200, Michael Walle wrote:
+> > > Am 2020-08-06 10:40, schrieb Uwe Kleine-K=F6nig:
+> > > > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
+> > > > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+> > > > > +				   struct pwm_device *pwm,
+> > > > > +				   struct pwm_state *state)
+> > > > > +{
+> > > > > +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
+> > > > > +	unsigned int reg;
+> > > > > +	int prescaler;
+> > > > > +
+> > > > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
+> > > > > +
+> > > > > +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
+> > > > > +
+> > > > > +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
+> > > > > +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
+> > > > > +
+> > > > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
+> > > > > +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
+> > > >
+> > > > Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed=
+ that
+> > > > the upper bits are zero?
+> > >=20
+> > > Mh, the hardware guarantees that bit7 is zero. So masking with
+> > > SL28CPLD_PWM_CYCLE_MAX won't buy us much. But what I could think
+> > > could go wrong is this: someone set the prescaler to !=3D 0 and the
+> > > duty cycle to a value greater than the max value for this particular
+> > > prescaler mode. For the above calculations this would result in a
+> > > duty_cycle greater than the period, if I'm not mistaken.
+> > >=20
+> > > The behavior of the hardware is undefined in that case (at the moment
+> > > it will be always on, I guess). So this isn't a valid setting.
+> > > Nevertheless it might happen. So what about the following:
+> > >=20
+> > > state->duty_cycle =3D min(state->duty_cycle, state->period);
+> >=20
+> > If you care about this: This can also happen (at least shortly) in
+> > sl28cpld_pwm_apply() as you write SL28CPLD_PWM_CTRL before
+> > SL28CPLD_PWM_CYCLE there.
+>=20
+> It could also happen if it was the other way around, couldn't it?
+> Changing modes might glitch.
+
+If you want to prevent this, you have to order the writes depending on
+prescaler increasing or decreasing.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ui3bvps5z2hxjh32
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8tK+YACgkQwfwUeK3K
+7Am+ZAf/fEspbQK7oTVzKrTHBQXxu0AjknqY6yLOlTFthBSsQqbzGwekDnDjQG21
+Emw2dyTCQW7YHQaYx8l1HilDsVFiazBpJ6yG49upduH83s15tgAB4Guv2uTbrzim
+uMsqxPDtiCrjGdTw4MNt37OoKh0A2O+IAd1yuSrgDpQqWiDM0uNs+MMNZm8OQAST
+ZkVhwCFr28b9QNzUodg6d2QK5T5DWEgt6BFkPpn5SFUc/mMMQs2/3LcaBOh2Gd9/
+FqKla8k4Akpniv4OcC93n0QfOap22V69gLflWJLN2YB3Gn+BvZLqMvhAgF6cy/Ho
+jEP7yLYqhcfx644/uGqeHpOHNDm8Eg==
+=jSvw
+-----END PGP SIGNATURE-----
+
+--ui3bvps5z2hxjh32--
