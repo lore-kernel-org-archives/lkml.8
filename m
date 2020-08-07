@@ -2,98 +2,91 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F836C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69512177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596798649;
-	bh=0mfZ3tCewEYBpMJJOPz0BmMamhTElZWdvCmOX36KiAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fJqg7NYfzFMOkdnjGd7q6hBgQytVek63kpvjMXAoxFtc/zs8qVmBbUiLeImaoWaMD
-	 aO5cnNjeZw63SpF+CVlVTigs15IZha3QsPx0qqwUWdToRZveXrSStmqY8GNnhQRjRN
-	 H3FQuDLiEPgjxjzgo0qpzrCzNGOZCOzmgNHI6+DY=
+	by mail.kernel.org (Postfix) with ESMTP id EB2712177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgHGLKq (ORCPT
+        id S1726524AbgHGLLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728181AbgHGLKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 07:11:16 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:47305 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbgHGLKV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 07:10:21 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5471B22CAE;
-        Fri,  7 Aug 2020 11:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596798588;
-        bh=0mfZ3tCewEYBpMJJOPz0BmMamhTElZWdvCmOX36KiAo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vLkvaRQqeXWKNg6wKaEQ8PDKcjcIsdzCJ9bTQ0Gm5WhT6Yn5TS0QLKQnWKMdWmHvb
-         ckswyLGYNEMx5onBTEN9cgAd2RP8HSgrQbgg6jj46UlBMFD/RSTFCl30ir5D0knxp2
-         evLNGLwT+HDJvHqOxRajUIe37yRe45iMZ8SVbeQk=
-Date:   Fri, 7 Aug 2020 12:09:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        tytso@mit.edu, Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH] arm64: kaslr: Use standard early random function
-Message-ID: <20200807110923.GA5435@sirena.org.uk>
-References: <20200807004904.72893-1-linux@roeck-us.net>
+Received: from [192.168.1.155] ([95.117.97.82]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1McpaE-1kdt290dOM-00ZwUJ; Fri, 07 Aug 2020 13:09:31 +0200
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+Subject: srvfs: file system for posting open file descriptors into fs
+ namespace
+Message-ID: <55ef0e9a-fb70-7c4a-e945-4d521180221c@metux.net>
+Date:   Fri, 7 Aug 2020 13:09:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
-In-Reply-To: <20200807004904.72893-1-linux@roeck-us.net>
-X-Cookie: Disposable, use only once.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:aYH5qUaztN8iXaCem72LGjZk06I3Aw5dDKBfrw6qDZ1UnOmvPQx
+ ObESaggefqvn96vKY6IXgUGbWqXXxHzU2BEOMTeV53LmkvC8Ns4L6fdZkUMo4jRoLcGE539
+ YCj/zPMzCDckPTPpOIkd6qye3h4yOaQopx3Wwn7ErZj1G6qjtKrXLutvQ4k/TmJd04jzTPE
+ YUja84VuOmEglQ0ASnfnQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Jw4ZP2u63oM=:eTZKKOWShd2aXxkZBLJ6hb
+ jhzcZNQhxsKnk+wMJxHXUOiKDDw5loMmoo5/7yOqagBwQ/iAh5cxzsAQWA1fPjMW/b9RrkPU+
+ JZfpRXst4VfACNJvV6gsCNvh/SmQlFNLYE6GcaqcjaBRwZpRpMSREIMKQT+vV+LrB4G3uKbRV
+ x93zM6N9MEvOJKl7RpKBiBSu7+bS4bYxeslL6r2Ux5DzmNGcWbqLgvuNF7tjsVtg57Vxe6TfU
+ K48l/t63NlSeeqVOSwyTLub95fS6AZ8NCKE64KhDtemPfINoPtnPM5ouiGHUE7vzim9fUvxCG
+ 2p5fY462b0uYowV0FjhmoUIN6KG2T/zPtHOc2M9TIs3kwiqFg3AR+RjZe4J2pCCUfygFbctpp
+ NrAfsx+teNoMaCMxue8UKuV0AtXFJIgdt7QawRHPrQSq5qN8o+joIWE3lgL+JcJsgw+ub1H6i
+ 9sijwcHU7F0dLmUDoT3FLEuc0Hmg2LMAWRcwFR4/M+O62lOlO4GQ1hAtujk8VFuhveX2n/W67
+ KPf8CPeKIKdYkm4AAxLwfScQaTaxkGLEErkSqXBlF9/UPkiNbYFVeKJBS8gP1jjeB9sSiW6tq
+ T+TAAuV38VgBZMC+up3BgWmg2ICuTsJqT+1T9Qgg5kavYgOoJgpJWgxH3OoV9/u+by/49IamE
+ zUvBEW12VgUAbACU/bo3VUq/9cH3VioI8OIYoDahPVSVMI21mUuVdxf4Y8mOlg/IJJhpVk/z5
+ 1wZyjziFRs3pzSX00OWTBadOZKRrJzF+maDJHLqi98N2tFHKaibWzg+aIBT/n0cyVJxJVsnZR
+ lbClW72tLWSE/RMo+WMPRWhuLKeVe0RQxWruPa5AffJC2QHGEUX+vH0Tqz7uKib8RWRpG1U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello folks,
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Aug 06, 2020 at 05:49:04PM -0700, Guenter Roeck wrote:
+here's the first version of my "srvfs" implementation - a synthentic
+filesystem which allows a process to "publish" an open file descriptor
+into the file system, so other processes can continue from there, with
+whatever state the fd is already in.
 
-> Use arch_get_random_seed_long_early() instead of arm64 specific functions
-> to solve the problem. As a side effect of this change, the code no longer
-> bypasses ARCH_RANDOM, which I consider desirable (after all, ARCH_RANDOM
-> was disabled for a reason).
+This is a concept from Plan9. The main purpose is allowing applications
+"dialing" some connection, do initial handshakes (eg. authentication)
+and then publish the connection to other applications, that now can now
+make use of the already dialed connection.
 
-This should be fine since the entire implementation is still static
-inline in the header other than the prints in the WARN_ON() which should
-never be triggered here so it should be fine.
+I'm currently developing it out-of-tree - will convert it to patches,
+once it reached a stable state.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Tested-by: Mark Brown <broonie@kernel.org>
+https://github.com/metux/linux-srvfs-oot
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Some quick background pointers on how it works on Plan9:
+http://man.cat-v.org/plan_9/4/exportfs
+https://9fans.github.io/plan9port/man/man3/dial.html
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8tNmMACgkQJNaLcl1U
-h9DK4Qf5AVSYfMMgTTvwKue9Ks6IYBH3gzG07ukffM+vAlE/RXqck638YxoU8wHU
-208wtyCiKeAPZiO9dawkdTsF8Rcks1XWCvYYDL1VdK6HIkUetFDD14D7/JFykuwi
-y4iZFMSHXiJ6L73afGWUMzY6p7OirJiyJ1aIfgsBSMgz8kKG7DcD2xiKzo72HcFt
-0mlWjbFH/PU3zNf24sB4Z67B0qCPguNNMQ+Iu0z5ETSNYZw+Bi3pPiN7JXzoPUdB
-2O6VcYXei1jJYHWihgetLv8E/hCFkaxUOIru705kIHp1pYma/yfMhmYYmlr/dlzs
-IAJVL1LhZ7dG/PYxpYevIgoSFjkGKA==
-=dHzU
------END PGP SIGNATURE-----
 
---a8Wt8u1KmwUX3Y2C--
+
+have fun,
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
