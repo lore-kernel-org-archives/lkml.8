@@ -2,164 +2,183 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8AE20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C72B20866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNFvZWO0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6fzQY++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgHGG6X (ORCPT
+        id S1726442AbgHGHDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 02:58:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59600 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725805AbgHGG6W (ORCPT
+        Fri, 7 Aug 2020 03:03:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgHGHDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 02:58:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596783500;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=m/hTQ57NSOU1AR5VfkeKkbB3aIGjwLPKETw5i6btfv8=;
-        b=PNFvZWO0F1YieebcdI4x+DRYF6eL9swuzM17p5YfqTS/BTOkvm+Pzfng8eMLc8bAQdwWN+
-        umlboiFsWks4yYQA5LmJRkw2bLjNADrP011BADQmxeX3rcEFK6iHkJ6VDMiMnvLQcxzH0N
-        k7WWMlkE+k7x/P1L4RC8j7tzaRZXA7k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-507-W7lOtSdpOcK86Y6NLXFXQg-1; Fri, 07 Aug 2020 02:58:16 -0400
-X-MC-Unique: W7lOtSdpOcK86Y6NLXFXQg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6E08800685;
-        Fri,  7 Aug 2020 06:58:13 +0000 (UTC)
-Received: from [10.36.112.251] (ovpn-112-251.ams2.redhat.com [10.36.112.251])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9617A1036D15;
-        Fri,  7 Aug 2020 06:58:10 +0000 (UTC)
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Michal Such?nek <msuchanek@suse.de>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andi Kleen <ak@linux.intel.com>
-References: <20200701084200.GN2369@dhcp22.suse.cz>
- <20200701100442.GB17918@linux.vnet.ibm.com>
- <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
- <20200701110145.GC17918@linux.vnet.ibm.com>
- <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
- <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
- <20200701122110.GT2369@dhcp22.suse.cz>
- <20200703091001.GJ21462@kitsune.suse.cz>
- <20200703092414.GR18446@dhcp22.suse.cz>
- <20200703105944.GS18446@dhcp22.suse.cz>
- <20200703125823.GA26243@linux.vnet.ibm.com>
- <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <5688b358-36bc-ccf0-d24b-a65375a9f3c3@redhat.com>
-Date:   Fri, 7 Aug 2020 08:58:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 03:03:33 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35ED6C061574;
+        Fri,  7 Aug 2020 00:03:32 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g19so644779plq.0;
+        Fri, 07 Aug 2020 00:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :in-reply-to;
+        bh=cXiFY40k3YE3h5GKxLLu7Lb8Z/u2Pasapw1Qrti5SeE=;
+        b=X6fzQY++CFlxidAbfDEoYwyNQPvjwSGUESo4p2YC1IKHcFg7zpA2t7N9Vb87Y42fKi
+         DUaNkHibnMqukp7+NPMT/rpER1zd/81jp3zk6l9Kgmd65OD+kFgb3W09WZ21KMdpgFms
+         JSrDF6WOdZoz+7E228lncn2P6O7DeQZsdC0BzDWXHjfu9BWP+EJnLa9jQy/IkD0ZizDg
+         vFg+48Y7V4JvEQVF01oVfLaPyX5cMtBZxpb7NtZdQyQ0SKe28evlEweXLACRL5dvhy/k
+         g68uGYVXVT1cPJ2vF5tvugJ9wxC2HSe66353jwffcRVjpT3q2pHFTpDBv58ncc0+Jj58
+         MDhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:in-reply-to;
+        bh=cXiFY40k3YE3h5GKxLLu7Lb8Z/u2Pasapw1Qrti5SeE=;
+        b=h9IpzftF8HRqmeqb9uoQlspCKbXDlRb/EOw01Jfy2k6fRZ17gb4urczDnNMPds+INR
+         KBaJ/Le5ePvluvnFDWyDzbVJsuTq25YZxEPKhxqHbjnVmrN7OUpvXze+VwmJYlSdFCNm
+         /NtRTfczXxbwSDUH8jKjb4ayMsJGS8W+wm0ozu7JWhRzKAcek7Z593V8gNro6JdVIU8n
+         oDhpN2IC3JT1EVmuwTx5GEAC1fGXtmH+toPuEcVSx7u0oDZLFfan7E4YQA3rcm+Qyf+q
+         wGQ01yEupDJmWuJp6tVLBZGtM80ZNugxC1kIOYlAoDi5nwph1xG6l4O3oIlFEg3s9QyJ
+         Gx8g==
+X-Gm-Message-State: AOAM531VxWrcLDwga5RT3DwhpIw1j7jh83wSUMq65ZFuu3MjrkdMH9Kk
+        BhCgQCLylXn52qkLufx9CkjcPXxC+ww=
+X-Google-Smtp-Source: ABdhPJwERHoyeYBSjOxRiDHETwlDme8Ekxn6cWsbmS65/Py/JR56kSzaY5kLJCW9JzCEyCKwhmIQMg==
+X-Received: by 2002:a17:902:bc49:: with SMTP id t9mr11269864plz.20.1596783811704;
+        Fri, 07 Aug 2020 00:03:31 -0700 (PDT)
+Received: from thinkpad (104.36.148.139.aurocloud.com. [104.36.148.139])
+        by smtp.gmail.com with ESMTPSA id e15sm6897268pfj.167.2020.08.07.00.03.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 00:03:31 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 00:04:00 -0700
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     kvm@vger.kernel.org, ebiggers@kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: memory leak in do_eventfd
+Message-ID: <20200807070400.GA10331@thinkpad>
 MIME-Version: 1.0
-In-Reply-To: <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605042402.GO2667@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.08.20 06:32, Andrew Morton wrote:
-> On Fri, 3 Jul 2020 18:28:23 +0530 Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
+On Thu, Jun 04, 2020 at 09:24:02PM -0700, Eric Biggers wrote:
+> [+Cc kvm mailing list]
 > 
->>> The memory hotplug changes that somehow because you can hotremove numa
->>> nodes and therefore make the nodemask sparse but that is not a common
->>> case. I am not sure what would happen if a completely new node was added
->>> and its corresponding node was already used by the renumbered one
->>> though. It would likely conflate the two I am afraid. But I am not sure
->>> this is really possible with x86 and a lack of a bug report would
->>> suggest that nobody is doing that at least.
->>>
->>
->> JFYI,
->> Satheesh copied in this mailchain had opened a bug a year on crash with vcpu
->> hotplug on memoryless node. 
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=202187
-> 
-> So...  do we merge this patch or not?  Seems that the overall view is
-> "risky but nobody is likely to do anything better any time soon"?
+> On Wed, May 20, 2020 at 06:12:17PM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    5a9ffb95 Merge tag '5.7-rc5-smb3-fixes' of git://git.samba..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10b72a02100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=f8295ae5b3f8268d
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=f196caa45793d6374707
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17585b76100000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12500a02100000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+f196caa45793d6374707@syzkaller.appspotmail.com
+> > 
+> > BUG: memory leak
+> > unreferenced object 0xffff888117169ac0 (size 64):
+> >   comm "syz-executor012", pid 6609, jiffies 4294942172 (age 13.720s)
+> >   hex dump (first 32 bytes):
+> >     01 00 00 00 ff ff ff ff 00 00 00 00 00 c9 ff ff  ................
+> >     d0 9a 16 17 81 88 ff ff d0 9a 16 17 81 88 ff ff  ................
+> >   backtrace:
+> >     [<00000000351bb234>] kmalloc include/linux/slab.h:555 [inline]
+> >     [<00000000351bb234>] do_eventfd+0x35/0xf0 fs/eventfd.c:418
+> >     [<00000000c2f69a77>] __do_sys_eventfd fs/eventfd.c:443 [inline]
+> >     [<00000000c2f69a77>] __se_sys_eventfd fs/eventfd.c:441 [inline]
+> >     [<00000000c2f69a77>] __x64_sys_eventfd+0x14/0x20 fs/eventfd.c:441
+> >     [<0000000086d6f989>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+> >     [<000000006c5bcb63>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > BUG: memory leak
+> > unreferenced object 0xffff888117169100 (size 64):
+> >   comm "syz-executor012", pid 6609, jiffies 4294942172 (age 13.720s)
+> >   hex dump (first 32 bytes):
+> >     e8 99 dd 00 00 c9 ff ff e8 99 dd 00 00 c9 ff ff  ................
+> >     00 00 00 20 00 00 00 00 00 00 00 00 00 00 00 00  ... ............
+> >   backtrace:
+> >     [<00000000436d2955>] kmalloc include/linux/slab.h:555 [inline]
+> >     [<00000000436d2955>] kzalloc include/linux/slab.h:669 [inline]
+> >     [<00000000436d2955>] kvm_assign_ioeventfd_idx+0x4f/0x270 arch/x86/kvm/../../../virt/kvm/eventfd.c:798
+> >     [<00000000e89390cc>] kvm_assign_ioeventfd arch/x86/kvm/../../../virt/kvm/eventfd.c:934 [inline]
+> >     [<00000000e89390cc>] kvm_ioeventfd+0xbb/0x194 arch/x86/kvm/../../../virt/kvm/eventfd.c:961
+> >     [<00000000ba9f6732>] kvm_vm_ioctl+0x1e6/0x1030 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3670
+> >     [<000000005da94937>] vfs_ioctl fs/ioctl.c:47 [inline]
+> >     [<000000005da94937>] ksys_ioctl+0xa6/0xd0 fs/ioctl.c:771
+> >     [<00000000a583d097>] __do_sys_ioctl fs/ioctl.c:780 [inline]
+> >     [<00000000a583d097>] __se_sys_ioctl fs/ioctl.c:778 [inline]
+> >     [<00000000a583d097>] __x64_sys_ioctl+0x1a/0x20 fs/ioctl.c:778
+> >     [<0000000086d6f989>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+> >     [<000000006c5bcb63>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
 
-I recall the issue Michal saw was "fix powerpc" vs. "break other
-architectures". @Michal how should we proceed? At least x86-64 won't be
-affected IIUC.
+i had to slightly change syzbot reproducer to reproduce this bug in my
+lab:
+	root@syzkaller:~# diff repro_fixed.c repro_syz.c
+	371c371
+	<   inject_fault(2);
+	---
+	>   inject_fault(4);
 
--- 
-Thanks,
+the memleak happens when kmalloc() fails in kvm_io_bus_unregister_dev()
+i also confirmed the leak by running ftrace - eventfd_free_ctx() was
+not executed when we got to kvm_vm_release()
 
-David / dhildenb
+it seems like we should call kvm_iodevice_destructor(), because there
+could be other devices linked to the bus that's being removed when that
+particular kmalloc() failure happens
+
+i did not want to modify callers of kvm_io_bus_unregister_dev() and i
+tested the patch below that fixed the leak, but i am not sure if it
+completely breaks other things in KVM, i would really appreciate if
+someone can review it:
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 0a68c9d3d3ab..b1996989d576 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4268,7 +4268,7 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			       struct kvm_io_device *dev)
+ {
+-	int i;
++	int i, j;
+ 	struct kvm_io_bus *new_bus, *bus;
+ 
+ 	bus = kvm_get_bus(kvm, bus_idx);
+@@ -4298,6 +4298,13 @@ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ broken:
+ 	rcu_assign_pointer(kvm->buses[bus_idx], new_bus);
+ 	synchronize_srcu_expedited(&kvm->srcu);
++	if (!new_bus) {
++		for (j = 0; j < bus->dev_count; j++) {
++			if (j == i)
++				continue;
++			kvm_iodevice_destructor(bus->range[j].dev);
++		}
++	}
+ 	kfree(bus);
+ 	return;
+ }
 
