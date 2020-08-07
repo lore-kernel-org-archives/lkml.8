@@ -4,120 +4,247 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA96C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA44BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2B2221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86AA2221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgHGOcz (ORCPT
+        id S1726262AbgHGOdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 10:32:55 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:43742 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725955AbgHGOcy (ORCPT
+        Fri, 7 Aug 2020 10:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgHGOdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 10:32:54 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U50nngy_1596810749;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U50nngy_1596810749)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 07 Aug 2020 22:32:29 +0800
-Date:   Fri, 7 Aug 2020 22:32:29 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        mike.kravetz@oracle.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] mm/hugetlb: return non-isolated page in the loop
- instead of break and check
-Message-ID: <20200807143229.GC14692@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-9-richard.weiyang@linux.alibaba.com>
- <20200807130931.GS14854@MiWiFi-R3L-srv>
+        Fri, 7 Aug 2020 10:33:32 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A11CC061756;
+        Fri,  7 Aug 2020 07:33:32 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 549B4299B0A
+Message-ID: <4112aad8ad439fe5b46192e7540e91da4ae8a557.camel@collabora.com>
+Subject: Re: [PATCH v2 01/14] media: uapi: h264: Update reference lists
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Date:   Fri, 07 Aug 2020 11:33:17 -0300
+In-Reply-To: <20200806154707.GA1621078@aptenodytes>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+         <20200806151310.98624-2-ezequiel@collabora.com>
+         <20200806154707.GA1621078@aptenodytes>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807130931.GS14854@MiWiFi-R3L-srv>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 09:09:31PM +0800, Baoquan He wrote:
->On 08/07/20 at 05:12pm, Wei Yang wrote:
->> Function dequeue_huge_page_node_exact() iterates the free list and
->> return the first non-isolated one.
->> 
->> Instead of break and check the loop variant, we could return in the loop
->> directly. This could reduce some redundant check.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> ---
->>  mm/hugetlb.c | 26 ++++++++++++--------------
->>  1 file changed, 12 insertions(+), 14 deletions(-)
->> 
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index b8e844911b5a..9473eb6800e9 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -1035,20 +1035,18 @@ static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
->>  {
->>  	struct page *page;
->>  
->> -	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
->> -		if (!PageHWPoison(page))
->> -			break;
->
->I don't see how it can reduce redundant check, just two different
->styles.
->
+On Thu, 2020-08-06 at 17:47 +0200, Paul Kocialkowski wrote:
+> Hi,
+> 
+> On Thu 06 Aug 20, 12:12, Ezequiel Garcia wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > 
+> > When dealing with with interlaced frames, reference lists must tell if
+> > each particular reference is meant for top or bottom field. This info
+> > is currently not provided at all in the H264 related controls.
+> > 
+> > Make reference lists hold a structure which will also hold an
+> > enumerator type along index into DPB array. The enumerator must
+> > be used to specify if reference is for top or bottom field.
+> > 
+> > Currently the only user of these lists is Cedrus which is just compile
+> > fixed here. Actual usage of will come in a following commit.
+> 
+> Is there a particular reason we are adding this to the ref_pic_list[0-1]
+> instead of the DPB entries directly?
+> 
 
-list_for_each_entry() stops by checking whether the item reach list head.
+I actually asked the same question to Jernej's original series.
 
->> -	/*
->> -	 * if 'non-isolated free hugepage' not found on the list,
->> -	 * the allocation fails.
->
->But the above code comment seems stale, it checks HWPoision page()
->directly, but not the old isolated page checking.
->
->> -	 */
->> -	if (&h->hugepage_freelists[nid] == &page->lru)
->> -		return NULL;
+Given the references are per-field, which is why there are twice
+as many references as DPB entries, the semantics proposed here
+are required for slice-based decoders.
 
-And here the check is done again, if we really iterate the whole list.
+See Nicolas' reply:
 
-By take the code in the loop, we can avoid this check.
+https://www.spinics.net/lists/arm-kernel/msg812277.html
 
->> -	list_move(&page->lru, &h->hugepage_activelist);
->> -	set_page_refcounted(page);
->> -	h->free_huge_pages--;
->> -	h->free_huge_pages_node[nid]--;
->> -	return page;
->> +	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
->> +		if (PageHWPoison(page))
->> +			continue;
->> +
->> +		list_move(&page->lru, &h->hugepage_activelist);
->> +		set_page_refcounted(page);
->> +		h->free_huge_pages--;
->> +		h->free_huge_pages_node[nid]--;
->> +		return page;
->> +	}
->> +
->> +	return NULL;
->>  }
->>  
->>  static struct page *dequeue_huge_page_nodemask(struct hstate *h, gfp_t gfp_mask, int nid,
->> -- 
->> 2.20.1 (Apple Git-117)
->> 
->> 
+As Jernej's already reply, this is required to fix Cedrus.
 
--- 
-Wei Yang
-Help you, Help me
+Thanks!
+Ezequiel
+
+> Cheers,
+> 
+> Paul
+> 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> > v2:
+> > * As pointed out by Jonas, enum v4l2_h264_dpb_reference here.
+> > ---
+> >  .../media/v4l/ext-ctrls-codec.rst             | 44 ++++++++++++++++++-
+> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
+> >  include/media/h264-ctrls.h                    | 23 +++++++---
+> >  3 files changed, 62 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > index d0d506a444b1..f2b2a381369f 100644
+> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >      * - __u32
+> >        - ``slice_group_change_cycle``
+> >        -
+> > -    * - __u8
+> > +    * - struct :c:type:`v4l2_h264_reference`
+> >        - ``ref_pic_list0[32]``
+> >        - Reference picture list after applying the per-slice modifications
+> > -    * - __u8
+> > +    * - struct :c:type:`v4l2_h264_reference`
+> >        - ``ref_pic_list1[32]``
+> >        - Reference picture list after applying the per-slice modifications
+> >      * - __u32
+> > @@ -1926,6 +1926,46 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >        - ``chroma_offset[32][2]``
+> >        -
+> >  
+> > +``Picture Reference``
+> > +
+> > +.. c:type:: v4l2_h264_reference
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table:: struct v4l2_h264_reference
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - enum :c:type:`v4l2_h264_dpb_reference`
+> > +      - ``reference``
+> > +      - Specifies how the DPB entry is referenced.
+> > +    * - __u8
+> > +      - ``index``
+> > +      - Index into the :c:type:`v4l2_ctrl_h264_decode_params`.dpb array.
+> > +
+> > +.. c:type:: v4l2_h264_dpb_reference
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table::
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - ``V4L2_H264_DPB_TOP_REF``
+> > +      - 0x1
+> > +      - The top field in field pair is used for
+> > +        short-term reference.
+> > +    * - ``V4L2_H264_DPB_BOTTOM_REF``
+> > +      - 0x2
+> > +     - The bottom field in field pair is used for
+> > +        short-term reference.
+> > +    * - ``V4L2_H264_DPB_FRAME_REF``
+> > +      - 0x3
+> > +      - The frame (or the top/bottom fields, if it's a field pair)
+> > +        is used for short-term reference.
+> > +
+> >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
+> >      Specifies the decode parameters (as extracted from the bitstream)
+> >      for the associated H264 slice data. This includes the necessary
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > index 54ee2aa423e2..cce527bbdf86 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+> >  
+> >  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+> >  				   struct cedrus_run *run,
+> > -				   const u8 *ref_list, u8 num_ref,
+> > -				   enum cedrus_h264_sram_off sram)
+> > +				   const struct v4l2_h264_reference *ref_list,
+> > +				   u8 num_ref, enum cedrus_h264_sram_off sram)
+> >  {
+> >  	const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
+> >  	struct vb2_queue *cap_q;
+> > @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+> >  		int buf_idx;
+> >  		u8 dpb_idx;
+> >  
+> > -		dpb_idx = ref_list[i];
+> > +		dpb_idx = ref_list[i].index;
+> >  		dpb = &decode->dpb[dpb_idx];
+> >  
+> >  		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > index 080fd1293c42..4c0bb7f5fb05 100644
+> > --- a/include/media/h264-ctrls.h
+> > +++ b/include/media/h264-ctrls.h
+> > @@ -19,6 +19,8 @@
+> >   */
+> >  #define V4L2_H264_NUM_DPB_ENTRIES 16
+> >  
+> > +#define V4L2_H264_REF_LIST_LEN (2 * V4L2_H264_NUM_DPB_ENTRIES)
+> > +
+> >  /* Our pixel format isn't stable at the moment */
+> >  #define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 parsed slices */
+> >  
+> > @@ -140,6 +142,19 @@ struct v4l2_h264_pred_weight_table {
+> >  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x04
+> >  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x08
+> >  
+> > +enum v4l2_h264_dpb_reference {
+> > +	V4L2_H264_DPB_TOP_REF = 0x1,
+> > +	V4L2_H264_DPB_BOTTOM_REF = 0x2,
+> > +	V4L2_H264_DPB_FRAME_REF = 0x3,
+> > +};
+> > +
+> > +struct v4l2_h264_reference {
+> > +	enum v4l2_h264_dpb_reference fields;
+> > +
+> > +	/* Index into v4l2_ctrl_h264_decode_params.dpb[] */
+> > +	__u8 index;
+> > +};
+> > +
+> >  struct v4l2_ctrl_h264_slice_params {
+> >  	/* Size in bytes, including header */
+> >  	__u32 size;
+> > @@ -178,12 +193,8 @@ struct v4l2_ctrl_h264_slice_params {
+> >  	__u8 num_ref_idx_l1_active_minus1;
+> >  	__u32 slice_group_change_cycle;
+> >  
+> > -	/*
+> > -	 * Entries on each list are indices into
+> > -	 * v4l2_ctrl_h264_decode_params.dpb[].
+> > -	 */
+> > -	__u8 ref_pic_list0[32];
+> > -	__u8 ref_pic_list1[32];
+> > +	struct v4l2_h264_reference ref_pic_list0[V4L2_H264_REF_LIST_LEN];
+> > +	struct v4l2_h264_reference ref_pic_list1[V4L2_H264_REF_LIST_LEN];
+> >  
+> >  	__u32 flags;
+> >  };
+> > -- 
+> > 2.27.0
+> > 
+
+
