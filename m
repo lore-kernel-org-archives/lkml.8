@@ -2,101 +2,151 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B67C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858FF204EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596824245;
-	bh=Pjl2+k1yN4Msqxm/kEU+RloXdwLPGEg7+FJjvJdDReA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XIK7FBb+p9oHag3RQkIBhhQHWRith88WewFQ8LQbq6DzDNvoYEbOlZa7gkxxpJtzL
-	 jGg5CijAlTAE/ut3c/OtEgici7osBSvva6sCimapJNFnn8Bt/5K1D+Wv8ibJ4J1TMg
-	 QdhvsPPjFkJSKek0VpY8cXFymA9Qce1HaCb66mhM=
+	by mail.kernel.org (Postfix) with ESMTP id BAA2F204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEYA/snm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgHGSRY (ORCPT
+        id S1726402AbgHGSRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:17:24 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37531 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGSRW (ORCPT
+        Fri, 7 Aug 2020 14:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgHGSRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:17:22 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e11so2307191otk.4;
-        Fri, 07 Aug 2020 11:17:22 -0700 (PDT)
+        Fri, 7 Aug 2020 14:17:32 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABD1C061756;
+        Fri,  7 Aug 2020 11:17:31 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 9so2489322wmj.5;
+        Fri, 07 Aug 2020 11:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+RLcMf039Fja7+NVYfWd7LsUb0HLd5N8YbD0HQCYGKs=;
+        b=hEYA/snmkEnBTWT41qnElh5RISovyGYu/KkzthXY5h6DXG3W0hdwlPVFr/1TAoXzeN
+         g3hdpKG0rlvrSWBRhz3pHgXCOMaLU4F64766xythYWHQHlIEwrrFLdcqeFPRyJmojb1E
+         heapMjHWiXzttkUCvdfk+AGwfd5/QdZ4kkv5nO1iVEmH96vtecMuYb4rsXnqnFW2BoXK
+         pLMpM+R+B5IagfhSenzb51rHcZH1tGJMgwVOQRwG6S2/ilDdHL7Dd/kVhwIF3HsUKr17
+         VHBukSpEB9zVSSuJ5A3A0ny9PKP+RldiUG6Jami6ucXsNk21I6t1AdOCQvr0jFMJott7
+         F22A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RFU9qSetmlHzp98q29/MxQ7l/3U0+Del5PqcymwLD98=;
-        b=KlhK+MXJbzVi8NX0AH94C3TTHPdOG4pvEwxx0iX+K29hyuFTWmfrs2DBkl828sWetf
-         ldPFcSGG6+bTYAn0wEPng0UywFO7P8Nv0BpI1FrUEvIt4029Chj52lYTdTz0flk9XeRD
-         pIfpy6qpDNx+QQDVIWXJtDgI0pXBayxLOQ50NXyMrdyFEccpwTdIEZRsD+HqLRVjsmKL
-         sD4pSOAOBdpH9YCrOSwAtQ4jrxOTHBXG8opj8c3PbHl6z+tDJ4AX7Gbrd43kEiQH+Yq6
-         ZgTxfbE+ZpIgAADkcROuMhwOFZbrLOO4ey8INm0mBy7GldWMFrWLhPfslWKohFDOBtx0
-         WKfg==
-X-Gm-Message-State: AOAM532VcXuuHG2njW5pdzp/Qg+sPjKYPSoXibNBuEKfLwbLuGM5ZRPW
-        lk0fzUCYOI9eN/68AQnTQDBmQ8eGHMrJuKgHmi0=
-X-Google-Smtp-Source: ABdhPJxXOPvQ7Q9jlLfe9GWsFmyrbS1fgxV3RBJTgThMjB5uy4YXGTocdhpyzRH6f2m6zycLzsfJ9F9zicUysX9aYEk=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr12907809oth.262.1596824241773;
- Fri, 07 Aug 2020 11:17:21 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+RLcMf039Fja7+NVYfWd7LsUb0HLd5N8YbD0HQCYGKs=;
+        b=FQmI4RAVFODthMteDm97WeLLFTiXRNRoWxCrZhcRAtMYB0J/u1IvGSRK9Eo8FWTN8y
+         rViufjyZnyj/SPSpN3JfZBRdCy2axQ5KpFXd9n449IzbQjetMoxrSFZSxYR0XOaH+pXX
+         o6+IWseA3ZTl+Q5ACk69DxTHSmEI1qvSF3exVNtBHXA3mxjPVAvzi4QftuTwaEz7+3fH
+         0gwt9db24CUDtIW/IAg5RLFK4aUm5sT+eqUxzVyhbtKzeIOxybp3fS2lJsONOV35TK5A
+         +U0Ib2kLWEPP1aA7buXYfinpl52gUwpn15rWqvjJenBpVVFE/h+dz6DoxNbGQLFUmrAe
+         /Bxg==
+X-Gm-Message-State: AOAM530WGKmnqBs1R8mukzy80klq9uUWXvwm70j4e+jgoED5ApkR7DHd
+        tvQBDXNLFqFvBmu55BJslmw=
+X-Google-Smtp-Source: ABdhPJw1gAmZHJQX55Ci8aLNAo0vKfunS/WHs1CJQjlHAcjBEZCQV97jdptYDEHSsVMoBeR0Tazsvg==
+X-Received: by 2002:a7b:c38a:: with SMTP id s10mr14609217wmj.13.1596824250547;
+        Fri, 07 Aug 2020 11:17:30 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id k184sm11289988wme.1.2020.08.07.11.17.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 11:17:29 -0700 (PDT)
+Subject: Re: [PATCH stable v4.9 v2] arm64: entry: Place an SB sequence
+ following an ERET instruction
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
+        <kvmarm@lists.cs.columbia.edu>
+References: <20200709195034.15185-1-f.fainelli@gmail.com>
+ <20200720130411.GB494210@kroah.com>
+ <df1de420-ac59-3647-3b81-a0c163783225@gmail.com>
+ <9c29080e-8b3a-571c-3296-e0487fa473fa@gmail.com>
+ <20200807131429.GB664450@kroah.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <fb3be972-106e-e171-1c2f-6df20ce186d6@gmail.com>
+Date:   Fri, 7 Aug 2020 11:17:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200731133604.12512-1-akshu.agrawal@amd.com>
-In-Reply-To: <20200731133604.12512-1-akshu.agrawal@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 7 Aug 2020 20:17:10 +0200
-Message-ID: <CAJZ5v0iWuv-+ha+5Gem-hVaXCfgVJbNmCZ+6vaeKKtfjay=VoQ@mail.gmail.com>
-Subject: Re: [0/4] Extend AMD SoC general purpose clk for all versions
-To:     Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        rahul.tanwar@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200807131429.GB664450@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 3:36 PM Akshu Agrawal <akshu.agrawal@amd.com> wrote:
->
-> Hi,
->
-> This series of patch does the following:
-> 1. Changes the name of the AMD SoC general purpose clk
-> from ST(a version of SoC) to FCH (name of the IP).
-> 2. Then make the drivers support both older and newer versions of
-> SoC.
->
-> Thanks,
-> Akshu
->
-> Akshu Agrawal (4):
->   ACPI: APD: Change name from ST to FCH
->   clk: x86: Change name from ST to FCH
->   ACPI: APD: Add a fmw property is_raven
->   clk: x86: Support RV architecture
->
->  drivers/acpi/acpi_apd.c                       |  18 ++--
->  drivers/clk/x86/Makefile                      |   2 +-
->  drivers/clk/x86/clk-fch.c                     | 101 ++++++++++++++++++
->  drivers/clk/x86/clk-st.c                      |  78 --------------
->  .../platform_data/{clk-st.h => clk-fch.h}     |  11 +-
->  5 files changed, 119 insertions(+), 91 deletions(-)
->  create mode 100644 drivers/clk/x86/clk-fch.c
->  delete mode 100644 drivers/clk/x86/clk-st.c
->  rename include/linux/platform_data/{clk-st.h => clk-fch.h} (51%)
->
-> --
 
-Whole series applied as 5.9-rc1 material, thanks!
+
+On 8/7/2020 6:14 AM, Greg KH wrote:
+> On Thu, Aug 06, 2020 at 01:00:54PM -0700, Florian Fainelli wrote:
+>>
+>>
+>> On 7/20/2020 11:26 AM, Florian Fainelli wrote:
+>>> On 7/20/20 6:04 AM, Greg KH wrote:
+>>>> On Thu, Jul 09, 2020 at 12:50:23PM -0700, Florian Fainelli wrote:
+>>>>> From: Will Deacon <will.deacon@arm.com>
+>>>>>
+>>>>> commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
+>>>>>
+>>>>> Some CPUs can speculate past an ERET instruction and potentially perform
+>>>>> speculative accesses to memory before processing the exception return.
+>>>>> Since the register state is often controlled by a lower privilege level
+>>>>> at the point of an ERET, this could potentially be used as part of a
+>>>>> side-channel attack.
+>>>>>
+>>>>> This patch emits an SB sequence after each ERET so that speculation is
+>>>>> held up on exception return.
+>>>>>
+>>>>> Signed-off-by: Will Deacon <will.deacon@arm.com>
+>>>>> [florian: Adjust hyp-entry.S to account for the label
+>>>>>  added change to hyp/entry.S]
+>>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>>
+>>>>> - added missing hunk in hyp/entry.S per Will's feedback
+>>>>
+>>>> What about 4.19.y and 4.14.y trees?  I can't take something for 4.9.y
+>>>> and then have a regression if someone moves to a newer release, right?
+>>>
+>>> Sure, send you candidates for 4.14 and 4.19.
+>>
+>> Greg, did you have a chance to queue those changes for 4.9, 4.14 and 4.19?
+>>
+>> https://lore.kernel.org/linux-arm-kernel/20200720182538.13304-1-f.fainelli@gmail.com/
+>> https://lore.kernel.org/linux-arm-kernel/20200720182937.14099-1-f.fainelli@gmail.com/
+>> https://lore.kernel.org/linux-arm-kernel/20200709195034.15185-1-f.fainelli@gmail.com/
+> 
+> Nope, I was waiting for Will's "ack" for these.
+
+OK, Will, can you review those? Thanks
+-- 
+Florian
