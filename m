@@ -2,96 +2,105 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C860C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4492C2177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809FC206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgHGJij (ORCPT
+        id S1728116AbgHGJiq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:38:39 -0400
-Received: from spam01.hygon.cn ([110.188.70.11]:58222 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbgHGJib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:38:31 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id 0779b7L1041093;
-        Fri, 7 Aug 2020 17:37:07 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id 0779b09i079166;
-        Fri, 7 Aug 2020 17:37:00 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from ubuntu1604-2.higon.com (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Fri, 7 Aug 2020
- 17:36:45 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <wsa@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
-Subject: [PATCH RESEND] i2c: designware: Add device HID for Hygon I2C controller
-Date:   Fri, 7 Aug 2020 17:35:29 +0800
-Message-ID: <20200807093529.5343-1-puwen@hygon.cn>
-X-Mailer: git-send-email 2.23.0
+        Fri, 7 Aug 2020 05:38:46 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:42979 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728092AbgHGJin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 05:38:43 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-16-5qKKb2pWNfK428LdGWcIog-1; Fri, 07 Aug 2020 10:38:39 +0100
+X-MC-Unique: 5qKKb2pWNfK428LdGWcIog-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 7 Aug 2020 10:38:38 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 7 Aug 2020 10:38:38 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "x86@kernel.org" <x86@kernel.org>, "Jan Kara" <jack@suse.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+Subject: RE: [PATCH 3/3] quota: simplify the quotactl compat handling
+Thread-Topic: [PATCH 3/3] quota: simplify the quotactl compat handling
+Thread-Index: AQHWZzVGHzqazLGYN0OsEvz6unAGWaksbb8Q
+Date:   Fri, 7 Aug 2020 09:38:38 +0000
+Message-ID: <f894de9f065f4bf9a451668dfbf35591@AcuMS.aculab.com>
+References: <20200731122202.213333-1-hch@lst.de>
+ <20200731122202.213333-4-hch@lst.de>
+In-Reply-To: <20200731122202.213333-4-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn 0779b7L1041093
-X-DNSRBL: 
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device HID HYGO0010 to match the Hygon ACPI Vendor ID (HYGO) that
-was registered in http://www.uefi.org/acpi_id_list, and the I2C
-controller on Hygon paltform will use the HID.
+From: Christoph Hellwig
+> Sent: 31 July 2020 13:22
+> 
+> Fold the misaligned u64 workarounds into the main quotactl flow instead
+> of implementing a separate compat syscall handler.
+> 
+...
+> +static int compat_copy_fs_quota_stat(struct compat_fs_quota_stat __user *to,
+> +		struct fs_quota_stat *from)
+> +{
+> +	if (put_user(from->qs_version, &to->qs_version) ||
+> +	    put_user(from->qs_flags, &to->qs_flags) ||
+> +	    put_user(from->qs_pad, &to->qs_pad) ||
+> +	    compat_copy_fs_qfilestat(&to->qs_uquota, &from->qs_uquota) ||
+> +	    compat_copy_fs_qfilestat(&to->qs_gquota, &from->qs_gquota) ||
+> +	    put_user(from->qs_incoredqs, &to->qs_incoredqs) ||
+> +	    put_user(from->qs_btimelimit, &to->qs_btimelimit) ||
+> +	    put_user(from->qs_itimelimit, &to->qs_itimelimit) ||
+> +	    put_user(from->qs_rtbtimelimit, &to->qs_rtbtimelimit) ||
+> +	    put_user(from->qs_bwarnlimit, &to->qs_bwarnlimit) ||
+> +	    put_user(from->qs_iwarnlimit, &to->qs_iwarnlimit))
+> +		return -EFAULT;
+> +	return 0;
+> +}
 
-Signed-off-by: Pu Wen <puwen@hygon.cn>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Wolfram Sang <wsa@kernel.org>
----
- drivers/acpi/acpi_apd.c                     | 1 +
- drivers/i2c/busses/i2c-designware-platdrv.c | 1 +
- 2 files changed, 2 insertions(+)
+That might look better as a 'noinline' function that copied
+all the fields into an on-stack struct compat_fs_quota_stat
+and then did a single copy_to_user().
 
-diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-index ba2612e9a0eb..f24f6d3f1fa5 100644
---- a/drivers/acpi/acpi_apd.c
-+++ b/drivers/acpi/acpi_apd.c
-@@ -240,6 +240,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
- 	{ "AMDI0020", APD_ADDR(cz_uart_desc) },
- 	{ "AMD0030", },
- 	{ "AMD0040", APD_ADDR(st_misc_desc)},
-+	{ "HYGO0010", APD_ADDR(wt_i2c_desc) },
- #endif
- #ifdef CONFIG_ARM64
- 	{ "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index a71bc58fc03c..0dfeb2d11603 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -55,6 +55,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
- 	{ "HISI02A1", 0 },
- 	{ "HISI02A2", 0 },
- 	{ "HISI02A3", 0 },
-+	{ "HYGO0010", ACCESS_INTR_MASK },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, dw_i2c_acpi_match);
--- 
-2.23.0
+(I do 'like' qs_pad - I wonder what the person who added
+it was smoking.)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
