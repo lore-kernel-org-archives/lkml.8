@@ -2,95 +2,148 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 787C62177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D992173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C1Wf1Kia"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dq+axmEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHGD7k (ORCPT
+        id S1725970AbgHGEBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:59:40 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44780 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726078AbgHGD7j (ORCPT
+        Fri, 7 Aug 2020 00:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgHGEBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:59:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596772778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ur7u+L4AiUpxBUHlNLWgY5xdw+Rt8MUvqmC6sx75eg=;
-        b=C1Wf1KiawA0CklZxFa+RSXGSeJFePmsb17Oukj7RqAlZ+FpouLdfPFWQTsgtW0FTda+doW
-        OvOfW6zIl9ktjrdOFgzd1J06FokfVbWeyLw3gpPZz+Ez0nIZvInkTMKe7g/QKTFmiL6aR5
-        Bj9H3iQCwQkDIL7li9BtpU7pVFq4UQM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-eu1zuceKMwaHilGdVSy2Hg-1; Thu, 06 Aug 2020 23:59:36 -0400
-X-MC-Unique: eu1zuceKMwaHilGdVSy2Hg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A64318C63DE;
-        Fri,  7 Aug 2020 03:59:35 +0000 (UTC)
-Received: from [10.72.13.215] (ovpn-13-215.pek2.redhat.com [10.72.13.215])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9829187A5A;
-        Fri,  7 Aug 2020 03:59:30 +0000 (UTC)
-Subject: Re: [PATCH] vdpa/mlx5: Fix erroneous null pointer checks
-From:   Jason Wang <jasowang@redhat.com>
-To:     Alex Dewar <alex.dewar90@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Eli Cohen <eli@mellanox.com>,
-        virtualization@lists.linux-foundation.org,
+        Fri, 7 Aug 2020 00:01:40 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6383EC061574;
+        Thu,  6 Aug 2020 21:01:40 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w14so719100ljj.4;
+        Thu, 06 Aug 2020 21:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6hXGoG7VpK7QiMqEgGEMUiXEradygc4+EQbKgcXgAnc=;
+        b=dq+axmEtzt+fsNxEocn+nvEVMNUDImOzdAuhrdiADvPgAAXGOu7W6u4LpfQL+bCoDd
+         Ny8fn2a/oHVWXxDps3MOo6wVVlf7XkqNB/3OzH3fCg+FOfSn6tSkFdRUKoOJtJBDkOVt
+         XSXTVEth/1GVsTqrQYaWX/8srj9O4hLSifoAKoZ6SM45GeylDowJcHqo8oaC81jB/Yj2
+         wovp6bg57xvxlc8qCDXQSkbUd9FG6jUZ2GkdjMmm7zWpeyne7MtB/r8sKXduCTAGVyIn
+         rv8kDoeK+kDUNGFgGV0VqgG98NdSDgfPs5OIujI9KEUwWdMsiPH9vJfEgm74GggPe8Yc
+         QJXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6hXGoG7VpK7QiMqEgGEMUiXEradygc4+EQbKgcXgAnc=;
+        b=HBYvdMygkmagkfeNPbo9iQoMiUutUF9qyN7OD+HkZ1pnJn3pNyBXfzCshxrOa9sm3C
+         LT9TE0UgvUfXSEpqUjrJGvStjVhQDQY/wYNWSAz4x7UkTqI38Ifjsc5sIHd0lAuZmJZm
+         SwcFbanF2mf/ghnqwVq13gD4QuUQBgoWdhcuhXhEhcp3eXqMAAFd5Id7x0hZotBN2t38
+         s4iVt6OySC7RP9QDCOFXOAU/Nu2IKi5UcIjDwL7aEMUaA0WuGKXnpzJRfgPxi4mqu6D2
+         berczbaZTqET2zqHc7gdmJOrc+xhLyrp/6eaYzBeRhnpKUfJ5YtBCNrLBHlrGP8SvTzi
+         u1bA==
+X-Gm-Message-State: AOAM530MMuEB+KdToVm+Qx/qSJFdBtwrP12dkIteWABxP5hpXFCsyUd2
+        hep7ip/X+DUdnB/Gqj+OziUnjyNJ
+X-Google-Smtp-Source: ABdhPJzo6Nf7QKwzHHB8TWQc7KI+xioxHV3ebroViVnk6mqUDJsg+5I756yebJODia8pYefdTKmhOA==
+X-Received: by 2002:a2e:9886:: with SMTP id b6mr4935082ljj.258.1596772898499;
+        Thu, 06 Aug 2020 21:01:38 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id j66sm3663946lfd.74.2020.08.06.21.01.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 21:01:37 -0700 (PDT)
+Subject: Re: [PATCH v9 08/10] gpu: host1x: mipi: Keep MIPI clock enabled and
+ mutex locked till calibration done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200806191849.82189-1-alex.dewar90@gmail.com>
- <a1fb552a-bd5c-d7a2-7eae-d787cc61ec73@redhat.com>
-Message-ID: <59bf7e04-a834-2728-dd2a-a2cd62a724a8@redhat.com>
-Date:   Fri, 7 Aug 2020 11:59:29 +0800
+References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
+ <1596740494-19306-9-git-send-email-skomatineni@nvidia.com>
+ <f2522713-6995-d6a1-e691-a5443823056b@gmail.com>
+ <7ef2a6dd-d220-ff47-e6ef-7443a1779fae@nvidia.com>
+ <a0a187d3-04e9-88d9-5146-1448d4bd79e9@nvidia.com>
+ <54e01160-4041-f8fa-065d-f635e8d69e2f@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7c47b165-8663-87f0-bff5-37036d472fb9@gmail.com>
+Date:   Fri, 7 Aug 2020 07:01:36 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <a1fb552a-bd5c-d7a2-7eae-d787cc61ec73@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <54e01160-4041-f8fa-065d-f635e8d69e2f@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/8/7 上午11:37, Jason Wang wrote:
->
-> On 2020/8/7 上午3:18, Alex Dewar wrote:
->> In alloc_inout() in net/mlx5_vnet.c, there are a few places where memory
->> is allocated to *in and *out, but only the values of in and out are
->> null-checked (i.e. there is a missing dereference). Fix this.
+07.08.2020 06:18, Sowjanya Komatineni пишет:
+> 
+> On 8/6/20 8:14 PM, Sowjanya Komatineni wrote:
 >>
->> Addresses-Coverity: ("CID 1496603: (REVERSE_INULL)")
->> Fixes: 1a86b377aa21 ("vdpa/mlx5: Add VDPA driver for supported mlx5 
->> devices")
->> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
->
->
-> Acked-by: Jason Wang <jasowang@redhat.com>
+>> On 8/6/20 8:10 PM, Sowjanya Komatineni wrote:
+>>>
+>>> On 8/6/20 7:31 PM, Dmitry Osipenko wrote:
+>>>> 06.08.2020 22:01, Sowjanya Komatineni пишет:
+>>>> ...
+>>>>> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
+>>>>>   {
+>>>>>       const struct tegra_mipi_soc *soc = device->mipi->soc;
+>>>>>       unsigned int i;
+>>>>> @@ -381,12 +375,16 @@ int tegra_mipi_calibrate(struct
+>>>>> tegra_mipi_device *device)
+>>>>>       value |= MIPI_CAL_CTRL_START;
+>>>>>       tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+>>>>>   -    mutex_unlock(&device->mipi->lock);
+>>>>> -    clk_disable(device->mipi->clk);
+>>>>> +    /*
+>>>>> +     * Wait for min 72uS to let calibration logic finish calibration
+>>>>> +     * sequence codes before waiting for pads idle state to apply the
+>>>>> +     * results.
+>>>>> +     */
+>>>>> +    usleep_range(75, 80);
+>>>> Could you please explain why the ACTIVE bit can't be polled instead of
+>>>> using the fixed delay? Doesn't ACTIVE bit represents the state of the
+>>>> busy FSM?
+>>>
+>>> Based on internal discussion, ACTIVE bit gets cleared when all
+>>> enabled pads calibration is done (same time as when DONE set to 1).
+>>>
+>>> Will request HW designer to look into design and confirm exactly when
+>>> ACTIVE bit gets cleared.
+>>>
+>>> Will get back on this.
+>>>
+>> Verified with HW designer. above is correct. ACTIVE bit update happens
+>> same time as DONE bit.
+>>
+>> Active = !(DONE)
+>>
+>> In case of calibration logic waiting for LP-11 where done bit does not
+>> get set, ACTIVE will still be 1 and on next start trigger new
+>> calibration will start
+>>
+> Based on internal design check from designer, as long as its in waiting
+> for LP-11 stage, next calibration request can be triggered again but
+> ACTIVE bit we will see it at 1. So we should check for DONE bits to
+> confirm if calibration is done or not.
+> 
+> To start next calibration, it can take effect as long as its in wait for
+> LP-11 mode.
 
-
-Colin posted something similar: [PATCH][next] vdpa/mlx5: fix memory 
-allocation failure checks
-
-And I think his fix is better since it prevent raw pointers to be freed.
-
-Thanks
-
+I meant the start_calibration() will poll the ACTIVE bit (calibration
+busy), while the finish_calibration() will poll the DONE bit
+(calibration applied).
