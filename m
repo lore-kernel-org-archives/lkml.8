@@ -2,323 +2,242 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A67C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD176C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB042177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:05:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596780359;
-	bh=SZtoAZmzio3bHrmvZmazdPaIg3lLA0bdq1G1ghCmIOc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ZL/AL5URYpK4tz9noeQaj6MQ6J1BJBcBX2oVXyLeIEQjxLITf6fW7PTCXNmZ/QzPM
-	 fajQi6LQrLqZTXWMuZmI71tYYDbChEXxMmCO3cszn0+ZpNhuSiqr3/Whf8Qrn7tf/0
-	 KyDRCLKyg4CFPiT5NBQP/LIFY6oFSyLDBnj1vWGY=
+	by mail.kernel.org (Postfix) with ESMTP id 9E32A2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:23:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tiw6O4XW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgHGGF5 (ORCPT
+        id S1726276AbgHGGXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 02:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgHGGF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 02:05:56 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE88D20866;
-        Fri,  7 Aug 2020 06:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596780355;
-        bh=SZtoAZmzio3bHrmvZmazdPaIg3lLA0bdq1G1ghCmIOc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OxC8q3wvLnVsI0fOMpUU5SclFpeszFa7BrXLeBjNa3q4dVSWa3oiKZsttAJhsp4C/
-         DxY7vIbEJPK1aPg/WaxBfC0xyp08V3Pk7mQcZx4hAUQ2g0iYOysOeOEspYxWg3uidt
-         WhSutYmYPzix/uT30WtYoNTHfakAy9Im9E7Jg8vE=
-Date:   Fri, 7 Aug 2020 11:35:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        dma <dmaengine@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine updates for v5.9-rc1
-Message-ID: <20200807060551.GL12965@vkoul-mobl>
+        Fri, 7 Aug 2020 02:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgHGGX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 02:23:28 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421D3C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 23:23:28 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o5so421348pgb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 23:23:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kjYnZO75jW+/NGMWgfsZKGwoEpWRxfcQO49H3CEjGVo=;
+        b=tiw6O4XWq6TLskF079PRNCB3yu6v54OlBOgQNGuZ5nyrw6dK8b52GuWCH2diP9RaNK
+         QfjP+alu9EsDItQfbi3g8/yH4LN4C0ZtUTlwX0OKDw5v/Z4oth/8HMyVBfhtjaeKFkjM
+         F1QCiL+IHiqg4jJ1xADzTqteLK62kx8j9FYoHk3sOjuLLcCwGKDjEmQw4kzejV1iou0B
+         H3qhv3iLWMoyRWUaYk9aA0W9xQnr5JJl6ulIn8pEoF1irPSsXi8CKE5UXAkRgmx40LqA
+         P7FFdXQazZv1sDUfwnqVmFXIfQ0ANa3JXGF54HlODMIh7ZVAeZAKLMB6WbDaEyau/7U+
+         +bfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kjYnZO75jW+/NGMWgfsZKGwoEpWRxfcQO49H3CEjGVo=;
+        b=gq8s55sjT2qM8CrTYRwpN5A6GzRHmUKs0Hly7Ptj97jSvfQ0btt5ESd3eYl/1H104m
+         N+1f9qjVqJ0k0asgL581RGKOqmj8kVwExPTdWKSIcy63u5/juqbIeZTnc4+NXdCYf+NQ
+         O15O3RqLLakBqzU1YJCRvvA4W+kHN8cc4rCKqkfWwoRwO7wxc4s37mCZSINFLbD4bgBZ
+         xeUpjGCzDX+s3YoDpYL1KRlbnkhqet971k6Js+Vigb5OHCWGnIAuXSsBMIG8YhGmGDuA
+         zzyou7MhRlQL+y8LxFc6yKnI6I4sfCuIqGe/tCXan0wbD25gc+BlHJNaVS/naNzlhaZI
+         8XCw==
+X-Gm-Message-State: AOAM530xM5erC/ovETcoK48VlYexB2XFkYkiwUGm8bM+JtbiKAUxUN6d
+        FHbo9ezcgz5Q6tJ9os0EVxLd3+h1dnDebPqHQeCoDQ==
+X-Google-Smtp-Source: ABdhPJwQIjDDxXvPIYI66seCVsO7fJloix907UN+BOcP9hYrcizvL0kHTde7padIRCE53hB/GTd7qWRLpnkcrZOrxkc=
+X-Received: by 2002:a65:6381:: with SMTP id h1mr10771109pgv.0.1596781407242;
+ Thu, 06 Aug 2020 23:23:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HCdXmnRlPgeNBad2"
-Content-Disposition: inline
+References: <20200718000637.3632841-3-saravanak@google.com>
+ <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
+ <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
+ <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org> <78ad0914-6173-f753-9eba-b7cbfbb51fd6@kali.org>
+ <CALAqxLXPN9kThwF32YoWyApaWnfjthANXj3uk65Wc3ddaJQFFQ@mail.gmail.com>
+ <20200807004001.GF20825@builder.lan> <CALAqxLWwY00PVUL7EM-tgbXeB5h8MsfPo7EFZTfDSzbb3P3eqQ@mail.gmail.com>
+ <20200807013903.GG20825@builder.lan> <CALAqxLWmJisTA9836Rvb8f9m4hsTL7iZ=HQtz39anu2Bbgv44g@mail.gmail.com>
+ <20200807055842.GP61202@yoga>
+In-Reply-To: <20200807055842.GP61202@yoga>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 6 Aug 2020 23:22:50 -0700
+Message-ID: <CAGETcx8DNDQZ_ikjJD9pybt9-jMeb399am1k3xHOjuTFn1imTg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
+ IRQCHIP_PLATFORM_DRIVER helper macros
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Steev Klimaszewski <steev@kali.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 6, 2020 at 10:58 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 06 Aug 19:48 PDT 2020, John Stultz wrote:
+>
+> > On Thu, Aug 6, 2020 at 6:42 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > > On Thu 06 Aug 18:22 PDT 2020, John Stultz wrote:
+> > > > On Thu, Aug 6, 2020 at 5:43 PM Bjorn Andersson
+> > > > <bjorn.andersson@linaro.org> wrote:
+> > > > > On Wed 05 Aug 14:57 PDT 2020, John Stultz wrote:
+> > > > > > On Wed, Aug 5, 2020 at 2:47 PM Steev Klimaszewski <steev@kali.org> wrote:
+> > > > > > > On 8/5/20 4:16 PM, Steev Klimaszewski wrote:
+> > > > > > > > On 8/5/20 3:19 PM, Saravana Kannan wrote:
+> > > > > > > >> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> wrote:
+> > > > > > > >>> <sigh>
+> > > > > > > >>> So this is where I bashfully admit I didn't get a chance to try this
+> > > > > > > >>> patch series out, as I had success with a much older version of
+> > > > > > > >>> Saravana's macro magic.
+> > > > > > > >>>
+> > > > > > > >>> But unfortunately, now that this has landed in mainline, I'm seeing
+> > > > > > > >>> boot regressions on db845c. :( This is in the non-modular case,
+> > > > > > > >>> building the driver in.
+> > > > > > > >> Does that mean the modular version is working? Or you haven't tried
+> > > > > > > >> that yet? I'll wait for your reply before I try to fix it. I don't
+> > > > > > > >> have the hardware, but it should be easy to guess this issue looking
+> > > > > > > >> at the code delta.
+> > > > > > > > For what it's worth, I saw this too on the Lenovo C630 (started on -next
+> > > > > > > > around 20200727, but I didn't track it down as, well, there's less way
+> > > > > > > > to get debug output on the C630.
+> > > > > > > >
+> > > > > > > > In my testing, module or built-in doesn't matter, but reverting does
+> > > > > > > > allow me to boot again.
+> > > > > > > >
+> > > > > > > Actually - I spoke too soon - QCOM_PDC built-in with the commit reverted
+> > > > > > > boots, however, module (on the c630 at least) doesn't boot whether it's
+> > > > > > > a module or built-in.
+> > > > > >
+> > > > > > You may need to set deferred_probe_timeout=30 to give things a bit
+> > > > > > more grace time to load.
+> > > > >
+> > > > > With the risk of me reading more into this than what you're saying,
+> > > > > please don't upstream anything that depend this parameter to be
+> > > > > increased.
+> > > > >
+> > > > > Compiling any of these drivers as module should not require the user to
+> > > > > pass additional kernel command line parameters in order to get their
+> > > > > device to boot.
+> > > >
+> > > > So, ideally I agree, and Saravana's fw_devlink work should allow us to
+> > > > avoid it. But the reality is that it is already required (at least in
+> > > > configurations heavily using modules) to give more time for modules
+> > > > loaded to resolve missing dependencies after init begins (due to
+> > > > changes in the driver core to fail loading after init so that optional
+> > > > dt links aren't eternally looked for). This was seen when trying to
+> > > > enable the qualcom clk drivers to modules.
+> > > >
+> > >
+> > > So to clarify what you're saying, any system that boots successfully
+> > > with the default options is a sign of pure luck - regardless of being
+> > > builtin or modules.
+> > >
+> > >
+> > > And there you have my exact argument against the deferred timeout magic
+> > > going on in the driver core. But as you know people insist that it's
+> > > more important to be able to boot some defunct system from NFS than a
+> > > properly configured one reliably.
+> >
+> > I'd agree, but the NFS case was in use before, and when the original
+> > deferred timeout/optional link handling stuff landed no one complained
+> > they were broken by it (at least at the point where it landed).
+>
+> I did object when this was proposed and I've objected for the last two
+> years, because we keep adding more and more subsystems to follow this
+> broken behavior.
+>
+> > Only later when we started enabling more lower-level core drivers as
+> > modules did the shortened dependency resolution time start to bite
+> > folks.  My attempt to set the default to be 30 seconds helped there,
+> > but caused trouble and delays for the NFS case, and "don't break
+> > existing users" seemed to rule, so I set the default timeout back to
+> > 0.
+> >
+>
+> I can't argue with that and I'm at loss on how to turn this around.
+>
+> > > > It doesn't seem necessary in this case, but I suggested it here as
+> > > > I've got it enabled by default in my AOSP builds so that the
+> > > > module-heavy configs for GKI boot properly (even if Saravana's
+> > > > fw_devlink work is disabled).
+> > > >
+> > >
+> > > With all due respect, that's your downstream kernel, the upstream kernel
+> > > should not rely on luck, out-of-tree patches or kernel parameters.
+> >
+> > I agree that would be preferred. But kernel parameters are often there
+> > for these sorts of cases where we can't always do the right thing.
+> > As for out-of-tree patches, broken things don't get fixed until
+> > out-of-tree patches are developed and upstreamed, and I know Saravana
+> > is doing exactly that, and I hope his fw_devlink work helps fix it so
+> > the module loading is not just a matter of luck.
+> >
+>
+> I don't agree with this, upstream should be functional in its default
+> configuration. Out-of-tree patches might be necessary to enable features
+> or get the most out of the hardware, but what we have upstream should
+> work.  And no, this is not always the case, but we should at least aim
+> for this.
+>
+> > Also I think Thierry's comments in the other thread today are also
+> > good ideas for ways to better handle the optional dt link handling
+> > (rather than using a timeout).
+> >
+>
+> I'll take a look at that, but to repeat what I've said many times
+> before, for Qualcomm platforms there's pretty much no such thing as
+> optional links.
 
---HCdXmnRlPgeNBad2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Nicolas had suggested earlier that we could have a way to enable
+fw_devlink=on in DT under the "chosen" node. I liked that idea, but
+wasn't sure how easy it would be to convince DT maintainers to allow
+it. If that happens, we could just set that and not have to worry
+about these timeouts for QC platforms.
 
-Hello Linus,
+Not sure how easy it is to update DT in a DB 845c though. But for
+cases where DT can't be updated, we'd still have the crappy timeout to
+plaster over the issue.
 
-Now that mail.kernel.org is back, time to send the pull request.
+Something like this or whatever sensible name that suggests that the
+dependencies in DT are reliable enough to use for probe ordering,
+deferred probe, etc. Then once that's there, we can turn on
+fw_devlink=on and that'd completely skip this timeout code path (and
+has a bunch of other benefits).
 
-Please pull to receive the below updates for dmaengine. Please note that
-SFR has reported conflicts with MAINTAINERS file update in this request,
-am sure that would be easy for you to manage :)
+chosen {
+        linux,reliable-dt-dependencies;
+}
 
-The following changes since commit 87730ccbddcb48478b1b88e88b14e73424130764:
+Just some food for thought.
 
-  dmaengine: ioat setting ioat timeout as module parameter (2020-07-06 14:4=
-9:34 +0530)
+Also, Thierry's idea would work, but it'll need changes to multiple
+drivers. Also, I don't think it'll work for drivers that'll need to
+ignore vs not ignore dependencies based on what board they are used
+in. It's still better than the blind timeout though.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
-aengine-5.9-rc1
-
-for you to fetch changes up to 00043a2689232631f39ebbf6719d545b1d799086:
-
-  Merge branch 'topic/xilinx' into fixes (2020-08-07 11:13:37 +0530)
-
-----------------------------------------------------------------
-dmaengine updates for v5.9-rc1
-
-Core:
- - Support out of order dma completion
- - Support for repeating transaction
-
-New controllers:
- - Support for Actions S700 DMA engine
- - Renesas R8A774E1, r8a7742 controller binding
- - New driver for Xilinx DPDMA controller
-
-Others:
- - Support of out of order dma completion in idxd driver
- - W=3D1 warning cleanup of subsystem
- - Updates to ti-k3-dma, dw, idxd drivers
-
-----------------------------------------------------------------
-Amit Singh Tomar (3):
-      dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
-      dmaengine: Actions: get rid of bit fields from dma descriptor
-      dmaengine: Actions: Add support for S700 DMA engine
-
-Andy Shevchenko (4):
-      dmaengine: dw: Register ACPI DMA controller for PCI that has companion
-      dmaengine: dw: Replace 'objs' by 'y'
-      dmaengine: acpi: Drop double check for ACPI companion device
-      dmaengine: dw: Don't include unneeded header to platform data header
-
-Dave Jiang (6):
-      dmaengine: cookie bypass for out of order completion
-      dmaengine: idxd: add leading / for sysfspath in ABI documentation
-      dmaengine: idxd: move submission to sbitmap_queue
-      dmaengine: idxd: add work queue drain support
-      dmaengine: idxd: move idxd interrupt handling to mask instead of igno=
-re
-      dmaengine: idxd: add missing invalid flags field to completion
-
-Gustavo A. R. Silva (2):
-      dmaengine: hisilicon: Use struct_size() in devm_kzalloc()
-      dmaengine: ti: k3-udma: Use struct_size() in kzalloc()
-
-Hyun Kwon (1):
-      dmaengine: xilinx: dpdma: Add the Xilinx DisplayPort DMA engine driver
-
-Koehrer Mathias (ETAS/EES-SL) (1):
-      dmaengine: Extend NXP QDMA driver to check transmission errors
-
-Lad Prabhakar (3):
-      dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
-      dt-bindings: dma: renesas,rcar-dmac: Document R8A774E1 bindings
-      dt-bindings: dma: renesas,usb-dmac: Add binding for r8a774e1
-
-Laurent Pinchart (3):
-      dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
-      dmaengine: Add support for repeating transactions
-      dmaengine: xilinx: dpdma: Fix kerneldoc warning
-
-Lee Jones (17):
-      dmaengine: mediatek: mtk-hsdma: Fix formatting in 'struct mtk_hsdma_p=
-desc' doc block
-      dmaengine: of-dma: Fix misspellings/formatting issues in some functio=
-n headers
-      dmaengine: ep93xx_dma: Provide some missing struct attribute document=
-ation
-      dmaengine: mmp_pdma: Demote obvious misuse of kerneldoc to standard c=
-omment blocks
-      dmaengine: pl330: Demote obvious misuse of kerneldoc to standard comm=
-ent block
-      dmaengine: ste_dma40: Supply 2 missing struct attribute descriptions
-      dmaengine: altera-msgdma: Fix struct documentation blocks
-      dmaengine: at_hdmac: Repair parameter misspelling and demote non-kern=
-eldoc headers
-      dmaengine: sun4i-dma: Demote obvious misuse of kerneldoc to standard =
-comment blocks
-      dmaengine: fsl-qdma: Fix 'struct fsl_qdma_format' formatting issue
-      dmaengine: imx-sdma: Correct formatting issue and provide 2 new descr=
-iptions
-      dmaengine: iop-adma: Function parameter documentation must adhere to =
-correct formatting
-      dmaengine: nbpfaxi: Provide some missing attribute docs and split out=
- slave info
-      dmaengine: xgene-dma: Provide descriptions for 'dev' and 'clk' in dev=
-ice's ddata
-      dmaengine: mv_xor_v2: Supply some missing 'struct mv_xor_v2_device' a=
-ttribute docs
-      dmaengine: ioat: init: Correct misspelling of function parameter 'c' =
-for channel
-      dmaengine: ioat: Fix some parameter misspelling and provide descripti=
-on for phys_complete
-
-Lubomir Rintel (2):
-      dmaengine: mmp_pdma: Do not warn when IRQ is shared by all chans
-      dmaengine: mmp_tdma: share the IRQ line
-
-Ludovic Desroches (1):
-      MAINTAINERS: dmaengine: Microchip: add Tudor Ambarus as co-maintainer
-
-Peter Ujfalusi (7):
-      dmaengine: ti: k3-udma: Remove dma_sync_single calls for descriptors
-      dmaengine: ti: k3-udma: Do not use ring_get_occ in udma_pop_from_ring
-      dmaengine: ti: k3-udma: Use common defines for TCHANRT/RCHANRT regist=
-ers
-      dmaengine: ti: k3-udma-private: Use udma_read/write for register acce=
-ss
-      dmaengine: ti: k3-udma: Use udma_chan instead of tchan/rchan for IO f=
-unctions
-      dmaengine: ti: k3-udma: Use defines for capabilities register parsing
-      dmaengine: ti: k3-udma: Query throughput level information from hardw=
-are
-
-Randy Dunlap (3):
-      Documentation/driver-api: dmaengine/provider: drop doubled word
-      dmaengine: idxd: fix PCI_MSI build errors
-      dmaengine: linux/dmaengine.h: drop duplicated word in a comment
-
-Serge Semin (10):
-      dt-bindings: dma: dw: Convert DW DMAC to DT binding
-      dt-bindings: dma: dw: Add max burst transaction length property
-      dmaengine: Introduce min burst length capability
-      dmaengine: Introduce max SG burst capability
-      dmaengine: Introduce DMA-device device_caps callback
-      dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
-      dmaengine: dw: Set DMA device max segment size parameter
-      dmaengine: dw: Initialize min and max burst DMA device capability
-      dmaengine: dw: Introduce max burst length hw config
-      dmaengine: dw: Initialize max_sg_burst capability
-
-Sugar Zhang (5):
-      dmaengine: pl330: Make sure the debug is idle before doing DMAGO
-      dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
-      dmaengine: pl330: Improve transfer efficiency for the dregs
-      dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
-      dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
-
-Vinod Koul (5):
-      MAINTAINERS: switch dmaengine tree to kernel.org
-      dmaengine: xilinx: dpdma: remove comparison of unsigned expression
-      dmaengine: xilinx: dpdma: add missing kernel doc
-      Merge branch 'for-linus' into fixes
-      Merge branch 'topic/xilinx' into fixes
-
- Documentation/ABI/stable/sysfs-driver-dma-idxd     |   56 +-
- .../devicetree/bindings/dma/arm-pl330.txt          |    1 +
- Documentation/devicetree/bindings/dma/owl-dma.txt  |   47 -
- Documentation/devicetree/bindings/dma/owl-dma.yaml |   79 +
- .../devicetree/bindings/dma/renesas,rcar-dmac.yaml |    1 +
- .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |    2 +
- .../bindings/dma/snps,dma-spear1340.yaml           |  176 +++
- Documentation/devicetree/bindings/dma/snps-dma.txt |   69 -
- .../bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml     |   68 +
- Documentation/driver-api/dmaengine/client.rst      |    4 +-
- Documentation/driver-api/dmaengine/provider.rst    |   70 +-
- MAINTAINERS                                        |   40 +-
- drivers/dma/Kconfig                                |   13 +-
- drivers/dma/acpi-dma.c                             |   17 +-
- drivers/dma/altera-msgdma.c                        |    6 +-
- drivers/dma/at_hdmac.c                             |    6 +-
- drivers/dma/dmaengine.c                            |   12 +
- drivers/dma/dmatest.c                              |   11 +-
- drivers/dma/dw/Makefile                            |    6 +-
- drivers/dma/dw/acpi.c                              |    2 +
- drivers/dma/dw/core.c                              |   48 +-
- drivers/dma/dw/of.c                                |    5 +
- drivers/dma/dw/pci.c                               |    4 +
- drivers/dma/dw/regs.h                              |    3 +
- drivers/dma/ep93xx_dma.c                           |    2 +
- drivers/dma/fsl-qdma.c                             |   65 +-
- drivers/dma/hisi_dma.c                             |    5 +-
- drivers/dma/idxd/cdev.c                            |    3 +
- drivers/dma/idxd/device.c                          |  222 ++-
- drivers/dma/idxd/dma.c                             |    3 +-
- drivers/dma/idxd/idxd.h                            |   21 +-
- drivers/dma/idxd/init.c                            |   34 +-
- drivers/dma/idxd/irq.c                             |   43 +-
- drivers/dma/idxd/submit.c                          |   74 +-
- drivers/dma/idxd/sysfs.c                           |   22 +-
- drivers/dma/imx-sdma.c                             |    4 +-
- drivers/dma/ioat/dma.c                             |    7 +-
- drivers/dma/ioat/init.c                            |    2 +-
- drivers/dma/iop-adma.c                             |    3 +-
- drivers/dma/mediatek/mtk-hsdma.c                   |    8 +-
- drivers/dma/mmp_pdma.c                             |    8 +-
- drivers/dma/mmp_tdma.c                             |    2 +-
- drivers/dma/mv_xor_v2.c                            |    6 +-
- drivers/dma/nbpfaxi.c                              |   13 +-
- drivers/dma/of-dma.c                               |    8 +-
- drivers/dma/owl-dma.c                              |  139 +-
- drivers/dma/pl330.c                                |   66 +-
- drivers/dma/ste_dma40.c                            |    2 +
- drivers/dma/sun4i-dma.c                            |   12 +-
- drivers/dma/ti/k3-udma-glue.c                      |   79 +-
- drivers/dma/ti/k3-udma-private.c                   |    8 +-
- drivers/dma/ti/k3-udma.c                           |  309 ++--
- drivers/dma/ti/k3-udma.h                           |   69 +-
- drivers/dma/xgene-dma.c                            |    2 +
- drivers/dma/xilinx/Makefile                        |    1 +
- drivers/dma/xilinx/xilinx_dpdma.c                  | 1535 ++++++++++++++++=
-++++
- include/dt-bindings/dma/xlnx-zynqmp-dpdma.h        |   16 +
- include/linux/dmaengine.h                          |   37 +-
- include/linux/platform_data/dma-dw.h               |   10 +-
- include/uapi/linux/idxd.h                          |    6 +
- 60 files changed, 2779 insertions(+), 813 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
- create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear134=
-0.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqm=
-p-dpdma.yaml
- create mode 100644 drivers/dma/xilinx/xilinx_dpdma.c
- create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-
-Thanks
---=20
-~Vinod
-
---HCdXmnRlPgeNBad2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl8s7z8ACgkQfBQHDyUj
-g0cYvA/+Pzjb+bwnGmzeqSm/o9UFpoyaZvfANPGgQ8YegE+fdjFvQVOHVAp5KsWe
-mLKl0Rm+zCf+czgM7kL1CgQNJqDmH/v0HnLjfseFkhWQzwusTgaPBEBgfIvFrtel
-dW435wOgJna8DfHjLQ32Ylcx7SmmmQzWbCjZm4hN5PBKT5HFO1n8BZOgPZbCM3o/
-tETsenEa7VAFB984zQNmmhx/okcnloK7JzMAHzDnlxbinkGfPYJH+O4N9GNi7tCy
-Z7FMAu3NBQPSUeX/+OoqgnPwi9RzDJR7l/tLlsU3I2nm2BU1IY+XwwKWE836DWwk
-KRowELvizJFn+57HDqnSnNxVXuCBe0FpViOldH71BnAVlXZmrBPHkwTV+lmrZzZa
-SWD+Se6BdCMayZTXvuXHWwRmyydfwAqySJ3UmOx3HvdivbYcTZpe6ZnWSTjxHDRp
-QuVHNyzDXJUT1fpSDQGODNRbPrQTuCntdOne7mM2Nm/4e4owDyHQeq40MU0xH15l
-Sv7X4s9Q2JlEETc0n7tEhzbdunLa/jwTgB5mpaZAftXgMCrddFx+NQzv6smuS1jY
-SxLPqO3N6Voipw3o2hUGzBQK1TtAOG1/gXc6uart/mbp8XczwByAMt5vIO3CckZy
-Fh3T+4nknx8GvxPxZnII8SciTvhSI4Abh4R/eaYC7bEjppCjkGY=
-=0Psa
------END PGP SIGNATURE-----
-
---HCdXmnRlPgeNBad2--
+-Saravana
