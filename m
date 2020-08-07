@@ -2,137 +2,137 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B50C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F63B2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204D72086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MoZrTt2i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TQP1xJCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgHGDSK (ORCPT
+        id S1726205AbgHGDX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:18:10 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1362 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgHGDSJ (ORCPT
+        Thu, 6 Aug 2020 23:23:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49963 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726038AbgHGDX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:18:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2cc78c0000>; Thu, 06 Aug 2020 20:16:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 20:18:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 20:18:09 -0700
-Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
- 2020 03:18:08 +0000
-Subject: Re: [PATCH v9 08/10] gpu: host1x: mipi: Keep MIPI clock enabled and
- mutex locked till calibration done
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
- <1596740494-19306-9-git-send-email-skomatineni@nvidia.com>
- <f2522713-6995-d6a1-e691-a5443823056b@gmail.com>
- <7ef2a6dd-d220-ff47-e6ef-7443a1779fae@nvidia.com>
- <a0a187d3-04e9-88d9-5146-1448d4bd79e9@nvidia.com>
-Message-ID: <54e01160-4041-f8fa-065d-f635e8d69e2f@nvidia.com>
-Date:   Thu, 6 Aug 2020 20:18:12 -0700
+        Thu, 6 Aug 2020 23:23:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596770605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hsMi9av5b4p35ahtO8uQIDsEdl3GiG9dvjCH9nlwTHQ=;
+        b=TQP1xJCZOsofEq4KnGsTgIHI8bzNR1ZX9W1iTE6lXtkTNKede24kU56oDymmeBoVM9V52k
+        Op1jF2gVh1zhlBd+ghquxWilWNYC5rqrpnVK8+fL34rRXkpiaUTvuzTbBHV/in4Pdqn0+L
+        wLegnthOn3ySALiX7TqPC9vPrkAiCXM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-OYrdhSukPp-3tbOlaSTw9w-1; Thu, 06 Aug 2020 23:23:22 -0400
+X-MC-Unique: OYrdhSukPp-3tbOlaSTw9w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59B95106B242;
+        Fri,  7 Aug 2020 03:23:20 +0000 (UTC)
+Received: from [10.72.13.215] (ovpn-13-215.pek2.redhat.com [10.72.13.215])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A7575F7D8;
+        Fri,  7 Aug 2020 03:23:11 +0000 (UTC)
+Subject: Re: [PATCH 1/4] vdpa: introduce config op to get valid iova range
+To:     "Michael S. Tsirkin" <mst@redhat.com>, Eli Cohen <eli@mellanox.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn
+References: <20200617032947.6371-1-jasowang@redhat.com>
+ <20200617032947.6371-2-jasowang@redhat.com>
+ <20200805085035-mutt-send-email-mst@kernel.org>
+ <20200806120354.GA171218@mtl-vdi-166.wap.labs.mlnx>
+ <20200806082727-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <20debde5-1f59-8bd4-1978-68e59abefaea@redhat.com>
+Date:   Fri, 7 Aug 2020 11:23:10 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <a0a187d3-04e9-88d9-5146-1448d4bd79e9@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200806082727-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596770188; bh=Q7c5COmKNsUWJOpEgoTrMYUm9lwTDUfUI3WVQ2PxY+U=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=MoZrTt2ic0S4pNRINK57nFq+73kJskPIilWYp8p0zEbhoJgfqCo4RFictZBeZ5H1/
-         BkyxlwjscYH/AJ3oSy+zYxWHJsT6xYQmI9lHBo3mtTUf6Udc01KuDhXDMq1s/kTAIA
-         9VvVNO7slm0TyB7175t0OE/LeqVjEmpU8rkjgvgVd66ZgkpwdPgdYpkRKg2i/fU9bO
-         IhIQoWciEVEZxqY032gI4Dm4AyTQcDRoctgwQp8l5G6hLbi3wdf9k42/mkubxX4Pw0
-         NHu//j/DYl0EKeS++jPTHzxQsMI7F0Sk0vAqKh5bCTKhJx7Ka9aNd3P+QNcQEISGQ+
-         eepbTGicSq9Gw==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 8/6/20 8:14 PM, Sowjanya Komatineni wrote:
+On 2020/8/6 下午8:29, Michael S. Tsirkin wrote:
+> On Thu, Aug 06, 2020 at 03:03:55PM +0300, Eli Cohen wrote:
+>> On Wed, Aug 05, 2020 at 08:51:56AM -0400, Michael S. Tsirkin wrote:
+>>> On Wed, Jun 17, 2020 at 11:29:44AM +0800, Jason Wang wrote:
+>>>> This patch introduce a config op to get valid iova range from the vDPA
+>>>> device.
+>>>>
+>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>> ---
+>>>>   include/linux/vdpa.h | 14 ++++++++++++++
+>>>>   1 file changed, 14 insertions(+)
+>>>>
+>>>> diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+>>>> index 239db794357c..b7633ed2500c 100644
+>>>> --- a/include/linux/vdpa.h
+>>>> +++ b/include/linux/vdpa.h
+>>>> @@ -41,6 +41,16 @@ struct vdpa_device {
+>>>>   	unsigned int index;
+>>>>   };
+>>>>   
+>>>> +/**
+>>>> + * vDPA IOVA range - the IOVA range support by the device
+>>>> + * @start: start of the IOVA range
+>>>> + * @end: end of the IOVA range
+>>>> + */
+>>>> +struct vdpa_iova_range {
+>>>> +	u64 start;
+>>>> +	u64 end;
+>>>> +};
+>>>> +
+>>> This is ambiguous. Is end in the range or just behind it?
+>>> How about first/last?
+>> It is customary in the kernel to use start-end where end corresponds to
+>> the byte following the last in the range. See struct vm_area_struct
+>> vm_start and vm_end fields
+> Exactly my point:
 >
-> On 8/6/20 8:10 PM, Sowjanya Komatineni wrote:
->>
->> On 8/6/20 7:31 PM, Dmitry Osipenko wrote:
->>> 06.08.2020 22:01, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct tegra_mipi_soc *soc =3D de=
-vice->mipi->soc;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int i;
->>>> @@ -381,12 +375,16 @@ int tegra_mipi_calibrate(struct=20
->>>> tegra_mipi_device *device)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D MIPI_CAL_CTRL_START;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_mipi_writel(device->mipi, value, =
-MIPI_CAL_CTRL);
->>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 mutex_unlock(&device->mipi->lock);
->>>> -=C2=A0=C2=A0=C2=A0 clk_disable(device->mipi->clk);
->>>> +=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Wait for min 72uS to let calibration logic=
- finish calibration
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * sequence codes before waiting for pads idl=
-e state to apply the
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * results.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0 usleep_range(75, 80);
->>> Could you please explain why the ACTIVE bit can't be polled instead of
->>> using the fixed delay? Doesn't ACTIVE bit represents the state of the
->>> busy FSM?
->>
->> Based on internal discussion, ACTIVE bit gets cleared when all=20
->> enabled pads calibration is done (same time as when DONE set to 1).
->>
->> Will request HW designer to look into design and confirm exactly when=20
->> ACTIVE bit gets cleared.
->>
->> Will get back on this.
->>
-> Verified with HW designer. above is correct. ACTIVE bit update happens=20
-> same time as DONE bit.
+> include/linux/mm_types.h:       unsigned long vm_end;           /* The first byte after our end address
 >
-> Active =3D !(DONE)
->
-> In case of calibration logic waiting for LP-11 where done bit does not=20
-> get set, ACTIVE will still be 1 and on next start trigger new=20
-> calibration will start
->
-Based on internal design check from designer, as long as its in waiting=20
-for LP-11 stage, next calibration request can be triggered again but=20
-ACTIVE bit we will see it at 1. So we should check for DONE bits to=20
-confirm if calibration is done or not.
+> in this case Jason wants it to be the last byte, not one behind.
 
-To start next calibration, it can take effect as long as its in wait for=20
-LP-11 mode.
 
->>
->>
+Ok, I somehow recall the reason :)
+
+See:
+
+struct iommu_domain_geometry {
+     dma_addr_t aperture_start; /* First address that can be mapped    */
+     dma_addr_t aperture_end;   /* Last address that can be mapped     */
+     bool force_aperture;       /* DMA only allowed in mappable range? */
+};
+
+
+So what I proposed here is to be consistent with it.
+
+Thanks
+
+
+>
+>
+
