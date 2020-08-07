@@ -2,105 +2,131 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD70DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169AD20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FD820866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1TXy3bfK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HY+3ABIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgHGNnm (ORCPT
+        id S1726442AbgHGNnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 09:43:42 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:63780 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726282AbgHGNn1 (ORCPT
+        Fri, 7 Aug 2020 09:43:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21737 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726205AbgHGNl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:43:27 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 077Dax9v009897;
-        Fri, 7 Aug 2020 15:42:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=yrH1sOj/tTHQBQooVD/Sbc7bjAl/F6ZnmtA5MxyZscw=;
- b=1TXy3bfK6Radyo6qP7mwfBoiv4mSCFlK9wAjuGFdzpWQwBC7TzyDgX1uwWiWLdkFb8Ua
- UZPhX/C7tQyoxVLuhUMj/d/trbpXar5qlSRnFG/u4OSOx7P9XI/ObcCPspOozBJ9ctRK
- ffvFkUQ9mgVLdAlU2dQQ7Ae7plM8B73omFpdHZC/FJ7DDKHTYQ0xnH9aZhqBXPBeecTJ
- qZoubeEuB67smJsqXzLTJDTNI/XJ6Gw/kWZwYHcRlwGVKp9jl/bbyI6Yzb3XHDs0wBo/
- nWTegWxkb11c/LPIw7l+3ov+MXKTTxyyf/qFEzNQH4YRhvhVU5DlzipmZWKjsMcG7ATE hA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6sbj1cw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 15:42:56 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7965310002A;
-        Fri,  7 Aug 2020 15:42:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 662972B35EB;
-        Fri,  7 Aug 2020 15:42:56 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
- 2020 15:42:55 +0200
-Date:   Fri, 7 Aug 2020 15:42:54 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     <amelie.delaunay@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 02/18] spi: stm32-spi: defer probe for reset
-Message-ID: <20200807134254.GC12946@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Mark Brown <broonie@kernel.org>, amelie.delaunay@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
- <1596610933-32599-3-git-send-email-alain.volmat@st.com>
- <20200805104906.GB5556@sirena.org.uk>
+        Fri, 7 Aug 2020 09:41:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596807711;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u54r45ompdFXC1u4rhBBkec2eDw3it8Mdnq7sfxp85I=;
+        b=HY+3ABIafsUJ7PvBXhapaqQ3l4KVg2F5piUbEnIbWGZaIjfleOgp/zptOoZA1FMhvZCrfk
+        TmRkRo+4yE4znw4ef1mqbHUgw/ISOU5NlAxnrM7nlZKR8lDfuoNGzEwKd/OuZDQPsmoV+D
+        NSb5Swq8Wafz9kB0IKtjTCT5iUyChK4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368--gHwb_pwPJCEf2HvDpuu3Q-1; Fri, 07 Aug 2020 09:41:28 -0400
+X-MC-Unique: -gHwb_pwPJCEf2HvDpuu3Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1313058;
+        Fri,  7 Aug 2020 13:41:27 +0000 (UTC)
+Received: from T590 (ovpn-12-80.pek2.redhat.com [10.72.12.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D76AA6FEF4;
+        Fri,  7 Aug 2020 13:41:19 +0000 (UTC)
+Date:   Fri, 7 Aug 2020 21:41:14 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: splice: infinite busy loop lockup bug
+Message-ID: <20200807134114.GA2114050@T590>
+References: <00000000000084b59f05abe928ee@google.com>
+ <29de15ff-15e9-5c52-cf87-e0ebdfa1a001@I-love.SAKURA.ne.jp>
+ <20200807122727.GR1236603@ZenIV.linux.org.uk>
+ <20200807123854.GS1236603@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200805104906.GB5556@sirena.org.uk>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-07_09:2020-08-06,2020-08-07 signatures=0
+In-Reply-To: <20200807123854.GS1236603@ZenIV.linux.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 11:49:06AM +0100, Mark Brown wrote:
-> On Wed, Aug 05, 2020 at 09:01:57AM +0200, Alain Volmat wrote:
+On Fri, Aug 07, 2020 at 01:38:54PM +0100, Al Viro wrote:
+> On Fri, Aug 07, 2020 at 01:27:27PM +0100, Al Viro wrote:
+> > On Fri, Aug 07, 2020 at 07:35:08PM +0900, Tetsuo Handa wrote:
+> > > syzbot is reporting hung task at pipe_release() [1], for for_each_bvec() from
+> > > iterate_bvec() from iterate_all_kinds() from iov_iter_alignment() from
+> > > ext4_unaligned_io() from ext4_dio_write_iter() from ext4_file_write_iter() from
+> > > call_write_iter() from do_iter_readv_writev() from do_iter_write() from
+> > > vfs_iter_write() from iter_file_splice_write() falls into infinite busy loop
+> > > with pipe->mutex held.
+> > > 
+> > > The reason of falling into infinite busy loop is that iter_file_splice_write()
+> > > for some reason generates "struct bio_vec" entry with .bv_len=0 and .bv_offset=0
+> > > while for_each_bvec() cannot handle .bv_len == 0.
+> > 
+> > broken in 1bdc76aea115 "iov_iter: use bvec iterator to implement iterate_bvec()",
+> > unless I'm misreading it...
+> > 
+> > Zero-length segments are not disallowed; it's not all that hard to filter them
+> > out in iter_file_splice_write(), but the intent had always been to have
+> > iterate_all_kinds() et.al. able to cope with those.
+> > 
+> > How are these pipe_buffers with ->len == 0 generated in that reproducer, BTW?
+> > There might be something else fishy going on...
 > 
-> > -	rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> > -	if (!IS_ERR(rst)) {
-> > +	rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-> > +	if (rst) {
-> > +		if (IS_ERR(rst)) {
-> > +			ret = PTR_ERR(rst);
-> > +			if (ret != -EPROBE_DEFER)
-> > +				dev_err(&pdev->dev, "reset get failed: %d\n",
-> > +					ret);
-> > +			goto err_clk_disable;
-> > +		}
-> 
-> This will not provide any diagnostics when deferring which isn't very
-> helpful if there's issues.
+> FWIW, my preference would be to have for_each_bvec() advance past zero-length
+> segments; I'll need to go through its uses elsewhere in the tree first, though
+> (after I grab some sleep),
 
-Do you mean that a message when deferring would be needed ?
+Usually block layer doesn't allow/support zero bvec, however we can make
+for_each_bvec() to support it only.
 
-I am worrying that this would lead to having too much noise during boot
-since probe deferring is kinda common. Of course it can also be due to a bad
-configuration of the kernel as well but having looked around I think that
-usually driver are rather silent in case of deferring.
+Tetsuo, can you try the following patch?
+
+diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+index ac0c7299d5b8..b03c793dd28d 100644
+--- a/include/linux/bvec.h
++++ b/include/linux/bvec.h
+@@ -117,11 +117,19 @@ static inline bool bvec_iter_advance(const struct bio_vec *bv,
+ 	return true;
+ }
+ 
++static inline void bvec_iter_skip_zero_vec(const struct bio_vec *bv,
++		struct bvec_iter *iter)
++{
++	iter->bi_idx++;
++	iter->bi_bvec_done = 0;
++}
++
+ #define for_each_bvec(bvl, bio_vec, iter, start)			\
+ 	for (iter = (start);						\
+ 	     (iter).bi_size &&						\
+-		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);	\
+-	     bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len))
++		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);		\
++	  (bvl).bv_len ? bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len) : \
++			bvec_iter_skip_zero_vec((bio_vec), &(iter)))
+ 
+ /* for iterating one bio from start to end */
+ #define BVEC_ITER_ALL_INIT (struct bvec_iter)				\
+
+Thanks,
+Ming
+
