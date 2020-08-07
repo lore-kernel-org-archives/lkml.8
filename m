@@ -2,172 +2,100 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C7EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3ABF22CAF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q1ihf0KV"
+	by mail.kernel.org (Postfix) with ESMTP id 45DAB22CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgHGByG (ORCPT
+        id S1726282AbgHGByw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:54:06 -0400
-Received: from mail-eopbgr60065.outbound.protection.outlook.com ([40.107.6.65]:64619
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Thu, 6 Aug 2020 21:54:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55480 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbgHGByG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:54:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=COeQz/KObXZ4zSybl2AAyrlEWggYKJDzEhExf9n5RLbBL1iYa8TJsjUuccZX1BmI80G3mgKkdrx+5QIg7fktfbE+0GX7yENqbMeyO0Ne7bWHYW/RA0zSnkUNCJL7IHKqakjLXdlEHyiobh/BgXW3MtewxTL9ZXDxXeM+P33KCxKqriG594GvLxN06AexStpcRjzCKBkFRyh6aYqY6kG06zmJx2Q3+FnNUv0nU1hoEwIIsnFsWMfSDrVWPlJRGJdX6oLDcMzhIylPlIVvKMeBs6J1NIt9uqm5C+AbMfSXSHwOpLrl+LxtRDOV3HcdPcqa8yOkWVpvw0zoi44yzshM5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
- b=XrbmlmvsagfKxkMHidGSyKcjL8IcMuxpnlNFr7zTjGs9u/2MYhjbsDRwxND8p3l6Hkf4KsFAtyl4HLeyvF1EGLP+fOp7fCAKiTmvaIAtYRK9cJyE8G187fKk/Y6c4sQoKJSP0OBRbqlRG2Th3Z8V58jRaDlkMpx+jvnB0gMrciQjOB7MXE7AeKUn8+e4NkMNdjQqUcNRHK53fG/x/s/9a3KNjJJaeZUiOlah7GSrmgayhIiVOgfOtzT3ZylVlNfvZd6GyLhK5ub0ZjvqFOktcWWcbXeTGqaFqVKhYODXrm+ke7FFByxxbsTyb7JIXbTWAxaOx2rss1bmuyclRAIcvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
- b=Q1ihf0KVKFWCqmioH9pp8jvf7wU5Mn6H2DJbO3cK3I/cJ9uVEqAUmxILdcHYOrQsXI1lbIiHl24ScqKx3ajx3HwRNrTo2b+WX3QZH/CucI6h8SqJ2PafClTWwF9qfq91t2BIuK5ixyaFCMrSMDLRaqzLP237jTDwB73p6RPG/mc=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB7PR04MB5994.eurprd04.prod.outlook.com (2603:10a6:10:89::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Fri, 7 Aug
- 2020 01:54:02 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8db5:8715:8570:1406]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8db5:8715:8570:1406%7]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
- 01:54:02 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
-Thread-Topic: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
-Thread-Index: AQHWanDUsv5s6HEs8UmAXMW6+qGJdqkrIOgAgADEmlA=
-Date:   Fri, 7 Aug 2020 01:54:02 +0000
-Message-ID: <DB3PR0402MB39160FB9BEE17C4375308D57F5490@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1596553308-13190-1-git-send-email-Anson.Huang@nxp.com>
- <20200806140718.GA766974@bogus>
-In-Reply-To: <20200806140718.GA766974@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c8118909-d4c1-48f0-7ed8-08d83a74c263
-x-ms-traffictypediagnostic: DB7PR04MB5994:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB599455B1A71014E70E135B48F5490@DB7PR04MB5994.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f8SUzQPaTIYj9mkB354UShLjRp4dv8Y4zn+x1y4/Y5oqHHzZaQvQeiAY4D270+S5Z+m5TSTfc+8boIgq1JR5N1iNwgHPZBFSbcYzBUVYfUSwu6RJ2Q7SHaqXrfMQZzOnSZ+CaRC45+eR699n3f66hI+ZfkCXDghwkMAYBcaU2EJNjoGGIyA2H1sAYLYVpNhwLURJqtihj+r9a1UkTZHIkYuY3elBnP4kKTDw50t6Xq7yarurDx3YIWFrV3I6k0HPgepWVEO67Pa0QrbrmI2NQRBhe49m8WxMl8mxU05d9AS9NZxOzFqPWgdRsO7Jf7tD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(26005)(33656002)(7696005)(8936002)(6506007)(8676002)(66556008)(5660300002)(4326008)(2906002)(64756008)(186003)(52536014)(66446008)(66476007)(76116006)(66946007)(316002)(83380400001)(55016002)(86362001)(71200400001)(9686003)(44832011)(54906003)(478600001)(6916009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: hatUAiSV3BcQqaCbZo6yoZMUUZr0gHocLMZCDE4Yi9mh3QnOMHXevua4mAjsf/rQqThG2+KGIWHE1nwcgor/eA5DEI9Sgx2AZPeQqLfFPDqoZJHkD1dtR48TmeI2mW7ITieFAFKy2tq71OElienxOGaqLX/mPiDGmePT6zaVBgbDodomFnYYmLpQr/nZY8YNhCWqfjWRMjpmJqVEVG5hs46KJdOqe/qrudBZRLuk+v0V4aZUuRCTVjl4e+bR3BGcznZdYkP4/Kqrxk9GCEDt1Hj7RgqaXvcEDs4emhS7PnXwRnlr/wGfLISkZLlM6mZfB907Ud9pwCe2LJgmj4p04LgdQmBsFdw2GNmvuoHmPBxgeyRYSJtlqiGVElV2qxOOLR1qfPRxVYE3jI6Ok9fhwEJeCj0jJ2Y2v/3YRxBLfpodjxgN/exlYDfJv56pagESbuRcVHOwFxeXo2LMUSfXdj1qgFK3dWkwm7brIOVNsXbJD/saQBCY1oTicRMBJaIHVKeZpK5knl1QccY+0OtM2beYUggw6vQT3MIVteooN9VFaJFXOm3S0JTG5LkrdWR+jGngKS9krGg4LSKkXpAPoGbe6/3I2Vq8wfehD5qagn49mLCaxH57zmutKjEgAmu0PmXR834Q94I80BBaJQbUCw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726055AbgHGByw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:54:52 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C39C0F8C14D03B22675A;
+        Fri,  7 Aug 2020 09:54:49 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.81) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 7 Aug 2020
+ 09:54:47 +0800
+Subject: Re: [PATCH net] net: qcom/emac: Fix missing clk_disable_unprepare()
+ in error path of emac_probe
+To:     Timur Tabi <timur@kernel.org>, <davem@davemloft.net>,
+        <kuba@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+References: <20200806140647.43099-1-wanghai38@huawei.com>
+ <87f41175-689e-f198-aaf6-9b9f04449ed8@kernel.org>
+From:   "wanghai (M)" <wanghai38@huawei.com>
+Message-ID: <df1bad2e-2a6a-ff70-9b91-f18df20aaec8@huawei.com>
+Date:   Fri, 7 Aug 2020 09:54:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8118909-d4c1-48f0-7ed8-08d83a74c263
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2020 01:54:02.4103
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kbCkXll3KVQcuMhTqVv8yME0xjK+n8ezhlFGvTwA684DciqbZ8W+FDVR5hJJillhOclcnLCqph9O6jORyoWoPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5994
+In-Reply-To: <87f41175-689e-f198-aaf6-9b9f04449ed8@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.81]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Rob
 
+在 2020/8/6 22:23, Timur Tabi 写道:
+> On 8/6/20 9:06 AM, Wang Hai wrote:
+>> In emac_clks_phase1_init() of emac_probe(), there may be a situation
+>> in which some clk_prepare_enable() succeed and others fail.
+>> If emac_clks_phase1_init() fails, goto err_undo_clocks to clean up
+>> the clk that was successfully clk_prepare_enable().
+>
+> Good catch, however, I think the proper fix is to fix this in 
+> emac_clks_phase1_init(), so that if some clocks fail, the other clocks 
+> are cleaned up and then an error is returned.
+>
+> .
+>
+Thanks for your suggestion. May I fix it like this?
 
-> Subject: Re: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
->=20
-> On Tue, 04 Aug 2020 23:01:48 +0800, Anson Huang wrote:
-> > Convert the vf610 gpio binding to DT schema format using json-schema.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 --------------=
----
-> >  .../devicetree/bindings/gpio/gpio-vf610.yaml       | 79
-> ++++++++++++++++++++++
-> >  2 files changed, 79 insertions(+), 63 deletions(-)  delete mode
-> > 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> >
->=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio=
-/
-> gpio-vf610.example.dt.yaml: example-0: gpio@40049000:reg:0: [1074040832,
-> 4096, 1074786304, 64] is too long
->=20
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c 
+b/drivers/net/ethernet/qualcomm/emac/emac.c
+index 7520c02eec12..7977ad02a7c6 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac.c
+@@ -474,13 +474,25 @@ static int emac_clks_phase1_init(struct 
+platform_device *pdev,
 
-I updated the dt-schema and the latest commit is as below, and there is no =
-build error
-on my side, do you know why?
+         ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
+         if (ret)
+-               return ret;
++               goto disable_clk_axi;
 
-commit 8fd8ce7ff6bd47616ceb48f69d1a04116dee7a41
-Author: Rob Herring <robh@kernel.org>
-Date:   Wed Aug 5 10:38:08 2020 -0600
+         ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
+         if (ret)
+-               return ret;
++               goto disable_clk_cfg_ahb;
 
-    dt-extract-example: Use the C yaml parser
+-       return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++       ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++       if (ret)
++               goto disable_clk_cfg_ahb;
++
++       return 0;
++
++disable_clk_cfg_ahb:
++       clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
++disable_clk_axi:
++       clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
++
++       return ret;
+  }
 
-    The 'pure' (Python) loader was needed at one time for YAML 1.2, but rua=
-mel
-    has supported 1.2 with its libyaml since 0.15.63 and we depend on versi=
-on
-    0.15.70 at least.
-
-    Signed-off-by: Rob Herring <robh@kernel.org>
-
-tools/dt-extract-example
-
-
-anson@anson-OptiPlex-790:~/workspace/stash/linux-next$ make.cross ARCH=3Dar=
-m dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/gpio=
-/gpio-vf610.yaml
-make CROSS_COMPILE=3D/opt/gcc-4.9.0-nolibc/arm-unknown-linux-gnueabi/bin/ar=
-m-unknown-linux-gnueabi- --jobs=3D8 ARCH=3Darm dt_binding_check DT_SCHEMA_F=
-ILES=3DDocumentation/devicetree/bindings/gpio/gpio-vf610.yaml
-  CHKDT   Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
-/home/anson/workspace/stash/linux-next/Documentation/devicetree/bindings/pi=
-nctrl/ingenic,pinctrl.yaml: ignoring, error in schema: additionalProperties
-warning: no schema found in file: ./Documentation/devicetree/bindings/pinct=
-rl/ingenic,pinctrl.yaml
-  DTC     Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
-  CHECK   Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
-anson@anson-OptiPlex-790:~/workspace/stash/linux-next$
-
-Thanks,
-Anson
 
