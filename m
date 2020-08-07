@@ -2,61 +2,147 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E22C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB74CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 283B822CAE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8341122CA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:23:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="NMIiw8Qs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgHGQXO (ORCPT
+        id S1727889AbgHGQXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgHGQXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:23:11 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E788C061756;
-        Fri,  7 Aug 2020 09:23:11 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k4597-00BE3G-Tq; Fri, 07 Aug 2020 16:23:05 +0000
-Date:   Fri, 7 Aug 2020 17:23:05 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: srvfs: file system for posting open file descriptors into fs
- namespace
-Message-ID: <20200807162305.GT1236603@ZenIV.linux.org.uk>
-References: <55ef0e9a-fb70-7c4a-e945-4d521180221c@metux.net>
+        Fri, 7 Aug 2020 12:23:20 -0400
+Received: from mail-eopbgr140057.outbound.protection.outlook.com ([40.107.14.57]:4231
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726891AbgHGQWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 12:22:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h6VV9adG7OG5XmenVcK2+QMCOxpwrqceRBjhbo/bwfBp18ImDp87KljFnU30VnGcyNC4qo4S6kJ4cgdVDrq/vh0fxD6uD2AUp1slzFKfmgpJ51xvzncAblidyHKOoZdTGmG09qUseVB5DgvtSDG+05Z8yEe/jUn20QfqV7uxmceDLirJU0j7oKBDyXLH8TXPZSAJgiXp89xusmxZ0oIG+T2ZFbWusC4KkSNJ1Qj3Fzjsede/iooRNScRJlm2GOmhhVcapdnzxSdHse2aAAUBwQ99riWZID9Hs4hNta0u0i5Je8O8IEsAAeahM1Hjd1u+lCxGMqtZM8ZAkzMg/PQ3GQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YZ3ZDCBgSVsJI0JDqY88ayzFFjlNBfrKFO6cSXTsXF4=;
+ b=QV95tgfp37O2Rxn4ujyxliCy5jUDXJtuQLeh3nsLzvqmexBbQpVZsC7QN9pvCHKlnmceKJ5txGVvviKtpp3oDrL4nNkdoMCK+o4uOLGspV9YDB5tUqgchSLKUC4EJFEQUmJzp1geBve+3UT2PmoBquRmnHZMN+Ay5SV2obUEm09XoviuybGNhr+TrJPWlJCnWWSWOAbTrTE6hF2TazTpHbp25U62vjjzJ9RELSyXyATI+oqmLC83RnIwFJ3sI47ZzUD7sRzLOTS7cFLYIaREt240Cn0oFutNVr5755fdWDR6/YNSQ7+TeB9SNMmj/qYHvSmlnxNulnImVS62reMKJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YZ3ZDCBgSVsJI0JDqY88ayzFFjlNBfrKFO6cSXTsXF4=;
+ b=NMIiw8QslRG2OmklIbK1+3v1X5J6DtavEUZjE1D1f+gkjbj4sS35YiFWyuLTgux3jdzMrWnQgsBE0zgeAXtJvHsekotgGWYQ/fVBuunlMN9kIEPr+FE9YgvfsNWmfGw3lDDjRLpwfXOwgGjvTQKD3s5X8XEn0KHza8XbBsuRrF0=
+Authentication-Results: gondor.apana.org.au; dkim=none (message not signed)
+ header.d=none;gondor.apana.org.au; dmarc=none action=none
+ header.from=oss.nxp.com;
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
+ by VE1PR04MB7359.eurprd04.prod.outlook.com (2603:10a6:800:1a0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Fri, 7 Aug
+ 2020 16:22:13 +0000
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Fri, 7 Aug 2020
+ 16:22:13 +0000
+From:   Andrei Botila <andrei.botila@oss.nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, x86@kernel.org,
+        linux-arm-kernel@axis.com, Andrei Botila <andrei.botila@nxp.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [PATCH 16/22] crypto: ccree - add check for xts input length equal to zero
+Date:   Fri,  7 Aug 2020 19:20:04 +0300
+Message-Id: <20200807162010.18979-17-andrei.botila@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
+References: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR04CA0075.eurprd04.prod.outlook.com
+ (2603:10a6:208:be::16) To VE1PR04MB6608.eurprd04.prod.outlook.com
+ (2603:10a6:803:125::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55ef0e9a-fb70-7c4a-e945-4d521180221c@metux.net>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR04CA0075.eurprd04.prod.outlook.com (2603:10a6:208:be::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Fri, 7 Aug 2020 16:22:12 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 99b176c6-0428-4cd1-a9eb-08d83aee0ad1
+X-MS-TrafficTypeDiagnostic: VE1PR04MB7359:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB73597E6C1F17B52B42D7C341B4490@VE1PR04MB7359.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ixNqRZSK4QN+sfYUbv6XiexCApbcaIdXcqQAobZy9cXHXuL2syRwt0aJ+DsenlWQJJL+e+lOH/oVs0gcL3r5XstwkiC16km6fH/9tQXYO/U5vs63/GYOAf1UqqJOyq43PfNbFOq/TAB6eCOvQ3YLW2x4u0a8DXR85URzT8J+5xdbGbwxNwu5kkRMLeCyE+CDRhiu7QTwLHw59ZLrzhPwVzjJrkZprdGmywtTZvqQUd8+1L55cEYA8mASSWsglHKKuMBW/Eb2uj5xOalvHZa7tcR6j13T/2vqtO1bhda3hhJV8ttCq0w40yyY0ew1FCYXyamzT+/fuWkRVGZsl+YnsA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(44832011)(66556008)(66476007)(110136005)(7416002)(54906003)(1076003)(6506007)(4326008)(66946007)(83380400001)(8936002)(316002)(26005)(956004)(186003)(16526019)(478600001)(86362001)(5660300002)(6666004)(6512007)(2906002)(8676002)(2616005)(52116002)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 8DnA2Z9Se0k0eZNaFIAUoxRr+kC20wDvBK7yi5Jb5VSE/CxcBm/A/HANo4z/mw4lFLfWWla8IbB7JH9oH5C1EDgRp23RBoA6hvIMlGtpRhCt1sL4vPwodAq9zjXvmRmk2nmWu1sekjyBc+XKe4moPCbOqpVVB+Ty8B1YoLv8wHMVLnykpy08V1ztT/Iu5a1uavM/S/5C7BwVortV66NieTK7oHr9PC45QSu/sMbfo/Rcoh8/LhdDxcZm+7F0Wa1As+hzxf9sI1jnbJm0llXUG3rAkQ5uJMZcW1RUZv15VlSlZA19PLp0zYkmJEq5jm8IratFAi0WaQdYwh/AJNm705+DejXbim9SfWMLgKNaQ9wnSK9nph1xCYBeH4HxoaqO7Ffy0QUE5QCGUJdIbdAEC5X19WRmEJNBZT1NoWZuw/e+zUCkJWP6ro0lPLe9AQPljn4ZD6OZd/d0syggt4FiiMe87LRa7xOopXyZIyubFPlP3l2O4RkOXRX9uZ8auxcBUrBJlb+wQ13vOhfqIj3UpZitZEekzxAp7aRAmtYJ5oLR9dkZDwtTbRy4Dd4I5i9Khdgca6sWMRaz+kuedipLD4fMli6GegGU8/WawfG8WouD1El9LM1QaHnzqCxCSuSPWcNBri5BVHxh9S/MQReGWg==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99b176c6-0428-4cd1-a9eb-08d83aee0ad1
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 16:22:13.3124
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SvCACcrqPgUXZJJAaN447+0qSCBO1ch5ByD/fkXrSO+yjsXOXzV1bytAMRBZUigrkKgnhEJsEAQEJ0soFPS6VQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7359
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 01:09:30PM +0200, Enrico Weigelt, metux IT consult wrote:
-> Hello folks,
-> 
-> 
-> here's the first version of my "srvfs" implementation - a synthentic
-> filesystem which allows a process to "publish" an open file descriptor
-> into the file system, so other processes can continue from there, with
-> whatever state the fd is already in.
-> 
-> This is a concept from Plan9. The main purpose is allowing applications
-> "dialing" some connection, do initial handshakes (eg. authentication)
-> and then publish the connection to other applications, that now can now
-> make use of the already dialed connection.
+From: Andrei Botila <andrei.botila@nxp.com>
 
-Yeah, but...  Linux open() always gets a new struct file instance; how
-do you work around that?  Some variant of ->atomic_open() API change?
-Details, please.
+Standardize the way input lengths equal to 0 are handled in all skcipher
+algorithms. All the algorithms return 0 for input lengths equal to zero.
+This change has implications not only for xts(aes) but also for cts(cbc(aes))
+and cts(cbc(paes)).
+
+Cc: Gilad Ben-Yossef <gilad@benyossef.com>
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+---
+ drivers/crypto/ccree/cc_cipher.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
+index 076669dc1035..112bb8b4dce6 100644
+--- a/drivers/crypto/ccree/cc_cipher.c
++++ b/drivers/crypto/ccree/cc_cipher.c
+@@ -912,17 +912,18 @@ static int cc_cipher_process(struct skcipher_request *req,
+ 
+ 	/* STAT_PHASE_0: Init and sanity checks */
+ 
+-	if (validate_data_size(ctx_p, nbytes)) {
+-		dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
+-		rc = -EINVAL;
+-		goto exit_process;
+-	}
+ 	if (nbytes == 0) {
+ 		/* No data to process is valid */
+ 		rc = 0;
+ 		goto exit_process;
+ 	}
+ 
++	if (validate_data_size(ctx_p, nbytes)) {
++		dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
++		rc = -EINVAL;
++		goto exit_process;
++	}
++
+ 	if (ctx_p->fallback_on) {
+ 		struct skcipher_request *subreq = skcipher_request_ctx(req);
+ 
+-- 
+2.17.1
+
