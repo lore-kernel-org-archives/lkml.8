@@ -2,115 +2,142 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5F3C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27A0B221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F91420866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvNI74fM"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jd8bvtZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgHGR2s (ORCPT
+        id S1726823AbgHGRcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 13:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgHGR2q (ORCPT
+        Fri, 7 Aug 2020 13:32:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36432 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbgHGRcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 13:28:46 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4F0C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 10:28:46 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id z18so2176693otk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 10:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pcPljqLlsSaByEgdnjwhb5jRujI3GPfRCMC3xF366sQ=;
-        b=lvNI74fMbQTw+8M58BgwRChxDSXnuBaigD7ycw6XMt5W1E6aOHaOc1QKCKumH60SwS
-         cSpZz92jRmTtH8YU80yP119KbtH9tkQPB4gsNsdTYot8Q5jFfuM5B4BZ3Qk1IA+KLQOv
-         kf5UMHXHl8BxAggENKovoflSBpi8OYVS7LW2YXeLEBTzrUdEvM6BYJRWHLmyNz9r50c0
-         yOIXS2Sdl6To0nDBGs5rdC83Ui3dQtr12tLqKXFn/Qfg1zK+mc++zTtg2gJnEo76nKT3
-         /TLWkZVePhsgkD5gJjrLYh9ehJd2tbhP3EWS+2dWSXVd89xlEROPK64FDJau2tiA1HjP
-         Srdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pcPljqLlsSaByEgdnjwhb5jRujI3GPfRCMC3xF366sQ=;
-        b=aNOVCkjhxBAReVN3G5KJ3bySxCyYQQKhW8DFfAjjLm2sbgDn/TWdAcYZe5bRax6ICO
-         p90HNd43JVpndGKaDN5v4MdCvPQ0X2ix+APN3KwYIBEQ4F5qJVUwJWlf0JVkK7+dzjH4
-         NjSKN3oJ45guo4sRFiDj9PUU57rmDXxXRoBhYM9U6xW5Xh6AtlpktZtYIkWrun4hvvTJ
-         h5sukmnSAZ4Votp66LxF60cc2IQOwJtP3uXgkb0vkHlUiNE6hE8QRk2+HT9t0G9r47sS
-         VQV2zvs+QPKBn6IIJ8IT7G65jfsa1rrz/Yxm9esVD2HAMcVaj2rHzN58DMj11eQPaNWA
-         4wgw==
-X-Gm-Message-State: AOAM5338PT/pgkrzNS3Lsi22b2XA3wmlTrwSzuFe2y4mH3EE02qJ7Mr6
-        yygI6jQPeoQky2t4ujn2W7wdbFN2y8FIvb11/VfWt3IeK/E=
-X-Google-Smtp-Source: ABdhPJyhRNkJ7IwFovJWB4fr/hjEdbgkIhGpcwsemu7+FnTI1YphMimo6fZOrfenJDcYeti2RNOLqc2dB+aC9WrUFY8=
-X-Received: by 2002:a9d:3d77:: with SMTP id a110mr12761833otc.11.1596821326081;
- Fri, 07 Aug 2020 10:28:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
- <a53f9039-5cba-955b-009e-12e8c5ffb345@suse.cz> <CAOJsxLHX62P0yvHZcXdje41zm_2demzTraqvHXAvfhVPp2HKsA@mail.gmail.com>
- <alpine.DEB.2.22.394.2008071258020.55871@www.lameter.com>
-In-Reply-To: <alpine.DEB.2.22.394.2008071258020.55871@www.lameter.com>
-From:   Pekka Enberg <penberg@gmail.com>
-Date:   Fri, 7 Aug 2020 20:28:27 +0300
-Message-ID: <CAOJsxLGqrCTgQhdOTTWKcCz0TsVfh_AxTCVWNGj6Mo4hyE5E2Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial objects
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Xunlei Pang <xlpang@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Aug 2020 13:32:32 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 077HW45O185756;
+        Fri, 7 Aug 2020 13:32:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=Y0pKoWPeTxDyByUmLaCIWxPyH2WwR9p+/RxajWERAWo=;
+ b=jd8bvtZSDyNgHw2Je8MeB+DJ4XXI9Pf45pkFwoUx+CqF1AgoBovcIE+mumIY79vc5bTf
+ ns67M1Y+8W/AAFJVuVwsN1g6c6nDdNKYVu5ajSLIuEn93EDoAhq1n1CS0UncjvpDTClo
+ 5/x4R8oSQrERkaRuVked3eDOR7kBxPGZbecpNpVdtwXsNTH/Z18WO4VIoVhaBhZsNgOH
+ FbdQnOsCLbFjtWEZKnAjCmqvdBLzrhV6OnvzBoLfO+5Pp+EWgl2OmrR0atXyOKhl3zX5
+ TGxtNZnfzXB0sK9P697OG2ojYwvTemmIMHOC5k/zgGasURdGSMvfxvc6Ucxm81nnQtXC xA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32repj1gev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Aug 2020 13:32:07 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 077HW4kl185730;
+        Fri, 7 Aug 2020 13:32:06 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32repj1g73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Aug 2020 13:32:06 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 077HVYj4008226;
+        Fri, 7 Aug 2020 17:31:34 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 32nyyd3e91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Aug 2020 17:31:34 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 077HVVF530343660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Aug 2020 17:31:31 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFFE252050;
+        Fri,  7 Aug 2020 17:31:31 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.122.187])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 004F55204F;
+        Fri,  7 Aug 2020 17:31:27 +0000 (GMT)
+Message-ID: <4a764c86a824a4b931dd7f130ce7afce7df140e4.camel@linux.ibm.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Morris <jmorris@namei.org>
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com, paul@paul-moore.com,
+        corbet@lwn.net, nramas@linux.microsoft.com, serge@hallyn.com,
+        pasha.tatashin@soleen.com, jannh@google.com,
+        linux-block@vger.kernel.org, viro@zeniv.linux.org.uk,
+        axboe@kernel.dk, mdsakib@microsoft.com,
+        linux-kernel@vger.kernel.org, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Fri, 07 Aug 2020 13:31:27 -0400
+In-Reply-To: <alpine.LRH.2.21.2008080240350.13040@namei.org>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+                   <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+                   <20200802143143.GB20261@amd>
+                   <1596386606.4087.20.camel@HansenPartnership.com>
+                   <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+                 <1596639689.3457.17.camel@HansenPartnership.com>
+                  <alpine.LRH.2.21.2008050934060.28225@namei.org>
+                 <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+                 <alpine.LRH.2.21.2008060949410.20084@namei.org>
+         <eb7a2f5b5cd22cf9231aa0fd8fdb77c729a83428.camel@linux.ibm.com>
+         <alpine.LRH.2.21.2008080240350.13040@namei.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-07_15:2020-08-06,2020-08-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008070120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christopher,
+On Sat, 2020-08-08 at 02:41 +1000, James Morris wrote:
+> On Thu, 6 Aug 2020, Mimi Zohar wrote:
+> 
+> > On Thu, 2020-08-06 at 09:51 +1000, James Morris wrote:
+> > > On Wed, 5 Aug 2020, Mimi Zohar wrote:
+> > > 
+> > > > If block layer integrity was enough, there wouldn't have been a need
+> > > > for fs-verity.   Even fs-verity is limited to read only filesystems,
+> > > > which makes validating file integrity so much easier.  From the
+> > > > beginning, we've said that fs-verity signatures should be included in
+> > > > the measurement list.  (I thought someone signed on to add that support
+> > > > to IMA, but have not yet seen anything.)
+> > > > 
+> > > > Going forward I see a lot of what we've accomplished being incorporated
+> > > > into the filesystems.  When IMA will be limited to defining a system
+> > > > wide policy, I'll have completed my job.
+> > > 
+> > > What are your thoughts on IPE being a standalone LSM? Would you prefer to 
+> > > see its functionality integrated into IMA?
+> > 
+> > Improving the integrity subsystem would be preferred.
+> > 
+> 
+> Are you planning to attend Plumbers? Perhaps we could propose a BoF 
+> session on this topic.
 
-On Fri, 7 Aug 2020, Pekka Enberg wrote:
-> > I think we can just default to the counters. After all, if I
-> > understood correctly, we're talking about up to 100 ms time period
-> > with IRQs disabled when count_partial() is called. As this is
-> > triggerable from user space, that's a performance bug whatever way you
-> > look at it.
+That sounds like a good idea.
 
-On Fri, Aug 7, 2020 at 4:02 PM Christopher Lameter <cl@linux.com> wrote:
-> Well yes under extreme conditions and this is only happening for sysfs
-> counter retrieval.
+Mimi
 
-You will likely get some stall even in less extreme conditions, and in
-any case, the kernel should not allow user space to trigger such a
-stall.
 
-On Fri, Aug 7, 2020 at 4:02 PM Christopher Lameter <cl@linux.com> wrote:
-> There could be other solutions to this. This solution here is penalizing
-> evertu hotpath slab allocation for the sake of relatively infrequently
-> used counter monitoring. There the possibility of not traversing the list
-> ande simply estimating the value based on the number of slab pages
-> allocated on that node.
-
-Why do you consider this to be a fast path? This is all partial list
-accounting when we allocate/deallocate a slab, no? Just like
-___slab_alloc() says, I assumed this to be the slow path... What am I
-missing?
-
-No objections to alternative fixes, of course, but wrapping the
-counters under CONFIG_DEBUG seems like just hiding the actual issue...
-
-- Pekka
