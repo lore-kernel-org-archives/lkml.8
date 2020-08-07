@@ -2,191 +2,112 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B305C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF74C2224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596839144;
-	bh=5d8J1XXPiuotV4kyoNsGQ2GCIAsJcMejftum46peWaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SFx3bdZ3PdVrnXQ36j4nwOftpxftYKYQ/O0NdQPiV3v6Q9EwYkyrHjKrTsu+zoqha
-	 WNkkHcPkAEMRIlgnugOpU2KYzDPn9tFdq9GsjlRP9SiilC0fuQwk4QpprdxGeFmBdO
-	 WV554VCqFoxe8jEpTLS3oXvVV4Hkn2wH8vIN7bJw=
+	by mail.kernel.org (Postfix) with ESMTP id 0526A2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JqfkR9u7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgHGWZn (ORCPT
+        id S1726249AbgHGWZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 18:25:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgHGWZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 18:25:42 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE88E2177B;
-        Fri,  7 Aug 2020 22:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596839141;
-        bh=5d8J1XXPiuotV4kyoNsGQ2GCIAsJcMejftum46peWaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hJ1P9Hxef/cjB6dDGYTSjQuMigdd6ePzcd2lrH8T40SxRiohlf+MNZEzHJggn92Gt
-         VLWIrVM2aKNqBv5YNEktomIJf1mQ3YFyRdz6Atmydyl8AxfGkB9uwPbUptETdSPm0H
-         sryLAwpd7HUjfYK4pzh/cIqFQlIg8cRXLcP9IFF0=
-Date:   Fri, 7 Aug 2020 18:25:39 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     torvalds@linux-foundation.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH v4 00/14] liblockdep fixes for 5.9-rc1
-Message-ID: <20200807222539.GE2975990@sasha-vm>
-References: <20200805001043.3331907-1-sashal@kernel.org>
- <20200806080941.GA1697074@gmail.com>
+        Fri, 7 Aug 2020 18:25:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56160 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgHGWZ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 18:25:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 077MNFKR166634;
+        Fri, 7 Aug 2020 22:25:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=oPFJKyZLYAc3VzVUyvou3SVCM5tsGRrnygBBMWBaWi8=;
+ b=JqfkR9u7pcoIxTZRu7RsIlMJmdCvxLOfvLfMLzJWds90cTGFcBigcS6dYE6ypx95mni7
+ Mpi8AGY7JIuIZkHBc/4bAIUjNl9z7Ae/4gcMyrMhqqTPlRsfIAmqEQ9YJoBoN3EeJBTZ
+ rtLHe8A9fHoHc1k+w/+l4bGLDJPW0cPJByzloQ9aGK+w/FM3tOv+y38fc3C9UlcAraEf
+ WTm8lICr3nnV7lv02oiIlc3gbBPu6kfHRVdPAr5q6CH8c7UB036cMhF7uY9y0r8Hh+Hf
+ gNWwE8CM/4Lmytdb6aaQNl/8wpQ73BgM3mgx5xjEtNWBjSVxBBoAfukdZ+Uu8YPR57BC cg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32r6fxtwjh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 07 Aug 2020 22:25:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 077MO2tO122450;
+        Fri, 7 Aug 2020 22:25:47 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 32r6cygxjy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Aug 2020 22:25:47 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 077MPjmM026290;
+        Fri, 7 Aug 2020 22:25:45 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Aug 2020 22:25:45 +0000
+Subject: Re: [PATCH 00/10] mm/hugetlb: code refine and simplification
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <5b954f2d-0b51-c3bd-db8a-610580272d3d@oracle.com>
+Date:   Fri, 7 Aug 2020 15:25:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200806080941.GA1697074@gmail.com>
+In-Reply-To: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 adultscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008070151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 adultscore=0
+ bulkscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 clxscore=1015 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008070151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:09:41AM +0200, Ingo Molnar wrote:
->
->* Sasha Levin <sashal@kernel.org> wrote:
->
->> Hi Linus,
->>
->> Please consider applying these patches for liblockdep, or alternatively
->> pull from:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/sashal/linux.git tags/liblockdep-fixes-040820
->>
->> The patches fix up compilation and functionality of liblockdep on 5.8,
->> they were tested using liblockdep's internal testsuite.
->>
->> I was unable to get the x86 folks to pull these fixes for the past few
->> months:
->
->So the primary reason I didn't pull is that liblockdep was permanently
->build-broken from February 2019 to around February 2020, despite me
->pinging you multiple times about it.
+On 8/7/20 2:12 AM, Wei Yang wrote:
+> Following are some cleanup for hugetlb.
+> 
+> Simple test with tools/testing/selftests/vm/map_hugetlb pass.
+> 
+> Wei Yang (10):
+>   mm/hugetlb: not necessary to coalesce regions recursively
+>   mm/hugetlb: make sure to get NULL when list is empty
+>   mm/hugetlb: use list_splice to merge two list at once
+>   mm/hugetlb: count file_region to be added when regions_needed != NULL
+>   mm/hugetlb: remove the redundant check on non_swap_entry()
+>   mm/hugetlb: remove redundant huge_pte_alloc() in hugetlb_fault()
+>   mm/hugetlb: a page from buddy is not on any list
+>   mm/hugetlb: return non-isolated page in the loop instead of break and
+>     check
+>   mm/hugetlb: narrow the hugetlb_lock protection area during preparing
+>     huge page
+>   mm/hugetlb: not necessary to abuse temporary page to workaround the
+>     nasty free_huge_page
+> 
+>  mm/hugetlb.c | 101 ++++++++++++++++++++++-----------------------------
+>  1 file changed, 44 insertions(+), 57 deletions(-)
 
-I'm not sure how ignoring me for additional 6 months helped the state of
-liblockdep.
+Thanks Wei Yang!
 
->>  - https://lkml.org/lkml/2020/2/17/1089
->
->This pull request still said that if fixes "most of" liblockdep, not
->"all of", which is the benchmark really after such a long series of
->breakage.
->
->>  - https://lkml.org/lkml/2020/4/18/817
->
->This still said "most of".
->
->>  - https://lkml.org/lkml/2020/6/22/1262
->
->Same 'most of' verbiage.
-
-Right, and there are still benign build warnings around unused
-variables which doesn't impede liblockdep's functionality.
-
-Should they be cleaned up? sure, but let's get it working again.
-
->> Which is why this pull request ends up going straight to you.
->
->So at this point I think we need to ask whether it's worth it: are
->there any actual users of liblockdep, besides the testcases in
->liblockdep itself? I see there's a 'liblockdep-dev' package for
->Debian, but not propagated to Ubuntu or other popular variants AFAICS.
-
-Right, I can't really say how many users of this there are out there. I
-get an occasional email with a question or comment but I'm not aware of
-how many of those users are out there.
-
-I do think that if we keep liblockdep alive we should do a better job at
-not taking commits that break it to begin with. The model where someone
-is chasing lockdep to fix breakage after breakage isn't sustainable.
-
->Also, could you please specify whether all bugs are fixed or just
->'most'?
-
-It passes the testsuite, there are compiler warnings that show up on
-some gcc versions I'll work on cleaning up.
-
->> Sasha Levin (14):
->>   tools headers: Add kprobes.h header
->>   tools headers: Add rcupdate.h header
->>   tools/kernel.h: extend with dummy RCU functions
->>   tools bitmap: add bitmap_andnot definition
->>   tools/lib/lockdep: add definition required for IRQ flag tracing
->>   tools bitmap: add bitmap_clear definition
->>   tools/lib/lockdep: Hook up vsprintf, find_bit, hweight libraries
->>   tools/lib/lockdep: Enable building with CONFIG_TRACE_IRQFLAGS
->>   tools/lib/lockdep: New stacktrace API
->>   tools/lib/lockdep: call lockdep_init_task on init
->>   tools/lib/lockdep: switch to using lockdep_init_map_waits
->>   tools/kernel.h: hide noinstr
->>   tools/lib/lockdep: explicitly declare lockdep_init_task()
->>   tools/kernel.h: hide task_struct.hardirq_chain_key
->
->Style nits, please use consistent titles for patches:
->
-> - First word should be capitalized consistently, instead of mismash
->   of lower case mixed with upper case.
->
-> - First word should preferably be a verb, i.e. "Add new stacktrace
->   API stubs", not "New stacktrace API"
-
-I'll address these.
-
->Also, please always check linux-next whether there's some new upstream
->changes that liblockdep needs to adapt to. Right now there's a new
->build breakage even with all your fixes applied:
->
->  thule:~/tip/tools/lib/lockdep> make
->    CC       common.o
->  In file included from ../../include/linux/lockdep.h:24,
->                   from common.c:5:
->   ../../include/linux/../../../include/linux/lockdep.h:13:10: fatal error: linux/lockdep_types.h: No such file or directory
->     13 | #include <linux/lockdep_types.h>
->        |          ^~~~~~~~~~~~~~~~~~~~~~~
->
->At which point we need to step back and analyze the development model:
->this comparatively high rate of breakage derives from the unorthodox
->direct coupling of a kernel subsystem to a user-space library.
->
->The solution for that would be to use the method how perf syncs to
->kernel space headers, by maintaining a 100% copy in tools/include/ and
->having automatic mechanism that warns about out of sync headers but
->doesn't break functionality.
->
->See tools/perf/check-headers.sh for details.
->
->I believe this same half-automated sync-on-upstream-changes model
->could be used for liblockdep as well, i.e. lets copy kernel/lockdep.c
->and lockdep*.h over to tools/lib/lockdep/, and reuse the perf header
->syncing method to keep it synchronized from that point on.
->
->That would result in a far more maintainable liblockdep end result
->IMO?
-
-How does perf handle doing changes on top of those headers? As an
-example, if you look at patch #12, it basically makes userspace ignore
-the new "noinstr" annotation, otherwise compiling code that uses
-"noinstr" in userspace breaks badly.
-
-For liblockdep it's not enough to just sync headers, we need to do
-changes to those headers as well.
-
+I'll take a look at these next week.
 -- 
-Thanks,
-Sasha
+Mike Kravetz
