@@ -2,141 +2,103 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19757C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E902074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6285820855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="L6J98Lga"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="d/TLBHsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgHGSbE (ORCPT
+        id S1726968AbgHGSbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54368 "EHLO
+        Fri, 7 Aug 2020 14:31:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGSbD (ORCPT
+        with ESMTP id S1726061AbgHGSb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:31:03 -0400
-Received: from forward500o.mail.yandex.net (forward500o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::610])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F64C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:31:03 -0700 (PDT)
-Received: from mxback9g.mail.yandex.net (mxback9g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:170])
-        by forward500o.mail.yandex.net (Yandex) with ESMTP id 71B4560083;
-        Fri,  7 Aug 2020 21:30:59 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback9g.mail.yandex.net (mxback/Yandex) with ESMTP id Jr0i3gfLIB-Uwe4MD1j;
-        Fri, 07 Aug 2020 21:30:58 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1596825058;
-        bh=m/jDxnnqzj1sgkrZ03L56+2V0mkkC8zwbwVGLDh/z7o=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=L6J98Lga0onuM7EwUQje5yBnCw6f1Wi4gqdyGbZUYsQxzmYGEpqz5tnwydIbKkuye
-         jGtPPZMVSJGaWH0Jq/HD1XqA7MLZrDhKanTuW6ZkcickFcS4Ixy2NtgIysNFWQx//Y
-         85TApdPLO/HjKg86qkR9ZsImLa2KgSlv9JwYRNqQ=
-Authentication-Results: mxback9g.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by sas1-28d87b1eb748.qloud-c.yandex.net with HTTP;
-        Fri, 07 Aug 2020 21:30:58 +0300
-From:   Evgeny Novikov <novikov@ispras.ru>
-Envelope-From: eugenenovikov@yandex.ru
-To:     Guenter Roeck <linux@roeck-us.net>,
-        "madhuparnabhowmik10@gmail.com" <madhuparnabhowmik10@gmail.com>
-Cc:     "ldv-project@linuxtesting.org" <ldv-project@linuxtesting.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>
-In-Reply-To: <20200807162141.GA41980@roeck-us.net>
-References: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com> <20200807162141.GA41980@roeck-us.net>
-Subject: Re: [ldv-project] [PATCH] drivers: watchdog: rdc321x_wdt: Fix race condition bugs
+        Fri, 7 Aug 2020 14:31:29 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB1FC061A27
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:31:28 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id x1so2564287ilp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ow/n+p5v9AzYTA+9JReZiErGOMiITrcf1jfAhTavps8=;
+        b=d/TLBHsbUxJim9gdd6Ilv6C2+IoLB5KGJSQKC8Y7rBSGC//gc3mJa8d+nyjASUx6Ld
+         /Sap8yf2yTNMWrWQguBMFeBDe457yQgWGC1T1RXw2xz8rd6dATNB/I6tYOvkkueY3fQB
+         ut599aJHWiP0JG0noR7f1MkiPe0AeqXyYCwUY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ow/n+p5v9AzYTA+9JReZiErGOMiITrcf1jfAhTavps8=;
+        b=iScJFy+X5ftASwHWEy3q1+DNUHG8tnDpOFDRNHJ/X99h1aTYj4N0+fZOvjclCBuzqh
+         m6NZ0LM//eHmb257cmiCqohpm5ZdUxkBhE2AAn8XzSAmN+LyPpVjq5OQ7TmSw5HPu6zV
+         BGX1baAspDGt1gELMar2MQOekUgjRh7YqjRR9i50WeakdxAF8AALMR0k1ZS6W6Qz6ACB
+         bORU5qHEIBN2TV1FzuBrHa6JRF0gZ6ojd7PVOX2AH02IdavjbNduikbbPGsRwyhqhMVU
+         q3DMGQxijmN7MsVq992W3b58oXH1ys/8SrgVVSSTiOT9v+u0isrrN8vzfRDktM2Icvba
+         rRWQ==
+X-Gm-Message-State: AOAM530X/OLzJEslHRFeQLC7YNpbPwdAWIfhtvBu9VtKLZ8vauA6VRGr
+        LEknxQbvTs0913mgSA1bw75YG8jMyyw8CgH/dRs+AluiVdg=
+X-Google-Smtp-Source: ABdhPJy8Y0pVCBFunfYxLQ12k7YK8BWag29BNhppx9OX5t9Bt5CkoRs73Za0PwiTyL4uNOvTk/9RI6PwxpJZBtDtM9Q=
+X-Received: by 2002:a92:cb06:: with SMTP id s6mr5997240ilo.13.1596825087854;
+ Fri, 07 Aug 2020 11:31:27 -0700 (PDT)
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Fri, 07 Aug 2020 21:30:58 +0300
-Message-Id: <507311596824581@mail.yandex.ru>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+References: <20200807170722.2897328-1-joel@joelfernandes.org>
+In-Reply-To: <20200807170722.2897328-1-joel@joelfernandes.org>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Fri, 7 Aug 2020 14:31:16 -0400
+Message-ID: <CAEXW_YSCjELpkFUoX=kNvrkPvU-mDwv50Bbu=MZmbKa8=+BbYw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] option-subject: RCU and CPU hotplug checks and docs
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Vineeth Pillai <vineethrp@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.08.2020, 19:21, "Guenter Roeck" <linux@roeck-us.net>:
-> On Fri, Aug 07, 2020 at 04:59:02PM +0530, madhuparnabhowmik10@gmail.com wrote:
->>  From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->>
->>  In rdc321x_wdt_probe(), rdc321x_wdt_device.queue is initialized
->>  after misc_register(), hence if ioctl is called before its
->>  initialization which can call rdc321x_wdt_start() function,
->>  it will see an uninitialized value of rdc321x_wdt_device.queue,
->>  hence initialize it before misc_register().
->>  Also, rdc321x_wdt_device.default_ticks is accessed in reset()
->>  function called from write callback, thus initialize it before
->>  misc_register().
->>
->>  Found by Linux Driver Verification project (linuxtesting.org).
->>
->>  Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Fri, Aug 7, 2020 at 1:07 PM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
 >
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 >
-> Having said that ... this is yet another potentially obsolete driver.
-> You are really wasting your (and, fwiw, my) time.
+> This series improves/adds to RCU's warnings about CPU hotplug and adds
+> documentation and testing.
+>
+> v3->v4: Minor cleanups.
+>
+> Joel Fernandes (Google) (5):
+> rcu/tree: Add a warning if CPU being onlined did not report QS already
+> rcu/tree: Clarify comments about FQS loop reporting quiescent states
+> rcu/tree: Make FQS complaining about offline CPU more aggressive
+> rcutorture: Force synchronizing of RCU flavor from hotplug notifier
+> docs: Update RCU's hotplug requirements with a bit about design
 
-Static analysis tools are not aware about obsolete drivers.
-It would be great if there will be some formal way to filter them out.
-Maybe some file will enumerate all obsolete drivers, or there will be
-something within their source code, or something else.
+Apologies that the cover-letter subject has the weird 'option-subject'
+in it.  Likely my git-send script misunderstood one of my markers.
 
--- 
-Best regards,
-Evgeny Novikov
+thanks,
 
->
-> Florian, any thoughts if support for this chip can/should be deprecated
-> or even removed ?
->
-> Guenter
->
->>  ---
->>   drivers/watchdog/rdc321x_wdt.c | 5 ++---
->>   1 file changed, 2 insertions(+), 3 deletions(-)
->>
->>  diff --git a/drivers/watchdog/rdc321x_wdt.c b/drivers/watchdog/rdc321x_wdt.c
->>  index 57187efeb86f..f0c94ea51c3e 100644
->>  --- a/drivers/watchdog/rdc321x_wdt.c
->>  +++ b/drivers/watchdog/rdc321x_wdt.c
->>  @@ -231,6 +231,8 @@ static int rdc321x_wdt_probe(struct platform_device *pdev)
->>
->>           rdc321x_wdt_device.sb_pdev = pdata->sb_pdev;
->>           rdc321x_wdt_device.base_reg = r->start;
->>  + rdc321x_wdt_device.queue = 0;
->>  + rdc321x_wdt_device.default_ticks = ticks;
->>
->>           err = misc_register(&rdc321x_wdt_misc);
->>           if (err < 0) {
->>  @@ -245,14 +247,11 @@ static int rdc321x_wdt_probe(struct platform_device *pdev)
->>                                   rdc321x_wdt_device.base_reg, RDC_WDT_RST);
->>
->>           init_completion(&rdc321x_wdt_device.stop);
->>  - rdc321x_wdt_device.queue = 0;
->>
->>           clear_bit(0, &rdc321x_wdt_device.inuse);
->>
->>           timer_setup(&rdc321x_wdt_device.timer, rdc321x_wdt_trigger, 0);
->>
->>  - rdc321x_wdt_device.default_ticks = ticks;
->>  -
->>           dev_info(&pdev->dev, "watchdog init success\n");
->>
->>           return 0;
->>  --
->>  2.17.1
->
-> _______________________________________________
-> ldv-project mailing list
-> ldv-project@linuxtesting.org
-> http://linuxtesting.org/cgi-bin/mailman/listinfo/ldv-project
+ - Joel
