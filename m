@@ -2,344 +2,137 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D45222C9F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C32F2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MvQYr4hl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TqWTmWEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHGOG7 (ORCPT
+        id S1726604AbgHGOHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 10:06:59 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43642 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726574AbgHGOEa (ORCPT
+        Fri, 7 Aug 2020 10:07:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34405 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726536AbgHGOEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 10:04:30 -0400
+        Fri, 7 Aug 2020 10:04:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596809068;
+        s=mimecast20190719; t=1596809058;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=/o/7N/pVYTrU8PWj8rjIVFM7HLH+xZUNPQd5e/vJSog=;
-        b=MvQYr4hlcwlfsn3ecJA5Iof/LHR0OPz+pjM5iPCFVGgwXTtAFYRngCAl/M8X7JBRHfEJjh
-        tlG4OSVDxzH77GesRzk+SWWfrL9FBXflO2AGreNCoTm2VLZOLD0yCf2PwnLi7aDOOmCga/
-        ls1inTtE2vQoa0xfX1YgLyfL3b92X3s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-rvM63Tg-MQ-pOJ53pyxIYQ-1; Fri, 07 Aug 2020 10:02:23 -0400
-X-MC-Unique: rvM63Tg-MQ-pOJ53pyxIYQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33C3B1DE0;
-        Fri,  7 Aug 2020 14:02:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-69.rdu2.redhat.com [10.10.113.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C680D69502;
-        Fri,  7 Aug 2020 14:02:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 1/5] Add manpage for open_tree(2)
-From:   David Howells <dhowells@redhat.com>
-To:     mtk.manpages@gmail.com, viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        christian.brauner@ubuntu.com, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 07 Aug 2020 15:02:06 +0100
-Message-ID: <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+         in-reply-to:in-reply-to:references:references;
+        bh=GXVhD3g6ivnac0fcrazCB91JC9lqn0ES5uvBW9pR7CI=;
+        b=TqWTmWElxtZDngVPQZj33LPFcz1PT3ujODGKKvP6gyGcgMRBrqrJ5+cgknG9yvHEzowx6D
+        dOShxb7oIm5lmiRU+6UrqKdlQ4o9tWcp/arbM4fsc78L+J9328Zi/gwC8Z7eZIMB87EOTd
+        XFq3R9+1Hfm/RSWDuaI8vlqodvKbmkI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-Q57o9ZuhNHyJ_lBrA4k_BQ-1; Fri, 07 Aug 2020 10:04:16 -0400
+X-MC-Unique: Q57o9ZuhNHyJ_lBrA4k_BQ-1
+Received: by mail-wr1-f72.google.com with SMTP id z7so787410wrw.21
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 07:04:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GXVhD3g6ivnac0fcrazCB91JC9lqn0ES5uvBW9pR7CI=;
+        b=QGuVT8O8+F+YezZ78VsOMNugeB2L1omK4Mcm28rwVAYzflzaLLFIdhQxrjT9dNxoc7
+         6LWye+xCJnsveu6dF8sl2dvB762ZvIkijyHL503uLRTySHYAYxJxIFOkiFAkylQoypFs
+         kTejRYVZyXe0PUuP9xnTf8/k/BsdPcxmUwybdcGDYhkvILgmegelGmRDfEO/Er5Y03td
+         zFEReYNUf6Z25nwNAZ7u2t1aE/PGoKB6YTsCqkC8EYlOfFkzUVWenSmoa5MHcuX0NNHv
+         Tk5ol02r6xgxI6rut5TBnFadk85cQcUz2jVxCwu9VOWOthAnhlTatNW5pn3DLJBAI00W
+         e1Wg==
+X-Gm-Message-State: AOAM532CAVBqrP99vLR2Kb9v2BNFlImU0D19J7wwH1jUgnTSrr4oLyy8
+        h/o55fCAHntV/GYNKlztcacHcSN+K74j6f9buQvWTekn3ihGrWxdnr8E6uEMW3bjlHgo44VQXWO
+        VtzF7XmeKKnW9FBXWLrwfu6J9
+X-Received: by 2002:adf:ee8e:: with SMTP id b14mr13349618wro.213.1596809055472;
+        Fri, 07 Aug 2020 07:04:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzFnme6nB5sjnqXnT/i5KaKdqR/HrTEH/rsAWb6xNgVZbU3AgpzaUOvBS2QBrgwH91EUDWCyw==
+X-Received: by 2002:adf:ee8e:: with SMTP id b14mr13349593wro.213.1596809055215;
+        Fri, 07 Aug 2020 07:04:15 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.36.84])
+        by smtp.gmail.com with ESMTPSA id h14sm10114783wml.30.2020.08.07.07.04.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 07:04:14 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 16:04:11 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     luca abeni <luca.abeni@santannapisa.it>
+Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        tommaso.cucinotta@santannapisa.it, alessio.balsini@gmail.com,
+        bristot@redhat.com, dietmar.eggemann@arm.com,
+        linux-rt-users@vger.kernel.org, mtosatti@redhat.com,
+        williams@redhat.com, valentin.schneider@arm.com
+Subject: Re: [RFC PATCH v2 0/6] SCHED_DEADLINE server infrastructure
+Message-ID: <20200807140411.GS42956@localhost.localdomain>
+References: <20200807095051.385985-1-juri.lelli@redhat.com>
+ <20200807151632.36dc6200@nowhere>
+ <20200807133041.GQ42956@localhost.localdomain>
+ <20200807154120.5dc9599c@nowhere>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807154120.5dc9599c@nowhere>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a manual page to document the open_tree() system call.
+On 07/08/20 15:41, luca abeni wrote:
+> Hi Juri,
+> 
+> On Fri, 7 Aug 2020 15:30:41 +0200
+> Juri Lelli <juri.lelli@redhat.com> wrote:
+> [...]
+> > > In the meanwhile, I have some questions/comments after a first quick
+> > > look.
+> > > 
+> > > If I understand well, the patchset does not apply deadline servers
+> > > to FIFO and RR tasks, right? How does this patchset interact with RT
+> > > throttling?  
+> > 
+> > Well, it's something like the dual of it, in that RT Throttling
+> > directly throttles RT tasks to make spare CPU cycles available to
+> > fair tasks while this patchset introduces deadline servers to
+> > schedule fair tasks, thus still reserving CPU time for those (when
+> > needed).
+> 
+> Ah, OK... I was thinking about using deadline servers for both RT and
+> non-RT tasks. And to use them not only to throttle, but also to provide
+> some kind of performance guarantees (to all the scheduling classes).
+> Think about what can be done when combining this mechanism with
+> cgroups/containers :)
+> 
+> [...]
+> > > I understand this is because you do not
+> > > want to delay RT tasks if they are not starving other tasks. But
+> > > then, maybe what you want is not deadline-based scheduling. Maybe a
+> > > reservation-based scheduler based on fixed priorities is what you
+> > > want? (with SCHED_DEADLINE, you could provide exact performance
+> > > guarantees to SCHED_OTHER tasks, but I suspect patch 6/6 breaks
+> > > these guarantees?)  
+> > 
+> > I agree that we are not interested in exact guarantees in this case,
+> > but why not using something that it's already there and would give us
+> > the functionality we need (fix starvation for fair)?
+> 
+> Ok, if performance guarantees to non-RT tasks are not the goal, then I
+> agree. I was thinking that since the patchset provides a mechanism to
+> schedule various classes of tasks through deadline servers, then
+> using these servers to provide some kinds of guarantees could be
+> interesting ;-)
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- man2/open_tree.2 |  260 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 260 insertions(+)
- create mode 100644 man2/open_tree.2
-
-diff --git a/man2/open_tree.2 b/man2/open_tree.2
-new file mode 100644
-index 000000000..a360b11a5
---- /dev/null
-+++ b/man2/open_tree.2
-@@ -0,0 +1,260 @@
-+'\" t
-+.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
-+.\"
-+.\" %%%LICENSE_START(VERBATIM)
-+.\" Permission is granted to make and distribute verbatim copies of this
-+.\" manual provided the copyright notice and this permission notice are
-+.\" preserved on all copies.
-+.\"
-+.\" Permission is granted to copy and distribute modified versions of this
-+.\" manual under the conditions for verbatim copying, provided that the
-+.\" entire resulting derived work is distributed under the terms of a
-+.\" permission notice identical to this one.
-+.\"
-+.\" Since the Linux kernel and libraries are constantly changing, this
-+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-+.\" responsibility for errors or omissions, or for damages resulting from
-+.\" the use of the information contained herein.  The author(s) may not
-+.\" have taken the same level of care in the production of this manual,
-+.\" which is licensed free of charge, as they might when working
-+.\" professionally.
-+.\"
-+.\" Formatted or processed versions of this manual, if unaccompanied by
-+.\" the source, must acknowledge the copyright and authors of this work.
-+.\" %%%LICENSE_END
-+.\"
-+.TH OPEN_TREE 2 2020-08-07 "Linux" "Linux Programmer's Manual"
-+.SH NAME
-+open_tree \- Pick or clone mount object and attach to fd
-+.SH SYNOPSIS
-+.nf
-+.B #include <sys/types.h>
-+.br
-+.B #include <sys/mount.h>
-+.br
-+.B #include <unistd.h>
-+.br
-+.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
-+.PP
-+.BI "int open_tree(int " dirfd ", const char *" pathname ", unsigned int " flags );
-+.fi
-+.PP
-+.IR Note :
-+There are no glibc wrappers for these system calls.
-+.SH DESCRIPTION
-+.BR open_tree ()
-+picks the mount object specified by the pathname and attaches it to a new file
-+descriptor or clones it and attaches the clone to the file descriptor.  The
-+resultant file descriptor is indistinguishable from one produced by
-+.BR open "(2) with " O_PATH .
-+.PP
-+In the case that the mount object is cloned, the clone will be "unmounted" and
-+destroyed when the file descriptor is closed if it is not otherwise mounted
-+somewhere by calling
-+.BR move_mount (2).
-+.PP
-+To select a mount object, no permissions are required on the object referred
-+to by the path, but execute (search) permission is required on all of the
-+directories in
-+.I pathname
-+that lead to the object.
-+.PP
-+To clone an object, however, the caller must have mount capabilities and
-+permissions.
-+.PP
-+.BR open_tree ()
-+uses
-+.IR pathname ", " dirfd " and " flags
-+to locate the target object in one of a variety of ways:
-+.TP
-+[*] By absolute path.
-+.I pathname
-+points to an absolute path and
-+.I dirfd
-+is ignored.  The object is looked up by name, starting from the root of the
-+filesystem as seen by the calling process.
-+.TP
-+[*] By cwd-relative path.
-+.I pathname
-+points to a relative path and
-+.IR dirfd " is " AT_FDCWD .
-+The object is looked up by name, starting from the current working directory.
-+.TP
-+[*] By dir-relative path.
-+.I pathname
-+points to relative path and
-+.I dirfd
-+indicates a file descriptor pointing to a directory.  The object is looked up
-+by name, starting from the directory specified by
-+.IR dirfd .
-+.TP
-+[*] By file descriptor.
-+.I pathname
-+is "",
-+.I dirfd
-+indicates a file descriptor and
-+.B AT_EMPTY_PATH
-+is set in
-+.IR flags .
-+The mount attached to the file descriptor is queried directly.  The file
-+descriptor may point to any type of file, not just a directory.
-+
-+.\"______________________________________________________________
-+.PP
-+.I flags
-+can be used to control the operation of the function and to influence a
-+path-based lookup.  A value for
-+.I flags
-+is constructed by OR'ing together zero or more of the following constants:
-+.TP
-+.BR AT_EMPTY_PATH
-+.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
-+If
-+.I pathname
-+is an empty string, operate on the file referred to by
-+.IR dirfd
-+(which may have been obtained from
-+.BR open "(2) with"
-+.BR O_PATH ", from " fsmount (2)
-+or from another
-+.BR open_tree ()).
-+If
-+.I dirfd
-+is
-+.BR AT_FDCWD ,
-+the call operates on the current working directory.
-+In this case,
-+.I dirfd
-+can refer to any type of file, not just a directory.
-+This flag is Linux-specific; define
-+.B _GNU_SOURCE
-+.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
-+to obtain its definition.
-+.TP
-+.BR AT_NO_AUTOMOUNT
-+Don't automount the terminal ("basename") component of
-+.I pathname
-+if it is a directory that is an automount point.  This flag allows the
-+automount point itself to be picked up or a mount cloned that is rooted on the
-+automount point.  The
-+.B AT_NO_AUTOMOUNT
-+flag has no effect if the mount point has already been mounted over.
-+This flag is Linux-specific; define
-+.B _GNU_SOURCE
-+.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
-+to obtain its definition.
-+.TP
-+.B AT_SYMLINK_NOFOLLOW
-+If
-+.I pathname
-+is a symbolic link, do not dereference it: instead pick up or clone a mount
-+rooted on the link itself.
-+.TP
-+.B OPEN_TREE_CLOEXEC
-+Set the close-on-exec flag for the new file descriptor.  This will cause the
-+file descriptor to be closed automatically when a process exec's.
-+.TP
-+.B OPEN_TREE_CLONE
-+Rather than directly attaching the selected object to the file descriptor,
-+clone the object, set the root of the new mount object to that point and
-+attach the clone to the file descriptor.
-+.TP
-+.B AT_RECURSIVE
-+This is only permitted in conjunction with OPEN_TREE_CLONE.  It causes the
-+entire mount subtree rooted at the selected spot to be cloned rather than just
-+that one mount object.
-+
-+
-+.SH EXAMPLE
-+The
-+.BR open_tree ()
-+function can be used like the following:
-+.PP
-+.RS
-+.nf
-+fd1 = open_tree(AT_FDCWD, "/mnt", 0);
-+fd2 = open_tree(fd1, "",
-+                AT_EMPTY_PATH | OPEN_TREE_CLONE | AT_RECURSIVE);
-+move_mount(fd2, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
-+.fi
-+.RE
-+.PP
-+This would attach the path point for "/mnt" to fd1, then it would copy the
-+entire subtree at the point referred to by fd1 and attach that to fd2; lastly,
-+it would attach the clone to "/mnt2".
-+
-+
-+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-+.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-+.SH RETURN VALUE
-+On success, the new file descriptor is returned.  On error, \-1 is returned,
-+and
-+.I errno
-+is set appropriately.
-+.SH ERRORS
-+.TP
-+.B EACCES
-+Search permission is denied for one of the directories
-+in the path prefix of
-+.IR pathname .
-+(See also
-+.BR path_resolution (7).)
-+.TP
-+.B EBADF
-+.I dirfd
-+is not a valid open file descriptor.
-+.TP
-+.B EFAULT
-+.I pathname
-+is NULL or
-+.IR pathname
-+point to a location outside the process's accessible address space.
-+.TP
-+.B EINVAL
-+Reserved flag specified in
-+.IR flags .
-+.TP
-+.B ELOOP
-+Too many symbolic links encountered while traversing the pathname.
-+.TP
-+.B ENAMETOOLONG
-+.I pathname
-+is too long.
-+.TP
-+.B ENOENT
-+A component of
-+.I pathname
-+does not exist, or
-+.I pathname
-+is an empty string and
-+.B AT_EMPTY_PATH
-+was not specified in
-+.IR flags .
-+.TP
-+.B ENOMEM
-+Out of memory (i.e., kernel memory).
-+.TP
-+.B ENOTDIR
-+A component of the path prefix of
-+.I pathname
-+is not a directory or
-+.I pathname
-+is relative and
-+.I dirfd
-+is a file descriptor referring to a file other than a directory.
-+.SH VERSIONS
-+.BR open_tree ()
-+was added to Linux in kernel 4.18.
-+.SH CONFORMING TO
-+.BR open_tree ()
-+is Linux-specific.
-+.SH NOTES
-+Glibc does not (yet) provide a wrapper for the
-+.BR open_tree ()
-+system call; call it using
-+.BR syscall (2).
-+.SH SEE ALSO
-+.BR fsmount (2),
-+.BR move_mount (2),
-+.BR open (2)
-
+Not saying that the wider scope approach is not worth pursuing, you know
+I would be very much interested into that as well :-), but I'd leave it
+for a later time. This proposal looks reasonably achieaveble in somewhat
+short times and it should provide provable benefits to production today.
+Plus, you are again right, foundations would be there already when we'll
+be ready for the wider solution.
 
