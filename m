@@ -1,116 +1,92 @@
-Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EBCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FB0204EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 23:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7C42075A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgHFX7q (ORCPT
+        id S1726398AbgHGACL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 19:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
+        Thu, 6 Aug 2020 20:02:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHFX7p (ORCPT
+        with ESMTP id S1726130AbgHGACL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 19:59:45 -0400
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [IPv6:2001:67c:2050::465:102])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5779AC061574;
-        Thu,  6 Aug 2020 16:59:45 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4BN57s5V1GzKmRH;
-        Fri,  7 Aug 2020 01:59:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id Z5kYO4k7-bo7; Fri,  7 Aug 2020 01:59:32 +0200 (CEST)
-Date:   Fri, 7 Aug 2020 09:59:20 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Lokesh Gidra <lokeshgidra@google.com>, viro@zeniv.linux.org.uk,
-        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
-        jmorris@namei.org, kaleshsingh@google.com, dancol@dancol.org,
-        surenb@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nnk@google.com, jeffv@google.com,
-        calin@google.com, kernel-team@android.com, yanfei.xu@windriver.com,
-        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-Subject: Re: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and
- remove O_CLOEXEC
-Message-ID: <20200806235920.vy6ngjb7h55hg5w4@yavin.dot.cyphar.com>
-References: <20200804203155.2181099-1-lokeshgidra@google.com>
- <20200805034758.lrobunwdcqtknsvz@yavin.dot.cyphar.com>
- <20200805040806.GB1136@sol.localdomain>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2o2yssul3qsbj6lg"
-Content-Disposition: inline
-In-Reply-To: <20200805040806.GB1136@sol.localdomain>
-X-MBO-SPAM-Probability: 0
-X-Rspamd-Score: -6.18 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 88FDD1832
-X-Rspamd-UID: 6bf24b
+        Thu, 6 Aug 2020 20:02:11 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EEEC061574;
+        Thu,  6 Aug 2020 17:02:10 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 836BE11D69C3E;
+        Thu,  6 Aug 2020 16:45:23 -0700 (PDT)
+Date:   Thu, 06 Aug 2020 17:02:05 -0700 (PDT)
+Message-Id: <20200806.170205.1316893051509388641.davem@davemloft.net>
+To:     xie.he.0141@gmail.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
+        willemdebruijn.kernel@gmail.com, ms@dev.tdt.de,
+        briannorris@chromium.org
+Subject: Re: [PATCH] drivers/net/wan/lapbether: Added needed_headroom and a
+ skb->len check
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200806015040.98379-1-xie.he.0141@gmail.com>
+References: <20200806015040.98379-1-xie.he.0141@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 06 Aug 2020 16:45:23 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Xie He <xie.he.0141@gmail.com>
+Date: Wed,  5 Aug 2020 18:50:40 -0700
 
---2o2yssul3qsbj6lg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 1. Added a skb->len check
+> 
+> This driver expects upper layers to include a pseudo header of 1 byte
+> when passing down a skb for transmission. This driver will read this
+> 1-byte header. This patch added a skb->len check before reading the
+> header to make sure the header exists.
+> 
+> 2. Changed to use needed_headroom instead of hard_header_len to request
+> necessary headroom to be allocated
+> 
+> In net/packet/af_packet.c, the function packet_snd first reserves a
+> headroom of length (dev->hard_header_len + dev->needed_headroom).
+> Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
+> which calls dev->header_ops->create, to create the link layer header.
+> If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
+> length (dev->hard_header_len), and assumes the user to provide the
+> appropriate link layer header.
+> 
+> So according to the logic of af_packet.c, dev->hard_header_len should
+> be the length of the header that would be created by
+> dev->header_ops->create.
+> 
+> However, this driver doesn't provide dev->header_ops, so logically
+> dev->hard_header_len should be 0.
+> 
+> So we should use dev->needed_headroom instead of dev->hard_header_len
+> to request necessary headroom to be allocated.
+> 
+> This change fixes kernel panic when this driver is used with AF_PACKET
+> SOCK_RAW sockets.
+> 
+> Call stack when panic:
+ ...
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
 
-On 2020-08-04, Eric Biggers <ebiggers@kernel.org> wrote:
-> On Wed, Aug 05, 2020 at 01:47:58PM +1000, Aleksa Sarai wrote:
-> > On 2020-08-04, Lokesh Gidra <lokeshgidra@google.com> wrote:
-> > > when get_unused_fd_flags returns error, ctx will be freed by
-> > > userfaultfd's release function, which is indirectly called by fput().
-> > > Also, if anon_inode_getfile_secure() returns an error, then
-> > > userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
-> > >=20
-> > > Also, the O_CLOEXEC was inadvertently added to the call to
-> > > get_unused_fd_flags() [1].
-> >=20
-> > I disagree that it is "wrong" to do O_CLOEXEC-by-default (after all,
-> > it's trivial to disable O_CLOEXEC, but it's non-trivial to enable it on
-> > an existing file descriptor because it's possible for another thread to
-> > exec() before you set the flag). Several new syscalls and fd-returning
-> > facilities are O_CLOEXEC-by-default now (the most obvious being pidfds
-> > and seccomp notifier fds).
->=20
-> Sure, O_CLOEXEC *should* be the default, but this is an existing syscall =
-so it
-> has to keep the existing behavior.
-
-Ah, I missed that this was a UAPI breakage. :P
-
-> > At the very least there should be a new flag added that sets O_CLOEXEC.
->=20
-> There already is one (but these patches broke it).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---2o2yssul3qsbj6lg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXyyZVAAKCRCdlLljIbnQ
-EqERAQCdc5vbuBbcH6ZvlJ76Nh76VRRomUWHHCrcOMRHSFrJ+gD/WfDZUXU8Mwa0
-gAR9T/LNnZ0Yv7I1Q/ny7ZJjPIQswgU=
-=y/ce
------END PGP SIGNATURE-----
-
---2o2yssul3qsbj6lg--
+Applied and queued up for -stable, thanks.
