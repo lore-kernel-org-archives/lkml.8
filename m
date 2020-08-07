@@ -2,121 +2,177 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55446C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D04E2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VkZWRvcE"
+	by mail.kernel.org (Postfix) with ESMTP id F33312086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgHGD1G (ORCPT
+        id S1726489AbgHGD2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:27:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20340 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726055AbgHGD1G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:27:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596770825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PzBVMxtG2p8vYea4PsugHNCB46PX04hMXUf43TE1qM8=;
-        b=VkZWRvcEfrNplcAoweCEX+niiIFh67ohVytaIyurCz+miFQCxlhQK9Xf14+GrRIt9O2O2m
-        B4v+Z936UJhbwed6wEVLBcqllxBXOWuqggph541tQzqMwy7QudMT7LQvqjWNTnsfVH91jM
-        L5LhuD4igpvvlobaA5q1og/qgcBPGoU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-Bc6xhlj6Opam2uxRH5xr5Q-1; Thu, 06 Aug 2020 23:27:02 -0400
-X-MC-Unique: Bc6xhlj6Opam2uxRH5xr5Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC21518C63E7;
-        Fri,  7 Aug 2020 03:27:01 +0000 (UTC)
-Received: from [10.72.13.215] (ovpn-13-215.pek2.redhat.com [10.72.13.215])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D31B587A66;
-        Fri,  7 Aug 2020 03:26:57 +0000 (UTC)
-Subject: Re: [PATCH v2 03/24] virtio: allow __virtioXX, __leXX in config space
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20200803205814.540410-1-mst@redhat.com>
- <20200803205814.540410-4-mst@redhat.com>
- <ce85a206-45a6-da3d-45a7-06f068f3bad7@redhat.com>
- <20200805074434-mutt-send-email-mst@kernel.org>
- <4aa65ad6-5324-0a8c-0fa6-0d8e680f0706@redhat.com>
- <20200806015604-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a4ef115c-f005-fd09-a94f-5b2a004b672b@redhat.com>
-Date:   Fri, 7 Aug 2020 11:26:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200806015604-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Thu, 6 Aug 2020 23:28:53 -0400
+Received: from mga03.intel.com ([134.134.136.65]:42799 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgHGD2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 23:28:53 -0400
+IronPort-SDR: 1yj1qdaEnfZxoBT2AGV1VeRA/MfhZxlf7rprVnG+pqUtRFRzrTkA5d6TfhjeKlGhBIM8IJffyr
+ eGFXwhC57oXQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="152954956"
+X-IronPort-AV: E=Sophos;i="5.75,444,1589266800"; 
+   d="scan'208";a="152954956"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 20:28:52 -0700
+IronPort-SDR: 0E9cD/H5fx6Fo8etzqI3DOSq93r7jaZixsz19Qs2x+B5XHvjWPDTEOoPHMV5YNll+efx/om4Hx
+ lwksviia0Z3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,444,1589266800"; 
+   d="scan'208";a="468084410"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga005.jf.intel.com with ESMTP; 06 Aug 2020 20:28:51 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org
+Subject: [PATCH v4] x86/cpu: Use SERIALIZE in sync_core() when available
+Date:   Thu,  6 Aug 2020 20:28:33 -0700
+Message-Id: <20200807032833.17484-1-ricardo.neri-calderon@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The SERIALIZE instruction gives software a way to force the processor to
+complete all modifications to flags, registers and memory from previous
+instructions and drain all buffered writes to memory before the next
+instruction is fetched and executed. Thus, it serves the purpose of
+sync_core(). Use it when available.
 
-On 2020/8/6 下午1:58, Michael S. Tsirkin wrote:
-> On Thu, Aug 06, 2020 at 11:37:38AM +0800, Jason Wang wrote:
->> On 2020/8/5 下午7:45, Michael S. Tsirkin wrote:
->>>>>     #define virtio_cread(vdev, structname, member, ptr)			\
->>>>>     	do {								\
->>>>>     		might_sleep();						\
->>>>>     		/* Must match the member's type, and be integer */	\
->>>>> -		if (!typecheck(typeof((((structname*)0)->member)), *(ptr))) \
->>>>> +		if (!__virtio_typecheck(structname, member, *(ptr)))	\
->>>>>     			(*ptr) = 1;					\
->>>> A silly question,  compare to using set()/get() directly, what's the value
->>>> of the accessors macro here?
->>>>
->>>> Thanks
->>> get/set don't convert to the native endian, I guess that's why
->>> drivers use cread/cwrite. It is also nice that there's type
->>> safety, checking the correct integer width is used.
->>
->> Yes, but this is simply because a macro is used here, how about just doing
->> things similar like virtio_cread_bytes():
->>
->> static inline void virtio_cread(struct virtio_device *vdev,
->>                        unsigned int offset,
->>                        void *buf, size_t len)
->>
->>
->> And do the endian conversion inside?
->>
->> Thanks
->>
-> Then you lose type safety. It's very easy to have an le32 field
-> and try to read it into a u16 by mistake.
->
-> These macros are all about preventing bugs: and the whole patchset
-> is about several bugs sparse found - that is what prompted me to make
-> type checks more strict.
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Cathy Zhang <cathy.zhang@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kyung Min Park <kyung.min.park@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: linux-edac@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+This is v4 from my three previous submission [1], [2], and [3]. The first
+three patches of the series have been merged in Linus' tree. Hence, I am
+submitting only this patch for review.
 
+[1]. https://lkml.org/lkml/2020/7/27/8
+[2]. https://lkml.org/lkml/2020/8/4/1090
+[3]. https://lkml.org/lkml/2020/8/6/808
 
-Yes, but we need to do the macro with compiler extensions. I wonder 
-whether or not the kernel has already had something since this request 
-here is pretty common?
+Changes since v3:
+ * Reworked comments in sync_core() for better readability. (Dave Hansen)
+ * Reworked the implementation to align with the style in special_insns.h.
+   No functional changes were introduced. (Tony Luck)
 
-Thanks
+Changes since v2:
+ * Support serialize with static_cpu_has() instead of using alternative
+   runtime patching directly. (Borislav Petkov)
 
+Changes since v1:
+ * Support SERIALIZE using alternative runtime patching.
+   (Peter Zijlstra, H. Peter Anvin)
+ * Added a note to specify which version of binutils supports SERIALIZE.
+   (Peter Zijlstra)
+ * Verified that (::: "memory") is used. (H. Peter Anvin)
+---
+ arch/x86/include/asm/special_insns.h |  6 ++++++
+ arch/x86/include/asm/sync_core.h     | 26 ++++++++++++++++++--------
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
->
->
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 59a3e13204c3..5999b0b3dd4a 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -234,6 +234,12 @@ static inline void clwb(volatile void *__p)
+ 
+ #define nop() asm volatile ("nop")
+ 
++static inline void serialize(void)
++{
++	/* Instruction opcode for SERIALIZE; supported in binutils >= 2.35. */
++	asm volatile(".byte 0xf, 0x1, 0xe8" ::: "memory");
++}
++
+ #endif /* __KERNEL__ */
+ 
+ #endif /* _ASM_X86_SPECIAL_INSNS_H */
+diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
+index fdb5b356e59b..089712777fd9 100644
+--- a/arch/x86/include/asm/sync_core.h
++++ b/arch/x86/include/asm/sync_core.h
+@@ -5,6 +5,7 @@
+ #include <linux/preempt.h>
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
++#include <asm/special_insns.h>
+ 
+ #ifdef CONFIG_X86_32
+ static inline void iret_to_self(void)
+@@ -54,14 +55,23 @@ static inline void iret_to_self(void)
+ static inline void sync_core(void)
+ {
+ 	/*
+-	 * There are quite a few ways to do this.  IRET-to-self is nice
+-	 * because it works on every CPU, at any CPL (so it's compatible
+-	 * with paravirtualization), and it never exits to a hypervisor.
+-	 * The only down sides are that it's a bit slow (it seems to be
+-	 * a bit more than 2x slower than the fastest options) and that
+-	 * it unmasks NMIs.  The "push %cs" is needed because, in
+-	 * paravirtual environments, __KERNEL_CS may not be a valid CS
+-	 * value when we do IRET directly.
++	 * The SERIALIZE instruction is the most straightforward way to
++	 * do this but it not universally available.
++	 */
++	if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
++		serialize();
++		return;
++	}
++
++	/*
++	 * For all other processors, there are quite a few ways to do this
++	 * IRET-to-self is nice because it works on every CPU, at any CPL
++	 * (so it's compatible with paravirtualization), and it never exits
++	 * to a hypervisor. The only down sides are that it's a bit slow
++	 * (it seems to be a bit more than 2x slower than the fastest
++	 * options) and that it unmasks NMIs.  The "push %cs" is needed
++	 * because, in paravirtual environments, __KERNEL_CS may not be a
++	 * valid CS value when we do IRET directly.
+ 	 *
+ 	 * In case NMI unmasking or performance ever becomes a problem,
+ 	 * the next best option appears to be MOV-to-CR2 and an
+-- 
+2.17.1
 
