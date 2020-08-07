@@ -2,75 +2,71 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2736DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00A5F221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798972177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oYb3Id1V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WXIRFhFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgHGGfv (ORCPT
+        id S1726388AbgHGGf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 02:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57506 "EHLO
+        Fri, 7 Aug 2020 02:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgHGGft (ORCPT
+        with ESMTP id S1726180AbgHGGfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 02:35:49 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFF0C061756
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 23:35:49 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f193so466006pfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 23:35:49 -0700 (PDT)
+        Fri, 7 Aug 2020 02:35:51 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DE3C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 23:35:50 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g33so433861pgb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 23:35:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lbtTVfS19M9EircaMcGgloMEE/grVbAoUbgj1gpJXrg=;
-        b=oYb3Id1Vy5jcC87/K7XVZbIUdogBy8rqpbrYWfAis26tXnMx+qzw81kg4Zx1gYap1k
-         hiHxefnWRbv5s/Je/DBNO+4/C+kVHuRkurqczsPzam4fZ3TcKXfPxtgvXQvxqu3CVF6j
-         ejySUVgMHfvjnwW7P9taUczH+H/AdV7FbpY4w=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sArfDCPX+yKb9TQ1ON2BnB3SsuAFh3sZzLbDb6cibRU=;
+        b=WXIRFhFCe4W5I6UgKWDCW3UyMYilZ32XCNH9uee6t/xanqVry8VnS7gryJMsuZBFY/
+         yBoQD8rGfleNlkW7yfU+4wlASpGIk6kZbcI7RoTXpUe1/M1ruF8pdmz+KCAV9qOIER1N
+         AHutCbPhvDh3rzitWzIXBLnCKJ63fOFuZ5gZ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lbtTVfS19M9EircaMcGgloMEE/grVbAoUbgj1gpJXrg=;
-        b=gDWLV7FLL7cRy5FvWDlCI3/e7tsBRR4uwelfPQYbOJy5HatavMa5QSGJEAH6fFO3Jx
-         uDipjxuhjD662EqOVn0hTELrFTkU13miRS/epM7CHegdt6nHz2QCGiiVZcn6sDH9Gmhk
-         WCwFi1nb02kZDTt7ZC7uqVjcPl3stBfpTCLssYZj7Ac+yJEZ1MNtSQyhdtoc3JpG/D/Q
-         G95ocFbMzfxZqXP2JumSMPD4Gim7ybquDiXlwaYIjtpE0lLFuBVpsROsWcmIIPNCZukk
-         sFMYLv/TcrmbGi2//oquIKHSACeTWUvVFxBBwWCmUxM1moJc3DfZxh9+hrlH9EuwGaZu
-         oosg==
-X-Gm-Message-State: AOAM533q5AI8yAv+eXX5F5qrTxeqQfI4blKfHZjXjlVxDaXXAOwaveal
-        nqEgFQem/Ri/51e+xRGF2nl5haxJfVA=
-X-Google-Smtp-Source: ABdhPJwAp6eTnZSJvt3uZQk6PAO4KETgli+5BFbz7Euml8v36poCp5QpJfq/cQM2TB7Jrnr5SofgFQ==
-X-Received: by 2002:a62:8cd3:: with SMTP id m202mr11272808pfd.184.1596782149105;
-        Thu, 06 Aug 2020 23:35:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sArfDCPX+yKb9TQ1ON2BnB3SsuAFh3sZzLbDb6cibRU=;
+        b=M8ZVcCWTSmVbxxfZNLcbtG2WRSAARGvGpI/89aALpEntRAoMkY3vBMEk52RLuUI4z1
+         MCwODJJ5hTb3G0b65ZDzEt261RnjBCjpDJTTqfBi1O3CNxMZQWKar+1KaQFmvaCLNnIU
+         jzxa4gNuCNmk6i1LrpEAmc0t1wMqS9se0uwZLcL6WoGcjrQsewFhFeVrFGfYL45hrF/m
+         7y220WAnlLQsqHyCbb4WHdou3LfZBQRVVnYvPccBfWzZZw2lmpYKOnmpVkZUxM71LGpu
+         A2WG4SE0cDq+1NXGeCfFHP517vKjNjLRIl+/HrUcRWgrlZRh3J0ipuz05G9rGnpI3wt0
+         EQ3Q==
+X-Gm-Message-State: AOAM531cULd9QJyi0JeW1OZWcZRvaloZoOM0u1eVe8qsz3/SKUmlSnbA
+        vL/zLCx3jFYux8jT1lCjUsViNQ==
+X-Google-Smtp-Source: ABdhPJwYh4MTlWGIL+50lpLKghCeomuo6cIkL3bH4TI5zJoOsDhOPDjNUP7PEy8JCuaxkfuLRBFvvA==
+X-Received: by 2002:a65:614f:: with SMTP id o15mr10400330pgv.321.1596782150506;
+        Thu, 06 Aug 2020 23:35:50 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g9sm10812966pfr.172.2020.08.06.23.35.48
+        by smtp.gmail.com with ESMTPSA id o192sm12514425pfg.81.2020.08.06.23.35.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 06 Aug 2020 23:35:48 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>, stable@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>, Shuah Khan <shuah@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/2] module: Correctly truncate sysfs sections output
-Date:   Thu,  6 Aug 2020 23:35:38 -0700
-Message-Id: <20200807063539.2620154-2-keescook@chromium.org>
+Subject: [PATCH 0/2] module: Correctly truncate sysfs sections output
+Date:   Thu,  6 Aug 2020 23:35:37 -0700
+Message-Id: <20200807063539.2620154-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200807063539.2620154-1-keescook@chromium.org>
-References: <20200807063539.2620154-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,73 +74,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only-root-readable /sys/module/$module/sections/$section files
-did not truncate their output to the available buffer size. While most
-paths into the kernfs read handlers end up using PAGE_SIZE buffers,
-it's possible to get there through other paths (e.g. splice, sendfile).
-Actually limit the output to the "count" passed into the read function,
-and report it back correctly. *sigh*
+Hi,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/20200805002015.GE23458@shao2-debian
-Fixes: ed66f991bb19 ("module: Refactor section attr into bin attribute")
-Cc: stable@vger.kernel.org
-Cc: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- kernel/module.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+This fixes my sysfs module sections refactoring to take into account
+the case where the output buffer is not PAGE_SIZE. :( Thanks to 0day
+and trinity for noticing.
 
-diff --git a/kernel/module.c b/kernel/module.c
-index aa183c9ac0a2..08c46084d8cc 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1520,18 +1520,34 @@ struct module_sect_attrs {
- 	struct module_sect_attr attrs[];
- };
- 
-+#define MODULE_SECT_READ_SIZE (3 /* "0x", "\n" */ + (BITS_PER_LONG / 4))
- static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
- 				struct bin_attribute *battr,
- 				char *buf, loff_t pos, size_t count)
- {
- 	struct module_sect_attr *sattr =
- 		container_of(battr, struct module_sect_attr, battr);
-+	char bounce[MODULE_SECT_READ_SIZE + 1];
-+	size_t wrote;
- 
- 	if (pos != 0)
- 		return -EINVAL;
- 
--	return sprintf(buf, "0x%px\n",
--		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
-+	/*
-+	 * Since we're a binary read handler, we must account for the
-+	 * trailing NUL byte that sprintf will write: if "buf" is
-+	 * too small to hold the NUL, or the NUL is exactly the last
-+	 * byte, the read will look like it got truncated by one byte.
-+	 * Since there is no way to ask sprintf nicely to not write
-+	 * the NUL, we have to use a bounce buffer.
-+	 */
-+	wrote = scnprintf(bounce, sizeof(bounce), "0x%px\n",
-+			 kallsyms_show_value(file->f_cred)
-+				? (void *)sattr->address : NULL);
-+	count = min(count, wrote);
-+	memcpy(buf, bounce, count);
-+
-+	return count;
- }
- 
- static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
-@@ -1580,7 +1596,7 @@ static void add_sect_attrs(struct module *mod, const struct load_info *info)
- 			goto out;
- 		sect_attrs->nsections++;
- 		sattr->battr.read = module_sect_read;
--		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
-+		sattr->battr.size = MODULE_SECT_READ_SIZE;
- 		sattr->battr.attr.mode = 0400;
- 		*(gattr++) = &(sattr++)->battr;
- 	}
+I'll let this sit in -next for a few days and then send it to Linus.
+
+-Kees
+
+Kees Cook (2):
+  module: Correctly truncate sysfs sections output
+  selftests: splice: Check behavior of full and short splices
+
+ kernel/module.c                               | 22 ++++++-
+ tools/testing/selftests/splice/.gitignore     |  1 +
+ tools/testing/selftests/splice/Makefile       |  4 +-
+ tools/testing/selftests/splice/config         |  1 +
+ tools/testing/selftests/splice/settings       |  1 +
+ .../selftests/splice/short_splice_read.sh     | 56 ++++++++++++++++++
+ tools/testing/selftests/splice/splice_read.c  | 57 +++++++++++++++++++
+ 7 files changed, 137 insertions(+), 5 deletions(-)
+ create mode 100644 tools/testing/selftests/splice/config
+ create mode 100644 tools/testing/selftests/splice/settings
+ create mode 100755 tools/testing/selftests/splice/short_splice_read.sh
+ create mode 100644 tools/testing/selftests/splice/splice_read.c
+
 -- 
 2.25.1
 
