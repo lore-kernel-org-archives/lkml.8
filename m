@@ -2,118 +2,111 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7741EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666572075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:08:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U51uVC8U"
+	by mail.kernel.org (Postfix) with ESMTP id 5090F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596823739;
+	bh=udi5I5pfi5JJ7CIIUzcIC0pR27D0JOkk+ttmUMzlvy4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rTXVmIGNowJfzb72B6kms1WnDfCwamZZMJ0dlrUyzWP3B8xR+06fB2pcaoCS555Nz
+	 9M2Z56gizKtA/f7J8Dd+oOJk3LHjNDSDfSlHKT8jtopNGk1Jhpa09WQCncCSws5dDz
+	 J3g5HgqycRpuu10fqWd5ytiUui2h171I6OXNsx0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgHGSIx (ORCPT
+        id S1726722AbgHGSI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGSIw (ORCPT
+        Fri, 7 Aug 2020 14:08:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35153 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgHGSI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:08:52 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30E9C061756;
-        Fri,  7 Aug 2020 11:08:52 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d188so1431449pfd.2;
-        Fri, 07 Aug 2020 11:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=o9GfeplJEGWZE00SmFSw687oTtbpYxZHtEH+C525WsM=;
-        b=U51uVC8UURDb54ath1YrC7mDCLpm/CjpQ8fUhrrfebCIli2aeodyWXi2PlqxJarsEX
-         TQIqQ1fTZ4s+dlx2qwqEvBFLdUIiTqLQmNG0Lg7vXrEzNv9v8GtNob34vPZ/nI+0oV6t
-         m4huIM+18HJTqEzHb5mZUjkcvHqSS0SiOeTKesdhdBXnT4IvhDxtgkyMXHxvyKftmKB5
-         v5GGMyrBcHx5CNeM5hMDBeQcvtEZGidvGIFaNhf1aUH+ypjyjncrwIkSN+WJpGYAdo71
-         +I+ZWAQPuhSf7NYprhlz42gR58I2igazxXO7brgp4PiUMiJY6BDK22Eamk3sblgtArpA
-         jMwQ==
+        Fri, 7 Aug 2020 14:08:57 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 93so2305148otx.2;
+        Fri, 07 Aug 2020 11:08:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o9GfeplJEGWZE00SmFSw687oTtbpYxZHtEH+C525WsM=;
-        b=BKQadCKoQmH90BvK1b6QO4iPHJ7RFUVhvmjhW9Hb5O6j0EncsIugLFdVm+3F2lW9M8
-         WZ/KYnjHg8TjQEiVMVN7WcmPx7tKu6tV2BEEPwkYWTsinoeazCxnq5wWcpfhWo9jFEcg
-         u7NzwMqNnzdgXtjShgIy3zLPvzi5Qu/N9hBMPivafUy+1MvrYSIqZU80Q9goK16q29JX
-         IlNpKMocyn8LhyeugrDRWzRCY2bHuXhUnj/tg/18H+K4ubR+BtP0sYWLq5lUJWxVKEsj
-         8lkVgUQgVlIALLXhXT5C95wVrTnTIsGecIfCfikFEWVvauPafr0IBIpO0lNQjrOlZ+8Z
-         LFhQ==
-X-Gm-Message-State: AOAM5318BC6Z+4NE3ykUJrsoDSxsvaSisMMlZXeFBdsnVnsniSlDenT4
-        FVOCHdlC7uNZ3N9H6jV0aj0=
-X-Google-Smtp-Source: ABdhPJwVv8qm+UbX4+y4I9aSasEizsLVsVTWOw9GfQYTGRnWyeAzRCbvcsPDG6WoMeKE4RbIE5gHAg==
-X-Received: by 2002:a63:541e:: with SMTP id i30mr12922269pgb.47.1596823732168;
-        Fri, 07 Aug 2020 11:08:52 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id f43sm4106367pjg.35.2020.08.07.11.08.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 11:08:51 -0700 (PDT)
-Subject: Re: [PATCH] drivers: watchdog: rdc321x_wdt: Fix race condition bugs
-To:     Guenter Roeck <linux@roeck-us.net>, madhuparnabhowmik10@gmail.com
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
-        ldv-project@linuxtesting.org
-References: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com>
- <20200807162141.GA41980@roeck-us.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <8dca64a1-8cd9-6a41-b61d-1c4c14e5cd5e@gmail.com>
-Date:   Fri, 7 Aug 2020 11:08:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vlBLt0wVavmDZ5RFEsE+vCh0JS01F9HZx3Rc707e4Kw=;
+        b=d6mJgNWfX5o6T2N9E2ZV11Oc/wjLapES/dMSdzTwqWAZe5G/4i/3Sjr9cJgb81Brz+
+         RTCDoutlMnVUZnsTwuBqnoGrIpVmfHPEXiuKRg6BU5alzfZhJhJxsZx/GU+l3NYkxNiC
+         ZHG7t2q2DVz53gDqCe60YieNwRlwM4Exar4s0tYfP1mCmxwVhO/kHqd4jsvXykNPk7lY
+         m+/kY/8GmTleUO28VfZF7AicHeOR64SWr0RHgHzjfd4NzzeEI5iI/oDRhBUb1+gsNTAB
+         SapBNigx6t2H9+lcFRCPJeoI8PDuwlnxqvSV5oPVYNYBq85z629H6+40U2FCylhZvsbu
+         1mzw==
+X-Gm-Message-State: AOAM531x9kiWXbz/SIy3S3Vo1Vi0sO7K+IbCxlUwl+OlWFW1oSP2qVTe
+        6b6ASJzv07u5XAg03uCcndtJzQ7DaO32lR2ZPvs=
+X-Google-Smtp-Source: ABdhPJwS6Rs7JJC7qd1+eUP1wOhP9sPrOMJCwJ8G7Tro9YiSK2Elieu727o27cU/trsCY95ziwt2Qftnp7gkk1L3qkg=
+X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr12255651otj.118.1596823735863;
+ Fri, 07 Aug 2020 11:08:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200807162141.GA41980@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200807093529.5343-1-puwen@hygon.cn>
+In-Reply-To: <20200807093529.5343-1-puwen@hygon.cn>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 7 Aug 2020 20:08:44 +0200
+Message-ID: <CAJZ5v0hJoJr5+GSZfoYXmTtH_TrY17P_xRABZg1YFnQ+WUaqmg@mail.gmail.com>
+Subject: Re: [PATCH RESEND] i2c: designware: Add device HID for Hygon I2C controller
+To:     Pu Wen <puwen@hygon.cn>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 7, 2020 at 11:37 AM Pu Wen <puwen@hygon.cn> wrote:
+>
+> Add device HID HYGO0010 to match the Hygon ACPI Vendor ID (HYGO) that
+> was registered in http://www.uefi.org/acpi_id_list, and the I2C
+> controller on Hygon paltform will use the HID.
+>
+> Signed-off-by: Pu Wen <puwen@hygon.cn>
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Wolfram Sang <wsa@kernel.org>
+> ---
+>  drivers/acpi/acpi_apd.c                     | 1 +
+>  drivers/i2c/busses/i2c-designware-platdrv.c | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+> index ba2612e9a0eb..f24f6d3f1fa5 100644
+> --- a/drivers/acpi/acpi_apd.c
+> +++ b/drivers/acpi/acpi_apd.c
+> @@ -240,6 +240,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
+>         { "AMDI0020", APD_ADDR(cz_uart_desc) },
+>         { "AMD0030", },
+>         { "AMD0040", APD_ADDR(st_misc_desc)},
+> +       { "HYGO0010", APD_ADDR(wt_i2c_desc) },
+>  #endif
+>  #ifdef CONFIG_ARM64
+>         { "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index a71bc58fc03c..0dfeb2d11603 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -55,6 +55,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
+>         { "HISI02A1", 0 },
+>         { "HISI02A2", 0 },
+>         { "HISI02A3", 0 },
+> +       { "HYGO0010", ACCESS_INTR_MASK },
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, dw_i2c_acpi_match);
+> --
 
-
-On 8/7/2020 9:21 AM, Guenter Roeck wrote:
-> On Fri, Aug 07, 2020 at 04:59:02PM +0530, madhuparnabhowmik10@gmail.com wrote:
->> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->>
->> In rdc321x_wdt_probe(), rdc321x_wdt_device.queue is initialized
->> after misc_register(), hence if ioctl is called before its
->> initialization which can call rdc321x_wdt_start() function,
->> it will see an uninitialized value of rdc321x_wdt_device.queue,
->> hence initialize it before misc_register().
->> Also, rdc321x_wdt_device.default_ticks is accessed in reset()
->> function called from write callback, thus initialize it before
->> misc_register().
->>
->> Found by Linux Driver Verification project (linuxtesting.org).
->>
->> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> Having said that ... this is yet another potentially obsolete driver.
-> You are really wasting your (and, fwiw, my) time.
-> 
-> Florian, any thoughts if support for this chip can/should be deprecated
-> or even removed ?
-
-I am still using my rdc321x-based SoC, so no, this is not obsolete as
-far as I am concerned, time permitting, modernizing the driver is on my
-TODO after checking/fixing the Ethernet driver first.
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Applied as 5.9-rc1 material, thanks!
