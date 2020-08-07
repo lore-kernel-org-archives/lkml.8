@@ -2,73 +2,80 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C132CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96C7C2224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FFD2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:43:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QVwW8wID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgHGMjA (ORCPT
+        id S1728453AbgHGMnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:39:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728350AbgHGMjA (ORCPT
+        Fri, 7 Aug 2020 08:43:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50559 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728350AbgHGMnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 08:39:00 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2327C061574;
-        Fri,  7 Aug 2020 05:38:59 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k41eA-00B8k0-Cv; Fri, 07 Aug 2020 12:38:54 +0000
-Date:   Fri, 7 Aug 2020 13:38:54 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: splice: infinite busy loop lockup bug
-Message-ID: <20200807123854.GS1236603@ZenIV.linux.org.uk>
-References: <00000000000084b59f05abe928ee@google.com>
- <29de15ff-15e9-5c52-cf87-e0ebdfa1a001@I-love.SAKURA.ne.jp>
- <20200807122727.GR1236603@ZenIV.linux.org.uk>
+        Fri, 7 Aug 2020 08:43:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596804195;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=273fiZa3j2YUsHYvjEo3xvFBeJLIY7mZ32ur6GZf0EM=;
+        b=QVwW8wIDIa1aK18bgE0wv6MXTdWGITG4t87itufgubLiU4N8nT5UlKy68dffxcZscFKngp
+        6+SGR/SiO+K8nYE36PggEtI/DYrfkY8Nu3P5KDjFcJTgWIGUSiQC4N5pQ32JSJg+HX0Z7x
+        nuJL5yKJF8u3O3h2hiVQpkImdRUWPwU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-8ExUZS9hO7iDqC6bCcjDtg-1; Fri, 07 Aug 2020 08:43:14 -0400
+X-MC-Unique: 8ExUZS9hO7iDqC6bCcjDtg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 549B718A1DFB;
+        Fri,  7 Aug 2020 12:43:12 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E9E377B932;
+        Fri,  7 Aug 2020 12:43:11 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 001E99CBC; Fri,  7 Aug 2020 14:43:10 +0200 (CEST)
+Date:   Fri, 7 Aug 2020 14:43:10 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Xin He <hexin.op@bytedance.com>
+Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Qi Liu <liuqi.16@bytedance.com>
+Subject: Re: [PATCH] drm/virtio: fix memory leak in
+ virtio_gpu_cleanup_object()
+Message-ID: <20200807124310.cmhbj6bj76twdtaw@sirius.home.kraxel.org>
+References: <20200722051851.72662-1-hexin.op@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807122727.GR1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200722051851.72662-1-hexin.op@bytedance.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 01:27:27PM +0100, Al Viro wrote:
-> On Fri, Aug 07, 2020 at 07:35:08PM +0900, Tetsuo Handa wrote:
-> > syzbot is reporting hung task at pipe_release() [1], for for_each_bvec() from
-> > iterate_bvec() from iterate_all_kinds() from iov_iter_alignment() from
-> > ext4_unaligned_io() from ext4_dio_write_iter() from ext4_file_write_iter() from
-> > call_write_iter() from do_iter_readv_writev() from do_iter_write() from
-> > vfs_iter_write() from iter_file_splice_write() falls into infinite busy loop
-> > with pipe->mutex held.
-> > 
-> > The reason of falling into infinite busy loop is that iter_file_splice_write()
-> > for some reason generates "struct bio_vec" entry with .bv_len=0 and .bv_offset=0
-> > while for_each_bvec() cannot handle .bv_len == 0.
-> 
-> broken in 1bdc76aea115 "iov_iter: use bvec iterator to implement iterate_bvec()",
-> unless I'm misreading it...
-> 
-> Zero-length segments are not disallowed; it's not all that hard to filter them
-> out in iter_file_splice_write(), but the intent had always been to have
-> iterate_all_kinds() et.al. able to cope with those.
-> 
-> How are these pipe_buffers with ->len == 0 generated in that reproducer, BTW?
-> There might be something else fishy going on...
+On Wed, Jul 22, 2020 at 01:18:51PM +0800, Xin He wrote:
+> Before setting shmem->pages to NULL, kfree() should
+> be called.
 
-FWIW, my preference would be to have for_each_bvec() advance past zero-length
-segments; I'll need to go through its uses elsewhere in the tree first, though
-(after I grab some sleep),
+>  			sg_free_table(shmem->pages);
+> +			kfree(shmem->pages);
+>  			shmem->pages = NULL;
+
+Pushed to drm-misc-fixes.
+
+thanks,
+  Gerd
+
