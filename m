@@ -2,139 +2,206 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466142086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D092086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:17:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWwhGBch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgHGVQ0 (ORCPT
+        id S1726582AbgHGVRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 17:16:26 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39693 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGVQZ (ORCPT
+        Fri, 7 Aug 2020 17:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGVRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 17:16:25 -0400
-Received: by mail-io1-f70.google.com with SMTP id v10so2561876iot.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:16:24 -0700 (PDT)
+        Fri, 7 Aug 2020 17:17:18 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABE8C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:17:18 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 128so1605223pgd.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:17:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mTi25uKDeno+kjIGWxKtG9bnSzwH+0hK7ejqxU/R1EA=;
+        b=PWwhGBchg2tJbjQiYkAtlcJdXTvewWyYBMHTHHrKFz2Px+GJ5NXCZfJ7x5pG3p5K8c
+         6FhQTKgwg48cZFRfGsdGe6mYPYH2dLTU+qCzpRfJXDHU5jT/bH8VyQUZ0ngvIIGG13my
+         ZUjFuSEKUTRIoUtwlx+fekBRDEZLzvdAKhTPtX25rUOj36ZEdkgbf4Q4wCEDvVJFIaNr
+         dlUloyzVjagzcCYchfILiAavp7KC7EMg7VwsKSCC1mQxULEK8ELFy6kIyyAi3DvhwDw7
+         PS8cGJVHwjXzWUpcVHd2RLZK19nTPA/gSYq50xrZM2aQAAWBDiWFrgxiWaq2F/OXVfoV
+         uYEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=V/ye5q3zVEuEmk6UgKiiIHke6oMmhX9ZWEGicRQ0Rto=;
-        b=t8gE9QLIZ1nt4KMrLc8PefBLqqpL1LwYx6sajfqC9/4NKYIwtzP56+TSktzaEjSCHG
-         fOZfwHyG9im3HXZ7FBQv0TWzhBNla34wWsOvbxw50u4q+2QbwsN3lu45mGv534G/fERH
-         FNT6eaJpcFbf0maPrE+YRfJqYJ9EFdFbCOfRLku7FePYE87GkqEOaGlb/Y1WHbwg1UvH
-         YI77m47G1H8BiaOucRk1CfC7ke+In+w38FWpCBC0YSInlyNQs1x5u0B+8sb1+Kl2Mxc6
-         rAhGCpUtwsWmwMziHDKKBGHfIJsD9w6b6tzUq7UpqLoIHhdGXPHmoxxaXNDuthqFtBvO
-         FOaw==
-X-Gm-Message-State: AOAM531S9XVsjPNNLqphLhCuzhZHeKxKYng1ikue+NgwqEe32FNFmLJN
-        48wcv6F9rYLhHIhFfQZBFhjBH6ER0sl0CMPYAUzZbRCnQj9m
-X-Google-Smtp-Source: ABdhPJw4romYBK1Z+dvO46jBp8soCsB3ThWVIPk1PwYP4o+yLiyarrCr/PxiuMUi9FWDd2MSbKJ9KS6kozKB86Nq6uPjNsNhPxMc
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mTi25uKDeno+kjIGWxKtG9bnSzwH+0hK7ejqxU/R1EA=;
+        b=dqfh1Qv/gPkafZYHM9dIiIWFS35eP3pJR68FqCDy4qK4WbA6cjvjQfs3JEnf90vyTn
+         kvYm4xZWMgucRpmSXcpee2JM7Bpco2U8JjBw0T/vjYHgHkVFe/ItVC6CYvX09b+wo0RI
+         2m8G6HCpkhREZs3ELisOi3vcvyr58A/1oFv9LK8p/b2pQI6IIm1HZd0+P06mL0MbgbGv
+         QLOA3fDJDV/n6xYzPA6fijbkrLV+sMJUl77OW7KWl8Vi6MJhpRWeeO/XSaKHMX2ouF/D
+         y027BJUjEfM8RhzxNu6LqFzyJUbP+aLJESyH08zmyIGdxegeRy1TAJzs5h7vH08gq/10
+         9Ugw==
+X-Gm-Message-State: AOAM533VuE46sssAlNUZtB31JxapFC8GEbW0hBhauqUnujzz4P6+Cn8b
+        49eYHZVMsFAhLFmpDEYAK24=
+X-Google-Smtp-Source: ABdhPJyX8dokEBECvrJtr/HspUEzUCXoXJ2w+iu74hAdocV4J9yYNtCOIKOnx/uQYxfab10QHJTsWw==
+X-Received: by 2002:a62:62c5:: with SMTP id w188mr15527675pfb.133.1596835037973;
+        Fri, 07 Aug 2020 14:17:17 -0700 (PDT)
+Received: from realwakka ([61.83.141.80])
+        by smtp.gmail.com with ESMTPSA id i185sm4358478pgd.28.2020.08.07.14.17.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Aug 2020 14:17:17 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 21:17:00 +0000
+From:   Sidong Yang <realwakka@gmail.com>
+To:     Melissa Wen <melissa.srw@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/vkms: modify sequence disable/plane/enable in
+ commit_tail
+Message-ID: <20200807211700.GA30117@realwakka>
+References: <20200729152231.13249-1-realwakka@gmail.com>
+ <CAJeY4oEAHmY5icF_EPpojW5U+ryt3-guuvGQfj_S=XskO_xyRA@mail.gmail.com>
+ <20200804093351.GI6419@phenom.ffwll.local>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1611:: with SMTP id x17mr6741244jas.99.1596834984654;
- Fri, 07 Aug 2020 14:16:24 -0700 (PDT)
-Date:   Fri, 07 Aug 2020 14:16:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000067ab705ac501e5f@google.com>
-Subject: kernel BUG at kernel/fork.c:LINE!
-From:   syzbot <syzbot+3776ecd80aac504e6085@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, christian@brauner.io,
-        christian@kellner.me, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        mingo@kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, wad@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200804093351.GI6419@phenom.ffwll.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Aug 04, 2020 at 11:33:51AM +0200, daniel@ffwll.ch wrote:
+> On Sat, Aug 01, 2020 at 04:30:23PM -0300, Melissa Wen wrote:
+> > On Wed, Jul 29, 2020 at 12:22 PM Sidong Yang <realwakka@gmail.com> wrote:
+> > >
+> > > This patch modifies function call sequence in commit tail. This is for
+> > > the problem that raised when kms_cursor_crc test is tested repeatedly.
+> > > In second test, there is an bug that crtc commit doesn't start vblank events.
+> > > Because there is some error about vblank's refcount. in commit_flush() that
+> > > called from commit_plane, drm_vblank_get() is called and vblank is enabled
+> > > in normal case. But in second test, vblank isn't enable for vblank->refcount
+> > > is already increased in previous test. Increased refcount will be decreased
+> > > in drm_atomic_helper_commit_modeset_enables() after commit_plane.
+> > > Therefore, commit_plane should be called after commit_modeset_enable.
+> > >
+> > > In this situation, there is a warning raised in get_vblank_timestamp().
+> > > hrtimer.node.expires and vblank->time are zero for no vblank events before.
+> > > This patch returns current time when vblank is not enabled.
+> > >
+> > Hi Sidong,
+> > 
+> > I think this patch tries to solve two different issues.
+> > 
+> > I am not a maintainer, but I believe you can split it.
+> > 
+> > Everything indicates that changing the commit tail sequence does not
+> > ideally solve the problem of subtests getting stuck (as we have dicussed);
+> > however, for me, the treatment of the warning is valid and it is also related
+> > to other IGT tests using VKMS.
+> 
+> Yeah I think (but haven't tested, definitely need to confirm that) that
+> the vblank get/put fix from Melissa is the correct fix for all these
+> issues.
+> 
+> > One option is to send a patch that only treats the warning. I believe that
+> > in the body of the commit message, it would be nice to have the warning
+> > that this patch addresses, and when it appears by running an IGT test.
+> > Also, say why it should be done this way in vkms.
+> > This info could help future debugging.
+> 
+> Yeah I think splitting out the warning fix is the right thing to do here.
 
-syzbot found the following issue on:
+Okay, I'll write another patch about the warning.
+Thanks.
 
-HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1194d90a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=18bb86f2e4ebfda2
-dashboard link: https://syzkaller.appspot.com/bug?extid=3776ecd80aac504e6085
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+-Sidong
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3776ecd80aac504e6085@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at kernel/fork.c:390!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 5239 Comm: syz-executor.1 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:account_kernel_stack+0x297/0x320 kernel/fork.c:390
-Code: 89 e2 be 23 00 00 00 48 89 ef c1 e2 05 e8 81 9e 75 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 ae c9 2f 00 e8 a9 c9 2f 00 <0f> 0b e8 f2 50 6f 00 e9 d2 fd ff ff e8 98 c9 2f 00 48 c7 c6 20 24
-RSP: 0018:ffffc90015e4f850 EFLAGS: 00010216
-RAX: 00000000000001f4 RBX: 0000000000000000 RCX: ffffc90017983000
-RDX: 0000000000040000 RSI: ffffffff81445327 RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880a2ef9663
-R10: 0000000000000008 R11: 0000000000000000 R12: ffffffffffffffff
-R13: ffff8880001b2280 R14: ffff88809e4fa840 R15: 0000000000000000
-FS:  00007f7f035e5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2fd30000 CR3: 000000009b747000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- release_task_stack kernel/fork.c:447 [inline]
- put_task_stack+0xc4/0x230 kernel/fork.c:459
- finish_task_switch+0x52a/0x750 kernel/sched/core.c:3649
- context_switch kernel/sched/core.c:3781 [inline]
- __schedule+0x8ed/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- freezable_schedule include/linux/freezer.h:172 [inline]
- futex_wait_queue_me+0x2a7/0x570 kernel/futex.c:2588
- futex_wait+0x1df/0x560 kernel/futex.c:2690
- do_futex+0x15b/0x1a60 kernel/futex.c:3749
- __do_sys_futex kernel/futex.c:3810 [inline]
- __se_sys_futex kernel/futex.c:3778 [inline]
- __x64_sys_futex+0x378/0x4e0 kernel/futex.c:3778
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ccd9
-Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7f035e4cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: ffffffffffffffda RBX: 000000000078bfa8 RCX: 000000000045ccd9
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000078bfa8
-RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
-R13: 00007fff896cb67f R14: 00007f7f035e59c0 R15: 000000000078bfac
-Modules linked in:
----[ end trace ff14b6c5822b8142 ]---
-RIP: 0010:account_kernel_stack+0x297/0x320 kernel/fork.c:390
-Code: 89 e2 be 23 00 00 00 48 89 ef c1 e2 05 e8 81 9e 75 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 ae c9 2f 00 e8 a9 c9 2f 00 <0f> 0b e8 f2 50 6f 00 e9 d2 fd ff ff e8 98 c9 2f 00 48 c7 c6 20 24
-RSP: 0018:ffffc90015e4f850 EFLAGS: 00010216
-RAX: 00000000000001f4 RBX: 0000000000000000 RCX: ffffc90017983000
-RDX: 0000000000040000 RSI: ffffffff81445327 RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880a2ef9663
-R10: 0000000000000008 R11: 0000000000000000 R12: ffffffffffffffff
-R13: ffff8880001b2280 R14: ffff88809e4fa840 R15: 0000000000000000
-FS:  00007f7f035e5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2fd30000 CR3: 000000009b747000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> -Daniel
+> 
+> > 
+> > Off-topic: I removed the group's mailing list of the University of São
+> > Paulo (kernel-usp) from the cc, since I believe you had no intention of
+> > sending the patch to them.
+> > 
+> > Best regards,
+> > 
+> > Melissa
+> > 
+> > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> > >
+> > > Signed-off-by: Sidong Yang <realwakka@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/vkms/vkms_crtc.c | 5 +++++
+> > >  drivers/gpu/drm/vkms/vkms_drv.c  | 4 ++--
+> > >  2 files changed, 7 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > index ac85e17428f8..09c012d54d58 100644
+> > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > @@ -86,6 +86,11 @@ static bool vkms_get_vblank_timestamp(struct drm_crtc *crtc,
+> > >         struct vkms_output *output = &vkmsdev->output;
+> > >         struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+> > >
+> > > +       if (!READ_ONCE(vblank->enabled)) {
+> > > +               *vblank_time = ktime_get();
+> > > +               return true;
+> > > +       }
+> > > +
+> > >         *vblank_time = READ_ONCE(output->vblank_hrtimer.node.expires);
+> > >
+> > >         if (WARN_ON(*vblank_time == vblank->time))
+> > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> > > index 1e8b2169d834..c2c83a01d4a7 100644
+> > > --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> > > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > > @@ -76,10 +76,10 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
+> > >
+> > >         drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> > >
+> > > -       drm_atomic_helper_commit_planes(dev, old_state, 0);
+> > > -
+> > >         drm_atomic_helper_commit_modeset_enables(dev, old_state);
+> > >
+> > > +       drm_atomic_helper_commit_planes(dev, old_state, 0);
+> > > +
+> > >         drm_atomic_helper_fake_vblank(old_state);
+> > >
+> > >         drm_atomic_helper_commit_hw_done(old_state);
+> > > --
+> > > 2.17.1
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Groups "Kernel USP" group.
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
+> > > To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/20200729152231.13249-1-realwakka%40gmail.com.
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
