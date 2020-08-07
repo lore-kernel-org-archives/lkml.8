@@ -2,69 +2,122 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 05:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 05:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F12C20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 05:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5667C2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 05:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596779549;
+	bh=VrTc5pr7hXkvJgVB3uN/B80HBQFTxP5+kpw5LS5EzAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Toqr4+zDWdf4TwD9d+1jad9GqiXAskiRzQzQ2NYshSG9B+HwgyMYzxEpuYgTziPQ
+	 ZfqAFscOk9pR3RAEW5FBYbXGeFAbQw+mqElfZSc8g7/b475ncuqoFSG6l1Pw+mAOJg
+	 i6mdFjkkiQ/VHFh6q8tsHZt7c2U5sEcU/l9GA6fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgHGFuo (ORCPT
+        id S1726232AbgHGFw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 01:50:44 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:26673 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725805AbgHGFuo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 01:50:44 -0400
-Received: from [192.168.1.41] ([92.140.224.28])
-        by mwinf5d73 with ME
-        id CVqc2300D0dNxE403Vqd5J; Fri, 07 Aug 2020 07:50:41 +0200
-X-ME-Helo: [192.168.1.41]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 07 Aug 2020 07:50:41 +0200
-X-ME-IP: 92.140.224.28
-Subject: Re: [PATCH] epic100: switch from 'pci_' to 'dma_' API
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, snelson@pensando.io, mhabets@solarflare.com,
-        vaibhavgupta40@gmail.com, mst@redhat.com, mkubecek@suse.cz,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200806201935.733641-1-christophe.jaillet@wanadoo.fr>
- <20200806.142311.94169513118353100.davem@davemloft.net>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <bbb337c9-7cb7-0809-2b25-b0c5bd6fd82a@wanadoo.fr>
-Date:   Fri, 7 Aug 2020 07:50:37 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 7 Aug 2020 01:52:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbgHGFw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 01:52:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B438120866;
+        Fri,  7 Aug 2020 05:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596779547;
+        bh=VrTc5pr7hXkvJgVB3uN/B80HBQFTxP5+kpw5LS5EzAg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UFNPuzPGH9tHUnlaF2r5NMb+vdjJwWbNUP64KapCaARfWmoTWnCqkiXj/3IQoYjiQ
+         ZyEL5J/FuZr/i59mk/feuDtu5nfUo9pZYTd1rWHykE8rgHlGclkNGK1PMqJZKxZH5F
+         7exPTDGS7SGZieec/4LE40wqiwlrmr7MZauHh2ek=
+Date:   Fri, 7 Aug 2020 07:52:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     =?utf-8?B?5L2V6ZGr?= <hexin.op@bytedance.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
+        kraxel@redhat.com, Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, Qi Liu <liuqi.16@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: Re: [PATCH v3] drm/virtio: fix missing dma_fence_put() in
+ virtio_gpu_execbuffer_ioctl()
+Message-ID: <20200807055241.GA3025028@kroah.com>
+References: <20200721101647.42653-1-hexin.op@bytedance.com>
+ <CACKzwj=obkJPmMb1cGKDwBdgkxa92kpPTP9c2SzFWbbzcD6Luw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200806.142311.94169513118353100.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACKzwj=obkJPmMb1cGKDwBdgkxa92kpPTP9c2SzFWbbzcD6Luw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 06/08/2020 à 23:23, David Miller a écrit :
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Date: Thu,  6 Aug 2020 22:19:35 +0200
+On Fri, Aug 07, 2020 at 11:00:11AM +0800, 何鑫 wrote:
+> Xin He <hexin.op@bytedance.com> 于2020年7月21日周二 下午6:17写道：
+> >
+> > From: Qi Liu <liuqi.16@bytedance.com>
+> >
+> > We should put the reference count of the fence after calling
+> > virtio_gpu_cmd_submit(). So add the missing dma_fence_put().
+> >
+> > Fixes: 2cd7b6f08bc4 ("drm/virtio: add in/out fence support for explicit synchronization")
+> > Co-developed-by: Xin He <hexin.op@bytedance.com>
+> > Signed-off-by: Xin He <hexin.op@bytedance.com>
+> > Signed-off-by: Qi Liu <liuqi.16@bytedance.com>
+> > Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+> > ---
+> >
+> > changelog in v3:
+> > 1) Change the subject from "drm/virtio: fixed memory leak in virtio_gpu_execbuffer_ioctl()" to
+> >    "drm/virtio: fix missing dma_fence_put() in virtio_gpu_execbuffer_ioctl()"
+> > 2) Rework the commit log
+> >
+> > changelog in v2:
+> > 1) Add a change description
+> >
+> >  drivers/gpu/drm/virtio/virtgpu_ioctl.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> > index 5df722072ba0..19c5bc01eb79 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> > @@ -179,6 +179,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+> >
+> >         virtio_gpu_cmd_submit(vgdev, buf, exbuf->size,
+> >                               vfpriv->ctx_id, buflist, out_fence);
+> > +       dma_fence_put(&out_fence->f);
+> >         virtio_gpu_notify(vgdev);
+> >         return 0;
+> >
+> > --
+> > 2.21.1 (Apple Git-122.3)
+> >
 > 
->> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> Christophe, the net-next tree is closed so I'd like to ask that you
-> defer submitting these conversion patches until the net-next
-> tree opens back up again.
-> 
-> Thank you.
-> 
-> 
+> cc Greg
 
+Why?
 
-Sure, sorry for the inconvenience.
+$ ./scripts/get_maintainer.pl --file drivers/gpu/drm/virtio/virtgpu_ioctl.c
+David Airlie <airlied@linux.ie> (maintainer:VIRTIO GPU DRIVER)
+Gerd Hoffmann <kraxel@redhat.com> (maintainer:VIRTIO GPU DRIVER)
+Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
+Sumit Semwal <sumit.semwal@linaro.org> (maintainer:DMA BUFFER SHARING FRAMEWORK)
+"Christian König" <christian.koenig@amd.com> (maintainer:DMA BUFFER SHARING FRAMEWORK)
+dri-devel@lists.freedesktop.org (open list:VIRTIO GPU DRIVER)
+virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER)
+linux-kernel@vger.kernel.org (open list)
+linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK)
+linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING FRAMEWORK)
 
-CJ
