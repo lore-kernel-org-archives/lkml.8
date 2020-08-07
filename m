@@ -2,93 +2,121 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95227C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771D222D06
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBBC22CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 04:32:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gAYVyRcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgHGEXA convert rfc822-to-8bit (ORCPT
+        id S1726066AbgHGEco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 00:23:00 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:52662 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725379AbgHGEXA (ORCPT
+        Fri, 7 Aug 2020 00:32:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37622 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgHGEcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 00:23:00 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0U4zfFVC_1596774176;
-Received: from 30.27.116.2(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0U4zfFVC_1596774176)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 07 Aug 2020 12:22:57 +0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/3] scripts/sorttable: Change section type of orc_lookup
- to SHT_PROGBITS
-From:   changhuaixin <changhuaixin@linux.alibaba.com>
-In-Reply-To: <20200806150810.GA2127855@gmail.com>
-Date:   Fri, 7 Aug 2020 12:22:56 +0800
-Cc:     changhuaixin <changhuaixin@linux.alibaba.com>, bp@alien8.de,
-        hpa@zytor.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        michal.lkml@markovi.net, mingo@redhat.com,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        x86@kernel.org, yamada.masahiro@socionext.com, jpoimboe@redhat.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <C605557D-951C-4FA7-9CE2-940B92FD198D@linux.alibaba.com>
-References: <20200723034643.33537-1-changhuaixin@linux.alibaba.com>
- <20200723034643.33537-2-changhuaixin@linux.alibaba.com>
- <2714DF66-5F65-4CB1-A232-B88E4D5AF566@linux.alibaba.com>
- <20200806150810.GA2127855@gmail.com>
-To:     Ingo Molnar <mingo@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Fri, 7 Aug 2020 00:32:43 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0774WNsI141338;
+        Fri, 7 Aug 2020 04:32:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=8Wfo9c+uZ6H9abHfs8H2dH/06jlrmsvNMvWZnZ+m/xQ=;
+ b=gAYVyRcDHCZA1oU2kbOgRx4hqvmV4BJvzhMXYaeXs9feh9vbcmA/P1TUX4HB+zt5uwb/
+ /gqO6h6vmZST0Ojs2lYI4qe7Vp1Cs+VLLSoFpvRz9jljEGaAR64sVajPwEhdXeVSa+bP
+ Fr1CQgFirE23smTbLCZQ759WgnTasH065pa8SA096yqmvdbypkk4TuTywvrOhJCPw7ho
+ 3uGxrmsaIXtO8A5PwfKVUTmx4TIAODzKICSbDK3e7hGZaoNbzYT8YizJesaVQ2EEJs66
+ kA3ezxDWhl28g4/S7jGg5a0ON3VTZZVV9cTI20Aepc41PNDKuj3JfEeCin6nGwP2ekRu 4w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 32r6ep6ejq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 07 Aug 2020 04:32:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0774T1Ch032156;
+        Fri, 7 Aug 2020 04:32:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 32pdnye4u6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Aug 2020 04:32:23 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0774WJdV016137;
+        Fri, 7 Aug 2020 04:32:20 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Aug 2020 21:32:19 -0700
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     Bean Huo <huobean@gmail.com>,
+        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Subject: Re: [PATCH v8 0/4] scsi: ufs: Add Host Performance Booster Support
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1mu37w0ig.fsf@ca-mkp.ca.oracle.com>
+References: <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
+        <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+        <7c59c7abf7b00c368228b3096e1bea8c9e2b2e80.camel@gmail.com>
+        <SN6PR04MB4640CE297AAB3CF4D37EE002FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <39c546268abead68f4c00f17dc47c1597f3e0273.camel@gmail.com>
+        <SN6PR04MB4640210D586CBA053F56DCF0FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <e3aba7fba7c208ac58c638139bd615c871d2e52e.camel@gmail.com>
+        <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+Date:   Fri, 07 Aug 2020 00:32:15 -0400
+In-Reply-To: <SN6PR04MB464069DD70022FC3C55265B6FC480@SN6PR04MB4640.namprd04.prod.outlook.com>
+        (Avri Altman's message of "Thu, 6 Aug 2020 13:56:34 +0000")
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008070031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
+ malwarescore=0 clxscore=1011 mlxscore=0 priorityscore=1501 adultscore=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008070032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Avri,
 
-> On Aug 6, 2020, at 11:08 PM, Ingo Molnar <mingo@kernel.org> wrote:
-> 
-> 
-> * changhuaixin <changhuaixin@linux.alibaba.com> wrote:
-> 
->> Hi, Ingo
->> 
->> Another way to write SHT_PROGBITS is using elf_create_section to write orc_lookup table headers, when orc_unwind_ip table and orc_unwind table are written. Is this a better solution?
->> 
->> diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
->> index 3f98dcfbc177..860d4dcec8e6 100644
->> --- a/tools/objtool/orc_gen.c
->> +++ b/tools/objtool/orc_gen.c
->> @@ -183,6 +183,10 @@ int create_orc_sections(struct objtool_file *file)
->>        u_sec = elf_create_section(file->elf, ".orc_unwind",
->>                                   sizeof(struct orc_entry), idx);
->> 
->> +       /* make flags of section orc_lookup right */
->> +       if (!elf_create_section(file->elf, ".orc_lookup", sizeof(int), 0))
->> +               return -1;
->> +
->>        /* populate sections */
->>        idx = 0;
->>        for_each_sec(file, sec) {
-> 
-> Looks much nicer IMO.
-> 
-> Mind turning this into a proper patch that does it plus reverts the 
-> hack?
-> 
-A new patchset is sent.
+> Martin - Are you considering to merge the HPB feature eventually to
+> mainline kernel?
 
-Thanks,
-huaixin
+I promise to take a look at the new series. But I can't say I'm a big
+fan of how this feature was defined in the spec.
 
-> Thanks,
-> 
-> 	Ingo
+And - as discussed a couple of weeks ago - I would still like to see
+some supporting evidence from a realistic workload and not a synthetic
+benchmark.
 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
