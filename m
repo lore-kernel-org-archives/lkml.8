@@ -2,70 +2,76 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DIET_1,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA72C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4092B2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6ED02074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWyWAQSE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fn2BtkYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgHGUKU (ORCPT
+        id S1726676AbgHGUKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
+        Fri, 7 Aug 2020 16:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgHGUKQ (ORCPT
+        with ESMTP id S1726015AbgHGUKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:10:16 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D968C061A27
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:10:16 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id h3so2997220oie.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:10:16 -0700 (PDT)
+        Fri, 7 Aug 2020 16:10:20 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4816EC061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:10:20 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id 25so3057898oir.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:10:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=a3UDDzhIvH1/+i0FRX7y0haqHObyC/cYDe6aFvS0mIE=;
-        b=pWyWAQSEcaR5o2q23Lhj1hu5lev1ZwJsUOkJXSUGisvh8psV3p4AGEAQlE40xUXjuQ
-         1QL7C4CD6k+gRx4jbCTmYkttkqB89JCrocEDvyf1Y4B0MWbxzYXVdVppKAWIok+HhKoy
-         uLhpuJSBMLTZ4Nl6z1OWsv9o7KsC7kaXsm85M82sIHP+p9Q6c+rgiS3DgApVZc08OHTO
-         xgACYE4y1O2FH9e1qhQT95wZ1piqaAPn6k6AobOWCH/4EpHqFhKmONrJM5cp2qGnsyMH
-         jluNNox6zn9wIW72y1C67kc3KiC+EG+4FsF38dtDaPnJAWkkIGIeORHFhEzduoOM/7MP
-         S2Tw==
+        bh=SgP7WwDilGEtspTgVkOv5lPLm3Tj4TA+TAE2e5VngkQ=;
+        b=Fn2BtkYAUEWONC2B2r5P7++ILH4yha2msE6c7WxSUkQUcmdnlIf9zoUIyC3F8Q23qu
+         bOTB7hEalppR1PdOWkzGw2brkvQmCoFkETZ9+6dFTgtUQLgoJSybhPw+Ypi/mLoqA+sy
+         DLM5rI6eZ+ECDTIMURT1jNNaANm0FfLbjVSL2zB9SLVcdFkKyZG+czIOElJcQ1tjuxs9
+         fHA6uD1pErLXGjTykxcVJjXOdyrd84JVOs1z7uAuZG/zj8PK7vCO3V9z6IwLkrzKKXZu
+         XY4ltb6VXgV+tv52rzOxMq4P6DfWb+0DQTvjw9KWHx0KHk2AklVTujkxZ7uNcsSFMKHJ
+         3zIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=a3UDDzhIvH1/+i0FRX7y0haqHObyC/cYDe6aFvS0mIE=;
-        b=O54zjnvsaLO7p+Jy/X3tEtx0ne8i21J/lD+6kyCvwj5tY1gndgR89KnUkc2IIhQBHb
-         VkZf0+l/gsL77HKsPCTONv7wwKL1dis6Mn9Tr5BR9klwxg3p1AEOHjxpuJy44CMi0Ktp
-         UsSkihO8FOfjaTqpJt2hqvyN8w5nMyjim4hBh3aQtD82qOQgkWttab4MaTBmg4Wwq3fB
-         SldUeIuWYtFQsZv/G0Y7kvd6sj16w49hIZAwD/U0W/e8fg3QZ+Gicu6+UqQKkyDiQyl4
-         zL7M21cjuvhSf34EwNJI2RxOVpOBefopQ7E7zGVzPCrWH7o/HqY6ZFTyBUaEmEP7x23a
-         QnLg==
-X-Gm-Message-State: AOAM5326oMPHxBqMfd28MyO+5qhVsCRk825TR8837ge20C8JaLJbY3My
-        Yt49IibE4EnnIq707pn6+jVbqPstAyM=
-X-Google-Smtp-Source: ABdhPJyYp3S8ZK9pimNGa3qu49dKYz8bRXMdIpcthP4MVM49ILkpPPii1y+VD7YRmE3LplUtwrnw0A==
-X-Received: by 2002:aca:1b03:: with SMTP id b3mr12735675oib.26.1596831015848;
-        Fri, 07 Aug 2020 13:10:15 -0700 (PDT)
+        bh=SgP7WwDilGEtspTgVkOv5lPLm3Tj4TA+TAE2e5VngkQ=;
+        b=ca6XJIr5Xs84JPx7gbBHOv1P9yM5o+qgaz8m26avV2VCIVcYq0tFcvGFLRNoBZDiwI
+         SwekfQBNTp/gIGAPMKkdryJDVQJcHYUsFAeeFUPflLFIBlQfcoMqQRiNgzcj87gONxnG
+         OPbdmZVCohsVp63zCm2MM1Zske1rh26Me7y1hPzWM8r1v7ly9mr335iRq2QfSHLgiAvq
+         1zwXaaMzNYg7/8O/alxJOLFQGzYsS1VNxW4orX+DdED5rJRgKTm283KQmzjuifQiR20Y
+         6E0kWTVKTzaUNx4uZWFV48lAkLLplme16+/Co8QiLvyVbEanaHSTAZN66zpfR6EOByTM
+         Z56w==
+X-Gm-Message-State: AOAM533bRN7ctDdqj/7oXXOHWHWsG3mMuRl9lj9iNwrNIok4C5s//NxG
+        dZAPVObJQOhx4LKeiAe+owOUIDID2wY=
+X-Google-Smtp-Source: ABdhPJwuL05vKPmYk2CPkKFc1IFTD3g22CIx8t/B5hSRAyK900cDTelq6EPMd87/2xNP6PFeP9nOwg==
+X-Received: by 2002:aca:c508:: with SMTP id v8mr12408452oif.149.1596831019701;
+        Fri, 07 Aug 2020 13:10:19 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::af38])
-        by smtp.googlemail.com with ESMTPSA id s6sm1835794otq.75.2020.08.07.13.10.14
+        by smtp.googlemail.com with ESMTPSA id s6sm1835794otq.75.2020.08.07.13.10.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 13:10:14 -0700 (PDT)
+        Fri, 07 Aug 2020 13:10:19 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org
-Cc:     Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 2/7] dyndbg: motivate a diet plan
-Date:   Fri,  7 Aug 2020 14:09:49 -0600
-Message-Id: <20200807200957.1269454-3-jim.cromie@gmail.com>
+Cc:     Jim Cromie <jim.cromie@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 3/7] dyndbg: select ZPOOL in Kconfig.debug
+Date:   Fri,  7 Aug 2020 14:09:50 -0600
+Message-Id: <20200807200957.1269454-4-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200807200957.1269454-1-jim.cromie@gmail.com>
 References: <20200807200957.1269454-1-jim.cromie@gmail.com>
@@ -76,66 +82,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this throwaway patch demonstrates the extra weight:
+dyndbg will next need zs_malloc and friends, so add config reqs now,
+to avoid touching make-deps late in a patch-set.
 
- dyndbg: 2605 entries. repeated entries: 2369 module 2231 file 1147 func
-
-Thats (91%, 86%, 44%) repeated values in those pointers/columns.
-
-This simple test also shows that a similarly simple run-length encoder
-on those 3 columns would compress this table dramatically.
+I used select in order not to hide dyndbg inadvertently.
+I want to say recommends, since it could be an optional feature.
+Whats the best way ?
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ lib/Kconfig.debug | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 01b7d0210412..691e79826fc2 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -1059,11 +1059,12 @@ static int __init dynamic_debug_init_control(void)
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..a7973063baf0 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -100,6 +100,7 @@ config DYNAMIC_DEBUG
+ 	depends on PRINTK
+ 	depends on (DEBUG_FS || PROC_FS)
+ 	select DYNAMIC_DEBUG_CORE
++	select ZPOOL
+ 	help
  
- static int __init dynamic_debug_init(void)
- {
--	struct _ddebug *iter, *iter_start;
-+	struct _ddebug *iter, *iter_start, *prev = 0;
- 	const char *modname = NULL;
- 	char *cmdline;
- 	int ret = 0;
- 	int n = 0, entries = 0, modct = 0;
-+	int modreps = 0, funcreps = 0, filereps = 0;
- 
- 	if (&__start___dyndbg == &__stop___dyndbg) {
- 		if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
-@@ -1077,7 +1078,16 @@ static int __init dynamic_debug_init(void)
- 	iter = __start___dyndbg;
- 	modname = iter->modname;
- 	iter_start = iter;
--	for (; iter < __stop___dyndbg; iter++) {
-+	for (prev = iter; iter < __stop___dyndbg; iter++) {
-+		if (entries) {
-+			if (prev->site->modname == iter->site->modname)
-+				modreps++;
-+			if (prev->site->function == iter->site->function)
-+				funcreps++;
-+			if (prev->site->filename == iter->site->filename)
-+				filereps++;
-+			prev++; /* one behind iter */
-+		}
- 		entries++;
- 		if (strcmp(modname, iter->modname)) {
- 			modct++;
-@@ -1099,6 +1109,9 @@ static int __init dynamic_debug_init(void)
- 		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
- 		 (int)(entries * sizeof(struct _ddebug)));
- 
-+	vpr_info("%d entries. repeated entries: %d module %d file %d func\n",
-+		 entries, modreps, filereps, funcreps);
-+
- 	/* apply ddebug_query boot param, dont unload tables on err */
- 	if (ddebug_setup_string[0] != '\0') {
- 		pr_warn("ddebug_query param name is deprecated, change it to dyndbg\n");
+ 	  Compiles debug level messages into the kernel, which would not
 -- 
 2.26.2
 
