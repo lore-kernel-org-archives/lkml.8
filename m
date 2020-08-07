@@ -4,58 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A20DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1708B2224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07D42224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="glcu9akm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UluaHTa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgHGTz6 (ORCPT
+        id S1727055AbgHGT4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:55:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23971 "EHLO
+        Fri, 7 Aug 2020 15:56:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43565 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726629AbgHGTzw (ORCPT
+        by vger.kernel.org with ESMTP id S1726881AbgHGTzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:55:52 -0400
+        Fri, 7 Aug 2020 15:55:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596830150;
+        s=mimecast20190719; t=1596830152;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oj4PmJ1a4e1ZsexvboHtbFcdyMjs6dgGJG9AzmjCgvg=;
-        b=glcu9akm/7gMFxI8IqwhFyQPbRF/p/uHh6sHFaTjPF4qHL84TY8SSuMIkhsgbq1lQ6Y/SA
-        B0AyIqwP+SDlOxFyN09BlG0hRtGNDcdDE8rLT9WS9TArovkNwufyZ0aereUvfHcx1xDzZN
-        L33Z8Og6H4o6aEkJx0K6P0A+s8/PehA=
+        bh=4PHi22BkJAek7xvY326jzMafeEyOJdaMjdrgxmITiXU=;
+        b=UluaHTa8UbLw3MwhnLPdLVz3X7gWxmuvKb0JX4kcGA+R77mw4iaCxjI9lMgLicImUOmcwU
+        Wv2JWZbrZJsHIchl/enq0jMH/H/PjzKAu7wrwG7bGoYe95kc0/HZrH89AuJ4VI1oK2ro+o
+        RkUpJR5ItTr3WCBzSN/2+tiNOq+wWVQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-247-LeGsX1doM7a1Lyy_D1dGSg-1; Fri, 07 Aug 2020 15:55:48 -0400
-X-MC-Unique: LeGsX1doM7a1Lyy_D1dGSg-1
+ us-mta-356-UWWIYsY5Pb2C0eOynjdfpA-1; Fri, 07 Aug 2020 15:55:48 -0400
+X-MC-Unique: UWWIYsY5Pb2C0eOynjdfpA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED516800138;
-        Fri,  7 Aug 2020 19:55:46 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A0C41902EA0;
+        Fri,  7 Aug 2020 19:55:47 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-113-142.rdu2.redhat.com [10.10.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9518B2DE7E;
-        Fri,  7 Aug 2020 19:55:45 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 47D652DE73;
+        Fri,  7 Aug 2020 19:55:47 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id DF757222E4F; Fri,  7 Aug 2020 15:55:38 -0400 (EDT)
+        id 12972222E5B; Fri,  7 Aug 2020 15:55:39 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Liu Bo <bo.liu@linux.alibaba.com>
-Subject: [PATCH v2 09/20] virtio_fs, dax: Set up virtio_fs dax_device
-Date:   Fri,  7 Aug 2020 15:55:15 -0400
-Message-Id: <20200807195526.426056-10-vgoyal@redhat.com>
+        dgilbert@redhat.com
+Subject: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax page fault
+Date:   Fri,  7 Aug 2020 15:55:21 -0400
+Message-Id: <20200807195526.426056-16-vgoyal@redhat.com>
 In-Reply-To: <20200807195526.426056-1-vgoyal@redhat.com>
 References: <20200807195526.426056-1-vgoyal@redhat.com>
 MIME-Version: 1.0
@@ -66,216 +65,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hajnoczi <stefanha@redhat.com>
+We need some kind of locking mechanism here. Normal file systems like
+ext4 and xfs seems to take their own semaphore to protect agains
+truncate while fault is going on.
 
-Setup a dax device.
+We have additional requirement to protect against fuse dax memory range
+reclaim. When a range has been selected for reclaim, we need to make sure
+no other read/write/fault can try to access that memory range while
+reclaim is in progress. Once reclaim is complete, lock will be released
+and read/write/fault will trigger allocation of fresh dax range.
 
-Use the shm capability to find the cache entry and map it.
+Taking inode_lock() is not an option in fault path as lockdep complains
+about circular dependencies. So define a new fuse_inode->i_mmap_sem.
 
-The DAX window is accessed by the fs/dax.c infrastructure and must have
-struct pages (at least on x86).  Use devm_memremap_pages() to map the
-DAX window PCI BAR and allocate struct page.
-
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
 ---
- fs/fuse/virtio_fs.c            | 139 +++++++++++++++++++++++++++++++++
- include/uapi/linux/virtio_fs.h |   3 +
- 2 files changed, 142 insertions(+)
+ fs/fuse/dir.c    |  2 ++
+ fs/fuse/file.c   | 15 ++++++++++++---
+ fs/fuse/fuse_i.h |  7 +++++++
+ fs/fuse/inode.c  |  1 +
+ 4 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index add31794ca1a..e54696f778a7 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -5,6 +5,9 @@
-  */
- 
- #include <linux/fs.h>
-+#include <linux/dax.h>
-+#include <linux/pci.h>
-+#include <linux/pfn_t.h>
- #include <linux/module.h>
- #include <linux/virtio.h>
- #include <linux/virtio_fs.h>
-@@ -12,6 +15,7 @@
- #include <linux/fs_context.h>
- #include <linux/fs_parser.h>
- #include <linux/highmem.h>
-+#include <linux/uio.h>
- #include "fuse_i.h"
- 
- /* List of virtio-fs device instances and a lock for the list. Also provides
-@@ -50,6 +54,12 @@ struct virtio_fs {
- 	struct virtio_fs_vq *vqs;
- 	unsigned int nvqs;               /* number of virtqueues */
- 	unsigned int num_request_queues; /* number of request queues */
-+	struct dax_device *dax_dev;
-+
-+	/* DAX memory window where file contents are mapped */
-+	void *window_kaddr;
-+	phys_addr_t window_phys_addr;
-+	size_t window_len;
- };
- 
- struct virtio_fs_forget_req {
-@@ -726,6 +736,131 @@ static void virtio_fs_cleanup_vqs(struct virtio_device *vdev,
- 	vdev->config->del_vqs(vdev);
- }
- 
-+/* Map a window offset to a page frame number.  The window offset will have
-+ * been produced by .iomap_begin(), which maps a file offset to a window
-+ * offset.
-+ */
-+static long virtio_fs_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
-+				    long nr_pages, void **kaddr, pfn_t *pfn)
-+{
-+	struct virtio_fs *fs = dax_get_private(dax_dev);
-+	phys_addr_t offset = PFN_PHYS(pgoff);
-+	size_t max_nr_pages = fs->window_len/PAGE_SIZE - pgoff;
-+
-+	if (kaddr)
-+		*kaddr = fs->window_kaddr + offset;
-+	if (pfn)
-+		*pfn = phys_to_pfn_t(fs->window_phys_addr + offset,
-+					PFN_DEV | PFN_MAP);
-+	return nr_pages > max_nr_pages ? max_nr_pages : nr_pages;
-+}
-+
-+static size_t virtio_fs_copy_from_iter(struct dax_device *dax_dev,
-+				       pgoff_t pgoff, void *addr,
-+				       size_t bytes, struct iov_iter *i)
-+{
-+	return copy_from_iter(addr, bytes, i);
-+}
-+
-+static size_t virtio_fs_copy_to_iter(struct dax_device *dax_dev,
-+				       pgoff_t pgoff, void *addr,
-+				       size_t bytes, struct iov_iter *i)
-+{
-+	return copy_to_iter(addr, bytes, i);
-+}
-+
-+static int virtio_fs_zero_page_range(struct dax_device *dax_dev,
-+				     pgoff_t pgoff, size_t nr_pages)
-+{
-+	long rc;
-+	void *kaddr;
-+
-+	rc = dax_direct_access(dax_dev, pgoff, nr_pages, &kaddr, NULL);
-+	if (rc < 0)
-+		return rc;
-+	memset(kaddr, 0, nr_pages << PAGE_SHIFT);
-+	dax_flush(dax_dev, kaddr, nr_pages << PAGE_SHIFT);
-+	return 0;
-+}
-+
-+static const struct dax_operations virtio_fs_dax_ops = {
-+	.direct_access = virtio_fs_direct_access,
-+	.copy_from_iter = virtio_fs_copy_from_iter,
-+	.copy_to_iter = virtio_fs_copy_to_iter,
-+	.zero_page_range = virtio_fs_zero_page_range,
-+};
-+
-+static void virtio_fs_cleanup_dax(void *data)
-+{
-+	struct dax_device *dax_dev = data;
-+
-+	kill_dax(dax_dev);
-+	put_dax(dax_dev);
-+}
-+
-+static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
-+{
-+	struct virtio_shm_region cache_reg;
-+	struct dev_pagemap *pgmap;
-+	bool have_cache;
-+
-+	if (!IS_ENABLED(CONFIG_DAX_DRIVER))
-+		return 0;
-+
-+	/* Get cache region */
-+	have_cache = virtio_get_shm_region(vdev, &cache_reg,
-+					   (u8)VIRTIO_FS_SHMCAP_ID_CACHE);
-+	if (!have_cache) {
-+		dev_notice(&vdev->dev, "%s: No cache capability\n", __func__);
-+		return 0;
-+	}
-+
-+	if (!devm_request_mem_region(&vdev->dev, cache_reg.addr, cache_reg.len,
-+				     dev_name(&vdev->dev))) {
-+		dev_warn(&vdev->dev, "could not reserve region addr=0x%llx"
-+			 " len=0x%llx\n", cache_reg.addr, cache_reg.len);
-+		return -EBUSY;
-+	}
-+
-+	dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n", cache_reg.len,
-+		   cache_reg.addr);
-+
-+	pgmap = devm_kzalloc(&vdev->dev, sizeof(*pgmap), GFP_KERNEL);
-+	if (!pgmap)
-+		return -ENOMEM;
-+
-+	pgmap->type = MEMORY_DEVICE_FS_DAX;
-+
-+	/* Ideally we would directly use the PCI BAR resource but
-+	 * devm_memremap_pages() wants its own copy in pgmap.  So
-+	 * initialize a struct resource from scratch (only the start
-+	 * and end fields will be used).
-+	 */
-+	pgmap->res = (struct resource){
-+		.name = "virtio-fs dax window",
-+		.start = (phys_addr_t) cache_reg.addr,
-+		.end = (phys_addr_t) cache_reg.addr + cache_reg.len - 1,
-+	};
-+
-+	fs->window_kaddr = devm_memremap_pages(&vdev->dev, pgmap);
-+	if (IS_ERR(fs->window_kaddr))
-+		return PTR_ERR(fs->window_kaddr);
-+
-+	fs->window_phys_addr = (phys_addr_t) cache_reg.addr;
-+	fs->window_len = (phys_addr_t) cache_reg.len;
-+
-+	dev_dbg(&vdev->dev, "%s: window kaddr 0x%px phys_addr 0x%llx"
-+		" len 0x%llx\n", __func__, fs->window_kaddr, cache_reg.addr,
-+		cache_reg.len);
-+
-+	fs->dax_dev = alloc_dax(fs, NULL, &virtio_fs_dax_ops, 0);
-+	if (IS_ERR(fs->dax_dev))
-+		return PTR_ERR(fs->dax_dev);
-+
-+	return devm_add_action_or_reset(&vdev->dev, virtio_fs_cleanup_dax,
-+					fs->dax_dev);
-+}
-+
- static int virtio_fs_probe(struct virtio_device *vdev)
- {
- 	struct virtio_fs *fs;
-@@ -747,6 +882,10 @@ static int virtio_fs_probe(struct virtio_device *vdev)
- 
- 	/* TODO vq affinity */
- 
-+	ret = virtio_fs_setup_dax(vdev, fs);
-+	if (ret < 0)
-+		goto out_vqs;
-+
- 	/* Bring the device online in case the filesystem is mounted and
- 	 * requests need to be sent before we return.
+diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+index 26f028bc760b..f40766c0693b 100644
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -1609,8 +1609,10 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
  	 */
-diff --git a/include/uapi/linux/virtio_fs.h b/include/uapi/linux/virtio_fs.h
-index b02eb2ac3d99..2f64abce781f 100644
---- a/include/uapi/linux/virtio_fs.h
-+++ b/include/uapi/linux/virtio_fs.h
-@@ -16,4 +16,7 @@ struct virtio_fs_config {
- 	__u32 num_request_queues;
- } __attribute__((packed));
+ 	if ((is_truncate || !is_wb) &&
+ 	    S_ISREG(inode->i_mode) && oldsize != outarg.attr.size) {
++		down_write(&fi->i_mmap_sem);
+ 		truncate_pagecache(inode, outarg.attr.size);
+ 		invalidate_inode_pages2(inode->i_mapping);
++		up_write(&fi->i_mmap_sem);
+ 	}
  
-+/* For the id field in virtio_pci_shm_cap */
-+#define VIRTIO_FS_SHMCAP_ID_CACHE 0
+ 	clear_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index be7d90eb5b41..00ad27216cc3 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2878,11 +2878,18 @@ static vm_fault_t __fuse_dax_fault(struct vm_fault *vmf,
+ 
+ 	if (write)
+ 		sb_start_pagefault(sb);
+-
++	/*
++	 * We need to serialize against not only truncate but also against
++	 * fuse dax memory range reclaim. While a range is being reclaimed,
++	 * we do not want any read/write/mmap to make progress and try
++	 * to populate page cache or access memory we are trying to free.
++	 */
++	down_read(&get_fuse_inode(inode)->i_mmap_sem);
+ 	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
+ 
+ 	if (ret & VM_FAULT_NEEDDSYNC)
+ 		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
++	up_read(&get_fuse_inode(inode)->i_mmap_sem);
+ 
+ 	if (write)
+ 		sb_end_pagefault(sb);
+@@ -3849,9 +3856,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
+ 			file_update_time(file);
+ 	}
+ 
+-	if (mode & FALLOC_FL_PUNCH_HOLE)
++	if (mode & FALLOC_FL_PUNCH_HOLE) {
++		down_write(&fi->i_mmap_sem);
+ 		truncate_pagecache_range(inode, offset, offset + length - 1);
+-
++		up_write(&fi->i_mmap_sem);
++	}
+ 	fuse_invalidate_attr(inode);
+ 
+ out:
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index 22fb01ba55fb..1ddf526330a5 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -181,6 +181,13 @@ struct fuse_inode {
+ 	 */
+ 	struct rw_semaphore i_dmap_sem;
+ 
++	/**
++	 * Can't take inode lock in fault path (leads to circular dependency).
++	 * So take this in fuse dax fault path to make sure truncate and
++	 * punch hole etc. can't make progress in parallel.
++	 */
++	struct rw_semaphore i_mmap_sem;
 +
- #endif /* _UAPI_LINUX_VIRTIO_FS_H */
+ 	/** Sorted rb tree of struct fuse_dax_mapping elements */
+ 	struct rb_root_cached dmap_tree;
+ 	unsigned long nr_dmaps;
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 41edc377a3df..4bd965d0ecf6 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -88,6 +88,7 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
+ 	fi->state = 0;
+ 	fi->nr_dmaps = 0;
+ 	mutex_init(&fi->mutex);
++	init_rwsem(&fi->i_mmap_sem);
+ 	init_rwsem(&fi->i_dmap_sem);
+ 	spin_lock_init(&fi->lock);
+ 	fi->forget = fuse_alloc_forget();
 -- 
 2.25.4
 
