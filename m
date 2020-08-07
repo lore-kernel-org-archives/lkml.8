@@ -2,193 +2,203 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E54C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5888BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9DF20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF2420855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R4kYYWeZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LN/kimao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgHGSje (ORCPT
+        id S1726262AbgHGSl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:39:34 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14304 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGSjc (ORCPT
+        Fri, 7 Aug 2020 14:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgHGSl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:39:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2d9fb10000>; Fri, 07 Aug 2020 11:38:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Aug 2020 11:39:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Aug 2020 11:39:32 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
- 2020 18:39:30 +0000
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.56) by
- HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 7 Aug 2020 18:39:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RukYmoJ8Lo85ZtlgoY42H85gbJXZ8A/AyhRbkr79Dj7t09DwSah5a1HCTuWXMLK7OTopgi85JIEEKv8ZE04GvJsZaRJe2vi5lSRHW4s+aXMIsstoxwnf7Qp0NVauTMrqteB6txzwDdXpcBK/LoSTDRbSCgpwwcc4UdY4cQIbk22mK2aYzm0vYGspOPzv0sXO1+v+iidB8Cqveh//GXUOd/Yegkv5NajwxZS+XAQVM+RvdNsiLYnsoCdYGsgaCdIPvWQL8T2UP0pTw9Wb6bH3JRXZc5YTdLx0TP7IByvLNlhhdc4rGcYVXj85YCiuqNw0h6+8MhbMsES4g4EbMXpoVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LSedvlXCbDmzOblX/9NK3RwxARgxvJi8yTM9k8MLHb0=;
- b=lTVi4lkhDS+Hjpi7JsqDvjkj9ip2/h3pV0xjNhk8EDFbyRj/wjq/ZL7UDVbDAD08xXYeVeRqAepPuQubR//Re75bhIFn1KBMbQdSWi1zMWNoUrNlfd/NDUjua+aaT//kIN52mbVv5y/x8Eb5c9orLabM4kxNCnwtdtMmyKE3JyUvzSv2vfbAY5ag5zooQjsjdd1lglKuaoN6ZoblWhAa6dsBQp3aOJE81IP3MrwuhSmIGW85ZijzEMca28fMafZtEbGD4wpLu6wxbiWq4d6bDus5+1pLKvLaovWxhbl9OyGT20z36elLbqnlL5BBmMnMBGlZULJISuc9pEWh6amTdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB2583.namprd12.prod.outlook.com (2603:10b6:4:b3::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Fri, 7 Aug
- 2020 18:39:29 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
- 18:39:28 +0000
-Date:   Fri, 7 Aug 2020 15:39:27 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Dey, Megha" <megha.dey@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Message-ID: <20200807183927.GY16789@nvidia.com>
-References: <20200806001927.GM19097@mellanox.com>
- <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
- <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
- <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
- <87h7tfh6fc.fsf@nanos.tec.linutronix.de> <20200807120650.GR16789@nvidia.com>
- <20200807123831.GA645281@kroah.com> <20200807133428.GT16789@nvidia.com>
- <87v9hufln7.fsf@nanos.tec.linutronix.de>
- <d4e3ce5a-c138-2ebb-06d1-52ef57d987e6@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <d4e3ce5a-c138-2ebb-06d1-52ef57d987e6@intel.com>
-X-ClientProxiedBy: MN2PR05CA0039.namprd05.prod.outlook.com
- (2603:10b6:208:236::8) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 7 Aug 2020 14:41:26 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34123C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:41:26 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id z22so2815270oid.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=qmBoGKJ/6jf0yN39yT89ZvHLfPlQIChbVPrk/otNWQ0=;
+        b=LN/kimaoPxNG7QYyWZoeFQ1GljX2ckB7ujRpdZqKUZo6aEhUnGhDNdRNJYX9qgjG50
+         4J9MMVXR4T16g8OfbfsNmZ7KbRjMI8bitZ8HVwidzNEB77ivrSeKq4ExqpcLBD9w4xsh
+         VQIoy25TaJ8G28LKYf84f7MUAUWYAz0xElhDKICbvdAPuaAbLNIBSjV8uMEPmwcFHsa6
+         5tja8W0ULyNw+pVogR6MlHqXoZ+3rRASVIod19W+z6Zcj7jzuwg6F7Lqy8xXoY/kCdeC
+         n8527o34/Ze9xkLcAR1IF4jmwXtejTM9Qqr4EY0/t8By+h6els1583FfG5EevsFFBMj+
+         UaYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=qmBoGKJ/6jf0yN39yT89ZvHLfPlQIChbVPrk/otNWQ0=;
+        b=TjBOFvbfzJKPkg+2wd3YD5lOKdDxZyictdqSgGZkrP0no/RwbFocnS4kcLUYCeR0EM
+         nyFLpfvNBAA88VMy4IN/C4EdaH1H/7pcyvnZ5RLwNRvWbW91MdFoIe+EM34vhx5beFdp
+         1l44oua45jYDBDnGn+Ehj7h3b6FCCtiiZRQzKdq4ZSGaKntSdmqn4jetitRMNFSETHug
+         j7005NK5zoWCXkUtJA6LVcuxLZIuLb8BvNMGW6OJE8E9/s2G2d0+1WifH01jaWiiWwNm
+         i8AqSZvQWplW9sYfiRSHsc7/s++U+ML2sK/ZGrurxDksNsfs4rmNS2/swkDuPFF3dNIZ
+         ej1w==
+X-Gm-Message-State: AOAM530VheBQNiI7SoGn7R4x1bpaKbqEaXzzAiBTdDVzbr3ChJm6SRo7
+        lamAsD7WF9IDsJSHpec9AIYk5A==
+X-Google-Smtp-Source: ABdhPJzm6312WQgCLIUYAZsQXEO52kI7CL0mkhj7HhyDTHhtppSZdfXqwXhnC5rSkOv9IWQXavIRiw==
+X-Received: by 2002:aca:d88a:: with SMTP id p132mr13091890oig.95.1596825684270;
+        Fri, 07 Aug 2020 11:41:24 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id k25sm1798842otb.1.2020.08.07.11.41.21
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Fri, 07 Aug 2020 11:41:22 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 11:41:09 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Matthew Wilcox <willy@infradead.org>,
+        Hugh Dickins <hughd@google.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+In-Reply-To: <CAHk-=wihTRHMm1LC4AfidZptT9ZuT-wBjE2VhYzKBy66e4iwQw@mail.gmail.com>
+Message-ID: <alpine.LSU.2.11.2008071047510.1239@eggly.anvils>
+References: <20200724152424.GC17209@redhat.com> <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com> <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com> <20200725101445.GB3870@redhat.com> <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
+ <alpine.LSU.2.11.2007251343370.3804@eggly.anvils> <alpine.LSU.2.11.2007252100230.5376@eggly.anvils> <alpine.LSU.2.11.2007261246530.6812@eggly.anvils> <alpine.LSU.2.11.2008052105040.8716@eggly.anvils> <CAHk-=whf7wCUV2oTDUg0eeNafhhk_OhJBT2SbHZXwgtmAzNeTg@mail.gmail.com>
+ <20200806180024.GB17456@casper.infradead.org> <CAHk-=wihTRHMm1LC4AfidZptT9ZuT-wBjE2VhYzKBy66e4iwQw@mail.gmail.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR05CA0039.namprd05.prod.outlook.com (2603:10b6:208:236::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.5 via Frontend Transport; Fri, 7 Aug 2020 18:39:28 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k47H5-004oPA-6I; Fri, 07 Aug 2020 15:39:27 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1de33126-ae2d-46f0-97fa-08d83b013784
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2583:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB25830E1DFA0F14DB4D99FDC9C2490@DM5PR12MB2583.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bqJkOZLIGTQPDdOa/Wae7QbHVKidL28w9W/onH3vEpeFd89luV61ZFp3ebNz5jp1Coywq+SB719AQavae4K19mahNHIOfGnqfsExRpnBfg+7InZhp98oRgK3ST/wBwuH/tWmivCt0AH4wYvhJTbULM23uk1cur4e+wEMY5olXkX/1RVlywlaGSbSsV17gW/K0OV9u3JdvcymxrXMsrgP/YB+JwuvXo4HeMOZkOedug0O1me0gNtu+pF/Hntwa469vUg3Dnhftkrh3tprTcF9s/WxufTtDqOzgPkWd4rbdfChH40PNIfiYIU2Ov4yUBh2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(346002)(136003)(9746002)(9786002)(54906003)(66556008)(8936002)(478600001)(66476007)(4326008)(66946007)(2906002)(36756003)(1076003)(33656002)(316002)(8676002)(2616005)(6916009)(426003)(7406005)(7416002)(4744005)(86362001)(5660300002)(26005)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: QdgxuRgzxrQKFRtoD2QrnkOFnZTeCn++wsw9Vf64lQcV0pA9uzFO3SLqXTRo3W4QhDb2r3s70mCHbvBCI6Le55aAZJqwBd3rIRNMs1+5iI2/QcRestHazqJmZHYrJ6849d9kX8ib8Pu0Q84aVgdPYuM8o9IbDv1G6Ob5ujlezsDXsZQQGTf7O58WKF6c/ITWc4xN/y3cUiaUYQMBbGDYN0Dn4V0CyNUWzU/PvpKi9ilkqmHBt+nUKcIjW692rl76Ff2z4LNfpoyD5qpvQ5yl+6xmUwFV/+Rsb8styG9QjRmP3PiT5/wvT2vZzaxHIJ8XtrFCHm2dhJnSA4+kwM4ChYb2BZB98MTlurXKU/UYE6SMdemHs6UcvHvJixfBjFKXYcxjYyysQ+vpVXuGozzdE+JsmuoyihGuSgVi4f00JUNQyKO7qvsOu80CVha4Vp22LB98AjUSWUiVRMY1XM9y3MTYNsC8sIMVxn2lQByYjaG+GXRukuMnq4r+FJn2CGygaQfcebRR6GhZQCuzJ9vYaNrtpwTN3e1zZ7n+RNuKHeUeDmGQHXzjWAIikilonOET/6LU4NVuwFgCz6Z/YgXKw+Yce+cD+4uEvgkJ0vPen5nxCDvpWM/xOMhC3UXMV3gax/TqP5aYdXsW9Fp/8k/n9w==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1de33126-ae2d-46f0-97fa-08d83b013784
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 18:39:28.8925
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LCIxTAbkdDckG9Iu5G4p6sT5n89I/SkkwXkbr8AaM72dYK84UOstqxF0oPenE9/K
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2583
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596825521; bh=CFpBs/oDEPdjTRVHVoJyZycTlbnk0Z4tOWvHDqCnsNw=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         Content-Transfer-Encoding:In-Reply-To:X-ClientProxiedBy:
-         MIME-Version:X-MS-Exchange-MessageSentRepresentingType:
-         X-Originating-IP:X-MS-PublicTrafficType:
-         X-MS-Office365-Filtering-Correlation-Id:X-MS-TrafficTypeDiagnostic:
-         X-LD-Processed:X-MS-Exchange-Transport-Forked:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=R4kYYWeZe0zvR0BuXjAHCRUbn64jTSAtTWBiNNkg0ee2gwYdG0VuoBR+Fd1dJDbJS
-         lYnMdqnkfCsY3aWV3Yd+48j6rzIYGWtfbHPDAAOFL7Y6/oSIa1SLi+ZiIz+BplQYKf
-         1Y9LEB5omXjqP8WSUk/bpdXkxYfmCnUk5pPFrNTIBBLCvNoC8U88z4qUKAux8sTOGr
-         lx1XGpto02Wn8z7szo2LJi1P3I6Hav/5V5GkR78CdlfZDCW7XLKdp7TOjHEKj4M5GG
-         PkYDX8Oszd/DbAx7e/KmCZsoNH6mysy3zisYpz8cFc1o3ZAjlXYd8wCr4P+6MF8Go7
-         DpQ9DjNxENJdg==
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 10:54:51AM -0700, Dey, Megha wrote:
+On Thu, 6 Aug 2020, Linus Torvalds wrote:
+> On Thu, Aug 6, 2020 at 11:00 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > It wasn't clear to me whether Hugh thought it was an improvement or
+> > not that trylock was now less likely to jump the queue.  There're
+> > the usual "fair is the opposite of throughput" kind of arguments.
 
-> So from the hierarchical domain standpoint, we will have:
-> - For DSA device: vector->intel-IR->IDXD
-> - For Jason's device: root domain-> domain A-> Jason's device's IRQ domai=
-n
-> - For any other intel IMS device in the future which
-> =C2=A0=C2=A0=C2=A0 does not require interrupt remapping: vector->new devi=
-ce IRQ domain
-> =C2=A0=C2=A0=C2=A0 requires interrupt remapping: vector->intel-IR->new de=
-vice IRQ domain
+I don't know.  I'm inclined to think that keeping just a small chance
+of jumping the queue is probably good; but pay no attention to me,
+that's an opinion based on ignorance.
 
-I think you need a better classification than Jason's device or
-Intel's device :)
+Thanks for mentioning the lucky lock_page(): I was quite wrong to
+single out trylock_page() - I suppose its lack of a slow path just
+helped it spring to mind more easily.
 
-Shouldn't the two cases be either you take the parent domain from the
-IOMMU or you take the parent domain from the pci device?
+> 
+> Yeah, it could go either way. But on the whole, if the lock bit is
+> getting any contention, I think we'd rather have it be fair for
+> latency reasons.
+> 
+> That said, I'm not convinced about my patch, and I actually threw it
+> away without even testing it (sometimes I keep patches around in my
+> private tree for testing, and they can live there for months or even
+> years when I wonder if they are worth it, but this time I didn't
+> bother to go to the trouble).
+> 
+> If somebody is interested in pursuing this, I think that patch might
+> be a good starting point (and it _might_ even work), but it seemed to
+> be too subtle to really worry about unless somebody finds an actual
+> acute reason for it.
 
-What other choices could a PCI driver make?
+It is an attractive idea, passing the baton from one to the next;
+and a logical destination from where you had already arrived.
+Maybe somebody, not me, should pursue it.
 
-Jason
+I tried to ignore it, but eventually succumbed to temptation, and ran
+it overnight at home (my usual tmpfs swapping), and on one machine at
+work (fork/exit stress etc).  It did need one fixup, below: then home
+testing went fine.  But the fork/exit stress hit that old familiar
+unlock_page wake_up_page_bit softlockup that your existing patch
+has appeared to fix.  I can't afford to investigate further (though
+might regret that: I keep wondering if the small dose of unfairness
+in your existing patch is enough to kick the test when it otherwise
+would hang, and this new stricter patch be pointing to that).
+
+My home testing was, effectively, on top of c6fe44d96fc1 (v5.8 plus
+your two patches): I did not have in the io_uring changes from the
+current tree. In glancing there, I noticed one new and one previous
+instance of SetPageWaiters() *after* __add_wait_queue_entry_tail():
+are those correct?
+ 
+> 
+> I think the existing patch narrowing the window is good, and it
+> clearly didn't hurt throughput (although that was almost certainly for
+> other reasons).
+
+Agreed.
+
+> 
+>                 Linus
+> 
+
+--- linus/mm/filemap.c	2020-08-07 02:08:13.727709186 -0700
++++ hughd/mm/filemap.c	2020-08-07 02:16:10.960331473 -0700
+@@ -1044,7 +1044,7 @@ static int wake_page_function(wait_queue
+ 	return ret;
+ }
+ 
+-static int wake_up_page_bit(struct page *page, int bit_nr)
++static void wake_up_page_bit(struct page *page, int bit_nr, bool exclude)
+ {
+ 	wait_queue_head_t *q = page_waitqueue(page);
+ 	struct wait_page_key key;
+@@ -1096,15 +1096,28 @@ static int wake_up_page_bit(struct page
+ 		 * That's okay, it's a rare case. The next waker will clear it.
+ 		 */
+ 	}
++
++	/*
++	 * If we hoped to pass PG_locked on to the next locker, but found
++	 * no exclusive taker, then we must clear it before dropping q->lock.
++	 * Otherwise unlock_page() can race trylock_page_bit_common(), and if
++	 * PageWaiters was already set from before, then cmpxchg sees no
++	 * difference to send it back to wake_up_page_bit().
++	 *
++	 * We may have already dropped and retaken q->lock on the way here, but
++	 * I think this works out because new entries are always added at tail.
++	 */
++	if (exclude && !exclusive)
++		clear_bit(bit_nr, &page->flags);
++
+ 	spin_unlock_irqrestore(&q->lock, flags);
+-	return exclusive;
+ }
+ 
+ static void wake_up_page(struct page *page, int bit)
+ {
+ 	if (!PageWaiters(page))
+ 		return;
+-	wake_up_page_bit(page, bit);
++	wake_up_page_bit(page, bit, false);
+ }
+ 
+ /*
+@@ -1339,8 +1352,8 @@ void unlock_page(struct page *page)
+ 			 * spinlock wake_up_page_bit() will do.
+ 			 */
+ 			smp_mb__before_atomic();
+-			if (wake_up_page_bit(page, PG_locked))
+-				return;
++			wake_up_page_bit(page, PG_locked, true);
++			return;
+ 		}
+ 		new = cmpxchg_release(&page->flags, flags, flags & ~(1 << PG_locked));
+ 		if (likely(new == flags))
