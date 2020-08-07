@@ -2,167 +2,169 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91875C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B065C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B18B2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596827295;
-	bh=7oH8HHWjv0Fqtx6NnYKfhdNyUutqPCCLEgh+b5hHjMk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wMhWwn8L0eTTeyUCeev9j4K3Sb6pN+mwlSkulHkmm9hkQui/j5A5M1iGqdunAekzy
-	 xoH7UtbzHS7GvmGSGeSZRW38fvUP82wgThV6z5WxEoalxCeNZJIco9zv5N2aXtiP0L
-	 KsdlRtv2zIV4YW2R9HOVl9r5XNMoxaiMwY7QwTpQ=
+	by mail.kernel.org (Postfix) with ESMTP id 321572086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvmd69nd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHGTIO (ORCPT
+        id S1726398AbgHGTIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
+        Fri, 7 Aug 2020 15:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGTIN (ORCPT
+        with ESMTP id S1726015AbgHGTIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:08:13 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53EA6C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 12:08:13 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w14so3318035ljj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:08:13 -0700 (PDT)
+        Fri, 7 Aug 2020 15:08:48 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66DA5C061756;
+        Fri,  7 Aug 2020 12:08:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id r4so1533160pls.2;
+        Fri, 07 Aug 2020 12:08:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c8tGfyphxRtiXyEdcvoYman9XgjfDP3kct92h+829I4=;
-        b=IgxCxB4uub7VQqj+eQvlcRIhDoXI2u63xnHa6xhV72pL6k6VdF2Riprov2SytE5Be5
-         PCTWDk4SeGRy98Ba2QdQ8bI/ekpBd9OazBCyPQGu8VFQp11MxKlxQX1S3uRYaNw0+dMs
-         Sa2DcnatE4QSVfijxi+fBGnSJF78tPUoiZFBU=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rnGb9sOppjE3N1Nli9X1x3L4VMPPhFl52eNOc7JQXfM=;
+        b=kvmd69ndOASREggmVhOQqM9JjjV9E88s8xw8Y+qdPH7OD4q/Mry5EjZBck2vgapqjf
+         A0S6N0tXTd9rBQ1sL1HyD/nPDaNJLn54U3J0ZdEaQ0Zh4OFstXNDzB/spAjOQwMA6Ie9
+         BdjGMIBiqULyUqpDiCkCCvpwsUpQXc4wijoePuiqv1c1P0WFM36itIz9v/Ug2t+9QJ8w
+         L5fzYGlylZp48l//HL8ryEVDK/O4RWLEH6mOXXXaQ0wWOzJQNLlfu3RVPgK8K/mR5Q7C
+         +PLF1v5uNNiPNzUKYyNU4L+lcATLD1U+k2Ip7cpGUQ80wCDW4pP3zcAx0APmI1/uTRh5
+         PwPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c8tGfyphxRtiXyEdcvoYman9XgjfDP3kct92h+829I4=;
-        b=XMMyvPLeAxxTmqCgi9oR6ftbEKDlHqAO3Agj8dwybszd3wFluNaOZtUzMZ9JqQcfGD
-         9vEOrQAavSFoVdWHaoTPj61zC/Mfabe+fr6E/pz5yg/iDNYm9C0246ydsXtd3OuSG+/W
-         9jiAtl3nvYMjqZSnpMsb66f6P7tpv7cgwBtlfxPOt2PZzbOftQSdIoumTggXG455+ZMy
-         9QZ8lEZ9dDXkEsr/VWydF6e9G0tBtAwaqjLtvTP2oloO1dEdXu0PPP4kSu8fOAaFjg/w
-         IErzQ4dvbHjGQxYPwKzFv5/lzB5i2KutDiOPrnZug1coQdc2L9e/jgVDsEYRqrNe5HXl
-         e22A==
-X-Gm-Message-State: AOAM533TEM2l+vMH/mCDJYwiE9FmBba0K5WOjmXMJL/TxIkBilQm/tVm
-        tyaZ3JR2aftpKTYzEokce1Vgc5AF0mM=
-X-Google-Smtp-Source: ABdhPJyRrrbXgs91V4ribX+omqiBP0fEr2sqO6iRlMXHSttQrtyMSEFJHtFsh8AySF+SqEPzzCjoQQ==
-X-Received: by 2002:a2e:9ce:: with SMTP id 197mr7229455ljj.369.1596827290633;
-        Fri, 07 Aug 2020 12:08:10 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id w11sm4567223lff.62.2020.08.07.12.08.04
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=rnGb9sOppjE3N1Nli9X1x3L4VMPPhFl52eNOc7JQXfM=;
+        b=dCGLJqQGfeSXjRfbximP7Dineyb6RmeTGHPt7GTgHXdIVIzlkrUU2gSrAkP3reaEIz
+         L1DudJIh7Ur+HaDUi7ftMievrHVzjxxL+hkrDHQKexBiCHACiDb5lhTHhA/lbnWKeYNb
+         MVnc2rDYWtlb4eGmQ5G7PdAuyOwyaQO/XtpnB7Mm4UO5liSizYPkSnHr3gQFa1BO4++M
+         Q1e2Bwe2N6DEhx+ncVlvt9/dnY3lllWsijYrTP/JDi6PGMFCfqfA9hAByXGfXToyq9OO
+         thwQuprgKqMUgYHgVpcGlFhwL7zbRKXzgGpwfGE/Jno+Ac/GUcMEucsi8PslQ0u+X8+M
+         4u8Q==
+X-Gm-Message-State: AOAM531AcH49Zedv0ikvggSOdLqPuxHPPYg6n2uHAJT/TDz2v/MR+W9j
+        cMqBOMrINz2aI3wxJc5Edsc=
+X-Google-Smtp-Source: ABdhPJzZKuHLjA60DqQPRCt6LmfbZT1/rUOlw18GY9vliaiL5JVG7p4dOy9DPwM/brM7UctMjkqk/w==
+X-Received: by 2002:a17:90b:18b:: with SMTP id t11mr14971480pjs.105.1596827327997;
+        Fri, 07 Aug 2020 12:08:47 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x9sm11436307pjt.9.2020.08.07.12.08.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 12:08:05 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id i10so3326378ljn.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:08:04 -0700 (PDT)
-X-Received: by 2002:a05:651c:503:: with SMTP id o3mr4808734ljp.312.1596827284312;
- Fri, 07 Aug 2020 12:08:04 -0700 (PDT)
+        Fri, 07 Aug 2020 12:08:47 -0700 (PDT)
+Subject: Re: [PATCH] drivers: watchdog: rdc321x_wdt: Fix race condition bugs
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        madhuparnabhowmik10@gmail.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
+        ldv-project@linuxtesting.org
+References: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com>
+ <20200807162141.GA41980@roeck-us.net>
+ <8dca64a1-8cd9-6a41-b61d-1c4c14e5cd5e@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <bc8c5d7d-91a4-e955-854f-eef88812ac1a@roeck-us.net>
+Date:   Fri, 7 Aug 2020 12:08:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200724152424.GC17209@redhat.com> <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
- <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
- <20200725101445.GB3870@redhat.com> <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
- <alpine.LSU.2.11.2007251343370.3804@eggly.anvils> <alpine.LSU.2.11.2007252100230.5376@eggly.anvils>
- <alpine.LSU.2.11.2007261246530.6812@eggly.anvils> <alpine.LSU.2.11.2008052105040.8716@eggly.anvils>
- <CAHk-=whf7wCUV2oTDUg0eeNafhhk_OhJBT2SbHZXwgtmAzNeTg@mail.gmail.com>
- <20200806180024.GB17456@casper.infradead.org> <CAHk-=wihTRHMm1LC4AfidZptT9ZuT-wBjE2VhYzKBy66e4iwQw@mail.gmail.com>
- <alpine.LSU.2.11.2008071047510.1239@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2008071047510.1239@eggly.anvils>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 7 Aug 2020 12:07:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjHdwaz9aU1NMcucr+kK3BdZkM7FYVxpBLOo1H0NHPynw@mail.gmail.com>
-Message-ID: <CAHk-=wjHdwaz9aU1NMcucr+kK3BdZkM7FYVxpBLOo1H0NHPynw@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8dca64a1-8cd9-6a41-b61d-1c4c14e5cd5e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 11:41 AM Hugh Dickins <hughd@google.com> wrote:
->
-> +
-> +       /*
-> +        * If we hoped to pass PG_locked on to the next locker, but found
-> +        * no exclusive taker, then we must clear it before dropping q->lock.
-> +        * Otherwise unlock_page() can race trylock_page_bit_common(), and if
-> +        * PageWaiters was already set from before, then cmpxchg sees no
-> +        * difference to send it back to wake_up_page_bit().
-> +        *
-> +        * We may have already dropped and retaken q->lock on the way here, but
-> +        * I think this works out because new entries are always added at tail.
-> +        */
-> +       if (exclude && !exclusive)
-> +               clear_bit(bit_nr, &page->flags);
-> +
->         spin_unlock_irqrestore(&q->lock, flags);
+On 8/7/20 11:08 AM, Florian Fainelli wrote:
+> 
+> 
+> On 8/7/2020 9:21 AM, Guenter Roeck wrote:
+>> On Fri, Aug 07, 2020 at 04:59:02PM +0530, madhuparnabhowmik10@gmail.com wrote:
+>>> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>>>
+>>> In rdc321x_wdt_probe(), rdc321x_wdt_device.queue is initialized
+>>> after misc_register(), hence if ioctl is called before its
+>>> initialization which can call rdc321x_wdt_start() function,
+>>> it will see an uninitialized value of rdc321x_wdt_device.queue,
+>>> hence initialize it before misc_register().
+>>> Also, rdc321x_wdt_device.default_ticks is accessed in reset()
+>>> function called from write callback, thus initialize it before
+>>> misc_register().
+>>>
+>>> Found by Linux Driver Verification project (linuxtesting.org).
+>>>
+>>> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>
+>> Having said that ... this is yet another potentially obsolete driver.
+>> You are really wasting your (and, fwiw, my) time.
+>>
+>> Florian, any thoughts if support for this chip can/should be deprecated
+>> or even removed ?
+> 
+> I am still using my rdc321x-based SoC, so no, this is not obsolete as
+> far as I am concerned, time permitting, modernizing the driver is on my
+> TODO after checking/fixing the Ethernet driver first.
+> 
 
-Yeah, I started thinking about this, and that's when I decided to just
-throw away the patch.
+Do you have a manual ? I'd give it a try if you can test it - conversion
+should be simple enough (I have a coccinelle script which partially
+automates it), but this chip seems to have a fast timeout, and the
+comments in the code ("set the timeout to 81.92 us") seem to be quite
+obviously wrong.
 
-Because now it clears the bit *after* it has woken people up, and that
-just made me go "Eww".
-
-You did add a comment about the whole "always added to the tail"
-thing, and the spinlock should serialize everything, so I guess it's
-ok (because the spinlock should serialize things that care), but it
-just feels wrong.
-
-I also started worrying about other people waiting on the page lock
-(ie we now have that whole io_uring case), and interaction with the
-PG_writeback case etc, and it just ended up feeling very messy.
-
-I think it was all fine - other cases won't hit that exclusive case at
-all - but I had a hard time wrapping my little mind around the exact
-handoff rules, and the cmpxchg behavior when other bits changed (eg
-PG_waiters), so I gave up.
-
-> My home testing was, effectively, on top of c6fe44d96fc1 (v5.8 plus
-> your two patches): I did not have in the io_uring changes from the
-> current tree. In glancing there, I noticed one new and one previous
-> instance of SetPageWaiters() *after* __add_wait_queue_entry_tail():
-> are those correct?
-
-I don't think SetPageWaiters() has any ordering constraints with the
-wait queue. Nobody looks at the waitqueue unless they already got to
-the slowpath.
-
-The only ordering constraint is with the testing of the bit we're
-going to wait on. Because doing
-
-     if (test_and_set_bit())
-          SetPageWaiters(page);
-
-is wrong - there's a race in there when somebody can clear the bit,
-and not see that there are waiters.
-
-And obviously that needs to be done inside the spinlock, but once you
-do that, the ordering of the actual wait-queue is entirely irrelevant.
-The spinlock will order _that_ part. The only thing the spinlock won't
-order and serialize is the PG_lock bit and making sure we get to the
-slowpath in the first place.
-
-So if you're talking about __wait_on_page_locked_async(), then I think
-that part is ok.
-
-Or am I missing something?
-
-                Linus
+Guenter
