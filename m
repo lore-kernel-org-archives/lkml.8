@@ -2,93 +2,124 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42868C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38081C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15DBF221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAFB22C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:02:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="icVDBPfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgHGLCC (ORCPT
+        id S1726772AbgHGK7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:02:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53276 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbgHGK6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 06:58:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3E588AB3D;
-        Fri,  7 Aug 2020 10:58:36 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Stefan Berger <stefanb@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH] docs: update trusted-encrypted.rst
-Date:   Fri,  7 Aug 2020 18:58:13 +0800
-Message-Id: <20200807105813.59900-1-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Aug 2020 06:59:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42309 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726159AbgHGKzU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 06:55:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596797681;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=SebiSFSvaUNdq26nIA+KqtCZ23a0eXZDimZTww2A8Sg=;
+        b=icVDBPfFAvVjpV74uWIirjyLnWicOM0ZOB8DnfrFDWgGECdYlpO2j+XbewZAbDQ4waonX8
+        LOSLT1WeNHRQGxcAxi7copxuRE8WHZXKlZRY18I59PHC8lF2PSzS2tqh6PQHF6QkCyBQ5x
+        jF14oz96ea7HN4n1qh97TdeHJRcP0e0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-UU5rZ_o5N1-B9dA0K-2Xzw-1; Fri, 07 Aug 2020 06:54:37 -0400
+X-MC-Unique: UU5rZ_o5N1-B9dA0K-2Xzw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A2998005B0;
+        Fri,  7 Aug 2020 10:54:35 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B2F661176;
+        Fri,  7 Aug 2020 10:54:30 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 5A1689CBC; Fri,  7 Aug 2020 12:54:29 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, 1882851@bugs.launchpad.net,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Chia-I Wu <olvaffe@gmail.com>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/virtio: fix unblank
+Date:   Fri,  7 Aug 2020 12:54:29 +0200
+Message-Id: <20200807105429.24208-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parameters in tmp2 commands are outdated, people are not able to
-create trusted key by the example commands.
+When going through a disable/enable cycle without changing the
+framebuffer the optimization added by commit 3954ff10e06e ("drm/virtio:
+skip set_scanout if framebuffer didn't change") causes the screen stay
+blank.  Add a bool to force an update to fix that.
 
-This patch updates the paramerters of tpm2 commands, they are verified
-by tpm2-tools-4.1 with Linux v5.8 kernel.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: Stefan Berger <stefanb@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: 1882851@bugs.launchpad.net
+Fixes: 3954ff10e06e ("drm/virtio: skip set_scanout if framebuffer didn't change")
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- Documentation/security/keys/trusted-encrypted.rst | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_drv.h     | 1 +
+ drivers/gpu/drm/virtio/virtgpu_display.c | 1 +
+ drivers/gpu/drm/virtio/virtgpu_plane.c   | 4 +++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
-index 9483a7425ad5..442a2775156e 100644
---- a/Documentation/security/keys/trusted-encrypted.rst
-+++ b/Documentation/security/keys/trusted-encrypted.rst
-@@ -39,10 +39,9 @@ With the IBM TSS 2 stack::
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 9ff9f4ac0522..7b0c319f23c9 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -138,6 +138,7 @@ struct virtio_gpu_output {
+ 	int cur_x;
+ 	int cur_y;
+ 	bool enabled;
++	bool need_update;
+ };
+ #define drm_crtc_to_virtio_gpu_output(x) \
+ 	container_of(x, struct virtio_gpu_output, crtc)
+diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+index cc7fd957a307..378be5956b30 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_display.c
++++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+@@ -100,6 +100,7 @@ static void virtio_gpu_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
  
- Or with the Intel TSS 2 stack::
+ 	output->enabled = true;
++	output->need_update = true;
+ }
  
--  #> tpm2_createprimary --hierarchy o -G rsa2048 -o key.ctxt
-+  #> tpm2_createprimary --hierarchy o -G rsa2048 key.ctxt
-   [...]
--  handle: 0x800000FF
--  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
-+  #> tpm2_evictcontrol -c key.ctxt 0x81000001
-   persistentHandle: 0x81000001
+ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index 52d24179bcec..5948031a9ce8 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -163,7 +163,8 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 	    plane->state->src_w != old_state->src_w ||
+ 	    plane->state->src_h != old_state->src_h ||
+ 	    plane->state->src_x != old_state->src_x ||
+-	    plane->state->src_y != old_state->src_y) {
++	    plane->state->src_y != old_state->src_y ||
++	    output->need_update) {
+ 		DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
+ 			  bo->hw_res_handle,
+ 			  plane->state->crtc_w, plane->state->crtc_h,
+@@ -178,6 +179,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 					   plane->state->src_h >> 16,
+ 					   plane->state->src_x >> 16,
+ 					   plane->state->src_y >> 16);
++		output->need_update = false;
+ 	}
  
- Usage::
-@@ -115,7 +114,7 @@ append 'keyhandle=0x81000001' to statements between quotes, such as
- 
- ::
- 
--    $ keyctl add trusted kmk "new 32" @u
-+    $ keyctl add trusted kmk "new 32 keyhandle=0x81000001" @u
-     440502848
- 
-     $ keyctl show
-@@ -138,7 +137,7 @@ append 'keyhandle=0x81000001' to statements between quotes, such as
- 
- Load a trusted key from the saved blob::
- 
--    $ keyctl add trusted kmk "load `cat kmk.blob`" @u
-+    $ keyctl add trusted kmk "load `cat kmk.blob` keyhandle=0x81000001" @u
-     268728824
- 
-     $ keyctl print 268728824
+ 	virtio_gpu_cmd_resource_flush(vgdev, bo->hw_res_handle,
 -- 
-2.26.2
+2.18.4
 
