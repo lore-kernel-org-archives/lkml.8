@@ -2,152 +2,122 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8757DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2DDD20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6160920866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:09:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmSBvJ3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHGHH3 (ORCPT
+        id S1726582AbgHGHJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:07:29 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:38801 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgHGHHR (ORCPT
+        Fri, 7 Aug 2020 03:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgHGHJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:07:17 -0400
-Received: by mail-io1-f71.google.com with SMTP id a65so984869iog.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 00:07:16 -0700 (PDT)
+        Fri, 7 Aug 2020 03:09:25 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB587C061574
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 00:09:24 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id o21so1048171oie.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 00:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uLQHBFTmBmwUqDoaiiE130WzMyrApr6UvOSb4IUTTB8=;
+        b=TmSBvJ3duCrYdmyJEMPijGgyzrsxf4Wsp0DSFhOtD6F+n69OQjKaYTBX+nmXYpsOhZ
+         gsTTpuRxsgbNl9n81S8XZx8geuSicmXGyklUHmZ4oLofkRedfWazPB8v6w0yqdsmFAY8
+         o8Pg10anUkIByOne6YFJJVmsG0ZX0pgGpdGn1O/H62wI335Bv/hVJvDsqqDGIzoXT17W
+         iAJrDkyVjmqGVlvmcilO59TFZqXSxmd1rUz92L/+5tPfFC+uNpOk1XNHBNZ1w0K8+eQY
+         Q3fObk3+JE8uisNWIkHu5OyZFLANXbjTOWjQDnn0r3L2+zBpKdjeEjgEE2hD+wpF/eJh
+         m5iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=p96+8eivvECQ6gB2pMJM1gOA5q/X+IfS62pER3Ikwjc=;
-        b=HeBF/ZvJOnxtEDOnoTTNL09AKAV21608Rmi7YVKeUozO9A2qxAB2F7CBngJc6AlQ0B
-         sFguHK0Bv2uaYkEoXkNm8RvokGkAdhcR3DJRD9kUby06hgLdKk0OjqMkQf7y3KLwxpHu
-         gkb57rTFBiRwCWvG4uatFWEUfBff4uNvDjrK4Kxq44xbA/7bFAAly+6eokOkI3jZtP8o
-         Xh67ACvRTSNRT7iVlek4QCVSaKbEImwt7Cpks+jUBXH/Rfi30gI5RRhWm+/eovapFse4
-         p+iLe+IH1XUAmvnThIFceJ9UV7+yLx9gVZlKLq1JjyluNQzNbb6M/CqknjWsp7NNLJWN
-         GRzQ==
-X-Gm-Message-State: AOAM532J49aLyK7AMzQuLtvcL9W8V62Tq8ZKJxNuhIEGFi9w9jDQ73sz
-        n7QMbsCVQt+8B4ESgCOkQW1mc5BzF74atovDd30CeHsjNmw5
-X-Google-Smtp-Source: ABdhPJzPfM2I+0d4pil+xyqfPnF98jniuzjJF0QmomQhPU/65w25n4YTGgrl360bm+CiGfgLQKcPazPb12i/mr3E0/o+gbbhMkJl
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uLQHBFTmBmwUqDoaiiE130WzMyrApr6UvOSb4IUTTB8=;
+        b=PH04p38B0rFTu3cWlwREOU95pttJnisCaMSOhYHq9n9vrdStOHy8tK2jEfdkH0ORde
+         gQ2hVmc5omZTRlNmLQt2kidfiIveRUUdVEBSEUCKItnYFP+ZMRYmVNwY1HK0P/dlpi5E
+         sVmJZp5Gedw5CvnY5CTND5OvNfKzyh+qn6FW3cI1k6BT0TUplL+ka4D+VS8dUMqvzevX
+         9qQUTT1yF6oKd9HvJjmE0e/6rHaN+0heSKWzK+3HvHrCYzv3WpK50wh9lQ/mU+RWplty
+         acNReNfUTmJolmh4SEyk3ig1TJW3gDczj26eqLjmzdIglstq+/0y8Wy991o2midb31Bk
+         JKbQ==
+X-Gm-Message-State: AOAM533s3Ik/NqOGfbnxjKQx/W8rQLjFKzSbE6YtpvVSjhPQTs7WZqSK
+        CTofTWEey7+3/TIIob225lFn4QO6e9hC0GltDPE=
+X-Google-Smtp-Source: ABdhPJxUoUC9D1qb/TSkAtYOZ8P2AojnvVZYFEvhk1z4B1ubehX59+bxtrZtMZqnwBJfHPii3A/W7qOJg1fB8ab3phE=
+X-Received: by 2002:aca:f38b:: with SMTP id r133mr10348803oih.81.1596784163233;
+ Fri, 07 Aug 2020 00:09:23 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:b610:: with SMTP id h16mr3429002jam.74.1596784036494;
- Fri, 07 Aug 2020 00:07:16 -0700 (PDT)
-Date:   Fri, 07 Aug 2020 00:07:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004740cd05ac444126@google.com>
-Subject: KASAN: use-after-free Write in afs_manage_cell
-From:   syzbot <syzbot+f59c67285cb61166a0cf@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <CGME20200803061805epcas2p20faeeff0b31b23d1bc4464972285b561@epcas2p2.samsung.com>
+ <1596435031-41837-1-git-send-email-pullip.cho@samsung.com> <5f41af0f-4593-3441-12f4-5b0f7e6999ac@redhat.com>
+In-Reply-To: <5f41af0f-4593-3441-12f4-5b0f7e6999ac@redhat.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Fri, 7 Aug 2020 10:08:41 +0300
+Message-ID: <CAOJsxLHTL__N3KE_HUhQrVR=rkri80=kU1e64-6nBgMKHZRi4g@mail.gmail.com>
+Subject: Re: [PATCH] mm: sort freelist by rank number
+To:     David Hildenbrand <david@redhat.com>
+Cc:     pullip.cho@samsung.com, Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, hyesoo.yu@samsung.com,
+        janghyuck.kim@samsung.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Cho and David,
 
-syzbot found the following issue on:
+On Mon, Aug 3, 2020 at 10:57 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 03.08.20 08:10, pullip.cho@samsung.com wrote:
+> > From: Cho KyongHo <pullip.cho@samsung.com>
+> >
+> > LPDDR5 introduces rank switch delay. If three successive DRAM accesses
+> > happens and the first and the second ones access one rank and the last
+> > access happens on the other rank, the latency of the last access will
+> > be longer than the second one.
+> > To address this panelty, we can sort the freelist so that a specific
+> > rank is allocated prior to another rank. We expect the page allocator
+> > can allocate the pages from the same rank successively with this
+> > change. It will hopefully improves the proportion of the consecutive
+> > memory accesses to the same rank.
+>
+> This certainly needs performance numbers to justify ... and I am sorry,
+> "hopefully improves" is not a valid justification :)
+>
+> I can imagine that this works well initially, when there hasn't been a
+> lot of memory fragmentation going on. But quickly after your system is
+> under stress, I doubt this will be very useful. Proof me wrong. ;)
+>
+> ... I dislike this manual setting of "dram_rank_granule". Yet another mm
+> feature that can only be enabled by a magic command line parameter where
+> users have to guess the right values.
+>
+> (side note, there have been similar research approaches to improve
+> energy consumption by switching off ranks when not needed).
 
-HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1053efea900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=18bb86f2e4ebfda2
-dashboard link: https://syzkaller.appspot.com/bug?extid=f59c67285cb61166a0cf
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+I was thinking of the exact same thing. PALLOC [1] comes to mind, but
+perhaps there are more recent ones?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I also dislike the manual knob, but is there a way for the OS to
+detect this by itself? My (perhaps outdated) understanding was that
+the DRAM address mapping scheme, for example, is not exposed to the
+OS.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f59c67285cb61166a0cf@syzkaller.appspotmail.com
+I think having more knowledge of DRAM controller details in the OS
+would be potentially beneficial for better page allocation policy, so
+maybe try come up with something more generic, even if the fallback to
+providing this information is a kernel command line option.
 
-==================================================================
-BUG: KASAN: use-after-free in afs_activate_cell fs/afs/cell.c:626 [inline]
-BUG: KASAN: use-after-free in afs_manage_cell+0xf72/0x11c0 fs/afs/cell.c:697
-Write of size 8 at addr ffff88808ecf5888 by task kworker/1:2/2576
+[1] http://cs-people.bu.edu/rmancuso/files/papers/palloc-rtas2014.pdf
 
-CPU: 1 PID: 2576 Comm: kworker/1:2 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: afs afs_manage_cell
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- afs_activate_cell fs/afs/cell.c:626 [inline]
- afs_manage_cell+0xf72/0x11c0 fs/afs/cell.c:697
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-Allocated by task 16538:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- afs_alloc_cell fs/afs/cell.c:151 [inline]
- afs_lookup_cell+0x5c8/0x1440 fs/afs/cell.c:262
- afs_parse_source fs/afs/super.c:290 [inline]
- afs_parse_param+0x404/0x8c0 fs/afs/super.c:326
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2869 [inline]
- do_mount+0x658/0x1fe0 fs/namespace.c:3200
- __do_sys_mount fs/namespace.c:3410 [inline]
- __se_sys_mount fs/namespace.c:3387 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3387
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 7033:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- rcu_do_batch kernel/rcu/tree.c:2427 [inline]
- rcu_core+0x5c7/0x1190 kernel/rcu/tree.c:2655
- __do_softirq+0x2de/0xa24 kernel/softirq.c:298
-
-The buggy address belongs to the object at ffff88808ecf5800
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 136 bytes inside of
- 1024-byte region [ffff88808ecf5800, ffff88808ecf5c00)
-The buggy address belongs to the page:
-page:ffffea00023b3d40 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002896a48 ffffea0002784e88 ffff8880aa000c40
-raw: 0000000000000000 ffff88808ecf5000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88808ecf5780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88808ecf5800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88808ecf5880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                      ^
- ffff88808ecf5900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88808ecf5980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+- Pekka
