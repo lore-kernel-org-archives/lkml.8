@@ -2,107 +2,149 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3912C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED63E221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GH+TcRxM"
+	by mail.kernel.org (Postfix) with ESMTP id C36A9221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596818936;
+	bh=Fg3Aw0IDcexSj+nRhIX1U3XSgab99WBZOgFlAsu4IIM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hnkVVTt2XuZ+t1WHdcDCjw1eU0KBKNF/lcefUKTltwu07APsw8n0UdYResSOXyiLk
+	 0spko+3gatbKOgRradjYtUzYR0gCGA3E58la28xG1Vgt3Xo0mGXpc7pc3+JjAOj91D
+	 i+Jc13slfxzMVHifuEzE3c534Lkt6AdgJofl5PGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgHGQsS (ORCPT
+        id S1726955AbgHGQsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:48:18 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23593 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726923AbgHGQsN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:48:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596818892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5uaTvo6j9usJ7mGdDSjNCVzeTH3/9YOGpZH8iappgok=;
-        b=GH+TcRxMnTOw/U3OkimZZ1+0p6ms/7VGxbwm/pmI7N4QHvOHOOWirgG1Uq8h1r6NmB/1Zi
-        j9viJv7Fbg2kEvG1atPjbUJfN+1KC/uI8tIsj+Sl2jcbzEfqCAaT9hdRwNduGPsjeJUhWE
-        qTSqU3XMfzevaH3avpttoW9a1fvZr14=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-UOpswGSkPjan0kp2yjU6ow-1; Fri, 07 Aug 2020 12:48:10 -0400
-X-MC-Unique: UOpswGSkPjan0kp2yjU6ow-1
-Received: by mail-ej1-f70.google.com with SMTP id e22so1118595ejx.18
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 09:48:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5uaTvo6j9usJ7mGdDSjNCVzeTH3/9YOGpZH8iappgok=;
-        b=RQqDo8zoAjVhLxY4n4HIniJRlLevE5BAVJ4JxwzMp8+7ju3VmDYba4ronU4/1nPwiH
-         lc6xYeGEy60I/MT/tTSnQ2n795Mb/u9ENJKRJ6JxqVzKo7G3NfQEkka/hX+/9/OkUQVC
-         rfYRszmkYCZcJYkJZ9AevfZMYM8B/Zih7vGg5dDIf3cIblbPkK25istHW9Sn//kUnQaC
-         ++POdrUZOnrlwdmfGVH9zS7EP6dvg0EewweOkObIXtsJfBIGfE+8Aaud2lFWYVDnXi7i
-         4XX0HbLy3SUZ7bqT4bIT0dzl04YBNZVp89WijVlz/p2yV+5ISOjyvajZvn9TG61Vcpqm
-         wGNw==
-X-Gm-Message-State: AOAM5304CYgM2AV4IA8qYXBx5mPHonRh9Mw6yY7hHoojmbVONxkDIq/B
-        wHc3pbA81qEpxo1TPxkYfNf/72uC7M7GAutF0aRuYc8ZeHSqlC+uRjWCQHUix1fA6dG4IIJeH0n
-        N2/cg8WT7m7mbXKNTHZS3Sygr
-X-Received: by 2002:a17:906:aad2:: with SMTP id kt18mr10449856ejb.537.1596818888965;
-        Fri, 07 Aug 2020 09:48:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzcfviELTbH8IfrCZg+pRReV0EoEKU9cNH9MLRePDcYmNJ6fqZI8EjqPkhFM1ikphH145ya/A==
-X-Received: by 2002:a17:906:aad2:: with SMTP id kt18mr10449835ejb.537.1596818888809;
-        Fri, 07 Aug 2020 09:48:08 -0700 (PDT)
-Received: from x1.bristot.me (host-87-16-204-193.retail.telecomitalia.it. [87.16.204.193])
-        by smtp.gmail.com with ESMTPSA id g25sm6232476ejh.110.2020.08.07.09.48.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 09:48:08 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 6/6] sched/fair: Implement starvation monitor
-To:     peterz@infradead.org, luca abeni <luca.abeni@santannapisa.it>
-Cc:     Juri Lelli <juri.lelli@redhat.com>, mingo@redhat.com,
-        rostedt@goodmis.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, tommaso.cucinotta@santannapisa.it,
-        alessio.balsini@gmail.com, dietmar.eggemann@arm.com,
-        linux-rt-users@vger.kernel.org, mtosatti@redhat.com,
-        williams@redhat.com, valentin.schneider@arm.com
-References: <20200807095051.385985-1-juri.lelli@redhat.com>
- <20200807095604.GO42956@localhost.localdomain>
- <20200807104618.GH2674@hirez.programming.kicks-ass.net>
- <20200807154941.2bb11408@nowhere>
- <20200807141118.GK2674@hirez.programming.kicks-ass.net>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <b4778352-9426-59f5-854d-942f4c345c91@redhat.com>
-Date:   Fri, 7 Aug 2020 18:48:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 12:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgHGQsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 12:48:51 -0400
+Received: from C02YQ0RWLVCF.internal.digitalocean.com (c-73-181-34-237.hsd1.co.comcast.net [73.181.34.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D14D221E2;
+        Fri,  7 Aug 2020 16:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596818930;
+        bh=Fg3Aw0IDcexSj+nRhIX1U3XSgab99WBZOgFlAsu4IIM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sc5e5teQfZZ/8vtM7WWGhTGSYRb41w5uS/rIbs5W1ScQZD2vQmzwzp4nS9genHrdD
+         XXp1EzJfxa8zKK4LfLbzXf/to2h94CMXvYMavHs2IXD1gac5pHWCT9X1bElhFjoL/o
+         Q1AMr+zi2/A9TigcD/Fz1M24cSOMwIZhJfauDZq8=
+From:   David Ahern <dsahern@kernel.org>
+To:     acme@kernel.org
+Cc:     namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, David Ahern <dsahern@kernel.org>
+Subject: [PATCH 1/2] perf sched: Prefer sched_waking event when it exists
+Date:   Fri,  7 Aug 2020 10:48:44 -0600
+Message-Id: <20200807164844.44870-1-dsahern@kernel.org>
+X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
 MIME-Version: 1.0
-In-Reply-To: <20200807141118.GK2674@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 4:11 PM, peterz@infradead.org wrote:
-> But I shelved all that after I heard about that other balancer idea
-> Danial was suppose to be working on ;-)))
+Commit fbd705a0c618 ("sched: Introduce the 'trace_sched_waking' tracepoint")
+added sched_waking tracepoint which should be preferred over sched_wakeup
+when analyzing scheduling delays.
 
-The PhD bureaucracy (and behind the scenes) were blocking me... but I am free
-man now and will catch up on that ;-).
+Update 'perf sched record' to collect sched_waking events if it exists
+and fallback to sched_wakeup if it does not. Similarly, update timehist
+command to skip sched_wakeup events if the session includes
+sched_waking (ie., sched_waking is preferred over sched_wakeup).
 
-[ also because I made enough progress on this:
+Signed-off-by: David Ahern <dsahern@kernel.org>
+---
+ tools/perf/builtin-sched.c | 32 +++++++++++++++++++++++++++++---
+ 1 file changed, 29 insertions(+), 3 deletions(-)
 
-https://github.com/bristot/rtsl/
-
-and can start other things. ]
-
--- Daniel
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 459e4229945e..0c7d599fa555 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -2398,6 +2398,15 @@ static void timehist_print_wakeup_event(struct perf_sched *sched,
+ 	printf("\n");
+ }
+ 
++static int timehist_sched_wakeup_ignore(struct perf_tool *tool __maybe_unused,
++					union perf_event *event __maybe_unused,
++					struct evsel *evsel __maybe_unused,
++					struct perf_sample *sample __maybe_unused,
++					struct machine *machine __maybe_unused)
++{
++	return 0;
++}
++
+ static int timehist_sched_wakeup_event(struct perf_tool *tool,
+ 				       union perf_event *event __maybe_unused,
+ 				       struct evsel *evsel,
+@@ -2958,9 +2967,10 @@ static int timehist_check_attr(struct perf_sched *sched,
+ 
+ static int perf_sched__timehist(struct perf_sched *sched)
+ {
+-	const struct evsel_str_handler handlers[] = {
++	struct evsel_str_handler handlers[] = {
+ 		{ "sched:sched_switch",       timehist_sched_switch_event, },
+ 		{ "sched:sched_wakeup",	      timehist_sched_wakeup_event, },
++		{ "sched:sched_waking",       timehist_sched_wakeup_event, },
+ 		{ "sched:sched_wakeup_new",   timehist_sched_wakeup_event, },
+ 	};
+ 	const struct evsel_str_handler migrate_handlers[] = {
+@@ -3018,6 +3028,11 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 
+ 	setup_pager();
+ 
++	/* prefer sched_waking if it is captured */
++	if (perf_evlist__find_tracepoint_by_name(session->evlist,
++						  "sched:sched_waking"))
++		handlers[1].handler = timehist_sched_wakeup_ignore;
++
+ 	/* setup per-evsel handlers */
+ 	if (perf_session__set_tracepoints_handlers(session, handlers))
+ 		goto out;
+@@ -3330,12 +3345,16 @@ static int __cmd_record(int argc, const char **argv)
+ 		"-e", "sched:sched_stat_iowait",
+ 		"-e", "sched:sched_stat_runtime",
+ 		"-e", "sched:sched_process_fork",
+-		"-e", "sched:sched_wakeup",
+ 		"-e", "sched:sched_wakeup_new",
+ 		"-e", "sched:sched_migrate_task",
+ 	};
++	struct tep_event *waking_event;
+ 
+-	rec_argc = ARRAY_SIZE(record_args) + argc - 1;
++	/*
++	 * +2 for either "-e", "sched:sched_wakeup" or
++	 * "-e", "sched:sched_waking"
++	 */
++	rec_argc = ARRAY_SIZE(record_args) + 2 + argc - 1;
+ 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+ 
+ 	if (rec_argv == NULL)
+@@ -3344,6 +3363,13 @@ static int __cmd_record(int argc, const char **argv)
+ 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
+ 		rec_argv[i] = strdup(record_args[i]);
+ 
++	rec_argv[i++] = "-e";
++	waking_event = trace_event__tp_format("sched", "sched_waking");
++	if (!IS_ERR(waking_event))
++		rec_argv[i++] = strdup("sched:sched_waking");
++	else
++		rec_argv[i++] = strdup("sched:sched_wakeup");
++
+ 	for (j = 1; j < (unsigned int)argc; j++, i++)
+ 		rec_argv[i] = argv[j];
+ 
+-- 
+2.17.1
 
