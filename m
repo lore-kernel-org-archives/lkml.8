@@ -2,131 +2,234 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0002AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D743C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7722075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D602075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="adiHvInB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDDCzqQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgHGSKK (ORCPT
+        id S1726518AbgHGSMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
+        Fri, 7 Aug 2020 14:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726361AbgHGSKJ (ORCPT
+        with ESMTP id S1726038AbgHGSMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:10:09 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EF6C061757
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:10:09 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id ba10so1896063edb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:10:09 -0700 (PDT)
+        Fri, 7 Aug 2020 14:12:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB23EC061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:12:41 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f10so1434960plj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q1STpBYwfz2s2WvBbqzcmi5iVPWegrSjSTiq6diCLE0=;
-        b=adiHvInBWjgTG7ebG6Nb7+yfwAmRWTX0Gu4VAA0C7dmQ5tmWJ72b391yWTw74tuIxn
-         wAWSKl7+zGI9g88Sr8DbaNomX6664PPAgPIsl79IxDYXRY4kSJOlj0lcGlo5gru5tM0o
-         ifRoW0m1BO2ksF/n5/LDlJwDq9DUGYbcgsrM4AeWLJUoCGxC2zWGJiWI22ol2J2jrIjK
-         3H1neTwB4+KEZYqSHyvAjYKgYR4eUUXJYz1TThLXKZbOaq9urhKA8T4VYJ3eyCsZSQbw
-         /btfeKxDK4J/LPqhrRg9ROeObqN0cPj7PZ2Q7PPZQ4apZaH2jEB0AvGxCZpd2AqvwM3U
-         g9yg==
+        bh=kL3mR5oBZa4t2i/MKwrasxeLRvGcBc/sHQnLPXjcDwY=;
+        b=qDDCzqQMNn82CNd4xcit662vHZMflfcl/cJjl2y6Rf2h/iJ2NYCm4uQUJpzhbCTiSM
+         Upi8GVx8qDBBIy7VW2aAlhkTAhgdCSF3EA4Tu77gjdit1+LwN4QDoKiA1ObOYgyjp9kN
+         t6gouN/unOljNDNCvakHHUz7sz6hdnpaT9YUS7AJMnMGCdUZ1OmKUfF9TaOJVz503CU+
+         H8G5muLfTUVHpQd9uoHosckOHKYXWEbaqaRwUTFxsDR7BfjbJ5K8DePBafMyUIAwuuM1
+         Aq3DYpyMSGZnVJeUj2RpcjoWOGoTGaNoFWMb2xWDtzfb77+fWq/WZxo9a1WpYNz6wjcT
+         8tvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q1STpBYwfz2s2WvBbqzcmi5iVPWegrSjSTiq6diCLE0=;
-        b=rusBLc6GrJoEqEuD0WEbpHNv7L/ROBJRrx9tlTst/8LFbXJ/aZGucWeQ76giMEnUJp
-         czBYMwKYV2NjlxW2MSnojSKBoT7uwkhClYgyb0uFqpkFJQmUUj/uMm1GSJEQEJza2oSi
-         VvXmKbNG/+IxFyfiQOtpXauDl0A0NhEcHPnL7G7SxNq2tr0Rn9hJy7RztT55SIuGSvt4
-         rMib5mHS5NzyzmTYsGMkX6uOSocBLQoKQTpuomStPF63vA5KXj5zwnDeGXvqzSLcw360
-         Q8zWQls/bDc3+6aghn6YjRhvSWjhKhNyrCBL+pZ6WnfWOLC9btfKyQUFs9erZLSadma6
-         THsg==
-X-Gm-Message-State: AOAM531aqV34MrZ5RUhpxfmhyAmjyQQbhbw5/P20RtQsAQwJ3X9Oq1r1
-        +WtlDXg/NKPZ3lqtqbE/Rww/rlO53q6xGtT5HqPn
-X-Google-Smtp-Source: ABdhPJysL55Ns6Iw5owOS+YKPOXkwqm66Dgs9N0+aS8afD0Z1MBv6J2wu3k8CLxKxBx0ZlKlEvxZeZykbP0lN5ns06M=
-X-Received: by 2002:aa7:c383:: with SMTP id k3mr9747989edq.164.1596823807375;
- Fri, 07 Aug 2020 11:10:07 -0700 (PDT)
+        bh=kL3mR5oBZa4t2i/MKwrasxeLRvGcBc/sHQnLPXjcDwY=;
+        b=hFSD2WblSThx1J+HxLwy51sxD49Ubwsnp0/xo9q/Vt40rXDFtbEFxDwrJfVR4AY5/6
+         X5UnxZGWdQIePQo6v3heskVyGf163dowqkN+OyyolFCeSp8KEtEzogCa6qHaBsAFkOCX
+         uTs0+eZgfI44Qnh75R4pUUP3cX/29/adaPJpDRJhB2XmBfVCXqSe3DDMz3m2N3zPNr/Y
+         bCdiy5y/A/zP8AIvEhp1ZXUd2HmsY59KDenMNNsBv4OfkACwX2jDFxHgNoTgiw93c+56
+         +KwfHdD/j7JlriFXlnjPdGbUEQiGZhkgP8ffKsyqOdIkoj0Ro1ZsJtfOPPtUjkbm0lqm
+         61gg==
+X-Gm-Message-State: AOAM533N3wcabJARToUGQcOZG8Fn28tPH572nJiMrqrSl9dtoxrhPXoY
+        xWWIvwNXrI9E9w892lp1dT0qRM7QgM1iPJt3J49epw==
+X-Google-Smtp-Source: ABdhPJzUP9BycNEANV1ccydFSurHQBFr1fKt53c4Ly+onOxBQysLPnMNlFrz2Xmne8b9+/GR+N3sOSeUyLSCzZN+QsY=
+X-Received: by 2002:a17:902:cb91:: with SMTP id d17mr13384373ply.223.1596823960860;
+ Fri, 07 Aug 2020 11:12:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200807165134.3913-1-rdunlap@infradead.org>
-In-Reply-To: <20200807165134.3913-1-rdunlap@infradead.org>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 7 Aug 2020 14:09:56 -0400
-Message-ID: <CAHC9VhQW-8pem59QHQctx9UNhMNLEAjNwDiOU1ODz9wX5B_tdQ@mail.gmail.com>
-Subject: Re: [PATCH] security: selinux: delete repeated words in comments
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org
+References: <20200731230820.1742553-1-keescook@chromium.org> <20200731230820.1742553-7-keescook@chromium.org>
+In-Reply-To: <20200731230820.1742553-7-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 7 Aug 2020 11:12:29 -0700
+Message-ID: <CAKwvOd=mY5=SWjGKA_KpvKnOPmJky_qMcyBYeFhskx6J=aJmNA@mail.gmail.com>
+Subject: Re: [PATCH v5 06/36] x86/boot: Remove run-time relocations from head_{32,64}.S
+To:     Kees Cook <keescook@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 12:51 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri, Jul 31, 2020 at 4:08 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Drop a repeated word in comments.
-> {open, is, then}
+> From: Arvind Sankar <nivedita@alum.mit.edu>
 >
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
-> Cc: Eric Paris <eparis@parisplace.org>
-> Cc: selinux@vger.kernel.org
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: linux-security-module@vger.kernel.org
+> The BFD linker generates run-time relocations for z_input_len and
+> z_output_len, even though they are absolute symbols.
+>
+> This is fixed for binutils-2.35 [1]. Work around this for earlier
+> versions by defining two variables input_len and output_len in addition
+> to the symbols, and use them via position-independent references.
+>
+> This eliminates the last two run-time relocations in the head code and
+> allows us to drop the -z noreloc-overflow flag to the linker.
+>
+> Move the -pie and --no-dynamic-linker LDFLAGS to LDFLAGS_vmlinux instead
+> of KBUILD_LDFLAGS. There shouldn't be anything else getting linked, but
+> this is the more logical location for these flags, and modversions might
+> call the linker if an EXPORT_SYMBOL is left over accidentally in one of
+> the decompressors.
+>
+> [1] https://sourceware.org/bugzilla/show_bug.cgi?id=25754
+>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  security/selinux/hooks.c |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  arch/x86/boot/compressed/Makefile  | 12 ++----------
+>  arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
+>  arch/x86/boot/compressed/head_64.S |  4 ++--
+>  arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
+>  4 files changed, 18 insertions(+), 21 deletions(-)
+>
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 489fea16bcfb..7db0102a573d 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -51,16 +51,8 @@ UBSAN_SANITIZE :=n
+>  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+>  # Compressed kernel should be built as PIE since it may be loaded at any
+>  # address by the bootloader.
+> -ifeq ($(CONFIG_X86_32),y)
+> -KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
+> -else
+> -# To build 64-bit compressed kernel as PIE, we disable relocation
+> -# overflow check to avoid relocation overflow error with a new linker
+> -# command-line option, -z noreloc-overflow.
+> -KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
+> -       && echo "-z noreloc-overflow -pie --no-dynamic-linker")
+> -endif
+> -LDFLAGS_vmlinux := -T
+> +LDFLAGS_vmlinux := $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
 
-This obviously looks fine, but it will need to wait until after the
-merge window closes.  I'll send another reply once it is merged.
+Oh, do these still need ld-option?  bfd and lld both support these
+flags. (Though in their --help, they mention single hyphen and double
+hyphen respectively.  Also, if we don't build this as PIE because the
+linker doesn't support the option, we probably want to fail the build?
 
-> --- linux-next-20200731.orig/security/selinux/hooks.c
-> +++ linux-next-20200731/security/selinux/hooks.c
-> @@ -1978,7 +1978,7 @@ static inline u32 file_to_av(struct file
->  }
+> +LDFLAGS_vmlinux += -T
+>
+>  hostprogs      := mkpiggy
+>  HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+> index 8c1a4f5610f5..659fad53ca82 100644
+> --- a/arch/x86/boot/compressed/head_32.S
+> +++ b/arch/x86/boot/compressed/head_32.S
+> @@ -178,18 +178,17 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+>  /*
+>   * Do the extraction, and jump to the new kernel..
+>   */
+> -                               /* push arguments for extract_kernel: */
+> -       pushl   $z_output_len   /* decompressed length, end of relocs */
+> +       /* push arguments for extract_kernel: */
+>
+> -       pushl   %ebp            /* output address */
+> -
+> -       pushl   $z_input_len    /* input_len */
+> +       pushl   output_len@GOTOFF(%ebx) /* decompressed length, end of relocs */
+> +       pushl   %ebp                    /* output address */
+> +       pushl   input_len@GOTOFF(%ebx)  /* input_len */
+>         leal    input_data@GOTOFF(%ebx), %eax
+> -       pushl   %eax            /* input_data */
+> +       pushl   %eax                    /* input_data */
+>         leal    boot_heap@GOTOFF(%ebx), %eax
+> -       pushl   %eax            /* heap area */
+> -       pushl   %esi            /* real mode pointer */
+> -       call    extract_kernel  /* returns kernel location in %eax */
+> +       pushl   %eax                    /* heap area */
+> +       pushl   %esi                    /* real mode pointer */
+> +       call    extract_kernel          /* returns kernel location in %eax */
+>         addl    $24, %esp
 >
 >  /*
-> - * Convert a file to an access vector and include the correct open
-> + * Convert a file to an access vector and include the correct
->   * open permission.
->   */
->  static inline u32 open_file_to_av(struct file *file)
-> @@ -4444,7 +4444,7 @@ static int selinux_skb_peerlbl_sid(struc
->   *
->   * If @skb_sid is valid then the user:role:type information from @sk_sid is
->   * combined with the MLS information from @skb_sid in order to create
-> - * @conn_sid.  If @skb_sid is not valid then then @conn_sid is simply a copy
-> + * @conn_sid.  If @skb_sid is not valid then @conn_sid is simply a copy
->   * of @sk_sid.  Returns zero on success, negative values on failure.
->   *
->   */
-> @@ -5314,7 +5314,7 @@ static int selinux_sctp_bind_connect(str
+> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+> index 11429092c224..9e46729cf162 100644
+> --- a/arch/x86/boot/compressed/head_64.S
+> +++ b/arch/x86/boot/compressed/head_64.S
+> @@ -534,9 +534,9 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+>         movq    %rsi, %rdi              /* real mode address */
+>         leaq    boot_heap(%rip), %rsi   /* malloc area for uncompression */
+>         leaq    input_data(%rip), %rdx  /* input_data */
+> -       movl    $z_input_len, %ecx      /* input_len */
+> +       movl    input_len(%rip), %ecx   /* input_len */
+>         movq    %rbp, %r8               /* output target address */
+> -       movl    $z_output_len, %r9d     /* decompressed length, end of relocs */
+> +       movl    output_len(%rip), %r9d  /* decompressed length, end of relocs */
+>         call    extract_kernel          /* returns kernel location in %rax */
+>         popq    %rsi
 >
->                         /* As selinux_sctp_bind_connect() is called by the
->                          * SCTP protocol layer, the socket is already locked,
-> -                        * therefore selinux_netlbl_socket_connect_locked() is
-> +                        * therefore selinux_netlbl_socket_connect_locked()
->                          * is called here. The situations handled are:
->                          * sctp_connectx(3), sctp_sendmsg(3), sendmsg(2),
->                          * whenever a new IP address is added or when a new
+> diff --git a/arch/x86/boot/compressed/mkpiggy.c b/arch/x86/boot/compressed/mkpiggy.c
+> index 7e01248765b2..52aa56cdbacc 100644
+> --- a/arch/x86/boot/compressed/mkpiggy.c
+> +++ b/arch/x86/boot/compressed/mkpiggy.c
+> @@ -60,6 +60,12 @@ int main(int argc, char *argv[])
+>         printf(".incbin \"%s\"\n", argv[1]);
+>         printf("input_data_end:\n");
+>
+> +       printf(".section \".rodata\",\"a\",@progbits\n");
+> +       printf(".globl input_len\n");
+> +       printf("input_len:\n\t.long %lu\n", ilen);
+> +       printf(".globl output_len\n");
+> +       printf("output_len:\n\t.long %lu\n", (unsigned long)olen);
+> +
+>         retval = 0;
+>  bail:
+>         if (f)
+> --
+> 2.25.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200731230820.1742553-7-keescook%40chromium.org.
 
 
 
 -- 
-paul moore
-www.paul-moore.com
+Thanks,
+~Nick Desaulniers
