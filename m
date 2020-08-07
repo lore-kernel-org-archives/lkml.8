@@ -2,214 +2,210 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D26C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55AA520866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50172086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jR9JqQGv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cuta9FDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgHGMHW (ORCPT
+        id S1728418AbgHGMI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:07:22 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:10879 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbgHGMHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 08:07:01 -0400
-Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2d43e10002>; Fri, 07 Aug 2020 20:06:57 +0800
-Received: from HKMAIL103.nvidia.com ([10.18.16.12])
-  by hkpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Aug 2020 05:06:57 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate101.nvidia.com on Fri, 07 Aug 2020 05:06:57 -0700
-Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
- (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
- 2020 12:06:54 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
- by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 7 Aug 2020 12:06:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dIv4xpPg4Br912Ed3lZ+k9RFOkWKDXgb0CDU3y4sZGNWh53wXZ0bvnS/BdY7oEKJMUosZrKYX4zhtX/Fhd1sycXrakbBSv9FiPy8SPe+YqbjDfRHMBZUBSEo5bqHhmILTnvILG5AkUqIp886I/FfPOtCgQItRbaFor+pUnuGC+Y1EazoagBv8litlfI28iPxgyRNIP5a/JZZOLTNiC4xKRGY00OS454tROdHkbSr8DR/spgyJgS905tKVM1ZpZzsAhKkNOX2yfEFWy2OG4/x5Mx2OhBmKCblB/dWExcwlbYSSxJRp0iNIM0+6B3J4pogasqPGCNvgC07wM/B0LPCwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FA5i77KQ9ekFUbbxsuLCWszZ/MINCIcRJhq0r4T+d6o=;
- b=DHgnyeLS3XBY2gz4nakp3Sj37tljxF6xnxpu3MrcezxAQs+W2GsEazTOxKdqeYj1eTTuGHUOrWUPZSMKzdgPBtBG7GVBLItZk4fVIdxDtDTacMgfiDqx3B3EmlaZfmwzK18FNoypzSj/44RA0FOO+xAs83z9WnMyW+YD2OzueRylaajJfuaKhJRWphh5z23G5GCiS+Nc1oaUy46iPn7Uwh3mO7Pj7WHMy0BGn4SuNw79y2joO1ni7eLKAVA+Ee5fGL5k2bzM8vo0IMd78iPeQuSFbDMA35wi09cqi27mM6dcvcfdeaZm96yAWlGu0lCuISMGz8h67K8VrLjLSsnFSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3515.namprd12.prod.outlook.com (2603:10b6:5:15f::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Fri, 7 Aug
- 2020 12:06:51 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
- 12:06:51 +0000
-Date:   Fri, 7 Aug 2020 09:06:50 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     "Dey, Megha" <megha.dey@intel.com>, Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Message-ID: <20200807120650.GR16789@nvidia.com>
-References: <96a1eb5ccc724790b5404a642583919d@intel.com>
- <20200805221548.GK19097@mellanox.com>
- <70465fd3a7ae428a82e19f98daa779e8@intel.com>
- <20200805225330.GL19097@mellanox.com>
- <630e6a4dc17b49aba32675377f5a50e0@intel.com>
- <20200806001927.GM19097@mellanox.com>
- <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
- <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
- <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
- <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
-X-ClientProxiedBy: MN2PR20CA0043.namprd20.prod.outlook.com
- (2603:10b6:208:235::12) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 7 Aug 2020 08:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgHGMIY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 08:08:24 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8577C061574
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 05:08:24 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id z22so1711515oid.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 05:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ay16CW272QYTKkAOwUiRs236ospoi7GV3k++PHOMjNM=;
+        b=Cuta9FDJbicH7ciZGUJOHWchBBbaLqjwqa0uPBtbSTLSxIyX/sx7nXURWR+O73KTVZ
+         /I/eGITHvvT326sPFg6eATE+mfgY9SdUDTsZgbpZa2RdLfKr5fWpR4Dp7JRJ5BByC8J4
+         WC7GxBqSciBBf4tPsSWNsdWfmvn73GoUj9Kp4okfExPkQL0PXhSAz30AEDs5CNeU8bDT
+         LIPE7BIFbHF/lJZ7EJi1iblRRKYFMu4H3/r6QeQ9n8GrzsGrD9P0JcIxTo+l33ktORWy
+         UoXXTK5TKopRw/biRd9PfLpI8F+2vdRQrdpB+iA6/F06qOzkzpNUsStbBprQag30FK7h
+         e1Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ay16CW272QYTKkAOwUiRs236ospoi7GV3k++PHOMjNM=;
+        b=hEvjTne743DCQC4oHlCmSwNYBCKg6G0mVDsTjU5wzHgnfQCsyt/950Otq23Zf8yoKQ
+         Rxm7DMuNr98qZNaGfSHB51JfPNSF3YbNqlm+7a7LLzKUvdV3nwYXmMOuoel7RSvyQxiE
+         wKfpONTbk8Dyr/DBHYQH9RWKCz+6gUa6xrTVyBLOef6R9k+fRm0mQ2WNHLDjNkDPFwLn
+         m0LA0GhwL7XqLZXX8+LB+a4juzirifSWndKPOQQ4rfdCzsiugJvnzFQt9g1bKlZIAnxX
+         tIBwqSRhTa/4C87EInz9VZkS+HYPEmkAaPXTuZo9fSWSb7S+eF5++1dhrjOOZNd4SFD+
+         hvsw==
+X-Gm-Message-State: AOAM533se0N6SE5MjAQDApfyDgKnYWqbgP7E1doIhkyWlm9hnQNn9XGF
+        WUdmK07B1oyrIIzo6qhq3h6M19lgnVY4/5uCx5mC+g==
+X-Google-Smtp-Source: ABdhPJyRdcFmIssEsapW4/CLzNwi/Y/cKSJJGB/i43zf3rjk+ahPgoq1BYX0ZRbxh3JmHf3qEpFRsZunBdCj2xkmaAc=
+X-Received: by 2002:aca:b8c4:: with SMTP id i187mr11210808oif.121.1596802103701;
+ Fri, 07 Aug 2020 05:08:23 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0043.namprd20.prod.outlook.com (2603:10b6:208:235::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Fri, 7 Aug 2020 12:06:51 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k4198-004gcU-2d; Fri, 07 Aug 2020 09:06:50 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 31593619-ea0c-4b64-da6f-08d83aca5e58
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3515:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB35159C3C2458095E38D6D0FCC2490@DM6PR12MB3515.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r4BPTTtoPnpI4hycj/0AG2JkcjoumFjNZ5XkI30JUUH6UQUxthc5Bopz7v+fUBeKFL3xJge7gluMcj8IuqZ6AOgr3pIyk7NgsO+GwmiLEGPjUvw6rLpARjNyW9EtOOA8HaEcWT6hr9ECMl5PLzdgVSuNULJWLt/+6lqUO0UStoNX3kz2UX6kq40yAioeQNungx420YIGACXKzrTfcfOeAq9/a3+cEhh//FNbC1uqAUp9MJdPiqq88TrH5PnKAs16HJ2Crw3w8eThgr5QUGH0qOMFk4fR9mOqsuYhqkC0j4XwA/O+SnddsncAad+Y3OqrGvioN3JkUkhJGgdM2D5b1g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(316002)(9746002)(8936002)(2906002)(66476007)(7416002)(66556008)(5660300002)(36756003)(9786002)(66946007)(7406005)(186003)(1076003)(2616005)(54906003)(426003)(26005)(83380400001)(33656002)(86362001)(6916009)(478600001)(4326008)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ctP9XOdsD+1ANNsN2eTa3ucLJfN1lTRFNzyotm57CT0EF/lODwZUBIVXCTKK1OcuVYXLf+ImfP8JoKk2eO7ELwYMLasZLp7UP5trOQMrWhz2ttvzQzxgobcEhjc1yQIZz9+/tUk73BZFNjbNL+1wgGWrRp1C1IoVEvqxHIxrDAuDjSKGOycRew62+OG/N2lQkYZuch75VxS08eE1aqHWN2jdEVWXIUwY3h/+WpOLwydokXMaFy+6uO+Cojscpupwlf2cu8bp08mNs4JYjFDKC3tPkzBPvTiGVyOP0WSrkGOW7pxzF3YQfVgywe9ybl9f9+n5DDrhnKgK9eGcgjqoacTJZuujjDZZC3D9c+GRD5LaV6GM+1+fkmdc9sSpF40MhNAcOy0RteDGZqq0k2B5IyW4hH3HG/1ZTwuzQkblw9ZGEwCfGxEUL+pq49D3sJP0LdgigPpQ0szhmYG0YCVjbaqqSWVPCIXFPEBhHk1/RSv0QWajgP60TmCC6UEOMxWXgRdV52QngZJD3clK9qIoCd3bkFJTb78Fiv4KI6DTD+g/6mixjt/N6tdeNhOAlMKUizjDgNzz+CVgJPehCkze1Ly0gxok1+5N8lJ0dd4oXJAHd5JZ8cmw2V5q3Js6hrU4fqHfntHgdp6PPScefgDAMg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31593619-ea0c-4b64-da6f-08d83aca5e58
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 12:06:51.7069
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cBn4LeXMoL6d4KkfWcdn/dzRXuh3Jf2nNrmupbZ9azvxkTGmMvkmrhsf04KDD2Em
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3515
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596802017; bh=FA5i77KQ9ekFUbbxsuLCWszZ/MINCIcRJhq0r4T+d6o=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
-         X-MS-Exchange-Transport-Forked:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=jR9JqQGvPWqQcPi5PLWGWqU6twVWqkvoQGR2jHFw4FWk6n/CbsQqE/17h2ne43WdF
-         qhZbQII7+Nz/denkH9FCvwCV49Riz4FWwOojKI7r+vApwAJKFcon/6+5aA20mGfQwH
-         qGrarW8MX5kVcBbettYVKm4D2S0uqo2bvZa5a2fWoyUR93BYVUrjq2MozW4nxxBpbL
-         ceEAd8qL3IIHbpNqC9sY+TKA1rqVPDPQ5fuuPqkYiuikDMVhpnDmfrvLexqQCn1q4y
-         Hh0jkXHkGu33Gv00/DuLz4BHMKAAhxQ94djZqcwnvPz1qDzU4bJctDvSVfbwlMzF0g
-         IxNUc4KudD6Rg==
+References: <CANpmjNN6FWZ+MsAn3Pj+WEez97diHzqF8hjONtHG15C2gSpSgw@mail.gmail.com>
+ <CANpmjNNy3XKQqgrjGPPKKvXhAoF=mae7dk8hmoS4k4oNnnB=KA@mail.gmail.com>
+ <20200806074723.GA2364872@elver.google.com> <20200806113236.GZ2674@hirez.programming.kicks-ass.net>
+ <20200806131702.GA3029162@elver.google.com> <CANpmjNNqt8YrCad4WqgCoXvH47pRXtSLpnTKhD8W8+UpoYJ+jQ@mail.gmail.com>
+ <CANpmjNO860SHpNve+vaoAOgarU1SWy8o--tUWCqNhn82OLCiew@mail.gmail.com>
+ <fe2bfa7f-132f-7581-a967-d01d58be1588@suse.com> <20200807095032.GA3528289@elver.google.com>
+ <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com> <20200807113838.GA3547125@elver.google.com>
+ <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
+In-Reply-To: <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 7 Aug 2020 14:08:11 +0200
+Message-ID: <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*() helpers
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>, yu-cheng.yu@intel.com,
+        sdeep@vmware.com, virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:21:11PM +0200, Thomas Gleixner wrote:
+On Fri, 7 Aug 2020 at 14:04, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrote:
+>
+> On 07.08.20 13:38, Marco Elver wrote:
+> > On Fri, Aug 07, 2020 at 12:35PM +0200, J=C3=BCrgen Gro=C3=9F wrote:
+> >> On 07.08.20 11:50, Marco Elver wrote:
+> >>> On Fri, Aug 07, 2020 at 11:24AM +0200, J=C3=BCrgen Gro=C3=9F wrote:
+> >>>> On 07.08.20 11:01, Marco Elver wrote:
+> >>>>> On Thu, 6 Aug 2020 at 18:06, Marco Elver <elver@google.com> wrote:
+> >>>>>> On Thu, 6 Aug 2020 at 15:17, Marco Elver <elver@google.com> wrote:
+> >>>>>>> On Thu, Aug 06, 2020 at 01:32PM +0200, peterz@infradead.org wrote=
+:
+> >>>>>>>> On Thu, Aug 06, 2020 at 09:47:23AM +0200, Marco Elver wrote:
+> >>>>>>>>> Testing my hypothesis that raw then nested non-raw
+> >>>>>>>>> local_irq_save/restore() breaks IRQ state tracking -- see the r=
+eproducer
+> >>>>>>>>> below. This is at least 1 case I can think of that we're bound =
+to hit.
+> >>>>>>> ...
+> >>>>>>>>
+> >>>>>>>> /me goes ponder things...
+> >>>>>>>>
+> >>>>>>>> How's something like this then?
+> >>>>>>>>
+> >>>>>>>> ---
+> >>>>>>>>     include/linux/sched.h |  3 ---
+> >>>>>>>>     kernel/kcsan/core.c   | 62 +++++++++++++++++++++++++++++++++=
++++---------------
+> >>>>>>>>     2 files changed, 44 insertions(+), 21 deletions(-)
+> >>>>>>>
+> >>>>>>> Thank you! That approach seems to pass syzbot (also with
+> >>>>>>> CONFIG_PARAVIRT) and kcsan-test tests.
+> >>>>>>>
+> >>>>>>> I had to modify it some, so that report.c's use of the restore lo=
+gic
+> >>>>>>> works and not mess up the IRQ trace printed on KCSAN reports (wit=
+h
+> >>>>>>> CONFIG_KCSAN_VERBOSE).
+> >>>>>>>
+> >>>>>>> I still need to fully convince myself all is well now and we don'=
+t end
+> >>>>>>> up with more fixes. :-) If it passes further testing, I'll send i=
+t as a
+> >>>>>>> real patch (I want to add you as Co-developed-by, but would need =
+your
+> >>>>>>> Signed-off-by for the code you pasted, I think.)
+> >>>>>
+> >>>>> I let it run on syzbot through the night, and it's fine without
+> >>>>> PARAVIRT (see below). I have sent the patch (need your Signed-off-b=
+y
+> >>>>> as it's based on your code, thank you!):
+> >>>>> https://lkml.kernel.org/r/20200807090031.3506555-1-elver@google.com
+> >>>>>
+> >>>>>> With CONFIG_PARAVIRT=3Dy (without the notrace->noinstr patch), I s=
+till
+> >>>>>> get lockdep DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled()), alth=
+ough
+> >>>>>> it takes longer for syzbot to hit them. But I think that's expecte=
+d
+> >>>>>> because we can still get the recursion that I pointed out, and wil=
+l
+> >>>>>> need that patch.
+> >>>>>
+> >>>>> Never mind, I get these warnings even if I don't turn on KCSAN
+> >>>>> (CONFIG_KCSAN=3Dn). Something else is going on with PARAVIRT=3Dy th=
+at
+> >>>>> throws off IRQ state tracking. :-/
+> >>>>
+> >>>> What are the settings of CONFIG_PARAVIRT_XXL and
+> >>>> CONFIG_PARAVIRT_SPINLOCKS in this case?
+> >>>
+> >>> I attached a config.
+> >>>
+> >>>     $> grep PARAVIRT .config
+> >>>     CONFIG_PARAVIRT=3Dy
+> >>>     CONFIG_PARAVIRT_XXL=3Dy
+> >>>     # CONFIG_PARAVIRT_DEBUG is not set
+> >>>     CONFIG_PARAVIRT_SPINLOCKS=3Dy
+> >>>     # CONFIG_PARAVIRT_TIME_ACCOUNTING is not set
+> >>>     CONFIG_PARAVIRT_CLOCK=3Dy
+> >>
+> >> Anything special I need to do to reproduce the problem? Or would you b=
+e
+> >> willing to do some more rounds with different config settings?
+> >
+> > I can only test it with syzkaller, but that probably doesn't help if yo=
+u
+> > don't already have it set up. It can't seem to find a C reproducer.
+> >
+> > I did some more rounds with different configs.
+> >
+> >> I think CONFIG_PARAVIRT_XXL shouldn't matter, but I'm not completely
+> >> sure about that. CONFIG_PARAVIRT_SPINLOCKS would be my primary suspect=
+.
+> >
+> > Yes, PARAVIRT_XXL doesn't make a different. When disabling
+> > PARAVIRT_SPINLOCKS, however, the warnings go away.
+>
+> Thanks for testing!
+>
+> I take it you are doing the tests in a KVM guest?
 
-> Optionally? Please tell the hardware folks to make this mandatory. We
-> have enough pain with non maskable MSI interrupts already so introducing
-> yet another non maskable interrupt trainwreck is not an option.
+Yes, correct.
 
-Can you elaborate on the flows where Linux will need to trigger
-masking?
+> If so I have a gut feeling that the use of local_irq_save() and
+> local_irq_restore() in kvm_wait() might be fishy. I might be completely
+> wrong here, though.
 
-I expect that masking will be available in our NIC HW too - but it
-will require a spin loop if masking has to be done in an atomic
-context.
+Happy to help debug more, although I might need patches or pointers
+what to play with.
 
-> It's more than a decade now that I tell HW people not to repeat the
-> non-maskable MSI failure, but obviously they still think that
-> non-maskable interrupts are a brilliant idea. I know that HW folks
-> believe that everything they omit can be fixed in software, but they
-> have to finally understand that this particular issue _cannot_ be fixed
-> at all.
-
-Sure, the CPU should always be able to shut off an interrupt!
-
-Maybe explaining the goals would help understand the HW perspective.
-
-Today HW can process > 100k queues of work at once. Interrupt delivery
-works by having a MSI index in each queue's metadata and the interrupt
-indirects through a MSI-X table on-chip which has the
-addr/data/mask/etc.
-
-What IMS proposes is that the interrupt data can move into the queue
-meta data (which is not required to be on-chip), eg along side the
-producer/consumer pointers, and the central MSI-X table is not
-needed. This is necessary because the PCI spec has very harsh design
-requirements for a MSI-X table that make scaling it prohibitive.
-
-So an IRQ can be silenced by deleting or stopping the queue(s)
-triggering it. It can be masked by including masking in the queue
-metadata. We can detect pending by checking the producer/consumer
-values.
-
-However synchronizing all the HW and all the state is now more
-complicated than just writing a mask bit via MMIO to an on-die memory.
-
-Jason
+> BTW, I think Xen's variant of pv spinlocks is fine (no playing with IRQ
+> on/off).
+>
+> Hyper-V seems to do the same as KVM, and kicking another vcpu could be
+> problematic as well, as it is just using IPI.
+>
+>
+> Juergen
