@@ -2,198 +2,318 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE91C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FD7221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0529E22CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYe2VyXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgHGHpw (ORCPT
+        id S1727796AbgHGHqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40028 "EHLO
+        Fri, 7 Aug 2020 03:46:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbgHGHpu (ORCPT
+        with ESMTP id S1726891AbgHGHqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:45:50 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44498C061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 00:45:50 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3x4V-0001Pr-7L; Fri, 07 Aug 2020 09:45:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3x4R-000615-Vj; Fri, 07 Aug 2020 09:45:44 +0200
-Date:   Fri, 7 Aug 2020 09:45:43 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200807074543.pfbwlhtegl3oc4zp@pengutronix.de>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc>
+        Fri, 7 Aug 2020 03:46:05 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E142C061574;
+        Fri,  7 Aug 2020 00:46:05 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id a19so357755qvy.3;
+        Fri, 07 Aug 2020 00:46:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Wi17FMMgE94rR1w5syCb0jJ8vGHETYbbJ/4ifa0mtRQ=;
+        b=BYe2VyXlXHY5SJsCzDFzsKf6qFa/Y54TQFErFeh2mz4FG9euUqsPTcOeDmYJzA06yT
+         R62vmtQiI4ON68rFy+oUCx9LOf06tGPnmYLxbUDD9Y+azmTB7M6/mMrh5dQLpKQNbszJ
+         /3U9vT5bd80CQ8Cm1QapuH+mv6+um9cqyZokL/hxG7v2itGR1diKIlAb+KQwGls4UGjg
+         Qrqr2OrOm39h7zgjx+f82dGDICgkSYSuH6TR66MtzYpnOL1N+s56m8WPzoZ8b3trXNDa
+         3cZfIthFCNx1EtEMYaiLkYlb8ndnBU+qOV15pJyuCaZdZUQTMXdPLJEnCYRzNUQiA/db
+         XWYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Wi17FMMgE94rR1w5syCb0jJ8vGHETYbbJ/4ifa0mtRQ=;
+        b=iyga7l0REtVaOQyYv+lpTLsAmuJRjvikC0KSkTdb3BH43sGg7w5X66qg6XMIP5s3qp
+         R/O0x+xuN6zJnD+o90V4qvJ61hjCu3B6sGr/g71mSzJdgelJVCAbJgDlC+Y1YsAS9i4o
+         Rf7asbnLosm59x8OYeUdEZ3AdgDxXrPRiL3afy3YGXTHhLWrOjBoXhP7lkBDZFCfehdC
+         JuCb1olSEuagQdcXbTE9LcUTmJteqIWTtFC8ddybmxOjFwJ+R3gAjR1TPvG1uKIQVExc
+         7Sz67i8s6sxGbVyyh6RUsJdP73gv6JaVyobQ9SOy9Tf3fT9nBNBxxpqCT0JDKpWSxFN2
+         cKzA==
+X-Gm-Message-State: AOAM533ZFszLBVR2AE2bujwPmuWmfQTTjujZFdsBKGIK8agSuu8qLfFx
+        WaDrO9buBCgHSonzJLQrimg=
+X-Google-Smtp-Source: ABdhPJyhlMhs2eZd2cWIpzQBQPR7t3AkD+ad+VF5thRHxMGa/r/O5/Dtpq0LnPiHMYjl/Y7Jsat/cA==
+X-Received: by 2002:a0c:d64b:: with SMTP id e11mr7312610qvj.169.1596786364140;
+        Fri, 07 Aug 2020 00:46:04 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id i30sm7572370qte.30.2020.08.07.00.46.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Aug 2020 00:46:03 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 58EB827C0054;
+        Fri,  7 Aug 2020 03:46:03 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:46:03 -0400
+X-ME-Sender: <xms:uwYtXzaEb8-cDW_qxkZY2wSdJYooEeN5pCR4SJk-tvyvmpLPyENGHw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
+    ueelnecukfhppeduudegrdekhedrudektddrvdduheenucevlhhushhtvghrufhiiigvpe
+    einecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
+    vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnpe
+    epfhhigihmvgdrnhgrmhgvsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:uwYtXybrAYEm0rWLo7W2ecc4rPb7ucHVKds4dneeUmVGL2D3i8ExOg>
+    <xmx:uwYtX1-bfVkxM5gFlXqTpGTBBSgNOym2mCEM9yIoDaL-BCUyoqboyw>
+    <xmx:uwYtX5rtidbQZEVo8cBbIcU2QIGa0G_TIyDUkZa4L_vM1kEdhzg99Q>
+    <xmx:uwYtX3lcEswS8fAfkTvlR64kDm5R4uC5uqi80-p0d9-5jdFz1v2oEw>
+Received: from localhost (unknown [114.85.180.215])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 575DB3280059;
+        Fri,  7 Aug 2020 03:46:01 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [RFC v7 16/19] lockdep/selftest: Add more recursive read related test cases
+Date:   Fri,  7 Aug 2020 15:42:35 +0800
+Message-Id: <20200807074238.1632519-17-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200807074238.1632519-1-boqun.feng@gmail.com>
+References: <20200807074238.1632519-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6vfvapgawy5623je"
-Content-Disposition: inline
-In-Reply-To: <e288ca6cfee819223395712e04159dd9@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add those four test cases:
 
---6vfvapgawy5623je
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+1.	X --(ER)--> Y --(ER)--> Z --(ER)--> X is deadlock.
 
-On Fri, Aug 07, 2020 at 09:28:31AM +0200, Michael Walle wrote:
-> Hi Uwe, Hi Lee,
->=20
-> Am 2020-08-06 10:40, schrieb Uwe Kleine-K=F6nig:
-> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
-> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > > index 7dbcf6973d33..a0d50d70c3b9 100644
-> > > --- a/drivers/pwm/Kconfig
-> > > +++ b/drivers/pwm/Kconfig
-> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
-> > >  	  To compile this driver as a module, choose M here: the module
-> > >  	  will be called pwm-sifive.
-> > >=20
-> > > +config PWM_SL28CPLD
-> > > +	tristate "Kontron sl28cpld PWM support"
-> > > +	select MFD_SIMPLE_MFD_I2C
-> >=20
-> > Is it sensible to present this option to everyone? Maybe
-> >=20
-> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
->=20
-> Because there is now no real MFD driver anymore, there is also
-> no symbol for that. The closest would be ARCH_ARM64 but I don't
-> think that is a good idea.
->=20
-> Lee, what do you think about adding a symbol to the MFD, which
-> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
->=20
-> I.e.
-> config MFD_SL28CPLD
->     tristate "Kontron sl28cpld"
->     select MFD_SIMPLE_MFD_I2C
->     help
->       Say yes here to add support for the Kontron sl28cpld board
->       management controller.
->=20
-> Then all the other device driver could depend on the MFD_SL28CPLD
-> symbol.
->=20
-> [..]
->=20
-> > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> > > +				   struct pwm_device *pwm,
-> > > +				   struct pwm_state *state)
-> > > +{
-> > > +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> > > +	unsigned int reg;
-> > > +	int prescaler;
-> > > +
-> > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
-> > > +
-> > > +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
-> > > +
-> > > +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
-> > > +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
-> > > +
-> > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
-> > > +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
-> >=20
-> > Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed that
-> > the upper bits are zero?
->=20
-> Mh, the hardware guarantees that bit7 is zero. So masking with
-> SL28CPLD_PWM_CYCLE_MAX won't buy us much. But what I could think
-> could go wrong is this: someone set the prescaler to !=3D 0 and the
-> duty cycle to a value greater than the max value for this particular
-> prescaler mode. For the above calculations this would result in a
-> duty_cycle greater than the period, if I'm not mistaken.
->=20
-> The behavior of the hardware is undefined in that case (at the moment
-> it will be always on, I guess). So this isn't a valid setting.
-> Nevertheless it might happen. So what about the following:
->=20
-> state->duty_cycle =3D min(state->duty_cycle, state->period);
+2.	X --(EN)--> Y --(SR)--> Z --(ER)--> X is deadlock.
 
-If you care about this: This can also happen (at least shortly) in
-sl28cpld_pwm_apply() as you write SL28CPLD_PWM_CTRL before
-SL28CPLD_PWM_CYCLE there.
+3.	X --(EN)--> Y --(SR)--> Z --(SN)--> X is not deadlock.
 
-I wonder if we want to sanitize the values returned from driver's
-=2Eget_state in the core; or scream loud (maybe only if PWM_DEBUG is on).
+4.	X --(ER)--> Y --(SR)--> Z --(EN)--> X is not deadlock.
 
-Something like:
+Those self testcases are valuable for the development of supporting
+recursive read related deadlock detection.
 
-	if (state->enabled && state->duty_cycle > state->period) {
-		if (IS_ENABLED(CONFIG_PWM_DEBUG))
-			dev_warn(chip->dev, ".get_state() returned invalid setting.\n");
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ lib/locking-selftest.c | 161 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 161 insertions(+)
 
-		state->duty_cycle =3D state->period;
-	}
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index f65a658cc9e3..76c314ab4f03 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -1034,6 +1034,133 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_inversion_soft_wlock)
+ #undef E2
+ #undef E3
+ 
++/*
++ * write-read / write-read / write-read deadlock even if read is recursive
++ */
++
++#define E1()				\
++					\
++	WL(X1);				\
++	RL(Y1);				\
++	RU(Y1);				\
++	WU(X1);
++
++#define E2()				\
++					\
++	WL(Y1);				\
++	RL(Z1);				\
++	RU(Z1);				\
++	WU(Y1);
++
++#define E3()				\
++					\
++	WL(Z1);				\
++	RL(X1);				\
++	RU(X1);				\
++	WU(Z1);
++
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(W1R2_W2R3_W3R1)
++
++#undef E1
++#undef E2
++#undef E3
++
++/*
++ * write-write / read-read / write-read deadlock even if read is recursive
++ */
++
++#define E1()				\
++					\
++	WL(X1);				\
++	WL(Y1);				\
++	WU(Y1);				\
++	WU(X1);
++
++#define E2()				\
++					\
++	RL(Y1);				\
++	RL(Z1);				\
++	RU(Z1);				\
++	RU(Y1);
++
++#define E3()				\
++					\
++	WL(Z1);				\
++	RL(X1);				\
++	RU(X1);				\
++	WU(Z1);
++
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(W1W2_R2R3_W3R1)
++
++#undef E1
++#undef E2
++#undef E3
++
++/*
++ * write-write / read-read / read-write is not deadlock when read is recursive
++ */
++
++#define E1()				\
++					\
++	WL(X1);				\
++	WL(Y1);				\
++	WU(Y1);				\
++	WU(X1);
++
++#define E2()				\
++					\
++	RL(Y1);				\
++	RL(Z1);				\
++	RU(Z1);				\
++	RU(Y1);
++
++#define E3()				\
++					\
++	RL(Z1);				\
++	WL(X1);				\
++	WU(X1);				\
++	RU(Z1);
++
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(W1R2_R2R3_W3W1)
++
++#undef E1
++#undef E2
++#undef E3
++
++/*
++ * write-read / read-read / write-write is not deadlock when read is recursive
++ */
++
++#define E1()				\
++					\
++	WL(X1);				\
++	RL(Y1);				\
++	RU(Y1);				\
++	WU(X1);
++
++#define E2()				\
++					\
++	RL(Y1);				\
++	RL(Z1);				\
++	RU(Z1);				\
++	RU(Y1);
++
++#define E3()				\
++					\
++	WL(Z1);				\
++	WL(X1);				\
++	WU(X1);				\
++	WU(Z1);
++
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(W1W2_R2R3_R3W1)
++
++#undef E1
++#undef E2
++#undef E3
+ /*
+  * read-lock / write-lock recursion that is actually safe.
+  */
+@@ -1259,6 +1386,19 @@ static inline void print_testname(const char *testname)
+ 	dotest(name##_##nr, FAILURE, LOCKTYPE_RWLOCK);		\
+ 	pr_cont("\n");
+ 
++#define DO_TESTCASE_1RR(desc, name, nr)				\
++	print_testname(desc"/"#nr);				\
++	pr_cont("             |");				\
++	dotest(name##_##nr, SUCCESS, LOCKTYPE_RWLOCK);		\
++	pr_cont("\n");
++
++#define DO_TESTCASE_1RRB(desc, name, nr)			\
++	print_testname(desc"/"#nr);				\
++	pr_cont("             |");				\
++	dotest(name##_##nr, FAILURE, LOCKTYPE_RWLOCK);		\
++	pr_cont("\n");
++
++
+ #define DO_TESTCASE_3(desc, name, nr)				\
+ 	print_testname(desc"/"#nr);				\
+ 	dotest(name##_spin_##nr, FAILURE, LOCKTYPE_SPIN);	\
+@@ -1368,6 +1508,22 @@ static inline void print_testname(const char *testname)
+ 	DO_TESTCASE_2IB(desc, name, 312);			\
+ 	DO_TESTCASE_2IB(desc, name, 321);
+ 
++#define DO_TESTCASE_6x1RR(desc, name)				\
++	DO_TESTCASE_1RR(desc, name, 123);			\
++	DO_TESTCASE_1RR(desc, name, 132);			\
++	DO_TESTCASE_1RR(desc, name, 213);			\
++	DO_TESTCASE_1RR(desc, name, 231);			\
++	DO_TESTCASE_1RR(desc, name, 312);			\
++	DO_TESTCASE_1RR(desc, name, 321);
++
++#define DO_TESTCASE_6x1RRB(desc, name)				\
++	DO_TESTCASE_1RRB(desc, name, 123);			\
++	DO_TESTCASE_1RRB(desc, name, 132);			\
++	DO_TESTCASE_1RRB(desc, name, 213);			\
++	DO_TESTCASE_1RRB(desc, name, 231);			\
++	DO_TESTCASE_1RRB(desc, name, 312);			\
++	DO_TESTCASE_1RRB(desc, name, 321);
++
+ #define DO_TESTCASE_6x6(desc, name)				\
+ 	DO_TESTCASE_6I(desc, name, 123);			\
+ 	DO_TESTCASE_6I(desc, name, 132);			\
+@@ -2144,6 +2300,11 @@ void locking_selftest(void)
+ 	pr_cont("             |");
+ 	dotest(rlock_chaincache_ABBA1, FAILURE, LOCKTYPE_RWLOCK);
+ 
++	DO_TESTCASE_6x1RRB("rlock W1R2/W2R3/W3R1", W1R2_W2R3_W3R1);
++	DO_TESTCASE_6x1RRB("rlock W1W2/R2R3/W3R1", W1W2_R2R3_W3R1);
++	DO_TESTCASE_6x1RR("rlock W1W2/R2R3/R3W1", W1W2_R2R3_R3W1);
++	DO_TESTCASE_6x1RR("rlock W1R2/R2R3/W3W1", W1R2_R2R3_W3W1);
++
+ 	printk("  --------------------------------------------------------------------------\n");
+ 
+ 	/*
+-- 
+2.28.0
 
-Do we want to catch state->period =3D 0, too? Do we interpret this as
-disabled?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---6vfvapgawy5623je
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8tBqQACgkQwfwUeK3K
-7AkxWAgAoG+PqaPjPFtzNF9JWYONbF6XKaC5Ptr0ArDt6eAhMk/J7dN5fPbk53SY
-BwI2bQI42oVwcpBcRWuwfW3cRIVw+71KyOcPH5JYyX5BGEKqPOVGpWeHWcE2VCpz
-wgvROpNxKRAJSkiUCaqPEEGVUyYrYrfYIBVNapbq9BOafMXoyISCClOWpNqMkm77
-NH8PRsmlkdbZRXV6r+u7bw859VNc32IAFdITfYJa7iAXe+w8GiS8Ow1iFmdE6pXT
-v8/RLQsKka7TsakHZ4FgzI4V9nRjaHBlLuY724cyYlScVKHuX3rQiQ6LoU/vTaPD
-DOycv3Dc1STgW4hmNt9AQcCLCJlL+A==
-=dkcM
------END PGP SIGNATURE-----
-
---6vfvapgawy5623je--
