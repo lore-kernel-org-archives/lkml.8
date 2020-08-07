@@ -2,69 +2,92 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D34DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EAFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6AF2177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257F12177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgHGHV1 (ORCPT
+        id S1726481AbgHGHYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:21:27 -0400
-Received: from verein.lst.de ([213.95.11.211]:52859 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgHGHV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:21:26 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A67A168D0F; Fri,  7 Aug 2020 09:21:20 +0200 (CEST)
-Date:   Fri, 7 Aug 2020 09:21:20 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: Re: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
-Message-ID: <20200807072120.GB2086@lst.de>
-References: <20200723060908.50081-1-hch@lst.de> <20200723060908.50081-26-hch@lst.de> <6357942b-0b6e-1901-7dce-e308c9fac347@gmail.com>
+        Fri, 7 Aug 2020 03:24:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50032 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgHGHYW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 03:24:22 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 273271C0BD9; Fri,  7 Aug 2020 09:24:19 +0200 (CEST)
+Date:   Fri, 7 Aug 2020 09:24:18 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 0/6] 4.19.138-rc1 review
+Message-ID: <20200807072418.GA23375@duo.ucw.cz>
+References: <20200805153505.472594546@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
 Content-Disposition: inline
-In-Reply-To: <6357942b-0b6e-1901-7dce-e308c9fac347@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 03:21:25PM -0700, Eric Dumazet wrote:
-> converting get_user(...)   to  copy_from_sockptr(...) really assumed the optlen
-> has been validated to be >= sizeof(int) earlier.
-> 
-> Which is not always the case, for example here.
 
-Yes.  And besides the bpfilter mess the main reason I even had to add
-the sockptr vs just copying optlen in the high-level socket code.
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please take a look at the patch in the other thread to just revert to
-the "dumb" version everywhere.
+Hi!
+
+> This is the start of the stable review cycle for the 4.19.138 release.
+> There are 6 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Fri, 07 Aug 2020 15:34:53 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.13=
+8-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-4.19.y
+> and the diffstat can be found below.
+
+Testing did not find any problems:
+
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+4.19.y
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--17pEHd4RhPHOinZp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXy0BogAKCRAw5/Bqldv6
+8gbXAJ9LNdSigRqWjJsW5Nn3iWrsXQ2VIQCeIQ64WWAqDzSC7hSXR4sCBlLwZdc=
+=j9kA
+-----END PGP SIGNATURE-----
+
+--17pEHd4RhPHOinZp--
