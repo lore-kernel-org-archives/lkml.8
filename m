@@ -4,49 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D90C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741E12086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1F5221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgHGRCK (ORCPT
+        id S1726778AbgHGRDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 13:02:10 -0400
-Received: from www62.your-server.de ([213.133.104.62]:42212 "EHLO
+        Fri, 7 Aug 2020 13:03:30 -0400
+Received: from www62.your-server.de ([213.133.104.62]:42486 "EHLO
         www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgHGRCH (ORCPT
+        with ESMTP id S1725934AbgHGRDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 13:02:07 -0400
+        Fri, 7 Aug 2020 13:03:30 -0400
 Received: from sslproxy06.your-server.de ([78.46.172.3])
         by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89_1)
         (envelope-from <daniel@iogearbox.net>)
-        id 1k45ki-0005qO-RL; Fri, 07 Aug 2020 19:01:56 +0200
+        id 1k45m9-00063H-Jw; Fri, 07 Aug 2020 19:03:26 +0200
 Received: from [178.196.57.75] (helo=pc-9.home)
         by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <daniel@iogearbox.net>)
-        id 1k45ki-000S11-H3; Fri, 07 Aug 2020 19:01:56 +0200
-Subject: Re: [PATCH bpf] bpf: doc: remove references to warning message when
- using bpf_trace_printk()
-To:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org
-Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        rostedt@goodmis.org, linux-doc@vger.kernel.org, corbet@lwn.net,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596801029-32395-1-git-send-email-alan.maguire@oracle.com>
+        id 1k45m9-000W3A-EG; Fri, 07 Aug 2020 19:03:25 +0200
+Subject: Re: [PATCH] kernel: bpf: delete repeated words in comments
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20200807033141.10437-1-rdunlap@infradead.org>
 From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <007a231f-6352-9784-bce1-417d6572b423@iogearbox.net>
-Date:   Fri, 7 Aug 2020 19:01:55 +0200
+Message-ID: <f8411d64-9265-ced6-d5db-ff6d604a3fb8@iogearbox.net>
+Date:   Fri, 7 Aug 2020 19:03:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1596801029-32395-1-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <20200807033141.10437-1-rdunlap@infradead.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -57,13 +53,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 1:50 PM, Alan Maguire wrote:
-> The BPF helper bpf_trace_printk() no longer uses trace_printk();
-> it is now triggers a dedicated trace event.  Hence the described
-> warning is no longer present, so remove the discussion of it as
-> it may confuse people.
+On 8/7/20 5:31 AM, Randy Dunlap wrote:
+> Drop repeated words in kernel/bpf/.
+> {has, the}
 > 
-> Fixes: ac5a72ea5c89 ("bpf: Use dedicated bpf_trace_printk event instead of trace_printk()")
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
 
 Applied, thanks!
