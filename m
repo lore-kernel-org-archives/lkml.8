@@ -2,121 +2,112 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEDEC2075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ej2O6FAJ"
+	by mail.kernel.org (Postfix) with ESMTP id E2D4D22C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596801281;
+	bh=ZtA3NUxNT+VUCjbXoK3nwC7HwEhIkp1OwgDmyeuzGSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gmLh/9YvONM//0XOMVPAw/1znqpbvGYZqfx9xbdkYPEt36yhE2abzAXd6JNRHR60O
+	 7EKmHUh9qNM7IIW/nInX8WSEmXfVCBt8ICp91QgfBqkLEdPeJegfBCOhFvBxBXaEbh
+	 UkKUCBWhyCGY9pBPXrVUvy0WCcai66aKmz3J6j5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgHGLxJ (ORCPT
+        id S1728332AbgHGLyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:53:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgHGLxI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 07:53:08 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC85BC061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 04:53:07 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id c16so1753392ejx.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 04:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wTdRBKiB7nfAhpSsvP1RXs+/uy2BYq/STu2ChZq1IcQ=;
-        b=Ej2O6FAJ6dFQS5I7wKiWLpGGq2zwEj/WsP9k7jR+1JY/QMwfRlXH2ovbIc8v1UUNPU
-         2jZjdWaH7FnCvQmufEQ/A6ouiMl5Iue5iPG/eLKrYVi9Qr+z3/GvasqpdY/wIS7HJAdM
-         pNdUKZsDssb0r7rDJff6ixiA84k7qsw3MIs7BZ5oqa8x3CeuJxiiK37z/5N9HxDucJ6k
-         TM4nRS2oFBR97a4twlHb5DLA7wndiAflqsoC+pK06eRbxRdwVKEwdjHc5VgEXtdC4rIo
-         jypanLwlHEgHq0xXgPbTduw/f2D/vr7ohFqORLzsKt7YZZTRJVsKJKMuk07nBcvPedIq
-         x53g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wTdRBKiB7nfAhpSsvP1RXs+/uy2BYq/STu2ChZq1IcQ=;
-        b=NGmD+qBPJYPaFYKUNMDC5y92mQ3VI+/GwAQjdB0dUOmxmO5GC4dpFwsha8qbmyDS2Y
-         QXAfBNlpFObnckvslwfIdab2e4Hoehhk3UC90vWXYbUGJssX0MosqqCXx7IEudqxsb21
-         82JcNNe4ISB1lb/N/zopsK3JnZEVsIfwDAnvFcl6GfRkCIEm0nVyrN05IUsfOxxIMNln
-         8O39SCYs5JjIAcYxZ1DU8uOAGR5zBTdhLgFLUTc7IcsfSU4eJxiuufw1Ukuld3pDvn4o
-         Gz9nTJ75jUAivQuSCh4aHEB9XTHpc+EcOYMpthkyQeDafa91WrommUe9PiQ9mvslmHpp
-         Zgqg==
-X-Gm-Message-State: AOAM530UMItBBnri4apvkWP7p5Th8vOl91y8raskR8FEfAqnwjulbh7l
-        sL9rljPo0SIHWhnq3fIv6bk9hOiG
-X-Google-Smtp-Source: ABdhPJzO2cUb0CWDxCQKiDsxIwJLZzUh6fYbXnyg8USOYTwwbIb9QunWGWu7Nez0mEs81Y4EsesqNg==
-X-Received: by 2002:a17:906:841:: with SMTP id f1mr9135783ejd.158.1596801186704;
-        Fri, 07 Aug 2020 04:53:06 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:a7fb:e200:5975:4576:7691:7d5b])
-        by smtp.gmail.com with ESMTPSA id e8sm5212824edy.68.2020.08.07.04.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 04:53:05 -0700 (PDT)
-Date:   Fri, 7 Aug 2020 13:53:04 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: drivers/video/fbdev/pxafb.c:916:24: sparse: sparse: incorrect
- type in assignment (different address spaces)
-Message-ID: <20200807115304.npzxzzcuxbn7td2h@ltop.local>
-References: <202008071833.kUoyxyIe%lkp@intel.com>
+        Fri, 7 Aug 2020 07:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgHGLyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 07:54:40 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB2B02075D;
+        Fri,  7 Aug 2020 11:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596801279;
+        bh=ZtA3NUxNT+VUCjbXoK3nwC7HwEhIkp1OwgDmyeuzGSo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SLO03/FOcrfNQ+qPTkxU1dgQGEhJFM2Ul9fpJa3e1SEXb3rQ+sKtvBXRHbjiseWu3
+         1M4zGkfTAnUAIgaFLhVHAHs+Jg70ApN+OXLpv3F8ZDZtcmJ1X6x9iqRPL6ivYYqiSA
+         ZGu8A2dvW5JwdJDq7Pe0y77lWF6FVtAvxNeYErRM=
+Date:   Fri, 7 Aug 2020 12:54:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: amd: Replacing component->name with codec_dai->name
+Message-ID: <20200807115414.GI5435@sirena.org.uk>
+References: <20200806101451.7918-1-Vishnuvardhanrao.Ravulapati@amd.com>
+ <20200806112831.GA6442@sirena.org.uk>
+ <BY5PR12MB429286C315F66F7E2E5EA501E7490@BY5PR12MB4292.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mhOzvPhkurUs4vA9"
 Content-Disposition: inline
-In-Reply-To: <202008071833.kUoyxyIe%lkp@intel.com>
+In-Reply-To: <BY5PR12MB429286C315F66F7E2E5EA501E7490@BY5PR12MB4292.namprd12.prod.outlook.com>
+X-Cookie: Disposable, use only once.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 06:37:36PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   86cfccb66937dd6cbf26ed619958b9e587e6a115
-> commit: 670d0a4b10704667765f7d18f7592993d02783aa sparse: use identifiers to define address spaces
-> date:   7 weeks ago
-> config: arm-randconfig-s031-20200807 (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # apt-get install sparse
->         # sparse version: v0.6.2-118-ge1578773-dirty
->         git checkout 670d0a4b10704667765f7d18f7592993d02783aa
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> 
-> sparse warnings: (new ones prefixed by >>)
-> 
-> >> drivers/video/fbdev/pxafb.c:916:24: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __iomem *video_mem @@     got void * @@
-> >> drivers/video/fbdev/pxafb.c:916:24: sparse:     expected void [noderef] __iomem *video_mem
 
-Hi,
+--mhOzvPhkurUs4vA9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-since late June I receive several mails per day about this commit but
-they are all false-positive.
-Commit 670d0a4b10704667765f7d18f7592993d02783aa can't introduce *new*
-warnings, it only change how address-spaces are displayed in sparse's
-warnings (for example, the address space for __user pointers were
-displayd as '<asn:1>', now it's nicely displayed as '__user', same
-for '__iomem', '__percpu' and '__rcu').
+On Fri, Aug 07, 2020 at 08:36:25AM +0000, RAVULAPATI, VISHNU VARDHAN RAO wr=
+ote:
+> On Thu, Aug 06, 2020 at 03:44:12PM +0530, Ravulapati Vishnu vardhan rao w=
+rote:
 
-Isn't it possible to ignore some commits like this one?
-Or, even better, should it be possible to only report when a new
-warning is effectively added, not when its content is simply modified?
-If not it would be nice to be able to see the difference in a diff-like
-format.
+> > Replacing string compare with codec_dai->name instead of comparing=20
+> > with codec_dai->component->name in hw_params.
 
-Best regards,
--- Luc
+> >Why?
+
+> Here the component name for codec RT1015 is "i2c-10EC1015:00" and will ne=
+ver be "rt1015-aif1"
+> As it is codec-dai->name so the strcmp always compares and fails to set t=
+he sysclk,pll,bratio of expected codec-dai
+
+This should be in the changelog so people can understand why the change
+was made.
+
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
+
+--mhOzvPhkurUs4vA9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8tQOUACgkQJNaLcl1U
+h9AMEwf9EjG0TW7IazqtWGPRye237mVP6Pc8k9MNOPeSCB+0NwICOZWMa+bT2dr9
+YAUGqvVRrbSFzqgPXlUvSP9WQoYXbnx9vyu/eNYinHy1P5ij0JMafTb79TekTqbW
+QlaRNBdesjDQPuoFnHncAQZY8hddYW9OwKQ/dEGA3uvM9q86dGLgH5LrOhl9sRXp
+zywg8qYT1oQkfj1gvfj3OgqjJHo6g65l6Ei7QQ1oNXk7lq+cxJGebjpTOVcVW6pA
+pxwbi4r/fyemXLhJ/YvF62wZ6YVarLh2zWAn6sKBTRY+1owvQ/nOKpRAC/Ie+2WF
+P8ojsr5EIog/QduiVBCAs2MV7ModLg==
+=ml31
+-----END PGP SIGNATURE-----
+
+--mhOzvPhkurUs4vA9--
