@@ -2,124 +2,119 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E36A2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FB12086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:55:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cvmZEENp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OuqM7fz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHGTzf (ORCPT
+        id S1727016AbgHGTz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:55:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGTze (ORCPT
+        Fri, 7 Aug 2020 15:55:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21427 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726569AbgHGTzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:55:34 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90993C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 12:55:34 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p3so1479958pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=lc4ip8IuREvQJlhnv84WeQVzFK5ehI3Ao0CDpvwe7OY=;
-        b=cvmZEENphTLaFd4eCuuel6D11tsxU6L9ejl3xoNtS5T8uzcK9bFpvFoxntbx979R83
-         R/Mi5MRj7UUySEttXw9KgytrA+NhGWfKltTueJ2uBERg4gfNm2sPMwK/xa1UFrpOilq/
-         A1E7Qk2wLck3UQfEWRKVPk1wCPylP3XC5fTdQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=lc4ip8IuREvQJlhnv84WeQVzFK5ehI3Ao0CDpvwe7OY=;
-        b=FePM87ufd3YNKuKA7y3gDqb8+jBFsorIcsmq0MXh05aeXw4GO3v/yoqFWtLXHEjrZU
-         roeORW0+VCPLUCRFlBAvxPO/zkjDmv9polqmZK8/ZR3DguYDa6a2DzgaLV4iAuQA/Zfh
-         L1omK5uhOSvEi6c7EkdR2nJ/etO1QCUdDAOTzGpPt8STSKAqDcRTOP0U2Y16Lz85rwu6
-         38w6YwoMkqEzyX9F6nct9M5LgQ/vW9fmNF4MxBMyOnW+UpqwaI6xhakh6v61bEm5gG1O
-         tcBVlJxGS0tgUk+1tRFhWRLVXkT0jr3KdDsPJ0C3s+UPSsP6UjONLYcK6+uGIxZpUUdA
-         hX5w==
-X-Gm-Message-State: AOAM5338EUukL1aUXcigI+XP2KCzypSEHuun+PjMXp5FTbNVmrLSlIvo
-        FzEhb6AfEgTbWpFidWcGiW+vqPkG018=
-X-Google-Smtp-Source: ABdhPJzcdcYgdH7PKpGWCXCMe8VFF8lb21ozUZhQ1sTZ5AtwoXvPWPfiLeheRgiLQF+LcYl+Mfu1eQ==
-X-Received: by 2002:a62:f807:: with SMTP id d7mr6990374pfh.207.1596830133900;
-        Fri, 07 Aug 2020 12:55:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y135sm14612855pfg.148.2020.08.07.12.55.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 12:55:33 -0700 (PDT)
-Date:   Fri, 7 Aug 2020 12:55:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: [GIT PULL] kallsyms_show_value-fix updates for v5.9-rc1
-Message-ID: <202008071250.7DC8D5FF61@keescook>
+        Fri, 7 Aug 2020 15:55:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596830148;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=L9RWbojIVQ2p7jm03k2G6KoVG69ya+D8xde31L+iPHE=;
+        b=OuqM7fz+q6mHa4gp/ASW6lGK4ah9sg359aZD2hJj8Htc53PrPkW3Gj9Ir/FPDuZyJ9IvwF
+        tN+NEasAxgujj2IyqS+sWzMA6kspNTdz506r+OG6bDn6EHFLIG1nq4r1xwW4KwA9nC9jPJ
+        jfy+NiQfFbhfp0TcdhQYgV+odVRklsY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-78-gIhu-hKBPyyoar0_g8woZw-1; Fri, 07 Aug 2020 15:55:46 -0400
+X-MC-Unique: gIhu-hKBPyyoar0_g8woZw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F333E57;
+        Fri,  7 Aug 2020 19:55:44 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-113-142.rdu2.redhat.com [10.10.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2625710027AB;
+        Fri,  7 Aug 2020 19:55:39 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id A6969222E40; Fri,  7 Aug 2020 15:55:38 -0400 (EDT)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com
+Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm@lists.01.org
+Subject: [PATCH v2 01/20] dax: Modify bdev_dax_pgoff() to handle NULL bdev
+Date:   Fri,  7 Aug 2020 15:55:07 -0400
+Message-Id: <20200807195526.426056-2-vgoyal@redhat.com>
+In-Reply-To: <20200807195526.426056-1-vgoyal@redhat.com>
+References: <20200807195526.426056-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+virtiofs does not have a block device but it has dax device.
+Modify bdev_dax_pgoff() to be able to handle that.
 
-Please pull this fix to my kallsyms_show_value() refactoring for
-v5.9-rc1. About a month after the original refactoring landed, 0day
-noticed that there was a path through the kernfs binattr read handlers
-that did not have PAGE_SIZEd buffers, and the module "sections" read
-handler made a bad assumption about this, resulting in it stomping on
-memory when reached through small-sized splice() calls. I've added a set
-of tests to find these kinds of regressions more quickly in the future
-as well.
+If there is no bdev, that means dax offset is 0. (It can't be a partition
+block device starting at an offset in dax device).
 
-Thanks!
+This is little hackish. There have been discussions about getting rid
+of dax not supporting partitions.
 
--Kees
+https://lore.kernel.org/linux-fsdevel/20200107125159.GA15745@infradead.org/
 
-The following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
+IMHO, this path can easily break exisitng users. For example
+ioctl(BLKPG_ADD_PARTITION) will start breaking on block devices
+supporting DAX. Also, I personally find it very useful to be able to
+partition dax devices and still be able to use DAX.
 
-  Linux 5.8 (2020-08-02 14:21:45 -0700)
+Alternatively, I tried to store offset into dax device information in iomap
+interface, but that got NACKed.
 
-are available in the Git repository at:
+https://lore.kernel.org/linux-fsdevel/20200217133117.GB20444@infradead.org/
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kallsyms_show_value-fix-v5.9-rc1
+I can't think of a good path to solve this issue properly. So to make
+progress, it seems this patch is least bad option for now and I hope
+we can take it.
 
-for you to fetch changes up to 9af47666cb0f331bfcd76799ee368cdfcb00882c:
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-nvdimm@lists.01.org
+---
+ drivers/dax/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  selftests: splice: Check behavior of full and short splices (2020-08-07 10:50:11 -0700)
-
-----------------------------------------------------------------
-Fix sysfs module section output overflow
-
-----------------------------------------------------------------
-Kees Cook (2):
-      module: Correctly truncate sysfs sections output
-      selftests: splice: Check behavior of full and short splices
-
- kernel/module.c                                    | 22 +++++++--
- tools/testing/selftests/splice/.gitignore          |  1 +
- tools/testing/selftests/splice/Makefile            |  4 +-
- tools/testing/selftests/splice/config              |  1 +
- tools/testing/selftests/splice/settings            |  1 +
- .../testing/selftests/splice/short_splice_read.sh  | 56 +++++++++++++++++++++
- tools/testing/selftests/splice/splice_read.c       | 57 ++++++++++++++++++++++
- 7 files changed, 137 insertions(+), 5 deletions(-)
- create mode 100644 tools/testing/selftests/splice/config
- create mode 100644 tools/testing/selftests/splice/settings
- create mode 100755 tools/testing/selftests/splice/short_splice_read.sh
- create mode 100644 tools/testing/selftests/splice/splice_read.c
-
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index 8e32345be0f7..c4bec437e88b 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -46,7 +46,8 @@ EXPORT_SYMBOL_GPL(dax_read_unlock);
+ int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
+ 		pgoff_t *pgoff)
+ {
+-	phys_addr_t phys_off = (get_start_sect(bdev) + sector) * 512;
++	sector_t start_sect = bdev ? get_start_sect(bdev) : 0;
++	phys_addr_t phys_off = (start_sect + sector) * 512;
+ 
+ 	if (pgoff)
+ 		*pgoff = PHYS_PFN(phys_off);
 -- 
-Kees Cook
+2.25.4
+
