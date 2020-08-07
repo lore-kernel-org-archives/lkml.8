@@ -2,100 +2,181 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23603C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E92C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 098E420855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596766685;
-	bh=b7Qq+dJNZhU/7zza7rxiZgawP5B3QZPu8FRr0mt+wsA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1i1bI4RAShn4NQNNH2h93M40MnwvAsuMPed8BZDGrk4xmOaxaUpBA2pu9NEncHtd4
-	 uiaxVPkYzWjpjKAvTHErMio/Mui1ydABkAeNRNOtXxyfXufeC0jEBvyHnopriRxtAi
-	 f8oj2rREymEfRGOyHv3sx9CczWBb2t6sxJeul8nI=
+	by mail.kernel.org (Postfix) with ESMTP id D663022CF7
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgHGCSD (ORCPT
+        id S1726230AbgHGCSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 22:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHGCSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 22:18:03 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA4DC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 19:18:02 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g6so501223ljn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 19:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Lah8TzAGljxIbFtVurJusY2DfiaafQCEJzA/pwqjDM=;
-        b=VjqpGoT1TBgvDGglmYSQIgK2T4nVs67xQsZm8S2CFvqnq61+ud20VYm9xLk5dgltGU
-         ADPvjm9v5KrYjmqZ8uW6OSd4aQjfc4iLggDx8+szpkXLIhZHf/hLL81EtQEFHZ4T/BCF
-         6BuSjL2rKWnTl3CKlISDpQwBpONjVlq/QE3Sg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Lah8TzAGljxIbFtVurJusY2DfiaafQCEJzA/pwqjDM=;
-        b=Xu/ZkYAHABS0YSEMrpZFy7gLHhks0Rx27u6E92qLu7lN4r8TSbF1m34ZZHooOIIJ15
-         uz7m6u0tVQw4AFPDZN6e/Bsjd6aJ+OeFD0BZrbeekqxpEwWjfCqjuJXebMc/UqDjfeQz
-         zUJWmpj/npocHbjgZbJ7w1D60SjFOcJA0pcFDe8rB8A6QWdfEK5JymZ3/7CSPnv6Py4s
-         ePQKiax+MAKGzXfaDaGSykIXhMJSRph8xvnIkrz9WCh9T6O79YqhtHbPsOaoUam+QFZ3
-         JDYMwn/k5h6XK21jvcRYI6oBRisGAONiesVtYP9bKBkWtvUmUyTvDBzc4s4H8HNxNHgw
-         L3xQ==
-X-Gm-Message-State: AOAM530Bl+K1PuC1RbKjm9/ZRq6Mm/h4E3dT87dBEr/3TpFr4r5pYMiG
-        6Z+QGjK0rwpeiWfVwTirf3Do+HtNu/Y=
-X-Google-Smtp-Source: ABdhPJwjbWL0YThibJgbqokbpiPTsNypoOuCwnmBue6czX54fMN76x7vAv2eRvhyPd40qs5kd39kZw==
-X-Received: by 2002:a05:651c:50b:: with SMTP id o11mr5482535ljp.411.1596766679718;
-        Thu, 06 Aug 2020 19:17:59 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id j18sm3229936ljg.5.2020.08.06.19.17.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 19:17:58 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id s16so516830ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 19:17:57 -0700 (PDT)
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr5035498lji.314.1596766677614;
- Thu, 06 Aug 2020 19:17:57 -0700 (PDT)
+        Thu, 6 Aug 2020 22:18:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9249 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725947AbgHGCSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 22:18:48 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7215DAEE717C6995C4D6;
+        Fri,  7 Aug 2020 10:18:45 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.214) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 7 Aug 2020
+ 10:18:38 +0800
+Subject: Re: [PATCH] ubi: check kthread_should_stop() after the setting of
+ task state
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+CC:     <linux-mtd@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+References: <20200601091231.3794350-1-chengzhihao1@huawei.com>
+ <CAFLxGvwLSvYsQ+OPi85VS8aQ2uge_JqQRD2C8h=XMORvCej3Sw@mail.gmail.com>
+ <211afcd0-d5b3-5ac0-1fd1-dc789634a858@huawei.com>
+ <CAFLxGvwRDfB4mqxJhOLwWvoZ3yzpVY-kuAiovYLf8T7WwJqaTg@mail.gmail.com>
+ <9caa4860-975c-70bb-c8b9-737d1db9ead4@huawei.com>
+ <CAFLxGvycs7DNu5o5QY1WwTPfS6cTTykTh-91n9TQZ7yP_ADr4A@mail.gmail.com>
+ <2086f822-e67a-43e4-76d8-5339eaccd3ac@huawei.com>
+ <CAFLxGvzwoC1GcjJOfwpc8V5LD79=8XiJaNV2HjOm8EdQcCbp+w@mail.gmail.com>
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <5f7ae548-350b-cedf-3c8e-25fea06a8377@huawei.com>
+Date:   Fri, 7 Aug 2020 10:18:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200807004904.72893-1-linux@roeck-us.net>
-In-Reply-To: <20200807004904.72893-1-linux@roeck-us.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 6 Aug 2020 19:17:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whTGZ2hVGP-UXVW2q2AtQh+gWOeCvasDm1Z4+g5+grkmg@mail.gmail.com>
-Message-ID: <CAHk-=whTGZ2hVGP-UXVW2q2AtQh+gWOeCvasDm1Z4+g5+grkmg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kaslr: Use standard early random function
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Qian Cai <cai@lca.pw>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFLxGvzwoC1GcjJOfwpc8V5LD79=8XiJaNV2HjOm8EdQcCbp+w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.214]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 5:49 PM Guenter Roeck <linux@roeck-us.net> wrote:
+在 2020/8/7 4:15, Richard Weinberger 写道:
+> On Wed, Aug 5, 2020 at 4:23 AM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>> Er, I can't get the point. I can list two possible situations, did I
+>> miss other situations?
+> Yes. You keep ignoring the case I brought up.
 >
-> Use arch_get_random_seed_long_early() instead of arm64 specific functions
-> to solve the problem. As a side effect of this change, the code no longer
-> bypasses ARCH_RANDOM, which I consider desirable (after all, ARCH_RANDOM
-> was disabled for a reason).
+> Let's start from scratch, maybe I miss something.
+> So I'm sorry for being persistent.
+Never mind, we're all trying to figure it out.  :-) . Besides, I'm not 
+good at expressing question in English. (In Practicing...)
+> The ubi thread can be reduced to a loop like this one:
+> 1. for (;;) {
+> 2.      if (kthread_should_stop())
+> 3.              break;
+> 4.
+> 5.      if ( /* no work pending*/ ){
+> 6.              set_current_state(TASK_INTERRUPTIBLE);
+> 7.              schedule();
+> 8.              continue;
+> 9.      }
+> 10.
+> 11.     do_work();
+> 12. }
+>
+> syzcaller found a case where stopping the thread did not work.
+> If another task tries to stop the thread while no work is pending and
+> the program counter in the thread
+> is between lines 5 and 6, the kthread_stop() instruction has no effect.
+> It has no effect because the thread sets the thread state to
+> interruptible sleep and then schedules away.
+>
+> This is a common anti-pattern in the Linux kernel, sadly.
 
-This patch looks sane to me, but let's see what the arm64 people say
-in case they have preferences..
+Yes, but UBIFS is the exception, my solution looks like UBIFS.
 
-                Linus
+int ubifs_bg_thread(void *info)
+{
+     while(1) {
+         if (kthread_should_stop())
+             break;
+
+         set_current_state(TASK_INTERRUPTIBLE);
+         if (!c->need_bgt) {
+             /*
+              * Nothing prevents us from going sleep now and
+              * be never woken up and block the task which
+              * could wait in 'kthread_stop()' forever.
+              */
+             if (kthread_should_stop())
+                 break;
+             schedule();
+             continue;
+         }
+     }
+}
+
+
+>
+> Do you agree with me so far or do you think syzcaller found a different issue?
+Yes, I agree.
+>
+> Your patch changes the loop as follows:
+> 1. for (;;) {
+> 2.      if (kthread_should_stop())
+> 3.              break;
+> 4.
+> 5.      if ( /* no work pending*/ ){
+> 6.              set_current_state(TASK_INTERRUPTIBLE);
+> 7.
+> 8.              if (kthread_should_stop()) {
+> 9.                      set_current_state(TASK_RUNNING);
+> 10.                     break;
+> 11.             }
+> 12.
+> 13.             schedule();
+> 14.             continue;
+> 15.     }
+> 16.
+> 17.     do_work();
+> 18. }
+>
+> That way there is a higher chance that the thread sees the stop flag
+> and gracefully terminates, I fully agree on that.
+There's no disagreement so far.
+> But it does not completely solve the problem.
+> If kthread_stop() happens while the program counter of the ubi thread
+> is at line 12, the stop flag is still missed
+> and we end up in interruptible sleep just like before.
+
+That's where we hold different views. I have 3 viewpoints（You can point 
+out which one you disagree.）:
+
+1. If kthread_stop() happens at line 12, ubi thread is *marked* with 
+stop flag, it will stop at kthread_should_stop() as long as it can reach 
+the next iteration.
+
+2. If task A is on runqueue and its state is TASK_RUNNING, task A will 
+be scheduled to execute.
+
+3. If kthread_stop() happens at line 12, after program counter going to 
+line 14, ubi thead is on runqueue and its state is TASK_RUNNING. I have 
+explained this in situation 1 in last session.
+
+
+I mean ubi thread is on runqueue with TASK_RUNNING state & stop flag 
+after the process you described.
+
+Line 12   kthread_stop()
+
+                  set_bit(mark stop flag) && wake_up_process(enqueue && 
+set TASK_RUNNING )    => TASK_RUNNING & stop flag & on runqueue
+
+Line 13  schedule()
+
+                  Do nothing but pick next task to execute
+
+>
+> So, to solve the problem entirely I suggest changing schedule() to
+> schedule_timeout() and let the thread wake up
+> periodically.
+>
+
+
