@@ -3,170 +3,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6210FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C710CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37354206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E16C206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="IwhGZX7L"
+	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="ljpr+RBk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgHGRu4 (ORCPT
+        id S1728399AbgHGRvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 13:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728329AbgHGRuy (ORCPT
+        Fri, 7 Aug 2020 13:51:23 -0400
+Received: from sonic311-24.consmr.mail.gq1.yahoo.com ([98.137.65.205]:46327
+        "EHLO sonic311-24.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727838AbgHGRvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 13:50:54 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B97EBC061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 10:50:54 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a14so1856124edx.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 10:50:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nV60Lqd/s6jkR9RwVRlKW7Xy32P0lIA2VNvjGGWHCBg=;
-        b=IwhGZX7LdBz9Um8mRp/QS0j6Q+GbQl8v73j0V8V2WITC6uJ2ifcAkkiIIfaxA9/9ig
-         T96guVNcY8tg1p4oKZrQ2H3KYKPVrusWb1ZomNrEMd/NlUlmHSE159rPjcfA4sE2nZSr
-         T5WwdJSNJSbR4VYAsuED8Dkk1kfgLjFwLOLGFp680oA4u+TxQvdy4rq5qu/ybULVFECY
-         IavpPCYKYmZ13sepQ/4Ka/LOrhSAu+6DtzXg5Hb3KwPWSeY3wH6n1v7KMEHFifcTgCfX
-         +AmcTfZFtuy+HMD1eoTuWivbfPh7+xH0mZyMQjwBYYnpZnsbBM6Z5dCuISeyFXGT6YwY
-         S8HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nV60Lqd/s6jkR9RwVRlKW7Xy32P0lIA2VNvjGGWHCBg=;
-        b=T98Alh9wGig5UQtAb90ySsIsKmCHqwOjFzcoWe3saNbNnWFGHHvlE5qy/bq6aCrvuq
-         OJuT7XmNMykYOPcogbjjYXUsM3T4wL4vdxpKTrQH7Gna1gKTBXj61syyL+tQG0LjnssV
-         6Fya6D5bCM/ERLe/9GZFIKYOZcx2ejUSSyOVsQg9e07rET/ZB2Td221XbpEVesWdQ26I
-         f9LjdBuNFxDj4CwpBrswDG+rOUCj9mluIb6+ItSk+Y4/5Y/XmsBUK+2TWQeatP2M1bAs
-         gcXDdN57Q2mb1AErijnlORC18SSfFUpIBGHql2dha8jrir3Kc1Uu14NLnkfolDidrHU7
-         a4JQ==
-X-Gm-Message-State: AOAM532xofh6oVAsPfrkUs29IENmKEZkclUbp+KbBfPwo+vUNTXyi5rB
-        3HryHJik/gFURjvfX2zJns+UOi9AUh2ZmoPpWER2hg==
-X-Google-Smtp-Source: ABdhPJzvhKrW3dF3SpuUWaQUa/eW+G5WCapZOMN4nSQUAw999XeWxTFetxrMHXiBNl2+15joikVxjo+F1zTL04Gwbs0=
-X-Received: by 2002:a05:6402:16d0:: with SMTP id r16mr10237222edx.124.1596822653289;
- Fri, 07 Aug 2020 10:50:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200806170544.382140-1-posk@google.com> <20200807133755.GJ2674@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200807133755.GJ2674@hirez.programming.kicks-ass.net>
-From:   Peter Oskolkov <posk@posk.io>
-Date:   Fri, 7 Aug 2020 10:50:42 -0700
-Message-ID: <CAFTs51VHC5nyAb7bf-jvuYDRwLS5kWP98T336Uu7h+RMFb0ZqA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v2] rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Peter Oskolkov <posk@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
+        Fri, 7 Aug 2020 13:51:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1596822681; bh=7rFtTYgty6X4oWzyWCtAXM5bdgI3jqDY75d+k2FdyYw=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject; b=ljpr+RBkuOhMExQ6suaSGIXFI0Z6hwaW+LHh7V9DG4MbnJuudoIBD5UpfWYvpx52ri7ryLZw3rbtfaydmNqd90hGHXsVaw6qfkLnRldXjExbv78Odk49P+f4PX3Q0WIA4ghoo5Ma3R+dwNSGO/xklRFT0F4bzuMEBS+1Zf3Jbn/NkGnNJ675u0gHPtKlX+haTGl2setjNcdyGxMHFuyDPAJ5uI5zUUZ5JbOP8scAhxmRfHjNWU7lZI8uYvblVE56R4Uavma+tYMCePKcl1nZpm7AYTzyOFhlUTPSrtFDKko20eiWW1rW2MNZyR8S+cxh9jUmm0hbOMx3MAU5FdbunA==
+X-YMail-OSG: 5wJ.4qMVM1kSov5Pd_G1D5sD7EYK6_cveIvYPN0ASCK.OdnKrAO7N2PecSKbHlK
+ qAxqtseKxh0aXDocbkjyaTLGXzdea.mzo743Bkxrq70CaLQgMHrvG7XiiktQnpN9pDTWXyEKDcgB
+ I45e.pIUsdHiYMX1a9ZqRthxsiH6CO4dVyiFh95lAl53AISza6pZufzP6tjtr.4H5e81.yGLosIm
+ XW3T1yx1VMKqf6QIWwec2G4x144RscA0ole0dVX5DBMD.CB7ErRSmZS5IOk.yr2Tiqpr1j.6ZO57
+ VDZUi2V8U7cOEgmA7WWdC6EkZ41lZsNiyiWbyywZ6J6TdEHP.EQuO_YLNwHZH75BFSgIQ9JSlxrn
+ zF3_AAbXhOmNlIfNjvOzBg_5JUu.mQSHjp4VxyUxR6t2mYgqmEbHKM.eWkUd3_xvD7PESs3zmzFs
+ zucjgH4BClemgug64raOiBOH_NokzYgzsI8Jwai9aHNb3ZslJNK7.WI7QB1jwBhSBZdR4dQRcG6d
+ xVUWCqwYjPrQstGidUlpgqrykL5wqcYjoCu7jfXsOHLyDHx8GVjUIm0ZavHKkkHQ4z_SnmBfBRP_
+ C9jMWctGeDpzp42Ook8KaaQCt5q2VkWBbvUWGoNNrziuKDkMAQTIAqjBRjMevMzu5KEhrhyLctOx
+ d3gd8h3eExV7.uzZmpUZ4k1__E2WFvj2lx.fxLCmirat4a.4nn8R_tBBaqW0rYoYr8QCg8rSW2pl
+ vmDy6v3z3wn4eFqHBCZ.NW7EzTlDfPChA.lTYvLJBY4rjPjd.H7Vfngbr33nmWM6SAwW4kKZ6Tg_
+ UaBzDuQJYIM6PVZbQwvASZgMxa35jHi7NYQUyjmGCJXjbO6x7HfIdXx5TH4g9MHgo2sScs.EnDpc
+ sn4QvMZR3FXsbXIb21bhsrOrKQWlTuI38J90SsaflpGO67rk6rkBnoONavpgilZxE4cXTM1jk7Hk
+ twQ3pbs8o_M3vfEYpxRL0aMzhmdMKIVpFmAkuZzZHsoOHWLsie9v2ClQFPecpF3zS8rwjmJe8VfR
+ xZBr0Q2QbM5ViRZhgQl.iiScKddiqejV2wCnh44RpR5NlcWKj1PLR1XQ6GH64k9hyQtyzAPDpCAc
+ 0hh1a1s4woIgvbU53NpWmTLZqr.s0Wy41DWuYnzKt5xqjdJZ1GcvQ6lW8fG3iW_bDhsh..eUg8zD
+ Wc.wkgKFiZgWtIswJMU03zEmHFWh0Uog24DaJs1q4P4kj8R9zaRe0ys1y1sj03AWpsY7qUM56wHA
+ 2YRJNKfUk98sUmrNFRsm1ggDL4B0JL2ph3JPBsDb3Kdipaurwjvxfaw_O1LNks7Atxpt0_FwRj4P
+ zDdAskBh9UP8t2IiQfvSqAFn.durl8bBXxajQskgyJWYXNyYNgnnAWQgDAZf_W9k5j5YNcGpUORs
+ DgWXtm3SFmX9.iB2ND.0TPbMWsmyL8D_Y_nGPcW0B0Ylw9RJlK_Ti6VLDEO.omhq57VNMVKpdW38
+ S.fbEO0_EeswMUP3ISJVJFF5Q3F4QIK1uIni1s6fHSpJ4Y_8vT4fF2TSkvC9PLJl6Pjid2PDSbR4
+ 7Gy1ulA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.gq1.yahoo.com with HTTP; Fri, 7 Aug 2020 17:51:21 +0000
+Received: by smtp423.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 0b03665a650798086ff5d7b69b2720e5;
+          Fri, 07 Aug 2020 17:51:16 +0000 (UTC)
+Date:   Fri, 07 Aug 2020 13:51:12 -0400
+From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Subject: Re: wine fails to start with seccomp updates for v5.9-rc1
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Kees Cook <keescook@chromium.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Shuah Khan <shuah@kernel.org>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>, Will Deacon <will@kernel.org>,
+        Yonghong Song <yhs@fb.com>
+References: <1596812929.lz7fuo8r2w.none.ref@localhost>
+        <1596812929.lz7fuo8r2w.none@localhost>
+        <CAHk-=wi41L-OXCPQJi4dtc_7SmYTzXGz0XM=39rjiTNAi2gn3g@mail.gmail.com>
+        <20200807173609.GJ4402@mussarela>
+In-Reply-To: <20200807173609.GJ4402@mussarela>
+MIME-Version: 1.0
+Message-Id: <1596822616.zldk40bolg.none@localhost>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.16436 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 6:38 AM <peterz@infradead.org> wrote:
->
+Excerpts from Thadeu Lima de Souza Cascardo's message of August 7, 2020 1:3=
+6 pm:
+> On Fri, Aug 07, 2020 at 08:48:46AM -0700, Linus Torvalds wrote:
+>> On Fri, Aug 7, 2020 at 8:19 AM Alex Xu (Hello71) <alex_y_xu@yahoo.ca> wr=
+ote:
+>> >
+>> > On Linus' master, wine fails to start with the following error:
+>> >
+>> > wine client error:0: write: Bad file descriptor
+>> >
+>> > This issue is not present on 5.8. It appears to be caused by failure t=
+o
+>> > write to a pipe FD received via SCM_RIGHTS. Therefore, I tried reverti=
+ng
+>> > 9ecc6ea491f0, which resolved the issue.
+>>=20
+>> Would you mind trying to bisect exactly where it happens?
+>>=20
+>=20
+> This report [1] seemed related and pointed out at c0029de50982 ("net/scm:
+> Regularize compat handling of scm_detach_fds()"). The use of CMSG_USER_DA=
+TA
+> instead of CMSG_COMPAT_DATA seems fishy.
+>=20
+> Alex, can you try applying the patch below?
+>=20
+> Cascardo.
+>=20
+> [1] https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-August/216156.ht=
+ml
+>=20
+>> I don't think any of the commits in that pull are supposed to change
+>> semantics, and while reverting the whole merge shows that yes, that's
+>> what brought in the problems, it would be good to pinpoint just which
+>> change breaks so that we can fix just that thing.
+>>=20
+>> Kees, ideas?
+>>=20
+>>                  Linus
+>=20
+> ---
+> diff --git a/net/compat.c b/net/compat.c
+> index 703acb51c698..95ce707a30a3 100644
+> --- a/net/compat.c
+> +++ b/net/compat.c
+> @@ -294,7 +294,7 @@ void scm_detach_fds_compat(struct msghdr *msg, struct=
+ scm_cookie *scm)
+>  		(struct compat_cmsghdr __user *)msg->msg_control;
+>  	unsigned int o_flags =3D (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXE=
+C : 0;
+>  	int fdmax =3D min_t(int, scm_max_fds_compat(msg), scm->fp->count);
+> -	int __user *cmsg_data =3D CMSG_USER_DATA(cm);
+> +	int __user *cmsg_data =3D CMSG_COMPAT_DATA(cm);
+>  	int err =3D 0, i;
+> =20
+>  	for (i =3D 0; i < fdmax; i++) {
+>=20
 
-[...]
+Yes, this seems to work.
 
-> I'm thinking even this is a problem, we can end up sending IPIs to CPUs
-> outside out partition (they might be NOHZ_FULL) and that's a no-no too.
->
-> Something like so perhaps... that really limits it to CPUs that match
-> our mm.
+Tested-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
 
-Thanks for the suggestion - I'll prepare a v3 based on your and
-Mathieu's feedback.
-
->
-> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> index 6be66f52a2ad..bee5e98e6774 100644
-> --- a/include/linux/sched/mm.h
-> +++ b/include/linux/sched/mm.h
-> @@ -356,6 +356,7 @@ enum {
->
->  enum {
->         MEMBARRIER_FLAG_SYNC_CORE       = (1U << 0),
-> +       MEMBARRIER_FLAG_RSEQ            = (1U << 1),
->  };
->
->  #ifdef CONFIG_ARCH_HAS_MEMBARRIER_CALLBACKS
-> diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-> index 168479a7d61b..4d9b22c2f5e2 100644
-> --- a/kernel/sched/membarrier.c
-> +++ b/kernel/sched/membarrier.c
-> @@ -27,6 +27,11 @@
->
->  static void ipi_mb(void *info)
->  {
-> +       int *flags = info;
-> +
-> +       if (flags && (*flags & MEMBARRIER_FLAG_RSEQ))
-> +               rseq_preempt(current);
-> +
->         smp_mb();       /* IPIs should be serializing but paranoid. */
->  }
->
-> @@ -129,11 +134,11 @@ static int membarrier_global_expedited(void)
->         return 0;
->  }
->
-> -static int membarrier_private_expedited(int flags)
-> +static int membarrier_private_expedited(int flags, int cpu_id)
->  {
-> -       int cpu;
-> -       cpumask_var_t tmpmask;
->         struct mm_struct *mm = current->mm;
-> +       cpumask_var_t tmpmask;
-> +       int cpu;
->
->         if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
->                 if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
-> @@ -174,6 +179,10 @@ static int membarrier_private_expedited(int flags)
->                  */
->                 if (cpu == raw_smp_processor_id())
->                         continue;
-> +
-> +               if (cpu_id >= 0 && cpu != cpu_id)
-> +                       continue;
-> +
->                 p = rcu_dereference(cpu_rq(cpu)->curr);
->                 if (p && p->mm == mm)
->                         __cpumask_set_cpu(cpu, tmpmask);
-> @@ -181,7 +190,7 @@ static int membarrier_private_expedited(int flags)
->         rcu_read_unlock();
->
->         preempt_disable();
-> -       smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
-> +       smp_call_function_many(tmpmask, ipi_mb, &flags, 1);
->         preempt_enable();
->
->         free_cpumask_var(tmpmask);
-> @@ -362,11 +371,13 @@ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
->         case MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED:
->                 return membarrier_register_global_expedited();
->         case MEMBARRIER_CMD_PRIVATE_EXPEDITED:
-> -               return membarrier_private_expedited(0);
-> +               return membarrier_private_expedited(0, -1);
->         case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED:
->                 return membarrier_register_private_expedited(0);
->         case MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE:
-> -               return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
-> +               return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE, -1);
-> +       case MEMBERRIER_CMD_PRIVATE_EXPEDITED_RSEQ:
-> +               return membarrier_private_expedited(MEMBARRIER_FLAG_RSEQ, flags);
->         case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
->                 return membarrier_register_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
->         default:
+Thanks!
