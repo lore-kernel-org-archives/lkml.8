@@ -2,165 +2,117 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6D422C9F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424822177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S02sly2c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FCC2Jg2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgHGJDk (ORCPT
+        id S1727768AbgHGJGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgHGJDj (ORCPT
+        Fri, 7 Aug 2020 05:06:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42227 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726788AbgHGJGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:03:39 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3017DC061574;
-        Fri,  7 Aug 2020 02:03:39 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id x24so1081253otp.3;
-        Fri, 07 Aug 2020 02:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZRSac1P8m6Y9HoON8XkebBqO7NQzk7phhyPSzWi0PZk=;
-        b=S02sly2cj7uxDEgK9A6TE6IHU13sCB/ugUCBZB2i6v9nyAdTfLMeIDHVidcNQOXFTm
-         hZ78gU7R/ZFdpfBpY9llHXQEtg/pi+024prrvv12GlwXnXSjHK6KozxgBb6TfjdcrjVQ
-         aoTZITbxG2Dmn5GvmmV4d2dFuTMa9/AL4jnRKYartry5EUv7e9Af2YhSwBGloHZhqRdq
-         S0Wdn7CYooMP9UNwkeBblwTmR9K9uabJShxaQBG5GIipY94YqljJKKa0NVUH1rO5j43u
-         XsNFt6g74a4kFh8i9dgRG+aGVu71f1+JNeVoDqsms3O0c19fGmmOjxeqQirVZHWhQncm
-         NxRA==
+        Fri, 7 Aug 2020 05:06:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596791211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YAgJEBejyPWGx6tEh8JOWO70ZKvKRe9vL7QVxREaPEs=;
+        b=FCC2Jg2Hew9Po2OnKynhY4kFDT1U4ScPYdPnqb0XR8xbuCEnISH1poage58pHbuZQS/0EL
+        wY/OBKrfCS+rNK+XPDeLF+Lx15srWsr2w1/Q5l3ARyaLilOu/6Ozp1q8JjcS1wywK+oqMo
+        lgxcG3nalWpW6vRUaNlgsQyYpk1AKGk=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-3gLpA6-1P02nVDVV8AkXYw-1; Fri, 07 Aug 2020 05:06:49 -0400
+X-MC-Unique: 3gLpA6-1P02nVDVV8AkXYw-1
+Received: by mail-ed1-f69.google.com with SMTP id z11so482637edj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 02:06:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZRSac1P8m6Y9HoON8XkebBqO7NQzk7phhyPSzWi0PZk=;
-        b=ZtYtbNtuaAGrdTsNgrV/7+/7wVzR1YXIg8OIHpetvbj5gWm3FzGwL5Pt6sbCX3c/hc
-         M6UIe4ZtTiG8BdWlJy78Xb96R4vbl5B8T9NVmdnU2GccRyRDYPeSEXCs497iPX/pgYeA
-         sO4IRiZLzzxT2Nz6YMaK0p+BrrUHCLSJoyJamUf5cNPX5R0vt2CMqzJNPNSi8VLpzw00
-         GqXVG8Vi6HCrQgr0QIsECnwUSOZxIqo77FlRPH+qzRAPZa+Levv+NqlNZDkKuj3XH2NC
-         /r6XKzswEYFiSoPVy589yXo4VUU/k37LOUvBKOcUJY1ADTgrbxK0LLZU5oYKJPs5qvNf
-         hKJA==
-X-Gm-Message-State: AOAM530eZecSMX7cvmkAtMxbyalW2mWdaA1dym6CLtA6qLQzoXxEKzLA
-        ulg8RFUj1LTFM4pcGF/XEIYi7c2q6DRRUE75MXk=
-X-Google-Smtp-Source: ABdhPJzLBrRvOfgpLXHkBQldJTXluuB62LEw27OwAPaAg4DdQIpyt2xTMUjCMV353wjDbsBL+04npHHrDpZMjLabBQQ=
-X-Received: by 2002:a9d:6a54:: with SMTP id h20mr11178924otn.116.1596791018374;
- Fri, 07 Aug 2020 02:03:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=YAgJEBejyPWGx6tEh8JOWO70ZKvKRe9vL7QVxREaPEs=;
+        b=TuMwpuKshiyhqi0FEGAWmRFDrfqhwH5T6s/VX+HsxWzFDCoMJcySMq6Rggk6vXWBIl
+         0HxH1QM2ElV9NgHsOmacbzkcgBTnwtggFKyXuMWxy4MLMt7ROJDvejm7RRXdbk9X32jD
+         lPwFAdAtC7hJf48CUfbYhjqqLljGGbRcII/Fr7edmQH9Wsyr0Z/u/ZFQaQ4vjU+pojgQ
+         rENAnDBvgSJytLkQYhVTgXJNBXX7HRah4iK4l1TwLXEsFABoFluUo8r5U8/Jq73QCuy/
+         wrvFRiXJ9md2vi5smWop0WrL585S6C6P1LytRIHVQ9CwVCaZjskC+zYTPqfkg/G0B7eC
+         q0mA==
+X-Gm-Message-State: AOAM531XvWJ9pwJe/TuoA4ist+1TTDjNny6jyJVXbebjdVssldjXAkci
+        UGY1NCPcCzk9YcRuw+dHG3NUAi4Fvy29bOLAgOYVwU58SXMJotOK5Y8SOA1jHcyWbnjjg3Wrgg6
+        7dpqL0zzPts3NlA3lIRCDz6SV
+X-Received: by 2002:a17:906:d187:: with SMTP id c7mr8598725ejz.196.1596791208726;
+        Fri, 07 Aug 2020 02:06:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw0gp4D1eeThNc0MfUqIzH9zOKg9l29PiJCQKRH1FdTYArhPiiYmHs1iPWe8+PWuyye41OG4g==
+X-Received: by 2002:a17:906:d187:: with SMTP id c7mr8598712ejz.196.1596791208530;
+        Fri, 07 Aug 2020 02:06:48 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id dr21sm705148ejc.112.2020.08.07.02.06.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 02:06:47 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        kys@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Only notify Hyper-V for die events that are oops
+In-Reply-To: <1596730935-11564-1-git-send-email-mikelley@microsoft.com>
+References: <1596730935-11564-1-git-send-email-mikelley@microsoft.com>
+Date:   Fri, 07 Aug 2020 11:06:47 +0200
+Message-ID: <87o8nmome0.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200805141202.8641-1-yulei.kernel@gmail.com> <CANgfPd_P_bjduGgS7miCp4BLUaDXBTYb9swC1gzxwYG2baWRVw@mail.gmail.com>
-In-Reply-To: <CANgfPd_P_bjduGgS7miCp4BLUaDXBTYb9swC1gzxwYG2baWRVw@mail.gmail.com>
-From:   yulei zhang <yulei.kernel@gmail.com>
-Date:   Fri, 7 Aug 2020 17:03:27 +0800
-Message-ID: <CACZOiM3Shps4sJm4c6WWB12-mo1kWC4qYmCFD2dhJ+shaHoEeg@mail.gmail.com>
-Subject: Re: [RFC 0/9] KVM:x86/mmu:Introduce parallel memory virtualization to
- boost performance
-To:     Ben Gardon <bgardon@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        xiaoguangrong.eric@gmail.com, kernellwp@gmail.com,
-        lihaiwei.kernel@gmail.com, Yulei Zhang <yuleixzhang@tencent.com>,
-        Junaid Shahid <junaids@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 1:04 AM Ben Gardon <bgardon@google.com> wrote:
->
-> On Wed, Aug 5, 2020 at 9:53 AM Yulei Zhang <yulei.kernel@gmail.com> wrote:
-> >
-> > From: Yulei Zhang <yuleixzhang@tencent.com>
-> >
-> > Currently in KVM memory virtulization we relay on mmu_lock to synchronize
-> > the memory mapping update, which make vCPUs work in serialize mode and
-> > slow down the execution, especially after migration to do substantial
-> > memory mapping setup, and performance get worse if increase vCPU numbers
-> > and guest memories.
-> >
-> > The idea we present in this patch set is to mitigate the issue with
-> > pre-constructed memory mapping table. We will fast pin the guest memory
-> > to build up a global memory mapping table according to the guest memslots
-> > changes and apply it to cr3, so that after guest starts up all the vCPUs
-> > would be able to update the memory concurrently, thus the performance
-> > improvement is expected.
->
-> Is a re-implementation of the various MMU functions in this series
-> necessary to pre-populate the EPT/NPT? I realize the approach you took
-> is probably the fastest way to pre-populate an EPT, but it seems like
-> similar pre-population could be achieved with some changes to the PF
-> handler's prefault scheme or, from user space by adding a dummy vCPU
-> to touch memory before loading the actual guest image.
->
-> I think this series is taking a similar approach to the direct MMU RFC
-> I sent out a little less than a year ago. (I will send another version
-> of that series in the next month.) I'm not sure this level of
-> complexity is worth it if you're only interested in EPT pre-population.
-> Is pre-population your goal? You mention "parallel memory
-> virtualization," does that refer to parallel page fault handling you
-> intend to implement in a future series?
->
-> There are a number of features I see you've chosen to leave behind in
-> this series which might work for your use case, but I think they're
-> necessary. These include handling vCPUs with different roles (SMM, VMX
-> non root mode, etc.), MMU notifiers (which I realize matter less for
-> pinned memory), demand paging through UFFD, fast EPT
-> invalidation/teardown and others.
->
-Thanks for the feedback. I think the target circumstance for this feature is
-without memory overcommitment, thus it can fast pin the memory and
-setup the GPA->HPA mapping table, and after that we don't expect PF
-while vCPUs access the memory. We call it "parallel memory virtualization"
-as with pre-populated EPT the vCPUs will be able to update the memory
-in parallel mode.
-Yes, so far we disable the SMM etc. We are looking forward to gathering
-the inputs from your experts and refine the implementation.
+Michael Kelley <mikelley@microsoft.com> writes:
 
-> >
-> > And after test the initial patch with memory dirty pattern workload, we
-> > have seen positive results even with huge page enabled. For example,
-> > guest with 32 vCPUs and 64G memories, in 2M/1G huge page mode we would get
-> > more than 50% improvement.
-> >
-> >
-> > Yulei Zhang (9):
-> >   Introduce new fields in kvm_arch/vcpu_arch struct for direct build EPT
-> >     support
-> >   Introduce page table population function for direct build EPT feature
-> >   Introduce page table remove function for direct build EPT feature
-> >   Add release function for direct build ept when guest VM exit
-> >   Modify the page fault path to meet the direct build EPT requirement
-> >   Apply the direct build EPT according to the memory slots change
-> >   Add migration support when using direct build EPT
-> >   Introduce kvm module parameter global_tdp to turn on the direct build
-> >     EPT mode
-> >   Handle certain mmu exposed functions properly while turn on direct
-> >     build EPT mode
-> >
-> >  arch/mips/kvm/mips.c            |  13 +
-> >  arch/powerpc/kvm/powerpc.c      |  13 +
-> >  arch/s390/kvm/kvm-s390.c        |  13 +
-> >  arch/x86/include/asm/kvm_host.h |  13 +-
-> >  arch/x86/kvm/mmu/mmu.c          | 537 ++++++++++++++++++++++++++++++--
-> >  arch/x86/kvm/svm/svm.c          |   2 +-
-> >  arch/x86/kvm/vmx/vmx.c          |  17 +-
-> >  arch/x86/kvm/x86.c              |  55 ++--
-> >  include/linux/kvm_host.h        |   7 +-
-> >  virt/kvm/kvm_main.c             |  43 ++-
-> >  10 files changed, 648 insertions(+), 65 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
+> Hyper-V currently may be notified of a panic for any die event. But
+> this results in false panic notifications for various user space traps
+> that are die events. Fix this by ignoring die events that aren't oops.
+>
+> Fixes: 510f7aef65bb ("Drivers: hv: vmbus: prefer 'die' notification chain to 'panic'")
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index b50081c..910b6e9 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -86,6 +86,10 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+>  	struct die_args *die = (struct die_args *)args;
+>  	struct pt_regs *regs = die->regs;
+>  
+> +	/* Don't notify Hyper-V if the die event is other than oops */
+> +	if (val != DIE_OOPS)
+> +		return NOTIFY_DONE;
+> +
+
+Looking at die_val enum, DIE_PANIC also sounds like something we would
+want to report but it doesn't get emitted anywhere and honestly I don't
+quite understand how is was supposed to be different from DIE_OOPS.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+>  	/*
+>  	 * Hyper-V should be notified only once about a panic.  If we will be
+>  	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+
+-- 
+Vitaly
+
