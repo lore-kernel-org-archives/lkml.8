@@ -2,123 +2,212 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52439C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C687EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F00322CAE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB952177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qESXkcjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHGHR0 (ORCPT
+        id S1726877AbgHGHRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:17:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18216 "EHLO mga05.intel.com"
+        Fri, 7 Aug 2020 03:17:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:35083 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgHGHRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:17:25 -0400
-IronPort-SDR: niAEalFBLdxcA0n6bWAWRGSlTyRCVVM+xsZX5yPp00mtpSa7D+u6SdMx9Wezu+fJwYENOITMy5
- 0aWZUo/sSINw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="237871146"
-X-IronPort-AV: E=Sophos;i="5.75,444,1589266800"; 
-   d="scan'208";a="237871146"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2020 00:17:24 -0700
-IronPort-SDR: TW2/Rs+oqVNyglT8SzPM1QCZ+r337k9xEfMIf6xTm3CR693d7jRwYZJWOfJqpBWRiswXg1Gb0R
- FKA72pWheM4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,444,1589266800"; 
-   d="scan'208";a="289534895"
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
-  by orsmga003.jf.intel.com with ESMTP; 07 Aug 2020 00:17:20 -0700
-Date:   Fri, 7 Aug 2020 15:16:43 +0800
-From:   kernel test robot <rong.a.chen@intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        X86 ML <x86@kernel.org>, stable <stable@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        0day robot <lkp@intel.com>, lkp@lists.01.org
-Subject: Re: [x86/copy_mc] a0ac629ebe: fio.read_iops -43.3% regression
-Message-ID: <20200807071643.GL23458@shao2-debian>
-References: <159630256804.3143511.8894023468833792004.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200803094257.GA23458@shao2-debian>
- <20200806133452.GA2077191@gmail.com>
- <CAPcyv4hS7K0Arrd+C0LhjrFH=yGJf3g55_WkHOET4z58AcWrJw@mail.gmail.com>
- <20200806153500.GC2131635@gmail.com>
+        id S1726038AbgHGHRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 03:17:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596784653; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=PsrmpV7aCgsjcTBiYds5TLUyqKco9jzw4xFDzUS1GsQ=; b=qESXkcjgmou2h/EgJ8k0OwRZMYUsXvH4wDee/IADL4ErNbeLJVnboV49DSIDJL3/zXDcq7v1
+ 1B6YW5ezg2QPbgqZYETwmEmyL2hp3QK0NFcDQZzI0F1xg5j3nQxsI+FEuZDYBwDuVLA6D99d
+ NHMRCRUjVuHxhxib0YmhwYlMdTk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f2d000dba4c2cd367214a00 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 07 Aug 2020 07:17:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AD630C433CB; Fri,  7 Aug 2020 07:17:32 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83561C433C9;
+        Fri,  7 Aug 2020 07:17:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 83561C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, robdclark@gmail.com
+Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v9 0/5] Add support for DisplayPort driver on SnapDragon
+Date:   Fri,  7 Aug 2020 00:17:13 -0700
+Message-Id: <20200807071718.17937-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200806153500.GC2131635@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 05:35:00PM +0200, Ingo Molnar wrote:
-> 
-> * Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > On Thu, Aug 6, 2020 at 6:35 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > >
-> > > * kernel test robot <rong.a.chen@intel.com> wrote:
-> > >
-> > > > Greeting,
-> > > >
-> > > > FYI, we noticed a -43.3% regression of fio.read_iops due to commit:
-> > > >
-> > > >
-> > > > commit: a0ac629ebe7b3d248cb93807782a00d9142fdb98 ("x86/copy_mc: Introduce copy_mc_generic()")
-> > > > url: https://github.com/0day-ci/linux/commits/Dan-Williams/Renovate-memcpy_mcsafe-with-copy_mc_to_-user-kernel/20200802-014046
-> > > >
-> > > >
-> > > > in testcase: fio-basic
-> > > > on test machine: 96 threads Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz with 256G memory
-> > > > with following parameters:
-> > >
-> > > So this performance regression, if it isn't a spurious result, looks
-> > > concerning. Is this expected?
-> > 
-> > This is not expected and I think delays these patches until I'm back
-> > from leave in a few weeks. I know that we might lose some inlining
-> > effect due to replacing native memcpy, but I did not expect it would
-> > have an impact like this. In my testing I was seeing a performance
-> > improvement from replacing the careful / open-coded copy with rep;
-> > mov;, which increases the surprise of this result.
-> 
-> It would be nice to double check this on the kernel-test-robot side as 
-> well, to make sure it's not a false positive.
-> 
+These patches add Display-Port driver on SnapDragon/msm hardware.
+This series also contains device-tree bindings for msm DP driver.
+It also contains Makefile and Kconfig changes to compile msm DP driver.
 
-Hi Ingo,
+The block diagram of DP driver is shown below:
 
-We recompiled the kernels with option "-falign-functions=32", and the
-regression still exists:
 
-7476b91d4db369d8  a0ac629ebe7b3d248cb9380778  testcase/testparams/testbox
-----------------  --------------------------  ---------------------------
-         %stddev      change         %stddev
-             \          |                \  
-     22103             -43%      12551        fio-basic/2M-performance-2pmem-xfs-libaio-dax-50%-200s-read-200G-tb-ucode=0x5002f01/lkp-csl-2sp6
-     22103             -43%      12551        GEO-MEAN fio.read_iops
+                 +-------------+
+                 |DRM FRAMEWORK|
+                 +------+------+
+                        |
+                   +----v----+
+                   | DP DRM  |
+                   +----+----+
+                        |
+                   +----v----+
+     +------------+|   DP    +----------++------+
+     +        +---+| DISPLAY |+---+      |      |
+     |        +    +-+-----+-+    |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     v        v      v     v      v      v      v
+ +------+ +------+ +---+ +----+ +----+ +---+ +-----+
+ |  DP  | |  DP  | |DP | | DP | | DP | |DP | | DP  |
+ |PARSER| | HPD  | |AUX| |LINK| |CTRL| |PHY| |POWER|
+ +--+---+ +---+--+ +---+ +----+ +--+-+ +-+-+ +-----+
+    |                              |     |
+ +--v---+                         +v-----v+
+ |DEVICE|                         |  DP   |
+ | TREE |                         |CATALOG|
+ +------+                         +---+---+
+                                      |
+                                  +---v----+
+                                  |CTRL/PHY|
+                                  |   HW   |
+                                  +--------+
 
-Best Regards,
-Rong Chen
+Changes in v7:
+
+- Modify cover letter description and fix title.
+- Introduce dp-controller.yaml for common bindings across SOC
+- Rename dp-sc7180.yaml to dp-controller-sc7180.yaml for SC7180 bindings
+- Rename compatible string to qcom,sc7180-dp
+- Add assigned-clocks and assigned-clock-parents properties in bindings
+- Remove redundant code from driver
+- Extend series to include HPD detection logic
+
+Changes in v8:
+
+- Add MDSS AHB clock in bindings 
+- Replace mode->vrefresh use with drm_mode_vrefresh API
+- Remove redundant aux config code from parser and aux module
+- Assign default max lanes if data-lanes property is not available
+- Fix use-after-free during DP driver remove
+- Unregister hardware clocks during driver cleanup
+
+Changes in v9:
+
+- Drop YAML bindings change from the series
+- Use assigne-clock-parents property and remove clk_set_parent use from code
+- Access register address space without name
+- Fix DP register dump utility
+- Disable DP clocks after vsync generated
+- Avoid 64-bit modulo operation
+- Drop any unused code and fix function proptotyes to avoid W=1 warnings
+- Drop DRM_MSM_DP_10NM_PLL config as only 10nm PLL is available
+
+Chandan Uddaraju (4):
+  dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
+  drm: add constant N value in helper file
+  drm/msm/dp: add displayPort driver support
+  drm/msm/dp: add support for DP PLL driver
+
+Jeykumar Sankaran (1):
+  drm/msm/dpu: add display port support in DPU
+
+Tanmay Shah (1):
+  drm/msm/dp: Add Display Port HPD feature
+
+ drivers/gpu/drm/i915/display/intel_display.c  |    2 +-
+ drivers/gpu/drm/msm/Kconfig                   |    9 +
+ drivers/gpu/drm/msm/Makefile                  |   14 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |   27 +-
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |    8 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |   83 +-
+ drivers/gpu/drm/msm/dp/dp_aux.c               |  510 +++++
+ drivers/gpu/drm/msm/dp/dp_aux.h               |   29 +
+ drivers/gpu/drm/msm/dp/dp_catalog.c           | 1030 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_catalog.h           |  104 +
+ drivers/gpu/drm/msm/dp/dp_ctrl.c              | 1693 +++++++++++++++++
+ drivers/gpu/drm/msm/dp/dp_ctrl.h              |   35 +
+ drivers/gpu/drm/msm/dp/dp_display.c           | 1017 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_display.h           |   31 +
+ drivers/gpu/drm/msm/dp/dp_drm.c               |  168 ++
+ drivers/gpu/drm/msm/dp/dp_drm.h               |   18 +
+ drivers/gpu/drm/msm/dp/dp_hpd.c               |   69 +
+ drivers/gpu/drm/msm/dp/dp_hpd.h               |   79 +
+ drivers/gpu/drm/msm/dp/dp_link.c              | 1214 ++++++++++++
+ drivers/gpu/drm/msm/dp/dp_link.h              |  132 ++
+ drivers/gpu/drm/msm/dp/dp_panel.c             |  486 +++++
+ drivers/gpu/drm/msm/dp/dp_panel.h             |   95 +
+ drivers/gpu/drm/msm/dp/dp_parser.c            |  269 +++
+ drivers/gpu/drm/msm/dp/dp_parser.h            |  138 ++
+ drivers/gpu/drm/msm/dp/dp_pll.c               |   99 +
+ drivers/gpu/drm/msm/dp/dp_pll.h               |   61 +
+ drivers/gpu/drm/msm/dp/dp_pll_10nm.c          |  917 +++++++++
+ drivers/gpu/drm/msm/dp/dp_pll_private.h       |   98 +
+ drivers/gpu/drm/msm/dp/dp_power.c             |  373 ++++
+ drivers/gpu/drm/msm/dp/dp_power.h             |  103 +
+ drivers/gpu/drm/msm/dp/dp_reg.h               |  517 +++++
+ drivers/gpu/drm/msm/msm_drv.c                 |    2 +
+ drivers/gpu/drm/msm/msm_drv.h                 |   59 +-
+ include/drm/drm_dp_helper.h                   |    1 +
+ 34 files changed, 9471 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_10nm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_private.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_reg.h
+
+
+base-commit: 418eda8f3fe292782c150266d693d55d284c0c98
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
