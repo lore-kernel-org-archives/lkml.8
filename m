@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99556C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B72AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711222224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29162086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEtcWCE8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NRk61K5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgHGT4E (ORCPT
+        id S1727808AbgHGT4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:56:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42354 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726979AbgHGTz4 (ORCPT
+        Fri, 7 Aug 2020 15:56:22 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55546 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726978AbgHGTz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 15:55:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,96 +29,89 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qdlNr90CBeIrDZm/k8M3WSYgAxr0kUHBQSfXY3HBR3M=;
-        b=OEtcWCE8O5fZ4rbGITleBlsU0WLxb7Ef7hxXcd01DHmtitoBa3RrwXzJ2bSNVOSz8WIaAE
-        NlVvekfuoTCWwJJjrf+rsMOUKqg4bk51ghjCsDLtUr1lYF4hBcP6eWW058k/9+i7ek5DNs
-        bTG07R6oi+v53wt4Nr0zM8gLhCGCv0g=
+        bh=ZDqXD2TtSUhhe1fmfc71LWO9xKmi0hI+AvOpGNLOk0I=;
+        b=NRk61K5uyjpXaMw264RTED2+/On7NDYHXsw6VUqQRroMlTcHrXilNd24XL9zP/5G6Ylttx
+        gELsHlh3IsC93rrhRdsZ5fRWzoW/FYcI7Eb/XZAl0ISj8f4+bsNzBIRJZYmcSdB9+Xc+f+
+        IoQQhDMsk8Z12FPcvTb3jwbNdLJDiz0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-456-fTI0CLrNPD-IHN_fsiNHLQ-1; Fri, 07 Aug 2020 15:55:53 -0400
-X-MC-Unique: fTI0CLrNPD-IHN_fsiNHLQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-400-Ws3ldtSPPaK-FvFvMpiWAg-1; Fri, 07 Aug 2020 15:55:53 -0400
+X-MC-Unique: Ws3ldtSPPaK-FvFvMpiWAg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8351A1005510;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A835800688;
         Fri,  7 Aug 2020 19:55:52 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-113-142.rdu2.redhat.com [10.10.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 60A975C1D0;
-        Fri,  7 Aug 2020 19:55:52 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBF935D9E8;
+        Fri,  7 Aug 2020 19:55:46 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 19357222E5E; Fri,  7 Aug 2020 15:55:39 -0400 (EDT)
+        id F20F7222E55; Fri,  7 Aug 2020 15:55:38 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com
-Subject: [PATCH v2 16/20] fuse,virtiofs: Define dax address space operations
-Date:   Fri,  7 Aug 2020 15:55:22 -0400
-Message-Id: <20200807195526.426056-17-vgoyal@redhat.com>
+        dgilbert@redhat.com, Peng Tao <tao.peng@linux.alibaba.com>
+Subject: [PATCH v2 12/20] fuse: Introduce setupmapping/removemapping commands
+Date:   Fri,  7 Aug 2020 15:55:18 -0400
+Message-Id: <20200807195526.426056-13-vgoyal@redhat.com>
 In-Reply-To: <20200807195526.426056-1-vgoyal@redhat.com>
 References: <20200807195526.426056-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is done along the lines of ext4 and xfs. I primarily wanted ->writepages
-hook at this time so that I could call into dax_writeback_mapping_range().
-This in turn will decide which pfns need to be written back.
+Introduce two new fuse commands to setup/remove memory mappings. This
+will be used to setup/tear down file mapping in dax window.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
 ---
- fs/fuse/file.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ include/uapi/linux/fuse.h | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 00ad27216cc3..54708cb24da0 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -2669,6 +2669,16 @@ static int fuse_writepages_fill(struct page *page,
- 	return err;
- }
- 
-+static int fuse_dax_writepages(struct address_space *mapping,
-+				struct writeback_control *wbc)
-+{
-+
-+	struct inode *inode = mapping->host;
-+	struct fuse_conn *fc = get_fuse_conn(inode);
-+
-+	return dax_writeback_mapping_range(mapping, fc->dax_dev, wbc);
-+}
-+
- static int fuse_writepages(struct address_space *mapping,
- 			   struct writeback_control *wbc)
- {
-@@ -4030,6 +4040,13 @@ static const struct address_space_operations fuse_file_aops  = {
- 	.write_end	= fuse_write_end,
+diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+index 5b85819e045f..4c386116978a 100644
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -894,4 +894,33 @@ struct fuse_copy_file_range_in {
+ 	uint64_t	flags;
  };
  
-+static const struct address_space_operations fuse_dax_file_aops  = {
-+	.writepages	= fuse_dax_writepages,
-+	.direct_IO	= noop_direct_IO,
-+	.set_page_dirty	= noop_set_page_dirty,
-+	.invalidatepage	= noop_invalidatepage,
++#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
++struct fuse_setupmapping_in {
++	/* An already open handle */
++	uint64_t	fh;
++	/* Offset into the file to start the mapping */
++	uint64_t	foffset;
++	/* Length of mapping required */
++	uint64_t	len;
++	/* Flags, FUSE_SETUPMAPPING_FLAG_* */
++	uint64_t	flags;
++	/* Offset in Memory Window */
++	uint64_t	moffset;
 +};
 +
- void fuse_init_file_inode(struct inode *inode)
- {
- 	struct fuse_inode *fi = get_fuse_inode(inode);
-@@ -4045,6 +4062,8 @@ void fuse_init_file_inode(struct inode *inode)
- 	fi->writepages = RB_ROOT;
- 	fi->dmap_tree = RB_ROOT_CACHED;
- 
--	if (fc->dax_dev)
-+	if (fc->dax_dev) {
- 		inode->i_flags |= S_DAX;
-+		inode->i_data.a_ops = &fuse_dax_file_aops;
-+	}
- }
++struct fuse_removemapping_in {
++	/* number of fuse_removemapping_one follows */
++	uint32_t        count;
++};
++
++struct fuse_removemapping_one {
++	/* Offset into the dax window start the unmapping */
++	uint64_t        moffset;
++        /* Length of mapping required */
++        uint64_t	len;
++};
++
++#define FUSE_REMOVEMAPPING_MAX_ENTRY   \
++		(PAGE_SIZE / sizeof(struct fuse_removemapping_one))
++
+ #endif /* _LINUX_FUSE_H */
 -- 
 2.25.4
 
