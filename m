@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1105C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F330C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE622224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274272086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GiiUK4WF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hgss4fYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgHGT5W (ORCPT
+        id S1727997AbgHGT5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:57:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25639 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726578AbgHGTzu (ORCPT
+        Fri, 7 Aug 2020 15:57:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51442 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726563AbgHGTzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 15:55:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,32 +29,33 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=S1YK+dRX48++bcQSBbjSrKQM9bu8x29oyfw9Y+MmJRY=;
-        b=GiiUK4WF61TFDghYBsIH3XiUCHpwrGg+Hwll2o14UzW5gR3wKwMiGcGsjzm1Y0/NUeiY6r
-        Ybc74+G6hdoxP3gM2djMKOyGjYpTE3FITVaS3ytR4LPdEah9PYmGGQQLCofKYQato6JzLn
-        wP0ffTOtHnrnHxoFTqMYntBu3puemno=
+        bh=b9oCZOt4XAQRJ9KNyevi8iZQFJ4vdGUXovGIvqFrTvk=;
+        b=Hgss4fYoY9+rpGdPKMj3lMgNJ2gkmmcMZUxzrGuUG30Mt8GBaB+jw78lxL+glmJN06C/ZO
+        A5jtN8VjbXIAqR0b83pb+4/xO57g0X52SlryM4mM2j9h5S6MM+3+mCU58Tmcl9HUK8yMni
+        RZFjH15DZnpgspGeSAv19NjobPONWtw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-NBf-wxbKNtWXmpCp-38WHw-1; Fri, 07 Aug 2020 15:55:47 -0400
-X-MC-Unique: NBf-wxbKNtWXmpCp-38WHw-1
+ us-mta-446-2W3Pway7MyiLtOPmaj1fGg-1; Fri, 07 Aug 2020 15:55:46 -0400
+X-MC-Unique: 2W3Pway7MyiLtOPmaj1fGg-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D293107BEF5;
-        Fri,  7 Aug 2020 19:55:46 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-113-142.rdu2.redhat.com [10.10.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0CE62DE77;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31A798014C1;
         Fri,  7 Aug 2020 19:55:45 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-113-142.rdu2.redhat.com [10.10.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E2222DE73;
+        Fri,  7 Aug 2020 19:55:39 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id EBAEF222E53; Fri,  7 Aug 2020 15:55:38 -0400 (EDT)
+        id AD5DB222E43; Fri,  7 Aug 2020 15:55:38 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com
-Subject: [PATCH v2 11/20] fuse: implement FUSE_INIT map_alignment field
-Date:   Fri,  7 Aug 2020 15:55:17 -0400
-Message-Id: <20200807195526.426056-12-vgoyal@redhat.com>
+        dgilbert@redhat.com, Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm@lists.01.org
+Subject: [PATCH v2 02/20] dax: Create a range version of dax_layout_busy_page()
+Date:   Fri,  7 Aug 2020 15:55:08 -0400
+Message-Id: <20200807195526.426056-3-vgoyal@redhat.com>
 In-Reply-To: <20200807195526.426056-1-vgoyal@redhat.com>
 References: <20200807195526.426056-1-vgoyal@redhat.com>
 MIME-Version: 1.0
@@ -65,111 +66,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device communicates FUSE_SETUPMAPPING/FUSE_REMOVMAPPING alignment
-constraints via the FUST_INIT map_alignment field.  Parse this field and
-ensure our DAX mappings meet the alignment constraints.
+virtiofs device has a range of memory which is mapped into file inodes
+using dax. This memory is mapped in qemu on host and maps different
+sections of real file on host. Size of this memory is limited
+(determined by administrator) and depending on filesystem size, we will
+soon reach a situation where all the memory is in use and we need to
+reclaim some.
 
-We don't actually align anything differently since our mappings are
-already 2MB aligned.  Just check the value when the connection is
-established.  If it becomes necessary to honor arbitrary alignments in
-the future we'll have to adjust how mappings are sized.
+As part of reclaim process, we will need to make sure that there are
+no active references to pages (taken by get_user_pages()) on the memory
+range we are trying to reclaim. I am planning to use
+dax_layout_busy_page() for this. But in current form this is per inode
+and scans through all the pages of the inode.
 
-The upshot of this commit is that we can be confident that mappings will
-work even when emulating x86 on Power and similar combinations where the
-host page sizes are different.
+We want to reclaim only a portion of memory (say 2MB page). So we want
+to make sure that only that 2MB range of pages do not have any
+references  (and don't want to unmap all the pages of inode).
 
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+Hence, create a range version of this function named
+dax_layout_busy_page_range() which can be used to pass a range which
+needs to be unmapped.
+
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-nvdimm@lists.01.org
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/fuse_i.h          |  5 ++++-
- fs/fuse/inode.c           | 19 +++++++++++++++++--
- include/uapi/linux/fuse.h |  4 +++-
- 3 files changed, 24 insertions(+), 4 deletions(-)
+ fs/dax.c            | 66 ++++++++++++++++++++++++++++++++-------------
+ include/linux/dax.h |  6 +++++
+ 2 files changed, 54 insertions(+), 18 deletions(-)
 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 478c940b05b4..4a46e35222c7 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -47,7 +47,10 @@
- /** Number of dentries for each connection in the control filesystem */
- #define FUSE_CTL_NUM_DENTRIES 5
+diff --git a/fs/dax.c b/fs/dax.c
+index 11b16729b86f..0d51b0fbb489 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -558,27 +558,20 @@ static void *grab_mapping_entry(struct xa_state *xas,
+ 	return xa_mk_internal(VM_FAULT_FALLBACK);
+ }
  
--/* Default memory range size, 2MB */
+-/**
+- * dax_layout_busy_page - find first pinned page in @mapping
+- * @mapping: address space to scan for a page with ref count > 1
+- *
+- * DAX requires ZONE_DEVICE mapped pages. These pages are never
+- * 'onlined' to the page allocator so they are considered idle when
+- * page->count == 1. A filesystem uses this interface to determine if
+- * any page in the mapping is busy, i.e. for DMA, or other
+- * get_user_pages() usages.
+- *
+- * It is expected that the filesystem is holding locks to block the
+- * establishment of new mappings in this address_space. I.e. it expects
+- * to be able to run unmap_mapping_range() and subsequently not race
+- * mapping_mapped() becoming true.
 +/*
-+ * Default memory range size.  A power of 2 so it agrees with common FUSE_INIT
-+ * map_alignment values 4KB and 64KB.
-+ */
- #define FUSE_DAX_SZ	(2*1024*1024)
- #define FUSE_DAX_SHIFT	(21)
- #define FUSE_DAX_PAGES	(FUSE_DAX_SZ/PAGE_SIZE)
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index b82eb61d63cc..9b690456de30 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -980,9 +980,10 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
++ * Partial pages are included. If end is LLONG_MAX, pages in the range from
++ * start to end of the file are inluded.
+  */
+-struct page *dax_layout_busy_page(struct address_space *mapping)
++struct page *dax_layout_busy_page_range(struct address_space *mapping,
++					loff_t start, loff_t end)
  {
- 	struct fuse_init_args *ia = container_of(args, typeof(*ia), args);
- 	struct fuse_init_out *arg = &ia->out;
-+	bool ok = true;
+-	XA_STATE(xas, &mapping->i_pages, 0);
+ 	void *entry;
+ 	unsigned int scanned = 0;
+ 	struct page *page = NULL;
++	pgoff_t start_idx = start >> PAGE_SHIFT;
++	pgoff_t end_idx = end >> PAGE_SHIFT;
++	XA_STATE(xas, &mapping->i_pages, start_idx);
++	loff_t len, lstart = round_down(start, PAGE_SIZE);
  
- 	if (error || arg->major != FUSE_KERNEL_VERSION)
--		fc->conn_error = 1;
-+		ok = false;
- 	else {
- 		unsigned long ra_pages;
+ 	/*
+ 	 * In the 'limited' case get_user_pages() for dax is disabled.
+@@ -589,6 +582,22 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	if (!dax_mapping(mapping) || !mapping_mapped(mapping))
+ 		return NULL;
  
-@@ -1045,6 +1046,14 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
- 					min_t(unsigned int, FUSE_MAX_MAX_PAGES,
- 					max_t(unsigned int, arg->max_pages, 1));
- 			}
-+			if ((arg->flags & FUSE_MAP_ALIGNMENT) &&
-+			    (FUSE_DAX_SZ % (1ul << arg->map_alignment))) {
-+				printk(KERN_ERR "FUSE: map_alignment %u"
-+				       " incompatible with dax mem range size"
-+				       " %u\n", arg->map_alignment,
-+				       FUSE_DAX_SZ);
-+				ok = false;
-+			}
- 		} else {
- 			ra_pages = fc->max_read / PAGE_SIZE;
- 			fc->no_lock = 1;
-@@ -1060,6 +1069,11 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
- 	}
- 	kfree(ia);
- 
-+	if (!ok) {
-+		fc->conn_init = 0;
-+		fc->conn_error = 1;
++	/* If end == LLONG_MAX, all pages from start to till end of file */
++	if (end == LLONG_MAX) {
++		end_idx = ULONG_MAX;
++		len = 0;
++	} else {
++		/* length is being calculated from lstart and not start.
++		 * This is due to behavior of unmap_mapping_range(). If
++		 * start is say 4094 and end is on 4096 then we want to
++		 * unamp two pages, idx 0 and 1. But unmap_mapping_range()
++		 * will unmap only page at idx 0. If we calculate len
++		 * from the rounded down start, this problem should not
++		 * happen.
++		 */
++		len = end - lstart + 1;
 +	}
 +
- 	fuse_set_initialized(fc);
- 	wake_up_all(&fc->blocked_waitq);
+ 	/*
+ 	 * If we race get_user_pages_fast() here either we'll see the
+ 	 * elevated page count in the iteration and wait, or
+@@ -601,10 +610,10 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	 * guaranteed to either see new references or prevent new
+ 	 * references from being established.
+ 	 */
+-	unmap_mapping_range(mapping, 0, 0, 0);
++	unmap_mapping_range(mapping, start, len, 0);
+ 
+ 	xas_lock_irq(&xas);
+-	xas_for_each(&xas, entry, ULONG_MAX) {
++	xas_for_each(&xas, entry, end_idx) {
+ 		if (WARN_ON_ONCE(!xa_is_value(entry)))
+ 			continue;
+ 		if (unlikely(dax_is_locked(entry)))
+@@ -625,6 +634,27 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	xas_unlock_irq(&xas);
+ 	return page;
  }
-@@ -1082,7 +1096,8 @@ void fuse_send_init(struct fuse_conn *fc)
- 		FUSE_WRITEBACK_CACHE | FUSE_NO_OPEN_SUPPORT |
- 		FUSE_PARALLEL_DIROPS | FUSE_HANDLE_KILLPRIV | FUSE_POSIX_ACL |
- 		FUSE_ABORT_ERROR | FUSE_MAX_PAGES | FUSE_CACHE_SYMLINKS |
--		FUSE_NO_OPENDIR_SUPPORT | FUSE_EXPLICIT_INVAL_DATA;
-+		FUSE_NO_OPENDIR_SUPPORT | FUSE_EXPLICIT_INVAL_DATA |
-+		FUSE_MAP_ALIGNMENT;
- 	ia->args.opcode = FUSE_INIT;
- 	ia->args.in_numargs = 1;
- 	ia->args.in_args[0].size = sizeof(ia->in);
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 373cada89815..5b85819e045f 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -313,7 +313,9 @@ struct fuse_file_lock {
-  * FUSE_CACHE_SYMLINKS: cache READLINK responses
-  * FUSE_NO_OPENDIR_SUPPORT: kernel supports zero-message opendir
-  * FUSE_EXPLICIT_INVAL_DATA: only invalidate cached pages on explicit request
-- * FUSE_MAP_ALIGNMENT: map_alignment field is valid
-+ * FUSE_MAP_ALIGNMENT: init_out.map_alignment contains log2(byte alignment) for
-+ *		       foffset and moffset fields in struct
-+ *		       fuse_setupmapping_out and fuse_removemapping_one.
-  */
- #define FUSE_ASYNC_READ		(1 << 0)
- #define FUSE_POSIX_LOCKS	(1 << 1)
++EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
++
++/**
++ * dax_layout_busy_page - find first pinned page in @mapping
++ * @mapping: address space to scan for a page with ref count > 1
++ *
++ * DAX requires ZONE_DEVICE mapped pages. These pages are never
++ * 'onlined' to the page allocator so they are considered idle when
++ * page->count == 1. A filesystem uses this interface to determine if
++ * any page in the mapping is busy, i.e. for DMA, or other
++ * get_user_pages() usages.
++ *
++ * It is expected that the filesystem is holding locks to block the
++ * establishment of new mappings in this address_space. I.e. it expects
++ * to be able to run unmap_mapping_range() and subsequently not race
++ * mapping_mapped() becoming true.
++ */
++struct page *dax_layout_busy_page(struct address_space *mapping)
++{
++	return dax_layout_busy_page_range(mapping, 0, 0);
++}
+ EXPORT_SYMBOL_GPL(dax_layout_busy_page);
+ 
+ static int __dax_invalidate_entry(struct address_space *mapping,
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index 6904d4e0b2e0..9016929db4c6 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -141,6 +141,7 @@ int dax_writeback_mapping_range(struct address_space *mapping,
+ 		struct dax_device *dax_dev, struct writeback_control *wbc);
+ 
+ struct page *dax_layout_busy_page(struct address_space *mapping);
++struct page *dax_layout_busy_page_range(struct address_space *mapping, loff_t start, loff_t end);
+ dax_entry_t dax_lock_page(struct page *page);
+ void dax_unlock_page(struct page *page, dax_entry_t cookie);
+ #else
+@@ -171,6 +172,11 @@ static inline struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	return NULL;
+ }
+ 
++static inline struct page *dax_layout_busy_page_range(struct address_space *mapping, pgoff_t start, pgoff_t nr_pages)
++{
++	return NULL;
++}
++
+ static inline int dax_writeback_mapping_range(struct address_space *mapping,
+ 		struct dax_device *dax_dev, struct writeback_control *wbc)
+ {
 -- 
 2.25.4
 
