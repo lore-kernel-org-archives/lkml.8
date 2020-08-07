@@ -2,167 +2,91 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D94BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E757C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C560206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67395206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yf26EGUt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7tu28UU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgHGAgo (ORCPT
+        id S1726377AbgHGAg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:36:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54613 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgHGAgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:36:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BN5yf1zybz9sSG;
-        Fri,  7 Aug 2020 10:36:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596760602;
-        bh=G+kDgt44SsZYuVJDnpFeQASIMFtHjTuJWg69wtHW0j4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Yf26EGUtRp5R7Q27/hXK2bPYyCqaXA/bp7xn8HfnUz8adwPouQaFEFQrHsxWs4drs
-         JHvFeRq13fxf31ufouWzVDIzdYY1AtOSJ4DVJ/Z4wdBTQw7mIjqdwkDo1XumorDxj2
-         pZ6n80hrpBTOZfXxGEly+taqYJp1mhM+uQ2x2olCZSqFNkMX4BhN1QHcTcdwetxJbt
-         k+snWIbQqhWjskOrfvACcSh5Ar+zF9EDApTWwzwZSEqafyzW+zpWehjHmiOD+YUGty
-         7mxyiCwz71B7iy2cV67eYaqFrxQGo7IELSZQmV7+VyE7F1Ou/ImmDklqBFLMAZdXaa
-         LUMb0jKgubgzw==
-Date:   Fri, 7 Aug 2020 10:36:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the nfs tree
-Message-ID: <20200807103640.116e82f6@canb.auug.org.au>
+        Thu, 6 Aug 2020 20:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHGAgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 20:36:55 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B603C061574;
+        Thu,  6 Aug 2020 17:36:55 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t11so239292plr.5;
+        Thu, 06 Aug 2020 17:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=alp2G6ff2wO0MqehzwXx5LsJyIv92ql/KYHKrtPRdXk=;
+        b=R7tu28UUZocD5B4bGEXu8f51JjvdG9rwUbAWKIvlyHu9NgqGfrO91/lntX9/+hUqSB
+         biLhqBSiKJvjHvzvZ6CxrFTWQqF2A7dix2JS8n7gvxqUMGcUv9McdAbyw+NCmCVACuVX
+         mCfV8uCGN669iCxOzr7H5MwW/Rdfu22l6TOD+J9XJ1O7VR5uqM0Ct+YJhFd/MPpsDYVj
+         Nx8k4ANU9uG35xiIQ3VKrxghxxlBM8IO8pykI1/5qzhZ23oQhyBuh9j77o2cOv4be2Ma
+         EGXjPHWiZVCd46KODTmFOQWR2LnqfM4v9duGa07ZvSMGW1wGLjIWFR5NM7R8O9xPn/EK
+         aqmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=alp2G6ff2wO0MqehzwXx5LsJyIv92ql/KYHKrtPRdXk=;
+        b=W2j8YeeWhT1FPSaXsA1UPJEtIEm6RtOfWBgdXreZxaLiU8hEPVG48bdYVlaucTXzdl
+         qfJxfrP5ycdxy8HYAVfNwctabdsdRnb/3LiiDvTO57EviNLAp1iwoMFOsLixqififZsT
+         +3dS8C3qZK0dYsfbKe6JM+ajxR5aeX87R3DqQig5edSKImV7ZiKPkuviFSmFz7DPwcGH
+         VKQkl5wmAM4Ekn/wok8MiFq7bJVe2+DP9wJGEL84ycXR4gcHpL23mCetfv7zfvnJFa6D
+         /ZZTfDyhonjQuL6T7N1GbCxPyOCt7CcygKKr9qVsOJ6vnndxdyq3twZaQhZhnZAmPuP3
+         NhIw==
+X-Gm-Message-State: AOAM53227PcoKALUcVVMpsy8R8E0mnGiOJ3GeE/sbtiMxfPVNJPItk3U
+        RtthTX2s1HTWV4N3Qkbyxz4=
+X-Google-Smtp-Source: ABdhPJwZxaOw2BWIKVtszCmcgQdOVYNHdsj8BrhT2AFof7Nqjf0CRnw2g3YdVIq2o2P6WYjAnH6LrA==
+X-Received: by 2002:a17:90b:4c0c:: with SMTP id na12mr6593998pjb.24.1596760614704;
+        Thu, 06 Aug 2020 17:36:54 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id m62sm9036352pje.18.2020.08.06.17.36.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 17:36:54 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 17:36:52 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv4 1/4] dt-bindings: touchscreen: Convert EETI EXC3000
+ touchscreen to json-schema
+Message-ID: <20200807003652.GN1665100@dtor-ws>
+References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+ <20200805160520.456570-2-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ZnR5EW090Tzmib=+7x7aWl0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805160520.456570-2-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZnR5EW090Tzmib=+7x7aWl0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 05, 2020 at 06:05:17PM +0200, Sebastian Reichel wrote:
+> Convert the EETI EXC3000 binding to DT schema format using json-schema
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Hi all,
+Applied, thank you.
 
-After merging the nfs tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
-
-In file included from include/trace/define_trace.h:102,
-                 from fs/nfs/nfs4trace.h:2316,
-                 from fs/nfs/nfs4trace.c:13:
-fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_read_event':
-fs/nfs/./nfs4trace.h:1767:34: warning: unused variable 'lo' [-Wunused-varia=
-ble]
- 1767 |    const struct pnfs_layout_hdr *lo =3D lseg ?
-      |                                  ^~
-include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE_E=
-VENT_CLASS'
-  707 |  { assign; }       \
-      |    ^~~~~~
-fs/nfs/./nfs4trace.h:1759:3: note: in expansion of macro 'TP_fast_assign'
- 1759 |   TP_fast_assign(
-      |   ^~~~~~~~~~~~~~
-fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_write_event':
-fs/nfs/./nfs4trace.h:1844:34: warning: unused variable 'lo' [-Wunused-varia=
-ble]
- 1844 |    const struct pnfs_layout_hdr *lo =3D lseg ?
-      |                                  ^~
-include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE_E=
-VENT_CLASS'
-  707 |  { assign; }       \
-      |    ^~~~~~
-fs/nfs/./nfs4trace.h:1836:3: note: in expansion of macro 'TP_fast_assign'
- 1836 |   TP_fast_assign(
-      |   ^~~~~~~~~~~~~~
-fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_commit_event':
-fs/nfs/./nfs4trace.h:1917:34: warning: unused variable 'lo' [-Wunused-varia=
-ble]
- 1917 |    const struct pnfs_layout_hdr *lo =3D lseg ?
-      |                                  ^~
-include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE_E=
-VENT_CLASS'
-  707 |  { assign; }       \
-      |    ^~~~~~
-fs/nfs/./nfs4trace.h:1911:3: note: in expansion of macro 'TP_fast_assign'
- 1911 |   TP_fast_assign(
-      |   ^~~~~~~~~~~~~~
-In file included from include/trace/define_trace.h:103,
-                 from fs/nfs/nfs4trace.h:2316,
-                 from fs/nfs/nfs4trace.c:13:
-fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_read_event':
-fs/nfs/./nfs4trace.h:1767:34: warning: unused variable 'lo' [-Wunused-varia=
-ble]
- 1767 |    const struct pnfs_layout_hdr *lo =3D lseg ?
-      |                                  ^~
-include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CLAS=
-S'
-   66 |  { assign; }       \
-      |    ^~~~~~
-fs/nfs/./nfs4trace.h:1759:3: note: in expansion of macro 'TP_fast_assign'
- 1759 |   TP_fast_assign(
-      |   ^~~~~~~~~~~~~~
-fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_write_event':
-fs/nfs/./nfs4trace.h:1844:34: warning: unused variable 'lo' [-Wunused-varia=
-ble]
- 1844 |    const struct pnfs_layout_hdr *lo =3D lseg ?
-      |                                  ^~
-include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CLAS=
-S'
-   66 |  { assign; }       \
-      |    ^~~~~~
-fs/nfs/./nfs4trace.h:1836:3: note: in expansion of macro 'TP_fast_assign'
- 1836 |   TP_fast_assign(
-      |   ^~~~~~~~~~~~~~
-fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_commit_event':
-fs/nfs/./nfs4trace.h:1917:34: warning: unused variable 'lo' [-Wunused-varia=
-ble]
- 1917 |    const struct pnfs_layout_hdr *lo =3D lseg ?
-      |                                  ^~
-include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CLAS=
-S'
-   66 |  { assign; }       \
-      |    ^~~~~~
-fs/nfs/./nfs4trace.h:1911:3: note: in expansion of macro 'TP_fast_assign'
- 1911 |   TP_fast_assign(
-      |   ^~~~~~~~~~~~~~
-
-Introduced by commit
-
-  34daa637f2b2 ("NFS: Add layout segment info to pnfs read/write/commit tra=
-cepoints")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ZnR5EW090Tzmib=+7x7aWl0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8sohgACgkQAVBC80lX
-0GyfWAf/Uee0eK2oy5lPgp6E3AE82wOteR6aR8QaK6FnH4MyRK0f7/cZybUiwNQt
-uA+9PBa/iCHJwWF6+2EAX0dKzRbR8Gsb/GCy0M+zc5De0AE/wSmz1PYYGFfXO8xP
-eGMHehoA+M4LGCX657nNzc5jvdfkF52tEc1lDO/mwLLE2X14sBvRD1TO7rn7I2H/
-Y5svpu/kRsqLXNUifVS/39Q1+wTN8vqBHv5BHImwRx5BeTe2skOhSnpO5dkmbyph
-jn4So0dM0ymqC3a4dHUT8BkezWRn8jOoJp52Mr5tcbtCjH8UZ2RaG9WE2WGf1Bke
-/yblRBLPx9GnSYzH+vY4ppmtBbx63g==
-=/7HP
------END PGP SIGNATURE-----
-
---Sig_/ZnR5EW090Tzmib=+7x7aWl0--
+-- 
+Dmitry
