@@ -2,135 +2,87 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94722C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2482CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B48B206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:23:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dbhUZ4Ad"
+	by mail.kernel.org (Postfix) with ESMTP id 19DC9206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgHGBXZ (ORCPT
+        id S1726394AbgHGBXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgHGBXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:23:24 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB751C061575
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 18:23:23 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id e24so428045pfl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 18:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=yC5jYNAZ2LkpJAay2cVTHRBar69NJbTlP8o5uIXB6/g=;
-        b=dbhUZ4AdddRmmfM5MZeqGAPEKz9pXzfFnWWvVwOcBdaX6SgkOX4BLQ1qmjaI2Vv/RE
-         lI810NuPrU8cba8i0YMXSkn1Ohkr+DXWdTHizneQgoirhCfkZmKKIefeuWQqwM6d5p46
-         5ScI/Z3lLN/VuwpppPg52ErsiS6PbguN4Kopt6kIWm0mDIDHjOFb1h27WrIDbRLRHP2v
-         z/Nof0CVwzKkv+LKjBfCzacBwcSdazISEWZKgHJuaT4pwK6Fsdwez25g9dP4eiWSO7hC
-         qCfmyEflLkUT16wBzHw+kRlqSt1miYrr3Hnn1UbC94AfE7oJaTUr/YGJlqf9blZYhnkg
-         PqRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=yC5jYNAZ2LkpJAay2cVTHRBar69NJbTlP8o5uIXB6/g=;
-        b=cI0cQyrU1oAYezGsz8lEJd8DRaEd2Fr7IEv/qTLfH3mfdMz/+HTubitvo6JfbpqGu0
-         LLUlkQP/0Vy68k8eDa0OeNvuWLkppcTrol3SAUMwiWgkXxpXLCiBWkD229rxKBL0Z1cE
-         6yZnM+DahjBNed6gzI6kdOpvkBxQB09N6Dvtfj45UvsRzxvHYwq9kggALr+bnG98b37z
-         J20Qd0F+iWcSQov6eZjA0woW/A3HPQfDxPqH+mPVlOcqzTRNVcUeVa/M1/gprAhtsUcX
-         gfGXW7g001GNq1WqypfkyaqWmHm+tCXOo4JgTGEpZp5C7M/+BYUXhR0Rh/zRLtbXIlQp
-         bX2w==
-X-Gm-Message-State: AOAM530YWd8sBHVP8z/twnEC7gGEawRNHkMkqdNaCmPKf7aWHF1Y6ram
-        VBJ7h0vU2J+6vj3UWQyMZm5yvbWb
-X-Google-Smtp-Source: ABdhPJzX3Q/EZzrTsL+psZOfV6Qe3oGEelBpSTkxN0LrcRBxKGusOhF5mZvdOdGnh5l977FkZGlm/weK
-X-Received: by 2002:a17:90a:6343:: with SMTP id v3mr11046672pjs.163.1596763402902;
- Thu, 06 Aug 2020 18:23:22 -0700 (PDT)
-Date:   Thu,  6 Aug 2020 18:23:03 -0700
-Message-Id: <20200807012303.3769170-1-cfir@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [PATCH] KVM: SVM: Mark SEV launch secret pages as dirty.
-From:   Cfir Cohen <cfir@google.com>
-To:     "kvm @ vger . kernel . org" <kvm@vger.kernel.org>,
-        Lendacky Thomas <thomas.lendacky@amd.com>,
-        Singh Brijesh <brijesh.singh@amd.com>
-Cc:     Grimm Jon <Jon.Grimm@amd.com>,
-        David Rientjes <rientjes@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Cfir Cohen <cfir@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Aug 2020 21:23:30 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9350 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726276AbgHGBX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:23:26 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 231C2A365779A84C8704;
+        Fri,  7 Aug 2020 09:23:24 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 7 Aug 2020 09:23:13 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: compress: remove unneeded code
+Date:   Fri, 7 Aug 2020 09:23:10 +0800
+Message-ID: <20200807012310.112639-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LAUNCH_SECRET command performs encryption of the
-launch secret memory contents. Mark pinned pages as
-dirty, before unpinning them.
-This matches the logic in sev_launch_update().
+- f2fs_write_multi_pages
+ - f2fs_compress_pages
+  - init_compress_ctx
+  - compress_pages
+  - destroy_compress_ctx  --- 1
+ - f2fs_write_compressed_pages
+ - destroy_compress_ctx  --- 2
 
-Signed-off-by: Cfir Cohen <cfir@google.com>
+destroy_compress_ctx() in f2fs_write_multi_pages() is redundant, remove
+it.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- arch/x86/kvm/svm/sev.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/f2fs/compress.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 5573a97f1520..37c47d26b9f7 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -850,7 +850,7 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	struct kvm_sev_launch_secret params;
- 	struct page **pages;
- 	void *blob, *hdr;
--	unsigned long n;
-+	unsigned long n, i;
- 	int ret, offset;
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 6e7db450006c..3bb112e91cf6 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1388,9 +1388,6 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
+ 					struct writeback_control *wbc,
+ 					enum iostat_type io_type)
+ {
+-	struct f2fs_inode_info *fi = F2FS_I(cc->inode);
+-	const struct f2fs_compress_ops *cops =
+-			f2fs_cops[fi->i_compress_algorithm];
+ 	int err;
  
- 	if (!sev_guest(kvm))
-@@ -863,6 +863,14 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	if (!pages)
- 		return -ENOMEM;
+ 	*submitted = 0;
+@@ -1405,7 +1402,6 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
  
-+	/*
-+	 * The LAUNCH_SECRET command will perform in-place encryption of the
-+	 * memory content (i.e it will write the same memory region with C=1).
-+	 * It's possible that the cache may contain the data with C=0, i.e.,
-+	 * unencrypted so invalidate it first.
-+	 */
-+	sev_clflush_pages(pages, n);
-+
- 	/*
- 	 * The secret must be copied into contiguous memory region, lets verify
- 	 * that userspace memory pages are contiguous before we issue command.
-@@ -908,6 +916,11 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
- e_free:
- 	kfree(data);
- e_unpin_memory:
-+	/* content of memory is updated, mark pages dirty */
-+	for (i = 0; i < n; i++) {
-+		set_page_dirty_lock(pages[i]);
-+		mark_page_accessed(pages[i]);
-+	}
- 	sev_unpin_memory(kvm, pages, n);
- 	return ret;
- }
+ 		err = f2fs_write_compressed_pages(cc, submitted,
+ 							wbc, io_type);
+-		cops->destroy_compress_ctx(cc);
+ 		kfree(cc->cpages);
+ 		cc->cpages = NULL;
+ 		if (!err)
 -- 
-2.28.0.163.g6104cc2f0b6-goog
+2.26.2
 
