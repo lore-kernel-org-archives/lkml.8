@@ -2,127 +2,343 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA15C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1342065E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596816798;
-	bh=AfuvdFn3dMHqvQQoxBneF6L/AD9mtL8sc5x4o3BprDc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KWOtS0TRci1vtFeDoP7QWMM+8T6ePjXY8pi9ms9s3ngg+LkNCN7eZOI+iD1TeAWtL
-	 ZQjUHSkPCfWjMH4LZYbzkYDg9mCOasGGywBkK/HZWhadz6zg/FLiyyDffcbofWjaoc
-	 xyOQbVTZFUHMgMnh93Zgwi1WN/fs758O6uSFBx2c=
+	by mail.kernel.org (Postfix) with ESMTP id F14D62065E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHGQNR (ORCPT
+        id S1726375AbgHGQOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:13:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgHGQNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:13:16 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9873B2065E
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 16:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596816795;
-        bh=AfuvdFn3dMHqvQQoxBneF6L/AD9mtL8sc5x4o3BprDc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DWJHBwYgk1neCdP4+TIFmGkZr41TsTc+6PXJ0l//hCW+xbq81LlM6pUlR0lRzpXMt
-         UhuUAaSdNZZLoIRS0tB9mm6eK9q6/zjyfEV2wjKYq/1bH94H5UCrnEVXYYHzyO/LFZ
-         YErF7gjHvlpWAP0ERaub9pCEqKgXxjldbBjY/EVA=
-Received: by mail-oi1-f170.google.com with SMTP id u63so2383620oie.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 09:13:15 -0700 (PDT)
-X-Gm-Message-State: AOAM530ogeuwRyTbqR7P5BYaT2wBdZoXf6dOTmsmTkHkAo98qeiA1rZF
-        13UWP60tubaMgKcyItH7IsIBS3Dbrvl4CCsw6A==
-X-Google-Smtp-Source: ABdhPJwvEIz202H+y8lt7/5urap/1s4x9MmUoqD47TMfOnZglCtDSfQblglc2OIFHIEzaeCAJcyGROSzQTGRmOwgWjE=
-X-Received: by 2002:aca:c3d8:: with SMTP id t207mr12260276oif.152.1596816794972;
- Fri, 07 Aug 2020 09:13:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200710095409.407087-1-peron.clem@gmail.com>
-In-Reply-To: <20200710095409.407087-1-peron.clem@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 7 Aug 2020 10:13:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLnOGVbO5T92dyzt3K-v4BRNt72yMpYR_wW-z8dpdVSvA@mail.gmail.com>
-Message-ID: <CAL_JsqLnOGVbO5T92dyzt3K-v4BRNt72yMpYR_wW-z8dpdVSvA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/14] Add regulator devfreq support to Panfrost
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 7 Aug 2020 12:14:05 -0400
+Received: from vpn2.c-s.fr ([93.17.235.2]:5177 "EHLO pegase2.c-s.fr"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbgHGQOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 12:14:04 -0400
+Received: from localhost (mailhub2-ext [172.26.127.67])
+        by localhost (Postfix) with ESMTP id 4BNVm40jBXz9ttfr;
+        Fri,  7 Aug 2020 18:13:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+        by localhost (pegase2.c-s.fr [172.26.127.65]) (amavisd-new, port 10024)
+        with ESMTP id W6UNBS7J8keU; Fri,  7 Aug 2020 18:13:56 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4BNVm36P8bz9ttfn;
+        Fri,  7 Aug 2020 18:13:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 334C58B862;
+        Fri,  7 Aug 2020 18:13:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id nm6_b2U25kWU; Fri,  7 Aug 2020 18:13:59 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CD8328B849;
+        Fri,  7 Aug 2020 18:13:58 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 9C2C865C12; Fri,  7 Aug 2020 16:13:58 +0000 (UTC)
+Message-Id: <95c00a811897f6d9176d30bf2ac92dab8c9c8e95.1596816789.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [RFC PATCH v1] power: don't manage floating point regs when no FPU
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri,  7 Aug 2020 16:13:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 3:54 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
-om> wrote:
->
-> Hi,
->
-> This serie cleans and adds regulator support to Panfrost devfreq.
-> This is mostly based on comment for the freshly introduced lima
-> devfreq.
->
-> We need to add regulator support because on Allwinner the GPU OPP
-> table defines both frequencies and voltages.
->
-> First patches [01-07] should not change the actual behavior
-> and introduce a proper panfrost_devfreq struct.
->
-> Regards,
-> Cl=C3=A9ment
->
-> Changes since v4:
->  - Fix missed a pfdev to &pfdev->devfreq during rebase
->
-> Changes since v3:
->  - Collect Steven Price reviewed-by tags
->  - Rebase on next/master (next-20200709)
->
-> Changes since v2:
->  - Collect Alyssa Rosenzweig reviewed-by tags
->  - Fix opp_set_regulator before adding opp_table (introduce in v2)
->  - Call err_fini in case opp_add_table failed
->
-> Changes since v1:
->  - Collect Steven Price reviewed-by tags
->  - Fix spinlock comment
->  - Drop OPP clock-name patch
->  - Drop device_property_test patch
->  - Add rename error labels patch
->
-> Cl=C3=A9ment P=C3=A9ron (14):
->   drm/panfrost: avoid static declaration
->   drm/panfrost: clean headers in devfreq
->   drm/panfrost: don't use pfdevfreq.busy_count to know if hw is idle
->   drm/panfrost: introduce panfrost_devfreq struct
->   drm/panfrost: use spinlock instead of atomic
->   drm/panfrost: properly handle error in probe
->   drm/panfrost: rename error labels in device_init
->   drm/panfrost: move devfreq_init()/fini() in device
->   drm/panfrost: dynamically alloc regulators
->   drm/panfrost: add regulators to devfreq
->   arm64: defconfig: Enable devfreq cooling device
->   arm64: dts: allwinner: h6: Add cooling map for GPU
->   [DO NOT MERGE] arm64: dts: allwinner: h6: Add GPU OPP table
->   [DO NOT MERGE] arm64: dts: allwinner: force GPU regulator to be always
+There is no point in copying floating point regs when there
+is no FPU and MATH_EMULATION is not selected.
 
-Patches 1-10 applied to drm-misc.
+Create a new CONFIG_PPC_FPU_REGS bool that is selected by
+CONFIG_MATH_EMULATION and CONFIG_PPC_FPU, and use it to
+opt out everything related to fp_state in thread_struct.
 
-Rob
+The following app runs in approx 10.50 seconds on an 8xx without
+the patch, and in 9.45 seconds with the patch.
+
+	void sigusr1(int sig) { }
+
+	int main(int argc, char **argv)
+	{
+		int i = 100000;
+
+		signal(SIGUSR1, sigusr1);
+		for (;i--;)
+			raise(SIGUSR1);
+		exit(0);
+	}
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/Kconfig                      |  1 +
+ arch/powerpc/include/asm/processor.h      |  2 ++
+ arch/powerpc/kernel/asm-offsets.c         |  2 ++
+ arch/powerpc/kernel/process.c             |  4 ++++
+ arch/powerpc/kernel/ptrace/ptrace-novsx.c |  8 ++++++++
+ arch/powerpc/kernel/ptrace/ptrace.c       |  4 ++++
+ arch/powerpc/kernel/signal.c              | 12 +++++++++++-
+ arch/powerpc/kernel/signal_32.c           |  4 ++++
+ arch/powerpc/kernel/traps.c               |  4 ++++
+ arch/powerpc/platforms/Kconfig.cputype    |  4 ++++
+ 10 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1f48bbfb3ce9..a2611880b904 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -416,6 +416,7 @@ config HUGETLB_PAGE_SIZE_VARIABLE
+ config MATH_EMULATION
+ 	bool "Math emulation"
+ 	depends on 4xx || PPC_8xx || PPC_MPC832x || BOOKE
++	select PPC_FPU_REGS
+ 	help
+ 	  Some PowerPC chips designed for embedded applications do not have
+ 	  a floating-point unit and therefore do not implement the
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index ed0d633ab5aa..e20b0c5abe62 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -175,8 +175,10 @@ struct thread_struct {
+ #endif
+ 	/* Debug Registers */
+ 	struct debug_reg debug;
++#ifdef CONFIG_PPC_FPU_REGS
+ 	struct thread_fp_state	fp_state;
+ 	struct thread_fp_state	*fp_save_area;
++#endif
+ 	int		fpexc_mode;	/* floating-point exception mode */
+ 	unsigned int	align_ctl;	/* alignment handling control */
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+index 8711c2164b45..6cb36c341c70 100644
+--- a/arch/powerpc/kernel/asm-offsets.c
++++ b/arch/powerpc/kernel/asm-offsets.c
+@@ -110,9 +110,11 @@ int main(void)
+ #ifdef CONFIG_BOOKE
+ 	OFFSET(THREAD_NORMSAVES, thread_struct, normsave[0]);
+ #endif
++#ifdef CONFIG_PPC_FPU
+ 	OFFSET(THREAD_FPEXC_MODE, thread_struct, fpexc_mode);
+ 	OFFSET(THREAD_FPSTATE, thread_struct, fp_state.fpr);
+ 	OFFSET(THREAD_FPSAVEAREA, thread_struct, fp_save_area);
++#endif
+ 	OFFSET(FPSTATE_FPSCR, thread_fp_state, fpscr);
+ 	OFFSET(THREAD_LOAD_FP, thread_struct, load_fp);
+ #ifdef CONFIG_ALTIVEC
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 016bd831908e..7e0082ac0a39 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1694,7 +1694,9 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		p->thread.ptrace_bps[i] = NULL;
+ #endif
+ 
++#ifdef CONFIG_PPC_FPU_REGS
+ 	p->thread.fp_save_area = NULL;
++#endif
+ #ifdef CONFIG_ALTIVEC
+ 	p->thread.vr_save_area = NULL;
+ #endif
+@@ -1821,8 +1823,10 @@ void start_thread(struct pt_regs *regs, unsigned long start, unsigned long sp)
+ #endif
+ 	current->thread.load_slb = 0;
+ 	current->thread.load_fp = 0;
++#ifdef CONFIG_PPC_FPU_REGS
+ 	memset(&current->thread.fp_state, 0, sizeof(current->thread.fp_state));
+ 	current->thread.fp_save_area = NULL;
++#endif
+ #ifdef CONFIG_ALTIVEC
+ 	memset(&current->thread.vr_state, 0, sizeof(current->thread.vr_state));
+ 	current->thread.vr_state.vscr.u[3] = 0x00010000; /* Java mode disabled */
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-novsx.c b/arch/powerpc/kernel/ptrace/ptrace-novsx.c
+index b2dc4e92d11a..8f87a11f3f8c 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace-novsx.c
++++ b/arch/powerpc/kernel/ptrace/ptrace-novsx.c
+@@ -21,6 +21,7 @@
+ int fpr_get(struct task_struct *target, const struct user_regset *regset,
+ 	    unsigned int pos, unsigned int count, void *kbuf, void __user *ubuf)
+ {
++#ifdef CONFIG_PPC_FPU_REGS
+ 	BUILD_BUG_ON(offsetof(struct thread_fp_state, fpscr) !=
+ 		     offsetof(struct thread_fp_state, fpr[32]));
+ 
+@@ -28,6 +29,9 @@ int fpr_get(struct task_struct *target, const struct user_regset *regset,
+ 
+ 	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+ 				   &target->thread.fp_state, 0, -1);
++#else
++	return 0;
++#endif
+ }
+ 
+ /*
+@@ -47,6 +51,7 @@ int fpr_set(struct task_struct *target, const struct user_regset *regset,
+ 	    unsigned int pos, unsigned int count,
+ 	    const void *kbuf, const void __user *ubuf)
+ {
++#ifdef CONFIG_PPC_FPU_REGS
+ 	BUILD_BUG_ON(offsetof(struct thread_fp_state, fpscr) !=
+ 		     offsetof(struct thread_fp_state, fpr[32]));
+ 
+@@ -54,4 +59,7 @@ int fpr_set(struct task_struct *target, const struct user_regset *regset,
+ 
+ 	return user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+ 				  &target->thread.fp_state, 0, -1);
++#else
++	return 0;
++#endif
+ }
+diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
+index f6e51be47c6e..f162bfec0d3f 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace.c
++++ b/arch/powerpc/kernel/ptrace/ptrace.c
+@@ -70,6 +70,7 @@ long arch_ptrace(struct task_struct *child, long request,
+ 			ret = ptrace_get_reg(child, (int) index, &tmp);
+ 			if (ret)
+ 				break;
++#ifdef CONFIG_PPC_FPU_REGS
+ 		} else {
+ 			unsigned int fpidx = index - PT_FPR0;
+ 
+@@ -79,6 +80,7 @@ long arch_ptrace(struct task_struct *child, long request,
+ 				       sizeof(long));
+ 			else
+ 				tmp = child->thread.fp_state.fpscr;
++#endif
+ 		}
+ 		ret = put_user(tmp, datalp);
+ 		break;
+@@ -103,6 +105,7 @@ long arch_ptrace(struct task_struct *child, long request,
+ 		CHECK_FULL_REGS(child->thread.regs);
+ 		if (index < PT_FPR0) {
+ 			ret = ptrace_put_reg(child, index, data);
++#ifdef CONFIG_PPC_FPU_REGS
+ 		} else {
+ 			unsigned int fpidx = index - PT_FPR0;
+ 
+@@ -113,6 +116,7 @@ long arch_ptrace(struct task_struct *child, long request,
+ 			else
+ 				child->thread.fp_state.fpscr = data;
+ 			ret = 0;
++#endif
+ 		}
+ 		break;
+ 	}
+diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+index d15a98c758b8..18dcbf538f8f 100644
+--- a/arch/powerpc/kernel/signal.c
++++ b/arch/powerpc/kernel/signal.c
+@@ -133,7 +133,7 @@ unsigned long copy_ckvsx_from_user(struct task_struct *task,
+ 	return 0;
+ }
+ #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
+-#else
++#elif defined(CONFIG_PPC_FPU_REGS)
+ inline unsigned long copy_fpr_to_user(void __user *to,
+ 				      struct task_struct *task)
+ {
+@@ -163,6 +163,16 @@ inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
+ 				ELF_NFPREG * sizeof(double));
+ }
+ #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
++#else
++inline unsigned long copy_fpr_to_user(void __user *to, struct task_struct *task)
++{
++	return 0;
++}
++
++inline unsigned long copy_fpr_from_user(struct task_struct *task, void __user *from)
++{
++	return 0;
++}
+ #endif
+ 
+ /* Log an error when sending an unhandled signal to a process. Controlled
+diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+index 96950f189b5a..7b291707eb31 100644
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -814,7 +814,9 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
+ 	}
+ 	regs->link = tramp;
+ 
++#ifdef CONFIG_PPC_FPU_REGS
+ 	tsk->thread.fp_state.fpscr = 0;	/* turn off all fp exceptions */
++#endif
+ 
+ 	/* create a stack frame for the caller of the handler */
+ 	newsp = ((unsigned long)rt_sf) - (__SIGNAL_FRAMESIZE + 16);
+@@ -1271,7 +1273,9 @@ int handle_signal32(struct ksignal *ksig, sigset_t *oldset,
+ 
+ 	regs->link = tramp;
+ 
++#ifdef CONFIG_PPC_FPU_REGS
+ 	tsk->thread.fp_state.fpscr = 0;	/* turn off all fp exceptions */
++#endif
+ 
+ 	/* create a stack frame for the caller of the handler */
+ 	newsp = ((unsigned long)frame) - __SIGNAL_FRAMESIZE;
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index d1ebe152f210..ee9ec61e75b7 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -1188,6 +1188,7 @@ static inline int __parse_fpscr(unsigned long fpscr)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_PPC_FPU
+ static void parse_fpe(struct pt_regs *regs)
+ {
+ 	int code = 0;
+@@ -1198,6 +1199,7 @@ static void parse_fpe(struct pt_regs *regs)
+ 
+ 	_exception(SIGFPE, regs, code, regs->nip);
+ }
++#endif
+ 
+ /*
+  * Illegal instruction emulation support.  Originally written to
+@@ -1477,11 +1479,13 @@ void program_check_exception(struct pt_regs *regs)
+ 	/* We can now get here via a FP Unavailable exception if the core
+ 	 * has no FPU, in that case the reason flags will be 0 */
+ 
++#ifdef CONFIG_PPC_FPU
+ 	if (reason & REASON_FP) {
+ 		/* IEEE FP exception */
+ 		parse_fpe(regs);
+ 		goto bail;
+ 	}
++#endif
+ 	if (reason & REASON_TRAP) {
+ 		unsigned long bugaddr;
+ 		/* Debugger is first in line to stop recursive faults in
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 87737ec86d39..40ffcdba42b8 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -225,9 +225,13 @@ config PPC_E500MC
+ 	  such as e5500/e6500), and must be disabled for running on
+ 	  e500v1 or e500v2.
+ 
++config PPC_FPU_REGS
++	bool
++
+ config PPC_FPU
+ 	bool
+ 	default y if PPC64
++	select PPC_FPU_REGS
+ 
+ config FSL_EMB_PERFMON
+ 	bool "Freescale Embedded Perfmon"
+-- 
+2.25.0
+
