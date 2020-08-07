@@ -2,92 +2,74 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A652C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFDE222D2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:10:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mM2TU/P5"
+	by mail.kernel.org (Postfix) with ESMTP id 2ADAD2075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgHGPKj (ORCPT
+        id S1726442AbgHGPMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgHGPKf (ORCPT
+        Fri, 7 Aug 2020 11:12:12 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58802 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGPML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:10:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CE8C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 08:10:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wm+FtgUidVQX0/yTlqJZB7OVlh/P6bpND6KCyw+td38=; b=mM2TU/P5Kd/4be8Aklbm/fnP2g
-        Zlu8zyrYWUFkyS4nOAOOs1HREitcVN+m/ReHAuU5/0ZuK8pyGOoSAlbIa1rGx14LLAeiihdRJJicA
-        XTHfrsdWq0wfsoXf95vaTIi2Wi8ZizPTDRqcM4nYOHnEnNadKsVElaBtb9mpBxjLRwPBhZQ2uzaqG
-        gW8A91ELbM7xTQ6V+d8KeMzDagw1PYP8XfWTbIL2660gr7L6UD8k3JXD6yYuBBl6n49MOS/viHkx0
-        kWtVsiTZSyYbVUekUY0hcLaplnVQnSyGRSFqB3S8lqe2B0iY3bXEdsjJ3SlUyu2rVVbXjrzhXV6ys
-        7NCZuL/A==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k440r-0007xU-GF; Fri, 07 Aug 2020 15:10:29 +0000
-Date:   Fri, 7 Aug 2020 16:10:29 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        cai@lca.pw, rppt@linux.ibm.com, vbabka@suse.cz,
-        william.kucharski@oracle.com,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v2] mm, dump_page: do not crash with bad
- compound_mapcount()
-Message-ID: <20200807151029.GE17456@casper.infradead.org>
-References: <20200804214807.169256-1-jhubbard@nvidia.com>
- <20200807143504.4kudtd4xeoqaroqg@box>
+        Fri, 7 Aug 2020 11:12:11 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 077FBgaq066051;
+        Sat, 8 Aug 2020 00:11:42 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp);
+ Sat, 08 Aug 2020 00:11:42 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 077FBfdj066037
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sat, 8 Aug 2020 00:11:41 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: splice: infinite busy loop lockup bug
+To:     Matthew Wilcox <willy@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>
+References: <00000000000084b59f05abe928ee@google.com>
+ <29de15ff-15e9-5c52-cf87-e0ebdfa1a001@I-love.SAKURA.ne.jp>
+ <20200807122727.GR1236603@ZenIV.linux.org.uk>
+ <20200807123854.GS1236603@ZenIV.linux.org.uk> <20200807134114.GA2114050@T590>
+ <20200807141148.GD17456@casper.infradead.org>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <c83c6931-b3fb-3d8e-8a09-533cc3d6a287@i-love.sakura.ne.jp>
+Date:   Sat, 8 Aug 2020 00:11:38 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807143504.4kudtd4xeoqaroqg@box>
+In-Reply-To: <20200807141148.GD17456@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 05:35:04PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Aug 04, 2020 at 02:48:07PM -0700, John Hubbard wrote:
-> > If a compound page is being split while dump_page() is being run on that
-> > page, we can end up calling compound_mapcount() on a page that is no
-> > longer compound. This leads to a crash (already seen at least once in
-> > the field), due to the VM_BUG_ON_PAGE() assertion inside
-> > compound_mapcount().
+On 2020/08/07 23:11, Matthew Wilcox wrote:
+> (I find the whole bvec handling a mess of confusing macros and would
+> welcome more of it being inline functions, in general).
 
-[...]
-> > +static inline int head_mapcount(struct page *head)
-> > +{
-> 
-> Do we want VM_BUG_ON_PAGE(!PageHead(head), head) here?
+Indeed. Inlined functions will be more useful than macros when syzbot
+calculates the location of the source code from address for reporting.
+I spent a lot of time where
 
-Well, no.  That was the point of the bug report -- by the time we called
-compound_mapcount, the page was no longer a head page.
+  RIP: 0010:iov_iter_alignment+0x39e/0x850 lib/iov_iter.c:1236
 
-> > A similar problem is possible, via compound_pincount() instead of
-> > compound_mapcount().
-> > 
-> > In order to avoid this kind of crash, make dump_page() slightly more
-> > robust, by providing a pair of simpler routines that don't contain
-> > assertions: head_mapcount() and head_pincount().
-> 
-> I find naming misleading. head_mapcount() and head_pincount() sounds like
-> a mapcount/pincount of the head page, but it's not. It's mapcount and
-> pincount of the compound page.
-
-OK, point taken.  I might go for head_compound_mapcount()?  Or as I
-originally suggested, just opencoding it like we do in __page_mapcount().
-
+within the complicated macros is. If inlined line numbers were available,
+I could have narrowed down the location of infinite loop faster...
