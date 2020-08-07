@@ -2,135 +2,105 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C95FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC38C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E22720866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E50D2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHGUcD (ORCPT
+        id S1726305AbgHGUe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:32:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:27008 "EHLO mga01.intel.com"
+        Fri, 7 Aug 2020 16:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgHGUcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:32:02 -0400
-IronPort-SDR: NGilUrbjowMQpp2DWPYvoI6V3pDtDvC0Cnz82EXoRkh8JEjp+XmQB74WpKaquOyY+WRrQOpm4X
- BcOjdFhvd51A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9706"; a="171246252"
-X-IronPort-AV: E=Sophos;i="5.75,447,1589266800"; 
-   d="scan'208";a="171246252"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2020 13:32:02 -0700
-IronPort-SDR: IN18xFCKQgClrIUKzDHAPEBjhp7AvR9YSRvj0zUJoUoAQF6T8Ol2TBqri5Pua/0BehsckxirXX
- h7T7z+sPVV4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,447,1589266800"; 
-   d="scan'208";a="307489966"
-Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
-  by orsmga002.jf.intel.com with ESMTP; 07 Aug 2020 13:32:01 -0700
-Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
- ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 7 Aug 2020 13:32:01 -0700
-Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
- orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 7 Aug 2020 13:32:01 -0700
-Received: from [10.254.183.24] (10.254.183.24) by ORSMSX101.amr.corp.intel.com
- (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 7 Aug
- 2020 13:32:01 -0700
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-To:     Jason Gunthorpe <jgg@nvidia.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <20200806001927.GM19097@mellanox.com>
- <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
- <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
- <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
- <87h7tfh6fc.fsf@nanos.tec.linutronix.de> <20200807120650.GR16789@nvidia.com>
- <20200807123831.GA645281@kroah.com> <20200807133428.GT16789@nvidia.com>
- <87v9hufln7.fsf@nanos.tec.linutronix.de>
- <d4e3ce5a-c138-2ebb-06d1-52ef57d987e6@intel.com>
- <20200807183927.GY16789@nvidia.com>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <17351360-a880-f651-2a99-6f9817b99e03@intel.com>
-Date:   Fri, 7 Aug 2020 13:31:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1725893AbgHGUeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:34:25 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24C8920866;
+        Fri,  7 Aug 2020 20:34:24 +0000 (UTC)
+Date:   Fri, 7 Aug 2020 16:34:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, will@kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org, elver@google.com,
+        paulmck@kernel.org, rjw@rjwysocki.net
+Subject: Re: [RFC][PATCH 3/3] lockdep,trace: Expose tracepoints
+Message-ID: <20200807163422.02bae823@oasis.local.home>
+In-Reply-To: <20200807193018.160331394@infradead.org>
+References: <20200807192336.405068898@infradead.org>
+        <20200807193018.160331394@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200807183927.GY16789@nvidia.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.254.183.24]
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 07 Aug 2020 21:23:39 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On 8/7/2020 11:39 AM, Jason Gunthorpe wrote:
-> On Fri, Aug 07, 2020 at 10:54:51AM -0700, Dey, Megha wrote:
->
->> So from the hierarchical domain standpoint, we will have:
->> - For DSA device: vector->intel-IR->IDXD
->> - For Jason's device: root domain-> domain A-> Jason's device's IRQ domain
->> - For any other intel IMS device in the future which
->>      does not require interrupt remapping: vector->new device IRQ domain
->>      requires interrupt remapping: vector->intel-IR->new device IRQ domain
-> I think you need a better classification than Jason's device or
-> Intel's device :)
-hehe yeah, for sure, just wanted to get my point across :)
->
-> Shouldn't the two cases be either you take the parent domain from the
-> IOMMU or you take the parent domain from the pci device?
+> The lockdep tracepoints are under the lockdep recursion counter, this
+> has a bunch of nasty side effects:
+> 
+>  - TRACE_IRQFLAGS doesn't work across the entire tracepoint, leading to
+>    all sorts of dodgy complaints.
+> 
+>  - RCU-lockdep doesn't see the tracepoints either, hiding numerous
+>    "suspicious RCU usage" warnings.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/locking/lockdep.c |   27 ++++++++++++++++++---------
+>  1 file changed, 18 insertions(+), 9 deletions(-)
+> 
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -5000,8 +5000,9 @@ void lock_acquire(struct lockdep_map *lo
+>  	raw_local_irq_save(flags);
+>  	check_flags(flags);
+>  
+> -	current->lockdep_recursion++;
+>  	trace_lock_acquire(lock, subclass, trylock, read, check, nest_lock, ip);
+> +
+> +	current->lockdep_recursion++;
+>  	__lock_acquire(lock, subclass, trylock, read, check,
+>  		       irqs_disabled_flags(flags), nest_lock, ip, 0, 0);
+>  	lockdep_recursion_finish();
+> @@ -5016,10 +5017,13 @@ void lock_release(struct lockdep_map *lo
+>  	if (unlikely(current->lockdep_recursion))
+>  		return;
+>  
+> +
 
-Hmm yeah this makes sense..
+Superfluous space.
+ 
 
-Although in the case of DSA, we find the iommu corresponding to the 
-parent PCI device.
+Other than that:
 
->
-> What other choices could a PCI driver make?
-Currently I think based on the devices we have, I don't think there are 
-any others
->
-> Jason
+Reviewed-by: Steven Rosted (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+>  	raw_local_irq_save(flags);
+>  	check_flags(flags);
+> -	current->lockdep_recursion++;
+> +
+>  	trace_lock_release(lock, ip);
+> +
+> +	current->lockdep_recursion++;
+>  	if (__lock_release(lock, ip))
+>  		check_chain_key(current);
+>  	lockdep_recursion_finish();
+> @@ -5171,7 +5175,7 @@ __lock_contended(struct lockdep_map *loc
+>  		stats->bounces[bounce_contended + !!hlock->read]++;
+>  }
+>  
