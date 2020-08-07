@@ -2,251 +2,384 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20814C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 23:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD562224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596841189;
-	bh=OKlwQpmZVQ3qO7aGJBHKETrCWwGnjbQlj5eQ6u796b4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=APwkNF/d5u3iEPGykKXz3SriRN4Sl91Sl+On0gvN+G8iWZ6K4x5eAkd7dM8+1wpZD
-	 rcy69dxKC/fCOR2/YgJwVCGz7GOzCUoWgakofQSwbZA4ofdFxFoP0EFL0/BXe2Zziw
-	 aEqxmpy373GqVrWVXEzw5bK+B4Lm0DfTAYC6qyXU=
+	by mail.kernel.org (Postfix) with ESMTP id D82BD2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 23:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="gkiBEOsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgHGW7r (ORCPT
+        id S1726200AbgHGXBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 18:59:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgHGW7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 18:59:46 -0400
-Received: from earth.universe (unknown [95.33.152.0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B61F20866;
-        Fri,  7 Aug 2020 22:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596841185;
-        bh=OKlwQpmZVQ3qO7aGJBHKETrCWwGnjbQlj5eQ6u796b4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BauPeCuOtKayFdlD3gtWq1yeXNsC3Xe2DCx5McCH/MrAv6RpNcPLX4M1rUltS3QDW
-         cOdr7zzSlkz9VytYHyjxoGvDSs61gnT1L377vWn/VDtL83IrM50U7gFFNxgbYZvGf8
-         ve/cW35XKcQXEApLrz9Yymf4dD83/FZ0y9ByzYT4=
-Received: by earth.universe (Postfix, from userid 1000)
-        id BEFD83C0C80; Sat,  8 Aug 2020 00:59:43 +0200 (CEST)
-Date:   Sat, 8 Aug 2020 00:59:43 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [GIT PULL] power-supply changes for 5.9
-Message-ID: <20200807225943.cdfvw5m6h7ywgrmc@earth.universe>
+        Fri, 7 Aug 2020 19:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgHGXBt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 19:01:49 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1C3C061757
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 16:01:48 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id u126so3452812iod.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 16:01:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=melexis.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Mn2Ewcv0rE8ArObt2Bnc/hXt7ImGEZcAPTBu0GM9bg=;
+        b=gkiBEOsfHFIcWOyW/TYfkO8HQpwYHznXTs4jg4W10rIB+X0ZsXh/bDPrBBpUpWtRno
+         u2fbSIkSGV6R1wIXM1dZqF/7p/5jtG1lZHjSUF5kh8alQf+FJwbUWYbdlJv9rLwIDw+L
+         HkWcqF/PPE3b/Gq2Ov1SNQ1DH7JoCje1XZ1X5DJvEeC8Meap6/5qqNenXQvds/9uiTN+
+         OJy2+8eVq5cRd2L4or5Aun7l1em1MztewKvg/hvvvEsZ39gAM/gsMOiNGujOC5OFEMVt
+         unwYpX9Z72ad2/GkdZwGkmeFp+AijgeGAqLcuUArlU9+i/zIGBzhTpM031zVCtNkEIF3
+         2e8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Mn2Ewcv0rE8ArObt2Bnc/hXt7ImGEZcAPTBu0GM9bg=;
+        b=JQYaMhI4iEe0nXQ2xqrwYvSDs+ZNN7b+Cfk8ac3iQC8srkVlDPIg0HEBbLZtB4wsdz
+         VL/6XKLkd8VixKLPSmM0dWJdwnGTdI9Ll6vJmQHlcjMd9nANKaVppPde6BjMhOQXZV80
+         nPkfdMdGw0TgzitgXEz2VR6QFUBSSDTZITqKl4+XIgVFpiUhlocKaUUmPFI7yww+Fgwz
+         UDXQTCvfLulashgpARRDCBPObJ483/1psHPC+iYt5GpIQ4CPmp32xcsz0uwYsvPukPj3
+         Vzj6C0la4ZPjXFju63H2PA4P31T+vQmZEnfSgoyYVe3qyeNLWmySdwAj4qxntR/f1d86
+         o/Vw==
+X-Gm-Message-State: AOAM531IZTdHZaE187wchzON22vcmSrLr9k3/f3a4Gdk2SDCzH3bUQQj
+        U+DlJViVzLv6DqWE4pnllnijiO3XzaYWNqBIMgRH943gBeU=
+X-Google-Smtp-Source: ABdhPJyCXpgBbjuhyfUmZ+gDKCW/4rGgdOCRhajanp7EPA0fXYESvGqZKzVa828nNb8c4NkUqiAV0TWDZhH+S9+HSV4=
+X-Received: by 2002:a6b:700d:: with SMTP id l13mr6714067ioc.135.1596841307675;
+ Fri, 07 Aug 2020 16:01:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n7bt4iw4u6yl7qkt"
-Content-Disposition: inline
+References: <20200807092014.967262-1-cmo@melexis.com> <CAHp75VcBa7kpmnHi84363pL-CHffSmYhObNa7r0t-g_rtmP++g@mail.gmail.com>
+ <CAKv63utf8v_BWwU35JNZpaBMkgq9XtezT3TtB4uSYMs7tEogWQ@mail.gmail.com>
+In-Reply-To: <CAKv63utf8v_BWwU35JNZpaBMkgq9XtezT3TtB4uSYMs7tEogWQ@mail.gmail.com>
+From:   Crt Mori <cmo@melexis.com>
+Date:   Sat, 8 Aug 2020 01:01:11 +0200
+Message-ID: <CAKv63utZSJJHvCTJYuy-iSvh6N4AGn2z0o=VV8RxGDvf5PaCjA@mail.gmail.com>
+Subject: Re: [PATCH 2/2 resend] iio:temperature:mlx90632: Adding extended
+ calibration option
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 7 Aug 2020 at 13:13, Crt Mori <cmo@melexis.com> wrote:
+>
+> On Fri, 7 Aug 2020 at 12:29, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Fri, Aug 7, 2020 at 12:21 PM Crt Mori <cmo@melexis.com> wrote:
+> >
+> > Oh yeah, you are right, there will be some comments :-)
+> >
+>
+> Told ya. No matter how many times I go through it, I always find
+> something. I will prepare v3 with fixes, except for some additional
+> questions below.
+>
+I tried some suggestions and it was just not working. See the
+explanation below. I am resending v3 without those.
 
---n7bt4iw4u6yl7qkt
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > For some time market wants medical grade accuracy in medical range,
+> >
+> > the market
+> >
+> > > while still retaining the declared accuracy outside of the medical range
+> > > within the same sensor. That is why we created extended calibration
+> > > which is automatically switched to when object temperature is too high.
+> > >
+> > > This patch also introduces the object_ambient_temperature variable which
+> > > is needed for more accurate calculation of the object infra-red
+> > > footprint as sensor's ambient temperature might be totally different
+> > > than what the ambient temperature is at object and that is why we can
+> > > have some more error which can be eliminated. Currently this temperature
+> >
+> > errors
+> >
+> > > is fixed at 25, but interface to adjust it by user (with external sensor
+> >
+> > the interface
+> >
+> > > or just IR measurement of the another object which acts as ambient),
+> >
+> > 'of another' or 'the other' if we know what it is exactly.
+> >
+> > > will be introduced in another commit.
+> >
+> > ...
+> >
+> > >  struct mlx90632_data {
+> > >         struct i2c_client *client;
+> > >         struct mutex lock; /* Multiple reads for single measurement */
+> > >         struct regmap *regmap;
+> > >         u16 emissivity;
+> >
+> > > +       u8 mtyp; /* measurement type - to enable extended range calculations */
+> >
+> > Perhaps better to switch this struct to follow kernel doc in one of
+> > preparatory patches and add the description of this field accordingly.
+> >
+>
+> Can you explain a bit more? I was looking in kernel doc, but could not
+> find much about how to comment these members.
+>
+> > > +       u32 object_ambient_temperature;
+> > >  };
+> >
+> > ...
+> >
+> > > +static int mlx90632_set_meas_type(struct regmap *regmap, u8 type)
+> > > +{
+> > > +       int ret;
+> > > +
+> > > +       if ((type != MLX90632_MTYP_MEDICAL) & (type != MLX90632_MTYP_EXTENDED))
+> > > +               return -EINVAL;
+> >
+> > Not sure I understand the point of & vs. && here.
+> >
+>
+> Should indeed be &&, if it is needed at all. Both are boolean types.
+>
+> > > +       ret = regmap_write(regmap, MLX90632_REG_I2C_CMD, MLX90632_RESET_CMD);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       ret = regmap_write_bits(regmap, MLX90632_REG_CONTROL,
+> > > +                                (MLX90632_CFG_MTYP_MASK | MLX90632_CFG_PWR_MASK),
+> > > +                                (MLX90632_MTYP_STATUS(type) | MLX90632_PWR_STATUS_HALT));
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       mlx90632_pwr_continuous(regmap);
+> >
+> > > +
+> > > +       return ret;
+> >
+> > Since you are using ' < 0' above and below (and I think it doesn't
+> > worth it, i.o.w. you may drop them) here is something interesting
+> > might be returned (actually not, see first part of this sentence).
+> > Should be
+> >
+> > return 0;
+> >
+> > > +}
+> >
+> > ...
+> >
+> > > +static int mlx90632_read_ambient_raw_extended(struct regmap *regmap,
+> > > +                                             s16 *ambient_new_raw, s16 *ambient_old_raw)
+> > > +{
+> >
+> > > +       int ret;
+> > > +       unsigned int read_tmp;
+> >
+> > Please keep them in reversed xmas tree format.
+> >
+> > > +
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_3(17), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       *ambient_new_raw = (s16)read_tmp;
+> > > +
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_3(18), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       *ambient_old_raw = (s16)read_tmp;
+> >
+> > > +       return ret;
+> >
+> > Same comments as per previous function.
+> >
+> > > +}
+> >
+> > > +static int mlx90632_read_object_raw_extended(struct regmap *regmap, s16 *object_new_raw)
+> > > +{
+> > > +       int ret;
+> > > +       unsigned int read_tmp;
+> > > +       s32 read;
+> >
+> > Besides all above comments being applicable here...
+> >
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       read = (s16)read_tmp;
+> > > +
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       read = read - (s16)read_tmp;
+> >
+> > ...I'm wondering if you can use bulk reads of those registers.
+>
+> I cant, sensor does not support it and single read case did not work
+> few years back, but maybe regmap now improved...
+>
+> > Also I'm not sure you need explicit castings.
+> >
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       read = read - (s16)read_tmp;
+> > > +
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       read = (read + (s16)read_tmp) / 2;
+> >
+> > Ditto.
+> >
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       read = read + (s16)read_tmp;
+> > > +
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +       read = read + (s16)read_tmp;
+> >
+> > > +       if (read > 32767 || read < -32768)
+> >
+> > These are defined as S16_MIN and S16_MAX. Use limits.h.
+> >
+> > > +               return -EINVAL;
+> >
+> > -ERANGE
+> >
+> > > +       *object_new_raw = (int16_t)read;
+> >
+> > Oh, no. Please avoid user space types in the kernel. And what's the
+> > point anyway after checking the range?
+> >
+> > > +       return ret;
+> > > +}
+> >
+> > ...
+> >
+> > > +static int mlx90632_read_all_channel_extended(struct mlx90632_data *data, s16 *object_new_raw,
+> > > +                                             s16 *ambient_new_raw, s16 *ambient_old_raw)
+> > > +{
+> > > +       s32 ret;
+> > > +       int tries = 4;
+> > > +
+> > > +       mutex_lock(&data->lock);
+> > > +       ret = mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_EXTENDED);
+> > > +       if (ret < 0)
+> > > +               goto read_unlock;
+> >
+> >
+> > > +       while (tries-- > 0) {
+> > > +               ret = mlx90632_perform_measurement(data);
+> > > +               if (ret < 0)
+> > > +                       goto read_unlock;
+> > > +
+> >
+> > > +               if (ret == 19)
+> >
+> > It's funny. What does this magic mean?
+> >
+>
+> That we should break the loop once channels up to 19 are filled (we
+> read 17 18 and 19 in this case, we read 1 2 in normal case). A comment
+> maybe here?
+>
+> > > +                       break;
+> > > +       }
+> > > +       if (tries < 0) {
+> > > +               ret = -ETIMEDOUT;
+> > > +               goto read_unlock;
+> > > +       }
+> >
+> > Timeout loops are much better in a following style
+> >
+> > unsigned int iterations = 4;
+> >
+> > do {
+> >   ...
+> > } while (--iterations);
+> > if (!iterations) {
+> >   ...-ETIMEDOUT...
+> > }
+> >
+> > Besides that consider the iopoll.h APIs, perhaps it may be applied here.
+> >
 
-Hi Linus,
+I tried to apply the iopoll.h, but it is not appropriate enough as
+timeout_us would have to be timeout_ms, because if you want 4 cycles
+of 10ms, then you run out of range of usleep. I can create a helper,
+but it does not seem like someone needs it. I am keeping current
+style, because also function above (old) has the same style of poll
+loop.
 
-Please pull the power-supply changes for the 5.9 development cycle.
-Stephen mentioned one trivial merge conflict between the
-power-supply tree and the set_fs tree and has the correct solution:
-
-https://lore.kernel.org/linux-next/20200727210137.01a5d03d@canb.auug.org.au/
-
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-su=
-pply.git tags/for-v5.9
-
-for you to fetch changes up to 46cbd0b05799e8234b719d18f3a4b27679c4c92e:
-
-  power: supply: wilco_ec: Add long life charging mode (2020-07-31 14:33:56=
- +0200)
-
-----------------------------------------------------------------
-power supply and reset changes for the v5.9 series
-
-power-supply core:
- * add COOL/WARM/HOT state from JEITA JISC8712:2015 specification
- * convert simple-battery DT binding to YAML
- * add long-life charging mode
-
-battery/charger drivers:
- * bq25150: new charger driver
- * bq27xxx: add support for BQ27z561 and BQ28z610
- * max17040: support CAPACITY_ALERT_MIN
- * sbs-battery: add PEC support
- * wilco-ec: support long-life charging mode
- * bq25890: fix DT binding
- * misc. fixes and cleanups
-
-reset drivers:
- * linkstation: new reset driver
-
-----------------------------------------------------------------
-Alexander A. Klimov (2):
-      power: reset: keystone-reset: Replace HTTP links with HTTPS ones
-      power: supply: bq2xxxx: Replace HTTP links with HTTPS ones
-
-Chunyan Zhang (2):
-      math64: New DIV_S64_ROUND_CLOSEST helper
-      power: supply: sc27xx: prevent adc * 1000 from overflow
-
-Crag Wang (1):
-      power: supply: wilco_ec: Add long life charging mode
-
-Dan Murphy (6):
-      power_supply: Add additional health properties to the header
-      dt-bindings: power: Convert battery.txt to battery.yaml
-      dt-bindings: power: Add BQ27Z561 compatible
-      power: supply: bq27xxx_battery: Add the BQ27Z561 Battery monitor
-      dt-bindings: power: Add BQ28z610 compatible
-      power: supply: bq27xxx_battery: Add the BQ28z610 Battery monitor
-
-Daniel Gonz=E1lez Cabanelas (1):
-      power: reset: add driver for LinkStation power off
-
-Dinghao Liu (1):
-      power: supply: bq24190_charger: Fix runtime PM imbalance on error
-
-Jonathan Bakker (1):
-      power: supply: max8998_charger: Correct ONLINE and add STATUS props
-
-Keyur Patel (1):
-      power: supply: axp20x_usb_power: fix spelling mistake
-
-Krzysztof Kozlowski (4):
-      dt-bindings: power: supply: bq25890: Indent example with tabs
-      dt-bindings: power: supply: bq25890: Document required interrupt
-      power: supply: cpcap-battery: Fix kerneldoc of cpcap_battery_read_acc=
-umulated()
-      power: supply: Fix kerneldoc of power_supply_temp2resist_simple()
-
-LH Lin (1):
-      power: supply: test_power: Fix battery_current initial value
-
-Matheus Castello (1):
-      power: supply: max17040: Add POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN
-
-Peng Fan (1):
-      power: supply: rt5033_battery: Fix error code in rt5033_battery_probe=
-()
-
-Randy Dunlap (1):
-      power: fix duplicated words in bq2415x_charger.h
-
-Ricardo Rivera-Matos (2):
-      dt-bindings: power: Add the bindings for the bq2515x family of charge=
-rs.
-      power: supply: bq25150 introduce the bq25150
-
-Sebastian Reichel (4):
-      dt-bindings: power: supply: gpio-charger: convert to yaml
-      power: supply: gpio-charger: Make gpios optional
-      power: supply: sbs-battery: use i2c_smbus_read_block_data()
-      power: supply: sbs-battery: add PEC support
-
-Tom Rix (1):
-      power: supply: check if calc_soc succeeded in pm860x_init_battery
-
-Wang Qing (1):
-      power: supply: use kobj_to_dev
-
-Yongqiang Liu (1):
-      power: Convert to DEFINE_SHOW_ATTRIBUTE
-
- Documentation/ABI/testing/sysfs-class-power        |    3 +-
- Documentation/ABI/testing/sysfs-class-power-wilco  |    4 +
- .../devicetree/bindings/power/supply/battery.txt   |   86 +-
- .../devicetree/bindings/power/supply/battery.yaml  |  144 +++
- .../devicetree/bindings/power/supply/bq2515x.yaml  |   93 ++
- .../devicetree/bindings/power/supply/bq25890.txt   |   30 +-
- .../devicetree/bindings/power/supply/bq27xxx.yaml  |    2 +
- .../bindings/power/supply/gpio-charger.txt         |   31 -
- .../bindings/power/supply/gpio-charger.yaml        |   63 ++
- drivers/power/reset/Kconfig                        |   11 +
- drivers/power/reset/Makefile                       |    1 +
- drivers/power/reset/keystone-reset.c               |    2 +-
- drivers/power/reset/linkstation-poweroff.c         |  136 +++
- drivers/power/supply/88pm860x_battery.c            |    6 +-
- drivers/power/supply/Kconfig                       |   13 +
- drivers/power/supply/Makefile                      |    1 +
- drivers/power/supply/axp20x_usb_power.c            |    2 +-
- drivers/power/supply/bq2415x_charger.c             |   16 +-
- drivers/power/supply/bq24190_charger.c             |    4 +-
- drivers/power/supply/bq24257_charger.c             |    6 +-
- drivers/power/supply/bq2515x_charger.c             | 1169 ++++++++++++++++=
-++++
- drivers/power/supply/bq27xxx_battery.c             |  160 ++-
- drivers/power/supply/bq27xxx_battery_hdq.c         |    2 +-
- drivers/power/supply/bq27xxx_battery_i2c.c         |    6 +-
- drivers/power/supply/cpcap-battery.c               |    2 +-
- drivers/power/supply/da9030_battery.c              |   12 +-
- drivers/power/supply/gpio-charger.c                |   38 +-
- drivers/power/supply/max17040_battery.c            |   51 +-
- drivers/power/supply/max8998_charger.c             |   25 +-
- drivers/power/supply/power_supply_core.c           |    2 +-
- drivers/power/supply/power_supply_sysfs.c          |    6 +-
- drivers/power/supply/rt5033_battery.c              |    2 +-
- drivers/power/supply/sbs-battery.c                 |   89 +-
- drivers/power/supply/sc27xx_fuel_gauge.c           |    9 +-
- drivers/power/supply/test_power.c                  |    2 +-
- drivers/power/supply/wilco-charger.c               |    5 +
- include/linux/math64.h                             |   19 +
- include/linux/power/bq2415x_charger.h              |    4 +-
- include/linux/power/bq27xxx_battery.h              |    2 +
- include/linux/power_supply.h                       |    4 +
- 40 files changed, 2044 insertions(+), 219 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/battery.=
-yaml
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.=
-yaml
- delete mode 100644 Documentation/devicetree/bindings/power/supply/gpio-cha=
-rger.txt
- create mode 100644 Documentation/devicetree/bindings/power/supply/gpio-cha=
-rger.yaml
- create mode 100644 drivers/power/reset/linkstation-poweroff.c
- create mode 100644 drivers/power/supply/bq2515x_charger.c
-
---n7bt4iw4u6yl7qkt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8t3M0ACgkQ2O7X88g7
-+poUrQ//eWJTZcVDFsWgWepCSQSYXVCnyFlQtX4yPjOh3FbdskDbaV4Lfw5oaRH8
-Q6wXY0lhEAHqQSYQac5BNTRMx3diA7UzjIqy5ovUMnB9Q886BX0D1VC9wcHyDvEL
-0JgF/8mD/DK75dAHC3DpcEyW7NcZ5dlKg4eCLxtL3e+Ak6s7/iNqm/F9DU+zPwLq
-W6h9u8+fr8jbbzfWdo/PkUSyemi/LvUHqC/vwywZZWSzOVBrRspFb54GFiM34/rJ
-LLTa6W4vuAS2yLqif5W+1e+qYy0/+LW8vLuAYE7ZBPRGPj1Fb+YqAy9OWVfJa0ab
-Ab2k1TwLHtz0CKdTn8lS/OpQdMBMmdVSQhN5VaMWrEmDHvBzyr2gk3r1Il3s1OMM
-FbXbtgZBOplCADANiqZEWc1uz4ztU4Uov4DKm8VNdOY6jJRPBCsz5XeLoSecKBmc
-MycotdH2dN0ii0DGRYFfctPPGqSPNxdwYiwcoTwL9o9F0OcYg3uLWUHpjL+rx2TZ
-vlR9yY1n83CE7lCg8m3iUsxALwOoRQ9Z8PdObuxyvi4yBOhXw0oWreRDsJEimgIQ
-OZMiXPY38GOTQY7E1zjOWFOBzwl4iVXvGFXK6A17EMUM+/EALuX2PvJ5EfVCdtgs
-eiOwSXNXiKLRPQ8kGtCzO0ydli9duRpZICVP/GHbSKA8AdbiWgo=
-=1wFC
------END PGP SIGNATURE-----
-
---n7bt4iw4u6yl7qkt--
+> > > +       ret = mlx90632_read_object_raw_extended(data->regmap, object_new_raw);
+> > > +       if (ret < 0)
+> > > +               goto read_unlock;
+> > > +
+> > > +       ret = mlx90632_read_ambient_raw_extended(data->regmap, ambient_new_raw, ambient_old_raw);
+> > > +
+> > > +read_unlock:
+> > > +       (void) mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_MEDICAL);
+> > > +
+> > > +       mutex_unlock(&data->lock);
+> > > +       return ret;
+> > > +}
+> >
+> > ...
+> >
+> > > +static s64 mlx90632_preprocess_temp_obj_extended(s16 object_new_raw, s16 ambient_new_raw,
+> > > +                                                s16 ambient_old_raw, s16 Ka)
+> > > +{
+> > > +       s64 VR_IR, kKa, tmp;
+> > > +
+> > > +       kKa = ((s64)Ka * 1000LL) >> 10ULL;
+> > > +       VR_IR = (s64)ambient_old_raw * 1000000LL +
+> > > +               kKa * div64_s64(((s64)ambient_new_raw * 1000LL),
+> > > +                       (MLX90632_REF_3));
+> >
+> > And the point of using parentheses? It's not a Lisp language :-)
+> > (Applicable everywhere in your code, the rule of thumb that any
+> > particular comment given by reviewer should be considered against
+> > entire code where it's appropriate)
+> >
+> > > +       tmp = div64_s64(
+> > > +                       div64_s64((((s64)object_new_raw) * 1000000000000LL), MLX90632_REF_12),
+> > > +                       VR_IR);
+> > > +       return div64_s64((tmp << 19ULL), 1000LL);
+> > > +}
+> >
+> > ...
+> >
+> > > +       TAdut = div64_s64(((ambient - kTA0) * 1000000LL), kTA) + 25 * 1000000LL;
+> > > +       Tr4 = (div64_long(reflected, 10) + 27315) *
+> > > +               (div64_long(reflected, 10) + 27315) *
+> > > +               (div64_long(reflected, 10) + 27315) *
+> > > +               (div64_long(reflected, 10) + 27315);
+> > > +       TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
+> > > +               (div64_s64(TAdut, 10000LL) + 27315) *
+> > > +               (div64_s64(TAdut, 10000LL)  + 27315) *
+> > > +               (div64_s64(TAdut, 10000LL) + 27315);
+> >
+> > Okay, looking at this I definitely think that this patch should be
+> > split into a few smaller logically separated pieces like introducing
+> > some helpers to calculate above with them.
+> >
+> > ...
+> >
+> > > +       mlx90632->object_ambient_temperature = 25000; /* 25 degrees Celsius */
+> >
+> > Comment is lying. milliCelsius.
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
