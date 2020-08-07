@@ -2,104 +2,68 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48484C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D90C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14F9321744
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IHOlCsxt"
+	by mail.kernel.org (Postfix) with ESMTP id 741E12086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgHGQvm (ORCPT
+        id S1726293AbgHGRCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGQvk (ORCPT
+        Fri, 7 Aug 2020 13:02:10 -0400
+Received: from www62.your-server.de ([213.133.104.62]:42212 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgHGRCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:51:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C73C061756;
-        Fri,  7 Aug 2020 09:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=OBTWZQt5vODOTMK+QJG5w+DYxrngWnwJntqbpr+2+EE=; b=IHOlCsxtDgnyWWM8Etp7cnNBgu
-        XcJgvO1LZUPXypIusCtqV1SdpjcXyU9j1cJlDD++rAiriS4539+wAe09OxLKMlD2GvMA4YAFpEhkn
-        6FjQIqFQSGlYQzMowLC5rf7mEKb7wJlpETBS5L/4/U5Bxy0gWl80p7bBuFJUXlRZ2L6c2ZirMpx42
-        ZFBnh2hTffCvjd0PjN2HPAp33n6JY/ZqepSEvjs4nWfdeO5tl9lTvFptRlywvyB5rHDaN4ItSnJzr
-        JJB6GXywgdHVI8Qr39RvTFxn9DXx4EeTfRhO8TaHeJ39zIpB+xQQc5co94jMSPMePTH94sm6QqWgC
-        RrOT9GjA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac] (helo=smtpauth.infradead.org)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k45aj-0004G4-ST; Fri, 07 Aug 2020 16:51:38 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH] security: selinux: delete repeated words in comments
-Date:   Fri,  7 Aug 2020 09:51:34 -0700
-Message-Id: <20200807165134.3913-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Fri, 7 Aug 2020 13:02:07 -0400
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k45ki-0005qO-RL; Fri, 07 Aug 2020 19:01:56 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k45ki-000S11-H3; Fri, 07 Aug 2020 19:01:56 +0200
+Subject: Re: [PATCH bpf] bpf: doc: remove references to warning message when
+ using bpf_trace_printk()
+To:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org
+Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        rostedt@goodmis.org, linux-doc@vger.kernel.org, corbet@lwn.net,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596801029-32395-1-git-send-email-alan.maguire@oracle.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <007a231f-6352-9784-bce1-417d6572b423@iogearbox.net>
+Date:   Fri, 7 Aug 2020 19:01:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1596801029-32395-1-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.4/25897/Fri Aug  7 14:45:59 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop a repeated word in comments.
-{open, is, then}
+On 8/7/20 1:50 PM, Alan Maguire wrote:
+> The BPF helper bpf_trace_printk() no longer uses trace_printk();
+> it is now triggers a dedicated trace event.  Hence the described
+> warning is no longer present, so remove the discussion of it as
+> it may confuse people.
+> 
+> Fixes: ac5a72ea5c89 ("bpf: Use dedicated bpf_trace_printk event instead of trace_printk()")
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: Eric Paris <eparis@parisplace.org>
-Cc: selinux@vger.kernel.org
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-security-module@vger.kernel.org
----
- security/selinux/hooks.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---- linux-next-20200731.orig/security/selinux/hooks.c
-+++ linux-next-20200731/security/selinux/hooks.c
-@@ -1978,7 +1978,7 @@ static inline u32 file_to_av(struct file
- }
- 
- /*
-- * Convert a file to an access vector and include the correct open
-+ * Convert a file to an access vector and include the correct
-  * open permission.
-  */
- static inline u32 open_file_to_av(struct file *file)
-@@ -4444,7 +4444,7 @@ static int selinux_skb_peerlbl_sid(struc
-  *
-  * If @skb_sid is valid then the user:role:type information from @sk_sid is
-  * combined with the MLS information from @skb_sid in order to create
-- * @conn_sid.  If @skb_sid is not valid then then @conn_sid is simply a copy
-+ * @conn_sid.  If @skb_sid is not valid then @conn_sid is simply a copy
-  * of @sk_sid.  Returns zero on success, negative values on failure.
-  *
-  */
-@@ -5314,7 +5314,7 @@ static int selinux_sctp_bind_connect(str
- 
- 			/* As selinux_sctp_bind_connect() is called by the
- 			 * SCTP protocol layer, the socket is already locked,
--			 * therefore selinux_netlbl_socket_connect_locked() is
-+			 * therefore selinux_netlbl_socket_connect_locked()
- 			 * is called here. The situations handled are:
- 			 * sctp_connectx(3), sctp_sendmsg(3), sendmsg(2),
- 			 * whenever a new IP address is added or when a new
+Applied, thanks!
