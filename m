@@ -2,189 +2,196 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D19C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6E922C9F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DD222C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XRsQjOfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgHGLhB convert rfc822-to-8bit (ORCPT
+        id S1728303AbgHGLit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:37:01 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:43049 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgHGLg7 (ORCPT
+        Fri, 7 Aug 2020 07:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgHGLis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 07:36:59 -0400
-Received: by mail-oo1-f65.google.com with SMTP id z10so353625ooi.10;
-        Fri, 07 Aug 2020 04:36:57 -0700 (PDT)
+        Fri, 7 Aug 2020 07:38:48 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FD6C061574
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 04:38:48 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q76so1538843wme.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 04:38:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2OvNGf73HwASsIIn3dVColNmerzHMlfHRu2Q37hp8fA=;
+        b=XRsQjOfjF/jdZJQeBdPMyTohXnpRCVKgc7tSZM7ojE226DzwExG7JRV2o5LQyjIpQE
+         OIWfbjF1MX/R0TrbKwaJoBnTGHlkhkkIwmABm+25ISDXuxNi+98CMmhUnXEaBF4PODSL
+         a1+IhaDGtL3pnU4QIGaSGni6MWKZLVIy2kx6YYlP43ZKkbXm63ZLGBqcbB5oXEMrBKTl
+         We5fhSE7oxpKkXf49apFvZA0fX+N+RYiQEGshMZgRjl0KxqgR5qy4isLQvE2j//6nySE
+         X0eNE3O1hVDFrZZcI9XCVQDph/01xCcaMfdSxhEJVdCN8JDmDnPVgzmTb3PjAZeBF+Xg
+         eb1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XXMM2VmPbdzScEgaWzC2c7QfQOtrLAuTY8gvz9Vc4VA=;
-        b=i2+bmzm6DH1N21mIeZptUZA7++/9Dot11W8Go1vfnZmv6NLxFyMUQ3NYRJuC/9zZy6
-         JX/bJkajC04xQ0mBs4txh8Yn7UV9MSBsecOVOhqPddopu6nuxkL6IbMmaXS/xAMW5Mvd
-         nv3umyDWILaKzFR7VW4BYeeOlryd9pgvlQ4pUTT9vXozKkZfSdocnpmAfzdm0Y0pWMOv
-         F5tLDf8S9Bh/f0zH0WTKncPNiKabeEPgjnv0/Wen5JEKC7M+AKARxSd/pGnNoYX0BaLm
-         sXcGmj0gCJQeZz+Z/yXvZrzWEKU6vP40BbDzJy5zcH3lwP7CZr0PjAWEfKMX45B+tbll
-         8TSw==
-X-Gm-Message-State: AOAM5321t5vfKYT5soHllJlIECFhExrcIHDvk9hNqFzsqTFdqXVR4wMV
-        ZLSjKRnGrwCzbJxf3irZSYkIYbyhRdwti3Lbm18=
-X-Google-Smtp-Source: ABdhPJzvkXusENrHFbx7Z4UeU5tcAYrWmu2wMgV9PP1LU7MWabSySITzZd9SeQneUYYb9H/JEkRsCIws54cijEZ+u5w=
-X-Received: by 2002:a4a:4201:: with SMTP id h1mr12077660ooj.1.1596800217309;
- Fri, 07 Aug 2020 04:36:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2OvNGf73HwASsIIn3dVColNmerzHMlfHRu2Q37hp8fA=;
+        b=DliRxH21hd6C3AvsM5+CyhizOCN5suc1lNDBiyd8weL+2GzQkLbKX9P+WH55Tay2O9
+         2zJMT81nS9obRb8ahP7TEMRJFDw5neGAuP2d9a06S/ddicvMDCn/9qjobQXlMuM+RNam
+         eEY+Hul3an6wAidnYA7oOCpEKigstR/R/ZfhmCUAWtg4S+264TkaSI8tFIL+BAk+DYYB
+         Ir21AsI2/MUA349LkbxsNNN2ZPLDPxMn9f7cSDYAQYmHwodofDi3NPGuEp9FAxSs/zHz
+         c9o0C19+3/tjsbjb2ZFVly370eBp10tuh1+1nEmbM42AnoCkbtvhpjRpko82bUcE20Hc
+         61Cw==
+X-Gm-Message-State: AOAM530zbSE5teHuA9D/EZpWsuDj6tkc2+hGx/o+jPsFmRHLnS1msvJW
+        VpDpreUPEVAtvmr2v9IwaZ5joQ==
+X-Google-Smtp-Source: ABdhPJwPVgRQpJPW5tGBGYX0Uzt3l53hhFUnwetA4tIJc4edGGxc8mzGNJF8DhrMGT+O6qsBSdYsEw==
+X-Received: by 2002:a1c:988a:: with SMTP id a132mr11991182wme.14.1596800325696;
+        Fri, 07 Aug 2020 04:38:45 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id g14sm9823063wmk.37.2020.08.07.04.38.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 04:38:44 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 13:38:38 +0200
+From:   Marco Elver <elver@google.com>
+To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        yu-cheng.yu@intel.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
+ helpers
+Message-ID: <20200807113838.GA3547125@elver.google.com>
+References: <CANpmjNN6FWZ+MsAn3Pj+WEez97diHzqF8hjONtHG15C2gSpSgw@mail.gmail.com>
+ <CANpmjNNy3XKQqgrjGPPKKvXhAoF=mae7dk8hmoS4k4oNnnB=KA@mail.gmail.com>
+ <20200806074723.GA2364872@elver.google.com>
+ <20200806113236.GZ2674@hirez.programming.kicks-ass.net>
+ <20200806131702.GA3029162@elver.google.com>
+ <CANpmjNNqt8YrCad4WqgCoXvH47pRXtSLpnTKhD8W8+UpoYJ+jQ@mail.gmail.com>
+ <CANpmjNO860SHpNve+vaoAOgarU1SWy8o--tUWCqNhn82OLCiew@mail.gmail.com>
+ <fe2bfa7f-132f-7581-a967-d01d58be1588@suse.com>
+ <20200807095032.GA3528289@elver.google.com>
+ <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com>
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
- <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
- <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com> <20200807112754.GC3387836@oden.dyn.berto.se>
-In-Reply-To: <20200807112754.GC3387836@oden.dyn.berto.se>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 7 Aug 2020 13:36:46 +0200
-Message-ID: <CAMuHMdW1Ofjouj4P+bdg2VWmYohD73=si8R6ivZ4QiZps6=HAQ@mail.gmail.com>
-Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
-To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
+On Fri, Aug 07, 2020 at 12:35PM +0200, J=FCrgen Gro=DF wrote:
+> On 07.08.20 11:50, Marco Elver wrote:
+> > On Fri, Aug 07, 2020 at 11:24AM +0200, J=FCrgen Gro=DF wrote:
+> > > On 07.08.20 11:01, Marco Elver wrote:
+> > > > On Thu, 6 Aug 2020 at 18:06, Marco Elver <elver@google.com> wrote:
+> > > > > On Thu, 6 Aug 2020 at 15:17, Marco Elver <elver@google.com> wrote:
+> > > > > > On Thu, Aug 06, 2020 at 01:32PM +0200, peterz@infradead.org wro=
+te:
+> > > > > > > On Thu, Aug 06, 2020 at 09:47:23AM +0200, Marco Elver wrote:
+> > > > > > > > Testing my hypothesis that raw then nested non-raw
+> > > > > > > > local_irq_save/restore() breaks IRQ state tracking -- see t=
+he reproducer
+> > > > > > > > below. This is at least 1 case I can think of that we're bo=
+und to hit.
+> > > > > > ...
+> > > > > > >=20
+> > > > > > > /me goes ponder things...
+> > > > > > >=20
+> > > > > > > How's something like this then?
+> > > > > > >=20
+> > > > > > > ---
+> > > > > > >    include/linux/sched.h |  3 ---
+> > > > > > >    kernel/kcsan/core.c   | 62 +++++++++++++++++++++++++++++++=
++++++---------------
+> > > > > > >    2 files changed, 44 insertions(+), 21 deletions(-)
+> > > > > >=20
+> > > > > > Thank you! That approach seems to pass syzbot (also with
+> > > > > > CONFIG_PARAVIRT) and kcsan-test tests.
+> > > > > >=20
+> > > > > > I had to modify it some, so that report.c's use of the restore =
+logic
+> > > > > > works and not mess up the IRQ trace printed on KCSAN reports (w=
+ith
+> > > > > > CONFIG_KCSAN_VERBOSE).
+> > > > > >=20
+> > > > > > I still need to fully convince myself all is well now and we do=
+n't end
+> > > > > > up with more fixes. :-) If it passes further testing, I'll send=
+ it as a
+> > > > > > real patch (I want to add you as Co-developed-by, but would nee=
+d your
+> > > > > > Signed-off-by for the code you pasted, I think.)
+> > > >=20
+> > > > I let it run on syzbot through the night, and it's fine without
+> > > > PARAVIRT (see below). I have sent the patch (need your Signed-off-by
+> > > > as it's based on your code, thank you!):
+> > > > https://lkml.kernel.org/r/20200807090031.3506555-1-elver@google.com
+> > > >=20
+> > > > > With CONFIG_PARAVIRT=3Dy (without the notrace->noinstr patch), I =
+still
+> > > > > get lockdep DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled()), alt=
+hough
+> > > > > it takes longer for syzbot to hit them. But I think that's expect=
+ed
+> > > > > because we can still get the recursion that I pointed out, and wi=
+ll
+> > > > > need that patch.
+> > > >=20
+> > > > Never mind, I get these warnings even if I don't turn on KCSAN
+> > > > (CONFIG_KCSAN=3Dn). Something else is going on with PARAVIRT=3Dy th=
+at
+> > > > throws off IRQ state tracking. :-/
+> > >=20
+> > > What are the settings of CONFIG_PARAVIRT_XXL and
+> > > CONFIG_PARAVIRT_SPINLOCKS in this case?
+> >=20
+> > I attached a config.
+> >=20
+> > 	$> grep PARAVIRT .config
+> > 	CONFIG_PARAVIRT=3Dy
+> > 	CONFIG_PARAVIRT_XXL=3Dy
+> > 	# CONFIG_PARAVIRT_DEBUG is not set
+> > 	CONFIG_PARAVIRT_SPINLOCKS=3Dy
+> > 	# CONFIG_PARAVIRT_TIME_ACCOUNTING is not set
+> > 	CONFIG_PARAVIRT_CLOCK=3Dy
+>=20
+> Anything special I need to do to reproduce the problem? Or would you be
+> willing to do some more rounds with different config settings?
 
-On Fri, Aug 7, 2020 at 1:27 PM Niklas Söderlund
-<niklas.soderlund@ragnatech.se> wrote:
-> On 2020-08-06 13:47:58 +0200, Geert Uytterhoeven wrote:
-> > On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
-> > > > >
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > >
-> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > >
-> > > > However, before I queue this in renesas-devel for v5.10, I'd like to
-> > > > have some clarification about the issue below.
-> > > >
-> > > > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > >
-> > > > > +               vin4: video@e6ef4000 {
-> > > > > +                       compatible = "renesas,vin-r8a774e1";
-> > > > > +                       reg = <0 0xe6ef4000 0 0x1000>;
-> > > > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > +                       clocks = <&cpg CPG_MOD 807>;
-> > > > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> > > > > +                       resets = <&cpg 807>;
-> > > > > +                       renesas,id = <4>;
-> > > > > +                       status = "disabled";
-> > > > > +
-> > > > > +                       ports {
-> > > > > +                               #address-cells = <1>;
-> > > > > +                               #size-cells = <0>;
-> > > > > +
-> > > > > +                               port@1 {
-> > > > > +                                       #address-cells = <1>;
-> > > > > +                                       #size-cells = <0>;
-> > > >
-> > > > "make dtbs W=1" says:
-> > > >
-> > > >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
-> > > > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
-> > > > has single child node 'endpoint@0', #address-cells/#size-cells are not
-> > > > necessary
-> > > >
-> > > > (same for vin5-7 below)
-> > > >
-> > > Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
-> > > VIN endpoint numbering") we definitely need endpoint numbering.
-> > > Probably the driver needs to be fixed to handle such cases.
-> >
-> > > > > +
-> > > > > +                                       reg = <1>;
-> > > > > +
-> > > > > +                                       vin4csi20: endpoint@0 {
-> > > > > +                                               reg = <0>;
-> > > > > +                                               remote-endpoint = <&csi20vin4>;
-> >
-> > On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
-> > complain. Here it is at address 0.
-> >
-> > Niklas?
->
-> First the R-Car VIN driver makes decisions based on which endpoint is
-> described, each endpoint 0-3 represents a different CSI-2 block on the
-> other end (0: CSI20, 1: CSI21, 2: CSI40 and 3: CSI41).
+I can only test it with syzkaller, but that probably doesn't help if you
+don't already have it set up. It can't seem to find a C reproducer.
 
-That's my understanding, too.
+I did some more rounds with different configs.
 
-> Then how to handle the warning I'm not sure. I can only really see 2
-> options.
->
-> 1. Ignore the warning.
-> 2. Remove #address-cells, #size-cells and reg properties from port@ if
->    the only endpoint described is endpoint@0.
->
-> I would prefers option 2. that is what we do in other cases (for example
-> on Gen2 boards that only have a single parallel sensor in some early DTS
-> files we don't have the ports node and just describe a single port with
-> the same reasoning.
->
-> We are not at risk at someone describing a second CSI-2 bock as an
-> overlay so I see no real harm in option 2.
+> I think CONFIG_PARAVIRT_XXL shouldn't matter, but I'm not completely
+> sure about that. CONFIG_PARAVIRT_SPINLOCKS would be my primary suspect.
 
-Yeah, no overlay possible for on-SoC wiring ;-)
+Yes, PARAVIRT_XXL doesn't make a different. When disabling
+PARAVIRT_SPINLOCKS, however, the warnings go away.
 
-> What are your thoughts Geert?
-> You know more about DT then me.
-
-You have too much faith in me ;-)
-
-AFAIK we don't get this warning for e.g. SPI buses, which can have a
-single device at address 0, and #{address,size}-cells is mandatory
-there. So endpoints (or SPI?) are treated special?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+-- Marco
