@@ -2,87 +2,77 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2482CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41394C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19DC9206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248BC2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596763558;
+	bh=mA/awtDZ4yMki7SF0GBozP3n+dALHx4VvvVdvvuQTg8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KvG2ahMd7758UjQf16MNg0KPdXEgkaIBaRW1oRF88eKRDV3ipi87xpvKuX9IfRAmk
+	 n1tlxoBwIz896NHwcST1jsjZmWMOLMB1jPxkNElOdSIv5hT+4ght8W+8rsGa9dS5l7
+	 ULf4cLIdUDV585N04OtW+eaK65GVa1NaatQNUPBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbgHGBXa (ORCPT
+        id S1726126AbgHGBZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:23:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9350 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726276AbgHGBX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:23:26 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 231C2A365779A84C8704;
-        Fri,  7 Aug 2020 09:23:24 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 7 Aug 2020 09:23:13 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: compress: remove unneeded code
-Date:   Fri, 7 Aug 2020 09:23:10 +0800
-Message-ID: <20200807012310.112639-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+        Thu, 6 Aug 2020 21:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgHGBZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:25:56 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B832206B5;
+        Fri,  7 Aug 2020 01:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596763556;
+        bh=mA/awtDZ4yMki7SF0GBozP3n+dALHx4VvvVdvvuQTg8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dYvoJcTEvXHqFP5FwYVm1gBTYqZu8kiddHmoWKhQgx1+Lw0OXOD7nABF/x8GMbg8t
+         V7yB1BureSyuML7pk/LzSQO0CyOADWd7U7d2f0yIgK3YsTcHuGUPdEAdEX7YczjyyQ
+         aE88OvCf1CNxX9ay7Qh29SuMK2kyvvETSZj41nQw=
+Date:   Thu, 6 Aug 2020 18:25:55 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mm: vmstat: fix /proc/sys/vm/stat_refresh generating
+ false warnings
+Message-Id: <20200806182555.d7a7fc9853b5a239ffe9f846@linux-foundation.org>
+In-Reply-To: <20200806233804.GB1217906@carbon.dhcp.thefacebook.com>
+References: <20200714173920.3319063-1-guro@fb.com>
+        <alpine.LSU.2.11.2007291902340.6363@eggly.anvils>
+        <20200730162348.GA679955@carbon.dhcp.thefacebook.com>
+        <alpine.LSU.2.11.2007302018350.2410@eggly.anvils>
+        <20200801011821.GA859734@carbon.dhcp.thefacebook.com>
+        <alpine.LSU.2.11.2007311915130.9716@eggly.anvils>
+        <20200804004012.GA1049259@carbon.dhcp.thefacebook.com>
+        <alpine.LSU.2.11.2008051913580.8184@eggly.anvils>
+        <20200806233804.GB1217906@carbon.dhcp.thefacebook.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- f2fs_write_multi_pages
- - f2fs_compress_pages
-  - init_compress_ctx
-  - compress_pages
-  - destroy_compress_ctx  --- 1
- - f2fs_write_compressed_pages
- - destroy_compress_ctx  --- 2
+On Thu, 6 Aug 2020 16:38:04 -0700 Roman Gushchin <guro@fb.com> wrote:
 
-destroy_compress_ctx() in f2fs_write_multi_pages() is redundant, remove
-it.
+> it seems that Hugh and me haven't reached a consensus here.
+> Can, you, please, not merge this patch into 5.9, so we would have
+> more time to find a solution, acceptable for all?
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/compress.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 6e7db450006c..3bb112e91cf6 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1388,9 +1388,6 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
- 					struct writeback_control *wbc,
- 					enum iostat_type io_type)
- {
--	struct f2fs_inode_info *fi = F2FS_I(cc->inode);
--	const struct f2fs_compress_ops *cops =
--			f2fs_cops[fi->i_compress_algorithm];
- 	int err;
- 
- 	*submitted = 0;
-@@ -1405,7 +1402,6 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
- 
- 		err = f2fs_write_compressed_pages(cc, submitted,
- 							wbc, io_type);
--		cops->destroy_compress_ctx(cc);
- 		kfree(cc->cpages);
- 		cc->cpages = NULL;
- 		if (!err)
--- 
-2.26.2
-
+No probs.  I already had a big red asterisk on it ;)
