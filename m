@@ -2,179 +2,133 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3475FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAA320855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18813221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="X45ayHjb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RDovZW0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHGDME (ORCPT
+        id S1726600AbgHGDNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:12:04 -0400
-Received: from mail-mw2nam12on2063.outbound.protection.outlook.com ([40.107.244.63]:9153
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726038AbgHGDMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:12:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hh2VSLp9f+wzWvLN+6fCxPWVad/R9ZIENT0Q33swaQz4/pKzEhzBE6D2KRxjIHkfqiBtEDpEUh58Lrz9yqW2cFu3pE+CJyTvzDuJ/0gx7FFUzkuHJOuO9C+DTsuoelvuq1AdKG8GxwOBn9EMHaVuhxJeFPV2/zsPbv9vdGx9yQWdAG0YjqnQqGevldKPG9MeZzOhZIUa9o+Vcoq7p3L3nWrDkwjDpRy5XK827o+Hb3vGlcShLwILwyWbiXP7ATaVTj6931q0SrCbSul7zvdcruNf/HhHlyBZxdks3c3WvJ0XursbSc3Et9jlHnOd0dY5fSWqBh+3RnWHEbljoyJP5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L7HYtVQEeMam4dtIRc60ChScNvBFasoceWzyswtaGfQ=;
- b=ivngB0Rw+qgw16x65JO75zKWndNQrjuatn8ZUZxLs527vGut15xYUvc1rqng1uAOeIGxH+UCll5xZS11+RHQkkGRz/yKSBn4u3JfxHjvhdOa9h4Wm8fPHqGDQm4Ra53XzbV6TyOA99D3QvAJ4DN4qwbLvKw+P4JgpGWTn9CRpobHkWb818e4NeBqXK/Ri3BkFF7lFsoWrp/3uLAcglOQ+TdXzT8HQUOEemo5FUP1qZSrPxmPLEn2mYjz4WaVd+szxiKipMotH4qR+s3Nyi1SG0eRrv6fMaEbFTf4oyxREAR7Q9Ppht0BTQjEzhGtSsMWvihtSNbSNsF57XgXkeUUog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+        Thu, 6 Aug 2020 23:13:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgHGDNd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 23:13:33 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6119C061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 20:13:32 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id z20so395439plo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 20:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L7HYtVQEeMam4dtIRc60ChScNvBFasoceWzyswtaGfQ=;
- b=X45ayHjbQ11qHQZmlRHigX+YdVtz/bCPLPy3H95sYt43rgafqxiIH49ixU95RgKllapPaGWyPkhxJLrEPBcBNdT07DVAOAC6UfFKADPryuxQ7M4xIoVIYglN+Tm/shuSA93NsEuI6fm7AyoQ9H3cKkI50npEhV6eD5mGN/MpCls=
-Received: from BYAPR11MB2632.namprd11.prod.outlook.com (2603:10b6:a02:c4::17)
- by BY5PR11MB4226.namprd11.prod.outlook.com (2603:10b6:a03:1bf::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Fri, 7 Aug
- 2020 03:11:58 +0000
-Received: from BYAPR11MB2632.namprd11.prod.outlook.com
- ([fe80::d87a:b368:655c:e12b]) by BYAPR11MB2632.namprd11.prod.outlook.com
- ([fe80::d87a:b368:655c:e12b%7]) with mapi id 15.20.3239.022; Fri, 7 Aug 2020
- 03:11:58 +0000
-From:   "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>
-Subject: =?gb2312?B?16q3ojogdXBzdHJlYW0gdGVzdCBlcnJvcjogV0FSTklORyBpbiBkb19lcG9s?=
- =?gb2312?Q?l=5Fwait?=
-Thread-Topic: upstream test error: WARNING in do_epoll_wait
-Thread-Index: AQHWavjOocYpF+4E4kCmcEqd8cRrxakr+Bc4
-Date:   Fri, 7 Aug 2020 03:11:58 +0000
-Message-ID: <BYAPR11MB26328A938028DD73AC6C3CF7FF490@BYAPR11MB2632.namprd11.prod.outlook.com>
-References: <00000000000080940e05ac1c301e@google.com>
-In-Reply-To: <00000000000080940e05ac1c301e@google.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none
- header.from=windriver.com;
-x-originating-ip: [60.247.85.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 549faf9a-2b24-4b9e-dded-08d83a7fa5a4
-x-ms-traffictypediagnostic: BY5PR11MB4226:
-x-microsoft-antispam-prvs: <BY5PR11MB4226866BBEF9F6B5CD17F96AFF490@BY5PR11MB4226.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IRSdgjx7YbI0uwhK6iUmvwbJUvdD3RzVAC5J7Ljrxi/75yiXu9VIYCFJasPJ3viCuoP/rRd32q6JDKYdw/9H6iyMSNcmydNDjYMLEgqVZ7HPp97rReRYaxaBv5J/Z/PQbQKrZ/GA2qakxbBhVZLA2qTQoVD7Y07cvROwAIkw1UgGxO2tsNS+mngyRmOg0rJ78W/8Mw22hRP3zC49M0QHMvwGkyrlaxQGHsXs6se8BjH1FgIwM6PDIXXfp3mTeEHw9CKUUjK1oo4d5lzwFSqcqDpc1RrbLLfSWA9n7z31hltcy2yaaB7a9jkbh1bMabnXP7WQqfYYJCfQSEt16XLSX96t5koxp4ZT9SVDqLOBM62aJPeW9w02xG6WAXosHdx/Dyv732jsjnnfoaMADs/GN3JfvI4hxWuT9IHlyLz5ntdodG7cWBpOseDdx7n6wlkyYdwePVhtBc1H38ieBHVbtQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2632.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(39850400004)(366004)(346002)(136003)(52536014)(66946007)(76116006)(966005)(5660300002)(478600001)(86362001)(66476007)(66556008)(66446008)(64756008)(2906002)(4326008)(8936002)(83380400001)(33656002)(83080400001)(55016002)(9686003)(26005)(316002)(224303003)(110136005)(6506007)(186003)(71200400001)(91956017)(7696005)(99710200001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: FR4efr4V6eq0N6NYcfSTNeCsYlaSxO1n47zws+1kTbZfD3P4m1mujmdDYcjAvSQBitRn7wj9MiUqbGnck8lHIaBAkfzotxpXnjzcZQzfCFd/BhA99SxPzEi4UzpsEFtx2J4ffqGB0zDhEaFwN0nxWVXD4IxvBzayTToS6f6tVln3EQOXmEV9c00k3vwQ2zGzNgqnOYrb2bH5ZZg+xbN/jDRZUSc/8/D4QyZ28JsOLdIYERmQlhkBMpuWv4FyXIbacdlfgG1u1/WFzXmhAIGn8X+NAyEc3vI0Lb1JwkZFTL7jUWOTJSK5dUiu8AUd1V0XMIdTdduGkI1/V1r5k2wo7I08k7ZoJfwHu8gEF8ipnjsV4VhssYU6Q/YGC+84PjLdYQlV4UVsuHr4a1z9wuX2EL+ZoWaD9oYD2QeZ5Fi9lz/Q9m60TJ5yu8Pns0XUlucsDVMrBGdiS34zUGJHFZ08l0t5ZxsGjg1GHYYrW63Xvx+4Uis7iKbaBFnk0HSLLI9cBWFHi9Q7bagxv/Z1mWsr04fDpzy9O60kxQBDrd1DDlfg0OoeDz3H2/0ul7Wmuh1qrdTXzNTPcg5PH+8680KzfsCGA8l0e78FqX/1QUNipuhbpSLxHNDET/q6BryDvqwPDvnVsQ0CvC/ASq2Z/mIgvg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mntt/yV9g0WantW+MFUMl7qG7fGk/Oi5dRuY6kccsYw=;
+        b=RDovZW0comW5k7a9qDBhi0AemfQotZc35NVP3B/JDirQCHkb3KxYzbiNVpmHOLFuwB
+         16VvF1+r+a5Uh0LqZm/NYiMCFqw5Kg84vRSFVEvGutQZxz14IrygV9VS6q8VcYGZw/h1
+         dHG0UzmQ0xHz10DDkThhfDS9paQ9LrKO/PoEGFXs24VQWqcyQVSzNeshbKpJnxZ1mG0d
+         5Zf92IcmPVcRjaHg0tRv1sCEKsHUa8AclgHXo1FnE9oTRiP5y2Izlfzg3fZJrgzl3sqd
+         07fpIFfQH3mur+x5UUTjPLI1b9JvJd346SZpuhDJVf+98Mu6vRZ5H5WCK+dJezuiL7kq
+         YLBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mntt/yV9g0WantW+MFUMl7qG7fGk/Oi5dRuY6kccsYw=;
+        b=YlzfvzyJeoWWSOjIFO0Q+Ndl5YgoBm9CuJtQ3dcyPFN7dB4YMrFe1YDBs1ayVtNfwZ
+         SMYWyBLK/P7YNcdPBnNFl/2bGlbD06JGzK+WzsGvvXA2cjp0efrpZgYG4G/3H7ODD5DJ
+         Va6jgIEx6tVWV6GrXOTgTU7esqmUdw6vAA3eFezhHelvatxhYpGqPwlIYTvG1pO2hrHn
+         N8IuOvkExsRBDGoqiObNnNSpF1z/dUiLZKp4CckFd8A9xlOf8VifwcI4JtEaG5R7T6vM
+         CSXUpO0ztR6GXUvBc9o8NWLwQ6BS05lHDl41ByoCVWUowO5+0YBQskbt5dsWtD3H9MPZ
+         ztHw==
+X-Gm-Message-State: AOAM531m3aAhGC3NgqRGDSe082gpy2iGoW5sQ9VsEg6CF8/JUx0/lhbR
+        H8VB3vBCRfd7bTFL/UzqFj9ngkOZe69a+hyk8+RW8w==
+X-Google-Smtp-Source: ABdhPJwHf/baXL/FshABJwVK72iC4bCenNX/IrhdV9ee/TdyaNNuV/RPDLg0FYY0/FnAyGhJKXhqedgsCLoHXEgA/TY=
+X-Received: by 2002:a17:90a:1546:: with SMTP id y6mr2707909pja.93.1596770011948;
+ Thu, 06 Aug 2020 20:13:31 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2632.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 549faf9a-2b24-4b9e-dded-08d83a7fa5a4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2020 03:11:58.5379
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aElT4egJmCP5Kby/nz8uyb+pQUh1E7ikK4QThhyPBE3s8cuOpN6fmKpRbWzdbYUKnAZAPIyYmwXzV6ZEx01D5nekHLqdqi+qRqOSqwI9mP0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4226
+References: <20200718000637.3632841-1-saravanak@google.com>
+ <20200718000637.3632841-3-saravanak@google.com> <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
+ <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
+ <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org> <78ad0914-6173-f753-9eba-b7cbfbb51fd6@kali.org>
+ <CALAqxLXPN9kThwF32YoWyApaWnfjthANXj3uk65Wc3ddaJQFFQ@mail.gmail.com>
+ <20200807004001.GF20825@builder.lan> <CALAqxLWwY00PVUL7EM-tgbXeB5h8MsfPo7EFZTfDSzbb3P3eqQ@mail.gmail.com>
+ <20200807013903.GG20825@builder.lan> <CALAqxLWmJisTA9836Rvb8f9m4hsTL7iZ=HQtz39anu2Bbgv44g@mail.gmail.com>
+ <CAGETcx9Gsa9CWow8MBVPF4cgofdcK1+cFohAf_-Dqa3JT8H1bw@mail.gmail.com> <CALAqxLWR3mKrQDn5VkOV_zaaqxmwWzZwK0CCLRSfGJDU6WUXag@mail.gmail.com>
+In-Reply-To: <CALAqxLWR3mKrQDn5VkOV_zaaqxmwWzZwK0CCLRSfGJDU6WUXag@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 6 Aug 2020 20:12:56 -0700
+Message-ID: <CAGETcx-2mCg9K3th+HW_QjvKWmpb6yk=Cu3F3gOn3w+TD1RTzw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
+ IRQCHIP_PLATFORM_DRIVER helper macros
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Steev Klimaszewski <steev@kali.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cgo+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+t6K8/sjLOiBsaW51
-eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnIDxsaW51eC1rZXJuZWwtb3duZXJAdmdlci5r
-ZXJuZWwub3JnPiA+tPqx7SBzeXpib3QgPHN5emJvdCs0NDI5NjcwZDgyMTNmNWYyNjM1MkBzeXpr
-YWxsZXIuYXBwc3BvdG1haWwuY29tPgo+t6LLzcqxvOQ6IDIwMjDE6jjUwjXI1SAxNToxOQo+ytW8
-/sjLOiBsaW51eC1mc2RldmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgPnN5emthbGxlci0+YnVnc0Bnb29nbGVncm91cHMuY29tOyB2aXJvQHplbml2Lmxp
-bnV4Lm9yZy51awo+1vfM4jogdXBzdHJlYW0gdGVzdCBlcnJvcjogV0FSTklORyBpbiBkb19lcG9s
-bF93YWl0Cgo+SGVsbG8sCgo+c3l6Ym90IGZvdW5kIHRoZSBmb2xsb3dpbmcgaXNzdWUgb246Cgo+
-SEVBRCBjb21taXQ6ICAgIDRmMzBhNjBhIE1lcmdlIHRhZyAnY2xvc2UtcmFuZ2UtdjUuOScgb2Yg
-Z2l0Oi8vZ2l0Lmtlcm5lbC4uLgo+Z2l0IHRyZWU6ICAgICAgIHVwc3RyZWFtCj5jb25zb2xlIG91
-dHB1dDogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0P3g9MTRjNWE3ZGE5
-MDAwMDAKPmtlcm5lbCBjb25maWc6ICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94Ly5j
-b25maWc/eD04YmRkOTk0NGRlZGYwZjE2Cj5kYXNoYm9hcmQgbGluazogaHR0cHM6Ly9zeXprYWxs
-ZXIuYXBwc3BvdC5jb20vYnVnP2V4dGlkPTQ0Mjk2NzBkODIxM2Y1ZjI2MzUyCj5jb21waWxlcjog
-ICAgICAgY2xhbmcgdmVyc2lvbiAxMS4wLjAgKGh0dHBzOi8vZ2l0aHViLmNvbS9sbHZtL2xsdm0t
-cHJvamVjdC5naXQgPmNhMmRjYmQwMzBlYWRiZjBhYTliNjYwZWZlODY0ZmYwOGFmNmUxOGIpCgo+
-SU1QT1JUQU5UOiBpZiB5b3UgZml4IHRoZSBpc3N1ZSwgcGxlYXNlIGFkZCB0aGUgZm9sbG93aW5n
-IHRhZyB0byB0aGUgY29tbWl0Ogo+UmVwb3J0ZWQtYnk6IHN5emJvdCs0NDI5NjcwZDgyMTNmNWYy
-NjM1MkBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tCgo+LS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBd
-LS0tLS0tLS0tLS0tCj5XQVJOSU5HOiBDUFU6IDEgUElEOiA4NzI4IGF0IGZzL2V2ZW50cG9sbC5j
-OjE4MjggZXBfcG9sbCBmcy9ldmVudHBvbGwuYzoxODI4IFtpbmxpbmVdCj5XQVJOSU5HOiBDUFU6
-IDEgUElEOiA4NzI4IGF0IGZzL2V2ZW50cG9sbC5jOjE4MjggZG9fZXBvbGxfd2FpdCsweDMzNy8w
-eDkyMCA+ZnMvZXZlbnRwb2xsLmM6MjMzMwo+S2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IHBh
-bmljX29uX3dhcm4gc2V0IC4uLgo+Q1BVOiAxIFBJRDogODcyOCBDb21tOiBzeXotZnV6emVyIE5v
-dCB0YWludGVkIDUuOC4wLXN5emthbGxlciAjMAo+SGFyZHdhcmUgbmFtZTogR29vZ2xlIEdvb2ds
-ZSBDb21wdXRlIEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdpbmUsIEJJT1MgPkdvb2dsZSAwMS8w
-MS8yMDExCj5DYWxsIFRyYWNlOgogPl9fZHVtcF9zdGFjayBsaWIvZHVtcF9zdGFjay5jOjc3IFtp
-bmxpbmVdCiA+ZHVtcF9zdGFjaysweDE2ZS8weDI1ZCBsaWIvZHVtcF9zdGFjay5jOjExOAogPnBh
-bmljKzB4MjBjLzB4NjlhIGtlcm5lbC9wYW5pYy5jOjIzMQogPl9fd2FybisweDIxMS8weDI0MCBr
-ZXJuZWwvcGFuaWMuYzo2MDAKID5yZXBvcnRfYnVnKzB4MTUzLzB4MWQwIGxpYi9idWcuYzoxOTgK
-ID5oYW5kbGVfYnVnKzB4NGQvMHg5MCBhcmNoL3g4Ni9rZXJuZWwvdHJhcHMuYzoyMzUKID5leGNf
-aW52YWxpZF9vcCsweDE2LzB4NzAgYXJjaC94ODYva2VybmVsL3RyYXBzLmM6MjU1CiA+YXNtX2V4
-Y19pbnZhbGlkX29wKzB4MTIvMHgyMCBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9pZHRlbnRyeS5oOjU0
-Nwo+UklQOiAwMDEwOmVwX3BvbGwgZnMvZXZlbnRwb2xsLmM6MTgyOCBbaW5saW5lXQo+UklQOiAw
-MDEwOmRvX2Vwb2xsX3dhaXQrMHgzMzcvMHg5MjAgZnMvZXZlbnRwb2xsLmM6MjMzMwo+Q29kZTog
-NDEgYmUgMDEgMDAgMDAgMDAgMzEgYzAgNDggODkgNDQgMjQgMjAgNDUgMzEgZTQgZTkgN2YgMDEg
-MDAgMDAgZTggNTkgYWIgYzYgZmYgNDEgYmMgZjIgPmZmIGZmIGZmIGU5IGM4IDAzIDAwIDAwIGU4
-IDQ5IGFiIGM2IGZmIDwwZj4gMGIgZTkgNTggZmUgZmYgZmYgNDkgYmYgZmYgZmYgZmYgZmYgZmYg
-ZmYgZmYgN2YgZTkgZjAgZmUgZmYgPmZmCj5SU1A6IDAwMTg6ZmZmZmM5MDAwMGUxZmUyOCBFRkxB
-R1M6IDAwMDEwMjkzCj5SQVg6IGZmZmZmZmZmODE4NTYyOTcgUkJYOiBmZmZmODg4MTIwZmFmYTAw
-IFJDWDogZmZmZjg4ODExZTE5NjQwMAo+UkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogMDAwMDAw
-MDAwMDAwMDAwMCBSREk6IDAwMDAwMDAwMDAwMDAwMDAKPlJCUDogMDAwMDAwMDAwMDAwMDAwMCBS
-MDg6IGZmZmZmZmZmODE4NTYwZDggUjA5OiAwMDAwZmZmZjg4NjE5ZWI3Cj5SMTA6IDAwMDBmZmZm
-ZmZmZmZmZmYgUjExOiAwMDAwMDAwMDAwMDAwMDAwIFIxMjogMDAwMDdmZmZmZmZmZjAwMAo+UjEz
-OiAwMDAwMDAwMDAwMDAwMDgwIFIxNDogMDAwMDAwMDAwMDAwMDAwMSBSMTU6IDAwMDAwMDAwMDAw
-MDAwMDMKID5fX2RvX3N5c19lcG9sbF9wd2FpdCBmcy9ldmVudHBvbGwuYzoyMzY0IFtpbmxpbmVd
-CiA+X19zZV9zeXNfZXBvbGxfcHdhaXQgZnMvZXZlbnRwb2xsLmM6MjM1MCBbaW5saW5lXQogPl9f
-eDY0X3N5c19lcG9sbF9wd2FpdCsweDkyLzB4MTUwIGZzL2V2ZW50cG9sbC5jOjIzNTAKID5kb19z
-eXNjYWxsXzY0KzB4NmEvMHhlMCBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzozODQKID5lbnRyeV9T
-WVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0NC8weGE5Cj5SSVA6IDAwMzM6MHg0NjkyNDAKPkNv
-ZGU6IDBmIDA1IDg5IDQ0IDI0IDIwIGMzIGNjIGNjIGNjIDhiIDdjIDI0IDA4IDQ4IDhiIDc0IDI0
-IDEwIDhiIDU0IDI0IDE4IDQ0IDhiIDU0IDI0IDFjID40OSBjNyBjMCAwMCAwMCAwMCAwMCBiOCAx
-OSAwMSAwMCAwMCAwZiAwNSA8ODk+IDQ0IDI0IDIwIGMzIGNjIGNjIGNjIGNjIGNjIGNjIGNjIGNj
-IGNjIGNjIGNjID44YiA3YyAyNCAwOCA0OCBjNwo+UlNQOiAwMDJiOjAwMDAwMGMwMDAwNGI3ZjAg
-RUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDogMDAwMDAwMDAwMDAwMDExOQo+UkFYOiBmZmZmZmZm
-ZmZmZmZmZmRhIFJCWDogMDAwMDAwMDAwMDAwMDAwMSBSQ1g6IDAwMDAwMDAwMDA0NjkyNDAKPlJE
-WDogMDAwMDAwMDAwMDAwMDA4MCBSU0k6IDAwMDAwMGMwMDAwNGI4NDAgUkRJOiAwMDAwMDAwMDAw
-MDAwMDAzCj5SQlA6IDAwMDAwMGMwMDAwNGJlNDAgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTog
-MDAwMDAwMDAwMDAwMDAwMAo+UjEwOiAwMDAwMDAwMDAwMDAwMDAxIFIxMTogMDAwMDAwMDAwMDAw
-MDI0NiBSMTI6IDAwMDAwMDAwMDAwMDAwMDMKPlIxMzogMDAwMDAwYzAwMDA5Y2MwMCBSMTQ6IDAw
-MDAwMGMwMDAzMmMxODAgUjE1OiAwMDAwMDAwMDAwMDAwMDAwCj5LZXJuZWwgT2Zmc2V0OiBkaXNh
-YmxlZAo+UmVib290aW5nIGluIDg2NDAwIHNlY29uZHMuLgoKSW4gImVwX3BvbGwiIGZ1bmMgdGhl
-IGxvY2tkZXBfYXNzZXJ0X2lycXNfZW5hYmxlZCBkZXRlY3RlZAogaW50ZXJydXB0IHN0YXR1cywg
-YWx0aG91Z2ggYmVmb3JlIGVudGVyICJlcF9wb2xsIiBmdW5jLCBpcnEKICBpcyBhbHJlYWR5IGVu
-YWJsZWQsIGJ1dCBpdCB3YXMgbWlzc2VkIGxvY2tkZXAgaXJxIHN0YXR1cyBzZXQuCgotLS0gYS9r
-ZXJuZWwvZW50cnkvY29tbW9uLmMKKysrIGIva2VybmVsL2VudHJ5L2NvbW1vbi5jCkBAIC03Niw2
-ICs3Niw3IEBAIG5vaW5zdHIgbG9uZyBzeXNjYWxsX2VudGVyX2Zyb21fdXNlcl9tb2RlKHN0cnVj
-dCBwdF9yZWdzICpyZWdzLCBsb25nIHN5c2NhbGwpCiAgICAgICAgaW5zdHJ1bWVudGF0aW9uX2Jl
-Z2luKCk7CiAKICAgICAgICBsb2NhbF9pcnFfZW5hYmxlKCk7CisgICAgICAgbG9ja2RlcF9oYXJk
-aXJxc19vbihDQUxMRVJfQUREUjApOwogICAgICAgIHRpX3dvcmsgPSBSRUFEX09OQ0UoY3VycmVu
-dF90aHJlYWRfaW5mbygpLT5mbGFncyk7CiAgICAgICAgaWYgKHRpX3dvcmsgJiBTWVNDQUxMX0VO
-VEVSX1dPUkspCiAgICAgICAgICAgICAgICBzeXNjYWxsID0gc3lzY2FsbF90cmFjZV9lbnRlcihy
-ZWdzLCBzeXNjYWxsLCB0aV93b3JrKTsKLS0gCkNhbiB3ZSBzaG91bGQgYWRkIGxvY2tkZXBfaGFy
-ZGlycXNfb24/CgoKPi0tLQo+VGhpcyByZXBvcnQgaXMgZ2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBt
-YXkgY29udGFpbiBlcnJvcnMuCj5TZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGlu
-Zm9ybWF0aW9uIGFib3V0IHN5emJvdC4KPnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQg
-YXQgc3l6a2FsbGVyQGdvb2dsZWdyb3Vwcy5jb20uCgo+c3l6Ym90IHdpbGwga2VlcCB0cmFjayBv
-ZiB0aGlzIGlzc3VlLiBTZWU6Cj5odHRwczovL2dvby5nbC90cHNtRUojc3RhdHVzIGZvciBob3cg
-dG8gY29tbXVuaWNhdGUgd2l0aCBzeXpib3QuCg==
+On Thu, Aug 6, 2020 at 8:09 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Thu, Aug 6, 2020 at 8:02 PM Saravana Kannan <saravanak@google.com> wrote:
+> > On Thu, Aug 6, 2020 at 7:49 PM John Stultz <john.stultz@linaro.org> wrote:
+> > > On Thu, Aug 6, 2020 at 6:42 PM Bjorn Andersson
+> > > <bjorn.andersson@linaro.org> wrote:
+> > > > With all due respect, that's your downstream kernel, the upstream kernel
+> > > > should not rely on luck, out-of-tree patches or kernel parameters.
+> > >
+> > > I agree that would be preferred. But kernel parameters are often there
+> > > for these sorts of cases where we can't always do the right thing.  As
+> > > for out-of-tree patches, broken things don't get fixed until
+> > > out-of-tree patches are developed and upstreamed, and I know Saravana
+> > > is doing exactly that, and I hope his fw_devlink work helps fix it so
+> > > the module loading is not just a matter of luck.
+> >
+> > Btw, the only downstream fw_devlink change is setting itto =on (vs
+> > =permissive in upstream).
+>
+> I thought there was the clk_sync_state stuff as well?
+
+That's not needed to solve the module load ordering issues and
+deferred probe issues. That's only needed to keep clocks on till some
+of the modules are loaded and it depends on fw_devlink, but not really
+a part of fw_devlink IMHO. And yes, that's on my list of things to
+upstream.
+
+> > > Also I think Thierry's comments in the other thread today are also
+> > > good ideas for ways to better handle the optional dt link handling
+> > > (rather than using a timeout).
+> >
+> > Could you please give me a lore link to this thread? Just curious.
+>
+> Sure: https://lore.kernel.org/lkml/20200806135251.GB3351349@ulmo/
+
+Thanks.
+
+-Saravana
