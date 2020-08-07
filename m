@@ -4,75 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082B422CF7
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9830522CF7
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596765310;
-	bh=VKHTneHgQd9kfBEFTXy/ydtlL31JnW0bvl2ACafIqr0=;
+	s=default; t=1596765314;
+	bh=ZQ3AZOQRls5Sk7BQCbwdqbcwdxOK2Rjt6f8/0mn/8CU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Ntxsw5bnQIRm6nYUaUhpQKO2wutxevWEttN4ZNAhv2ltdJBYpAgX6xLh96oGCWbUR
-	 QKkdYb4XMPEmDXHyZmlPtpxO+LnK1aSQfZMgnP+L2g/wDFkeMNoOvYW6iHWKClO1Zv
-	 d6qSMbvNmjH4AhnhxJfHdJSohqLBqz96SyXCsvf8=
+	b=zcw+fdiupMhOOBDxZqxOde9YnGXzC4l4CE3rTzrN/34S7le/57f2oDD1riJZEa5Lp
+	 X5O8uSdHqVNW2dALbkECs/Qi3LCWcfbTIxTnrMHyWypwYwv8anugaCH6p39fDPeQKl
+	 DUjcVnPH/U8DGlnBl8lSEmQNKR6uhA902/nizZ1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgHGBzI (ORCPT
+        id S1726439AbgHGBzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        Thu, 6 Aug 2020 21:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgHGBzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:55:07 -0400
-Subject: Re: [GIT PULL] RESEND: thermal for v5.9-rc1
+        id S1726393AbgHGBzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:55:12 -0400
+Subject: Re: [GIT PULL] first round of SCSI updates for the 5.8+ merge window
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596765307;
-        bh=VKHTneHgQd9kfBEFTXy/ydtlL31JnW0bvl2ACafIqr0=;
+        s=default; t=1596765312;
+        bh=ZQ3AZOQRls5Sk7BQCbwdqbcwdxOK2Rjt6f8/0mn/8CU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=TdowF9EnLsmGGm1GW3upeFv5zKyeAxRr9S29REfKo/psivR/YNL4zmTqafIs3P7TE
-         D6uFMLmX3dbvD9RnmXB0XYdhLhyPJn7VGssfdanVZM2HEbVDj873wOkCZ9WgCWiiww
-         zjmVOaZtCuT0CWCK8EAZdILphxqAPk46HmyVbtKc=
+        b=XwTosu1GRkKt+QgS7nWWmkeUVopgJsT8mod50Bpo9FrC+fniw9bB7SNEFZKnP7VHd
+         ySYV8ZHK4APP6G3TX3qAZkRya5hRenaWZhnetiKbdbBEabswTCU7gTMWn3vuEWs1bx
+         nR0H2RvqNEM2BbVygO7TvFVCLdiy88sv1MWJnY7w=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
-References: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
-X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.9-rc1
-X-PR-Tracked-Commit-Id: c569e805c7bcebdd069e5c97ce5f8543f6d02433
+In-Reply-To: <1596747315.25458.50.camel@HansenPartnership.com>
+References: <1596747315.25458.50.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-scsi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1596747315.25458.50.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: bf1a28f92a8b00ee8ce48cc11338980e31ddb7b3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 96e3f3c16b7aedcd71502ccfc5778dddfc2e7b15
-Message-Id: <159676530743.30846.14861257054393255674.pr-tracker-bot@kernel.org>
-Date:   Fri, 07 Aug 2020 01:55:07 +0000
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Colin King <colin.king@canonical.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Lukasz Luba <Lukasz.Luba@arm.com>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Henry Yen <henry.yen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
+X-PR-Merge-Commit-Id: dfdf16ecfd6abafc22b7f02364d9bb879ca8a5ee
+Message-Id: <159676531190.30846.10031371483321725160.pr-tracker-bot@kernel.org>
+Date:   Fri, 07 Aug 2020 01:55:11 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 6 Aug 2020 22:18:59 +0200:
+The pull request you sent on Thu, 06 Aug 2020 13:55:15 -0700:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.9-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/96e3f3c16b7aedcd71502ccfc5778dddfc2e7b15
+https://git.kernel.org/torvalds/c/dfdf16ecfd6abafc22b7f02364d9bb879ca8a5ee
 
 Thank you!
 
