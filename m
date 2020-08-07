@@ -2,108 +2,118 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F611C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6452B20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="xkKdSxZ/"
+	by mail.kernel.org (Postfix) with ESMTP id 4739220855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHGCXM (ORCPT
+        id S1726514AbgHGC0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 22:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHGCXL (ORCPT
+        Thu, 6 Aug 2020 22:26:30 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:35406 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgHGC01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 22:23:11 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5654C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 19:23:09 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id d6so452753ejr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 19:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jgzNrADqzmOr0n80iYHzzjjMlgmpS1/Gs1L13/e0S0M=;
-        b=xkKdSxZ/YeWppyWC41wNCev1Hlc6V2GbZYCKi04KJcQA2xlABK3jHBb55CII9kdLkB
-         lwF1l3xjePmejor8JDViPAKMSYmfJMazdFURokNdeblwnOFelt6FAryAvZJTOK7Q2Q+i
-         ikXRvpcROlw8/3BPTvfNY5bxBxFFKitUKLwSaO/T+JWGgWRMPTDdN05VVUKwWwNAs2yt
-         1Ai2iIjmlYVGcqW+qIQJmPNFXQCdUkkkg9yLsCXbpu5pmTHrpT9tK7B6Yx/ePXOKdzr2
-         9w9o0QIyPj/0KBojAGRrVEdVdSeDo5sJRbJlQg8JOiZUUeOQJTK0TDXDx+S4PSbT3tpS
-         sYVw==
+        Thu, 6 Aug 2020 22:26:27 -0400
+Received: by mail-il1-f199.google.com with SMTP id g6so361208iln.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 19:26:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jgzNrADqzmOr0n80iYHzzjjMlgmpS1/Gs1L13/e0S0M=;
-        b=O56Mde1iQ1OBQ6CXFZg4LHxlmtkI5m47kOVjElFBpz5Qq6PelHKTQHZB8/iqAsOlQc
-         TXm/SlQNdrzL2folVOsxY3Zhlj/zgApuacyeNzILny4ouybo3qeOQjMLkm4gqBaqgv7n
-         qHe8/4F55pQwKLmxawhsa3xdsNM9H7hWJGiX10ifealacrQ+/kby5+JNWqiTLatS4NuZ
-         Wj5IKYWlL0UcQXjrw2TC6fFX5l8zMEQw5ZrrwINKATwX8iQQvFrEHOUMnP7mmRui2dHy
-         O7bKpUqbkxZ0wiXjjzpWtX5bztgvG7Kv13Ohaz2ZB9jAW5lTomtirWVYq+STEVlgnY3k
-         SkMw==
-X-Gm-Message-State: AOAM530bMhSlcwsyPRAZD09F980m5V8s7lFBSusJCn1+Ws/TtvMFnuXm
-        zdHWI1EdatTzmWh1KT82jRn1fDVN/g7yZenEFIQT
-X-Google-Smtp-Source: ABdhPJxYMiDo8RtvN3CXEECww50UvDjUBbfOPaqI3Inev+STXp5CcSBgW3wJZjTdxBDyskuyHGC2ibHVKOcefgjLOOI=
-X-Received: by 2002:a17:906:7c86:: with SMTP id w6mr7106172ejo.178.1596766988566;
- Thu, 06 Aug 2020 19:23:08 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=P4HaL8fuExeVT2ON4Wu7436r4YukaeyETCtLgx2utNk=;
+        b=uLBOrvukh7NM2qFDbEQXlKLv9nqUb5Du4M3Ve63OvBu6Kn4F+xRcZfVScfstOve+Iq
+         PQ2hvyTxOgPER35YkT+qAYeA3E6AF5qhB/YaQAgRmOSIHS5kXgj8eOBMNdvtItsdVFhb
+         u9+cfbLS3l0NzRcFpWvBGPFW800taGXMgkh7SagqQLy3W862LIqb+mghxTtR7N7L5XXf
+         qdqzRMAPYssmjQawy3WJtA6JKvidrzIHKKxUlUT0BzVX/6haRbkmSl8tLKw2fG6dgV4S
+         UTn8htwWWpbcaGz7zJcV3qzXp528JlI0dLzJZZ2ZPKBDSK8ckw6VOZpkuoI4tRXIJwGz
+         C3YQ==
+X-Gm-Message-State: AOAM532y8eIGBJnL8kXD4rsG6VaRiZ2zaR5Jvof214AwhPedYhdxok2o
+        NJlagc5QVXqbY9rZK62zTbrb1xyQc/+bmTuAMuyRQYQjz5V9
+X-Google-Smtp-Source: ABdhPJxC+84P4eA4etCMj8bj2rNpwjY7+2e8369KBCiLW0ybXGFHpcCp84efsiZ87C3C9o/rgJ/W/0ZmK9AIsZ8STNyY0l/N0nb5
 MIME-Version: 1.0
-References: <20200806080358.3124505-1-tweek@google.com> <20200806080358.3124505-2-tweek@google.com>
- <89d23362-39b9-79e5-84f1-d7b89204ef38@gmail.com> <8627d780-0e19-6755-0de5-c686deb0f5de@sony.com>
- <971592b6-5d5f-05d8-d243-b521fe65577d@gmail.com> <20200806123748.2285944b@oasis.local.home>
-In-Reply-To: <20200806123748.2285944b@oasis.local.home>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 6 Aug 2020 22:22:57 -0400
-Message-ID: <CAHC9VhQ5AK_16EeCLqDJO3iCscMMKWYqVZbbj-MtpXfqoEpc5A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] selinux: add attributes to avc tracepoint
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        peter enderborg <peter.enderborg@sony.com>,
-        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org
+X-Received: by 2002:a6b:8b10:: with SMTP id n16mr2168652iod.11.1596767185982;
+ Thu, 06 Aug 2020 19:26:25 -0700 (PDT)
+Date:   Thu, 06 Aug 2020 19:26:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e8d94d05ac40540a@google.com>
+Subject: WARNING: refcount bug in bt_accept_dequeue
+From:   syzbot <syzbot+6048aa700d088954b0fc@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 12:37 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Thu, 6 Aug 2020 08:32:38 -0400
-> Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
-> > >
-> > > In the commit message or in a Documentation/trace/events-avc.rst ?
-> >
-> > I was just asking for it in the commit message / patch description.  I
-> > don't know what is typical for Documentation/trace.
->
-> No, the Documentation/trace is for generic tracing documentation. Not
-> for individual events.
+Hello,
 
-As I've said many times in the past, I've never rejected a patch
-because the patch description was too verbose, but I have rejected
-patches where the description hasn't provided enough useful
-information.
+syzbot found the following issue on:
 
-I would really like to see the commit description show an example
-where you setup/load/etc. the event into the kernel, trigger and
-capture the event information, and then show how the event output can
-be parsed/processed into something meaningful by a user.  I'm
-essentially looking for a "hello world" version of the SELinux
-tracepoint, does that make sense?
+HEAD commit:    47ec5303 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1083e7ec900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c783f658542f35
+dashboard link: https://syzkaller.appspot.com/bug?extid=6048aa700d088954b0fc
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c227dc900000
 
--- 
-paul moore
-www.paul-moore.com
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6048aa700d088954b0fc@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 1 PID: 3805 at lib/refcount.c:25 refcount_warn_saturate+0x13d/0x1a0 lib/refcount.c:25
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 3805 Comm: krfcommd Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:231
+ __warn+0x227/0x250 kernel/panic.c:600
+ report_bug+0x1b1/0x2e0 lib/bug.c:198
+ handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:refcount_warn_saturate+0x13d/0x1a0 lib/refcount.c:25
+Code: c7 93 1e 15 89 31 c0 e8 71 0c a9 fd 0f 0b eb a3 e8 88 66 d7 fd c6 05 97 4d ed 05 01 48 c7 c7 ca 1e 15 89 31 c0 e8 53 0c a9 fd <0f> 0b eb 85 e8 6a 66 d7 fd c6 05 7a 4d ed 05 01 48 c7 c7 f6 1e 15
+RSP: 0018:ffffc90001997b80 EFLAGS: 00010246
+RAX: b5077223a4630100 RBX: 0000000000000002 RCX: ffff88809902e380
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: 0000000000000002 R08: ffffffff815dffd9 R09: ffffed1015d262c0
+R10: ffffed1015d262c0 R11: 0000000000000000 R12: ffff88808df4b4b8
+R13: ffff88808df4b080 R14: 0000000000000000 R15: dffffc0000000000
+ refcount_add include/linux/refcount.h:205 [inline]
+ refcount_inc include/linux/refcount.h:241 [inline]
+ sock_hold include/net/sock.h:692 [inline]
+ bt_accept_dequeue+0x34e/0x560 net/bluetooth/af_bluetooth.c:206
+ l2cap_sock_accept+0x21c/0x430 net/bluetooth/l2cap_sock.c:332
+ kernel_accept+0x143/0x410 net/socket.c:3569
+ rfcomm_accept_connection net/bluetooth/rfcomm/core.c:1931 [inline]
+ rfcomm_process_sessions+0x1c5/0xc540 net/bluetooth/rfcomm/core.c:1990
+ rfcomm_run+0x3b5/0x900 net/bluetooth/rfcomm/core.c:2086
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
