@@ -2,272 +2,87 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1689DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89B021744
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789DD21744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TujP8TuZ"
+	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="jN4BnPT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726123AbgHGPTN (ORCPT
+        id S1726242AbgHGPTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgHGPTM (ORCPT
+        Fri, 7 Aug 2020 11:19:20 -0400
+Received: from sonic315-54.consmr.mail.gq1.yahoo.com ([98.137.65.30]:40079
+        "EHLO sonic315-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgHGPTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:19:12 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F543C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 08:19:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r2so2013877wrs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 08:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jHwuEBD3ANfATNEay78Qrd/CFOLdfE4qFBZzKEVtZCA=;
-        b=TujP8TuZR2DpKwyBOeQllZVWSln2kvXwLMBXX49z/O6xe8jGbNkhvXxcP1NQpUJylO
-         UgBfvD6zY2Qu8xw9xJ2ntvw4vVgZ8nU4vFOujvRjS/L+dWCS2adTEUBik1qmKpj6hIJb
-         p21G4Ojwu/Nm0P/4P6pUgmfcwPn2wx9rqnBBJc3zj4wk+hIAdczTrLW5jVEAnBfvF43N
-         xRlG6WyCI5vwTQHyN4TzY60sCoieCzDaOxrwlmHeTztaztrsARkjWz4UpuBMgDGGdHUi
-         e4tpzaME4K7qlDiuJMKVCwC6sDWfpGnq49jIdIe3hQpSQJNzDdt6BvRoNAELSgBepZD9
-         1KnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jHwuEBD3ANfATNEay78Qrd/CFOLdfE4qFBZzKEVtZCA=;
-        b=h06YaB6HUJ1zLQsnG2mGT7C66RpLdZq8Pz/inMZ20xJtB8scGq8wNhCr65sj5Me5GW
-         fNYHlfafxNDwYtn1oUUnp2LqJ0KVwlBx/GOT/uS1GebWXKEETC/eao5urEF4jayO74Es
-         VtoWu5RDZkSJ5vk51TAY8+iZGRBXDXIRPIQBkDbJsaOmjmv9w2ebLOXmzhsZ1lncpzrj
-         IrwGkcYHKILtfGJRRqZ3dCX49atZyY9yh/p8eBwG0fIsvzwneGzll1mOqbq6jaaOmpnJ
-         LjbakBmQe+FL8BgOUmvgKM0r+pD79xe6IiyRXJbZdfDNCxgLCmbV1HtpPgySwPJqF9eK
-         T74Q==
-X-Gm-Message-State: AOAM533hDURvBWKYgRuggNPPUxt2C9o4ad5iyMQBQGv5I14YDPRTVzIS
-        RXI3dsC7rXWHABv3IyZ9ZxSOQRO/Ung=
-X-Google-Smtp-Source: ABdhPJyaZVsj/LF4r8nUhCFL1vL9/xRwj7Iov/A9RiYqwaHSuuOH9wQsJoBwzeuM3+8RO1bFzHasXg==
-X-Received: by 2002:a5d:4401:: with SMTP id z1mr12196021wrq.305.1596813550150;
-        Fri, 07 Aug 2020 08:19:10 -0700 (PDT)
-Received: from elver.google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id 111sm10899976wrc.53.2020.08.07.08.19.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 08:19:08 -0700 (PDT)
-Date:   Fri, 7 Aug 2020 17:19:03 +0200
-From:   Marco Elver <elver@google.com>
-To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        yu-cheng.yu@intel.com, sdeep@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
- helpers
-Message-ID: <20200807151903.GA1263469@elver.google.com>
-References: <20200806113236.GZ2674@hirez.programming.kicks-ass.net>
- <20200806131702.GA3029162@elver.google.com>
- <CANpmjNNqt8YrCad4WqgCoXvH47pRXtSLpnTKhD8W8+UpoYJ+jQ@mail.gmail.com>
- <CANpmjNO860SHpNve+vaoAOgarU1SWy8o--tUWCqNhn82OLCiew@mail.gmail.com>
- <fe2bfa7f-132f-7581-a967-d01d58be1588@suse.com>
- <20200807095032.GA3528289@elver.google.com>
- <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com>
- <20200807113838.GA3547125@elver.google.com>
- <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
- <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
+        Fri, 7 Aug 2020 11:19:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1596813559; bh=DDIPGKv8pPTNaBP39e4OFKUALf3JyLizv1xi70HKs2o=; h=Date:From:Subject:To:Cc:References:From:Subject; b=jN4BnPT5nzRv5I6dIPlMciA/96H/Rx8mSsJ+IblK1cP2f0HTa4I3epXRJ7hSydyFoJo6WfwWDPtlG6iUKCVi60tlEy5rzgpLjy2wkkSwkj+VoQFusJIXk1g29xljbMvZXEwWCGXm2B3kIQWeggvSfdMWCg4mkmQAmjj5aC81yihZuViRjT6k4UuNixI9r/NUkHusublyxohVugXwaUlT27Fx4s8tFjC6M2+IR5AiIcx8+igJ5g0a+5z4OPc+yn4Tiemh6i/nl7sFNf9G/tnkbYCSAHfKp+uQFjfkGBhRCVYJnok/mHDxaqC4fQdXD956G705LaDm/x/sJiWS/TRiLw==
+X-YMail-OSG: aoq6VQ0VM1l9UFnQ3a1JmKHuS55NiehuV3UbSYoA6S.si0Fo11owzmUBibL2p04
+ B.iNKA1x9T8OxZI5EX5fdTShpSAijHR3B6Glc_dGQE4uYY_ncFgUR9LzfIxKuP6ZJxba0G4kW5Nw
+ yAfT.3c9sE.qko2p11IyPauOsjIjO9dXfT3aA.YuBpb7J1nDTw6i8TU4raEFp4BEt2zMPrlViPt.
+ EMRmvA_3aN8WvbRB4IaJk6gUkwn550fshiF6wKD8EVt_rKmw85g8caRRvAzO.L4bOU.baV4fvE17
+ zN9kUdhFkJhlKR__8xecd6ecTX65gzWunDmsQDfaJ88EPjV9uH.RgXKf2NiTbsQ.d9fcIgNLly6c
+ BD2hGU54hxaAwqSXPrhhw4jUQ3NiHQZ_E5DWg.olNqFHoH4oXz5kBxnbVL4KDJ8_25kw_4SKNZDV
+ PZwkU2PIoxUX96GAwo_j3zEmU5RDO.GOFlA3tnQY_ivmqamrralZ1BeSN_tYzoUODBZS1CXCqS3z
+ dBKmsPLlHCx6k7VaBLfNeUeQ7XnA3j2dNl2fxgshS4QwpQG7jue5ykrVDD5wHMFjDNNj_AnMgGiP
+ 71yZRX7kPPLRpJEIIXqtYckYtNElFfXEj0EfzJhHGlufXKWH7_DtFLk24pjS2dK_lxIzCRIM_iHt
+ pU14_jAF.l46AURL._WZ0tNpsti0emU6zIFUFj4WpwB97WqNdYhnKMHRygOhdcS4ozOIu7vIcLby
+ FCy4eRHERriWRbjIOppvlHqAv3RtKA8e_cr1tQKpL1.Rc7eeqlGi1vdE5OJuMAzFBxV9vrXRyg0u
+ ZxC_uIPOvn1SttwgVko.zznQh3qi7Le096y0nV5z5r6MDxqb7OB5fhcDG6j.tWIqBIXc9OG8J9lU
+ iaLIYGaRtqhdqAgRozRzYPs4UnaEiGt22nhrb8qTCmVx2ObJKBKboxKuZY7O29gkAyNg8E0bkOX2
+ Y1aLfoAFu8q0QhBsCbS1yLvNXIgPNtfudIMY.vBl4iXSVikvsAF0NKp49LAB5HWojtTZ.C_bSNaI
+ 8sU4hDy8YM_Gb4T8S4OzqpqCv4pBtuoUFl4uoYeszoJCJUcSWclPFbySCr.hEC05E5xTdzrM7p3M
+ dcy9ZoXRLCwAhMM4fQ3q2tM9tPY6G16plLnViKcHLwbDuGmYEi.Hd.rbO1LZAD8RGTRCuMcSG4gl
+ DZcEz4Um8A3Y2e6Jx8w.vQTSbeF83qjerEkfVY4R2Z3E6Pdn3i0I1N1ztesCXYSbWsoGHBHxfPUa
+ 7hBR8jZqOEDX5LfK7CG6F5y6083S__V2jVZFLtBt7fszdKromqzI8.1Re6rYZMqvSbFSxPQjuGrZ
+ z_EnsnDeGOAPtdJx.Ihd_7Xwsg5gSdjTxaz2m..42d9ZeIXBp35QoZ9.Fmznd7M3LjXRcboO3paH
+ WAEQlIesIFhP7U89Qt6br17ss5dJIgl4Mo4y27cU9ClyiqKMhZ6T4LWs-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Fri, 7 Aug 2020 15:19:19 +0000
+Received: by smtp415.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 046d4181f1aaf2890af699b2d693421a;
+          Fri, 07 Aug 2020 15:19:12 +0000 (UTC)
+Date:   Fri, 07 Aug 2020 11:19:09 -0400
+From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Subject: wine fails to start with seccomp updates for v5.9-rc1
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Chris Palmer <palmer@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matt Denton <mpdenton@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Shuah Khan <shuah@kernel.org>, Tycho Andersen <tycho@tycho.ws>,
+        Will Deacon <will@kernel.org>, Will Drewry <wad@chromium.org>,
+        Yonghong Song <yhs@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Message-Id: <1596812929.lz7fuo8r2w.none@localhost>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+References: <1596812929.lz7fuo8r2w.none.ref@localhost>
+X-Mailer: WebService/1.1.16436 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 02:08PM +0200, Marco Elver wrote:
-> On Fri, 7 Aug 2020 at 14:04, J=FCrgen Gro=DF <jgross@suse.com> wrote:
-> >
-> > On 07.08.20 13:38, Marco Elver wrote:
-> > > On Fri, Aug 07, 2020 at 12:35PM +0200, J=FCrgen Gro=DF wrote:
-> > >> On 07.08.20 11:50, Marco Elver wrote:
-> > >>> On Fri, Aug 07, 2020 at 11:24AM +0200, J=FCrgen Gro=DF wrote:
-> > >>>> On 07.08.20 11:01, Marco Elver wrote:
-> > >>>>> On Thu, 6 Aug 2020 at 18:06, Marco Elver <elver@google.com> wrote:
-> > >>>>>> On Thu, 6 Aug 2020 at 15:17, Marco Elver <elver@google.com> wrot=
-e:
-> > >>>>>>> On Thu, Aug 06, 2020 at 01:32PM +0200, peterz@infradead.org wro=
-te:
-> > >>>>>>>> On Thu, Aug 06, 2020 at 09:47:23AM +0200, Marco Elver wrote:
-> > >>>>>>>>> Testing my hypothesis that raw then nested non-raw
-> > >>>>>>>>> local_irq_save/restore() breaks IRQ state tracking -- see the=
- reproducer
-> > >>>>>>>>> below. This is at least 1 case I can think of that we're boun=
-d to hit.
-> > >>>>>>> ...
-> > >>>>>>>>
-> > >>>>>>>> /me goes ponder things...
-> > >>>>>>>>
-> > >>>>>>>> How's something like this then?
-> > >>>>>>>>
-> > >>>>>>>> ---
-> > >>>>>>>>     include/linux/sched.h |  3 ---
-> > >>>>>>>>     kernel/kcsan/core.c   | 62 +++++++++++++++++++++++++++++++=
-+++++---------------
-> > >>>>>>>>     2 files changed, 44 insertions(+), 21 deletions(-)
-> > >>>>>>>
-> > >>>>>>> Thank you! That approach seems to pass syzbot (also with
-> > >>>>>>> CONFIG_PARAVIRT) and kcsan-test tests.
-> > >>>>>>>
-> > >>>>>>> I had to modify it some, so that report.c's use of the restore =
-logic
-> > >>>>>>> works and not mess up the IRQ trace printed on KCSAN reports (w=
-ith
-> > >>>>>>> CONFIG_KCSAN_VERBOSE).
-> > >>>>>>>
-> > >>>>>>> I still need to fully convince myself all is well now and we do=
-n't end
-> > >>>>>>> up with more fixes. :-) If it passes further testing, I'll send=
- it as a
-> > >>>>>>> real patch (I want to add you as Co-developed-by, but would nee=
-d your
-> > >>>>>>> Signed-off-by for the code you pasted, I think.)
-> > >>>>>
-> > >>>>> I let it run on syzbot through the night, and it's fine without
-> > >>>>> PARAVIRT (see below). I have sent the patch (need your Signed-off=
--by
-> > >>>>> as it's based on your code, thank you!):
-> > >>>>> https://lkml.kernel.org/r/20200807090031.3506555-1-elver@google.c=
-om
-> > >>>>>
-> > >>>>>> With CONFIG_PARAVIRT=3Dy (without the notrace->noinstr patch), I=
- still
-> > >>>>>> get lockdep DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled()), al=
-though
-> > >>>>>> it takes longer for syzbot to hit them. But I think that's expec=
-ted
-> > >>>>>> because we can still get the recursion that I pointed out, and w=
-ill
-> > >>>>>> need that patch.
-> > >>>>>
-> > >>>>> Never mind, I get these warnings even if I don't turn on KCSAN
-> > >>>>> (CONFIG_KCSAN=3Dn). Something else is going on with PARAVIRT=3Dy =
-that
-> > >>>>> throws off IRQ state tracking. :-/
-> > >>>>
-> > >>>> What are the settings of CONFIG_PARAVIRT_XXL and
-> > >>>> CONFIG_PARAVIRT_SPINLOCKS in this case?
-> > >>>
-> > >>> I attached a config.
-> > >>>
-> > >>>     $> grep PARAVIRT .config
-> > >>>     CONFIG_PARAVIRT=3Dy
-> > >>>     CONFIG_PARAVIRT_XXL=3Dy
-> > >>>     # CONFIG_PARAVIRT_DEBUG is not set
-> > >>>     CONFIG_PARAVIRT_SPINLOCKS=3Dy
-> > >>>     # CONFIG_PARAVIRT_TIME_ACCOUNTING is not set
-> > >>>     CONFIG_PARAVIRT_CLOCK=3Dy
-> > >>
-> > >> Anything special I need to do to reproduce the problem? Or would you=
- be
-> > >> willing to do some more rounds with different config settings?
-> > >
-> > > I can only test it with syzkaller, but that probably doesn't help if =
-you
-> > > don't already have it set up. It can't seem to find a C reproducer.
-> > >
-> > > I did some more rounds with different configs.
-> > >
-> > >> I think CONFIG_PARAVIRT_XXL shouldn't matter, but I'm not completely
-> > >> sure about that. CONFIG_PARAVIRT_SPINLOCKS would be my primary suspe=
-ct.
-> > >
-> > > Yes, PARAVIRT_XXL doesn't make a different. When disabling
-> > > PARAVIRT_SPINLOCKS, however, the warnings go away.
-> >
-> > Thanks for testing!
-> >
-> > I take it you are doing the tests in a KVM guest?
->=20
-> Yes, correct.
->=20
-> > If so I have a gut feeling that the use of local_irq_save() and
-> > local_irq_restore() in kvm_wait() might be fishy. I might be completely
-> > wrong here, though.
->=20
-> Happy to help debug more, although I might need patches or pointers
-> what to play with.
->=20
-> > BTW, I think Xen's variant of pv spinlocks is fine (no playing with IRQ
-> > on/off).
-> >
-> > Hyper-V seems to do the same as KVM, and kicking another vcpu could be
-> > problematic as well, as it is just using IPI.
+Hi,
 
-I experimented a bit more, and the below patch seems to solve the
-warnings. However, that was based on your pointer about kvm_wait(), and
-I can't quite tell if it is the right solution.
+On Linus' master, wine fails to start with the following error:
 
-My hypothesis here is simply that kvm_wait() may be called in a place
-where we get the same case I mentioned to Peter,
+wine client error:0: write: Bad file descriptor
 
-	raw_local_irq_save(); /* or other IRQs off without tracing */
-	...
-	kvm_wait() /* IRQ state tracing gets confused */
-	...
-	raw_local_irq_restore();
-
-and therefore, using raw variants in kvm_wait() works. It's also safe
-because it doesn't call any other libraries that would result in corrupt
-IRQ state AFAIK.
+This issue is not present on 5.8. It appears to be caused by failure to=20
+write to a pipe FD received via SCM_RIGHTS. Therefore, I tried reverting=20
+9ecc6ea491f0, which resolved the issue.
 
 Thanks,
--- Marco
-
------- >8 ------
-
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 233c77d056c9..1d412d1466f0 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -797,7 +797,7 @@ static void kvm_wait(u8 *ptr, u8 val)
- 	if (in_nmi())
- 		return;
-=20
--	local_irq_save(flags);
-+	raw_local_irq_save(flags);
-=20
- 	if (READ_ONCE(*ptr) !=3D val)
- 		goto out;
-@@ -810,10 +810,10 @@ static void kvm_wait(u8 *ptr, u8 val)
- 	if (arch_irqs_disabled_flags(flags))
- 		halt();
- 	else
--		safe_halt();
-+		raw_safe_halt();
-=20
- out:
--	local_irq_restore(flags);
-+	raw_local_irq_restore(flags);
- }
-=20
- #ifdef CONFIG_X86_32
+Alex.
