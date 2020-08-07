@@ -2,534 +2,249 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF38AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 938CD22D2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59F72075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WleNc4dM"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="g9NXD8HR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHGP5U (ORCPT
+        id S1726913AbgHGP54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:57:20 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:60826 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgHGP5P (ORCPT
+        Fri, 7 Aug 2020 11:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgHGP5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:57:15 -0400
+        Fri, 7 Aug 2020 11:57:55 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3D8C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 08:57:55 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id q17so1225369pls.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 08:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596815833; x=1628351833;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=heTUCgazYkFyMFPgshgvhLTxaWyqhkoT+T0bDksM3A0=;
-  b=WleNc4dMUvW96m/31RS37ouO2VukU2wi0LznQQBl1ky7YRxfoWToSmuv
-   pTffZhseCH5Y8gX2Yf9qOlQthlGtDXRLXMnApJvMF/9bdiNQpqXvA4pKy
-   eUQhuBc8XWdat/NnZ7Y4UHTsBLgbiSuWMvLFG3hIenEt4Lmi8/RcycKGc
-   Q=;
-IronPort-SDR: 0F4u/+iYeXLqaYH1QOLVJofWgoM7itBn17zKkK4ivPb8W0M1VHaAFlq3obw7B2v7boNfcuvsIZ
- LbFwp5n1NdCA==
-X-IronPort-AV: E=Sophos;i="5.75,446,1589241600"; 
-   d="scan'208";a="46627822"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 07 Aug 2020 15:57:11 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 2F16BA1E89;
-        Fri,  7 Aug 2020 15:57:06 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 7 Aug 2020 15:57:05 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.162.140) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 7 Aug 2020 15:57:02 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Joerg Roedel" <joro@8bytes.org>,
-        KarimAllah Raslan <karahmed@amazon.de>,
-        Aaron Lewis <aaronlewis@google.com>, <kvm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 2/3] KVM: x86: Introduce allow list for MSR emulation
-Date:   Fri, 7 Aug 2020 17:56:47 +0200
-Message-ID: <20200807155648.8602-3-graf@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200807155648.8602-1-graf@amazon.com>
-References: <20200807155648.8602-1-graf@amazon.com>
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eUpvaTqUYrMyWZbq7tEdgtH3MVmHdB0HgoG8WDALDBM=;
+        b=g9NXD8HRe/9tWdd5YZ8x9Hmxw3j98KyR/Ixwr2U1JGV+x9ew1ox6djajiVhu+TfrOI
+         ABtBAqd9syIkMWXhelhf1W24OajVWIBjq0X9Vh87ZuUwnrykfpvENL9xVOb5ui2LQZel
+         p48Cc27jK2ysSbiJfeiD0r7sRlBuvpTYOVhijW/1rH/AJV0jiMHQYFwaWmkhchK9fHtb
+         kDUKocyVU+Y4KtxUdnOMzrTYnmQ1OtnbJH9nAZPX7BEwJhOrJeG9mN8jXaDkLp376FBS
+         ROyXvwV/77NpGCP/lgBkuBcsYYo860DtMesZnGVGwwLA8RXjcGSe9TcPC0MwilTo0Geb
+         1pOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eUpvaTqUYrMyWZbq7tEdgtH3MVmHdB0HgoG8WDALDBM=;
+        b=qwhnV9qJspu6jNZyYbbP5QtJEETTV1gLzcXbg20I3TdfqV4Wt3UJ1AWKYEP3KuGDB3
+         FuP8RSE9irykmSYnpXS4DM1UUA9gZeTsBSWRk/z6u1d4NbMzPX0EpxIG7WcY0Ear2dEV
+         q4TKKIrXciaxj7EuA0+wKeSLh02mUFYPzzjnodkLv40q05f1fM+Qhz0otjC1y/M8q7q9
+         JUwb9p57LbFsjAmVYi6ea9w3v30H7NPqoUUGP03/8krb7vLVofTUv+GL+pX7phjxEOeF
+         qMBDMUNNMfMRgwBHDT79dAKs4TfRAWAow2m3Wi3fEq13TDiED8S6Z3oHqoy9jOcIEMow
+         67Rw==
+X-Gm-Message-State: AOAM530MdSK1Kzlp7armsJbi9HvZQCS7QYsEFJ8PobXuLp1n3YzAEmTJ
+        LP2iYPN8DyhuYG2CY6xLNqsTbMgrCFY=
+X-Google-Smtp-Source: ABdhPJwvt973ShLNQBXsJ5gTd6aOO23BVnkwbA42vMbpqVpfyb/A98JNGRX5vMHbZxmUGl2coyfQsg==
+X-Received: by 2002:a17:902:9309:: with SMTP id bc9mr12418716plb.51.1596815873482;
+        Fri, 07 Aug 2020 08:57:53 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id x136sm12851663pfc.28.2020.08.07.08.57.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 08:57:53 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 08:57:45 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     linux-kernel@vger.kernel.org
+Subject: [ANNOUNCE] iproute2 5.8
+Message-ID: <20200807085745.705a0247@hermes.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D29UWA001.ant.amazon.com (10.43.160.187) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not desireable to have all MSRs always handled by KVM kernel space. Some
-MSRs would be useful to handle in user space to either emulate behavior (like
-uCode updates) or differentiate whether they are valid based on the CPU model.
+Time for a new version of iproute2 to go with the 5.8 kernel.
+There are couple of administrative changes that long term downloaders
+will notice. First it that iproute2 is now maintained on the "main"
+branch. There are parallel copies (both updated) on kernel.org
+and github.
 
-To allow user space to specify which MSRs it wants to see handled by KVM,
-this patch introduces a new ioctl to push allow lists of bitmaps into
-KVM. Based on these bitmaps, KVM can then decide whether to reject MSR access.
-With the addition of KVM_CAP_X86_USER_SPACE_MSR it can also deflect the
-denied MSR events to user space to operate on.
+If you use github, you will get the right default branch;
+if you use kernel.org you will get the WRONG default branch.
+Kernel.org still does not have an way to change the name of the
+default branch. The "master" branch is dead and will be
+removed once kernel.org is fixed. If you have an existing
+iproute2 git repo either or clone a new copy or
+see one of many tutorials on renaming the master branch.
 
-If no allowlist is populated, MSR handling stays identical to before.
+The other change is that the former date based internal
+versioning (snapshot) is replaced by the regular version numbering
+which corresponds to the kernel version. Iproute2
+carries its own sanitized version of the kernel headers so the
+current code will build and run on older kernel releases.
 
-Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
-Signed-off-by: Alexander Graf <graf@amazon.com>
+It is recommended to always use the latest iproute2.
+Do not treat iproute2 like perf and require matching packages.
+The latest code will always run on older kernels (and vice versa);
+this is possible because of the kernel API/ABI guarantees.
+Except for rare cases, iproute2 does not do maintenance releases
+and there is no long term stable version.
 
----
+Download:
+    https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.8.0.tar.gz
 
-v2 -> v3:
+Repository for current release
+    https://github.com/shemminger/iproute2.git
+    git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 
-  - document flags for KVM_X86_ADD_MSR_ALLOWLIST
-  - generalize exit path, always unlock when returning
-  - s/KVM_CAP_ADD_MSR_ALLOWLIST/KVM_CAP_X86_MSR_ALLOWLIST/g
-  - Add KVM_X86_CLEAR_MSR_ALLOWLIST
+And future release (net-next):
+    git://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git
 
-v3 -> v4:
-  - lock allow check and clearing
-  - free bitmaps on clear
+Thanks for all the contributions.
 
-v4 -> v5:
-
-  - use srcu
----
- Documentation/virt/kvm/api.rst  |  91 ++++++++++++++++++
- arch/x86/include/asm/kvm_host.h |  10 ++
- arch/x86/include/uapi/asm/kvm.h |  15 +++
- arch/x86/kvm/x86.c              | 160 ++++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h        |   5 +
- 5 files changed, 281 insertions(+)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 2ca38649b3d4..9cb36060f61c 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -4697,6 +4697,82 @@ KVM_PV_VM_VERIFY
-   Verify the integrity of the unpacked image. Only if this succeeds,
-   KVM is allowed to start protected VCPUs.
- 
-+4.126 KVM_X86_ADD_MSR_ALLOWLIST
-+-------------------------------
-+
-+:Capability: KVM_CAP_X86_MSR_ALLOWLIST
-+:Architectures: x86
-+:Type: vm ioctl
-+:Parameters: struct kvm_msr_allowlist
-+:Returns: 0 on success, < 0 on error
-+
-+::
-+
-+  struct kvm_msr_allowlist {
-+         __u32 flags;
-+         __u32 nmsrs; /* number of msrs in bitmap */
-+         __u32 base;  /* base address for the MSRs bitmap */
-+         __u32 pad;
-+
-+         __u8 bitmap[0]; /* a set bit allows that the operation set in flags */
-+  };
-+
-+flags values:
-+
-+KVM_MSR_ALLOW_READ
-+
-+  Filter read accesses to MSRs using the given bitmap. A 0 in the bitmap
-+  indicates that a read should immediately fail, while a 1 indicates that
-+  a read should be handled by the normal KVM MSR emulation logic.
-+
-+KVM_MSR_ALLOW_WRITE
-+
-+  Filter write accesses to MSRs using the given bitmap. A 0 in the bitmap
-+  indicates that a write should immediately fail, while a 1 indicates that
-+  a write should be handled by the normal KVM MSR emulation logic.
-+
-+KVM_MSR_ALLOW_READ | KVM_MSR_ALLOW_WRITE
-+
-+  Filter booth read and write accesses to MSRs using the given bitmap. A 0
-+  in the bitmap indicates that both reads and writes should immediately fail,
-+  while a 1 indicates that reads and writes should be handled by the normal
-+  KVM MSR emulation logic.
-+
-+This ioctl allows user space to define a set of bitmaps of MSR ranges to
-+specify whether a certain MSR access is allowed or not.
-+
-+If this ioctl has never been invoked, MSR accesses are not guarded and the
-+old KVM in-kernel emulation behavior is fully preserved.
-+
-+As soon as the first allow list was specified, only allowed MSR accesses
-+are permitted inside of KVM's MSR code.
-+
-+Each allowlist specifies a range of MSRs to potentially allow access on.
-+The range goes from MSR index [base .. base+nmsrs]. The flags field
-+indicates whether reads, writes or both reads and writes are permitted
-+by setting a 1 bit in the bitmap for the corresponding MSR index.
-+
-+If an MSR access is not permitted through the allow list, it generates a
-+#GP inside the guest. When combined with KVM_CAP_X86_USER_SPACE_MSR, that
-+allows user space to deflect and potentially handle various MSR accesses
-+into user space.
-+
-+4.124 KVM_X86_CLEAR_MSR_ALLOWLIST
-+---------------------------------
-+
-+:Capability: KVM_CAP_X86_MSR_ALLOWLIST
-+:Architectures: x86
-+:Type: vcpu ioctl
-+:Parameters: none
-+:Returns: 0
-+
-+This ioctl resets all internal MSR allow lists. After this call, no allow
-+list is present and the guest would execute as if no allow lists were set,
-+so all MSRs are considered allowed and thus handled by the in-kernel MSR
-+emulation logic.
-+
-+No vCPU may be in running state when calling this ioctl.
-+
- 
- 5. The kvm_run structure
- ========================
-@@ -6213,3 +6289,18 @@ writes to user space. It can be enabled on a VM level. If enabled, MSR
- accesses that would usually trigger a #GP by KVM into the guest will
- instead get bounced to user space through the KVM_EXIT_X86_RDMSR and
- KVM_EXIT_X86_WRMSR exit notifications.
-+
-+8.25 KVM_CAP_X86_MSR_ALLOWLIST
-+------------------------------
-+
-+:Architectures: x86
-+
-+This capability indicates that KVM supports emulation of only select MSR
-+registers. With this capability exposed, KVM exports two new VM ioctls:
-+KVM_X86_ADD_MSR_ALLOWLIST which user space can call to specify bitmaps of MSR
-+ranges that KVM should emulate in kernel space and KVM_X86_CLEAR_MSR_ALLOWLIST
-+which user space can call to remove all MSR allow lists from the VM context.
-+
-+In combination with KVM_CAP_X86_USER_SPACE_MSR, this allows user space to
-+trap and emulate MSRs that are outside of the scope of KVM as well as
-+limit the attack surface on KVM's MSR emulation code.
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 2f2307e71342..4b1ff7cb848f 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -901,6 +901,13 @@ struct kvm_hv {
- 	struct kvm_hv_syndbg hv_syndbg;
- };
- 
-+struct msr_bitmap_range {
-+	u32 flags;
-+	u32 nmsrs;
-+	u32 base;
-+	unsigned long *bitmap;
-+};
-+
- enum kvm_irqchip_mode {
- 	KVM_IRQCHIP_NONE,
- 	KVM_IRQCHIP_KERNEL,       /* created with KVM_CREATE_IRQCHIP */
-@@ -1005,6 +1012,9 @@ struct kvm_arch {
- 	/* Deflect RDMSR and WRMSR to user space when they trigger a #GP */
- 	bool user_space_msr_enabled;
- 
-+	struct msr_bitmap_range msr_allowlist_ranges[10];
-+	int msr_allowlist_ranges_count;
-+
- 	struct kvm_pmu_event_filter *pmu_event_filter;
- 	struct task_struct *nx_lpage_recovery_thread;
- };
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 0780f97c1850..c33fb1d72d52 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -192,6 +192,21 @@ struct kvm_msr_list {
- 	__u32 indices[0];
- };
- 
-+#define KVM_MSR_ALLOW_READ  (1 << 0)
-+#define KVM_MSR_ALLOW_WRITE (1 << 1)
-+
-+/* Maximum size of the of the bitmap in bytes */
-+#define KVM_MSR_ALLOWLIST_MAX_LEN 0x600
-+
-+/* for KVM_X86_ADD_MSR_ALLOWLIST */
-+struct kvm_msr_allowlist {
-+	__u32 flags;
-+	__u32 nmsrs; /* number of msrs in bitmap */
-+	__u32 base;  /* base address for the MSRs bitmap */
-+	__u32 pad;
-+
-+	__u8 bitmap[0]; /* a set bit allows that the operation set in flags */
-+};
- 
- struct kvm_cpuid_entry {
- 	__u32 function;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index e1139124350f..a037da85d9d4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1472,6 +1472,39 @@ void kvm_enable_efer_bits(u64 mask)
- }
- EXPORT_SYMBOL_GPL(kvm_enable_efer_bits);
- 
-+static bool kvm_msr_allowed(struct kvm_vcpu *vcpu, u32 index, u32 type)
-+{
-+	struct kvm *kvm = vcpu->kvm;
-+	struct msr_bitmap_range *ranges = kvm->arch.msr_allowlist_ranges;
-+	u32 count = kvm->arch.msr_allowlist_ranges_count;
-+	u32 i;
-+	bool r = false;
-+	int idx;
-+
-+	/* MSR allowlist not set up, allow everything */
-+	if (!count)
-+		return true;
-+
-+	/* Prevent collision with clear_msr_allowlist */
-+	idx = srcu_read_lock(&kvm->srcu);
-+
-+	for (i = 0; i < count; i++) {
-+		u32 start = ranges[i].base;
-+		u32 end = start + ranges[i].nmsrs;
-+		u32 flags = ranges[i].flags;
-+		unsigned long *bitmap = ranges[i].bitmap;
-+
-+		if ((index >= start) && (index < end) && (flags & type)) {
-+			r = !!test_bit(index - start, bitmap);
-+			break;
-+		}
-+	}
-+
-+	srcu_read_unlock(&kvm->srcu, idx);
-+
-+	return r;
-+}
-+
- /*
-  * Write @data into the MSR specified by @index.  Select MSR specific fault
-  * checks are bypassed if @host_initiated is %true.
-@@ -1483,6 +1516,9 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
- {
- 	struct msr_data msr;
- 
-+	if (!host_initiated && !kvm_msr_allowed(vcpu, index, KVM_MSR_ALLOW_WRITE))
-+		return -ENOENT;
-+
- 	switch (index) {
- 	case MSR_FS_BASE:
- 	case MSR_GS_BASE:
-@@ -1528,6 +1564,9 @@ int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
- 	struct msr_data msr;
- 	int ret;
- 
-+	if (!host_initiated && !kvm_msr_allowed(vcpu, index, KVM_MSR_ALLOW_READ))
-+		return -ENOENT;
-+
- 	msr.index = index;
- 	msr.host_initiated = host_initiated;
- 
-@@ -3550,6 +3589,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_EXCEPTION_PAYLOAD:
- 	case KVM_CAP_SET_GUEST_DEBUG:
- 	case KVM_CAP_X86_USER_SPACE_MSR:
-+	case KVM_CAP_X86_MSR_ALLOWLIST:
- 		r = 1;
- 		break;
- 	case KVM_CAP_SYNC_REGS:
-@@ -5075,6 +5115,116 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 	return r;
- }
- 
-+static bool msr_range_overlaps(struct kvm *kvm, struct msr_bitmap_range *range)
-+{
-+	struct msr_bitmap_range *ranges = kvm->arch.msr_allowlist_ranges;
-+	u32 i, count = kvm->arch.msr_allowlist_ranges_count;
-+	bool r = false;
-+
-+	for (i = 0; i < count; i++) {
-+		u32 start = max(range->base, ranges[i].base);
-+		u32 end = min(range->base + range->nmsrs,
-+			      ranges[i].base + ranges[i].nmsrs);
-+
-+		if ((start < end) && (range->flags & ranges[i].flags)) {
-+			r = true;
-+			break;
-+		}
-+	}
-+
-+	return r;
-+}
-+
-+static int kvm_vm_ioctl_add_msr_allowlist(struct kvm *kvm, void __user *argp)
-+{
-+	struct msr_bitmap_range *ranges = kvm->arch.msr_allowlist_ranges;
-+	struct kvm_msr_allowlist __user *user_msr_allowlist = argp;
-+	struct msr_bitmap_range range;
-+	struct kvm_msr_allowlist kernel_msr_allowlist;
-+	unsigned long *bitmap = NULL;
-+	size_t bitmap_size;
-+	int r = 0;
-+
-+	if (copy_from_user(&kernel_msr_allowlist, user_msr_allowlist,
-+			   sizeof(kernel_msr_allowlist))) {
-+		r = -EFAULT;
-+		goto out;
-+	}
-+
-+	bitmap_size = BITS_TO_LONGS(kernel_msr_allowlist.nmsrs) * sizeof(long);
-+	if (bitmap_size > KVM_MSR_ALLOWLIST_MAX_LEN) {
-+		r = -EINVAL;
-+		goto out;
-+	}
-+
-+	bitmap = memdup_user(user_msr_allowlist->bitmap, bitmap_size);
-+	if (IS_ERR(bitmap)) {
-+		r = PTR_ERR(bitmap);
-+		goto out;
-+	}
-+
-+	range = (struct msr_bitmap_range) {
-+		.flags = kernel_msr_allowlist.flags,
-+		.base = kernel_msr_allowlist.base,
-+		.nmsrs = kernel_msr_allowlist.nmsrs,
-+		.bitmap = bitmap,
-+	};
-+
-+	if (range.flags & ~(KVM_MSR_ALLOW_READ | KVM_MSR_ALLOW_WRITE)) {
-+		r = -EINVAL;
-+		goto out;
-+	}
-+
-+	/*
-+	 * Protect from concurrent calls to this function that could trigger
-+	 * a TOCTOU violation on kvm->arch.msr_allowlist_ranges_count.
-+	 */
-+	mutex_lock(&kvm->lock);
-+
-+	if (kvm->arch.msr_allowlist_ranges_count >=
-+	    ARRAY_SIZE(kvm->arch.msr_allowlist_ranges)) {
-+		r = -E2BIG;
-+		goto out_locked;
-+	}
-+
-+	if (msr_range_overlaps(kvm, &range)) {
-+		r = -EINVAL;
-+		goto out_locked;
-+	}
-+
-+	/* Everything ok, add this range identifier to our global pool */
-+	ranges[kvm->arch.msr_allowlist_ranges_count] = range;
-+	/* Make sure we filled the array before we tell anyone to walk it */
-+	smp_wmb();
-+	kvm->arch.msr_allowlist_ranges_count++;
-+
-+out_locked:
-+	mutex_unlock(&kvm->lock);
-+out:
-+	if (r)
-+		kfree(bitmap);
-+
-+	return r;
-+}
-+
-+static int kvm_vm_ioctl_clear_msr_allowlist(struct kvm *kvm)
-+{
-+	int i;
-+	u32 count = kvm->arch.msr_allowlist_ranges_count;
-+	struct msr_bitmap_range ranges[10];
-+
-+	mutex_lock(&kvm->lock);
-+	kvm->arch.msr_allowlist_ranges_count = 0;
-+	memcpy(ranges, kvm->arch.msr_allowlist_ranges, count * sizeof(ranges[0]));
-+	mutex_unlock(&kvm->lock);
-+	synchronize_srcu(&kvm->srcu);
-+
-+	for (i = 0; i < count; i++)
-+		kfree(ranges[i].bitmap);
-+
-+	return 0;
-+}
-+
- long kvm_arch_vm_ioctl(struct file *filp,
- 		       unsigned int ioctl, unsigned long arg)
- {
-@@ -5381,6 +5531,12 @@ long kvm_arch_vm_ioctl(struct file *filp,
- 	case KVM_SET_PMU_EVENT_FILTER:
- 		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
- 		break;
-+	case KVM_X86_ADD_MSR_ALLOWLIST:
-+		r = kvm_vm_ioctl_add_msr_allowlist(kvm, argp);
-+		break;
-+	case KVM_X86_CLEAR_MSR_ALLOWLIST:
-+		r = kvm_vm_ioctl_clear_msr_allowlist(kvm);
-+		break;
- 	default:
- 		r = -ENOTTY;
- 	}
-@@ -10086,6 +10242,8 @@ void kvm_arch_pre_destroy_vm(struct kvm *kvm)
- 
- void kvm_arch_destroy_vm(struct kvm *kvm)
- {
-+	int i;
-+
- 	if (current->mm == kvm->mm) {
- 		/*
- 		 * Free memory regions allocated on behalf of userspace,
-@@ -10102,6 +10260,8 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- 	}
- 	if (kvm_x86_ops.vm_destroy)
- 		kvm_x86_ops.vm_destroy(kvm);
-+	for (i = 0; i < kvm->arch.msr_allowlist_ranges_count; i++)
-+		kfree(kvm->arch.msr_allowlist_ranges[i].bitmap);
- 	kvm_pic_destroy(kvm);
- 	kvm_ioapic_destroy(kvm);
- 	kvm_free_vcpus(kvm);
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 13fc7de1eb50..4d6bb06e0fb1 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1041,6 +1041,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_HALT_POLL 182
- #define KVM_CAP_ASYNC_PF_INT 183
- #define KVM_CAP_X86_USER_SPACE_MSR 184
-+#define KVM_CAP_X86_MSR_ALLOWLIST 185
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1542,6 +1543,10 @@ struct kvm_pv_cmd {
- /* Available with KVM_CAP_S390_PROTECTED */
- #define KVM_S390_PV_COMMAND		_IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
- 
-+/* Available with KVM_CAP_X86_MSR_ALLOWLIST */
-+#define KVM_X86_ADD_MSR_ALLOWLIST	_IOW(KVMIO,  0xc6, struct kvm_msr_allowlist)
-+#define KVM_X86_CLEAR_MSR_ALLOWLIST	_IO(KVMIO,  0xc7)
-+
- /* Secure Encrypted Virtualization command */
- enum sev_cmd_id {
- 	/* Guest initialization commands */
--- 
-2.17.1
+Report problems (or enhancements) to the netdev@vger.kernel.org mailing list.
 
 
+Alexander Aring (1):
+      lwtunnel: add support for rpl segment routing
 
+Andrea Claudi (1):
+      ip address: remove useless include
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
+Anton Danilov (3):
+      tc: improve the qdisc show command
+      misc: make the pattern matching case-insensitive
+      bridge: fdb: the 'dynamic' option in the show/get commands
 
+Bjarni Ingi Gislason (5):
+      libnetlink.3: display section numbers in roman font, not boldface
+      man8/bridge.8: fix misuse of two-fonts macros
+      devlink.8: Use a single-font macro for a single argument
+      devlink-dev.8: use a single-font macro for one argument
+      devlint-health.8: use a single-font macro for a single argument
 
+David Ahern (4):
+      Update kernel headers and import mptcp.h
+      Update kernel headers
+      Import rpl.h and rpl_iptunnel.h uapi headers
+      Update kernel headers and import tc_gate.h
+
+Davide Caratti (2):
+      ss: allow dumping MPTCP subflow information
+      tc: full JSON support for 'bpf' filter
+
+Dmitry Yakunin (4):
+      ss: introduce cgroup2 cache and helper functions
+      ss: add support for cgroup v2 information and filtering
+      ss: add checks for bc filter support
+      lib: fix checking of returned file handle size for cgroup
+
+Eran Ben Elisha (1):
+      devlink: Add devlink health auto_dump command support
+
+Eyal Birger (2):
+      ip xfrm: update man page on setting/printing XFRMA_IF_ID in states/policies
+      ip xfrm: policy: support policies with IF_ID in get/delete/deleteall
+
+Guillaume Nault (3):
+      ip link: initial support for bareudp devices
+      tc: flower: support multiple MPLS LSE match
+      testsuite: Add tests for bareudp tunnels
+
+Hoang Huu Le (1):
+      tipc: fixed a compile warning in tipc/link.c
+
+Ian K. Coolidge (2):
+      iproute2: ip addr: Organize flag properties structurally
+      iproute2: ip addr: Add support for setting 'optimistic'
+
+Ido Schimmel (3):
+      devlink: Add 'control' trap type
+      devlink: Add 'mirror' trap action
+      devlink: Document zero policer identifier
+
+Jakub Kicinski (1):
+      devlink: support kernel-side snapshot id allocation
+
+Jamie Gloudon (1):
+      tc/m_estimator: Print proper value for estimator interval in raw.
+
+Julien Fortin (2):
+      bridge: fdb get: add missing json init (new_json_obj)
+      bridge: fdb show: fix fdb entry state output for json context
+
+Louis Peens (1):
+      devlink: add 'disk' to 'fw_load_policy' string validation
+
+Maciej Fijalkowski (1):
+      tc: mqprio: reject queues count/offset pair count higher than num_tc
+
+Mark Starovoytov (2):
+      macsec: add support for MAC offload
+      macsec: add support for specifying offload at link add time
+
+Matthieu Baerts (1):
+      mptcp: show all endpoints when no ID is specified
+
+Paolo Abeni (3):
+      add support for mptcp netlink interface
+      man: mptcp man page
+      man: ip.8: add reference to mptcp man-page
+
+Petr Machata (1):
+      tc: pedit: Support JSON dumping
+
+Po Liu (2):
+      iproute2-next:tc:action: add a gate control action
+      iproute2-next: add gate action man page
+
+Roi Dayan (1):
+      ip address: Fix loop initial declarations are only allowed in C99
+
+Roman Mashak (1):
+      tc: report time an action was first used
+
+Sorah Fukumori (1):
+      ip fou: respect preferred_family for IPv6
+
+Stephen Hemminger (11):
+      uapi: update headers
+      devlink: update include files
+      uapi: update to magic.h
+      man/tc: remove obsolete reference to ipchains
+      uapi: update bpf.h
+      iplink_bareudp: use common include syntax
+      rtacct: drop unused header
+      genl: use <> for system includes
+      uapi: update bpf.h
+      replace SNAPSHOT with auto-generated version string
+      lnstat: use same version as iproute2
+
+Tony Ambardar (1):
+      configure: support ipset version 7 with kernel version 5
+
+Tuong Lien (1):
+      tipc: enable printing of broadcast rcv link stats
+
+William Tu (1):
+      erspan: Add type I version 0 support.
+
+Xin Long (7):
+      iproute_lwtunnel: add options support for geneve metadata
+      iproute_lwtunnel: add options support for vxlan metadata
+      iproute_lwtunnel: add options support for erspan metadata
+      tc: m_tunnel_key: add options support for vxlan
+      tc: m_tunnel_key: add options support for erpsan
+      tc: f_flower: add options support for vxlan
+      tc: f_flower: add options support for erspan
 
