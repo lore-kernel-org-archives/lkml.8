@@ -2,129 +2,267 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E08C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65710C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B9D2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40857214F1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKuC0uos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgHGUDF (ORCPT
+        id S1726574AbgHGUDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:03:05 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:58521 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725893AbgHGUDE (ORCPT
+        Fri, 7 Aug 2020 16:03:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGUDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:03:04 -0400
-Received: from callcc.thunk.org (pool-96-230-252-158.bstnma.fios.verizon.net [96.230.252.158])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 077K2sxo017388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 7 Aug 2020 16:02:55 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 2FA1A420263; Fri,  7 Aug 2020 16:02:54 -0400 (EDT)
-Date:   Fri, 7 Aug 2020 16:02:54 -0400
-From:   tytso@mit.edu
-To:     Xianting Tian <xianting_tian@126.com>
-Cc:     viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Subject: Re: [PATCH] ext4: move buffer_mapped() to proper position
-Message-ID: <20200807200254.GY7657@mit.edu>
-References: <1596211825-8750-1-git-send-email-xianting_tian@126.com>
+        Fri, 7 Aug 2020 16:03:12 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C848C061756;
+        Fri,  7 Aug 2020 13:03:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f12so2704501wru.13;
+        Fri, 07 Aug 2020 13:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OSLWRy9ysyT4eibP6iMlQrzS7AS0P8deCWCZeNvVCDw=;
+        b=cKuC0uosBz+Tin+kAwwFiT57a/t33eF5zdr86svo0PRBao/R9rftfkIlicbGB/6CfQ
+         S4nfOQXRm7QbcyeEjObL4IOJvkpgekEuY1wHQomjGZu9fhQfYqghrxYjTyfu+hh5rIWB
+         s1XhiMeNyq9zTiHXWTbTKy/1YRjfnuTn7h3Z4fGWrvt3Q+0rFf9e5BSO2QL5hV2vbp5p
+         +blXEG1jfKgMoEI17LfReVX/qA8nv53xZ+ZkXxnvmeIRyGFemZ/gSUhc/xihJma7Kbfg
+         SrkH3q01dBRUJ7xQrEaXjgbNWMoGkX61z2jDW5CvPhNAY2axJmS/ZiA5aoh4XYO4h2EJ
+         j+fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OSLWRy9ysyT4eibP6iMlQrzS7AS0P8deCWCZeNvVCDw=;
+        b=qaAzS7yppJ+/fN0fVVmwyBia0FtXYhz7UbsbQNeI1m1ywxSCUr1k2nijkKkw9AyWkl
+         yZSd9jOSppJ++8rvd3UumOogNm9CxipRKXXdnev3M/jYLER1lOfmFhZzvF0KU4AexysZ
+         AmuXVpVgscD8qbIaYlcNV04hE+oP31IWWX0t5Eerj01o10wVEA58BWPjcmmgMY8nLjn8
+         qy26Hx5gxVOrq+Fc8ro3JIXSeSVmo2C9VgAPSPWwXv67ZQLwkLSbDGyUi+KqasGhW7Dk
+         aVTiMGfdPxr2IiHPZdHeHoUj40Bvo+VPt6QFnylqsOw0Rw6VueYqGzt70iAE54VHjI1Z
+         +gbg==
+X-Gm-Message-State: AOAM530vqLGo6p3bcqX0WilPIkgDAszn6cPeBhASEwg6qd+EjWkbjRlf
+        qnxSJ54voTLIr88nnBFj77nTrgbsJlbd5dzNsmI=
+X-Google-Smtp-Source: ABdhPJxMIcDcXDI1jEIi/2CWQ0HC/RAkG26jBGU/hI2e7LmI9IXbWAVf1mVql7wNxwQh+Fcvv0OGDkHMT6/AryEFd7Q=
+X-Received: by 2002:adf:ec04:: with SMTP id x4mr12769567wrn.28.1596830590085;
+ Fri, 07 Aug 2020 13:03:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596211825-8750-1-git-send-email-xianting_tian@126.com>
+References: <20200803193547.305660-1-jcrouse@codeaurora.org> <20200803193547.305660-11-jcrouse@codeaurora.org>
+In-Reply-To: <20200803193547.305660-11-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 7 Aug 2020 13:03:54 -0700
+Message-ID: <CAF6AEGv53rt=33TjQ5mim3hhQvsQugv+u61r68=FTctdmoXw0w@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v11 10/12] drm/msm: Add support for private
+ address space instances
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        David Airlie <airlied@linux.ie>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, applied, although I rewrote the commit description to make it
-be a bit more clearer:
+On Mon, Aug 3, 2020 at 12:36 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Add support for allocating private address space instances. Targets that
+> support per-context pagetables should implement their own function to
+> allocate private address spaces.
+>
+> The default will return a pointer to the global address space.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/gpu/drm/msm/msm_drv.c     | 13 +++++++------
+>  drivers/gpu/drm/msm/msm_drv.h     |  5 +++++
+>  drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
+>  drivers/gpu/drm/msm/msm_gpu.c     | 17 +++++++++++++++++
+>  drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
+>  5 files changed, 43 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index 108b663c3ef2..f072306f1260 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+>         kref_init(&ctx->ref);
+>         msm_submitqueue_init(dev, ctx);
+>
+> -       ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
+> +       ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
+>         file->driver_priv = ctx;
+>
+>         return 0;
+> @@ -780,18 +780,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
+>  }
+>
+>  static int msm_ioctl_gem_info_iova(struct drm_device *dev,
+> -               struct drm_gem_object *obj, uint64_t *iova)
+> +               struct drm_file *file, struct drm_gem_object *obj,
+> +               uint64_t *iova)
+>  {
+> -       struct msm_drm_private *priv = dev->dev_private;
+> +       struct msm_file_private *ctx = file->driver_priv;
+>
+> -       if (!priv->gpu)
+> +       if (!ctx->aspace)
+>                 return -EINVAL;
+>
+>         /*
+>          * Don't pin the memory here - just get an address so that userspace can
+>          * be productive
+>          */
+> -       return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
+> +       return msm_gem_get_iova(obj, ctx->aspace, iova);
+>  }
+>
+>  static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+> @@ -830,7 +831,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+>                 args->value = msm_gem_mmap_offset(obj);
+>                 break;
+>         case MSM_INFO_GET_IOVA:
+> -               ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
+> +               ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
+>                 break;
+>         case MSM_INFO_SET_NAME:
+>                 /* length check should leave room for terminating null: */
+> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+> index f69c6d62584d..51a5c9083e13 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.h
+> +++ b/drivers/gpu/drm/msm/msm_drv.h
+> @@ -249,6 +249,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
+>  void msm_gem_close_vma(struct msm_gem_address_space *aspace,
+>                 struct msm_gem_vma *vma);
+>
+> +
+> +struct msm_gem_address_space *
+> +msm_gem_address_space_get(struct msm_gem_address_space *aspace);
+> +
+>  void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
+>
+>  struct msm_gem_address_space *
+> @@ -434,6 +438,7 @@ static inline void msm_file_private_destroy(struct kref *kref)
+>         struct msm_file_private *ctx = container_of(kref,
+>                 struct msm_file_private, ref);
+>
+> +       msm_gem_address_space_put(ctx->aspace);
+>         kfree(ctx);
+>  }
+>
+> diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+> index 5f6a11211b64..29cc1305cf37 100644
+> --- a/drivers/gpu/drm/msm/msm_gem_vma.c
+> +++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+> @@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
+>                 kref_put(&aspace->kref, msm_gem_address_space_destroy);
+>  }
+>
+> +struct msm_gem_address_space *
+> +msm_gem_address_space_get(struct msm_gem_address_space *aspace)
+> +{
+> +       if (!IS_ERR_OR_NULL(aspace))
+> +               kref_get(&aspace->kref);
+> +
+> +       return aspace;
+> +}
+> +
+>  /* Actually unmap memory for the vma */
+>  void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
+>                 struct msm_gem_vma *vma)
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> index a1f3da6550e5..aabbd7908ee5 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> @@ -823,6 +823,23 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
+>         return 0;
+>  }
+>
+> +/* Return a new address space for a msm_drm_private instance */
+> +struct msm_gem_address_space *
+> +msm_gpu_create_private_address_space(struct msm_gpu *gpu)
+> +{
+> +       if (!gpu)
+> +               return NULL;
+> +
+> +       /*
+> +        * If the target doesn't support private address spaces then return
+> +        * the global one
+> +        */
+> +       if (!gpu->funcs->create_private_address_space)
+> +               return msm_gem_address_space_get(gpu->aspace);
+> +
+> +       return gpu->funcs->create_private_address_space(gpu);
 
-    fs: prevent BUG_ON in submit_bh_wbc()
-    
-    If a device is hot-removed --- for example, when a physical device is
-    unplugged from pcie slot or a nbd device's network is shutdown ---
-    this can result in a BUG_ON() crash in submit_bh_wbc().  This is
-    because the when the block device dies, the buffer heads will have
-    their Buffer_Mapped flag get cleared, leading to the crash in
-    submit_bh_wbc.
-    
-    We had attempted to work around this problem in commit a17712c8
-    ("ext4: check superblock mapped prior to committing").  Unfortunately,
-    it's still possible to hit the BUG_ON(!buffer_mapped(bh)) if the
-    device dies between when the work-around check in ext4_commit_super()
-    and when submit_bh_wbh() is finally called:
-    
-    Code path:
-    ext4_commit_super
-        judge if 'buffer_mapped(sbh)' is false, return <== commit a17712c8
-              lock_buffer(sbh)
-              ...
-              unlock_buffer(sbh)
-                   __sync_dirty_buffer(sbh,...
-                        lock_buffer(sbh)
-                            judge if 'buffer_mapped(sbh))' is false, return <== added by this patch
-                                submit_bh(...,sbh)
-                                    submit_bh_wbc(...,sbh,...)
-    
-    [100722.966497] kernel BUG at fs/buffer.c:3095! <== BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc()
-    [100722.966503] invalid opcode: 0000 [#1] SMP
-    [100722.966566] task: ffff8817e15a9e40 task.stack: ffffc90024744000
-    [100722.966574] RIP: 0010:submit_bh_wbc+0x180/0x190
-    [100722.966575] RSP: 0018:ffffc90024747a90 EFLAGS: 00010246
-    [100722.966576] RAX: 0000000000620005 RBX: ffff8818a80603a8 RCX: 0000000000000000
-    [100722.966576] RDX: ffff8818a80603a8 RSI: 0000000000020800 RDI: 0000000000000001
-    [100722.966577] RBP: ffffc90024747ac0 R08: 0000000000000000 R09: ffff88207f94170d
-    [100722.966578] R10: 00000000000437c8 R11: 0000000000000001 R12: 0000000000020800
-    [100722.966578] R13: 0000000000000001 R14: 000000000bf9a438 R15: ffff88195f333000
-    [100722.966580] FS:  00007fa2eee27700(0000) GS:ffff88203d840000(0000) knlGS:0000000000000000
-    [100722.966580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    [100722.966581] CR2: 0000000000f0b008 CR3: 000000201a622003 CR4: 00000000007606e0
-    [100722.966582] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    [100722.966583] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    [100722.966583] PKRU: 55555554
-    [100722.966583] Call Trace:
-    [100722.966588]  __sync_dirty_buffer+0x6e/0xd0
-    [100722.966614]  ext4_commit_super+0x1d8/0x290 [ext4]
-    [100722.966626]  __ext4_std_error+0x78/0x100 [ext4]
-    [100722.966635]  ? __ext4_journal_get_write_access+0xca/0x120 [ext4]
-    [100722.966646]  ext4_reserve_inode_write+0x58/0xb0 [ext4]
-    [100722.966655]  ? ext4_dirty_inode+0x48/0x70 [ext4]
-    [100722.966663]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
-    [100722.966671]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
-    [100722.966679]  ext4_dirty_inode+0x48/0x70 [ext4]
-    [100722.966682]  __mark_inode_dirty+0x17f/0x350
-    [100722.966686]  generic_update_time+0x87/0xd0
-    [100722.966687]  touch_atime+0xa9/0xd0
-    [100722.966690]  generic_file_read_iter+0xa09/0xcd0
-    [100722.966694]  ? page_cache_tree_insert+0xb0/0xb0
-    [100722.966704]  ext4_file_read_iter+0x4a/0x100 [ext4]
-    [100722.966707]  ? __inode_security_revalidate+0x4f/0x60
-    [100722.966709]  __vfs_read+0xec/0x160
-    [100722.966711]  vfs_read+0x8c/0x130
-    [100722.966712]  SyS_pread64+0x87/0xb0
-    [100722.966716]  do_syscall_64+0x67/0x1b0
-    [100722.966719]  entry_SYSCALL64_slow_path+0x25/0x25
-    
-    To address this, add the check of 'buffer_mapped(bh)' to
-    __sync_dirty_buffer().  This also has the benefit of fixing this for
-    other file systems.
-    
-    With this addition, we can drop the workaround in ext4_commit_supper().
-    
-    [ Commit description rewritten by tytso. ]
-    
-    Signed-off-by: Xianting Tian <xianting_tian@126.com>
-    Link: https://lore.kernel.org/r/1596211825-8750-1-git-send-email-xianting_tian@126.com
-    Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+so if you flip the logic around here, you can get rid of the
+msm_gem_address_space_get() in per-gen backend and consolidate the
+error handling here, ie.
 
-							- Ted
+  struct msm_gem_address_space *aspace = NULL;
+
+  if (gpu->funcs->create_private_address_space)
+     aspace = gpu->funcs->create_private_address_space(...);
+
+  if (IS_ERR_OR_NULL(aspace))
+    aspace = msm_gem_address_space_get(...);
+
+(and that also simplifies a bit the patch I have on top to show comm in debugfs)
+
+BR,
+-R
+
+> +}
+> +
+>  int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>                 struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+>                 const char *name, struct msm_gpu_config *config)
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index d496d488222c..d298657b4730 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -64,6 +64,8 @@ struct msm_gpu_funcs {
+>         void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
+>         struct msm_gem_address_space *(*create_address_space)
+>                 (struct msm_gpu *gpu, struct platform_device *pdev);
+> +       struct msm_gem_address_space *(*create_private_address_space)
+> +               (struct msm_gpu *gpu);
+>  };
+>
+>  struct msm_gpu {
+> @@ -286,6 +288,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>                 struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+>                 const char *name, struct msm_gpu_config *config);
+>
+> +struct msm_gem_address_space *
+> +msm_gpu_create_private_address_space(struct msm_gpu *gpu);
+> +
+>  void msm_gpu_cleanup(struct msm_gpu *gpu);
+>
+>  struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
+> --
+> 2.25.1
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
