@@ -2,209 +2,155 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA639C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27433C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2FB20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DA520866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:28:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="CLO9uFSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgHGH0d (ORCPT
+        id S1726724AbgHGH2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:26:33 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39299 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgHGH0b (ORCPT
+        Fri, 7 Aug 2020 03:28:39 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:45747 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgHGH2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:26:31 -0400
-Received: by mail-il1-f197.google.com with SMTP id i66so869960ile.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 00:26:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=maCRq8t2WGs6qYo8ph+1iUnVQkbnN+eBqqaFz3t0+14=;
-        b=TR7d2hV134qNoIamm5Dx/GvqvTtOncpl0GairW8vZc4XxSGS/bRnxCKS8v8X82Rckz
-         opKoIY0UDl4bbcYd7rguZCZGs/jMHN1/wSIYumE+DXfErXsh4zJgRBKq9KBc1J3fqaCf
-         DTnsP9u7si/0rFDdViQZfJQU7MV3cH4KqbHc+z+oFkQuWL4Yh4z0dLgN2m6ANULJL59l
-         CCoLO2qz1fyT6ZRfDX1Y0q/QI23yLN+cMBBRRbIfEzNAP4bX/r2zdxkz796tcr3S9vOx
-         W717StoJu0WCVJlPR1BSg4QnxqOmKSRSqZ2cPbTZI26LxTtjfwjAlPUQ9yb1D/yK0G8T
-         wRSg==
-X-Gm-Message-State: AOAM530FL1DakIKPduSsqzaNZPc6wh1IkWXjcOfxOYyWVnCWXvWmE5GB
-        ZhXGIYFj9azIA50P4Q8p7Tw00ZBRPlf7ph9ocgckJLDdi5i0
-X-Google-Smtp-Source: ABdhPJyoJfQ5dZEZxfAY4Nh5BcNwNuZZ/2Z5T2+JkNVnL8J1YikapJj365TZaomwcsWwZ6ynW7WgpInpiL566IryMRFjU4ooo3/u
+        Fri, 7 Aug 2020 03:28:38 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CF4A922ED8;
+        Fri,  7 Aug 2020 09:28:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1596785315;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tqzu9cLvHIN1w+G0QnQy/FU9UJymmPP1GnHUTyNwIWU=;
+        b=CLO9uFSoOVH3XA6dnULEy2QmA0Enr2120+59hiwzIkhJvSLxb9rm0SLTIdWKZS0qIbZFtU
+        KwVkQj9aBlA4svDMmN0bz9kL32a7s3yo8YNO/WNoOE6x6OAMBh+I4qg7O4PZqCTGIa9ifG
+        zUXv755+HfYWp7qQtzjFvlJnemNYLak=
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:e10:: with SMTP id a16mr3234774ilk.204.1596785189704;
- Fri, 07 Aug 2020 00:26:29 -0700 (PDT)
-Date:   Fri, 07 Aug 2020 00:26:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000003dcbd05ac44862c@google.com>
-Subject: KASAN: use-after-free Read in rc_dev_uevent
-From:   syzbot <syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, sean@mess.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 07 Aug 2020 09:28:31 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
+In-Reply-To: <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+References: <20200803093559.12289-1-michael@walle.cc>
+ <20200803093559.12289-7-michael@walle.cc>
+ <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <e288ca6cfee819223395712e04159dd9@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Uwe, Hi Lee,
 
-syzbot found the following issue on:
+Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
+> On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
+>> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> index 7dbcf6973d33..a0d50d70c3b9 100644
+>> --- a/drivers/pwm/Kconfig
+>> +++ b/drivers/pwm/Kconfig
+>> @@ -428,6 +428,16 @@ config PWM_SIFIVE
+>>  	  To compile this driver as a module, choose M here: the module
+>>  	  will be called pwm-sifive.
+>> 
+>> +config PWM_SL28CPLD
+>> +	tristate "Kontron sl28cpld PWM support"
+>> +	select MFD_SIMPLE_MFD_I2C
+> 
+> Is it sensible to present this option to everyone? Maybe
+> 
+> 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
 
-HEAD commit:    7b4ea945 Revert "x86/mm/64: Do not sync vmalloc/ioremap ma..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a7813a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=72a84c46d0c668c
-dashboard link: https://syzkaller.appspot.com/bug?extid=ceef16277388d6f24898
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Because there is now no real MFD driver anymore, there is also
+no symbol for that. The closest would be ARCH_ARM64 but I don't
+think that is a good idea.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Lee, what do you think about adding a symbol to the MFD, which
+selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com
+I.e.
+config MFD_SL28CPLD
+     tristate "Kontron sl28cpld"
+     select MFD_SIMPLE_MFD_I2C
+     help
+       Say yes here to add support for the Kontron sl28cpld board
+       management controller.
 
-==================================================================
-BUG: KASAN: use-after-free in string_nocheck lib/vsprintf.c:611 [inline]
-BUG: KASAN: use-after-free in string+0x39c/0x3d0 lib/vsprintf.c:693
-Read of size 1 at addr ffff8881ca21cd20 by task systemd-udevd/5147
+Then all the other device driver could depend on the MFD_SL28CPLD
+symbol.
 
-CPU: 1 PID: 5147 Comm: systemd-udevd Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0+0x1a/0x210 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
- string_nocheck lib/vsprintf.c:611 [inline]
- string+0x39c/0x3d0 lib/vsprintf.c:693
- vsnprintf+0x71b/0x14f0 lib/vsprintf.c:2617
- add_uevent_var+0x14d/0x310 lib/kobject_uevent.c:664
- rc_dev_uevent+0x54/0x140 drivers/media/rc/rc-main.c:1616
- dev_uevent+0x30e/0x780 drivers/base/core.c:1916
- uevent_show+0x1bb/0x360 drivers/base/core.c:1963
- dev_attr_show+0x4b/0x90 drivers/base/core.c:1667
- sysfs_kf_seq_show+0x1f8/0x400 fs/sysfs/file.c:60
- seq_read+0x432/0x1070 fs/seq_file.c:208
- kernfs_fop_read+0xe9/0x590 fs/kernfs/file.c:251
- vfs_read+0x1df/0x520 fs/read_write.c:479
- ksys_read+0x12d/0x250 fs/read_write.c:607
- do_syscall_64+0x2d/0x40 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f6e6c02f910
-Code: b6 fe ff ff 48 8d 3d 0f be 08 00 48 83 ec 08 e8 06 db 01 00 66 0f 1f 44 00 00 83 3d f9 2d 2c 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 de 9b 01 00 48 89 04 24
-RSP: 002b:00007fff3cddeae8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000558492caaae0 RCX: 00007f6e6c02f910
-RDX: 0000000000001000 RSI: 0000558492cc7530 RDI: 0000000000000007
-RBP: 00007f6e6c2ea440 R08: 00007f6e6c2ee298 R09: 0000000000001010
-R10: 0000558492caaae0 R11: 0000000000000246 R12: 0000000000001000
-R13: 0000000000000d68 R14: 0000558492cc7530 R15: 00007f6e6c2e9900
+[..]
 
-Allocated by task 5:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc_node mm/slub.c:2824 [inline]
- slab_alloc mm/slub.c:2832 [inline]
- __kmalloc_track_caller+0xec/0x280 mm/slub.c:4430
- kstrdup+0x36/0x70 mm/util.c:60
- ir_create_table drivers/media/rc/rc-main.c:217 [inline]
- ir_setkeytable drivers/media/rc/rc-main.c:477 [inline]
- rc_prepare_rx_device drivers/media/rc/rc-main.c:1786 [inline]
- rc_register_device+0x464/0x1600 drivers/media/rc/rc-main.c:1914
- igorplugusb_probe+0x7e6/0xc98 drivers/media/rc/igorplugusb.c:209
- usb_probe_interface+0x315/0x7f0 drivers/usb/core/driver.c:374
- really_probe+0x291/0xde0 drivers/base/dd.c:553
- driver_probe_device+0x26b/0x3d0 drivers/base/dd.c:738
- __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:844
- bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
- __device_attach+0x228/0x4a0 drivers/base/dd.c:912
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0xb51/0x1c70 drivers/base/core.c:2930
- usb_set_configuration+0xf05/0x18a0 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0xba/0xf2 drivers/usb/core/generic.c:239
- usb_probe_device+0xd9/0x250 drivers/usb/core/driver.c:272
- really_probe+0x291/0xde0 drivers/base/dd.c:553
- driver_probe_device+0x26b/0x3d0 drivers/base/dd.c:738
- __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:844
- bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
- __device_attach+0x228/0x4a0 drivers/base/dd.c:912
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0xb51/0x1c70 drivers/base/core.c:2930
- usb_new_device.cold+0x71d/0xfd4 drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x2361/0x4390 drivers/usb/core/hub.c:5576
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x392/0x470 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+>> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+>> +				   struct pwm_device *pwm,
+>> +				   struct pwm_state *state)
+>> +{
+>> +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
+>> +	unsigned int reg;
+>> +	int prescaler;
+>> +
+>> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
+>> +
+>> +	state->enabled = reg & SL28CPLD_PWM_CTRL_ENABLE;
+>> +
+>> +	prescaler = FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
+>> +	state->period = SL28CPLD_PWM_PERIOD(prescaler);
+>> +
+>> +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
+>> +	state->duty_cycle = SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
+> 
+> Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed 
+> that
+> the upper bits are zero?
 
-Freed by task 5:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x116/0x160 mm/kasan/common.c:455
- slab_free_hook mm/slub.c:1474 [inline]
- slab_free_freelist_hook+0x53/0x140 mm/slub.c:1507
- slab_free mm/slub.c:3072 [inline]
- kfree+0xbc/0x2c0 mm/slub.c:4052
- ir_free_table drivers/media/rc/rc-main.c:245 [inline]
- rc_free_rx_device drivers/media/rc/rc-main.c:1875 [inline]
- rc_unregister_device+0x142/0x410 drivers/media/rc/rc-main.c:2014
- igorplugusb_disconnect+0x58/0x110 drivers/media/rc/igorplugusb.c:232
- usb_unbind_interface+0x1d8/0x8d0 drivers/usb/core/driver.c:436
- __device_release_driver+0x3c6/0x6f0 drivers/base/dd.c:1153
- device_release_driver_internal drivers/base/dd.c:1184 [inline]
- device_release_driver+0x26/0x40 drivers/base/dd.c:1207
- bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
- device_del+0x481/0xd90 drivers/base/core.c:3107
- usb_disable_device+0x387/0x930 drivers/usb/core/message.c:1245
- usb_disconnect.cold+0x27d/0x780 drivers/usb/core/hub.c:2217
- hub_port_connect drivers/usb/core/hub.c:5059 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x1c93/0x4390 drivers/usb/core/hub.c:5576
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- process_scheduled_works kernel/workqueue.c:2331 [inline]
- worker_thread+0x82b/0x1120 kernel/workqueue.c:2417
- kthread+0x392/0x470 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Mh, the hardware guarantees that bit7 is zero. So masking with
+SL28CPLD_PWM_CYCLE_MAX won't buy us much. But what I could think
+could go wrong is this: someone set the prescaler to != 0 and the
+duty cycle to a value greater than the max value for this particular
+prescaler mode. For the above calculations this would result in a
+duty_cycle greater than the period, if I'm not mistaken.
 
-The buggy address belongs to the object at ffff8881ca21cd20
- which belongs to the cache kmalloc-16 of size 16
-The buggy address is located 0 bytes inside of
- 16-byte region [ffff8881ca21cd20, ffff8881ca21cd30)
-The buggy address belongs to the page:
-page:ffffea0007288700 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0x200000000000200(slab)
-raw: 0200000000000200 0000000000000000 0000000100000001 ffff8881da003680
-raw: 0000000000000000 0000000080800080 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+The behavior of the hardware is undefined in that case (at the moment
+it will be always on, I guess). So this isn't a valid setting.
+Nevertheless it might happen. So what about the following:
 
-Memory state around the buggy address:
- ffff8881ca21cc00: fb fb fc fc fb fb fc fc fb fb fc fc 00 00 fc fc
- ffff8881ca21cc80: fb fb fc fc 00 00 fc fc 00 00 fc fc 00 00 fc fc
->ffff8881ca21cd00: fb fb fc fc fb fb fc fc fb fb fc fc 00 00 fc fc
-                               ^
- ffff8881ca21cd80: 00 00 fc fc fb fb fc fc fb fb fc fc fb fb fc fc
- ffff8881ca21ce00: 00 00 fc fc fb fb fc fc 00 00 fc fc 00 00 fc fc
-==================================================================
+state->duty_cycle = min(state->duty_cycle, state->period);
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-michael
