@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47875C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4E5214F1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E262224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:34:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gNLYKy+v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OPgv1US9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgHGTeg (ORCPT
+        id S1726789AbgHGTeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 7 Aug 2020 15:34:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHGTef (ORCPT
+        with ESMTP id S1726569AbgHGTef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 15:34:35 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4E1C061A27
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D31FC061757
         for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 12:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=4X+e9xmY0R4WcggmN+7D+WWvMgS/YSPjKPIIfkhd5fQ=; b=gNLYKy+v5YRk35QxeXb3pocGCS
-        81ah8zvO+HOh1Vs5ze8iC3eqNn0wTp+bmGX3FHc4dR6xfD52Re/FI/RZ9WUuozVfFBCBZiYFZK5bG
-        mcMFA4mcEa5XW/s9SnN35J4ErfHKojWuHILNsbl8jLFbUEfMWQvGp+wqD4o2y1hL0CAjJdjy7w8ik
-        WJzeGxwj/y/Cf/+cvF5HpHM8wXLQ4LyqU0TVkqZuc6vuRdW10UV9of07hqoIy948d8O4zaSH7m7k5
-        KV6Zlc4doI77VzBoJ/L7ru3fJtohi4UI4fGtZvztdK6W1EcKiURQsU03Qe2+eDUHxCxkEOMTnWoy/
-        mr6ZYMbQ==;
+        bh=q7qulpqAdX36SfnH7+5yo69CQ5s+D4aJ7X9LFvgh0dc=; b=OPgv1US9Kj0ipv/Yx3OOubA9lq
+        Ul8Ou8HB1nNei8N2PYbmLJr9yp73JSvs2xLhONYm5j/+3DUny5hcrVwDOjIQDfIJ4e6Khu0x2bWXz
+        aLCZetMQJ5cCtuxs1JB/mRBSuOh6nd5C5//sm9BBRIsfk3u5K3g1aLKHLnfEnnNX8xCqYg3oPuZAv
+        G69bQRBVzDqR+EHfmwHq4M/vtFv5S1u1WoZRi0H/ssPTuD9IT+srVqrfgso2/7QGlQqHwPBLWtnx9
+        NorRBvLNCQIkehqQqn2zjWqzaJJJ/vY5HQeSGE4YYS1wiN3iOBG40Yd/4B9VgnJw9Llqfm/TNExSl
+        K6Farn2Q==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k4887-0001mw-0o; Fri, 07 Aug 2020 19:34:15 +0000
+        id 1k4887-0001mv-1O; Fri, 07 Aug 2020 19:34:15 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 231003059DD;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1D8733010D2;
         Fri,  7 Aug 2020 21:34:13 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A78DD2145192A; Fri,  7 Aug 2020 21:34:13 +0200 (CEST)
-Message-ID: <20200807193017.962482579@infradead.org>
+        id B75A92B2C82C3; Fri,  7 Aug 2020 21:34:13 +0200 (CEST)
+Message-ID: <20200807193018.160331394@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 07 Aug 2020 21:23:37 +0200
+Date:   Fri, 07 Aug 2020 21:23:39 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, mingo@kernel.org, will@kernel.org
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, elver@google.com,
         paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
         peterz@infradead.org
-Subject: [RFC][PATCH 1/3] sched,idle,rcu: Push rcu_idle deeper into the idle path
+Subject: [RFC][PATCH 3/3] lockdep,trace: Expose tracepoints
 References: <20200807192336.405068898@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,155 +63,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lots of things take locks, due to a wee bug, RCU-lockdep didn't notice
-that the locking tracepoints were using RCU.
+The lockdep tracepoints are under the lockdep recursion counter, this
+has a bunch of nasty side effects:
 
-Push rcu_idle_{enter,exit}() as deep as possible into the idle paths,
-this also resolves a lot of _rcuidle()/RCU_NONIDLE() usage.
+ - TRACE_IRQFLAGS doesn't work across the entire tracepoint, leading to
+   all sorts of dodgy complaints.
 
-Specifically, sched_clock_idle_wakeup_event() will use ktime which
-will use seqlocks which will tickle lockdep.
+ - RCU-lockdep doesn't see the tracepoints either, hiding numerous
+   "suspicious RCU usage" warnings.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/cpuidle/cpuidle.c |   13 +++++++++----
- kernel/sched/idle.c       |   18 ++++++------------
- 2 files changed, 15 insertions(+), 16 deletions(-)
+ kernel/locking/lockdep.c |   27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
---- a/drivers/cpuidle/cpuidle.c
-+++ b/drivers/cpuidle/cpuidle.c
-@@ -145,15 +145,17 @@ static void enter_s2idle_proper(struct c
- 	 * executing it contains RCU usage regarded as invalid in the idle
- 	 * context, so tell RCU about that.
- 	 */
--	RCU_NONIDLE(tick_freeze());
-+	tick_freeze();
- 	/*
- 	 * The state used here cannot be a "coupled" one, because the "coupled"
- 	 * cpuidle mechanism enables interrupts and doing that with timekeeping
- 	 * suspended is generally unsafe.
- 	 */
-+	rcu_idle_enter();
- 	stop_critical_timings();
- 	drv->states[index].enter_s2idle(dev, drv, index);
--	WARN_ON(!irqs_disabled());
-+	if (WARN_ON(!irqs_disabled()))
-+		local_irq_disable();
- 	/*
- 	 * timekeeping_resume() that will be called by tick_unfreeze() for the
- 	 * first CPU executing it calls functions containing RCU read-side
-@@ -161,6 +163,7 @@ static void enter_s2idle_proper(struct c
- 	 */
- 	RCU_NONIDLE(tick_unfreeze());
- 	start_critical_timings();
-+	rcu_idle_exit();
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -5000,8 +5000,9 @@ void lock_acquire(struct lockdep_map *lo
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
  
- 	time_end = ns_to_ktime(local_clock());
- 
-@@ -228,16 +231,18 @@ int cpuidle_enter_state(struct cpuidle_d
- 	/* Take note of the planned idle state. */
- 	sched_idle_set_state(target_state);
- 
--	trace_cpu_idle_rcuidle(index, dev->cpu);
-+	trace_cpu_idle(index, dev->cpu);
- 	time_start = ns_to_ktime(local_clock());
- 
-+	rcu_idle_enter();
- 	stop_critical_timings();
- 	entered_state = target_state->enter(dev, drv, index);
- 	start_critical_timings();
-+	rcu_idle_exit();
- 
- 	sched_clock_idle_wakeup_event();
- 	time_end = ns_to_ktime(local_clock());
--	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
-+	trace_cpu_idle(PWR_EVENT_EXIT, dev->cpu);
- 
- 	/* The cpu is no longer idle or about to enter idle. */
- 	sched_idle_set_state(NULL);
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -54,17 +54,18 @@ __setup("hlt", cpu_idle_nopoll_setup);
- 
- static noinline int __cpuidle cpu_idle_poll(void)
- {
-+	trace_cpu_idle(0, smp_processor_id());
- 	rcu_idle_enter();
--	trace_cpu_idle_rcuidle(0, smp_processor_id());
- 	local_irq_enable();
- 	stop_critical_timings();
- 
- 	while (!tif_need_resched() &&
--		(cpu_idle_force_poll || tick_check_broadcast_expired()))
-+	       (cpu_idle_force_poll || tick_check_broadcast_expired()))
- 		cpu_relax();
+-	current->lockdep_recursion++;
+ 	trace_lock_acquire(lock, subclass, trylock, read, check, nest_lock, ip);
 +
- 	start_critical_timings();
--	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
- 	rcu_idle_exit();
-+	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
++	current->lockdep_recursion++;
+ 	__lock_acquire(lock, subclass, trylock, read, check,
+ 		       irqs_disabled_flags(flags), nest_lock, ip, 0, 0);
+ 	lockdep_recursion_finish();
+@@ -5016,10 +5017,13 @@ void lock_release(struct lockdep_map *lo
+ 	if (unlikely(current->lockdep_recursion))
+ 		return;
  
- 	return 1;
++
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+-	current->lockdep_recursion++;
++
+ 	trace_lock_release(lock, ip);
++
++	current->lockdep_recursion++;
+ 	if (__lock_release(lock, ip))
+ 		check_chain_key(current);
+ 	lockdep_recursion_finish();
+@@ -5171,7 +5175,7 @@ __lock_contended(struct lockdep_map *loc
+ 		stats->bounces[bounce_contended + !!hlock->read]++;
  }
-@@ -90,9 +91,11 @@ void __cpuidle default_idle_call(void)
- 	if (current_clr_polling_and_test()) {
- 		local_irq_enable();
- 	} else {
-+		rcu_idle_enter();
- 		stop_critical_timings();
- 		arch_cpu_idle();
- 		start_critical_timings();
-+		rcu_idle_exit();
- 	}
- }
  
-@@ -158,7 +161,6 @@ static void cpuidle_idle_call(void)
- 
- 	if (cpuidle_not_available(drv, dev)) {
- 		tick_nohz_idle_stop_tick();
--		rcu_idle_enter();
- 
- 		default_idle_call();
- 		goto exit_idle;
-@@ -178,21 +180,17 @@ static void cpuidle_idle_call(void)
- 		u64 max_latency_ns;
- 
- 		if (idle_should_enter_s2idle()) {
--			rcu_idle_enter();
- 
- 			entered_state = call_cpuidle_s2idle(drv, dev);
- 			if (entered_state > 0)
- 				goto exit_idle;
- 
--			rcu_idle_exit();
--
- 			max_latency_ns = U64_MAX;
- 		} else {
- 			max_latency_ns = dev->forced_idle_latency_limit_ns;
- 		}
- 
- 		tick_nohz_idle_stop_tick();
--		rcu_idle_enter();
- 
- 		next_state = cpuidle_find_deepest_state(drv, dev, max_latency_ns);
- 		call_cpuidle(drv, dev, next_state);
-@@ -209,8 +207,6 @@ static void cpuidle_idle_call(void)
- 		else
- 			tick_nohz_idle_retain_tick();
- 
--		rcu_idle_enter();
--
- 		entered_state = call_cpuidle(drv, dev, next_state);
- 		/*
- 		 * Give the governor an opportunity to reflect on the outcome
-@@ -226,8 +222,6 @@ static void cpuidle_idle_call(void)
+-static void
++static bool
+ __lock_acquired(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
+@@ -5187,16 +5191,16 @@ __lock_acquired(struct lockdep_map *lock
+ 	 * acquire, how the heck did that happen?
  	 */
- 	if (WARN_ON_ONCE(irqs_disabled()))
- 		local_irq_enable();
+ 	if (DEBUG_LOCKS_WARN_ON(!depth))
+-		return;
++		return false;
+ 
+ 	hlock = find_held_lock(curr, lock, depth, &i);
+ 	if (!hlock) {
+ 		print_lock_contention_bug(curr, lock, _RET_IP_);
+-		return;
++		return false;
+ 	}
+ 
+ 	if (hlock->instance != lock)
+-		return;
++		return false;
+ 
+ 	cpu = smp_processor_id();
+ 	if (hlock->waittime_stamp) {
+@@ -5205,8 +5209,6 @@ __lock_acquired(struct lockdep_map *lock
+ 		hlock->holdtime_stamp = now;
+ 	}
+ 
+-	trace_lock_acquired(lock, ip);
 -
--	rcu_idle_exit();
+ 	stats = get_lock_stats(hlock_class(hlock));
+ 	if (waittime) {
+ 		if (hlock->read)
+@@ -5219,6 +5221,8 @@ __lock_acquired(struct lockdep_map *lock
+ 
+ 	lock->cpu = cpu;
+ 	lock->ip = ip;
++
++	return true;
  }
  
- /*
+ void lock_contended(struct lockdep_map *lock, unsigned long ip)
+@@ -5244,6 +5248,7 @@ EXPORT_SYMBOL_GPL(lock_contended);
+ void lock_acquired(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	unsigned long flags;
++	bool trace;
+ 
+ 	if (unlikely(!lock_stat || !debug_locks))
+ 		return;
+@@ -5254,8 +5259,12 @@ void lock_acquired(struct lockdep_map *l
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+ 	current->lockdep_recursion++;
+-	__lock_acquired(lock, ip);
++	trace = __lock_acquired(lock, ip);
+ 	lockdep_recursion_finish();
++
++	if (trace)
++		trace_lock_acquired(lock, ip);
++
+ 	raw_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(lock_acquired);
 
 
