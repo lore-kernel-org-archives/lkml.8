@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E38C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337D222CAE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2491B22CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:40:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QIrhVIPO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KIoX4tuJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgHGIkU (ORCPT
+        id S1728217AbgHGIkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:40:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34093 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727957AbgHGIkP (ORCPT
+        Fri, 7 Aug 2020 04:40:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42147 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728192AbgHGIkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 04:40:15 -0400
+        Fri, 7 Aug 2020 04:40:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596789614;
+        s=mimecast20190719; t=1596789615;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1tapk5X882JkWKX+3cYAD+GMIrv4DCXAv+v7JG2RGp4=;
-        b=QIrhVIPOLd+lx/ty7CFw+Idf+L8NEMZXRaX8GTUF10a9iURZv2uYkRAtlDM3bhgEJTLNKi
-        pHsoamgPsZiu34GyrcW2oziszSa1a4pqIMS8POYVV/l1szgiKfRb0vc/lkwGaBkuUy9Zh5
-        NqCot34GXLdeb77L8ZH+Au4itROe50Y=
+        bh=L00fvImj+Aem/rZ4jTFnPDHDfEBv268QH0yH7XjxJsc=;
+        b=KIoX4tuJ1vkbhvVnXeOJ+RI0d9vnRuT98BI9J6W3AAErwb7dUmWG6FcGZhW2uDFZxcLcq0
+        SWekHa7dTab4/eUbv/Y+HdinA6wh6gDvlE2ojvrHQiCLo71wYMkkrtfL358YS+vlwbpCjg
+        8MuPy+WItqlAc6rYd7nQFOU6UfhGyDI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-D_5NxhDnMcWUlNv0PozHow-1; Fri, 07 Aug 2020 04:40:11 -0400
-X-MC-Unique: D_5NxhDnMcWUlNv0PozHow-1
+ us-mta-193--iTQFr-JOCSqlY7VPsjDsA-1; Fri, 07 Aug 2020 04:40:14 -0400
+X-MC-Unique: -iTQFr-JOCSqlY7VPsjDsA-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3C5B8017FB;
-        Fri,  7 Aug 2020 08:40:09 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B28C58064AC;
+        Fri,  7 Aug 2020 08:40:12 +0000 (UTC)
 Received: from vitty.brq.redhat.com (unknown [10.40.195.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B3DF5C1D2;
-        Fri,  7 Aug 2020 08:40:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 399825C1D2;
+        Fri,  7 Aug 2020 08:40:10 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -52,9 +52,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Eduardo Habkost <ehabkost@redhat.com>,
         Jon Doron <arilou@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] KVM: x86: hyper-v: always advertise HV_STIMER_DIRECT_MODE_AVAILABLE
-Date:   Fri,  7 Aug 2020 10:39:43 +0200
-Message-Id: <20200807083946.377654-5-vkuznets@redhat.com>
+Subject: [PATCH 5/7] KVM: x86: hyper-v: drop now unneeded vcpu parameter from kvm_vcpu_ioctl_get_hv_cpuid()
+Date:   Fri,  7 Aug 2020 10:39:44 +0200
+Message-Id: <20200807083946.377654-6-vkuznets@redhat.com>
 In-Reply-To: <20200807083946.377654-1-vkuznets@redhat.com>
 References: <20200807083946.377654-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -65,36 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HV_STIMER_DIRECT_MODE_AVAILABLE is the last conditionally set feature bit
-in KVM_GET_SUPPORTED_HV_CPUID but it doesn't have to be conditional: first,
-this bit is only an indication to userspace VMM that direct mode stimers
-are supported, it still requires manual enablement (enabling SynIC) to
-work so no VMM should just blindly copy it to guest CPUIDs. Second,
-lapic_in_kernel() is a must for SynIC. Expose the bit unconditionally.
+kvm_vcpu_ioctl_get_hv_cpuid() doesn't use its vcpu parameter anymore,
+drop it. Also, the function is now untied from vcpu, rename it accordingly.
+
+No functional change intended.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/hyperv.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/x86/kvm/hyperv.c | 3 +--
+ arch/x86/kvm/hyperv.h | 3 +--
+ arch/x86/kvm/x86.c    | 3 +--
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 5a6831799544..a8ebaa66a8e1 100644
+index a8ebaa66a8e1..daed68139765 100644
 --- a/arch/x86/kvm/hyperv.c
 +++ b/arch/x86/kvm/hyperv.c
-@@ -2027,13 +2027,7 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 			ent->ebx |= HV_DEBUGGING;
- 			ent->edx |= HV_X64_GUEST_DEBUGGING_AVAILABLE;
- 			ent->edx |= HV_FEATURE_DEBUG_MSRS_AVAILABLE;
--
--			/*
--			 * Direct Synthetic timers only make sense with in-kernel
--			 * LAPIC
--			 */
--			if (lapic_in_kernel(vcpu))
--				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
-+			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
+@@ -1950,8 +1950,7 @@ int kvm_vm_ioctl_hv_eventfd(struct kvm *kvm, struct kvm_hyperv_eventfd *args)
+ 	return kvm_hv_eventfd_assign(kvm, args->conn_id, args->fd);
+ }
  
- 			break;
+-int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+-				struct kvm_cpuid_entry2 __user *entries)
++int kvm_get_hv_cpuid(struct kvm_cpuid2 *cpuid, struct kvm_cpuid_entry2 __user *entries)
+ {
+ 	uint16_t evmcs_ver = 0;
+ 	struct kvm_cpuid_entry2 cpuid_entries[] = {
+diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+index e68c6c2e9649..1fc4997e7f01 100644
+--- a/arch/x86/kvm/hyperv.h
++++ b/arch/x86/kvm/hyperv.h
+@@ -126,7 +126,6 @@ void kvm_hv_setup_tsc_page(struct kvm *kvm,
+ void kvm_hv_init_vm(struct kvm *kvm);
+ void kvm_hv_destroy_vm(struct kvm *kvm);
+ int kvm_vm_ioctl_hv_eventfd(struct kvm *kvm, struct kvm_hyperv_eventfd *args);
+-int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+-				struct kvm_cpuid_entry2 __user *entries);
++int kvm_get_hv_cpuid(struct kvm_cpuid2 *cpuid, struct kvm_cpuid_entry2 __user *entries);
+ 
+ #endif
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 95ef62922869..4659067c2e53 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4749,8 +4749,7 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
+ 			goto out;
+ 
+-		r = kvm_vcpu_ioctl_get_hv_cpuid(vcpu, &cpuid,
+-						cpuid_arg->entries);
++		r = kvm_get_hv_cpuid(&cpuid, cpuid_arg->entries);
+ 		if (r)
+ 			goto out;
  
 -- 
 2.25.4
