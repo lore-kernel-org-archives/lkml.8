@@ -2,98 +2,151 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A808A2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251A7221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:53:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HCkl2wKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgHGNuh (ORCPT
+        id S1726305AbgHGNxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 09:50:37 -0400
-Received: from ms01.santannapisa.it ([193.205.80.98]:61185 "EHLO
-        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgHGNt4 (ORCPT
+        Fri, 7 Aug 2020 09:53:08 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:53622 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726155AbgHGNxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:49:56 -0400
-Received: from [94.37.192.58] (account l.abeni@santannapisa.it HELO nowhere)
-  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 150297187; Fri, 07 Aug 2020 15:49:52 +0200
-Date:   Fri, 7 Aug 2020 15:49:41 +0200
-From:   luca abeni <luca.abeni@santannapisa.it>
-To:     peterz@infradead.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>, mingo@redhat.com,
-        rostedt@goodmis.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, tommaso.cucinotta@santannapisa.it,
-        alessio.balsini@gmail.com, bristot@redhat.com,
-        dietmar.eggemann@arm.com, linux-rt-users@vger.kernel.org,
-        mtosatti@redhat.com, williams@redhat.com,
-        valentin.schneider@arm.com
-Subject: Re: [RFC PATCH v2 6/6] sched/fair: Implement starvation monitor
-Message-ID: <20200807154941.2bb11408@nowhere>
-In-Reply-To: <20200807104618.GH2674@hirez.programming.kicks-ass.net>
-References: <20200807095051.385985-1-juri.lelli@redhat.com>
-        <20200807095604.GO42956@localhost.localdomain>
-        <20200807104618.GH2674@hirez.programming.kicks-ass.net>
-Organization: Scuola Superiore S.Anna
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Aug 2020 09:53:03 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 758DF30C0FE;
+        Fri,  7 Aug 2020 06:51:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 758DF30C0FE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1596808279;
+        bh=tGx/rX9q9g90/gKcnXViGFt5JZcPsprp9pEqIAGHWrg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HCkl2wKm3M07Wx2cO8ia4Y9gCs3H8AfVX8V49ovatQqPwV7RIFwms8MgfWrce0z3T
+         sxrLl/j4lvXM6x+UqFHsrZLubj29EiRg0eV+3eCUiWmx+M6ujkzFziOgClpbi5dB43
+         V0eyDND3RzPpjnoArEyk4QsixeII2WmeqHJtVGec=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id ACD5A140093;
+        Fri,  7 Aug 2020 06:53:00 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1] MIPS: uasm: false warning on use of uasm_i_lui()
+Date:   Fri,  7 Aug 2020 09:52:45 -0400
+Message-Id: <20200807135251.32148-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Currently, the example uasm code
 
-On Fri, 7 Aug 2020 12:46:18 +0200
-peterz@infradead.org wrote:
+	uasm_i_lui(p, tmp, 0xa000);
 
-> On Fri, Aug 07, 2020 at 11:56:04AM +0200, Juri Lelli wrote:
-> > Starting deadline server for lower priority classes right away when
-> > first task is enqueued might break guarantees, as tasks belonging to
-> > intermediate priority classes could be uselessly preempted. E.g., a
-> > well behaving (non hog) FIFO task can be preempted by NORMAL tasks
-> > even if there are still CPU cycles available for NORMAL tasks to
-> > run, as they'll be running inside the fair deadline server for some
-> > period of time.
-> > 
-> > To prevent this issue, implement a starvation monitor mechanism that
-> > starts the deadline server only if a (fair in this case) task hasn't
-> > been scheduled for some interval of time after it has been enqueued.
-> > Use pick/put functions to manage starvation monitor status.  
-> 
-> One thing I considerd was scheduling this as a least-laxity entity --
-> such that it runs late, not early
+issues a warning at Linux boot when the code is "assembled".  This is
+because the "lui" instruction is defined by the macro "Ip_u1s2(_lui)" -- I
+believe it should be Ip_u1u2(_lui) -- and its definition is associated with
+the SIMM macro -- I believe it should be the UIMM macro.  The current code
+takes a 32bit number and checks that it can be converted to a 16bit signed
+immediate.  This check fails of course for an immediate such as 0x0000a000.
 
-Are you thinking about scheduling both RT and non-RT tasks through
-deadline servers? If yes, then I think that using something like
-laxity-based scheduling for the SCHED_OTHER server can be a good idea
-(but then we need to understand how to combine deadline-based
-scheduling with laxity-based scheduling, etc...)
+This is fixed.  However, there are two uses of uasm_i_lui() in
+UASM_i_LA_mostly() which use 16bit signed immediates in the form of a
+sign-extended 32 bit number.  Left alone these may now cause a warning when
+being processed by build_imm().  These two uses have been modified by first
+calling build_simm() on the argument to uasm_i_lui() as to convert it to a
+proper 16 bit unsigned integer.
 
-Or are you thinking about keeping the SCHED_OTHER server throttled
-until its laxity is 0 (or until its laxity is lower than some small
-value)? In this second case, the approach would work even if RT tasks
-are not scheduled through a server (but I do not know which kind of
-performance guarantee we could provide).
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+---
+ arch/mips/include/asm/uasm.h  | 2 +-
+ arch/mips/mm/uasm-micromips.c | 2 +-
+ arch/mips/mm/uasm-mips.c      | 2 +-
+ arch/mips/mm/uasm.c           | 6 +++---
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-
-> -- and start the server when
-> rq->nr_running != rq->cfs.h_nr_running, IOW when there's !fair tasks
-> around.
-
-Yes, this could be a good optimization.
-
-
-
-			Luca
-> 
-> Not saying we should do it like that, but that's perhaps more
-> deterministic than this.
+diff --git a/arch/mips/include/asm/uasm.h b/arch/mips/include/asm/uasm.h
+index f7effca791a5..7ea1d338570b 100644
+--- a/arch/mips/include/asm/uasm.h
++++ b/arch/mips/include/asm/uasm.h
+@@ -127,7 +127,7 @@ Ip_u2s3u1(_lh);
+ Ip_u2s3u1(_lhu);
+ Ip_u2s3u1(_ll);
+ Ip_u2s3u1(_lld);
+-Ip_u1s2(_lui);
++Ip_u1u2(_lui);
+ Ip_u2s3u1(_lw);
+ Ip_u2s3u1(_lwu);
+ Ip_u3u1u2(_lwx);
+diff --git a/arch/mips/mm/uasm-micromips.c b/arch/mips/mm/uasm-micromips.c
+index 75ef90486fe6..86ee1499e120 100644
+--- a/arch/mips/mm/uasm-micromips.c
++++ b/arch/mips/mm/uasm-micromips.c
+@@ -82,7 +82,7 @@ static const struct insn insn_table_MM[insn_invalid] = {
+ 	[insn_lh]	= {M(mm_lh32_op, 0, 0, 0, 0, 0), RT | RS | SIMM},
+ 	[insn_ll]	= {M(mm_pool32c_op, 0, 0, (mm_ll_func << 1), 0, 0), RS | RT | SIMM},
+ 	[insn_lld]	= {0, 0},
+-	[insn_lui]	= {M(mm_pool32i_op, mm_lui_op, 0, 0, 0, 0), RS | SIMM},
++	[insn_lui]	= {M(mm_pool32i_op, mm_lui_op, 0, 0, 0, 0), RS | UIMM},
+ 	[insn_lw]	= {M(mm_lw32_op, 0, 0, 0, 0, 0), RT | RS | SIMM},
+ 	[insn_mfc0]	= {M(mm_pool32a_op, 0, 0, 0, mm_mfc0_op, mm_pool32axf_op), RT | RS | RD},
+ 	[insn_mfhi]	= {M(mm_pool32a_op, 0, 0, 0, mm_mfhi32_op, mm_pool32axf_op), RS},
+diff --git a/arch/mips/mm/uasm-mips.c b/arch/mips/mm/uasm-mips.c
+index 7154a1d99aad..b45c15111d68 100644
+--- a/arch/mips/mm/uasm-mips.c
++++ b/arch/mips/mm/uasm-mips.c
+@@ -132,7 +132,7 @@ static const struct insn insn_table[insn_invalid] = {
+ 	[insn_ll]	= {M6(spec3_op, 0, 0, 0, ll6_op),  RS | RT | SIMM9},
+ 	[insn_lld]	= {M6(spec3_op, 0, 0, 0, lld6_op),  RS | RT | SIMM9},
+ #endif
+-	[insn_lui]	= {M(lui_op, 0, 0, 0, 0, 0),	RT | SIMM},
++	[insn_lui]	= {M(lui_op, 0, 0, 0, 0, 0),	RT | UIMM},
+ 	[insn_lw]	= {M(lw_op, 0, 0, 0, 0, 0),  RS | RT | SIMM},
+ 	[insn_lwu]	= {M(lwu_op, 0, 0, 0, 0, 0),  RS | RT | SIMM},
+ 	[insn_lwx]	= {M(spec3_op, 0, 0, 0, lwx_op, lx_op), RS | RT | RD},
+diff --git a/arch/mips/mm/uasm.c b/arch/mips/mm/uasm.c
+index c56f129c9a4b..ca5d47da3bd1 100644
+--- a/arch/mips/mm/uasm.c
++++ b/arch/mips/mm/uasm.c
+@@ -327,7 +327,7 @@ I_u2s3u1(_lh)
+ I_u2s3u1(_lhu)
+ I_u2s3u1(_ll)
+ I_u2s3u1(_lld)
+-I_u1s2(_lui)
++I_u1u2(_lui)
+ I_u2s3u1(_lw)
+ I_u2s3u1(_lwu)
+ I_u1u2u3(_mfc0)
+@@ -457,7 +457,7 @@ UASM_EXPORT_SYMBOL(uasm_rel_lo);
+ void UASM_i_LA_mostly(u32 **buf, unsigned int rs, long addr)
+ {
+ 	if (!uasm_in_compat_space_p(addr)) {
+-		uasm_i_lui(buf, rs, uasm_rel_highest(addr));
++		uasm_i_lui(buf, rs, build_simm(uasm_rel_highest(addr)));
+ 		if (uasm_rel_higher(addr))
+ 			uasm_i_daddiu(buf, rs, rs, uasm_rel_higher(addr));
+ 		if (uasm_rel_hi(addr)) {
+@@ -468,7 +468,7 @@ void UASM_i_LA_mostly(u32 **buf, unsigned int rs, long addr)
+ 		} else
+ 			uasm_i_dsll32(buf, rs, rs, 0);
+ 	} else
+-		uasm_i_lui(buf, rs, uasm_rel_hi(addr));
++		uasm_i_lui(buf, rs, build_simm(uasm_rel_hi(addr)));
+ }
+ UASM_EXPORT_SYMBOL(UASM_i_LA_mostly);
+ 
+-- 
+2.17.1
 
