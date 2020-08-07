@@ -6,153 +6,163 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA520C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D94BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB57322CA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C560206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PselFkAd"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yf26EGUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgHGAcm (ORCPT
+        id S1726198AbgHGAgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgHGAcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:32:42 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA1AC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 17:32:41 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id x24so340911otp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 17:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G7T/X+Hdz300MbabhJq6qCcx3VnFKkl/jPa3R3amrfI=;
-        b=PselFkAd+xgUoI8Sz1hEqzHw4MzaI68hCHVzBUOC0a1q3kPMu658GjTjbH0IusHnyC
-         nOrJI3uJO3oG0gwgJ9/0gf7I7++TszMXeGMSzF6NfC6GiC80PIg9prDkFgzYx07E9jNZ
-         gPFKJojWEdGHzwYsm/JDOS8J2c1YqqT7HepJs5CIzBkfCRJHfrVftApAetSDEBIdLYPw
-         MVc+Wm7I4gTNWS4INILZK0arXSEfKJGzlUGIlnkUIANSoj7m2I3sB8cM8KW/b4KFRWgV
-         +WAPPrWOq/zib0essjzcatHXvWXYUKAw9l7esBeFu3MxaclMiALrPqu+IJ5YyNI5zIE3
-         WcYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G7T/X+Hdz300MbabhJq6qCcx3VnFKkl/jPa3R3amrfI=;
-        b=G1StTNZcRQffaEwNSocxnDoemKTtN9eCSsbVhAtNZRqB8rOMWCDu87iAKqaAMLsBMZ
-         5/k8a1E2b6i+xj0+RUGufl4jmSLDhRv4Pj+1qhq8qOvLgBetwl+quTEEKSJUZLidX+Wp
-         JGhH2UcnCRCM4OQ4PNJGOx4ixY58txcad203MY5FKV4z/yBzJuQcmxjtje/IdISvAfsA
-         s01GRIieguyeDKdeO8PMQY3jd7jXPxZsCedLWPCy79NOTIYRg4L7yYbzciIJY182Rt1h
-         0fYfcLgiFiGCddfdNcJ0NkJx/ys6FXrH5bw7qh6NWhbY8qGQaOAATwUJMvuIP6u8xzLu
-         0O0w==
-X-Gm-Message-State: AOAM5332MUxCzpNpdKxKsM3WP78qsS3ZwurTndtTo9pAOFbhPJ+UqC6E
-        tp4ibN5I7AR+XTiIyKqRfx5TS/eVnoO2jj09EQAV9Q==
-X-Google-Smtp-Source: ABdhPJwyPY6wH8Y5BOxdyJPSPc1NkqW3b4kEuerTASF72tv3kfgI/n/QmxoBFWlvwgmWcJaYouIJ5eHHjI3IfvYfFgQ=
-X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr9170519oth.352.1596760361235;
- Thu, 06 Aug 2020 17:32:41 -0700 (PDT)
+        Thu, 6 Aug 2020 20:36:44 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54613 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgHGAgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 20:36:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BN5yf1zybz9sSG;
+        Fri,  7 Aug 2020 10:36:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596760602;
+        bh=G+kDgt44SsZYuVJDnpFeQASIMFtHjTuJWg69wtHW0j4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Yf26EGUtRp5R7Q27/hXK2bPYyCqaXA/bp7xn8HfnUz8adwPouQaFEFQrHsxWs4drs
+         JHvFeRq13fxf31ufouWzVDIzdYY1AtOSJ4DVJ/Z4wdBTQw7mIjqdwkDo1XumorDxj2
+         pZ6n80hrpBTOZfXxGEly+taqYJp1mhM+uQ2x2olCZSqFNkMX4BhN1QHcTcdwetxJbt
+         k+snWIbQqhWjskOrfvACcSh5Ar+zF9EDApTWwzwZSEqafyzW+zpWehjHmiOD+YUGty
+         7mxyiCwz71B7iy2cV67eYaqFrxQGo7IELSZQmV7+VyE7F1Ou/ImmDklqBFLMAZdXaa
+         LUMb0jKgubgzw==
+Date:   Fri, 7 Aug 2020 10:36:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the nfs tree
+Message-ID: <20200807103640.116e82f6@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200805.185559.1225246192723680518.davem@davemloft.net>
- <CANcMJZA1pSz8T9gkRtwYHy_vVfoMj35Wd-+qqxQBg+GRaXS0_Q@mail.gmail.com> <011a0a3b-74ac-fa61-2a04-73cb9897e8e8@gmail.com>
-In-Reply-To: <011a0a3b-74ac-fa61-2a04-73cb9897e8e8@gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 6 Aug 2020 17:32:29 -0700
-Message-ID: <CALAqxLVDyTygzoktGK+aYnT2dQdOTPFAD=P=Kr1x+TmLuUC=NA@mail.gmail.com>
-Subject: Re: [GIT] Networking
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/ZnR5EW090Tzmib=+7x7aWl0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 4:17 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> On 8/6/20 2:39 PM, John Stultz wrote:
-> > [   19.709492] Unable to handle kernel access to user memory outside
-> > uaccess routines at virtual address 0000006f53337070
-> > [   19.726539] Mem abort info:
-> > [   19.726544]   ESR = 0x9600000f
-> > [   19.741323]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [   19.741326]   SET = 0, FnV = 0
-> > [   19.761185]   EA = 0, S1PTW = 0
-> > [   19.761188] Data abort info:
-> > [   19.761190]   ISV = 0, ISS = 0x0000000f
-> > [   19.761192]   CM = 0, WnR = 0
-> > [   19.761199] user pgtable: 4k pages, 39-bit VAs, pgdp=000000016e9e9000
-> > [   19.777584] [0000006f53337070] pgd=000000016e99e003,
-> > p4d=000000016e99e003, pud=000000016e99e003, pmd=000000016e99a003,
-> > pte=00e800016d3c7f53
-> > [   19.789205] Internal error: Oops: 9600000f [#1] PREEMPT SMP
-> > [   19.789211] Modules linked in:
-> > [   19.797153] CPU: 7 PID: 364 Comm: iptables-restor Tainted: G
-> > W         5.8.0-mainline-08255-gf9e74a8eb6f3 #3350
-> > [   19.797156] Hardware name: Thundercomm Dragonboard 845c (DT)
-> > [   19.797161] pstate: a0400005 (NzCv daif +PAN -UAO BTYPE=--)
-> > [   19.797177] pc : do_ipt_set_ctl+0x304/0x610
-> > [   19.807891] lr : do_ipt_set_ctl+0x50/0x610
-> > [   19.807894] sp : ffffffc0139bbba0
-> > [   19.807898] x29: ffffffc0139bbba0 x28: ffffff80f07a3800
-> > [   19.846468] x27: 0000000000000000 x26: 0000000000000000
-> > [   19.846472] x25: 0000000000000000 x24: 0000000000000698
-> > [   19.846476] x23: ffffffec8eb0cc80 x22: 0000000000000040
-> > [   19.846480] x21: b400006f53337070 x20: ffffffec8eb0c000
-> > [   19.846484] x19: ffffffec8e9e9000 x18: 0000000000000000
-> > [   19.846487] x17: 0000000000000000 x16: 0000000000000000
-> > [   19.846491] x15: 0000000000000000 x14: 0000000000000000
-> > [   19.846495] x13: 0000000000000000 x12: 0000000000000000
-> > [   19.846501] x11: 0000000000000000 x10: 0000000000000000
-> > [   19.856005] x9 : 0000000000000000 x8 : 0000000000000000
-> > [   19.856008] x7 : ffffffec8e9e9d08 x6 : 0000000000000000
-> > [   19.856012] x5 : 0000000000000000 x4 : 0000000000000213
-> > [   19.856015] x3 : 00000001ffdeffef x2 : 11ded3fb0bb85e00
-> > [   19.856019] x1 : 0000000000000027 x0 : 0000008000000000
-> > [   19.856024] Call trace:
-> > [   19.866319]  do_ipt_set_ctl+0x304/0x610
-> > [   19.866327]  nf_setsockopt+0x64/0xa8
-> > [   19.866332]  ip_setsockopt+0x21c/0x1710
-> > [   19.866338]  raw_setsockopt+0x50/0x1b8
-> > [   19.866347]  sock_common_setsockopt+0x50/0x68
-> > [   19.882672]  __sys_setsockopt+0x120/0x1c8
-> > [   19.882677]  __arm64_sys_setsockopt+0x30/0x40
-> > [   19.882686]  el0_svc_common.constprop.3+0x78/0x188
-> > [   19.882691]  do_el0_svc+0x80/0xa0
-> > [   19.882699]  el0_sync_handler+0x134/0x1a0
-> > [   19.901555]  el0_sync+0x140/0x180
-> > [   19.901564] Code: aa1503e0 97fffd3e 2a0003f5 17ffff80 (a9401ea6)
-> > [   19.901569] ---[ end trace 22010e9688ae248f ]---
-> > [   19.913033] Kernel panic - not syncing: Fatal exception
-> > [   19.913042] SMP: stopping secondary CPUs
-> > [   20.138885] Kernel Offset: 0x2c7d080000 from 0xffffffc010000000
-> > [   20.138887] PHYS_OFFSET: 0xfffffffa80000000
-> > [   20.138894] CPU features: 0x0040002,2a80a218
-> > [   20.138898] Memory Limit: none
-> >
-> > I'll continue to work on bisecting this down further, but figured I'd
-> > share now as you or someone else might be able to tell whats wrong
-> > from the trace.
-> >
->
-> Can you try at commit c2f12630c60ff33a9cafd221646053fc10ec59b6 ("netfilter: switch nf_setsockopt to sockptr_t")
-> (and right before it)
+--Sig_/ZnR5EW090Tzmib=+7x7aWl0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-So I rebased my patches ontop of that commit, but I'm not seeing the
-crash there.  I also hand applied your suggested patch when I did see
-the issue, but that didn't seem to fix it either.
+After merging the nfs tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
 
-So far I've only narrowed it down to between
-65ccbbda52288527b7c48087eb33bb0757975875..530fe9d433b9e60251bb8fdc5dddecbc486a50ef.
-But I'll keep rebase-bisecting it down.
+In file included from include/trace/define_trace.h:102,
+                 from fs/nfs/nfs4trace.h:2316,
+                 from fs/nfs/nfs4trace.c:13:
+fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_read_event':
+fs/nfs/./nfs4trace.h:1767:34: warning: unused variable 'lo' [-Wunused-varia=
+ble]
+ 1767 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+      |                                  ^~
+include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE_E=
+VENT_CLASS'
+  707 |  { assign; }       \
+      |    ^~~~~~
+fs/nfs/./nfs4trace.h:1759:3: note: in expansion of macro 'TP_fast_assign'
+ 1759 |   TP_fast_assign(
+      |   ^~~~~~~~~~~~~~
+fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_write_event':
+fs/nfs/./nfs4trace.h:1844:34: warning: unused variable 'lo' [-Wunused-varia=
+ble]
+ 1844 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+      |                                  ^~
+include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE_E=
+VENT_CLASS'
+  707 |  { assign; }       \
+      |    ^~~~~~
+fs/nfs/./nfs4trace.h:1836:3: note: in expansion of macro 'TP_fast_assign'
+ 1836 |   TP_fast_assign(
+      |   ^~~~~~~~~~~~~~
+fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_commit_event':
+fs/nfs/./nfs4trace.h:1917:34: warning: unused variable 'lo' [-Wunused-varia=
+ble]
+ 1917 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+      |                                  ^~
+include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE_E=
+VENT_CLASS'
+  707 |  { assign; }       \
+      |    ^~~~~~
+fs/nfs/./nfs4trace.h:1911:3: note: in expansion of macro 'TP_fast_assign'
+ 1911 |   TP_fast_assign(
+      |   ^~~~~~~~~~~~~~
+In file included from include/trace/define_trace.h:103,
+                 from fs/nfs/nfs4trace.h:2316,
+                 from fs/nfs/nfs4trace.c:13:
+fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_read_event':
+fs/nfs/./nfs4trace.h:1767:34: warning: unused variable 'lo' [-Wunused-varia=
+ble]
+ 1767 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+      |                                  ^~
+include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CLAS=
+S'
+   66 |  { assign; }       \
+      |    ^~~~~~
+fs/nfs/./nfs4trace.h:1759:3: note: in expansion of macro 'TP_fast_assign'
+ 1759 |   TP_fast_assign(
+      |   ^~~~~~~~~~~~~~
+fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_write_event':
+fs/nfs/./nfs4trace.h:1844:34: warning: unused variable 'lo' [-Wunused-varia=
+ble]
+ 1844 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+      |                                  ^~
+include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CLAS=
+S'
+   66 |  { assign; }       \
+      |    ^~~~~~
+fs/nfs/./nfs4trace.h:1836:3: note: in expansion of macro 'TP_fast_assign'
+ 1836 |   TP_fast_assign(
+      |   ^~~~~~~~~~~~~~
+fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_commit_event':
+fs/nfs/./nfs4trace.h:1917:34: warning: unused variable 'lo' [-Wunused-varia=
+ble]
+ 1917 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+      |                                  ^~
+include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CLAS=
+S'
+   66 |  { assign; }       \
+      |    ^~~~~~
+fs/nfs/./nfs4trace.h:1911:3: note: in expansion of macro 'TP_fast_assign'
+ 1911 |   TP_fast_assign(
+      |   ^~~~~~~~~~~~~~
 
-thanks
--john
+Introduced by commit
+
+  34daa637f2b2 ("NFS: Add layout segment info to pnfs read/write/commit tra=
+cepoints")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ZnR5EW090Tzmib=+7x7aWl0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8sohgACgkQAVBC80lX
+0GyfWAf/Uee0eK2oy5lPgp6E3AE82wOteR6aR8QaK6FnH4MyRK0f7/cZybUiwNQt
+uA+9PBa/iCHJwWF6+2EAX0dKzRbR8Gsb/GCy0M+zc5De0AE/wSmz1PYYGFfXO8xP
+eGMHehoA+M4LGCX657nNzc5jvdfkF52tEc1lDO/mwLLE2X14sBvRD1TO7rn7I2H/
+Y5svpu/kRsqLXNUifVS/39Q1+wTN8vqBHv5BHImwRx5BeTe2skOhSnpO5dkmbyph
+jn4So0dM0ymqC3a4dHUT8BkezWRn8jOoJp52Mr5tcbtCjH8UZ2RaG9WE2WGf1Bke
+/yblRBLPx9GnSYzH+vY4ppmtBbx63g==
+=/7HP
+-----END PGP SIGNATURE-----
+
+--Sig_/ZnR5EW090Tzmib=+7x7aWl0--
