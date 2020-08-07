@@ -2,113 +2,131 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0728CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25764C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF182214F1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0154F214F1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:29:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eMECZogz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BM8RHOdk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgHGU2u (ORCPT
+        id S1726578AbgHGU3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
+        Fri, 7 Aug 2020 16:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGU2u (ORCPT
+        with ESMTP id S1725893AbgHGU3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:28:50 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0120EC061756;
-        Fri,  7 Aug 2020 13:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=xRUD55pKuLg6gojA/cds2ffAUN36ReNagtqRG0GQuOQ=; b=eMECZogztFAvPBcu91JBf/wLGM
-        k1ceU0vlipiSyF/G/oMzLceUJUkmnts30fR0q2pmDv82h1fK80oSlFWBy8h78KX7AiVirD+JYaJxy
-        tXpFbNVVNfKY4cuNjqdQBKxlNJ5k7EfvRwx5DrJOSYcQB1lY0LQsWjpTvI0R9nyB2LyNsR6CeJe8R
-        zGc5QI7AEsgMCNtqPdk4LZ28D+nZnjXA+qImpWBbKE1C1AMO6wG5mShWIw8NjQJvFKBbkygQBr/Qh
-        HrP6IkmCYd6dCSvDooYUEj2SzoS3QhuYD4ld+Mzq8LJd2BKL1LvTwVvph76zE+uCdeKXqjNqslrtl
-        iOfpdiUw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k48yo-0004Yn-VD; Fri, 07 Aug 2020 20:28:43 +0000
-Subject: Re: [PATCH v9 3/5] drm/msm/dp: add support for DP PLL driver
-To:     Stephen Boyd <swboyd@chromium.org>, Rob Clark <robdclark@gmail.com>
-Cc:     Tanmay Shah <tanmay@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, aravindh@codeaurora.org,
-        Abhinav Kumar <abhinavk@codeaurora.org>, khsieh@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-References: <20200807071718.17937-1-tanmay@codeaurora.org>
- <20200807071718.17937-4-tanmay@codeaurora.org>
- <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org>
- <CAF6AEGv5Yf1x7aCEauP7XtzTjpUCxJt6_GzxFhFXyf_DX_Gi+g@mail.gmail.com>
- <159683184187.1360974.15575847254880429529@swboyd.mtv.corp.google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <75acac5a-b4a5-9c5a-4404-fb936d738e46@infradead.org>
-Date:   Fri, 7 Aug 2020 13:28:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 16:29:36 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD37DC061756;
+        Fri,  7 Aug 2020 13:29:36 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id z17so2834611ill.6;
+        Fri, 07 Aug 2020 13:29:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uq3Rm3BodEbHoD3xpm4HpbWX1fCXnHobKwQS9eSoca4=;
+        b=BM8RHOdk46N+DeGLK9WTKkMYUkIB4fexT7uOlF79JjFH11zN1g/IDmLcSQCtkuwngn
+         r46/DeVJjrv9lKfKrdHHQuVScjeQiOaKJSwY9wjuNTdWsvRjDUnl/HHzqs9EO/081Miq
+         wdI2AiaNkAx1NGAuG5qdMcXHvZpdqekA0Kev49MF9WOrn83XpMBgp7ehIKkOjE7e46lU
+         0z4BAQ/F1aXYZRnjf9q0LZ3RtANjeAyQlZf/9+8HxqhjShyGSfgA08uIf/J6h/3t12Z7
+         CFEZMpvZW0kN1Vv59hHqIaQOdsKTVw9clSzgmhVFD88DVHzDLqks3CY76+d/yK4x4VWx
+         It1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uq3Rm3BodEbHoD3xpm4HpbWX1fCXnHobKwQS9eSoca4=;
+        b=bMAg/EcUny46Z97LH0cHSqCgGJmNXfSrV2vcBSCRl+TMFvyfKxrKH4ifVabVszmNDu
+         HBoHINHjapbQ0hwukZwJ0AWAQoPmD+GDv1bMG0TPk2ciKJd/eLC/i6FRx5Li+X/Gtfcz
+         4nl6iqoAI/P0xRR1qmdQzzq36QyvT8lkKlkHJaKlEgG69SnzzEdPymfFICVFmxRZHi+f
+         KC55Hx9pt63Qh1sUNsIIYomMlITeiNEvLp8WM5G3WQBxfuaIlm06ky1YWpcWGnJD61UQ
+         LkUmLw4F2KUqNj9kIQBaGjToSt1DAis9P3FtAH1kM/x6NUE1gfsZ0zldGATrn5O6/heC
+         wnEg==
+X-Gm-Message-State: AOAM531qq0Qd2m/95YfFoor9JwYgELQZPX46AGeXviqu2IZDDBgwxXn6
+        ROPhsftgCf9R+0eBnjq+soJuReE0vm6/HwCfK10=
+X-Google-Smtp-Source: ABdhPJwC9P+sOC25h3PoOSP50YpPCTyAOEUT0secwM5VyYf3NZXaBzxAMi6eRm+95YX8Kh14rxVqTZmqDD/zYQktLX0=
+X-Received: by 2002:a92:5e9c:: with SMTP id f28mr6357090ilg.302.1596832176074;
+ Fri, 07 Aug 2020 13:29:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159683184187.1360974.15575847254880429529@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200709182642.1773477-1-keescook@chromium.org> <20200709182642.1773477-4-keescook@chromium.org>
+In-Reply-To: <20200709182642.1773477-4-keescook@chromium.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 7 Aug 2020 13:29:24 -0700
+Message-ID: <CANcMJZAcDAG7Dq7vo=M-SZwujj+BOKMh7wKvywHq+tEX3GDbBQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/9] net/scm: Regularize compat handling of scm_detach_fds()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 1:24 PM, Stephen Boyd wrote:
-> Quoting Rob Clark (2020-08-07 08:51:48)
->> On Fri, Aug 7, 2020 at 8:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>>
->>> On 8/7/20 12:17 AM, Tanmay Shah wrote:
->>>> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
->>>> index ea3c4d094d09..cc1392b29022 100644
->>>> --- a/drivers/gpu/drm/msm/Kconfig
->>>> +++ b/drivers/gpu/drm/msm/Kconfig
->>>> @@ -60,6 +60,7 @@ config DRM_MSM_HDMI_HDCP
->>>>  config DRM_MSM_DP
->>>>       bool "Enable DP support in MSM DRM driver"
->>>>       depends on DRM_MSM
->>>> +     default y
->>>>       help
->>>>         Compile in support for DP driver in msm drm driver. DP external
->>>>         display support is enabled through this config option. It can
->>>
->>> Hi,
->>>
->>> You need a very strong justification to make an optional part of a driver
->>> to be "default y".
->>
->> My opinion is that if the driver is built, everything should be built.
->> This is what makes sense for distro's.  It is only the embedded case
->> where you want to trim down unneeded features where you might want to
->> disable some parts.  So 'default y' makes sense to me.
+On Thu, Jul 9, 2020 at 11:28 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Duplicate the cleanups from commit 2618d530dd8b ("net/scm: cleanup
+> scm_detach_fds") into the compat code.
+>
+> Replace open-coded __receive_sock() with a call to the helper.
+>
+> Move the check added in commit 1f466e1f15cf ("net: cleanly handle kernel
+> vs user buffers for ->msg_control") to before the compat call, even
+> though it should be impossible for an in-kernel call to also be compat.
+>
+> Correct the int "flags" argument to unsigned int to match fd_install()
+> and similar APIs.
+>
+> Regularize any remaining differences, including a whitespace issue,
+> a checkpatch warning, and add the check from commit 6900317f5eff ("net,
+> scm: fix PaX detected msg_controllen overflow in scm_detach_fds") which
+> fixed an overflow unique to 64-bit. To avoid confusion when comparing
+> the compat handler to the native handler, just include the same check
+> in the compat handler.
+>
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-We don't set defaults for distro convenience.
+Hey Kees,
+  So during the merge window (while chasing a few other regressions),
+I noticed occasionally my Dragonboard 845c running AOSP having trouble
+with the web browser crashing or other apps hanging, and I've bisected
+the issue down to this change.
 
-> 
-> Maybe use 'default DRM_MSM' so that it doesn't trigger the 'default y'
-> filters people have?
+Unfortunately it doesn't revert cleanly so I can't validate reverting
+it sorts things against linus/HEAD.  Anyway, I wanted to check and see
+if you had any other reports of similar or any ideas what might be
+going wrong?
 
-Most people can figure that one out.  ;)
-I don't have any automated filters.
-
--- 
-~Randy
-
+thanks
+-john
