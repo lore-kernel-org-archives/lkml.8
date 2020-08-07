@@ -2,77 +2,69 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F31C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A78320866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jooGZOBZ"
+	by mail.kernel.org (Postfix) with ESMTP id 728FC20866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596807576;
+	bh=djVAZ8bgNnDd5s20tDbtmbbCi6mAMF/eFolBBmMjS/4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=l3Y0aOr342rMEX6FGVoHqNcUeczfOw22fLdlaAc6U/EmjsqUGYVjuNRMWZkm6C5vy
+	 GlyPmq2gx2TJZuNzYGBh7ashcmUOgMg3GRrCpKOigI6IJuaye2StB37UB+j1WKM5MG
+	 5JXNto9da29pO9VElvzu5Ksi3S34mfmSUD98lS/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgHGNjC (ORCPT
+        id S1726256AbgHGNje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 09:39:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgHGNjB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:39:01 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421B8C061574;
-        Fri,  7 Aug 2020 06:39:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eNlt5+MOMqdMiipq56av3Q5dInH/0IZEcBwwhkePOhw=; b=jooGZOBZPN+/zhWloZREEQs9Qe
-        1Gm0HEqpmKTnkfVygGtCjNGPDIVzbn6Oy4iJaZzm2CfGsgeL8I6RGXh+QirerafkOCyyFLowQfn04
-        IChcKEfRifcIOwSxygkNiijBPFeNHpOZTqM6nCUYljV7yii6nwcVfTblozH6g8PM6Q312CvbDI25M
-        zjBglzIXAyMENEhkum19A1pCMt7D7s7lweM2Z4sd2VbM7V6c6Cd5CwISpe/CWHJm+3fcz7fTwgtvK
-        Rlxfs1dl7r8mlxzgjjjbi+UlFk1MHOgX7V6pvrUvfVUZV9ivnPN/+OOwdWfrzlX5EzJ1coyIw+I7X
-        K4lH3vDg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k42aH-0003o5-B8; Fri, 07 Aug 2020 13:38:57 +0000
-Date:   Fri, 7 Aug 2020 14:38:57 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, darrick.wong@oracle.com,
-        dan.j.williams@intel.com, david@fromorbit.com, hch@lst.de,
-        rgoldwyn@suse.de, qi.fuli@fujitsu.com, y-goto@fujitsu.com
-Subject: Re: [RFC PATCH 0/8] fsdax: introduce FS query interface to support
- reflink
-Message-ID: <20200807133857.GC17456@casper.infradead.org>
-References: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
+        Fri, 7 Aug 2020 09:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgHGNjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 09:39:19 -0400
+Received: from [10.20.23.223] (unknown [12.97.180.36])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C614520866;
+        Fri,  7 Aug 2020 13:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596807559;
+        bh=djVAZ8bgNnDd5s20tDbtmbbCi6mAMF/eFolBBmMjS/4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M2t8KqC8r0URtDNpW9FSWMTYh/AqHEhN8JK9uqdfkyd61X7sFgA6WeVL9bX34Bf77
+         l80ZFYD73auUDGxQSXdi5NS03vbp3/IVW2FGapuluwwl45VS2XFJGRnUE9PdzTZKL6
+         2HjUIkDnNrxmao+96kag6Vd8PXuTAVDCR25wvCmM=
+Subject: Re: [PATCH net] net: qcom/emac: Fix missing clk_disable_unprepare()
+ in error path of emac_probe
+To:     "wanghai (M)" <wanghai38@huawei.com>, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20200806140647.43099-1-wanghai38@huawei.com>
+ <87f41175-689e-f198-aaf6-9b9f04449ed8@kernel.org>
+ <df1bad2e-2a6a-ff70-9b91-f18df20aaec8@huawei.com>
+From:   Timur Tabi <timur@kernel.org>
+Message-ID: <9ec9b9ab-48d9-9d38-8f58-27e2556c141a@kernel.org>
+Date:   Fri, 7 Aug 2020 08:38:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
+In-Reply-To: <df1bad2e-2a6a-ff70-9b91-f18df20aaec8@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 09:13:28PM +0800, Shiyang Ruan wrote:
-> This patchset is a try to resolve the problem of tracking shared page
-> for fsdax.
+On 8/6/20 8:54 PM, wanghai (M) wrote:
+> Thanks for your suggestion. May I fix it like this?
 > 
-> Instead of per-page tracking method, this patchset introduces a query
-> interface: get_shared_files(), which is implemented by each FS, to
-> obtain the owners of a shared page.  It returns an owner list of this
-> shared page.  Then, the memory-failure() iterates the list to be able
-> to notify each process using files that sharing this page.
-> 
-> The design of the tracking method is as follow:
-> 1. dax_assocaite_entry() associates the owner's info to this page
+Yes, this is what I had in mind.  Thanks.
 
-I think that's the first problem with this design.  dax_associate_entry is
-a horrendous idea which needs to be ripped out, not made more important.
-It's all part of the general problem of trying to do something on a
-per-page basis instead of per-extent basis.
-
+Acked-by: Timur Tabi <timur@kernel.org>
