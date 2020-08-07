@@ -2,287 +2,112 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21425C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 390E5221E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596759851;
-	bh=WT5/ZbSgfaderB5Ge8RH11JapqNx2uuvd9h0qdPCn0Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k1tpODW00T93uZ+ntojKapTPy5kEZA9teaVOb7thNR7ebiUQYEhF9s4tTid2ekxZP
-	 99kEogycaYcGc8fcZu8Jb0xX88BJ6GU7Zn/L0w/Lm51G0azXGZlPLTQ+gOBfo7JCt+
-	 7gei0DwtmGadOizfBgEexHLr7asmToCavm35d5rc=
+	by mail.kernel.org (Postfix) with ESMTP id 1FA4420855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="osQlR8ck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgHGAYK (ORCPT
+        id S1726402AbgHGAYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:24:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgHGAYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:24:08 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 451A120855;
-        Fri,  7 Aug 2020 00:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596759847;
-        bh=WT5/ZbSgfaderB5Ge8RH11JapqNx2uuvd9h0qdPCn0Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pbyqJOherK/amtB8m6wkfGNCsPAGHSpqqsdWgPrK4rFkIwLPSGdiFRpHmh5hZQcDh
-         x6vrKU+OKddRmM38eMZDXtYrpNwQ9Wk4bvgSrCGRTVfWnxFhie3692hpD2L5qS6uBW
-         wIYQSgfe1VCvvMtcn7XPrbWvCYtl5O+mAK35TPao=
-Received: by mail-lj1-f180.google.com with SMTP id g6so280235ljn.11;
-        Thu, 06 Aug 2020 17:24:07 -0700 (PDT)
-X-Gm-Message-State: AOAM532Hdvjugct9HdIgWVWEwGO3FacVjnbeX/fm8Kv+2F1j+gXbp9A6
-        WKc/qaz3MRB4JIUiw+o5Nou1ewQNp5rUuzqrWYc=
-X-Google-Smtp-Source: ABdhPJzYkrXyPAnRh91DPhVQkBmh2Vbe1E41s/eKJXEW5cF0NiWNfulpn7WC1neJ1hRZV+dLboTfh5pUycZovzdhHwo=
-X-Received: by 2002:a2e:86d8:: with SMTP id n24mr4622806ljj.377.1596759845398;
- Thu, 06 Aug 2020 17:24:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200805104146.GP2674@hirez.programming.kicks-ass.net> <20200805104415.GA35926@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200805104415.GA35926@hirez.programming.kicks-ass.net>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Fri, 7 Aug 2020 08:23:53 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSWCE-MCpwbiax79njqUUSQgLo_w=7SF7ejWavQQKCKZQ@mail.gmail.com>
-Message-ID: <CAJF2gTSWCE-MCpwbiax79njqUUSQgLo_w=7SF7ejWavQQKCKZQ@mail.gmail.com>
-Subject: Re: csky: smp_mb__after_spinlock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ren Guo <ren_guo@c-sky.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-csky@vger.kernel.org, mathieu.desnoyers@efficios.com,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Aug 2020 20:24:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10680 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725998AbgHGAYJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 20:24:09 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 077038jc175593;
+        Thu, 6 Aug 2020 20:24:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=VsXvvS8VKmxXDht3q36Bubq+Zar3OcXZnhZAUZMQcnY=;
+ b=osQlR8ck1rT5G162TuDnpSNrxODRJG3dxpkrNZqQCF2Cdp6JuubIveeoPTy+njFJIIe2
+ D3MnSivYKh0I7ddKP5/HThN1K6l1LBTV37g0Nd9xv34NNSj2oHOPAnv4k2FSMck0UGG7
+ Ro+ZwjFZYrRiTK0BDmljRTm1B3xzO00Ceu0PoXfamHku+958QyF+MTyLzsWUgvdJk7t3
+ FmajTb+ccilDljclikn5Bm8ybta2w/Zx7xXKYHR2bswT72i1k9FkUGXsFQolYrk2gAEW
+ ltYbBrvJSVQ0yEO8zoDDiYosFvmdbWSzy+F6beREbwYkci4JLqcbiz4vwt1OkMUT+Xm+ UQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32rgnfn7rt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 20:24:00 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0770Jqde005199;
+        Fri, 7 Aug 2020 00:23:58 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32n0185yyw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Aug 2020 00:23:58 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0770NuNi28246380
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Aug 2020 00:23:56 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F04DB4C04E;
+        Fri,  7 Aug 2020 00:23:55 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B2EB4C046;
+        Fri,  7 Aug 2020 00:23:53 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.117.136])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Aug 2020 00:23:52 +0000 (GMT)
+Message-ID: <1cdddf80e0b1ea46346edf8a1c0dc81aea095f15.camel@linux.ibm.com>
+Subject: Re: [PATCH v4 12/17] LSM: Add "contents" flag to kernel_read_file
+ hook
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Takashi Iwai <tiwai@suse.de>, Jessica Yu <jeyu@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 06 Aug 2020 20:23:51 -0400
+In-Reply-To: <20200729175845.1745471-13-keescook@chromium.org>
+References: <20200729175845.1745471-1-keescook@chromium.org>
+         <20200729175845.1745471-13-keescook@chromium.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_17:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 clxscore=1015 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Guo Ren <guoren@kernel.org>
+On Wed, 2020-07-29 at 10:58 -0700, Kees Cook wrote:
+> As with the kernel_load_data LSM hook, add a "contents" flag to the
+> kernel_read_file LSM hook that indicates whether the LSM can expect
+> a matching call to the kernel_post_read_file LSM hook with the full
+> contents of the file. With the coming addition of partial file read
+> support for kernel_read_file*() API, the LSM will no longer be able
+> to always see the entire contents of a file during the read calls.
+> 
+> For cases where the LSM must read examine the complete file contents,
+> it will need to do so on its own every time the kernel_read_file
+> hook is called with contents=false (or reject such cases). Adjust all
+> existing LSMs to retain existing behavior.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-On Thu, Aug 6, 2020 at 3:55 AM <peterz@infradead.org> wrote:
->
-> On Wed, Aug 05, 2020 at 12:41:46PM +0200, peterz@infradead.org wrote:
-> > Hi,
-> >
-> > While doing an audit of smp_mb__after_spinlock, I found that csky
-> > defines it, why?
-> >
-> > CSKY only has smp_mb(), it doesn't override __atomic_acquire_fence or
-> > otherwise special cases it's atomic*_acquire() primitives. It has an
-> > explicit smp_mb() in its arch_spin_lock().
->
-> Also, why have two implementations of all the locking ?
->
-> ---
-> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-> index bd31ab12f77d..332738e93e57 100644
-> --- a/arch/csky/Kconfig
-> +++ b/arch/csky/Kconfig
-> @@ -7,7 +7,7 @@ config CSKY
->         select ARCH_HAS_SYNC_DMA_FOR_CPU
->         select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->         select ARCH_USE_BUILTIN_BSWAP
-> -       select ARCH_USE_QUEUED_RWLOCKS if NR_CPUS>2
-> +       select ARCH_USE_QUEUED_RWLOCKS
->         select ARCH_WANT_FRAME_POINTERS if !CPU_CK610
->         select COMMON_CLK
->         select CLKSRC_MMIO
-> diff --git a/arch/csky/include/asm/spinlock.h b/arch/csky/include/asm/spinlock.h
-> index 7cf3f2b34cea..69f5aa249c5f 100644
-> --- a/arch/csky/include/asm/spinlock.h
-> +++ b/arch/csky/include/asm/spinlock.h
-> @@ -6,8 +6,6 @@
->  #include <linux/spinlock_types.h>
->  #include <asm/barrier.h>
->
-> -#ifdef CONFIG_QUEUED_RWLOCKS
-> -
->  /*
->   * Ticket-based spin-locking.
->   */
-> @@ -88,169 +86,4 @@ static inline int arch_spin_is_contended(arch_spinlock_t *lock)
->
->  #include <asm/qrwlock.h>
->
-> -/* See include/linux/spinlock.h */
-> -#define smp_mb__after_spinlock()       smp_mb()
-> -
-> -#else /* CONFIG_QUEUED_RWLOCKS */
-> -
-> -/*
-> - * Test-and-set spin-locking.
-> - */
-> -static inline void arch_spin_lock(arch_spinlock_t *lock)
-> -{
-> -       u32 *p = &lock->lock;
-> -       u32 tmp;
-> -
-> -       asm volatile (
-> -               "1:     ldex.w          %0, (%1) \n"
-> -               "       bnez            %0, 1b   \n"
-> -               "       movi            %0, 1    \n"
-> -               "       stex.w          %0, (%1) \n"
-> -               "       bez             %0, 1b   \n"
-> -               : "=&r" (tmp)
-> -               : "r"(p)
-> -               : "cc");
-> -       smp_mb();
-> -}
-> -
-> -static inline void arch_spin_unlock(arch_spinlock_t *lock)
-> -{
-> -       smp_mb();
-> -       WRITE_ONCE(lock->lock, 0);
-> -}
-> -
-> -static inline int arch_spin_trylock(arch_spinlock_t *lock)
-> -{
-> -       u32 *p = &lock->lock;
-> -       u32 tmp;
-> -
-> -       asm volatile (
-> -               "1:     ldex.w          %0, (%1) \n"
-> -               "       bnez            %0, 2f   \n"
-> -               "       movi            %0, 1    \n"
-> -               "       stex.w          %0, (%1) \n"
-> -               "       bez             %0, 1b   \n"
-> -               "       movi            %0, 0    \n"
-> -               "2:                              \n"
-> -               : "=&r" (tmp)
-> -               : "r"(p)
-> -               : "cc");
-> -
-> -       if (!tmp)
-> -               smp_mb();
-> -
-> -       return !tmp;
-> -}
-> -
-> -#define arch_spin_is_locked(x) (READ_ONCE((x)->lock) != 0)
-> -
-> -/*
-> - * read lock/unlock/trylock
-> - */
-> -static inline void arch_read_lock(arch_rwlock_t *lock)
-> -{
-> -       u32 *p = &lock->lock;
-> -       u32 tmp;
-> -
-> -       asm volatile (
-> -               "1:     ldex.w          %0, (%1) \n"
-> -               "       blz             %0, 1b   \n"
-> -               "       addi            %0, 1    \n"
-> -               "       stex.w          %0, (%1) \n"
-> -               "       bez             %0, 1b   \n"
-> -               : "=&r" (tmp)
-> -               : "r"(p)
-> -               : "cc");
-> -       smp_mb();
-> -}
-> -
-> -static inline void arch_read_unlock(arch_rwlock_t *lock)
-> -{
-> -       u32 *p = &lock->lock;
-> -       u32 tmp;
-> -
-> -       smp_mb();
-> -       asm volatile (
-> -               "1:     ldex.w          %0, (%1) \n"
-> -               "       subi            %0, 1    \n"
-> -               "       stex.w          %0, (%1) \n"
-> -               "       bez             %0, 1b   \n"
-> -               : "=&r" (tmp)
-> -               : "r"(p)
-> -               : "cc");
-> -}
-> -
-> -static inline int arch_read_trylock(arch_rwlock_t *lock)
-> -{
-> -       u32 *p = &lock->lock;
-> -       u32 tmp;
-> -
-> -       asm volatile (
-> -               "1:     ldex.w          %0, (%1) \n"
-> -               "       blz             %0, 2f   \n"
-> -               "       addi            %0, 1    \n"
-> -               "       stex.w          %0, (%1) \n"
-> -               "       bez             %0, 1b   \n"
-> -               "       movi            %0, 0    \n"
-> -               "2:                              \n"
-> -               : "=&r" (tmp)
-> -               : "r"(p)
-> -               : "cc");
-> -
-> -       if (!tmp)
-> -               smp_mb();
-> -
-> -       return !tmp;
-> -}
-> -
-> -/*
-> - * write lock/unlock/trylock
-> - */
-> -static inline void arch_write_lock(arch_rwlock_t *lock)
-> -{
-> -       u32 *p = &lock->lock;
-> -       u32 tmp;
-> -
-> -       asm volatile (
-> -               "1:     ldex.w          %0, (%1) \n"
-> -               "       bnez            %0, 1b   \n"
-> -               "       subi            %0, 1    \n"
-> -               "       stex.w          %0, (%1) \n"
-> -               "       bez             %0, 1b   \n"
-> -               : "=&r" (tmp)
-> -               : "r"(p)
-> -               : "cc");
-> -       smp_mb();
-> -}
-> -
-> -static inline void arch_write_unlock(arch_rwlock_t *lock)
-> -{
-> -       smp_mb();
-> -       WRITE_ONCE(lock->lock, 0);
-> -}
-> -
-> -static inline int arch_write_trylock(arch_rwlock_t *lock)
-> -{
-> -       u32 *p = &lock->lock;
-> -       u32 tmp;
-> -
-> -       asm volatile (
-> -               "1:     ldex.w          %0, (%1) \n"
-> -               "       bnez            %0, 2f   \n"
-> -               "       subi            %0, 1    \n"
-> -               "       stex.w          %0, (%1) \n"
-> -               "       bez             %0, 1b   \n"
-> -               "       movi            %0, 0    \n"
-> -               "2:                              \n"
-> -               : "=&r" (tmp)
-> -               : "r"(p)
-> -               : "cc");
-> -
-> -       if (!tmp)
-> -               smp_mb();
-> -
-> -       return !tmp;
-> -}
-> -
-> -#endif /* CONFIG_QUEUED_RWLOCKS */
->  #endif /* __ASM_CSKY_SPINLOCK_H */
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
