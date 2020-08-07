@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D171C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD4922CF6
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5C022CA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="gd6IPzId"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="aTbsnZQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgHGQWU (ORCPT
+        id S1727064AbgHGQWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:22:20 -0400
-Received: from mail-eopbgr140057.outbound.protection.outlook.com ([40.107.14.57]:4231
+        Fri, 7 Aug 2020 12:22:32 -0400
+Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:64918
         "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726891AbgHGQWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:22:16 -0400
+        id S1726996AbgHGQWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 12:22:22 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TqOigEwgpG0rYl3UnxtkqMWeWQwTW/C8qUALHW0Vx1mfUEVFbSnxu34qxFOUnN+j6vVkxdnsfifqgPMSeVQdRQk+PgAK6tUgTrMLt+jJbD3XEImKyklNiTJYPNHB2K2hhDHbh7Uv+FSYeC5hW9NpE/4qLHegT941eWKnJybpwnCgzER3aCTA9gtIUFlAapKZuYytN+3l9TeRbwmsYAssf4YwwAPFZPYgviNUrNJGcPpoaHTttD2Ra7dPcVgX2Qckp5JH7a4xblxXRz9FgJm+xtBhchFEFOrqF33qs6oL7jgm9NQzGumoXZSWQkNJvwTgddurVOfdP6W2k/xNcio90w==
+ b=Wq/34hehxj8LUCCirG94yDJY7hSlb/8AM5uH7rPua3Dmp9Uz/jRei2CX4nrucycT020kB/Txx3BEkyeEX/UQwrb3rL1Qg1ZoCtmmnre6k5WY8cPabNY8NL71Pg6KW4EmtEXAaWsdxQsMRZmLKgcpn1TVRabn/fng1WEl5Kl2BVFoIjd9UImxrC65XPeLH3ZjNFVTKTaALAqJf9ymO+b9G/j3qUPwJwxQ1G34ZbWBar40yTGvUwLJy2Bllhs+bbLZWqX44uev6UXxhMjtq8IbQANFuntQfrLHXUI0eSM+g0vEYno281R/4Hm0SV1SFHUyPkkjvnMT6PFK8HEKKNA28g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gKUbz7IwokmTEaHfqLuPQ6Re62bDmfVBxGj27TTbExw=;
- b=IaGqoReGCJJV5rl3+yiwFX8W6/MOIjwJePJh7HRh6ZenRMfm2yxIF+xTNRme92tZcQYUeVfcU46JB9gMf/o4tkuMvlLgB+CKFjdRIoqvrNhoLELTl8m5/qomk8EUYcKUrOi2iJvKAHBlnyjgSTEiWedTPoIoz4RHhZ7xBJWQPRGyFQy16eDLOQ5iWJ3+Goy6nXk4Gw5V1pv0RaLvDQQrUj7dhX8+IWDg6hUBD2rCYoN3HoV1NFE6MBbYg9JUl/slH5CLyqoGqlBoDskg8xq19e7Z+2y1J3nB+5NLpJf83Ri7962o2WbbO5QN+bb5ZBYomDGP1NOoa2Z0O6DIc+u4Fg==
+ bh=xaNcAWlBrajSgP5CYQnMmX6wqHfPV2gSVIypIKsycZU=;
+ b=TyWyhWWObRrh70ffUDdDJZfgfJlRn/PkcW0YBAnfhalfHteNA4TDe9mLN520RprmiOs4hQ7M94ISNPtohpB175Ltq5pN7PfhdJf5sqexsSoCCGoN/fVaHJKLBasdMwWdHTcA334ZXzX6tL9MlxVT20IXlIZkfOJlmblrmuRMWkyGnNftK2EPWZjGLUSjkU4V/jjpJaIILSXmnCoHgy/z7fuSOupRGMwV77Dj6d0/3VMDEI3S6yzpZuiaqFR19bLDrBv9TtubWF16FwrISps+YibYJgl/lb9zFEWhG7t7jPZaIt9Rf2eFMd/RTrTPmerHY9sBPquVK1NdzZ71jj7CWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gKUbz7IwokmTEaHfqLuPQ6Re62bDmfVBxGj27TTbExw=;
- b=gd6IPzId1uxHzMNgmsFcKJNDjlomAVSTW3dcjFz0lF1SBG0UuLxpAwNGtdHLUQyd5nlIQXZzk03VNA1bqyPPTMR8mhY/LLXMH1PhjKx3pZUYPKwK6a5T0rY6P2B4ZHcN2dYg5iLq8oAzPmcnn1whe/BlivMaWAKduRcMvGypPoE=
+ bh=xaNcAWlBrajSgP5CYQnMmX6wqHfPV2gSVIypIKsycZU=;
+ b=aTbsnZQ1pPHtraD+ZeG1N/takXbuNjOWSYf2WD5obJD2wESet/e05fTHkdCzlNtttNaicMLOj3CQR+HV99ZPJXQrA0fp2YZDl5fE5a+K04fL7PrtuB+qVgUbZe43J6cKbeqU54BwReUslhcQSJskVsiDc1Q3p5DIVx1SUn4F8cs=
 Authentication-Results: gondor.apana.org.au; dkim=none (message not signed)
  header.d=none;gondor.apana.org.au; dmarc=none action=none
  header.from=oss.nxp.com;
@@ -45,11 +45,11 @@ Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
  by VE1PR04MB7359.eurprd04.prod.outlook.com (2603:10a6:800:1a0::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Fri, 7 Aug
- 2020 16:22:02 +0000
+ 2020 16:22:09 +0000
 Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
  ([fe80::a856:c104:11c7:258d]) by VE1PR04MB6608.eurprd04.prod.outlook.com
  ([fe80::a856:c104:11c7:258d%6]) with mapi id 15.20.3261.019; Fri, 7 Aug 2020
- 16:22:02 +0000
+ 16:22:09 +0000
 From:   Andrei Botila <andrei.botila@oss.nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
@@ -57,11 +57,11 @@ Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-s390@vger.kernel.org, x86@kernel.org,
         linux-arm-kernel@axis.com, Andrei Botila <andrei.botila@nxp.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Lars Persson <lars.persson@axis.com>
-Subject: [PATCH 11/22] crypto: artpec6 - add check for xts input length equal to zero
-Date:   Fri,  7 Aug 2020 19:19:59 +0300
-Message-Id: <20200807162010.18979-12-andrei.botila@oss.nxp.com>
+        Srikanth Jampala <jsrikanth@marvell.com>,
+        Nagadheeraj Rottela <rnagadheeraj@marvell.com>
+Subject: [PATCH 14/22] crypto: cavium/nitrox - add check for xts input length equal to zero
+Date:   Fri,  7 Aug 2020 19:20:02 +0300
+Message-Id: <20200807162010.18979-15-andrei.botila@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
 References: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
@@ -71,32 +71,32 @@ X-ClientProxiedBy: AM0PR04CA0075.eurprd04.prod.outlook.com
  (2603:10a6:803:125::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR04CA0075.eurprd04.prod.outlook.com (2603:10a6:208:be::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Fri, 7 Aug 2020 16:22:01 +0000
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM0PR04CA0075.eurprd04.prod.outlook.com (2603:10a6:208:be::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Fri, 7 Aug 2020 16:22:07 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [83.217.231.2]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9736d86e-1695-47ec-dbad-08d83aee0467
+X-MS-Office365-Filtering-Correlation-Id: 48319828-eeee-450d-084e-08d83aee084f
 X-MS-TrafficTypeDiagnostic: VE1PR04MB7359:
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB735946FFCB51EAD3597945DAB4490@VE1PR04MB7359.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Microsoft-Antispam-PRVS: <VE1PR04MB735952FBA11927E2DD17DB86B4490@VE1PR04MB7359.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bUTiw1FsFK5h8IO1jarwWN92L+W80dIsWjCYtxjGRz0X0CuvLOHEme7vCBYuSwnkl9rVlj1R3Ks61YYiTogtkiCqMFRZTvEBEIgINvPgZ9HrWcI+fhkzmMDZRdTMLp1OnZJla9iogD7OJ92D8SbPk64Qe0WaUW9kttIMtaFScWEg8XiUPqyTTheamehHykSa9bKzIpbUzIag6gwfxUn58i50XOutCq8dpN8ej9JCqjM5C6zXqFG3GyQG1zM6FlMvFAF9cu+17prDzpTPK+OZZlVlNmnW7kTscz9eaVfiHZABq9iiY6Ov9lbiLEohmw9Pi48RwxQEToSsdef1zre17Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(44832011)(66556008)(66476007)(110136005)(7416002)(54906003)(1076003)(6506007)(4326008)(66946007)(83380400001)(8936002)(316002)(26005)(956004)(186003)(16526019)(478600001)(86362001)(5660300002)(6512007)(2906002)(8676002)(2616005)(52116002)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: G6hI3qlLow7u3mB3XZA+7xFn5wI3dQwrMA8ZEMNV7+oC8Gf75ZQxCQLYetBdz9bDaGJPlN8PZly0H8plS+gwFlY1M/7q6qabZEn54celwp/rsqOOQSswYINdvPIXU0K53KbWu5v9tm93dWRA2sA4fxdLvTieU+jzIyngvdnyZsKG6Dj50uvn/yideCzlYp16lob1jruXku/mNgSBsmclE892KG17USdBjDL+h7blIN0z0RWAtlU01U8yRrn/61YbtrH5ZXokU+PoDWC/u8OnTwEN2F/d7vqSn+GBMM9i/WfY6uBGBPiY4HePx9w2TB1BKWf6CrPGy+kL8egG3vRJxAyNRw7pQl57bly8TUCZffjSGK6pWhRxaIURdUl8MjuPsiFAH9+fyJ9Ek60KAX45l/BfgUISgOKyTjWrv1KSaPysYzxPeQfmed0BpbxinfmP/T4jjJY0mFxJJ7rSPgZcCCpWy4LTkmL1XlO1Xcy5Sh0HvPlD02L30uC5NtV7yU8pO6gFnf7mdiEQAXpbPtXoaQItE6359Swn9ke8scKltWZ/pCU2CTEqXQVNyG91MjDoT4W5q4FFN7tpgqCRpji0/bB4qPTz+DX8wqUFUpbXFNVElbNVi/A1UFftRhddSWdtPnkkBJHthV4Zjvixmb1uDA==
+X-Microsoft-Antispam-Message-Info: pxtdA68sFf0CDnh2yxC1XWQeJGMU/0e2vcUjCGc1cE3NZ4k2h2I7Es9mn3Z6S5XFZ85Cu/MPuSm4f6Y+QUHnLaHs7QzxPWO3jVdxofhWuo2GrLxaAM0zYl0O/yI6YbJ/PN7WPu3Bx5Q2QaygGpRiwuxd2/ks6rUsbgXiuGVlenmXT4cuZjEmtHqfaT+REMGJ5gs/L9f2piT08O9NnZE+wbAGiZJ/bOGHHoaCqDoJysh3NLph6hpK8XozLIkn75jWHxF1mA8QKiulEUwF6oRV5UChPm+wnwTzs5n/FgcZLWytWXtppQpkpxXEVJrH+lDLqQfpaGArQKBDRTy/qhA/Ew==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(44832011)(66556008)(66476007)(110136005)(7416002)(54906003)(1076003)(6506007)(4326008)(66946007)(83380400001)(8936002)(316002)(26005)(956004)(186003)(16526019)(478600001)(86362001)(5660300002)(6666004)(6512007)(2906002)(8676002)(2616005)(52116002)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: TYh3cA2iImoJjemUFIh4/RQrQtRrMcvIKAOw0MFqn8iku19wFhnfPvI5YUmKnX/QSvVWROEUuECrldd8IyAqm2LQz/z0duSUX3JlPTLtZo8u6EzHsk/JixajIUeZy5aeVeWr2zGaZrkV6Z5olabHT11ILQOo8JQWmU7RC7f6jEY0bARl6poQVdQCilSRyi58EUwUj+DE6WWyw3iAfH4eekql0JqJqjrFbKGQbaHmLf4YD5/myJcYBLiZJbXcK6x2K/B9CC2Fy45FZBFgINEJY5GKipT0lM3G9eOzEbzWLhp8HD57/8tkLSx5iZsKeklt17e30FE7t9aX9m95moxKzPF/lTT6JclNJHO/y0ixuiUclcloW2nB6d66wsgAen0kysB2G30Ug3n/XbbmFLgu33EU+m59HiUhJpr9da/EMn7LGJBVJMuBarKddu0KmkL8K3Jrxvah9mXojYWAV3NO/rlIACSVx45iwOuOwT03NL1c4MCdxJxZ+lkboiDerIsdTrz++rdTBO/6aYxS384CxHaRkEjfNc+mzIYV/MKjFWkBSbljw++HYJWCxwBbQiTh9kQxDjfw9q3zKGLvhcvHkv+32ev7smNQQq5yvM64vIaL1tbbUtN9VBnOLF5SdFzhoOBatGm1qABhyAW0clj+Lw==
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9736d86e-1695-47ec-dbad-08d83aee0467
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48319828-eeee-450d-084e-08d83aee084f
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6608.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 16:22:02.5496
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 16:22:09.0638
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ltQA+Aleb/fZ10gSG4RH2omcYxmBBjuR40NT49MsUI5l3yKmWaDLanAHV40uSD9Pqwl7T37fq0bPcmJsLUSzXQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: YpghWmS5By+srwfPPmz1Rhw+rh1jjuucxAU8WsxiXTbhN89W3MpA2NyucoTnZlvzRIN33FmS35TpPVkpr/ctQw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7359
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -108,37 +108,34 @@ From: Andrei Botila <andrei.botila@nxp.com>
 Standardize the way input lengths equal to 0 are handled in all skcipher
 algorithms. All the algorithms return 0 for input lengths equal to zero.
 
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Lars Persson <lars.persson@axis.com>
+Cc: Srikanth Jampala <jsrikanth@marvell.com>
+Cc: Nagadheeraj Rottela <rnagadheeraj@marvell.com>
 Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
 ---
- drivers/crypto/axis/artpec6_crypto.c | 6 ++++++
+ drivers/crypto/cavium/nitrox/nitrox_skcipher.c | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/drivers/crypto/axis/artpec6_crypto.c b/drivers/crypto/axis/artpec6_crypto.c
-index 1a46eeddf082..243880c97629 100644
---- a/drivers/crypto/axis/artpec6_crypto.c
-+++ b/drivers/crypto/axis/artpec6_crypto.c
-@@ -1090,6 +1090,9 @@ static int artpec6_crypto_encrypt(struct skcipher_request *req)
- 	void (*complete)(struct crypto_async_request *req);
+diff --git a/drivers/crypto/cavium/nitrox/nitrox_skcipher.c b/drivers/crypto/cavium/nitrox/nitrox_skcipher.c
+index a553ac65f324..d76589ebe354 100644
+--- a/drivers/crypto/cavium/nitrox/nitrox_skcipher.c
++++ b/drivers/crypto/cavium/nitrox/nitrox_skcipher.c
+@@ -249,10 +249,16 @@ static int nitrox_skcipher_crypt(struct skcipher_request *skreq, bool enc)
+ 	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(skreq);
+ 	struct nitrox_crypto_ctx *nctx = crypto_skcipher_ctx(cipher);
+ 	struct nitrox_kcrypt_request *nkreq = skcipher_request_ctx(skreq);
++	struct crypto_tfm *tfm = crypto_skcipher_tfm(cipher);
+ 	int ivsize = crypto_skcipher_ivsize(cipher);
+ 	struct se_crypto_request *creq;
++	const char *name;
  	int ret;
  
-+	if (!req->cryptlen)
++	name = crypto_tfm_alg_name(tfm);
++	if (!skreq->cryptlen && flexi_cipher_type(name) == CIPHER_AES_XTS)
 +		return 0;
 +
- 	req_ctx = skcipher_request_ctx(req);
- 
- 	switch (ctx->crypto_type) {
-@@ -1135,6 +1138,9 @@ static int artpec6_crypto_decrypt(struct skcipher_request *req)
- 	struct artpec6_crypto_request_context *req_ctx = NULL;
- 	void (*complete)(struct crypto_async_request *req);
- 
-+	if (!req->cryptlen)
-+		return 0;
-+
- 	req_ctx = skcipher_request_ctx(req);
- 
- 	switch (ctx->crypto_type) {
+ 	creq = &nkreq->creq;
+ 	creq->flags = skreq->base.flags;
+ 	creq->gfp = (skreq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
 -- 
 2.17.1
 
