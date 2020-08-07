@@ -8,81 +8,81 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0637FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA14C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A1E2177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67D6206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrbp7bxc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkC2Ql0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgHGHon (ORCPT
+        id S1727032AbgHGHou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
+        Fri, 7 Aug 2020 03:44:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgHGHom (ORCPT
+        with ESMTP id S1726619AbgHGHot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:44:42 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED243C061574;
-        Fri,  7 Aug 2020 00:44:41 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id x12so676134qtp.1;
-        Fri, 07 Aug 2020 00:44:41 -0700 (PDT)
+        Fri, 7 Aug 2020 03:44:49 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB06C061574;
+        Fri,  7 Aug 2020 00:44:49 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id g26so962529qka.3;
+        Fri, 07 Aug 2020 00:44:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bNQ/SKrs9r0Vw7ZGQck+KbBshkkEyzwGxG46EESM6ZI=;
-        b=mrbp7bxcLuj/DY7OKj5ibGLzrJ2AoXdwgxb3t0TdRCl7qAyK5fCneG6pKIVAjjKzeo
-         jRqSRRsJ0gaoYzXL2OzS8J90cuvTKSLft6n5ZXuXFEeKArLe9G9fwMlYeYdKYfAcNmiA
-         gSDvfFnLznHr4sU8ShDwWfX3RLFo1RTj5DpVBuz8C1qkRmSx7W9HGMFOzmM9TfAzb4nm
-         L11dTbj+CZWWYoj4Pf958BsdvYMBAVCfB3ET1DbjWSLbQJMd5FbACDra0KFI+fc4zpPI
-         g4ezjNXCG0iwfyHYoC9Wrgk6+5Nq6G3CK7BfC84vai6bWK7QNCgT9v6G4nWmNo0cygaB
-         121w==
+        bh=ABUWUryyl0WAohIly7NLWorZFay2XZMY/R0J3iEyG28=;
+        b=EkC2Ql0BTGJfQWD4iNz03zQ5NK497lumoGpUVcilZzW5vvtmiH8iqk0ghqIXe4ltbO
+         P4mumKsXedBA4GSRKl2Q2VilYo50ZO4924+xce1fu93tBODgnny4Um/doLMRawxenKp0
+         59sA1SeQ7i1uEO54GpA3G37Y7HO00s9/eH6stK/kHGexjrbFAkzQKPYB3DFwXdD7KGRR
+         pfppg/isUoHXOIVkt1v281dLuiUfPnBSiNqPgcolLi4HilJtVOVmr069+oc/JKVhmkHv
+         WLCqiKTZjOhsAFQU3IYlgUo/WpDxE627MJgvw4qDVu8BIkyj1x23JXj976bWAdO+4n97
+         wwTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bNQ/SKrs9r0Vw7ZGQck+KbBshkkEyzwGxG46EESM6ZI=;
-        b=Zue/nKpuQVOv4zLBL4GlmFxLAdfRwqoYneLlENgf8E0LuqUkHslwZWBwCQf9DX3APH
-         WFqu/dUdVwPuVXrfJaZflQP6Z5vJcZ8VUV20dB3KQWYLui2d6QWmrH8zUxlLj2DFMfha
-         WrlL8pJeRw5ryK2YEk9fh66j2Qj6gtQsdbCYiXDmGh2i8OaMtTNqwi/7jEo+hspTVf1J
-         fx1KhI3lJJI9sM1n018TGOtkF2HtHguwV9GNVILowN7OueBFcETvIm6KA5WUMl+9+08x
-         LWp9jT19JFzGkWZhxsDReFocXwb+AAWIZKB+MY3neZLNmnB/EQO+R59xRIgK22oirsE6
-         dWIA==
-X-Gm-Message-State: AOAM530/iw3F6GH6dMicjuJImA1++vi/3yFsLJTwIdIBWiBTDXWcAVfi
-        +wVaoJie5SsrxlXeECAFCQso7ZLO
-X-Google-Smtp-Source: ABdhPJyw7UwTw9WMVM32uodBWeQZlLzwHC8pjFbVk2vK1H3Ni9CZTytzhP6zyMHwjYr6SHkFfy/1tg==
-X-Received: by 2002:aed:3461:: with SMTP id w88mr12674600qtd.180.1596786281235;
-        Fri, 07 Aug 2020 00:44:41 -0700 (PDT)
+        bh=ABUWUryyl0WAohIly7NLWorZFay2XZMY/R0J3iEyG28=;
+        b=pAVEEkzhBPxBu/Nh50DPfyZhfRPIx9nsyBmSsWW3SqrOeuFAfrlzrulcTC5Ys5rOKg
+         /ejOCNnzaCgBtTide1B4w4N2+PddolefbRFI4/A08nhspDsU/uqyieHql2Gg45tbD8g1
+         u4JzqgapEuzZy8oEYswBLHWA5edbAhAepTMRc5qTRo/VvhbXCVqcvQyrdiEZblN+X/61
+         REHrdoCebMebhULCjOIeI2IHkRi9dMQDBwOCYw3sQuNJ1fr4a56Y/cHLvjNDioC6msxX
+         IMRt15KSEECZMZfsENxDbWkMAVHlbRu0VHtQja8kMQLtAL7zC3F834Bjt6Uh+df5rfv2
+         bgwg==
+X-Gm-Message-State: AOAM531x7k73uuYAFiB8AQUallCkaHuoLg/Y0qcRQchvJqBt0EQ6CR1d
+        LY4a/w1olFPEq2i8trKblTE=
+X-Google-Smtp-Source: ABdhPJyqsBui8q0j3wkdfJ+TmOiZxHcN4uQrd3RNJSUNhbyDwvfKD3r0SGFX2zEpZVG/cKOqq5CPsQ==
+X-Received: by 2002:a05:620a:20ca:: with SMTP id f10mr12226666qka.0.1596786288308;
+        Fri, 07 Aug 2020 00:44:48 -0700 (PDT)
 Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id g136sm6197111qke.82.2020.08.07.00.44.40
+        by smtp.gmail.com with ESMTPSA id h13sm6956675qtu.7.2020.08.07.00.44.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Aug 2020 00:44:40 -0700 (PDT)
+        Fri, 07 Aug 2020 00:44:47 -0700 (PDT)
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 4948A27C0054;
-        Fri,  7 Aug 2020 03:44:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:44:40 -0400
-X-ME-Sender: <xms:aAYtX4EnadFxi6JTwcfTYIltdssE6dK3pANjJ51mGNVcbw6Xqu44ow>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdehucetufdoteggodetrfdotf
+        by mailauth.nyi.internal (Postfix) with ESMTP id 6537027C0054;
+        Fri,  7 Aug 2020 03:44:47 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:44:47 -0400
+X-ME-Sender: <xms:bwYtX0XV9ckzFxdIEqUK5Be4mfcchUeWXhk5UPnPP9HGAPP23njLJw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhn
     ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
     htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
     ueelnecukfhppeduudegrdekhedrudektddrvdduheenucevlhhushhtvghrufhiiigvpe
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
     vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnpe
     epfhhigihmvgdrnhgrmhgvsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:aAYtXxXUJTQytvuGXU3L9AteZRzal8Y9PCri-JDK2w38UcfxVebaFw>
-    <xmx:aAYtXyKDYuGP_K1uR4NLURA4SuM-9p_3cWJ-tsd9e91-CNNVYFUtOg>
-    <xmx:aAYtX6HN_RwRjBHlENzpSB1X9-ApkpPMgTuwWtICu_MXY-RI6IlznQ>
-    <xmx:aAYtX8wo2SXmbkfJzTVkCU4lbIv_ehF0S7hCq7v3zxDijAOm12aOjQ>
+X-ME-Proxy: <xmx:bwYtX4no2ZQquGBu-2twQoGieoan0E5_Rk5KY-TT30nU471InUmObg>
+    <xmx:bwYtX4ZwX0sO_MH3N7M8y-EIPJk3WD8VWIrWcJ1_3YrY-oB1iFLT0Q>
+    <xmx:bwYtXzW5JgtsP-vbQh_FVrW86lCZnaOYqp_4oAD2n01xYyZik4K0PQ>
+    <xmx:bwYtX_DYA76QUxVSvF4yWsma4NrHhY36vUam0IzITOy4riHzMIhG1A>
 Received: from localhost (unknown [114.85.180.215])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5F2023060067;
-        Fri,  7 Aug 2020 03:44:38 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 50621328005D;
+        Fri,  7 Aug 2020 03:44:45 -0400 (EDT)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -90,9 +90,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Waiman Long <longman@redhat.com>,
         Boqun Feng <boqun.feng@gmail.com>
-Subject: [RFC v7 09/19] lockdep: Support deadlock detection for recursive read locks in check_noncircular()
-Date:   Fri,  7 Aug 2020 15:42:28 +0800
-Message-Id: <20200807074238.1632519-10-boqun.feng@gmail.com>
+Subject: [RFC v7 10/19] lockdep: Adjust check_redundant() for recursive read change
+Date:   Fri,  7 Aug 2020 15:42:29 +0800
+Message-Id: <20200807074238.1632519-11-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200807074238.1632519-1-boqun.feng@gmail.com>
 References: <20200807074238.1632519-1-boqun.feng@gmail.com>
@@ -103,109 +103,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, lockdep only has limit support for deadlock detection for
-recursive read locks.
+check_redundant() will report redundancy if it finds a path could
+replace the about-to-add dependency in the BFS search. With recursive
+read lock changes, we certainly need to change the match function for
+the check_redundant(), because the path needs to match not only the lock
+class but also the dependency kinds. For example, if the about-to-add
+dependency @prev -> @next is A -(SN)-> B, and we find a path A -(S*)->
+.. -(*R)->B in the dependency graph with __bfs() (for simplicity, we can
+also say we find an -(SR)-> path from A to B), we can not replace the
+dependency with that path in the BFS search. Because the -(SN)->
+dependency can make a strong path with a following -(S*)-> dependency,
+however an -(SR)-> path cannot.
 
-This patch support deadlock detection for recursive read locks. The
-basic idea is:
+Further, we can replace an -(SN)-> dependency with a -(EN)-> path, that
+means if we find a path which is stronger than or equal to the
+about-to-add dependency, we can report the redundancy. By "stronger", it
+means both the start and the end of the path are not weaker than the
+start and the end of the dependency (E is "stronger" than S and N is
+"stronger" than R), so that we can replace the dependency with that
+path.
 
-We are about to add dependency B -> A in to the dependency graph, we use
-check_noncircular() to find whether we have a strong dependency path
-A -> .. -> B so that we have a strong dependency circle (a closed strong
-dependency path):
+To make sure we find a path whose start point is not weaker than the
+about-to-add dependency, we use a trick: the ->only_xr of the root
+(start point) of __bfs() is initialized as @prev-> == 0, therefore if
+@prev is E, __bfs() will pick only -(E*)-> for the first dependency,
+otherwise, __bfs() can pick -(E*)-> or -(S*)-> for the first dependency.
 
-	 A -> .. -> B -> A
-
-, which doesn't have two adjacent dependencies as -(*R)-> L -(S*)->.
-
-Since A -> .. -> B is already a strong dependency path, so if either
-B -> A is -(E*)-> or A -> .. -> B is -(*N)->, the circle A -> .. -> B ->
-A is strong, otherwise not. So we introduce a new match function
-hlock_conflict() to replace the class_equal() for the deadlock check in
-check_noncircular().
+To make sure we find a path whose end point is not weaker than the
+about-to-add dependency, we replace the match function for __bfs()
+check_redundant(), we check for the case that either @next is R
+(anything is not weaker than it) or the end point of the path is N
+(which is not weaker than anything).
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- kernel/locking/lockdep.c | 43 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 35 insertions(+), 8 deletions(-)
+ kernel/locking/lockdep.c | 47 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 44 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 62f7f88e3673..e5b2c1cf4286 100644
+index e5b2c1cf4286..85a4d3539faa 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1838,10 +1838,37 @@ static inline bool class_equal(struct lock_list *entry, void *data)
- 	return entry->class == data;
+@@ -1833,9 +1833,39 @@ print_circular_bug_header(struct lock_list *entry, unsigned int depth,
+ 	print_circular_bug_entry(entry, depth);
  }
  
+-static inline bool class_equal(struct lock_list *entry, void *data)
 +/*
-+ * We are about to add B -> A into the dependency graph, and in __bfs() a
++ * We are about to add A -> B into the dependency graph, and in __bfs() a
 + * strong dependency path A -> .. -> B is found: hlock_class equals
 + * entry->class.
 + *
-+ * We will have a deadlock case (conflict) if A -> .. -> B -> A is a strong
-+ * dependency cycle, that means:
++ * If A -> .. -> B can replace A -> B in any __bfs() search (means the former
++ * is _stronger_ than or equal to the latter), we consider A -> B as redundant.
++ * For example if A -> .. -> B is -(EN)-> (i.e. A -(E*)-> .. -(*N)-> B), and A
++ * -> B is -(ER)-> or -(EN)->, then we don't need to add A -> B into the
++ * dependency graph, as any strong path ..-> A -> B ->.. we can get with
++ * having dependency A -> B, we could already get a equivalent path ..-> A ->
++ * .. -> B -> .. with A -> .. -> B. Therefore A -> B is reduntant.
++ *
++ * We need to make sure both the start and the end of A -> .. -> B is not
++ * weaker than A -> B. For the start part, please see the comment in
++ * check_redundant(). For the end part, we need:
 + *
 + * Either
 + *
-+ *     a) B -> A is -(E*)->
++ *     a) A -> B is -(*R)-> (everything is not weaker than that)
 + *
 + * or
 + *
-+ *     b) A -> .. -> B is -(*N)-> (i.e. A -> .. -(*N)-> B)
++ *     b) A -> .. -> B is -(*N)-> (nothing is stronger than this)
 + *
-+ * as then we don't have -(*R)-> -(S*)-> in the cycle.
 + */
-+static inline bool hlock_conflict(struct lock_list *entry, void *data)
-+{
++static inline bool hlock_equal(struct lock_list *entry, void *data)
+ {
+-	return entry->class == data;
 +	struct held_lock *hlock = (struct held_lock *)data;
 +
 +	return hlock_class(hlock) == entry->class && /* Found A -> .. -> B */
-+	       (hlock->read == 0 || /* B -> A is -(E*)-> */
++	       (hlock->read == 2 ||  /* A -> B is -(*R)-> */
 +		!entry->only_xr); /* A -> .. -> B is -(*N)-> */
-+}
-+
- static noinline void print_circular_bug(struct lock_list *this,
--					struct lock_list *target,
--					struct held_lock *check_src,
--					struct held_lock *check_tgt)
-+				struct lock_list *target,
-+				struct held_lock *check_src,
-+				struct held_lock *check_tgt)
- {
- 	struct task_struct *curr = current;
- 	struct lock_list *parent;
-@@ -1950,13 +1977,13 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
-  * <target> or not.
-  */
- static noinline enum bfs_result
--check_path(struct lock_class *target, struct lock_list *src_entry,
-+check_path(struct held_lock *target, struct lock_list *src_entry,
-+	   bool (*match)(struct lock_list *entry, void *data),
- 	   struct lock_list **target_entry)
- {
- 	enum bfs_result ret;
+ }
  
--	ret = __bfs_forwards(src_entry, (void *)target, class_equal,
--			     target_entry);
-+	ret = __bfs_forwards(src_entry, target, match, target_entry);
+ /*
+@@ -2045,10 +2075,21 @@ check_redundant(struct held_lock *src, struct held_lock *target)
+ 	struct lock_list src_entry;
  
- 	if (unlikely(bfs_error(ret)))
- 		print_bfs_bug(ret);
-@@ -1983,7 +2010,7 @@ check_noncircular(struct held_lock *src, struct held_lock *target,
- 
- 	debug_atomic_inc(nr_cyclic_checks);
- 
--	ret = check_path(hlock_class(target), &src_entry, &target_entry);
-+	ret = check_path(target, &src_entry, hlock_conflict, &target_entry);
- 
- 	if (unlikely(ret == BFS_RMATCH)) {
- 		if (!*trace) {
-@@ -2021,7 +2048,7 @@ check_redundant(struct held_lock *src, struct held_lock *target)
+ 	bfs_init_root(&src_entry, src);
++	/*
++	 * Special setup for check_redundant().
++	 *
++	 * To report redundant, we need to find a strong dependency path that
++	 * is equal to or stronger than <src> -> <target>. So if <src> is E,
++	 * we need to let __bfs() only search for a path starting at a -(E*)->,
++	 * we achieve this by setting the initial node's ->only_xr to true in
++	 * that case. And if <prev> is S, we set initial ->only_xr to false
++	 * because both -(S*)-> (equal) and -(E*)-> (stronger) are redundant.
++	 */
++	src_entry.only_xr = src->read == 0;
  
  	debug_atomic_inc(nr_redundant_checks);
  
--	ret = check_path(hlock_class(target), &src_entry, &target_entry);
-+	ret = check_path(target, &src_entry, class_equal, &target_entry);
+-	ret = check_path(target, &src_entry, class_equal, &target_entry);
++	ret = check_path(target, &src_entry, hlock_equal, &target_entry);
  
  	if (ret == BFS_RMATCH)
  		debug_atomic_inc(nr_redundant);
