@@ -2,83 +2,129 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02678C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D586C2224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75A422C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:48:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJ9vNVD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgHGPr0 (ORCPT
+        id S1726595AbgHGPs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:47:26 -0400
-Received: from mailout02.rmx.de ([62.245.148.41]:52337 "EHLO mailout02.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgHGPrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:47:25 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout02.rmx.de (Postfix) with ESMTPS id 4BNV9P411szNldc;
-        Fri,  7 Aug 2020 17:47:21 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BNV906GPlz2TRlS;
-        Fri,  7 Aug 2020 17:47:00 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.12) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 7 Aug
- 2020 17:46:37 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] iio: light: as73211: New driver
-Date:   Fri, 7 Aug 2020 17:46:36 +0200
-Message-ID: <4466981.tjO45I7u8z@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <20200806184451.04293626@archlinux>
-References: <20200805055744.31909-1-ceggers@arri.de> <20200805055744.31909-3-ceggers@arri.de> <20200806184451.04293626@archlinux>
+        Fri, 7 Aug 2020 11:48:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGPs4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 11:48:56 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2894BC061756;
+        Fri,  7 Aug 2020 08:48:56 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f12so2084996wru.13;
+        Fri, 07 Aug 2020 08:48:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yfueNriVUB3p4pHebmB0wN45L+tb5z/FC2duvCDRetg=;
+        b=CJ9vNVD3aZLSnY2sCQYl+Y0UKcQT689KbOVAU5udo/ClWsJNreQJZNXU6iAvGe8iDR
+         kUAJW4S7GBVyoAtthSfCBaRWUUUBHuimkpYH/5XJ8PNdnJ0eviz+xhFhYSTHH+m1hoS1
+         Om3f4I/W2uHDLUkLzi3i0Ls0osGwgF2ZxG1aNXbjGyrts8KjTnTWTJFAEPgA+tZ8/8gq
+         rAtbijUFcMirTFEyFAABbC/KVfr4TvvGldj9w0+rqij0vxa1+oe+uTfRS8GVrGTlFISM
+         aCs9/zcM6ZIfssVBDnfPocblj1mydfunen5INJAlAuGECk00ksQIJJYfWtYCDmmmXckT
+         bTpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yfueNriVUB3p4pHebmB0wN45L+tb5z/FC2duvCDRetg=;
+        b=KRVVy8Q6REN7fqhtGVYiw6SZVYE1lqlQu0Jq2hWoPne+1CYkFwUkOEE7gyyu1telKM
+         dqCvXwKFkqQhmoLGvV9MPoeGkvBHdKug9rNt4WyO2AVBgfOwPbHvlV5RqpueSNvfyeGP
+         5bXRHD/i+cv0gkZDlPonC0rX/1bLBT+u8jN66TgMC//h6hXvIyFvwWi6lrTdZ5HlYWJq
+         x5tSys87qqa7HiXcqSL79QhHivtVPb1qFCqsrRfvq9Dy/r2qAyVCWF1Ik7vErBjP1afj
+         EJ1eAmPeur9aDLWGgQFmH0Nb9AQFPOQyWsj16/LL5NnKl7qVF/VnnoXgOox1jWJrtB1b
+         cASw==
+X-Gm-Message-State: AOAM530KsNbJMxrP9RTk5ghnnoCnWA0VQXZtaMCQ8K6xn/Ddfmu57T2P
+        nptvEX6p5jUj2Y+Qxky51XbE1b3J1KMLfFYapFE=
+X-Google-Smtp-Source: ABdhPJytinwBY5iKZBEt+YLwoGWtqqhpouwAznID40D/s5L6USS9h0V+VI8N7EAyG74/0nL5zvsljvf9illVhaeW6Ls=
+X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr13545017wrs.132.1596815333975;
+ Fri, 07 Aug 2020 08:48:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.12]
-X-RMX-ID: 20200807-174702-4BNV906GPlz2TRlS-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+References: <20200807071718.17937-1-tanmay@codeaurora.org> <20200807071718.17937-3-tanmay@codeaurora.org>
+ <b0e8415f-53e6-575d-5774-5f4f7adca982@infradead.org>
+In-Reply-To: <b0e8415f-53e6-575d-5774-5f4f7adca982@infradead.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 7 Aug 2020 08:49:37 -0700
+Message-ID: <CAF6AEGvLrR2LPTF2DDEcxRwQY+pEEcooZh=NBSr5WOs+TUk0Dw@mail.gmail.com>
+Subject: Re: [PATCH v9 2/5] drm/msm/dp: add displayPort driver support
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Tanmay Shah <tanmay@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, aravindh@codeaurora.org,
+        Abhinav Kumar <abhinavk@codeaurora.org>, khsieh@codeaurora.org,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+On Fri, Aug 7, 2020 at 8:37 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 8/7/20 12:17 AM, Tanmay Shah wrote:
+> > diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> > index 6deaa7d01654..ea3c4d094d09 100644
+> > --- a/drivers/gpu/drm/msm/Kconfig
+> > +++ b/drivers/gpu/drm/msm/Kconfig
+> > @@ -57,6 +57,14 @@ config DRM_MSM_HDMI_HDCP
+> >       help
+> >         Choose this option to enable HDCP state machine
+> >
+> > +config DRM_MSM_DP
+> > +     bool "Enable DP support in MSM DRM driver"
+>
+>         bool "Enabled DisplayPort support in MSM DRM driver"
+>
+> > +     depends on DRM_MSM
+> > +     help
+> > +       Compile in support for DP driver in msm drm driver. DP external
+>
+>                                               MSM DRM
+>
+> Also:
+> I can't find anywhere in drivers/gpu/drm/msm/ that explains what MSM means.
+> What does it mean?
 
-On Thursday, 6 August 2020, 19:44:51 CEST, Jonathan Cameron wrote:
-> Hi Christian,
-> 
-> I'll take this, but please send a follow up patch to add documentation
-> for in_intensity_x_raw and all the other new ABI this adds in
-> Documentation/ABI/testing/sysfs-bus-iio
-> I should have mentioned that earlier, but kind of assumed we already
-> had these documented for some reason!
-where to add these entries in Documentation/ABI/testing/sysfs-bus-iio?
-Shall all missing entries be added together at the bottom (as AS73211
-is the first device using it) , or inserted in different existing paragraphs
-(when the enums where introduced)?
+I believe it stands for "Mobile Station Modem".. in the pre-devicetree
+days it was the name of the qcom platform.  Things later shifted to
+"qcom" instead, but that was after this driver was merged.  At this
+point it is just three letters ;-)
 
-Which kernel version shall I use (5.10)?
+BR,
+-R
 
-regards
-Christian
-
-
-
-
+> > +       display support is enabled through this config option. It can
+> > +       be primary or secondary display on device.
+> > +
+> >  config DRM_MSM_DSI
+> >       bool "Enable DSI support in MSM DRM driver"
+> >       depends on DRM_MSM
+>
+> thanks.
+> --
+> ~Randy
+>
