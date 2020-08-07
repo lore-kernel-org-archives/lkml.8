@@ -2,401 +2,129 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C204BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E08C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9952074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596830543;
-	bh=C+7asLDriCYEDRRBcKx9zx5zJb59QUfuNMAsgzrUPkU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=DyVkOpouq/eiJ6TXS7oUvx9cpaqeRSFGKgC36J04QSKXVseXPsD5t1Lll74dak+Yl
-	 1HeQewZBBPvzEzqm0cJmxMVjgBKAS7NZ9r6iGYAYt8AxghyhR4RJhcJtQvDW8hE3N0
-	 BqO0+6GxjQA7kHJCijc3m0gsJRT6SheFP3BQCfKI=
+	by mail.kernel.org (Postfix) with ESMTP id 97B9D2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgHGUCW (ORCPT
+        id S1726429AbgHGUDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgHGUCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:02:21 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D2FC2074D;
-        Fri,  7 Aug 2020 20:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596830540;
-        bh=C+7asLDriCYEDRRBcKx9zx5zJb59QUfuNMAsgzrUPkU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SWr+fJoH9tnckuS/pJIaK2jU5JnQGazVWE8BvozXV7NFW5iUfo2bM3msUeE9mgi4C
-         ekgZebCOkbMlnHsoS10yMNf+u9H2TNR/u1Pk/7NMNn1SHdSQsyNz2l7QTsUvpCEwFx
-         VQJU/cFqxqVB5VkcfSv0ibuJkhlwjcaJfOPWhdtg=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clk changes for the merge window
-Date:   Fri,  7 Aug 2020 13:02:19 -0700
-Message-Id: <20200807200219.463265-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+        Fri, 7 Aug 2020 16:03:05 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:58521 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725893AbgHGUDE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:03:04 -0400
+Received: from callcc.thunk.org (pool-96-230-252-158.bstnma.fios.verizon.net [96.230.252.158])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 077K2sxo017388
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 7 Aug 2020 16:02:55 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 2FA1A420263; Fri,  7 Aug 2020 16:02:54 -0400 (EDT)
+Date:   Fri, 7 Aug 2020 16:02:54 -0400
+From:   tytso@mit.edu
+To:     Xianting Tian <xianting_tian@126.com>
+Cc:     viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ext4@vger.kernel.org
+Subject: Re: [PATCH] ext4: move buffer_mapped() to proper position
+Message-ID: <20200807200254.GY7657@mit.edu>
+References: <1596211825-8750-1-git-send-email-xianting_tian@126.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596211825-8750-1-git-send-email-xianting_tian@126.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 1e7468bd9d30a21e059af477106dc5588ae52dff:
+Thanks, applied, although I rewrote the commit description to make it
+be a bit more clearer:
 
-  clk: Specify IOMEM dependency for HSDK pll driver (2020-07-11 09:28:10 -0700)
+    fs: prevent BUG_ON in submit_bh_wbc()
+    
+    If a device is hot-removed --- for example, when a physical device is
+    unplugged from pcie slot or a nbd device's network is shutdown ---
+    this can result in a BUG_ON() crash in submit_bh_wbc().  This is
+    because the when the block device dies, the buffer heads will have
+    their Buffer_Mapped flag get cleared, leading to the crash in
+    submit_bh_wbc.
+    
+    We had attempted to work around this problem in commit a17712c8
+    ("ext4: check superblock mapped prior to committing").  Unfortunately,
+    it's still possible to hit the BUG_ON(!buffer_mapped(bh)) if the
+    device dies between when the work-around check in ext4_commit_super()
+    and when submit_bh_wbh() is finally called:
+    
+    Code path:
+    ext4_commit_super
+        judge if 'buffer_mapped(sbh)' is false, return <== commit a17712c8
+              lock_buffer(sbh)
+              ...
+              unlock_buffer(sbh)
+                   __sync_dirty_buffer(sbh,...
+                        lock_buffer(sbh)
+                            judge if 'buffer_mapped(sbh))' is false, return <== added by this patch
+                                submit_bh(...,sbh)
+                                    submit_bh_wbc(...,sbh,...)
+    
+    [100722.966497] kernel BUG at fs/buffer.c:3095! <== BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc()
+    [100722.966503] invalid opcode: 0000 [#1] SMP
+    [100722.966566] task: ffff8817e15a9e40 task.stack: ffffc90024744000
+    [100722.966574] RIP: 0010:submit_bh_wbc+0x180/0x190
+    [100722.966575] RSP: 0018:ffffc90024747a90 EFLAGS: 00010246
+    [100722.966576] RAX: 0000000000620005 RBX: ffff8818a80603a8 RCX: 0000000000000000
+    [100722.966576] RDX: ffff8818a80603a8 RSI: 0000000000020800 RDI: 0000000000000001
+    [100722.966577] RBP: ffffc90024747ac0 R08: 0000000000000000 R09: ffff88207f94170d
+    [100722.966578] R10: 00000000000437c8 R11: 0000000000000001 R12: 0000000000020800
+    [100722.966578] R13: 0000000000000001 R14: 000000000bf9a438 R15: ffff88195f333000
+    [100722.966580] FS:  00007fa2eee27700(0000) GS:ffff88203d840000(0000) knlGS:0000000000000000
+    [100722.966580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    [100722.966581] CR2: 0000000000f0b008 CR3: 000000201a622003 CR4: 00000000007606e0
+    [100722.966582] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+    [100722.966583] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+    [100722.966583] PKRU: 55555554
+    [100722.966583] Call Trace:
+    [100722.966588]  __sync_dirty_buffer+0x6e/0xd0
+    [100722.966614]  ext4_commit_super+0x1d8/0x290 [ext4]
+    [100722.966626]  __ext4_std_error+0x78/0x100 [ext4]
+    [100722.966635]  ? __ext4_journal_get_write_access+0xca/0x120 [ext4]
+    [100722.966646]  ext4_reserve_inode_write+0x58/0xb0 [ext4]
+    [100722.966655]  ? ext4_dirty_inode+0x48/0x70 [ext4]
+    [100722.966663]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
+    [100722.966671]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
+    [100722.966679]  ext4_dirty_inode+0x48/0x70 [ext4]
+    [100722.966682]  __mark_inode_dirty+0x17f/0x350
+    [100722.966686]  generic_update_time+0x87/0xd0
+    [100722.966687]  touch_atime+0xa9/0xd0
+    [100722.966690]  generic_file_read_iter+0xa09/0xcd0
+    [100722.966694]  ? page_cache_tree_insert+0xb0/0xb0
+    [100722.966704]  ext4_file_read_iter+0x4a/0x100 [ext4]
+    [100722.966707]  ? __inode_security_revalidate+0x4f/0x60
+    [100722.966709]  __vfs_read+0xec/0x160
+    [100722.966711]  vfs_read+0x8c/0x130
+    [100722.966712]  SyS_pread64+0x87/0xb0
+    [100722.966716]  do_syscall_64+0x67/0x1b0
+    [100722.966719]  entry_SYSCALL64_slow_path+0x25/0x25
+    
+    To address this, add the check of 'buffer_mapped(bh)' to
+    __sync_dirty_buffer().  This also has the benefit of fixing this for
+    other file systems.
+    
+    With this addition, we can drop the workaround in ext4_commit_supper().
+    
+    [ Commit description rewritten by tytso. ]
+    
+    Signed-off-by: Xianting Tian <xianting_tian@126.com>
+    Link: https://lore.kernel.org/r/1596211825-8750-1-git-send-email-xianting_tian@126.com
+    Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
-
-for you to fetch changes up to 63e95849a774140ea0825f99be35765758bb7341:
-
-  Merge branch 'clk-imx' into clk-next (2020-07-21 01:03:16 -0700)
-
-----------------------------------------------------------------
-It looks like a smaller batch of clk updates this time around. In the core
-framework we just have some minor tweaks and a debugfs feature, so not much to
-see there. The driver updates are fairly well split between AT91 and Qualcomm
-clk support. Adding those two drivers together equals about 50% of the
-diffstat. Otherwise, the big amount of work this time was on supporting
-Broadcom's Raspberry Pi firmware clks. See below for some more highlights.
-
-Core:
- - Document clk_hw_round_rate() so it gets some more use
- - Remove unused __clk_get_flags()
- - Add a prepare/enable debugfs feature similar to rate setting
-
-New Drivers:
- - Add support for SAMA7G5 SoC clks
- - Enable CPU clks on Qualcomm IPQ6018 SoCs
- - Enable CPU clks on Qualcomm MSM8996 SoCs
- - GPU clk support for Qualcomm SM8150 and SM8250 SoCs
- - Audio clks on Qualcomm SC7180 SoCs
- - Microchip Sparx5 DPLL clk
- - Add support for the new Renesas RZ/G2H (R8A774E1) SoC
-
-Updates:
- - Make defines for bcm63xx-gate clks to use in DT
- - Support BCM2711 SoC firmware clks
- - Add HDMI clks for BCM2711 SoCs
- - Add RTC related clks on Ingenic SoCs
- - Support USB PHY clks on Ingenic SoCs
- - Support gate clks on BCM6318 SoCs
- - RMU and DMAC/GPIO clock support for Actions Semi S500 SoCs
- - Use poll_timeout functions in Rockchip clk driver
- - Support Rockchip rk3288w SoC variant
- - Mark mac_lbtest critical on Rockchip rk3188
- - Add CAAM clock support for i.MX vf610 driver
- - Add MU root clock support for i.MX imx8mp driver
- - Amlogic g12: add neural network accelerator clock sources
- - Amlogic meson8: remove critical flag for main PLL divider
- - Amlogic meson8: add video decoder clock gates
- - Convert one more Renesas DT binding to json-schema
- - Enhance critical clock handling on Renesas platforms to only consider
-   clocks that were enabled at boot time
-
-----------------------------------------------------------------
-Adam Ford (3):
-      clk: vc5: Allow Versaclock driver to support multiple instances
-      dt: Add additional option bindings for IDT VersaClock
-      clk: vc5: Enable addition output configurations of the Versaclock
-
-Alexander A. Klimov (1):
-      Replace HTTP links with HTTPS ones: Common CLK framework
-
-Andrey Smirnov (1):
-      clk: imx: vf610: add CAAM clock
-
-Andy Shevchenko (1):
-      clk: Drop duplicate selection in Kconfig
-
-Ansuel Smith (1):
-      ipq806x: gcc: add support for child probe
-
-Dinh Nguyen (3):
-      dt-bindings: agilex: add NAND_X_CLK and NAND_ECC_CLK
-      clk: socfpga: agilex: add nand_x_clk and nand_ecc_clk
-      clk: socfpga: agilex: mpu_l2ram_clk should be mpu_ccu_clk
-
-Dmitry Shmidt (2):
-      dt-bindings: clk: g12a-clkc: Add NNA CLK Source clock IDs
-      clk: meson: g12a: Add support for NNA CLK source clocks
-
-Florian Fainelli (1):
-      dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML
-
-Geert Uytterhoeven (2):
-      dt-bindings: clock: renesas: cpg: Convert to json-schema
-      Merge tag 'renesas-r8a774e1-dt-binding-defs-tag' into clk-renesas-for-v5.9
-
-Ilia Lin (2):
-      soc: qcom: Separate kryo l2 accessors from PMU driver
-      dt-bindings: clk: qcom: Add bindings for CPU clock for msm8996
-
-Konrad Dybcio (2):
-      clk: qcom: smd: Add support for SDM660 rpm clocks
-      clk: qcom: smd: Add support for MSM8992/4 rpm clocks
-
-Loic Poulain (1):
-      clk: qcom: Add CPU clock driver for msm8996
-
-Marian-Cristian Rotariu (4):
-      dt-bindings: power: Add r8a774e1 SYSC power domain definitions
-      clk: renesas: Add r8a774e1 CPG Core Clock Definitions
-      dt-bindings: clock: renesas,cpg-mssr: Document r8a774e1
-      clk: renesas: cpg-mssr: Add r8a774e1 support
-
-Martin Blumenstingl (3):
-      clk: meson: meson8b: Drop CLK_IS_CRITICAL from fclk_div2
-      clk: meson: meson8b: add the vclk_en gate clock
-      clk: meson: meson8b: add the vclk2_en gate clock
-
-Maxime Ripard (30):
-      reset: Move reset-simple header out of drivers/reset
-      reset: simple: Add reset callback
-      dt-bindings: clock: Add BCM2711 DVP binding
-      clk: bcm: Add BCM2711 DVP driver
-      dt-bindings: clock: Add a binding for the RPi Firmware clocks
-      firmware: rpi: Only create clocks device if we don't have a node for it
-      clk: bcm: rpi: Allow the driver to be probed by DT
-      clk: bcm: rpi: Statically init clk_init_data
-      clk: bcm: rpi: Use clk_hw_register for pllb_arm
-      clk: bcm: rpi: Remove global pllb_arm clock pointer
-      clk: bcm: rpi: Make sure pllb_arm is removed
-      clk: bcm: rpi: Remove pllb_arm_lookup global pointer
-      clk: bcm: rpi: Switch to clk_hw_register_clkdev
-      clk: bcm: rpi: Make sure the clkdev lookup is removed
-      clk: bcm: rpi: Use CCF boundaries instead of rolling our own
-      clk: bcm: rpi: Create a data structure for the clocks
-      clk: bcm: rpi: Add clock id to data
-      clk: bcm: rpi: Pass the clocks data to the firmware function
-      clk: bcm: rpi: Rename is_prepared function
-      clk: bcm: rpi: Split pllb clock hooks
-      clk: bcm: rpi: Make the PLLB registration function return a clk_hw
-      clk: bcm: rpi: Add DT provider for the clocks
-      clk: bcm: rpi: Add an enum for the firmware clocks
-      clk: bcm: rpi: Discover the firmware clocks
-      clk: bcm: rpi: Give firmware clocks a name
-      Revert "clk: bcm2835: remove pllb"
-      clk: bcm2835: Allow custom CCF flags for the PLLs
-      clk: bcm2835: Don't cache the PLLB rate
-      clk: bcm: rpi: Remove the quirks for the CPU clock
-      clk: bcm: dvp: Add missing module informations
-
-Peng Fan (1):
-      clk: imx8mp: add mu root clk
-
-Randy Dunlap (1):
-      clk: <linux/clk-provider.h>: drop a duplicated word
-
-Sarang Mairal (1):
-      clk: add function documentation for clk_hw_round_rate()
-
-Sivaprakash Murugesan (7):
-      dt-bindings: clock: add ipq6018 a53 pll compatible
-      clk: qcom: Add ipq apss pll driver
-      clk: qcom: Add DT bindings for ipq6018 apss clock controller
-      clk: qcom: Add ipq6018 apss clock controller
-      dt-bindings: clock: qcom: ipq8074: Add missing bindings for PCIe
-      clk: qcom: ipq8074: Add missing clocks for pcie
-      clk: qcom: ipq8074: Add correct index for PCIe clocks
-
-Stephen Boyd (21):
-      Merge branch 'reset/simple' of git://git.pengutronix.de/git/pza/linux into clk-bcm
-      Merge branch 'clk-socfpga' into clk-next
-      Merge branch 'clk-doc' into clk-next
-      Merge branch 'clk-qcom' into clk-next
-      Merge branch 'clk-vc5' into clk-next
-      Merge branch 'clk-bcm' into clk-next
-      Merge branch 'clk-qcom' into clk-next
-      Merge branch 'clk-https' into clk-next
-      Merge tag 'clk-renesas-for-v5.9-tag1' of git://git.kernel.org/.../geert/renesas-drivers into clk-renesas
-      Merge branch 'clk-renesas' into clk-next
-      Merge branch 'clk-qcom' into clk-next
-      Merge branch 'clk-kconfig' into clk-next
-      Merge branch 'clk-fixes' into clk-next
-      Merge branch 'clk-doc' into clk-next
-      Merge branch 'clk-qcom' into clk-next
-      Merge tag 'clk-renesas-for-v5.9-tag2' of git://git.kernel.org/.../geert/renesas-drivers into clk-renesas
-      Merge branch 'clk-renesas' into clk-next
-      Merge tag 'clk-meson-v5.9-1' of https://github.com/BayLibre/clk-meson into clk-amlogic
-      Merge branch 'clk-amlogic' into clk-next
-      Merge tag 'clk-imx-5.9' of git://git.kernel.org/.../shawnguo/linux into clk-imx
-      Merge branch 'clk-imx' into clk-next
-
-Taniya Das (1):
-      clk: qcom: gcc: Make disp gpll0 branch aon for sc7180/sdm845
-
-Ulrich Hecht (3):
-      clk: renesas: cpg-mssr: Mark clocks as critical only if on at boot
-      clk: renesas: rcar-gen3: Mark RWDT clocks as critical
-      clk: renesas: rzg2: Mark RWDT clocks as critical
-
-Vincent Knecht (2):
-      dt-bindings: clock: rpmcc: Document MSM8936 compatible
-      clk: qcom: smd: Add support for MSM8936 rpm clocks
-
-Wei Yongjun (2):
-      clk: qcom: Fix return value check in apss_ipq6018_probe()
-      clk: qcom: msm8996: Make symbol 'cpu_msm8996_clks' static
-
-Álvaro Fernández Rojas (11):
-      clk: bcm63xx-gate: fix last clock availability
-      dt-bindings: clock: bcm63xx: add 6318 gated clock bindings
-      clk: bcm63xx-gate: add BCM6318 support
-      mips: bmips: add BCM3368 clock definitions
-      mips: bmips: add BCM6318 clock definitions
-      mips: bmips: add BCM6328 clock definitions
-      mips: bmips: add BCM6358 clock definitions
-      mips: bmips: add BCM6362 clock definitions
-      mips: bmips: add BCM6368 clock definitions
-      mips: bmips: add BCM63268 clock definitions
-      clk: bcm63xx-gate: switch to dt-bindings definitions
-
- .../arm/bcm/raspberrypi,bcm2835-firmware.txt       |  14 -
- .../arm/bcm/raspberrypi,bcm2835-firmware.yaml      |  59 +++
- .../bindings/clock/brcm,bcm2711-dvp.yaml           |  47 ++
- .../bindings/clock/brcm,bcm63xx-clocks.txt         |   2 +
- .../devicetree/bindings/clock/clock-bindings.txt   |   2 +-
- .../devicetree/bindings/clock/idt,versaclock5.txt  |  33 ++
- .../devicetree/bindings/clock/qcom,a53pll.yaml     |  21 +-
- .../bindings/clock/qcom,msm8996-apcc.yaml          |  56 +++
- .../devicetree/bindings/clock/qcom,rpmcc.txt       |   4 +
- .../bindings/clock/renesas,cpg-clocks.yaml         | 241 +++++++++
- .../bindings/clock/renesas,cpg-mssr.yaml           |   1 +
- .../bindings/clock/renesas,r8a73a4-cpg-clocks.txt  |  33 --
- .../bindings/clock/renesas,r8a7740-cpg-clocks.txt  |  41 --
- .../bindings/clock/renesas,r8a7778-cpg-clocks.txt  |  47 --
- .../bindings/clock/renesas,r8a7779-cpg-clocks.txt  |  49 --
- .../bindings/clock/renesas,rz-cpg-clocks.txt       |  53 --
- .../bindings/clock/renesas,sh73a0-cpg-clocks.txt   |  35 --
- .../devicetree/bindings/clock/silabs,si514.txt     |   2 +-
- .../devicetree/bindings/clock/silabs,si5351.txt    |   2 +-
- .../devicetree/bindings/clock/silabs,si570.txt     |   4 +-
- .../devicetree/bindings/clock/ti,cdce706.txt       |   2 +-
- .../devicetree/bindings/clock/ti,cdce925.txt       |   8 +-
- drivers/clk/Kconfig                                |   2 -
- drivers/clk/bcm/Kconfig                            |  11 +
- drivers/clk/bcm/Makefile                           |   1 +
- drivers/clk/bcm/clk-bcm2711-dvp.c                  | 124 +++++
- drivers/clk/bcm/clk-bcm2835.c                      |  34 +-
- drivers/clk/bcm/clk-bcm63xx-gate.c                 | 553 +++++++++++++++++----
- drivers/clk/bcm/clk-raspberrypi.c                  | 311 +++++++-----
- drivers/clk/clk-cdce706.c                          |   2 +-
- drivers/clk/clk-gpio.c                             |   2 +-
- drivers/clk/clk-si5351.c                           |   4 +-
- drivers/clk/clk-versaclock5.c                      | 240 +++++++--
- drivers/clk/clk.c                                  |  15 +
- drivers/clk/imx/clk-imx8mp.c                       |   1 +
- drivers/clk/imx/clk-vf610.c                        |   1 +
- drivers/clk/keystone/sci-clk.c                     |   2 +-
- drivers/clk/keystone/syscon-clk.c                  |   2 +-
- drivers/clk/meson/g12a.c                           | 119 +++++
- drivers/clk/meson/g12a.h                           |   7 +-
- drivers/clk/meson/meson8b.c                        |  67 ++-
- drivers/clk/meson/meson8b.h                        |   6 +-
- drivers/clk/qcom/Kconfig                           |  28 ++
- drivers/clk/qcom/Makefile                          |   3 +
- drivers/clk/qcom/apss-ipq-pll.c                    |  95 ++++
- drivers/clk/qcom/apss-ipq6018.c                    | 106 ++++
- drivers/clk/qcom/clk-alpha-pll.h                   |   6 +
- drivers/clk/qcom/clk-cpu-8996.c                    | 538 ++++++++++++++++++++
- drivers/clk/qcom/clk-smd-rpm.c                     | 297 +++++++++++
- drivers/clk/qcom/gcc-ipq806x.c                     |   2 +-
- drivers/clk/qcom/gcc-ipq8074.c                     |  60 +++
- drivers/clk/qcom/gcc-sc7180.c                      |   2 +-
- drivers/clk/qcom/gcc-sdm845.c                      |   4 +-
- drivers/clk/renesas/Kconfig                        |   5 +
- drivers/clk/renesas/Makefile                       |   1 +
- drivers/clk/renesas/r8a774a1-cpg-mssr.c            |   1 +
- drivers/clk/renesas/r8a774b1-cpg-mssr.c            |   1 +
- drivers/clk/renesas/r8a774c0-cpg-mssr.c            |   1 +
- drivers/clk/renesas/r8a774e1-cpg-mssr.c            | 349 +++++++++++++
- drivers/clk/renesas/r8a7795-cpg-mssr.c             |   2 +-
- drivers/clk/renesas/r8a7796-cpg-mssr.c             |   2 +-
- drivers/clk/renesas/r8a77965-cpg-mssr.c            |   1 +
- drivers/clk/renesas/r8a77970-cpg-mssr.c            |   2 +-
- drivers/clk/renesas/r8a77980-cpg-mssr.c            |   2 +-
- drivers/clk/renesas/r8a77990-cpg-mssr.c            |   1 +
- drivers/clk/renesas/r8a77995-cpg-mssr.c            |   2 +-
- drivers/clk/renesas/renesas-cpg-mssr.c             |  23 +-
- drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
- drivers/clk/socfpga/clk-agilex.c                   |   8 +-
- drivers/clk/versatile/icst.c                       |   2 +-
- drivers/clk/versatile/icst.h                       |   2 +-
- drivers/firmware/raspberrypi.c                     |  14 +
- drivers/perf/Kconfig                               |   1 +
- drivers/perf/qcom_l2_pmu.c                         |  90 +---
- drivers/reset/reset-simple.c                       |  23 +-
- drivers/reset/reset-socfpga.c                      |   3 +-
- drivers/reset/reset-sunxi.c                        |   3 +-
- drivers/reset/reset-uniphier-glue.c                |   3 +-
- drivers/soc/qcom/Kconfig                           |   4 +
- drivers/soc/qcom/Makefile                          |   1 +
- drivers/soc/qcom/kryo-l2-accessors.c               |  57 +++
- include/dt-bindings/clk/versaclock.h               |  13 +
- include/dt-bindings/clock/agilex-clock.h           |   4 +-
- include/dt-bindings/clock/bcm3368-clock.h          |  24 +
- include/dt-bindings/clock/bcm6318-clock.h          |  42 ++
- include/dt-bindings/clock/bcm63268-clock.h         |  30 ++
- include/dt-bindings/clock/bcm6328-clock.h          |  19 +
- include/dt-bindings/clock/bcm6358-clock.h          |  18 +
- include/dt-bindings/clock/bcm6362-clock.h          |  26 +
- include/dt-bindings/clock/bcm6368-clock.h          |  24 +
- include/dt-bindings/clock/g12a-clkc.h              |   2 +
- include/dt-bindings/clock/qcom,apss-ipq.h          |  12 +
- include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   4 +
- include/dt-bindings/clock/qcom,rpmcc.h             |  16 +
- include/dt-bindings/clock/r8a774e1-cpg-mssr.h      |  59 +++
- include/dt-bindings/clock/vf610-clock.h            |   3 +-
- include/dt-bindings/power/r8a774e1-sysc.h          |  36 ++
- include/linux/clk-provider.h                       |   2 +-
- {drivers => include/linux}/reset/reset-simple.h    |   7 +
- include/soc/qcom/kryo-l2-accessors.h               |  12 +
- 100 files changed, 3669 insertions(+), 690 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,msm8996-apcc.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-clocks.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/renesas,r8a73a4-cpg-clocks.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/renesas,r8a7740-cpg-clocks.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/renesas,r8a7778-cpg-clocks.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/renesas,sh73a0-cpg-clocks.txt
- create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
- create mode 100644 drivers/clk/qcom/apss-ipq-pll.c
- create mode 100644 drivers/clk/qcom/apss-ipq6018.c
- create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
- create mode 100644 drivers/clk/renesas/r8a774e1-cpg-mssr.c
- create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
- create mode 100644 include/dt-bindings/clk/versaclock.h
- create mode 100644 include/dt-bindings/clock/bcm3368-clock.h
- create mode 100644 include/dt-bindings/clock/bcm6318-clock.h
- create mode 100644 include/dt-bindings/clock/bcm63268-clock.h
- create mode 100644 include/dt-bindings/clock/bcm6328-clock.h
- create mode 100644 include/dt-bindings/clock/bcm6358-clock.h
- create mode 100644 include/dt-bindings/clock/bcm6362-clock.h
- create mode 100644 include/dt-bindings/clock/bcm6368-clock.h
- create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
- create mode 100644 include/dt-bindings/clock/r8a774e1-cpg-mssr.h
- create mode 100644 include/dt-bindings/power/r8a774e1-sysc.h
- rename {drivers => include/linux}/reset/reset-simple.h (74%)
- create mode 100644 include/soc/qcom/kryo-l2-accessors.h
-
--- 
-https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
+							- Ted
