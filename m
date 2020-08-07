@@ -2,152 +2,177 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA65BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C586A206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF942075A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="whSCyRwN"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="bd4tz29a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgHGAno (ORCPT
+        id S1726442AbgHGAq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:43:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgHGAnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:43:43 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDF3C061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 17:43:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so65156pjd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 17:43:42 -0700 (PDT)
+        Thu, 6 Aug 2020 20:46:28 -0400
+Received: from mail-dm6nam12on2073.outbound.protection.outlook.com ([40.107.243.73]:24416
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726011AbgHGAq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 20:46:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nsxoatNi18iZ7aLtV5xNZb0LNidlPTcATdTvqyLXMwb+UhxJYqgATkzbdxJWA2TJXrL5x4i8ZskKJhK67SMIRhWWC6Ng0D+rc8rVIhP9t1fUotKM4IvAMGMSHg2LGmSxWJr10ECGYicKPS9a0yp80RtCKy3pKf92SvrR6VgkLHGJ6zz7ztIJdtM7mEElyy1Rzhyr60rtCFxPSlXt5IK0QOQbuomKtHYJM5rks1QnOu6JVUvP46ty0J0W65H2NrrvcHJC+e749s33nZmWIaSH1M1QSiczwW/G5pqzE4SP1HknvrPybKNyT2y1h1QW7hzBNSz3Q8p4R7B3Jv42cBSXwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p7Fig27GH/SZKzuAM1l7HbKtV50j0Yv5t0+/zy87IIY=;
+ b=LQ2n/g4fB0P2GIiz1SPSdECul1BUzKVF1EkVFkeNxMZDvdP5i25QrsARgB1YBoQGFdMGheX0LtAbPVuRYMZ7EXRa3tYnOlOlZaiXU/vq6+IaJFQpkNhrIBvVD7S+Z0uTmoahgeKF3Np9/5U534KmZ9ebCZa4IH5kbRnyRr+qQq32JVtH2ayd2xxIW6pnl8upyQlCf5xduY4aGPWkVajwihf+V/UYOtgiPNlT9nSEmGkA7N7NyFb7xemikXwq3kQh1Quu44ltlJMF5cGGgyzT5pDrY7yVnBt9Rx2IRp+T7Q9oqE8cDOSk0taDPezJZFrvLN08VVyqypcdg4VUVUWikg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RgPXZVMrIckGX5DmfsQv8yNcqJQDdPlKU/7tj+0RAOU=;
-        b=whSCyRwNhpsO+yWDNZ4Cv5qNyZzpLOvp7DiNIK2pc3y7XGe+OgdIGNTYBxcj8Zsxh7
-         zYK0DR66GIMJwtwOdD0UOwxI+I5yf6lNoZKf3J+MlgeO82rATZ4XoQZuFSQZYbA+Y1el
-         SO329IS71+vYIjIWEGLmlMbwErG6gv2/N5bXbsRi6xPMSzueQ04XdqNNg2be3HuBptsM
-         +lJdAMvJDOB5JSozRVKaB3mz6n5A8d428+EF0qwNz/iOBaDczoIhMPLfszGtK7+UWBPK
-         Z67kBsTMFlydITNfQZc49FejvfOdYfrpHYf+O4jF1aB9AFLpGA0O2BcoeO4qSphffdVH
-         WRdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RgPXZVMrIckGX5DmfsQv8yNcqJQDdPlKU/7tj+0RAOU=;
-        b=fZUz3P8X2jb+7x5ZO1eF7hOrDhGzomS8bKcQbFyvuu/zWoTlCZbKGxLTJuo0VsGMwB
-         uvdLrCm+vrY4Ris/wMVx6GkPfiWm6F3furVi3T4SMhEFLZDy7j2oZpyVs2AXarWdhFkB
-         xb36aoPBO3yC3Wu49LIeKnXeNG81PTlhhuY74vCTFzv7Idk7XCDbxEU1qFo2cz+9mHfY
-         pklfww8VG6A4HTwYqegmP+ozQxXy2L4hMhGJBmKMiUzhPG5ATneFOBnZQw8v4Kd8rt5A
-         yLmol/7MVDXzN1hjJABXSUCzBW0sbAuC/as/UEmBBdaLGRrvwnPFUfjN9ACg1k7gZJVj
-         vJ/Q==
-X-Gm-Message-State: AOAM533kCnBc5LKEJWvOMsmdIzKxYfUDtYtkxLveqNHvKU7A25snO8sU
-        dcubw+yJF9ZuMUxFVgOHFwh2IQ==
-X-Google-Smtp-Source: ABdhPJzzSsdKj+hMfY/ueb2cz2zxYSb8Y/2u33WYsliSAC12b4M2MWm1xSe3yMluHLVX3jxKgljGCQ==
-X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr10174683plo.184.1596761019053;
-        Thu, 06 Aug 2020 17:43:39 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b15sm9673497pft.116.2020.08.06.17.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 17:43:38 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 17:40:01 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Steev Klimaszewski <steev@kali.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
- IRQCHIP_PLATFORM_DRIVER helper macros
-Message-ID: <20200807004001.GF20825@builder.lan>
-References: <20200718000637.3632841-1-saravanak@google.com>
- <20200718000637.3632841-3-saravanak@google.com>
- <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
- <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
- <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org>
- <78ad0914-6173-f753-9eba-b7cbfbb51fd6@kali.org>
- <CALAqxLXPN9kThwF32YoWyApaWnfjthANXj3uk65Wc3ddaJQFFQ@mail.gmail.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p7Fig27GH/SZKzuAM1l7HbKtV50j0Yv5t0+/zy87IIY=;
+ b=bd4tz29aWuGlXCxm34IAAnLdUmWiurLOm1vDCoiFe8BW0bJY92//mxzOdKA3sXMSe78E0hVVJVuruvE6bQ2vs1gQPtQWD0C5FQtbdm8DkEsQ0sPXGtLoxzfCzeCqYstzoCLgsxmEEn75NUte/0Te5ZMEsuKX16NPKm0GrOyeLrU=
+Authentication-Results: tencent.com; dkim=none (message not signed)
+ header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SA0PR12MB4479.namprd12.prod.outlook.com (2603:10b6:806:95::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Fri, 7 Aug
+ 2020 00:46:23 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c%6]) with mapi id 15.20.3239.023; Fri, 7 Aug 2020
+ 00:46:23 +0000
+Subject: [PATCH v4 00/12] SVM cleanup and INVPCID support for the AMD guests
+From:   Babu Moger <babu.moger@amd.com>
+To:     pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        sean.j.christopherson@intel.com, jmattson@google.com
+Cc:     kvm@vger.kernel.org, joro@8bytes.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, tglx@linutronix.de
+Date:   Thu, 06 Aug 2020 19:46:20 -0500
+Message-ID: <159676101387.12805.18038347880482984693.stgit@bmoger-ubuntu>
+User-Agent: StGit/0.17.1-dirty
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0085.namprd05.prod.outlook.com
+ (2603:10b6:803:22::23) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLXPN9kThwF32YoWyApaWnfjthANXj3uk65Wc3ddaJQFFQ@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [127.0.1.1] (165.204.77.1) by SN4PR0501CA0085.namprd05.prod.outlook.com (2603:10b6:803:22::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.6 via Frontend Transport; Fri, 7 Aug 2020 00:46:21 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 73f4e03f-9959-464f-aa1e-08d83a6b4eb7
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4479:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4479D3D29ADBCFB11711230495490@SA0PR12MB4479.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3hBuPWcgDKx4nJb3hE01y6u03BMXfVpxGACzpaW5ImjTbHqabdTTTyoZdbhdr5UZ0L7BA9cO/UwuktLt1j/PYcaoYU2SeLZ8NdqTb80/NFCE8VM/QATw/rhBOMyeqSibPYXqR0Y/UwtXHq9sr8/+UQ6bVq6SH1LgryBZgftK2Nz0ZUnPOmEnqtE/A+D0D4g0mnqZeM/kB7uIMsViKI/5caQXY/Rk9GANaIVRyVQLwoxt6ZYx1pg8fkkF481C9cmjv6+A5cJPkh9yfX1wuCarUcq3Hw5Cf9P3dhEqLm00vuTeH0z+GEirkTsG8jDUbTRi+wLVJbB+ujoQPWhTCa9sHmnY8j9pGtr7JzwS9wEstUIMwWQqOeaMctN5o3ajJR4W1/hLP18yCpNruZIuBJqKnA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(39860400002)(396003)(376002)(346002)(136003)(366004)(5660300002)(6486002)(52116002)(2906002)(16576012)(4326008)(83380400001)(7416002)(956004)(44832011)(33716001)(26005)(9686003)(8676002)(966005)(66476007)(66556008)(103116003)(66946007)(8936002)(86362001)(16526019)(186003)(478600001)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: wMIJw4ofRllnmiIXP+Jo3CqITajFeiX6wi4+MtTr2sErmOPs2JVYj1x5KNIDU0afRvqFxTLd7nwLVuMK/oCJN/a4yTafR98mOXf+xEgsLlGK3PfcYcnhO4xXtTe/rBFY9MH++ZO3pzLoLp7FZ1ylhbXqIIj6MrkIt22L+Sk18229cKne+v1Q/d9S+YTzfjaTp7dFbc4otavVKiOjHTWoyvbXu3t2vSukwYToQBPDcgVlsXszjfgLWL49f9/2+Blp0llH2YTWqJ5Tf6iN5LGWuZY4pUII0oTUeQgIZ3O2GdKpXVjR7PIVrt0XbfG3y4CpzjIlrqImNuqfUngOyoYRzirGKlOdqn+1brDwQqjx4kzPqAtnMWGb+lEiLyOZLMuV0QeqpJMt1xnWuHWRzJbr20wpAVawvCNugu8dBKsuAKraYPXfcDyVL87oweA7uT4V/mQUqFLYjd8tNzw3R/m42C0L8i4k8RhlEmG9eVfAJgJToaw4qNd5zoCf+/y6hBMB4Md8v5gUmDExC+5X3sJrMrImdokw6qPz9hZzxJ9Xx7/v9eBQMkA5EJt1IZY4o74J7sE+FhtZwVj3Pkldwr3KpoaSclNbBLU6JibLePANrOqhnaH5NkwcHr1VG49Fp9OB5lpfb0HgjKjxpuJ2hUMbAw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73f4e03f-9959-464f-aa1e-08d83a6b4eb7
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 00:46:23.0875
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3/ZFI7xZ+YrqEir8Zik72grNSVoDypoV86Hv7/NDra/yytJiv3a+BGX1YIvJPsXY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4479
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05 Aug 14:57 PDT 2020, John Stultz wrote:
+The following series adds the support for PCID/INVPCID on AMD guests.
+While doing it re-structured the vmcb_control_area data structure to
+combine all the intercept vectors into one 32 bit array. Makes it easy
+for future additions. Re-arranged few pcid related code to make it common
+between SVM and VMX.
 
-> On Wed, Aug 5, 2020 at 2:47 PM Steev Klimaszewski <steev@kali.org> wrote:
-> >
-> >
-> > On 8/5/20 4:16 PM, Steev Klimaszewski wrote:
-> > > On 8/5/20 3:19 PM, Saravana Kannan wrote:
-> > >> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> wrote:
-> > >>> <sigh>
-> > >>> So this is where I bashfully admit I didn't get a chance to try this
-> > >>> patch series out, as I had success with a much older version of
-> > >>> Saravana's macro magic.
-> > >>>
-> > >>> But unfortunately, now that this has landed in mainline, I'm seeing
-> > >>> boot regressions on db845c. :( This is in the non-modular case,
-> > >>> building the driver in.
-> > >> Does that mean the modular version is working? Or you haven't tried
-> > >> that yet? I'll wait for your reply before I try to fix it. I don't
-> > >> have the hardware, but it should be easy to guess this issue looking
-> > >> at the code delta.
-> > > For what it's worth, I saw this too on the Lenovo C630 (started on -next
-> > > around 20200727, but I didn't track it down as, well, there's less way
-> > > to get debug output on the C630.
-> > >
-> > > In my testing, module or built-in doesn't matter, but reverting does
-> > > allow me to boot again.
-> > >
-> > Actually - I spoke too soon - QCOM_PDC built-in with the commit reverted
-> > boots, however, module (on the c630 at least) doesn't boot whether it's
-> > a module or built-in.
-> 
-> You may need to set deferred_probe_timeout=30 to give things a bit
-> more grace time to load.
+INVPCID interceptions are added only when the guest is running with shadow
+page table enabled. In this case the hypervisor needs to handle the tlbflush
+based on the type of invpcid instruction.
 
-With the risk of me reading more into this than what you're saying,
-please don't upstream anything that depend this parameter to be
-increased.
+For the guests with nested page table (NPT) support, the INVPCID feature
+works as running it natively. KVM does not need to do any special handling.
 
-Compiling any of these drivers as module should not require the user to
-pass additional kernel command line parameters in order to get their
-device to boot.
+AMD documentation for INVPCID feature is available at "AMD64 Architecture
+Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34(or later)"
 
-Regards,
-Bjorn
+The documentation can be obtained at the links below:
+Link: https://www.amd.com/system/files/TechDocs/24593.pdf
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+---
+v4:
+ 1. Changed the functions __set_intercept/__clr_intercept/__is_intercept to
+    to vmcb_set_intercept/vmcb_clr_intercept/vmcb_is_intercept by passing
+    vmcb_control_area structure(Suggested by Paolo).
+ 2. Rearranged the commit 7a35e515a7055 ("KVM: VMX: Properly handle kvm_read/write_guest_virt*())
+    to make it common across both SVM/VMX(Suggested by Jim Mattson).
+ 3. Took care of few other comments from Jim Mattson. Dropped "Reviewed-by"
+    on few patches which I have changed since v3.
 
-> (I've mostly recently used qcom-pdc as a module with the android tree,
-> so the fw_devlink bits help there, but I need to re-check the state of
-> that upstream.)
-> 
-> I'll dbl check this and dig more on the issue with the patch in
-> question once I can get back in my office later today.
-> 
-> thanks
-> -john
+v3:
+ https://lore.kernel.org/lkml/159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu/
+ 1. Addressing the comments from Jim Mattson. Follow the v2 link below
+    for the context.
+ 2. Introduced the generic __set_intercept, __clr_intercept and is_intercept
+    using native __set_bit, clear_bit and test_bit.
+ 3. Combined all the intercepts vectors into single 32 bit array.
+ 4. Removed set_intercept_cr, clr_intercept_cr, set_exception_intercepts,
+    clr_exception_intercept etc. Used the generic set_intercept and
+    clr_intercept where applicable.
+ 5. Tested both L1 guest and l2 nested guests. 
+
+v2:
+  https://lore.kernel.org/lkml/159234483706.6230.13753828995249423191.stgit@bmoger-ubuntu/
+  - Taken care of few comments from Jim Mattson.
+  - KVM interceptions added only when tdp is off. No interceptions
+    when tdp is on.
+  - Reverted the fault priority to original order in VMX. 
+  
+v1:
+  https://lore.kernel.org/lkml/159191202523.31436.11959784252237488867.stgit@bmoger-ubuntu/
+
+Babu Moger (12):
+      KVM: SVM: Introduce vmcb_set_intercept, vmcb_clr_intercept and vmcb_is_intercept
+      KVM: SVM: Change intercept_cr to generic intercepts
+      KVM: SVM: Change intercept_dr to generic intercepts
+      KVM: SVM: Modify intercept_exceptions to generic intercepts
+      KVM: SVM: Modify 64 bit intercept field to two 32 bit vectors
+      KVM: SVM: Add new intercept vector in vmcb_control_area
+      KVM: nSVM: Cleanup nested_state data structure
+      KVM: SVM: Remove set_cr_intercept, clr_cr_intercept and is_cr_intercept
+      KVM: SVM: Remove set_exception_intercept and clr_exception_intercept
+      KVM: X86: Rename and move the function vmx_handle_memory_failure to x86.c
+      KVM: X86: Move handling of INVPCID types to x86
+      KVM:SVM: Enable INVPCID feature on AMD
+
+
+ arch/x86/include/asm/svm.h      |  117 +++++++++++++++++++++++++----------
+ arch/x86/include/uapi/asm/svm.h |    2 +
+ arch/x86/kvm/svm/nested.c       |   66 +++++++++-----------
+ arch/x86/kvm/svm/svm.c          |  131 ++++++++++++++++++++++++++-------------
+ arch/x86/kvm/svm/svm.h          |   87 +++++++++-----------------
+ arch/x86/kvm/trace.h            |   21 ++++--
+ arch/x86/kvm/vmx/nested.c       |   12 ++--
+ arch/x86/kvm/vmx/vmx.c          |   95 ----------------------------
+ arch/x86/kvm/vmx/vmx.h          |    2 -
+ arch/x86/kvm/x86.c              |  106 ++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.h              |    3 +
+ 11 files changed, 364 insertions(+), 278 deletions(-)
+
+--
