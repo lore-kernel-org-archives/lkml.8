@@ -2,172 +2,191 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F71C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4CA22C9F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA402075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XQ50o8Qy"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="Kg7pTCam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgHGLZk (ORCPT
+        id S1728316AbgHGLZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:25:40 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:37187 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgHGLZi (ORCPT
+        Fri, 7 Aug 2020 07:25:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgHGLZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 07:25:38 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200807112535epoutp02149287c7458d1c3adc6aef4aaf7771a2~o_LekbkUD2716827168epoutp02e;
-        Fri,  7 Aug 2020 11:25:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200807112535epoutp02149287c7458d1c3adc6aef4aaf7771a2~o_LekbkUD2716827168epoutp02e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596799535;
-        bh=vpt6JHTadTINEfPXkQp2G8+U/htx+npoLwW4CoLiWpY=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=XQ50o8Qy7hHoGWrDpgneR3ZH88+wLsnv5ho3IHZy8wyJ/u2iqwDWFCK1V41A0d8kg
-         69JnNutdkkvE1BokrP4NjCllOtsMgLdihWTAEd0srRbCD2k+pcEM1AqZ+/0S1/Omio
-         h7jan3ZXyyN8G9E5uwShualgQ/bLBy6iYVLXvh2A=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200807112534epcas5p33f1f0f66a68542f2d0087b7880884113~o_LdeuyT92580025800epcas5p3z;
-        Fri,  7 Aug 2020 11:25:34 +0000 (GMT)
-X-AuditID: b6c32a4a-991ff70000019d8d-55-5f2d3a2e8e77
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E3.87.40333.E2A3D2F5; Fri,  7 Aug 2020 20:25:34 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: [PATCH 1/1] arm64: add support for PAGE_SIZE aligned kernel
- stack
-Reply-To: maninder1.s@samsung.com
-From:   Maninder Singh <maninder1.s@samsung.com>
-To:     Vaneet Narang <v.narang@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "kristina.martsenko@arm.com" <kristina.martsenko@arm.com>,
-        "samitolvanen@google.com" <samitolvanen@google.com>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "gladkov.alexey@gmail.com" <gladkov.alexey@gmail.com>,
-        "daniel.m.jordan@oracle.com" <daniel.m.jordan@oracle.com>,
-        "walken@google.com" <walken@google.com>,
-        "bernd.edlinger@hotmail.de" <bernd.edlinger@hotmail.de>,
-        "laoar.shao@gmail.com" <laoar.shao@gmail.com>,
-        "avagin@gmail.com" <avagin@gmail.com>,
-        "john.johansen@canonical.com" <john.johansen@canonical.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20200804061526epcms5p3ff393f7e51d28ed896105c868bd31e5b@epcms5p3>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20200807111720epcms5p1206fe967bcee6136774c8432ed5b514b@epcms5p1>
-Date:   Fri, 07 Aug 2020 16:47:20 +0530
-X-CMS-MailID: 20200807111720epcms5p1206fe967bcee6136774c8432ed5b514b
+        Fri, 7 Aug 2020 07:25:49 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB9D7C061574
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 04:25:48 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x5so1423708wmi.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 04:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=O7paGcOXKXd31brfw25UL/WyioLI5ZPkfZ3OZkjGuA4=;
+        b=Kg7pTCam7u8BpMn7OoNqeyGI8I/P6oFR0aJ89fN2fug7i+K+zbadsgZQ4+kJy7NHm5
+         PAA3S+C+E+VzX0swEy6cgRbbDFJvIMJnxji6BTjw+S5qJse3ZUYR9CK2slrKapauRYRz
+         AzIb+e8HBy0Z5dahpoFE9RrUeXbk/tgXjXa8w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O7paGcOXKXd31brfw25UL/WyioLI5ZPkfZ3OZkjGuA4=;
+        b=RvkSEauGWYZOh2mIvwk6VOyMiCFJdd1DQtQZeYDkQRji5E3A+9yuhNG5kVi3IyNo+e
+         DNjXQy8AJB8EF266h9pwe3Miek3vf33bYpYUMHJDnxnrpmfdnwAKpiRj9d7X5ryl3aRr
+         p9D/4kCZd4eiTx1kTmiUi6+6a6iNm0CBX38poIYv3DZ9q709ocY8f7PilummX8rARvol
+         12PI+uJahVM3LV+EoimA8fAbFfZMLQ8/ng/qYg8w1uam5mBdP1B+ebbxaHfbVY8Qgsel
+         ZTmMZU5lEilc+8WkwIgtpJj09TxA/ypcJU37fyFhWfnqT0UugXAr6szBSqZyfwpbYV3o
+         +xng==
+X-Gm-Message-State: AOAM532dPtTTvkJ4UYBbgarrqhI8C84DfKN8qNwG4FTDfNYzf/9MieDD
+        c0LVUhYBkzTKpUzSy4fABgsd+Q==
+X-Google-Smtp-Source: ABdhPJx/09gN6DxT56rfqSkxKvr1/HYW6cD5BABn5RY+0d6hyGIYph16+DvbpTYDshIXPECemJdL6A==
+X-Received: by 2002:a7b:cbd0:: with SMTP id n16mr12402671wmi.123.1596799547657;
+        Fri, 07 Aug 2020 04:25:47 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id b123sm10147077wme.20.2020.08.07.04.25.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 04:25:46 -0700 (PDT)
+Subject: Re: [PATCH v5 1/2] net: dsa: Add protocol support for 802.1AD when
+ adding or deleting vlan for dsa switch port
+To:     hongbo.wang@nxp.com, xiaoliang.yang_1@nxp.com,
+        allan.nielsen@microchip.com, po.liu@nxp.com,
+        claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
+        vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
+        andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
+        kuba@kernel.org, vinicius.gomes@intel.com,
+        roopa@cumulusnetworks.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        ivecera@redhat.com
+References: <20200807111349.20649-1-hongbo.wang@nxp.com>
+ <20200807111349.20649-2-hongbo.wang@nxp.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <1ae01bfb-437b-345d-f000-2c4de103f7b1@cumulusnetworks.com>
+Date:   Fri, 7 Aug 2020 14:25:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200807111349.20649-2-hongbo.wang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTVwDGPbe3917QLpeC27G4KSRkgrE8guzMGPfQZBeTObbsj2Wbgw4v
-        6GwpaYFNjK4bj41qFSuwUgpURQrYDVfkIa3VdSsDgWF1OEAEDD4QSwrKjLWBLqU07r/f+c6X
-        78t3cigO30oIqH1ZOawsSySOJILxtt+jYzYJt2xKjXs8vhI5zCz66budSNdsJJC1Ox25510A
-        Lai7SNTnneagxvJBHJXfuUsgV/1RgLRPNSTythWS6JTrQ1RwpplA41YDhrrniwjUd0SCxv8s
-        5iLDg1ESmSZvcpHlUg+ObnTqCHT2HweGLup6uOj6FT2GWi8XAWT9cQJDZxtmuEjtbMOQraca
-        oEuLbhwtqg+hwtHNb0cwxhojYDzP1YDRKlQEU6Vw4MxF7W2SKbSOkIzelMucHrDjjKmphGC6
-        NR6cuVxtJJmWum+ZuXsjOOOyDhLMsQtNgHliei0l5NPgrXtY8b48Vha7LS14r3Kqkptdt+ob
-        489OTAEmg5QgiIJ0Iiwbc2FKEEzxaTOAdpcOKAFF8egQuNAR6vOE0ilw7uEV4GM+HQGvaYxL
-        llA6Dj5v3eCTCVoImzotuI/D6A+g5UED6Yvk0HoK3vIOLx1W0BU4LLzWTfqLeVDzwz3cz+Gw
-        3dC6VBBE74LtCx7Cr6+Gw+dmyAC7umqBn8Ng0Vg/x88hcMJtXtbXwnMtquXMAgBL6lhfMaTL
-        ADRPK5dD34Dm8zW4f+T78JRhi0/G6ShYNeJYtuyA9v4Wro859DrYPqPj+OwcOho2d8b6La/C
-        8qu/YH7LS1DluYsFZnXUBDgKFg6f5wYmPpmbW2qFNANHGkApiNC+eGjt/7q0L7r0gNME1rDZ
-        ckkmK9+cnZDFfi2UiyTy3KxMYbpUYgJLXzxmZwe4MzErtAGMAjYAKU5kGO+rqY2pfN4e0YF8
-        ViZNleWKWbkNhFN45Cu8yGd9X/DpTFEOu59ls1lZ4BajggQKDBx/mlQsOXk/70So2L42aX3J
-        hvfqh6Z3Tbr7Gh92EG/NZjrefGd3tejgUHiiQtq3YlR0U12h0px4/G9DRkoSk2KpT3tdDJOv
-        5y8Wv0sez9VIbcO/Ccb+TtjOxO2vOxx/Py1xjSrWmcyPr1G2xgx81pJv161KiAqvLPtrx+4q
-        e3eT2X0k9cDsvL5Lbc7pjLb1/7HA1mI9jrLeZxbd1ZHt9ttpRw+PKTIiDNLSQU+7vEJQUDyx
-        6P1ceCFi/NHQI+d0nm61PsP2ZRHrpBQfyb2HzuT0Rm/trSyVsp9UHiyIbRzaduOY8FdvQfLU
-        Rv1A6TrrrZdRifP0+ozaxe8FlvSVH1dH4vK9ovgYjkwu+g9izAL/UQQAAA==
-X-CMS-RootMailID: 20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96
-References: <20200804061526epcms5p3ff393f7e51d28ed896105c868bd31e5b@epcms5p3>
-        <20200803123447.GA89825@C02TD0UTHF1T.local>
-        <1596386115-47228-1-git-send-email-maninder1.s@samsung.com>
-        <CGME20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96@epcms5p1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Mark, 
-
->>If you are seeing issues with the current stack size, can you please
->>explain that in more detail? Where are you seeing problems? Which
->>configuration options do you have selected?
->>
-
-We checked on our system with netflix and youtube 4K videos running
-max stack consumption was 7 KB:
-
-sh-3.2# cat /sys/kernel/debug/tracing/stack_max_size  
-7312
-
-Thus we thought 16KB wil waste a lot of memory for our ARM64 target,
-and 8KB can be less in some exceptional case.
-So we decided for 12 KB change.
-
-
->>I'm not keen on making kernel stack sizes configurable as it's not
->>currently possible for the person building the kernel to figure out a
->>safe size (and if this were possible, it's be better to handle this
->>automatically).
->>
-
-Ok, can we do something else?, like not making it configurable,
-but do code changes to support it for PAGE_SIZE aligned stacks
-rather than power of 2 alignement.
-
-Although with configurable also, it depends on VMAP stack,
-so user will have stack exhaust  exception and can increase acccordingly also.
-
+On 07/08/2020 14:13, hongbo.wang@nxp.com wrote:
+> From: "hongbo.wang" <hongbo.wang@nxp.com>
 > 
->Motivation behind these changes is saving memory on our system. 
->Our system runs around 2500 threads concurrently so saving 4Kb  
->might help us in saving 10MB memory.
+> the following command will be supported:
 > 
->To ensure 12KB is sufficient for our system we have used stack tracing and 
->realised maximum stack used is not more than 9KB. 
-> /sys/kernel/tracing/stack_max_size
+> Set bridge's vlan protocol:
+>     ip link set br0 type bridge vlan_protocol 802.1ad
+> Add VLAN:
+>     ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
+> Delete VLAN:
+>     ip link del link swp1 name swp1.100
 > 
->Tracing interface defined by kernel to track maximum stack size can be used
->by others to decide appropriate stack size.
+> Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
+> ---
+>  include/net/switchdev.h   |  1 +
+>  net/bridge/br_switchdev.c | 22 ++++++++++++++++
+>  net/dsa/dsa_priv.h        |  4 +--
+>  net/dsa/port.c            |  6 +++--
+>  net/dsa/slave.c           | 53 ++++++++++++++++++++++++++-------------
+>  net/dsa/tag_8021q.c       |  4 +--
+>  6 files changed, 66 insertions(+), 24 deletions(-)
 > 
 
-Thanks
- 
+Hi,
+Please put the bridge changes in a separate patch with proper description.
+Reviewers would easily miss these bridge changes. Also I believe net-next
+is currently closed and that's where these patches should be targeted (i.e.
+have net-next after PATCH in the subject). Few more comments below.
+
+Thanks,
+ Nik
+
+> diff --git a/include/net/switchdev.h b/include/net/switchdev.h
+> index ff2246914301..7594ea82879f 100644
+> --- a/include/net/switchdev.h
+> +++ b/include/net/switchdev.h
+> @@ -97,6 +97,7 @@ struct switchdev_obj_port_vlan {
+>  	u16 flags;
+>  	u16 vid_begin;
+>  	u16 vid_end;
+> +	u16 proto;
+>  };
+>  
+>  #define SWITCHDEV_OBJ_PORT_VLAN(OBJ) \
+> diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
+> index 015209bf44aa..bcfa00d6d5eb 100644
+> --- a/net/bridge/br_switchdev.c
+> +++ b/net/bridge/br_switchdev.c
+> @@ -146,6 +146,26 @@ br_switchdev_fdb_notify(const struct net_bridge_fdb_entry *fdb, int type)
+>  	}
+>  }
+>  
+> +static u16 br_switchdev_get_bridge_vlan_proto(struct net_device *dev)
+
+const
+
+> +{
+> +	u16 vlan_proto = ETH_P_8021Q;
+> +	struct net_device *br = NULL;
+> +	struct net_bridge_port *p;
+> +
+> +	if (netif_is_bridge_master(dev)) {
+> +		br = dev;
+> +	} else if (netif_is_bridge_port(dev)) {
+
+You can use br_port_get_rtnl_rcu() and just check if p is not NULL.
+But in general these helpers are used only on bridge devices, I don't think you
+can reach them with a device that's not either a bridge or a port. So you can just
+check if it's a bridge master else it's a port.
+
+> +		p = br_port_get_rcu(dev);
+> +		if (p && p->br)
+
+No need to check for p->br, it always exists.
+
+> +			br = p->br->dev;
+> +	}
+> +
+> +	if (br)
+> +		br_vlan_get_proto(br, &vlan_proto);
+> +
+> +	return vlan_proto;
+> +}
+> +
+>  int br_switchdev_port_vlan_add(struct net_device *dev, u16 vid, u16 flags,
+>  			       struct netlink_ext_ack *extack)
+>  {
+> @@ -157,6 +177,7 @@ int br_switchdev_port_vlan_add(struct net_device *dev, u16 vid, u16 flags,
+>  		.vid_end = vid,
+>  	};
+>  
+> +	v.proto = br_switchdev_get_bridge_vlan_proto(dev);
+>  	return switchdev_port_obj_add(dev, &v.obj, extack);
+>  }
+>  
+> @@ -169,5 +190,6 @@ int br_switchdev_port_vlan_del(struct net_device *dev, u16 vid)
+>  		.vid_end = vid,
+>  	};
+>  
+> +	v.proto = br_switchdev_get_bridge_vlan_proto(dev);
+>  	return switchdev_port_obj_del(dev, &v.obj);
+>  }
