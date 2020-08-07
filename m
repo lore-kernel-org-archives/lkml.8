@@ -2,91 +2,106 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D20EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2652224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF3C22D3E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="t43ETIaj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FlLKpGkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgHGMwP (ORCPT
+        id S1726149AbgHGMxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:52:15 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58663 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725815AbgHGMwP (ORCPT
+        Fri, 7 Aug 2020 08:53:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51995 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725872AbgHGMxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 08:52:15 -0400
-X-UUID: e2ce0aac34324cc4a86a3828c652b6b6-20200807
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=mztOhQW0Qq5rF36HzmEccKSTcbg3ytjmt1H64T/6/Fw=;
-        b=t43ETIajGTKqWq9hYaCkVJTGesRh7ItdyoZ5aolm8/57Bkziyzfy2U/u0+7RQ/71pJm1ciMTVPc/wZWSKBavBMSfIbvpGSIAXSK0wEbevV3U+goJryIqUHkpJH8K1ORfEOyD3EBY7WxDrIZ4mv7iGA6hJRkut9rMbz0+uB7Vi4c=;
-X-UUID: e2ce0aac34324cc4a86a3828c652b6b6-20200807
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2053474008; Fri, 07 Aug 2020 20:52:10 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 7 Aug 2020 20:52:07 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 7 Aug 2020 20:52:07 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>, Daniel Palmer <daniel@0x0f.com>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-CC:     <alix.wu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <jason@lakedaemon.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <yj.chiang@mediatek.com>
-Subject: Re: [PATCH 0/2] irqchip: irq-mt58xx: Add mt58xx series interrupt
-Date:   Fri, 7 Aug 2020 20:52:04 +0800
-Message-ID: <20200807125204.2739-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <654a81dcefb3024d762ff338d4bd7f14@kernel.org>
-References: <654a81dcefb3024d762ff338d4bd7f14@kernel.org>
+        Fri, 7 Aug 2020 08:53:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596804817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VWhoxI+xwZ03QCZkTxfCmHgWyAvOMiqULGB6In4p2DU=;
+        b=FlLKpGkSRqv8+4+Ko4lfIkdRPnW/KwaP94nmzTe+J5EbjD5sfB0Oo5v9ExXamDPL0wrgM4
+        f3EqNfnCIlM6RurfUHTIniAU04VExQIzlQB0buqs8vZl5+I2TdWvzWBuXT2N+2xRqxmWWz
+        icf4qAuUs/gnXTrsE718YQ3bqNRKpCI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-65-LCW4CS3DNJCeMDx-LZicVA-1; Fri, 07 Aug 2020 08:53:33 -0400
+X-MC-Unique: LCW4CS3DNJCeMDx-LZicVA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 861798064AB;
+        Fri,  7 Aug 2020 12:53:32 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BB1C8380;
+        Fri,  7 Aug 2020 12:53:30 +0000 (UTC)
+Date:   Fri, 7 Aug 2020 20:53:27 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/10] mm/hugetlb: use list_splice to merge two list at
+ once
+Message-ID: <20200807125327.GN14854@MiWiFi-R3L-srv>
+References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+ <20200807091251.12129-4-richard.weiyang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807091251.12129-4-richard.weiyang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPiBPbiAyMDIwLTA4LTA2IDE1
-OjU4LCBEYW5pZWwgUGFsbWVyIHdyb3RlOg0KPiA+IEhpIE1hcmstUEssDQo+ID4gDQo+ID4gT24g
-VGh1LCA2IEF1ZyAyMDIwIGF0IDIzOjA4LCBNYXJrLVBLIFRzYWkgPG1hcmstcGsudHNhaUBtZWRp
-YXRlay5jb20+IA0KPiA+IHdyb3RlOg0KPiA+PiA+IERvIHlvdSBrbm93IGlmIGl0IHdvdWxkIGJl
-IHBvc3NpYmxlIHRvIGNvbmZpcm0gaWYgdGhleSBhcmUNCj4gPj4gPiB0aGUNCj4gPj4gPiBzYW1l
-IHRoaW5nPyBNZWRpYVRlayBib3VnaHQgTVN0YXIgYSBmZXcgeWVhcnMgYWdvIHNvIGl0IHNlZW1z
-IGxpa2VseQ0KPiA+PiA+IGJ1dCBJIGhhdmUgbm8gaGFyZCBpbmZvcm1hdGlvbi4NCj4gPj4gPg0K
-PiA+PiANCj4gPj4gWWVzLCBpdCdzIGZvciB0aGUgc2FtZSBpbnRlcnJ1cHQgY29udHJvbGxlciBJ
-UC4NCj4gPiANCj4gPiBUaGF0J3MgZ29vZCBuZXdzLiA6KQ0KPiA+IA0KPiA+PiA+IElmIHRoZXkg
-YXJlIHRoZSBzYW1lIHRoaW5nIGNvdWxkIHdlIHdvcmsgb24gbWFraW5nIG9uZSBzZXJpZXMgdGhh
-dA0KPiA+PiA+IHN1cHBvcnRzIGJvdGggdXNlIGNhc2VzPw0KPiA+PiANCj4gPj4gU3VyZSwgYW5k
-IEkgdGhpbmsgdGhlIGlycSBjb250cm9sbGVyIGRyaXZlciBzaG91bGQgc3VwcG9ydCBib3RoIHVz
-ZSANCj4gPj4gY2FzZXMuDQo+ID4+IFNvIGhvdyBhYm91dCBrZWVwIHRoZSBNVEsgdmVyc2lvbiBk
-cml2ZXI/DQo+ID4gDQo+ID4gSSdtIGZpbmUgd2l0aCB0aGF0LiBNYXliZSB5b3UgY2FuIHB1c2gg
-dGhlIE1USyB2ZXJzaW9uIGFuZCBJIGNhbiBzZW5kDQo+ID4gYSBzbWFsbCBwYXRjaCBhZnRlciB0
-aGF0IHRvIGFkZCB0aGUgc21hbGwgYml0cyBJIG5lZWQ/DQo+IA0KPiBJbiB0aGUgaW50ZXJlc3Qg
-b2YgYmVpbmcgdmVuZG9yIGFnbm9zdGljLCBwbGVhc2UgcmVuYW1lIHRoZSBwcm9wZXJ0aWVzDQo+
-IHN1Y2ggYXMgbWVkaWF0ZWssaXJxcy1tYXAtcmFuZ2UgdG8gc29tZXRoaW5nIGxlc3MgYnJhbmQt
-c3BlY2lmaWMuDQo+IFRoZSBjb21wYXRpYmxlIHN0cmluZyBzaG91bGQgYmUgZW5vdWdoLg0KDQpJ
-IGNhbid0IGZpbmQgdGhlIHN1aXRhYmxlIHByb3BlcnR5IGluIHN0YW5kYXJkIG9uZXMgdGhhdCBt
-YXRjaCB0aGUgY3VzdG9tDQpwcm9wZXJ0aWVzIGhlcmUuDQpBbmQgdGhlIHZlbmRvciBwcmVmaXhl
-ZCBydWxlIGlzIGRlc2NyaWJlZCBpbiBbMV0uDQoNClRoZSBpbnRlcnJ1cHQgY29udHJvbGxlciBp
-cyBmaXJzdCB1c2VkIGluIE1zdGFyIFRWIFNvQ3MuDQpOb3cgaXQncyB1c2VkIGluIE1USyBUViBh
-bmQgU2lnbWFzdGFyIFNvQ3MuDQpTbyBJIHRoaW5rIE1zdGFyIHByZWZpeGVkIHdvdWxkIG1ha2Ug
-bW9yZSBzZW5zZS4NCkkgd2lsbCByZW5hbWUgdGhlIGRyaXZlciBpbnRvIG1zdGFyLWludGMsIGFu
-ZCBNVEsgd2lsbCBtYWludGFpbiB0aGlzIGRyaXZlci4NCg0KWzFdIGh0dHBzOi8vd3d3Lmtlcm5l
-bC5vcmcvZG9jL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9ib290aW5nLXdpdGhvdXQtb2YudHh0
+On 08/07/20 at 05:12pm, Wei Yang wrote:
+> Instead of add allocated file_region one by one to region_cache, we
+> could use list_splice to merge two list at once.
+> 
+> Also we know the number of entries in the list, increase the number
+> directly.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> ---
+>  mm/hugetlb.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 0a2f3851b828..929256c130f9 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -443,11 +443,8 @@ static int allocate_file_region_entries(struct resv_map *resv,
+>  
+>  		spin_lock(&resv->lock);
+>  
+> -		list_for_each_entry_safe(rg, trg, &allocated_regions, link) {
+> -			list_del(&rg->link);
+> -			list_add(&rg->link, &resv->region_cache);
+> -			resv->region_cache_count++;
+> -		}
+> +		list_splice(&allocated_regions, &resv->region_cache);
+> +		resv->region_cache_count += to_allocate;
+
+Looks good to me.
+
+Reviewed-by: Baoquan He <bhe@redhat.com>
+
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.20.1 (Apple Git-117)
+> 
+> 
 
