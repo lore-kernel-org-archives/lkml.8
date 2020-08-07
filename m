@@ -2,53 +2,63 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DB9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A252177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F3322CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:38:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Hxp8Htes"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHGHcA (ORCPT
+        id S1726676AbgHGHie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:32:00 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:59688 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgHGHcA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:32:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 8D90820139AF;
-        Fri,  7 Aug 2020 15:31:58 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YeWoiEESwadk; Fri,  7 Aug 2020 15:31:58 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 7608B20139A7;
-        Fri,  7 Aug 2020 15:31:58 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 6FB32C019FB;
-        Fri,  7 Aug 2020 15:31:58 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 6ADB520014E; Fri,  7 Aug 2020 15:31:58 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/2] devicetree: hwmon: shtc1: add sensirion,shtc1.yaml
-Date:   Fri,  7 Aug 2020 15:31:43 +0800
-Message-Id: <20200807073143.30462-3-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200807073143.30462-1-chris.ruehl@gtsys.com.hk>
-References: <20200807073143.30462-1-chris.ruehl@gtsys.com.hk>
+        Fri, 7 Aug 2020 03:38:34 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:36155 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgHGHie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 03:38:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596785913; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=0GqpQXEcvOowQrBcjr1VTdagh2TvhN6ZZx7qSkiCD20=; b=Hxp8HtesuZy65MeJ3IOGVHPso+H4bRr9GxZYOawkBTArou9FZEWu2/LNKLqcKuCHfp+AbrlF
+ hcDFp1/hcV9Orz2LlbMJSHkXvt1B79MWKdpqao9Rj4+hcltaxkk7bZyDbs0/FoaLezW5C/q1
+ HUedMym3C66oLyAzmyE57zNeWHo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f2d04afc85a1092b018a7fe (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 07 Aug 2020 07:37:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 773F4C433CB; Fri,  7 Aug 2020 07:37:19 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E1CCC433C6;
+        Fri,  7 Aug 2020 07:37:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E1CCC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     =devicetree@vger.kernel.org, swboyd@chromium.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        robdclark@gmail.com
+Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v4] arm64: dts: qcom: sc7180: Add Display Port dt node
+Date:   Fri,  7 Aug 2020 00:36:47 -0700
+Message-Id: <20200807073647.1900-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,81 +66,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for the newly added DTS support in the shtc1 driver.
-To align with the drivers logic to have high precision by default
-a boolean sensirion,low_precision is used to switch to low precision.
+Add DP device node on sc7180.
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Changes in v2:
+
+- Add assigned-clocks and assigned-clock-parents
+- Remove cell-index and pixel_rcg
+- Change compatible to qcom,sc7180-dp
+
+Changes in v3:
+- Update commit text
+- Make DP child node of MDSS
+- Remove data-lanes property from SOC dts
+- Disable DP node in SOC dts
+- Assign DP to Port2 in MDP node
+- Add MDSS AHB clock in DP device node
+
+Changes in v4:
+- Remove redundant reg-names property
+- Use IRQ flag instead had hard coded value.
+- Add link clock source in assigned-clocks list.
+
+This patch depends-on following series:
+https://lore.kernel.org/dri-devel/20200807071718.17937-1-tanmay@codeaurora.org/
+
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
 ---
- .../bindings/hwmon/sensirion,shtc1.yaml       | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 49 ++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-new file mode 100644
-index 000000000000..41cc59b0b0e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217bb5bf..bb52b69df6fb 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2371,6 +2371,13 @@ dpu_intf1_out: endpoint {
+ 							remote-endpoint = <&dsi0_in>;
+ 						};
+ 					};
 +
-+title: Sensirion SHTC1 Humidity and Temperature Sensor IC
++					port@2 {
++						reg = <2>;
++						dpu_intf0_out: endpoint {
++							remote-endpoint = <&dp_in>;
++						};
++					};
+ 				};
+ 			};
+ 
+@@ -2440,6 +2447,44 @@ dsi_phy: dsi-phy@ae94400 {
+ 
+ 				status = "disabled";
+ 			};
 +
-+maintainers:
-+  - chris.ruehl@gtsys.com.hk
++			msm_dp: displayport-controller@ae90000 {
++				status = "disabled";
++				compatible = "qcom,sc7180-dp";
 +
-+description: |
-+  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
-+  designed especially for battery-driven high-volume consumer electronics
-+  applications.
-+  For further information refere to Documentation/hwmon/shtc1.rst
++				reg = <0 0x0ae90000 0 0x1400>;
 +
-+  This binding document describes the binding for the hardware monitor
-+  portion of the driver.
++				interrupt-parent = <&mdss>;
++				interrupts = <12 IRQ_TYPE_NONE>;
 +
-+properties:
-+  compatible:
-+    enum:
-+      - sensirion,shtc1
-+      - sensirion,shtw1
-+      - sensirion,shtc3
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
++				clock-names = "core_iface", "core_aux", "ctrl_link",
++					      "ctrl_link_iface", "stream_pixel";
++				#clock-cells = <1>;
++				assigned-clocks = <&dispcc DISP_CC_MDSS_DP_LINK_CLK_SRC>,
++						  <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
++				assigned-clock-parents = <&msm_dp 0>, <&msm_dp 1>;
 +
-+  reg:
-+    const: 0x70
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					port@0 {
++						reg = <0>;
++						dp_in: endpoint {
++							remote-endpoint = <&dpu_intf0_out>;
++						};
++					};
 +
-+  sensirion,blocking-io:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set, the driver hold the i2c bus until measurement is finished.
-+
-+  sensirion,low-precision:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set, the sensor aquire data with low precision (not recommended).
-+      The driver aquire data with high precision by default.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c1 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      clock-frequency = <400000>;
-+
-+      shtc3@70 {
-+        compatible = "sensirion,shtc3";
-+        reg = <0x70>;
-+        sensirion,blocking-io;
-+      };
-+    };
-+...
++					port@1 {
++						reg = <1>;
++						dp_out: endpoint { };
++					};
++				};
++			};
+ 		};
+ 
+ 		dispcc: clock-controller@af00000 {
+@@ -2449,8 +2494,8 @@ dispcc: clock-controller@af00000 {
+ 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+ 				 <&dsi_phy 0>,
+ 				 <&dsi_phy 1>,
+-				 <0>,
+-				 <0>;
++				 <&msm_dp 0>,
++				 <&msm_dp 1>;
+ 			clock-names = "bi_tcxo",
+ 				      "gcc_disp_gpll0_clk_src",
+ 				      "dsi0_phy_pll_out_byteclk",
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
