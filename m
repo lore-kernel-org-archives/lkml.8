@@ -2,98 +2,117 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6652C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC8E2075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FB42075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgHGO2y (ORCPT
+        id S1725815AbgHGOaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 10:28:54 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:46192 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725815AbgHGO2x (ORCPT
+        Fri, 7 Aug 2020 10:30:05 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:52151 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725993AbgHGOaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 10:28:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U50laYt_1596810517;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U50laYt_1596810517)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 07 Aug 2020 22:28:38 +0800
-Date:   Fri, 7 Aug 2020 22:28:37 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        mike.kravetz@oracle.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/10] mm/hugetlb: remove the redundant check on
- non_swap_entry()
-Message-ID: <20200807142837.GB14692@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-6-richard.weiyang@linux.alibaba.com>
- <20200807125550.GP14854@MiWiFi-R3L-srv>
+        Fri, 7 Aug 2020 10:30:04 -0400
+Received: (qmail 228459 invoked by uid 1000); 7 Aug 2020 10:30:02 -0400
+Date:   Fri, 7 Aug 2020 10:30:02 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+Message-ID: <20200807143002.GE226516@rowland.harvard.edu>
+References: <1596034432.4356.19.camel@HansenPartnership.com>
+ <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm>
+ <1596037482.4356.37.camel@HansenPartnership.com>
+ <A1653792-B7E5-46A9-835B-7FA85FCD0378@puri.sm>
+ <20200729182515.GB1580638@rowland.harvard.edu>
+ <1596047349.4356.84.camel@HansenPartnership.com>
+ <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
+ <20200730151030.GB6332@rowland.harvard.edu>
+ <9b80ca7c-39f8-e52d-2535-8b0baf93c7d1@puri.sm>
+ <425990b3-4b0b-4dcf-24dc-4e7e60d5869d@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807125550.GP14854@MiWiFi-R3L-srv>
+In-Reply-To: <425990b3-4b0b-4dcf-24dc-4e7e60d5869d@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 08:55:50PM +0800, Baoquan He wrote:
->On 08/07/20 at 05:12pm, Wei Yang wrote:
->> Migration and hwpoison entry is a subset of non_swap_entry().
->> 
->> Remove the redundant check on non_swap_entry().
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->
->Hmm, I have posted one patch to do the same thing, got reivewed by
->people.
->
->https://lore.kernel.org/linux-mm/20200723104636.GS32539@MiWiFi-R3L-srv/
->
+On Fri, Aug 07, 2020 at 11:51:21AM +0200, Martin Kepplinger wrote:
+> it's really strange: below is the change I'm trying. Of course that's
+> only for testing the functionality, nothing how a patch could look like.
+> 
+> While I remember it had worked, now (weirdly since I tried that mounting
+> via fstab) it doesn't anymore!
+> 
+> What I understand (not much): I handle the error with "retry" via the
+> new flag, but scsi_decide_disposition() returns SUCCESS because of "no
+> more retries"; but it's the first and only time it's called.
 
-Nice
+Are you saying that scmd->allowed is set to 0?  Or is scsi_notry_cmd() 
+returning a nonzero value?  Whichever is true, why does it happen that 
+way?
 
->> ---
->>  mm/hugetlb.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index d775e514eb2e..f5f04e89000d 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -3778,7 +3778,7 @@ bool is_hugetlb_entry_migration(pte_t pte)
->>  	if (huge_pte_none(pte) || pte_present(pte))
->>  		return false;
->>  	swp = pte_to_swp_entry(pte);
->> -	if (non_swap_entry(swp) && is_migration_entry(swp))
->> +	if (is_migration_entry(swp))
->>  		return true;
->>  	else
->>  		return false;
->> @@ -3791,7 +3791,7 @@ static int is_hugetlb_entry_hwpoisoned(pte_t pte)
->>  	if (huge_pte_none(pte) || pte_present(pte))
->>  		return 0;
->>  	swp = pte_to_swp_entry(pte);
->> -	if (non_swap_entry(swp) && is_hwpoison_entry(swp))
->> +	if (is_hwpoison_entry(swp))
->>  		return 1;
->>  	else
->>  		return 0;
->> -- 
->> 2.20.1 (Apple Git-117)
->> 
->> 
+What is the failing command?  Is it a READ(10)?
 
--- 
-Wei Yang
-Help you, Help me
+> How can this be? What am I missing?
+
+It's kind of hard to tell without seeing the error messages or system 
+log or any debugging information.
+
+Alan Stern
+
+> --- a/drivers/scsi/scsi_error.c
+> +++ b/drivers/scsi/scsi_error.c
+> @@ -565,6 +565,13 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
+>  				return NEEDS_RETRY;
+>  			}
+>  		}
+> +		if (scmd->device->expecting_media_change) {
+> +			if (sshdr.asc == 0x28 && sshdr.ascq == 0x00) {
+> +				scmd->device->expecting_media_change = 0;
+> +				return NEEDS_RETRY;
+> +			}
+> +		}
+> +
+>  		/*
+>  		 * we might also expect a cc/ua if another LUN on the target
+>  		 * reported a UA with an ASC/ASCQ of 3F 0E -
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index d90fefffe31b..bb583e403b81 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -3642,6 +3642,8 @@ static int sd_resume(struct device *dev)
+>  	if (!sdkp)	/* E.g.: runtime resume at the start of sd_probe() */
+>  		return 0;
+> 
+> +	sdkp->device->expecting_media_change = 1;
+> +
+>  	if (!sdkp->device->manage_start_stop)
+>  		return 0;
+> 
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index bc5909033d13..f5fc1af68e00 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -169,6 +169,7 @@ struct scsi_device {
+>  				 * this device */
+>  	unsigned expecting_cc_ua:1; /* Expecting a CHECK_CONDITION/UNIT_ATTN
+>  				     * because we did a bus reset. */
+> +	unsigned expecting_media_change:1;
+>  	unsigned use_10_for_rw:1; /* first try 10-byte read / write */
+>  	unsigned use_10_for_ms:1; /* first try 10-byte mode sense/select */
+>  	unsigned set_dbd_for_ms:1; /* Set "DBD" field in mode sense */
