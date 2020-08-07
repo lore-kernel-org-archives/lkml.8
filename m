@@ -2,91 +2,114 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7735B21744
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jhJYAsDB"
+	by mail.kernel.org (Postfix) with ESMTP id BDED521744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgHGP1s (ORCPT
+        id S1726323AbgHGP1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgHGP1p (ORCPT
+        Fri, 7 Aug 2020 11:27:47 -0400
+Received: from 9.mo4.mail-out.ovh.net ([46.105.40.176]:57093 "EHLO
+        9.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgHGP1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 11:27:45 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2724FC061756;
-        Fri,  7 Aug 2020 08:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=A6reZ+I6qgExQ6tk0eR0RqsI3FRby5QZjmXbBTCsRpE=; b=jhJYAsDBx5mQARq8HFgz3mMQYG
-        O06mJ2jVj1/Hooz3lLXQr3jSnaOu4YRK8d/7qmpzc6NX7AVBLznUBuD5XdkIqUcgtR8mBMm44blh2
-        RukKKZhq9Amh33DyJNVkpsm/cQmbBmKwh8Hq1i3RycjB76fmHb3ivkvVRvixoVY0TiTCrhVx09P3T
-        3z8MLOn55T6FNEdAp8y15TyGg9s+0UWSq46F/aoeJbALEsNQEOFVYnmrDNJ/lZerK8GNlwnInbPvN
-        OeNlt7yMznGN8++j5wm1rj5Dqqe+H/1UF5RhDKH9ldPAAnnUKCtlUR0yyfbmc1bFN7ZFnR02WbYch
-        VWm/pMEw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k44HT-0000Cp-6H; Fri, 07 Aug 2020 15:27:39 +0000
-Subject: Re: [PATCH v9 3/5] drm/msm/dp: add support for DP PLL driver
-To:     Tanmay Shah <tanmay@codeaurora.org>, swboyd@chromium.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        robdclark@gmail.com
-Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org, Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-References: <20200807071718.17937-1-tanmay@codeaurora.org>
- <20200807071718.17937-4-tanmay@codeaurora.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org>
-Date:   Fri, 7 Aug 2020 08:27:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+X-Greylist: delayed 158755 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 11:27:44 EDT
+Received: from player691.ha.ovh.net (unknown [10.110.103.18])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 1DDBB242D39
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 17:27:42 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player691.ha.ovh.net (Postfix) with ESMTPSA id C355E152D3C08;
+        Fri,  7 Aug 2020 15:27:32 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-100R003698b6a68-6b76-4ff7-aa52-ad9ed4f119b7,
+                    B1FDDFD4E508142116FDFB9194C63E8FBE397CFD) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Scott Wood <oss@buserror.net>, linuxppc-dev@lists.ozlabs.org
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] arch/powerpc: use simple i2c probe function
+Date:   Fri,  7 Aug 2020 17:27:13 +0200
+Message-Id: <20200807152713.381588-1-steve@sk2.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20200807071718.17937-4-tanmay@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 8281275292837105073
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedvgdekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheiledurdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 12:17 AM, Tanmay Shah wrote:
-> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-> index ea3c4d094d09..cc1392b29022 100644
-> --- a/drivers/gpu/drm/msm/Kconfig
-> +++ b/drivers/gpu/drm/msm/Kconfig
-> @@ -60,6 +60,7 @@ config DRM_MSM_HDMI_HDCP
->  config DRM_MSM_DP
->  	bool "Enable DP support in MSM DRM driver"
->  	depends on DRM_MSM
-> +	default y
->  	help
->  	  Compile in support for DP driver in msm drm driver. DP external
->  	  display support is enabled through this config option. It can
+The i2c probe functions here don't use the id information provided in
+their second argument, so the single-parameter i2c probe function
+("probe_new") can be used instead.
 
-Hi,
+This avoids scanning the identifier tables during probes.
 
-You need a very strong justification to make an optional part of a driver
-to be "default y".
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ arch/powerpc/platforms/44x/ppc476.c            | 5 ++---
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 4 ++--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-so why?
-
-thanks.
+diff --git a/arch/powerpc/platforms/44x/ppc476.c b/arch/powerpc/platforms/44x/ppc476.c
+index cba83eee685c..07f7e3ce67b5 100644
+--- a/arch/powerpc/platforms/44x/ppc476.c
++++ b/arch/powerpc/platforms/44x/ppc476.c
+@@ -86,8 +86,7 @@ static void __noreturn avr_reset_system(char *cmd)
+ 	avr_halt_system(AVR_PWRCTL_RESET);
+ }
+ 
+-static int avr_probe(struct i2c_client *client,
+-			    const struct i2c_device_id *id)
++static int avr_probe(struct i2c_client *client)
+ {
+ 	avr_i2c_client = client;
+ 	ppc_md.restart = avr_reset_system;
+@@ -104,7 +103,7 @@ static struct i2c_driver avr_driver = {
+ 	.driver = {
+ 		.name = "akebono-avr",
+ 	},
+-	.probe = avr_probe,
++	.probe_new = avr_probe,
+ 	.id_table = avr_id,
+ };
+ 
+diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+index 0967bdfb1691..409481016928 100644
+--- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
++++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+@@ -142,7 +142,7 @@ static int mcu_gpiochip_remove(struct mcu *mcu)
+ 	return 0;
+ }
+ 
+-static int mcu_probe(struct i2c_client *client, const struct i2c_device_id *id)
++static int mcu_probe(struct i2c_client *client)
+ {
+ 	struct mcu *mcu;
+ 	int ret;
+@@ -221,7 +221,7 @@ static struct i2c_driver mcu_driver = {
+ 		.name = "mcu-mpc8349emitx",
+ 		.of_match_table = mcu_of_match_table,
+ 	},
+-	.probe = mcu_probe,
++	.probe_new = mcu_probe,
+ 	.remove	= mcu_remove,
+ 	.id_table = mcu_ids,
+ };
 -- 
-~Randy
+2.25.4
 
