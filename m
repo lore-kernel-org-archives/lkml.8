@@ -2,69 +2,95 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A63222CAF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596765372;
-	bh=s6MsJr//dYnGoBao7cSD8ADX9UKC2I4PuoQ7Ehbo2tI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=yowBoigGzhklvcRS5qunJGeHOJYMxpgKDXBoMd0wVa6UGH4p9bPQavDMzJIym7Caf
-	 OGAypBSvhhBmRcQbHZD7j3qbiT8E3akOgM1VC8JIIdOiNY2suMRjDM/z6GntW4pZfz
-	 SudPLGf03eYwnGKY7rFrcd5rqXs/iGzYpGWMJKd4=
+	by mail.kernel.org (Postfix) with ESMTP id A06D9206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHGB4L (ORCPT
+        id S1726787AbgHGCCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbgHGB4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:56:08 -0400
-Subject: Re: [GIT PULL] auxdisplay for v5.9-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596765368;
-        bh=s6MsJr//dYnGoBao7cSD8ADX9UKC2I4PuoQ7Ehbo2tI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=YPporZ8CQNcdnvdnvAAubFMd0THz/JL+OBL/Fawbfd8XKDt3wSUMTkybzPWicQu8M
-         1P6moAuAwGursvmnPU9fsQzWwuMhy+g/JeBWQMR38k1INAU04Js04LBzQhq+1zFtXW
-         vlA5fl70iKoOQ0Kv+74daPC2LhWKYT9OG3bhbeZI=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200806190421.GA4273@gmail.com>
-References: <20200806190421.GA4273@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200806190421.GA4273@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.9-rc1
-X-PR-Tracked-Commit-Id: 3f03b64981723b61048ea46642bcaa9b518f3ad3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ed35832648b5c22ce39fe9c476065389c6f330ef
-Message-Id: <159676536849.30846.13144645432553904215.pr-tracker-bot@kernel.org>
-Date:   Fri, 07 Aug 2020 01:56:08 +0000
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org
+        Thu, 6 Aug 2020 22:02:53 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3048 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726396AbgHGCCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 22:02:52 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id C35568F870CD51DBB033;
+        Fri,  7 Aug 2020 10:02:49 +0800 (CST)
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 7 Aug 2020 10:02:49 +0800
+Subject: Re: [PATCH net-next] hinic: fix strncpy output truncated compile
+ warnings
+From:   "luobin (L)" <luobin9@huawei.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
+References: <20200806074830.1375-1-luobin9@huawei.com>
+ <20200806.120103.1200684111953914586.davem@davemloft.net>
+ <7f9e241e-3ad6-b250-11b1-a16d1dc2df68@huawei.com>
+Message-ID: <16468b06-3aaf-c871-820e-7ad41b952dd4@huawei.com>
+Date:   Fri, 7 Aug 2020 10:02:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <7f9e241e-3ad6-b250-11b1-a16d1dc2df68@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 6 Aug 2020 21:04:21 +0200:
+On 2020/8/7 8:57, luobin (L) wrote:
+> On 2020/8/7 3:01, David Miller wrote:
+>> From: Luo bin <luobin9@huawei.com>
+>> Date: Thu, 6 Aug 2020 15:48:30 +0800
+>>
+>>> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+>>> index c6adc776f3c8..1dc948c07b94 100644
+>>> --- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+>>> +++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+>>> @@ -342,9 +342,9 @@ static int chip_fault_show(struct devlink_fmsg *fmsg,
+>>>  
+>>>  	level = event->event.chip.err_level;
+>>>  	if (level < FAULT_LEVEL_MAX)
+>>> -		strncpy(level_str, fault_level[level], strlen(fault_level[level]));
+>>> +		strncpy(level_str, fault_level[level], strlen(fault_level[level]) + 1);
+>>>  	else
+>>> -		strncpy(level_str, "Unknown", strlen("Unknown"));
+>>> +		strncpy(level_str, "Unknown", sizeof(level_str));
+>>>  
+>>>  	if (level == FAULT_LEVEL_SERIOUS_FLR) {
+>>
+>> Please fix these cases consistently, either use the strlen()+1 pattern
+>> or the "sizeof(destination)" one.
+>>
+>> Probably sizeof(destination) is best.
+>> .
+>>
+> Will fix. Thanks. Level_str array is initialized to zero, so can't use the strlen()+1 pattern, I'll
+> use strlen()+1 consistently.
+> 
+I have tried to use 'sizeof(level_str)' instead of 'strlen(fault_level[level]) + 1', but this will lead
+to following compile warning:
 
-> https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.9-rc1
+In function ‘strncpy’,
+    inlined from ‘chip_fault_show’ at drivers/net/ethernet/huawei/hinic/hinic_devlink.c:345:3:
+./include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ specified bound 17 equals destination size [-Wstringop-truncation]
+  297 | #define __underlying_strncpy __builtin_strncpy
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ed35832648b5c22ce39fe9c476065389c6f330ef
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+So I will use the strlen()+1 pattern consistently.
