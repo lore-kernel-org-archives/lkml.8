@@ -2,110 +2,125 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C00204EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4716204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M87sxljR"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JIZYPdv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHGS3j (ORCPT
+        id S1726890AbgHGSaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54110 "EHLO
+        Fri, 7 Aug 2020 14:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgHGS30 (ORCPT
+        with ESMTP id S1726067AbgHGSaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:29:26 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72BA2C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:29:25 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id v13so2727545oiv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:29:25 -0700 (PDT)
+        Fri, 7 Aug 2020 14:30:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC733C061757
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 11:30:16 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r4so2515813wrx.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 11:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GRZscs3w79+OTYKLy1t5uEwBVQo4S2E3yAf0TmC6ezQ=;
-        b=M87sxljRhgDKnOiY+w5VD4cJXvG7jw/q7azGnqtu3jmMp3QYwFtssH0Z6+asChmaBm
-         +I1bw4NeZR0P6cMYJ4mTOv5f+tCG7sElwI7wtjNVVvF0ZMWBKs5dcv1bGp5hAKgn2bvs
-         ng5DmwCuDu1n2RtWCqjXqh6GniagFwwQR4t6NDJW3aVJjZLmFe5lT/m5KA0ALE2cyqVD
-         yGjDMYAG13VD82ukONfeoAA/5I0VL1SgTYmOJm0fxLCTqCqh332uJhojsg93dUmyIrZv
-         C+raIMzHP6zHs+T1AoQJpcDADnFn9RLfyJaBtpDaHsk4f1RT13wl47kFQpTCH0TwR1xS
-         VRzw==
+        d=broadcom.com; s=google;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kwA5JcNY/d3XoYU5aubcGGUYrAFU/lMm8dbRvxaJYYc=;
+        b=JIZYPdv0zdmj2PPtbQmcQcYLP2L00PM7ZREFxDgOUqlpKDXdHnY11R0WpvMkdfiBjp
+         T70EC82ICngLJeoZ5aBv0lSDlsM7d9J3gfeoEuLH9XZAVD5651rvxUgo2hHDvvLTfhc3
+         jJpBKr1SxDVJ99X4AmW4YPgCOrHYCtHOUkr8Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GRZscs3w79+OTYKLy1t5uEwBVQo4S2E3yAf0TmC6ezQ=;
-        b=iYexP4/TCM9w1KZheGH/X0lvL02LwX/s2XjCYue87RZTVavJGAcrpK/ShVDZGSr3vM
-         xKsmYhUTYYo4609s+gBPUPKrtdX465odCQM0lpJhu0yLeZiZMqbws3mdL5Yh93C/XV7h
-         eVWjlPoQ3GED5Pr0d1Vw03FstOSObfIpJBqyVtnrV/9dzNI0a6U3xXOeu900SZbzqi8c
-         4lMWoRZyRJNTwAK6U2CqZ2WShfkYE0NyF9FKtfZfr9bpTXnQrD/3aZLZUlCVTXvkXRI1
-         2co9Yg8bZ0kVWC7AVG4sT9Eb+6BRZ4GpSc6tTTUF8wbg+UfuBF8Ab/Q4HlWKuSImOReb
-         qYPw==
-X-Gm-Message-State: AOAM530iOiqU2gCOUtRL43jyvCVTO0CvFXqRLGJUp6adWlgd91A7lDSh
-        7zW/1IUBYtqVJTTmZ6K5pS23Y33i5VR7EDIDWq3QGQ==
-X-Google-Smtp-Source: ABdhPJzSqBEwBD90o7enXkKcc9j2icDqdYfOORflr4DBAg2p5wuOERIh95avM+pnEaF+z97ZGau7xu5IuDErxZuDQVU=
-X-Received: by 2002:aca:b50b:: with SMTP id e11mr10955479oif.10.1596824964855;
- Fri, 07 Aug 2020 11:29:24 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kwA5JcNY/d3XoYU5aubcGGUYrAFU/lMm8dbRvxaJYYc=;
+        b=oeDq3U5GdCNG2nv5BqLyJoEg8V7Q057bU6emd+M+QeyG3XzSbFXN/37SWCOQVdvah0
+         Ko4G9qDRIDPvulZG1x11PqVIMtx2rPkhE7KrIZn8JcyPBoXfh6u8HN5mqhYMhfXIef52
+         hQpRTg7VkgUlGxygi4kjFaqhHU5jNUzR8Qnzw+a89r2Qt3v4IfkAAAeeMY5d3dy7GfJF
+         9dN9KogBnQ2ZYxE/DP2zTO4hm7TKRqV9B25Vl4Qdr3QDxnsUg9J3r9jouYXz0hRwZc2I
+         WNlb8WPqQRKxnknCaV2DNcikLPrGx3xYW0UecgFksRDbJ6wBGvKqvPEb3KqktTWutc5e
+         HcIg==
+X-Gm-Message-State: AOAM533k78aj1oMriFSqY7X2mqVfQo1lp6JqjpX5tRF212wMTV1YpU+d
+        TxOmyC9HS623GMD/+zsBtoVeRE5OgBKjSsRwLhkQokEkPaMDmNApsLCYbEzsxb6oBpOwgTpXZsl
+        WBiOAQHhddW5XxDOa85o1JqvY0H1AIC7pG6KcljH5HRm/4HP/roQY2XAXVmjG+2iWu/b1wiOF9g
+        qTMg3FXLsIog==
+X-Google-Smtp-Source: ABdhPJzxg81wlnJeH3Tm3rmn7DfHAUOheMZ6dnPVq2eOqO1P5kdkHjfteMe2QPkts6gITJO0UWCZag==
+X-Received: by 2002:adf:a195:: with SMTP id u21mr14019347wru.296.1596825014916;
+        Fri, 07 Aug 2020 11:30:14 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i66sm11847533wma.35.2020.08.07.11.30.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 11:30:14 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] MIPS: BCM63xx: remove EHCI from BCM6348 boards
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200807100411.2904279-1-noltari@gmail.com>
+ <20200807100411.2904279-3-noltari@gmail.com>
+From:   Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
+ xAQQAQgArgUCXnQoOxcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
+ Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
+ LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
+ AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoHaNB/4p5GXw2Xlk4r2J0MsUAZE4Gnfc
+ C4DtilufOGVR1K0/WhROYemyCAP+xuBj8bnQDBtZwB5ED37q4/p8DSmCnkEBjM5Cz12EZQzs
+ utQgCV1UIgzryoiDZSF2XLslzF9LOSaOiNzpBvwEYNTZ+koEW+AOHEAgS6SbV2Hob8Zc32xF
+ oQdKGwbSwcV8hS2YLL37VxKr2h8ZTtuTmhDNqxuKPzZuoAL61/4i8+BTyVZC4gUL/EUu7pG2
+ rbwhg/s8TyQWWeBz18Xiw5K148TXT0LeErmTsJSPQFMqZ6AR/nuJDQzhIUiLeq/hvBs1BIQf
+ REqNMShEnnMJfHjd8RFnGpdPk+hKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
+ C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
+ vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
+ q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
+ W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
+ 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
+ AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
+ e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
+ hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
+ Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
+ MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
+ 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
+ Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
+ sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
+ rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
+ pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
+ Q3up0ArDSP1L
+Message-ID: <5fa71232-1a8d-f6b2-1250-bd8c8f9d8627@broadcom.com>
+Date:   Fri, 7 Aug 2020 11:30:09 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200805.185559.1225246192723680518.davem@davemloft.net>
- <CANcMJZA1pSz8T9gkRtwYHy_vVfoMj35Wd-+qqxQBg+GRaXS0_Q@mail.gmail.com>
- <011a0a3b-74ac-fa61-2a04-73cb9897e8e8@gmail.com> <CALAqxLVDyTygzoktGK+aYnT2dQdOTPFAD=P=Kr1x+TmLuUC=NA@mail.gmail.com>
- <CALAqxLWKGfoPya3u9pbvZcbMAhjXKmYvp8b6L7hpk4bNWyt7sQ@mail.gmail.com> <20200807071954.GA2086@lst.de>
-In-Reply-To: <20200807071954.GA2086@lst.de>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 7 Aug 2020 11:29:14 -0700
-Message-ID: <CALAqxLWNJPvS_7pMU4cq1VsbednmUi_Ujji6OrVt0z6_mnRK9A@mail.gmail.com>
-Subject: Re: [GIT] Networking
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200807100411.2904279-3-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 12:19 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Thu, Aug 06, 2020 at 11:23:34PM -0700, John Stultz wrote:
-> > So I've finally rebase-bisected it down to:
-> >   a31edb2059ed ("net: improve the user pointer check in init_user_sockptr")
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a31edb2059ed4e498f9aa8230c734b59d0ad797a
-> >
-> > And reverting that from linus/HEAD (at least from this morning) seems
-> > to avoid it.
-> >
-> > Seems like it is just adding extra checks on the data passed, so maybe
-> > existing trouble from a different driver is the issue here, but it's
-> > not really clear from the crash what might be wrong.
-> >
-> > Suggestions would be greatly appreciated!
->
-> I think the sockpt optimization is just a little to clever for its
-> own sake, as also chown by the other issue pointed out by Eric.
->
-> Can you try this revert that just goes back to the "boring" normal
-> version for everyone?
 
-Yes! This seems to avoid the crash and networking looks ok.
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+On 8/7/2020 3:04 AM, Álvaro Fernández Rojas wrote:
+> There's no EHCI controller on BCM6348.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-thanks
--john
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
