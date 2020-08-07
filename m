@@ -2,142 +2,100 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E0A206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U9oLfO4F";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="45PXI7tN"
+	by mail.kernel.org (Postfix) with ESMTP id 7F706206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgHGIsb (ORCPT
+        id S1727789AbgHGIuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:48:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35086 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgHGIsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 04:48:30 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596790107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MBF7RuxtgMye0FeTHS4/I2QgvfUn5rqfABUW3RbrEFA=;
-        b=U9oLfO4Fm3GXtP9BGZ1UlYHmiESlcNyJleCppysP/SHrBFitqdd0yWg5QWy6rVoVQHZYBx
-        SwZYMagWZTS18JVVzhhb8jtFjuE0vhrpwiE1LKhh1SDn2dqIdOkvLEY4HoO9MbWCpLtmN8
-        /y8VkMj+kWOwMyHVOmAj/BSPK7PcgZ3pGxvTyzdjWLWgQBmeNvw4zxK6diPigqWiut2kMn
-        tPVOed3oAlGL29ApZ2fsPZMPgarDxRy1Xovohoab6Dro/s+X4bJel+7AzG767hGGNeOweY
-        MCwDc2D1qLXzcFnau+d7gYDQAUZOAEfWyhz16VP3x5uCDmC3/RpU1SqXnT5Pxw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596790107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MBF7RuxtgMye0FeTHS4/I2QgvfUn5rqfABUW3RbrEFA=;
-        b=45PXI7tN0bIu6GaA71iC+tzQwVOKfU7CU4tMg5Aau4ktHfZWtUjjvlZGw8aPKO2mKPNek9
-        Sxjhsd+t5bh6REDA==
-To:     "Dey\, Megha" <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hpa\@zytor.com" <hpa@zytor.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "Lin\, Jing" <jing.lin@intel.com>,
-        "Williams\, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "Hansen\, Dave" <dave.hansen@intel.com>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
-In-Reply-To: <78a0cdd6-ba05-e153-b25e-2c0fe8c1e7b9@intel.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com> <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com> <96a1eb5ccc724790b5404a642583919d@intel.com> <20200805221548.GK19097@mellanox.com> <70465fd3a7ae428a82e19f98daa779e8@intel.com> <20200805225330.GL19097@mellanox.com> <630e6a4dc17b49aba32675377f5a50e0@intel.com> <20200806001927.GM19097@mellanox.com> <c6a1c065ab9b46bbaf9f5713462085a5@intel.com> <87tuxfhf9u.fsf@nanos.tec.linutronix.de> <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com> <87h7tfh6fc.fsf@nanos.tec.linutronix.de> <78a0cdd6-ba05-e153-b25e-2c0fe8c1e7b9@intel.com>
-Date:   Fri, 07 Aug 2020 10:48:26 +0200
-Message-ID: <87364yhmed.fsf@nanos.tec.linutronix.de>
+        Fri, 7 Aug 2020 04:50:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36472 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726985AbgHGIuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 04:50:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 478AAAF06;
+        Fri,  7 Aug 2020 08:50:39 +0000 (UTC)
+Message-ID: <aae9250e660339142e9390427a603c4cf4e282af.camel@suse.de>
+Subject: Re: [PATCH v3 2/2] dma-pool: Only allocate from CMA when in same
+ memory zone
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     amit.pundir@linaro.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>, rientjes@google.com,
+        jeremy.linton@arm.com, linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Date:   Fri, 07 Aug 2020 10:50:19 +0200
+In-Reply-To: <20200807052116.GA584@lst.de>
+References: <20200806184756.32075-1-nsaenzjulienne@suse.de>
+         <20200806184756.32075-3-nsaenzjulienne@suse.de>
+         <20200807052116.GA584@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-CN1cawQ3wxFHCl/garHR"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Megha,
 
-"Dey, Megha" <megha.dey@intel.com> writes:
-> On 8/6/2020 1:21 PM, Thomas Gleixner wrote:
->> If you expect or know that there are other devices coming up with IMS
->> integrated then most of that code can be made a common library. But for
->> this to make sense, you really want to make sure that these other
->> devices do not require yet another horrible layer of indirection.
->
-> Yes Thomas, for now this may look odd since there is only one device
-> using this IRQ domain. But there will be other devices following suit,
-> hence I have added all the IRQ chip/domain bits in a separate file in
-> drivers/irqchip in the next version of patches. I'll submit the
-> patches shortly and it will be great if I can get more feedback on it.
+--=-CN1cawQ3wxFHCl/garHR
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Again. The common domain makes only sense if it provides actual
-functionality and resource management at the domain level. The IMS slot
-management CANNOT happen at the common domain level simply because IMS
-is strictly per device. So your "common" domain is just a shim layer
-which pretends to be common and requires warts at the side to do the IMS
-management at the device level.
+On Fri, 2020-08-07 at 07:21 +0200, Christoph Hellwig wrote:
+> On Thu, Aug 06, 2020 at 08:47:55PM +0200, Nicolas Saenz Julienne wrote:
+> > There is no guarantee to CMA's placement, so allocating a zone specific
+> > atomic pool from CMA might return memory from a completely different
+> > memory zone. To get around this double check CMA's placement before
+> > allocating from it.
+>=20
+> As the builtbot pointed out, memblock_start_of_DRAM can't be used from
+> non-__init code.  But lookig at it I think throwing that in
+> is bogus anyway, as cma_get_base returns a proper physical address
+> already.
 
-Let's see what you came up with this time :)
+It does indeed, but I'm comparing CMA's base with bitmasks that don't take =
+into
+account where the memory starts. Say memory starts at 0x80000000, and CMA f=
+alls
+into ZONE_DMA [0x80000000 0xC0000000], if you want to compare it with
+DMA_BIT_MASK(zone_dma_bits) you're forced to unify the memory bases.
 
->> A side note: I just read back on the specification and stumbled over
->> the following gem:
->>
->>   "IMS may also optionally support per-message masking and pending bit
->>    status, similar to the per-vector mask and pending bit array in the
->>    PCI Express MSI-X capability."
->>
->> Optionally? Please tell the hardware folks to make this mandatory. We
->> have enough pain with non maskable MSI interrupts already so introducing
->> yet another non maskable interrupt trainwreck is not an option.
->>
->> It's more than a decade now that I tell HW people not to repeat the
->> non-maskable MSI failure, but obviously they still think that
->> non-maskable interrupts are a brilliant idea. I know that HW folks
->> believe that everything they omit can be fixed in software, but they
->> have to finally understand that this particular issue _cannot_ be fixed
->> at all.
->
-> hmm, I asked the hardware folks and they have informed me that all IMS
-> devices will support per vector masking/pending bit. This will be
-> updated in the next SIOV spec which will be published soon.
+That said, I now realize that this doesn't work for ZONE_DMA32 which has a =
+hard
+limit on 32bit addresses reglardless of the memory base.
 
-I seriously hope so...
+That said I still need to call memblock_start_of_DRAM() any suggestions WRT
+that? I could save the value in dma_atomic_pool_init(), which is __init cod=
+e.
 
-Thanks,
 
-        tglx
+--=-CN1cawQ3wxFHCl/garHR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8tFcsACgkQlfZmHno8
+x/5Wxwf+IXh+GDy4xNKtfhxHMTDolZREHO/kvmoJd/zTobn0o4992GzMyEVu9YLd
+MA+Yxdpi4IDDTredYMITrPM7f0nd2BpqZ1Wf8zXF2o5nmtPoAeOqH89FbajqzXle
+oLRzLPoC5xDcErO2J1UDIRg539IJu1kKGaPDxJT0gxcDv39DOMITNzMuphQwacLM
+tYXUuZ9yNFRx0AdODTOXPE7iE4qKRQvm54rExmYsT3VJIjlo+H8qrpa79q6BhooL
+G19pFMDFTVhX/iRA94j2HBXr7IjyDK44JJlHWZ9Ocf04S3bVCClkDH9nK74ZRHgm
+GS5W7k8K8VWOD1DajSTMyZjk/2+E/A==
+=i4iT
+-----END PGP SIGNATURE-----
+
+--=-CN1cawQ3wxFHCl/garHR--
+
