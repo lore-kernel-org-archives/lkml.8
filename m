@@ -2,81 +2,106 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C782C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 296892086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596829644;
-	bh=3J6m0L2M1H6OYUCNqt6X/ozt7tphzFWFRd3BR+Q4sdE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Uo4YBq0thrAbF35793fAeGLS1kLWyitEkerT6fqHSVHzWHyOTZk+h8/8RFZv2S6Yx
-	 hOCoj8+d6UOJ2dtcYxR1Y5YbBj7cdBoyA2ufcUH3Jn8q2/VstZm2QCD2pxU2I4gXdT
-	 grqSKmFtrVDgpGGiD/wFM9aQ35g0v80U1b+/fF38=
+	by mail.kernel.org (Postfix) with ESMTP id 4CFC32086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:48:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rA/hxPg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgHGTrX (ORCPT
+        id S1726584AbgHGTsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgHGTrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:47:22 -0400
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630CD22CA1
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 19:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596829642;
-        bh=3J6m0L2M1H6OYUCNqt6X/ozt7tphzFWFRd3BR+Q4sdE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZsZVOnU0pSYlXCiknGgpzZ+yoJggEaZQgAobS6FE23rUVqN6a8RbLV9/R4gY80skh
-         l2n9eHAw4Outhaghsb5o7cqPeB7bhMxJ1pXv2nojezu/Hu779bT/VAplrQWS2bVnPb
-         5oQHwGBk8XQ38k63F6pkOUCGCDBITrtsK1rQSnxg=
-Received: by mail-oi1-f179.google.com with SMTP id v13so2927427oiv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:47:22 -0700 (PDT)
-X-Gm-Message-State: AOAM5326D+Hm7aiRdbcJo5TN5v6ebODX/at8YO+z9pDpTW2UvEBFGDt8
-        oUVQWr//G/T9lOhNGP2o+uvrQhvD2VNDy6ZGXQ==
-X-Google-Smtp-Source: ABdhPJyDBKNKazQW/H5+sfR53s7164vQnk9FjIqPg3Oig0DKLylafCiJV+BIvaMmp1qTHNFx1uIlWVQ5HREMyGpLsKY=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr12846734oif.106.1596829641729;
- Fri, 07 Aug 2020 12:47:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200611085900.49740-1-tomeu.vizoso@collabora.com>
-In-Reply-To: <20200611085900.49740-1-tomeu.vizoso@collabora.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 7 Aug 2020 13:47:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLw9t0GJ4dDu6DgW4_Vwy3LzX_uCUJYXCN5rD-WUNEHTA@mail.gmail.com>
-Message-ID: <CAL_JsqLw9t0GJ4dDu6DgW4_Vwy3LzX_uCUJYXCN5rD-WUNEHTA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] panfrost: Make sure GPU is powered on when reading GPU_LATEST_FLUSH_ID
-To:     Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Fri, 7 Aug 2020 15:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHGTsM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 15:48:12 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FB0C061756;
+        Fri,  7 Aug 2020 12:48:12 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 185so3410607ljj.7;
+        Fri, 07 Aug 2020 12:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/OAIwEYgb5EsnCOJBCBI53WQmoKNdPN9sFAT/HuBiGM=;
+        b=rA/hxPg/cBBsL6bAS+rNWvYhRtIbOW7C8M0vmi2SgNiJ54zvP65TKyIbqD1hsHvkvS
+         U7BsWvNlW0fM2g8crodJORaa+6xrZO4LAIxF70NhlT4aniLWsOt0YlH+H0rMWD5HVDjp
+         e1z4CwOZtvwMokZdQ/+VXZFL5W6Br/QZsLGZ2kee1o1cxY3jJYjniQRvHWr2N8a6u1Ye
+         gO5m4DCTLEyQREynj8UgTn4yeIpXn3G5IARwAXYRfTC1XCvskkeqBJzmjuzGTxE1bfA3
+         EolmpKhPAKVepeb0TamsuYYEtxZEIk55G2gnn+CVXK/aFlXWvjlFJKBjFwsuU5mh13MT
+         zvNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/OAIwEYgb5EsnCOJBCBI53WQmoKNdPN9sFAT/HuBiGM=;
+        b=dRUXKgacG9vOBjR29byo0USGqAzY5leZI5oZXHPRWML4PPCYMG/yFj7orbxgMXb8yn
+         ODk3cYm2hYEl5gm7VJOUQqMeIUfsp3e4l8rdfTu2hcWon9HraRHxUVimZZfcyx9lspOt
+         Rwl7ge/QI7P7c5sN9761DGrfqPER22pTiuNIX0kH0vRSLofdHWU1igbgYSryY403hLvp
+         v2lSz/NH7hRFA2nfzcQZTytwNnKO7lLmDx/k/udQsblnu/7LCRU0ut0luDVylCRWFZ+0
+         zVYuYzlg45G1Rmom3aWdRc5LBNOkLGb9/d9UmYZ0tZKnQoyNM8XDihP+eQZApVagfihF
+         U/FQ==
+X-Gm-Message-State: AOAM533Mt2glW2w2Dqzh0EHAgSs/FdyZlRrdpjy4oLmoIh8pkYILbHIv
+        yBITH6fPfYSKZkF+bPtFqVI=
+X-Google-Smtp-Source: ABdhPJzDPKqMkNqMCDgRhnAMLxrvo+wEVw3+nGA9tP5kHBSzcsRls18yvJQ+ewft2ZoRvQRTWzs36g==
+X-Received: by 2002:a2e:b689:: with SMTP id l9mr6614535ljo.393.1596829690811;
+        Fri, 07 Aug 2020 12:48:10 -0700 (PDT)
+Received: from wasted.omprussia.ru ([2a00:1fa0:445c:7ae3:e9a3:2354:9467:4eca])
+        by smtp.gmail.com with ESMTPSA id k4sm4171586ljc.50.2020.08.07.12.48.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 12:48:10 -0700 (PDT)
+Subject: Re: [PATCH 5/7] ARM: dts: r8a7742: Add DU support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <e67a94e8-c9ed-dc9e-cab8-453a09441bcb@gmail.com>
+Date:   Fri, 7 Aug 2020 22:48:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200807174954.14448-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 2:59 AM Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
->
-> Bifrost devices do support the flush reduction feature, so on first job
-> submit we were trying to read the register while still powered off.
->
-> If the GPU is powered off, the feature doesn't bring any benefit, so
-> don't try to read.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_gpu.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+Hello!
 
-Both patches applied.
+On 8/7/20 8:49 PM, Lad Prabhakar wrote:
+
+> Add du node to r8a7742 SoC DT. Boards that want to enable the DU
+
+  Both "du" and "DU" on a single line? :-)
+
+> need to specify the output topology.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+[...]
+
+MBR, Sergei
