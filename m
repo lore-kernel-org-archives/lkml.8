@@ -2,124 +2,262 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8C8C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAAC2224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E3DUFXe2"
+	by mail.kernel.org (Postfix) with ESMTP id 99E0E21744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgHGQDJ (ORCPT
+        id S1726514AbgHGQDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:03:09 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16539 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgHGQDI (ORCPT
+        Fri, 7 Aug 2020 12:03:40 -0400
+Received: from pbmsgap02.intersil.com ([192.157.179.202]:54030 "EHLO
+        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgHGQDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:03:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2d7b2e0000>; Fri, 07 Aug 2020 09:02:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Aug 2020 09:03:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Aug 2020 09:03:08 -0700
-Received: from [10.26.73.183] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
- 2020 16:03:02 +0000
-Subject: Re: [Patch v2 2/4] dmaengine: tegra: Add Tegra GPC DMA driver
-To:     Rajesh Gumasta <rgumasta@nvidia.com>, <ldewangan@nvidia.com>,
-        <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <thierry.reding@gmail.com>, <p.zabel@pengutronix.de>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <kyarlagadda@nvidia.com>, Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
- <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a1b9f491-39c4-253e-ba89-f29ab8184cfe@nvidia.com>
-Date:   Fri, 7 Aug 2020 17:03:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 12:03:40 -0400
+Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
+        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 077FvuCQ005868;
+        Fri, 7 Aug 2020 11:57:56 -0400
+Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
+        by pbmsgap02.intersil.com with ESMTP id 32n2jctr6y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 07 Aug 2020 11:57:56 -0400
+Received: from pbmxdp02.intersil.corp (132.158.200.223) by
+ pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1979.3; Fri, 7 Aug 2020 11:57:54 -0400
+Received: from localhost (132.158.202.109) by pbmxdp02.intersil.corp
+ (132.158.200.223) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Fri, 7 Aug 2020 11:57:54 -0400
+From:   <min.li.xe@renesas.com>
+To:     <richardcochran@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Min Li <min.li.xe@renesas.com>
+Subject: [PATCH net 2/4] ptp: ptp_idt82p33: add more debug logs
+Date:   Fri, 7 Aug 2020 11:57:48 -0400
+Message-ID: <1596815868-11045-1-git-send-email-min.li.xe@renesas.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-MML: disable
 MIME-Version: 1.0
-In-Reply-To: <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596816174; bh=IVGky6nLxDkiBaaxwKtT2L98g021B3TbNVb8iaX+a2o=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=E3DUFXe2pxHisbdIwV064pYOFGdAw6mnlEJkWxAQ85aIX47ja5/IP8Xhv0Ec994PI
-         ZDoY2gg66kN/PS+7jgSsANnVuVS3K1XQJnY5RYEVgLNTbog2pb+wDSwF2d03u+u786
-         wmHBVbPzdpCYy9nxCaYtF21OF5YhGxPNBnmHri8cfltygKf1+MKC2XUcHJDzWwnRex
-         MQC0reaONUHiXKyH6ZEszDimpVGE1f9C0EOkfdavFnKtkTWDzCheWoll0THA3qYj9m
-         3+WOeHN8naScraT8fe6rhIaLq26g5l1550Ot+NRupYeCC5pHwJAOSMkkK1Zwd4bXH+
-         V/CnwGhLW+2Sw==
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-07_12:2020-08-06,2020-08-07 signatures=0
+X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2006250000 definitions=main-2008070110
+X-Proofpoint-Spam-Reason: mlx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Min Li <min.li.xe@renesas.com>
 
-On 06/08/2020 08:30, Rajesh Gumasta wrote:
-> Adding GPC DMA controller driver for Tegra186 and Tegra194. The driver
-> supports dma transfers between memory to memory, IO peripheral to memory
-> and memory to IO peripheral.
-> 
-> Signed-off-by: Pavan Kunapuli <pkunapuli@nvidia.com>
-> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-> ---
->  drivers/dma/Kconfig         |   12 +
->  drivers/dma/Makefile        |    1 +
->  drivers/dma/tegra-gpc-dma.c | 1472 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1485 insertions(+)
->  create mode 100644 drivers/dma/tegra-gpc-dma.c
+Signed-off-by: Min Li <min.li.xe@renesas.com>
+---
+ drivers/ptp/ptp_idt82p33.c | 88 +++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 79 insertions(+), 9 deletions(-)
 
-...
-
-> +static void tdc_start_head_req(struct tegra_dma_channel *tdc)
-> +{
-> +	struct tegra_dma_sg_req *sg_req;
-> +	struct virt_dma_desc *vdesc;
-> +
-> +	if (list_empty(&tdc->pending_sg_req))
-> +		return;
-> +
-> +	if (tdc->is_pending)
-> +		return;
-> +
-> +	vdesc = vchan_next_desc(&tdc->vc);
-> +	if (!vdesc)
-> +		return;
-> +	list_del(&vdesc->node);
-> +	tdc->dma_desc = vd_to_tegra_dma_desc(vdesc);
-> +	tdc->is_pending = true;
-> +	tdc->dma_desc->tdc = tdc;
-> +	sg_req = list_first_entry(&tdc->pending_sg_req,
-> +				  typeof(*sg_req), node);
-> +	tegra_dma_start(tdc, sg_req);
-> +	sg_req->configured = true;
-> +	tdc->busy = true;
-> +}
-
-
-I really don't understand this. First we get a descriptor for the
-vchan_next_desc and then we get a sg_req from another list. I really
-don't see why we need to have two lists here. Seems overly complicated.
-
-Jon
-
+diff --git a/drivers/ptp/ptp_idt82p33.c b/drivers/ptp/ptp_idt82p33.c
+index bd1fbcd..189bb81 100644
+--- a/drivers/ptp/ptp_idt82p33.c
++++ b/drivers/ptp/ptp_idt82p33.c
+@@ -86,6 +86,7 @@ static int idt82p33_xfer(struct idt82p33 *idt82p33,
+ 	struct i2c_client *client = idt82p33->client;
+ 	struct i2c_msg msg[2];
+ 	int cnt;
++	char *fmt = "i2c_transfer failed at %d in %s for %s, at addr: %04X!\n";
+ 
+ 	msg[0].addr = client->addr;
+ 	msg[0].flags = 0;
+@@ -99,7 +100,12 @@ static int idt82p33_xfer(struct idt82p33 *idt82p33,
+ 
+ 	cnt = i2c_transfer(client->adapter, msg, 2);
+ 	if (cnt < 0) {
+-		dev_err(&client->dev, "i2c_transfer returned %d\n", cnt);
++		dev_err(&client->dev,
++			fmt,
++			__LINE__,
++			__func__,
++			write ? "write" : "read",
++			(u8) regaddr);
+ 		return cnt;
+ 	} else if (cnt != 2) {
+ 		dev_err(&client->dev,
+@@ -448,8 +454,13 @@ static int idt82p33_measure_tod_write_overhead(struct idt82p33_channel *channel)
+ 
+ 	err = idt82p33_measure_settime_gettime_gap_overhead(channel, &gap_ns);
+ 
+-	if (err)
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
++	}
+ 
+ 	err = idt82p33_measure_one_byte_write_overhead(channel,
+ 						       &one_byte_write_ns);
+@@ -613,13 +624,23 @@ static int idt82p33_enable_tod(struct idt82p33_channel *channel)
+ 
+ 	err = idt82p33_pps_enable(channel, false);
+ 
+-	if (err)
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
++	}
+ 
+ 	err = idt82p33_measure_tod_write_overhead(channel);
+ 
+-	if (err)
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
++	}
+ 
+ 	err = _idt82p33_settime(channel, &ts);
+ 
+@@ -728,6 +749,11 @@ static int idt82p33_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+ 
+ 	mutex_lock(&idt82p33->reg_lock);
+ 	err = _idt82p33_adjfine(channel, scaled_ppm);
++	if (err)
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 	mutex_unlock(&idt82p33->reg_lock);
+ 
+ 	return err;
+@@ -751,10 +777,19 @@ static int idt82p33_adjtime(struct ptp_clock_info *ptp, s64 delta_ns)
+ 
+ 	if (err) {
+ 		mutex_unlock(&idt82p33->reg_lock);
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
+ 	}
+ 
+ 	err = idt82p33_sync_tod(channel, true);
++	if (err)
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 
+ 	mutex_unlock(&idt82p33->reg_lock);
+ 
+@@ -770,6 +805,11 @@ static int idt82p33_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ 
+ 	mutex_lock(&idt82p33->reg_lock);
+ 	err = _idt82p33_gettime(channel, ts);
++	if (err)
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 	mutex_unlock(&idt82p33->reg_lock);
+ 
+ 	return err;
+@@ -785,6 +825,11 @@ static int idt82p33_settime(struct ptp_clock_info *ptp,
+ 
+ 	mutex_lock(&idt82p33->reg_lock);
+ 	err = _idt82p33_settime(channel, ts);
++	if (err)
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 	mutex_unlock(&idt82p33->reg_lock);
+ 
+ 	return err;
+@@ -849,8 +894,13 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
+ 	channel = &idt82p33->channel[index];
+ 
+ 	err = idt82p33_channel_init(channel, index);
+-	if (err)
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
++	}
+ 
+ 	channel->idt82p33 = idt82p33;
+ 
+@@ -859,12 +909,22 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
+ 		 "IDT 82P33 PLL%u", index);
+ 
+ 	err = idt82p33_dpll_set_mode(channel, PLL_MODE_DCO);
+-	if (err)
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
++	}
+ 
+ 	err = idt82p33_enable_tod(channel);
+-	if (err)
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
++	}
+ 
+ 	channel->ptp_clock = ptp_clock_register(&channel->caps, NULL);
+ 
+@@ -896,8 +956,13 @@ static int idt82p33_load_firmware(struct idt82p33 *idt82p33)
+ 
+ 	err = request_firmware(&fw, FW_FILENAME, &idt82p33->client->dev);
+ 
+-	if (err)
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
+ 		return err;
++	}
+ 
+ 	dev_dbg(&idt82p33->client->dev, "firmware size %zu bytes\n", fw->size);
+ 
+@@ -981,8 +1046,13 @@ static int idt82p33_probe(struct i2c_client *client,
+ 		for (i = 0; i < MAX_PHC_PLL; i++) {
+ 			if (idt82p33->pll_mask & (1 << i)) {
+ 				err = idt82p33_enable_channel(idt82p33, i);
+-				if (err)
++				if (err) {
++					dev_err(&idt82p33->client->dev,
++						"Failed at %d in func %s!\n",
++						__LINE__,
++						__func__);
+ 					break;
++				}
+ 			}
+ 		}
+ 	} else {
 -- 
-nvpublic
+2.7.4
+
