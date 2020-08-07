@@ -2,94 +2,102 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A29FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A4922D01
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:22:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JpfLO58D"
+	by mail.kernel.org (Postfix) with ESMTP id 0114720855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596759774;
+	bh=pkcY1cimNMDbQ9RVzs4TpVS5NVc1IMyxBAvdaany3Ng=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0hvWN9A+MTCvLy/TqP7K5mGnbU7a+jtlF12zZxlrFh8Fm5BAxzHc1rWWtQWmTbt1J
+	 ZnbbtGyZoJN+w7fw6Pswi9HYvC42Jt9cUVm8yR3t40CPq1zYlq0VZv2ycm+1aIVd5v
+	 Qfh74CCD5y0z6W1DYqxTL09F3t51mPI3JPeV9zvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgHGAWs (ORCPT
+        id S1726335AbgHGAWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHGAWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:22:43 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595F7C06179F
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 17:22:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so7587283wmc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 17:22:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nrwX/wfFzmOB6yLRhb7qEWgDu6TEjOMw7c5SuWROcuA=;
-        b=JpfLO58DHRpIaearkFKOnrfvqBCUl0RamhydiUAyJKHTIjLYcYkw7jHOswLhEnvlz+
-         42rMjdrWtq1srri4CwkYJOOZqz9/+yBOurDBNaTXbUNL7sGwOZSau9gPNwqlyl1D/7TE
-         o5VG1NlGwBD81xYZqfeyR2hIsZ7Qv7Lk4Sk5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nrwX/wfFzmOB6yLRhb7qEWgDu6TEjOMw7c5SuWROcuA=;
-        b=mh+iCxAeT/oDLUaR5Bppl5F8L5SmOqTfu3fDIWM1L2JrufDbWOd11fwcvc8xvzzkLF
-         GHROVnX3MobtfDAGH97AXfkLHxEumeWbGZgNNc+8w1OahmDi1J1EKziLskd6XiY5wNBs
-         4jwgRpqepSKR0/mTemTECzueH/O+/K/hT3eNjv9+5AGOIhYuj0RJmrD1yRPxh7Tb2vfe
-         34YAdVOtcezS9+exp3zSRY4RbnXvWBxTv5o4yDC3GoqC3XzGjOvnGpmDUUaKV9pA11Bv
-         Wn47BTIl66FMuFwm9X0znNcqVs+LwBixw0naj2uHGWU6i1voMFckxI39K9gEbwN9cpa2
-         auTw==
-X-Gm-Message-State: AOAM531ejGb8OTDIhPRYi8s3vg56KDnscDn/ZWVq9RXAsC/R0NE6WF6o
-        9MbV+8kDD78d+Ciw9dzQkX6XBMIANhmKBVP2CDEgRQ==
-X-Google-Smtp-Source: ABdhPJz2CSFYHBHps5lsYSSXi4LmfIaF9F6g3gv7J9WuzjjQKkuYj3RGkVMthT3YMgBgze8VgIBd8JCNOrPtY+ZUvC4=
-X-Received: by 2002:a05:600c:252:: with SMTP id 18mr10198939wmj.56.1596759760832;
- Thu, 06 Aug 2020 17:22:40 -0700 (PDT)
+        Thu, 6 Aug 2020 20:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgHGAWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 20:22:51 -0400
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC1122CA1;
+        Fri,  7 Aug 2020 00:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596759770;
+        bh=pkcY1cimNMDbQ9RVzs4TpVS5NVc1IMyxBAvdaany3Ng=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CBY5GhyfGS56YW17PsneEppDyAsgHKiXTuc4R6MJRFpNeCl4vnKNXGZq4BDlX4UvG
+         vZ0FVCF8FV76orHhhKOfPpGRploLz4Hsn/gfykUNLZ5mZ/Fqq9eZEzB4LOUDrLPmpM
+         Nu/Ac/qbC1DEg+/xTIAUmqz1pGsnE6HyHvNDiXc4=
+Received: by mail-lf1-f51.google.com with SMTP id j22so104228lfm.2;
+        Thu, 06 Aug 2020 17:22:49 -0700 (PDT)
+X-Gm-Message-State: AOAM5321kAYb12fjSqpBSnXpoW7oBL1+8Z8KlSCuSEdnN+Tefb5eYdaK
+        bFcCS/TDYrCYT7MPY8VPRCUUjDTIRUC3yQqepUU=
+X-Google-Smtp-Source: ABdhPJyvyRLn9ReqXtclDsN0AdxBbUGkzogNbRrTyBVZBSevpv0l7yNHrrJvXec12YOi9ul/FEn/LKGODqJ0zC26mI4=
+X-Received: by 2002:ac2:44d4:: with SMTP id d20mr5041848lfm.137.1596759767874;
+ Thu, 06 Aug 2020 17:22:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200729175845.1745471-1-keescook@chromium.org>
- <20200729175845.1745471-12-keescook@chromium.org> <20200805145342.GA22100@linux-8ccs>
-In-Reply-To: <20200805145342.GA22100@linux-8ccs>
-From:   KP Singh <kpsingh@chromium.org>
-Date:   Fri, 7 Aug 2020 02:22:30 +0200
-Message-ID: <CACYkzJ6dbUPydbg+HVt3toAPhgZAFut5Wt5OVckWMrKuPZ0ibw@mail.gmail.com>
-Subject: Re: [PATCH v4 11/17] module: Call security_kernel_post_load_data()
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Takashi Iwai <tiwai@suse.de>, SeongJae Park <sjpark@amazon.de>,
-        linux-efi@vger.kernel.org,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200805104146.GP2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200805104146.GP2674@hirez.programming.kicks-ass.net>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Fri, 7 Aug 2020 08:22:36 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRqi-HuxJsMOjHTpaf33f1L9LypF-FkWo8OZm4SP12Hnw@mail.gmail.com>
+Message-ID: <CAJF2gTRqi-HuxJsMOjHTpaf33f1L9LypF-FkWo8OZm4SP12Hnw@mail.gmail.com>
+Subject: Re: csky: smp_mb__after_spinlock
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ren Guo <ren_guo@c-sky.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, mathieu.desnoyers@efficios.com,
+        Will Deacon <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 4:53 PM Jessica Yu <jeyu@kernel.org> wrote:
->
-> +++ Kees Cook [29/07/20 10:58 -0700]:
-> >Now that there is an API for checking loaded contents for modules
-> >loaded without a file, call into the LSM hooks.
-> >
-> >Cc: Jessica Yu <jeyu@kernel.org>
-> >Signed-off-by: Kees Cook <keescook@chromium.org>
->
-> Acked-by: Jessica Yu <jeyu@kernel.org>
+Hi Peter,
 
-Thanks!
+On Thu, Aug 6, 2020 at 3:53 AM <peterz@infradead.org> wrote:
+>
+> Hi,
+>
+> While doing an audit of smp_mb__after_spinlock, I found that csky
+> defines it, why?
+>
+> CSKY only has smp_mb(), it doesn't override __atomic_acquire_fence or
+> otherwise special cases it's atomic*_acquire() primitives. It has an
+> explicit smp_mb() in its arch_spin_lock().
 
-Reviewed-by: KP Singh <kpsingh@google.com>
+Yes, csky didn't implement ACQUIRE/RELEASE in spinlock.h. So it is a
+redundant and side-effect wrong macro, we should remove it to fixup.
+
+TODO:
+ - implement csky's ACQUIRE/RELEASE barrier
+
+> Also, why have two implementations of all the locking?
+
+I just kept my baby's codes :P. Now, we could remove it and just keep
+the ticket's one.
+
+BTW, I want to change the spinlock to qspinlock, but csky only has
+32-bit atomic operation in hardware.
+
+Any plan to deal with this in spinlock?
+
+Maybe for the embedded scenario, qspinlock seems a bit heavy, are any
+tickets-like comm spinlock infrastructures in the plan?
+
+--
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
