@@ -2,196 +2,270 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88213C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49979C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C222224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:50:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bF2xJUIl"
+	by mail.kernel.org (Postfix) with ESMTP id 21FFA2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596840799;
+	bh=mjd4I6UIxWHXT6Qoh8/YMicEZ9FboUvw1K74+xrH7Tw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=w4VLHJgkYiJzo2PsMHpb2PHEDZBVF6kvvySQsTI7MfdDpMMGRIcDbMa8F1qcjFciO
+	 dxpB1CjSl/ix1IP6hPsHcqiuiBpHbzNn+hUUxez4DAgryBvDsBC9SClrgpakNIBmH0
+	 LQ5S/JGauTHYc5f9Jq8nv8rByyGvh2jzUsl/vxQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHGWuf (ORCPT
+        id S1726159AbgHGWxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 18:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgHGWu1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 18:50:27 -0400
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2539FC061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 15:50:27 -0700 (PDT)
-Received: by mail-pj1-x1049.google.com with SMTP id a6so2659767pjd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 15:50:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=3/owlDjeUst/VUedKaOlenkrtf0ajk2+sX2cL13a7vo=;
-        b=bF2xJUIl3GYrWMv7joU4DxGYXczwSg+carS7d5v9vBaVDCqwtrswyCeuZi2vDCcn1I
-         VfxkmmJsSr5GAGY4Io7yRwj1aQEOarVNDrLpe4iRBtm5RPlnT84dETARkWpF+dQaQCMN
-         5T8vnTYMrgJL9sC33YSONqohFwtuf6X7xukqpNxQUOfDrs0fBb4hpKYXBNg6umB1IKjS
-         14csky7oxpKje8br+jEYf2jnlTjk8+dToAc31ep9at/aQX8aw1chNbLU28aszzE1DtuZ
-         T2j+ZD8fJ4FjC/jVIcjQeG+sTNq4rzL6UtFg4Ii1dyaOWZND0gaDs+vw6ScUJlHmewbQ
-         m5qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=3/owlDjeUst/VUedKaOlenkrtf0ajk2+sX2cL13a7vo=;
-        b=qdWtR2mleS2alT4sCnVfwEakZf7UqPvG5qkXnqLnXPFtTjTr7ke2fBsX884WCin1h1
-         h658g7aDHA/fflMn1l+uoXTfpIIUXHsLq9GMRXDPyOFo1GBCrK2xyY/U4aSmxqlRSQIV
-         Yr/Qg9WfRG9l3WNuZLOCrg7o9jZjiq8BzbjufFc77vsS/UipeAxq3bWIf7Dh827rCqsh
-         Mh1XfL2iwroxCP2YNIckxjIIVsaj7MWbx41M9Cju8m8qihHQWPmK1iTyLSgkYMu036F5
-         cjEPrsQYS7g5Qhh4B7SXNupsgbvenIy6eutNRyOWmxznYDVZeItb9mDhiECg9upzVLYi
-         /aUg==
-X-Gm-Message-State: AOAM530zp20UvUz41vn2T6zIcRa65fGP5q42dHQk6wKfHVF2p2AMhgeI
-        BRYk9iOtklAcE5TpcOGDmhQ0EQjIclPWdQHb8A==
-X-Google-Smtp-Source: ABdhPJzxKLo54fvW6D1u9bvhmmERMULl1i/OzpJh+BMKFG/junntW18h4IfaT+t8b+Ofl6BrLf0D1SQ/CC6dzKxqyw==
-X-Received: by 2002:a17:90b:3807:: with SMTP id mq7mr16155471pjb.13.1596840626464;
- Fri, 07 Aug 2020 15:50:26 -0700 (PDT)
-Date:   Fri,  7 Aug 2020 15:49:41 -0700
-In-Reply-To: <20200807224941.3440722-1-lokeshgidra@google.com>
-Message-Id: <20200807224941.3440722-4-lokeshgidra@google.com>
-Mime-Version: 1.0
-References: <20200807224941.3440722-1-lokeshgidra@google.com>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [PATCH v6 3/3] Wire UFFD up to SELinux
-From:   Lokesh Gidra <lokeshgidra@google.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Daniel Colascione <dancol@dancol.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        KP Singh <kpsingh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Thomas Cedeno <thomascedeno@google.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Adrian Reber <areber@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        kaleshsingh@google.com, calin@google.com, surenb@google.com,
-        nnk@google.com, jeffv@google.com, kernel-team@android.com,
-        Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Aug 2020 18:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbgHGWxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 18:53:17 -0400
+Received: from localhost (130.sub-72-107-113.myvzw.com [72.107.113.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0491C20866;
+        Fri,  7 Aug 2020 22:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596840796;
+        bh=mjd4I6UIxWHXT6Qoh8/YMicEZ9FboUvw1K74+xrH7Tw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Gd34WugUs/6yfxod6L+Q756+93/0d6+XxCvaAZ9TfHbxOZNuHB8abyzXeZmZCc8b5
+         2R0zr2o7V3Wzv0Y5Olh9B3P1Uwb4O5waZN8BIq3dRrBW5xnonwJyWsmE0Gq7ITZc0M
+         HoDB1dYcEV8fxtm7UvIJiDc6ipR/A6nkWy/tPDqE=
+Date:   Fri, 7 Aug 2020 17:53:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 4/9] PCI/AER: Extend AER error handling to RCECs
+Message-ID: <20200807225314.GA521346@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804194052.193272-5-sean.v.kelley@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Colascione <dancol@google.com>
+On Tue, Aug 04, 2020 at 12:40:47PM -0700, Sean V Kelley wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Currently the kernel does not handle AER errors for Root Complex integrated
+> End Points (RCiEPs)[0]. These devices sit on a root bus within the Root Complex
+> (RC). AER handling is performed by a Root Complex Event Collector (RCEC) [1]
+> which is a effectively a type of RCiEP on the same root bus.
+> 
+> For an RCEC (technically not a Bridge), error messages "received" from
+> associated RCiEPs must be enabled for "transmission" in order to cause a
+> System Error via the Root Control register or (when the Advanced Error
+> Reporting Capability is present) reporting via the Root Error Command
+> register and logging in the Root Error Status register and Error Source
+> Identification register.
+> 
+> In addition to the defined OS level handling of the reset flow for the
+> associated RCiEPs of an RCEC, it is possible to also have a firmware first
+> model. In that case there is no need to take any actions on the RCEC because
+> the firmware is responsible for them. This is true where APEI [2] is used
+> to report the AER errors via a GHES[v2] HEST entry [3] and relevant
+> AER CPER record [4] and Firmware First handling is in use.
 
-This change gives userfaultfd file descriptors a real security
-context, allowing policy to act on them.
+I don't see anything in the patch that mentions "firmware first." Do
+we need it in the commit log?  After
+https://git.kernel.org/linus/708b20003624 ("PCI/AER: Remove
+HEST/FIRMWARE_FIRST parsing for AER ownership"), I think we no longer 
+know anything about firmware-first in the kernel.
 
-Signed-off-by: Daniel Colascione <dancol@google.com>
+> We effectively end up with two different types of discovery for
+> purposes of handling AER errors:
+> 
+> 1) Normal bus walk - we pass the downstream port above a bus to which
+> the device is attached and it walks everything below that point.
+> 
+> 2) An RCiEP with no visible association with an RCEC as there is no need to
+> walk devices. In that case, the flow is to just call the callbacks for the actual
+> device.
+> 
+> A new walk function, similar to pci_bus_walk is provided that takes a pci_dev
+> instead of a bus. If that dev corresponds to a downstream port it will walk
+> the subordinate bus of that downstream port. If the dev does not then it
+> will call the function on that device alone.
 
-[Remove owner inode from userfaultfd_ctx]
-[Use anon_inode_getfd_secure() instead of anon_inode_getfile_secure()
- in userfaultfd syscall]
-[Use inode of file in userfaultfd_read() in resolve_userfault_fork()]
+Maybe mention the new function name here?
 
-Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
----
- fs/userfaultfd.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+Add "()" after function names in commit logs and comments so they
+don't look like English words.
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 6e264dded46e..23c8618ebe35 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -978,14 +978,16 @@ static __poll_t userfaultfd_poll(struct file *file, poll_table *wait)
- 
- static const struct file_operations userfaultfd_fops;
- 
--static int resolve_userfault_fork(struct userfaultfd_ctx *ctx,
--				  struct userfaultfd_ctx *new,
-+static int resolve_userfault_fork(struct userfaultfd_ctx *new,
-+				  struct inode *inode,
- 				  struct uffd_msg *msg)
- {
- 	int fd;
- 
--	fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, new,
--			      O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS));
-+	fd = anon_inode_getfd_secure(
-+		"[userfaultfd]", &userfaultfd_fops, new,
-+		O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS),
-+		inode);
- 	if (fd < 0)
- 		return fd;
- 
-@@ -995,7 +997,7 @@ static int resolve_userfault_fork(struct userfaultfd_ctx *ctx,
- }
- 
- static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
--				    struct uffd_msg *msg)
-+				    struct uffd_msg *msg, struct inode *inode)
- {
- 	ssize_t ret;
- 	DECLARE_WAITQUEUE(wait, current);
-@@ -1106,7 +1108,7 @@ static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
- 	spin_unlock_irq(&ctx->fd_wqh.lock);
- 
- 	if (!ret && msg->event == UFFD_EVENT_FORK) {
--		ret = resolve_userfault_fork(ctx, fork_nctx, msg);
-+		ret = resolve_userfault_fork(fork_nctx, inode, msg);
- 		spin_lock_irq(&ctx->event_wqh.lock);
- 		if (!list_empty(&fork_event)) {
- 			/*
-@@ -1166,6 +1168,7 @@ static ssize_t userfaultfd_read(struct file *file, char __user *buf,
- 	ssize_t _ret, ret = 0;
- 	struct uffd_msg msg;
- 	int no_wait = file->f_flags & O_NONBLOCK;
-+	struct inode *inode = file_inode(file);
- 
- 	if (ctx->state == UFFD_STATE_WAIT_API)
- 		return -EINVAL;
-@@ -1173,7 +1176,7 @@ static ssize_t userfaultfd_read(struct file *file, char __user *buf,
- 	for (;;) {
- 		if (count < sizeof(msg))
- 			return ret ? ret : -EINVAL;
--		_ret = userfaultfd_ctx_read(ctx, no_wait, &msg);
-+		_ret = userfaultfd_ctx_read(ctx, no_wait, &msg, inode);
- 		if (_ret < 0)
- 			return ret ? ret : _ret;
- 		if (copy_to_user((__u64 __user *) buf, &msg, sizeof(msg)))
-@@ -1995,8 +1998,10 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
- 	/* prevent the mm struct to be freed */
- 	mmgrab(ctx->mm);
- 
--	fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, ctx,
--			      O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS));
-+	fd = anon_inode_getfd_secure("[userfaultfd]",
-+		&userfaultfd_fops, ctx,
-+		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
-+		NULL);
- 	if (fd < 0) {
- 		mmdrop(ctx->mm);
- 		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
--- 
-2.28.0.236.gb10cc79966-goog
+Wrap commit logs so they fit in 75 columns, so they don't wrap when
+"git log" indents them in a default 80 column window.  Yes, I know I
+could use wider windows, but I'd still want *some* default so commits
+don't just have random widths.
 
+> [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex Integrated
+>     Endpoint Rules.
+> [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling and Logging
+> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface (APEI)
+> [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
+> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> ---
+>  drivers/pci/pcie/err.c | 59 +++++++++++++++++++++++++++++++++---------
+>  1 file changed, 47 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index c543f419d8f9..682302dfb55b 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -146,38 +146,69 @@ static int report_resume(struct pci_dev *dev, void *data)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * pci_walk_dev_affected - walk devices potentially AER affected
+> + * @dev      device which may be an RCEC with associated RCiEPs,
+> + *           an RCiEP associated with an RCEC, or a Port.
+
+Does this mean that if dev is an RCEC, we call the callback for the
+*RCEC* itself?  I would have thought we'd want to do that for the
+associated *RCiEPs*?
+
+> + * @cb       callback to be called for each device found
+> + * @userdata arbitrary pointer to be passed to callback.
+> + *
+> + * If the device provided is a port, walk the subordinate bus,
+
+This usage of "port" doesn't seem quite right.  "Port" includes root
+ports, switch upstream ports, switch downstream ports, *and* the
+upstream ports on endpoints.  The endpoint upstream ports obviously
+don't have subordinate buses.  We typically use "bridge" as the
+generic term for something with a subordinate bus.
+
+> + * including any bridged devices on buses under this bus.
+> + * Call the provided callback on each device found.
+> + *
+> + * If the device provided has no subordinate bus, call the provided
+> + * callback on the device itself.
+> + */
+> +static void pci_walk_dev_affected(struct pci_dev *dev, int (*cb)(struct pci_dev *, void *),
+
+I don't understand the "affected" reference in the function name.
+This doesn't test anything to see whether devices are "affected".
+Naming is the hardest part of programming :)
+
+> +				  void *userdata)
+> +{
+> +	if (dev->subordinate) {
+> +		pci_walk_bus(dev->subordinate, cb, userdata);
+> +	} else {
+> +		cb(dev, userdata);
+> +	}
+
+Typical Linux style omits {} for single-line if/else branches.
+
+> +}
+> +
+>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  			pci_channel_state_t state,
+>  			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+>  {
+>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> -	struct pci_bus *bus;
+>  
+>  	/*
+>  	 * Error recovery runs on all subordinates of the first downstream port.
+>  	 * If the downstream port detected the error, it is cleared at the end.
+> +	 * For RCiEPs we should reset just the RCiEP itself.
+>  	 */
+>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
+> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
+>  		dev = dev->bus->self;
+> -	bus = dev->subordinate;
+>  
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+> -		pci_walk_bus(bus, report_frozen_detected, &status);
+> +		pci_walk_dev_affected(dev, report_frozen_detected, &status);
+> +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> +			pci_warn(dev, "link reset not possible for RCiEP\n");
+> +			status = PCI_ERS_RESULT_NONE;
+> +			goto failed;
+> +		}
+> +
+>  		status = reset_link(dev);
+
+reset_link() might be misnamed.  IIUC "dev" is a bridge, and the point
+is really to reset any devices below "dev."  Whether we do that by
+resetting link, DPC trigger, secondary bus reset, FLR, etc, is sort of
+immaterial.  Some of those methods might be applicable for RCiEPs.
+
+But you didn't add that name; I'm just trying to understand this
+better.
+
+>  		if (status != PCI_ERS_RESULT_RECOVERED) {
+>  			pci_warn(dev, "link reset failed\n");
+>  			goto failed;
+>  		}
+>  	} else {
+> -		pci_walk_bus(bus, report_normal_detected, &status);
+> +		pci_walk_dev_affected(dev, report_normal_detected, &status);
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(dev, "broadcast mmio_enabled message\n");
+> -		pci_walk_bus(bus, report_mmio_enabled, &status);
+> +		pci_walk_dev_affected(dev, report_mmio_enabled, &status);
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> @@ -188,18 +219,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		 */
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(dev, "broadcast slot_reset message\n");
+> -		pci_walk_bus(bus, report_slot_reset, &status);
+> +		pci_walk_dev_affected(dev, report_slot_reset, &status);
+>  	}
+>  
+>  	if (status != PCI_ERS_RESULT_RECOVERED)
+>  		goto failed;
+>  
+>  	pci_dbg(dev, "broadcast resume message\n");
+> -	pci_walk_bus(bus, report_resume, &status);
+> -
+> -	if (pcie_aer_is_native(dev))
+> -		pcie_clear_device_status(dev);
+> -	pci_aer_clear_nonfatal_status(dev);
+> +	pci_walk_dev_affected(dev, report_resume, &status);
+> +
+> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
+> +		if (pcie_aer_is_native(dev))
+> +			pcie_clear_device_status(dev);
+> +		pci_aer_clear_nonfatal_status(dev);
+
+This change (testing pci_pcie_type()) looks like it's not strictly
+related to the rest of this patch and maybe should be split out into
+its own patch?
+
+> +	}
+>  	pci_info(dev, "device recovery successful\n");
+>  	return status;
+>  
+> -- 
+> 2.27.0
+> 
