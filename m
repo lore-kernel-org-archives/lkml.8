@@ -2,108 +2,88 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9372AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FF72177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4354C2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgHGCIE convert rfc822-to-8bit (ORCPT
+        id S1726528AbgHGCJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 22:08:04 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33772 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgHGCIC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 22:08:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id g14so451054iom.0;
-        Thu, 06 Aug 2020 19:08:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/3E1czSRtJ2NM8tCCNBLnDvuWpSz15DONo1WQYWWOmM=;
-        b=MiCRjK8cGnrCImbbdviOQENjAOCMC026IJKKUa68848pqumbBUsCWTqnIi3SxXUaNG
-         ChLVUc1cAxrLVuW4JLG2wr00+fECFDCLVJ+fPiPk4MOhR6Bk2xvmLBIpFycGDAHGpaPu
-         5pogRXDxBbnp6Y4h3l2VIZXdperNMIcY7/FWYF/Oqk5ZWgYvjtZ1HJGDIxgsh76e/ieS
-         zAjFT01VtU3o7+hb15t0MdEtNXfCkCACadI6Pyy9i0gVvt2sa3julLFYg+ZHqMdW5cDL
-         asaYPyDlQHUqN4nBfMEI6is5/3BDfRAkPiHs6mc45WMk3gwA8iqYAtscHgkCTeC5lXSB
-         Oabg==
-X-Gm-Message-State: AOAM53266xO4WD9qLcWIjsb1duUQACz3ITUlxQlF9ryDZRstOf48LYFF
-        4DHkvto8LolYOLUckh9FwXGo04PTQP9JSXzbBY8=
-X-Google-Smtp-Source: ABdhPJxr/YQEpf+/6x2NfWQSE6YvvpF1iaILStGtfR0ZSXXvpGbB2zw9A901yxdCaEmHiVZjTvXelGpeGTaMTolh+74=
-X-Received: by 2002:a02:84c1:: with SMTP id f59mr2361109jai.106.1596766081446;
- Thu, 06 Aug 2020 19:08:01 -0700 (PDT)
+        Thu, 6 Aug 2020 22:09:10 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35428 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726126AbgHGCJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 22:09:10 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8C0BE4446DE7DCD91267;
+        Fri,  7 Aug 2020 10:09:08 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 7 Aug 2020 10:09:02 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
+Subject: [PATCH net-next v1] hinic: fix strncpy output truncated compile warnings
+Date:   Fri, 7 Aug 2020 10:09:14 +0800
+Message-ID: <20200807020914.3123-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200801061147.1412187-1-jiaxun.yang@flygoat.com>
- <d03a350c-842c-c041-f11b-017ec68e3de4@flygoat.com> <9823ab9b-1f02-c8af-7d62-80a1d24aaaa3@xen0n.name>
-In-Reply-To: <9823ab9b-1f02-c8af-7d62-80a1d24aaaa3@xen0n.name>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Fri, 7 Aug 2020 10:07:50 +0800
-Message-ID: <CAAhV-H4AP-57fA31dxEGcTrvCH9NpPcKmbP-T9nm7ZUygczszw@mail.gmail.com>
-Subject: Re: [PATCH v2] MIPS: Provide Kconfig option for default IEEE 754
- conformance mode
-To:     WANG Xuerui <kernel@xen0n.name>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        WANG Xuerui <git@xen0n.name>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Xuerui,
+fix the compile warnings of 'strncpy' output truncated before
+terminating nul copying N bytes from a string of the same length
 
-On Thu, Aug 6, 2020 at 6:54 PM WANG Xuerui <kernel@xen0n.name> wrote:
->
-> Hi Jiaxun,
->
->
-> On 2020/8/5 21:59, Jiaxun Yang wrote:
-> >
-> >
-> > 在 2020/8/1 14:11, Jiaxun Yang 写道:
-> >> Requested by downstream distros, a Kconfig option for default
-> >> IEEE 754 conformance mode allows them to set their mode to
-> >> relaxed by default.
-> >>
-> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >> Reviewed-by: WANG Xuerui <git@xen0n.name>
-> >> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> >> Reviewed-by: Huacai Chen <chenhc@lemote.com>
-> >>
-> >> --
-> >> v2: Reword according to Xuerui's suggestion.
-> >> ---
-> > Hi Thomas,
-> >
-> > Is it possible to get this patch into 5.9 merge window?
-> > I think it have got enough review tag, and the config option was
-> > requested
-> > by a Debian developer. The next Debian release will take 5.9 lts
-> > kernel and
-> > they don't want to ship a non-bootable kernel in a major release.
->
-> I have an idea. Can the downstream packagers make use of the builtin
-> command line config options, to inject the "ieee754=relaxed" or whatever
-> option necessary? If it is acceptable this patch should not be necessary
-> in the short term.
-Built-in "ieee754=relaxed" is already in upstream for Loongson-3.
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+V0~V1:
+- use the strlen()+1 pattern consistently
 
-Huacai
->
-> >
-> > Thanks.
-> >
-> > - Jiaxun
+ drivers/net/ethernet/huawei/hinic/hinic_devlink.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+index c6adc776f3c8..1ec88ebf81d6 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+@@ -342,9 +342,9 @@ static int chip_fault_show(struct devlink_fmsg *fmsg,
+ 
+ 	level = event->event.chip.err_level;
+ 	if (level < FAULT_LEVEL_MAX)
+-		strncpy(level_str, fault_level[level], strlen(fault_level[level]));
++		strncpy(level_str, fault_level[level], strlen(fault_level[level]) + 1);
+ 	else
+-		strncpy(level_str, "Unknown", strlen("Unknown"));
++		strncpy(level_str, "Unknown", strlen("Unknown") + 1);
+ 
+ 	if (level == FAULT_LEVEL_SERIOUS_FLR) {
+ 		err = devlink_fmsg_u32_pair_put(fmsg, "Function level err func_id",
+@@ -388,9 +388,9 @@ static int fault_report_show(struct devlink_fmsg *fmsg,
+ 	int err;
+ 
+ 	if (event->type < FAULT_TYPE_MAX)
+-		strncpy(type_str, fault_type[event->type], strlen(fault_type[event->type]));
++		strncpy(type_str, fault_type[event->type], strlen(fault_type[event->type]) + 1);
+ 	else
+-		strncpy(type_str, "Unknown", strlen("Unknown"));
++		strncpy(type_str, "Unknown", strlen("Unknown") + 1);
+ 
+ 	err = devlink_fmsg_string_pair_put(fmsg, "Fault type", type_str);
+ 	if (err)
+-- 
+2.17.1
+
