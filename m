@@ -2,68 +2,103 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB74C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71A4206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F7C206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgHGJbt (ORCPT
+        id S1727874AbgHGJcM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:31:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34548 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgHGJbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:31:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 992C1AC55;
-        Fri,  7 Aug 2020 09:32:05 +0000 (UTC)
-Date:   Fri, 7 Aug 2020 11:31:46 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: VAIO EEPROM support in at24
-Message-ID: <20200807113146.7557c18b@endymion>
-In-Reply-To: <20200805163655.6cfa6e17@endymion>
-References: <20200317151409.7940926c@endymion>
-        <CAMRc=Mdoh5Sk3iS_CO4+++SG2jJOy1qrG4q2zOzbeYYMdJR0VA@mail.gmail.com>
-        <20200805163655.6cfa6e17@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Fri, 7 Aug 2020 05:32:12 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:46729 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726851AbgHGJcL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 05:32:11 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-210-SVT2GwbWMVi2mGcbTk0Ssg-1; Fri, 07 Aug 2020 10:32:08 +0100
+X-MC-Unique: SVT2GwbWMVi2mGcbTk0Ssg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 7 Aug 2020 10:32:07 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 7 Aug 2020 10:32:07 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Luo bin' <luobin9@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "luoxianjun@huawei.com" <luoxianjun@huawei.com>,
+        "yin.yinshi@huawei.com" <yin.yinshi@huawei.com>,
+        "cloud.wangxiaoyun@huawei.com" <cloud.wangxiaoyun@huawei.com>,
+        "chiqijun@huawei.com" <chiqijun@huawei.com>
+Subject: RE: [PATCH net-next v1] hinic: fix strncpy output truncated compile
+ warnings
+Thread-Topic: [PATCH net-next v1] hinic: fix strncpy output truncated compile
+ warnings
+Thread-Index: AQHWbF+/LM1G8mFmIkykQEWb0Xuu7aksYh5w
+Date:   Fri, 7 Aug 2020 09:32:07 +0000
+Message-ID: <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
+References: <20200807020914.3123-1-luobin9@huawei.com>
+In-Reply-To: <20200807020914.3123-1-luobin9@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Aug 2020 16:36:55 +0200, Jean Delvare wrote:
-> 1* Do we actually need to use a struct resource? With the current
->    requirements, that looks overkill to me. We really only need the
->    start and end offsets of the masked area (or start and length). Or
->    do you plan to ever support multiple masked ranges, and
->    resource.child would be used to daisy-chain these ranges? Personally
->    I would wait until the need exists.
+From: Luo bin
+> Sent: 07 August 2020 03:09
+> 
+> fix the compile warnings of 'strncpy' output truncated before
+> terminating nul copying N bytes from a string of the same length
+> 
+> Signed-off-by: Luo bin <luobin9@huawei.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> ---
+> V0~V1:
+> - use the strlen()+1 pattern consistently
+> 
+>  drivers/net/ethernet/huawei/hinic/hinic_devlink.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+> b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+> index c6adc776f3c8..1ec88ebf81d6 100644
+> --- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+> +++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+> @@ -342,9 +342,9 @@ static int chip_fault_show(struct devlink_fmsg *fmsg,
+> 
+>  	level = event->event.chip.err_level;
+>  	if (level < FAULT_LEVEL_MAX)
+> -		strncpy(level_str, fault_level[level], strlen(fault_level[level]));
+> +		strncpy(level_str, fault_level[level], strlen(fault_level[level]) + 1);
 
-Dang, turns out that the need already exists. I just found that the
-eeprom driver masks *2* areas of the Sony VAIO EEPROMs. I should know
-because I'm the one who made that change but that was 13 years ago and
-my memory doesn't go that far back.
+Have you even considered what that code is actually doing?
 
-I'll think of a way to support that. Still not a big fan of
-daisy-chained resource structs though. Maybe a generic post-processing
-callback function would do... I'll give that a try.
+	David
 
--- 
-Jean Delvare
-SUSE L3 Support
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
