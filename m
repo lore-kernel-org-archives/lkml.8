@@ -2,101 +2,149 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F843C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B509DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFE12224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="etF75RBz"
+	by mail.kernel.org (Postfix) with ESMTP id 9BB712075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHGPzL (ORCPT
+        id S1726721AbgHGPzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:55:11 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:34303 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725993AbgHGPzK (ORCPT
+        Fri, 7 Aug 2020 11:55:33 -0400
+Received: from out28-173.mail.aliyun.com ([115.124.28.173]:38881 "EHLO
+        out28-173.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgHGPzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:55:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596815710; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=mSYxkLsaVq5dfOiTl3Q4gvm7lK+FCJ9JjXvC8E52WmU=;
- b=etF75RBz0uB1AVWs49jkqwS84ye0sNaAOyoMSJAY8mt6c37JZFXpXza4mTdZM2j1O2s+KBVB
- X0qH7vlZSW+qyGRnuM3/e7SQjqtpRCYn2l/b/vsKvs/pOhc0qFHEPlE+XyVVV1VqB1lXhaAf
- lHPQHFhFeaveRMKUnsXcoh0VI4k=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f2d7950247ccc308c5b175b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 07 Aug 2020 15:54:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1A645C433AF; Fri,  7 Aug 2020 15:54:55 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6100FC433C9;
-        Fri,  7 Aug 2020 15:54:54 +0000 (UTC)
+        Fri, 7 Aug 2020 11:55:31 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436521|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0144054-0.000982358-0.984612;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.IE4cuQu_1596815718;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.IE4cuQu_1596815718)
+          by smtp.aliyun-inc.com(10.147.41.137);
+          Fri, 07 Aug 2020 23:55:20 +0800
+Subject: Re: [PATCH] MIPS: CI20: Update defconfig for EFUSE.
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     tsbogend@alpha.franken.de, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, keescook@chromium.org,
+        hns@goldelico.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+References: <20200723071950.130007-1-zhouyanjie@wanyeetech.com>
+ <20200723071950.130007-2-zhouyanjie@wanyeetech.com>
+ <V2ZWDQ.DNM4EVLAB6YN3@crapouillou.net>
+ <b1de1e95-9ce3-1324-346d-07196aa30637@wanyeetech.com>
+ <PIR6EQ.G22CDHRT7D5O@crapouillou.net>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <d8b28bac-8995-23db-816e-31ba1f8d02f3@wanyeetech.com>
+Date:   Fri, 7 Aug 2020 23:55:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Aug 2020 08:54:54 -0700
-From:   tanmay@codeaurora.org
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, robdclark@gmail.com,
-        linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org, Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-Subject: Re: [PATCH v9 3/5] drm/msm/dp: add support for DP PLL driver
-In-Reply-To: <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org>
-References: <20200807071718.17937-1-tanmay@codeaurora.org>
- <20200807071718.17937-4-tanmay@codeaurora.org>
- <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org>
-Message-ID: <29b8d7f281aa69df491bedd1e6b6fac6@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <PIR6EQ.G22CDHRT7D5O@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-07 08:27, Randy Dunlap wrote:
-> On 8/7/20 12:17 AM, Tanmay Shah wrote:
->> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
->> index ea3c4d094d09..cc1392b29022 100644
->> --- a/drivers/gpu/drm/msm/Kconfig
->> +++ b/drivers/gpu/drm/msm/Kconfig
->> @@ -60,6 +60,7 @@ config DRM_MSM_HDMI_HDCP
->>  config DRM_MSM_DP
->>  	bool "Enable DP support in MSM DRM driver"
->>  	depends on DRM_MSM
->> +	default y
->>  	help
->>  	  Compile in support for DP driver in msm drm driver. DP external
->>  	  display support is enabled through this config option. It can
-> 
-> Hi,
-> 
-> You need a very strong justification to make an optional part of a 
-> driver
-> to be "default y".
-> 
-> so why?
-> 
-Thanks Randy for reviews.
-"default y" doesn't belong there. Thanks for pointing that.
-It will be fixed in next patch.
+Hi Paul,
 
-> thanks.
+在 2020/7/28 下午11:40, Paul Cercueil 写道:
+> Hi Zhou,
+>
+> Le sam. 25 juil. 2020 à 16:02, Zhou Yanjie <zhouyanjie@wanyeetech.com> 
+> a écrit :
+>> Hi Paul,
+>>
+>> 在 2020/7/23 下午4:47, Paul Cercueil 写道:
+>>> Hi Zhou,
+>>>
+>>> Le jeu. 23 juil. 2020 à 15:19, 周琰杰 (Zhou Yanjie) 
+>>> <zhouyanjie@wanyeetech.com> a écrit :
+>>>> The commit 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
+>>>> controller use NVMEM to find the default MAC address") add EFUSE
+>>>> node for DM9000 in CI20, however, the EFUSE driver is not selected,
+>>>> which will cause the DM9000 to fail to read the MAC address from
+>>>> EFUSE, causing the following issue:
+>>>>
+>>>> [FAILED] Failed to start Raise network interfaces.
+>>>>
+>>>> Fix this problem by select CONFIG_JZ4780_EFUSE by default in the
+>>>> ci20_defconfig.
+>>>
+>>> Does it actually fix it on a clean 5.8-rc kernel?
+>>>
+>>> From what I know, the efuse driver cannot probe, because the nemc 
+>>> driver requests the complete memory resource, so the efuse driver's 
+>>> devm_platform_ioremap_resource() fails.
+>>>
+>>> I did send a patch to fix this 
+>>> (https://lore.kernel.org/lkml/551a8560261543c1decb1d4d1671ec4b7fa52fdb.1582905653.git.hns@goldelico.com/),
+>>> but it's hard to have somebody merge it, because nobody maintains 
+>>> drivers/memory/.
+>>>
+>> You are right, I cleaned up the changes made to support X1000's EFUSE 
+>> and rebase to clean 5.8-RC6, it still does not work properly, I think 
+>> we should drop this fix patch.
+>
+> The patch I mentioned was merged, so starting from 5.9-rc1 the efuse 
+> driver should work. Please resend this patch after 5.9-rc1 then.
+>
+
+Sure, I will resent when 5.9-rc1 is released.
+
+Thanks and best regards!
+
+> Thanks,
+> -Paul
+>
+>>
+>>>> Fixes: 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
+>>>> controller use NVMEM to find the default MAC address").
+>>>
+>>> That shouldn't be a fix IMHO - the devicetree was updated in one 
+>>> commit, the config should be updated in another. The "bug" here is 
+>>> that it wasn't done right away.
+>>>
+>> Okay.
+>>>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>>>
+>>> Btw - when you add a Fixes: tag to fix a commit that is not for the 
+>>> kernel currently in RC phase, you need to Cc linux-stable as well.
+>>>
+>> Sure, I will pay attention next time.
+>>
+>> Thanks and best regards!
+>>
+>>
+>>> Cheers,
+>>> -Paul
+>>>
+>>>> ---
+>>>>  arch/mips/configs/ci20_defconfig | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/mips/configs/ci20_defconfig 
+>>>> b/arch/mips/configs/ci20_defconfig
+>>>> index f433fad16073..ba26ba4de09a 100644
+>>>> --- a/arch/mips/configs/ci20_defconfig
+>>>> +++ b/arch/mips/configs/ci20_defconfig
+>>>> @@ -140,6 +140,7 @@ CONFIG_INGENIC_OST=y
+>>>>  CONFIG_MEMORY=y
+>>>>  CONFIG_PWM=y
+>>>>  CONFIG_PWM_JZ4740=m
+>>>> +CONFIG_JZ4780_EFUSE=y
+>>>>  CONFIG_EXT4_FS=y
+>>>>  # CONFIG_DNOTIFY is not set
+>>>>  CONFIG_AUTOFS_FS=y
+>>>> -- 
+>>>> 2.11.0
+>>>>
+>>>
+>
