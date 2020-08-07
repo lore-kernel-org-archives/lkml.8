@@ -2,103 +2,94 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B79C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B16C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCA5A2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3B92224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 17:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GhIm2Pa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHGRUf (ORCPT
+        id S1726956AbgHGRU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 13:20:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:60146 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgHGRUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 13:20:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C8641FB;
-        Fri,  7 Aug 2020 10:20:31 -0700 (PDT)
-Received: from net-arm-thunderx2-02.shanghai.arm.com (net-arm-thunderx2-02.shanghai.arm.com [10.169.210.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A05A13F7D7;
-        Fri,  7 Aug 2020 10:20:28 -0700 (PDT)
-From:   Jianlin Lv <Jianlin.Lv@arm.com>
-To:     bpf@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, yhs@fb.com, Jianlin.Lv@arm.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH bpf-next] bpf: fix segmentation fault of test_progs
-Date:   Sat,  8 Aug 2020 01:20:16 +0800
-Message-Id: <20200807172016.150952-1-Jianlin.Lv@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200731061600.18344-1-Jianlin.Lv@arm.com>
-References: <20200731061600.18344-1-Jianlin.Lv@arm.com>
+        Fri, 7 Aug 2020 13:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgHGRU4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 13:20:56 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1888EC061757
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 10:20:55 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id w17so1349319ply.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 10:20:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZmKP+qCzihWJK9dXcNadQFATorS0FHUmvkMi7b8YfMY=;
+        b=GhIm2Pa7v4YxhlXrHy3f/nlqbB1X4jZ2cO8Etlvz9zwHwM00RutEXb0eh+mr4sOATP
+         aLxjs3msffA79SRugYCIpDPFF4XCrcdo2yPLvYsSi1VzP0prKlxDewDF4VO7M7mgBqrQ
+         wBjOViIeaHA0LQo495hDAQ1HNFKtu0yZuJAlw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZmKP+qCzihWJK9dXcNadQFATorS0FHUmvkMi7b8YfMY=;
+        b=q/+MiC9qMohmUj/IfvAULozzdAfL4TNjfsluSeQ+yD39+0hh/aofuxP/aKDlhgmDxG
+         D1JEfySjMSUrY+hI2lszBeM7zTvXaJBnmqGjvY8O915o1vaAWxJFhZBm3QPABB638+MZ
+         SHyQiBDMxqoGPe4xrDjfXn6foCTKPnsCWV/xTP8GkeWDoGFd9CJF+w/mAXvb3nb+B56R
+         pggu4p399vR041pRLiT9LdalhncTBDvZTMHoHTt6OBUUwaDqQKTKJuCA5Zl37SLONMCi
+         QZCqKZcDxPrjuhonWejbjql8zfDjC8i8e1fdGD4CLFg1m8aeA+v0FHGCBKhnDV1m/UJh
+         dwQw==
+X-Gm-Message-State: AOAM532Wvv7RdcPncZ7dok1CPbQSLT4UN/YBVc1UFhhCbOD7oit088xz
+        Ju8DU28ZidqNSjUXbZDRBUG/MQ==
+X-Google-Smtp-Source: ABdhPJyB6OwUfUimb8Uz2hhZTkIwGjClz3vVRtHwCFeTj6wgxCBADhupXVxYQDrplWNO0sPKqpn5Ug==
+X-Received: by 2002:a17:902:8643:: with SMTP id y3mr13409666plt.199.1596820855376;
+        Fri, 07 Aug 2020 10:20:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e29sm4935070pfj.92.2020.08.07.10.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 10:20:54 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 10:20:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, arjan@linux.intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+Message-ID: <202008071019.BF206AE8BD@keescook>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <20200804182359.GA23533@redhat.com>
+ <f8963aab93243bc046791dba6af5d006e15c91ff.camel@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8963aab93243bc046791dba6af5d006e15c91ff.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-test_progs reports the segmentation fault as below
+On Fri, Aug 07, 2020 at 09:38:11AM -0700, Kristen Carlson Accardi wrote:
+> Thanks for testing. Yes, Josh and I have been discussing the orc_unwind
+> issues. I've root caused one issue already, in that objtool places an
+> orc_unwind_ip address just outside the section, so my algorithm fails
+> to relocate this address. There are other issues as well that I still
+> haven't root caused. I'll be addressing this in v5 and plan to have
+> something that passes livepatch testing with that version.
 
-$ sudo ./test_progs -t mmap --verbose
-test_mmap:PASS:skel_open_and_load 0 nsec
-......
-test_mmap:PASS:adv_mmap1 0 nsec
-test_mmap:PASS:adv_mmap2 0 nsec
-test_mmap:PASS:adv_mmap3 0 nsec
-test_mmap:PASS:adv_mmap4 0 nsec
-Segmentation fault
+FWIW, I'm okay with seeing fgkaslr be developed progressively. Getting
+it working with !livepatching would be fine as a first step. There's
+value in getting the general behavior landed, and then continuing to
+improve it.
 
-This issue was triggered because mmap() and munmap() used inconsistent
-length parameters; mmap() creates a new mapping of 3*page_size, but the
-length parameter set in the subsequent re-map and munmap() functions is
-4*page_size; this leads to the destruction of the process space.
-
-Another issue is that when unmap the second page fails, the length
-parameter to delete tmp1 mappings should be 3*page_size.
-
-Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
----
- tools/testing/selftests/bpf/prog_tests/mmap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
-index 43d0b5578f46..2070cfe19cac 100644
---- a/tools/testing/selftests/bpf/prog_tests/mmap.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
-@@ -192,7 +192,7 @@ void test_mmap(void)
- 	/* unmap second page: pages 1, 3 mapped */
- 	err = munmap(tmp1 + page_size, page_size);
- 	if (CHECK(err, "adv_mmap2", "errno %d\n", errno)) {
--		munmap(tmp1, map_sz);
-+		munmap(tmp1, 3 * page_size);
- 		goto cleanup;
- 	}
- 
-@@ -207,8 +207,8 @@ void test_mmap(void)
- 	CHECK(tmp1 + page_size != tmp2, "adv_mmap4",
- 	      "tmp1: %p, tmp2: %p\n", tmp1, tmp2);
- 
--	/* re-map all 4 pages */
--	tmp2 = mmap(tmp1, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
-+	/* re-map all 3 pages */
-+	tmp2 = mmap(tmp1, 3 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
- 		    data_map_fd, 0);
- 	if (CHECK(tmp2 == MAP_FAILED, "adv_mmap5", "errno %d\n", errno)) {
- 		munmap(tmp1, 3 * page_size); /* unmap page 1 */
-@@ -226,7 +226,7 @@ void test_mmap(void)
- 	CHECK_FAIL(map_data->val[2] != 321);
- 	CHECK_FAIL(map_data->val[far] != 3 * 321);
- 
--	munmap(tmp2, 4 * page_size);
-+	munmap(tmp2, 3 * page_size);
- 
- 	/* map all 4 pages, but with pg_off=1 page, should fail */
- 	tmp1 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
 -- 
-2.17.1
-
+Kees Cook
