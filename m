@@ -2,160 +2,212 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C95C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D94C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE1A02086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529EF2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wF2sKYSC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kHFrwOCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgHGVaA (ORCPT
+        id S1727891AbgHGVaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 17:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
+        Fri, 7 Aug 2020 17:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbgHGV3r (ORCPT
+        with ESMTP id S1727831AbgHGV3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 17:29:47 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE802C061A31
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:29:42 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id f59so2593663qtb.22
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:29:42 -0700 (PDT)
+        Fri, 7 Aug 2020 17:29:54 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E880C061A2D
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:29:53 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o23so3507546ejr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O7nU7lYRfe2R9ziGF333WHlsyARaR/Q4/HWduypodHg=;
-        b=wF2sKYSCPfS1oM0NH0xBupgB1N/FqdnAiRnprzF9CglUuoj8PFS0W/tP4/W0GJPNuX
-         TyrQaJi9YYWikcZeI0piuRjIgi7S5jtC+iCUMgx8SN14rfqmKY7koAozdgACk/O4WfVJ
-         yv7+JzWcCmipUuyAMJMfzjLlkCoyIjH1rZVL2QfDcg/SnWLNI8ygMAJbmEQc4uzHhanr
-         cOazUENtE+ArWoT9JNvMKb2ZhVEp8J8eXYoSQYPithEBghTam0jogYR9DsEv5IJ8i0zG
-         nhl2W24qoGsirdUwqm7iXnLP0F2QVNElE3cyh5qkdYDPSSJRi85rrFJtgQ3oy1s4p4h+
-         sSCQ==
+        bh=fDDWZstNpjGOtdGZCLFEkYVcrKkQad8l/sIeiWx0PNA=;
+        b=kHFrwOCm6+H+Lg18Azi6wrn6sp7VnwHKw1qI4a4DgR+2tVfsZWWKguiTnjvT//xN5m
+         +s9DfRDsLw8w887oSLClL8uUsRIm2zFWNFSWNKeboOq3831NZe/9N+n5q54bwRWTy6RP
+         PhMZZMCgFwBpUwFvhCUk94uzEWzm1PLiMKV38=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=O7nU7lYRfe2R9ziGF333WHlsyARaR/Q4/HWduypodHg=;
-        b=l32UTayfYQtFXB+F0BYTizZBh1kf6QN+QtpiwxDNKOrojSXzkfyIz98JPDn7vquqoP
-         oq/SYjOSo1nB+DKYrIgV5d7DDqaRfiFm1XU562lli5EsEhXh0Y00A9nm9I3rkGLB3gJh
-         XdBqmeH0KbexHOINMgjjvmHAFy3nbkOZgg0PyWjXMgiTxUN6G5GRHQwb+vYmSkQlo8Ak
-         x4Sddo7WF3m5npktMctAReiJIGGnMlxuDu5DMHCAZbVe29sPinNpOXPSLfVkCMzXPsEJ
-         PNjVgCXSUAKV1ZUc8wXxYM1eS2kPlKeUQIPW/VOfNawwK2Xa1GlVBtS3DQqqDNZgbfi9
-         MyZQ==
-X-Gm-Message-State: AOAM5336OYdxm/aY/qFGGC/MYq0Zi3Jz3W5zhoLhaaLSob7MoBECPqGn
-        ppv+HEIi0Zvssqr+AwgNFyJVXnsrNm0o2zCttwrMcQYltDiRiH1oCW4E6F8rlJBa/BKGvhwEFlX
-        S39kSqezn/5t50iBk87TSbmpclbyTYgANsoNF0Mg4bCbaevqmvMS8n16ugjOxMSG7JF6C9PQ=
-X-Google-Smtp-Source: ABdhPJwX9D4en+hACeaFijzp6xuG9EX9sqMK2d3+XO8tWnEdN3dt94ChhAurZV3Fxr5jxFzwH9+/rqq5AG1s
-X-Received: by 2002:a05:6214:11a8:: with SMTP id u8mr15191510qvv.88.1596835781537;
- Fri, 07 Aug 2020 14:29:41 -0700 (PDT)
-Date:   Fri,  7 Aug 2020 14:29:13 -0700
-In-Reply-To: <20200807212916.2883031-1-jwadams@google.com>
-Message-Id: <20200807212916.2883031-5-jwadams@google.com>
-Mime-Version: 1.0
-References: <20200807212916.2883031-1-jwadams@google.com>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [RFC PATCH 4/7] core/metricfs: expose softirq information through metricfs
-From:   Jonathan Adams <jwadams@google.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jim Mattson <jmattson@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fDDWZstNpjGOtdGZCLFEkYVcrKkQad8l/sIeiWx0PNA=;
+        b=CUawkqeqNh7CqJ1FpRN0RaA8osxpeXASY/ivJ7JpqWcU3aKxZEJeMCmg31oHlBhfia
+         kImIq3DcB3En1UfKo9JLduR0NXtjPkzbyHDxNzBrytnlXPAuXzQzqvUVzrilB5e+fvCD
+         6XQ+TwAGIqg0n/l/XkorVXlLEYhgdMSW0M7TiGWZJR6Qq4VVS5fuWyQ+tU55nGyD8Fdy
+         bpV37iUjYEjit3housIMBTEc6A5Bf4ZRtKht/2akE3NdYQ4seXOwdrMSivbKFQQcprzj
+         r3TsBvSBuovdFidTVn6H/TbWBO+dqf01v/d2MqIB4LPawQTJ8N4w/jM4DF6HC+j9Pztp
+         jPFw==
+X-Gm-Message-State: AOAM5338Za8AX+l2WKUSHv0VcxIXOnbHoH4dkFxBfZ44SgzT7CEIB7i5
+        ci4EM/LO4+Xt0VkjepVKqXi9kdtdGCc=
+X-Google-Smtp-Source: ABdhPJy42kcYlw30MFe5Ox0ifmsYOXWd0Rm1TwaviYYfKu9DRbYJCE3MRPup5A8tTbRCLwr4CKgs5g==
+X-Received: by 2002:a17:906:4f8f:: with SMTP id o15mr10977663eju.220.1596835791824;
+        Fri, 07 Aug 2020 14:29:51 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id ch24sm6514256ejb.7.2020.08.07.14.29.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 14:29:51 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id f18so9455477wmc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:29:51 -0700 (PDT)
+X-Received: by 2002:a7b:cb50:: with SMTP id v16mr10118993wmj.11.1596835790795;
+ Fri, 07 Aug 2020 14:29:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200730114632.6717-1-stanimir.varbanov@linaro.org> <20200730114632.6717-4-stanimir.varbanov@linaro.org>
+In-Reply-To: <20200730114632.6717-4-stanimir.varbanov@linaro.org>
+From:   Fritz Koenig <frkoenig@chromium.org>
+Date:   Fri, 7 Aug 2020 14:29:38 -0700
+X-Gmail-Original-Message-ID: <CAMfZQbxXdNZV8e9o+=0oZ2rvM-QGJwuJpMiMmsQQ7NhG8Y35=w@mail.gmail.com>
+Message-ID: <CAMfZQbxXdNZV8e9o+=0oZ2rvM-QGJwuJpMiMmsQQ7NhG8Y35=w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] venus: Add new interface queues reinit
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add metricfs support for displaying percpu softirq counters.  The
-top directory is /sys/kernel/debug/metricfs/softirq.  Then there
-is a subdirectory for each softirq type.  For example:
-
-    cat /sys/kernel/debug/metricfs/softirq/NET_RX/values
-
-Signed-off-by: Jonathan Adams <jwadams@google.com>
-
----
-
-jwadams@google.com: rebased to 5.8-pre6
-	This is work originally done by another engineer at
-	google, who would rather not have their name associated with this
-	patchset. They're okay with me sending it under my name.
----
- kernel/softirq.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index c4201b7f42b1..1ae3a540b789 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -25,6 +25,8 @@
- #include <linux/smpboot.h>
- #include <linux/tick.h>
- #include <linux/irq.h>
-+#include <linux/jump_label.h>
-+#include <linux/metricfs.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/irq.h>
-@@ -738,3 +740,46 @@ unsigned int __weak arch_dynirq_lower_bound(unsigned int from)
- {
- 	return from;
- }
-+
-+#ifdef CONFIG_METRICFS
-+
-+#define METRICFS_ITEM(name) \
-+static void \
-+metricfs_##name(struct metric_emitter *e, int cpu) \
-+{ \
-+	int64_t v = kstat_softirqs_cpu(name##_SOFTIRQ, cpu); \
-+	METRIC_EMIT_PERCPU_INT(e, cpu, v); \
-+} \
-+METRIC_EXPORT_PERCPU_COUNTER(name, #name " softirq", metricfs_##name)
-+
-+METRICFS_ITEM(HI);
-+METRICFS_ITEM(TIMER);
-+METRICFS_ITEM(NET_TX);
-+METRICFS_ITEM(NET_RX);
-+METRICFS_ITEM(BLOCK);
-+METRICFS_ITEM(IRQ_POLL);
-+METRICFS_ITEM(TASKLET);
-+METRICFS_ITEM(SCHED);
-+METRICFS_ITEM(HRTIMER);
-+METRICFS_ITEM(RCU);
-+
-+static int __init init_softirq_metricfs(void)
-+{
-+	struct metricfs_subsys *subsys;
-+
-+	subsys = metricfs_create_subsys("softirq", NULL);
-+	metric_init_HI(subsys);
-+	metric_init_TIMER(subsys);
-+	metric_init_NET_TX(subsys);
-+	metric_init_NET_RX(subsys);
-+	metric_init_BLOCK(subsys);
-+	metric_init_IRQ_POLL(subsys);
-+	metric_init_TASKLET(subsys);
-+	metric_init_SCHED(subsys);
-+	metric_init_RCU(subsys);
-+
-+	return 0;
-+}
-+module_init(init_softirq_metricfs);
-+
-+#endif
--- 
-2.28.0.236.gb10cc79966-goog
-
+On Thu, Jul 30, 2020 at 4:47 AM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+> Presently the recovery mechanism is using two hfi functions
+> to destroy and create interface queues. For the purpose of
+> recovery we don't need to free and allocate the memory used
+> for interface message queues, that's why we introduce new
+> function which just reinit the queues.  Also this will give
+> to the recovery procedure one less reason to fail (if for
+> some reason we couldn't allocate memory).
+>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c      |  3 +-
+>  drivers/media/platform/qcom/venus/hfi.c       |  5 ++
+>  drivers/media/platform/qcom/venus/hfi.h       |  1 +
+>  drivers/media/platform/qcom/venus/hfi_venus.c | 51 +++++++++++++++++++
+>  drivers/media/platform/qcom/venus/hfi_venus.h |  1 +
+>  5 files changed, 59 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 46f6e34d435a..eda8f35425df 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -72,8 +72,7 @@ static void venus_sys_error_handler(struct work_struct *work)
+>         while (core->pmdomains[0] && pm_runtime_active(core->pmdomains[0]))
+>                 usleep_range(1000, 1500);
+>
+> -       hfi_destroy(core);
+> -       ret |= hfi_create(core, &venus_core_ops);
+> +       hfi_reinit(core);
+>
+>         pm_runtime_get_sync(core->dev);
+>
+> diff --git a/drivers/media/platform/qcom/venus/hfi.c b/drivers/media/platform/qcom/venus/hfi.c
+> index a211eb93e0f9..a59022adb14c 100644
+> --- a/drivers/media/platform/qcom/venus/hfi.c
+> +++ b/drivers/media/platform/qcom/venus/hfi.c
+> @@ -517,3 +517,8 @@ void hfi_destroy(struct venus_core *core)
+>  {
+>         venus_hfi_destroy(core);
+>  }
+> +
+> +void hfi_reinit(struct venus_core *core)
+> +{
+> +       venus_hfi_queues_reinit(core);
+> +}
+> diff --git a/drivers/media/platform/qcom/venus/hfi.h b/drivers/media/platform/qcom/venus/hfi.h
+> index 62c315291484..f25d412d6553 100644
+> --- a/drivers/media/platform/qcom/venus/hfi.h
+> +++ b/drivers/media/platform/qcom/venus/hfi.h
+> @@ -145,6 +145,7 @@ struct hfi_ops {
+>
+>  int hfi_create(struct venus_core *core, const struct hfi_core_ops *ops);
+>  void hfi_destroy(struct venus_core *core);
+> +void hfi_reinit(struct venus_core *core);
+>
+>  int hfi_core_init(struct venus_core *core);
+>  int hfi_core_deinit(struct venus_core *core, bool blocking);
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index 3392fd177d22..90067cd8c892 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -1603,3 +1603,54 @@ int venus_hfi_create(struct venus_core *core)
+>         core->ops = NULL;
+>         return ret;
+>  }
+> +
+> +void venus_hfi_queues_reinit(struct venus_core *core)
+> +{
+> +       struct venus_hfi_device *hdev = to_hfi_priv(core);
+> +       struct hfi_queue_table_header *tbl_hdr;
+> +       struct iface_queue *queue;
+> +       struct hfi_sfr *sfr;
+> +       unsigned int i;
+> +
+> +       mutex_lock(&hdev->lock);
+> +
+> +       for (i = 0; i < IFACEQ_NUM; i++) {
+> +               queue = &hdev->queues[i];
+> +               queue->qhdr =
+> +                       IFACEQ_GET_QHDR_START_ADDR(hdev->ifaceq_table.kva, i);
+> +
+> +               venus_set_qhdr_defaults(queue->qhdr);
+> +
+> +               queue->qhdr->start_addr = queue->qmem.da;
+> +
+> +               if (i == IFACEQ_CMD_IDX)
+> +                       queue->qhdr->type |= HFI_HOST_TO_CTRL_CMD_Q;
+> +               else if (i == IFACEQ_MSG_IDX)
+> +                       queue->qhdr->type |= HFI_CTRL_TO_HOST_MSG_Q;
+> +               else if (i == IFACEQ_DBG_IDX)
+> +                       queue->qhdr->type |= HFI_CTRL_TO_HOST_DBG_Q;
+> +       }
+> +
+> +       tbl_hdr = hdev->ifaceq_table.kva;
+> +       tbl_hdr->version = 0;
+> +       tbl_hdr->size = IFACEQ_TABLE_SIZE;
+> +       tbl_hdr->qhdr0_offset = sizeof(struct hfi_queue_table_header);
+> +       tbl_hdr->qhdr_size = sizeof(struct hfi_queue_header);
+> +       tbl_hdr->num_q = IFACEQ_NUM;
+> +       tbl_hdr->num_active_q = IFACEQ_NUM;
+> +
+> +       /*
+> +        * Set receive request to zero on debug queue as there is no
+> +        * need of interrupt from video hardware for debug messages
+> +        */
+> +       queue = &hdev->queues[IFACEQ_DBG_IDX];
+> +       queue->qhdr->rx_req = 0;
+> +
+> +       sfr = hdev->sfr.kva;
+> +       sfr->buf_size = ALIGNED_SFR_SIZE;
+> +
+> +       /* ensure table and queue header structs are settled in memory */
+> +       wmb();
+> +
+> +       mutex_unlock(&hdev->lock);
+> +}
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.h b/drivers/media/platform/qcom/venus/hfi_venus.h
+> index 57154832090e..1b656ef2bf07 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.h
+> @@ -10,5 +10,6 @@ struct venus_core;
+>
+>  void venus_hfi_destroy(struct venus_core *core);
+>  int venus_hfi_create(struct venus_core *core);
+> +void venus_hfi_queues_reinit(struct venus_core *core);
+>
+>  #endif
+> --
+> 2.17.1
+>
+Reviewed-by: Fritz Koenig <frkoenig@chromium.org>
