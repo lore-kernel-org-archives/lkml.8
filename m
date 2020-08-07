@@ -2,297 +2,226 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEF1221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3456B221E5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="omKXMc7x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqRDp1KI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgHGHp5 (ORCPT
+        id S1727790AbgHGHqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:45:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17654 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727079AbgHGHpx (ORCPT
+        Fri, 7 Aug 2020 03:46:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgHGHp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:45:53 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0777VYKW083756;
-        Fri, 7 Aug 2020 03:45:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=aUlNL7sr0ua7PsthmyzDvPCr3i3J9piy9BAkH+ZcaXs=;
- b=omKXMc7xADJ6av7ZYWwzKaKFvp/9fMaNOOOm0V1BqOhEXydtUq81eaeamMm/iuEYUCpI
- 5MlI3N80cGxOdU8T2Jf5ooJX5wXLA47dpj+gEbrNrsPz9tNDaz6cyf8dLABmX1uv0Ldo
- 3Da2ef3wNMZdm5D1Rvf8M5khcEWokhisIPH8gN9FToCci23q6j1LryvMNFMrWW/r/haF
- CeXk8tsM75HglKMmTy3+r6NPaEzGIQ2YXM277LKAeI+nrUgZfERp0m+3bxeRLh1+ho6w
- AbDZBiT9636XmE035GiBKi9c+Of6/ywRJsH0/bpEOIdmNRSd4StXWHMk06eom82MUR/F SQ== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32rnu9meuj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 03:45:34 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0777fTOP013194;
-        Fri, 7 Aug 2020 07:45:32 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06fra.de.ibm.com with ESMTP id 32mynhbwrv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 07:45:32 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0777jUVe31195456
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Aug 2020 07:45:30 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5993CAE053;
-        Fri,  7 Aug 2020 07:45:30 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6F79AE056;
-        Fri,  7 Aug 2020 07:45:26 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.199.45.118])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Aug 2020 07:45:26 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: [PATCH v2 2/2] powerpc/topology: Override cpu_smt_mask
-Date:   Fri,  7 Aug 2020 13:15:17 +0530
-Message-Id: <20200807074517.27957-2-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200807074517.27957-1-srikar@linux.vnet.ibm.com>
-References: <20200807074517.27957-1-srikar@linux.vnet.ibm.com>
+        Fri, 7 Aug 2020 03:45:57 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41669C061574;
+        Fri,  7 Aug 2020 00:45:57 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id v22so655143qtq.8;
+        Fri, 07 Aug 2020 00:45:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EHg5gQL7O9H3weXw7HumbisNzK8ZK1pZS93c4xfkxlw=;
+        b=uqRDp1KIdnjSSjtURugjUs7jkmnhxCRyrgfRIIZf1YYf/7ZfupoiudHXsjSreOhhuc
+         U8jJjKe/4ED7VQ1QlcKM0N+c6wuXWdbG3n7evxSilXOEnx3YohBiJNaFkz6Sf378rjOJ
+         QUmJ8wIy4lV4Q+p72A4PzfWBqe3YFjrawnqzaOB7G8RpKecVZKgM0mn09TnnFRDkcQNR
+         9+5QZOs1lunqu1PGB2f6fybQV+syDzCPEHA2DhVowKfc0yUCWvFGeAktDL64suYKLVj8
+         pZ79ehd/o+xD55aJ8VHvC4Ok6QmpFh/ZY6bvkT8X/D6KYropzSelBS462edLarB4pJA4
+         nikQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EHg5gQL7O9H3weXw7HumbisNzK8ZK1pZS93c4xfkxlw=;
+        b=W57DO/j6IHTyl8hVUYnilT7lzxC5jblmkNLYXmksQJfaAhq1uMqrsP+pjHxwcyYVe6
+         YVSw6P2ioQt6H8ollFEla18BENh/eD7VPjcWV7JcBQ3CDMbX6r/7DvoAXt1O21EHStPt
+         njOC4/zl8WbJM2xm6TrnpdHGl4edJQNaWlyhcfCO85eQfRm4mHBgAm6XciCAce+rnKVZ
+         5b7c+AYuU02AgiV194YwOLkQh0CL2r+ZjwzEuLvPPSpotvGFWkzASLQrej+a2DMfzHB5
+         xHZRCszJhrVj/WbWQhsWutRdwK6/MMgOYHkLbRXNT5wcgbhzcNFQJt4lgYKEVQHZNQae
+         sSHg==
+X-Gm-Message-State: AOAM530OmCk0X1HtlPdHwKADmcy0bSzDNS38RIm/YrJ+eoJxhcbrcTcH
+        pN7BmByo4b75DkYZg8O5pkA=
+X-Google-Smtp-Source: ABdhPJwY1AX/Fv/EgjsxEtaqA6v1Uve/wyfVkvlK0t858bI04DX2OWrsx5mE1bs5Vf/bYdK+2a/Gxw==
+X-Received: by 2002:aed:36aa:: with SMTP id f39mr13334366qtb.297.1596786356574;
+        Fri, 07 Aug 2020 00:45:56 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id a67sm6388744qkd.40.2020.08.07.00.45.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Aug 2020 00:45:56 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id B92B027C0054;
+        Fri,  7 Aug 2020 03:45:55 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:45:55 -0400
+X-ME-Sender: <xms:swYtX6FKbO5nD5m6fW_eQO-lYf1NyIjYDmUJiE8WOsqKbvvRbc3L0w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
+    ueelnecukfhppeduudegrdekhedrudektddrvdduheenucevlhhushhtvghrufhiiigvpe
+    ehnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
+    vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnpe
+    epfhhigihmvgdrnhgrmhgvsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:swYtX7WIioF3CT8tgFMeD-eAZ9xtJ61uVj1Rz8fktwUQOKOA9j6BAA>
+    <xmx:swYtX0IrC5NZOf1iJRbRa1aw-HZShrFyAIcF2xcXj7AkoF_K8LQ2Gw>
+    <xmx:swYtX0EjWgYlA2VRkNbe1wQP9g9CGqPPi2rDpVMyFqgHSCMPAnQzYA>
+    <xmx:swYtX-xWu_YncJDfiZInBntq51c-WNQcrRdwnLZ7I-AKihHPLMuLbw>
+Received: from localhost (unknown [114.85.180.215])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E90363060067;
+        Fri,  7 Aug 2020 03:45:53 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [RFC v7 15/19] lockdep/selftest: Unleash irq_read_recursion2 and add more
+Date:   Fri,  7 Aug 2020 15:42:34 +0800
+Message-Id: <20200807074238.1632519-16-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200807074238.1632519-1-boqun.feng@gmail.com>
+References: <20200807074238.1632519-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-07_02:2020-08-06,2020-08-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
- impostorscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008070051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Power9, a pair of SMT4 cores can be presented by the firmware as a SMT8
-core for backward compatibility reasons, with the fusion of two SMT4 cores.
-Powerpc allows LPARs to be live migrated from Power8 to Power9.  Existing
-software developed/configured for Power8, expects to see a SMT8 core.
+Now since we can handle recursive read related irq inversion deadlocks
+correctly, uncomment the irq_read_recursion2 and add more testcases.
 
-In order to maintain userspace backward compatibility (with Power8 chips in
-case of Power9) in enterprise Linux systems, the topology_sibling_cpumask
-has to be set to SMT8 core.
-
-cpu_smt_mask() should generally point to the cpu mask of the SMT4 core.
-Hence override the default cpu_smt_mask() to be powerpc specific
-allowing for better scheduling behaviour on Power.
-
-schbench
-(latency measured in usecs, so lesser is better)
-Without patch                   With patch
-Latency percentiles (usec)	Latency percentiles (usec)
-	50.0000th: 34           	50.0000th: 38
-	75.0000th: 47           	75.0000th: 52
-	90.0000th: 54           	90.0000th: 60
-	95.0000th: 57           	95.0000th: 64
-	*99.0000th: 62          	*99.0000th: 72
-	99.5000th: 65           	99.5000th: 75
-	99.9000th: 76           	99.9000th: 3452
-	min=0, max=9205         	min=0, max=9344
-
-schbench (With Cede disabled)
-Without patch                   With patch
-Latency percentiles (usec) 	Latency percentiles (usec)
-	50.0000th: 20           	50.0000th: 21
-	75.0000th: 28           	75.0000th: 29
-	90.0000th: 33           	90.0000th: 34
-	95.0000th: 35           	95.0000th: 37
-	*99.0000th: 40          	*99.0000th: 40
-	99.5000th: 48           	99.5000th: 42
-	99.9000th: 94           	99.9000th: 79
-	min=0, max=791          	min=0, max=791
-
-perf bench sched pipe
-usec/ops : lesser is better
-Without patch
-  N           Min           Max        Median           Avg        Stddev
-101      5.095113      5.595269      5.204842     5.2298776    0.10762713
-
-5.10 - 5.15 : ##################################################   23% (24)
-5.15 - 5.20 : #############################################        21% (22)
-5.20 - 5.25 : ##################################################   23% (24)
-5.25 - 5.30 : #########################                            11% (12)
-5.30 - 5.35 : ##########                                            4% (5)
-5.35 - 5.40 : ########                                              3% (4)
-5.40 - 5.45 : ########                                              3% (4)
-5.45 - 5.50 : ####                                                  1% (2)
-5.50 - 5.55 : ##                                                    0% (1)
-5.55 - 5.60 : ####                                                  1% (2)
-
-With patch
-  N           Min           Max        Median           Avg        Stddev
-101      5.134675      8.524719      5.207658     5.2780985    0.34911969
-
-5.1 - 5.5 : ##################################################   94% (95)
-5.5 - 5.8 : ##                                                    3% (4)
-5.8 - 6.2 :                                                       0% (1)
-6.2 - 6.5 :
-6.5 - 6.8 :
-6.8 - 7.2 :
-7.2 - 7.5 :
-7.5 - 7.8 :
-7.8 - 8.2 :
-8.2 - 8.5 :
-
-perf bench sched pipe (cede disabled)
-usec/ops : lesser is better
-Without patch
-  N           Min           Max        Median           Avg        Stddev
-101      7.884227     12.576538      7.956474     8.0170722    0.46159054
-
-7.9 - 8.4 : ##################################################   99% (100)
-8.4 - 8.8 :
-8.8 - 9.3 :
-9.3 - 9.8 :
-9.8 - 10.2 :
-10.2 - 10.7 :
-10.7 - 11.2 :
-11.2 - 11.6 :
-11.6 - 12.1 :
-12.1 - 12.6 :
-
-With patch
-  N           Min           Max        Median           Avg        Stddev
-101      7.956021      8.217284      8.015615     8.0283866   0.049844967
-
-7.96 - 7.98 : ######################                               12% (13)
-7.98 - 8.01 : ##################################################   28% (29)
-8.01 - 8.03 : ####################################                 20% (21)
-8.03 - 8.06 : #########################                            14% (15)
-8.06 - 8.09 : ######################                               12% (13)
-8.09 - 8.11 : ######                                                3% (4)
-8.11 - 8.14 : ###                                                   1% (2)
-8.14 - 8.17 : ###                                                   1% (2)
-8.17 - 8.19 :
-8.19 - 8.22 : #                                                     0% (1)
-
-Observations: With the patch, the initial run/iteration takes a slight
-longer time. This can be attributed to the fact that now we pick a CPU
-from a idle core which could be sleep mode. Once we remove the cede,
-state the numbers improve in favour of the patch.
-
-ebizzy:
-transactions per second (higher is better)
-without patch
-  N           Min           Max        Median           Avg        Stddev
-100       1018433       1304470       1193208     1182315.7     60018.733
-
-1018433 - 1047037 : ######                                                3% (3)
-1047037 - 1075640 : ########                                              4% (4)
-1075640 - 1104244 : ########                                              4% (4)
-1104244 - 1132848 : ###############                                       7% (7)
-1132848 - 1161452 : ####################################                 17% (17)
-1161452 - 1190055 : ##########################                           12% (12)
-1190055 - 1218659 : #############################################        21% (21)
-1218659 - 1247263 : ##################################################   23% (23)
-1247263 - 1275866 : ########                                              4% (4)
-1275866 - 1304470 : ########                                              4% (4)
-
-with patch
-  N           Min           Max        Median           Avg        Stddev
-100        967014       1292938       1208819     1185281.8     69815.851
-
- 967014 - 999606  : ##                                                    1% (1)
- 999606 - 1032199 : ##                                                    1% (1)
-1032199 - 1064791 : ############                                          6% (6)
-1064791 - 1097384 : ##########                                            5% (5)
-1097384 - 1129976 : ##################                                    9% (9)
-1129976 - 1162568 : ####################                                 10% (10)
-1162568 - 1195161 : ##########################                           13% (13)
-1195161 - 1227753 : ############################################         22% (22)
-1227753 - 1260346 : ##################################################   25% (25)
-1260346 - 1292938 : ##############                                        7% (7)
-
-Observations: Not much changes, ebizzy is not much impacted.
-
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
-Changelog v1->v2:
-	Modified commit msg as per mailing list discussion.
-	Added performance numbers
+ lib/locking-selftest.c | 59 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 47 insertions(+), 12 deletions(-)
 
- arch/powerpc/include/asm/cputhreads.h |  1 -
- arch/powerpc/include/asm/smp.h        | 13 +++++++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/cputhreads.h b/arch/powerpc/include/asm/cputhreads.h
-index deb99fd6e060..98c8bd155bf9 100644
---- a/arch/powerpc/include/asm/cputhreads.h
-+++ b/arch/powerpc/include/asm/cputhreads.h
-@@ -23,7 +23,6 @@
- extern int threads_per_core;
- extern int threads_per_subcore;
- extern int threads_shift;
--extern bool has_big_cores;
- extern cpumask_t threads_core_mask;
- #else
- #define threads_per_core	1
-diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-index 9cd0765633c5..bb06aa875131 100644
---- a/arch/powerpc/include/asm/smp.h
-+++ b/arch/powerpc/include/asm/smp.h
-@@ -131,6 +131,19 @@ static inline struct cpumask *cpu_smallcore_mask(int cpu)
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index 002d1ec09852..f65a658cc9e3 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -1053,20 +1053,28 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_inversion_soft_wlock)
+ #define E3()				\
+ 					\
+ 	IRQ_ENTER();			\
+-	RL(A);				\
++	LOCK(A);			\
+ 	L(B);				\
+ 	U(B);				\
+-	RU(A);				\
++	UNLOCK(A);			\
+ 	IRQ_EXIT();
  
- extern int cpu_to_core_id(int cpu);
+ /*
+- * Generate 12 testcases:
++ * Generate 24 testcases:
+  */
+ #include "locking-selftest-hardirq.h"
+-GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_hard)
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_hard_rlock)
++
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_hard_wlock)
  
-+extern bool has_big_cores;
+ #include "locking-selftest-softirq.h"
+-GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft)
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft_rlock)
 +
-+#define cpu_smt_mask cpu_smt_mask
-+#ifdef CONFIG_SCHED_SMT
-+static inline const struct cpumask *cpu_smt_mask(int cpu)
-+{
-+	if (has_big_cores)
-+		return per_cpu(cpu_smallcore_map, cpu);
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft_wlock)
+ 
+ #undef E1
+ #undef E2
+@@ -1080,8 +1088,8 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft)
+ 					\
+ 	IRQ_DISABLE();			\
+ 	L(B);				\
+-	WL(A);				\
+-	WU(A);				\
++	LOCK(A);			\
++	UNLOCK(A);			\
+ 	U(B);				\
+ 	IRQ_ENABLE();
+ 
+@@ -1098,13 +1106,21 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft)
+ 	IRQ_EXIT();
+ 
+ /*
+- * Generate 12 testcases:
++ * Generate 24 testcases:
+  */
+ #include "locking-selftest-hardirq.h"
+-// GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_hard)
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_hard_rlock)
 +
-+	return per_cpu(cpu_sibling_map, cpu);
-+}
-+#endif /* CONFIG_SCHED_SMT */
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_hard_wlock)
+ 
+ #include "locking-selftest-softirq.h"
+-// GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft)
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_rlock)
 +
- /* Since OpenPIC has only 4 IPIs, we use slightly different message numbers.
-  *
-  * Make sure this matches openpic_request_IPIs in open_pic.c, or what shows up
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_wlock)
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ # define I_SPINLOCK(x)	lockdep_reset_lock(&lock_##x.dep_map)
+@@ -1257,6 +1273,25 @@ static inline void print_testname(const char *testname)
+ 	dotest(name##_rlock_##nr, SUCCESS, LOCKTYPE_RWLOCK);	\
+ 	pr_cont("\n");
+ 
++#define DO_TESTCASE_2RW(desc, name, nr)				\
++	print_testname(desc"/"#nr);				\
++	pr_cont("      |");					\
++	dotest(name##_wlock_##nr, FAILURE, LOCKTYPE_RWLOCK);	\
++	dotest(name##_rlock_##nr, SUCCESS, LOCKTYPE_RWLOCK);	\
++	pr_cont("\n");
++
++#define DO_TESTCASE_2x2RW(desc, name, nr)			\
++	DO_TESTCASE_2RW("hard-"desc, name##_hard, nr)		\
++	DO_TESTCASE_2RW("soft-"desc, name##_soft, nr)		\
++
++#define DO_TESTCASE_6x2x2RW(desc, name)				\
++	DO_TESTCASE_2x2RW(desc, name, 123);			\
++	DO_TESTCASE_2x2RW(desc, name, 132);			\
++	DO_TESTCASE_2x2RW(desc, name, 213);			\
++	DO_TESTCASE_2x2RW(desc, name, 231);			\
++	DO_TESTCASE_2x2RW(desc, name, 312);			\
++	DO_TESTCASE_2x2RW(desc, name, 321);
++
+ #define DO_TESTCASE_6(desc, name)				\
+ 	print_testname(desc);					\
+ 	dotest(name##_spin, FAILURE, LOCKTYPE_SPIN);		\
+@@ -2121,8 +2156,8 @@ void locking_selftest(void)
+ 	DO_TESTCASE_6x6("safe-A + unsafe-B #2", irqsafe4);
+ 	DO_TESTCASE_6x6RW("irq lock-inversion", irq_inversion);
+ 
+-	DO_TESTCASE_6x2("irq read-recursion", irq_read_recursion);
+-//	DO_TESTCASE_6x2B("irq read-recursion #2", irq_read_recursion2);
++	DO_TESTCASE_6x2x2RW("irq read-recursion", irq_read_recursion);
++	DO_TESTCASE_6x2x2RW("irq read-recursion #2", irq_read_recursion2);
+ 
+ 	ww_tests();
+ 
 -- 
-2.18.2
+2.28.0
 
