@@ -2,106 +2,189 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E14C22CB3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596800155;
-	bh=tB44LrcAJ3NxEYYWCxVL/xdN1g4mPUOLKmrBE/LmCZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vvFXXcJIXS4TWA9forSzuGpRmZ43SKXDEpIs/hVewYHI86VvMCjlBkgaMr+jC56mH
-	 aIR2AuT+37MKbqJHewOwdL13Lvxvr7R/ojsmkm9P2Epgv4+SCXsI9806MGZb6BtkwJ
-	 xuIpnVnzVwt1b/gAUGVT+Ke3DRgNlWrx6J9dwhW4=
+	by mail.kernel.org (Postfix) with ESMTP id 4F6E922C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgHGLfy (ORCPT
+        id S1728371AbgHGLhB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:35:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgHGLfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 07:35:53 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE2522C9F;
-        Fri,  7 Aug 2020 11:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596800152;
-        bh=tB44LrcAJ3NxEYYWCxVL/xdN1g4mPUOLKmrBE/LmCZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=adPdvx7BNkN3vzleYgFgdh5QTP1V3DG3dm6nNmuWVM8gkbIiTTFCE48YedudEmH4P
-         X6lzhSZuMMswEMloGb/39wFETPqu1rkcW6m5xnQg/jknYdA3B25xVAZg4N6Mc5/AfX
-         fSwa0ZcfFidwfuu3qxrr1xB0vJ7CvrA1LEk8tSfo=
-Date:   Fri, 7 Aug 2020 12:35:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v2 18/41] ARM: s5pv210: don't imply CONFIG_PLAT_SAMSUNG
-Message-ID: <20200807113528.GE5435@sirena.org.uk>
-References: <20200806181932.2253-1-krzk@kernel.org>
- <20200806182059.2431-18-krzk@kernel.org>
+        Fri, 7 Aug 2020 07:37:01 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:43049 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgHGLg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 07:36:59 -0400
+Received: by mail-oo1-f65.google.com with SMTP id z10so353625ooi.10;
+        Fri, 07 Aug 2020 04:36:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XXMM2VmPbdzScEgaWzC2c7QfQOtrLAuTY8gvz9Vc4VA=;
+        b=i2+bmzm6DH1N21mIeZptUZA7++/9Dot11W8Go1vfnZmv6NLxFyMUQ3NYRJuC/9zZy6
+         JX/bJkajC04xQ0mBs4txh8Yn7UV9MSBsecOVOhqPddopu6nuxkL6IbMmaXS/xAMW5Mvd
+         nv3umyDWILaKzFR7VW4BYeeOlryd9pgvlQ4pUTT9vXozKkZfSdocnpmAfzdm0Y0pWMOv
+         F5tLDf8S9Bh/f0zH0WTKncPNiKabeEPgjnv0/Wen5JEKC7M+AKARxSd/pGnNoYX0BaLm
+         sXcGmj0gCJQeZz+Z/yXvZrzWEKU6vP40BbDzJy5zcH3lwP7CZr0PjAWEfKMX45B+tbll
+         8TSw==
+X-Gm-Message-State: AOAM5321t5vfKYT5soHllJlIECFhExrcIHDvk9hNqFzsqTFdqXVR4wMV
+        ZLSjKRnGrwCzbJxf3irZSYkIYbyhRdwti3Lbm18=
+X-Google-Smtp-Source: ABdhPJzvkXusENrHFbx7Z4UeU5tcAYrWmu2wMgV9PP1LU7MWabSySITzZd9SeQneUYYb9H/JEkRsCIws54cijEZ+u5w=
+X-Received: by 2002:a4a:4201:: with SMTP id h1mr12077660ooj.1.1596800217309;
+ Fri, 07 Aug 2020 04:36:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
-Content-Disposition: inline
-In-Reply-To: <20200806182059.2431-18-krzk@kernel.org>
-X-Cookie: Disposable, use only once.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
+ <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
+ <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com> <20200807112754.GC3387836@oden.dyn.berto.se>
+In-Reply-To: <20200807112754.GC3387836@oden.dyn.berto.se>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 7 Aug 2020 13:36:46 +0200
+Message-ID: <CAMuHMdW1Ofjouj4P+bdg2VWmYohD73=si8R6ivZ4QiZps6=HAQ@mail.gmail.com>
+Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
+To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Niklas,
 
---2qXFWqzzG3v1+95a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 7, 2020 at 1:27 PM Niklas Söderlund
+<niklas.soderlund@ragnatech.se> wrote:
+> On 2020-08-06 13:47:58 +0200, Geert Uytterhoeven wrote:
+> > On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > > On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
+> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
+> > > > >
+> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > > >
+> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > >
+> > > > However, before I queue this in renesas-devel for v5.10, I'd like to
+> > > > have some clarification about the issue below.
+> > > >
+> > > > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> > > >
+> > > > > +               vin4: video@e6ef4000 {
+> > > > > +                       compatible = "renesas,vin-r8a774e1";
+> > > > > +                       reg = <0 0xe6ef4000 0 0x1000>;
+> > > > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +                       clocks = <&cpg CPG_MOD 807>;
+> > > > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> > > > > +                       resets = <&cpg 807>;
+> > > > > +                       renesas,id = <4>;
+> > > > > +                       status = "disabled";
+> > > > > +
+> > > > > +                       ports {
+> > > > > +                               #address-cells = <1>;
+> > > > > +                               #size-cells = <0>;
+> > > > > +
+> > > > > +                               port@1 {
+> > > > > +                                       #address-cells = <1>;
+> > > > > +                                       #size-cells = <0>;
+> > > >
+> > > > "make dtbs W=1" says:
+> > > >
+> > > >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
+> > > > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
+> > > > has single child node 'endpoint@0', #address-cells/#size-cells are not
+> > > > necessary
+> > > >
+> > > > (same for vin5-7 below)
+> > > >
+> > > Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
+> > > VIN endpoint numbering") we definitely need endpoint numbering.
+> > > Probably the driver needs to be fixed to handle such cases.
+> >
+> > > > > +
+> > > > > +                                       reg = <1>;
+> > > > > +
+> > > > > +                                       vin4csi20: endpoint@0 {
+> > > > > +                                               reg = <0>;
+> > > > > +                                               remote-endpoint = <&csi20vin4>;
+> >
+> > On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
+> > complain. Here it is at address 0.
+> >
+> > Niklas?
+>
+> First the R-Car VIN driver makes decisions based on which endpoint is
+> described, each endpoint 0-3 represents a different CSI-2 block on the
+> other end (0: CSI20, 1: CSI21, 2: CSI40 and 3: CSI41).
 
-On Thu, Aug 06, 2020 at 08:20:35PM +0200, Krzysztof Kozlowski wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The plat-samsung directory and mach-s5pv210 can be build
-> completely independently, so split the two Kconfig symbols
-> CONFIG_PLAT_SAMSUNG and CONFIG_ARCH_S5PV210.
+That's my understanding, too.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+> Then how to handle the warning I'm not sure. I can only really see 2
+> options.
+>
+> 1. Ignore the warning.
+> 2. Remove #address-cells, #size-cells and reg properties from port@ if
+>    the only endpoint described is endpoint@0.
+>
+> I would prefers option 2. that is what we do in other cases (for example
+> on Gen2 boards that only have a single parallel sensor in some early DTS
+> files we don't have the ports node and just describe a single port with
+> the same reasoning.
+>
+> We are not at risk at someone describing a second CSI-2 bock as an
+> overlay so I see no real harm in option 2.
 
---2qXFWqzzG3v1+95a
-Content-Type: application/pgp-signature; name="signature.asc"
+Yeah, no overlay possible for on-SoC wiring ;-)
 
------BEGIN PGP SIGNATURE-----
+> What are your thoughts Geert?
+> You know more about DT then me.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8tPH8ACgkQJNaLcl1U
-h9AKhQf/R7RK8Hp7GiOARjjdjgAtgRwwe6zGtME1BaY4sl5QjQX3lbKLy27zSN8g
-oIS4rQz7hiHTbEPAYejiOFvzEWdxiiJCwsb4LoUYmS7z5ZHh1hkymZNMNxkh03k5
-OtD206PpuFlkRBy5mQmvNSpCLcAZ933xTyhdUDH00eAg5/09+FEqq4z84afijimH
-EDgvn6dXYA8Zqd+w7Kx0fiERDK0Ygo1jl85OEsLKFbPZefjx9wUKqqNlm9Oz+s+k
-C6yb2uPrkc2t8FqW0jBc/nR+ky0+VBkW3duO0CCP1Sag3U2HLi5GZ2wdtQrXLXu+
-ZDfJfLruyTaIkzFFcfZgPsjk6niMXQ==
-=qNw4
------END PGP SIGNATURE-----
+You have too much faith in me ;-)
 
---2qXFWqzzG3v1+95a--
+AFAIK we don't get this warning for e.g. SPI buses, which can have a
+single device at address 0, and #{address,size}-cells is mandatory
+there. So endpoints (or SPI?) are treated special?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
