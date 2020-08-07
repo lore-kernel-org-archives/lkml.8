@@ -2,117 +2,101 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 424822177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:06:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FCC2Jg2H"
+	by mail.kernel.org (Postfix) with ESMTP id 2783D2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHGJGy (ORCPT
+        id S1727941AbgHGJG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:06:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42227 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726788AbgHGJGx (ORCPT
+        Fri, 7 Aug 2020 05:06:59 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35376 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgHGJG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:06:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596791211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YAgJEBejyPWGx6tEh8JOWO70ZKvKRe9vL7QVxREaPEs=;
-        b=FCC2Jg2Hew9Po2OnKynhY4kFDT1U4ScPYdPnqb0XR8xbuCEnISH1poage58pHbuZQS/0EL
-        wY/OBKrfCS+rNK+XPDeLF+Lx15srWsr2w1/Q5l3ARyaLilOu/6Ozp1q8JjcS1wywK+oqMo
-        lgxcG3nalWpW6vRUaNlgsQyYpk1AKGk=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-3gLpA6-1P02nVDVV8AkXYw-1; Fri, 07 Aug 2020 05:06:49 -0400
-X-MC-Unique: 3gLpA6-1P02nVDVV8AkXYw-1
-Received: by mail-ed1-f69.google.com with SMTP id z11so482637edj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 02:06:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=YAgJEBejyPWGx6tEh8JOWO70ZKvKRe9vL7QVxREaPEs=;
-        b=TuMwpuKshiyhqi0FEGAWmRFDrfqhwH5T6s/VX+HsxWzFDCoMJcySMq6Rggk6vXWBIl
-         0HxH1QM2ElV9NgHsOmacbzkcgBTnwtggFKyXuMWxy4MLMt7ROJDvejm7RRXdbk9X32jD
-         lPwFAdAtC7hJf48CUfbYhjqqLljGGbRcII/Fr7edmQH9Wsyr0Z/u/ZFQaQ4vjU+pojgQ
-         rENAnDBvgSJytLkQYhVTgXJNBXX7HRah4iK4l1TwLXEsFABoFluUo8r5U8/Jq73QCuy/
-         wrvFRiXJ9md2vi5smWop0WrL585S6C6P1LytRIHVQ9CwVCaZjskC+zYTPqfkg/G0B7eC
-         q0mA==
-X-Gm-Message-State: AOAM531XvWJ9pwJe/TuoA4ist+1TTDjNny6jyJVXbebjdVssldjXAkci
-        UGY1NCPcCzk9YcRuw+dHG3NUAi4Fvy29bOLAgOYVwU58SXMJotOK5Y8SOA1jHcyWbnjjg3Wrgg6
-        7dpqL0zzPts3NlA3lIRCDz6SV
-X-Received: by 2002:a17:906:d187:: with SMTP id c7mr8598725ejz.196.1596791208726;
-        Fri, 07 Aug 2020 02:06:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw0gp4D1eeThNc0MfUqIzH9zOKg9l29PiJCQKRH1FdTYArhPiiYmHs1iPWe8+PWuyye41OG4g==
-X-Received: by 2002:a17:906:d187:: with SMTP id c7mr8598712ejz.196.1596791208530;
-        Fri, 07 Aug 2020 02:06:48 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id dr21sm705148ejc.112.2020.08.07.02.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 02:06:47 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     mikelley@microsoft.com, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Only notify Hyper-V for die events that are oops
-In-Reply-To: <1596730935-11564-1-git-send-email-mikelley@microsoft.com>
-References: <1596730935-11564-1-git-send-email-mikelley@microsoft.com>
-Date:   Fri, 07 Aug 2020 11:06:47 +0200
-Message-ID: <87o8nmome0.fsf@vitty.brq.redhat.com>
+        Fri, 7 Aug 2020 05:06:58 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id AE7051C0BD9; Fri,  7 Aug 2020 11:06:53 +0200 (CEST)
+Date:   Fri, 7 Aug 2020 11:06:53 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
+ Marvell PHYs
+Message-ID: <20200807090653.ihnt2arywqtpdzjg@duo.ucw.cz>
+References: <20200728150530.28827-1-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tuqlwx4lnotoz6lx"
+Content-Disposition: inline
+In-Reply-To: <20200728150530.28827-1-marek.behun@nic.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
 
-> Hyper-V currently may be notified of a panic for any die event. But
-> this results in false panic notifications for various user space traps
-> that are die events. Fix this by ignoring die events that aren't oops.
->
-> Fixes: 510f7aef65bb ("Drivers: hv: vmbus: prefer 'die' notification chain to 'panic'")
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index b50081c..910b6e9 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -86,6 +86,10 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
->  	struct die_args *die = (struct die_args *)args;
->  	struct pt_regs *regs = die->regs;
->  
-> +	/* Don't notify Hyper-V if the die event is other than oops */
-> +	if (val != DIE_OOPS)
-> +		return NOTIFY_DONE;
-> +
+--tuqlwx4lnotoz6lx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looking at die_val enum, DIE_PANIC also sounds like something we would
-want to report but it doesn't get emitted anywhere and honestly I don't
-quite understand how is was supposed to be different from DIE_OOPS.
+Hi!
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> this is v4 of my RFC adding support for LEDs connected to Marvell PHYs.
+>=20
+> Please note that if you want to test this, you still need to first apply
+> the patch adding the LED private triggers support from Pavel's tree.
+> https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/comm=
+it/?h=3Dfor-next&id=3D93690cdf3060c61dfce813121d0bfc055e7fa30d
+>=20
+> What I still don't like about this is that the LEDs created by the code
+> don't properly support device names. LEDs should have name in format
+> "device:color:function", for example "eth0:green:activity".
+>=20
+> The code currently looks for attached netdev for a given PHY, but
+> at the time this happens there is no netdev attached, so the LEDs gets
+> names without the device part (ie ":green:activity").
+>=20
+> This can be addressed in next version by renaming the LED when a netdev
+> is attached to the PHY, but first a API for LED device renaming needs to
+> be proposed. I am going to try to do that. This would also solve the
+> same problem when userspace renames an interface.
+>=20
+> And no, I don't want phydev name there.
 
->  	/*
->  	 * Hyper-V should be notified only once about a panic.  If we will be
->  	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+Ummm. Can we get little more explanation on that? I fear that LED
+device renaming will be tricky and phydev would work around that
+nicely.
 
--- 
-Vitaly
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--tuqlwx4lnotoz6lx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXy0ZrQAKCRAw5/Bqldv6
+8o/UAJ9nvd57fgnTIHmdYW/OH4c5swwXJQCguYTbyQen7XuCNSviqkB7ZxmHeYs=
+=WH64
+-----END PGP SIGNATURE-----
+
+--tuqlwx4lnotoz6lx--
