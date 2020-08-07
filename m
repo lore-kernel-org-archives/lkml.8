@@ -2,149 +2,136 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B550C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E7C221E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF76C20855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgaYN8P3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HUOOHTOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgHGATR (ORCPT
+        id S1726130AbgHGAV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:19:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56136 "EHLO
+        Thu, 6 Aug 2020 20:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHGATQ (ORCPT
+        with ESMTP id S1726013AbgHGAVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:19:16 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25309C061574;
-        Thu,  6 Aug 2020 17:19:16 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k13so201277plk.13;
-        Thu, 06 Aug 2020 17:19:15 -0700 (PDT)
+        Thu, 6 Aug 2020 20:21:55 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47957C06179E
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 17:21:55 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f12so58360wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 17:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UXliulb/nEB8A5bXluLowN5ZPsnjirc+VXLcTbaZeNw=;
-        b=NgaYN8P3J3ZDD5wpDwgv3SvayRjgk1R7Qxy3cr9dFe1Qfk0e50tiLjwxEiqo+lC/pc
-         SvZidJa6ko+FckNmWQ9UGlKRxl8A8Kjoe4HVhAEd/hBGKDyJ2AEpSkheGmJzHsqiH5u0
-         ngiWBYBtL41xzkVIvLYFAMmpeWWm3eT+irh7Yg+jHyp1RiYPPj6sT3QkwLTJpwc50Af/
-         oVhl9IoXVj8Iej/oAI4BSPuYCiDZPuxKLDMNSXkzgqkeYfZDWt9HIo6iwDV060HioF7w
-         Dua+CILcmuntPwHXWvf9rZOTxvIcSsS5kWCGoA3J/6rLUJnq347WK6QrZNQVwnlGKr4o
-         8AKw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vwItUOgNx85u5QZIQ4VOjuZBdBEzAvdaCSETt8ahY3s=;
+        b=HUOOHTOjhFobum7n1FxSPal+6xOFjFHJ4KdS0H7W+nYIGtMNvuG6RtAWDbvRfRi0ON
+         r3p8PkAPyykbju/M9pM+mqVPbykuZJ+c7T/2w1wt9VITrSqfM2RqDOqn7cXXRLbp3kK/
+         xaxlqE39pxK4B109IawxwyTE8wJHK7VJ9zpH4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UXliulb/nEB8A5bXluLowN5ZPsnjirc+VXLcTbaZeNw=;
-        b=lHwLpnDRmStXAORIu5EU1dS6Cj0RapouRckEUSKyf6O+Mobnxwi9dtD5DUyllC5i6B
-         LScqYpGjIQQIyKeYndeUZs95WjW1f7nq+uUI+XoFztvpzI8VAnAIq+SoHv+0wY/z4pyu
-         zXnHqhcZLpauONorT3D8EBZxgRur5EL3iV8zAfTTRtTykhMVznY7vAKIMnpHh+wxXJDH
-         2hluxudUE16KR57bpucbrsra6xT2TEoJWXW+dCfWbW2WpCD8DB2sCEwNlAWEBBpEZ4/b
-         evTSjaI/Uh72cXg/Co2I0v6iux3lyhfps6GYAykLA9c+v8icMyuTm/+8mVX3d71zYmf7
-         kl3w==
-X-Gm-Message-State: AOAM532sFYqG9sbkD5rHuylbSpLNU9NG88GheaH8KbK5PM5oeLPm0jDx
-        zJ7RAWIlp4HYnerTKY0GMvA=
-X-Google-Smtp-Source: ABdhPJzvJSmv39MSPsAAtzl7DF+Dt/hliUkfkx5Ii8UPRzZ561wwXNl4DjzrU+24ewxb4Yo9lpj3fA==
-X-Received: by 2002:a17:90a:c28d:: with SMTP id f13mr596183pjt.124.1596759554941;
-        Thu, 06 Aug 2020 17:19:14 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y10sm8240162pjv.55.2020.08.06.17.19.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Aug 2020 17:19:14 -0700 (PDT)
-Date:   Thu, 6 Aug 2020 17:19:12 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Qian Cai <cai@lca.pw>
-Cc:     torvalds@linux-foundation.org, daniel.diaz@linaro.org,
-        tytso@mit.edu, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org
-Subject: Re: [PATCH] random: fix a compilation error on arm64
-Message-ID: <20200807001912.GA29367@roeck-us.net>
-References: <20200806135836.31736-1-cai@lca.pw>
- <4edcf552-ef82-cdd2-3fda-38d42ebfecc7@roeck-us.net>
- <20200806224313.GA36490@lca.pw>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vwItUOgNx85u5QZIQ4VOjuZBdBEzAvdaCSETt8ahY3s=;
+        b=PQdw8GwN2i5RwKUiGIAFxQHa+DTNJJq83GAJ2XTS1I7wcWBNfty2r/zPPJi8SeCU6v
+         L0uNAG0o58HWMVyzlFZbLRaLSWVOrlXlvVurlv5P3y1fkZIfFXqh3FdAZIffBjI51OvP
+         JhxPV0tzHJOkDtxwCe6pxIiVcA4n91aejCyF78XK4MBGpO5ICPFBLsNM7JEBSfX3KLSi
+         h5SDTFQN/KizSKO2eWNRACBth5UXJyZDsEmCK2Mfmdf/6D2ulc43ZlG4lx3/EGFyOl0f
+         H6ZSvz6p2C7xN16mH+4S6+V+jFeJ8tMxARB8rcRXVCKwqL5PWp3rtv4818CLOOfLjwHN
+         M94Q==
+X-Gm-Message-State: AOAM533I5vWDHFLJMOCHwpTwaf0j0yOZRtNtBvf6PhBaLgFP2L5OlRX5
+        K8W1AffNW8WVmnxrZ39leb5IVgYC7c9oyWjHey//Tw==
+X-Google-Smtp-Source: ABdhPJw7IlNrHiAatjwRzejW/qFOf8CuU+9oSt2zFkMHfDTIOYGDDIS1MZzK2AFyXhM1SERMQ4TPwB/50V0i6Q5JvOU=
+X-Received: by 2002:adf:efce:: with SMTP id i14mr9666726wrp.359.1596759713673;
+ Thu, 06 Aug 2020 17:21:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200806224313.GA36490@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200729175845.1745471-1-keescook@chromium.org> <20200729175845.1745471-10-keescook@chromium.org>
+In-Reply-To: <20200729175845.1745471-10-keescook@chromium.org>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Fri, 7 Aug 2020 02:21:42 +0200
+Message-ID: <CACYkzJ6djhtZ2GUDZgf+YO-fXTFhmH9=Mu1t+3eAOosj=1kGhw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/17] LSM: Introduce kernel_post_load_data() hook
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Takashi Iwai <tiwai@suse.de>, Jessica Yu <jeyu@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>, linux-efi@vger.kernel.org,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 06:43:14PM -0400, Qian Cai wrote:
-> On Thu, Aug 06, 2020 at 07:50:23AM -0700, Guenter Roeck wrote:
-> > On 8/6/20 6:58 AM, Qian Cai wrote:
-> > > linux-next failed to compile using this .config,
-> > > https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
-> > > 
-> > > arch/arm64/kernel/kaslr.c: In function 'kaslr_early_init':
-> > > arch/arm64/kernel/kaslr.c:128:6: error: implicit declaration of function
-> > > '__early_cpu_has_rndr'; did you mean '__early_pfn_to_nid'?
-> > > [-Werror=implicit-function-declaration]
-> > >   if (__early_cpu_has_rndr()) {
-> > >       ^~~~~~~~~~~~~~~~~~~~
-> > >       __early_pfn_to_nid
-> > > arch/arm64/kernel/kaslr.c:131:7: error: implicit declaration of function
-> > > '__arm64_rndr' [-Werror=implicit-function-declaration]
-> > >    if (__arm64_rndr(&raw))
-> > >        ^~~~~~~~~~~~
-> > > cc1: some warnings being treated as errors
-> > > 
-> > 
-> > This happens because ARCH_RANDOM is disabled. May be I am wrong, but I
-> > would argue that __arm64_rndr() should not be called directly in the
-> > first place. arch_get_random_seed_long_early() should be called instead.
-> 
-> I am not sure about if that would cure possible ARCH_RANDOM=n compiling
-> failures on all arches. Since my patch would not compile on mips etc, an
-> alternative is to revert the buggy commit 585524081ecd for now. Any thought?
-> 
-It is quite unlikely that any other architecture would attempt to compile
-any arm64 code (which is the only code touched by commit 585524081ecd).
-Also, commit 585524081ecd fixes a different problem caused by the
-recursive inclusion of asm/archrandom.h. On top of that, I think using
-arch_get_random_seed_long_early() would be much cleaner than the current
-code since it doesn't override/bypass ARCH_RANDOM.
+On Wed, Jul 29, 2020 at 7:59 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> There are a few places in the kernel where LSMs would like to have
+> visibility into the contents of a kernel buffer that has been loaded or
+> read. While security_kernel_post_read_file() (which includes the
+> buffer) exists as a pairing for security_kernel_read_file(), no such
+> hook exists to pair with security_kernel_load_data().
+>
+> Earlier proposals for just using security_kernel_post_read_file() with a
+> NULL file argument were rejected (i.e. "file" should always be valid for
+> the security_..._file hooks, but it appears at least one case was
+> left in the kernel during earlier refactoring. (This will be fixed in
+> a subsequent patch.)
+>
+> Since not all cases of security_kernel_load_data() can have a single
+> contiguous buffer made available to the LSM hook (e.g. kexec image
+> segments are separately loaded), there needs to be a way for the LSM to
+> reason about its expectations of the hook coverage. In order to handle
+> this, add a "contents" argument to the "kernel_load_data" hook that
+> indicates if the newly added "kernel_post_load_data" hook will be called
+> with the full contents once loaded. That way, LSMs requiring full contents
+> can choose to unilaterally reject "kernel_load_data" with contents=false
+> (which is effectively the existing hook coverage), but when contents=true
+> they can allow it and later evaluate the "kernel_post_load_data" hook
+> once the buffer is loaded.
+>
+> With this change, LSMs can gain coverage over non-file-backed data loads
+> (e.g. init_module(2) and firmware userspace helper), which will happen
+> in subsequent patches.
+>
+> Additionally prepare IMA to start processing these cases.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Let's do it this way: I'll submit an alternate patch using
-arch_get_random_seed_long_early(). This way Linus can decide how to
-proceed, and we don't have to go back and forth.
+Thanks for adding this! Would be really useful for us.
 
-Thanks,
-Guenter
+Reviewed-by: KP Singh <kpsingh@google.com>
 
-> > 
-> > Thanks,
-> > Guenter
-> > 
-> > > Fixes: 585524081ecd ("random: random.h should include archrandom.h, not the other way around")
-> > > Signed-off-by: Qian Cai <cai@lca.pw>
-> > > ---
-> > >  include/linux/random.h | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/include/linux/random.h b/include/linux/random.h
-> > > index f45b8be3e3c4..da782c16c20c 100644
-> > > --- a/include/linux/random.h
-> > > +++ b/include/linux/random.h
-> > > @@ -12,6 +12,8 @@
-> > >  #include <linux/list.h>
-> > >  #include <linux/once.h>
-> > >  
-> > > +#include <asm/archrandom.h>
-> > > +
-> > >  #include <uapi/linux/random.h>
-> > >  
-> > >  struct random_ready_callback {
-> > > 
-> > 
+> ---
+>  drivers/base/firmware_loader/fallback.c       |  2 +-
+
+[...]
+
+> index 5de45010fb1a..1a5c68196faf 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -4019,7 +4019,7 @@ static int selinux_kernel_read_file(struct file *file,
+>         return rc;
+>  }
+>
+> -static int selinux_kernel_load_data(enum kernel_load_data_id id)
+> +static int selinux_kernel_load_data(enum kernel_load_data_id id, bool contents)
+>  {
+>         int rc = 0;
+>
+> --
+> 2.25.1
+>
