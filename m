@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5371BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA201C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339E42177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD0720855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596792014;
-	bh=ULAXQmntZdDf57Ccm8GuMSgIUGTzbP/arW17SUP4d5I=;
+	s=default; t=1596792024;
+	bh=bnwHregWeNIz2L126k+XEbDTwIw/jd2B+q7bRPagxYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zFkcslxmhy3SY44vrm+xFNcLehCPrJnenD5wR4wS1RDsjijN55P+q/TvexlC2E1M2
-	 efoSis2YpBfzUfqvhCou8x3y3cQRFey7/pP9WVb7/b63UVX9rzcwgXhgLqYQluyMzz
-	 M0cTxqazuOTRbyPNHk3GGNx+qXs5QZMJm54q7e/I=
+	b=xXR9T7s0bmoymLkavsSfkwkd7pf0i4XXo3j4lGRUMKTaBjeJ1+QUwqBVbqliKvIOd
+	 /ETCwai0JE+f7+azkXxMtB6IvEbf4pm8LJKAU3Ajeq7wUYcCuQuF/6J1o6AgbGjBpX
+	 wiiei0RdkdbYLCsEvIFrQHCSlAPr88AhFdNRoeMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgHGJUK (ORCPT
+        id S1726979AbgHGJUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:20:10 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:41595 "EHLO
+        Fri, 7 Aug 2020 05:20:22 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:41596 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbgHGJTk (ORCPT
+        with ESMTP id S1728001AbgHGJTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 05:19:40 -0400
 Received: from localhost.localdomain (softbank060134047170.bbtec.net [60.134.47.170]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 0779JBQ9032147;
-        Fri, 7 Aug 2020 18:19:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0779JBQ9032147
+        by conuserg-12.nifty.com with ESMTP id 0779JBQC032147;
+        Fri, 7 Aug 2020 18:19:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0779JBQC032147
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596791962;
-        bh=ruoGdXxpfuF5Ao/NO55rH8BOT8e4cequmOPosNxZzGU=;
+        s=dec2015msa; t=1596791964;
+        bh=w3KzcbrgyiETrQqPWYtQBGT5ncK4Sw4Cv5ADwewuI0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xEykM3Vk05LeOIFlZwX75FtlFzlVlGVDp4rp+9ASdgfPzYYG4+SsB8XclztLZY0dm
-         lEMbZhQ1w56gL9SwPe5vA7lofMKYbH408lswWHq8AvC+hzkt+Yqv7CiHDWRBj5yvEL
-         bSEAHutI/0L7N9wEcjV9ij7OhOb7Td6o5/Z8NuijV+N03HMpCJL3ieiZRrNniuGdgY
-         R0MPP+2WremIDmN7SbgEFjoilF7zNd2SE4HlMi2/Q+vPyrcCpLdDKao3wZ0YJD4bId
-         bfEzg/OPLHKTyt7zwlTFyklvHG3rDh2oWeBBWzetJ0UwLgF60i5nGdFOpOXDYP/mMv
-         0bbiTY1Q5iwgw==
+        b=XuI4BpKpwUpsd06Bm4AwQGojdP5uoeov/PesL6MDs2YYXstst4LlCwMOyjVoq95ES
+         8AMfnM+kTG7yhuiSpGbKEcnPbZM5i5zsK56vqEqgffox5qdrSH9EWLHeDZRgfzpxpF
+         1jr8kfRcGjLXjDhfCmukal/TiJryvRK1EKWE5GG8g0RxLvOQ/1+BZz6jcEdEDYtGRk
+         FOg44eIDQqb0kuF5cXoZqGC/ARQjkyecvJOZzq0qEH8PKR59cyLMQj0rCLwUAmtt8i
+         hMz6DC+Aw1UQ61fTcnKKwIiGHPZyZr0xWqwUtf8WzhntWgXkg/gUrO5gxOzjEq2Y1g
+         1yS0Bj5ezpsRg==
 X-Nifty-SrcIP: [60.134.47.170]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/19] kconfig: qconf: remove ConfigItem::pixmap/setPixmap
-Date:   Fri,  7 Aug 2020 18:19:03 +0900
-Message-Id: <20200807091909.2985787-13-masahiroy@kernel.org>
+Subject: [PATCH v2 16/19] kconfig: qconf: remove unused voidPix, menuInvPix
+Date:   Fri,  7 Aug 2020 18:19:06 +0900
+Message-Id: <20200807091909.2985787-16-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200807091909.2985787-1-masahiroy@kernel.org>
 References: <20200807091909.2985787-1-masahiroy@kernel.org>
@@ -60,114 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use QTreeWidgetItem::icon/setIcon directly.
+These are initialized, but not used by anyone.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 (no changes since v1)
 
- scripts/kconfig/qconf.cc | 22 +++++++++++-----------
- scripts/kconfig/qconf.h  |  8 --------
- 2 files changed, 11 insertions(+), 19 deletions(-)
+ scripts/kconfig/qconf.cc | 2 +-
+ scripts/kconfig/qconf.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 230ce621d85b..56b5cdd8b1c9 100644
+index 04da1397575a..90b618785239 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -97,7 +97,7 @@ void ConfigItem::updateMenu(void)
- 
- 	list = listView();
- 	if (goParent) {
--		setPixmap(promptColIdx, list->menuBackPix);
-+		setIcon(promptColIdx, list->menuBackPix);
- 		prompt = "..";
- 		goto set_prompt;
- 	}
-@@ -114,15 +114,15 @@ void ConfigItem::updateMenu(void)
- 			 */
- 			if (sym && list->rootEntry == menu)
- 				break;
--			setPixmap(promptColIdx, list->menuPix);
-+			setIcon(promptColIdx, list->menuPix);
- 		} else {
- 			if (sym)
- 				break;
--			setPixmap(promptColIdx, QIcon());
-+			setIcon(promptColIdx, QIcon());
- 		}
- 		goto set_prompt;
- 	case P_COMMENT:
--		setPixmap(promptColIdx, QIcon());
-+		setIcon(promptColIdx, QIcon());
- 		goto set_prompt;
- 	default:
- 		;
-@@ -139,7 +139,7 @@ void ConfigItem::updateMenu(void)
- 		char ch;
- 
- 		if (!sym_is_changeable(sym) && list->optMode == normalOpt) {
--			setPixmap(promptColIdx, QIcon());
-+			setIcon(promptColIdx, QIcon());
- 			setText(noColIdx, QString());
- 			setText(modColIdx, QString());
- 			setText(yesColIdx, QString());
-@@ -149,22 +149,22 @@ void ConfigItem::updateMenu(void)
- 		switch (expr) {
- 		case yes:
- 			if (sym_is_choice_value(sym) && type == S_BOOLEAN)
--				setPixmap(promptColIdx, list->choiceYesPix);
-+				setIcon(promptColIdx, list->choiceYesPix);
- 			else
--				setPixmap(promptColIdx, list->symbolYesPix);
-+				setIcon(promptColIdx, list->symbolYesPix);
- 			setText(yesColIdx, "Y");
- 			ch = 'Y';
- 			break;
- 		case mod:
--			setPixmap(promptColIdx, list->symbolModPix);
-+			setIcon(promptColIdx, list->symbolModPix);
- 			setText(modColIdx, "M");
- 			ch = 'M';
- 			break;
- 		default:
- 			if (sym_is_choice_value(sym) && type == S_BOOLEAN)
--				setPixmap(promptColIdx, list->choiceNoPix);
-+				setIcon(promptColIdx, list->choiceNoPix);
- 			else
--				setPixmap(promptColIdx, list->symbolNoPix);
-+				setIcon(promptColIdx, list->symbolNoPix);
- 			setText(noColIdx, "N");
- 			ch = 'N';
- 			break;
-@@ -769,7 +769,7 @@ void ConfigList::mouseReleaseEvent(QMouseEvent* e)
- 	idx = header()->logicalIndexAt(x);
- 	switch (idx) {
- 	case promptColIdx:
--		icon = item->pixmap(promptColIdx);
-+		icon = item->icon(promptColIdx);
- 		if (!icon.isNull()) {
- 			int off = header()->sectionPosition(0) + visualRect(indexAt(p)).x() + 4; // 4 is Hardcoded image offset. There might be a way to do it properly.
- 			if (x >= off && x < off + icon.availableSizes().first().width()) {
+@@ -291,7 +291,7 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
+ 	  updateAll(false),
+ 	  symbolYesPix(xpm_symbol_yes), symbolModPix(xpm_symbol_mod), symbolNoPix(xpm_symbol_no),
+ 	  choiceYesPix(xpm_choice_yes), choiceNoPix(xpm_choice_no),
+-	  menuPix(xpm_menu), menuInvPix(xpm_menu_inv), menuBackPix(xpm_menuback), voidPix(xpm_void),
++	  menuPix(xpm_menu), menuBackPix(xpm_menuback),
+ 	  showName(false), showRange(false), showData(false), mode(singleMode), optMode(normalOpt),
+ 	  rootEntry(0), headerPopup(0)
+ {
 diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index 952bd98d7912..5cda89a51740 100644
+index 012414dcdee5..c46a79a69001 100644
 --- a/scripts/kconfig/qconf.h
 +++ b/scripts/kconfig/qconf.h
-@@ -172,14 +172,6 @@ class ConfigItem : public QTreeWidgetItem {
- 	{
- 		return Parent::text(idx);
- 	}
--	void setPixmap(colIdx idx, const QIcon &icon)
--	{
--		Parent::setIcon(idx, icon);
--	}
--	const QIcon pixmap(colIdx idx) const
--	{
--		return icon(idx);
--	}
- 	// TODO: Implement paintCell
+@@ -100,7 +100,7 @@ public slots:
  
- 	ConfigItem* nextItem;
+ 	QPixmap symbolYesPix, symbolModPix, symbolNoPix;
+ 	QPixmap choiceYesPix, choiceNoPix;
+-	QPixmap menuPix, menuInvPix, menuBackPix, voidPix;
++	QPixmap menuPix, menuBackPix;
+ 
+ 	bool showName, showRange, showData;
+ 	enum listMode mode;
 -- 
 2.25.1
 
