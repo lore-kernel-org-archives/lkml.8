@@ -2,149 +2,172 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B509DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA86C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB712075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5E72075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:57:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="r9DSZhRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgHGPzd (ORCPT
+        id S1726750AbgHGP5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:55:33 -0400
-Received: from out28-173.mail.aliyun.com ([115.124.28.173]:38881 "EHLO
-        out28-173.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgHGPzb (ORCPT
+        Fri, 7 Aug 2020 11:57:06 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:65242 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgHGP5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:55:31 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436521|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0144054-0.000982358-0.984612;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.IE4cuQu_1596815718;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.IE4cuQu_1596815718)
-          by smtp.aliyun-inc.com(10.147.41.137);
-          Fri, 07 Aug 2020 23:55:20 +0800
-Subject: Re: [PATCH] MIPS: CI20: Update defconfig for EFUSE.
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     tsbogend@alpha.franken.de, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, keescook@chromium.org,
-        hns@goldelico.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-References: <20200723071950.130007-1-zhouyanjie@wanyeetech.com>
- <20200723071950.130007-2-zhouyanjie@wanyeetech.com>
- <V2ZWDQ.DNM4EVLAB6YN3@crapouillou.net>
- <b1de1e95-9ce3-1324-346d-07196aa30637@wanyeetech.com>
- <PIR6EQ.G22CDHRT7D5O@crapouillou.net>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <d8b28bac-8995-23db-816e-31ba1f8d02f3@wanyeetech.com>
-Date:   Fri, 7 Aug 2020 23:55:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Fri, 7 Aug 2020 11:57:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596815825; x=1628351825;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=aRi9Uy05R53LS40Cl2TUQpYE2SoFuLjkjihkP3mfagk=;
+  b=r9DSZhRnLAY3Lh6WxwtvX3DDXDaKH9jxGXflXD9pZy/Sz4SZcuitD84+
+   H2uvc+IM/6DDhlbPRTgmSN5ZYWafYjJcpgKUBYFR3UK82ujDWfJU7J9S9
+   tjn39cgpvI3go0c5c53dBMEDiuvCdz/wtZBKu0AhMrUvPc63PXyumoFty
+   w=;
+IronPort-SDR: y4XqMm+0kzfvW4yIpAFwF1Tu+qCceBTtGffx1tonMt08r4cNIV5o41CNIGp5ooiDazwJVjVxQj
+ gmheqMJRHdNg==
+X-IronPort-AV: E=Sophos;i="5.75,446,1589241600"; 
+   d="scan'208";a="46730315"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 07 Aug 2020 15:57:03 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 9A85FA211B;
+        Fri,  7 Aug 2020 15:56:59 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 7 Aug 2020 15:56:58 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.162.140) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 7 Aug 2020 15:56:55 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        Aaron Lewis <aaronlewis@google.com>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 0/3] Allow user space to restrict and augment MSR emulation
+Date:   Fri, 7 Aug 2020 17:56:45 +0200
+Message-ID: <20200807155648.8602-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <PIR6EQ.G22CDHRT7D5O@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.140]
+X-ClientProxiedBy: EX13D29UWA001.ant.amazon.com (10.43.160.187) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+While tying to add support for the MSR_CORE_THREAD_COUNT MSR in KVM,
+I realized that we were still in a world where user space has no control
+over what happens with MSR emulation in KVM.
 
-在 2020/7/28 下午11:40, Paul Cercueil 写道:
-> Hi Zhou,
->
-> Le sam. 25 juil. 2020 à 16:02, Zhou Yanjie <zhouyanjie@wanyeetech.com> 
-> a écrit :
->> Hi Paul,
->>
->> 在 2020/7/23 下午4:47, Paul Cercueil 写道:
->>> Hi Zhou,
->>>
->>> Le jeu. 23 juil. 2020 à 15:19, 周琰杰 (Zhou Yanjie) 
->>> <zhouyanjie@wanyeetech.com> a écrit :
->>>> The commit 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
->>>> controller use NVMEM to find the default MAC address") add EFUSE
->>>> node for DM9000 in CI20, however, the EFUSE driver is not selected,
->>>> which will cause the DM9000 to fail to read the MAC address from
->>>> EFUSE, causing the following issue:
->>>>
->>>> [FAILED] Failed to start Raise network interfaces.
->>>>
->>>> Fix this problem by select CONFIG_JZ4780_EFUSE by default in the
->>>> ci20_defconfig.
->>>
->>> Does it actually fix it on a clean 5.8-rc kernel?
->>>
->>> From what I know, the efuse driver cannot probe, because the nemc 
->>> driver requests the complete memory resource, so the efuse driver's 
->>> devm_platform_ioremap_resource() fails.
->>>
->>> I did send a patch to fix this 
->>> (https://lore.kernel.org/lkml/551a8560261543c1decb1d4d1671ec4b7fa52fdb.1582905653.git.hns@goldelico.com/),
->>> but it's hard to have somebody merge it, because nobody maintains 
->>> drivers/memory/.
->>>
->> You are right, I cleaned up the changes made to support X1000's EFUSE 
->> and rebase to clean 5.8-RC6, it still does not work properly, I think 
->> we should drop this fix patch.
->
-> The patch I mentioned was merged, so starting from 5.9-rc1 the efuse 
-> driver should work. Please resend this patch after 5.9-rc1 then.
->
+That is bad for multiple reasons. In my case, I wanted to emulate the
+MSR in user space, because it's a CPU specific register that does not
+exist on older CPUs and that really only contains informational data that
+is on the package level, so it's a natural fit for user space to provide
+it.
 
-Sure, I will resent when 5.9-rc1 is released.
+However, it is also bad on a platform compatibility level. Currrently,
+KVM has no way to expose different MSRs based on the selected target CPU
+type.
 
-Thanks and best regards!
+This patch set introduces a way for user space to indicate to KVM which
+MSRs should be handled in kernel space. With that, we can solve part of
+the platform compatibility story. Or at least we can not handle AMD specific
+MSRs on an Intel platform and vice versa.
 
-> Thanks,
-> -Paul
->
->>
->>>> Fixes: 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
->>>> controller use NVMEM to find the default MAC address").
->>>
->>> That shouldn't be a fix IMHO - the devicetree was updated in one 
->>> commit, the config should be updated in another. The "bug" here is 
->>> that it wasn't done right away.
->>>
->> Okay.
->>>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>>
->>> Btw - when you add a Fixes: tag to fix a commit that is not for the 
->>> kernel currently in RC phase, you need to Cc linux-stable as well.
->>>
->> Sure, I will pay attention next time.
->>
->> Thanks and best regards!
->>
->>
->>> Cheers,
->>> -Paul
->>>
->>>> ---
->>>>  arch/mips/configs/ci20_defconfig | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/mips/configs/ci20_defconfig 
->>>> b/arch/mips/configs/ci20_defconfig
->>>> index f433fad16073..ba26ba4de09a 100644
->>>> --- a/arch/mips/configs/ci20_defconfig
->>>> +++ b/arch/mips/configs/ci20_defconfig
->>>> @@ -140,6 +140,7 @@ CONFIG_INGENIC_OST=y
->>>>  CONFIG_MEMORY=y
->>>>  CONFIG_PWM=y
->>>>  CONFIG_PWM_JZ4740=m
->>>> +CONFIG_JZ4780_EFUSE=y
->>>>  CONFIG_EXT4_FS=y
->>>>  # CONFIG_DNOTIFY is not set
->>>>  CONFIG_AUTOFS_FS=y
->>>> -- 
->>>> 2.11.0
->>>>
->>>
->
+In addition, it introduces a way for user space to get into the loop
+when an MSR access would generate a #GP fault, such as when KVM finds an
+MSR that is not handled by the in-kernel MSR emulation or when the guest
+is trying to access reserved registers.
+
+In combination with the allow list, the user space trapping allows us
+to emulate arbitrary MSRs in user space, paving the way for target CPU
+specific MSR implementations from user space.
+
+v1 -> v2:
+
+  - s/ETRAP_TO_USER_SPACE/ENOENT/g
+  - deflect all #GP injection events to user space, not just unknown MSRs.
+    That was we can also deflect allowlist errors later
+  - fix emulator case
+  - new patch: KVM: x86: Introduce allow list for MSR emulation
+  - new patch: KVM: selftests: Add test for user space MSR handling
+
+v2 -> v3:
+
+  - return r if r == X86EMUL_IO_NEEDED
+  - s/KVM_EXIT_RDMSR/KVM_EXIT_X86_RDMSR/g
+  - s/KVM_EXIT_WRMSR/KVM_EXIT_X86_WRMSR/g
+  - Use complete_userspace_io logic instead of reply field
+  - Simplify trapping code
+  - document flags for KVM_X86_ADD_MSR_ALLOWLIST
+  - generalize exit path, always unlock when returning
+  - s/KVM_CAP_ADD_MSR_ALLOWLIST/KVM_CAP_X86_MSR_ALLOWLIST/g
+  - Add KVM_X86_CLEAR_MSR_ALLOWLIST
+  - Add test to clear whitelist
+  - Adjust to reply-less API
+  - Fix asserts
+  - Actually trap on MSR_IA32_POWER_CTL writes
+
+v3 -> v4:
+
+  - Mention exit reasons in re-enter mandatory section of API documentation
+  - Clear padding bytes
+  - Generalize get/set deflect functions
+  - Remove redundant pending_user_msr field
+  - lock allow check and clearing
+  - free bitmaps on clear
+
+v4 -> v5:
+
+  - use srcu 
+
+Alexander Graf (3):
+  KVM: x86: Deflect unknown MSR accesses to user space
+  KVM: x86: Introduce allow list for MSR emulation
+  KVM: selftests: Add test for user space MSR handling
+
+ Documentation/virt/kvm/api.rst                | 157 ++++++++++-
+ arch/x86/include/asm/kvm_host.h               |  13 +
+ arch/x86/include/uapi/asm/kvm.h               |  15 +
+ arch/x86/kvm/emulate.c                        |  18 +-
+ arch/x86/kvm/x86.c                            | 266 +++++++++++++++++-
+ include/trace/events/kvm.h                    |   2 +-
+ include/uapi/linux/kvm.h                      |  15 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/x86_64/user_msr_test.c      | 221 +++++++++++++++
+ 9 files changed, 699 insertions(+), 9 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/user_msr_test.c
+
+-- 
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
