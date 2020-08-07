@@ -2,153 +2,157 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C580C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4008C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F8D206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC22B206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:30:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgDuZ1Ao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHGHaS (ORCPT
+        id S1726789AbgHGHa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:30:18 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:48309 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgHGHaR (ORCPT
+        Fri, 7 Aug 2020 03:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgHGHa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:30:17 -0400
-Received: by mail-io1-f69.google.com with SMTP id k10so995115iow.15
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 00:30:16 -0700 (PDT)
+        Fri, 7 Aug 2020 03:30:56 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15581C061574;
+        Fri,  7 Aug 2020 00:30:56 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u20so562975pfn.0;
+        Fri, 07 Aug 2020 00:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=12q2iDN/YQAMmiwijXrl91ogiPtfmiW0SAQOocLHo1Y=;
+        b=PgDuZ1AoFYFz62izIwb8cPWickw2zyUdR0fekCVZjn9rmvwp1dzA8gYt15mXy/X4nO
+         MfNUI/+cBcpKSP4nPLppo4NFz3iFo1r1mqopO+rcJe5qBu4AYJLOPEiHgi/gnJgC4YEN
+         5NyPkQysnkUJIaIpEXqjE6VhRgc79RaVwtW2JtDMDKlxsemMhm6jsKNhHMCNwKBIGdBK
+         S4OxKHs9oXOcnl9lJ3g87nJK/NmOfy8390CCCP8twbF/8NTkzGtGZSsEYrkiGCqi7R7/
+         y6RBUOlERLfa1CPuuRmdVsPOzez4He2s75v6O2IgMZjwWtUjqxAhDlx3MCKozp0qEzNG
+         /PVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JOb+Ait29c8UaKGoRPSevgV4SXs3lLIQQpLOa7Dp1qU=;
-        b=XOSqDcDxXDBfc0QrIfDueKyBtnz32t7GUDTh91e8MXnWfvF5Y04uUtEv79N2JT2CPY
-         hmDgQEmdSBrS+Vv3DghG+Y7Rnkgv7jqi3DmwHrpBI/h64ngk+V8IJA4URhchuNosZVDB
-         zBLPdcW14gFeEa4GmdiVUyawQ0DVkrko57jQ4wC6YFxsI3VEg+/myfevyRdca/WJiZ3h
-         CagECJFfHnV8omNGyxDPOBlXFNLzQ+BPDAOQm8GYDr6eqv0k8e/OknifKUvebZtK9OP+
-         YImRT2siAO8IS1v0qwsGF94ZI9UoIcH3Ulr8y3VKsMjV6csrc42ifzcyCN3zJoUAArn/
-         HMow==
-X-Gm-Message-State: AOAM530VIMm9eaQGkCQdTogSuDRhpnakummJlJLfAuVQzuWx/SXYIa8O
-        EWQlLGGNGPRoarJUHLJvgYPg68JEVE9R24yWk49qJhV42ToM
-X-Google-Smtp-Source: ABdhPJzPpPvtcSJHqTUBAqF/YbXRQ/z7Jc4/l/rPj4QW3esD3oT9PRdTX/LX7R2aNd0MRgmH2DbtXTYFS5wPb9fcwOoILYqjJ4RZ
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=12q2iDN/YQAMmiwijXrl91ogiPtfmiW0SAQOocLHo1Y=;
+        b=ShEtwcTTzeiKCMvJ/V6xTcY0LjgI43Z81DDmKcdDLfe7qp1HSq0D/CLOLNv89u1VcW
+         OHG/2RrvyICdJVkAsqVyEjkapiUigFTLfah3+T9qQi5E1WsppeJQmRWjkMN+W61I6o4c
+         BcuW/c7hfgfkWWe9GrxqG16Y7U0xdubeCInmVAJo0leYkDKR8slaXwPyONEsYasKnTcz
+         Ha80lxMajwXZ0scmxktWQ0U4/3kKN/q2lfetoqW1zhxC8NPJkUeiyekSmqSnwXTq+uIa
+         3o6OYzC+eomr6l+chRQqCsIme83+frpNZ2t3D7TVOKoetWg3AUuhqalVt53ywbrZPS/x
+         3Fuw==
+X-Gm-Message-State: AOAM530+FXS3WOFMW8JUx8MRdgn0Y4pulApRT5AQfcmUAnVN4oKGJJXb
+        yRR4xui4Ia2KOgIYW82/tHE=
+X-Google-Smtp-Source: ABdhPJwN1X8goGoRMJDRaLdI3tWVPblbljhOmdmPEQtcE39uDEZoEfEDxp7/KdozksQUtltWL3YB0A==
+X-Received: by 2002:a62:1543:: with SMTP id 64mr12301411pfv.242.1596785455446;
+        Fri, 07 Aug 2020 00:30:55 -0700 (PDT)
+Received: from dc803.localdomain (FL1-218-42-16-224.hyg.mesh.ad.jp. [218.42.16.224])
+        by smtp.gmail.com with ESMTPSA id y7sm10020079pjm.3.2020.08.07.00.30.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 00:30:55 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] exfat: add dir-entry set checksum validation
+Date:   Fri,  7 Aug 2020 16:30:48 +0900
+Message-Id: <20200807073049.24959-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:ba57:: with SMTP id o84mr2898216ili.215.1596785416214;
- Fri, 07 Aug 2020 00:30:16 -0700 (PDT)
-Date:   Fri, 07 Aug 2020 00:30:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000841f8305ac4493b2@google.com>
-Subject: WARNING: refcount bug in l2tp_session_free
-From:   syzbot <syzbot+f20ee2ee6060c79efb65@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, edumazet@google.com, fw@strlen.de,
-        jchapman@katalix.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, lucien.xin@gmail.com,
-        netdev@vger.kernel.org, pablo@netfilter.org,
-        ridge.kennedy@alliedtelesis.co.nz, syzkaller-bugs@googlegroups.com,
-        vulab@iscas.ac.cn
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add checksum validation for dir-entry set when getting it.
+exfat_calc_dir_chksum_with_entry_set() also validates entry-type.
 
-syzbot found the following issue on:
+** This patch depends on:
+  '[PATCH v3] exfat: integrates dir-entry getting and validation'
 
-HEAD commit:    04300d66 Merge tag 'riscv-for-linus-5.8-rc7' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17beee28900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f3bc31881f1ae8a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=f20ee2ee6060c79efb65
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f20ee2ee6060c79efb65@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 6980 at lib/refcount.c:28 refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 6980 Comm: syz-executor.1 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-RIP: 0010:refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
-Code: c7 2a 86 14 89 31 c0 e8 d3 f2 a8 fd 0f 0b eb 85 e8 2a 32 d7 fd c6 05 43 cc eb 05 01 48 c7 c7 56 86 14 89 31 c0 e8 b5 f2 a8 fd <0f> 0b e9 64 ff ff ff e8 09 32 d7 fd c6 05 23 cc eb 05 01 48 c7 c7
-RSP: 0018:ffffc90000da8de8 EFLAGS: 00010246
-RAX: d0e66feebea22600 RBX: 0000000000000003 RCX: ffff888086b3c200
-RDX: 0000000080000102 RSI: 0000000080000102 RDI: 0000000000000000
-RBP: 0000000000000003 R08: ffffffff815dd389 R09: ffffed1015d241c3
-R10: ffffed1015d241c3 R11: 0000000000000000 R12: ffff888000f3f040
-R13: dffffc0000000000 R14: ffff8880a9256800 R15: ffff888000f3f0c0
- l2tp_tunnel_dec_refcount include/linux/refcount.h:274 [inline]
- l2tp_session_free+0x1a5/0x1f0 net/l2tp/l2tp_core.c:1570
- __sk_destruct+0x50/0x770 net/core/sock.c:1786
- rcu_do_batch kernel/rcu/tree.c:2414 [inline]
- rcu_core+0x816/0x1120 kernel/rcu/tree.c:2641
- __do_softirq+0x268/0x80c kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0xe0/0x1a0 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu+0x1e1/0x1f0 kernel/softirq.c:417
- irq_exit_rcu+0x6/0x50 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0x117/0x130 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
-RIP: 0010:__raw_spin_unlock_irq include/linux/spinlock_api_smp.h:169 [inline]
-RIP: 0010:_raw_spin_unlock_irq+0x57/0x80 kernel/locking/spinlock.c:199
-Code: 00 00 00 00 fc ff df 80 3c 08 00 74 0c 48 c7 c7 08 c8 4b 89 e8 da 40 93 f9 48 83 3d aa 67 2b 01 00 74 25 fb 66 0f 1f 44 00 00 <bf> 01 00 00 00 e8 af 38 30 f9 65 8b 05 94 9d e1 77 85 c0 74 02 5b
-RSP: 0018:ffffc90004957cb8 EFLAGS: 00000282
-RAX: 1ffffffff1297901 RBX: ffff8880ae9358c0 RCX: dffffc0000000000
-RDX: 0000000040000000 RSI: 0000000000000000 RDI: ffffffff8820602f
-RBP: ffffc90004957d18 R08: ffffffff817a3350 R09: ffffed1015d26b19
-R10: ffffed1015d26b19 R11: 0000000000000000 R12: ffff8880ae9358c0
-R13: ffff888086b3c200 R14: ffff8880ae936308 R15: dffffc0000000000
- finish_task_switch+0x24f/0x550 kernel/sched/core.c:3297
- context_switch kernel/sched/core.c:3461 [inline]
- __schedule+0x859/0xcf0 kernel/sched/core.c:4219
- schedule+0x188/0x220 kernel/sched/core.c:4294
- freezable_schedule include/linux/freezer.h:172 [inline]
- do_nanosleep+0x1ae/0x680 kernel/time/hrtimer.c:1879
- hrtimer_nanosleep kernel/time/hrtimer.c:1932 [inline]
- __do_sys_nanosleep kernel/time/hrtimer.c:1966 [inline]
- __se_sys_nanosleep+0x3d5/0x5c0 kernel/time/hrtimer.c:1953
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45a870
-Code: c0 5b 5d c3 66 0f 1f 44 00 00 8b 04 24 48 83 c4 18 5b 5d c3 66 0f 1f 44 00 00 83 3d e1 f5 84 00 00 75 14 b8 23 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 54 d1 fb ff c3 48 83 ec 08 e8 8a 46 00 00
-RSP: 002b:00007ffd534d3838 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
-RAX: ffffffffffffffda RBX: 0000000000145c62 RCX: 000000000045a870
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffd534d3840
-RBP: 0000000000001962 R08: 0000000000000001 R09: 0000000001ead940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
-R13: 00007ffd534d3890 R14: 0000000000145c30 R15: 00007ffd534d38a0
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/exfat/dir.c | 34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index c9715c7a55a1..2e79ac464f5f 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -563,18 +563,27 @@ int exfat_remove_entries(struct inode *inode, struct exfat_chain *p_dir,
+ 	return 0;
+ }
+ 
+-void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
++static int exfat_calc_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es, u16 *chksum)
+ {
+-	int chksum_type = CS_DIR_ENTRY, i;
+-	unsigned short chksum = 0;
+ 	struct exfat_dentry *ep;
++	int i;
+ 
+-	for (i = 0; i < es->num_entries; i++) {
+-		ep = exfat_get_validated_dentry(es, i, TYPE_ALL);
+-		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
+-					     chksum_type);
+-		chksum_type = CS_DEFAULT;
++	ep = container_of(es->de_file, struct exfat_dentry, dentry.file);
++	*chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, 0, CS_DIR_ENTRY);
++	for (i = 0; i < es->de_file->num_ext; i++) {
++		ep = exfat_get_validated_dentry(es, 1 + i, TYPE_SECONDARY);
++		if (!ep)
++			return -EIO;
++		*chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, *chksum, CS_DEFAULT);
+ 	}
++	return 0;
++}
++
++void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
++{
++	u16 chksum;
++
++	exfat_calc_dir_chksum_with_entry_set(es, &chksum);
+ 	es->de_file->checksum = cpu_to_le16(chksum);
+ 	es->modified = true;
+ }
+@@ -775,6 +784,7 @@ struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
+ 	struct exfat_entry_set_cache *es;
+ 	struct exfat_dentry *ep;
+ 	struct buffer_head *bh;
++	u16 chksum;
+ 
+ 	if (p_dir->dir == DIR_DELETED) {
+ 		exfat_err(sb, "access to deleted dentry");
+@@ -839,10 +849,10 @@ struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
+ 		goto free_es;
+ 	es->de_stream = &ep->dentry.stream;
+ 
+-	for (i = 2; i < es->num_entries; i++) {
+-		if (!exfat_get_validated_dentry(es, i, TYPE_SECONDARY))
+-			goto free_es;
+-	}
++	if (max_entries == ES_ALL_ENTRIES &&
++	    ((exfat_calc_dir_chksum_with_entry_set(es, &chksum) ||
++	      chksum != le16_to_cpu(es->de_file->checksum))))
++		goto free_es;
+ 
+ 	return es;
+ 
+-- 
+2.25.1
+
