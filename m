@@ -4,64 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC49C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE182224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BC12224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596832797;
-	bh=Hk4+PfIxR2EQZpW4JSb1J4BNdkn5+Ty9FtAWhAM/JGQ=;
+	s=default; t=1596832809;
+	bh=ffF7pgb5CC9QZjtpFziZVf95m1p+QOe2xbYxCPDIVMk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Iwzutuc5SN34cgYSKG7fcBIWHvCxYjg40AhYVxCtjDeQQ/OU8u6ODYvpIaEBXsqnj
-	 2bAUc1lixxwmmLjJY3bKH0dNY8QSA4diR4yDnn+NXsBECtWT3RzfkpVBZkj/nsGdsS
-	 5rDzMcgAguTmSX81yLnJ77LH80N0uO2pyhDWsdL4=
+	b=Qbz8Hqrn79qZPxLf5Kb6NxI3LwfU8GHog7/TnkwPCQACGK383BbjpW6JCb5EbMOVd
+	 X/JqUk22Q3hLcgZvNcnO2SdOvlro88LsLXen/i8vCv6hMt6fe/RVWZ/awGC+qlsSCG
+	 TH36xSoOpjVO/kfExv94tdaMNEpVAn7caWPEdjAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgHGUj4 (ORCPT
+        id S1726987AbgHGUkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:39:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33226 "EHLO mail.kernel.org"
+        Fri, 7 Aug 2020 16:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgHGUjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:39:55 -0400
-Subject: Re: [GIT PULL] Mailbox changes for v5.9
+        id S1726067AbgHGUkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:40:07 -0400
+Subject: Re: [GIT PULL]: dmaengine updates for v5.9-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596832795;
-        bh=Hk4+PfIxR2EQZpW4JSb1J4BNdkn5+Ty9FtAWhAM/JGQ=;
+        s=default; t=1596832807;
+        bh=ffF7pgb5CC9QZjtpFziZVf95m1p+QOe2xbYxCPDIVMk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=F5VMiL5mjTh06sd0xq0K+QoF0w8zQ09qtacWchRX3KFTxpYFvHkjmQPJeQFMXqdab
-         lIV3030s6gW4dAa1NXMnIsOIYHHjLNtEsxsdA+ZkO+9UV8GhXMyP+/0OY+peAaptRv
-         429GT1/xu4sMSBuw7EDd+azQfmMxopXNkcMpbtGM=
+        b=zUA+vcgDLJYJBbIMy6ruCjhkzE8FJ2asYjGguPYP9YLhATWLE0IgZ5WHKRkXyo2L9
+         QTBOZ1vKZBX+ON37ZLJIv15f2Cn90FGTtjnfm3QIWlfa2pmrFTGbHGiDgx/ZQx0Pm7
+         uVRFODb3rkmrOill+QcZ5fumd+jyCJESisa9faVU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CABb+yY0bZ8cdRa+vWYzE4zbujgQfKK=NzZs7G4o0QkxJXscEGQ@mail.gmail.com>
-References: <CABb+yY0bZ8cdRa+vWYzE4zbujgQfKK=NzZs7G4o0QkxJXscEGQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-arm-kernel.lists.infradead.org>
-X-PR-Tracked-Message-Id: <CABb+yY0bZ8cdRa+vWYzE4zbujgQfKK=NzZs7G4o0QkxJXscEGQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.linaro.org/landing-teams/working/fujitsu/integration.git tags/mailbox-v5.9
-X-PR-Tracked-Commit-Id: 884996986347dbe3b735cfa9bc041dd98a533796
+In-Reply-To: <20200807060551.GL12965@vkoul-mobl>
+References: <20200807060551.GL12965@vkoul-mobl>
+X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200807060551.GL12965@vkoul-mobl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-5.9-rc1
+X-PR-Tracked-Commit-Id: 00043a2689232631f39ebbf6719d545b1d799086
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 75dee3b6de4ce31464ffb827b81ddb5414599159
-Message-Id: <159683279523.2860.1761338992300041236.pr-tracker-bot@kernel.org>
-Date:   Fri, 07 Aug 2020 20:39:55 +0000
-To:     Jassi Brar <jassisinghbrar@gmail.com>
+X-PR-Merge-Commit-Id: ce615f5c1f73537c8267035d58b3d0c70e19b8da
+Message-Id: <159683280755.2860.12124200925415454292.pr-tracker-bot@kernel.org>
+Date:   Fri, 07 Aug 2020 20:40:07 +0000
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        dma <dmaengine@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 7 Aug 2020 01:30:04 -0500:
+The pull request you sent on Fri, 7 Aug 2020 11:35:51 +0530:
 
-> git://git.linaro.org/landing-teams/working/fujitsu/integration.git tags/mailbox-v5.9
+> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-5.9-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/75dee3b6de4ce31464ffb827b81ddb5414599159
+https://git.kernel.org/torvalds/c/ce615f5c1f73537c8267035d58b3d0c70e19b8da
 
 Thank you!
 
