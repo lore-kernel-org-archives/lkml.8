@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41509C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E7B221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A13E221E5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHGGZF (ORCPT
+        id S1726631AbgHGGZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 02:25:05 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:45239 "EHLO
+        Fri, 7 Aug 2020 02:25:14 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:62166 "EHLO
         alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbgHGGZE (ORCPT
+        with ESMTP id S1726401AbgHGGZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 02:25:04 -0400
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 23:25:04 -0700
+        Fri, 7 Aug 2020 02:25:03 -0400
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 06 Aug 2020 23:25:03 -0700
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 23:25:01 -0700
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Aug 2020 23:25:02 -0700
 Received: from c-mansur-linux.qualcomm.com ([10.204.90.208])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Aug 2020 11:54:56 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Aug 2020 11:54:50 +0530
 Received: by c-mansur-linux.qualcomm.com (Postfix, from userid 461723)
-        id DAEFA21C70; Fri,  7 Aug 2020 11:54:55 +0530 (IST)
+        id 06DEA21C70; Fri,  7 Aug 2020 11:54:49 +0530 (IST)
 From:   Mansur Alisha Shaik <mansur@codeaurora.org>
 To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         vgarodia@codeaurora.org,
         Mansur Alisha Shaik <mansur@codeaurora.org>
-Subject: [RESEND  3/3] venus: handle use after free for iommu_map/iommu_unmap
-Date:   Fri,  7 Aug 2020 11:54:38 +0530
-Message-Id: <1596781478-12216-4-git-send-email-mansur@codeaurora.org>
+Subject: [RESEND  1/3] venus: core: handle race condititon for core ops
+Date:   Fri,  7 Aug 2020 11:54:36 +0530
+Message-Id: <1596781478-12216-2-git-send-email-mansur@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596781478-12216-1-git-send-email-mansur@codeaurora.org>
 References: <1596781478-12216-1-git-send-email-mansur@codeaurora.org>
@@ -45,62 +45,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In concurrency usecase and reboot scenario we are trying
-to map fw.iommu_domain which is already unmapped during
-shutdown. This is causing NULL pointer dereference crash.
+For core ops we are having only write protect but there
+is no read protect, because of this in multthreading
+and concurrency, one CPU core is reading without wait
+which is causing the NULL pointer dereferece crash.
 
-This case is handled by adding necessary checks.
+one such scenario is as show below, where in one
+core core->ops becoming NULL and in another core
+calling core->ops->session_init().
 
+CPU: core-7:
 Call trace:
- __iommu_map+0x4c/0x348
- iommu_map+0x5c/0x70
- venus_boot+0x184/0x230 [venus_core]
- venus_sys_error_handler+0xa0/0x14c [venus_core]
+ hfi_session_init+0x180/0x1dc [venus_core]
+ vdec_queue_setup+0x9c/0x364 [venus_dec]
+ vb2_core_reqbufs+0x1e4/0x368 [videobuf2_common]
+ vb2_reqbufs+0x4c/0x64 [videobuf2_v4l2]
+ v4l2_m2m_reqbufs+0x50/0x84 [v4l2_mem2mem]
+ v4l2_m2m_ioctl_reqbufs+0x2c/0x38 [v4l2_mem2mem]
+ v4l_reqbufs+0x4c/0x5c
+__video_do_ioctl+0x2b0/0x39c
+
+CPU: core-0:
+Call trace:
+ venus_shutdown+0x98/0xfc [venus_core]
+ venus_sys_error_handler+0x64/0x148 [venus_core]
  process_one_work+0x210/0x3d0
  worker_thread+0x248/0x3f4
  kthread+0x11c/0x12c
- ret_from_fork+0x10/0x18
 
 Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
 ---
- drivers/media/platform/qcom/venus/firmware.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/media/platform/qcom/venus/core.c | 2 +-
+ drivers/media/platform/qcom/venus/hfi.c  | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-index 8801a6a..c427e88 100644
---- a/drivers/media/platform/qcom/venus/firmware.c
-+++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -171,9 +171,14 @@ static int venus_shutdown_no_tz(struct venus_core *core)
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 203c653..fe99c83 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -64,8 +64,8 @@ static void venus_sys_error_handler(struct work_struct *work)
+ 	pm_runtime_get_sync(core->dev);
  
- 	iommu = core->fw.iommu_domain;
+ 	hfi_core_deinit(core, true);
+-	hfi_destroy(core);
+ 	mutex_lock(&core->lock);
++	hfi_destroy(core);
+ 	venus_shutdown(core);
  
--	unmapped = iommu_unmap(iommu, VENUS_FW_START_ADDR, mapped);
--	if (unmapped != mapped)
--		dev_err(dev, "failed to unmap firmware\n");
-+	if (core->fw.mapped_mem_size && iommu) {
-+		unmapped = iommu_unmap(iommu, VENUS_FW_START_ADDR, mapped);
-+
-+		if (unmapped != mapped)
-+			dev_err(dev, "failed to unmap firmware\n");
-+		else
-+			core->fw.mapped_mem_size = 0;
-+	}
+ 	pm_runtime_put_sync(core->dev);
+diff --git a/drivers/media/platform/qcom/venus/hfi.c b/drivers/media/platform/qcom/venus/hfi.c
+index a211eb9..2eeb31f 100644
+--- a/drivers/media/platform/qcom/venus/hfi.c
++++ b/drivers/media/platform/qcom/venus/hfi.c
+@@ -195,7 +195,7 @@ EXPORT_SYMBOL_GPL(hfi_session_create);
+ int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
+ {
+ 	struct venus_core *core = inst->core;
+-	const struct hfi_ops *ops = core->ops;
++	const struct hfi_ops *ops;
+ 	int ret;
  
- 	return 0;
- }
-@@ -288,7 +293,11 @@ void venus_firmware_deinit(struct venus_core *core)
- 	iommu = core->fw.iommu_domain;
+ 	if (inst->state != INST_UNINIT)
+@@ -204,10 +204,13 @@ int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
+ 	inst->hfi_codec = to_codec_type(pixfmt);
+ 	reinit_completion(&inst->done);
  
- 	iommu_detach_device(iommu, core->fw.dev);
--	iommu_domain_free(iommu);
-+
-+	if (core->fw.iommu_domain) {
-+		iommu_domain_free(iommu);
-+		core->fw.iommu_domain = NULL;
-+	}
++	mutex_lock(&core->lock);
++	ops = core->ops;
+ 	ret = ops->session_init(inst, inst->session_type, inst->hfi_codec);
+ 	if (ret)
+ 		return ret;
  
- 	platform_device_unregister(to_platform_device(core->fw.dev));
- }
++	mutex_unlock(&core->lock);
+ 	ret = wait_session_msg(inst);
+ 	if (ret)
+ 		return ret;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
 of Code Aurora Forum, hosted by The Linux Foundation
