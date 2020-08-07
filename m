@@ -2,210 +2,344 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B385C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16F8322C9F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D45222C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 14:07:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MvQYr4hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgHGOEe (ORCPT
+        id S1726676AbgHGOG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 10:04:34 -0400
-Received: from mga12.intel.com ([192.55.52.136]:10122 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgHGN6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:58:15 -0400
-IronPort-SDR: IR4XiRxW9ObKYBuDUr16EPQaYkFp2b5noWcfFrHSlsjt/46H2DkVHblnj5Ceg53Pgma5Ppo5Z/
- 1fmRN7ZbDBwA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="132638377"
-X-IronPort-AV: E=Sophos;i="5.75,445,1589266800"; 
-   d="scan'208";a="132638377"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2020 06:58:08 -0700
-IronPort-SDR: HIw8EkictUtAcXrAoSt+uZAHW08pVZvuL+pgxULsOJiC7VeFMGHDQ/IWGx+tECiLTevAaCuwZS
- geCspFXkdXKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,445,1589266800"; 
-   d="scan'208";a="333547143"
-Received: from lkp-server02.sh.intel.com (HELO 090e49ab5480) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 07 Aug 2020 06:58:05 -0700
-Received: from kbuild by 090e49ab5480 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k42sU-0000J7-SM; Fri, 07 Aug 2020 13:57:46 +0000
-Date:   Fri, 07 Aug 2020 21:57:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/kaslr] BUILD SUCCESS
- 76167e5c5457aee8fba3edc5b8554183696fc94d
-Message-ID: <5f2d5dcc.GACXkTKne0jV4HcO%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 7 Aug 2020 10:06:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43642 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726574AbgHGOEa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 10:04:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596809068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/o/7N/pVYTrU8PWj8rjIVFM7HLH+xZUNPQd5e/vJSog=;
+        b=MvQYr4hlcwlfsn3ecJA5Iof/LHR0OPz+pjM5iPCFVGgwXTtAFYRngCAl/M8X7JBRHfEJjh
+        tlG4OSVDxzH77GesRzk+SWWfrL9FBXflO2AGreNCoTm2VLZOLD0yCf2PwnLi7aDOOmCga/
+        ls1inTtE2vQoa0xfX1YgLyfL3b92X3s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-rvM63Tg-MQ-pOJ53pyxIYQ-1; Fri, 07 Aug 2020 10:02:23 -0400
+X-MC-Unique: rvM63Tg-MQ-pOJ53pyxIYQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33C3B1DE0;
+        Fri,  7 Aug 2020 14:02:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-69.rdu2.redhat.com [10.10.113.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C680D69502;
+        Fri,  7 Aug 2020 14:02:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 1/5] Add manpage for open_tree(2)
+From:   David Howells <dhowells@redhat.com>
+To:     mtk.manpages@gmail.com, viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        christian.brauner@ubuntu.com, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 07 Aug 2020 15:02:06 +0100
+Message-ID: <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/kaslr
-branch HEAD: 76167e5c5457aee8fba3edc5b8554183696fc94d  x86/kaslr: Replace strlen() with strnlen()
+Add a manual page to document the open_tree() system call.
 
-elapsed time: 1173m
-
-configs tested: 140
-configs skipped: 73
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                       mainstone_defconfig
-sh                   sh7770_generic_defconfig
-mips                       rbtx49xx_defconfig
-ia64                         bigsur_defconfig
-arm                          simpad_defconfig
-sh                          polaris_defconfig
-powerpc64                           defconfig
-microblaze                      mmu_defconfig
-arm                         axm55xx_defconfig
-xtensa                    xip_kc705_defconfig
-m68k                       m5475evb_defconfig
-powerpc                       holly_defconfig
-powerpc                     pq2fads_defconfig
-c6x                                 defconfig
-arm                           u8500_defconfig
-mips                 pnx8335_stb225_defconfig
-arm                       aspeed_g5_defconfig
-mips                      bmips_stb_defconfig
-powerpc                    amigaone_defconfig
-sh                           se7712_defconfig
-arc                           tb10x_defconfig
-sh                           se7780_defconfig
-mips                   sb1250_swarm_defconfig
-sh                          r7780mp_defconfig
-arm                        realview_defconfig
-arm                           sunxi_defconfig
-microblaze                    nommu_defconfig
-mips                      fuloong2e_defconfig
-mips                     loongson1c_defconfig
-arm                          lpd270_defconfig
-mips                        jmr3927_defconfig
-arm                          ep93xx_defconfig
-mips                            e55_defconfig
-m68k                       m5249evb_defconfig
-sh                        dreamcast_defconfig
-alpha                               defconfig
-powerpc                  mpc885_ads_defconfig
-sh                   secureedge5410_defconfig
-ia64                          tiger_defconfig
-arm                         mv78xx0_defconfig
-mips                     loongson1b_defconfig
-sh                         apsh4a3a_defconfig
-sh                            hp6xx_defconfig
-s390                          debug_defconfig
-powerpc                     powernv_defconfig
-arm                        spear6xx_defconfig
-mips                         db1xxx_defconfig
-mips                            gpr_defconfig
-arm                       imx_v4_v5_defconfig
-arm                     eseries_pxa_defconfig
-arm                            pleb_defconfig
-arm                        keystone_defconfig
-arm                          collie_defconfig
-sh                           se7722_defconfig
-ia64                            zx1_defconfig
-mips                 decstation_r4k_defconfig
-openrisc                    or1ksim_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-i386                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a006-20200806
-x86_64               randconfig-a001-20200806
-x86_64               randconfig-a004-20200806
-x86_64               randconfig-a005-20200806
-x86_64               randconfig-a003-20200806
-x86_64               randconfig-a002-20200806
-i386                 randconfig-a005-20200806
-i386                 randconfig-a004-20200806
-i386                 randconfig-a001-20200806
-i386                 randconfig-a002-20200806
-i386                 randconfig-a003-20200806
-i386                 randconfig-a006-20200806
-i386                 randconfig-a005-20200805
-i386                 randconfig-a004-20200805
-i386                 randconfig-a001-20200805
-i386                 randconfig-a003-20200805
-i386                 randconfig-a002-20200805
-i386                 randconfig-a006-20200805
-x86_64               randconfig-a013-20200805
-x86_64               randconfig-a011-20200805
-x86_64               randconfig-a012-20200805
-x86_64               randconfig-a016-20200805
-x86_64               randconfig-a015-20200805
-x86_64               randconfig-a014-20200805
-i386                 randconfig-a011-20200805
-i386                 randconfig-a012-20200805
-i386                 randconfig-a013-20200805
-i386                 randconfig-a014-20200805
-i386                 randconfig-a015-20200805
-i386                 randconfig-a016-20200805
-i386                 randconfig-a011-20200806
-i386                 randconfig-a012-20200806
-i386                 randconfig-a013-20200806
-i386                 randconfig-a015-20200806
-i386                 randconfig-a014-20200806
-i386                 randconfig-a016-20200806
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+ man2/open_tree.2 |  260 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 260 insertions(+)
+ create mode 100644 man2/open_tree.2
+
+diff --git a/man2/open_tree.2 b/man2/open_tree.2
+new file mode 100644
+index 000000000..a360b11a5
+--- /dev/null
++++ b/man2/open_tree.2
+@@ -0,0 +1,260 @@
++'\" t
++.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
++.\"
++.\" %%%LICENSE_START(VERBATIM)
++.\" Permission is granted to make and distribute verbatim copies of this
++.\" manual provided the copyright notice and this permission notice are
++.\" preserved on all copies.
++.\"
++.\" Permission is granted to copy and distribute modified versions of this
++.\" manual under the conditions for verbatim copying, provided that the
++.\" entire resulting derived work is distributed under the terms of a
++.\" permission notice identical to this one.
++.\"
++.\" Since the Linux kernel and libraries are constantly changing, this
++.\" manual page may be incorrect or out-of-date.  The author(s) assume no
++.\" responsibility for errors or omissions, or for damages resulting from
++.\" the use of the information contained herein.  The author(s) may not
++.\" have taken the same level of care in the production of this manual,
++.\" which is licensed free of charge, as they might when working
++.\" professionally.
++.\"
++.\" Formatted or processed versions of this manual, if unaccompanied by
++.\" the source, must acknowledge the copyright and authors of this work.
++.\" %%%LICENSE_END
++.\"
++.TH OPEN_TREE 2 2020-08-07 "Linux" "Linux Programmer's Manual"
++.SH NAME
++open_tree \- Pick or clone mount object and attach to fd
++.SH SYNOPSIS
++.nf
++.B #include <sys/types.h>
++.br
++.B #include <sys/mount.h>
++.br
++.B #include <unistd.h>
++.br
++.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
++.PP
++.BI "int open_tree(int " dirfd ", const char *" pathname ", unsigned int " flags );
++.fi
++.PP
++.IR Note :
++There are no glibc wrappers for these system calls.
++.SH DESCRIPTION
++.BR open_tree ()
++picks the mount object specified by the pathname and attaches it to a new file
++descriptor or clones it and attaches the clone to the file descriptor.  The
++resultant file descriptor is indistinguishable from one produced by
++.BR open "(2) with " O_PATH .
++.PP
++In the case that the mount object is cloned, the clone will be "unmounted" and
++destroyed when the file descriptor is closed if it is not otherwise mounted
++somewhere by calling
++.BR move_mount (2).
++.PP
++To select a mount object, no permissions are required on the object referred
++to by the path, but execute (search) permission is required on all of the
++directories in
++.I pathname
++that lead to the object.
++.PP
++To clone an object, however, the caller must have mount capabilities and
++permissions.
++.PP
++.BR open_tree ()
++uses
++.IR pathname ", " dirfd " and " flags
++to locate the target object in one of a variety of ways:
++.TP
++[*] By absolute path.
++.I pathname
++points to an absolute path and
++.I dirfd
++is ignored.  The object is looked up by name, starting from the root of the
++filesystem as seen by the calling process.
++.TP
++[*] By cwd-relative path.
++.I pathname
++points to a relative path and
++.IR dirfd " is " AT_FDCWD .
++The object is looked up by name, starting from the current working directory.
++.TP
++[*] By dir-relative path.
++.I pathname
++points to relative path and
++.I dirfd
++indicates a file descriptor pointing to a directory.  The object is looked up
++by name, starting from the directory specified by
++.IR dirfd .
++.TP
++[*] By file descriptor.
++.I pathname
++is "",
++.I dirfd
++indicates a file descriptor and
++.B AT_EMPTY_PATH
++is set in
++.IR flags .
++The mount attached to the file descriptor is queried directly.  The file
++descriptor may point to any type of file, not just a directory.
++
++.\"______________________________________________________________
++.PP
++.I flags
++can be used to control the operation of the function and to influence a
++path-based lookup.  A value for
++.I flags
++is constructed by OR'ing together zero or more of the following constants:
++.TP
++.BR AT_EMPTY_PATH
++.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
++If
++.I pathname
++is an empty string, operate on the file referred to by
++.IR dirfd
++(which may have been obtained from
++.BR open "(2) with"
++.BR O_PATH ", from " fsmount (2)
++or from another
++.BR open_tree ()).
++If
++.I dirfd
++is
++.BR AT_FDCWD ,
++the call operates on the current working directory.
++In this case,
++.I dirfd
++can refer to any type of file, not just a directory.
++This flag is Linux-specific; define
++.B _GNU_SOURCE
++.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
++to obtain its definition.
++.TP
++.BR AT_NO_AUTOMOUNT
++Don't automount the terminal ("basename") component of
++.I pathname
++if it is a directory that is an automount point.  This flag allows the
++automount point itself to be picked up or a mount cloned that is rooted on the
++automount point.  The
++.B AT_NO_AUTOMOUNT
++flag has no effect if the mount point has already been mounted over.
++This flag is Linux-specific; define
++.B _GNU_SOURCE
++.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
++to obtain its definition.
++.TP
++.B AT_SYMLINK_NOFOLLOW
++If
++.I pathname
++is a symbolic link, do not dereference it: instead pick up or clone a mount
++rooted on the link itself.
++.TP
++.B OPEN_TREE_CLOEXEC
++Set the close-on-exec flag for the new file descriptor.  This will cause the
++file descriptor to be closed automatically when a process exec's.
++.TP
++.B OPEN_TREE_CLONE
++Rather than directly attaching the selected object to the file descriptor,
++clone the object, set the root of the new mount object to that point and
++attach the clone to the file descriptor.
++.TP
++.B AT_RECURSIVE
++This is only permitted in conjunction with OPEN_TREE_CLONE.  It causes the
++entire mount subtree rooted at the selected spot to be cloned rather than just
++that one mount object.
++
++
++.SH EXAMPLE
++The
++.BR open_tree ()
++function can be used like the following:
++.PP
++.RS
++.nf
++fd1 = open_tree(AT_FDCWD, "/mnt", 0);
++fd2 = open_tree(fd1, "",
++                AT_EMPTY_PATH | OPEN_TREE_CLONE | AT_RECURSIVE);
++move_mount(fd2, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
++.fi
++.RE
++.PP
++This would attach the path point for "/mnt" to fd1, then it would copy the
++entire subtree at the point referred to by fd1 and attach that to fd2; lastly,
++it would attach the clone to "/mnt2".
++
++
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.SH RETURN VALUE
++On success, the new file descriptor is returned.  On error, \-1 is returned,
++and
++.I errno
++is set appropriately.
++.SH ERRORS
++.TP
++.B EACCES
++Search permission is denied for one of the directories
++in the path prefix of
++.IR pathname .
++(See also
++.BR path_resolution (7).)
++.TP
++.B EBADF
++.I dirfd
++is not a valid open file descriptor.
++.TP
++.B EFAULT
++.I pathname
++is NULL or
++.IR pathname
++point to a location outside the process's accessible address space.
++.TP
++.B EINVAL
++Reserved flag specified in
++.IR flags .
++.TP
++.B ELOOP
++Too many symbolic links encountered while traversing the pathname.
++.TP
++.B ENAMETOOLONG
++.I pathname
++is too long.
++.TP
++.B ENOENT
++A component of
++.I pathname
++does not exist, or
++.I pathname
++is an empty string and
++.B AT_EMPTY_PATH
++was not specified in
++.IR flags .
++.TP
++.B ENOMEM
++Out of memory (i.e., kernel memory).
++.TP
++.B ENOTDIR
++A component of the path prefix of
++.I pathname
++is not a directory or
++.I pathname
++is relative and
++.I dirfd
++is a file descriptor referring to a file other than a directory.
++.SH VERSIONS
++.BR open_tree ()
++was added to Linux in kernel 4.18.
++.SH CONFORMING TO
++.BR open_tree ()
++is Linux-specific.
++.SH NOTES
++Glibc does not (yet) provide a wrapper for the
++.BR open_tree ()
++system call; call it using
++.BR syscall (2).
++.SH SEE ALSO
++.BR fsmount (2),
++.BR move_mount (2),
++.BR open (2)
+
+
