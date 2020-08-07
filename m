@@ -2,210 +2,197 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5925EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E44BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 283182224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CF3214F1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XWqmuEOs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skihW5Fs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgHGWk5 (ORCPT
+        id S1726202AbgHGWuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 18:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
+        Fri, 7 Aug 2020 18:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgHGWk4 (ORCPT
+        with ESMTP id S1726015AbgHGWuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 18:40:56 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA0AC061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 15:40:56 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k12so2852096otr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 15:40:56 -0700 (PDT)
+        Fri, 7 Aug 2020 18:50:13 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EDFC061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 15:50:13 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id c191so2544226qkb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 15:50:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c6hoLzC3a/GCKNCcphDjG0464om/VNNdDtUdrarqISg=;
-        b=XWqmuEOsFgQl/KW1XFg0sh1mkcTZV+lCf9Km2jxbUnibk7lWts4NReaGkR/UvTRGQs
-         00p62VfebsT6n/g9aykuVo7Ol+1xtiR2X3LIjW6IrZAwQS1iotmX711XuK0F+QfE33x5
-         RsRRNX27kjK7iMwcjyKYiD9OFtxAiHkVmRzGAiUeIB859Z6ClGPUd9TCdM3YzcJ5hTJP
-         7z+JtIvoDfHWjZxzIY25FQ4DJSLptHCO/VYQtA+5JG/Y2D+7uRX+W7sYH/YH4qWnDPeN
-         /Fh385x9FZpPDPB8B8NO+vdHzncxlyooK5Bk0B0tKLw5qXkvOT+lNEbeqndiijbRcZ0Y
-         i3Jg==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=DQO/d2NW9ycP8DpTdbgC9T07rqomhGHKBXOmCuHa3fI=;
+        b=skihW5FsoS5B78IzyrqqnSUBgOERm/DgSjBN+uMjnt0AZnPktaxaQbH2qQou65YQmU
+         qP21JoLind2jMwtpvkUtQldXZyx2lxVWdw0ROo0fDFRei2PlwNCMAdF/NA7atmf1rSDB
+         H7kEdhYhgDhiDrf8XmbVr9tEFsAU5rlfePr16DRyDkDz6gSCvwU4V8ZSUUK2oxRzfgsS
+         munPXEMVTA90J6c38s3k83pWnxFTpLR9v9nQreC1CwIf7cllzdpDOGRD96jwPxYDm58R
+         q6Qtrly3U9bt3QCQAvZaY2pCYItO38lzL923Ms6TFxmvinsPFI0AsgcvV6ABS9gDigIt
+         DrWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c6hoLzC3a/GCKNCcphDjG0464om/VNNdDtUdrarqISg=;
-        b=GPIXQNdJnm3YFBmiQIc6XmOetCiDIboXpGxA2qAuRmudTyB0txC8Z39Cu7aiSEYwGp
-         e0jVgh+OJdreD1/KUPWaXp6canjpc+6vH2jm0ygeIJR3DPf/TE4GFXeTg2XEYwxTB958
-         Y/X/oWm2Y7Tqxss33p+vK6KVsKKKU9Bn9vmH9blafMXxJTGCU+UbflVBhcTeMXGNEGcH
-         sIMFhPg/CUFL8c49SjzEawxrXYZrVjEiIeMe3W0WDg7Qomr43edJtgJyCx3JTY8ndoEL
-         7s58TLseo7k46dkDcC69DQypc34N3VsJpvpha5b/iGV269R51TtHKit0DY1B7PSOyrxD
-         4U5g==
-X-Gm-Message-State: AOAM5316hftym2A6YKcdKo8iEn/aRi0ioTHdsl6S4vEIOPhJuBkWrU14
-        Og481M+39YGyxnwr08ZHRArY46Z8bW3syvirAOpZDA==
-X-Google-Smtp-Source: ABdhPJxQGhwjuSCAEdjys+3p243krsAjWwtf+0bUT9mMHCQnL2xnaw1KMNO8fbXGJ4JR7p8Xmduk27uytRPHM1UVh6M=
-X-Received: by 2002:a05:6830:614:: with SMTP id w20mr2624613oti.283.1596840055222;
- Fri, 07 Aug 2020 15:40:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200806174326.3577537-1-urielguajardojr@gmail.com> <alpine.LRH.2.21.2008071510580.10525@localhost>
-In-Reply-To: <alpine.LRH.2.21.2008071510580.10525@localhost>
-From:   Uriel Guajardo <urielguajardo@google.com>
-Date:   Fri, 7 Aug 2020 17:40:43 -0500
-Message-ID: <CAG30EecJZeBZ-rbZNCGN1o=g6WkrmJv+PCp-JUr-zjMOzndg8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kunit: support failure from dynamic analysis tools
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=DQO/d2NW9ycP8DpTdbgC9T07rqomhGHKBXOmCuHa3fI=;
+        b=L4Rk59FyemmqWr/TEqHk48d1jDZNInXwr99VKTQyCMjsyGK2fZyjXAwy61RnZN/4tw
+         QfN1HE11T4m2JjN21UkIOMucluZSWWPtPBfhLDJ9gFPgyiZqja8ocmK0CmLA2op//pMc
+         F1aPsUCYOH3mUYBGKKsDtbxXvwzKDAfcoGoQAkqRsENi9OFuPPrvtFiABjAdn+VHCyvY
+         qNlLXELniPyrYa7IydnlOSDDHJgdyzhR4MP030GLDZgJt867cF2nqrhhpFzqNxPJZ/cG
+         KTcgUVgxTGvQ3s6WvA9baO//p0gsAlSuqpBat2UsfKM0mGaKgaqDIW8cBheit9f5yAnc
+         7/dg==
+X-Gm-Message-State: AOAM530dGDTmTZqcAf2/Tc1C9U9eLrwo7Y913fTQz47EjaY74BBEx/Nn
+        x4odazcWdR1IJeNd0HJcHUeJDplwwbo7evmbQg==
+X-Google-Smtp-Source: ABdhPJyG3KGIHkCpGfBzgWcWyqw9H33fn3v9KCn90f9K5GXlgb5Y6RbVNwWjkzPw3a2FniVWsQnK4tgwCbB49VCiMw==
+X-Received: by 2002:a0c:e604:: with SMTP id z4mr17234420qvm.222.1596840612573;
+ Fri, 07 Aug 2020 15:50:12 -0700 (PDT)
+Date:   Fri,  7 Aug 2020 15:49:38 -0700
+Message-Id: <20200807224941.3440722-1-lokeshgidra@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+Subject: [PATCH v6 0/3] SELinux support for anonymous inodes and UFFD
+From:   Lokesh Gidra <lokeshgidra@google.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Daniel Colascione <dancol@dancol.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        KP Singh <kpsingh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Cedeno <thomascedeno@google.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Reber <areber@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        kaleshsingh@google.com, calin@google.com, surenb@google.com,
+        nnk@google.com, jeffv@google.com, kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 9:16 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> On Thu, 6 Aug 2020, Uriel Guajardo wrote:
->
-> > Adds an API to allow dynamic analysis tools to fail the currently
-> > running KUnit test case.
-> >
-> > - Always places the kunit test in the task_struct to allow other tools
-> > to access the currently running KUnit test.
-> >
-> > - Creates a new header file to avoid circular dependencies that could be
-> > created from the test.h file.
-> >
-> > Requires KASAN-KUnit integration patch to access the kunit test from
-> > task_struct:
-> > https://lore.kernel.org/linux-kselftest/20200606040349.246780-2-davidgow@google.com/
-> >
-> > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
-> > ---
-> >  include/kunit/test-bug.h | 24 ++++++++++++++++++++++++
-> >  include/kunit/test.h     |  1 +
-> >  lib/kunit/test.c         | 10 ++++++----
-> >  3 files changed, 31 insertions(+), 4 deletions(-)
-> >  create mode 100644 include/kunit/test-bug.h
-> >
-> > diff --git a/include/kunit/test-bug.h b/include/kunit/test-bug.h
-> > new file mode 100644
-> > index 000000000000..283c19ec328f
-> > --- /dev/null
-> > +++ b/include/kunit/test-bug.h
-> > @@ -0,0 +1,24 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * KUnit API allowing dynamic analysis tools to interact with KUnit tests
-> > + *
-> > + * Copyright (C) 2020, Google LLC.
-> > + * Author: Uriel Guajardo <urielguajardo@google.com>
-> > + */
-> > +
-> > +#ifndef _KUNIT_TEST_BUG_H
-> > +#define _KUNIT_TEST_BUG_H
-> > +
-> > +#if IS_ENABLED(CONFIG_KUNIT)
-> > +
-> > +extern void kunit_fail_current_test(void);
-> > +
-> > +#else
-> > +
-> > +static inline void kunit_fail_current_test(void)
-> > +{
-> > +}
-> > +
-> > +#endif
-> > +
-> > +#endif /* _KUNIT_TEST_BUG_H */
->
-> This is great stuff!
->
-> One thing I wonder though; how obvious will it be to someone
-> running a KUnit test that the cause of the test failure
-> is a dynamic analysis tool?  Yes we'll see the dmesg logging
-> from that tool but I don't think there's any context _within_
-> KUnit that could clarify the source of the failure.  What about
-> changing the above API to include a string message that KUnit can
-> log, so it can at least identify the source of the failure
-> (ubsan, kasan etc).  That would alert anyone looking at KUnit
-> output only that there's an external context to examine.
->
+Userfaultfd in unprivileged contexts could be potentially very
+useful. We'd like to harden userfaultfd to make such unprivileged use
+less risky. This patch series allows SELinux to manage userfaultfd
+file descriptors and in the future, other kinds of
+anonymous-inode-based file descriptor.  SELinux policy authors can
+apply policy types to anonymous inodes by providing name-based
+transition rules keyed off the anonymous inode internal name (
+"[userfaultfd]" in the case of userfaultfd(2) file descriptors) and
+applying policy to the new SIDs thus produced.
 
-Good point! You're right: as it stands, there is no context within
-KUnit indicating the source of the failure, and the tool itself is
-responsible for logging. This patch is mainly focused on just failing
-test cases from outside KUnit.
+Inside the kernel, a pair of new anon_inodes interface,
+anon_inode_getfile_secure and anon_inode_getfd_secure, allow callers
+to opt into this SELinux management. In this new "secure" mode,
+anon_inodes creates new ephemeral inodes for anonymous file objects
+instead of reusing the normal anon_inodes singleton dummy inode. A new
+LSM hook gives security modules an opportunity to configure and veto
+these ephemeral inodes.
 
-I'm actually working on sending a follow-up patch soon that supports
-the expectation of failures from specific tools. It will introduce
-something similar to what you are suggesting, so that KUnit can
-properly distinguish between different failures and log them
-appropriately. Thanks for the suggestion!
+This patch series is one of two fork of [1] and is an
+alternative to [2].
 
+The primary difference between the two patch series is that this
+partch series creates a unique inode for each "secure" anonymous
+inode, while the other patch series ([2]) continues using the
+singleton dummy anonymous inode and adds a way to attach SELinux
+security information directly to file objects.
 
+I prefer the approach in this patch series because 1) it's a smaller
+patch than [2], and 2) it produces a more regular security
+architecture: in this patch series, secure anonymous inodes aren't
+S_PRIVATE and they maintain the SELinux property that the label for a
+file is in its inode. We do need an additional inode per anonymous
+file, but per-struct-file inode creation doesn't seem to be a problem
+for pipes and sockets.
 
+The previous version of this feature ([1]) created a new SELinux
+security class for userfaultfd file descriptors. This version adopts
+the generic transition-based approach of [2].
 
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index 3391f38389f8..81bf43a1abda 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -11,6 +11,7 @@
-> >
-> >  #include <kunit/assert.h>
-> >  #include <kunit/try-catch.h>
-> > +#include <kunit/test-bug.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> >  #include <linux/slab.h>
-> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > index dcc35fd30d95..d8189d827368 100644
-> > --- a/lib/kunit/test.c
-> > +++ b/lib/kunit/test.c
-> > @@ -16,6 +16,12 @@
-> >  #include "string-stream.h"
-> >  #include "try-catch-impl.h"
-> >
-> > +void kunit_fail_current_test(void)
-> > +{
-> > +     if (current->kunit_test)
-> > +             kunit_set_failure(current->kunit_test);
-> > +}
-> > +
-> >  static void kunit_print_tap_version(void)
-> >  {
-> >       static bool kunit_has_printed_tap_version;
-> > @@ -284,9 +290,7 @@ static void kunit_try_run_case(void *data)
-> >       struct kunit_suite *suite = ctx->suite;
-> >       struct kunit_case *test_case = ctx->test_case;
-> >
-> > -#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> >       current->kunit_test = test;
-> > -#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
-> >
-> >       /*
-> >        * kunit_run_case_internal may encounter a fatal error; if it does,
-> > @@ -602,9 +606,7 @@ void kunit_cleanup(struct kunit *test)
-> >               spin_unlock(&test->lock);
-> >               kunit_remove_resource(test, res);
-> >       }
-> > -#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> >       current->kunit_test = NULL;
-> > -#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
-> >  }
-> >  EXPORT_SYMBOL_GPL(kunit_cleanup);
-> >
-> > --
-> > 2.28.0.163.g6104cc2f0b6-goog
-> >
-> >
+This patch series also differs from [2] in that it doesn't affect all
+anonymous inodes right away --- instead requiring anon_inodes callers
+to opt in --- but this difference isn't one of basic approach. The
+important question to resolve is whether we should be creating new
+inodes or enhancing per-file data.
+
+Changes from the first version of the patch:
+
+  - Removed some error checks
+  - Defined a new anon_inode SELinux class to resolve the
+    ambiguity in [3]
+  - Inherit sclass as well as descriptor from context inode
+
+Changes from the second version of the patch:
+
+  - Fixed example policy in the commit message to reflect the use of
+    the new anon_inode class.
+
+Changes from the third version of the patch:
+
+  - Dropped the fops parameter to the LSM hook
+  - Documented hook parameters
+  - Fixed incorrect class used for SELinux transition
+  - Removed stray UFFD changed early in the series
+  - Removed a redundant ERR_PTR(PTR_ERR())
+
+Changes from the fourth version of the patch:
+
+  - Removed an unused parameter from an internal function
+  - Fixed function documentation
+
+Changes from the fifth version of the patch:
+
+  - Fixed function documentation in fs/anon_inodes.c and
+    include/linux/lsm_hooks.h
+  - Used anon_inode_getfd_secure() in userfaultfd() syscall and removed
+    owner from userfaultfd_ctx.
+
+[1] https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
+[2] https://lore.kernel.org/linux-fsdevel/20200213194157.5877-1-sds@tycho.nsa.gov/
+[3] https://lore.kernel.org/lkml/23f725ca-5b5a-5938-fcc8-5bbbfc9ba9bc@tycho.nsa.gov/
+
+Daniel Colascione (3):
+  Add a new LSM-supporting anonymous inode interface
+  Teach SELinux about anonymous inodes
+  Wire UFFD up to SELinux
+
+ fs/anon_inodes.c                    | 193 ++++++++++++++++++++++------
+ fs/userfaultfd.c                    |  23 ++--
+ include/linux/anon_inodes.h         |  13 ++
+ include/linux/lsm_hook_defs.h       |   2 +
+ include/linux/lsm_hooks.h           |   7 +
+ include/linux/security.h            |   3 +
+ security/security.c                 |   9 ++
+ security/selinux/hooks.c            |  53 ++++++++
+ security/selinux/include/classmap.h |   2 +
+ 9 files changed, 255 insertions(+), 50 deletions(-)
+
+-- 
+2.28.0.236.gb10cc79966-goog
+
