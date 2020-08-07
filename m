@@ -2,127 +2,156 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE352177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629EA221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:58:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQjMvGzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgHGD60 (ORCPT
+        id S1726563AbgHGD6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:58:26 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43942 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726038AbgHGD6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:58:25 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DF065B935D0C3FADCEE4;
-        Fri,  7 Aug 2020 11:58:23 +0800 (CST)
-Received: from [10.63.139.185] (10.63.139.185) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 7 Aug 2020 11:58:22 +0800
-Subject: Re: [BUG] crypto: hisilicon: accessing the data mapped to streaming
- DMA
-To:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-References: <361fa200-479c-e1ef-b7d6-e666a256660f@tsinghua.edu.cn>
- <5F276491.8060409@hisilicon.com>
- <c0001b9b-6529-27bc-2874-2a2674257507@tsinghua.edu.cn>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5F2CD15E.6060508@hisilicon.com>
+        Thu, 6 Aug 2020 23:58:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27069 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726066AbgHGD6g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 23:58:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596772714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=trd6XzNAFWlVlhnF00AGLAJ//+tyUA5NEjUQzobqU08=;
+        b=MQjMvGzyHpIfecOASrhi8Mr9viyxzrBMZ/IPaCWFcM2i8HBb2Q5mISn3zlYlSnK6lTLOYU
+        1jYariUWLjlOA/Oeikrlqcs0ExtRaJiPcVZsk/UhCh5D8JaPxGncHQQ/ekFfvIHRl6i3Wj
+        LN4+TFHR/6cW6XsFDG3nfJTcBIe6VvY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-fVW1eGtFPm-D5zEmWHR_nA-1; Thu, 06 Aug 2020 23:58:30 -0400
+X-MC-Unique: fVW1eGtFPm-D5zEmWHR_nA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 974998017FB;
+        Fri,  7 Aug 2020 03:58:29 +0000 (UTC)
+Received: from [10.72.13.215] (ovpn-13-215.pek2.redhat.com [10.72.13.215])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12EA15F1EF;
+        Fri,  7 Aug 2020 03:58:23 +0000 (UTC)
+Subject: Re: [PATCH][next] vdpa/mlx5: fix memory allocation failure checks
+To:     Colin King <colin.king@canonical.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Eli Cohen <eli@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        virtualization@lists.linux-foundation.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200806160828.90463-1-colin.king@canonical.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <bca8c1ef-1e21-cd05-4a91-ca136de5ae1e@redhat.com>
 Date:   Fri, 7 Aug 2020 11:58:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <c0001b9b-6529-27bc-2874-2a2674257507@tsinghua.edu.cn>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200806160828.90463-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/3 9:29, Jia-Ju Bai wrote:
-> 
-> 
-> On 2020/8/3 9:12, Zhou Wang wrote:
->> On 2020/8/2 22:52, Jia-Ju Bai wrote:
->>> In qm_qp_ctx_cfg(), "sqc" and "aeqc" are mapped to streaming DMA:
->>>    eqc_dma = dma_map_single(..., eqc, ...);
->>>    ......
->>>    aeqc_dma = dma_map_single(..., aeqc, ...);
->> Only sqc, cqc will be configured in qm_qp_ctx_cfg.
->>
->>> Then "sqc" and "aeqc" are accessed at many places, such as:
->>>    eqc->base_l = cpu_to_le32(lower_32_bits(qm->eqe_dma));
->>>    eqc->base_h = cpu_to_le32(upper_32_bits(qm->eqe_dma));
->>>    ......
->>>    aeqc->base_l = cpu_to_le32(lower_32_bits(qm->aeqe_dma));
->>>    aeqc->base_h = cpu_to_le32(upper_32_bits(qm->aeqe_dma));
->> There are sqc, cqc, eqc, aeqc, you seems misunderstand them.
->>
->>> These accesses may cause data inconsistency between CPU cache and hardware.
->>>
->>> I am not sure how to properly fix this problem, and thus I only report it.
->> In qm_qp_ctx_cfg, sqc/cqc memory will be allocated and related mailbox will be sent
->> to hardware. In qm_eq_ctx_cfg, eqc/aeqc related operations will be done.
->>
->> So there is no problem here :)
-> 
-> Ah, sorry, I misunderstood qm_eq_ctx_cfg() and qm_qp_ctx_cfg(), because their names are quite similar.
-> Now, I re-organize this report as follows:
-> 
-> In qm_eq_ctx_cfg(), "eqc" and "aeqc" are mapped to streaming DMA:
->   eqc_dma = dma_map_single(..., eqc, ...);
->   ......
->   aeqc_dma = dma_map_single(..., aeqc, ...);
-> 
-> Then "sqc" and "aeqc" are accessed at some places in qm_eq_ctx_cfg(), such as:
->   eqc->base_l = cpu_to_le32(lower_32_bits(qm->eqe_dma));
->   eqc->base_h = cpu_to_le32(upper_32_bits(qm->eqe_dma));
->   ......
->   aeqc->base_l = cpu_to_le32(lower_32_bits(qm->aeqe_dma));
->   aeqc->base_h = cpu_to_le32(upper_32_bits(qm->aeqe_dma));
-> 
-> These accesses may cause data inconsistency between CPU cache and hardware.
-> 
-> Besides, in qm_qp_ctx_cfg(), "sqc" and "cqc" are mapped to streaming DMA:
->   sqc_dma = dma_map_single(..., sqc, ...);
->   ......
->   cqc_dma = dma_map_single(..., cqc, ...);
-> 
-> 
-> Then "sqc" and "cqc" are at some places in qm_qp_ctx_cfg(), such as:
->   sqc->cq_num = cpu_to_le16(qp_id);
->   sqc->w13 = cpu_to_le16(QM_MK_SQC_W13(0, 1, qp->alg_type));
->   ......
->   cqc->dw3 = cpu_to_le32(QM_MK_CQC_DW3_V2(4));
->   cqc->w8 = 0;
-> 
-> These accesses may cause data inconsistency between CPU cache and hardware.
-> 
-> I think such problems (if they are real) can be fixed by finishing data assignment before DMA mapping.
 
-Sorry for late. I got your idea, from the semantics of dma_map_single/dma_unmap_single,
-we should not mix CPU and device DMA accessing here. The reason of working well is our
-hardware is hardware CC.
+On 2020/8/7 上午12:08, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The memory allocation failure checking for in and out is currently
+> checking if the pointers are valid rather than the contents of what
+> they point to. Hence the null check on failed memory allocations is
+> incorrect.  Fix this by adding the missing indirection in the check.
+> Also for the default case, just set the *in and *out to null as
+> these don't have any thing allocated to kfree. Finally remove the
+> redundant *in and *out check as these have been already done on each
+> allocation in the case statement.
+>
+> Addresses-Coverity: ("Null pointer dereference")
+> Fixes: 1a86b377aa21 ("vdpa/mlx5: Add VDPA driver for supported mlx5 devices")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Will fix this later.
 
-Thanks,
-Zhou
+Acked-by: Jason Wang <jasowang@redhat.com>
 
->  
-> 
-> Best wishes,
-> Jia-Ju Bai
-> 
-> .
-> 
+
+> ---
+>   drivers/vdpa/mlx5/net/mlx5_vnet.c | 13 ++++++-------
+>   1 file changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> index 3ec44a4f0e45..55bc58e1dae9 100644
+> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> @@ -867,7 +867,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+>   		*outlen = MLX5_ST_SZ_BYTES(qp_2rst_out);
+>   		*in = kzalloc(*inlen, GFP_KERNEL);
+>   		*out = kzalloc(*outlen, GFP_KERNEL);
+> -		if (!in || !out)
+> +		if (!*in || !*out)
+>   			goto outerr;
+>   
+>   		MLX5_SET(qp_2rst_in, *in, opcode, cmd);
+> @@ -879,7 +879,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+>   		*outlen = MLX5_ST_SZ_BYTES(rst2init_qp_out);
+>   		*in = kzalloc(*inlen, GFP_KERNEL);
+>   		*out = kzalloc(MLX5_ST_SZ_BYTES(rst2init_qp_out), GFP_KERNEL);
+> -		if (!in || !out)
+> +		if (!*in || !*out)
+>   			goto outerr;
+>   
+>   		MLX5_SET(rst2init_qp_in, *in, opcode, cmd);
+> @@ -896,7 +896,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+>   		*outlen = MLX5_ST_SZ_BYTES(init2rtr_qp_out);
+>   		*in = kzalloc(*inlen, GFP_KERNEL);
+>   		*out = kzalloc(MLX5_ST_SZ_BYTES(init2rtr_qp_out), GFP_KERNEL);
+> -		if (!in || !out)
+> +		if (!*in || !*out)
+>   			goto outerr;
+>   
+>   		MLX5_SET(init2rtr_qp_in, *in, opcode, cmd);
+> @@ -914,7 +914,7 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+>   		*outlen = MLX5_ST_SZ_BYTES(rtr2rts_qp_out);
+>   		*in = kzalloc(*inlen, GFP_KERNEL);
+>   		*out = kzalloc(MLX5_ST_SZ_BYTES(rtr2rts_qp_out), GFP_KERNEL);
+> -		if (!in || !out)
+> +		if (!*in || !*out)
+>   			goto outerr;
+>   
+>   		MLX5_SET(rtr2rts_qp_in, *in, opcode, cmd);
+> @@ -927,16 +927,15 @@ static void alloc_inout(struct mlx5_vdpa_net *ndev, int cmd, void **in, int *inl
+>   		MLX5_SET(qpc, qpc, rnr_retry, 7);
+>   		break;
+>   	default:
+> -		goto outerr;
+> +		goto outerr_nullify;
+>   	}
+> -	if (!*in || !*out)
+> -		goto outerr;
+>   
+>   	return;
+>   
+>   outerr:
+>   	kfree(*in);
+>   	kfree(*out);
+> +outerr_nullify:
+>   	*in = NULL;
+>   	*out = NULL;
+>   }
+
