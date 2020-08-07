@@ -2,165 +2,142 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A870206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E0A206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:48:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U9oLfO4F";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="45PXI7tN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgHGIsI (ORCPT
+        id S1728076AbgHGIsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:48:08 -0400
-Received: from relay.sw.ru ([185.231.240.75]:45292 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727820AbgHGIsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 04:48:07 -0400
-Received: from [192.168.15.98]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k3y2b-0007gU-S6; Fri, 07 Aug 2020 11:47:53 +0300
-Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
- expose namespaces lineary
-To:     Andrei Vagin <avagin@gmail.com>, adobriyan@gmail.com
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        viro@zeniv.linux.org.uk, davem@davemloft.net,
-        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
-        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <87k0yl5axy.fsf@x220.int.ebiederm.org>
- <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
- <875za43b3w.fsf@x220.int.ebiederm.org>
- <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
- <20200806080540.GA18865@gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
-Date:   Fri, 7 Aug 2020 11:47:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 7 Aug 2020 04:48:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35086 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgHGIsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 04:48:30 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596790107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MBF7RuxtgMye0FeTHS4/I2QgvfUn5rqfABUW3RbrEFA=;
+        b=U9oLfO4Fm3GXtP9BGZ1UlYHmiESlcNyJleCppysP/SHrBFitqdd0yWg5QWy6rVoVQHZYBx
+        SwZYMagWZTS18JVVzhhb8jtFjuE0vhrpwiE1LKhh1SDn2dqIdOkvLEY4HoO9MbWCpLtmN8
+        /y8VkMj+kWOwMyHVOmAj/BSPK7PcgZ3pGxvTyzdjWLWgQBmeNvw4zxK6diPigqWiut2kMn
+        tPVOed3oAlGL29ApZ2fsPZMPgarDxRy1Xovohoab6Dro/s+X4bJel+7AzG767hGGNeOweY
+        MCwDc2D1qLXzcFnau+d7gYDQAUZOAEfWyhz16VP3x5uCDmC3/RpU1SqXnT5Pxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596790107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MBF7RuxtgMye0FeTHS4/I2QgvfUn5rqfABUW3RbrEFA=;
+        b=45PXI7tN0bIu6GaA71iC+tzQwVOKfU7CU4tMg5Aau4ktHfZWtUjjvlZGw8aPKO2mKPNek9
+        Sxjhsd+t5bh6REDA==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "Lin\, Jing" <jing.lin@intel.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <78a0cdd6-ba05-e153-b25e-2c0fe8c1e7b9@intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com> <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com> <96a1eb5ccc724790b5404a642583919d@intel.com> <20200805221548.GK19097@mellanox.com> <70465fd3a7ae428a82e19f98daa779e8@intel.com> <20200805225330.GL19097@mellanox.com> <630e6a4dc17b49aba32675377f5a50e0@intel.com> <20200806001927.GM19097@mellanox.com> <c6a1c065ab9b46bbaf9f5713462085a5@intel.com> <87tuxfhf9u.fsf@nanos.tec.linutronix.de> <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com> <87h7tfh6fc.fsf@nanos.tec.linutronix.de> <78a0cdd6-ba05-e153-b25e-2c0fe8c1e7b9@intel.com>
+Date:   Fri, 07 Aug 2020 10:48:26 +0200
+Message-ID: <87364yhmed.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200806080540.GA18865@gmail.com>
-Content-Type: text/plain; charset=koi8-r
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.08.2020 11:05, Andrei Vagin wrote:
-> On Mon, Aug 03, 2020 at 01:03:17PM +0300, Kirill Tkhai wrote:
->> On 31.07.2020 01:13, Eric W. Biederman wrote:
->>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
->>>
->>>> On 30.07.2020 17:34, Eric W. Biederman wrote:
->>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
->>>>>
->>>>>> Currently, there is no a way to list or iterate all or subset of namespaces
->>>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
->>>>>> but some also may be as open files, which are not attached to a process.
->>>>>> When a namespace open fd is sent over unix socket and then closed, it is
->>>>>> impossible to know whether the namespace exists or not.
->>>>>>
->>>>>> Also, even if namespace is exposed as attached to a process or as open file,
->>>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
->>>>>> this multiplies at tasks and fds number.
->>>>>
->>>>> I am very dubious about this.
->>>>>
->>>>> I have been avoiding exactly this kind of interface because it can
->>>>> create rather fundamental problems with checkpoint restart.
->>>>
->>>> restart/restore :)
->>>>
->>>>> You do have some filtering and the filtering is not based on current.
->>>>> Which is good.
->>>>>
->>>>> A view that is relative to a user namespace might be ok.    It almost
->>>>> certainly does better as it's own little filesystem than as an extension
->>>>> to proc though.
->>>>>
->>>>> The big thing we want to ensure is that if you migrate you can restore
->>>>> everything.  I don't see how you will be able to restore these files
->>>>> after migration.  Anything like this without having a complete
->>>>> checkpoint/restore story is a non-starter.
->>>>
->>>> There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
->>>>
->>>> CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
->>>> As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
->>>> problem here.
->>>
->>> An obvious diffference is that you are adding the inode to the inode to
->>> the file name.  Which means that now you really do have to preserve the
->>> inode numbers during process migration.
->>>
->>> Which means now we have to do all of the work to make inode number
->>> restoration possible.  Which means now we need to have multiple
->>> instances of nsfs so that we can restore inode numbers.
->>>
->>> I think this is still possible but we have been delaying figuring out
->>> how to restore inode numbers long enough that may be actual technical
->>> problems making it happen.
+Megha,
+
+"Dey, Megha" <megha.dey@intel.com> writes:
+> On 8/6/2020 1:21 PM, Thomas Gleixner wrote:
+>> If you expect or know that there are other devices coming up with IMS
+>> integrated then most of that code can be made a common library. But for
+>> this to make sense, you really want to make sure that these other
+>> devices do not require yet another horrible layer of indirection.
+>
+> Yes Thomas, for now this may look odd since there is only one device
+> using this IRQ domain. But there will be other devices following suit,
+> hence I have added all the IRQ chip/domain bits in a separate file in
+> drivers/irqchip in the next version of patches. I'll submit the
+> patches shortly and it will be great if I can get more feedback on it.
+
+Again. The common domain makes only sense if it provides actual
+functionality and resource management at the domain level. The IMS slot
+management CANNOT happen at the common domain level simply because IMS
+is strictly per device. So your "common" domain is just a shim layer
+which pretends to be common and requires warts at the side to do the IMS
+management at the device level.
+
+Let's see what you came up with this time :)
+
+>> A side note: I just read back on the specification and stumbled over
+>> the following gem:
 >>
->> Yeah, this matters. But it looks like here is not a dead end. We just need
->> change the names the namespaces are exported to particular fs and to support
->> rename().
+>>   "IMS may also optionally support per-message masking and pending bit
+>>    status, similar to the per-vector mask and pending bit array in the
+>>    PCI Express MSI-X capability."
 >>
->> Before introduction a principally new filesystem type for this, can't
->> this be solved in current /proc?
-> 
-> do you mean to introduce names for namespaces which users will be able
-> to change? By default, this can be uuid.
+>> Optionally? Please tell the hardware folks to make this mandatory. We
+>> have enough pain with non maskable MSI interrupts already so introducing
+>> yet another non maskable interrupt trainwreck is not an option.
+>>
+>> It's more than a decade now that I tell HW people not to repeat the
+>> non-maskable MSI failure, but obviously they still think that
+>> non-maskable interrupts are a brilliant idea. I know that HW folks
+>> believe that everything they omit can be fixed in software, but they
+>> have to finally understand that this particular issue _cannot_ be fixed
+>> at all.
+>
+> hmm, I asked the hardware folks and they have informed me that all IMS
+> devices will support per vector masking/pending bit. This will be
+> updated in the next SIOV spec which will be published soon.
 
-Yes, I mean this.
+I seriously hope so...
 
-Currently I won't give a final answer about UUID, but I planned to show some
-default names, which based on namespace type and inode num. Completely custom
-names for any /proc by default will waste too much memory.
+Thanks,
 
-So, I think the good way will be:
-
-1)Introduce a function, which returns a hash/uuid based on ino, ns type and some static
-random seed, which is generated on boot;
-
-2)Use the hash/uuid as default names in newly create /proc/namespaces: pid-{hash/uuid(ino, "pid")}
-
-3)Allow rename, and allocate space only for renamed names.
-
-Maybe 2 and 3 will be implemented as shrinkable dentries and non-shrinkable.
-
-> And I have a suggestion about the structure of /proc/namespaces/.
-> 
-> Each namespace is owned by one of user namespaces. Maybe it makes sense
-> to group namespaces by their user-namespaces?
-> 
-> /proc/namespaces/
->                  user
->                  mnt-X
->                  mnt-Y
->                  pid-X
->                  uts-Z
->                  user-X/
->                         user
->                         mnt-A
->                         mnt-B
->                         user-C
->                         user-C/
->                                user
->                  user-Y/
->                         user
-
-Hm, I don't think that user namespace is a generic key value for everybody.
-For generic people tasks a user namespace is just a namespace among another
-namespace types. For me it will look a bit strage to iterate some user namespaces
-to build container net topology.
-
-> Do we try to invent cgroupfs for namespaces?
-
-Could you clarify your thought?
+        tglx
