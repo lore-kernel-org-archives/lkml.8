@@ -2,173 +2,128 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6511C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C920C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70C1221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF48F20855
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Bx5jHojb";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="6CQjQGON"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1dacVuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgHGKM6 (ORCPT
+        id S1727914AbgHGKQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 06:12:58 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:5056 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727873AbgHGKM6 (ORCPT
+        Fri, 7 Aug 2020 06:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbgHGKQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 06:12:58 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0779vSur023725;
-        Fri, 7 Aug 2020 03:12:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=yFKryULve5+jNtinVUWg1nOPY+Js3m/9FCCInR0sSi4=;
- b=Bx5jHojbChEo6a5v0iMwWrSRfLxJlAGendtKrCNyhLFJv4Pi7frrEXnJM3GAJx+QC2yh
- 7GT7R7RskjNNaIx+xlxE4uFj7Hv7y50nkDz7QID3HOBOgZ3dtkFK26+hVUY1Nsk3SNya
- oo7GOvHVWE12VoCIUY5Wr+FsVu/WtpSG9GaGW8ZiCPulvBXz8OTHzmlV/nTCyRtMQod+
- 2eV1/CZQT8WtxecQsf7zVY9di5nv8/EUVb13hf1LxOlu+ZgH0Nzi3L/KL8n770u4v1Dn
- Aj1a5xPArKkC+Lw2XXVPf9mdYmaiy1H1ZjGHdYwOdKduSwSjZFv17Fru1EEwEwzRbNmp Yw== 
-Received: from nam02-dm3-obe.outbound.protection.outlook.com ([104.47.56.103])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 32nme0m4rm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 03:12:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m5MTSui31yC9AAXL/QcCEcjEvCkxTXPCSAskT9da9TZ9k3g8qOyJHtuJkemSWOiv0E2wBy/1FkhIDjBwVozMyG9y/zn5uQYCKlx5Am5olj0qj+lfZYZU0VIcDVBdE6lyj/cMU4794sorbUKF3L9uuCmlzH6olGiYxJMZkIzNnNORSLYPRK6RRjTDQgz7+QXPPHdFLMdBbjQtXu945tSO8FOm13z10dYG93lK8wS92uFt6e4+lBymB1s8dyas8UGmaA7vBeFAGN4eFDRbZZJz+ER2hv+hwJLLObPGsKEWTs6m+BBHeKnyK+OBPgXK2/Ce9fyVoKx2bdBH6tS6XhHRjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yFKryULve5+jNtinVUWg1nOPY+Js3m/9FCCInR0sSi4=;
- b=K+d3ylrlUaO8Oh5VEOHKB43cpdfIP8z1xBdEyTv4R2RJgNQGYuunUnVGhX4IsOWaX9nnCHOWnsTR3xxvvbStDH5XctE3VcQWv7w4lXU6gPHnJEqDk5us6XlfNEsF0fKw6rpT79tcECxM1KHQuEI5lWuti4VQwV8fX3niViQAnewvRUnkhbEJ0N4ISXNgmiSkh2y2hqwaPB68y/38SsRDeHmDlmJskBO/2zFlZS5/jAOAfjGGGNpDguB9yqImPIDy/KfwgJ4W4ED+aw9pXm48XhDStfQA7eHKZQSGntW7Wqd1E+zhoUI8IQln6+2izUlZBs695n+4UCriVKajs6ZUyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 199.43.4.23) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yFKryULve5+jNtinVUWg1nOPY+Js3m/9FCCInR0sSi4=;
- b=6CQjQGON+Cp4pboAmrCezPgD1Xj0thk9dZPZ4dSe7TqpSm9T3f4XL5+sGRO1xzE2mzqohHZeNaSySlGRVL//hqaU8coWuxGZj8pcriNH7ekNohKRKQReMN3r9LdhGw9yXrLOEdyplOoktiXmp3FLTk7UIQZmT/jwCdpR4wAPfjk=
-Received: from MWHPR2201CA0054.namprd22.prod.outlook.com
- (2603:10b6:301:16::28) by BY5PR07MB6609.namprd07.prod.outlook.com
- (2603:10b6:a03:1a3::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Fri, 7 Aug
- 2020 10:12:50 +0000
-Received: from MW2NAM12FT051.eop-nam12.prod.protection.outlook.com
- (2603:10b6:301:16:cafe::4e) by MWHPR2201CA0054.outlook.office365.com
- (2603:10b6:301:16::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16 via Frontend
- Transport; Fri, 7 Aug 2020 10:12:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
- smtp.mailfrom=cadence.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=pass action=none header.from=cadence.com;
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
- client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
-Received: from rmmaillnx1.cadence.com (199.43.4.23) by
- MW2NAM12FT051.mail.protection.outlook.com (10.13.181.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.10 via Frontend Transport; Fri, 7 Aug 2020 10:12:50 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 077ACk5a021638
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 7 Aug 2020 06:12:48 -0400
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Fri, 7 Aug 2020 12:12:47 +0200
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 7 Aug 2020 12:12:47 +0200
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 077ACk36013379;
-        Fri, 7 Aug 2020 12:12:46 +0200
-Received: (from sjakhade@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 077ACkrY013378;
-        Fri, 7 Aug 2020 12:12:46 +0200
-From:   Swapnil Jakhade <sjakhade@cadence.com>
-To:     <vkoul@kernel.org>, <kishon@ti.com>, <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
-        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
-        <nsekhar@ti.com>
-Subject: [PATCH v1 0/7] PHY: Prepare Cadence Torrent PHY driver to support multilink configurations
-Date:   Fri, 7 Aug 2020 12:12:38 +0200
-Message-ID: <1596795165-13341-1-git-send-email-sjakhade@cadence.com>
-X-Mailer: git-send-email 2.4.5
+        Fri, 7 Aug 2020 06:16:20 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D3AFC061574
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 03:16:20 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id j8so1351239ioe.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 03:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4f8OQgzuz+LDRnj85cC5d/U7jDFEqbHAdZ2qh7RY1sE=;
+        b=Z1dacVuDCDo1gA3yUPlpW/LbuFZJcYNg+aJDk2w4/De7ZXN7/G5RDsXBsZF7PBD63g
+         FOdXb6jZFwbKD9NzFDRXUGHI5OtBii6Yc5csOQzqJFWgTIZfho4A3mBkhRTXmquSsGqX
+         do1nFqWajSwCs2xrA7dLDZrqb8Pfx0s+rP/c5zi4NOG5OffLBV9V+8ukkVbgSpToQTnP
+         fIUNXF/YqOx3/fQXxlxp6QQSnVu2fQoC+0oTDAqOP7PqnhzZRtBfXL9kEQeU+GlFgkxG
+         vdEgwbpg8vMx54H4ICkHGh/mx4/yrc75EPs7MWRCJhkADRivNQGeKlTwUqeXvZYXC4Mj
+         hENA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4f8OQgzuz+LDRnj85cC5d/U7jDFEqbHAdZ2qh7RY1sE=;
+        b=Z0F6pVrpe5E5rvkj5vVgNTy0tz/c2ueVobMLK21x38BulBHyG8mlf+vCJp3czLdJFT
+         tpBVQxXd9dFqlmwX0r+hbqTOPy2I1m/H1O7DxayVYpKwMllG/V7krJbulVuhcpAnl1/t
+         ZEsk38qvJGOIGDFRWFunubG3mY/vArK/pXAI/MMcx3tWh3Rsn1oskpZ/gQMzN6+I6J5m
+         ux+IVvfhyhNJ2dqmEI7rF+1BM5yqrei/RQEsP7P6g5n0r5CD6Mx0/Y04FyqrAWgDOs+8
+         7JdvVlU1HG4D6MJAjvauSXrLspBFFVnc+3lFOAzYhgKeNp4p+BUSDTWLAZqgzVe55Qre
+         Y6ZA==
+X-Gm-Message-State: AOAM533u2XiXSh4Mhs5lJrIfTha5s+ibsKAqpChlgn6p3VpID5e7a4Da
+        G4mtkvXzA4pIKIyXqL7FqE0G0WcDLMMHqIkFeuU=
+X-Google-Smtp-Source: ABdhPJzL42pQp9UVI3P9+3/FhcnfKuTDlRv/YHFJ3dIcTa2PaRxJ1LUbsHUpGcm5Vh/p99rU8/3beFIAcRSrrLNaq+o=
+X-Received: by 2002:a05:6638:1489:: with SMTP id j9mr4177977jak.22.1596795380033;
+ Fri, 07 Aug 2020 03:16:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fce8c9a1-3f2b-42c3-004d-08d83aba70d1
-X-MS-TrafficTypeDiagnostic: BY5PR07MB6609:
-X-Microsoft-Antispam-PRVS: <BY5PR07MB6609AAEA5A042CF0CCD550DCC5490@BY5PR07MB6609.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UIie6s17tCxHt+h82ejSYur/Z9m/YSwnIY0Q4NWdLzly7KcnmN+Wcm4SzX4WYOywUt/XSJPHAJnsv0VVVZCMoDsMifPoh58upTqAY/aNj6eucxaS+ahJyZzFWkX2giruXN3TMMZxj/viZzb4yCZKSu4qvObrPoBaThpZX5RPWvBglEomrk39+V0dPjuI6fU1Sll5Hf8Az0c+a09AjbjufFtNq57tcl4czmqBUt7c6z7Sbj5L6sC9o4Suu5t6WXwtnGAvsjuYulSVPTBXji8yp9VgeY+OzUNO7Biq2+2w1IhbEU6OxjsVAvLPrGUotvsEdv6hW26iZkL9yS0S+BVbnupIKJeRR3f0IHQq/p70XTSjnZ1/y2gQTTN6U/cAVA07DMLSWAOvUYKUhTe0qWthvSTm2cxyiG7wI3o8lDDFdGUR04I/3QNEj1xNS43uRJoRrNcJt5dML13XStNixrXPnLN3bORRA10TMZL7i9sWpzvtqUwGrfY5wCpcl8RZluMx
-X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(39860400002)(396003)(36092001)(46966005)(426003)(36756003)(966005)(36906005)(70206006)(110136005)(70586007)(81166007)(8676002)(478600001)(336012)(54906003)(82740400003)(8936002)(4326008)(42186006)(316002)(83380400001)(6666004)(26005)(82310400002)(2906002)(186003)(86362001)(356005)(2616005)(47076004)(5660300002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 10:12:50.2469
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fce8c9a1-3f2b-42c3-004d-08d83aba70d1
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-AuthSource: MW2NAM12FT051.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB6609
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-07_06:2020-08-06,2020-08-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
- phishscore=0 mlxlogscore=703 mlxscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 impostorscore=0 priorityscore=1501
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008070075
+References: <1596558782-3415-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1596558782-3415-11-git-send-email-gene.chen.richtek@gmail.com>
+ <20200805161021.GK5556@sirena.org.uk> <CAE+NS360iKLoGxiiz8NmQqCp2Uge98Eehe4g2sn_N0e-E3DgyQ@mail.gmail.com>
+ <20200806121332.GB6442@sirena.org.uk>
+In-Reply-To: <20200806121332.GB6442@sirena.org.uk>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Fri, 7 Aug 2020 10:16:08 +0800
+Message-ID: <CAE+NS37tr65GnTue89wJkPvJzddahKj__KPgzmjzwkOfWQnc8g@mail.gmail.com>
+Subject: Re: [PATCH 9/9] mfd: mt6360: Merge different sub-devices I2C read/write
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>, rafael@kernel.org,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cadence Torrent PHY is a multiprotocol PHY supporting different multilink
-PHY configurations including DisplayPort, PCIe, USB, SGMII, QSGMII etc.
-Existing Torrent PHY driver supports only DisplayPort. This patch series
-prepares Torrent PHY driver so that different multilink configurations can
-be supported. It also updates DT bindings accordingly.
+Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=886=E6=97=A5=
+ =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=888:13=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Aug 06, 2020 at 11:30:56AM +0800, Gene Chen wrote:
+> > Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=886=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8812:10=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> > > It's not clear why this isn't just done in the device regmap, there's
+> > > exactly one user?
+>
+> > because I use one regmap to access 4 I2C devices,
+>
+> There appears to be only one device here?
+>
+> > I need change the regmap_bus struct to fit I2C read/write with CRC bit
+> > Therefore, MFD reviewer suggests I can move the regmap api to regmap
+> > folder such as regmap-ac97.c
+>
+> AC'97 is an industry standard bus used by a range of devices in
+> different subsystems.  You can already have custom operations for a
+> device just in a regular regmap using the reg_read() and reg_write()
+> operations which are there so devices that individual device support
+> doesn't need to be added to the regmap core.
+>
 
-Support for different multilink configurations with register sequences for
-protocols above will be added in a separate patch series.
+I need use regmap_raw_read to access MT6360 TYPEC part, so we need
+implement bus read control
 
-This patch series is dependent on PHY patch series [1].
+> You really also need to write a much clearer changelog, I would be hard
+> pressed to tell from the changelog that this was moving things to the
+> regmap core rather than shuffling regmaps within the device.
 
-[1] https://lkml.org/lkml/2020/7/17/158
+MT6360 has 4 I2C worker devices
+First, I increase reg_bits from 8 to 16 bits.
+Higher 8 bits, bank, indicated which worker device I want access
+Then, if worker devices is PMIC or LDO part, I need calculate or check
+CRC8 bits when we write or read data.
+CRC8 bits is calculated by 3 parts.
+1'st part include 1 byte is worker address and R/W in LSB.
+2'nd part include 1 byte is register address
+3'nd part include written data or read data from MT6360
+I also need 1 dummy byte when write data
 
-Swapnil Jakhade (7):
-  phy: cadence-torrent: Use of_device_get_match_data() to get driver
-    data
-  phy: cadence-torrent: Use devm_platform_ioremap_resource() to get reg
-    addresses
-  phy: cadence-torrent: Enable support for multiple subnodes
-  phy: cadence-torrent: Add separate regmap functions for torrent and DP
-  phy: cadence-torrent: Check total lane count for all subnodes is
-    within limit
-  dt-bindings: phy: cadence-torrent: Add binding to specify SSC mode
-  dt-bindings: phy: cadence-torrent: Update Torrent PHY bindings for
-    generic use
-
- .../bindings/phy/phy-cadence-torrent.yaml     |  85 +++++++---
- drivers/phy/cadence/phy-cadence-torrent.c     | 146 ++++++++++--------
- include/dt-bindings/phy/phy-cadence-torrent.h |  13 ++
- 3 files changed, 164 insertions(+), 80 deletions(-)
- create mode 100644 include/dt-bindings/phy/phy-cadence-torrent.h
-
--- 
-2.26.1
-
+@Lee Jones,
+I found out drivers/iio/chemical/bme680_spi.c implement their own
+regmap_bus too.
+Can I move regmap control back to mt6360-core.c?
