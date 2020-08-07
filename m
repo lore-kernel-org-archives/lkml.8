@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD596C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A5C206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CF6206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596788127;
-	bh=mSUNnUQw1zp1SRfb0o1xtLqTuy2gHbNKh0uaKWFAcCE=;
+	s=default; t=1596788134;
+	bh=adIovFsbqhux+YEp5/lD5/48UuUPfdCL9zR3lAoe9bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GcvPyOEEZ8vBEk/IrH1ifJ0MYNNupeuFG2/P0meA52IHTGLP+xB1SGAHQ0ZOuRKGQ
-	 7vGsoqJaKOJQmie2lUdPABMB3FSptd8q/NgfedE4HlgmTDVh4zgSIH/lYXizHGxUK4
-	 ibs+f1ii1mDW8YAR36RT7KqmUQtiZ7Qmb9Bk06W0=
+	b=LWsVohxCfnkexvA6QjUbc8Gk0qdESSazywoSUeG/rVfbq2pCRHkatsK7XF2Hpk2PD
+	 PXnc8KJmuNbdVnEPr7/5mmUqa8cZP4MnJRL8Wznu2UqcfBoIa4B/ugJ9oIT85FMoVV
+	 QHtXah+AYaKn+Ry6bleIVRA0HZAP4jTfymPf6PiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgHGIP0 (ORCPT
+        id S1727063AbgHGIPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
+        Fri, 7 Aug 2020 04:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgHGIPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 04:15:22 -0400
+        id S1726729AbgHGIPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 04:15:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839D4221E5;
-        Fri,  7 Aug 2020 08:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B989221E5;
+        Fri,  7 Aug 2020 08:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596788121;
-        bh=mSUNnUQw1zp1SRfb0o1xtLqTuy2gHbNKh0uaKWFAcCE=;
+        s=default; t=1596788129;
+        bh=adIovFsbqhux+YEp5/lD5/48UuUPfdCL9zR3lAoe9bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1LumktAcOQ0tnQ+AMFYJRaHpJZpOirLI2AGE/NtPxI5W6JQC/9FoLn2v9kyywGeq
-         DsklhWNuRu+r0JeQObcxSl6vsVuf7n1DjAksO+JvfCldF2M4wHMqvpJAatHLJxSIuj
-         yr30OTTnoVhYLY9azho9gEzUXIkPds3c9WEtuLzA=
+        b=uWGyAjeDa/ecmKgTjrxJGP0KNJXJHBXXsppDndfbG/8WjAgawVn0RhfYPRom0zKYo
+         khh+JE8XvQuMoxrz6BFtHwJbm5TYzOFocO1aqJPl6PjPYSZNlfAYHwH0VWLlb51/Wm
+         9qtbLGFyKMAU9/ZD5AzutGToq5g/kpGelhfKYd54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 4.19.138
-Date:   Fri,  7 Aug 2020 10:15:26 +0200
-Message-Id: <159678812525348@kroah.com>
+Subject: Re: Linux 5.4.57
+Date:   Fri,  7 Aug 2020 10:15:35 +0200
+Message-Id: <159678813420213@kroah.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <159678812524753@kroah.com>
-References: <159678812524753@kroah.com>
+In-Reply-To: <1596788134201181@kroah.com>
+References: <1596788134201181@kroah.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,23 +58,23 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 diff --git a/Makefile b/Makefile
-index edf1799c08d2..daaa8ab2f550 100644
+index c33fb4eebd4d..dd753ef637fd 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
- VERSION = 4
- PATCHLEVEL = 19
--SUBLEVEL = 137
-+SUBLEVEL = 138
+ VERSION = 5
+ PATCHLEVEL = 4
+-SUBLEVEL = 56
++SUBLEVEL = 57
  EXTRAVERSION =
- NAME = "People's Front"
+ NAME = Kleptomaniac Octopus
  
 diff --git a/arch/arm/include/asm/percpu.h b/arch/arm/include/asm/percpu.h
-index a89b4076cde4..72821b4721ad 100644
+index f44f448537f2..1a3eedbac4a2 100644
 --- a/arch/arm/include/asm/percpu.h
 +++ b/arch/arm/include/asm/percpu.h
-@@ -16,6 +16,8 @@
+@@ -5,6 +5,8 @@
  #ifndef _ASM_ARM_PERCPU_H_
  #define _ASM_ARM_PERCPU_H_
  
@@ -83,11 +83,37 @@ index a89b4076cde4..72821b4721ad 100644
  /*
   * Same as asm-generic/percpu.h, except that we store the per cpu offset
   * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
+diff --git a/arch/arm64/include/asm/pointer_auth.h b/arch/arm64/include/asm/pointer_auth.h
+index 7a24bad1a58b..076a4157a74f 100644
+--- a/arch/arm64/include/asm/pointer_auth.h
++++ b/arch/arm64/include/asm/pointer_auth.h
+@@ -3,7 +3,6 @@
+ #define __ASM_POINTER_AUTH_H
+ 
+ #include <linux/bitops.h>
+-#include <linux/random.h>
+ 
+ #include <asm/cpufeature.h>
+ #include <asm/memory.h>
+@@ -30,6 +29,13 @@ struct ptrauth_keys {
+ 	struct ptrauth_key apga;
+ };
+ 
++/*
++ * Only include random.h once ptrauth_keys_* structures are defined
++ * to avoid yet another circular include hell (random.h * ends up
++ * including asm/smp.h, which requires ptrauth_keys_kernel).
++ */
++#include <linux/random.h>
++
+ static inline void ptrauth_keys_init(struct ptrauth_keys *keys)
+ {
+ 	if (system_supports_address_auth()) {
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index d5f970d039bb..6a5d4dfafc47 100644
+index 8ff28c14af7e..e877c20e0ee0 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -1257,6 +1257,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
+@@ -1330,6 +1330,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
  
  	fast_mix(fast_pool);
  	add_interrupt_bench(cycles);
@@ -96,10 +122,10 @@ index d5f970d039bb..6a5d4dfafc47 100644
  	if (unlikely(crng_init == 0)) {
  		if ((fast_pool->count >= 64) &&
 diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 3b1a7597af15..cd833f4e64ef 100644
+index 7e0c77de551b..a284d99a1ee5 100644
 --- a/fs/ext4/inode.c
 +++ b/fs/ext4/inode.c
-@@ -3848,6 +3848,11 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
+@@ -3836,6 +3836,11 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
  	struct inode *inode = mapping->host;
  	size_t count = iov_iter_count(iter);
  	ssize_t ret;
@@ -111,6 +137,40 @@ index 3b1a7597af15..cd833f4e64ef 100644
  
  	/*
  	 * Shared inode_lock is enough for us - it protects against concurrent
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 3bf3835d0e86..7aa0d8b5aaf0 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -956,11 +956,14 @@ static inline void bpf_map_offload_map_free(struct bpf_map *map)
+ #endif /* CONFIG_NET && CONFIG_BPF_SYSCALL */
+ 
+ #if defined(CONFIG_BPF_STREAM_PARSER)
+-int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog, u32 which);
++int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog,
++			 struct bpf_prog *old, u32 which);
+ int sock_map_get_from_fd(const union bpf_attr *attr, struct bpf_prog *prog);
++int sock_map_prog_detach(const union bpf_attr *attr, enum bpf_prog_type ptype);
+ #else
+ static inline int sock_map_prog_update(struct bpf_map *map,
+-				       struct bpf_prog *prog, u32 which)
++				       struct bpf_prog *prog,
++				       struct bpf_prog *old, u32 which)
+ {
+ 	return -EOPNOTSUPP;
+ }
+@@ -970,6 +973,12 @@ static inline int sock_map_get_from_fd(const union bpf_attr *attr,
+ {
+ 	return -EINVAL;
+ }
++
++static inline int sock_map_prog_detach(const union bpf_attr *attr,
++				       enum bpf_prog_type ptype)
++{
++	return -EOPNOTSUPP;
++}
+ #endif
+ 
+ #if defined(CONFIG_XDP_SOCKETS)
 diff --git a/include/linux/prandom.h b/include/linux/prandom.h
 new file mode 100644
 index 000000000000..aa16e6468f91
@@ -196,10 +256,10 @@ index 000000000000..aa16e6468f91
 +
 +#endif
 diff --git a/include/linux/random.h b/include/linux/random.h
-index 445a0ea4ff49..37209b3b22ae 100644
+index f189c927fdea..5b3ec7d2791f 100644
 --- a/include/linux/random.h
 +++ b/include/linux/random.h
-@@ -106,61 +106,12 @@ declare_get_random_var_wait(long)
+@@ -108,61 +108,12 @@ declare_get_random_var_wait(long)
  
  unsigned long randomize_page(unsigned long start, unsigned long range);
  
@@ -265,7 +325,7 @@ index 445a0ea4ff49..37209b3b22ae 100644
  
  #ifdef CONFIG_ARCH_RANDOM
  # include <asm/archrandom.h>
-@@ -191,10 +142,4 @@ static inline bool arch_has_random_seed(void)
+@@ -193,10 +144,4 @@ static inline bool arch_has_random_seed(void)
  }
  #endif
  
@@ -276,11 +336,52 @@ index 445a0ea4ff49..37209b3b22ae 100644
 -}
 -
  #endif /* _LINUX_RANDOM_H */
+diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+index 4bdb5e4bbd6a..20f3550b0b11 100644
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -450,6 +450,19 @@ static inline void psock_set_prog(struct bpf_prog **pprog,
+ 		bpf_prog_put(prog);
+ }
+ 
++static inline int psock_replace_prog(struct bpf_prog **pprog,
++				     struct bpf_prog *prog,
++				     struct bpf_prog *old)
++{
++	if (cmpxchg(pprog, old, prog) != old)
++		return -ENOENT;
++
++	if (old)
++		bpf_prog_put(old);
++
++	return 0;
++}
++
+ static inline void psock_progs_drop(struct sk_psock_progs *progs)
+ {
+ 	psock_set_prog(&progs->msg_parser, NULL);
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 8bc904f9badb..bf03d04a9e2f 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2029,10 +2029,10 @@ static int bpf_prog_detach(const union bpf_attr *attr)
+ 		ptype = BPF_PROG_TYPE_CGROUP_DEVICE;
+ 		break;
+ 	case BPF_SK_MSG_VERDICT:
+-		return sock_map_get_from_fd(attr, NULL);
++		return sock_map_prog_detach(attr, BPF_PROG_TYPE_SK_MSG);
+ 	case BPF_SK_SKB_STREAM_PARSER:
+ 	case BPF_SK_SKB_STREAM_VERDICT:
+-		return sock_map_get_from_fd(attr, NULL);
++		return sock_map_prog_detach(attr, BPF_PROG_TYPE_SK_SKB);
+ 	case BPF_LIRC_MODE2:
+ 		return lirc_prog_detach(attr);
+ 	case BPF_FLOW_DISSECTOR:
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 6c54cf481fde..61e41ea3a96e 100644
+index 1e9b81a930c0..a3ae244b1bcd 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -44,6 +44,7 @@
+@@ -43,6 +43,7 @@
  #include <linux/sched/debug.h>
  #include <linux/slab.h>
  #include <linux/compat.h>
@@ -288,10 +389,10 @@ index 6c54cf481fde..61e41ea3a96e 100644
  
  #include <linux/uaccess.h>
  #include <asm/unistd.h>
-@@ -1654,6 +1655,13 @@ void update_process_times(int user_tick)
+@@ -1742,6 +1743,13 @@ void update_process_times(int user_tick)
  	scheduler_tick();
  	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
- 		run_posix_cpu_timers(p);
+ 		run_posix_cpu_timers();
 +
 +	/* The current CPU might make use of net randoms without receiving IRQs
 +	 * to renew them often enough. Let's update the net_rand_state from a
@@ -303,7 +404,7 @@ index 6c54cf481fde..61e41ea3a96e 100644
  
  /**
 diff --git a/lib/random32.c b/lib/random32.c
-index 4aaa76404d56..036de0c93e22 100644
+index 763b920a6206..3d749abb9e80 100644
 --- a/lib/random32.c
 +++ b/lib/random32.c
 @@ -48,7 +48,7 @@ static inline void prandom_state_selftest(void)
@@ -315,3 +416,138 @@ index 4aaa76404d56..036de0c93e22 100644
  
  /**
   *	prandom_u32_state - seeded pseudo-random number generator.
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 6bbc118bf00e..df52061f99f7 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -71,7 +71,42 @@ int sock_map_get_from_fd(const union bpf_attr *attr, struct bpf_prog *prog)
+ 	map = __bpf_map_get(f);
+ 	if (IS_ERR(map))
+ 		return PTR_ERR(map);
+-	ret = sock_map_prog_update(map, prog, attr->attach_type);
++	ret = sock_map_prog_update(map, prog, NULL, attr->attach_type);
++	fdput(f);
++	return ret;
++}
++
++int sock_map_prog_detach(const union bpf_attr *attr, enum bpf_prog_type ptype)
++{
++	u32 ufd = attr->target_fd;
++	struct bpf_prog *prog;
++	struct bpf_map *map;
++	struct fd f;
++	int ret;
++
++	if (attr->attach_flags)
++		return -EINVAL;
++
++	f = fdget(ufd);
++	map = __bpf_map_get(f);
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++
++	prog = bpf_prog_get(attr->attach_bpf_fd);
++	if (IS_ERR(prog)) {
++		ret = PTR_ERR(prog);
++		goto put_map;
++	}
++
++	if (prog->type != ptype) {
++		ret = -EINVAL;
++		goto put_prog;
++	}
++
++	ret = sock_map_prog_update(map, NULL, prog, attr->attach_type);
++put_prog:
++	bpf_prog_put(prog);
++put_map:
+ 	fdput(f);
+ 	return ret;
+ }
+@@ -1015,27 +1050,32 @@ static struct sk_psock_progs *sock_map_progs(struct bpf_map *map)
+ }
+ 
+ int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog,
+-			 u32 which)
++			 struct bpf_prog *old, u32 which)
+ {
+ 	struct sk_psock_progs *progs = sock_map_progs(map);
++	struct bpf_prog **pprog;
+ 
+ 	if (!progs)
+ 		return -EOPNOTSUPP;
+ 
+ 	switch (which) {
+ 	case BPF_SK_MSG_VERDICT:
+-		psock_set_prog(&progs->msg_parser, prog);
++		pprog = &progs->msg_parser;
+ 		break;
+ 	case BPF_SK_SKB_STREAM_PARSER:
+-		psock_set_prog(&progs->skb_parser, prog);
++		pprog = &progs->skb_parser;
+ 		break;
+ 	case BPF_SK_SKB_STREAM_VERDICT:
+-		psock_set_prog(&progs->skb_verdict, prog);
++		pprog = &progs->skb_verdict;
+ 		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	if (old)
++		return psock_replace_prog(pprog, prog, old);
++
++	psock_set_prog(pprog, prog);
+ 	return 0;
+ }
+ 
+diff --git a/tools/testing/selftests/bpf/test_maps.c b/tools/testing/selftests/bpf/test_maps.c
+index e1f1becda529..c812f0178b64 100644
+--- a/tools/testing/selftests/bpf/test_maps.c
++++ b/tools/testing/selftests/bpf/test_maps.c
+@@ -793,19 +793,19 @@ static void test_sockmap(unsigned int tasks, void *data)
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_PARSER);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty parser prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_VERDICT);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty verdict prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_MSG_VERDICT);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty msg verdict prog detach\n");
+ 		goto out_sockmap;
+ 	}
+@@ -1094,19 +1094,19 @@ static void test_sockmap(unsigned int tasks, void *data)
+ 		assert(status == 0);
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, __MAX_BPF_ATTACH_TYPE);
++	err = bpf_prog_detach2(parse_prog, map_fd_rx, __MAX_BPF_ATTACH_TYPE);
+ 	if (!err) {
+ 		printf("Detached an invalid prog type.\n");
+ 		goto out_sockmap;
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
++	err = bpf_prog_detach2(parse_prog, map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
+ 	if (err) {
+ 		printf("Failed parser prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
++	err = bpf_prog_detach2(verdict_prog, map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
+ 	if (err) {
+ 		printf("Failed parser prog detach\n");
+ 		goto out_sockmap;
