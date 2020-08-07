@@ -2,70 +2,70 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DIET_1,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE616C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 977F72177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4092B2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+RLkgiW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWyWAQSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHGUKT (ORCPT
+        id S1726569AbgHGUKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41286 "EHLO
+        Fri, 7 Aug 2020 16:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGUKQ (ORCPT
+        with ESMTP id S1726015AbgHGUKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Aug 2020 16:10:16 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5024C061757
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:10:14 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id s190so662691ooa.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:10:14 -0700 (PDT)
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D968C061A27
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:10:16 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id h3so2997220oie.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5taqwMO9fu02Eq/oSradLpdwhpBHOZ6HATVQFj48PwQ=;
-        b=o+RLkgiWcKpcUvk2Tf5HX3mwUcwZMaE8ojwafEAc5BGvxDc1PPCM2L2pnU6qktkJgw
-         M9bcEGDCTL8TPb1z6EQBJdQsfFA1vl1+3VSo5jY9iocb4muw4AzFODmQCQUqjhmPFSdS
-         r8qYJfAD4h2FXFI31Clr4IcubakwzP8Wt5gQR5f/O9GByWCAKhbqMlmZ2mB5v7lHWn+n
-         Yndh1Eo2hGetellv5wkaEaooWttKZyWOlpLB2m6DUs/IXTpGACHnHhYEjtF93t5pauZM
-         UYfyGMQKnC6LWFt9ujtAF/3TLhlw2Bj9Za98hFWWvkBAJ8CmJkGc4XAMAC9CpUyLi7jc
-         SXUA==
+        bh=a3UDDzhIvH1/+i0FRX7y0haqHObyC/cYDe6aFvS0mIE=;
+        b=pWyWAQSEcaR5o2q23Lhj1hu5lev1ZwJsUOkJXSUGisvh8psV3p4AGEAQlE40xUXjuQ
+         1QL7C4CD6k+gRx4jbCTmYkttkqB89JCrocEDvyf1Y4B0MWbxzYXVdVppKAWIok+HhKoy
+         uLhpuJSBMLTZ4Nl6z1OWsv9o7KsC7kaXsm85M82sIHP+p9Q6c+rgiS3DgApVZc08OHTO
+         xgACYE4y1O2FH9e1qhQT95wZ1piqaAPn6k6AobOWCH/4EpHqFhKmONrJM5cp2qGnsyMH
+         jluNNox6zn9wIW72y1C67kc3KiC+EG+4FsF38dtDaPnJAWkkIGIeORHFhEzduoOM/7MP
+         S2Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5taqwMO9fu02Eq/oSradLpdwhpBHOZ6HATVQFj48PwQ=;
-        b=LycYgFZRl8gY2YV5NOCootEDo7kq00AWvlDZZ1/sQaDiFm0P8g8GldTHECUfCMOPuI
-         SdaNAMZUqgG31CtqjNH7DSLCy88fdKuZIpmth9MTj6E9D0xs1c3zC6W7fkvj2eOfeKTf
-         iYUGMDDQ7LGt98k40ivN65aednM7adzt+sLYUD9UuPS4RtwT7fDlqKBwzvI1j5pwkSAP
-         S/5/QapUjkJTXlT5Hv7IHLTWG86bhPE9B5cQAcXePTKZBB/dDcr4whDlzuWHnqiYZIQ0
-         7pwtl3uyORvcUfv3A1XIadp/3Utm/NOy+uevRpdDkW/b5BS+zonZ474FgWmCrtNh3qG5
-         wh6w==
-X-Gm-Message-State: AOAM530m+OQ6DeJt2MI5b6ULCshAngQ4JK4dASva8RUp1uYbxWh9oCRz
-        KndlF62QRxT4KbaWaUJ36aw5HiB9jkE=
-X-Google-Smtp-Source: ABdhPJyz32khtmCydKoxgCn/Skg4kS3eCD4Bs2kx9il4fiuJXkz9yEip16I5TowqS31SpS8DybilFw==
-X-Received: by 2002:a4a:4083:: with SMTP id n125mr8260745ooa.42.1596831014054;
-        Fri, 07 Aug 2020 13:10:14 -0700 (PDT)
+        bh=a3UDDzhIvH1/+i0FRX7y0haqHObyC/cYDe6aFvS0mIE=;
+        b=O54zjnvsaLO7p+Jy/X3tEtx0ne8i21J/lD+6kyCvwj5tY1gndgR89KnUkc2IIhQBHb
+         VkZf0+l/gsL77HKsPCTONv7wwKL1dis6Mn9Tr5BR9klwxg3p1AEOHjxpuJy44CMi0Ktp
+         UsSkihO8FOfjaTqpJt2hqvyN8w5nMyjim4hBh3aQtD82qOQgkWttab4MaTBmg4Wwq3fB
+         SldUeIuWYtFQsZv/G0Y7kvd6sj16w49hIZAwD/U0W/e8fg3QZ+Gicu6+UqQKkyDiQyl4
+         zL7M21cjuvhSf34EwNJI2RxOVpOBefopQ7E7zGVzPCrWH7o/HqY6ZFTyBUaEmEP7x23a
+         QnLg==
+X-Gm-Message-State: AOAM5326oMPHxBqMfd28MyO+5qhVsCRk825TR8837ge20C8JaLJbY3My
+        Yt49IibE4EnnIq707pn6+jVbqPstAyM=
+X-Google-Smtp-Source: ABdhPJyYp3S8ZK9pimNGa3qu49dKYz8bRXMdIpcthP4MVM49ILkpPPii1y+VD7YRmE3LplUtwrnw0A==
+X-Received: by 2002:aca:1b03:: with SMTP id b3mr12735675oib.26.1596831015848;
+        Fri, 07 Aug 2020 13:10:15 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::af38])
-        by smtp.googlemail.com with ESMTPSA id s6sm1835794otq.75.2020.08.07.13.10.13
+        by smtp.googlemail.com with ESMTPSA id s6sm1835794otq.75.2020.08.07.13.10.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 13:10:13 -0700 (PDT)
+        Fri, 07 Aug 2020 13:10:14 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org
 Cc:     Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 1/7] dyndbg: give %3u width in pr-format, cosmetic only
-Date:   Fri,  7 Aug 2020 14:09:48 -0600
-Message-Id: <20200807200957.1269454-2-jim.cromie@gmail.com>
+Subject: [PATCH 2/7] dyndbg: motivate a diet plan
+Date:   Fri,  7 Aug 2020 14:09:49 -0600
+Message-Id: <20200807200957.1269454-3-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200807200957.1269454-1-jim.cromie@gmail.com>
 References: <20200807200957.1269454-1-jim.cromie@gmail.com>
@@ -76,28 +76,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify the print-width so log entries line up nicely.
+this throwaway patch demonstrates the extra weight:
 
-no functional changes.
+ dyndbg: 2605 entries. repeated entries: 2369 module 2231 file 1147 func
+
+Thats (91%, 86%, 44%) repeated values in those pointers/columns.
+
+This simple test also shows that a similarly simple run-length encoder
+on those 3 columns would compress this table dramatically.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/dynamic_debug.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 1d012e597cc3..01b7d0210412 100644
+index 01b7d0210412..691e79826fc2 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -947,7 +947,7 @@ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
- 	list_add(&dt->link, &ddebug_tables);
- 	mutex_unlock(&ddebug_lock);
+@@ -1059,11 +1059,12 @@ static int __init dynamic_debug_init_control(void)
  
--	v2pr_info("%u debug prints in module %s\n", n, dt->mod_name);
-+	v2pr_info("%3u debug prints in module %s\n", n, dt->mod_name);
- 	return 0;
- }
+ static int __init dynamic_debug_init(void)
+ {
+-	struct _ddebug *iter, *iter_start;
++	struct _ddebug *iter, *iter_start, *prev = 0;
+ 	const char *modname = NULL;
+ 	char *cmdline;
+ 	int ret = 0;
+ 	int n = 0, entries = 0, modct = 0;
++	int modreps = 0, funcreps = 0, filereps = 0;
  
+ 	if (&__start___dyndbg == &__stop___dyndbg) {
+ 		if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
+@@ -1077,7 +1078,16 @@ static int __init dynamic_debug_init(void)
+ 	iter = __start___dyndbg;
+ 	modname = iter->modname;
+ 	iter_start = iter;
+-	for (; iter < __stop___dyndbg; iter++) {
++	for (prev = iter; iter < __stop___dyndbg; iter++) {
++		if (entries) {
++			if (prev->site->modname == iter->site->modname)
++				modreps++;
++			if (prev->site->function == iter->site->function)
++				funcreps++;
++			if (prev->site->filename == iter->site->filename)
++				filereps++;
++			prev++; /* one behind iter */
++		}
+ 		entries++;
+ 		if (strcmp(modname, iter->modname)) {
+ 			modct++;
+@@ -1099,6 +1109,9 @@ static int __init dynamic_debug_init(void)
+ 		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
+ 		 (int)(entries * sizeof(struct _ddebug)));
+ 
++	vpr_info("%d entries. repeated entries: %d module %d file %d func\n",
++		 entries, modreps, filereps, funcreps);
++
+ 	/* apply ddebug_query boot param, dont unload tables on err */
+ 	if (ddebug_setup_string[0] != '\0') {
+ 		pr_warn("ddebug_query param name is deprecated, change it to dyndbg\n");
 -- 
 2.26.2
 
