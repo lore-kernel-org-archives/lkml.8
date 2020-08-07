@@ -2,83 +2,89 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F008C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5147C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275BC2075A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7DBA21744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZRLmt8au"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgHGA5S (ORCPT
+        id S1726150AbgHGBGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:57:18 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3006 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726011AbgHGA5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:57:18 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 14D85D52B7E0A3E95817;
-        Fri,  7 Aug 2020 08:57:16 +0800 (CST)
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 7 Aug 2020 08:57:15 +0800
-Subject: Re: [PATCH net-next] hinic: fix strncpy output truncated compile
- warnings
-To:     David Miller <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-References: <20200806074830.1375-1-luobin9@huawei.com>
- <20200806.120103.1200684111953914586.davem@davemloft.net>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <7f9e241e-3ad6-b250-11b1-a16d1dc2df68@huawei.com>
-Date:   Fri, 7 Aug 2020 08:57:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 6 Aug 2020 21:06:01 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:61759 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726027AbgHGBGA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:06:00 -0400
+X-UUID: abd9c3f39a344fe5bf9d7bb293427d99-20200807
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=G4GxAPQqpd+NBS9oJCQUn487GFr6GbmdKg9Au8QZObs=;
+        b=ZRLmt8augMyTp+c3jXYI99SYRnMzNRYCfUmWSn/6LEyobabvLguovX6N5LEAH3PotQSYszq6ie+3oI1lXoDcUzSB4wg5t4o1nyCPT8nVX3RWcuhHg+18Kwa/7/K2e3oAmx7YNdWTWaLxKWqHSAz2VXbIKJRs0jaVfdH24qhnToo=;
+X-UUID: abd9c3f39a344fe5bf9d7bb293427d99-20200807
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1348952034; Fri, 07 Aug 2020 09:05:58 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs02n1.mediatek.inc
+ (172.21.101.77) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 7 Aug
+ 2020 09:05:56 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 7 Aug 2020 09:05:55 +0800
+Message-ID: <1596762313.8263.9.camel@mhfsdcap03>
+Subject: Re: [PATCH] i2c: mediatek: Fix i2c_spec_values description
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Matthias Brugger <mbrugger@suse.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>, <wsa@the-dreams.de>,
+        <yingjoe.chen@mediatek.com>, <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 7 Aug 2020 09:05:13 +0800
+In-Reply-To: <6e029d96-6171-0006-a5bb-01d0d5a7391b@suse.com>
+References: <c410f784-7b51-0d65-7a41-3845214dd273@gmail.com>
+         <1596712005.8263.4.camel@mhfsdcap03>
+         <6e029d96-6171-0006-a5bb-01d0d5a7391b@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200806.120103.1200684111953914586.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme714-chm.china.huawei.com (10.1.199.110) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/7 3:01, David Miller wrote:
-> From: Luo bin <luobin9@huawei.com>
-> Date: Thu, 6 Aug 2020 15:48:30 +0800
-> 
->> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->> index c6adc776f3c8..1dc948c07b94 100644
->> --- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->> +++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->> @@ -342,9 +342,9 @@ static int chip_fault_show(struct devlink_fmsg *fmsg,
->>  
->>  	level = event->event.chip.err_level;
->>  	if (level < FAULT_LEVEL_MAX)
->> -		strncpy(level_str, fault_level[level], strlen(fault_level[level]));
->> +		strncpy(level_str, fault_level[level], strlen(fault_level[level]) + 1);
->>  	else
->> -		strncpy(level_str, "Unknown", strlen("Unknown"));
->> +		strncpy(level_str, "Unknown", sizeof(level_str));
->>  
->>  	if (level == FAULT_LEVEL_SERIOUS_FLR) {
-> 
-> Please fix these cases consistently, either use the strlen()+1 pattern
-> or the "sizeof(destination)" one.
-> 
-> Probably sizeof(destination) is best.
-> .
-> 
-Will fix. Thanks. Level_str array is initialized to zero, so can't use the strlen()+1 pattern, I'll
-use strlen()+1 consistently.
+T24gVGh1LCAyMDIwLTA4LTA2IGF0IDE1OjM1ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMDYvMDgvMjAyMCAxMzowNiwgUWlpIFdhbmcgd3JvdGU6DQo+ID4gT24gVGh1
+LCAyMDIwLTA4LTA2IGF0IDExOjQ4ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOg0KPiA+
+PiBUaGUgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyBoYXZlIGl0J3MgbWVtYmVycyBkb2N1bWVudGVk
+IGJ1dCBpcyBtaXNzaW5nIHRoZQ0KPiA+PiBzdGFydGluZyAnQCcsIHdoaWNoIGxlYWRzIHRvIHdh
+cmluZ3MgbGlrZToNCj4gPj4NCj4gPj4gZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYzoy
+Njc6IHdhcm5pbmc6IEZ1bmN0aW9uIHBhcmFtZXRlciBvciBtZW1iZXINCj4gPj4gJ21pbl9sb3df
+bnMnIG5vdCBkZXNjcmliZWQgaW4gJ2kyY19zcGVjX3ZhbHVlcycNCj4gPj4NCj4gPj4gU2lnbmVk
+LW9mZi1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4NCj4gPj4g
+LS0tDQo+ID4+ICAgIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCA4ICsrKystLS0t
+DQo+ID4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0p
+DQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5j
+IGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiA+PiBpbmRleCBlODg5Zjc0NzAz
+ZTQuLmY1MWIzNWZjNDAwZiAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2ky
+Yy1tdDY1eHguYw0KPiA+PiArKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQo+
+ID4+IEBAIC0yNTMsMTAgKzI1MywxMCBAQCBzdHJ1Y3QgbXRrX2kyYyB7DQo+ID4+DQo+ID4+ICAg
+IC8qKg0KPiA+PiAgICAgKiBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzOg0KPiA+PiAtICogbWluX2xv
+d19uczogbWluIExPVyBwZXJpb2Qgb2YgdGhlIFNDTCBjbG9jaw0KPiA+IA0KPiA+IENhbiB5b3Ug
+aGVscCBtZSBhZGQgYSBkZXNjcmlwdGlvbiBvZiBtaW5faGlnaF9ucy4gQXMNCj4gPiBAbWluX2hp
+Z2hfbnM6IG1pbiBISUdIIHBlcmlvZCBvZiB0aGUgU0NMIGNsb2NrDQo+IA0KPiBSaWdodCwgSSBm
+b3Jnb3QgYWJvdXQgdGhpcyBvbmUuDQo+IA0KPiBBY3R1YWxseSBJIGRvbid0IHNlZSBhbnkgY29k
+ZSB3aGljaCB1c2VzIHRoZSB2YWx1ZSwgc28gSSB0aGluayBpdCBzaG91bGQgYmUgDQo+IGRlbGV0
+ZWQgZnJvbSB0aGUgc3RydWN0Lg0KPiANCj4gRG8geW91IGhhdmUgYW55IHRob3VnaHRzIG9uIHRo
+aXMuDQo+IA0KDQpUaGF0IGlzIHJpZ2h0LCBpdCBpcyB1c2VkIGZvciBpbnRlcm5hbCB0ZXN0IGJl
+Zm9yZS4gWW91IGNhbiBkZWxldGVkIGl0Lg0KDQo=
+
