@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52892C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3830C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D355221E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C342D221E5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0NcNhoM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GX52DsY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgHGHqu (ORCPT
+        id S1727028AbgHGHrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40192 "EHLO
+        Fri, 7 Aug 2020 03:47:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgHGHqu (ORCPT
+        with ESMTP id S1726212AbgHGHrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:46:50 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E49C061574;
-        Fri,  7 Aug 2020 00:46:50 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 2so932220qkf.10;
-        Fri, 07 Aug 2020 00:46:49 -0700 (PDT)
+        Fri, 7 Aug 2020 03:47:07 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8353C061574;
+        Fri,  7 Aug 2020 00:47:07 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id t23so674315qto.3;
+        Fri, 07 Aug 2020 00:47:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e2dWfZoxJWBHNcD2Np+CST7+CSWtDbu52bWnk3EvzQ0=;
-        b=j0NcNhoMepGwjKtVhk2xdYhPkiZRGOgmviLDb/QngRHurKNZyR1wOHH6QRggob2U9o
-         iSS8jM71HvDmvL+b/LktDl+2GsjKYGH33RZukCSf6soCGabkSAigs59ilP6c3fNCwIVi
-         /E7bj8Ew+adihamTc/F+j4O+H/3dLvueW0PyZIkVVDqOf1W8UbfDhYNAtWA1c9iQDFPE
-         21AnTaUg8KFrErj+6mZtBVBtmM92vHrpmv9/bRJ+842IwOR/DyIZ0U03eXfd4qmgayUD
-         0Uka7Wurr1lbIQEbfFuEXoVZ0pKn5umf9ykcvvXM/0WnfkhN6s0keL2AGvhi0PUY5Hce
-         uz/A==
+        bh=5TVRRrTJtmZdv6+6tRsGQqVeebKVn7+NZ1W0hZ5IlAc=;
+        b=GX52DsY3qIAl6y7VYvZNA6C7+CF8Xc3SkbYXO3RM+3EFn4rXFViWvcOewgLYU6HbgJ
+         uicchdrQfbyspVtdT10EeV4W8n+6haTvofNa82//gqanhTFomVEAVU4T/alV4608b+dX
+         otbPCb9DcyZmLDmLkBsmJkskovHimQ1QjCepmsy+EXDPmN2fL9s67X/gZ4+gMtNG9A6O
+         kUtUtx3msIyeyZ6g3s4M+bTnsvofYUqWXpyKhlsouAcvLjNUhUfu8/Ry2/kBZosN+M37
+         N9GHzHB9yIb0Exc9hAhp1uPeR1PEGsfw4I4Tc456rqCAeMchNYQH+7WBvZ0ljkj30cOD
+         87nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e2dWfZoxJWBHNcD2Np+CST7+CSWtDbu52bWnk3EvzQ0=;
-        b=BsUyTMRvaG+ag8mYUx8892ZRilLP2cisdN1cr2GHgfdLVjLd03aPRUj7v4IPPUN7DO
-         mR9d9csBitk8R239uaaWTocriplIbMYsgMOM+RoXpJvL0epTiXQqHH/f1rv9qVSbGltT
-         5gzrWPFzy7407EAuVoEiLv0mxY1Qehp2k974FfVTGZs18SohcgSQRMnunxhIKQx3McBZ
-         /EKGXKfJoMpi+n7QuQ+nGgmntxfRIpNS3gRDCx0bkpFPCcI+KKziOe9Ed4duuueH/duQ
-         n6PeEKwGYvJnrAIjh2TEceE1f6ZkeCDagkiP2IyXxQsbBNWpZTrv8sCeaTXXg6JlgkoS
-         jGJw==
-X-Gm-Message-State: AOAM530cEY5VioIIP9Re1CJg6CIl1/72rdWlkKbZA3J5PlS+iUoejO0U
-        PQf9y+6vqfyJjSsgSIUYi9Y=
-X-Google-Smtp-Source: ABdhPJxn06QjJuVcqHCWj0+qm0Z09tRW0DxTvTzT87RNcATlwxQAl5SgxnnDmnZLVfjw254HZkkwRA==
-X-Received: by 2002:a37:8405:: with SMTP id g5mr5754391qkd.286.1596786409268;
-        Fri, 07 Aug 2020 00:46:49 -0700 (PDT)
+        bh=5TVRRrTJtmZdv6+6tRsGQqVeebKVn7+NZ1W0hZ5IlAc=;
+        b=kGhVlZUq6KCpSdlh+DfnPPZFeI3abnFDfoUjJrBKTa6RpeiCfUsveDYcmMXr92BJsk
+         z/laPbORoydqQ6Lo8e9IcE6e672Z6wyJrbkoopgXNigisTTPkOErPKWJxsH71Y2dU4In
+         lEpQBYy0FzRlm0Px+uOV2PDDEkAQ9GP6mBVCMy8ZUwMj9Gs0vM1yfna+yK6AKuKL1k5U
+         tHNt89CrvS1xUx9IdDVvQJK368mtUAX84DYTbdreB8jNZsolJIAvgwz90Iwr+OBw4scp
+         t1OnEURZkNSKfSHE33TNDzNlzf0ianNVcbIuAZyoUH0lw5biQNld5NIkjkyKSzHIIv5K
+         xgNg==
+X-Gm-Message-State: AOAM5309HYln3Rr+HRfhkc3d1phx/qVz1Hg/xqxK7VfxggmYTpu13rRk
+        FE4BxK25EPTj9ss0OPUivBQ=
+X-Google-Smtp-Source: ABdhPJyq8IpG6jqFOXfhqXITDu6hadTHPSLs5omqd3OJpjos7mlE6qfsk6BKCaRwuMsOlQCpn0JsQQ==
+X-Received: by 2002:ac8:4e39:: with SMTP id d25mr12571151qtw.208.1596786427051;
+        Fri, 07 Aug 2020 00:47:07 -0700 (PDT)
 Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id y14sm7169878qtc.84.2020.08.07.00.46.48
+        by smtp.gmail.com with ESMTPSA id d26sm7289401qtc.51.2020.08.07.00.47.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Aug 2020 00:46:48 -0700 (PDT)
+        Fri, 07 Aug 2020 00:47:06 -0700 (PDT)
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 6253B27C0054;
-        Fri,  7 Aug 2020 03:46:48 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:46:48 -0400
-X-ME-Sender: <xms:6AYtX_FPeScM-435-ObQGmJo8BBhepnUxiKj907zoQuRbt68dJZvnQ>
+        by mailauth.nyi.internal (Postfix) with ESMTP id 3DC7F27C0054;
+        Fri,  7 Aug 2020 03:47:06 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 07 Aug 2020 03:47:06 -0400
+X-ME-Sender: <xms:-gYtX9YT703LbnsjkMNhxcE_tidta9S-Fc9Gyq5M0L-n9TcETf9MMA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -73,16 +73,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkedugdduvdeiucetufdoteggod
     ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
     htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
     ueelnecukfhppeduudegrdekhedrudektddrvdduheenucevlhhushhtvghrufhiiigvpe
-    eknecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
+    elnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
     vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnpe
     epfhhigihmvgdrnhgrmhgvsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:6AYtX8Wrm8SZALLznT8KSgT7sPF4xVEz643e9F9ReLV_TBsnI7mV6g>
-    <xmx:6AYtXxJ5l7mfZD9vBS6UqubGEX423dPyA1IapqngZPR7TiaeriLCeA>
-    <xmx:6AYtX9EkwJkkqXNE4-9LeiSDxvsm2HQ4per288Fcl5qK7iT-bgIArA>
-    <xmx:6AYtX7w7T9zjiXMfEnWeXJuvGuaqXmdNiYP6J16RDR-XcATDBfc-4A>
+X-ME-Proxy: <xmx:-gYtX0bS2x83-RSowex01dVlIBoNsjKSYFwKMCxzniyZeAlTMnEUmA>
+    <xmx:-gYtX__Da5PD3g5dbsjPBlONZxOTOVqMmxEdNwI3YW8qQ-nrvd-tmQ>
+    <xmx:-gYtX7r58KykQ2R6970LAqm7ZOgOCwznZKlQ3myLNMHDmWMYCYxg7g>
+    <xmx:-gYtXxkjqkaKfFLBQJBrMadKDn8xam-jfd13U6ELLkpfbJ1HpCWdgw>
 Received: from localhost (unknown [114.85.180.215])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 62B183280063;
-        Fri,  7 Aug 2020 03:46:46 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 32BF730600B2;
+        Fri,  7 Aug 2020 03:47:04 -0400 (EDT)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -90,9 +90,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Waiman Long <longman@redhat.com>,
         Boqun Feng <boqun.feng@gmail.com>
-Subject: [RFC v7 18/19] locking/selftest: Add test cases for queued_read_lock()
-Date:   Fri,  7 Aug 2020 15:42:37 +0800
-Message-Id: <20200807074238.1632519-19-boqun.feng@gmail.com>
+Subject: [RFC v7 19/19] lockdep/selftest: Introduce recursion3
+Date:   Fri,  7 Aug 2020 15:42:38 +0800
+Message-Id: <20200807074238.1632519-20-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200807074238.1632519-1-boqun.feng@gmail.com>
 References: <20200807074238.1632519-1-boqun.feng@gmail.com>
@@ -103,155 +103,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two self test cases for the following case:
-
-	P0:			P1:			P2:
-
-				<in irq handler>
-	spin_lock_irq(&slock)	read_lock(&rwlock)
-							write_lock_irq(&rwlock)
-	read_lock(&rwlock)	spin_lock(&slock)
-
-, which is a deadlock, as the read_lock() on P0 cannot get the lock
-because of the fairness.
-
-	P0:			P1:			P2:
-
-	<in irq handler>
-	spin_lock(&slock)	read_lock(&rwlock)
-							write_lock(&rwlock)
-	read_lock(&rwlock)	spin_lock_irq(&slock)
-
-, which is not a deadlock, as the read_lock() on P0 can get the lock
-because it could use the unfair fastpass.
+Add a test case shows that USED_IN_*_READ and ENABLE_*_READ can cause
+deadlock too.
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- lib/locking-selftest.c | 104 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
+ lib/locking-selftest.c | 55 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
 diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
-index 4264cf4b60bb..17f8f6f37165 100644
+index 17f8f6f37165..a899b3f0e2e5 100644
 --- a/lib/locking-selftest.c
 +++ b/lib/locking-selftest.c
-@@ -2201,6 +2201,108 @@ static void ww_tests(void)
- 	pr_cont("\n");
- }
+@@ -1249,6 +1249,60 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_rlock)
+ #include "locking-selftest-wlock.h"
+ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_wlock)
  
++#undef E1
++#undef E2
++#undef E3
++/*
++ * read-lock / write-lock recursion that is unsafe.
++ *
++ * A is a ENABLED_*_READ lock
++ * B is a USED_IN_*_READ lock
++ *
++ * read_lock(A);
++ *			write_lock(B);
++ * <interrupt>
++ * read_lock(B);
++ * 			write_lock(A); // if this one is read_lock(), no deadlock
++ */
++
++#define E1()				\
++					\
++	IRQ_DISABLE();			\
++	WL(B);				\
++	LOCK(A);			\
++	UNLOCK(A);			\
++	WU(B);				\
++	IRQ_ENABLE();
++
++#define E2()				\
++					\
++	RL(A);				\
++	RU(A);				\
++
++#define E3()				\
++					\
++	IRQ_ENTER();			\
++	RL(B);				\
++	RU(B);				\
++	IRQ_EXIT();
 +
 +/*
-+ * <in hardirq handler>
-+ * read_lock(&A);
-+ *			<hardirq disable>
-+ *			spin_lock(&B);
-+ * spin_lock(&B);
-+ *			read_lock(&A);
-+ *
-+ * is a deadlock.
++ * Generate 24 testcases:
 + */
-+static void queued_read_lock_hardirq_RE_Er(void)
-+{
-+	HARDIRQ_ENTER();
-+	read_lock(&rwlock_A);
-+	LOCK(B);
-+	UNLOCK(B);
-+	read_unlock(&rwlock_A);
-+	HARDIRQ_EXIT();
++#include "locking-selftest-hardirq.h"
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_hard_rlock)
 +
-+	HARDIRQ_DISABLE();
-+	LOCK(B);
-+	read_lock(&rwlock_A);
-+	read_unlock(&rwlock_A);
-+	UNLOCK(B);
-+	HARDIRQ_ENABLE();
-+}
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_hard_wlock)
 +
-+/*
-+ * <in hardirq handler>
-+ * spin_lock(&B);
-+ *			<hardirq disable>
-+ *			read_lock(&A);
-+ * read_lock(&A);
-+ *			spin_lock(&B);
-+ *
-+ * is not a deadlock.
-+ */
-+static void queued_read_lock_hardirq_ER_rE(void)
-+{
-+	HARDIRQ_ENTER();
-+	LOCK(B);
-+	read_lock(&rwlock_A);
-+	read_unlock(&rwlock_A);
-+	UNLOCK(B);
-+	HARDIRQ_EXIT();
++#include "locking-selftest-softirq.h"
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_soft_rlock)
 +
-+	HARDIRQ_DISABLE();
-+	read_lock(&rwlock_A);
-+	LOCK(B);
-+	UNLOCK(B);
-+	read_unlock(&rwlock_A);
-+	HARDIRQ_ENABLE();
-+}
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_soft_wlock)
 +
-+/*
-+ * <hardirq disable>
-+ * spin_lock(&B);
-+ *			read_lock(&A);
-+ *			<in hardirq handler>
-+ *			spin_lock(&B);
-+ * read_lock(&A);
-+ *
-+ * is a deadlock. Because the two read_lock()s are both non-recursive readers.
-+ */
-+static void queued_read_lock_hardirq_inversion(void)
-+{
-+
-+	HARDIRQ_ENTER();
-+	LOCK(B);
-+	UNLOCK(B);
-+	HARDIRQ_EXIT();
-+
-+	HARDIRQ_DISABLE();
-+	LOCK(B);
-+	read_lock(&rwlock_A);
-+	read_unlock(&rwlock_A);
-+	UNLOCK(B);
-+	HARDIRQ_ENABLE();
-+
-+	read_lock(&rwlock_A);
-+	read_unlock(&rwlock_A);
-+}
-+
-+static void queued_read_lock_tests(void)
-+{
-+	printk("  --------------------------------------------------------------------------\n");
-+	printk("  | queued read lock tests |\n");
-+	printk("  ---------------------------\n");
-+	print_testname("hardirq read-lock/lock-read");
-+	dotest(queued_read_lock_hardirq_RE_Er, FAILURE, LOCKTYPE_RWLOCK);
-+	pr_cont("\n");
-+
-+	print_testname("hardirq lock-read/read-lock");
-+	dotest(queued_read_lock_hardirq_ER_rE, SUCCESS, LOCKTYPE_RWLOCK);
-+	pr_cont("\n");
-+
-+	print_testname("hardirq inversion");
-+	dotest(queued_read_lock_hardirq_inversion, FAILURE, LOCKTYPE_RWLOCK);
-+	pr_cont("\n");
-+}
-+
- void locking_selftest(void)
- {
- 	/*
-@@ -2318,6 +2420,8 @@ void locking_selftest(void)
- 	/*
- 	 * queued_read_lock() specific test cases can be put here
- 	 */
-+	if (IS_ENABLED(CONFIG_QUEUED_RWLOCKS))
-+		queued_read_lock_tests();
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ # define I_SPINLOCK(x)	lockdep_reset_lock(&lock_##x.dep_map)
+ # define I_RWLOCK(x)	lockdep_reset_lock(&rwlock_##x.dep_map)
+@@ -2413,6 +2467,7 @@ void locking_selftest(void)
  
- 	if (unexpected_testcase_failures) {
- 		printk("-----------------------------------------------------------------\n");
+ 	DO_TESTCASE_6x2x2RW("irq read-recursion", irq_read_recursion);
+ 	DO_TESTCASE_6x2x2RW("irq read-recursion #2", irq_read_recursion2);
++	DO_TESTCASE_6x2x2RW("irq read-recursion #3", irq_read_recursion3);
+ 
+ 	ww_tests();
+ 
 -- 
 2.28.0
 
