@@ -1,77 +1,59 @@
-Return-Path: <SRS0=vN1y=BQ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CF0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE28221E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Aug 2020 22:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3429120866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQbpfTRk"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="uqimuOg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgHFWcB (ORCPT
+        id S1727055AbgHGI2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:32:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
+        Fri, 7 Aug 2020 04:28:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHFWcB (ORCPT
+        with ESMTP id S1726609AbgHGI2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:32:01 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94C1C061574;
-        Thu,  6 Aug 2020 15:32:00 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id f24so13615ejx.6;
-        Thu, 06 Aug 2020 15:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cIR5gjbU+Mwah1iH8pBqwUm77E/30L+bDjha2zH7UhE=;
-        b=tQbpfTRkaS+EXC5hy7iflWYywPq7iEufj6aXlB0TgQTb4TQkXon9cRnEm8WosLXENG
-         hdHnfb26i3aqMVgLEjcrgp73pcoJsU8vcW57sHbqIDrCa7UWxIbPy4MnSiJzPQ1NBnjF
-         UqEnuoFt0nmCRpawn+xt8Pu31IdHy7zdY1TOsmivMXYv0Rhl/vEKtE5nTu/31c7rYvHm
-         uugsPVaTXaRJD6HPrLbm0GOm3IH9DjnGJqfNGFo0KAsyex1lXpx4nJ5tC+eAUEiKjfhl
-         LsXVt3QEWWVyAXDwWthkhGRnHT1jdufUAqDPedjmVy3CkqDRAnnqcenv2g67L1CojxtY
-         rXyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cIR5gjbU+Mwah1iH8pBqwUm77E/30L+bDjha2zH7UhE=;
-        b=BpSJrZqgl47Q3qnvblLH0L/dSyJvJ6ODTGgaXI35n3Ltf/U1XOHiXlhuPqKeS+xdAs
-         +IWkaoaAmsKM7535P6sys/uMsmzeYPitIHGoJIHF7LIAPBy6LeqRPfguYWDCLxQyEuVc
-         FWl4krsbc5jzwmtAhWcROXAGlDL3HuYN1+M+I2SJpvcg78L/uSLCv/n4Kfn06I6gcFoB
-         4pM71cEY4SZmeUTPPOgCbDpQC0cBnrW0kU2J1x4WeedaIQ2aeuQbZL4CqEhhtWEDaH89
-         I3teGwrPuVif4HgcdJN6xQQOxCGjHpcA+avylAbKMscSWRF3xT2nOm27TtqBrxKQomNw
-         ywyg==
-X-Gm-Message-State: AOAM531S+qVnNAFxjcNeiVix/NtHU77yDkKMjHwp2DMMaP3zJ5W9XIHr
-        mcsSAlSl0EFgzGNDksM9rm4=
-X-Google-Smtp-Source: ABdhPJyOMmGi6mKgUkgfCV3kgswvOuijmfxLZUafhcyHeXGR/0cNk7pXbcQl3AoLWZikRuoaTya/0Q==
-X-Received: by 2002:a17:906:1f53:: with SMTP id d19mr6408582ejk.327.1596753119566;
-        Thu, 06 Aug 2020 15:31:59 -0700 (PDT)
-Received: from localhost.localdomain (abae50.neoplus.adsl.tpnet.pl. [83.6.168.50])
-        by smtp.googlemail.com with ESMTPSA id k22sm4411316edo.24.2020.08.06.15.31.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 15:31:59 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     amit.pundir@linaro.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, john.stultz@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, sumit.semwal@linaro.org,
-        Konrad Dybcio <konradybcio@gmail.com>
+        Fri, 7 Aug 2020 04:28:31 -0400
+Received: from mxwww.masterlogin.de (mxwww.masterlogin.de [IPv6:2a03:2900:1:1::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4240FC061574;
+        Fri,  7 Aug 2020 01:28:31 -0700 (PDT)
+Received: from mxout3.routing.net (unknown [192.168.10.111])
+        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id D24B8962D2;
+        Fri,  7 Aug 2020 08:28:24 +0000 (UTC)
+Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
+        by mxout3.routing.net (Postfix) with ESMTP id 6350E6046B;
+        Fri,  7 Aug 2020 08:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1596788904;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LTTAvZt84zMEQxdjDVX1V/pS94sBHBnf+fd0mzHYS/Y=;
+        b=uqimuOg/kuqp201562Tk5tMiic7EnABOEvs/isx7WG+CtjSeH2dKoqLArQs+ySCEX70ix6
+        U0jevTWjWKzlMTBSt9EqBh7V/OawRj62Pdrr4ALsqU/DHLAHhd85eTAvr49/PsmP7M4tWZ
+        LkQtRB7QwmFj7Mc6FQDoBy6sWhaKAsw=
+Received: from localhost.localdomain (fttx-pool-37.60.0.190.bambit.de [37.60.0.190])
+        by mxbox4.masterlogin.de (Postfix) with ESMTPSA id B424B808C6;
+        Fri,  7 Aug 2020 08:28:23 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Subject: 
-Date:   Fri,  7 Aug 2020 00:31:34 +0200
-Message-Id: <20200806223134.42748-1-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
-References: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
+Date:   Fri,  7 Aug 2020 10:27:52 +0200
+Message-Id: <20200807082754.6790-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,12 +61,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject: Re: [PATCH v4] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+From: Frank Wunderlich <frank-w@public-files.de>
 
->// This removed_region is needed to boot the device
->               // TODO: Find out the user of this reserved memory
->               removed_region: memory@88f00000 {
+Subject: [RFC PATCH 0/2] move/add display relevant nodes to mt7623n
 
-This region seems to belong to the Trust Zone. When Linux tries to access it, TZ bites and shuts the device down.
+based on series from David Woodhouse [1]
+i moved more display-nodes out of mt7623.dtsi to new mt7623n.dtsi
+and changed last part from my series [2] to add these nodes to this new dtsi
 
-Konrad
+[1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=329209
+[2] https://patchwork.kernel.org/patch/11700699/
+
+Frank Wunderlich (1):
+  arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
+
+Ryder Lee (1):
+  arm: dts: mt7623: add display subsystem related device nodes
+
+ arch/arm/boot/dts/mt7623.dtsi                 |  99 -------
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 +++++
+ arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 +++++
+ arch/arm/boot/dts/mt7623n.dtsi                | 270 ++++++++++++++++++
+ 4 files changed, 414 insertions(+), 99 deletions(-)
+
+-- 
+2.25.1
+
