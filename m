@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AB9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BD6C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC0821744
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6517E2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHGQEp (ORCPT
+        id S1726722AbgHGQEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:04:45 -0400
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:54088 "EHLO
+        Fri, 7 Aug 2020 12:04:54 -0400
+Received: from pbmsgap02.intersil.com ([192.157.179.202]:54166 "EHLO
         pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGQEj (ORCPT
+        with ESMTP id S1725893AbgHGQEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:04:39 -0400
+        Fri, 7 Aug 2020 12:04:50 -0400
 Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 077FvuCV005868;
-        Fri, 7 Aug 2020 11:59:01 -0400
-Received: from pbmxdp02.intersil.corp (pbmxdp02.pb.intersil.com [132.158.200.223])
-        by pbmsgap02.intersil.com with ESMTP id 32n2jctr7u-1
+        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 077FrjIF003016;
+        Fri, 7 Aug 2020 11:56:21 -0400
+Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
+        by pbmsgap02.intersil.com with ESMTP id 32n2jctr6h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 11:59:01 -0400
-Received: from pbmxdp01.intersil.corp (132.158.200.222) by
- pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server
+        Fri, 07 Aug 2020 11:56:21 -0400
+Received: from pbmxdp03.intersil.corp (132.158.200.224) by
+ pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1979.3; Fri, 7 Aug 2020 11:58:59 -0400
-Received: from localhost (132.158.202.109) by pbmxdp01.intersil.corp
- (132.158.200.222) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Fri, 7 Aug 2020 11:58:59 -0400
+ 15.1.1979.3; Fri, 7 Aug 2020 11:56:20 -0400
+Received: from localhost (132.158.202.109) by pbmxdp03.intersil.corp
+ (132.158.200.224) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Fri, 7 Aug 2020 11:56:19 -0400
 From:   <min.li.xe@renesas.com>
 To:     <richardcochran@gmail.com>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Min Li <min.li.xe@renesas.com>
-Subject: [PATCH net 4/4] ptp: ptp_idt82p33: support individually configure output by index
-Date:   Fri, 7 Aug 2020 11:58:23 -0400
-Message-ID: <1596815903-11144-1-git-send-email-min.li.xe@renesas.com>
+Subject: [PATCH net 1/4] ptp: ptp_idt82p33: update to support adjphase
+Date:   Fri, 7 Aug 2020 11:55:55 -0400
+Message-ID: <1596815755-10994-1-git-send-email-min.li.xe@renesas.com>
 X-Mailer: git-send-email 2.7.4
 X-TM-AS-MML: disable
 MIME-Version: 1.0
@@ -49,7 +49,7 @@ Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-07_12:2020-08-06,2020-08-07 signatures=0
 X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=835
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-2006250000 definitions=main-2008070110
 X-Proofpoint-Spam-Reason: mlx
@@ -60,141 +60,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Min Li <min.li.xe@renesas.com>
 
-Enable/disable individual output by index instead of by output_mask
+Add adjphase support for idt82p33xxx synchronization management unit.
+Also fix n_per_out to the actual number of outputs.
+
+Changes since v1:
+- Break into small changes
 
 Signed-off-by: Min Li <min.li.xe@renesas.com>
 ---
- drivers/ptp/ptp_idt82p33.c | 62 ++++++++++++++++++++++++++++++++++------------
- drivers/ptp/ptp_idt82p33.h |  2 ++
- 2 files changed, 48 insertions(+), 16 deletions(-)
+ drivers/ptp/ptp_idt82p33.c | 48 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/ptp/ptp_idt82p33.c b/drivers/ptp/ptp_idt82p33.c
-index 2d62aed..b3c82d7 100644
+index 179f6c4..bd1fbcd 100644
 --- a/drivers/ptp/ptp_idt82p33.c
 +++ b/drivers/ptp/ptp_idt82p33.c
-@@ -578,33 +578,46 @@ static long idt82p33_sync_tod_work_handler(struct ptp_clock_info *ptp)
- 	return ret;
+@@ -674,6 +674,51 @@ static int idt82p33_enable(struct ptp_clock_info *ptp,
+ 	return err;
  }
  
--static int idt82p33_pps_enable(struct idt82p33_channel *channel, bool enable)
-+static int idt82p33_output_enable(struct idt82p33_channel *channel,
-+				  bool enable, unsigned int outn)
- {
- 	struct idt82p33 *idt82p33 = channel->idt82p33;
--	u8 mask, outn, val;
- 	int err;
-+	u8 val;
-+
-+	err = idt82p33_read(idt82p33, OUT_MUX_CNFG(outn), &val, sizeof(val));
-+
-+	if (err)
-+		return err;
-+
-+	if (enable)
-+		val &= ~SQUELCH_ENABLE;
-+	else
-+		val |= SQUELCH_ENABLE;
-+
-+	return idt82p33_write(idt82p33, OUT_MUX_CNFG(outn), &val, sizeof(val));
-+}
-+
-+static int idt82p33_output_mask_enable(struct idt82p33_channel *channel,
-+				       bool enable)
++static int idt82p33_adjwritephase(struct ptp_clock_info *ptp, s32 offsetNs)
 +{
-+	u16 mask;
++	struct idt82p33_channel *channel =
++		container_of(ptp, struct idt82p33_channel, caps);
++	struct idt82p33 *idt82p33 = channel->idt82p33;
++	s64 offsetInFs;
++	s64 offsetRegVal;
++	u8 val[4] = {0};
 +	int err;
-+	u8 outn;
- 
- 	mask = channel->output_mask;
- 	outn = 0;
- 
- 	while (mask) {
--		if (mask & 0x1) {
--			err = idt82p33_read(idt82p33, OUT_MUX_CNFG(outn),
--					    &val, sizeof(val));
--			if (err)
--				return err;
- 
--			if (enable)
--				val &= ~SQUELCH_ENABLE;
--			else
--				val |= SQUELCH_ENABLE;
-+		if (mask & 0x1) {
- 
--			err = idt82p33_write(idt82p33, OUT_MUX_CNFG(outn),
--					     &val, sizeof(val));
-+			err = idt82p33_output_enable(channel, enable, outn);
- 
- 			if (err)
- 				return err;
- 		}
 +
- 		mask >>= 0x1;
- 		outn++;
- 	}
-@@ -612,6 +625,20 @@ static int idt82p33_pps_enable(struct idt82p33_channel *channel, bool enable)
- 	return 0;
- }
- 
-+static int idt82p33_perout_enable(struct idt82p33_channel *channel,
-+				  bool enable,
-+				  struct ptp_perout_request *perout)
-+{
-+	unsigned int flags = perout->flags;
++	offsetInFs = (s64)(-offsetNs) * 1000000;
 +
-+	/* Enable/disable output based on output_mask */
-+	if (flags == PEROUT_ENABLE_OUTPUT_MASK)
-+		return idt82p33_output_mask_enable(channel, enable);
++	if (offsetInFs > WRITE_PHASE_OFFSET_LIMIT)
++		offsetInFs = WRITE_PHASE_OFFSET_LIMIT;
++	else if (offsetInFs < -WRITE_PHASE_OFFSET_LIMIT)
++		offsetInFs = -WRITE_PHASE_OFFSET_LIMIT;
 +
-+	/* Enable/disable individual output instead */
-+	return idt82p33_output_enable(channel, enable, perout->index);
++	/* Convert from phaseOffsetInFs to register value */
++	offsetRegVal = ((offsetInFs * 1000) / IDT_T0DPLL_PHASE_RESOL);
++
++	val[0] = offsetRegVal & 0xFF;
++	val[1] = (offsetRegVal >> 8) & 0xFF;
++	val[2] = (offsetRegVal >> 16) & 0xFF;
++	val[3] = (offsetRegVal >> 24) & 0x1F;
++	val[3] |= PH_OFFSET_EN;
++
++	mutex_lock(&idt82p33->reg_lock);
++
++	err = idt82p33_dpll_set_mode(channel, PLL_MODE_WPH);
++	if (err) {
++		dev_err(&idt82p33->client->dev,
++			"Failed at line %d in func %s!\n",
++			__LINE__,
++			__func__);
++		goto out;
++	}
++
++	err = idt82p33_write(idt82p33, channel->dpll_phase_cnfg, val,
++			     sizeof(val));
++
++out:
++	mutex_unlock(&idt82p33->reg_lock);
++	return err;
 +}
 +
- static int idt82p33_enable_tod(struct idt82p33_channel *channel)
+ static int idt82p33_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
  {
- 	struct idt82p33 *idt82p33 = channel->idt82p33;
-@@ -625,7 +652,8 @@ static int idt82p33_enable_tod(struct idt82p33_channel *channel)
+ 	struct idt82p33_channel *channel =
+@@ -784,6 +829,8 @@ static void idt82p33_caps_init(struct ptp_clock_info *caps)
+ {
+ 	caps->owner = THIS_MODULE;
+ 	caps->max_adj = 92000;
++	caps->n_per_out = 11;
++	caps->adjphase = idt82p33_adjwritephase;
+ 	caps->adjfine = idt82p33_adjfine;
+ 	caps->adjtime = idt82p33_adjtime;
+ 	caps->gettime64 = idt82p33_gettime;
+@@ -810,7 +857,6 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
+ 	idt82p33_caps_init(&channel->caps);
+ 	snprintf(channel->caps.name, sizeof(channel->caps.name),
+ 		 "IDT 82P33 PLL%u", index);
+-	channel->caps.n_per_out = hweight8(channel->output_mask);
+ 
+ 	err = idt82p33_dpll_set_mode(channel, PLL_MODE_DCO);
  	if (err)
- 		return err;
- 
--	err = idt82p33_pps_enable(channel, false);
-+	if (0)
-+		err = idt82p33_output_mask_enable(channel, false);
- 
- 	if (err) {
- 		dev_err(&idt82p33->client->dev,
-@@ -681,14 +709,16 @@ static int idt82p33_enable(struct ptp_clock_info *ptp,
- 
- 	if (rq->type == PTP_CLK_REQ_PEROUT) {
- 		if (!on)
--			err = idt82p33_pps_enable(channel, false);
-+			err = idt82p33_perout_enable(channel, false,
-+						     &rq->perout);
- 
- 		/* Only accept a 1-PPS aligned to the second. */
- 		else if (rq->perout.start.nsec || rq->perout.period.sec != 1 ||
- 		    rq->perout.period.nsec) {
- 			err = -ERANGE;
- 		} else
--			err = idt82p33_pps_enable(channel, true);
-+			err = idt82p33_perout_enable(channel, true,
-+						     &rq->perout);
- 	}
- 
- 	mutex_unlock(&idt82p33->reg_lock);
-diff --git a/drivers/ptp/ptp_idt82p33.h b/drivers/ptp/ptp_idt82p33.h
-index 1dcd2c0..5008998 100644
---- a/drivers/ptp/ptp_idt82p33.h
-+++ b/drivers/ptp/ptp_idt82p33.h
-@@ -56,6 +56,8 @@
- #define PLL_MODE_SHIFT                    (0)
- #define PLL_MODE_MASK                     (0x1F)
- 
-+#define PEROUT_ENABLE_OUTPUT_MASK         (0xdeadbeef)
-+
- enum pll_mode {
- 	PLL_MODE_MIN = 0,
- 	PLL_MODE_AUTOMATIC = PLL_MODE_MIN,
 -- 
 2.7.4
 
