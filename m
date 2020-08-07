@@ -2,108 +2,157 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B17C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47763C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA99F206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456FC206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Uax3yNJO"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HEuQszfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHGAj0 (ORCPT
+        id S1726175AbgHGAmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:39:26 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:23367 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725998AbgHGAj0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:39:26 -0400
-X-UUID: 0ab91ec9b3684390b40d9aaae7d6a93d-20200807
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bnBFseN4rOUFAaYeG9/B7rSHa4Ze1CslHkpsIkYU4+w=;
-        b=Uax3yNJOKS687oP+vgorpNGrHft4mBgoFRdZ/T/x0+ZGZaOncz3BUvakL7OffvGOCR7fte02sssyoma8lEVtcbwydPzDfCE67Z/wINjdSpy62GHa200QK/UMC/OFG6SpyPGnUZjBu+mCghkAwaBUMTCkLy9VVrALVIE7xrz0KJo=;
-X-UUID: 0ab91ec9b3684390b40d9aaae7d6a93d-20200807
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1352188315; Fri, 07 Aug 2020 08:39:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 7 Aug 2020 08:39:18 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 7 Aug 2020 08:39:14 +0800
-Message-ID: <1596760757.27829.8.camel@mtkswgap22>
-Subject: RE: [PATCH v2] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     Can Guo <cang@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= 
-        <kuohong.wang@mediatek.com>,
-        Peter Wang =?UTF-8?Q?=28=E7=8E=8B=E4=BF=A1=E5=8F=8B=29?= 
-        <peter.wang@mediatek.com>,
-        Chun-Hung Wu =?UTF-8?Q?=28=E5=B7=AB=E9=A7=BF=E5=AE=8F=29?= 
-        <Chun-hung.Wu@mediatek.com>,
-        Andy Teng =?UTF-8?Q?=28=E9=84=A7=E5=A6=82=E5=AE=8F=29?= 
-        <Andy.Teng@mediatek.com>,
-        Chaotian Jing =?UTF-8?Q?=28=E4=BA=95=E6=9C=9D=E5=A4=A9=29?= 
-        <Chaotian.Jing@mediatek.com>,
-        CC Chou =?UTF-8?Q?=28=E5=91=A8=E5=BF=97=E6=9D=B0=29?= 
-        <cc.chou@mediatek.com>
-Date:   Fri, 7 Aug 2020 08:39:17 +0800
-In-Reply-To: <BYAPR04MB4629D947CAC7E07FF94D55F2FC4A0@BYAPR04MB4629.namprd04.prod.outlook.com>
-References: <20200729024037.23105-1-stanley.chu@mediatek.com>
-         <bfbb48b06fa3464da0cbd2aee8a32649@codeaurora.org>
-         <1596018374.17247.41.camel@mtkswgap22>
-         <4cb7403fae7226b70a133d4a7ecee755@codeaurora.org>
-         <1596095961.17247.51.camel@mtkswgap22>
-         <1596518850.27829.5.camel@mtkswgap22>
-         <BYAPR04MB4629D947CAC7E07FF94D55F2FC4A0@BYAPR04MB4629.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 6 Aug 2020 20:42:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52467 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgHGAmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 20:42:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BN65M4MR4z9sTC;
+        Fri,  7 Aug 2020 10:42:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596760953;
+        bh=jRNJx5IfknaND6+jGAaPwyuYIvtYOZjhhbHZBTHzTqU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HEuQszfwZ5Yx7GM8Fjf05TsHNRdKQhtsozdXgo7u1Tv7Xl3f6Cl2pk1FYntcgzzb+
+         4Jq8DwmzQqMAap2K+nh/ovtW4OpUnVIUEuzQAq/N/DFeKjGXTzg6Z5KWkEe58su95t
+         ndBHcdfHCo4L6DOSyOn1ZiLzIaD3hT1+Sdp1HE+9lcxbss5kDsKsw5Rg9VcgL0/O/r
+         DzTl3MztgdUljUOhg3/iR2GBjfyaLxkZjocR+pGxl0uP2VUOmOtKavKteJJd9mYAzb
+         zuFB+qD4bOIi6T8z0sFK8ItEIYMrsUX3hvy/uIEvYIHq7FUJprOkFolGGi96YSLYfR
+         QE2CxBc3jZjGQ==
+Date:   Fri, 7 Aug 2020 10:42:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Max Filippov <jcmvbkbc@gmail.com>, Rich Felker <dalias@libc.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Subject: Re: linux-next: manual merge of the xtensa tree with the sh tree
+Message-ID: <20200807104230.7f659cbb@canb.auug.org.au>
+In-Reply-To: <20200728102330.11f78570@canb.auug.org.au>
+References: <20200728102330.11f78570@canb.auug.org.au>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 73F1E00256D1A908A1930FBC0D29440FFF3B4AA04CC0F12EC73470C9002285A42000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="Sig_/1wtY195/p6ODi2.NtLB12DW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KDQpPbiBUdWUsIDIwMjAtMDgtMDQgYXQgMDY6MTAgKzAwMDAsIEF2cmkgQWx0
-bWFuIHdyb3RlOg0KPiA+IEhpIEF2cmksDQo+ID4gDQo+ID4gV291bGQgeW91IGhhdmUgYW55IHN1
-Z2dlc3Rpb25zIGZvciB0aGlzIHBhdGNoPw0KPiA+IA0KPiA+IFdlIG5lZWQgdGhpcyBwYXRjaCB0
-byBlbmFibGUgVUZTSENEX0NBUF9ISUJFUk44X1dJVEhfQ0xLX0dBVElORyBpbg0KPiA+IE1lZGlh
-VGVrIHBsYXRmb3JtLg0KPiA+IA0KPiA+IFRoYW5rcyBhIGxvdCwNCj4gPiANCj4gPiBTdGFubGV5
-IENodQ0KPiBMZXQncyB1c2UgaXQgZm9yIG5vdyBhcyBhIHNob3J0LXRlcm0gV0EuDQo+IFBsZWFz
-ZSB3b3JrIHdpdGggQ2FuIG9uIGEgcHJvcGVyIGZpeCB0aGF0IHdpbGwgdXRpbGl6ZSBoaXMgaWRl
-YSB0byByZW1vdmUgdWZzaGNkX2hvbGQvcmVsZWFzZQ0KPiBGcm9tIHVmc2hjZF9zZW5kX3VpY19j
-bWQsIGFzIHlvdSBhcmUgYm90aCBpbiBhZ3JlZW1lbnQgdGhhdCB0aGlzIHNob3VsZCB3b3JrIGFz
-IHRoZSBsb25nIHRlcm0gc29sdXRpb24uDQo+IA0KPiANCj4gPiA+ID4gPg0KPiA+ID4gPiA+Pg0K
-PiA+ID4gPiA+PiA+IFNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRp
-YXRlay5jb20+DQo+ID4gPiA+ID4+ID4gU2lnbmVkLW9mZi1ieTogQW5keSBUZW5nIDxhbmR5LnRl
-bmdAbWVkaWF0ZWsuY29tPg0KPiBSZXZpZXdlZC1ieTogQXZyaSBBbHRtYW4gPGF2cmkuYWx0bWFu
-QHdkYy5jb20+DQoNClRoYW5rcyENCg0KSSB3aWxsIGNvbnRpbnVlIHdpdGggdGhlIGxvbmcgdGVy
-bSBzb2x1dGlvbiB3aXRoIENhbi4NCg0KQlRXLCB0aGlzIG1haWwgc2VlbXMgbm90IHNob3dpbmcg
-dXAgaW4gTEtNTCBvciBQYXRjaHdvcmssIGp1c3QgcmVwbHkNCnRoaXMgbWFpbCB3aXRoIHJlbW92
-aW5nICJbU1BBTV0iIGtleXdvcmQgaW4gdGl0bGUuDQoNClRoYW5rcywNClN0YW5sZXkgQ2h1DQoN
-Cg==
+--Sig_/1wtY195/p6ODi2.NtLB12DW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
+
+On Tue, 28 Jul 2020 10:23:30 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the xtensa tree got a conflict in:
+>=20
+>   tools/testing/selftests/seccomp/seccomp_bpf.c
+>=20
+> between commit:
+>=20
+>   469023465e79 ("sh: Add SECCOMP_FILTER")
+>=20
+> from the sh tree and commit:
+>=20
+>   deccfc9ce639 ("selftests/seccomp: add xtensa support")
+>=20
+> from the xtensa tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> diff --cc tools/testing/selftests/seccomp/seccomp_bpf.c
+> index 06d994a34997,1b445c2e7fbe..000000000000
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@@ -124,8 -122,8 +124,10 @@@ struct seccomp_data=20
+>   #  define __NR_seccomp 358
+>   # elif defined(__s390__)
+>   #  define __NR_seccomp 348
+>  +# elif defined(__sh__)
+>  +#  define __NR_seccomp 372
+> + # elif defined(__xtensa__)
+> + #  define __NR_seccomp 337
+>   # else
+>   #  warning "seccomp syscall number unknown for this architecture"
+>   #  define __NR_seccomp 0xffff
+> @@@ -1634,10 -1624,14 +1636,18 @@@ TEST_F(TRACE_poke, getpid_runs_normally
+>   # define SYSCALL_SYSCALL_NUM regs[4]
+>   # define SYSCALL_RET	regs[2]
+>   # define SYSCALL_NUM_RET_SHARE_REG
+>  +#elif defined(__sh__)
+>  +# define ARCH_REGS	struct pt_regs
+>  +# define SYSCALL_NUM	gpr[3]
+>  +# define SYSCALL_RET	gpr[0]
+> + #elif defined(__xtensa__)
+> + # define ARCH_REGS	struct user_pt_regs
+> + # define SYSCALL_NUM	syscall
+> + /*
+> +  * On xtensa syscall return value is in the register
+> +  * a2 of the current window which is not fixed.
+> +  */
+> + #define SYSCALL_RET(reg) a[(reg).windowbase * 4 + 2]
+>   #else
+>   # error "Do not know how to find your architecture's registers and sysc=
+alls"
+>   #endif
+> @@@ -1710,7 -1704,7 +1720,7 @@@ void change_syscall(struct __test_metad
+>  =20
+>   #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) ||=
+ \
+>   	defined(__s390__) || defined(__hppa__) || defined(__riscv) || \
+> - 	defined(__csky__) || defined(__sh__)
+>  -	defined(__xtensa__)
+> ++	defined(__csky__) || defined(__sh__) || defined(__xtensa__)
+>   	{
+>   		regs.SYSCALL_NUM =3D syscall;
+>   	}
+
+This is now a conflict between the sh tree and Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1wtY195/p6ODi2.NtLB12DW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8so3YACgkQAVBC80lX
+0GxTRAf9GNvBk6UmbMk9jCAC13xvYqY5oLUeFiieeeitAdEzpIjGLCV5SfqbILPy
+eb6U+B1whGmdBvOeOXB+fVAg1/iKy6V1+mfEzAeCpGsJDIOHa1ApXSyYEE+InVTn
+yOJDO8Bv4qkAHQ2u5uY/lINz+IkhDUV/2saUEdKFHqnhAtbAjt1yU5q9WlSTaiMa
+VqC71qZLZcC+HdBeUgkmYqXbzlnqXgWjEJ/KOcH1xZzbyZDesnuPdBhgztKxGezH
+s/dO3sV5RD91MuSyZ+MMC2EAjz+b3LMO/LaIzdvcWzKKHhQdoLTPEneOYxRy/w/A
+TzCQth3WFGX+rj+itrqpxw+Bl09aqw==
+=kyJW
+-----END PGP SIGNATURE-----
+
+--Sig_/1wtY195/p6ODi2.NtLB12DW--
