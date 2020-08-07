@@ -7,68 +7,70 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F395C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D59F2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB8B214F1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 19:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMZPGV52"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfqzL8BW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgHGTQ6 (ORCPT
+        id S1726344AbgHGTRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 15:16:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33156 "EHLO
+        Fri, 7 Aug 2020 15:17:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGTQ5 (ORCPT
+        with ESMTP id S1725893AbgHGTQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 15:16:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1D9C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 12:16:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id p1so1543066pls.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:16:57 -0700 (PDT)
+        Fri, 7 Aug 2020 15:16:58 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B09C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 12:16:58 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d188so1546137pfd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 12:16:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w22kZ75JGy2Gq3VBIM8FU26Q5gzXZnTUB6P6tGV9wvg=;
-        b=JMZPGV5288yNzNSZLFUUBb7mZFPgCSl5mnv697xqrIBXcY8ugFSQka2Zh0+vjQEgpm
-         lO6Mbw3xxCinANX8wLhGsraz6RRAblUf2S7Y8W6V8tuQMQbPW+whev6SFJRZdmGzHUVa
-         krp1dZdF6qo/IZW4q7fHQT5hXRAeX5zR6hMmCLkJrwblkhL1zHCyCFHD4uFRCIZmYPog
-         9CEwpGiOZ7DcKdQvs0VMHVRQ71978e4L6k50kIe6zdC16HiYmUAnaVkgY+DxEzTsZae+
-         4NvBbaK5NFIgKMIIyeziQbYk5VU0cVssPyWApBV+9Z61bSp8rRulKx1VElmVtyAdLZz0
-         M4/w==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nAulkNxU9Nrr0r2Q+/oP/y0eVROiBvJb3wM5+KKQ5eM=;
+        b=UfqzL8BWBezA23AIgV8lJCXtRB83oKAQHXP40B+Y2CnU/8eLW4EQ9ejYtDvdiiOwkX
+         wPAh+O40EoFMjNWCqsOUF2+EgSRDJJc/yKiqVbZw9quOyfJORy+b50B+akPFnX0HOhB3
+         DiyIeKi/H2h6tE15XOQCKjLWwxbUJud4qH6DhM08w8eT8SAS7MhF817/+Pw+FmpcNEal
+         H5rfjlUhG9/hN1zcuAVwlkShWvvz8JlViKfMuoRFl+On6EY6qgEmUYNx/pfem7r27wBe
+         ByRK5gJcCGeh9i9K8yPg8qUz5tUIWXHdMo7iOLl1waPAe6AugLjFtlXRW57QHcwrDchK
+         Y4RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=w22kZ75JGy2Gq3VBIM8FU26Q5gzXZnTUB6P6tGV9wvg=;
-        b=VCmhwHT1a1sNlswlL36rQ72KnZp/esnvR+rF/RIKJEXQAI7//hWIWygg13MXwifxS8
-         LNEArMn3Tp4xEj0JsMnR+16paaOu1e0rAsHdoEk3R3TyrBQ7vYQv60330xz/2hOs1tFX
-         LEeKruyGzfaU4g6eqPjHjWnOvsu0HQ6FCNBhWMN/F0oZgKk9VVLTfSHZlFZbUJO+s3cG
-         K6HDVfsczm6WEKXi/du6wTocMEqC5mgj02t1LX8pyzRshzyfJzAvJX0GAhlohbJPnpBu
-         PMUtJ2fb0jKIB/5fPSjiX+c8bfg4SyepgQ5XvAiTZgUTaehhM9Qkszvkq6WKYjxV57r8
-         X+og==
-X-Gm-Message-State: AOAM533oNUtY5V1mUjaVqupgFQQico+kLZfGwpFQknraWupI58eS5Fcb
-        MNXxgO/p5id/Zk9E2/p8jHc=
-X-Google-Smtp-Source: ABdhPJzNaHW9b/WV22yrUOMtl5VaKywUnvhHra6uE+kbUBYVVWq4PMHXmvH+PSmd0u5U+6hMMQhPyQ==
-X-Received: by 2002:a17:902:d341:: with SMTP id l1mr13667172plk.134.1596827816932;
-        Fri, 07 Aug 2020 12:16:56 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=nAulkNxU9Nrr0r2Q+/oP/y0eVROiBvJb3wM5+KKQ5eM=;
+        b=i3Q1Jupqgo0inegFmg0+EEHv7C2gcVtZseHBhlCuXbCL+jkW6objr1yQ9jK4VP5YhU
+         011wAtlfKwUmrgdQxvNsghjARP/nf4qHunrM9f2NnXo//z8dJb69cB6lczLEt4uoeZNb
+         Lyjm7y0dIAK+evO8Nu8nYOTs+QwKarIaW75coBJv7TLERgNJOjjEkFIa2dra1GlpXvIJ
+         St1KZv34ykUlPKMeVZ/HEW0pEi7juM9X+rfQktVx43mLDkoLW6oVLeSUPoWLjhAw+dNE
+         2t2h9go6vLf3ehVYX7EAlilNlg7yOPZY6FO2gqs3glYQlYYvM3DB5l/WTxSU5eGuEfUW
+         bFFA==
+X-Gm-Message-State: AOAM531zDfKgJFhMA6XLlOyIL9UN2ZX7ARjiZBdeETLqhxz2SnHR/akq
+        pJjxZvu96LgtaNEhwyi61qM=
+X-Google-Smtp-Source: ABdhPJxlcMhidUm9kO+7tjlgQ6RAcIOD9PZs5RerRs47ASqhXiA2lHjyeI0ftKa71wrIekEwLEHYzA==
+X-Received: by 2002:a65:63c8:: with SMTP id n8mr12757511pgv.232.1596827818163;
+        Fri, 07 Aug 2020 12:16:58 -0700 (PDT)
 Received: from sultan-box.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id y4sm13432665pff.44.2020.08.07.12.16.55
+        by smtp.gmail.com with ESMTPSA id y4sm13432665pff.44.2020.08.07.12.16.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 12:16:56 -0700 (PDT)
+        Fri, 07 Aug 2020 12:16:57 -0700 (PDT)
 From:   Sultan Alsawaf <sultan@kerneltoast.com>
 X-Google-Original-From: Sultan Alsawaf
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
         linux-kernel@vger.kernel.org,
         Sultan Alsawaf <sultan@kerneltoast.com>
-Subject: [PATCH 1/2] locking/mutex: Don't hog RCU read lock while optimistically spinning
-Date:   Fri,  7 Aug 2020 12:16:35 -0700
-Message-Id: <20200807191636.75045-1-sultan@kerneltoast.com>
+Subject: [PATCH 2/2] locking/rwsem: Don't hog RCU read lock while optimistically spinning
+Date:   Fri,  7 Aug 2020 12:16:36 -0700
+Message-Id: <20200807191636.75045-2-sultan@kerneltoast.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200807191636.75045-1-sultan@kerneltoast.com>
+References: <20200807191636.75045-1-sultan@kerneltoast.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -80,65 +82,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Sultan Alsawaf <sultan@kerneltoast.com>
 
 There's no reason to hold an RCU read lock the entire time while
-optimistically spinning for a mutex lock. This can needlessly lengthen
-RCU grace periods and slow down synchronize_rcu() when it doesn't brute
+optimistically spinning for a rwsem. This can needlessly lengthen RCU
+grace periods and slow down synchronize_rcu() when it doesn't brute
 force the RCU grace period via rcupdate.rcu_expedited=1.
 
 Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
 ---
- kernel/locking/mutex.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ kernel/locking/rwsem.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 5352ce50a97e..cc5676712458 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -552,21 +552,31 @@ bool mutex_spin_on_owner(struct mutex *lock, struct task_struct *owner,
- {
- 	bool ret = true;
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index f11b9bd3431d..a1e3ceb254d1 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -723,8 +723,10 @@ rwsem_spin_on_owner(struct rw_semaphore *sem, unsigned long nonspinnable)
+ 	if (state != OWNER_WRITER)
+ 		return state;
  
 -	rcu_read_lock();
--	while (__mutex_owner(lock) == owner) {
-+	for (;;) {
-+		unsigned int cpu;
+ 	for (;;) {
 +		bool same_owner;
 +
++		rcu_read_lock();
+ 		/*
+ 		 * When a waiting writer set the handoff flag, it may spin
+ 		 * on the owner as well. Once that writer acquires the lock,
+@@ -732,27 +734,32 @@ rwsem_spin_on_owner(struct rw_semaphore *sem, unsigned long nonspinnable)
+ 		 * handoff bit is set.
+ 		 */
+ 		new = rwsem_owner_flags(sem, &new_flags);
+-		if ((new != owner) || (new_flags != flags)) {
+-			state = rwsem_owner_state(new, new_flags, nonspinnable);
+-			break;
+-		}
+ 
  		/*
 -		 * Ensure we emit the owner->on_cpu, dereference _after_
--		 * checking lock->owner still matches owner. If that fails,
-+		 * Ensure lock->owner still matches owner. If that fails,
- 		 * owner might point to freed memory. If it still matches,
+-		 * checking sem->owner still matches owner, if that fails,
++		 * Ensure sem->owner still matches owner. If that fails,
+ 		 * owner might point to free()d memory, if it still matches,
  		 * the rcu_read_lock() ensures the memory stays valid.
  		 */
 -		barrier();
-+		rcu_read_lock();
-+		same_owner = __mutex_owner(lock) == owner;
-+		if (same_owner) {
-+			ret = owner->on_cpu;
-+			if (ret)
-+				cpu = task_cpu(owner);
-+		}
++		same_owner = new == owner && new_flags == flags;
++		if (same_owner && !owner_on_cpu(owner))
++			state = OWNER_NONSPINNABLE;
 +		rcu_read_unlock();
-+
-+		if (!ret || !same_owner)
-+			break;
  
- 		/*
- 		 * Use vcpu_is_preempted to detect lock holder preemption issue.
- 		 */
--		if (!owner->on_cpu || need_resched() ||
--				vcpu_is_preempted(task_cpu(owner))) {
-+		if (need_resched() || vcpu_is_preempted(cpu)) {
- 			ret = false;
+-		if (need_resched() || !owner_on_cpu(owner)) {
++		if (!same_owner) {
++			state = rwsem_owner_state(new, new_flags, nonspinnable);
++			break;
++		}
++
++		if (state == OWNER_NONSPINNABLE)
++			break;
++
++		if (need_resched()) {
+ 			state = OWNER_NONSPINNABLE;
  			break;
  		}
-@@ -578,7 +588,6 @@ bool mutex_spin_on_owner(struct mutex *lock, struct task_struct *owner,
  
  		cpu_relax();
  	}
 -	rcu_read_unlock();
  
- 	return ret;
+ 	return state;
  }
 -- 
 2.28.0
