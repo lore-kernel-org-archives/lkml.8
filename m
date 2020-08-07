@@ -2,177 +2,159 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CF6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33312086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A292086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 03:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHGD2x (ORCPT
+        id S1726577AbgHGDaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 23:28:53 -0400
-Received: from mga03.intel.com ([134.134.136.65]:42799 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgHGD2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 23:28:53 -0400
-IronPort-SDR: 1yj1qdaEnfZxoBT2AGV1VeRA/MfhZxlf7rprVnG+pqUtRFRzrTkA5d6TfhjeKlGhBIM8IJffyr
- eGFXwhC57oXQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="152954956"
-X-IronPort-AV: E=Sophos;i="5.75,444,1589266800"; 
-   d="scan'208";a="152954956"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 20:28:52 -0700
-IronPort-SDR: 0E9cD/H5fx6Fo8etzqI3DOSq93r7jaZixsz19Qs2x+B5XHvjWPDTEOoPHMV5YNll+efx/om4Hx
- lwksviia0Z3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,444,1589266800"; 
-   d="scan'208";a="468084410"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga005.jf.intel.com with ESMTP; 06 Aug 2020 20:28:51 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: [PATCH v4] x86/cpu: Use SERIALIZE in sync_core() when available
-Date:   Thu,  6 Aug 2020 20:28:33 -0700
-Message-Id: <20200807032833.17484-1-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 6 Aug 2020 23:30:04 -0400
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:60740 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726038AbgHGDaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 23:30:03 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Fri, 7 Aug 2020
+ 11:30:00 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Fri, 7 Aug 2020
+ 11:29:59 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416]) by
+ zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416%16]) with mapi id
+ 15.01.1979.003; Fri, 7 Aug 2020 11:29:59 +0800
+From:   FelixCui-oc <FelixCui-oc@zhaoxin.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David Woodhouse" <dwmw2@infradead.org>
+CC:     RaymondPang-oc <RaymondPang-oc@zhaoxin.com>,
+        CobeChen-oc <CobeChen-oc@zhaoxin.com>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiDnrZTlpI06IFtQQVRDSF0gaW9tbXUvdnQtZDpBZGQgc3VwcG9ydCBm?=
+ =?utf-8?Q?or_ACPI_device_in_RMRR?=
+Thread-Topic: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiBbUEFUQ0hdIGlvbW11L3Z0LWQ6QWRkIHN1cHBvcnQgZm9yIEFDUEkg?=
+ =?utf-8?Q?device_in_RMRR?=
+Thread-Index: AQHWaLTDQmhhOccXwUmx3ozYFRtFBKklJPeAgACMEUD//7NFgIAAiuzg//+YlYCAAIpwQIAADhiQgACAoQCAAJyo4IABEuiAgADMGDCAAMCAgIAAj7pAgADp+4CAAKaswA==
+Date:   Fri, 7 Aug 2020 03:29:59 +0000
+Message-ID: <f25e4fdf592a455594d0e88fced8fb62@zhaoxin.com>
+References: <20200802100735.2722-1-FelixCui-oc@zhaoxin.com>
+ <73d4a1e4-f6b7-efb0-e225-2e462c838657@linux.intel.com>
+ <f6759b9bb2594026b58f9a89e3ce9dc6@zhaoxin.com>
+ <9f64d9b6-16e8-73ce-2186-9d8ba49c39f4@linux.intel.com>
+ <44ff8f73fa1f49a183a1d8d6d9c2213c@zhaoxin.com>
+ <314679b4-7653-041b-9310-73baf8117766@linux.intel.com>
+ <1aea042a1b524ef88e491ca2a6d95fb7@zhaoxin.com>
+ <36da53a6-00e2-1be1-91b5-d90906a6199f@linux.intel.com>
+ <a5fda3f364da4e739736e7d7bc618972@zhaoxin.com>
+ <a2658f9c-23fa-bb72-edba-ad61e52085cd@linux.intel.com>
+ <9ba29114fcad43d58159fcc7a4d89501@zhaoxin.com>
+ <1477b1dd-ac48-b49d-77f9-107bb4555b91@linux.intel.com>
+ <06a05e49a2564909a2049eb8be401670@zhaoxin.com>
+ <30ef5891-1368-d580-564a-1c21d90f47cd@linux.intel.com>
+In-Reply-To: <30ef5891-1368-d580-564a-1c21d90f47cd@linux.intel.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.29.8.19]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SERIALIZE instruction gives software a way to force the processor to
-complete all modifications to flags, registers and memory from previous
-instructions and drain all buffered writes to memory before the next
-instruction is fetched and executed. Thus, it serves the purpose of
-sync_core(). Use it when available.
-
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Cathy Zhang <cathy.zhang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kyung Min Park <kyung.min.park@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-This is v4 from my three previous submission [1], [2], and [3]. The first
-three patches of the series have been merged in Linus' tree. Hence, I am
-submitting only this patch for review.
-
-[1]. https://lkml.org/lkml/2020/7/27/8
-[2]. https://lkml.org/lkml/2020/8/4/1090
-[3]. https://lkml.org/lkml/2020/8/6/808
-
-Changes since v3:
- * Reworked comments in sync_core() for better readability. (Dave Hansen)
- * Reworked the implementation to align with the style in special_insns.h.
-   No functional changes were introduced. (Tony Luck)
-
-Changes since v2:
- * Support serialize with static_cpu_has() instead of using alternative
-   runtime patching directly. (Borislav Petkov)
-
-Changes since v1:
- * Support SERIALIZE using alternative runtime patching.
-   (Peter Zijlstra, H. Peter Anvin)
- * Added a note to specify which version of binutils supports SERIALIZE.
-   (Peter Zijlstra)
- * Verified that (::: "memory") is used. (H. Peter Anvin)
----
- arch/x86/include/asm/special_insns.h |  6 ++++++
- arch/x86/include/asm/sync_core.h     | 26 ++++++++++++++++++--------
- 2 files changed, 24 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 59a3e13204c3..5999b0b3dd4a 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -234,6 +234,12 @@ static inline void clwb(volatile void *__p)
- 
- #define nop() asm volatile ("nop")
- 
-+static inline void serialize(void)
-+{
-+	/* Instruction opcode for SERIALIZE; supported in binutils >= 2.35. */
-+	asm volatile(".byte 0xf, 0x1, 0xe8" ::: "memory");
-+}
-+
- #endif /* __KERNEL__ */
- 
- #endif /* _ASM_X86_SPECIAL_INSNS_H */
-diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
-index fdb5b356e59b..089712777fd9 100644
---- a/arch/x86/include/asm/sync_core.h
-+++ b/arch/x86/include/asm/sync_core.h
-@@ -5,6 +5,7 @@
- #include <linux/preempt.h>
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
-+#include <asm/special_insns.h>
- 
- #ifdef CONFIG_X86_32
- static inline void iret_to_self(void)
-@@ -54,14 +55,23 @@ static inline void iret_to_self(void)
- static inline void sync_core(void)
- {
- 	/*
--	 * There are quite a few ways to do this.  IRET-to-self is nice
--	 * because it works on every CPU, at any CPL (so it's compatible
--	 * with paravirtualization), and it never exits to a hypervisor.
--	 * The only down sides are that it's a bit slow (it seems to be
--	 * a bit more than 2x slower than the fastest options) and that
--	 * it unmasks NMIs.  The "push %cs" is needed because, in
--	 * paravirtual environments, __KERNEL_CS may not be a valid CS
--	 * value when we do IRET directly.
-+	 * The SERIALIZE instruction is the most straightforward way to
-+	 * do this but it not universally available.
-+	 */
-+	if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
-+		serialize();
-+		return;
-+	}
-+
-+	/*
-+	 * For all other processors, there are quite a few ways to do this
-+	 * IRET-to-self is nice because it works on every CPU, at any CPL
-+	 * (so it's compatible with paravirtualization), and it never exits
-+	 * to a hypervisor. The only down sides are that it's a bit slow
-+	 * (it seems to be a bit more than 2x slower than the fastest
-+	 * options) and that it unmasks NMIs.  The "push %cs" is needed
-+	 * because, in paravirtual environments, __KERNEL_CS may not be a
-+	 * valid CS value when we do IRET directly.
- 	 *
- 	 * In case NMI unmasking or performance ever becomes a problem,
- 	 * the next best option appears to be MOV-to-CR2 and an
--- 
-2.17.1
-
+SGkgYmFvbHUsDQoJCUkgdW5kZXJzdGFuZCB3aGF0IHlvdSBtZWFuIGlzIHRoYXQgeW91IHdhbnQg
+dG8gcHV0IHRoZSBmb2xsb3dpbmcgcHJvY2Vzc2luZyBjb2RlIGluIHRoZSBhY3BpX2RldmljZV9j
+cmVhdGVfZGlyZWN0X21hcHBpbmdzKCkgaW50byB0aGUgcHJvYmVfYWNwaV9uYW1lc3BhY2VfZGV2
+aWNlcygpICxyaWdodD8NCgkJSWYgeW91IG1lYW4gaXQgLCBJIHRoaW5rIGl0J3MgT0suIA0KDQoJ
+aWYgKHBuX2RldiA9PSBOVUxMKSB7DQoJCWFjcGlfZGV2aWNlLT5idXMtPmlvbW11X29wcyA9ICZp
+bnRlbF9pb21tdV9vcHM7DQoJCXJldCA9IGlvbW11X3Byb2JlX2RldmljZShhY3BpX2RldmljZSk7
+DQoJCWlmIChyZXQpIHsNCgkJCXByX2VycigiYWNwaV9kZXZpY2UgcHJvYmUgZmFpbCEgcmV0OiVk
+XG4iLCByZXQpOw0KCQkJcmV0dXJuIHJldDsNCgkJfQ0KCQlyZXR1cm4gMDsNCgl9DQoNCkJlc3Qg
+cmVnYXJkcw0KRmVsaXggY3VpLW9jDQoNCg0KDQoJDQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0N
+CuWPkeS7tuS6ujogTHUgQmFvbHUgPGJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbT4gDQrlj5HpgIHm
+l7bpl7Q6IDIwMjDlubQ45pyIN+aXpSA5OjA4DQrmlLbku7bkuro6IEZlbGl4Q3VpLW9jIDxGZWxp
+eEN1aS1vY0B6aGFveGluLmNvbT47IEpvZXJnIFJvZWRlbCA8am9yb0A4Ynl0ZXMub3JnPjsgaW9t
+bXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IERhdmlkIFdvb2Rob3VzZSA8ZHdtdzJAaW5mcmFkZWFkLm9yZz4NCuaKhOmAgTogYmFvbHUu
+bHVAbGludXguaW50ZWwuY29tOyBSYXltb25kUGFuZy1vYyA8UmF5bW9uZFBhbmctb2NAemhhb3hp
+bi5jb20+OyBDb2JlQ2hlbi1vYyA8Q29iZUNoZW4tb2NAemhhb3hpbi5jb20+DQrkuLvpopg6IFJl
+OiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiBbUEFUQ0hd
+IGlvbW11L3Z0LWQ6QWRkIHN1cHBvcnQgZm9yIEFDUEkgZGV2aWNlIGluIFJNUlINCg0KSGkgRmVs
+aXgsDQoNCk9uIDIwMjAvOC82IDE0OjUxLCBGZWxpeEN1aS1vYyB3cm90ZToNCj4gSGkgIGJhb2x1
+LA0KPiAJCT5TdXJlLiBCZWZvcmUgdGhhdCwgbGV0IG1lIHN5bmMgbXkgdW5kZXJzdGFuZGluZyB3
+aXRoIHlvdS4gWW91IGhhdmUgYW4gYWNwaSBuYW1lc3BhY2UgZGV2aWNlIGluIEFOREQgdGFibGUs
+IGl0IGFsc28gc2hvd3MgdXAgaW4gdGhlIGRldmljZSBzY29wZSBvZiBhIFJNUlIuDQo+IAkJPkN1
+cnJlbnQgY29kZSBkb2Vzbid0IGVudW1lcmF0ZSB0aGF0IGRldmljZSBmb3IgdGhlIFJNUlIsIGhl
+bmNlIGlvbW11X2NyZWF0ZV9kZXZpY2VfZGlyZWN0X21hcHBpbmdzKCkgZG9lc24ndCB3b3JrIGZv
+ciB0aGlzIGRldmljZS4NCj4gDQo+IAkJPkF0IHRoZSBzYW1lIHRpbWUsIHByb2JlX2FjcGlfbmFt
+ZXNwYWNlX2RldmljZXMoKSBkb2Vzbid0IHdvcmsgZm9yIHRoaXMgZGV2aWNlLCBoZW5jZSB5b3Ug
+d2FudCB0byBhZGQgYSBob21lLW1hZGUNCj4gCQk+YWNwaV9kZXZpY2VfY3JlYXRlX2RpcmVjdF9t
+YXBwaW5ncygpIGhlbHBlci4NCj4gDQo+IAkJWW91ciB1bmRlcnN0YW5kaW5nIGlzIHJpZ2h0Lg0K
+PiAJCUJ1dCB0aGVyZSBpcyBhIHByb2JsZW0gdGhhdCBldmVuIGlmIHRoZSBuYW1lc3BhY2UgZGV2
+aWNlIGluIHJtcnIgaXMgZW51bWVyYXRlZCBpbiB0aGUgY29kZSwgcHJvYmVfYWNwaV9uYW1lc3Bh
+Y2VfZGV2aWNlcygpIGFsc28gZG9lc24ndCB3b3JrIGZvciB0aGlzIGRldmljZS4NCj4gCQlUaGlz
+IGlzIGJlY2F1c2UgdGhlIGRldiBwYXJhbWV0ZXIgb2YgdGhlIGlvbW11X2NyZWF0ZV9kZXZpY2Vf
+ZGlyZWN0X21hcHBpbmdzKCkgaXMgbm90IHRoZSBuYW1lc3BhY2UgZGV2aWNlIGluIFJNUlIuDQo+
+IAkJVGhlIGFjdHVhbCBwYXJhbWV0ZXIgcGFzc2VkIGluIGlzIHRoZSBuYW1lc3BhY2UgZGV2aWNl
+J3MgcGh5c2ljYWwgbm9kZSBkZXZpY2UuDQo+IAkJSW4gaW9tbXVfY3JlYXRlX2RldmljZV9kaXJl
+Y3RfbWFwcGluZ3MoKSwgdGhlIHBoeXNpY2FsIG5vZGUgZGV2aWNlIHBhc3NlZCBpbiBjYW5ub3Qg
+bWF0Y2ggdGhlIG5hbWVzcGFjZSBkZXZpY2UgaW4gcm1yci0+ZGV2aWNlW10scmlnaHQ/DQo+IAkJ
+V2UgbmVlZCBhY3BpX2RldmljZV9jcmVhdGVfZGlyZWN0X21hcHBpbmdzKCkgaGVscGVyID8NCj4g
+DQo+IAkJSW4gYWRkaXRpb24sIGFkZXYtPnBoeXNpY2FsX25vZGVfbGlzdCBpcyByZWxhdGVkIHRv
+IHRoZSBfX0hJRCBvZiBuYW1lc3BhY2UgZGV2aWNlIHJlcG9ydGVkIGJ5IHRoZSBiaW9zLg0KPiAJ
+CUZvciBleGFtcGxlLCBpZiB0aGUgX19ISUQgcmVwb3J0ZWQgYnkgdGhlIGJpb3MgYmVsb25ncyB0
+byBhY3BpX3BucF9kZXZpY2VfaWRzW10sIGFkZXYtPnBoeXNpY2FsX25vZGVfbGlzdCBoYXMgbm8g
+ZGV2aWNlcy4NCj4gCQlTbyBpbiBhY3BpX2RldmljZV9jcmVhdGVfZGlyZWN0X21hcHBpbmdzKCks
+IEkgYWRkZWQgdGhlIGNhc2UgdGhhdCBhZGV2LT5waHlzaWNhbF9ub2RlX2xpc3QgaXMgZW1wdHku
+DQoNCkdvdCB5b3UuIFRoYW5rcyENCg0KSGF2ZSB5b3UgZXZlciB0cmllZCB0byBoYXZlIHByb2Jl
+X2FjcGlfbmFtZXNwYWNlX2RldmljZXMoKSBoYW5kbGUgdGhlIGNhc2Ugb2YgZW1wdHkgYWRldi0+
+cGh5c2ljYWxfbm9kZV9saXN0IGF0IHRoZSBzYW1lIHRpbWU/DQoNCkJlc3QgcmVnYXJkcywNCmJh
+b2x1DQoNCj4gDQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gRmVsaXggY3VpDQo+IA0KPiANCj4gICAN
+Cj4gDQo+IC0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCj4g5Y+R5Lu25Lq6OiBMdSBCYW9sdSA8YmFv
+bHUubHVAbGludXguaW50ZWwuY29tPg0KPiDlj5HpgIHml7bpl7Q6IDIwMjDlubQ45pyINuaXpSAx
+MDozNg0KPiDmlLbku7bkuro6IEZlbGl4Q3VpLW9jIDxGZWxpeEN1aS1vY0B6aGFveGluLmNvbT47
+IEpvZXJnIFJvZWRlbCANCj4gPGpvcm9AOGJ5dGVzLm9yZz47IGlvbW11QGxpc3RzLmxpbnV4LWZv
+dW5kYXRpb24ub3JnOyANCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgRGF2aWQgV29v
+ZGhvdXNlIDxkd213MkBpbmZyYWRlYWQub3JnPg0KPiDmioTpgIE6IGJhb2x1Lmx1QGxpbnV4Lmlu
+dGVsLmNvbTsgUmF5bW9uZFBhbmctb2MgDQo+IDxSYXltb25kUGFuZy1vY0B6aGFveGluLmNvbT47
+IENvYmVDaGVuLW9jIDxDb2JlQ2hlbi1vY0B6aGFveGluLmNvbT4NCj4g5Li76aKYOiBSZTog562U
+5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW9tbXUvdnQtZDpB
+ZGQgc3VwcG9ydCBmb3IgQUNQSSANCj4gZGV2aWNlIGluIFJNUlINCj4gDQo+IEhpIEZlbGl4LA0K
+PiANCj4gT24gOC81LzIwIDM6MzcgUE0sIEZlbGl4Q3VpLW9jIHdyb3RlOg0KPj4gSGkgYmFvbHUs
+DQo+PiAJCUxldCBtZSB0YWxrIGFib3V0IHdoeSBhY3BpX2RldmljZV9jcmVhdGVfZGlyZWN0X21h
+cHBpbmdzKCkgaXMgbmVlZGVkIGFuZCBwbGVhc2UgdGVsbCBtZSBpZiB0aGVyZSBpcyBhbiBlcnJv
+ci4NCj4gDQo+IFN1cmUuIEJlZm9yZSB0aGF0LCBsZXQgbWUgc3luYyBteSB1bmRlcnN0YW5kaW5n
+IHdpdGggeW91LiBZb3UgaGF2ZSBhbiBhY3BpIG5hbWVzcGFjZSBkZXZpY2UgaW4gQU5ERCB0YWJs
+ZSwgaXQgYWxzbyBzaG93cyB1cCBpbiB0aGUgZGV2aWNlIHNjb3BlIG9mIGEgUk1SUi4gQ3VycmVu
+dCBjb2RlIGRvZXNuJ3QgZW51bWVyYXRlIHRoYXQgZGV2aWNlIGZvciB0aGUgUk1SUiwgaGVuY2Ug
+aW9tbXVfY3JlYXRlX2RldmljZV9kaXJlY3RfbWFwcGluZ3MoKSBkb2Vzbid0IHdvcmsgZm9yIHRo
+aXMgZGV2aWNlLg0KPiANCj4gQXQgdGhlIHNhbWUgdGltZSwgcHJvYmVfYWNwaV9uYW1lc3BhY2Vf
+ZGV2aWNlcygpIGRvZXNuJ3Qgd29yayBmb3IgdGhpcyANCj4gZGV2aWNlLCBoZW5jZSB5b3Ugd2Fu
+dCB0byBhZGQgYSBob21lLW1hZGUNCj4gYWNwaV9kZXZpY2VfY3JlYXRlX2RpcmVjdF9tYXBwaW5n
+cygpIGhlbHBlci4NCj4gDQo+IERpZCBJIGdldCBpdCByaWdodD8NCj4gDQo+PiAJCUluIHRoZSBw
+cm9iZV9hY3BpX25hbWVzcGFjZV9kZXZpY2VzKCkgZnVuY3Rpb24sIG9ubHkgdGhlIGRldmljZSBp
+biB0aGUgYWRkZXYtPnBoeXNpY2FsX25vZGVfbGlzdCBpcyBwcm9iZWQsDQo+PiAJCWJ1dCB3ZSBu
+ZWVkIHRvIGVzdGFibGlzaCBpZGVudGl0eSBtYXBwaW5nIGZvciB0aGUgbmFtZXNwYWNlIGRldmlj
+ZSBpbiBSTVJSLiBUaGVzZSBhcmUgdHdvIGRpZmZlcmVudCBkZXZpY2VzLg0KPiANCj4gVGhlIG5h
+bWVzcGFjZSBkZXZpY2UgaGFzIGJlZW4gcHJvYmVkIGFuZCBwdXQgaW4gb25lIGRyaGQncyBkZXZp
+Y2UgbGlzdC4NCj4gSGVuY2UsIGl0IHNob3VsZCBiZSBwcm9jZXNzZWQgYnkgcHJvYmVfYWNwaV9u
+YW1lc3BhY2VfZGV2aWNlcygpLiBTbyB0aGUgcXVlc3Rpb24gaXMgd2h5IHRoZXJlIGFyZSBubyBk
+ZXZpY2VzIGluIGFkZGV2LT5waHlzaWNhbF9ub2RlX2xpc3Q/DQo+IA0KPj4gCQlUaGVyZWZvcmUs
+IHRoZSBuYW1lc3BhY2UgZGV2aWNlIGluIFJNUlIgaXMgbm90IG1hcHBlZCBpbiBwcm9iZV9hY3Bp
+X25hbWVzcGFjZV9kZXZpY2VzKCkuDQo+PiAJCWFjcGlfZGV2aWNlX2NyZWF0ZV9kaXJlY3RfbWFw
+cGluZ3MoKSBpcyB0byBjcmVhdGUgZGlyZWN0IG1hcHBpbmdzIGZvciBuYW1lc3BhY2UgZGV2aWNl
+cyBpbiBSTVJSLg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBiYW9sdQ0KPiANCg==
