@@ -2,103 +2,139 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D44C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73128C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8496C214F1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9B5214F1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 22:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bvagcmBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgHGWCC (ORCPT
+        id S1727023AbgHGWCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 18:02:02 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47482 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726038AbgHGWCC (ORCPT
+        Fri, 7 Aug 2020 18:02:22 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:36060 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgHGWCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 18:02:02 -0400
-Received: from callcc.thunk.org (pool-96-230-252-158.bstnma.fios.verizon.net [96.230.252.158])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 077M1l0R024214
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 7 Aug 2020 18:01:48 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 7AE6B420263; Fri,  7 Aug 2020 18:01:47 -0400 (EDT)
-Date:   Fri, 7 Aug 2020 18:01:47 -0400
-From:   tytso@mit.edu
-To:     Lazar Beloica <lazarbeloica@gmail.com>
-Cc:     linux-ext4@vger.kernel.org, stable@vger.kernel.org,
-        lazar.beloica@nutanix.com, boyu.mt@taobao.com,
-        adilger.kernel@dilger.ca, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ext4: fix marking group trimmed if all blocks not trimmed
-Message-ID: <20200807220147.GA7657@mit.edu>
-References: <1596471464-198715-1-git-send-email-lazar.beloica@nutanix.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596471464-198715-1-git-send-email-lazar.beloica@nutanix.com>
+        Fri, 7 Aug 2020 18:02:22 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1046)
+        id 689F920B4908; Fri,  7 Aug 2020 15:02:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 689F920B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596837741;
+        bh=tP/2fOtWxkpznzm5+efdZqc6aL8NJ+U2iK0gjmnE2uk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bvagcmBcS5wJ3js7XI0x9J+NCYjeHhfZgH+fdIqcNEFLBh8HcEypu5Ku2vdQ8+6Ff
+         oBDF4vxd3gSG5OyN1jhQMoV/rusMYOPgMptjW41t1RfzMnRD8gx1IX8XT5vOpetlRh
+         Xv6hKV/vX87+guoAmOER5IPIGCMYbCsTFGvcW4P4=
+From:   Dhananjay Phadke <dphadke@linux.microsoft.com>
+To:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>, Ray Jui <rjui@broadcom.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Dhananjay Phadke <dphadke@linux.microsoft.com>
+Subject: [PATCH v2] i2c: iproc: fix race between client unreg and isr
+Date:   Fri,  7 Aug 2020 15:02:06 -0700
+Message-Id: <1596837726-6859-1-git-send-email-dphadke@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 04:17:44PM +0000, Lazar Beloica wrote:
-> When FTRIM is issued on a group, ext4 marks it as trimmed so another FTRIM
-> on the same group has no effect. Ext4 marks group as trimmed if at least
-> one block is trimmed, therefore it is possible that a group is marked as
-> trimmed even if there are blocks in that group left untrimmed.
-> 
-> This patch marks group as trimmed only if there are no more blocks
-> in that group to be trimmed.
+When i2c client unregisters, synchronize irq before setting
+iproc_i2c->slave to NULL.
 
-This patch makes no sense; first of all, the changes below are *not*
-in the function ext4_trim_extent(), but rather ext4_trim_all_free().
-It appears that the diff is based off of v5.8-rc2, based on the index
-c0a331e, but then I'm not sure how you generated the diff?
+(1) disable_irq()
+(2) Mask event enable bits in control reg
+(3) Erase slave address (avoid further writes to rx fifo)
+(4) Flush tx and rx FIFOs
+(5) Clear pending event (interrupt) bits in status reg
+(6) enable_irq()
+(7) Set client pointer to NULL
 
-Secondly, ext4_trim_all_free(), which is where these two patch hunks
-appear:
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index c0a331e..130936b 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -5346,6 +5346,7 @@ static int ext4_trim_extent(struct super_block *sb, int start, int count,
->  {
->  	void *bitmap;
->  	ext4_grpblk_t next, count = 0, free_count = 0;
-> +	ext4_fsblk_t max_blks = ext4_blocks_count(EXT4_SB(sb)->s_es);
->  	struct ext4_buddy e4b;
->  	int ret = 0;
->  
-> @@ -5401,7 +5402,9 @@ static int ext4_trim_extent(struct super_block *sb, int start, int count,
->  
->  	if (!ret) {
->  		ret = count;
-> -		EXT4_MB_GRP_SET_TRIMMED(e4b.bd_info);
-> +		next = mb_find_next_bit(bitmap, max_blks, max + 1);
-> +		if (next == max_blks)
-> +			EXT4_MB_GRP_SET_TRIMMED(e4b.bd_info);
->  	}
->  out:
->  	ext4_unlock_group(sb, group);
+[  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
+[  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
+[  371.030309] sp : ffff800010003e40
+[  371.033727] x29: ffff800010003e40 x28: 0000000000000060
+[  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
+[  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
+[  371.050165] x23: 0000000000000003 x22: 0000000001600000
+[  371.055645] x21: ffff800010f18888 x20: 0000000001600000
+[  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
+[  371.066603] x17: 0000000000000000 x16: 0000000000000000
+[  371.072082] x15: 0000000000000000 x14: 0000000000000000
+[  371.077561] x13: 0000000000000000 x12: 0000000000000001
+[  371.083040] x11: 0000000000000000 x10: 0000000000000040
+[  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
+[  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
+[  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
+[  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
+[  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
 
-The function send discards for blocks in a block group which are
-freed.  So setting max_blks to be ext4_blocks_count() and then using
-it as the limit to mb_find_next_bit() makes no sense.  First of all
-next will never be equal to max_blks, since next is an offset relative
-to the beginning of the block group, and max_blks is set number of
-blocks in the entire file system.
+[  371.115916] Call trace:
+[  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
+[  371.122754]  __handle_irq_event_percpu+0x6c/0x170
+[  371.127606]  handle_irq_event_percpu+0x34/0x88
+[  371.132189]  handle_irq_event+0x40/0x120
+[  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
+[  371.140459]  generic_handle_irq+0x24/0x38
+[  371.144594]  __handle_domain_irq+0x60/0xb8
+[  371.148820]  gic_handle_irq+0xc0/0x158
+[  371.152687]  el1_irq+0xb8/0x140
+[  371.155927]  arch_cpu_idle+0x10/0x18
+[  371.159615]  do_idle+0x204/0x290
+[  371.162943]  cpu_startup_entry+0x24/0x60
+[  371.166990]  rest_init+0xb0/0xbc
+[  371.170322]  arch_call_rest_init+0xc/0x14
+[  371.174458]  start_kernel+0x404/0x430
 
-Secondly, mb_find_next_bit is searching a bitmap, which is a single
-file system block (e.g., 4k in a 4k block file system).  So if
-max_blks is the the number of blocks in (for example) a 10TB file
-system, this is going to potentially cause a kernel oops.
+Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
 
-How, exactly did you test this patch?
+Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+---
+ drivers/i2c/busses/i2c-bcm-iproc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-	     	      	 	     	   - Ted
+diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+index 8a3c98866fb7..c576776ffb10 100644
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -1078,7 +1078,7 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+ 	if (!iproc_i2c->slave)
+ 		return -EINVAL;
+ 
+-	iproc_i2c->slave = NULL;
++	disable_irq(iproc_i2c->irq);
+ 
+ 	/* disable all slave interrupts */
+ 	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+@@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+ 	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+ 	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
+ 
++	/* flush TX/RX FIFOs */
++	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
++	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
++
++	/* clear all pending slave interrupts */
++	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
++
++	enable_irq(iproc_i2c->irq);
++
++	iproc_i2c->slave = NULL;
++
+ 	return 0;
+ }
+ 
+-- 
+2.17.1
+
