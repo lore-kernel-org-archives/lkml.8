@@ -2,158 +2,107 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B09BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC89C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 605162075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DE422CAF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 10:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgHGKYy (ORCPT
+        id S1728182AbgHGKZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 06:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgHGKYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 06:24:53 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DCEC061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 03:24:53 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3zYO-0001jw-TK; Fri, 07 Aug 2020 12:24:48 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3zYI-0003e8-3P; Fri, 07 Aug 2020 12:24:42 +0200
-Date:   Fri, 7 Aug 2020 12:24:41 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Fri, 7 Aug 2020 06:25:30 -0400
+Received: from mx.socionext.com ([202.248.49.38]:31561 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgHGKZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 06:25:29 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 07 Aug 2020 19:25:27 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id E8E1560060;
+        Fri,  7 Aug 2020 19:25:27 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 7 Aug 2020 19:25:27 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 749781A0507;
+        Fri,  7 Aug 2020 19:25:27 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200807102441.qcshhsc36nzj7bpn@pengutronix.de>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc>
- <20200807074543.pfbwlhtegl3oc4zp@pengutronix.de>
- <92116be9aa56250becc4019c6c7a1538@walle.cc>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ui3bvps5z2hxjh32"
-Content-Disposition: inline
-In-Reply-To: <92116be9aa56250becc4019c6c7a1538@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v6 0/6] PCI: uniphier: Add features for UniPhier PCIe host controller
+Date:   Fri,  7 Aug 2020 19:25:16 +0900
+Message-Id: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series adds some features for UniPhier PCIe host controller.
 
---ui3bvps5z2hxjh32
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+- Add support for PME and AER invoked by MSI interrupt
+- Add iATU register view support for PCIe version >= 4.80
+- Add an error message when failing to get phy driver
 
-Hi Michael,
+This adds a new function called by MSI handler in DesignWare PCIe framework,
+that invokes PME and AER funcions to detect the factor from SoC-dependent
+registers.
 
-On Fri, Aug 07, 2020 at 09:55:19AM +0200, Michael Walle wrote:
-> Am 2020-08-07 09:45, schrieb Uwe Kleine-K=F6nig:
-> > On Fri, Aug 07, 2020 at 09:28:31AM +0200, Michael Walle wrote:
-> > > Am 2020-08-06 10:40, schrieb Uwe Kleine-K=F6nig:
-> > > > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
-> > > > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> > > > > +				   struct pwm_device *pwm,
-> > > > > +				   struct pwm_state *state)
-> > > > > +{
-> > > > > +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
-> > > > > +	unsigned int reg;
-> > > > > +	int prescaler;
-> > > > > +
-> > > > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
-> > > > > +
-> > > > > +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
-> > > > > +
-> > > > > +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
-> > > > > +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
-> > > > > +
-> > > > > +	sl28cpld_pwm_read(priv, SL28CPLD_PWM_CYCLE, &reg);
-> > > > > +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
-> > > >
-> > > > Should reg be masked to SL28CPLD_PWM_CYCLE_MAX, or is it guaranteed=
- that
-> > > > the upper bits are zero?
-> > >=20
-> > > Mh, the hardware guarantees that bit7 is zero. So masking with
-> > > SL28CPLD_PWM_CYCLE_MAX won't buy us much. But what I could think
-> > > could go wrong is this: someone set the prescaler to !=3D 0 and the
-> > > duty cycle to a value greater than the max value for this particular
-> > > prescaler mode. For the above calculations this would result in a
-> > > duty_cycle greater than the period, if I'm not mistaken.
-> > >=20
-> > > The behavior of the hardware is undefined in that case (at the moment
-> > > it will be always on, I guess). So this isn't a valid setting.
-> > > Nevertheless it might happen. So what about the following:
-> > >=20
-> > > state->duty_cycle =3D min(state->duty_cycle, state->period);
-> >=20
-> > If you care about this: This can also happen (at least shortly) in
-> > sl28cpld_pwm_apply() as you write SL28CPLD_PWM_CTRL before
-> > SL28CPLD_PWM_CYCLE there.
->=20
-> It could also happen if it was the other way around, couldn't it?
-> Changing modes might glitch.
+Changes since v5:
+- Add pcie_port_service_get_irq() function to pcie/portdrv
+- Call pcie_port_service_get_irq() to get vIRQ interrupt number for PME/AER
+- Rebase to the latest linux-next branch,
+  and remove devm_platform_ioremap_resource_byname() replacement patch
 
-If you want to prevent this, you have to order the writes depending on
-prescaler increasing or decreasing.
+Changes since v4:
+- Add Acked-by: line to dwc patch
 
-Best regards
-Uwe
+Changes since v3:
+- Move msi_host_isr() call into dw_handle_msi_irq()
+- Move uniphier_pcie_misc_isr() call into the guard of chained_irq
+- Use a bool argument is_msi instead of pci_msi_enabled()
+- Consolidate handler calls for the same interrupt
+- Fix typos in commit messages
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Changes since v2:
+- Avoid printing phy error message in case of EPROBE_DEFER
+- Fix iATU register mapping method
+- dt-bindings: Add Acked-by: line
+- Fix typos in commit messages
+- Use devm_platform_ioremap_resource_byname()
 
---ui3bvps5z2hxjh32
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v1:
+- Add check if struct resource is NULL
+- Fix warning in the type of dev_err() argument
 
------BEGIN PGP SIGNATURE-----
+Kunihiko Hayashi (6):
+  PCI: portdrv: Add pcie_port_service_get_irq() function
+  PCI: dwc: Add msi_host_isr() callback
+  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+  dt-bindings: PCI: uniphier: Add iATU register description
+  PCI: uniphier: Add iATU register support
+  PCI: uniphier: Add error message when failed to get phy
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8tK+YACgkQwfwUeK3K
-7Am+ZAf/fEspbQK7oTVzKrTHBQXxu0AjknqY6yLOlTFthBSsQqbzGwekDnDjQG21
-Emw2dyTCQW7YHQaYx8l1HilDsVFiazBpJ6yG49upduH83s15tgAB4Guv2uTbrzim
-uMsqxPDtiCrjGdTw4MNt37OoKh0A2O+IAd1yuSrgDpQqWiDM0uNs+MMNZm8OQAST
-ZkVhwCFr28b9QNzUodg6d2QK5T5DWEgt6BFkPpn5SFUc/mMMQs2/3LcaBOh2Gd9/
-FqKla8k4Akpniv4OcC93n0QfOap22V69gLflWJLN2YB3Gn+BvZLqMvhAgF6cy/Ho
-jEP7yLYqhcfx644/uGqeHpOHNDm8Eg==
-=jSvw
------END PGP SIGNATURE-----
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  3 +
+ drivers/pci/controller/dwc/pcie-designware.h       |  1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 90 ++++++++++++++++++----
+ drivers/pci/pcie/portdrv.h                         |  1 +
+ drivers/pci/pcie/portdrv_core.c                    | 16 ++++
+ 6 files changed, 99 insertions(+), 13 deletions(-)
 
---ui3bvps5z2hxjh32--
+-- 
+2.7.4
+
