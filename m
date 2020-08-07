@@ -2,100 +2,80 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45DAB22CAF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082B422CF7
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 01:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596765310;
+	bh=VKHTneHgQd9kfBEFTXy/ydtlL31JnW0bvl2ACafIqr0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Ntxsw5bnQIRm6nYUaUhpQKO2wutxevWEttN4ZNAhv2ltdJBYpAgX6xLh96oGCWbUR
+	 QKkdYb4XMPEmDXHyZmlPtpxO+LnK1aSQfZMgnP+L2g/wDFkeMNoOvYW6iHWKClO1Zv
+	 d6qSMbvNmjH4AhnhxJfHdJSohqLBqz96SyXCsvf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgHGByw (ORCPT
+        id S1726377AbgHGBzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:54:52 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55480 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726055AbgHGByw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:54:52 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C39C0F8C14D03B22675A;
-        Fri,  7 Aug 2020 09:54:49 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.81) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 7 Aug 2020
- 09:54:47 +0800
-Subject: Re: [PATCH net] net: qcom/emac: Fix missing clk_disable_unprepare()
- in error path of emac_probe
-To:     Timur Tabi <timur@kernel.org>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20200806140647.43099-1-wanghai38@huawei.com>
- <87f41175-689e-f198-aaf6-9b9f04449ed8@kernel.org>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-Message-ID: <df1bad2e-2a6a-ff70-9b91-f18df20aaec8@huawei.com>
-Date:   Fri, 7 Aug 2020 09:54:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <87f41175-689e-f198-aaf6-9b9f04449ed8@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.81]
-X-CFilter-Loop: Reflected
+        Thu, 6 Aug 2020 21:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbgHGBzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 21:55:07 -0400
+Subject: Re: [GIT PULL] RESEND: thermal for v5.9-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596765307;
+        bh=VKHTneHgQd9kfBEFTXy/ydtlL31JnW0bvl2ACafIqr0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=TdowF9EnLsmGGm1GW3upeFv5zKyeAxRr9S29REfKo/psivR/YNL4zmTqafIs3P7TE
+         D6uFMLmX3dbvD9RnmXB0XYdhLhyPJn7VGssfdanVZM2HEbVDj873wOkCZ9WgCWiiww
+         zjmVOaZtCuT0CWCK8EAZdILphxqAPk46HmyVbtKc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
+References: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
+X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <db1dc155-0c7c-f4eb-7fa6-047a78829a82@linaro.org>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.9-rc1
+X-PR-Tracked-Commit-Id: c569e805c7bcebdd069e5c97ce5f8543f6d02433
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 96e3f3c16b7aedcd71502ccfc5778dddfc2e7b15
+Message-Id: <159676530743.30846.14861257054393255674.pr-tracker-bot@kernel.org>
+Date:   Fri, 07 Aug 2020 01:55:07 +0000
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Colin King <colin.king@canonical.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Lukasz Luba <Lukasz.Luba@arm.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Henry Yen <henry.yen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Thu, 6 Aug 2020 22:18:59 +0200:
 
-在 2020/8/6 22:23, Timur Tabi 写道:
-> On 8/6/20 9:06 AM, Wang Hai wrote:
->> In emac_clks_phase1_init() of emac_probe(), there may be a situation
->> in which some clk_prepare_enable() succeed and others fail.
->> If emac_clks_phase1_init() fails, goto err_undo_clocks to clean up
->> the clk that was successfully clk_prepare_enable().
->
-> Good catch, however, I think the proper fix is to fix this in 
-> emac_clks_phase1_init(), so that if some clocks fail, the other clocks 
-> are cleaned up and then an error is returned.
->
-> .
->
-Thanks for your suggestion. May I fix it like this?
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.9-rc1
 
-diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c 
-b/drivers/net/ethernet/qualcomm/emac/emac.c
-index 7520c02eec12..7977ad02a7c6 100644
---- a/drivers/net/ethernet/qualcomm/emac/emac.c
-+++ b/drivers/net/ethernet/qualcomm/emac/emac.c
-@@ -474,13 +474,25 @@ static int emac_clks_phase1_init(struct 
-platform_device *pdev,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/96e3f3c16b7aedcd71502ccfc5778dddfc2e7b15
 
-         ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
-         if (ret)
--               return ret;
-+               goto disable_clk_axi;
+Thank you!
 
-         ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
-         if (ret)
--               return ret;
-+               goto disable_clk_cfg_ahb;
-
--       return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
-+       ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
-+       if (ret)
-+               goto disable_clk_cfg_ahb;
-+
-+       return 0;
-+
-+disable_clk_cfg_ahb:
-+       clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
-+disable_clk_axi:
-+       clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
-+
-+       return ret;
-  }
-
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
