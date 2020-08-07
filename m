@@ -2,249 +2,146 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1D52075A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8E72075A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 00:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wRI/oGBR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mz7Atwns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgHGArt (ORCPT
+        id S1726517AbgHGAtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 20:47:49 -0400
-Received: from mail-dm6nam12on2046.outbound.protection.outlook.com ([40.107.243.46]:12897
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726933AbgHGArp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 20:47:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VBT4sgyve1ja0W9Mf9IgGNzdwfQZoiIz8wjgEuEH0NDkHpU0pQcakLw30Y8r1819m4US5gD/BjA+7Q7TrlhO4C5dxVMiQ6P2COWDETS1aj40fBQ4Qy6u65WzhvLqWjoPYYg5WVWxaLA0dOPh9LJbjuq6CgOQb2sv7AgFmnngBfbuDEQJxngR/vH32HNgqUBY6ivm5dd1GV3/jTnLESy/NV5xuyiIfKbI17S5sf0KSTwPihoveln6ZhQBs5B6yMCmFyR2A5is1DjDU+JF88UFE+O3hqQsaw/2695499GcDzS6kpQu5jb8XIz55NYET/bMnheWeA3R0POjf6PJ/LxRRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZtemhJXG++vrCo084ayRfMhauo89lXnlsKI/xI4+f7Y=;
- b=OUGOaqHnkBQFMJrCu7nxKixfjAHeQAUwSI3zx90mVCakJEpnwuw+QgzEd06zcCeLWv+4r08CLi4zIUrZzvXMYv6aqYhBKayDDBvWt+gSvXGk12c6LcCVIxVzvAHO9PLg/yPi+vE4AREnBe4ww4ROV4Rbg+Lb/qrobChVr9jXr6DUbgddM3IXEzzZKeWEhf+AezepJzlbbtf7s6sXEBop2sviNKNMy9sLW3pjltUv4iVEiZlN4T2sQRQZOJfEA5dT/o+F0oAP31GRLu9hmS6ttBvjtDcw780aGd/0dsysR8Je6vcAhPJQfwGC+7jSpVTa5zMAgcOrGRLeDLWmmBALTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 6 Aug 2020 20:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHGAtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 20:49:09 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531EDC061574
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 17:49:09 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w17so235321ply.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 17:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZtemhJXG++vrCo084ayRfMhauo89lXnlsKI/xI4+f7Y=;
- b=wRI/oGBR1leYNCcEuQ745D/YT4Os0b52lCSyIWF8bie4FCEhk8JnCR4aD5660u51IGt+/cKn04+ZNst3UVHCKHe6dUCy6jertTvkE39ZdA9IvPIUeK6bKNRw/aZiAZ/dFRJHN4xaOz7nSG121WkrQaL+hlXtmVTu5MsJvLjcQro=
-Authentication-Results: tencent.com; dkim=none (message not signed)
- header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SA0PR12MB4479.namprd12.prod.outlook.com (2603:10b6:806:95::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Fri, 7 Aug
- 2020 00:47:42 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::691c:c75:7cc2:7f2c]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::691c:c75:7cc2:7f2c%6]) with mapi id 15.20.3239.023; Fri, 7 Aug 2020
- 00:47:42 +0000
-Subject: [PATCH v4 12/12] KVM:SVM: Enable INVPCID feature on AMD
-From:   Babu Moger <babu.moger@amd.com>
-To:     pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        sean.j.christopherson@intel.com, jmattson@google.com
-Cc:     kvm@vger.kernel.org, joro@8bytes.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, tglx@linutronix.de
-Date:   Thu, 06 Aug 2020 19:47:40 -0500
-Message-ID: <159676126090.12805.5961438692882905158.stgit@bmoger-ubuntu>
-In-Reply-To: <159676101387.12805.18038347880482984693.stgit@bmoger-ubuntu>
-References: <159676101387.12805.18038347880482984693.stgit@bmoger-ubuntu>
-User-Agent: StGit/0.17.1-dirty
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0801CA0009.namprd08.prod.outlook.com
- (2603:10b6:803:29::19) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [127.0.1.1] (165.204.77.1) by SN4PR0801CA0009.namprd08.prod.outlook.com (2603:10b6:803:29::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Fri, 7 Aug 2020 00:47:41 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b660ee9d-d818-4088-0e7d-08d83a6b7dc3
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4479:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB44798BB86038D694F3AF9D6595490@SA0PR12MB4479.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3lYaPpkStke8ozVIdwaCXs5F2FLKtlbzRwXsndweFAg9L1MgSVs5jvMC1Whw1k/BZEE2FU903mno9iq/mU3DgvQKBYV4apmXWwDIjb5JQRA7qIHrb+VWFlm62gBFK82/MM/uVUqsSd+6h0OB6ArDvb8+PiULv7RFPL1Ax5Ydatbv2JHOf7vCHG+sc5JSTQ5RyMUvRXFOFJQyYilqbSIVI/nlftFzvskXz95vPVkuCWhOC3m0HssSbgmZiUpfSBs7T2ow2dHq4YZlLo81F9uEIVYFcAF9d7NJIRTngbwnt3H0VQ/kMqnGppPB8mwbWE5SBM4hV2bBxwtgKFCdbf+9otQr+r4gjV7bri4OnwvHdkhyANUVBi9JVA7mbi+nU6vVeF9E5tkDjF+B/Vort2/6gQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(39860400002)(396003)(376002)(346002)(136003)(366004)(5660300002)(6486002)(52116002)(2906002)(16576012)(4326008)(83380400001)(7416002)(956004)(44832011)(33716001)(26005)(9686003)(8676002)(966005)(66476007)(66556008)(103116003)(66946007)(8936002)(86362001)(16526019)(186003)(478600001)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: gJctfP2enpbrkVw3I6/7JQX8Gq7H4FdSpCmFjJWvKNXTTQqyIYL7NGoYepdEGwViIBv/1LmOyi0qWipNo8em3ZVb3gKweGYBFT3kqeNJO7JcbP+hFC83+M8m9OJ/idfd7+sVcdi0IzdnXc5hpJkj+dHEbG1lNpCJfBd5VQUcpfamxVIO3NwGiE6m/qHk/gWy9mAdB0VPfWYXI+YSkgiKiDGb2Ha0iM4m/xJq65S88Q/XcSTK+j3owLok+fMwYOK7b2WACPTIXnX6Cj7UQdWCB2sbTZnD0MvTXy+1Wz0E29WRtyTIt+gihBHh3rff+RuU4tQN8WFQAfyKCmFp1oVi1hclIxTTxXw+bJxdVJdsFC9Ru6BNZHR+GM6TPXTSmRLJgkCHRfe79wIFdV0UvhzbJ84HSNq+bmV9WQjlfVT1OpxVnThL1LNUsx7Qt4CmWiRtmBLwvb3WyWb58yd29Sowo1c+NtwHaV+XdhfgrN9KeCePHD4b7IEZ5VRY+m3Xe73kqy/8c4wIDbuK/aCnjx2tpKIk4miFpg0rEMmk4fq4ZMT6BO+EwFJfPYJgxd5IxPX6y4ln4qRF7OCFo2RlO+LAKkgbvt58l4tnQuCiHT5oomyajDJCQbwVaMOFy+n2hAkQaWxkDeu/LvYMA4wax46DVA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b660ee9d-d818-4088-0e7d-08d83a6b7dc3
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 00:47:42.0741
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +43hnExN+6VM4IOOepB0bfI7wm2Mhx4Vzf5E3yYRvgM1qWThMU+4hhdfsubsWPMe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4479
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=PP4HULyUxqDd1w6PKeB4Lgbah/DbES+FeBMEx2CugQk=;
+        b=mz7Atwnsv1eAoEUP9SJmYSReTl4tBjjVonCdFFIq+nDsfdmsD5vJCgDP4EsUxtLYy3
+         YfCX0gIm/IazZ/1DB5zdWsY9wlQS5GhI5/KgajMXgccP0usV2PSNOa7W2U/OaVZWLrSu
+         41JisAUqEaI7RN8Og9A0l7dL/79y/ZSiOGZlHI95x8CT18JzCJWuWwKJd3C7OKxK+TY6
+         yfZ5U8BgrRPvgx75joYikaYqT8odlSehyvQdBy2d6QpKEIJfD13ONSFIOH/TX+FxS2s9
+         r/hqVcMwDRRrJOYQXlcW1y1dsu3QsMaM/ucSiw/dA8dju97MT9JgmcB5NcPjPae7DF5v
+         mm6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=PP4HULyUxqDd1w6PKeB4Lgbah/DbES+FeBMEx2CugQk=;
+        b=IGLHYDPK7VCn+hRmuPPQbLDz9uGinZx5LmdvKzfPP+xZI7AQmc1qjxciiTZ/e7HdEL
+         xYsq8dtKTgS4y98Mw+4CAwrOv8fVmMXk4A4HoHhtxnWFtkFbn1CcVVKpM9whKdHEf5E2
+         v2VEUfp52FlAT/lOI/jdTCmKVSDdDy7xocDRNMQ6JbTT6TMAaiq3GWznwWZrjI+ir02K
+         qlJ0aui2Ef75Y+bIw3sEQCx5R7z9H8i3+AH8+swmh2yA0YoGScAJcR+SdOIEJl+zcO0D
+         524rjw34BVIcrDcnJGbfpd4vGF+HmOJR9+MWOXFdFuODXy2cW6dt5Keb7R0I86hGIu0Q
+         f8Mg==
+X-Gm-Message-State: AOAM530ZgrosVMx8sqtW91nomVcZTZm9bK/FWc3NvaHU5DpG7GvQ0jHR
+        Qo+kozpydB1xc8jEYF76tg7W4AXg
+X-Google-Smtp-Source: ABdhPJwaBXO8RAqfMUXeX+3Zhd54RJq4uQVPPDQO7c5NcpJJkuUkSlrKWgwXt83Mw3TuhF9YQVa1GQ==
+X-Received: by 2002:a17:90a:36a7:: with SMTP id t36mr11265340pjb.36.1596761348877;
+        Thu, 06 Aug 2020 17:49:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 202sm9916655pfy.6.2020.08.06.17.49.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Aug 2020 17:49:07 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        tytso@mit.edu, Guenter Roeck <linux@roeck-us.net>,
+        Qian Cai <cai@lca.pw>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH] arm64: kaslr: Use standard early random function
+Date:   Thu,  6 Aug 2020 17:49:04 -0700
+Message-Id: <20200807004904.72893-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following intercept bit has been added to support VMEXIT
-for INVPCID instruction:
-Code    Name            Cause
-A2h     VMEXIT_INVPCID  INVPCID instruction
+Commit 585524081ecd ("random: random.h should include archrandom.h, not
+the other way around") tries to fix a problem with recursive inclusion
+of linux/random.h and arch/archrandom.h for arm64. Unfortunately, this
+results in the following compile error if ARCH_RANDOM is disabled.
 
-The following bit has been added to the VMCB layout control area
-to control intercept of INVPCID:
-Byte Offset     Bit(s)    Function
-14h             2         intercept INVPCID
+arch/arm64/kernel/kaslr.c: In function 'kaslr_early_init':
+arch/arm64/kernel/kaslr.c:128:6: error: implicit declaration of function
+'__early_cpu_has_rndr'; did you mean '__early_pfn_to_nid'?
+[-Werror=implicit-function-declaration]
+  if (__early_cpu_has_rndr()) {
+      ^~~~~~~~~~~~~~~~~~~~
+      __early_pfn_to_nid
+arch/arm64/kernel/kaslr.c:131:7: error: implicit declaration of function
+'__arm64_rndr' [-Werror=implicit-function-declaration]
+   if (__arm64_rndr(&raw))
+       ^~~~~~~~~~~~
 
-Enable the interceptions when the the guest is running with shadow
-page table enabled and handle the tlbflush based on the invpcid
-instruction type.
+Problem is that arch/archrandom.h is only included from linux/random.h if
+ARCH_RANDOM is enabled. If not, __arm64_rndr() and __early_cpu_has_rndr()
+are undeclared, causing the problem.
 
-For the guests with nested page table (NPT) support, the INVPCID
-feature works as running it natively. KVM does not need to do any
-special handling in this case.
+Use arch_get_random_seed_long_early() instead of arm64 specific functions
+to solve the problem. As a side effect of this change, the code no longer
+bypasses ARCH_RANDOM, which I consider desirable (after all, ARCH_RANDOM
+was disabled for a reason).
 
-AMD documentation for INVPCID feature is available at "AMD64
-Architecture Programmer’s Manual Volume 2: System Programming,
-Pub. 24593 Rev. 3.34(or later)"
-
-The documentation can be obtained at the links below:
-Link: https://www.amd.com/system/files/TechDocs/24593.pdf
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-
-Signed-off-by: Babu Moger <babu.moger@amd.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Fixes: 585524081ecd ("random: random.h should include archrandom.h, not the other way around")
+Fixes: 2e8e1ea88cbc ("arm64: Use v8.5-RNG entropy for KASLR seed")
+Cc: Qian Cai <cai@lca.pw>
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- arch/x86/include/uapi/asm/svm.h |    2 ++
- arch/x86/kvm/svm/svm.c          |   51 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
+ arch/arm64/kernel/kaslr.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-index 2e8a30f06c74..522d42dfc28c 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -76,6 +76,7 @@
- #define SVM_EXIT_MWAIT_COND    0x08c
- #define SVM_EXIT_XSETBV        0x08d
- #define SVM_EXIT_RDPRU         0x08e
-+#define SVM_EXIT_INVPCID       0x0a2
- #define SVM_EXIT_NPF           0x400
- #define SVM_EXIT_AVIC_INCOMPLETE_IPI		0x401
- #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS	0x402
-@@ -171,6 +172,7 @@
- 	{ SVM_EXIT_MONITOR,     "monitor" }, \
- 	{ SVM_EXIT_MWAIT,       "mwait" }, \
- 	{ SVM_EXIT_XSETBV,      "xsetbv" }, \
-+	{ SVM_EXIT_INVPCID,     "invpcid" }, \
- 	{ SVM_EXIT_NPF,         "npf" }, \
- 	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"avic_incomplete_ipi" }, \
- 	{ SVM_EXIT_AVIC_UNACCELERATED_ACCESS,   "avic_unaccelerated_access" }, \
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 3c718caa3b99..053dfd00efa1 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -813,6 +813,9 @@ static __init void svm_set_cpu_caps(void)
- 	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
- 	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
- 		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-+
-+	/* Enable INVPCID feature */
-+	kvm_cpu_cap_check_and_set(X86_FEATURE_INVPCID);
- }
+diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+index 9ded4237e1c1..b181e0544b79 100644
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -84,6 +84,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
+ 	void *fdt;
+ 	u64 seed, offset, mask, module_range;
+ 	const u8 *cmdline, *str;
++	unsigned long raw;
+ 	int size;
  
- static __init int svm_hardware_setup(void)
-@@ -970,6 +973,21 @@ static u64 svm_write_l1_tsc_offset(struct kvm_vcpu *vcpu, u64 offset)
- 	return svm->vmcb->control.tsc_offset;
- }
- 
-+static void svm_check_invpcid(struct vcpu_svm *svm)
-+{
-+	/*
-+	 * Intercept INVPCID instruction only if shadow page table is
-+	 * enabled. Interception is not required with nested page table
-+	 * enabled.
-+	 */
-+	if (kvm_cpu_cap_has(X86_FEATURE_INVPCID)) {
-+		if (!npt_enabled)
-+			set_intercept(svm, INTERCEPT_INVPCID);
-+		else
-+			clr_intercept(svm, INTERCEPT_INVPCID);
-+	}
-+}
-+
- static void init_vmcb(struct vcpu_svm *svm)
- {
- 	struct vmcb_control_area *control = &svm->vmcb->control;
-@@ -1099,6 +1117,8 @@ static void init_vmcb(struct vcpu_svm *svm)
- 		clr_intercept(svm, INTERCEPT_PAUSE);
+ 	/*
+@@ -122,15 +123,12 @@ u64 __init kaslr_early_init(u64 dt_phys)
  	}
  
-+	svm_check_invpcid(svm);
-+
- 	if (kvm_vcpu_apicv_active(&svm->vcpu))
- 		avic_init_vmcb(svm);
+ 	/*
+-	 * Mix in any entropy obtainable architecturally, open coded
+-	 * since this runs extremely early.
++	 * Mix in any entropy obtainable architecturally if enabled
++	 * and supported.
+ 	 */
+-	if (__early_cpu_has_rndr()) {
+-		unsigned long raw;
  
-@@ -2714,6 +2734,33 @@ static int mwait_interception(struct vcpu_svm *svm)
- 	return nop_interception(svm);
- }
+-		if (__arm64_rndr(&raw))
+-			seed ^= raw;
+-	}
++	if (arch_get_random_seed_long_early(&raw))
++		seed ^= raw;
  
-+static int invpcid_interception(struct vcpu_svm *svm)
-+{
-+	struct kvm_vcpu *vcpu = &svm->vcpu;
-+	unsigned long type;
-+	gva_t gva;
-+
-+	if (!guest_cpuid_has(vcpu, X86_FEATURE_INVPCID)) {
-+		kvm_queue_exception(vcpu, UD_VECTOR);
-+		return 1;
-+	}
-+
-+	/*
-+	 * For an INVPCID intercept:
-+	 * EXITINFO1 provides the linear address of the memory operand.
-+	 * EXITINFO2 provides the contents of the register operand.
-+	 */
-+	type = svm->vmcb->control.exit_info_2;
-+	gva = svm->vmcb->control.exit_info_1;
-+
-+	if (type > 3) {
-+		kvm_inject_gp(vcpu, 0);
-+		return 1;
-+	}
-+
-+	return kvm_handle_invpcid(vcpu, type, gva);
-+}
-+
- static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
- 	[SVM_EXIT_READ_CR0]			= cr_interception,
- 	[SVM_EXIT_READ_CR3]			= cr_interception,
-@@ -2776,6 +2823,7 @@ static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
- 	[SVM_EXIT_MWAIT]			= mwait_interception,
- 	[SVM_EXIT_XSETBV]			= xsetbv_interception,
- 	[SVM_EXIT_RDPRU]			= rdpru_interception,
-+	[SVM_EXIT_INVPCID]                      = invpcid_interception,
- 	[SVM_EXIT_NPF]				= npf_interception,
- 	[SVM_EXIT_RSM]                          = rsm_interception,
- 	[SVM_EXIT_AVIC_INCOMPLETE_IPI]		= avic_incomplete_ipi_interception,
-@@ -3561,6 +3609,9 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
- 	svm->nrips_enabled = kvm_cpu_cap_has(X86_FEATURE_NRIPS) &&
- 			     guest_cpuid_has(&svm->vcpu, X86_FEATURE_NRIPS);
- 
-+	/* Check again if INVPCID interception if required */
-+	svm_check_invpcid(svm);
-+
- 	if (!kvm_vcpu_apicv_active(vcpu))
- 		return;
- 
+ 	if (!seed) {
+ 		kaslr_status = KASLR_DISABLED_NO_SEED;
+-- 
+2.17.1
 
