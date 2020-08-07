@@ -2,62 +2,63 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75141C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9692177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A9A2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 07:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f5euxkJZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O5cF70/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgHGHQy (ORCPT
+        id S1726823AbgHGHQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 03:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35580 "EHLO
+        Fri, 7 Aug 2020 03:16:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgHGHQw (ORCPT
+        with ESMTP id S1726038AbgHGHQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 03:16:52 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04470C061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 00:16:52 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 128so478556pgd.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 00:16:52 -0700 (PDT)
+        Fri, 7 Aug 2020 03:16:57 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080F1C061574
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 00:16:57 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id g33so481744pgb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 00:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kiY70R+BKEfwoAW0V1FII+/M7MMCmP3lqqZu7SLgWOw=;
-        b=f5euxkJZ+36FSXvujuQLTTOS0WtRn/r7VxFnyx1O4UyOK/eoc+cYFI9wcKAWygCx4t
-         4unjX/FQNvbAZ1Dm+U2NgRL9yxYjHkkW5pf0vcaSCX5WkPFo7n5/64axTqXZJk/A9y18
-         sMu44egNg1G6cIMMjypLFgOw7wmWG8+TDVUsk6VP934w17sSAbwkGI0v9SxxHRh8S6PJ
-         SBNjt6+SDgUSf/xOZdD1w1PCF8mpoZVoSfhS88ESYVbcCda+Hzl5zvKWEgVLP9jD5GCK
-         bIT1WCUXq+IsxrvyB2Bd24fAifU+7iilXkFtEE2hBc/AakWcbgpdYsPMHXInMR8IoiEn
-         llFA==
+        bh=556/nqlePYZWBkAMwQbIJix7Bhlob1GBVvm8WL0qp+4=;
+        b=O5cF70/el26zG5aNlKIFz3vqTV8m01oR5hzLW6GizfWXCEWUFnHFfKEbZj8Z4kijG1
+         gmNkeh/A3DBUysqXZLW0O2l8g9FC8cik5TX9LWZZHyNUrCSY7w+ItBNFg0La+Q+GeQcl
+         sZclwBxIw3bE/OwbxNp3o8SnjfJLCUOBHh+Inl07SlkrAGkSNSlzDMgI+0tclEJ3E0Pt
+         dyagUKTF7WSPYi4pDNJ1tdumRFGcAODDmQGV++cs8rKbFwexdKEqjvbem/NQx8hzVZ+u
+         Y0UkqObpjwLVYu2go4YurHcs6cM+sCaIUKKZ9VBIlwI12w0wjduSbGhVElZ+e8kxQJsT
+         dw7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=kiY70R+BKEfwoAW0V1FII+/M7MMCmP3lqqZu7SLgWOw=;
-        b=sR0ntY1CQgBJzH/MZOZDGbIdNGWa8FLDWJ9wI1mghd0A9+gVwsCzMpDfLKy4MrXOEX
-         hkovYOILVOzM9/Oa7IA9AJnW2NqPHyQWUnqKfopCCw8bAD/HSzZudXoU7NvhxejPRBOE
-         ieV0n9mNI2UiyCQutotbpTWb5/t7AprdU3iAIwyAHHnSuTQ4s27u8mmAbkReH4+5P1Bf
-         FnkV+UmTNSk/oQqNe7pI6sobysHn3E6Ncj6ke50yozpe2/uuXTLyvJ/Zi78+aD/JYi8I
-         7naHFk+JL674ZppKLxEJRx/LHuH64c0JJud6rzyeuicOC3kZMDz9bJeGegwapAATjfko
-         EvIg==
-X-Gm-Message-State: AOAM5305v0NmBe0VTO9XkKrYL8kEDaih1O+Wx88UZeehEdLbhh5iAha/
-        nGLZCAt5NbmJH31GQxwbxZtbKQ==
-X-Google-Smtp-Source: ABdhPJyWV4/piQBHY88FkEZy2/oguF30nBvVUPGhRb5ia4tw8ISTk3B3HNLwhlz+5v8ZBb9vMrVaiw==
-X-Received: by 2002:aa7:9357:: with SMTP id 23mr11951157pfn.278.1596784611431;
-        Fri, 07 Aug 2020 00:16:51 -0700 (PDT)
+        bh=556/nqlePYZWBkAMwQbIJix7Bhlob1GBVvm8WL0qp+4=;
+        b=ldWpyvXDCon9Zq6OS51qc/Rv5nfa1dKOLXCeFUVyVPn7E8IiMMSm+odTA2XIdiTwOK
+         apqtDXv4ZO4G/zXnrcjt8RQ9KBqFgO6+C2WDi3nKvZ0nMM2OPLum0EVfJseK94aNnMyM
+         JeG8nizZb4rVm2qqZLRX+c8Zzb1Iu7u2aPD1Nrj0D7mZudIong6DkTvRF1hP1uN6vRxp
+         NIdpY9gagogzivEBV7HVoYcSZDQxwU5c5Ycnm6bwKi8CxA2QYREkoHz0aAzhOpqwZ6RY
+         b/xSn3WQGb7DEIqdTAhKhwvk2VK7yGYJrpQEF88ePeAwnyu4etJv97LkVx4nvj5LDCiq
+         /nyg==
+X-Gm-Message-State: AOAM533aDuKua6knVrhN3hmhrWvqlBn8mHKMaK2gkDHXY4Zs93oSxgg9
+        iClFCfiK4QNB0slAmbuOcF0DjQ==
+X-Google-Smtp-Source: ABdhPJyNnQdY8evKlB8D01W4yEwcejbI7oiamJeHiqmIHVJl2qF8SuEVSzJYIcEz4iPols5IAb2zCQ==
+X-Received: by 2002:aa7:9904:: with SMTP id z4mr11739740pff.32.1596784616467;
+        Fri, 07 Aug 2020 00:16:56 -0700 (PDT)
 Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id a19sm11434640pfn.10.2020.08.07.00.16.50
+        by smtp.gmail.com with ESMTPSA id c15sm10837967pfo.115.2020.08.07.00.16.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Aug 2020 00:16:51 -0700 (PDT)
+        Fri, 07 Aug 2020 00:16:55 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
@@ -77,9 +78,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Stephane Eranian <eranian@google.com>,
         James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 3/4] perf arm_arch_timer: Test conversion between counter and timestamp
-Date:   Fri,  7 Aug 2020 15:16:19 +0800
-Message-Id: <20200807071620.11907-4-leo.yan@linaro.org>
+Subject: [PATCH v2 4/4] perf arm-spe: Enable timestamp with arch timer counter
+Date:   Fri,  7 Aug 2020 15:16:20 +0800
+Message-Id: <20200807071620.11907-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200807071620.11907-1-leo.yan@linaro.org>
 References: <20200807071620.11907-1-leo.yan@linaro.org>
@@ -88,282 +89,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-x86 arch has provides the testing for conversion between tsc and perf
-time, this patch studies it and writes a similar testing for conversion
-between arch timer's counter and sample's time.
+Since the arch timer's counter is used for SPE tracing data, and now
+it's ready to use arch timer for sample's timestamp in Perf tool, this
+patch is to enable timestamp by convert the arch timer counter value to
+the time.
 
-The testing approach firstly creates three time points:
+After enabling timestamp for Arm SPE with this patch, we can see the
+timestamp with 'time' field:
 
-  Time point 1: 1st process's sample with perf time 'comm1_time';
-  Time point 2: read out arch timer counter 'test_arch_timer_cnt';
-  Time point 3: 2nd process's sample with perf time 'comm2_time';
-
-The testing converts perf time to and from arch timer counter for these
-three values and the testing can pass only if the counter values and
-time values are in the order.
-
-The test steps are as below:
-
-  # perf test list
-    [...]
-    67: Convert perf time to arch timer counter
-
-  # perf test 67 -v
-    67: Convert perf time to arch timer counter
-    --- start ---
-    test child forked, pid 5463
-    mmap size 528384B
-    1st event perf time 2231755083020 arch timer cnt 113097053477
-    test time           2231755087460 arch timer cnt 113097053699
-    2nd event perf time 2231755090680 arch timer cnt 113097053860
-    test child finished with 0
-    ---- end ----
+  $ perf script -F,+time
+    dd  6799 [034] 25496.733475:          1              l1d-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+    dd  6799 [034] 25496.733475:          1              tlb-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+    dd  6799 [034] 25496.733479:          1              l1d-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+    dd  6799 [034] 25496.733479:          1              tlb-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+    dd  6799 [034] 25496.733485:          1              l1d-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+    dd  6799 [034] 25496.733485:          1              tlb-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/arch/arm64/include/arch-tests.h    |   6 +
- tools/perf/arch/arm64/tests/Build             |   1 +
- tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
- .../tests/perf-time-to-arch-timer-counter.c   | 189 ++++++++++++++++++
- 4 files changed, 200 insertions(+)
- create mode 100644 tools/perf/arch/arm64/tests/perf-time-to-arch-timer-counter.c
+ tools/perf/arch/arm64/util/arm-spe.c | 17 +++++++++++++++++
+ tools/perf/util/arm-spe.c            | 16 ++++++++++++++--
+ tools/perf/util/arm-spe.h            |  5 +++++
+ 3 files changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
-index 90ec4c8cb880..12ad7592c9aa 100644
---- a/tools/perf/arch/arm64/include/arch-tests.h
-+++ b/tools/perf/arch/arm64/include/arch-tests.h
-@@ -2,6 +2,12 @@
- #ifndef ARCH_TESTS_H
- #define ARCH_TESTS_H
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index e3593063b3d1..a7cbd5fdb30e 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -11,6 +11,7 @@
+ #include <linux/zalloc.h>
+ #include <time.h>
  
-+#include <linux/compiler.h>
-+
-+/* Tests */
-+int test__perf_time_to_arch_timer_cnt(struct test *test __maybe_unused,
-+				      int subtest __maybe_unused);
-+
- #ifdef HAVE_DWARF_UNWIND_SUPPORT
- struct thread;
- struct perf_sample;
-diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-index a61c06bdb757..1fd819e4f80f 100644
---- a/tools/perf/arch/arm64/tests/Build
-+++ b/tools/perf/arch/arm64/tests/Build
-@@ -2,3 +2,4 @@ perf-y += regs_load.o
- perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
++#include "../../../util/arm_arch_timer.h"
+ #include "../../../util/cpumap.h"
+ #include "../../../util/event.h"
+ #include "../../../util/evsel.h"
+@@ -22,6 +23,7 @@
+ #include "../../../util/auxtrace.h"
+ #include "../../../util/record.h"
+ #include "../../../util/arm-spe.h"
++#include "../../../util/mmap.h"
  
- perf-y += arch-tests.o
-+perf-y += perf-time-to-arch-timer-counter.o
-diff --git a/tools/perf/arch/arm64/tests/arch-tests.c b/tools/perf/arch/arm64/tests/arch-tests.c
-index 5b1543c98022..99d8ab865668 100644
---- a/tools/perf/arch/arm64/tests/arch-tests.c
-+++ b/tools/perf/arch/arm64/tests/arch-tests.c
-@@ -4,6 +4,10 @@
- #include "arch-tests.h"
- 
- struct test arch_tests[] = {
-+	{
-+		.desc = "Convert perf time to arch timer counter",
-+		.func = test__perf_time_to_arch_timer_cnt,
-+	},
- #ifdef HAVE_DWARF_UNWIND_SUPPORT
- 	{
- 		.desc = "DWARF unwind",
-diff --git a/tools/perf/arch/arm64/tests/perf-time-to-arch-timer-counter.c b/tools/perf/arch/arm64/tests/perf-time-to-arch-timer-counter.c
-new file mode 100644
-index 000000000000..09b9f43b48a4
---- /dev/null
-+++ b/tools/perf/arch/arm64/tests/perf-time-to-arch-timer-counter.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <linux/types.h>
-+#include <sys/prctl.h>
-+#include <perf/cpumap.h>
-+#include <perf/evlist.h>
-+#include <perf/mmap.h>
-+
-+#include "arm_arch_timer.h"
-+#include "debug.h"
-+#include "parse-events.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "thread_map.h"
-+#include "record.h"
-+#include "util/mmap.h"
-+#include "tests/tests.h"
-+
-+#include "arch-tests.h"
-+
-+#define CHECK_NOT_LESS_ZERO(x) {		\
-+	while ((x) < 0) {			\
-+		pr_debug(#x " failed!\n");	\
-+		goto out_err;			\
-+	}					\
-+}
-+
-+#define CHECK_NOT_NULL(x) {			\
-+	while ((x) == NULL) {			\
-+		pr_debug(#x " failed!\n");	\
-+		goto out_err;			\
-+	}					\
-+}
-+
-+/*
-+ * The arch timer's offset is set to zero, the virtual counter and physical
-+ * counter should have the same value; so the user space program can read out
-+ * counter with system register cntvct_el0 and it can be used to compare with
-+ * kernel's counter.
-+ */
-+#define read_cntvct_el0(r) ({					\
-+	u64 __val;						\
-+	asm volatile("mrs %0, cntvct_el0" : "=r" (__val));	\
-+	__val;							\
-+})
-+
-+/**
-+ * test__perf_time_to_arch_timer_cnt - test converting perf time to Arm arch
-+ * timer counter.
-+ *
-+ * This function implements a test that checks that the conversion of perf time
-+ * to and from Arm arch timer counter is consistent with the order of events.
-+ * Returns 0 if the test passes, otherwise returns -1.  If TSC conversion is not
-+ * supported then then the test passes but " (not supported)" is printed.
-+ */
-+int test__perf_time_to_arch_timer_cnt(struct test *test __maybe_unused,
-+				      int subtest __maybe_unused)
-+{
-+	struct record_opts opts = {
-+		.mmap_pages	     = UINT_MAX,
-+		.user_freq	     = UINT_MAX,
-+		.user_interval	     = ULLONG_MAX,
-+		.target		     = {
-+			.uses_mmap   = true,
-+		},
-+		.sample_time	     = true,
-+	};
-+	struct perf_thread_map *threads = NULL;
-+	struct perf_cpu_map *cpus = NULL;
-+	struct evlist *evlist = NULL;
-+	struct evsel *evsel = NULL;
-+	int err = -1, ret, i;
-+	const char *comm1, *comm2;
-+	struct perf_arch_timer_conversion tc;
+ #define KiB(x) ((x) * 1024)
+ #define MiB(x) ((x) * 1024 * 1024)
+@@ -47,6 +49,9 @@ static int arm_spe_info_fill(struct auxtrace_record *itr,
+ 	struct arm_spe_recording *sper =
+ 			container_of(itr, struct arm_spe_recording, itr);
+ 	struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
 +	struct perf_event_mmap_page *pc;
-+	union perf_event *event;
-+	u64 test_arch_timer_cnt;
-+	u64 comm1_arch_timer_cnt;
-+	u64 comm2_arch_timer_cnt;
-+	u64 test_time, comm1_time = 0, comm2_time = 0;
-+	struct mmap *md;
-+
-+	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	CHECK_NOT_NULL(threads);
-+
-+	cpus = perf_cpu_map__new(NULL);
-+	CHECK_NOT_NULL(cpus);
-+
-+	evlist = evlist__new();
-+	CHECK_NOT_NULL(evlist);
-+
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
-+
-+	CHECK_NOT_LESS_ZERO(parse_events(evlist, "cycles:u", NULL));
-+
-+	perf_evlist__config(evlist, &opts, NULL);
-+
-+	evsel = evlist__first(evlist);
-+
-+	evsel->core.attr.comm = 1;
-+	evsel->core.attr.disabled = 1;
-+	evsel->core.attr.enable_on_exec = 0;
-+
-+	CHECK_NOT_LESS_ZERO(evlist__open(evlist));
-+
-+	CHECK_NOT_LESS_ZERO(evlist__mmap(evlist, UINT_MAX));
-+
-+	pc = evlist->mmap[0].core.base;
-+	ret = perf_read_arch_timer_conversion(pc, &tc);
-+	if (ret) {
-+		if (ret == -EOPNOTSUPP) {
-+			fprintf(stderr, " (not supported)");
-+			return 0;
-+		}
-+		goto out_err;
++	struct perf_arch_timer_conversion tc = { 0 };
++	int err;
+ 
+ 	if (priv_size != ARM_SPE_AUXTRACE_PRIV_SIZE)
+ 		return -EINVAL;
+@@ -54,8 +59,20 @@ static int arm_spe_info_fill(struct auxtrace_record *itr,
+ 	if (!session->evlist->core.nr_mmaps)
+ 		return -EINVAL;
+ 
++	pc = session->evlist->mmap[0].core.base;
++	if (pc) {
++		err = perf_read_arch_timer_conversion(pc, &tc);
++		if (err)
++			return err;
 +	}
 +
-+	evlist__enable(evlist);
+ 	auxtrace_info->type = PERF_AUXTRACE_ARM_SPE;
+ 	auxtrace_info->priv[ARM_SPE_PMU_TYPE] = arm_spe_pmu->type;
++	auxtrace_info->priv[ARM_SPE_TIME_SHIFT] = tc.time_shift;
++	auxtrace_info->priv[ARM_SPE_TIME_MULT] = tc.time_mult;
++	auxtrace_info->priv[ARM_SPE_TIME_ZERO] = tc.time_zero;
++	auxtrace_info->priv[ARM_SPE_TIME_CYCLES] = tc.time_cycles;
++	auxtrace_info->priv[ARM_SPE_TIME_MASK] = tc.time_mask;
+ 
+ 	return 0;
+ }
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 3882a5360ada..07232664c927 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -16,6 +16,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ 
++#include "arm_arch_timer.h"
+ #include "auxtrace.h"
+ #include "color.h"
+ #include "debug.h"
+@@ -44,6 +45,7 @@ struct arm_spe {
+ 	struct perf_session		*session;
+ 	struct machine			*machine;
+ 	u32				pmu_type;
++	struct perf_arch_timer_conversion tc;
+ 
+ 	u8				timeless_decoding;
+ 	u8				data_queued;
+@@ -229,7 +231,8 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
+ 	struct arm_spe_record *record = &speq->decoder->record;
+ 
+ 	if (!spe->timeless_decoding)
+-		sample->time = speq->timestamp;
++		sample->time = arch_timer_cyc_to_perf_time(speq->timestamp,
++							   &spe->tc);
+ 
+ 	sample->ip = record->from_ip;
+ 	sample->cpumode = arm_spe_cpumode(spe, sample->ip);
+@@ -350,6 +353,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
+ {
+ 	struct arm_spe *spe = speq->spe;
++	struct arm_spe_record *record;
+ 	int ret;
+ 
+ 	if (!spe->kernel_start)
+@@ -369,6 +373,9 @@ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
+ 		if (ret < 0)
+ 			continue;
+ 
++		record = &speq->decoder->record;
++		speq->timestamp = record->timestamp;
 +
-+	comm1 = "Test COMM 1";
-+	CHECK_NOT_LESS_ZERO(prctl(PR_SET_NAME, (unsigned long)comm1, 0, 0, 0));
-+
-+	test_arch_timer_cnt = read_cntvct_el0();
-+
-+	comm2 = "Test COMM 2";
-+	CHECK_NOT_LESS_ZERO(prctl(PR_SET_NAME, (unsigned long)comm2, 0, 0, 0));
-+
-+	evlist__disable(evlist);
-+
-+	for (i = 0; i < evlist->core.nr_mmaps; i++) {
-+		md = &evlist->mmap[i];
-+		if (perf_mmap__read_init(&md->core) < 0)
-+			continue;
-+
-+		while ((event = perf_mmap__read_event(&md->core)) != NULL) {
-+			struct perf_sample sample;
-+
-+			if (event->header.type != PERF_RECORD_COMM ||
-+			    (pid_t)event->comm.pid != getpid() ||
-+			    (pid_t)event->comm.tid != getpid())
-+				goto next_event;
-+
-+			if (strcmp(event->comm.comm, comm1) == 0) {
-+				CHECK_NOT_LESS_ZERO(evsel__parse_sample(evsel, event, &sample));
-+				comm1_time = sample.time;
-+			}
-+			if (strcmp(event->comm.comm, comm2) == 0) {
-+				CHECK_NOT_LESS_ZERO(evsel__parse_sample(evsel, event, &sample));
-+				comm2_time = sample.time;
-+			}
-+next_event:
-+			perf_mmap__consume(&md->core);
-+		}
-+		perf_mmap__read_done(&md->core);
-+	}
-+
-+	if (!comm1_time || !comm2_time)
-+		goto out_err;
-+
-+	test_time = arch_timer_cyc_to_perf_time(test_arch_timer_cnt, &tc);
-+	comm1_arch_timer_cnt = perf_time_to_arch_timer_cyc(comm1_time, &tc);
-+	comm2_arch_timer_cnt = perf_time_to_arch_timer_cyc(comm2_time, &tc);
-+
-+	pr_debug("1st event perf time %"PRIu64" arch timer cnt %"PRIu64"\n",
-+		 comm1_time, comm1_arch_timer_cnt);
-+	pr_debug("test time           %"PRIu64" arch timer cnt %"PRIu64"\n",
-+		 test_time, test_arch_timer_cnt);
-+	pr_debug("2nd event perf time %"PRIu64" arch timer cnt %"PRIu64"\n",
-+		 comm2_time, comm2_arch_timer_cnt);
-+
-+	if (test_time <= comm1_time ||
-+	    test_time >= comm2_time)
-+		goto out_err;
-+
-+	if (test_arch_timer_cnt <= comm1_arch_timer_cnt ||
-+	    test_arch_timer_cnt >= comm2_arch_timer_cnt)
-+		goto out_err;
-+
-+	err = 0;
-+
-+out_err:
-+	evlist__delete(evlist);
-+	return err;
-+}
+ 		ret = arm_spe_sample(speq);
+ 		if (ret)
+ 			return ret;
+@@ -585,7 +592,7 @@ static int arm_spe_process_event(struct perf_session *session,
+ 	}
+ 
+ 	if (sample->time && (sample->time != (u64) -1))
+-		timestamp = sample->time;
++		timestamp = perf_time_to_arch_timer_cyc(sample->time, &spe->tc);
+ 	else
+ 		timestamp = 0;
+ 
+@@ -934,6 +941,11 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	spe->machine = &session->machines.host; /* No kvm support */
+ 	spe->auxtrace_type = auxtrace_info->type;
+ 	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
++	spe->tc.time_shift = auxtrace_info->priv[ARM_SPE_TIME_SHIFT];
++	spe->tc.time_mult = auxtrace_info->priv[ARM_SPE_TIME_MULT];
++	spe->tc.time_zero = auxtrace_info->priv[ARM_SPE_TIME_ZERO];
++	spe->tc.time_cycles = auxtrace_info->priv[ARM_SPE_TIME_CYCLES];
++	spe->tc.time_mask = auxtrace_info->priv[ARM_SPE_TIME_MASK];
+ 
+ 	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
+ 	spe->auxtrace.process_event = arm_spe_process_event;
+diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
+index 98d3235781c3..8baa32ad179d 100644
+--- a/tools/perf/util/arm-spe.h
++++ b/tools/perf/util/arm-spe.h
+@@ -12,6 +12,11 @@
+ enum {
+ 	ARM_SPE_PMU_TYPE,
+ 	ARM_SPE_PER_CPU_MMAPS,
++	ARM_SPE_TIME_SHIFT,
++	ARM_SPE_TIME_MULT,
++	ARM_SPE_TIME_ZERO,
++	ARM_SPE_TIME_CYCLES,
++	ARM_SPE_TIME_MASK,
+ 	ARM_SPE_AUXTRACE_PRIV_MAX,
+ };
+ 
 -- 
 2.17.1
 
