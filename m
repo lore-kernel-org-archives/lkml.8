@@ -2,80 +2,145 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4FFD2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E9722CA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:44:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QVwW8wID"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wqBUHvS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgHGMnR (ORCPT
+        id S1728475AbgHGMoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:43:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50559 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728350AbgHGMnQ (ORCPT
+        Fri, 7 Aug 2020 08:44:24 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36760 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgHGMoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 08:43:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596804195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=273fiZa3j2YUsHYvjEo3xvFBeJLIY7mZ32ur6GZf0EM=;
-        b=QVwW8wIDIa1aK18bgE0wv6MXTdWGITG4t87itufgubLiU4N8nT5UlKy68dffxcZscFKngp
-        6+SGR/SiO+K8nYE36PggEtI/DYrfkY8Nu3P5KDjFcJTgWIGUSiQC4N5pQ32JSJg+HX0Z7x
-        nuJL5yKJF8u3O3h2hiVQpkImdRUWPwU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-8ExUZS9hO7iDqC6bCcjDtg-1; Fri, 07 Aug 2020 08:43:14 -0400
-X-MC-Unique: 8ExUZS9hO7iDqC6bCcjDtg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 549B718A1DFB;
-        Fri,  7 Aug 2020 12:43:12 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E9E377B932;
-        Fri,  7 Aug 2020 12:43:11 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 001E99CBC; Fri,  7 Aug 2020 14:43:10 +0200 (CEST)
-Date:   Fri, 7 Aug 2020 14:43:10 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Xin He <hexin.op@bytedance.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Qi Liu <liuqi.16@bytedance.com>
-Subject: Re: [PATCH] drm/virtio: fix memory leak in
- virtio_gpu_cleanup_object()
-Message-ID: <20200807124310.cmhbj6bj76twdtaw@sirius.home.kraxel.org>
-References: <20200722051851.72662-1-hexin.op@bytedance.com>
+        Fri, 7 Aug 2020 08:44:23 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 077CiJPA062485;
+        Fri, 7 Aug 2020 07:44:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596804259;
+        bh=lDv+rz9EfFabGbg1monOFONKn2sVmApnjb4a5bSPdRQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=wqBUHvS6WUvCFmJcMWAzsna5CdEiZUBITLhl49HyyJVTtagbTZPGEewUzcV3YScsZ
+         ABf2I4LuX3DFhn4P8ZiF4YMVESZIKHu/M1w4MFZPoIw/vMoyKamPKBI8tTf5hM4CoW
+         ZC7DTzXauinAwDVbpgOs8wvFCT0JTKzwzObO57SM=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 077CiJkn000401
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Aug 2020 07:44:19 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 7 Aug
+ 2020 07:44:19 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 7 Aug 2020 07:44:19 -0500
+Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 077CiCeG072818;
+        Fri, 7 Aug 2020 07:44:16 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH 1/2] arm64: dts: ti: k3-j7200: Add HyperBus node
+Date:   Fri, 7 Aug 2020 18:14:06 +0530
+Message-ID: <20200807124407.12604-2-vigneshr@ti.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200807124407.12604-1-vigneshr@ti.com>
+References: <20200807124407.12604-1-vigneshr@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722051851.72662-1-hexin.op@bytedance.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 01:18:51PM +0800, Xin He wrote:
-> Before setting shmem->pages to NULL, kfree() should
-> be called.
+J7200 has a Flash SubSystem that has one OSPI and one HyperBus.. Add
+DT nodes for HyperBus controller for now.
 
->  			sg_free_table(shmem->pages);
-> +			kfree(shmem->pages);
->  			shmem->pages = NULL;
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
+ .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      | 27 +++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j7200.dtsi          |  8 ++++--
+ 2 files changed, 33 insertions(+), 2 deletions(-)
 
-Pushed to drm-misc-fixes.
-
-thanks,
-  Gerd
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+index 94a797bbcdaf0..106c774dc224a 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+@@ -114,4 +114,31 @@ wkup_i2c0: i2c@42120000 {
+ 		clocks = <&k3_clks 197 1>;
+ 		power-domains = <&k3_pds 197 TI_SCI_PD_SHARED>;
+ 	};
++
++	fss: system-controller@47000000 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0x0 0x47000000 0x0 0x100>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		hbmc_mux: hbmc-mux {
++			compatible = "mmio-mux";
++			#mux-control-cells = <1>;
++			mux-reg-masks = <0x4 0x2>; /* HBMC select */
++		};
++
++		hbmc: hyperbus@47034000 {
++			compatible = "ti,am654-hbmc";
++			reg = <0x0 0x47034000 0x0 0x100>,
++				<0x5 0x00000000 0x1 0x0000000>;
++			power-domains = <&k3_pds 102 TI_SCI_PD_EXCLUSIVE>;
++			clocks = <&k3_clks 102 0>;
++			assigned-clocks = <&k3_clks 102 5>;
++			assigned-clock-rates = <333333333>;
++			#address-cells = <2>;
++			#size-cells = <1>;
++			mux-controls = <&hbmc_mux 0>;
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200.dtsi b/arch/arm64/boot/dts/ti/k3-j7200.dtsi
+index aadf707f25f5c..ba27f6641137e 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200.dtsi
+@@ -139,7 +139,9 @@ cbass_main: bus@100000 {
+ 			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
+ 			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
+ 			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>,
+-			 <0x00 0x50000000 0x00 0x50000000 0x00 0x10000000>;
++			 <0x00 0x50000000 0x00 0x50000000 0x00 0x10000000>,
++			 <0x05 0x00000000 0x05 0x00000000 0x01 0x00000000>,
++			 <0x07 0x00000000 0x07 0x00000000 0x01 0x00000000>;
+ 
+ 		cbass_mcu_wakeup: bus@28380000 {
+ 			compatible = "simple-bus";
+@@ -155,7 +157,9 @@ cbass_mcu_wakeup: bus@28380000 {
+ 				 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>, /* MMRs, remaining NAVSS */
+ 				 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>, /* CPSW */
+ 				 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>, /* OSPI register space */
+-				 <0x00 0x50000000 0x00 0x50000000 0x00 0x10000000>; /* FSS OSPI0/1 data region 0 */
++				 <0x00 0x50000000 0x00 0x50000000 0x00 0x10000000>, /* FSS OSPI0/1 data region 0 */
++				 <0x05 0x00000000 0x05 0x00000000 0x01 0x00000000>, /* FSS OSPI0 data region 3 */
++				 <0x07 0x00000000 0x07 0x00000000 0x01 0x00000000>; /* FSS OSPI1 data region 3 */
+ 		};
+ 	};
+ };
+-- 
+2.28.0
 
