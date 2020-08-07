@@ -2,145 +2,91 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6E32075A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D6A2224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596831389;
-	bh=zBooYBIWnGK5adBiPGAqhJfeVNFxpyvJpuKircY/IHg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=f/xZrQZg+/wonbb2q8e4DsJTgM/Xck8caXNrbD+dlDKifdWWMnsffJDNfT5u/RXE0
-	 IW4I+F3u1yICofpAEVLRWFJOsNOMzLBPGUCf3OADLaYrSvWMfJLY6Qym8EZRRfjD+b
-	 ObC522019mVRtztfnhsR1gr4XZUiOsNWt+Oc4zxw=
+	s=default; t=1596831434;
+	bh=FTGX8V3BOAmBXKLEXLdqfDBeFt3UQfICsLUdU64xJiE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Iyj/Ts9eecE+U24/s4MuqpJarZGLYDFUqgex+GJll0D5kHA7fl1KTaxxENBkjtmBD
+	 njBp+t8AvwvWADVU3ex02ihGT1pu3rfyGMwgI1HStS5EneX7aeLBStAkWN2YSoo0WD
+	 U16SOvmtDZ6QACY65rPt7w8WnoPgqk7ZGN6cs8PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgHGUQ2 (ORCPT
+        id S1726635AbgHGURN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgHGUQ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:16:27 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280BFC061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:16:27 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id g18so679065ooa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iIZRPhzhxvlQPAhRZLYpwVWj9ulUHGVA0m8o8NVr9w0=;
-        b=fO9nvYG1DHSSSUBg8D39QTcN6kddz8Pc3RyN9EXcxze4qboNGD3Q7ZsSwOY7C22ULO
-         w1GlGdGahdCihTkGqeV/WQsWi6J+fPvH49Fd3ZzIfg2fPYZkwKP/M1lGKBzF9hpVAZcu
-         Fp9YjXrUXfktUkjqRTTsTGSeCGBhhZHWMHytg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iIZRPhzhxvlQPAhRZLYpwVWj9ulUHGVA0m8o8NVr9w0=;
-        b=WoUb0flvhUSUsAiDWMToP81Epbt4alTAb91fyFTdfFM7Q+yHm3LchsaP7jTS2+X51N
-         qW/0rb+lSAmQuvz071cTd2IAsdHr/vZHH8ipG5spzK4C/WwxQVXtR9sfMu89Kh7CvogR
-         BynhlHb/MCmjGbeqzEQwj6m5mEtewGy2FXiLwwUmiJ3+6sh3Bo2adrLhTn7qhAvVOqGo
-         Lw1dOs8Fwj5e/bsCsYv6rmj2+cyaWe807JJhFy05yS5yB9bC5n4gJ2BmiEjbWxYfXcsX
-         zE4yp4jtVs2fjkfZuD6dMlhrH0JwedR4iM8ZN0qIuJG9P0OKPb/dRvqINWzYDnAR7TsA
-         to1g==
-X-Gm-Message-State: AOAM531sdwY3JUWAlB9n2SXcMdu5kLcojeuetXoHBoVTE9e6f++0/7Em
-        10hY2r/NgAPeBVmdJXsF8d1jIA==
-X-Google-Smtp-Source: ABdhPJwejuQGe9h7jhPsWtvn9CGO7dvBWRvMPyLjF83kiV6/cuYjbXhBPy3jfz9LBFNhccmJLw4dLw==
-X-Received: by 2002:a4a:9298:: with SMTP id i24mr14320378ooh.5.1596831386067;
-        Fri, 07 Aug 2020 13:16:26 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id x70sm1982965oif.3.2020.08.07.13.16.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 13:16:25 -0700 (PDT)
-Subject: Re: [GIT PULL] kallsyms_show_value-fix updates for v5.9-rc1
-To:     Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <202008071250.7DC8D5FF61@keescook>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <d625f256-0f99-05df-1fd2-94d3bd302bcd@linuxfoundation.org>
-Date:   Fri, 7 Aug 2020 14:16:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 16:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgHGURL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:17:11 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A66C12075A;
+        Fri,  7 Aug 2020 20:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596831430;
+        bh=FTGX8V3BOAmBXKLEXLdqfDBeFt3UQfICsLUdU64xJiE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=TKFpExx251qL5pZuFJCespYGYMaO91U5zGyMF51r/UcvnqdQ2cu4NxBi6+9zjiCGf
+         lmcvOhlGpRNU36TuvI3XAqLhDBjrcVHwrZS9+IsIfeeMR3reH68iZAasoSq+1g2tBH
+         VusTYqJ1btk2P+wMSfIVfmFwXYmkU1ME6O/jKw20=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <202008071250.7DC8D5FF61@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <989f1d99-3cd0-e725-3f6d-43facf1ec04d@codeaurora.org>
+References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org> <1595413915-17867-2-git-send-email-rohitkr@codeaurora.org> <159667391634.1360974.15763918681460437981@swboyd.mtv.corp.google.com> <989f1d99-3cd0-e725-3f6d-43facf1ec04d@codeaurora.org>
+Subject: Re: [PATCH v4 01/12] ASoC: qcom: Add common array to initialize soc based core clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Ajit Pandey <ajitp@codeaurora.org>
+To:     Rohit Kumar <rohitkr@codeaurora.org>, agross@kernel.org,
+        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
+        bjorn.andersson@linaro.org, broonie@kernel.org,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, plai@codeaurora.org, robh+dt@kernel.org,
+        srinivas.kandagatla@linaro.org, tiwai@suse.com
+Date:   Fri, 07 Aug 2020 13:17:09 -0700
+Message-ID: <159683142954.1360974.1307064087263696126@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 1:55 PM, Kees Cook wrote:
-> Hi Linus,
-> 
-> Please pull this fix to my kallsyms_show_value() refactoring for
-> v5.9-rc1. About a month after the original refactoring landed, 0day
-> noticed that there was a path through the kernfs binattr read handlers
-> that did not have PAGE_SIZEd buffers, and the module "sections" read
-> handler made a bad assumption about this, resulting in it stomping on
-> memory when reached through small-sized splice() calls. I've added a set
-> of tests to find these kinds of regressions more quickly in the future
-> as well.
-> 
+Quoting Rohit Kumar (2020-08-05 20:59:48)
+> Thanks Stephen for reviewing.
+>=20
+> On 8/6/2020 6:01 AM, Stephen Boyd wrote:
+> > Quoting Rohit kumar (2020-07-22 03:31:44)
+> >> From: Ajit Pandey <ajitp@codeaurora.org>
+> >>
+> >> LPASS variants have their own soc specific clocks that needs to be
+> >> enabled for MI2S audio support. Added a common variable in drvdata to
+> >> initialize such clocks using bulk clk api. Such clock names is
+> >> defined in variants specific data and needs to fetched during init.
+> > Why not just get all the clks and not even care about the names of them?
+> > Use devm_clk_bulk_get_all() for that, unless some clks need to change
+> > rates?
+>=20
+> There is ahbix clk which needs clk rate to be set. Please check below=20
+> patch in
+>=20
+> the series for reference
+>=20
+> [PATCH v5 02/12] ASoC: qcom: lpass-cpu: Move ahbix clk to platform=20
+> specific function
+>=20
 
-Awesome. Thanks Kees.
-
-> 
-> The following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
-> 
->    Linux 5.8 (2020-08-02 14:21:45 -0700)
-> 
-> are available in the Git repository at:
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kallsyms_show_value-fix-v5.9-rc1
-> 
-> for you to fetch changes up to 9af47666cb0f331bfcd76799ee368cdfcb00882c:
-> 
->    selftests: splice: Check behavior of full and short splices (2020-08-07 10:50:11 -0700)
-> 
-> ----------------------------------------------------------------
-> Fix sysfs module section output overflow
-> 
-> ----------------------------------------------------------------
-> Kees Cook (2):
->        module: Correctly truncate sysfs sections output
->        selftests: splice: Check behavior of full and short splices
-> 
->   kernel/module.c                                    | 22 +++++++--
->   tools/testing/selftests/splice/.gitignore          |  1 +
->   tools/testing/selftests/splice/Makefile            |  4 +-
->   tools/testing/selftests/splice/config              |  1 +
->   tools/testing/selftests/splice/settings            |  1 +
->   .../testing/selftests/splice/short_splice_read.sh  | 56 +++++++++++++++++++++
->   tools/testing/selftests/splice/splice_read.c       | 57 ++++++++++++++++++++++
->   7 files changed, 137 insertions(+), 5 deletions(-)
->   create mode 100644 tools/testing/selftests/splice/config
->   create mode 100644 tools/testing/selftests/splice/settings
->   create mode 100755 tools/testing/selftests/splice/short_splice_read.sh
->   create mode 100644 tools/testing/selftests/splice/splice_read.c
-> 
-
-For selftests part.
-
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+Alright. I wonder if we could make the API better or the binding better
+and always have the rate settable clk first and then
+devm_clk_bulk_get_all() could be used along with clk_set_rate() on some=20
+array element 0 or something. Anyway, don't mind me, I'm just thinking
+how to make this simpler.
