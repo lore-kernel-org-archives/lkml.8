@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EB8206B5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8693D2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzN/UkWw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2Q3dsLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgHGJie (ORCPT
+        id S1728088AbgHGJik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57358 "EHLO
+        Fri, 7 Aug 2020 05:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbgHGJia (ORCPT
+        with ESMTP id S1727858AbgHGJib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:38:30 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E4DC061574;
-        Fri,  7 Aug 2020 02:38:29 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q76so1218654wme.4;
-        Fri, 07 Aug 2020 02:38:29 -0700 (PDT)
+        Fri, 7 Aug 2020 05:38:31 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9E9C061575;
+        Fri,  7 Aug 2020 02:38:30 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g8so1150447wmk.3;
+        Fri, 07 Aug 2020 02:38:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oVHDxpk0dQpmXVQrDhF0SiIAm1xo4mNG/B7mphM+NZQ=;
-        b=CzN/UkWw0VhI60//D7uZxUzr0PpitsWbLoZZXhV0dJUtM04KSC06BNrRL171NvaP0b
-         g9Uhr28I0px57C59Q9Akxfji9j0QKqWK8s2dPkSDugAeNGVfUVGbs9UDP1LBUFQwAsHa
-         FIOC1zRz8VknDrEuARt5arVbNIXnEg+G/WbAmuEsK1pdvDyu/7El+lUC7jwlb6nKQ5bF
-         dd7Mxc+cS69q9U6GMeuxgFqd/cUmhrrbay1ozffK/4CatT/T3vTXZsbGhRC3eg2dfKU8
-         aIijmoOCYHD4DtRZkaIj7fJ9EylC62jNkIah1chN7fL9YMAqDRC4QtWX0uLOdw8crol9
-         xfIQ==
+        bh=PvHBHIoB+ScAAg9yLcMcG6JzuWnjVuFMmIuss4QEkjg=;
+        b=U2Q3dsLvieopkx9+Xxa0EghfS5n/PZAnRG+pjymuvrr1FZTFQKFtkHw/LpGqMXqeo+
+         fEr7arsocl3G2Oe0IPOKX36l2FxxYc25AodnIKkevNQB9ph2U2tPHo+Q72G9G2XB4jNj
+         jVJ+V7rAv52qgSi0Y6fxgKNhX1h+hC6tAeo7w4B9dvTMYekxxgtZ+r/MOqSp6kK8zd1D
+         cT1JXI3rBcqcFoUoyQuAaw/X1INTW48psy2+YWAfiY2Wij9HRjymls4LVMZaOS16xycs
+         NeYXqqH+4JEvi7OuOZmT9+Sy6+QoVvdfiVZct0xGxXQyo1tJL+fGxB+n6k4L7ZzikHH3
+         oxlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oVHDxpk0dQpmXVQrDhF0SiIAm1xo4mNG/B7mphM+NZQ=;
-        b=aXccOjgyF7LhUt5RMIoqgo4wBFe2WackbugQIFj+lIBBRrafPlCM/UX4i0yvC1NOW3
-         bhFcmDGju+p+hEwYJ1TkO1a4uF8CFpjDb7g/JM8dn+9duANeJr1UHNDnthS+3RWFx2TS
-         XbMzC2I+FpeI0D4GA+B2Anqk9b+HkwJO+fcdqW25Pv8Wxkp2aVJN70U8RDNJcaqLAemV
-         SMGYNqqWmNeRC4f9f7AKhkd9297s57zqgnh9+0ng0ZpXPzssl5Wh+dOaBxCU4gXFFa9/
-         CtIRtb5eRi73PxmZSH7CRuOuCr5rYGiviCIF8qIV6Ut/4MnjW3T5U+FkdK5RXUjXb9Iu
-         8zLQ==
-X-Gm-Message-State: AOAM531SFFhHZqxUFH6JL5XF4lguUeyrVXAdxYHfjS6CapINODO/MNtL
-        DEU4eiiZQq80NFQiLCKfIdw=
-X-Google-Smtp-Source: ABdhPJxwm+ds9QvbbRqyHXI9+AkTNPu6xQFkvvAiZjSVGwitqMW1Ma7rz/x/s5xX0d5svGGRZaCcWw==
-X-Received: by 2002:a7b:cd97:: with SMTP id y23mr12434274wmj.21.1596793108473;
-        Fri, 07 Aug 2020 02:38:28 -0700 (PDT)
+        bh=PvHBHIoB+ScAAg9yLcMcG6JzuWnjVuFMmIuss4QEkjg=;
+        b=WlOrxz0rO3EYniy/WdXh4bW4VyAS0WuskoRAnHqA3vTbWDnK2/Et9PAFTYO3Df8s2c
+         Ka8uo1mPyhu/RrONi8KkEK1Ae2oIBb0w4onIa73SMgE0+QUFjrgxhN5nl2FA8XlK9BnL
+         kLXlf6sJvUlIq+gunck4Xvgl4ZniqcCChv6AjgEFglYVMTEYH4MsPkvE2Ni7P8ekL42G
+         7DQinKHTKZsiU8uGOVNp/P2Muck+nf3DUYNwLzZRaa93GsNqcMi1BJm/bBXlcYUtwnyu
+         dCeG6o+i3ZEJNJzNxkoVIxcvVYnOvsmPMBT6j9sGhr+ZISIhF8DHboT5VHRSVF/sCT+k
+         gd9w==
+X-Gm-Message-State: AOAM533o+0XUSiz6emc6EFw9PA2vGQxvdVGC+Fo3xkQwUitJJqah/oox
+        rLSkvguRBuLiTnA+e43DC6zxrGuB
+X-Google-Smtp-Source: ABdhPJxBnb4MAzk5PImU+oJ32uf8yejYmTkE5G8u+bnrXBY9JbHcGjllTmSDfplANaszrDCay9WjMg==
+X-Received: by 2002:a1c:4e0d:: with SMTP id g13mr11879540wmh.177.1596793109572;
+        Fri, 07 Aug 2020 02:38:29 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id q19sm9460529wrf.48.2020.08.07.02.38.27
+        by smtp.gmail.com with ESMTPSA id q19sm9460529wrf.48.2020.08.07.02.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 02:38:27 -0700 (PDT)
+        Fri, 07 Aug 2020 02:38:28 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
@@ -68,9 +68,9 @@ To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
         linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 1/4] MIPS: BCM63xx: remove duplicated new lines
-Date:   Fri,  7 Aug 2020 11:38:22 +0200
-Message-Id: <20200807093825.2902474-2-noltari@gmail.com>
+Subject: [PATCH 2/4] MIPS: BCM63xx: remove EHCI from BCM6348 boards
+Date:   Fri,  7 Aug 2020 11:38:23 +0200
+Message-Id: <20200807093825.2902474-3-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200807093825.2902474-1-noltari@gmail.com>
 References: <20200807093825.2902474-1-noltari@gmail.com>
@@ -82,7 +82,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 3 duplicated new lines, let's remove them.
+There's no EHCI controller on BCM6348.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
@@ -90,33 +90,33 @@ Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
  1 file changed, 3 deletions(-)
 
 diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-index 230bf27c1fb8..744aa16bab12 100644
+index 744aa16bab12..45f1bc437245 100644
 --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
 +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-@@ -32,7 +32,6 @@
+@@ -285,7 +285,6 @@ static struct board_info __initdata board_96348gw_10 = {
  
- #include <uapi/linux/bcm933xx_hcs.h>
+ 	.has_ohci0			= 1,
+ 	.has_pccard			= 1,
+-	.has_ehci0			= 1,
  
--
- #define HCS_OFFSET_128K			0x20000
+ 	.leds = {
+ 		{
+@@ -338,7 +337,6 @@ static struct board_info __initdata board_96348gw_11 = {
  
- static struct board_info board;
-@@ -337,7 +336,6 @@ static struct board_info __initdata board_96348gw_11 = {
- 		.force_duplex_full	= 1,
- 	},
- 
--
  	.has_ohci0 = 1,
  	.has_pccard = 1,
- 	.has_ehci0 = 1,
-@@ -580,7 +578,6 @@ static struct board_info __initdata board_96358vw2 = {
- 		.force_duplex_full	= 1,
- 	},
+-	.has_ehci0 = 1,
  
--
- 	.has_ohci0 = 1,
- 	.has_pccard = 1,
- 	.has_ehci0 = 1,
+ 	.leds = {
+ 		{
+@@ -441,7 +439,6 @@ static struct board_info __initdata board_FAST2404 = {
+ 
+ 	.has_ohci0			= 1,
+ 	.has_pccard			= 1,
+-	.has_ehci0			= 1,
+ };
+ 
+ static struct board_info __initdata board_rta1025w_16 = {
 -- 
 2.27.0
 
