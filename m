@@ -2,111 +2,64 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7741EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC4DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5090F2075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596823739;
-	bh=udi5I5pfi5JJ7CIIUzcIC0pR27D0JOkk+ttmUMzlvy4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rTXVmIGNowJfzb72B6kms1WnDfCwamZZMJ0dlrUyzWP3B8xR+06fB2pcaoCS555Nz
-	 9M2Z56gizKtA/f7J8Dd+oOJk3LHjNDSDfSlHKT8jtopNGk1Jhpa09WQCncCSws5dDz
-	 J3g5HgqycRpuu10fqWd5ytiUui2h171I6OXNsx0A=
+	by mail.kernel.org (Postfix) with ESMTP id 1E05D221E5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 18:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgHGSI6 (ORCPT
+        id S1727042AbgHGSJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 14:08:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35153 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGSI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:08:57 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 93so2305148otx.2;
-        Fri, 07 Aug 2020 11:08:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vlBLt0wVavmDZ5RFEsE+vCh0JS01F9HZx3Rc707e4Kw=;
-        b=d6mJgNWfX5o6T2N9E2ZV11Oc/wjLapES/dMSdzTwqWAZe5G/4i/3Sjr9cJgb81Brz+
-         RTCDoutlMnVUZnsTwuBqnoGrIpVmfHPEXiuKRg6BU5alzfZhJhJxsZx/GU+l3NYkxNiC
-         ZHG7t2q2DVz53gDqCe60YieNwRlwM4Exar4s0tYfP1mCmxwVhO/kHqd4jsvXykNPk7lY
-         m+/kY/8GmTleUO28VfZF7AicHeOR64SWr0RHgHzjfd4NzzeEI5iI/oDRhBUb1+gsNTAB
-         SapBNigx6t2H9+lcFRCPJeoI8PDuwlnxqvSV5oPVYNYBq85z629H6+40U2FCylhZvsbu
-         1mzw==
-X-Gm-Message-State: AOAM531x9kiWXbz/SIy3S3Vo1Vi0sO7K+IbCxlUwl+OlWFW1oSP2qVTe
-        6b6ASJzv07u5XAg03uCcndtJzQ7DaO32lR2ZPvs=
-X-Google-Smtp-Source: ABdhPJwS6Rs7JJC7qd1+eUP1wOhP9sPrOMJCwJ8G7Tro9YiSK2Elieu727o27cU/trsCY95ziwt2Qftnp7gkk1L3qkg=
-X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr12255651otj.118.1596823735863;
- Fri, 07 Aug 2020 11:08:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200807093529.5343-1-puwen@hygon.cn>
-In-Reply-To: <20200807093529.5343-1-puwen@hygon.cn>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 7 Aug 2020 20:08:44 +0200
-Message-ID: <CAJZ5v0hJoJr5+GSZfoYXmTtH_TrY17P_xRABZg1YFnQ+WUaqmg@mail.gmail.com>
-Subject: Re: [PATCH RESEND] i2c: designware: Add device HID for Hygon I2C controller
-To:     Pu Wen <puwen@hygon.cn>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
+        Fri, 7 Aug 2020 14:09:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:60936 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbgHGSJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 14:09:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0F551FB;
+        Fri,  7 Aug 2020 11:09:52 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78C203F7D8;
+        Fri,  7 Aug 2020 11:09:51 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 19:09:49 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
+        Theodore Ts'o <tytso@mit.edu>, Qian Cai <cai@lca.pw>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] arm64: kaslr: Use standard early random function
+Message-ID: <20200807180948.GA27817@gaia>
+References: <20200807144521.34732-1-linux@roeck-us.net>
+ <20200807173513.GR6750@gaia>
+ <CAHk-=wjh1qFxHc2kScvcusv_f3bYangc3cro9s_WCPOvd+biTQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjh1qFxHc2kScvcusv_f3bYangc3cro9s_WCPOvd+biTQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 11:37 AM Pu Wen <puwen@hygon.cn> wrote:
->
-> Add device HID HYGO0010 to match the Hygon ACPI Vendor ID (HYGO) that
-> was registered in http://www.uefi.org/acpi_id_list, and the I2C
-> controller on Hygon paltform will use the HID.
->
-> Signed-off-by: Pu Wen <puwen@hygon.cn>
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Wolfram Sang <wsa@kernel.org>
-> ---
->  drivers/acpi/acpi_apd.c                     | 1 +
->  drivers/i2c/busses/i2c-designware-platdrv.c | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-> index ba2612e9a0eb..f24f6d3f1fa5 100644
-> --- a/drivers/acpi/acpi_apd.c
-> +++ b/drivers/acpi/acpi_apd.c
-> @@ -240,6 +240,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
->         { "AMDI0020", APD_ADDR(cz_uart_desc) },
->         { "AMD0030", },
->         { "AMD0040", APD_ADDR(st_misc_desc)},
-> +       { "HYGO0010", APD_ADDR(wt_i2c_desc) },
->  #endif
->  #ifdef CONFIG_ARM64
->         { "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index a71bc58fc03c..0dfeb2d11603 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -55,6 +55,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
->         { "HISI02A1", 0 },
->         { "HISI02A2", 0 },
->         { "HISI02A3", 0 },
-> +       { "HYGO0010", ACCESS_INTR_MASK },
->         { }
->  };
->  MODULE_DEVICE_TABLE(acpi, dw_i2c_acpi_match);
-> --
+On Fri, Aug 07, 2020 at 10:48:36AM -0700, Linus Torvalds wrote:
+> On Fri, Aug 7, 2020 at 10:35 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> >
+> > Linus, could you please pick this up directly? Otherwise, it will wait
+> > until we reach -rc1 to avoid basing a branch on a random commit.
+> 
+> Already done, since I was the cause of the mess. But because I did it
+> early, your Acked-by didn't get in.
 
-Applied as 5.9-rc1 material, thanks!
+Thanks (and no problem about the ack).
+
+-- 
+Catalin
