@@ -2,135 +2,102 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2233DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE616C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0772074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977F72177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve3N/HXw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+RLkgiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgHGUJJ (ORCPT
+        id S1726428AbgHGUKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
+        Fri, 7 Aug 2020 16:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGUJJ (ORCPT
+        with ESMTP id S1725934AbgHGUKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:09:09 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F7EC061756;
-        Fri,  7 Aug 2020 13:09:08 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l64so2847648qkb.8;
-        Fri, 07 Aug 2020 13:09:08 -0700 (PDT)
+        Fri, 7 Aug 2020 16:10:16 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5024C061757
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:10:14 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id s190so662691ooa.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v6shjW3mv0CzotYibzehFT5/hINT+XFxzYyCDrE83Dc=;
-        b=Ve3N/HXwsKv8ySPPGskSnRr5Uacjl8x1Kputs8iftdehBMa8UVQ30VCtrkGpg4pA1J
-         fIoi7mUMWwDUbL7lEeZUzkTSYGzk+kavkV3YwUrCg/Mwi3/cIdkw99a23kUQ7rCks1JB
-         iNXh7CbDevDlHYGKRcsjuxVLIdZXq2glnT7xi9PaTrPbe0nPQ0ZKS+DRaz/K/n9+sm/d
-         t3DWG4TtMRUPtUs1Mx8bhJOie6SGgh6iidRRoOxIxioT+YZ1N2ydkIJpRx8FGnVP8Kcb
-         6kPOrnKsaXZ70kQ0DYDruyvlDh4M8PC44n/c9Fr6354XzrS8/QYdmCjbtOcok5at1VYm
-         6ILQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5taqwMO9fu02Eq/oSradLpdwhpBHOZ6HATVQFj48PwQ=;
+        b=o+RLkgiWcKpcUvk2Tf5HX3mwUcwZMaE8ojwafEAc5BGvxDc1PPCM2L2pnU6qktkJgw
+         M9bcEGDCTL8TPb1z6EQBJdQsfFA1vl1+3VSo5jY9iocb4muw4AzFODmQCQUqjhmPFSdS
+         r8qYJfAD4h2FXFI31Clr4IcubakwzP8Wt5gQR5f/O9GByWCAKhbqMlmZ2mB5v7lHWn+n
+         Yndh1Eo2hGetellv5wkaEaooWttKZyWOlpLB2m6DUs/IXTpGACHnHhYEjtF93t5pauZM
+         UYfyGMQKnC6LWFt9ujtAF/3TLhlw2Bj9Za98hFWWvkBAJ8CmJkGc4XAMAC9CpUyLi7jc
+         SXUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v6shjW3mv0CzotYibzehFT5/hINT+XFxzYyCDrE83Dc=;
-        b=GHzdK+x32F4QVXwpqujAG2jNBg9RHkJuSMJp/VjLrK1sp9Yj8XzWH1ubAE+qQ676gg
-         9i2LFrcC9GJMfDF30vFQ//CYPF5PjIDkYWLEP2aj16sPAE4isEuti5BuP79RwUfwpaXL
-         EW6hnPWeXDfSEzJmxMyLojWvlx9Eoyb0TcV8pj9fZRXa5kOwemyF/BtXkwYRzHEMiYSJ
-         /8AWjBcmLtcPVyPde42uAgquczsjcSzmT0tDZML0zEXeWWkaCEswrvWNNx4pz/HoQ+Nw
-         yeVmDVa8r8Q9oEf7skudFxLfkSsoqSwNoKOoEq5a81QlkqirNX0MHq++yL4zup6DifW+
-         7BBA==
-X-Gm-Message-State: AOAM530tQXgDsCQIkW9VU8GV65A0tZLGKsQHzL/OG3PuTHhzeOMERYw6
-        xxg/NGJxJ4urPTAfbf45/3M=
-X-Google-Smtp-Source: ABdhPJxg6bRetxEVAOaiKqqoKUtFx4kiO3EkBtA3TT/yB2Ood5h2cAJoMzEOKPTQ/EC5B8xE+zcKBg==
-X-Received: by 2002:a37:a6c3:: with SMTP id p186mr14827311qke.135.1596830947429;
-        Fri, 07 Aug 2020 13:09:07 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id n127sm8006909qke.29.2020.08.07.13.09.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 13:09:06 -0700 (PDT)
-Subject: Re: [PATCH] drivers: watchdog: rdc321x_wdt: Fix race condition bugs
-To:     Guenter Roeck <linux@roeck-us.net>, madhuparnabhowmik10@gmail.com
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
-        ldv-project@linuxtesting.org
-References: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com>
- <20200807162141.GA41980@roeck-us.net>
- <8dca64a1-8cd9-6a41-b61d-1c4c14e5cd5e@gmail.com>
- <bc8c5d7d-91a4-e955-854f-eef88812ac1a@roeck-us.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <1b9db5ad-0edf-091b-a04e-a8f3a6ac08e2@gmail.com>
-Date:   Fri, 7 Aug 2020 13:09:02 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5taqwMO9fu02Eq/oSradLpdwhpBHOZ6HATVQFj48PwQ=;
+        b=LycYgFZRl8gY2YV5NOCootEDo7kq00AWvlDZZ1/sQaDiFm0P8g8GldTHECUfCMOPuI
+         SdaNAMZUqgG31CtqjNH7DSLCy88fdKuZIpmth9MTj6E9D0xs1c3zC6W7fkvj2eOfeKTf
+         iYUGMDDQ7LGt98k40ivN65aednM7adzt+sLYUD9UuPS4RtwT7fDlqKBwzvI1j5pwkSAP
+         S/5/QapUjkJTXlT5Hv7IHLTWG86bhPE9B5cQAcXePTKZBB/dDcr4whDlzuWHnqiYZIQ0
+         7pwtl3uyORvcUfv3A1XIadp/3Utm/NOy+uevRpdDkW/b5BS+zonZ474FgWmCrtNh3qG5
+         wh6w==
+X-Gm-Message-State: AOAM530m+OQ6DeJt2MI5b6ULCshAngQ4JK4dASva8RUp1uYbxWh9oCRz
+        KndlF62QRxT4KbaWaUJ36aw5HiB9jkE=
+X-Google-Smtp-Source: ABdhPJyz32khtmCydKoxgCn/Skg4kS3eCD4Bs2kx9il4fiuJXkz9yEip16I5TowqS31SpS8DybilFw==
+X-Received: by 2002:a4a:4083:: with SMTP id n125mr8260745ooa.42.1596831014054;
+        Fri, 07 Aug 2020 13:10:14 -0700 (PDT)
+Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::af38])
+        by smtp.googlemail.com with ESMTPSA id s6sm1835794otq.75.2020.08.07.13.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 13:10:13 -0700 (PDT)
+From:   Jim Cromie <jim.cromie@gmail.com>
+To:     jbaron@akamai.com, linux-kernel@vger.kernel.org
+Cc:     Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH 1/7] dyndbg: give %3u width in pr-format, cosmetic only
+Date:   Fri,  7 Aug 2020 14:09:48 -0600
+Message-Id: <20200807200957.1269454-2-jim.cromie@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200807200957.1269454-1-jim.cromie@gmail.com>
+References: <20200807200957.1269454-1-jim.cromie@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <bc8c5d7d-91a4-e955-854f-eef88812ac1a@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Specify the print-width so log entries line up nicely.
 
+no functional changes.
 
-On 8/7/2020 12:08 PM, Guenter Roeck wrote:
-> On 8/7/20 11:08 AM, Florian Fainelli wrote:
->>
->>
->> On 8/7/2020 9:21 AM, Guenter Roeck wrote:
->>> On Fri, Aug 07, 2020 at 04:59:02PM +0530, madhuparnabhowmik10@gmail.com wrote:
->>>> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->>>>
->>>> In rdc321x_wdt_probe(), rdc321x_wdt_device.queue is initialized
->>>> after misc_register(), hence if ioctl is called before its
->>>> initialization which can call rdc321x_wdt_start() function,
->>>> it will see an uninitialized value of rdc321x_wdt_device.queue,
->>>> hence initialize it before misc_register().
->>>> Also, rdc321x_wdt_device.default_ticks is accessed in reset()
->>>> function called from write callback, thus initialize it before
->>>> misc_register().
->>>>
->>>> Found by Linux Driver Verification project (linuxtesting.org).
->>>>
->>>> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->>>
->>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>>
->>> Having said that ... this is yet another potentially obsolete driver.
->>> You are really wasting your (and, fwiw, my) time.
->>>
->>> Florian, any thoughts if support for this chip can/should be deprecated
->>> or even removed ?
->>
->> I am still using my rdc321x-based SoC, so no, this is not obsolete as
->> far as I am concerned, time permitting, modernizing the driver is on my
->> TODO after checking/fixing the Ethernet driver first.
->>
-> 
-> Do you have a manual ? I'd give it a try if you can test it - conversion
-> should be simple enough (I have a coccinelle script which partially
-> automates it), but this chip seems to have a fast timeout, and the
-> comments in the code ("set the timeout to 81.92 us") seem to be quite
-> obviously wrong.
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+---
+ lib/dynamic_debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, there is a public manual for that SoC, search for RDC R8610 and the
-first link you find should be a 276 page long manual for the SoC.
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index 1d012e597cc3..01b7d0210412 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -947,7 +947,7 @@ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
+ 	list_add(&dt->link, &ddebug_tables);
+ 	mutex_unlock(&ddebug_lock);
+ 
+-	v2pr_info("%u debug prints in module %s\n", n, dt->mod_name);
++	v2pr_info("%3u debug prints in module %s\n", n, dt->mod_name);
+ 	return 0;
+ }
+ 
+-- 
+2.26.2
 
-I probably won't be able to test anything until the middle of next week
-though.
---
-Florian
