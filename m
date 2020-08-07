@@ -2,267 +2,90 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65710C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40857214F1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKuC0uos"
+	by mail.kernel.org (Postfix) with ESMTP id A87372074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHGUDN (ORCPT
+        id S1726530AbgHGUFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHGUDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:03:12 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C848C061756;
-        Fri,  7 Aug 2020 13:03:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f12so2704501wru.13;
-        Fri, 07 Aug 2020 13:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OSLWRy9ysyT4eibP6iMlQrzS7AS0P8deCWCZeNvVCDw=;
-        b=cKuC0uosBz+Tin+kAwwFiT57a/t33eF5zdr86svo0PRBao/R9rftfkIlicbGB/6CfQ
-         S4nfOQXRm7QbcyeEjObL4IOJvkpgekEuY1wHQomjGZu9fhQfYqghrxYjTyfu+hh5rIWB
-         s1XhiMeNyq9zTiHXWTbTKy/1YRjfnuTn7h3Z4fGWrvt3Q+0rFf9e5BSO2QL5hV2vbp5p
-         +blXEG1jfKgMoEI17LfReVX/qA8nv53xZ+ZkXxnvmeIRyGFemZ/gSUhc/xihJma7Kbfg
-         SrkH3q01dBRUJ7xQrEaXjgbNWMoGkX61z2jDW5CvPhNAY2axJmS/ZiA5aoh4XYO4h2EJ
-         j+fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OSLWRy9ysyT4eibP6iMlQrzS7AS0P8deCWCZeNvVCDw=;
-        b=qaAzS7yppJ+/fN0fVVmwyBia0FtXYhz7UbsbQNeI1m1ywxSCUr1k2nijkKkw9AyWkl
-         yZSd9jOSppJ++8rvd3UumOogNm9CxipRKXXdnev3M/jYLER1lOfmFhZzvF0KU4AexysZ
-         AmuXVpVgscD8qbIaYlcNV04hE+oP31IWWX0t5Eerj01o10wVEA58BWPjcmmgMY8nLjn8
-         qy26Hx5gxVOrq+Fc8ro3JIXSeSVmo2C9VgAPSPWwXv67ZQLwkLSbDGyUi+KqasGhW7Dk
-         aVTiMGfdPxr2IiHPZdHeHoUj40Bvo+VPt6QFnylqsOw0Rw6VueYqGzt70iAE54VHjI1Z
-         +gbg==
-X-Gm-Message-State: AOAM530vqLGo6p3bcqX0WilPIkgDAszn6cPeBhASEwg6qd+EjWkbjRlf
-        qnxSJ54voTLIr88nnBFj77nTrgbsJlbd5dzNsmI=
-X-Google-Smtp-Source: ABdhPJxMIcDcXDI1jEIi/2CWQ0HC/RAkG26jBGU/hI2e7LmI9IXbWAVf1mVql7wNxwQh+Fcvv0OGDkHMT6/AryEFd7Q=
-X-Received: by 2002:adf:ec04:: with SMTP id x4mr12769567wrn.28.1596830590085;
- Fri, 07 Aug 2020 13:03:10 -0700 (PDT)
+        Fri, 7 Aug 2020 16:05:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16010 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgHGUFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:05:38 -0400
+IronPort-SDR: iaVY8ZioFqIRfmMdYAlGAAF4NJih1v8u1knjiI/dbOP3EpeJAs5IEDiPF6hWzZ+TmQg79sjBnT
+ lFLet/7m9Rbw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9706"; a="152397697"
+X-IronPort-AV: E=Sophos;i="5.75,446,1589266800"; 
+   d="scan'208";a="152397697"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2020 13:05:38 -0700
+IronPort-SDR: iN9afJV0a8iKNGDrKwlY/zfIRTfZOsKW1t/FEpub7fHuyHY/ALiRqNmEgG/cOqSeiy78Jgvoay
+ show9POj62vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,446,1589266800"; 
+   d="scan'208";a="275462904"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2020 13:05:38 -0700
+Date:   Fri, 7 Aug 2020 13:05:38 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH v3 33/38] virtio_pmem: convert to LE accessors
+Message-ID: <20200807200537.GD2467625@iweiny-DESK2.sc.intel.com>
+References: <20200805134226.1106164-1-mst@redhat.com>
+ <20200805134226.1106164-34-mst@redhat.com>
 MIME-Version: 1.0
-References: <20200803193547.305660-1-jcrouse@codeaurora.org> <20200803193547.305660-11-jcrouse@codeaurora.org>
-In-Reply-To: <20200803193547.305660-11-jcrouse@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 7 Aug 2020 13:03:54 -0700
-Message-ID: <CAF6AEGv53rt=33TjQ5mim3hhQvsQugv+u61r68=FTctdmoXw0w@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v11 10/12] drm/msm: Add support for private
- address space instances
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805134226.1106164-34-mst@redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 12:36 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Add support for allocating private address space instances. Targets that
-> support per-context pagetables should implement their own function to
-> allocate private address spaces.
->
-> The default will return a pointer to the global address space.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+On Wed, Aug 05, 2020 at 09:44:45AM -0400, Michael S. Tsirkin wrote:
+> Virtio pmem is modern-only. Use LE accessors for config space.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 > ---
->
->  drivers/gpu/drm/msm/msm_drv.c     | 13 +++++++------
->  drivers/gpu/drm/msm/msm_drv.h     |  5 +++++
->  drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
->  drivers/gpu/drm/msm/msm_gpu.c     | 17 +++++++++++++++++
->  drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
->  5 files changed, 43 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 108b663c3ef2..f072306f1260 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
->         kref_init(&ctx->ref);
->         msm_submitqueue_init(dev, ctx);
->
-> -       ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
-> +       ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
->         file->driver_priv = ctx;
->
->         return 0;
-> @@ -780,18 +780,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
->  }
->
->  static int msm_ioctl_gem_info_iova(struct drm_device *dev,
-> -               struct drm_gem_object *obj, uint64_t *iova)
-> +               struct drm_file *file, struct drm_gem_object *obj,
-> +               uint64_t *iova)
->  {
-> -       struct msm_drm_private *priv = dev->dev_private;
-> +       struct msm_file_private *ctx = file->driver_priv;
->
-> -       if (!priv->gpu)
-> +       if (!ctx->aspace)
->                 return -EINVAL;
->
->         /*
->          * Don't pin the memory here - just get an address so that userspace can
->          * be productive
->          */
-> -       return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
-> +       return msm_gem_get_iova(obj, ctx->aspace, iova);
->  }
->
->  static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
-> @@ -830,7 +831,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
->                 args->value = msm_gem_mmap_offset(obj);
->                 break;
->         case MSM_INFO_GET_IOVA:
-> -               ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
-> +               ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
->                 break;
->         case MSM_INFO_SET_NAME:
->                 /* length check should leave room for terminating null: */
-> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-> index f69c6d62584d..51a5c9083e13 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.h
-> +++ b/drivers/gpu/drm/msm/msm_drv.h
-> @@ -249,6 +249,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
->  void msm_gem_close_vma(struct msm_gem_address_space *aspace,
->                 struct msm_gem_vma *vma);
->
-> +
-> +struct msm_gem_address_space *
-> +msm_gem_address_space_get(struct msm_gem_address_space *aspace);
-> +
->  void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
->
->  struct msm_gem_address_space *
-> @@ -434,6 +438,7 @@ static inline void msm_file_private_destroy(struct kref *kref)
->         struct msm_file_private *ctx = container_of(kref,
->                 struct msm_file_private, ref);
->
-> +       msm_gem_address_space_put(ctx->aspace);
->         kfree(ctx);
->  }
->
-> diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-> index 5f6a11211b64..29cc1305cf37 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_vma.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-> @@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
->                 kref_put(&aspace->kref, msm_gem_address_space_destroy);
->  }
->
-> +struct msm_gem_address_space *
-> +msm_gem_address_space_get(struct msm_gem_address_space *aspace)
-> +{
-> +       if (!IS_ERR_OR_NULL(aspace))
-> +               kref_get(&aspace->kref);
-> +
-> +       return aspace;
-> +}
-> +
->  /* Actually unmap memory for the vma */
->  void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
->                 struct msm_gem_vma *vma)
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> index a1f3da6550e5..aabbd7908ee5 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -823,6 +823,23 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
->         return 0;
->  }
->
-> +/* Return a new address space for a msm_drm_private instance */
-> +struct msm_gem_address_space *
-> +msm_gpu_create_private_address_space(struct msm_gpu *gpu)
-> +{
-> +       if (!gpu)
-> +               return NULL;
-> +
-> +       /*
-> +        * If the target doesn't support private address spaces then return
-> +        * the global one
-> +        */
-> +       if (!gpu->funcs->create_private_address_space)
-> +               return msm_gem_address_space_get(gpu->aspace);
-> +
-> +       return gpu->funcs->create_private_address_space(gpu);
+>  drivers/nvdimm/virtio_pmem.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+> index 5e3d07b47e0c..726c7354d465 100644
+> --- a/drivers/nvdimm/virtio_pmem.c
+> +++ b/drivers/nvdimm/virtio_pmem.c
+> @@ -58,9 +58,9 @@ static int virtio_pmem_probe(struct virtio_device *vdev)
+>  		goto out_err;
+>  	}
+>  
+> -	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> +	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
+>  			start, &vpmem->start);
+> -	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> +	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
+>  			size, &vpmem->size);
 
-so if you flip the logic around here, you can get rid of the
-msm_gem_address_space_get() in per-gen backend and consolidate the
-error handling here, ie.
+FWIW I think squashing patch 15/38 and this patch would have made more sense.
 
-  struct msm_gem_address_space *aspace = NULL;
+Acked-by: Ira Weiny <ira.weiny@intel.com>
 
-  if (gpu->funcs->create_private_address_space)
-     aspace = gpu->funcs->create_private_address_space(...);
-
-  if (IS_ERR_OR_NULL(aspace))
-    aspace = msm_gem_address_space_get(...);
-
-(and that also simplifies a bit the patch I have on top to show comm in debugfs)
-
-BR,
--R
-
-> +}
-> +
->  int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->                 struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
->                 const char *name, struct msm_gpu_config *config)
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index d496d488222c..d298657b4730 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.h
-> +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -64,6 +64,8 @@ struct msm_gpu_funcs {
->         void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
->         struct msm_gem_address_space *(*create_address_space)
->                 (struct msm_gpu *gpu, struct platform_device *pdev);
-> +       struct msm_gem_address_space *(*create_private_address_space)
-> +               (struct msm_gpu *gpu);
->  };
->
->  struct msm_gpu {
-> @@ -286,6 +288,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->                 struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
->                 const char *name, struct msm_gpu_config *config);
->
-> +struct msm_gem_address_space *
-> +msm_gpu_create_private_address_space(struct msm_gpu *gpu);
-> +
->  void msm_gpu_cleanup(struct msm_gpu *gpu);
->
->  struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
-> --
-> 2.25.1
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+>  
+>  	res.start = vpmem->start;
+> -- 
+> MST
+> 
