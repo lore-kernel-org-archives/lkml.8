@@ -2,132 +2,187 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6585AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973EF2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FAF02086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noA9x5sq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gVBBXSHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgHGV3W (ORCPT
+        id S1727006AbgHGV33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 17:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
+        Fri, 7 Aug 2020 17:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgHGV3T (ORCPT
+        with ESMTP id S1726015AbgHGV32 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 17:29:19 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6931AC061756;
-        Fri,  7 Aug 2020 14:29:19 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id x69so3063884qkb.1;
-        Fri, 07 Aug 2020 14:29:19 -0700 (PDT)
+        Fri, 7 Aug 2020 17:29:28 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1ED5C061756
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:29:27 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id bs17so2249910edb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:29:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6OCdZ+ZeCbuJb568osbDrIdPBoRSxq8uWrbOnWLeK5E=;
-        b=noA9x5sq8cTXe/XXi9Q4ba+UczIxMQ928kgCeg9juRZTOVfCH+8OjGDFymehDxoyFa
-         GlgOCtQ1HVmgoA5iKlaktjH6ZfIJCWDW8T9BC6T6Fm8dzJxZcPyZ48dhmpaiZhOcoebP
-         NBa0RjCtozFkyOfdHK0Gr0eUBqvZMDAAOgjm6Iyk/QijpWQDLy90bo4zcOYEoGl/1MnK
-         /AjQIlMBy4W0HDeUywa+vMcrn1BWFYz7rAJNNiZCE8S6Jg5QyqztFBvrRPZiP+5RvJid
-         ZDJyzjN4HEIyC8z7jRbRZZTI5SvpPfxWzakb6OLBroLkqoyw0WP3IYNb928wOYPM7dUO
-         XCug==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yecGcmW1H4YPmsU+YTc6bYsirnPkC2akIxfo68Ph3IA=;
+        b=gVBBXSHyNzt8rNePfxY1ncMz7C4eDz4YWTWWTL23EgpsUmW0Gtu+IKVQzZZPPajUsm
+         p+OLXMUQs7aok7cm7IafP4KTyvjZ2lMscp0WHC6AWnh+T5kKyC6VdzIPuVb3JbmIPi0N
+         MRZXC0Hsmo+yByNOzIxP7XAR4M6tykynCQNxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=6OCdZ+ZeCbuJb568osbDrIdPBoRSxq8uWrbOnWLeK5E=;
-        b=of+j5na8yD595Sd3duX0JMQ8hJMRZhJ7KCit0YDEADAQMylwL0RyjGThjzhhECqhTF
-         S43KA2Ze0jCRPL1YV6Jww0f+VuUMUfUbAorEsxh27M01/NJ2to6+VFAfZxwYEXQMxGWC
-         3MHxDMfUImYYICeNaAH3yW3pxVIb63RzggtH920XXpNpNC0ZRGqFfApr4EsEz2YFyrfv
-         oS0by0/kBHNd64bqlvYDWDCqJtKfoOHWEMmvk5ev4JuRfmZy7T153tXWLbowFD6g8Rtr
-         7A7ovs5PWThktKDsNCkYtTDJRj+hhAez/on2zxPDnkhc82uYAlViS4ZBXdZTeN6BRBgg
-         uvMA==
-X-Gm-Message-State: AOAM531kuhwEqYY9AsSlgEX0h81FrQdREp0GST4cuUzyrwX9CyqHuI2V
-        elELeNt0GRGkAaep12T8KOM=
-X-Google-Smtp-Source: ABdhPJxgMl4he648RZK+OwIGlkgBK6xjVlA/GQhmQeA4WNXiqRanMMXY26+OJDI0nbbGD/KTT9vmRA==
-X-Received: by 2002:a05:620a:234:: with SMTP id u20mr14935734qkm.54.1596835758328;
-        Fri, 07 Aug 2020 14:29:18 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id t93sm8636947qtd.97.2020.08.07.14.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 14:29:17 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 7 Aug 2020 17:29:14 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Fangrui Song <maskray@google.com>,
-        clang-built-linux@googlegroups.com, e5ten.arch@gmail.com,
-        stable@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dmitry Golovin <dima@golovin.in>,
-        Marco Elver <elver@google.com>, Nick Terrell <terrelln@fb.com>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: avoid relaxable symbols with Clang
-Message-ID: <20200807212914.GB1454138@rani.riverdale.lan>
-References: <20200807194100.3570838-1-ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yecGcmW1H4YPmsU+YTc6bYsirnPkC2akIxfo68Ph3IA=;
+        b=tLNANId32AyxH+HGtY9mwtzq7k7+h4KpDTVP+amehSo0sTcq58jXSpJ7F+q62lPGJN
+         BgAZz0XZrzODUs613YWUHM+HOIrPag7Ks28xDYQpVr+a8gZZgghI62LdNT2VJT4iehn0
+         po/vH137k0CbrvAXvHlzsvZUO01Xm+JFcnBQKvYxlarM+5kbOiD682IyN3AxEo4rKQ0W
+         z+SomPOtOYDXx3/Ge+tjF0MyjIBUbmuobDLqLkUwcfhf7insX41szJ9tr/Khw73KsPic
+         39DO2KXDgmaulc1meitraCjzpeR54zmLAjh5hcFu18EZd94s5BP3sHg8icIxLGHU0eal
+         ir/w==
+X-Gm-Message-State: AOAM531ctURATU2rq1+YF7hr+i+D7UmESB4mOcVYmOU6sIsR9xKqKO5r
+        xa5u32oMmQbGpQbhiTTBxY+GvKB1NWj9cw==
+X-Google-Smtp-Source: ABdhPJx6GEItqEjASKDolIG98tQBsdPW/iegfQm/jhgLkL80cryF3ju7w9wwcdmsJvD93hU0S/e/EA==
+X-Received: by 2002:a05:6402:1d32:: with SMTP id dh18mr10672567edb.14.1596835766451;
+        Fri, 07 Aug 2020 14:29:26 -0700 (PDT)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
+        by smtp.gmail.com with ESMTPSA id m13sm6170553eds.10.2020.08.07.14.29.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2020 14:29:26 -0700 (PDT)
+Received: by mail-wr1-f54.google.com with SMTP id a5so2881366wrm.6
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:29:25 -0700 (PDT)
+X-Received: by 2002:adf:dfc7:: with SMTP id q7mr13741548wrn.80.1596835765510;
+ Fri, 07 Aug 2020 14:29:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200807194100.3570838-1-ndesaulniers@google.com>
+References: <20200730114632.6717-1-stanimir.varbanov@linaro.org> <20200730114632.6717-3-stanimir.varbanov@linaro.org>
+In-Reply-To: <20200730114632.6717-3-stanimir.varbanov@linaro.org>
+From:   Fritz Koenig <frkoenig@chromium.org>
+Date:   Fri, 7 Aug 2020 14:29:13 -0700
+X-Gmail-Original-Message-ID: <CAMfZQbxUxm0FSjZUgrb7a_j_W2S1W=p2KQZT-hpOf2UyaVPNOw@mail.gmail.com>
+Message-ID: <CAMfZQbxUxm0FSjZUgrb7a_j_W2S1W=p2KQZT-hpOf2UyaVPNOw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] venus: Rework recovery mechanism
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 12:41:00PM -0700, Nick Desaulniers wrote:
-> A recent change to a default value of configuration variable
-> (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
-> integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
-> relocations. LLD will relax instructions with these relocations based on
-> whether the image is being linked as position independent or not.  When
-> not, then LLD will relax these instructions to use absolute addressing
-> mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with Clang
-> and linked with LLD to fail to boot.
-
-It could also cause kernels compiled with gcc and linked with LLD to
-fail in the same way, no? The gcc/gas combination will generate the
-relaxed relocations from I think gas-2.26 onward. Although the only
-troublesome symbol in the case of gcc/gas is trampoline_32bit_src,
-referenced from pgtable_64.c (gcc doesn't use a GOTPC reloc for _pgtable
-etc).
-
-I'm a bit surprised you were able to boot with just _pgtable fixed
-(looking at the CBL issue), there are quite a few more GOTPC relocs with
-clang -- maybe LLD isn't doing all the optimizations it could yet.
-
-This potential issue was mentioned [0] in one of the earlier threads
-(see last paragraph).
-
-[0] https://lore.kernel.org/lkml/20200526191411.GA2380966@rani.riverdale.lan/
-
-> 
-> Also, the LLVM commit notes that these relocation types aren't supported
-> until binutils 2.26. Since we support binutils 2.23+, avoid the
-> relocations regardless of linker.
-
-Note that the GNU assembler won't support the option to disable the
-relaxations until 2.26, when they were added.
-
-However, it turns out that clang always uses the integrated assembler
-for the decompressor (and the EFI stub) because the no-integrated-as
-option gets dropped when building these pieces, due to redefinition of
-KBUILD_CFLAGS. You might want to mention this in the commit log or a
-comment to explain why using the option unconditionally is safe. It
-might need to be made conditional if the CFLAGS ever gets fixed to
-maintain no-integrated-as.
-
-Thanks.
+On Thu, Jul 30, 2020 at 4:47 AM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+> After power domains and clock restructuring the recovery for
+> sdm845 and v4 did not work properly. Fix that by reworking the
+> recovery function and the sequence.
+>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c      | 24 ++++++++++---------
+>  drivers/media/platform/qcom/venus/hfi_venus.c | 11 ---------
+>  2 files changed, 13 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 203c6538044f..46f6e34d435a 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/init.h>
+>  #include <linux/interconnect.h>
+>  #include <linux/ioctl.h>
+> +#include <linux/delay.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> @@ -40,13 +41,7 @@ static void venus_event_notify(struct venus_core *core, u32 event)
+>         mutex_unlock(&core->lock);
+>
+>         disable_irq_nosync(core->irq);
+> -
+> -       /*
+> -        * Delay recovery to ensure venus has completed any pending cache
+> -        * operations. Without this sleep, we see device reset when firmware is
+> -        * unloaded after a system error.
+> -        */
+> -       schedule_delayed_work(&core->work, msecs_to_jiffies(100));
+> +       schedule_delayed_work(&core->work, msecs_to_jiffies(10));
+>  }
+>
+>  static const struct hfi_core_ops venus_core_ops = {
+> @@ -59,23 +54,30 @@ static void venus_sys_error_handler(struct work_struct *work)
+>                         container_of(work, struct venus_core, work.work);
+>         int ret = 0;
+>
+> -       dev_warn(core->dev, "system error has occurred, starting recovery!\n");
+> -
+>         pm_runtime_get_sync(core->dev);
+>
+>         hfi_core_deinit(core, true);
+> -       hfi_destroy(core);
+> +
+> +       dev_warn(core->dev, "system error has occurred, starting recovery!\n");
+> +
+>         mutex_lock(&core->lock);
+> +
+> +       while (pm_runtime_active(core->dev_dec) || pm_runtime_active(core->dev_enc))
+> +               msleep(10);
+> +
+>         venus_shutdown(core);
+>
+>         pm_runtime_put_sync(core->dev);
+>
+> +       while (core->pmdomains[0] && pm_runtime_active(core->pmdomains[0]))
+> +               usleep_range(1000, 1500);
+> +
+> +       hfi_destroy(core);
+>         ret |= hfi_create(core, &venus_core_ops);
+>
+>         pm_runtime_get_sync(core->dev);
+>
+>         ret |= venus_boot(core);
+> -
+>         ret |= hfi_core_resume(core, true);
+>
+>         enable_irq(core->irq);
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index 0d8855014ab3..3392fd177d22 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -986,13 +986,6 @@ static void venus_process_msg_sys_error(struct venus_hfi_device *hdev,
+>
+>         venus_set_state(hdev, VENUS_STATE_DEINIT);
+>
+> -       /*
+> -        * Once SYS_ERROR received from HW, it is safe to halt the AXI.
+> -        * With SYS_ERROR, Venus FW may have crashed and HW might be
+> -        * active and causing unnecessary transactions. Hence it is
+> -        * safe to stop all AXI transactions from venus subsystem.
+> -        */
+> -       venus_halt_axi(hdev);
+>         venus_sfr_print(hdev);
+>  }
+>
+> @@ -1009,10 +1002,6 @@ static irqreturn_t venus_isr_thread(struct venus_core *core)
+>         res = hdev->core->res;
+>         pkt = hdev->pkt_buf;
+>
+> -       if (hdev->irq_status & WRAPPER_INTR_STATUS_A2HWD_MASK) {
+> -               venus_sfr_print(hdev);
+> -               hfi_process_watchdog_timeout(core);
+> -       }
+>
+>         while (!venus_iface_msgq_read(hdev, pkt)) {
+>                 msg_ret = hfi_process_msg_packet(core, pkt);
+> --
+> 2.17.1
+>
+Reviewed-by: Fritz Koenig <frkoenig@chromium.org>
