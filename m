@@ -2,72 +2,313 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6598FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0D82086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F297F20866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 21:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VIBg3oqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgHGVaO (ORCPT
+        id S1727942AbgHGVaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 17:30:14 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:41991 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgHGVaK (ORCPT
+        Fri, 7 Aug 2020 17:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727824AbgHGV3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 17:30:10 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id EEE70E0005;
-        Fri,  7 Aug 2020 21:30:05 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH] rtc: max77686: Fix wake-ups for max77620
-Date:   Fri,  7 Aug 2020 23:30:05 +0200
-Message-Id: <159683578749.18787.912305362655306164.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200806125431.699339-1-jonathanh@nvidia.com>
-References: <20200806125431.699339-1-jonathanh@nvidia.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Aug 2020 17:29:48 -0400
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ACFCC061A2B
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 14:29:48 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id r3so2376092pgn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 14:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=LfxCPN/4iZPLCZVOVhzdLvyoPvK+axLJbpywb7N3FLc=;
+        b=VIBg3oqpKZQpugF58zmKqStuZ5KBBnpMO9QTOrnjznu3Umo3cQqhRuUY+u1Vo1ME8f
+         dVB/ezp2eLRF/M1OihMCsccbSEBWLB9GxfwdGRwkeIFuRPo3roBkeWAbbHEB4ZB7JSsC
+         viG7KdWxZ5LfFPd7WviOf0CtToGYdrRn2CboKmRkbG0ygI1tVLIDSQGcH7+bhLyAnT2O
+         9Kabzp4Oe4O8CXOa2yf4LfK75nVvxwpPciAU+kWlaIW8O6j4Wb9Bgv/JZBDZa2phCJHm
+         z0MHMOm+P+Gzyeec/BJx3I+Sgas6eGPW+bIJKumLJwFOhgIW+slujH5jW0XT1TKk8HRl
+         v/Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=LfxCPN/4iZPLCZVOVhzdLvyoPvK+axLJbpywb7N3FLc=;
+        b=Xy12DnLRUUFtZBlWwh+4gDDdybYNGNQYP2S4CwfoVvgZ6e3kYc09lHJpRQGtMG/Vlb
+         qL9i5bvtTXFsWojd+vXBQhiF8MT/SyvwboVwYClEm9M/obIjEm3q61raOFAMcaH4ohIS
+         5frw5b/VUyykEqkgYdN3qCJo7W+RKaxD3OMaEBL/oDcESOsrK5OnrP5RffhhBn0+AVSn
+         ReM1hOMQ7/00cC/iL0DjQkeEYKOMyDlLy6y0w+Nm1quTeZrGt74Zp10MD90p2bc0vFJY
+         GoilnAIiwm3XA17UkZ4IVi1oSCXMAG44yDxqsL8bVkpMUbaMPGirbO5UFNa8gpXNFeob
+         NYkQ==
+X-Gm-Message-State: AOAM532qv/Ficq2Saw59cS2POkDeHWr9/rrDKMgbEhIG35CAtmMuySG2
+        GkHFyUAF7HNPm4e9RhEc16uM5cUSzoPXbmubSol5Pl4HWEI6kELSzeMhgT4CtojMvPWd0AUacGQ
+        5LKJCfsqZX7D28enET7aNf7oHyaEnrC4+2//iO+djSRI5RRheCxARbKjJOphWyEpsZNmsxGY=
+X-Google-Smtp-Source: ABdhPJyoavtOmq/7H4LPduK/k9+4umyJYh/qUDlGhNEQwJMHeb8u/v/EJaYmce8YVr9gCjxz+YCKFwc8o4TE
+X-Received: by 2002:a17:90a:1a13:: with SMTP id 19mr14039860pjk.167.1596835787619;
+ Fri, 07 Aug 2020 14:29:47 -0700 (PDT)
+Date:   Fri,  7 Aug 2020 14:29:16 -0700
+In-Reply-To: <20200807212916.2883031-1-jwadams@google.com>
+Message-Id: <20200807212916.2883031-8-jwadams@google.com>
+Mime-Version: 1.0
+References: <20200807212916.2883031-1-jwadams@google.com>
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+Subject: [RFC PATCH 7/7] net-metricfs: Export /proc/net/dev via metricfs.
+From:   Jonathan Adams <jwadams@google.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jim Mattson <jmattson@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Laurent Chavey <chavey@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 13:54:31 +0100, Jon Hunter wrote:
-> Following commit d8f090dbeafd ("rtc: max77686: Do not allow interrupt to
-> fire before system resume"), RTC wake-ups stopped working on Jetson TX2
-> and Jetson Xavier platforms. The Jetson TX2 uses the max77620 PMIC and
-> the Jetson Xavier uses max20024 PMIC. Both of these PMICs have the same
-> max77620 RTC controller.
-> 
-> For the max77620 RTC, the variable 'rtc_irq_from_platform' is defined as
-> true in the max77686 driver and because of this the IRQ passed to the
-> max77686 driver for RTC is the PMIC IRQ and not the parent. Hence,
-> following commit d8f090dbeafd ("rtc: max77686: Do not allow interrupt to
-> fire before system resume"), for the max77620 the RTC IRQ within the
-> PMIC is now getting disabled on entry to suspend and unable to wake the
-> system up. Fix this by only disabling interrupts on entry to suspend
-> in the max77686 RTC driver, if the interrupt is the parent interrupt.
+From: Laurent Chavey <chavey@google.com>
 
-Applied, thanks!
+Export /proc/net/dev statistics via metricfs.
 
-[1/1] rtc: max77686: Fix wake-ups for max77620
-      commit: 16c24801122e2961c588562f04707b98f9c84bbb
+The implementation reports all the devices that are in the same
+network namespace as the process reading metricfs.
 
-Best regards,
+The implementation does not report devices across network namespaces
+
+Signed-off-by: Laurent Chavey <chavey@google.com>
+[jwadams@google.com: ported code to 5.8-pre6, cleaned up googleisms ]
+Signed-off-by: Jonathan Adams <jwadams@google.com>
+---
+ net/core/Makefile       |   1 +
+ net/core/net_metricfs.c | 194 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 195 insertions(+)
+ create mode 100644 net/core/net_metricfs.c
+
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 3e2c378e5f31..7647380b9679 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -27,6 +27,7 @@ obj-$(CONFIG_NET_PTP_CLASSIFY) += ptp_classifier.o
+ obj-$(CONFIG_CGROUP_NET_PRIO) += netprio_cgroup.o
+ obj-$(CONFIG_CGROUP_NET_CLASSID) += netclassid_cgroup.o
+ obj-$(CONFIG_LWTUNNEL) += lwtunnel.o
++obj-$(CONFIG_METRICFS) += net_metricfs.o
+ obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
+ obj-$(CONFIG_BPF_STREAM_PARSER) += sock_map.o
+ obj-$(CONFIG_DST_CACHE) += dst_cache.o
+diff --git a/net/core/net_metricfs.c b/net/core/net_metricfs.c
+new file mode 100644
+index 000000000000..82f0f797b0b0
+--- /dev/null
++++ b/net/core/net_metricfs.c
+@@ -0,0 +1,194 @@
++// SPDX-License-Identifier: GPL-2.0
++/* net_metricfs: Exports network counters using metricfs.
++ */
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/metricfs.h>
++#include <linux/netdevice.h>
++#include <linux/nsproxy.h>
++#include <linux/rcupdate.h>
++#include <linux/stddef.h>
++#include <linux/types.h>
++#include <net/net_namespace.h>
++
++struct metric_def {
++	struct metric *metric;
++	size_t off;
++	char *name;
++	char *desc;
++};
++
++/* If needed, we could export this via a function for other /net users */
++static struct metricfs_subsys *net_root_subsys;
++static struct metricfs_subsys *dev_subsys;
++static struct metricfs_subsys *dev_stats_subsys;
++
++static struct metric_def metric_def[] = {
++	{NULL, offsetof(struct rtnl_link_stats64, rx_bytes),
++	 "rx_bytes", "net device received bytes count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_packets),
++	 "rx_packets", "net device received packets count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_errors),
++	 "rx_errors", "net device received errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_dropped),
++	 "rx_dropped", "net device dropped packets count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_missed_errors),
++	 "rx_missed_errors",  "net device missed errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_fifo_errors),
++	 "rx_fifo_errors", "net device fifo errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_length_errors),
++	 "rx_length_errors", "net device length errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_over_errors),
++	 "rx_over_errors", "net device received overflow errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_crc_errors),
++	 "rx_crc_errors", "net device received crc errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_frame_errors),
++	 "rx_frame_errors", "net device received frame errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, rx_compressed),
++	 "rx_compressed", "net device received compressed packet count"},
++	{NULL, offsetof(struct rtnl_link_stats64, multicast),
++	 "rx_multicast", "net device received multicast packet count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_bytes),
++	 "tx_bytes", "net device transmited bytes count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_packets),
++	 "tx_packets", "net device transmited packets count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_errors),
++	 "tx_errors", "net device transmited errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_dropped),
++	 "tx_dropped", "net device transmited packet drop count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_fifo_errors),
++	 "tx_fifo_errors", "net device transmit fifo errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, collisions),
++	 "tx_collision", "net device transmit collisions count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_carrier_errors),
++	 "tx_carrier_errors", "net device transmit carrier errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_aborted_errors),
++	 "tx_aborted_errors", "net device transmit aborted errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_window_errors),
++	 "tx_window_errors", "net device transmit window errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_heartbeat_errors),
++	 "tx_heartbeat_errors", "net device transmit heartbeat errors count"},
++	{NULL, offsetof(struct rtnl_link_stats64, tx_compressed),
++	 "tx_compressed_errors", "net device transmit compressed count"},
++};
++
++static __init int init_net_subsys(void)
++{
++	net_root_subsys = metricfs_create_subsys("net", NULL);
++	if (!net_root_subsys) {
++		WARN_ONCE(1, "Net metricfs root not created.");
++		return -1;
++	}
++	return 0;
++}
++
++late_initcall(init_net_subsys);
++
++static void dev_stats_emit(struct metric_emitter *e,
++			   struct net_device *dev,
++			   struct metric_def *metricd)
++{
++	struct rtnl_link_stats64 temp;
++	const struct rtnl_link_stats64 *stats = dev_get_stats(dev, &temp);
++
++	if (stats) {
++		__u8 *ptr = (((__u8 *)stats) + metricd->off);
++
++		METRIC_EMIT_INT(e, *(__u64 *)ptr, dev->name, NULL);
++	}
++}
++
++/* metricfs export function */
++static void dev_stats_fn(struct metric_emitter *e, void *parm)
++{
++	struct net_device *dev;
++	struct net *net;
++	struct nsproxy *nsproxy = current->nsproxy;
++
++	rcu_read_lock();
++	for_each_net_rcu(net) {
++		/* skip namespaces not associated with the caller */
++		if (nsproxy->net_ns != net)
++			continue;
++		for_each_netdev_rcu(net, dev) {
++			dev_stats_emit(e, dev, (struct metric_def *)parm);
++		}
++	}
++	rcu_read_unlock();
++}
++
++static void clean_dev_stats_subsys(void)
++{
++	int x;
++	int metric_count = sizeof(metric_def) / sizeof(struct metric_def);
++
++	for (x = 0; x < metric_count; x++) {
++		if (metric_def[x].metric) {
++			metric_unregister(metric_def[x].metric);
++			metric_def[x].metric = NULL;
++		}
++	}
++	if (dev_stats_subsys)
++		metricfs_destroy_subsys(dev_stats_subsys);
++	if (dev_subsys)
++		metricfs_destroy_subsys(dev_subsys);
++	dev_stats_subsys = NULL;
++	dev_subsys = NULL;
++}
++
++static int __init init_dev_stats_subsys(void)
++{
++	int x;
++	int metric_count = sizeof(metric_def) / sizeof(struct metric_def);
++
++	dev_subsys = NULL;
++	dev_stats_subsys = NULL;
++	if (!net_root_subsys) {
++		WARN_ONCE(1, "Net metricfs root not initialized.");
++		goto error;
++	}
++	dev_subsys =
++		metricfs_create_subsys("dev", net_root_subsys);
++	if (!dev_subsys) {
++		WARN_ONCE(1, "Net metricfs dev not created.");
++		goto error;
++	}
++	dev_stats_subsys =
++		metricfs_create_subsys("stats", dev_subsys);
++	if (!dev_stats_subsys) {
++		WARN_ONCE(1, "Dev metricfs stats not created.");
++		goto error;
++	}
++
++	/* initialize each of the metrics */
++	for (x = 0; x < metric_count; x++) {
++		metric_def[x].metric =
++			metric_register_parm(metric_def[x].name,
++					     dev_stats_subsys,
++					     metric_def[x].desc,
++					     "interface",
++					     NULL,
++					     dev_stats_fn,
++					     (void *)&metric_def[x],
++					     false,
++					     true,  /* this is a counter */
++					     THIS_MODULE);
++		if (!metric_def[x].metric) {
++			WARN_ONCE(1, "Dev metricfs stats %s not registered.",
++				  metric_def[x].name);
++			goto error;
++		}
++	}
++	return 0;
++error:
++	clean_dev_stats_subsys();
++	return -1;
++}
++
++/* need to wait for metricfs and net metricfs root to be initialized */
++late_initcall_sync(init_dev_stats_subsys);
++
++static void __exit dev_stats_exit(void)
++{
++	clean_dev_stats_subsys();
++}
 -- 
-Alexandre Belloni <alexandre.belloni@bootlin.com>
+2.28.0.236.gb10cc79966-goog
+
