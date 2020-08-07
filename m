@@ -2,110 +2,216 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC748C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FD7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A5120855
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018BF206B5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="Wh5GOcai"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="P5BLbM7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgHGIxR (ORCPT
+        id S1727813AbgHGI5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50412 "EHLO
+        Fri, 7 Aug 2020 04:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgHGIxO (ORCPT
+        with ESMTP id S1727050AbgHGI5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 04:53:14 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F2FC061574
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 01:53:14 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w25so1349179ljo.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 01:53:14 -0700 (PDT)
+        Fri, 7 Aug 2020 04:57:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265A8C061575
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 01:57:45 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id k20so1101661wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 01:57:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3FGWnMv3Ra19uyn9AeOMIZCjrthqxBwjXKI+/nqj324=;
-        b=Wh5GOcaifky54Z0qvkUeHFxg4l6hxxPVxyMNzLfFd+JZdNm5kBkLJzYa0vKm3Myz3p
-         p4vxnOG/3h2NE9YQ9plmXzFRsHXZ7qxhVZCPViXuh3oIWgzk3NDoMju0C1bePkzmV3E8
-         9xeCfFbwFn+FiFOeltHwMD+7BeUiz7+76iCbsHcx6cbo62xiAvMi4tebmR4Gm32XqTG3
-         ZzlLefC7wjerYHpaziffpGq6cSxwvFPMu8HoPWuaT9xRoyiFTOdw7glN8ocYZ054vDlh
-         7yq0Cp6ypUXOvVXDDLq9HpGttUu5TGdyKIu/LVwh3hIAxXpryqzAKWguPGrMehIcZJv9
-         Nh3g==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H73Msn3ig8oo+rXLBRFR40qhkjSySvB7pfbrGJDIkto=;
+        b=P5BLbM7NaQMP5e2hJpp/jGb9n9cEXDqguDO01xB7EI9UcQR7OyzK98j0PVhTipFk+W
+         TQ70UzqxnBDEJangW88G9Dq+lqyXD9Rf/jm+IVd7toPT5l6IrZDIoKO127KmFgkwabTs
+         W14uS0QIQXZq8BKcRvIVDm4eJj+ZOC+728qNQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3FGWnMv3Ra19uyn9AeOMIZCjrthqxBwjXKI+/nqj324=;
-        b=GDfkVacQO3OVvt9m0OabllOoBSkqOnzH/B2WWGE9kiOATYAOnJpJIqRd+SEkk22bNM
-         leIfaP7m8zoHPDw2fR507PIz5LoeOkcJVgHKACsWOoKWH5n631de2dNVOr4q5yu8BPqy
-         jEc+vLm7DJlSbMaf0nn4SZA6h+R+oZZamVMEv9yyp/9yUiOBP2ZZEHiz5BYpKYnCdEBr
-         vYzGdPG9bwQ7Ak/A9m8+0v9A8fephYEd3AqOyDOf5TZGR0GGVgc5oGaLFolO2YzsF9Y3
-         s1uMwGtXipJnnA/EMZjTOXfqMUt1qQC7O57iNXTXCfQDAGGhRpM6MDB4GxGd6PGeXAvi
-         hh8A==
-X-Gm-Message-State: AOAM532LV0KBMZHve82WwYOFFJFa83JxFKH/lWVfznaZL290IUybx1k9
-        qbRsQV6e0xIWd+VfPX1xmE6cV7vyONj9ShNp+Amd5wuW
-X-Google-Smtp-Source: ABdhPJwqNVj6y5QwfXGcMVHxInI7wVfNpkbo123V4cqKumR5s4fH+faLV4b2UpJjLlEafDEwwON+Da8q7rwcR8sHcw4=
-X-Received: by 2002:a2e:9913:: with SMTP id v19mr5415222lji.292.1596790392713;
- Fri, 07 Aug 2020 01:53:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=H73Msn3ig8oo+rXLBRFR40qhkjSySvB7pfbrGJDIkto=;
+        b=URH7hwcx8rrtfzjcEy+CTCMj1tMSIdF83o1Wf9BXn1Wse4biypKgDc6aPyyW+H9S0Z
+         NQTytvNkPZk6JV2NwdEbU7Wk1V1NEHJQMQ5d59haar6pCQNFVbTOwO/zy8hNPOpj992F
+         /+zLm2mkPyPaRJCUvxul9pLiJPf4PfbW9K8sRhrQWUrlHBX0NRkLb082uLzU1krFuJou
+         2n6uxazUCAosj436NNh0KyVKLPKItSZDsJtoefOUY+SsXqQWJxLw1T5evZXo9V2H+AcG
+         Bq/dFx0zlYdFDY5jT7w9ULMQRAk5bU0FhJjmWVAeTPeDqYyJdCPLbo6JKvH5QadWF2mM
+         6+pA==
+X-Gm-Message-State: AOAM531JhKuq9rDszpboJ3wd+gZqC39Qj7hZxL3/rO2vFtXT71HlJpIN
+        b1bN27MiFAbnMsiSIkzg9Vizig==
+X-Google-Smtp-Source: ABdhPJynkqQfgSYGXyIhXXRsLuU2JaYCqT62Ezi3rAu3TCxoggostYXPfA0lWy6VQU0lDkGUgE8khA==
+X-Received: by 2002:a1c:df02:: with SMTP id w2mr12869666wmg.137.1596790663593;
+        Fri, 07 Aug 2020 01:57:43 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id o30sm9643520wra.67.2020.08.07.01.57.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 01:57:42 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 10:57:40 +0200
+From:   daniel@ffwll.ch
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [v1] drm/msm/dpu: Fix reservation failures in modeset
+Message-ID: <20200807085740.GR6419@phenom.ffwll.local>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200806073221.GA219724@gardel-login>
-In-Reply-To: <20200806073221.GA219724@gardel-login>
-From:   Martijn Coenen <maco@android.com>
-Date:   Fri, 7 Aug 2020 10:53:01 +0200
-Message-ID: <CAB0TPYEsRPxiVLS7ieBLJprje_avAo49n7QWExpovuLBJHkOGw@mail.gmail.com>
-Subject: Re: [PATCH] loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
-To:     Lennart Poettering <mzxreary@0pointer.de>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lennart,
+On Wed, Aug 05, 2020 at 08:48:34AM -0700, Rob Clark wrote:
+> On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+> >
+> > In TEST_ONLY commit, rm global_state will duplicate the
+> > object and request for new reservations, once they pass
+> > then the new state will be swapped with the old and will
+> > be available for the Atomic Commit.
+> >
+> > This patch fixes some of missing links in the resource
+> > reservation sequence mentioned above.
+> >
+> > 1) Creation of a duplicate state in test_only commit (Rob)
+> > 2) Allow resource release only during crtc_active false.
+> >
+> > For #2
+> > In a modeset operation, swap state happens well before disable.
+> > Hence clearing reservations in disable will cause failures
+> > in modeset enable.
+> >
+> > Sequence:
+> >     Swap state --> old, new
+> >     modeset disables --> virt disable
+> >     modeset enable --> virt modeset
+> >
+> > Allow reservations to be cleared only when crtc active is false
+> > as in that case there wont be any modeset enable after disable.
+> >
+> > Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> > ---
+> >  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> > index 63976dc..b85a576 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> > @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+> >         dpu_kms = to_dpu_kms(priv->kms);
+> >         mode = &crtc_state->mode;
+> >         adj_mode = &crtc_state->adjusted_mode;
+> > -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
+> > +       global_state = dpu_kms_get_global_state(crtc_state->state);
+> >         trace_dpu_enc_atomic_check(DRMID(drm_enc));
+> >
+> >         /*
+> > @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+> >         struct msm_drm_private *priv;
+> >         struct dpu_kms *dpu_kms;
+> >         struct dpu_global_state *global_state;
+> > +       struct drm_crtc_state *crtc_state;
+> >         int i = 0;
+> >
+> >         if (!drm_enc) {
+> > @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+> >         priv = drm_enc->dev->dev_private;
+> >         dpu_kms = to_dpu_kms(priv->kms);
+> >         global_state = dpu_kms_get_existing_global_state(dpu_kms);
+> > +       crtc_state = drm_enc->crtc->state;
+> >
+> >         trace_dpu_enc_disable(DRMID(drm_enc));
+> >
+> > @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+> >
+> >         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+> >
+> > -       dpu_rm_release(global_state, drm_enc);
+> > +       if (crtc_state->active_changed && !crtc_state->active)
+> > +               dpu_rm_release(global_state, drm_enc);
+> 
+> I still think releasing the state in the atomic_commit() path is the
+> wrong thing to do.  In the commit path, the various state objects
+> should be immutable.. ie. in the atomic_test() path you derive the new
+> hw state (including assignment/release of resources), and
+> atomic_commit() is simply pushing the state down to the hw.
+> 
+> Otherwise, this looks better than v1.
 
-Thanks again for the patch, I tested it and it looks good to me. I'll
-also add a test case to LTP for this. Two minor nits on the patch:
+Yeah this races and is total no-go. If you touch your state in commit
+(except some very specific exceptions), then a next TEST_ONLY atomic_check
+might duplicate the atomic state object in an incosistent state, and fail.
 
-On Thu, Aug 6, 2020 at 9:32 AM Lennart Poettering <mzxreary@0pointer.de> wrote:
-> Let's correct that and propagate the flag in LOOP_SETSTATUS too.
+Worse, this looks like if you race like that then you might duplicate an
+object with old reservations still in place, and then we've essentially
+leaked those resources and need to reboot. Yes most compositors use
+blocking modesets, but some actually do full nonblocking modesets.
 
-Think you meant LOOP_CONFIGURE.
+This stuff needs to be moved into the atomic_check code, and your commit
+code needs to be careful to use the right state (old or new) when pushing
+it into hw.
 
-Also, could you add a "Fixes" tag, like:
+Cheers, Daniel
 
-Fixes: 3448914e8cc5("loop: Add LOOP_CONFIGURE ioctl")
+> 
+> BR,
+> -R
+> 
+> >
+> >         mutex_unlock(&dpu_enc->enc_lock);
+> >  }
+> > --
+> > 1.9.1
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-
->
-> Signed-off-by: Lennart Poettering <lennart@poettering.net>
-> ---
->  drivers/block/loop.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index d18160146226..2f137d6ce169 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -1171,6 +1171,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
->         if (part_shift)
->                 lo->lo_flags |= LO_FLAGS_PARTSCAN;
->         partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
-> +       if (partscan)
-> +               lo->lo_disk->flags &= ~GENHD_FL_NO_PART_SCAN;
->
->         /* Grab the block_device to prevent its destruction after we
->          * put /dev/loopXX inode. Later in __loop_clr_fd() we bdput(bdev).
-> --
-> 2.26.2
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
