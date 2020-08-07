@@ -4,110 +4,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B138DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE1920866
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8AE20866
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 06:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K59azOHE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNFvZWO0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgHGGv0 (ORCPT
+        id S1726242AbgHGG6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 02:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgHGGvZ (ORCPT
+        Fri, 7 Aug 2020 02:58:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59600 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725805AbgHGG6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 02:51:25 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9AAC061574
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 23:51:25 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id d6so953877ejr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 23:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GEqwqYzm5hBTHtEMjhPr1RMlBJXotR2ShP/q7XiMds8=;
-        b=K59azOHEihLKYtrXBJVdrZ9lhi1MRP4V4B+xsIG+UgkqMVo3Lkigc03xj3IsnpNAtz
-         aJhPq1/rFY0tVuSGO4AElm7fKIdIwRNJzcWXUbCyGYZ8DAVto/qzsbBENy4k1EHiRFeR
-         1YtgZwuRZLSWv8L58z6bY2Yf7qcnOQvWCU8G0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GEqwqYzm5hBTHtEMjhPr1RMlBJXotR2ShP/q7XiMds8=;
-        b=Twdwx3S808iHzstWR9+Qi/73QSTEuIiXcYvWv61IqWyvIof+ab/2ua8UhuPN1643qI
-         gaLUOCX0Qh3jsEXcSLfsEXTa1DqfO+o27BhIq58noFrqBArT5nHSs5pbaKcrEAmJY8sQ
-         uhDkuznfTvVApu84h6tLE56ZbuUYfXL5bF5Y606Y3kR7HC1LPwH5OCciZlGyBMDMGjtv
-         tFeb9Kn5hQaQVWu4AWfYpVtagwV4KBX3Zy/R4af58dVqAhSJQ1FSkYjSvpKUdi3NGrgD
-         ika0KXbXjgaW5C28zNqjHPmaQPiYf65ufXfbIXRNuR6ZcaE8297TcS+bOTj6cLU3r9HO
-         TYYQ==
-X-Gm-Message-State: AOAM530ksVSQmiMqTr6b+g8+Ua99GtJ565WQyrk1Bm8uW44v+7U59ofm
-        b+sfJv0ANTP0oCwNGRlgMP+QA432Fi5QqiR4jCKmhQ==
-X-Google-Smtp-Source: ABdhPJycBsYihQ6WLQL2DbLBiaCDD4ezOrWrW6HMoL9l4LCvH6nKVPnySRZpJBF1oivhsog0Z9+pM75cdoeYDcnTiNQ=
-X-Received: by 2002:a17:906:38c7:: with SMTP id r7mr8318245ejd.118.1596783083914;
- Thu, 06 Aug 2020 23:51:23 -0700 (PDT)
+        Fri, 7 Aug 2020 02:58:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596783500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=m/hTQ57NSOU1AR5VfkeKkbB3aIGjwLPKETw5i6btfv8=;
+        b=PNFvZWO0F1YieebcdI4x+DRYF6eL9swuzM17p5YfqTS/BTOkvm+Pzfng8eMLc8bAQdwWN+
+        umlboiFsWks4yYQA5LmJRkw2bLjNADrP011BADQmxeX3rcEFK6iHkJ6VDMiMnvLQcxzH0N
+        k7WWMlkE+k7x/P1L4RC8j7tzaRZXA7k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-507-W7lOtSdpOcK86Y6NLXFXQg-1; Fri, 07 Aug 2020 02:58:16 -0400
+X-MC-Unique: W7lOtSdpOcK86Y6NLXFXQg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6E08800685;
+        Fri,  7 Aug 2020 06:58:13 +0000 (UTC)
+Received: from [10.36.112.251] (ovpn-112-251.ams2.redhat.com [10.36.112.251])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9617A1036D15;
+        Fri,  7 Aug 2020 06:58:10 +0000 (UTC)
+Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Michal Such?nek <msuchanek@suse.de>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andi Kleen <ak@linux.intel.com>
+References: <20200701084200.GN2369@dhcp22.suse.cz>
+ <20200701100442.GB17918@linux.vnet.ibm.com>
+ <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
+ <20200701110145.GC17918@linux.vnet.ibm.com>
+ <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
+ <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
+ <20200701122110.GT2369@dhcp22.suse.cz>
+ <20200703091001.GJ21462@kitsune.suse.cz>
+ <20200703092414.GR18446@dhcp22.suse.cz>
+ <20200703105944.GS18446@dhcp22.suse.cz>
+ <20200703125823.GA26243@linux.vnet.ibm.com>
+ <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <5688b358-36bc-ccf0-d24b-a65375a9f3c3@redhat.com>
+Date:   Fri, 7 Aug 2020 08:58:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200710144520.RESEND.1.Id0f52f486e277b5af30babac8ba6b09589962a68@changeid>
- <20200710070332.GA1175842@kroah.com> <CANMq1KDcKWgyYYP_m0-WV7602g7zUbU0PPkvwXxbSTF5vFfKGQ@mail.gmail.com>
- <CANMq1KC7CgUT+neoOUZbnr8MbDgqEikqt2vn8dxAS1rpX=C2aA@mail.gmail.com> <20200807062809.GB979264@kroah.com>
-In-Reply-To: <20200807062809.GB979264@kroah.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 7 Aug 2020 14:51:12 +0800
-Message-ID: <CANMq1KD_hJ_ST3du7dcSd8GBtdL4d-C1pWbxXz8Wu8w79-2fUg@mail.gmail.com>
-Subject: Re: [RESEND PATCH] media: atomisp: Replace trace_printk by pr_info
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 2:28 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Aug 07, 2020 at 09:50:23AM +0800, Nicolas Boichat wrote:
-> > On Fri, Jul 24, 2020 at 8:41 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
-> > >
-> > > On Fri, Jul 10, 2020 at 3:03 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Fri, Jul 10, 2020 at 02:45:29PM +0800, Nicolas Boichat wrote:
-> > > > > trace_printk should not be used in production code, replace it
-> > > > > call with pr_info.
-> > > > >
-> > > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > > > ---
-> > > > > Sent this before as part of a series (whose 4th patch was a
-> > > > > change that allows to detect such trace_printk), but maybe it's
-> > > > > easier to get individual maintainer attention by splitting it.
-> > > >
-> > > > Mauro should take this soon:
-> > > >
-> > > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >
-> > > Mauro: did you get a chance to look at this? (and the other similar
-> > > patch "media: camss: vfe: Use trace_printk for debugging only")
-> >
-> > Mauro: Another gentle ping. Thanks.
->
-> It's the middle of the merge window, maintainers can't do anything until
-> after 5.9-rc1 is out, sorry.
+On 07.08.20 06:32, Andrew Morton wrote:
+> On Fri, 3 Jul 2020 18:28:23 +0530 Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
+> 
+>>> The memory hotplug changes that somehow because you can hotremove numa
+>>> nodes and therefore make the nodemask sparse but that is not a common
+>>> case. I am not sure what would happen if a completely new node was added
+>>> and its corresponding node was already used by the renumbered one
+>>> though. It would likely conflate the two I am afraid. But I am not sure
+>>> this is really possible with x86 and a lack of a bug report would
+>>> suggest that nobody is doing that at least.
+>>>
+>>
+>> JFYI,
+>> Satheesh copied in this mailchain had opened a bug a year on crash with vcpu
+>> hotplug on memoryless node. 
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=202187
+> 
+> So...  do we merge this patch or not?  Seems that the overall view is
+> "risky but nobody is likely to do anything better any time soon"?
 
-Huh, wait, looks like Mauro _did_ pick it (found it in this email
-"[GIT PULL for v5.8-rc7] media fixes").
+I recall the issue Michal saw was "fix powerpc" vs. "break other
+architectures". @Michal how should we proceed? At least x86-64 won't be
+affected IIUC.
 
-My bad then, I was expecting an ack ,-)
+-- 
+Thanks,
 
-Thanks!
+David / dhildenb
 
-> greg k-h
