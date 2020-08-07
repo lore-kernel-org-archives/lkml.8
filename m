@@ -2,101 +2,150 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF93C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16880C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D842224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596806356;
-	bh=90W/RlmEX3PAdf4oEsZD+boIBLyjUS1TrXoIlmoXv6M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jxtxc63brFKJQo3eNy1cUMv13ox7/k5mnfkE3i56Pk+uZXHY5XArPNFmCjbwuskUV
-	 uelraIfSQwG15l7x+b96NSp6CnJ3w40eU5aHBBfAy0CJg7gUARsqDgxqvVnPMUHNHt
-	 b0E13ODLcy32VYAK/j1BCB7g1hVij2RSMBdrce1M=
+	by mail.kernel.org (Postfix) with ESMTP id E8C302224D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bj6kEv0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgHGNTP (ORCPT
+        id S1726131AbgHGNXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 09:19:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgHGNTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:19:14 -0400
-Received: from ziggy.com (81.172.57.81.dyn.user.ono.com [81.172.57.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E29522086A;
-        Fri,  7 Aug 2020 13:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596806354;
-        bh=90W/RlmEX3PAdf4oEsZD+boIBLyjUS1TrXoIlmoXv6M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=K3+w16/vPkbiOROuEmRUBKt2EyFZDHkhwM5D5RPR/xWJI8gBlWeT59Be2kccdeeRA
-         sQapHJNEC+JUFGTMpNd6O9xDexL3aIIAvw7Ip+Un4iDC7tbW0jmLN+maSqoWj7tUOr
-         RRdZl8udmoxeaVGeBQbK1KrJszBNor5PMilIcjUU=
-From:   matthias.bgg@kernel.org
-To:     qii.wang@mediatek.com, matthias.bgg@gmail.com, wsa@the-dreams.de,
-        yingjoe.chen@mediatek.com
-Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Brugger <mbrugger@suse.com>
-Subject: [v2] i2c: mediatek: Fix i2c_spec_values description
-Date:   Fri,  7 Aug 2020 15:19:04 +0200
-Message-Id: <20200807131904.6515-1-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.28.0
+        Fri, 7 Aug 2020 09:23:49 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:18184 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725893AbgHGNXo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 09:23:44 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 077DMvQA021119;
+        Fri, 7 Aug 2020 15:23:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=SPT9WADoExgaJ4XpWadwU5AdWgKn68epVmssRyHTVdM=;
+ b=bj6kEv0uTv0xAuVIsxAh6MxZVK6pHirs6IDx98pqVUREGVBXZnar0KCcFPYXH2Yyj0D6
+ LFusuuyUefxf3YKMPYiWFo8mKcMbIJDx54ZWW7Oz/ChXLVJs8rp109DVAE0J9Lx0iMMk
+ /f2i7rScCN6n5wEZfH3wreQG1yFsYOJfJQ4nYeo8d2dz9jzH9vn4V89wjrfbq14+qYSg
+ MycD9S1YBTvugXVqGcLUULzRUIy5RDcu5OCNq8qcB5gINe8uejQZJW9ZfaDoNz/7WY5m
+ /bIPBklwZtdAIFReQFAHdwxqS8z8gVmQ62CtsOqjNQh17NY74ExalaXTt9nij49EYpjt bw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32n6sbhy7u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Aug 2020 15:23:32 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CEAD2100039;
+        Fri,  7 Aug 2020 15:23:31 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C3D132B8A02;
+        Fri,  7 Aug 2020 15:23:31 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug 2020 15:23:31
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH 5/5] spi: stm32: always perform registers configuration prior to transfer
+Date:   Fri, 7 Aug 2020 15:21:25 +0200
+Message-ID: <1596806485-3810-6-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596806485-3810-1-git-send-email-alain.volmat@st.com>
+References: <1596806485-3810-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-07_09:2020-08-06,2020-08-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+SPI registers content may have been lost upon suspend/resume sequence.
+So, always compute and apply the necessary configuration in
+stm32_spi_transfer_one_setup routine.
 
-The struct i2c_spec_values have it's members documented but is
-missing the starting '@', which leads to warings like:
-
-drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_low_ns' not described in 'i2c_spec_values'
-
-We also delete min_high_ns member as it is not used in the code.
-
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
+ drivers/spi/spi-stm32.c | 42 +++++++++++++++++-------------------------
+ 1 file changed, 17 insertions(+), 25 deletions(-)
 
-Changes since v1:
-delete mint_high_ns member
-
- drivers/i2c/busses/i2c-mt65xx.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index e889f74703e4..efc14041d45b 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -253,14 +253,13 @@ struct mtk_i2c {
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index e196dbc5c432..7968d23347b6 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -1594,41 +1594,33 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
+ 	unsigned long flags;
+ 	unsigned int comm_type;
+ 	int nb_words, ret = 0;
++	int mbr;
  
- /**
-  * struct i2c_spec_values:
-- * min_low_ns: min LOW period of the SCL clock
-- * min_su_sta_ns: min set-up time for a repeated START condition
-- * max_hd_dat_ns: max data hold time
-- * min_su_dat_ns: min data set-up time
-+ * @min_low_ns: min LOW period of the SCL clock
-+ * @min_su_sta_ns: min set-up time for a repeated START condition
-+ * @max_hd_dat_ns: max data hold time
-+ * @min_su_dat_ns: min data set-up time
-  */
- struct i2c_spec_values {
- 	unsigned int min_low_ns;
--	unsigned int min_high_ns;
- 	unsigned int min_su_sta_ns;
- 	unsigned int max_hd_dat_ns;
- 	unsigned int min_su_dat_ns;
+ 	spin_lock_irqsave(&spi->lock, flags);
+ 
+ 	spi->cur_xferlen = transfer->len;
+ 
+-	if (spi->cur_bpw != transfer->bits_per_word) {
+-		spi->cur_bpw = transfer->bits_per_word;
+-		spi->cfg->set_bpw(spi);
+-	}
+-
+-	if (spi->cur_speed != transfer->speed_hz) {
+-		int mbr;
+-
+-		/* Update spi->cur_speed with real clock speed */
+-		mbr = stm32_spi_prepare_mbr(spi, transfer->speed_hz,
+-					    spi->cfg->baud_rate_div_min,
+-					    spi->cfg->baud_rate_div_max);
+-		if (mbr < 0) {
+-			ret = mbr;
+-			goto out;
+-		}
++	spi->cur_bpw = transfer->bits_per_word;
++	spi->cfg->set_bpw(spi);
+ 
+-		transfer->speed_hz = spi->cur_speed;
+-		stm32_spi_set_mbr(spi, mbr);
++	/* Update spi->cur_speed with real clock speed */
++	mbr = stm32_spi_prepare_mbr(spi, transfer->speed_hz,
++				    spi->cfg->baud_rate_div_min,
++				    spi->cfg->baud_rate_div_max);
++	if (mbr < 0) {
++		ret = mbr;
++		goto out;
+ 	}
+ 
+-	comm_type = stm32_spi_communication_type(spi_dev, transfer);
+-	if (spi->cur_comm != comm_type) {
+-		ret = spi->cfg->set_mode(spi, comm_type);
++	transfer->speed_hz = spi->cur_speed;
++	stm32_spi_set_mbr(spi, mbr);
+ 
+-		if (ret < 0)
+-			goto out;
++	comm_type = stm32_spi_communication_type(spi_dev, transfer);
++	ret = spi->cfg->set_mode(spi, comm_type);
++	if (ret < 0)
++		goto out;
+ 
+-		spi->cur_comm = comm_type;
+-	}
++	spi->cur_comm = comm_type;
+ 
+ 	if (spi->cfg->set_data_idleness)
+ 		spi->cfg->set_data_idleness(spi, transfer->len);
 -- 
-2.28.0
+2.7.4
 
