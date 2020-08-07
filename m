@@ -2,202 +2,203 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC897C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C417C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6C322CA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:13:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NaWoDowq"
+	by mail.kernel.org (Postfix) with ESMTP id 034AF221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHGNNN (ORCPT
+        id S1726382AbgHGNNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 09:13:13 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:13253 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbgHGNNL (ORCPT
+        Fri, 7 Aug 2020 09:13:48 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:10729 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726061AbgHGNNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:13:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596805991; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=1VgVkuCTjpRCi5kVKzU4GCa2g/ve+RIbwEZSuSegBn0=;
- b=NaWoDowqg+UEqYlBfdLmQVafRM6PXjnSzICsrulmGA7tUW0Uw/IOOJICAzK2i3xJB+OyUbW8
- zhmXIVDYowVJn87OQnzXkLKKMc2RQRdqIKs3IVLzhLchkKJyUWTa77jJl5OwZItWDjxvNxDc
- Ktr7Rl9MuRZWnCXE1Wz9FJmnSb8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f2d536703528d4024a6e53c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 07 Aug 2020 13:13:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 06CE2C43391; Fri,  7 Aug 2020 13:13:11 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 239C3C433C9;
-        Fri,  7 Aug 2020 13:13:10 +0000 (UTC)
+        Fri, 7 Aug 2020 09:13:48 -0400
+X-IronPort-AV: E=Sophos;i="5.75,445,1589212800"; 
+   d="scan'208";a="97774910"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 07 Aug 2020 21:13:42 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 364964CE34EF;
+        Fri,  7 Aug 2020 21:13:37 +0800 (CST)
+Received: from G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 7 Aug 2020 21:13:39 +0800
+Received: from localhost.localdomain (10.167.225.141) by
+ G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Fri, 7 Aug 2020 21:13:37 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>
+CC:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
+        <david@fromorbit.com>, <hch@lst.de>, <rgoldwyn@suse.de>,
+        <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
+Subject: [RFC PATCH 1/8] fs: introduce get_shared_files() for dax&reflink
+Date:   Fri, 7 Aug 2020 21:13:29 +0800
+Message-ID: <20200807131336.318774-2-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
+References: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Aug 2020 18:43:10 +0530
-From:   kalyan_t@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dpu: Fix reservation failures in modeset
-In-Reply-To: <CAF6AEGu2Lfb94kjnd7+GU_c93z0Zw2SgQ==UcrjPg3Wah=24ng@mail.gmail.com>
-References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
- <1101abba0c8082da196f36636ef07a84@codeaurora.org>
- <CAF6AEGu2Lfb94kjnd7+GU_c93z0Zw2SgQ==UcrjPg3Wah=24ng@mail.gmail.com>
-Message-ID: <0414fe65f9e3c21f64b13158eef653ee@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 364964CE34EF.ADD3D
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-06 22:15, Rob Clark wrote:
-> On Thu, Aug 6, 2020 at 7:46 AM <kalyan_t@codeaurora.org> wrote:
->> 
->> On 2020-08-05 21:18, Rob Clark wrote:
->> > On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org>
->> > wrote:
->> >>
->> >> In TEST_ONLY commit, rm global_state will duplicate the
->> >> object and request for new reservations, once they pass
->> >> then the new state will be swapped with the old and will
->> >> be available for the Atomic Commit.
->> >>
->> >> This patch fixes some of missing links in the resource
->> >> reservation sequence mentioned above.
->> >>
->> >> 1) Creation of a duplicate state in test_only commit (Rob)
->> >> 2) Allow resource release only during crtc_active false.
->> >>
->> >> For #2
->> >> In a modeset operation, swap state happens well before disable.
->> >> Hence clearing reservations in disable will cause failures
->> >> in modeset enable.
->> >>
->> >> Sequence:
->> >>     Swap state --> old, new
->> >>     modeset disables --> virt disable
->> >>     modeset enable --> virt modeset
->> >>
->> >> Allow reservations to be cleared only when crtc active is false
->> >> as in that case there wont be any modeset enable after disable.
->> >>
->> >> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> >> ---
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
->> >>  1 file changed, 5 insertions(+), 2 deletions(-)
->> >>
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> >> index 63976dc..b85a576 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> >> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
->> >>         dpu_kms = to_dpu_kms(priv->kms);
->> >>         mode = &crtc_state->mode;
->> >>         adj_mode = &crtc_state->adjusted_mode;
->> >> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
->> >> +       global_state = dpu_kms_get_global_state(crtc_state->state);
->> >>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
->> >>
->> >>         /*
->> >> @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct
->> >> drm_encoder *drm_enc)
->> >>         struct msm_drm_private *priv;
->> >>         struct dpu_kms *dpu_kms;
->> >>         struct dpu_global_state *global_state;
->> >> +       struct drm_crtc_state *crtc_state;
->> >>         int i = 0;
->> >>
->> >>         if (!drm_enc) {
->> >> @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct
->> >> drm_encoder *drm_enc)
->> >>         priv = drm_enc->dev->dev_private;
->> >>         dpu_kms = to_dpu_kms(priv->kms);
->> >>         global_state = dpu_kms_get_existing_global_state(dpu_kms);
->> >> +       crtc_state = drm_enc->crtc->state;
->> >>
->> >>         trace_dpu_enc_disable(DRMID(drm_enc));
->> >>
->> >> @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct
->> >> drm_encoder *drm_enc)
->> >>
->> >>         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
->> >>
->> >> -       dpu_rm_release(global_state, drm_enc);
->> >> +       if (crtc_state->active_changed && !crtc_state->active)
->> >> +               dpu_rm_release(global_state, drm_enc);
->> >
->> > I still think releasing the state in the atomic_commit() path is the
->> > wrong thing to do.  In the commit path, the various state objects
->> > should be immutable.. ie. in the atomic_test() path you derive the new
->> > hw state (including assignment/release of resources), and
->> > atomic_commit() is simply pushing the state down to the hw.
->> >
->> > Otherwise, this looks better than v1.
->> >
->> > BR,
->> > -R
->> >
->> okay. Should we avoid reservation all together if active=0 on that 
->> crtc
->> and trigger rm_release on the enc during atomic_check ?
->> how do you see the approach ?
-> 
-> Yeah, I suppose something like:
-> 
->    if (drm_atomic_crtc_needs_modeset()) {
->       reserve()
->    } else if (active_changed && !active) {
->       release()
->    }
-> 
-> I think it could happen (at least with atomic api) that you get a
-> modeset without active_changed, so we might need to release() and then
-> reserve() in that case?  (This is probably where starting to run more
-> IGT tests would be useful)
-> 
-> BR,
-> -R
-> Thanks Rob, please review the v2 version.
->> -Kalyan
->> >>
->> >>         mutex_unlock(&dpu_enc->enc_lock);
->> >>  }
->> >> --
->> >> 1.9.1
->> >>
->> > _______________________________________________
->> > Freedreno mailing list
->> > Freedreno@lists.freedesktop.org
->> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+Under the mode of both dax and reflink on, one page may be shared by
+multiple files and offsets.  In order to track them in memory-failure or
+other cases, we introduce this function by finding out who is sharing
+this block(the page) in a filesystem.  It returns a list that contains
+all the owners, and the offset in each owner.
+
+For XFS, rmapbt is used to find out the owners of one block.  So, it
+should be turned on when we want to use dax&reflink feature together.
+
+Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+---
+ fs/xfs/xfs_super.c  | 67 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/dax.h |  7 +++++
+ include/linux/fs.h  |  2 ++
+ 3 files changed, 76 insertions(+)
+
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 379cbff438bc..b71392219c91 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -35,6 +35,9 @@
+ #include "xfs_refcount_item.h"
+ #include "xfs_bmap_item.h"
+ #include "xfs_reflink.h"
++#include "xfs_alloc.h"
++#include "xfs_rmap.h"
++#include "xfs_rmap_btree.h"
+ 
+ #include <linux/magic.h>
+ #include <linux/fs_context.h>
+@@ -1097,6 +1100,69 @@ xfs_fs_free_cached_objects(
+ 	return xfs_reclaim_inodes_nr(XFS_M(sb), sc->nr_to_scan);
+ }
+ 
++static int _get_shared_files_fn(
++	struct xfs_btree_cur	*cur,
++	struct xfs_rmap_irec	*rec,
++	void			*priv)
++{
++	struct list_head	*list = priv;
++	struct xfs_inode	*ip;
++	struct shared_files	*sfp;
++
++	/* Get files that incore, filter out others that are not in use. */
++	xfs_iget(cur->bc_mp, cur->bc_tp, rec->rm_owner, XFS_IGET_INCORE, 0, &ip);
++	if (ip && !ip->i_vnode.i_mapping)
++		return 0;
++
++	sfp = kmalloc(sizeof(*sfp), GFP_KERNEL);
++	sfp->mapping = ip->i_vnode.i_mapping;
++	sfp->index = rec->rm_offset;
++	list_add_tail(&sfp->list, list);
++
++	return 0;
++}
++
++static int
++xfs_fs_get_shared_files(
++	struct super_block	*sb,
++	pgoff_t			offset,
++	struct list_head	*list)
++{
++	struct xfs_mount	*mp = XFS_M(sb);
++	struct xfs_trans	*tp = NULL;
++	struct xfs_btree_cur	*cur = NULL;
++	struct xfs_rmap_irec	rmap_low = { 0 }, rmap_high = { 0 };
++	struct xfs_buf		*agf_bp = NULL;
++	xfs_agblock_t		bno = XFS_B_TO_FSB(mp, offset);
++	xfs_agnumber_t		agno = XFS_FSB_TO_AGNO(mp, bno);
++	int			error = 0;
++
++	error = xfs_trans_alloc_empty(mp, &tp);
++	if (error)
++		return error;
++
++	error = xfs_alloc_read_agf(mp, tp, agno, 0, &agf_bp);
++	if (error)
++		return error;
++
++	cur = xfs_rmapbt_init_cursor(mp, tp, agf_bp, agno);
++
++	memset(&cur->bc_rec, 0, sizeof(cur->bc_rec));
++	/* Construct the range for one rmap search */
++	memset(&rmap_low, 0, sizeof(rmap_low));
++	memset(&rmap_high, 0xFF, sizeof(rmap_high));
++	rmap_low.rm_startblock = rmap_high.rm_startblock = bno;
++
++	error = xfs_rmap_query_range(cur, &rmap_low, &rmap_high,
++				     _get_shared_files_fn, list);
++	if (error == -ECANCELED)
++		error = 0;
++
++	xfs_btree_del_cursor(cur, error);
++	xfs_trans_brelse(tp, agf_bp);
++	return error;
++}
++
+ static const struct super_operations xfs_super_operations = {
+ 	.alloc_inode		= xfs_fs_alloc_inode,
+ 	.destroy_inode		= xfs_fs_destroy_inode,
+@@ -1110,6 +1176,7 @@ static const struct super_operations xfs_super_operations = {
+ 	.show_options		= xfs_fs_show_options,
+ 	.nr_cached_objects	= xfs_fs_nr_cached_objects,
+ 	.free_cached_objects	= xfs_fs_free_cached_objects,
++	.get_shared_files	= xfs_fs_get_shared_files,
+ };
+ 
+ static int
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index 6904d4e0b2e0..0a85e321d6b4 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -40,6 +40,13 @@ struct dax_operations {
+ 
+ extern struct attribute_group dax_attribute_group;
+ 
++struct shared_files {
++	struct list_head	list;
++	struct address_space	*mapping;
++	pgoff_t			index;
++	dax_entry_t		cookie;
++};
++
+ #if IS_ENABLED(CONFIG_DAX)
+ struct dax_device *dax_get_by_host(const char *host);
+ struct dax_device *alloc_dax(void *private, const char *host,
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f5abba86107d..81de3d2739b9 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1977,6 +1977,8 @@ struct super_operations {
+ 				  struct shrink_control *);
+ 	long (*free_cached_objects)(struct super_block *,
+ 				    struct shrink_control *);
++	int (*get_shared_files)(struct super_block *sb, pgoff_t offset,
++				struct list_head *list);
+ };
+ 
+ /*
+-- 
+2.27.0
+
+
+
