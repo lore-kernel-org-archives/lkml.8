@@ -2,102 +2,74 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A59C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1222224D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SAZLeWkG"
+	by mail.kernel.org (Postfix) with ESMTP id 27FA4221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 13:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgHGNCR (ORCPT
+        id S1726186AbgHGNCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 09:02:17 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:52733 "EHLO m43-7.mailgun.net"
+        Fri, 7 Aug 2020 09:02:44 -0400
+Received: from gentwo.org ([3.19.106.255]:35074 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgHGNCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 09:02:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596805336; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=mc38/opTEptAuWJc70jptxAnqwYZATU+evTD+ABr2Ms=;
- b=SAZLeWkGKhRIs5lLNjszPxncLIPk95b2G9yrKgurTwBl1e+1hJxJHPVp0Y7t1iNodgUm23Ft
- Ipcqfy6cUWHUcAQLSTPNDLqYABuZUub3DG70OOplaGS3da7HCJcib0Or/FV6hVSZMVy6mrKB
- YGUCqW0zE5/u8VkNGjYZMLpIYMY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f2d50bb8567201751ad7bbf (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 07 Aug 2020 13:01:47
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 51D89C433AD; Fri,  7 Aug 2020 13:01:46 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 856CCC433C9;
-        Fri,  7 Aug 2020 13:01:45 +0000 (UTC)
+        id S1725936AbgHGNCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 09:02:44 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 459743EA6D; Fri,  7 Aug 2020 13:02:43 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 43B3F3EA37;
+        Fri,  7 Aug 2020 13:02:43 +0000 (UTC)
+Date:   Fri, 7 Aug 2020 13:02:43 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Pekka Enberg <penberg@gmail.com>
+cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Xunlei Pang <xlpang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
+ objects
+In-Reply-To: <CAOJsxLHX62P0yvHZcXdje41zm_2demzTraqvHXAvfhVPp2HKsA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2008071258020.55871@www.lameter.com>
+References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com> <a53f9039-5cba-955b-009e-12e8c5ffb345@suse.cz> <CAOJsxLHX62P0yvHZcXdje41zm_2demzTraqvHXAvfhVPp2HKsA@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 07 Aug 2020 21:01:45 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Stanley Chu <stanley.chu@mediatek.com>, kernel-team@android.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Bao D. Nguyen" <nguyenb@codeaurora.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Hongwu Su <hongwus@codeaurora.org>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Mark Salyzyn <salyzyn@google.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH 9/9] scsi: ufs: Properly release resources if a task is
- aborted successfully
-In-Reply-To: <a752927b-dd9b-ebf0-8c77-e2ae0b2aa475@web.de>
-References: <a752927b-dd9b-ebf0-8c77-e2ae0b2aa475@web.de>
-Message-ID: <fc5c328732792aca1dd451d0109f00b5@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+On Fri, 7 Aug 2020, Pekka Enberg wrote:
 
-On 2020-08-07 17:33, Markus Elfring wrote:
->> … To fix it, …
-> 
-> I propose to replace this wording by the tag “Fixes”.
-> 
-> 
->> … "mannually", …
-> 
-> Please avoid a typo:
-> … "manually", …
-> 
-> 
-> Regards,
-> Markus
+> I think we can just default to the counters. After all, if I
+> understood correctly, we're talking about up to 100 ms time period
+> with IRQs disabled when count_partial() is called. As this is
+> triggerable from user space, that's a performance bug whatever way you
+> look at it.
 
-Thanks, will fix these in next version.
 
-Regards,
-Can Guo.
+Well yes under extreme conditions and this is only happening for sysfs
+counter retrieval.
+
+There could be other solutions to this. This solution here is penalizing
+evertu hotpath slab allocation for the sake of relatively infrequently
+used counter monitoring. There the possibility of not traversing the list
+ande simply estimating the value based on the number of slab pages
+allocated on that node.
+
+> Christoph, others, any objections?
+
+Obviously .... ;-)
+
