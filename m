@@ -2,114 +2,78 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3548C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDED521744
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A00622C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 15:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgHGP1r (ORCPT
+        id S1726131AbgHGPbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:27:47 -0400
-Received: from 9.mo4.mail-out.ovh.net ([46.105.40.176]:57093 "EHLO
-        9.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgHGP1p (ORCPT
+        Fri, 7 Aug 2020 11:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgHGPbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:27:45 -0400
-X-Greylist: delayed 158755 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 11:27:44 EDT
-Received: from player691.ha.ovh.net (unknown [10.110.103.18])
-        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 1DDBB242D39
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 17:27:42 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player691.ha.ovh.net (Postfix) with ESMTPSA id C355E152D3C08;
-        Fri,  7 Aug 2020 15:27:32 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-100R003698b6a68-6b76-4ff7-aa52-ad9ed4f119b7,
-                    B1FDDFD4E508142116FDFB9194C63E8FBE397CFD) smtp.auth=steve@sk2.org
-From:   Stephen Kitt <steve@sk2.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Scott Wood <oss@buserror.net>, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] arch/powerpc: use simple i2c probe function
-Date:   Fri,  7 Aug 2020 17:27:13 +0200
-Message-Id: <20200807152713.381588-1-steve@sk2.org>
-X-Mailer: git-send-email 2.25.4
+        Fri, 7 Aug 2020 11:31:39 -0400
+X-Greylist: delayed 115149 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 07 Aug 2020 08:31:38 PDT
+Received: from gardel.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45292C061756;
+        Fri,  7 Aug 2020 08:31:38 -0700 (PDT)
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 07D48E806C9;
+        Fri,  7 Aug 2020 17:31:35 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 75A67160D5D; Fri,  7 Aug 2020 17:31:34 +0200 (CEST)
+Date:   Fri, 7 Aug 2020 17:31:34 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Martijn Coenen <maco@android.com>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Subject: Re: [PATCH] loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
+Message-ID: <20200807153134.GA222272@gardel-login>
+References: <20200806073221.GA219724@gardel-login>
+ <CAB0TPYEsRPxiVLS7ieBLJprje_avAo49n7QWExpovuLBJHkOGw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 8281275292837105073
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkedvgdekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheiledurdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB0TPYEsRPxiVLS7ieBLJprje_avAo49n7QWExpovuLBJHkOGw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c probe functions here don't use the id information provided in
-their second argument, so the single-parameter i2c probe function
-("probe_new") can be used instead.
+On Fr, 07.08.20 10:53, Martijn Coenen (maco@android.com) wrote:
 
-This avoids scanning the identifier tables during probes.
+> Hi Lennart,
+>
+> Thanks again for the patch, I tested it and it looks good to me. I'll
+> also add a test case to LTP for this. Two minor nits on the patch:
+>
+> On Thu, Aug 6, 2020 at 9:32 AM Lennart Poettering <mzxreary@0pointer.de> wrote:
+> > Let's correct that and propagate the flag in LOOP_SETSTATUS too.
+>
+> Think you meant LOOP_CONFIGURE.
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- arch/powerpc/platforms/44x/ppc476.c            | 5 ++---
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 4 ++--
- 2 files changed, 4 insertions(+), 5 deletions(-)
+True!
 
-diff --git a/arch/powerpc/platforms/44x/ppc476.c b/arch/powerpc/platforms/44x/ppc476.c
-index cba83eee685c..07f7e3ce67b5 100644
---- a/arch/powerpc/platforms/44x/ppc476.c
-+++ b/arch/powerpc/platforms/44x/ppc476.c
-@@ -86,8 +86,7 @@ static void __noreturn avr_reset_system(char *cmd)
- 	avr_halt_system(AVR_PWRCTL_RESET);
- }
- 
--static int avr_probe(struct i2c_client *client,
--			    const struct i2c_device_id *id)
-+static int avr_probe(struct i2c_client *client)
- {
- 	avr_i2c_client = client;
- 	ppc_md.restart = avr_reset_system;
-@@ -104,7 +103,7 @@ static struct i2c_driver avr_driver = {
- 	.driver = {
- 		.name = "akebono-avr",
- 	},
--	.probe = avr_probe,
-+	.probe_new = avr_probe,
- 	.id_table = avr_id,
- };
- 
-diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-index 0967bdfb1691..409481016928 100644
---- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-+++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-@@ -142,7 +142,7 @@ static int mcu_gpiochip_remove(struct mcu *mcu)
- 	return 0;
- }
- 
--static int mcu_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+static int mcu_probe(struct i2c_client *client)
- {
- 	struct mcu *mcu;
- 	int ret;
-@@ -221,7 +221,7 @@ static struct i2c_driver mcu_driver = {
- 		.name = "mcu-mpc8349emitx",
- 		.of_match_table = mcu_of_match_table,
- 	},
--	.probe = mcu_probe,
-+	.probe_new = mcu_probe,
- 	.remove	= mcu_remove,
- 	.id_table = mcu_ids,
- };
--- 
-2.25.4
+> Also, could you add a "Fixes" tag, like:
+>
+> Fixes: 3448914e8cc5("loop: Add LOOP_CONFIGURE ioctl")
 
+Thanks for the review. I'll fix this up and send a v2. Are you OK with
+me adding your Ack to the patch? And also should this geta cc for
+stable?
+
+Thanks,
+
+Lennart
+
+--
+Lennart Poettering, Berlin
