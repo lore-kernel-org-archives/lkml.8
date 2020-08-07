@@ -2,343 +2,293 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14D62065E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35AC92075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mnQfNCSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgHGQOF (ORCPT
+        id S1726514AbgHGQQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:14:05 -0400
-Received: from vpn2.c-s.fr ([93.17.235.2]:5177 "EHLO pegase2.c-s.fr"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbgHGQOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:14:04 -0400
-Received: from localhost (mailhub2-ext [172.26.127.67])
-        by localhost (Postfix) with ESMTP id 4BNVm40jBXz9ttfr;
-        Fri,  7 Aug 2020 18:13:56 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-        by localhost (pegase2.c-s.fr [172.26.127.65]) (amavisd-new, port 10024)
-        with ESMTP id W6UNBS7J8keU; Fri,  7 Aug 2020 18:13:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase2.c-s.fr (Postfix) with ESMTP id 4BNVm36P8bz9ttfn;
-        Fri,  7 Aug 2020 18:13:55 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 334C58B862;
-        Fri,  7 Aug 2020 18:13:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id nm6_b2U25kWU; Fri,  7 Aug 2020 18:13:59 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CD8328B849;
-        Fri,  7 Aug 2020 18:13:58 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 9C2C865C12; Fri,  7 Aug 2020 16:13:58 +0000 (UTC)
-Message-Id: <95c00a811897f6d9176d30bf2ac92dab8c9c8e95.1596816789.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [RFC PATCH v1] power: don't manage floating point regs when no FPU
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri,  7 Aug 2020 16:13:58 +0000 (UTC)
+        Fri, 7 Aug 2020 12:16:06 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48340 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgHGQQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 12:16:05 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 077GBQOS027293;
+        Fri, 7 Aug 2020 16:15:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Iw9gSXOT177RL8c5e54Q3cyOdHO3XECC9NU+v/BWeOo=;
+ b=mnQfNCSPb2InFc+cNqgOSdQsDi0Eghe526jJr33AVNMBVINNJGfyNKaSmZv+25WlLG79
+ xcbZG4MGWLVG3iW31jyWub51ov3/uN1p907iOKuzm4WFYqN/YRr/5crg9FEPtUKrzi/U
+ q9y553uFmrD3JfDmAxNdZb7NJKSn7bU0d9DP2Gg7dT7aq2DfXlbf5ZumMLl82+6Df5j9
+ YKbImz/j0WX4ZkCREJarSjksa3k25DBhEyUwzvbnjV67Bj1LHfPD9IazhmOAr2/qMgBu
+ e+c9PgrDFHiqwsMBfiPQs357tfQTXVofqoTKI3ssXMQZMrTgYxXN3ewcJs068RUKrS7c Gg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32r6gx1cwg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 07 Aug 2020 16:15:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 077G80mw090947;
+        Fri, 7 Aug 2020 16:15:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 32r6cxya29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Aug 2020 16:15:32 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 077GFSgT003950;
+        Fri, 7 Aug 2020 16:15:28 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Aug 2020 09:15:28 -0700
+Date:   Fri, 7 Aug 2020 09:15:26 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, dan.j.williams@intel.com,
+        david@fromorbit.com, hch@lst.de, rgoldwyn@suse.de,
+        qi.fuli@fujitsu.com, y-goto@fujitsu.com
+Subject: Re: [RFC PATCH 1/8] fs: introduce get_shared_files() for dax&reflink
+Message-ID: <20200807161526.GD6090@magnolia>
+References: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
+ <20200807131336.318774-2-ruansy.fnst@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807131336.318774-2-ruansy.fnst@cn.fujitsu.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 mlxscore=0 bulkscore=0
+ spamscore=0 adultscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008070112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
+ phishscore=0 clxscore=1011 suspectscore=5 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008070112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point in copying floating point regs when there
-is no FPU and MATH_EMULATION is not selected.
+On Fri, Aug 07, 2020 at 09:13:29PM +0800, Shiyang Ruan wrote:
+> Under the mode of both dax and reflink on, one page may be shared by
+> multiple files and offsets.  In order to track them in memory-failure or
+> other cases, we introduce this function by finding out who is sharing
+> this block(the page) in a filesystem.  It returns a list that contains
+> all the owners, and the offset in each owner.
+> 
+> For XFS, rmapbt is used to find out the owners of one block.  So, it
+> should be turned on when we want to use dax&reflink feature together.
+> 
+> Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+> ---
+>  fs/xfs/xfs_super.c  | 67 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/dax.h |  7 +++++
+>  include/linux/fs.h  |  2 ++
+>  3 files changed, 76 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 379cbff438bc..b71392219c91 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -35,6 +35,9 @@
+>  #include "xfs_refcount_item.h"
+>  #include "xfs_bmap_item.h"
+>  #include "xfs_reflink.h"
+> +#include "xfs_alloc.h"
+> +#include "xfs_rmap.h"
+> +#include "xfs_rmap_btree.h"
+>  
+>  #include <linux/magic.h>
+>  #include <linux/fs_context.h>
+> @@ -1097,6 +1100,69 @@ xfs_fs_free_cached_objects(
+>  	return xfs_reclaim_inodes_nr(XFS_M(sb), sc->nr_to_scan);
+>  }
+>  
+> +static int _get_shared_files_fn(
 
-Create a new CONFIG_PPC_FPU_REGS bool that is selected by
-CONFIG_MATH_EMULATION and CONFIG_PPC_FPU, and use it to
-opt out everything related to fp_state in thread_struct.
+Needs an xfs_ prefix...
 
-The following app runs in approx 10.50 seconds on an 8xx without
-the patch, and in 9.45 seconds with the patch.
+> +	struct xfs_btree_cur	*cur,
+> +	struct xfs_rmap_irec	*rec,
+> +	void			*priv)
+> +{
+> +	struct list_head	*list = priv;
+> +	struct xfs_inode	*ip;
+> +	struct shared_files	*sfp;
+> +
+> +	/* Get files that incore, filter out others that are not in use. */
+> +	xfs_iget(cur->bc_mp, cur->bc_tp, rec->rm_owner, XFS_IGET_INCORE, 0, &ip);
 
-	void sigusr1(int sig) { }
+No error checking at all?
 
-	int main(int argc, char **argv)
-	{
-		int i = 100000;
+What if rm_owner refers to metadata?
 
-		signal(SIGUSR1, sigusr1);
-		for (;i--;)
-			raise(SIGUSR1);
-		exit(0);
-	}
+> +	if (ip && !ip->i_vnode.i_mapping)
+> +		return 0;
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/Kconfig                      |  1 +
- arch/powerpc/include/asm/processor.h      |  2 ++
- arch/powerpc/kernel/asm-offsets.c         |  2 ++
- arch/powerpc/kernel/process.c             |  4 ++++
- arch/powerpc/kernel/ptrace/ptrace-novsx.c |  8 ++++++++
- arch/powerpc/kernel/ptrace/ptrace.c       |  4 ++++
- arch/powerpc/kernel/signal.c              | 12 +++++++++++-
- arch/powerpc/kernel/signal_32.c           |  4 ++++
- arch/powerpc/kernel/traps.c               |  4 ++++
- arch/powerpc/platforms/Kconfig.cputype    |  4 ++++
- 10 files changed, 44 insertions(+), 1 deletion(-)
+When is the xfs_inode released?  We don't iput it here, and there's no
+way for dax_unlock_page (afaict the only consumer) to do it, so we
+leak the reference.
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1f48bbfb3ce9..a2611880b904 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -416,6 +416,7 @@ config HUGETLB_PAGE_SIZE_VARIABLE
- config MATH_EMULATION
- 	bool "Math emulation"
- 	depends on 4xx || PPC_8xx || PPC_MPC832x || BOOKE
-+	select PPC_FPU_REGS
- 	help
- 	  Some PowerPC chips designed for embedded applications do not have
- 	  a floating-point unit and therefore do not implement the
-diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-index ed0d633ab5aa..e20b0c5abe62 100644
---- a/arch/powerpc/include/asm/processor.h
-+++ b/arch/powerpc/include/asm/processor.h
-@@ -175,8 +175,10 @@ struct thread_struct {
- #endif
- 	/* Debug Registers */
- 	struct debug_reg debug;
-+#ifdef CONFIG_PPC_FPU_REGS
- 	struct thread_fp_state	fp_state;
- 	struct thread_fp_state	*fp_save_area;
-+#endif
- 	int		fpexc_mode;	/* floating-point exception mode */
- 	unsigned int	align_ctl;	/* alignment handling control */
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 8711c2164b45..6cb36c341c70 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -110,9 +110,11 @@ int main(void)
- #ifdef CONFIG_BOOKE
- 	OFFSET(THREAD_NORMSAVES, thread_struct, normsave[0]);
- #endif
-+#ifdef CONFIG_PPC_FPU
- 	OFFSET(THREAD_FPEXC_MODE, thread_struct, fpexc_mode);
- 	OFFSET(THREAD_FPSTATE, thread_struct, fp_state.fpr);
- 	OFFSET(THREAD_FPSAVEAREA, thread_struct, fp_save_area);
-+#endif
- 	OFFSET(FPSTATE_FPSCR, thread_fp_state, fpscr);
- 	OFFSET(THREAD_LOAD_FP, thread_struct, load_fp);
- #ifdef CONFIG_ALTIVEC
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 016bd831908e..7e0082ac0a39 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1694,7 +1694,9 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
- 		p->thread.ptrace_bps[i] = NULL;
- #endif
- 
-+#ifdef CONFIG_PPC_FPU_REGS
- 	p->thread.fp_save_area = NULL;
-+#endif
- #ifdef CONFIG_ALTIVEC
- 	p->thread.vr_save_area = NULL;
- #endif
-@@ -1821,8 +1823,10 @@ void start_thread(struct pt_regs *regs, unsigned long start, unsigned long sp)
- #endif
- 	current->thread.load_slb = 0;
- 	current->thread.load_fp = 0;
-+#ifdef CONFIG_PPC_FPU_REGS
- 	memset(&current->thread.fp_state, 0, sizeof(current->thread.fp_state));
- 	current->thread.fp_save_area = NULL;
-+#endif
- #ifdef CONFIG_ALTIVEC
- 	memset(&current->thread.vr_state, 0, sizeof(current->thread.vr_state));
- 	current->thread.vr_state.vscr.u[3] = 0x00010000; /* Java mode disabled */
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-novsx.c b/arch/powerpc/kernel/ptrace/ptrace-novsx.c
-index b2dc4e92d11a..8f87a11f3f8c 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-novsx.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace-novsx.c
-@@ -21,6 +21,7 @@
- int fpr_get(struct task_struct *target, const struct user_regset *regset,
- 	    unsigned int pos, unsigned int count, void *kbuf, void __user *ubuf)
- {
-+#ifdef CONFIG_PPC_FPU_REGS
- 	BUILD_BUG_ON(offsetof(struct thread_fp_state, fpscr) !=
- 		     offsetof(struct thread_fp_state, fpr[32]));
- 
-@@ -28,6 +29,9 @@ int fpr_get(struct task_struct *target, const struct user_regset *regset,
- 
- 	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
- 				   &target->thread.fp_state, 0, -1);
-+#else
-+	return 0;
-+#endif
- }
- 
- /*
-@@ -47,6 +51,7 @@ int fpr_set(struct task_struct *target, const struct user_regset *regset,
- 	    unsigned int pos, unsigned int count,
- 	    const void *kbuf, const void __user *ubuf)
- {
-+#ifdef CONFIG_PPC_FPU_REGS
- 	BUILD_BUG_ON(offsetof(struct thread_fp_state, fpscr) !=
- 		     offsetof(struct thread_fp_state, fpr[32]));
- 
-@@ -54,4 +59,7 @@ int fpr_set(struct task_struct *target, const struct user_regset *regset,
- 
- 	return user_regset_copyin(&pos, &count, &kbuf, &ubuf,
- 				  &target->thread.fp_state, 0, -1);
-+#else
-+	return 0;
-+#endif
- }
-diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
-index f6e51be47c6e..f162bfec0d3f 100644
---- a/arch/powerpc/kernel/ptrace/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace.c
-@@ -70,6 +70,7 @@ long arch_ptrace(struct task_struct *child, long request,
- 			ret = ptrace_get_reg(child, (int) index, &tmp);
- 			if (ret)
- 				break;
-+#ifdef CONFIG_PPC_FPU_REGS
- 		} else {
- 			unsigned int fpidx = index - PT_FPR0;
- 
-@@ -79,6 +80,7 @@ long arch_ptrace(struct task_struct *child, long request,
- 				       sizeof(long));
- 			else
- 				tmp = child->thread.fp_state.fpscr;
-+#endif
- 		}
- 		ret = put_user(tmp, datalp);
- 		break;
-@@ -103,6 +105,7 @@ long arch_ptrace(struct task_struct *child, long request,
- 		CHECK_FULL_REGS(child->thread.regs);
- 		if (index < PT_FPR0) {
- 			ret = ptrace_put_reg(child, index, data);
-+#ifdef CONFIG_PPC_FPU_REGS
- 		} else {
- 			unsigned int fpidx = index - PT_FPR0;
- 
-@@ -113,6 +116,7 @@ long arch_ptrace(struct task_struct *child, long request,
- 			else
- 				child->thread.fp_state.fpscr = data;
- 			ret = 0;
-+#endif
- 		}
- 		break;
- 	}
-diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-index d15a98c758b8..18dcbf538f8f 100644
---- a/arch/powerpc/kernel/signal.c
-+++ b/arch/powerpc/kernel/signal.c
-@@ -133,7 +133,7 @@ unsigned long copy_ckvsx_from_user(struct task_struct *task,
- 	return 0;
- }
- #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
--#else
-+#elif defined(CONFIG_PPC_FPU_REGS)
- inline unsigned long copy_fpr_to_user(void __user *to,
- 				      struct task_struct *task)
- {
-@@ -163,6 +163,16 @@ inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
- 				ELF_NFPREG * sizeof(double));
- }
- #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
-+#else
-+inline unsigned long copy_fpr_to_user(void __user *to, struct task_struct *task)
-+{
-+	return 0;
-+}
-+
-+inline unsigned long copy_fpr_from_user(struct task_struct *task, void __user *from)
-+{
-+	return 0;
-+}
- #endif
- 
- /* Log an error when sending an unhandled signal to a process. Controlled
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 96950f189b5a..7b291707eb31 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -814,7 +814,9 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
- 	}
- 	regs->link = tramp;
- 
-+#ifdef CONFIG_PPC_FPU_REGS
- 	tsk->thread.fp_state.fpscr = 0;	/* turn off all fp exceptions */
-+#endif
- 
- 	/* create a stack frame for the caller of the handler */
- 	newsp = ((unsigned long)rt_sf) - (__SIGNAL_FRAMESIZE + 16);
-@@ -1271,7 +1273,9 @@ int handle_signal32(struct ksignal *ksig, sigset_t *oldset,
- 
- 	regs->link = tramp;
- 
-+#ifdef CONFIG_PPC_FPU_REGS
- 	tsk->thread.fp_state.fpscr = 0;	/* turn off all fp exceptions */
-+#endif
- 
- 	/* create a stack frame for the caller of the handler */
- 	newsp = ((unsigned long)frame) - __SIGNAL_FRAMESIZE;
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index d1ebe152f210..ee9ec61e75b7 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -1188,6 +1188,7 @@ static inline int __parse_fpscr(unsigned long fpscr)
- 	return ret;
- }
- 
-+#ifdef CONFIG_PPC_FPU
- static void parse_fpe(struct pt_regs *regs)
- {
- 	int code = 0;
-@@ -1198,6 +1199,7 @@ static void parse_fpe(struct pt_regs *regs)
- 
- 	_exception(SIGFPE, regs, code, regs->nip);
- }
-+#endif
- 
- /*
-  * Illegal instruction emulation support.  Originally written to
-@@ -1477,11 +1479,13 @@ void program_check_exception(struct pt_regs *regs)
- 	/* We can now get here via a FP Unavailable exception if the core
- 	 * has no FPU, in that case the reason flags will be 0 */
- 
-+#ifdef CONFIG_PPC_FPU
- 	if (reason & REASON_FP) {
- 		/* IEEE FP exception */
- 		parse_fpe(regs);
- 		goto bail;
- 	}
-+#endif
- 	if (reason & REASON_TRAP) {
- 		unsigned long bugaddr;
- 		/* Debugger is first in line to stop recursive faults in
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 87737ec86d39..40ffcdba42b8 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -225,9 +225,13 @@ config PPC_E500MC
- 	  such as e5500/e6500), and must be disabled for running on
- 	  e500v1 or e500v2.
- 
-+config PPC_FPU_REGS
-+	bool
-+
- config PPC_FPU
- 	bool
- 	default y if PPC64
-+	select PPC_FPU_REGS
- 
- config FSL_EMB_PERFMON
- 	bool "Freescale Embedded Perfmon"
--- 
-2.25.0
+> +
+> +	sfp = kmalloc(sizeof(*sfp), GFP_KERNEL);
 
+If there are millions of open files reflinked to this range of pmem this
+is going to allocate a /lot/ of memory.
+
+> +	sfp->mapping = ip->i_vnode.i_mapping;
+
+sfp->mapping = VFS_I(ip)->i_mapping;
+
+> +	sfp->index = rec->rm_offset;
+> +	list_add_tail(&sfp->list, list);
+
+Why do we leave ->cookie uninitialized?  What does it even do?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +xfs_fs_get_shared_files(
+> +	struct super_block	*sb,
+> +	pgoff_t			offset,
+
+Which device does this offset refer to?  XFS supports multiple storage
+devices.
+
+Also, uh, is this really a pgoff_t?  If yes, you can't use it with
+XFS_B_TO_FSB below without first converting it to a loff_t.
+
+> +	struct list_head	*list)
+> +{
+> +	struct xfs_mount	*mp = XFS_M(sb);
+> +	struct xfs_trans	*tp = NULL;
+> +	struct xfs_btree_cur	*cur = NULL;
+> +	struct xfs_rmap_irec	rmap_low = { 0 }, rmap_high = { 0 };
+
+No need to memset(0) rmap_low later, or zero rmap_high just to memset it
+later.
+
+> +	struct xfs_buf		*agf_bp = NULL;
+> +	xfs_agblock_t		bno = XFS_B_TO_FSB(mp, offset);
+
+"FSB" refers to xfs_fsblock_t.  You just ripped the upper 32 bits off
+the fsblock number.
+
+> +	xfs_agnumber_t		agno = XFS_FSB_TO_AGNO(mp, bno);
+> +	int			error = 0;
+> +
+> +	error = xfs_trans_alloc_empty(mp, &tp);
+> +	if (error)
+> +		return error;
+> +
+> +	error = xfs_alloc_read_agf(mp, tp, agno, 0, &agf_bp);
+> +	if (error)
+> +		return error;
+> +
+> +	cur = xfs_rmapbt_init_cursor(mp, tp, agf_bp, agno);
+> +
+> +	memset(&cur->bc_rec, 0, sizeof(cur->bc_rec));
+
+Not necessary, bc_rec is zero in a freshly created cursor.
+
+> +	/* Construct the range for one rmap search */
+> +	memset(&rmap_low, 0, sizeof(rmap_low));
+> +	memset(&rmap_high, 0xFF, sizeof(rmap_high));
+> +	rmap_low.rm_startblock = rmap_high.rm_startblock = bno;
+> +
+> +	error = xfs_rmap_query_range(cur, &rmap_low, &rmap_high,
+> +				     _get_shared_files_fn, list);
+> +	if (error == -ECANCELED)
+> +		error = 0;
+> +
+> +	xfs_btree_del_cursor(cur, error);
+> +	xfs_trans_brelse(tp, agf_bp);
+> +	return error;
+> +}
+
+Looking at this, I don't think this is the right way to approach memory
+poisoning.  Rather than allocating a (potentially huge) linked list and
+passing it to the memory poison code to unmap pages, kill processes, and
+free the list, I think:
+
+1) "->get_shared_files" should be more targetted.  Call it ->storage_lost
+or something, so that it only has one purpose, which is to react to
+asynchronous notifications that storage has been lost.
+
+2) The inner _get_shared_files_fn should directly call back into the
+memory manager to remove a poisoned page from the mapping and signal
+whatever process might have it mapped.
+
+That way, _get_shared_files_fn can look in the xfs buffer cache to see
+if we have a copy in DRAM, and immediately write it back to pmem.
+
+Hmm and now that you've gotten me rambling about hwpoison, I wonder what
+happens if dram backing part of the xfs buffer cache goes bad...
+
+--D
+
+> +
+>  static const struct super_operations xfs_super_operations = {
+>  	.alloc_inode		= xfs_fs_alloc_inode,
+>  	.destroy_inode		= xfs_fs_destroy_inode,
+> @@ -1110,6 +1176,7 @@ static const struct super_operations xfs_super_operations = {
+>  	.show_options		= xfs_fs_show_options,
+>  	.nr_cached_objects	= xfs_fs_nr_cached_objects,
+>  	.free_cached_objects	= xfs_fs_free_cached_objects,
+> +	.get_shared_files	= xfs_fs_get_shared_files,
+>  };
+>  
+>  static int
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index 6904d4e0b2e0..0a85e321d6b4 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -40,6 +40,13 @@ struct dax_operations {
+>  
+>  extern struct attribute_group dax_attribute_group;
+>  
+> +struct shared_files {
+> +	struct list_head	list;
+> +	struct address_space	*mapping;
+> +	pgoff_t			index;
+> +	dax_entry_t		cookie;
+> +};
+> +
+>  #if IS_ENABLED(CONFIG_DAX)
+>  struct dax_device *dax_get_by_host(const char *host);
+>  struct dax_device *alloc_dax(void *private, const char *host,
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index f5abba86107d..81de3d2739b9 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1977,6 +1977,8 @@ struct super_operations {
+>  				  struct shrink_control *);
+>  	long (*free_cached_objects)(struct super_block *,
+>  				    struct shrink_control *);
+> +	int (*get_shared_files)(struct super_block *sb, pgoff_t offset,
+> +				struct list_head *list);
+>  };
+>  
+>  /*
+> -- 
+> 2.27.0
+> 
+> 
+> 
