@@ -2,302 +2,82 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E67C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C86C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F034221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:09:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xRVx7pmJ"
+	by mail.kernel.org (Postfix) with ESMTP id A0F9A2177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 02:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgHGCJb (ORCPT
+        id S1726377AbgHGCL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Aug 2020 22:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgHGCJa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Aug 2020 22:09:30 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED3BC061756
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Aug 2020 19:09:29 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id k12so492599otr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Aug 2020 19:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UXDzWg/XP+2sEYoVhG4gJfqwuqtmZXkmnkeb5iVh2iE=;
-        b=xRVx7pmJO/zgnmDPgxBODMiXXblNkdoeRjHXmhtFHUwUlpQxf7nYRXHHu9BNt2Hp8i
-         76kWUw7L3zpb9iMmyjcw2br1Wju7Q6dwIe79tqy4yr4oK5wtgTOVMpUc2rECYHCYsu9I
-         TcoaqnuUBgUEfeM+ZWZDU2CjurnWfmYp8IMnt/d7wNpSIf4mlqj1ZH8JVNvxvoHJ5a2p
-         uBF5+ggJjW1IUrkPnyH4niRERLtxkTIXZrtk1JNFb26gxC0RlgWewBXO+y12ZwRtfzse
-         mhLNykEUYuKZ/Iz2NnEH0KikWzaYpnbtc+3DPUt8pKC1/A5tDxdgt+lNq3/L4ucJgD23
-         gpvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UXDzWg/XP+2sEYoVhG4gJfqwuqtmZXkmnkeb5iVh2iE=;
-        b=pXoOS9ooCoWTwp+dJ5SqZQrmIs6ikaV94pC+Q6WI84Xhw/GFaydU9d5WUn05pqQNOf
-         KCEt/FJ5vCnJ5wD8KLDvLZ5FLXovJhkjfNQfZvZNhl5mrhhuLI5LEgRR3+3Ew2rcKMuh
-         bLDDcumrrQ9rxd1XUVKLsQtDGvHk/eFuLU+R9FpFuA5/FbOGupMODuFqG/EE0X8ZKLjj
-         udMHtisvPyI47owyIuY/QEVd6MbLjxs4X4NcQ608AJ5Ed16XiE6JfbKJcrBVa6nb6i3p
-         ll4cRgER2kpi3bOZoIwls8C7vkzzylNuM1teozdGAdFKLeczEtzLhZILn1hBzctLF4zH
-         NkLA==
-X-Gm-Message-State: AOAM5310BOgIC8QkHfEBuWPxMhdtbYwIbJZow+wiY91yMP5wAMXPQUSE
-        Z3pLbyMOSiVCyioxJDUn0H4eSZwoDCRJQwNGvvUZtQ==
-X-Google-Smtp-Source: ABdhPJxpkfgvvlB6dJX/jSYtlNEZQF79RdUNfSy2KapZFTawN302cQpYn6luuDiz+1kWHSQ6VcY0la2Eq+7jSP4C/LY=
-X-Received: by 2002:a9d:6f8f:: with SMTP id h15mr3718655otq.221.1596766168877;
- Thu, 06 Aug 2020 19:09:28 -0700 (PDT)
+        Thu, 6 Aug 2020 22:11:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48098 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726126AbgHGCL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Aug 2020 22:11:26 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 66EEC3AA4F0D1AE01613;
+        Fri,  7 Aug 2020 10:11:24 +0800 (CST)
+Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 7 Aug 2020
+ 10:11:23 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: remove unnecessary judgment in
+ f2fs_drop_inode
+To:     Liu Song <fishland@aliyun.com>, <jaegeuk@kernel.org>,
+        <chao@kernel.org>
+CC:     <liu.song11@zte.com.cn>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200806150317.34618-1-fishland@aliyun.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <ea87263e-57d9-7521-6094-9aa7e1796f07@huawei.com>
+Date:   Fri, 7 Aug 2020 10:11:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200422203245.83244-1-john.stultz@linaro.org>
- <20200422203245.83244-2-john.stultz@linaro.org> <20200806135251.GB3351349@ulmo>
-In-Reply-To: <20200806135251.GB3351349@ulmo>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 6 Aug 2020 19:09:16 -0700
-Message-ID: <CALAqxLU=a+KXKya2FkgCuYyw5ttZJ_NXjNbszFzSjP49wMN84g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] driver core: Revert default driver_deferred_probe_timeout
- value to 0
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200806150317.34618-1-fishland@aliyun.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.164.122.247]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 6:52 AM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> On Wed, Apr 22, 2020 at 08:32:43PM +0000, John Stultz wrote:
-> > This patch addresses a regression in 5.7-rc1+
-> >
-> > In commit c8c43cee29f6 ("driver core: Fix
-> > driver_deferred_probe_check_state() logic"), we both cleaned up
-> > the logic and also set the default driver_deferred_probe_timeout
-> > value to 30 seconds to allow for drivers that are missing
-> > dependencies to have some time so that the dependency may be
-> > loaded from userland after initcalls_done is set.
-> >
-> > However, Yoshihiro Shimoda reported that on his device that
-> > expects to have unmet dependencies (due to "optional links" in
-> > its devicetree), was failing to mount the NFS root.
-> >
-> > In digging further, it seemed the problem was that while the
-> > device properly probes after waiting 30 seconds for any missing
-> > modules to load, the ip_auto_config() had already failed,
-> > resulting in NFS to fail. This was due to ip_auto_config()
-> > calling wait_for_device_probe() which doesn't wait for the
-> > driver_deferred_probe_timeout to fire.
-> >
-> > Fixing that issue is possible, but could also introduce 30
-> > second delays in bootups for users who don't have any
-> > missing dependencies, which is not ideal.
-> >
-> > So I think the best solution to avoid any regressions is to
-> > revert back to a default timeout value of zero, and allow
-> > systems that need to utilize the timeout in order for userland
-> > to load any modules that supply misisng dependencies in the dts
-> > to specify the timeout length via the exiting documented boot
-> > argument.
-> >
-> > Thanks to Geert for chasing down that ip_auto_config was why NFS
-> > was failing in this case!
-> >
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-> > Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > Cc: Basil Eljuse <Basil.Eljuse@arm.com>
-> > Cc: Ferry Toth <fntoth@gmail.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Anders Roxell <anders.roxell@linaro.org>
-> > Cc: netdev <netdev@vger.kernel.org>
-> > Cc: linux-pm@vger.kernel.org
-> > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >  drivers/base/dd.c | 13 ++-----------
-> >  1 file changed, 2 insertions(+), 11 deletions(-)
->
-> Sorry for being a bit late to the party, but this breaks suspend/resume
-> support on various Tegra devices. I've only noticed now because, well,
-> suspend/resume have been broken for other reasons for a little while and
-> it's taken us a bit to resolve those issues.
->
-> But now that those other issues have been fixed, I've started seeing an
-> issue where after resume from suspend some of the I2C controllers are no
-> longer working. The reason for this is that they share pins with DP AUX
-> controllers via the pinctrl framework. The DP AUX driver registers as
-> part of the DRM/KMS driver, which usually happens in userspace. Since
-> the deferred probe timeout was set to 0 by default this no longer works
-> because no pinctrl states are assigned to the I2C controller and
-> therefore upon resume the pins cannot be configured for I2C operation.
-
-Oof. My apologies!
-
-> I'm also somewhat confused by this patch and a few before because they
-> claim that they restore previous default behaviour, but that's just not
-> true. Originally when this timeout was introduced it was -1, which meant
-> that there was no timeout at all and hence users had to opt-in if they
-> wanted to use a deferred probe timeout.
-
-I don't think that's quite true, since the point of my original
-changes were to avoid troubles I was seeing with drivers not loading
-because once the timeout fired after init, driver loading would fail
-with ENODEV instead of returning EPROBE_DEFER. The logic that existed
-was buggy so the timeout handling didn't really work (changing the
-boot argument wouldn't help, because after init the logic would return
-ENODEV before it checked the timeout value).
-
-That said, looking at it now, I do realize the
-driver_deferred_probe_check_state_continue() logic in effect never
-returned ETIMEDOUT before was consolidated in the earlier changes, and
-now we've backed the default timeout to 0, old user (see bec6c0ecb243)
-will now get ETIMEDOUT where they wouldn't before.
-
-So would the following fix it up for you? (sorry its whitespace corrupted)
-
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index c6fe7d64c913..c7448be64d07 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -129,9 +129,8 @@ static int dt_to_map_one_config(struct pinctrl *p,
-                if (!np_pctldev || of_node_is_root(np_pctldev)) {
-                        of_node_put(np_pctldev);
-                        ret = driver_deferred_probe_check_state(p->dev);
--                       /* keep deferring if modules are enabled
-unless we've timed out */
--                       if (IS_ENABLED(CONFIG_MODULES) && !allow_default &&
--                           (ret == -ENODEV))
-+                       /* keep deferring if modules are enabled */
-+                       if (IS_ENABLED(CONFIG_MODULES) &&
-!allow_default && ret < 0)
-                                ret = -EPROBE_DEFER;
-                        return ret;
-                }
-
-(you could probably argue calling driver_deferred_probe_check_state
-checking ret at all is silly here, since EPROBE_DEFER is the only
-option you want)
-
-> But now after this series the default is for there to be a very short
-> timeout, which in turn causes existing use-cases to potentially break.
-> I'm also going to suggest here that in most cases a driver will require
-> the resources that it asks for, so the case that Yoshihiro described and
-> that this patch is meant to fix sounds to me like it's the odd one out
-> rather than the other way around.
->
-> But I realize that that's not very constructive. So perhaps we can find
-> some other way for drivers to advertise that their dependencies are
-> optional? I came up with the below patch, which restores suspend/resume
-> on Tegra and could be used in conjunction with a patch that opts into
-> this behaviour for the problematic driver in Yoshihiro's case to make
-> this again work for everyone.
->
-> --- >8 ---
-> From a95f8f41b8a32dee3434db4f0515af7376d1873a Mon Sep 17 00:00:00 2001
-> From: Thierry Reding <treding@nvidia.com>
-> Date: Thu, 6 Aug 2020 14:51:59 +0200
-> Subject: [PATCH] driver core: Do not ignore dependencies by default
->
-> Many drivers do require the resources that they ask for and timing out
-> may not always be an option. While there is a way to allow probing to
-> continue to be deferred for some time after the system has booted, the
-> fact that this is controlled via a command-line parameter is undesired
-> because it require manual intervention, whereas in can be avoid in the
-> majority of cases.
->
-> Instead of requiring users to edit the kernel command-line, add a way
-> for drivers to specify whether or not their dependencies are optional
-> so that they can continue deferring probe indefinitely.
->
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+On 2020/8/6 23:03, Liu Song via Linux-f2fs-devel wrote:
+> From: Liu Song <liu.song11@zte.com.cn>
+> 
+> Inode hash has been removed in "make_bad_inode". If inode_unhashed
+> is false, it must not be a bad inode.
+> 
+> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
 > ---
->  drivers/base/dd.c             | 2 +-
->  include/linux/device/driver.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 857b0a928e8d..11e747070eae 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -279,7 +279,7 @@ int driver_deferred_probe_check_state(struct device *dev)
->                 return -ENODEV;
->         }
->
-> -       if (!driver_deferred_probe_timeout && initcalls_done) {
-> +       if (dev->driver->ignore_dependencies && !driver_deferred_probe_timeout && initcalls_done) {
->                 dev_warn(dev, "deferred probe timeout, ignoring dependency\n");
->                 return -ETIMEDOUT;
->         }
-> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-> index ee7ba5b5417e..6994455e8a2e 100644
-> --- a/include/linux/device/driver.h
-> +++ b/include/linux/device/driver.h
-> @@ -100,6 +100,7 @@ struct device_driver {
->         const char              *mod_name;      /* used for built-in modules */
->
->         bool suppress_bind_attrs;       /* disables bind/unbind via sysfs */
-> +       bool ignore_dependencies;       /* ignores dependencies */
->         enum probe_type probe_type;
->
->         const struct of_device_id       *of_match_table;
-> --
-> 2.27.0
-> --- >8 ---
->
-> Although, thinking about it a bit more it sounds to me like an even
-> better approach would be to make this part of the API where a resource
-> is requested. There are in fact already APIs that can request optional
-> resources (such as regulator_get_optional()), so I think it would make
-> more sense for any driver that can live without a resource to request
-> it with an optional flag, which in turn could then trigger this code
-> path for the deferred probe timeout. For anyone that really needs the
-> resources that they request, they really shouldn't have to jump through
-> hoops to get there.
+>   fs/f2fs/super.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 20e56b0fa46a..ee01d15effe3 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -1043,7 +1043,7 @@ static int f2fs_drop_inode(struct inode *inode)
+>   	 *       - inode_wait_for_writeback(inode)
+>   	 */
+>   	if ((!inode_unhashed(inode) && inode->i_state & I_SYNC)) {
 
-I do like these suggestions. I feel like the optional dt links
-handling is very opaque as there's no real way to tell if a dt link is
-truly optional or not. Having the timeout is a really subtle and
-implicit way of getting that optional link handling behavior.
+Since logic of "bad inode should be removed from hash" is not controlled by
+f2fs, so let's add below condition to make sure the rule of vfs is as it is.
 
-thanks
--john
+f2fs_bug_on(sbi, is_bad_inode(inode));
+
+> -		if (!inode->i_nlink && !is_bad_inode(inode)) {
+> +		if (!inode->i_nlink) {
+>   			/* to avoid evict_inode call simultaneously */
+>   			atomic_inc(&inode->i_count);
+>   			spin_unlock(&inode->i_lock);
+> 
