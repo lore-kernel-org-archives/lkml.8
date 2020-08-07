@@ -7,80 +7,167 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1AD2075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4CA22C9F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 11:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hMfLONcq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XQ50o8Qy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgHGLXw (ORCPT
+        id S1728252AbgHGLZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:23:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38421 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726058AbgHGLXv (ORCPT
+        Fri, 7 Aug 2020 07:25:40 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:37187 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgHGLZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 07:23:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596799430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WLk45tPE+WUIZ+TWLghGUARb9SM6riasZ/jfBJm1TnI=;
-        b=hMfLONcqBJD8L+WVWqMDLF1Kx9cH+3pRb1jAD+qivP6acIDDIz/ma2r5MIaQcd1/a99LA2
-        +q9lnfpsPGIlCRO6jXJp2HQasg6mACiZsHVKESS1bpiiDACzQNCpVbIGHZlgBwQZOSwQ8j
-        YQIjNdz/B0ZG4UFeb2/A6dP1GQ/fxLQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-q7r9Zj59MDOIhXTbmjlS4w-1; Fri, 07 Aug 2020 07:23:47 -0400
-X-MC-Unique: q7r9Zj59MDOIhXTbmjlS4w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFD8F58;
-        Fri,  7 Aug 2020 11:23:45 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1FA01001B2B;
-        Fri,  7 Aug 2020 11:23:45 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id AF26818095FF;
-        Fri,  7 Aug 2020 11:23:45 +0000 (UTC)
-Date:   Fri, 7 Aug 2020 07:23:45 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Cyril Hrubis <chrubis@suse.cz>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
-        ltp@lists.linux.it, skhan@linuxfoundation.org
-Message-ID: <282506361.7043502.1596799425598.JavaMail.zimbra@redhat.com>
-In-Reply-To: <2103348435.6776074.1596632339725.JavaMail.zimbra@redhat.com>
-References: <9927ed18c642db002e43afe5e36fb9c18c4f9495.1594811090.git.jstancek@redhat.com> <1881588710.5797015.1596457102422.JavaMail.zimbra@redhat.com> <20200805125357.GE5522@yuki.lan> <2103348435.6776074.1596632339725.JavaMail.zimbra@redhat.com>
-Subject: Re: [LTP] [PATCH] selftests: vdso: hash entry size on alpha, s390x
- is 8 bytes
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 7 Aug 2020 07:25:38 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200807112535epoutp02149287c7458d1c3adc6aef4aaf7771a2~o_LekbkUD2716827168epoutp02e;
+        Fri,  7 Aug 2020 11:25:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200807112535epoutp02149287c7458d1c3adc6aef4aaf7771a2~o_LekbkUD2716827168epoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596799535;
+        bh=vpt6JHTadTINEfPXkQp2G8+U/htx+npoLwW4CoLiWpY=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=XQ50o8Qy7hHoGWrDpgneR3ZH88+wLsnv5ho3IHZy8wyJ/u2iqwDWFCK1V41A0d8kg
+         69JnNutdkkvE1BokrP4NjCllOtsMgLdihWTAEd0srRbCD2k+pcEM1AqZ+/0S1/Omio
+         h7jan3ZXyyN8G9E5uwShualgQ/bLBy6iYVLXvh2A=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200807112534epcas5p33f1f0f66a68542f2d0087b7880884113~o_LdeuyT92580025800epcas5p3z;
+        Fri,  7 Aug 2020 11:25:34 +0000 (GMT)
+X-AuditID: b6c32a4a-991ff70000019d8d-55-5f2d3a2e8e77
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E3.87.40333.E2A3D2F5; Fri,  7 Aug 2020 20:25:34 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: [PATCH 1/1] arm64: add support for PAGE_SIZE aligned kernel
+ stack
+Reply-To: maninder1.s@samsung.com
+From:   Maninder Singh <maninder1.s@samsung.com>
+To:     Vaneet Narang <v.narang@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "kristina.martsenko@arm.com" <kristina.martsenko@arm.com>,
+        "samitolvanen@google.com" <samitolvanen@google.com>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "gladkov.alexey@gmail.com" <gladkov.alexey@gmail.com>,
+        "daniel.m.jordan@oracle.com" <daniel.m.jordan@oracle.com>,
+        "walken@google.com" <walken@google.com>,
+        "bernd.edlinger@hotmail.de" <bernd.edlinger@hotmail.de>,
+        "laoar.shao@gmail.com" <laoar.shao@gmail.com>,
+        "avagin@gmail.com" <avagin@gmail.com>,
+        "john.johansen@canonical.com" <john.johansen@canonical.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        AMIT SAHRAWAT <a.sahrawat@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20200804061526epcms5p3ff393f7e51d28ed896105c868bd31e5b@epcms5p3>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20200807111720epcms5p1206fe967bcee6136774c8432ed5b514b@epcms5p1>
+Date:   Fri, 07 Aug 2020 16:47:20 +0530
+X-CMS-MailID: 20200807111720epcms5p1206fe967bcee6136774c8432ed5b514b
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.208.12, 10.4.195.2]
-Thread-Topic: selftests: vdso: hash entry size on alpha, s390x is 8 bytes
-Thread-Index: LErn1s/S3CQkYyPud6YH5FoxnTRnDI7iYEbs
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTVwDGPbe3917QLpeC27G4KSRkgrE8guzMGPfQZBeTObbsj2Wbgw4v
+        6GwpaYFNjK4bj41qFSuwUgpURQrYDVfkIa3VdSsDgWF1OEAEDD4QSwrKjLWBLqU07r/f+c6X
+        78t3cigO30oIqH1ZOawsSySOJILxtt+jYzYJt2xKjXs8vhI5zCz66budSNdsJJC1Ox25510A
+        Lai7SNTnneagxvJBHJXfuUsgV/1RgLRPNSTythWS6JTrQ1RwpplA41YDhrrniwjUd0SCxv8s
+        5iLDg1ESmSZvcpHlUg+ObnTqCHT2HweGLup6uOj6FT2GWi8XAWT9cQJDZxtmuEjtbMOQraca
+        oEuLbhwtqg+hwtHNb0cwxhojYDzP1YDRKlQEU6Vw4MxF7W2SKbSOkIzelMucHrDjjKmphGC6
+        NR6cuVxtJJmWum+ZuXsjOOOyDhLMsQtNgHliei0l5NPgrXtY8b48Vha7LS14r3Kqkptdt+ob
+        489OTAEmg5QgiIJ0Iiwbc2FKEEzxaTOAdpcOKAFF8egQuNAR6vOE0ilw7uEV4GM+HQGvaYxL
+        llA6Dj5v3eCTCVoImzotuI/D6A+g5UED6Yvk0HoK3vIOLx1W0BU4LLzWTfqLeVDzwz3cz+Gw
+        3dC6VBBE74LtCx7Cr6+Gw+dmyAC7umqBn8Ng0Vg/x88hcMJtXtbXwnMtquXMAgBL6lhfMaTL
+        ADRPK5dD34Dm8zW4f+T78JRhi0/G6ShYNeJYtuyA9v4Wro859DrYPqPj+OwcOho2d8b6La/C
+        8qu/YH7LS1DluYsFZnXUBDgKFg6f5wYmPpmbW2qFNANHGkApiNC+eGjt/7q0L7r0gNME1rDZ
+        ckkmK9+cnZDFfi2UiyTy3KxMYbpUYgJLXzxmZwe4MzErtAGMAjYAKU5kGO+rqY2pfN4e0YF8
+        ViZNleWKWbkNhFN45Cu8yGd9X/DpTFEOu59ls1lZ4BajggQKDBx/mlQsOXk/70So2L42aX3J
+        hvfqh6Z3Tbr7Gh92EG/NZjrefGd3tejgUHiiQtq3YlR0U12h0px4/G9DRkoSk2KpT3tdDJOv
+        5y8Wv0sez9VIbcO/Ccb+TtjOxO2vOxx/Py1xjSrWmcyPr1G2xgx81pJv161KiAqvLPtrx+4q
+        e3eT2X0k9cDsvL5Lbc7pjLb1/7HA1mI9jrLeZxbd1ZHt9ttpRw+PKTIiDNLSQU+7vEJQUDyx
+        6P1ceCFi/NHQI+d0nm61PsP2ZRHrpBQfyb2HzuT0Rm/trSyVsp9UHiyIbRzaduOY8FdvQfLU
+        Rv1A6TrrrZdRifP0+ozaxe8FlvSVH1dH4vK9ovgYjkwu+g9izAL/UQQAAA==
+X-CMS-RootMailID: 20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96
+References: <20200804061526epcms5p3ff393f7e51d28ed896105c868bd31e5b@epcms5p3>
+        <20200803123447.GA89825@C02TD0UTHF1T.local>
+        <1596386115-47228-1-git-send-email-maninder1.s@samsung.com>
+        <CGME20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96@epcms5p1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
------ Original Message -----
-> 
-> ----- Original Message -----
-> > Hi!
-> > As much as it's worth the changes looks good to me.
-> > 
-> > @Jan: I guess that we can as well fix this in LTP first then we can try
-> >       to get the kernel version fixed...
-> 
-> Fine by me, I'll give it couple more days then push it.
+Hi Mark, 
 
-Pushed.
+>>If you are seeing issues with the current stack size, can you please
+>>explain that in more detail? Where are you seeing problems? Which
+>>configuration options do you have selected?
+>>
 
+We checked on our system with netflix and youtube 4K videos running
+max stack consumption was 7 KB:
+
+sh-3.2# cat /sys/kernel/debug/tracing/stack_max_size  
+7312
+
+Thus we thought 16KB wil waste a lot of memory for our ARM64 target,
+and 8KB can be less in some exceptional case.
+So we decided for 12 KB change.
+
+
+>>I'm not keen on making kernel stack sizes configurable as it's not
+>>currently possible for the person building the kernel to figure out a
+>>safe size (and if this were possible, it's be better to handle this
+>>automatically).
+>>
+
+Ok, can we do something else?, like not making it configurable,
+but do code changes to support it for PAGE_SIZE aligned stacks
+rather than power of 2 alignement.
+
+Although with configurable also, it depends on VMAP stack,
+so user will have stack exhaust  exception and can increase acccordingly also.
+
+> 
+>Motivation behind these changes is saving memory on our system. 
+>Our system runs around 2500 threads concurrently so saving 4Kb  
+>might help us in saving 10MB memory.
+> 
+>To ensure 12KB is sufficient for our system we have used stack tracing and 
+>realised maximum stack used is not more than 9KB. 
+> /sys/kernel/tracing/stack_max_size
+> 
+>Tracing interface defined by kernel to track maximum stack size can be used
+>by others to decide appropriate stack size.
+> 
+
+Thanks
+ 
