@@ -2,68 +2,45 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EF8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0728CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8269B214F1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF182214F1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WEQMKsvx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eMECZogz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgHGUYE (ORCPT
+        id S1726201AbgHGU2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:24:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43426 "EHLO
+        Fri, 7 Aug 2020 16:28:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgHGUYE (ORCPT
+        with ESMTP id S1725893AbgHGU2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:24:04 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245D7C061757
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:24:04 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so1494309pjd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=8kRWK6mpY0yuzrMz6VeBLLcMrpVG8ZtSX/iAsw+ut4A=;
-        b=WEQMKsvxL+jGuutK/BX9GjKhG9V6iqjN0wIPhLgvikM+b48e3QcXAaeBfnLsnUbVQM
-         sEPO5cpmUWUqe4CGQPLKERNzawMZGhiNtw2+3gnBjmoKN8srnzPI9ngJ2NslwuAjvSVk
-         RgOZqa5CfaRROKBbMjMpTLlU7cxtbupJL0vwY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=8kRWK6mpY0yuzrMz6VeBLLcMrpVG8ZtSX/iAsw+ut4A=;
-        b=QU/sh1PVPce4EY1A9XhUuojv4mA7DbMEh1lnAyVfqWZ/fcg/aUjHmhLuGO5XshAArQ
-         JSIH3gUz4RJY0t7wLYvLBI6JuU40VJDAbTbSlozKrZmTVawtD6J826O05c6/1qD8KCcG
-         eLl6qcgeFpKaxSCugrsf5x69qcOQj/TQso62QaOnbnnZ0wLro/bpf2LIEXpX9zEsp8tf
-         i77Lnk+T6KMnnfMSZLP1acJZIbaN3Xmh93O4o555fRTPWWpPLqc7xG1yP9IVMcKd+iXX
-         cuDS/V55WHALWLmsjEYQT7mkvUUq5IyIlx/y/yECIyDIYMiljBRhCJPvX0Q19zunRGou
-         BKWg==
-X-Gm-Message-State: AOAM533sdVZgLnAoIb2Vc9eKLZVI3QUfQ+Xu4u83wFw2ptu0lVUux79m
-        8oB/qM85GT8fX3jvrPGOVUOKMw==
-X-Google-Smtp-Source: ABdhPJwUCMA+qcCj4NBJ6bH6GJrNHolYmVbC63o7ey2y7ucXrSodd1KiH1QHhuAQODHYrQ6iqRsEPQ==
-X-Received: by 2002:a17:902:b089:: with SMTP id p9mr13616774plr.52.1596831843666;
-        Fri, 07 Aug 2020 13:24:03 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id z23sm11490482pgv.57.2020.08.07.13.24.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 13:24:03 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAF6AEGv5Yf1x7aCEauP7XtzTjpUCxJt6_GzxFhFXyf_DX_Gi+g@mail.gmail.com>
-References: <20200807071718.17937-1-tanmay@codeaurora.org> <20200807071718.17937-4-tanmay@codeaurora.org> <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org> <CAF6AEGv5Yf1x7aCEauP7XtzTjpUCxJt6_GzxFhFXyf_DX_Gi+g@mail.gmail.com>
+        Fri, 7 Aug 2020 16:28:50 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0120EC061756;
+        Fri,  7 Aug 2020 13:28:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=xRUD55pKuLg6gojA/cds2ffAUN36ReNagtqRG0GQuOQ=; b=eMECZogztFAvPBcu91JBf/wLGM
+        k1ceU0vlipiSyF/G/oMzLceUJUkmnts30fR0q2pmDv82h1fK80oSlFWBy8h78KX7AiVirD+JYaJxy
+        tXpFbNVVNfKY4cuNjqdQBKxlNJ5k7EfvRwx5DrJOSYcQB1lY0LQsWjpTvI0R9nyB2LyNsR6CeJe8R
+        zGc5QI7AEsgMCNtqPdk4LZ28D+nZnjXA+qImpWBbKE1C1AMO6wG5mShWIw8NjQJvFKBbkygQBr/Qh
+        HrP6IkmCYd6dCSvDooYUEj2SzoS3QhuYD4ld+Mzq8LJd2BKL1LvTwVvph76zE+uCdeKXqjNqslrtl
+        iOfpdiUw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k48yo-0004Yn-VD; Fri, 07 Aug 2020 20:28:43 +0000
 Subject: Re: [PATCH v9 3/5] drm/msm/dp: add support for DP PLL driver
-From:   Stephen Boyd <swboyd@chromium.org>
+To:     Stephen Boyd <swboyd@chromium.org>, Rob Clark <robdclark@gmail.com>
 Cc:     Tanmay Shah <tanmay@codeaurora.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
@@ -75,45 +52,63 @@ Cc:     Tanmay Shah <tanmay@codeaurora.org>,
         Abhinav Kumar <abhinavk@codeaurora.org>, khsieh@codeaurora.org,
         Chandan Uddaraju <chandanu@codeaurora.org>,
         Vara Reddy <varar@codeaurora.org>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Rob Clark <robdclark@gmail.com>
-Date:   Fri, 07 Aug 2020 13:24:01 -0700
-Message-ID: <159683184187.1360974.15575847254880429529@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <20200807071718.17937-1-tanmay@codeaurora.org>
+ <20200807071718.17937-4-tanmay@codeaurora.org>
+ <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org>
+ <CAF6AEGv5Yf1x7aCEauP7XtzTjpUCxJt6_GzxFhFXyf_DX_Gi+g@mail.gmail.com>
+ <159683184187.1360974.15575847254880429529@swboyd.mtv.corp.google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <75acac5a-b4a5-9c5a-4404-fb936d738e46@infradead.org>
+Date:   Fri, 7 Aug 2020 13:28:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <159683184187.1360974.15575847254880429529@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Clark (2020-08-07 08:51:48)
-> On Fri, Aug 7, 2020 at 8:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> > On 8/7/20 12:17 AM, Tanmay Shah wrote:
-> > > diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-> > > index ea3c4d094d09..cc1392b29022 100644
-> > > --- a/drivers/gpu/drm/msm/Kconfig
-> > > +++ b/drivers/gpu/drm/msm/Kconfig
-> > > @@ -60,6 +60,7 @@ config DRM_MSM_HDMI_HDCP
-> > >  config DRM_MSM_DP
-> > >       bool "Enable DP support in MSM DRM driver"
-> > >       depends on DRM_MSM
-> > > +     default y
-> > >       help
-> > >         Compile in support for DP driver in msm drm driver. DP extern=
-al
-> > >         display support is enabled through this config option. It can
-> >
-> > Hi,
-> >
-> > You need a very strong justification to make an optional part of a driv=
-er
-> > to be "default y".
->=20
-> My opinion is that if the driver is built, everything should be built.
-> This is what makes sense for distro's.  It is only the embedded case
-> where you want to trim down unneeded features where you might want to
-> disable some parts.  So 'default y' makes sense to me.
->=20
+On 8/7/20 1:24 PM, Stephen Boyd wrote:
+> Quoting Rob Clark (2020-08-07 08:51:48)
+>> On Fri, Aug 7, 2020 at 8:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>>
+>>> On 8/7/20 12:17 AM, Tanmay Shah wrote:
+>>>> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+>>>> index ea3c4d094d09..cc1392b29022 100644
+>>>> --- a/drivers/gpu/drm/msm/Kconfig
+>>>> +++ b/drivers/gpu/drm/msm/Kconfig
+>>>> @@ -60,6 +60,7 @@ config DRM_MSM_HDMI_HDCP
+>>>>  config DRM_MSM_DP
+>>>>       bool "Enable DP support in MSM DRM driver"
+>>>>       depends on DRM_MSM
+>>>> +     default y
+>>>>       help
+>>>>         Compile in support for DP driver in msm drm driver. DP external
+>>>>         display support is enabled through this config option. It can
+>>>
+>>> Hi,
+>>>
+>>> You need a very strong justification to make an optional part of a driver
+>>> to be "default y".
+>>
+>> My opinion is that if the driver is built, everything should be built.
+>> This is what makes sense for distro's.  It is only the embedded case
+>> where you want to trim down unneeded features where you might want to
+>> disable some parts.  So 'default y' makes sense to me.
 
-Maybe use 'default DRM_MSM' so that it doesn't trigger the 'default y'
-filters people have?
+We don't set defaults for distro convenience.
+
+> 
+> Maybe use 'default DRM_MSM' so that it doesn't trigger the 'default y'
+> filters people have?
+
+Most people can figure that one out.  ;)
+I don't have any automated filters.
+
+-- 
+~Randy
+
