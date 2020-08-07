@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B116DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A226C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9071F22CAE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1657822CF6
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 08:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2DaAEUz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="suCZmmO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHGIgz (ORCPT
+        id S1727983AbgHGIg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47838 "EHLO
+        Fri, 7 Aug 2020 04:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgHGIgt (ORCPT
+        with ESMTP id S1727826AbgHGIgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 04:36:49 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 913BDC061574;
-        Fri,  7 Aug 2020 01:36:49 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id j187so1013409qke.11;
-        Fri, 07 Aug 2020 01:36:49 -0700 (PDT)
+        Fri, 7 Aug 2020 04:36:55 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95AE5C061574;
+        Fri,  7 Aug 2020 01:36:55 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id o22so708420qtt.13;
+        Fri, 07 Aug 2020 01:36:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kPkFIcSFokKvqTTqVmcPnp2f4e3lwJk4o7y95n1MRkU=;
-        b=D2DaAEUzOKCb7TGI6DOVsPJRLnFUBxyYmyKABoBJ5taUVHtcWEA6oG0LRz2j/8hRmL
-         EnnsibjHoaQgwbOnWXA+qvy3DvRRyrJfl85MbmWEA6YwWDr9/3hflJB69GMYDLtLUEQR
-         Vsz3VMUeC8yqzASnBfwgdfNRbKb9HKWSvw/1/Iq2ZVMVTYcVYX8reKqGerD8Q4Bk6RpK
-         pP/GpgQG86JWwC2yQ8Cn7UvGEMDVM9HMjh1i+EzVVZh2PB98HuZpvh2Lzz2hGRPV/um8
-         HJWK55HE4bWroOkdVFnrgvWNQ7BylHDomHHU9aIm5QTfCgNuqgwWlJj/56JwO6PbtTIl
-         UeVw==
+        bh=EXGupTpGbvdG/fn/UKREirAgsAV1HujkQjqH/LC9r7g=;
+        b=suCZmmO70LGOca+M4uJziOz/IpkT24FjNgmNJfQ/EHhK1febz7DPchJGzCMl6FRJaY
+         9uTjEVUyViy4YBJY7f/ekSjeRV+0tVooPDh1HH5s2vowJ2F8+DZvYazqzSopUd/cx32s
+         bhvyBY4lYpghHPOtchdUCjT95jFQgBXAWXI++X81wn55y+rpYKRCeePq9v10J52enBnM
+         UaLj0QA7Wpyask0wRLLdbhO2poVRCjRKXkJi13dALs6iHk5f9jr2F2i3Lsxza7WqV0jl
+         ZOf816H8b2U3q8oac9lX9g371kIkNY4V7iUSFcy/1ft36I02V+jNIib9K9j7uwzP2f8T
+         81rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kPkFIcSFokKvqTTqVmcPnp2f4e3lwJk4o7y95n1MRkU=;
-        b=hqOW4Ptq+Y7JbmPNLZDrmlzr1Cs2+4vRrr9Cwk0S9iajGO1w+YkUsf588aIk6Gq3Fu
-         BAYKZy2e2aeZNdEyT2lqYR2uxTgna01dOYtSN4pYX2M/9g1CPjCFICH+LIenw380R1D0
-         ksQ34oH+qsqHdLKYY6tR02KGbYncsYUNo5ZKyerfLX8Bjc8TNVLDjrTEbKfOa44SvOMo
-         sjidsh66PgSo1O0d7i7UjT/i6XJnwi0VwIcObjwVGPGXP+xiuf4MBGcIXrdQJX2WDKNr
-         /Zd/rhGwoUqEgtRjXa/NuyC563MingGnm6jXXy9D+VaFH5HRDX08f6eSk6a+s/e0FsI1
-         liVw==
-X-Gm-Message-State: AOAM532o9BLM3vPx0RHwheZIsMLjKAhaWAnp1E2yvMqnrl3lptlxQm+X
-        7XxbzNwdhOGh6H8WLPNY1z/WpHSRZO4=
-X-Google-Smtp-Source: ABdhPJwUpDiyth/4I15fdaDZ8QJARvT0XSF+0JeDhsu+7pvdxLbDnhvEMt5AL1ULfayG+rOIOQz7QQ==
-X-Received: by 2002:a05:620a:5f7:: with SMTP id z23mr13039865qkg.206.1596789408463;
-        Fri, 07 Aug 2020 01:36:48 -0700 (PDT)
+        bh=EXGupTpGbvdG/fn/UKREirAgsAV1HujkQjqH/LC9r7g=;
+        b=BJRmvF3Ii2nAqwEHcA6bDeTEwlemuQAJlc69mGx4Cmd8wiX5ZEnr3p4WJmsbwqIbE2
+         nnpzeTNRo9bgv8V45Ek9MT9mwVqxXLN3cWKpY110/Lh0tzS9JEIBYLL+Rck/noX1WApN
+         3IiZhba5LdhrtRY//Qw/CALbkIWXoK/TsrVH731PO7LOrdYJzdeR6Ndu51AxaohN9sP7
+         q0XI0ZBj5X01i02wNJgD7LKK7a958fWhKM8HL60NUzhSC52kEaMKafOIEYZkhKag+ABw
+         UwkIVkdwLe/E3INkvGs8LMvb6cA9ZsJi6XM6yM9p0wjHu/Bzv9SEmqxiktQC8WYvASUR
+         yk+g==
+X-Gm-Message-State: AOAM533J6egOV9I8DKvA2CWY3HI+h/SY1b+BN0g2MFwsMumcb2Mx50EV
+        nuGENWNOKb95fd9IJpLwiAp0ED4Pa90=
+X-Google-Smtp-Source: ABdhPJynUVAOIp/xQi+6G9Hx4cDsYO+uw4KlJRzHBupTbmTgktD5fogTSoRfrLixJwXwItQ3/yW9LQ==
+X-Received: by 2002:ac8:4117:: with SMTP id q23mr13252062qtl.186.1596789414575;
+        Fri, 07 Aug 2020 01:36:54 -0700 (PDT)
 Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
-        by smtp.gmail.com with ESMTPSA id c42sm7846728qte.5.2020.08.07.01.36.46
+        by smtp.gmail.com with ESMTPSA id c42sm7846728qte.5.2020.08.07.01.36.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 01:36:47 -0700 (PDT)
+        Fri, 07 Aug 2020 01:36:54 -0700 (PDT)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
 To:     linux-kernel@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     skhan@linuxfoundation.org,
         "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org
-Subject: [PATCH 12/20] media: usb: dib0700_devices.c: remove useless if/else
-Date:   Fri,  7 Aug 2020 05:35:39 -0300
-Message-Id: <20200807083548.204360-12-dwlsalmeida@gmail.com>
+Subject: [PATCH 14/20] media: dvb-frontends: lgdt3306a.c: remove dead code
+Date:   Fri,  7 Aug 2020 05:35:41 -0300
+Message-Id: <20200807083548.204360-14-dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,40 +82,58 @@ From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
 Fix the following coccinelle report:
 
-drivers/media/usb/dvb-usb/dib0700_devices.c:1741:1-3:
-WARNING: possible condition with no effect (if == else)
+drivers/media/dvb-frontends/lgdt3306a.c:718:5-8:
+Unneeded variable: "ret". Return "0" on line 744
 
-Both branches are the same, so remove the if/else altogether.
+Code was enclosed with #if 0 and thus this variable was not needed.
+Remove that code altogether.
 
 Found using - Coccinelle (http://coccinelle.lip6.fr)
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- drivers/media/usb/dvb-usb/dib0700_devices.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/media/dvb-frontends/lgdt3306a.c | 27 +------------------------
+ 1 file changed, 1 insertion(+), 26 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 4ef3fa98d20f..f027db979c90 100644
---- a/drivers/media/usb/dvb-usb/dib0700_devices.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
-@@ -1738,14 +1738,9 @@ static int dib809x_tuner_attach(struct dvb_usb_adapter *adap)
- 	struct dib0700_adapter_state *st = adap->priv;
- 	struct i2c_adapter *tun_i2c = st->dib8000_ops.get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_TUNER, 1);
- 
--	if (adap->id == 0) {
--		if (dvb_attach(dib0090_register, adap->fe_adap[0].fe, tun_i2c, &dib809x_dib0090_config) == NULL)
--			return -ENODEV;
--	} else {
--		/* FIXME: check if it is fe_adap[1] */
--		if (dvb_attach(dib0090_register, adap->fe_adap[0].fe, tun_i2c, &dib809x_dib0090_config) == NULL)
--			return -ENODEV;
+diff --git a/drivers/media/dvb-frontends/lgdt3306a.c b/drivers/media/dvb-frontends/lgdt3306a.c
+index d3c330e035c4..0247ef799546 100644
+--- a/drivers/media/dvb-frontends/lgdt3306a.c
++++ b/drivers/media/dvb-frontends/lgdt3306a.c
+@@ -715,33 +715,8 @@ static int lgdt3306a_spectral_inversion(struct lgdt3306a_state *state,
+ 				       struct dtv_frontend_properties *p,
+ 				       int inversion)
+ {
+-	int ret = 0;
+-
+ 	dbg_info("(%d)\n", inversion);
+-#if 0
+-	/*
+-	 * FGR - spectral_inversion defaults already set for VSB and QAM;
+-	 * can enable later if desired
+-	 */
+-
+-	ret = lgdt3306a_set_inversion(state, inversion);
+-
+-	switch (p->modulation) {
+-	case VSB_8:
+-		/* Manual only for VSB */
+-		ret = lgdt3306a_set_inversion_auto(state, 0);
+-		break;
+-	case QAM_64:
+-	case QAM_256:
+-	case QAM_AUTO:
+-		/* Auto ok for QAM */
+-		ret = lgdt3306a_set_inversion_auto(state, 1);
+-		break;
+-	default:
+-		ret = -EINVAL;
 -	}
-+	/* FIXME: if adap->id != 0, check if it is fe_adap[1] */
-+	if (dvb_attach(dib0090_register, adap->fe_adap[0].fe, tun_i2c, &dib809x_dib0090_config) == NULL)
-+		return -ENODEV;
+-#endif
+-	return ret;
++	return 0;
+ }
  
- 	st->set_param_save = adap->fe_adap[0].fe->ops.tuner_ops.set_params;
- 	adap->fe_adap[0].fe->ops.tuner_ops.set_params = dib8096_set_param_override;
+ static int lgdt3306a_set_if(struct lgdt3306a_state *state,
 -- 
 2.28.0
 
