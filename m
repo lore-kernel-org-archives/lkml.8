@@ -2,119 +2,140 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B71C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DD022CF6
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481B422CA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 16:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jOD2ZI+n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6mz2e+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgHGQVl (ORCPT
+        id S1726630AbgHGQVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 12:21:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34508 "EHLO
+        Fri, 7 Aug 2020 12:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgHGQVl (ORCPT
+        with ESMTP id S1725900AbgHGQVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 12:21:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED584C061756;
-        Fri,  7 Aug 2020 09:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=S8JHbHVUKOnsDJ6vyDw0HBSI86uZiFi5itw14Bq3gQU=; b=jOD2ZI+n0+FgJNGycqX64zKdGD
-        4/o/iIp+buCL8ZsTq/dYT8ZX74PeRaHP6hBP81XbZUifMux8OnSCQfaQVrm39N5NQrK6yZwlMxBCg
-        NVr0dwLLvZmb5NBI4j+0nMIPLKe5ZCSs/8iOWOj/HqN3ssOP9EimnDK0TI6TxKJJ4izGK92drhUF2
-        Ym5tlRsy9nNUxy56Zhg3vFijErdRX9ObeRw2KSOEZYdBMTg9JMugJXgmnnQ6SiCc5Jp6Feb8ICndg
-        JaTSsg2+dw7MzWTiI1Zivi2/El06E6dbX9ZiDkbTp7C4DYk6/MUYyYgJs2gWzqUjB+NuCqc5E5p5i
-        +7tqXNDw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k457g-0002hE-0j; Fri, 07 Aug 2020 16:21:36 +0000
-Subject: Re: [PATCH v9 2/5] drm/msm/dp: add displayPort driver support
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Tanmay Shah <tanmay@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        freedreno@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, aravindh@codeaurora.org,
-        abhinavk@codeaurora.org, khsieh@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200807071718.17937-1-tanmay@codeaurora.org>
- <20200807071718.17937-3-tanmay@codeaurora.org>
- <b0e8415f-53e6-575d-5774-5f4f7adca982@infradead.org>
- <CABXOdTf6be2-O_aBakamNFswt+Xk0urJ7_x9hgwuuFO6=NDeew@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ab0a3659-b4c4-e7a9-f010-9ace4dae84a7@infradead.org>
-Date:   Fri, 7 Aug 2020 09:21:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 7 Aug 2020 12:21:44 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F844C061756;
+        Fri,  7 Aug 2020 09:21:44 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d4so1135299pjx.5;
+        Fri, 07 Aug 2020 09:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RtvJ13hdgXULntpol9mloh5tvxGSRGDKG13PZYUi3XU=;
+        b=H6mz2e+SOP/exVXTPiRz80OCuPuaIvFBqcsYiF+nL/rWpO8UkEOqqqKs9Qf0lT6vtc
+         x7OhdyO9yMTBl6Rlof8X9S7Kjm1WSJY8ODEJPcoY7nagpcLQwdx9F+QAbjBkj6/cAZYh
+         Pkrh+zKCLdudTC1MRPRuJZWdXBh9zq6iRFQS9o6NGHqU3Bi3gjRfrYmxg+qeARIbUjw0
+         vjcB65OafzC7MkmVzrMx2P2bDyoVrpSWpLkvUE0X0b/qNOFww+04ki7pJtC/WPM13dVv
+         DU/qOY8AuP6exCLRJFxX00XjR/m/mGTIsVOcxuHEruyEcKvEk+ARufx/2jGURlm6mXkK
+         ItEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RtvJ13hdgXULntpol9mloh5tvxGSRGDKG13PZYUi3XU=;
+        b=VLaC6WKz60lvsgWQmT474tJV4AFhx7Fs8MBiHJg/9OSpFO3M2yfLCTYoHZktHQcKVF
+         bf4ylbkuzXwXgZn/UA1+DajJdtmGM5S3P98CGDKVqt3+lQvbwAufobknracZeAzWazUQ
+         KBny0Gxs5uqn0lBqOfpg0H1U57JnIalgmVWFjGLTGO+wDl0lcJ2PcXZG13dl9iqdGyLy
+         Az37UHtOPyMvbPcQJTYSfE5w4n2sT1BeoUm//xAWKX6KlNTI9a/9wu3nyex13DjRV/ui
+         37j30QjthBmAyToLCrCWBPb8Mi0XqM7bBzlkgKB06FDEY0WcKoYh+6NLQjggcF4BzAuW
+         2PUw==
+X-Gm-Message-State: AOAM532vI6U9Kz4WwB9xWY59zLfyVcIozbiWldy0ND6ZiRdHT+iNYzWA
+        0GCw5U9EsXWloRFO0mJ4Jq4=
+X-Google-Smtp-Source: ABdhPJwiD81Z5EZLACnX1D2qaPuUB786F3u3s/Cr6RexLawSv5Y20XjRJJ1zrawKoro9VWPZnJEhkA==
+X-Received: by 2002:a17:90b:4b84:: with SMTP id lr4mr13554580pjb.111.1596817304007;
+        Fri, 07 Aug 2020 09:21:44 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f89sm11813143pje.11.2020.08.07.09.21.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Aug 2020 09:21:42 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 09:21:41 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
+        ldv-project@linuxtesting.org, f.fainelli@gmail.com
+Subject: Re: [PATCH] drivers: watchdog: rdc321x_wdt: Fix race condition bugs
+Message-ID: <20200807162141.GA41980@roeck-us.net>
+References: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CABXOdTf6be2-O_aBakamNFswt+Xk0urJ7_x9hgwuuFO6=NDeew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807112902.28764-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 9:09 AM, Guenter Roeck wrote:
-> On Fri, Aug 7, 2020 at 8:37 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 8/7/20 12:17 AM, Tanmay Shah wrote:
->>> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
->>> index 6deaa7d01654..ea3c4d094d09 100644
->>> --- a/drivers/gpu/drm/msm/Kconfig
->>> +++ b/drivers/gpu/drm/msm/Kconfig
->>> @@ -57,6 +57,14 @@ config DRM_MSM_HDMI_HDCP
->>>       help
->>>         Choose this option to enable HDCP state machine
->>>
->>> +config DRM_MSM_DP
->>> +     bool "Enable DP support in MSM DRM driver"
->>
->>         bool "Enabled DisplayPort support in MSM DRM driver"
->>
-> Why "Enabled" ? This would be quite unusual for a Kconfig entry.
-
-Sorry, my typo.
-Just "Enable", like it was earlier.
-
-> Guenter
+On Fri, Aug 07, 2020 at 04:59:02PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
->>> +     depends on DRM_MSM
->>> +     help
->>> +       Compile in support for DP driver in msm drm driver. DP external
->>
->>                                               MSM DRM
->>
->> Also:
->> I can't find anywhere in drivers/gpu/drm/msm/ that explains what MSM means.
->> What does it mean?
->>
->>> +       display support is enabled through this config option. It can
->>> +       be primary or secondary display on device.
->>> +
->>>  config DRM_MSM_DSI
->>>       bool "Enable DSI support in MSM DRM driver"
->>>       depends on DRM_MSM
+> In rdc321x_wdt_probe(), rdc321x_wdt_device.queue is initialized
+> after misc_register(), hence if ioctl is called before its
+> initialization which can call rdc321x_wdt_start() function,
+> it will see an uninitialized value of rdc321x_wdt_device.queue,
+> hence initialize it before misc_register().
+> Also, rdc321x_wdt_device.default_ticks is accessed in reset()
+> function called from write callback, thus initialize it before
+> misc_register().
+> 
+> Found by Linux Driver Verification project (linuxtesting.org).
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
--- 
-~Randy
+Having said that ... this is yet another potentially obsolete driver.
+You are really wasting your (and, fwiw, my) time.
 
+Florian, any thoughts if support for this chip can/should be deprecated
+or even removed ?
+
+Guenter
+
+> ---
+>  drivers/watchdog/rdc321x_wdt.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/watchdog/rdc321x_wdt.c b/drivers/watchdog/rdc321x_wdt.c
+> index 57187efeb86f..f0c94ea51c3e 100644
+> --- a/drivers/watchdog/rdc321x_wdt.c
+> +++ b/drivers/watchdog/rdc321x_wdt.c
+> @@ -231,6 +231,8 @@ static int rdc321x_wdt_probe(struct platform_device *pdev)
+>  
+>  	rdc321x_wdt_device.sb_pdev = pdata->sb_pdev;
+>  	rdc321x_wdt_device.base_reg = r->start;
+> +	rdc321x_wdt_device.queue = 0;
+> +	rdc321x_wdt_device.default_ticks = ticks;
+>  
+>  	err = misc_register(&rdc321x_wdt_misc);
+>  	if (err < 0) {
+> @@ -245,14 +247,11 @@ static int rdc321x_wdt_probe(struct platform_device *pdev)
+>  				rdc321x_wdt_device.base_reg, RDC_WDT_RST);
+>  
+>  	init_completion(&rdc321x_wdt_device.stop);
+> -	rdc321x_wdt_device.queue = 0;
+>  
+>  	clear_bit(0, &rdc321x_wdt_device.inuse);
+>  
+>  	timer_setup(&rdc321x_wdt_device.timer, rdc321x_wdt_trigger, 0);
+>  
+> -	rdc321x_wdt_device.default_ticks = ticks;
+> -
+>  	dev_info(&pdev->dev, "watchdog init success\n");
+>  
+>  	return 0;
+> -- 
+> 2.17.1
+> 
