@@ -2,118 +2,81 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA765C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943182177B
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4588F21744
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 09:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgHGJLX (ORCPT
+        id S1726996AbgHGJNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:11:23 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35850 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgHGJLW (ORCPT
+        Fri, 7 Aug 2020 05:13:19 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:57180 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726721AbgHGJNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 05:11:22 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F0F901C0BD9; Fri,  7 Aug 2020 11:11:19 +0200 (CEST)
-Date:   Fri, 7 Aug 2020 11:11:19 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek Behun <marek.behun@nic.cz>, netdev@vger.kernel.org,
-        linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v3 2/2] net: phy: marvell: add
- support for PHY LEDs via LED class
-Message-ID: <20200807091119.b7vcdk4fxz7le3zp@duo.ucw.cz>
-References: <20200724164603.29148-1-marek.behun@nic.cz>
- <20200724164603.29148-3-marek.behun@nic.cz>
- <20200725172318.GK1472201@lunn.ch>
- <20200725200224.3f03c041@nic.cz>
- <20200725184846.GO1472201@lunn.ch>
+        Fri, 7 Aug 2020 05:13:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U5.0C2._1596791595;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U5.0C2._1596791595)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 07 Aug 2020 17:13:16 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     mike.kravetz@oracle.com, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: [PATCH 01/10] mm/hugetlb: not necessary to coalesce regions recursively
+Date:   Fri,  7 Aug 2020 17:12:42 +0800
+Message-Id: <20200807091251.12129-2-richard.weiyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="deiezzmxyvff7ovy"
-Content-Disposition: inline
-In-Reply-To: <20200725184846.GO1472201@lunn.ch>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Per my understanding, we keep the regions ordered and would always
+coalesce regions properly. So the task to keep this property is just
+to coalesce its neighbour.
 
---deiezzmxyvff7ovy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Let's simplify this.
 
-On Sat 2020-07-25 20:48:46, Andrew Lunn wrote:
-> > > > +#if 0
-> > > > +	/* LED_COLOR_ID_MULTI is not yet merged in Linus' tree */
-> > > > +	/* TODO: Support DUAL MODE */
-> > > > +	if (color =3D=3D LED_COLOR_ID_MULTI) {
-> > > > +		phydev_warn(phydev, "node %pOF: This driver does not yet support=
- multicolor LEDs\n",
-> > > > +			    np);
-> > > > +		return -ENOTSUPP;
-> > > > +	}
-> > > > +#endif =20
-> > >=20
-> > > Code getting committed should not be using #if 0. Is the needed code
-> > > in the LED tree? Do we want to consider a stable branch of the LED
-> > > tree which DaveM can pull into net-next? Or do you want to wait until
-> > > the next merge cycle?
-> >=20
-> > That's why this is RFC. But yes, I would like to have this merged for
-> > 5.9, so maybe we should ask Dave. Is this common? Do we also need to
-> > tell Pavel or how does this work?
->=20
-> The Pavel needs to create a stable branch. DaveM then merges that
-> branch into net-next. Your patches can then be merged. When Linus
-> pulls the two branches, led and net-next, git sees the exact same
-> patches twice, and simply drops them from the second pull request.
->=20
-> So you need to ask Pavel and DaveM if they are willing to do this.
+Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+---
+ mm/hugetlb.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Multicolor should be upstream now, so I believe this is no longer
-required?
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 590111ea6975..62ec74f6d03f 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -307,8 +307,7 @@ static void coalesce_file_region(struct resv_map *resv, struct file_region *rg)
+ 		list_del(&rg->link);
+ 		kfree(rg);
+ 
+-		coalesce_file_region(resv, prg);
+-		return;
++		rg = prg;
+ 	}
+ 
+ 	nrg = list_next_entry(rg, link);
+@@ -318,9 +317,6 @@ static void coalesce_file_region(struct resv_map *resv, struct file_region *rg)
+ 
+ 		list_del(&rg->link);
+ 		kfree(rg);
+-
+-		coalesce_file_region(resv, nrg);
+-		return;
+ 	}
+ }
+ 
+-- 
+2.20.1 (Apple Git-117)
 
-> > I also want this code to be generalized somehow so that it can be
-> > reused. The problem is that I want to have support for DUAL mode, which
-> > is Marvell specific, and a DUAL LED needs to be defined in device tree.
->=20
-> It sounds like you first need to teach the LED core about dual LEDs
-> and triggers which affect two LEDs..
-
-Umm. Yes, triggers for controlling both intensity and hue will be
-interesting. Suggestions welcome.
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---deiezzmxyvff7ovy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXy0atwAKCRAw5/Bqldv6
-8hAmAKCvo/m/bATu/BHcZE9ByZbwMU7WUQCfecdgdfdiv5MBWfUc08dUT8HNswk=
-=5G/j
------END PGP SIGNATURE-----
-
---deiezzmxyvff7ovy--
