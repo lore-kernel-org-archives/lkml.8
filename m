@@ -2,174 +2,118 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B86B62075A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596831805;
-	bh=eZ11znaZyBQszlg13DinqaMSmiV/14OwQJjM/YVoM+c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=DOtMxCm3cEwQiJ6UC/rmY/ss6AXa/S4d/yvug/zRSqSnUlV+q4/pK6KHkGTytlLo3
-	 H/BZHMZOoXwylpZvcyWB79FbAfQauwdN2Grm3hqyUNmY9mrDRAOImyazICMr2egwht
-	 JGMT4YPgLMzUHDVEIcwMSDHSvaoVvlH9a+dOCsU0=
+	by mail.kernel.org (Postfix) with ESMTP id 8269B214F1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 20:24:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WEQMKsvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgHGUXY (ORCPT
+        id S1726776AbgHGUYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 16:23:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgHGUXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 16:23:23 -0400
-Received: from localhost (130.sub-72-107-113.myvzw.com [72.107.113.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C24172074D;
-        Fri,  7 Aug 2020 20:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596831803;
-        bh=eZ11znaZyBQszlg13DinqaMSmiV/14OwQJjM/YVoM+c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Q+hpo1S9CCaw7/RboOmuRIq5Ozpy9Hdj0Hf44V38d2eDCxlcW+VH8u6vVQkYUeyUl
-         flExzj3W5bnBE9Ff7v7xOJyfdoYbK1r0jQE8q9j1KEkFK6giGkFBUL2hekm9yOMFLn
-         8o2cIPiustbpSOxrNK9i+etfjHb3UYpZEsZSk0U0=
-Date:   Fri, 7 Aug 2020 15:23:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Jean Delvare <jdelvare@suse.com>
-Subject: Re: [PATCH v2 2/2] i2c: eg20t: use generic power management
-Message-ID: <20200807202321.GA753887@bjorn-Precision-5520>
+        Fri, 7 Aug 2020 16:24:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgHGUYE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 16:24:04 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245D7C061757
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 13:24:04 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e4so1494309pjd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 13:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=8kRWK6mpY0yuzrMz6VeBLLcMrpVG8ZtSX/iAsw+ut4A=;
+        b=WEQMKsvxL+jGuutK/BX9GjKhG9V6iqjN0wIPhLgvikM+b48e3QcXAaeBfnLsnUbVQM
+         sEPO5cpmUWUqe4CGQPLKERNzawMZGhiNtw2+3gnBjmoKN8srnzPI9ngJ2NslwuAjvSVk
+         RgOZqa5CfaRROKBbMjMpTLlU7cxtbupJL0vwY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=8kRWK6mpY0yuzrMz6VeBLLcMrpVG8ZtSX/iAsw+ut4A=;
+        b=QU/sh1PVPce4EY1A9XhUuojv4mA7DbMEh1lnAyVfqWZ/fcg/aUjHmhLuGO5XshAArQ
+         JSIH3gUz4RJY0t7wLYvLBI6JuU40VJDAbTbSlozKrZmTVawtD6J826O05c6/1qD8KCcG
+         eLl6qcgeFpKaxSCugrsf5x69qcOQj/TQso62QaOnbnnZ0wLro/bpf2LIEXpX9zEsp8tf
+         i77Lnk+T6KMnnfMSZLP1acJZIbaN3Xmh93O4o555fRTPWWpPLqc7xG1yP9IVMcKd+iXX
+         cuDS/V55WHALWLmsjEYQT7mkvUUq5IyIlx/y/yECIyDIYMiljBRhCJPvX0Q19zunRGou
+         BKWg==
+X-Gm-Message-State: AOAM533sdVZgLnAoIb2Vc9eKLZVI3QUfQ+Xu4u83wFw2ptu0lVUux79m
+        8oB/qM85GT8fX3jvrPGOVUOKMw==
+X-Google-Smtp-Source: ABdhPJwUCMA+qcCj4NBJ6bH6GJrNHolYmVbC63o7ey2y7ucXrSodd1KiH1QHhuAQODHYrQ6iqRsEPQ==
+X-Received: by 2002:a17:902:b089:: with SMTP id p9mr13616774plr.52.1596831843666;
+        Fri, 07 Aug 2020 13:24:03 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id z23sm11490482pgv.57.2020.08.07.13.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 13:24:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805193616.384313-3-vaibhavgupta40@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAF6AEGv5Yf1x7aCEauP7XtzTjpUCxJt6_GzxFhFXyf_DX_Gi+g@mail.gmail.com>
+References: <20200807071718.17937-1-tanmay@codeaurora.org> <20200807071718.17937-4-tanmay@codeaurora.org> <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org> <CAF6AEGv5Yf1x7aCEauP7XtzTjpUCxJt6_GzxFhFXyf_DX_Gi+g@mail.gmail.com>
+Subject: Re: [PATCH v9 3/5] drm/msm/dp: add support for DP PLL driver
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Tanmay Shah <tanmay@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, aravindh@codeaurora.org,
+        Abhinav Kumar <abhinavk@codeaurora.org>, khsieh@codeaurora.org,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Rob Clark <robdclark@gmail.com>
+Date:   Fri, 07 Aug 2020 13:24:01 -0700
+Message-ID: <159683184187.1360974.15575847254880429529@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Jean for i801 question below]
+Quoting Rob Clark (2020-08-07 08:51:48)
+> On Fri, Aug 7, 2020 at 8:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > On 8/7/20 12:17 AM, Tanmay Shah wrote:
+> > > diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> > > index ea3c4d094d09..cc1392b29022 100644
+> > > --- a/drivers/gpu/drm/msm/Kconfig
+> > > +++ b/drivers/gpu/drm/msm/Kconfig
+> > > @@ -60,6 +60,7 @@ config DRM_MSM_HDMI_HDCP
+> > >  config DRM_MSM_DP
+> > >       bool "Enable DP support in MSM DRM driver"
+> > >       depends on DRM_MSM
+> > > +     default y
+> > >       help
+> > >         Compile in support for DP driver in msm drm driver. DP extern=
+al
+> > >         display support is enabled through this config option. It can
+> >
+> > Hi,
+> >
+> > You need a very strong justification to make an optional part of a driv=
+er
+> > to be "default y".
+>=20
+> My opinion is that if the driver is built, everything should be built.
+> This is what makes sense for distro's.  It is only the embedded case
+> where you want to trim down unneeded features where you might want to
+> disable some parts.  So 'default y' makes sense to me.
+>=20
 
-On Thu, Aug 06, 2020 at 01:06:16AM +0530, Vaibhav Gupta wrote:
-> Drivers using legacy power management .suspen()/.resume() callbacks
-> have to manage PCI states and device's PM states themselves. They also
-> need to take care of standard configuration registers.
-> 
-> Switch to generic power management framework using a single
-> "struct dev_pm_ops" variable to take the unnecessary load from the driver.
-> This also avoids the need for the driver to directly call most of the PCI
-> helper functions and device power state control functions, as through
-> the generic framework PCI Core takes care of the necessary operations,
-> and drivers are required to do only device-specific jobs.
-> 
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-
-s/.suspen/.suspend/ above
-
-These both look right to me.
-
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Looking at neighboring drivers, it looks like some already use generic
-PM but have unnecessary PCI code, e.g., amd_mp2_pci_suspend().
-Probably already on your list.
-
-Also, i801_suspend() looks suspicious because it writes SMBHSTCFG, but
-I don't see anything corresponding in i801_resume().
-
-> ---
->  drivers/i2c/busses/i2c-eg20t.c | 36 +++++++---------------------------
->  1 file changed, 7 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-> index eb41de22d461..843b31a0f752 100644
-> --- a/drivers/i2c/busses/i2c-eg20t.c
-> +++ b/drivers/i2c/busses/i2c-eg20t.c
-> @@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
->  	kfree(adap_info);
->  }
->  
-> -#ifdef CONFIG_PM
-> -static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-> +static int __maybe_unused pch_i2c_suspend(struct device *dev)
->  {
-> -	int ret;
->  	int i;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct adapter_info *adap_info = pci_get_drvdata(pdev);
->  	void __iomem *p = adap_info->pch_data[0].pch_base_address;
->  
-> @@ -872,31 +871,13 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
->  		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
->  		ioread32(p + PCH_I2CESRSTA));
->  
-> -	ret = pci_save_state(pdev);
-> -
-> -	if (ret) {
-> -		pch_pci_err(pdev, "pci_save_state\n");
-> -		return ret;
-> -	}
-> -
-> -	pci_disable_device(pdev);
-> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-> -
->  	return 0;
->  }
->  
-> -static int pch_i2c_resume(struct pci_dev *pdev)
-> +static int __maybe_unused pch_i2c_resume(struct device *dev)
->  {
->  	int i;
-> -	struct adapter_info *adap_info = pci_get_drvdata(pdev);
-> -
-> -	pci_set_power_state(pdev, PCI_D0);
-> -	pci_restore_state(pdev);
-> -
-> -	if (pci_enable_device(pdev) < 0) {
-> -		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
-> -		return -EIO;
-> -	}
-> +	struct adapter_info *adap_info = dev_get_drvdata(dev);
->  
->  	for (i = 0; i < adap_info->ch_num; i++)
->  		pch_i2c_init(&adap_info->pch_data[i]);
-> @@ -905,18 +886,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
->  
->  	return 0;
->  }
-> -#else
-> -#define pch_i2c_suspend NULL
-> -#define pch_i2c_resume NULL
-> -#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
->  
->  static struct pci_driver pch_pcidriver = {
->  	.name = KBUILD_MODNAME,
->  	.id_table = pch_pcidev_id,
->  	.probe = pch_i2c_probe,
->  	.remove = pch_i2c_remove,
-> -	.suspend = pch_i2c_suspend,
-> -	.resume = pch_i2c_resume
-> +	.driver.pm = &pch_i2c_pm_ops,
->  };
->  
->  module_pci_driver(pch_pcidriver);
-> -- 
-> 2.27.0
-> 
+Maybe use 'default DRM_MSM' so that it doesn't trigger the 'default y'
+filters people have?
