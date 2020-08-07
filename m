@@ -2,193 +2,283 @@ Return-Path: <SRS0=KWFo=BR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E05C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B71221E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82701221E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Aug 2020 12:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Al/+sp1G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDFgU83h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgHGMUF (ORCPT
+        id S1728444AbgHGM0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:20:05 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13193 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgHGMUD (ORCPT
+        Fri, 7 Aug 2020 08:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728270AbgHGM0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 08:20:03 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2d46e50003>; Fri, 07 Aug 2020 05:19:49 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 07 Aug 2020 05:20:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 07 Aug 2020 05:20:02 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
- 2020 12:19:58 +0000
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
- by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 7 Aug 2020 12:19:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NPrkW53YUMLKOOWBR8QFZxmCT3PyvMzHZdQjXAxCuT+OxUyalQGY/5Il9Gm4ULZCj8IJ67IpRn9SagyGaS3qVSA3aXVUTVGN1AuyM+ZYeZi8HVxJuJeghK9dgrezQ9oYWK/DegEwVa671Azrpv/8QwNbb9kAH+9U1THTWuFBqs2l3hJPNycZvHRjZYrP2Aho9NK8+rRfvezHrfttqHG/vwyvWzi79Bl5NNp9lcRAtG3XpMfnC4PuICqRYCjpo1eXVyD6cJYvgK2gEHMD2bQ3NaMidHeAHA6CzfZIu/2WJ8LOKLMilCeNM1ws+RQk7Q0esLrP2JPg3WQu8Od7LXb22A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9nPGeq/CB4zb5MsgRTO9HHv5loEEdmISFZjlsqVKXIU=;
- b=UC/P8ldrsHCyZbtRy2UB/UxiG6rscyDGHhDiKWBAToXdiHuc+oNIah/G+4saFAgvrWUAdWyM70uqvHIrS+7mbiIkGrGPwn1qkC2phwHsNOx6lLRW7R1QsrdWCXVc3f1NxFnoPIZBRkSI6VY6HL9ZiO7rxSpSJwEPlhgO8xQHBQ0gqrdOYCdCh9+YLklT8ME/Rk12PFLRgqFvXWYRZAvcT+DsTOnZrVz07sBD1gOSqMqzepc5IfUilijzMCP80zGVq/B1/cuWE1QCSwhkZiCHj1tcSPJtHVUTYn79PnREboqxUHrCQNFdfpc7aWk9T5Ts6MrMaoIRq8otm9pfBjcSfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4057.namprd12.prod.outlook.com (2603:10b6:5:213::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Fri, 7 Aug
- 2020 12:19:57 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
- 12:19:57 +0000
-Date:   Fri, 7 Aug 2020 09:19:55 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200807121955.GS16789@nvidia.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200805192258.5ee7a05b@x1.home>
-X-ClientProxiedBy: MN2PR20CA0042.namprd20.prod.outlook.com
- (2603:10b6:208:235::11) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 7 Aug 2020 08:26:18 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 428B7C061574;
+        Fri,  7 Aug 2020 05:26:18 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l23so1115082edv.11;
+        Fri, 07 Aug 2020 05:26:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5dUj8K6+0mWlPErYm2rq9Z+oT0LCcA9o+12DiBmzbSQ=;
+        b=WDFgU83hLdOo0WtdeU8MKHJJWboDIYk1VGX73Jkv5w7FRjpjvJ4AR2G4+YjAHgwtCv
+         ssB7vfH+DdmTWFUwof5wCLiIlE06tTU+J2+wuLm4zKa0NoZDQcDAiFgEToM6Dkp/jp9X
+         6H0L9VwJPMoj2Pq8CmHgx2c2wtUE5AuQlRTR7ebMdnP38KT/2U4Lzic+87BaOincr5fH
+         n+THyrUJwM23w4K2JIdmW1cg4NqYYERVD55E3VOikoVmFxt9iiuXdiBvdnNk7rL6koyw
+         Baamnnr/IEi6qrKKqxXpUcBUF2ng1P+9tmeDPKzpLRmKc6mpewZ75Tb9UKEujGBH9ACk
+         TtCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5dUj8K6+0mWlPErYm2rq9Z+oT0LCcA9o+12DiBmzbSQ=;
+        b=kCXaJOE2Ooeivd7Hhxysx2dbGJ2CAnoii6J63NW6huO0/vC9wSewHX78sfgIcrF+ST
+         oFMxNhPgK3ORmTgnPUWwT72gzEigmx6xnAC9C8hhCBKVsyeoN+7MX7q0KVsmAy145cZR
+         r/WR4MSy5G29qWCc4qnh2M2+TtqAmhRL4wrMRPkOEf4cMhnurDpx6wouZ5j/0LZ1i8jh
+         P6XzRut9U9KdZCt6zoEWctjuA4LpzRHaKHhrEs8luoahgIScHRSmELfyFTJZ/SkmLZGe
+         rQwh3QvwZDnjWprueh+BjXRBQbySEZHJAWFbauKNhgw8GJqMKCJDayr35cXKmCb7d9d3
+         Bxnw==
+X-Gm-Message-State: AOAM532akTMNbA0wEWmdRy9v9mGaOLwkZLz579KO6MNsVbpHzrrS6/v4
+        RRux9hqF58GzpwzJwA6Pqcs=
+X-Google-Smtp-Source: ABdhPJz/+YjRdPSfSVfWr+74o3qMiwLruDOMxFS004OP2q+pyStRRrfW3AX71Ks1oE7MQ/aXkFymNQ==
+X-Received: by 2002:aa7:d70a:: with SMTP id t10mr8421207edq.68.1596803176237;
+        Fri, 07 Aug 2020 05:26:16 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id h9sm5915255ejt.50.2020.08.07.05.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 05:26:14 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 14:26:13 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v3 1/3] driver core: Revert default
+ driver_deferred_probe_timeout value to 0
+Message-ID: <20200807122613.GA524643@ulmo>
+References: <20200422203245.83244-1-john.stultz@linaro.org>
+ <20200422203245.83244-2-john.stultz@linaro.org>
+ <20200806135251.GB3351349@ulmo>
+ <CALAqxLU=a+KXKya2FkgCuYyw5ttZJ_NXjNbszFzSjP49wMN84g@mail.gmail.com>
+ <20200807110244.GB94549@ulmo>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0042.namprd20.prod.outlook.com (2603:10b6:208:235::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Fri, 7 Aug 2020 12:19:57 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k41Ln-004gmL-8u; Fri, 07 Aug 2020 09:19:55 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: af605af6-1cf6-4273-3ed5-08d83acc32ad
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4057:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4057027899426B9FA34A2354C2490@DM6PR12MB4057.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sT45pI/EJqwMs9Mo6bZvV6h+QRUVvyxudav8zLhJWxHdXgD5Puz5hxXTnCvr5NoYsCBTA3gWZcNcwdjg/lYmo2kSvCzZoW2I/zMOEy9DEcGmGh0cTlRvhFBqtRAcUo6jVkoT9xUx/FdmwZArNsPfGfDvU6Hlb5U/Fag/ELh2A5uZnwfSNCwQ76/HlnZg4KZrbxZaoZykuoHXWyDax78sVd7qtv4JvkzxixV+ZXILaxb0OMdCksUc6MmOO5pV8EFyob3IFlhA474LYoxDlv0N6XLvrKd2d0axKfih4gZi93Kd3TNEVia3Rqt+dACR7FOYdk6CfL35aHOAsAK+2gyMHA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(5660300002)(83380400001)(8676002)(4326008)(7406005)(9746002)(9786002)(7416002)(8936002)(426003)(26005)(478600001)(1076003)(186003)(316002)(2906002)(54906003)(6916009)(33656002)(66476007)(86362001)(2616005)(66556008)(36756003)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: HSkanueyqJR0VTKI4xknqDy8RBXTzzr2HM9WS12KUYpB7YZPbtp89UlRFxEBHOdRxrsZXe/cp+G7gRH5gS3U5Y4U1Oc6ZM/rl0+n/VC+e7HC8irsOsKOmJWgyhjKNz1rgJ5D24e8Vb99XjdRIyy9kFuKhGWZHaX5UXL7yKfFfalzidUMfqXRrACYOds2XJTEs7a+My8xLdTqLbZz6DS9cL3hhFo7ljmr/j4AOInr9NBOF/GINkS6STYgkzfKPSSpRx8a7ifRN0PbQ0FS0ID10RsvmeBw2D1fPWHuQfUQFMDCx6A0QT3zbm3Ailb6rvt/8wTezQqoUDdrSIbEsliVjGmi4+pZc1qN+eDXi3KVOzva2osuZLY5K7iG1nMhr2UJqtxnM2Kz2CmqA3KIu8rDJ4mVWp+yyyBgynY73w4XdojFrw0CBqHwyD8NvK0AO2G980DuctUu1jg1TtaJ3ow4ME3O7KoXkpmSJXTfzazqG5jIHjEnCRJdihxsh5SxsdwnGcmCzTOir+rintg974r7/xgHyiG7XvfzXGM4lb+2kKHRdzOiGfBHPz8yIUB3Y/AVPopY8RtT7ErMDXMdHsbAmO6WbA0XiPcmghmd5fYLr/X+bO1lL05GFXqrM1NGhLyhv6QtJ/lfHVwak37P/RRjTw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: af605af6-1cf6-4273-3ed5-08d83acc32ad
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 12:19:57.5566
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FdDxPLIVMvJekn9xpXy9KxRXok4TRFeo45ViOc0ojwy2Vn7LXR0vlzz38BgiY3qb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4057
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596802789; bh=9nPGeq/CB4zb5MsgRTO9HHv5loEEdmISFZjlsqVKXIU=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
-         X-MS-Exchange-Transport-Forked:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=Al/+sp1GjB/okQPNn3uj47BXS5mklUjTT9NxEzq5NjhoOP3iY0Cuptglk0X3w711E
-         xdOtG62TOELtj1wpI81WqPKXbw5nOaKJnXrkCWF9pjRgarC8R1ixNyd5klsxp0RJYT
-         NU6DwbLyJHJKJK1mV+CXaUb+3zqTW0GMdDf1MTGlWmSbt/D1i/GAClsQ7mCH/S6x5I
-         oI3Tvmke5LX+/FXMEloGQeBvMHkAX1N48CT/qZf0C1ibYlzxygY5i+9ILz7J3Ny32O
-         gYoGqrJPXDSd9TwVJIJkWajV6FPpNXBi1ajgUPc9Tw9Ti/6uX4Nx1oWPfjFW77KRmx
-         XHY8poriRFaeg==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Disposition: inline
+In-Reply-To: <20200807110244.GB94549@ulmo>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 07:22:58PM -0600, Alex Williamson wrote:
 
-> If you see this as an abuse of the framework, then let's identify those
-> specific issues and come up with a better approach.  As we've discussed
-> before, things like basic PCI config space emulation are acceptable
-> overhead and low risk (imo) and some degree of register emulation is
-> well within the territory of an mdev driver.  
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What troubles me is that idxd already has a direct userspace interface
-to its HW, and does userspace DMA. The purpose of this mdev is to
-provide a second direct userspace interface that is a little different
-and trivially plugs into the virtualization stack.
+On Fri, Aug 07, 2020 at 01:02:44PM +0200, Thierry Reding wrote:
+> On Thu, Aug 06, 2020 at 07:09:16PM -0700, John Stultz wrote:
+> > On Thu, Aug 6, 2020 at 6:52 AM Thierry Reding <thierry.reding@gmail.com=
+> wrote:
+> > >
+> > > On Wed, Apr 22, 2020 at 08:32:43PM +0000, John Stultz wrote:
+> > > > This patch addresses a regression in 5.7-rc1+
+> > > >
+> > > > In commit c8c43cee29f6 ("driver core: Fix
+> > > > driver_deferred_probe_check_state() logic"), we both cleaned up
+> > > > the logic and also set the default driver_deferred_probe_timeout
+> > > > value to 30 seconds to allow for drivers that are missing
+> > > > dependencies to have some time so that the dependency may be
+> > > > loaded from userland after initcalls_done is set.
+> > > >
+> > > > However, Yoshihiro Shimoda reported that on his device that
+> > > > expects to have unmet dependencies (due to "optional links" in
+> > > > its devicetree), was failing to mount the NFS root.
+> > > >
+> > > > In digging further, it seemed the problem was that while the
+> > > > device properly probes after waiting 30 seconds for any missing
+> > > > modules to load, the ip_auto_config() had already failed,
+> > > > resulting in NFS to fail. This was due to ip_auto_config()
+> > > > calling wait_for_device_probe() which doesn't wait for the
+> > > > driver_deferred_probe_timeout to fire.
+> > > >
+> > > > Fixing that issue is possible, but could also introduce 30
+> > > > second delays in bootups for users who don't have any
+> > > > missing dependencies, which is not ideal.
+> > > >
+> > > > So I think the best solution to avoid any regressions is to
+> > > > revert back to a default timeout value of zero, and allow
+> > > > systems that need to utilize the timeout in order for userland
+> > > > to load any modules that supply misisng dependencies in the dts
+> > > > to specify the timeout length via the exiting documented boot
+> > > > argument.
+> > > >
+> > > > Thanks to Geert for chasing down that ip_auto_config was why NFS
+> > > > was failing in this case!
+> > > >
+> > > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > > Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+> > > > Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> > > > Cc: Jakub Kicinski <kuba@kernel.org>
+> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > > > Cc: Rob Herring <robh@kernel.org>
+> > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > > Cc: Robin Murphy <robin.murphy@arm.com>
+> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > Cc: Sudeep Holla <sudeep.holla@arm.com>
+> > > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > > > Cc: Basil Eljuse <Basil.Eljuse@arm.com>
+> > > > Cc: Ferry Toth <fntoth@gmail.com>
+> > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > Cc: Anders Roxell <anders.roxell@linaro.org>
+> > > > Cc: netdev <netdev@vger.kernel.org>
+> > > > Cc: linux-pm@vger.kernel.org
+> > > > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > > Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > > Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_=
+state() logic")
+> > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > > ---
+> > > >  drivers/base/dd.c | 13 ++-----------
+> > > >  1 file changed, 2 insertions(+), 11 deletions(-)
+> > >
+> > > Sorry for being a bit late to the party, but this breaks suspend/resu=
+me
+> > > support on various Tegra devices. I've only noticed now because, well,
+> > > suspend/resume have been broken for other reasons for a little while =
+and
+> > > it's taken us a bit to resolve those issues.
+> > >
+> > > But now that those other issues have been fixed, I've started seeing =
+an
+> > > issue where after resume from suspend some of the I2C controllers are=
+ no
+> > > longer working. The reason for this is that they share pins with DP A=
+UX
+> > > controllers via the pinctrl framework. The DP AUX driver registers as
+> > > part of the DRM/KMS driver, which usually happens in userspace. Since
+> > > the deferred probe timeout was set to 0 by default this no longer wor=
+ks
+> > > because no pinctrl states are assigned to the I2C controller and
+> > > therefore upon resume the pins cannot be configured for I2C operation.
+> >=20
+> > Oof. My apologies!
+> >=20
+> > > I'm also somewhat confused by this patch and a few before because they
+> > > claim that they restore previous default behaviour, but that's just n=
+ot
+> > > true. Originally when this timeout was introduced it was -1, which me=
+ant
+> > > that there was no timeout at all and hence users had to opt-in if they
+> > > wanted to use a deferred probe timeout.
+> >=20
+> > I don't think that's quite true, since the point of my original
+> > changes were to avoid troubles I was seeing with drivers not loading
+> > because once the timeout fired after init, driver loading would fail
+> > with ENODEV instead of returning EPROBE_DEFER. The logic that existed
+> > was buggy so the timeout handling didn't really work (changing the
+> > boot argument wouldn't help, because after init the logic would return
+> > ENODEV before it checked the timeout value).
+> >=20
+> > That said, looking at it now, I do realize the
+> > driver_deferred_probe_check_state_continue() logic in effect never
+> > returned ETIMEDOUT before was consolidated in the earlier changes, and
+> > now we've backed the default timeout to 0, old user (see bec6c0ecb243)
+> > will now get ETIMEDOUT where they wouldn't before.
+> >=20
+> > So would the following fix it up for you? (sorry its whitespace corrupt=
+ed)
+> >=20
+> > diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+> > index c6fe7d64c913..c7448be64d07 100644
+> > --- a/drivers/pinctrl/devicetree.c
+> > +++ b/drivers/pinctrl/devicetree.c
+> > @@ -129,9 +129,8 @@ static int dt_to_map_one_config(struct pinctrl *p,
+> >                 if (!np_pctldev || of_node_is_root(np_pctldev)) {
+> >                         of_node_put(np_pctldev);
+> >                         ret =3D driver_deferred_probe_check_state(p->de=
+v);
+> > -                       /* keep deferring if modules are enabled
+> > unless we've timed out */
+> > -                       if (IS_ENABLED(CONFIG_MODULES) && !allow_defaul=
+t &&
+> > -                           (ret =3D=3D -ENODEV))
+> > +                       /* keep deferring if modules are enabled */
+> > +                       if (IS_ENABLED(CONFIG_MODULES) &&
+> > !allow_default && ret < 0)
+> >                                 ret =3D -EPROBE_DEFER;
+> >                         return ret;
+> >                 }
+> >=20
+> > (you could probably argue calling driver_deferred_probe_check_state
+> > checking ret at all is silly here, since EPROBE_DEFER is the only
+> > option you want)
+>=20
+> Just by looking at it I would've said, yes, this looks like it would fix
+> it. However, upon giving this a try, I see the same pinmux issues as I
+> was seeing before. I'm going to have to dig a little deeper to see if I
+> can find out why that is, because it isn't obvious to me right away.
 
-I don't think VFIO should be the only entry point to
-virtualization. If we say the universe of devices doing user space DMA
-must also implement a VFIO mdev to plug into virtualization then it
-will be alot of mdevs.
+Oh, nevermind. I managed to somehow mess up the device tree. With that
+fixed the above also restores the pinmux attachment for the I2C
+controller and suspend/resume works fine.
 
-I would prefer to see that the existing userspace interface have the
-extra needed bits for virtualization (eg by having appropriate
-internal kernel APIs to make this easy) and all the emulation to build
-the synthetic PCI device be done in userspace.
+Thierry
 
-Not only is it better for security, it keeps things to one device
-driver per device..
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Jason
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8tSGEACgkQ3SOs138+
+s6GHfw/9H5nN8XGczSUnK43wnJxGY4HA8YTW551cMKpvCvXhrbIPrKXv24xMsbG7
+F6Q7yFSCN77hFklgMRGjW+2tlDOBYwpor/J/nqjhJ5poXSyBrgM0qi78Nq8g2JR1
+p4AdHAUc9pzlxYW+u4MOgEVjDkYMA7cOX335m5ldK1CrQcVsmLbkbwLxRExH/sdz
+FpfrI8zCQlxw+px6oiMo/D7cqutYuW7H/D+CY5jHQ8jSbtBkCbpxRgTRO2sOScVz
+5jlbT0iRqw1GZCxDRLWyOo+75HoIDpNDCofM1cWlhwiOcnhgSqHuDDVOVcfdko7L
+JQqJEKPyG99X6MWZ4oe2jqANUr+GmJ9BqwhTF3qSS7yUiT5t3lCUmXMKh3FGwJQO
+bDC0MjFpJDa573N++0tIA9qf1loO3M7mW+kpn80p8T0et32pUT5+RFYtRFYo6/QW
+7/YffEpbULMylGulfBx+0gERn/B37teEWfjiH0xF6+DJwemchhM9BZ4GfsQUcyz/
+pm5gni9Vs8f1Nj9zbbAtZ9YI4ZMckuDpecBN3bsAZc/QiRdSS3CZB0ZVV81FsrHH
+aOGP21IBXq3GUE33pTDh+NygXsnUROAbMhlbhMQL2EN61anTx1btijhQaNu8tGh1
+isN1RME//+SnLg+6SeUH9L5/sMlIglIKjtGludz3KCJldgsmFfE=
+=q/a7
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
