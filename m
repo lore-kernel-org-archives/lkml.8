@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 08:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07595C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 08:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8742072D
+	by mail.kernel.org (Postfix) with ESMTP id DD3862072D
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 08:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgHHIUy (ORCPT
+        id S1726293AbgHHIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 04:20:54 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58462 "EHLO huawei.com"
+        Sat, 8 Aug 2020 04:34:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9356 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725880AbgHHIUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 04:20:53 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4685C6D5A0FFC2F1E59F;
-        Sat,  8 Aug 2020 16:20:50 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Sat, 8 Aug 2020
- 16:20:41 +0800
+        id S1725880AbgHHIeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 04:34:25 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B62D12A7F7EEF3E9890F;
+        Sat,  8 Aug 2020 16:34:19 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Sat, 8 Aug 2020
+ 16:34:09 +0800
 From:   linmiaohe <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: Convert to use the fallthrough macro
-Date:   Sat, 8 Aug 2020 16:23:10 +0800
-Message-ID: <1596874990-22437-1-git-send-email-linmiaohe@huawei.com>
+To:     <sfrench@samba.org>
+CC:     <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
+        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
+Subject: [PATCH] cifs: Convert to use the fallthrough macro
+Date:   Sat, 8 Aug 2020 16:36:37 +0800
+Message-ID: <1596875797-22710-1-git-send-email-linmiaohe@huawei.com>
 X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -47,40 +47,34 @@ From: Miaohe Lin <linmiaohe@huawei.com>
 
 Convert the uses of fallthrough comments to fallthrough macro.
 
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- net/socket.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/cifs/smb2pdu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index c61f036d24f5..f4d5998bdcba 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -1325,7 +1325,7 @@ int sock_wake_async(struct socket_wq *wq, int how, int band)
- 	case SOCK_WAKE_SPACE:
- 		if (!test_and_clear_bit(SOCKWQ_ASYNC_NOSPACE, &wq->flags))
- 			break;
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 24c2ac360591..667d70aa335f 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -3913,7 +3913,7 @@ smb2_readv_callback(struct mid_q_entry *mid)
+ 	case MID_RESPONSE_MALFORMED:
+ 		credits.value = le16_to_cpu(shdr->CreditRequest);
+ 		credits.instance = server->reconnect_instance;
 -		/* fall through */
 +		fallthrough;
- 	case SOCK_WAKE_IO:
- call_kill:
- 		kill_fasync(&wq->fasync_list, SIGIO, band);
-@@ -3158,13 +3158,13 @@ static int ethtool_ioctl(struct net *net, struct compat_ifreq __user *ifr32)
- 		if (rule_cnt > KMALLOC_MAX_SIZE / sizeof(u32))
- 			return -ENOMEM;
- 		buf_size += rule_cnt * sizeof(u32);
+ 	default:
+ 		rdata->result = -EIO;
+ 	}
+@@ -4146,7 +4146,7 @@ smb2_writev_callback(struct mid_q_entry *mid)
+ 	case MID_RESPONSE_MALFORMED:
+ 		credits.value = le16_to_cpu(rsp->sync_hdr.CreditRequest);
+ 		credits.instance = server->reconnect_instance;
 -		/* fall through */
 +		fallthrough;
- 	case ETHTOOL_GRXRINGS:
- 	case ETHTOOL_GRXCLSRLCNT:
- 	case ETHTOOL_GRXCLSRULE:
- 	case ETHTOOL_SRXCLSRLINS:
- 		convert_out = true;
--		/* fall through */
-+		fallthrough;
- 	case ETHTOOL_SRXCLSRLDEL:
- 		buf_size += sizeof(struct ethtool_rxnfc);
- 		convert_in = true;
+ 	default:
+ 		wdata->result = -EIO;
+ 		break;
 -- 
 2.19.1
 
