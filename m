@@ -2,154 +2,127 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B18C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55012053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:06:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LRb5LpcQ"
+	by mail.kernel.org (Postfix) with ESMTP id 309E120866
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgHHNGI (ORCPT
+        id S1726312AbgHHNW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 09:06:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726125AbgHHNGH (ORCPT
+        Sat, 8 Aug 2020 09:22:58 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:58819 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726125AbgHHNW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 09:06:07 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 078D15j3134717;
-        Sat, 8 Aug 2020 09:06:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=U8X6qRYCXP4zF6uXjsokluM1K/PbdmKCnP7Vf5VhsAs=;
- b=LRb5LpcQUo/o33OEtF9v6XO3l9udI1cHs2ZTHPoVTm6+SA8kSve993zbSPL/kBaQvZoS
- vQ0fFfhUya21sLF2TYGJYAp8fCIwD+Zy/u+XmprYsa30E3GcWSZgc/Z4+zJi7SI0lwDz
- wvln1q79iEoTIrxWahghtO98oRGgdWVK+9IrMyVauy4sZv7cok48VgobR8DsdKA5tEe1
- xGmXY1PzJK/1sa+cK+TyVSg1xZx/XQMi99VVjrjdGYtDsRhvQOtSqcu0NozQIC2C9J54
- q/vCDT3h88963vj061nbYlKTDgkmZCC6j5uT9D5kk8sdJq9Icb5kAMoQPOYPAK8rFIyi 0A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32srbycpjy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 08 Aug 2020 09:06:05 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 078D1Cos135111;
-        Sat, 8 Aug 2020 09:06:05 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32srbycpjm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 08 Aug 2020 09:06:05 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 078D4fP6023661;
-        Sat, 8 Aug 2020 13:06:03 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 32skp88ct9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 08 Aug 2020 13:06:02 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 078D5v3U30998942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Aug 2020 13:05:58 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9F2311C04A;
-        Sat,  8 Aug 2020 13:05:57 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50E7011C054;
-        Sat,  8 Aug 2020 13:05:57 +0000 (GMT)
-Received: from localhost (unknown [9.145.77.129])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  8 Aug 2020 13:05:57 +0000 (GMT)
-Date:   Sat, 8 Aug 2020 15:05:55 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Ulrich Weigand <ulrich.weigand@de.ibm.com>,
-        Jonas Paulsson <paulsson@linux.vnet.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: linux plumbers + clang + s390 virtualized testing
-Message-ID: <your-ad-here.call-01596891955-ext-8436@work.hours>
-References: <CAKwvOdn-2E=v_7Uie71pz2jjYCKnk98K1Ly8EkpxzvC6M5pXFA@mail.gmail.com>
- <20200716112840.GC8484@osiris>
- <your-ad-here.call-01596030682-ext-1369@work.hours>
- <CAKwvOd=1E+90VHwzh9cYGz9YKy_ECMJuK6gZhzLqBFw9kS4Cww@mail.gmail.com>
+        Sat, 8 Aug 2020 09:22:58 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U56q4nE_1596892973;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U56q4nE_1596892973)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 08 Aug 2020 21:22:54 +0800
+Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200731151655.GB491801@cmpxchg.org>
+ <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
+ <20200803081815.GD5174@dhcp22.suse.cz>
+ <bd61e672-b997-c4cd-2047-fca9dc11cc4c@linux.alibaba.com>
+ <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
+ <5622ef68-5e70-d1a9-d1be-b45411b6be5c@linux.alibaba.com>
+Message-ID: <4740bac1-72f6-a640-ab6a-a8801e68c27a@linux.alibaba.com>
+Date:   Sat, 8 Aug 2020 21:22:29 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <5622ef68-5e70-d1a9-d1be-b45411b6be5c@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=1E+90VHwzh9cYGz9YKy_ECMJuK6gZhzLqBFw9kS4Cww@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-08_05:2020-08-06,2020-08-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 malwarescore=0 priorityscore=1501 impostorscore=0
- spamscore=0 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0
- suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008080092
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 12:02:52PM -0700, Nick Desaulniers wrote:
-> On Wed, Jul 29, 2020 at 6:51 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
-> >
-> > > > We were very excited to see your patches going by for enabling Clang
-> > > > support for s390.  Since then, we've added s390 builds to our
-> > > > continuous integration setup.
-> > > >
-> > > > We've been running into a few issues with doing virtualized boot tests
-> > > > of our kernels on s390.
-> > > >
-> > > > I was curious if you'll both be attending Linux plumbers conf?  If we
-> > > > carve out time for an s390+clang talk, would this be of interest to
-> > > > you to attend?
-> > I will attend and it would surely be interesting to me and other
-> > s390 folks. Your efforts are greatly appreciated!
-> 
-> Cool, so our MC has been approved:
-> https://www.linuxplumbersconf.org/event/7/page/80-accepted-microconferences#llvm-cr
-> 
-> But we're super tight on time and probably won't be able to do a
-> session on s390 at the MC.  That said, I have just submitted a BoF
-> proposal since we have more topics internal to our group we'd like to
-> have more time to discuss.  I've added s390 testing to the list of
-> potential topics, too.  I'll re-ping this thread once I hear back
-> about whether it gets approved or not.
-> 
-> That said, we do meet once every other week virtually online, see
-> links: https://clangbuiltlinux.github.io/.
-> 
-> >
-> > BTW I believe basic Clang support for s390 came earlier in 5.2 with
-> > a lot of efforts from Arnd Bergmann.
-> >
-> > My part was fixing recent breakages and bugging our s390 clang team
-> > (which did all the great work) to get kernel specific features support
-> > in clang 10 and 11 to reach features parity with gcc. And eventually
-> > doing few adjustments so that features which came with clang 10 and
-> > 11 are working smoothly. That is s390 "asm goto" support and specific
-> > compiler flags for ftrace support and stack packing.
-> 
-> That's awesome; I'd love to get the chance to meet your s390 LLVM
-> team; in general it can take a while to get bugs routed to folks most
-> empowered to fix them until you know who they are.
-> 
-> Would you, any fellow s390 kernel and LLVM folks be interested in
-> attending one of our virtual meetings, even if it's just to say "hi"
-> quickly? Next one is next Wednesday.
-> 
-> Usually we go over whatever firedrills we've been running the past two
-> weeks, but sometimes have presentations of folks projects and
-> research.  I think it would be cool to get more background on s390 and
-> work out the issues we're running into with testing.
 
-I've added few more people in To. We'll try to make it next Wednesday,
-but no promises since we are based in Germany and this is quite late
-for us.
+
+在 2020/8/5 下午9:02, Alex Shi 写道:
+> 
+> 
+> 在 2020/8/5 下午8:28, Alex Shi 写道:
+>> The last patch has a problem on define. this version could fix it.
+>>
+>> BTW, I see some !memcg happens when MEMCG compilered but disabled by cgroup_disable
+>>
+>>
+>> [   94.657666] ---[ end trace f1f34bfc3b32ed2f ]---
+>> [   95.138995] anon flags: 0x5005b48008000d(locked|uptodate|dirty|swapbacked)
+>> [   95.146220] raw: 005005b48008000d dead000000000100 dead000000000122 ffff8897c7c76ad1
+>> [   95.154549] raw: 0000000000000022 0000000000000000 0000000200000000 0000000000000000
+>> [   95.162876] page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
+>>
+>>
+> 
+> The following patch may helpful.
+
+Any comments for the 2 patches?
+
+Thanks
+Alex
+
+> 
+> From 8bfb26a2e37e08dc61d20212bcfa5812a367ba94 Mon Sep 17 00:00:00 2001
+> From: Alex Shi <alex.shi@linux.alibaba.com>
+> Date: Wed, 5 Aug 2020 20:32:12 +0800
+> Subject: [PATCH] mm/memcg: don't try charge swap if memcg disabled
+> 
+> If we disabled memcg by cgroup_disable=memory, the swap charges are
+> still called. Let's return from the funcs earlier and keep WARN_ON
+> monitor.
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  mm/memcontrol.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index cb07a48d53aa..65f2b42d25af 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -7163,6 +7163,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+>  	VM_BUG_ON_PAGE(PageLRU(page), page);
+>  	VM_BUG_ON_PAGE(page_count(page), page);
+>  
+> +	if (mem_cgroup_disabled())
+> +		return;
+> +
+>  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>  		return;
+>  
+> @@ -7228,6 +7231,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+>  	struct mem_cgroup *memcg;
+>  	unsigned short oldid;
+>  
+> +	if (mem_cgroup_disabled())
+> +		return 0;
+> +
+>  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>  		return 0;
+>  
+> 
