@@ -2,141 +2,168 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C53592177B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FD220855
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:50:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxnleFpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgHHJqY (ORCPT
+        id S1726240AbgHHJuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 05:46:24 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36925 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbgHHJqW (ORCPT
+        Sat, 8 Aug 2020 05:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgHHJui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 05:46:22 -0400
-Received: by mail-io1-f69.google.com with SMTP id f6so3503109ioa.4
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 02:46:21 -0700 (PDT)
+        Sat, 8 Aug 2020 05:50:38 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A75C061756
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 02:50:37 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a15so3760350wrh.10
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 02:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=iu+xGq/4Dn8boKbZib4AWJ+d5oeBv4YdO2v6rLcz6X0=;
+        b=PxnleFpSMGNsYP2bmpZLHWDleM3D/LQ+Ug5cNcfmZ0H3YW6UCwVWMJojacIekW4OTY
+         MiT0Ta8+TjdqMibQoKoH6FWhqBfI7gP3dKwer384nZSN4amDAbUJCjgfol7HenZ2IAQJ
+         eJAQw7zzgjrwB/P8iaQVdphR4eq0qNA7QhBDB8b6dcAxUaMhSQgSyos2t+s8emEVGh3N
+         uxpwZ+HUPJ0mQOzorX74I9bch8D+b6HYg/xBTPUSp6GMEcp5H1K87uNLaHfAaJatLG7R
+         gpfTptszj7OQ1D4rC8AUU9EqKmagKmuLeLRW6/945KTR1/B+4+DYRNN/ZVL8xP2PGVTo
+         L5LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Mgd7GqjjHZbKTVg1oMh8UpWpxgZW/6tvB9gNkmYnfYE=;
-        b=cK7FheJ39xWcwEVC957D5yiV9hylL/NewuLtqzXWtsQXqoV68ABfzNYmJgZ4nVgxdV
-         ysBT7TE0A+y/FZ9/9UZluI/y8pm+XdKCNCBJrr+7X4xVvYD8EbyZyfx45N9/riMo4oxh
-         NYAuCKW6cOUB83NS7WLpQR32R1/RbAqk1/LsEQWhHepTIjssLnXDGRPCVfy4PnWGare1
-         XcXHty8sSSCNxN3qPShFVatF6IZqD1VvDwUO0+Jzpfg6NPQH4cQMHH+7o0i0r7eBN76T
-         EvOuUSaMChbAzhbujjk4FnnPXjKRIONE1a7xpTI8abx9p2d+Ny7K/D92jYEq8Q6ZHalP
-         zy5g==
-X-Gm-Message-State: AOAM533C06D1ZqEjOT85eAJTPUgBLV8ckVY5VOSvu8zOuqY5v9j76Xqw
-        IbiMR4DfIJiWyPap39cafge9vt/4H8dTh9dgSqKhDFc8nIoV
-X-Google-Smtp-Source: ABdhPJzW8/kOTaphgcikkhZB1BACCXuyS9i2Q48y8/n1Uc0jg23uS5/J2KZB4W9dkahJKWLM4/ndHDDc3MSj9hj88H1XQl04F5BJ
-MIME-Version: 1.0
-X-Received: by 2002:a6b:3e04:: with SMTP id l4mr8449851ioa.206.1596879981392;
- Sat, 08 Aug 2020 02:46:21 -0700 (PDT)
-Date:   Sat, 08 Aug 2020 02:46:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000a389a05ac5a9864@google.com>
-Subject: KASAN: null-ptr-deref Write in l2cap_chan_put
-From:   syzbot <syzbot+452e9465a3b2817fa4c2@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iu+xGq/4Dn8boKbZib4AWJ+d5oeBv4YdO2v6rLcz6X0=;
+        b=k8mgS2JXnku47exQlRXaD902CGx8YUtMx7gHMNaMEFDyYtPubWJ/UdxWRBFpmuEE14
+         BZPvMaNNxL6LSIuACo9X1ns227chN721W4Y6Aq6owWVsrzDZmt107C8jV3NG24EofCNu
+         NAKMOOcCK33zsVVYwuJgcSOQrlE2Ns0ZDcMgyc6J8U8i6sctr3HzzkF1BWuo4Gnnqndr
+         FxrHpCtrwIChZsU+nEFYCfuBjzKygEu58t/T0PD64lA77U0eLeS+o1etsSUS7lxCAtfi
+         WxacFYMN/LX3YCNoXKzSiSURw16p7CMWQURW5Y9AHq8v/LZ4ysiR4xBt1oLSXau7jkBK
+         T99w==
+X-Gm-Message-State: AOAM531XUuBQyJoTNTrpbj1dBnIORkOXXHqePQhWAmUcPmJhpqZyQkfk
+        WNINxWBG4EiDGXK/r7rxPJJ4vcnP9/Q=
+X-Google-Smtp-Source: ABdhPJwDlExzuCWZWtgQKlspwM6lkWCctnh+AsaxICv5NkIh1LlIJ/DSp6ei7MwuW0gEZRO4P9GBCA==
+X-Received: by 2002:adf:ee83:: with SMTP id b3mr15506244wro.163.1596880235998;
+        Sat, 08 Aug 2020 02:50:35 -0700 (PDT)
+Received: from Sahara-MacBookPro.darkmatter.uae ([31.215.141.243])
+        by smtp.gmail.com with ESMTPSA id i66sm14152504wma.35.2020.08.08.02.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Aug 2020 02:50:35 -0700 (PDT)
+From:   kpark3469@gmail.com
+To:     linux-kernel@vger.kernel.org
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        keun-o.park@digital14.com
+Subject: [PATCH] mm: slub: re-initialize randomized freelist sequence in calculate_sizes
+Date:   Sat,  8 Aug 2020 13:50:30 +0400
+Message-Id: <20200808095030.13368-1-kpark3469@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Sahara <keun-o.park@digital14.com>
 
-syzbot found the following issue on:
+Slab cache flags are exported to sysfs and are allowed to get modified
+from userspace. Some of those may call calculate_sizes function because
+the changed flag can take an effect on slab object size and layout,
+which means kmem_cache may have different order and objects.
+The freelist pointer corruption occurs if some slab flags are modified
+while CONFIG_SLAB_FREELIST_RANDOM is turned on.
 
-HEAD commit:    5631c5e0 Merge tag 'xfs-5.9-merge-7' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15c21934900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=afba7c06f91e56eb
-dashboard link: https://syzkaller.appspot.com/bug?extid=452e9465a3b2817fa4c2
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131e96aa900000
+ $ echo 0 > /sys/kernel/slab/zs_handle/store_user
+ $ echo 0 > /sys/kernel/slab/zspage/store_user
+ $ mkswap /dev/block/zram0
+ $ swapon /dev/block/zram0 -p 32758
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+452e9465a3b2817fa4c2@syzkaller.appspotmail.com
+ =============================================================================
+ BUG zs_handle (Not tainted): Freepointer corrupt
+ -----------------------------------------------------------------------------
 
-==================================================================
-BUG: KASAN: null-ptr-deref in instrument_atomic_write include/linux/instrumented.h:71 [inline]
-BUG: KASAN: null-ptr-deref in atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
-BUG: KASAN: null-ptr-deref in refcount_sub_and_test include/linux/refcount.h:266 [inline]
-BUG: KASAN: null-ptr-deref in refcount_dec_and_test include/linux/refcount.h:294 [inline]
-BUG: KASAN: null-ptr-deref in kref_put include/linux/kref.h:64 [inline]
-BUG: KASAN: null-ptr-deref in l2cap_chan_put+0x28/0x230 net/bluetooth/l2cap_core.c:502
-Write of size 4 at addr 0000000000000018 by task kworker/0:1/7077
+ Disabling lock debugging due to kernel taint
+ INFO: Slab 0xffffffbf29603600 objects=102 used=102 fp=0x0000000000000000 flags=0x0200
+ INFO: Object 0xffffffca580d8d78 @offset=3448 fp=0xffffffca580d8ed0
 
-CPU: 0 PID: 7077 Comm: kworker/0:1 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events l2cap_chan_timeout
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- __kasan_report mm/kasan/report.c:517 [inline]
- kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
- instrument_atomic_write include/linux/instrumented.h:71 [inline]
- atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
- refcount_sub_and_test include/linux/refcount.h:266 [inline]
- refcount_dec_and_test include/linux/refcount.h:294 [inline]
- kref_put include/linux/kref.h:64 [inline]
- l2cap_chan_put+0x28/0x230 net/bluetooth/l2cap_core.c:502
- l2cap_sock_kill+0xbd/0x180 net/bluetooth/l2cap_sock.c:1217
- l2cap_chan_timeout+0x1c1/0x450 net/bluetooth/l2cap_core.c:438
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7077 Comm: kworker/0:1 Tainted: G    B             5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events l2cap_chan_timeout
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- end_report+0x4d/0x53 mm/kasan/report.c:104
- __kasan_report mm/kasan/report.c:520 [inline]
- kasan_report.cold+0xd/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
- instrument_atomic_write include/linux/instrumented.h:71 [inline]
- atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
- refcount_sub_and_test include/linux/refcount.h:266 [inline]
- refcount_dec_and_test include/linux/refcount.h:294 [inline]
- kref_put include/linux/kref.h:64 [inline]
- l2cap_chan_put+0x28/0x230 net/bluetooth/l2cap_core.c:502
- l2cap_sock_kill+0xbd/0x180 net/bluetooth/l2cap_sock.c:1217
- l2cap_chan_timeout+0x1c1/0x450 net/bluetooth/l2cap_core.c:438
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ Redzone 00000000f3cddd6c: bb bb bb bb bb bb bb bb                          ........
+ Object 0000000082d5d74e: 6b 6b 6b 6b 6b 6b 6b a5                          kkkkkkk.
+ Redzone 000000008fd80359: bb bb bb bb bb bb bb bb                          ........
+ Padding 00000000c7f56047: 5a 5a 5a 5a 5a 5a 5a 5a                          ZZZZZZZZ
 
+In this example, an Android device tries to use zram as a swap and to
+turn off store_user in order to reduce the slub object size.
+When calculate_sizes is called in kmem_cache_open, size, order and
+objects for zs_handle is:
+ size:360, order:0, objects:22
+However, if the SLAB_STORE_USER bit is cleared in store_user_store:
+ size: 56, order:1, objects:73
 
+All the size, order, and objects is changed by calculate_sizes(), but
+the size of the random_seq array is still old value(22). As a result,
+out-of-bound array access can occur at shuffle_freelist() when slab
+allocation is requested.
+
+This patch fixes the problem by re-allocating the random_seq array
+with re-calculated correct objects value.
+
+Fixes: 210e7a43fa905 ("mm: SLUB freelist randomization")
+Reported-by: Ari-Pekka Verta <ari-pekka.verta@digital14.com>
+Reported-by: Timo Simola <timo.simola@digital14.com>
+Signed-off-by: Sahara <keun-o.park@digital14.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ mm/slub.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/mm/slub.c b/mm/slub.c
+index f226d66408ee..be1e4d6682b8 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3704,7 +3704,22 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
+ 	if (oo_objects(s->oo) > oo_objects(s->max))
+ 		s->max = s->oo;
+ 
+-	return !!oo_objects(s->oo);
++	if (!oo_objects(s->oo))
++		return 0;
++
++	/*
++	 * Initialize the pre-computed randomized freelist if slab is up.
++	 * If the randomized freelist random_seq is already initialized,
++	 * free and re-initialize it with re-calculated value.
++	 */
++	if (slab_state >= UP) {
++		if (s->random_seq)
++			cache_random_seq_destroy(s);
++		if (init_cache_random_seq(s))
++			return 0;
++	}
++
++	return 1;
+ }
+ 
+ static int kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
+@@ -3748,12 +3763,6 @@ static int kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
+ 	s->remote_node_defrag_ratio = 1000;
+ #endif
+ 
+-	/* Initialize the pre-computed randomized freelist if slab is up */
+-	if (slab_state >= UP) {
+-		if (init_cache_random_seq(s))
+-			goto error;
+-	}
+-
+ 	if (!init_kmem_cache_nodes(s))
+ 		goto error;
+ 
+-- 
+2.17.1
+
