@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC62C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A92FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3C52053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0582053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930264;
-	bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+	s=default; t=1596930276;
+	bh=671qMzywyiO9upLORWnHQgMmYgw/Iu86jshCUde0boc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mauCkn9VPr29c87W+Qyla6QiScmriyPOppWn8Yaq5W2p5+5Q7bQxHASTuOWQ138JS
-	 RbQtFq/N+MAtz52R1LyGc6TXMIvYyTUUjTJF3B6hbLn9p43Vzlw48/mKoYcKNHiBfx
-	 qyEVzq4kv5QuI1JWQLmym05D4HvNhrM/5Fmf/24o=
+	b=1JGhL9aWjBCu0UF5q7llcle0lkBZRasFJVtwIq1Kbbqu72IfJ9iKB7oFSOiZiWH2N
+	 0n0KxMEYlNLmTkhTmQf67WvSk3ZA+7N9Ww+pykIrxTKVFPOfnVz8xdEUD/V4b3rTp4
+	 wTa7uUGKo3+c6Rc4Q3TwZVZayDkvT92bER9GJ64A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgHHXoW (ORCPT
+        id S1728783AbgHHXoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54080 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbgHHXjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:23 -0400
+        id S1728464AbgHHXjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD9342073E;
-        Sat,  8 Aug 2020 23:39:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A598D20748;
+        Sat,  8 Aug 2020 23:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929962;
-        bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+        s=default; t=1596929956;
+        bh=671qMzywyiO9upLORWnHQgMmYgw/Iu86jshCUde0boc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VrvGBGRJDU5q6G4ZKA2eKaYIqs1Oe515RKwTNbfaiyn+ApfM1xfXi886J2mYVoveI
-         xFLJsNBIx1nO+WsseUSVwDk9egM3BIipZjswXFa/WG4zm0ZmxypGdiFSbw0+Pqm85F
-         TzmWTQPiY/Ea+teZQ5E0x2eZ0EjCTNDG7EDOfNTE=
+        b=rOnl3KvRjq3wAwFWHDft0qFQIS60nS7f4p4Dl5+648nmdNnxOzKM8WVV+lwNWz6Di
+         BUKAhL7+AUtrf5sf52UQ38TVtDCcRx2xSmcDwFVhtA90iJJzBe3+E73agboyi86fTF
+         kKLeZ/qXfR9HIvV4tP5k6pxbewOybrTPANTyUpLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 25/40] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
-Date:   Sat,  8 Aug 2020 19:38:29 -0400
-Message-Id: <20200808233844.3618823-25-sashal@kernel.org>
+Cc:     Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 20/40] platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
+Date:   Sat,  8 Aug 2020 19:38:24 -0400
+Message-Id: <20200808233844.3618823-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -59,46 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit e4dae01bf08b754de79072441c357737220b873f ]
+[ Upstream commit 64dd4a5a7d214a07e3d9f40227ec30ac8ba8796e ]
 
-The Bananapi M2+ uses a GPIO line to change the effective resistance of
-the CPU supply regulator's feedback resistor network. The voltages
-described in the device tree were given directly by the vendor. This
-turns out to be slightly off compared to the real values.
+In the function check_acpi_dev(), if it fails to create
+platform device, the return value is ERR_PTR() or NULL.
+Thus it must use IS_ERR_OR_NULL() to check return value.
 
-The updated voltages are based on calculations of the feedback resistor
-network, and verified down to three decimal places with a multi-meter.
-
-Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20200717160053.31191-4-wens@kernel.org
+Fixes: 332e081225fc ("intel-vbtn: new driver for Intel Virtual Button")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-index a628b5ee72b65..235994a4a2ebb 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -16,12 +16,12 @@ reg_vdd_cpux: vdd-cpux {
- 		regulator-type = "voltage";
- 		regulator-boot-on;
- 		regulator-always-on;
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1300000>;
-+		regulator-min-microvolt = <1108475>;
-+		regulator-max-microvolt = <1308475>;
- 		regulator-ramp-delay = <50>; /* 4ms */
- 		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
- 		gpios-states = <0x1>;
--		states = <1100000 0>, <1300000 1>;
-+		states = <1108475 0>, <1308475 1>;
- 	};
- };
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index cb2a80fdd8f46..3393ee95077f6 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -286,7 +286,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 		return AE_OK;
+ 
+ 	if (acpi_match_device_ids(dev, ids) == 0)
+-		if (acpi_create_platform_device(dev, NULL))
++		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+ 			dev_info(&dev->dev,
+ 				 "intel-vbtn: created platform device\n");
  
 -- 
 2.25.1
