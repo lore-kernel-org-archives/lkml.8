@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72A320656
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425B5208B3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930148;
-	bh=fZ8ST2yhYEOwdLXirGleANT944jZBPkw2xVYSWUoEMs=;
+	s=default; t=1596930153;
+	bh=5umpobZfU532MNHExFEMg4AwPASjY4mr8L46crhIfWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZKcby9yJn+BmYkd0hA7htxYOqjjPMkNnr8obpHXNwdYGubg5IPv/uO9pe1lRVBR6
-	 wIfN52RnbFWyNe3bdqGejQlORmfO/e3JlFgtvw+FSO1vYDZgTfHf3+SrPwPzdGfB0o
-	 VhNx4//UJYLwXjZU8X6JPWGhki9loebouffRKYf0=
+	b=uVyyLIkcphcQT7v2a0YEzuxD/Zg+iPQYv9WhI3OwRCFRcW1GWDBAJIV7v0pYN59lt
+	 ZxpBhbni2JzT3+eFKQAG5ZzkUiRGzIWkpsLOlZAwGBgbpFKBxuq2+rDhYA3MXgDo8P
+	 KnLbPGATYDMCP5hSOZX1A2dBSyja1WrTQuFYnzOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgHHXm2 (ORCPT
+        id S1728763AbgHHXkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55670 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728773AbgHHXkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:40:16 -0400
+        id S1728666AbgHHXjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A157D20825;
-        Sat,  8 Aug 2020 23:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C90E208B3;
+        Sat,  8 Aug 2020 23:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596930016;
-        bh=fZ8ST2yhYEOwdLXirGleANT944jZBPkw2xVYSWUoEMs=;
+        s=default; t=1596929993;
+        bh=5umpobZfU532MNHExFEMg4AwPASjY4mr8L46crhIfWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMMKxoveSPH8VF86S1FZhMfrmvtLSJ5PpSeUtBaUSEugtY9s4Kp2ElK2cgcV96Upm
-         MgcNSAaV4opmin5IV8aMQBa1+B5tgxQtOc1stz5fAssOfG1cs3Dd2KzpzJLRIxyNOA
-         rwaDhi8h8ttpMdOzgVSoQVCF0DPrGLeqGXE4AwaM=
+        b=dYDwNuyyGg33nwfb0u4W+a7rxA0DENAEd/fT0V61KQE7DuD/V9/6WnJQ5fKwWIdwV
+         yNjTJr5qhUQ6xiRI/ofqJLujQs01kQbHQENYElkXGNy2j8YjUdKwq5xs4c6eV4THIw
+         Bpnyrcgvc14vgRs49Wc+LSEK2H3wDSv2oyodvtiE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Liu <iwtbavbm@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 02/14] sched: correct SD_flags returned by tl->sd_flags()
-Date:   Sat,  8 Aug 2020 19:40:01 -0400
-Message-Id: <20200808234013.3619541-2-sashal@kernel.org>
+Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 09/21] crypto: ccree - fix resource leak on error path
+Date:   Sat,  8 Aug 2020 19:39:29 -0400
+Message-Id: <20200808233941.3619277-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808234013.3619541-1-sashal@kernel.org>
-References: <20200808234013.3619541-1-sashal@kernel.org>
+In-Reply-To: <20200808233941.3619277-1-sashal@kernel.org>
+References: <20200808233941.3619277-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,38 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Liu <iwtbavbm@gmail.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-[ Upstream commit 9b1b234bb86bcdcdb142e900d39b599185465dbb ]
+[ Upstream commit 9bc6165d608d676f05d8bf156a2c9923ee38d05b ]
 
-During sched domain init, we check whether non-topological SD_flags are
-returned by tl->sd_flags(), if found, fire a waning and correct the
-violation, but the code failed to correct the violation. Correct this.
+Fix a small resource leak on the error path of cipher processing.
 
-Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
-Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Fixes: 63ee04c8b491e ("crypto: ccree - add skcipher support")
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccree/cc_cipher.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 867d173dab482..152ffe0c24330 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1117,7 +1117,7 @@ sd_init(struct sched_domain_topology_level *tl,
- 		sd_flags = (*tl->sd_flags)();
- 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
- 			"wrong sd_flags in topology description\n"))
--		sd_flags &= ~TOPOLOGY_SD_FLAGS;
-+		sd_flags &= TOPOLOGY_SD_FLAGS;
+diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
+index 28a5b8b38fa2f..1bcb6f0157b07 100644
+--- a/drivers/crypto/ccree/cc_cipher.c
++++ b/drivers/crypto/ccree/cc_cipher.c
+@@ -137,7 +137,6 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
+ 				     skcipher_alg.base);
+ 	struct device *dev = drvdata_to_dev(cc_alg->drvdata);
+ 	unsigned int max_key_buf_size = cc_alg->skcipher_alg.max_keysize;
+-	int rc = 0;
  
- 	*sd = (struct sched_domain){
- 		.min_interval		= sd_weight,
+ 	dev_dbg(dev, "Initializing context @%p for %s\n", ctx_p,
+ 		crypto_tfm_alg_name(tfm));
+@@ -149,10 +148,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
+ 	ctx_p->flow_mode = cc_alg->flow_mode;
+ 	ctx_p->drvdata = cc_alg->drvdata;
+ 
++	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
++		/* Alloc hash tfm for essiv */
++		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
++		if (IS_ERR(ctx_p->shash_tfm)) {
++			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
++			return PTR_ERR(ctx_p->shash_tfm);
++		}
++	}
++
+ 	/* Allocate key buffer, cache line aligned */
+ 	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
+ 	if (!ctx_p->user.key)
+-		return -ENOMEM;
++		goto free_shash;
+ 
+ 	dev_dbg(dev, "Allocated key buffer in context. key=@%p\n",
+ 		ctx_p->user.key);
+@@ -164,21 +172,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
+ 	if (dma_mapping_error(dev, ctx_p->user.key_dma_addr)) {
+ 		dev_err(dev, "Mapping Key %u B at va=%pK for DMA failed\n",
+ 			max_key_buf_size, ctx_p->user.key);
+-		return -ENOMEM;
++		goto free_key;
+ 	}
+ 	dev_dbg(dev, "Mapped key %u B at va=%pK to dma=%pad\n",
+ 		max_key_buf_size, ctx_p->user.key, &ctx_p->user.key_dma_addr);
+ 
+-	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
+-		/* Alloc hash tfm for essiv */
+-		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
+-		if (IS_ERR(ctx_p->shash_tfm)) {
+-			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
+-			return PTR_ERR(ctx_p->shash_tfm);
+-		}
+-	}
++	return 0;
+ 
+-	return rc;
++free_key:
++	kfree(ctx_p->user.key);
++free_shash:
++	crypto_free_shash(ctx_p->shash_tfm);
++
++	return -ENOMEM;
+ }
+ 
+ static void cc_cipher_exit(struct crypto_tfm *tfm)
 -- 
 2.25.1
 
