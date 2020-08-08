@@ -2,92 +2,109 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 03:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 04:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A1E2073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 03:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C076920855
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 04:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PpdjXDy1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImMnrn3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgHHDz0 (ORCPT
+        id S1726152AbgHHEGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 23:55:26 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:49470 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgHHDzZ (ORCPT
+        Sat, 8 Aug 2020 00:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgHHEGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 23:55:25 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1046)
-        id 49EBD20B4908; Fri,  7 Aug 2020 20:55:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 49EBD20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596858925;
-        bh=yv1HNv+auWWTtGIHj8cYxCKVDXHJnHrx+GEc0N8XXUI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpdjXDy1StNRCYJdscNOuDJasjAuyBvq1a5LrNWdEAHy9ao+IphTIEzYm4L/MgoRq
-         Q1bZVnQu3P5khUwSJ2ttjPCrocuczYjLvZVxWPusO2jWo0SybO5Dtf7PUsAlMjSySP
-         Hchpqoukeqyp3mgOPNMBZ41eNGEjtVIcMVFbOoU8=
-From:   Dhananjay Phadke <dphadke@linux.microsoft.com>
-To:     f.fainelli@gmail.com
-Cc:     bcm-kernel-feedback-list@broadcom.com, dphadke@linux.microsoft.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rayagonda.kokatanur@broadcom.com, rjui@broadcom.com, wsa@kernel.org
-Subject: Re: [PATCH v2] i2c: iproc: fix race between client unreg and isr
-Date:   Fri,  7 Aug 2020 20:55:25 -0700
-Message-Id: <1596858925-45763-1-git-send-email-dphadke@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <00a30ca7-d533-94ba-994a-9a133fadb045@gmail.com>
-References: <00a30ca7-d533-94ba-994a-9a133fadb045@gmail.com>
+        Sat, 8 Aug 2020 00:06:42 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E736C061756;
+        Fri,  7 Aug 2020 21:06:42 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id p4so3635899qkf.0;
+        Fri, 07 Aug 2020 21:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eBX2STd6CRBk1vKmSlEBQtLB8UUMASbhavMeJ1WJR0A=;
+        b=ImMnrn3Z4k3xH3d5wjuGGYN5dCY5Wg7yTR6mWwxE/0/bqZN2eh0ux/M635crPwEWDO
+         RUqUkjgZ166oTo3IMuMmnuMHsSMhkDzoRms1MNwfTUorcMFXA6UACHWMaal1MUaCARlN
+         RUqIlF2x87k23WZtrRs2/GqwsDiG1blYKkLittDuyJQzNHsFAhC5NfgMSB0kFmP2VIYD
+         2X3iQoriLLXUSbdBDPmnR2S8YGDLWYyiyAjU6JfeQLkoIAcUMa/itMhvlGFDVDWyx3bU
+         osogjoRLH9tdNW8lQiZdZcy9WzfK4K3DIN248WTy1sj5QRBgygAtyaU6lmCPxULnuLC6
+         DqYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eBX2STd6CRBk1vKmSlEBQtLB8UUMASbhavMeJ1WJR0A=;
+        b=X8F/7+R/+iOLZpWCkoZZGiEWtCqKhrLp07JmhlwRAMhMeiKzwtceA9z1bxXNv6OUCD
+         cY4M1/wG3Ji18qN2IyUlmTI9Qs9DaVgI5f1HlE0cdYvfddV5B66z0LLXpguJXMHGyRjR
+         fSn6heNYswsJZ8gqsc9nv7g0OoDAKIhsCudvqdxRL8DsYG4JlxOMoO7AoRWIcIhyZv20
+         C83m2htx14OUIYLS2hsn37pQRocNvw+aP7/jKOIbooj2gJUGQYofZYVIX4UlZRD7J6YM
+         R416hKME0SNhHzWGqtXZsU1vAhV1kHvkx9fMPScmuhsE4rhClvXxFXPNY3rg6yQV/ded
+         pVHg==
+X-Gm-Message-State: AOAM533KCDOXIwgVQnuVm7h/kpwsqVHLrPNJ4K0R9w6UdrwadWG4Z0Jn
+        bDE3XyX9MYIC5ZvyPztVPw==
+X-Google-Smtp-Source: ABdhPJyiVi2TyBkfekwvTN8eseV1M60k4LZxF4cWE/pBssVqKoNRkt5Jy/31+Zj0ox2uqwcG0951nA==
+X-Received: by 2002:a37:a503:: with SMTP id o3mr16204813qke.162.1596859601722;
+        Fri, 07 Aug 2020 21:06:41 -0700 (PDT)
+Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id i7sm9264630qtb.27.2020.08.07.21.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 21:06:41 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Andrei Emeltchenko <andrei.emeltchenko@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH net] Bluetooth: Fix NULL pointer dereference in amp_read_loc_assoc_final_data()
+Date:   Sat,  8 Aug 2020 00:04:40 -0400
+Message-Id: <20200808040440.255578-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/2020, Florian Fainelli wrote:
-> > When i2c client unregisters, synchronize irq before setting
-> > iproc_i2c->slave to NULL.
-> > 
-> > (1) disable_irq()
-> > (2) Mask event enable bits in control reg
-> > (3) Erase slave address (avoid further writes to rx fifo)
-> > (4) Flush tx and rx FIFOs
-> > (5) Clear pending event (interrupt) bits in status reg
-> > (6) enable_irq()
-> > (7) Set client pointer to NULL
-> > 
-> 
-> > @@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
-> >  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
-> >  	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
-> >  
-> > +	/* flush TX/RX FIFOs */
-> > +	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
-> > +	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
-> > +
-> > +	/* clear all pending slave interrupts */
-> > +	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
-> > +
-> > +	enable_irq(iproc_i2c->irq);
-> > +
-> > +	iproc_i2c->slave = NULL;
-> 
-> There is nothing that checks on iproc_i2c->slave being valid within the
-> interrupt handler, we assume that the pointer is valid which is fin,
-> however non functional it may be, it may feel more natural to move the
-> assignment before the enable_irq()?
+Prevent amp_read_loc_assoc_final_data() from dereferencing `mgr` as NULL.
 
-As far as the teardown sequence ensures no more interrupts arrive after
-enable_irq() and they are enabled only after setting pointer during
-client register(); checking for NULL in ISR isn't necessary. 
+Reported-and-tested-by: syzbot+f4fb0eaafdb51c32a153@syzkaller.appspotmail.com
+Fixes: 9495b2ee757f ("Bluetooth: AMP: Process Chan Selected event")
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+ net/bluetooth/amp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If The teardown sequence doesn't guarantee quiescing of interrupts,
-setting NULL before or after enable_irq() is equally vulnerable.
-
-Dhananjay
+diff --git a/net/bluetooth/amp.c b/net/bluetooth/amp.c
+index 9c711f0dfae3..be2d469d6369 100644
+--- a/net/bluetooth/amp.c
++++ b/net/bluetooth/amp.c
+@@ -297,6 +297,9 @@ void amp_read_loc_assoc_final_data(struct hci_dev *hdev,
+ 	struct hci_request req;
+ 	int err;
+ 
++	if (!mgr)
++		return;
++
+ 	cp.phy_handle = hcon->handle;
+ 	cp.len_so_far = cpu_to_le16(0);
+ 	cp.max_len = cpu_to_le16(hdev->amp_assoc_size);
+-- 
+2.25.1
 
