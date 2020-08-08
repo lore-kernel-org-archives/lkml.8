@@ -2,178 +2,246 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB87EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 06:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 06:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83BE420866
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 06:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C6220866
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 06:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgHHG4U (ORCPT
+        id S1726238AbgHHG7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 02:56:20 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:32842 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHHG4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 02:56:20 -0400
-Received: by mail-io1-f70.google.com with SMTP id a12so3328134ioo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 23:56:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=PU7yqFGMVKvrXPZB8XKknR7zBk1zUbYuGJQogoX3Viw=;
-        b=T3NOeBsuwHXEdjlTy7G5hWl+2ovM0KQlBKrkCjNxMKfphBd0pLinCL3YuTZ29jAiJ2
-         3MmXczhonzjNEVXAqwcMlygqQf6Ayr3BGtnBVy/Vft0LOvDpvszC9wBkL1cdCiH3+5U1
-         dMvc/bycYazY8fKGTpdRgOwVziNbjw+qJ6sGQY2jSoUYIWFVXENOajdtRmuwtvhM/TM9
-         tF+bMvc6wRUiZWufZFfrqP0xsRf6HD7lxQoRaAKZ5pCiAMAsT5/G1VlpMCVWZCUmgFsD
-         6CilahO3j3GmWQhP30tc+DXzOkhf6Htz2osWQnYcVHAjUs/SozLA8+iAIgqCOX9NIPOe
-         hQBg==
-X-Gm-Message-State: AOAM531eRNLU8Uge3UiGgw+AFnFOcvqk/TiNA/PEuON1E4RSSSY4kIQI
-        3/UL7nG+2XGi2zIep3R4nXVehrzXcJTdZTubbBa6PqO0CLaW
-X-Google-Smtp-Source: ABdhPJwJok0tKX3N0EHJGvBinV+En+9WTSlTMOoK1f6SpNiSfFRIgFTy9mPXiPsajTS50wvhAhBbI7r0W5Cds9T3Fm+RoOsiWPtN
-MIME-Version: 1.0
-X-Received: by 2002:a92:5e9c:: with SMTP id f28mr8288344ilg.302.1596869778665;
- Fri, 07 Aug 2020 23:56:18 -0700 (PDT)
-Date:   Fri, 07 Aug 2020 23:56:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e8fb4b05ac58372e@google.com>
-Subject: KASAN: use-after-free Read in hci_get_auth_info
-From:   syzbot <syzbot+13010b6a10bbd82cc79c@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 8 Aug 2020 02:59:21 -0400
+Received: from comms.puri.sm ([159.203.221.185]:46128 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725786AbgHHG7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 02:59:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id C65CADFE40;
+        Fri,  7 Aug 2020 23:59:17 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iDrctBS22Urf; Fri,  7 Aug 2020 23:59:16 -0700 (PDT)
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+References: <1596034432.4356.19.camel@HansenPartnership.com>
+ <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm>
+ <1596037482.4356.37.camel@HansenPartnership.com>
+ <A1653792-B7E5-46A9-835B-7FA85FCD0378@puri.sm>
+ <20200729182515.GB1580638@rowland.harvard.edu>
+ <1596047349.4356.84.camel@HansenPartnership.com>
+ <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
+ <20200730151030.GB6332@rowland.harvard.edu>
+ <9b80ca7c-39f8-e52d-2535-8b0baf93c7d1@puri.sm>
+ <425990b3-4b0b-4dcf-24dc-4e7e60d5869d@puri.sm>
+ <20200807143002.GE226516@rowland.harvard.edu>
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
+ 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
+ ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
+Message-ID: <b0abab28-880e-4b88-eb3c-9ffd927d1ed9@puri.sm>
+Date:   Sat, 8 Aug 2020 08:59:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <20200807143002.GE226516@rowland.harvard.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 07.08.20 16:30, Alan Stern wrote:
+> On Fri, Aug 07, 2020 at 11:51:21AM +0200, Martin Kepplinger wrote:
+>> it's really strange: below is the change I'm trying. Of course that's
+>> only for testing the functionality, nothing how a patch could look like.
+>>
+>> While I remember it had worked, now (weirdly since I tried that mounting
+>> via fstab) it doesn't anymore!
+>>
+>> What I understand (not much): I handle the error with "retry" via the
+>> new flag, but scsi_decide_disposition() returns SUCCESS because of "no
+>> more retries"; but it's the first and only time it's called.
+> 
+> Are you saying that scmd->allowed is set to 0?  Or is scsi_notry_cmd() 
+> returning a nonzero value?  Whichever is true, why does it happen that 
+> way?
 
-syzbot found the following issue on:
+scsi_notry_cmd() is returning 1. (it's retry 1 of 5 allowed).
 
-HEAD commit:    d6efb3ac Merge tag 'tty-5.9-rc1' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ad2134900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61ec43e42a83feae
-dashboard link: https://syzkaller.appspot.com/bug?extid=13010b6a10bbd82cc79c
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fd9bc6900000
+why is it returning 1? REQ_FAILFAST_DEV is set. It's DID_OK, then "if
+(status_byte(scmd->result) != CHECK_CONDITION)" appearently is not true,
+then at the end it returns 1 because of REQ_FAILFAST_DEV.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+13010b6a10bbd82cc79c@syzkaller.appspotmail.com
+that seems to come from the block layer. why and when? could I change
+that so that the scsi error handling stays in control?
 
-==================================================================
-BUG: KASAN: use-after-free in __mutex_waiter_is_first kernel/locking/mutex.c:200 [inline]
-BUG: KASAN: use-after-free in __mutex_lock_common+0x12cd/0x2fc0 kernel/locking/mutex.c:1040
-Read of size 8 at addr ffff88808e668060 by task syz-executor.4/19584
+> 
+> What is the failing command?  Is it a READ(10)?
 
-CPU: 0 PID: 19584 Comm: syz-executor.4 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_address_description+0x66/0x5a0 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- __mutex_waiter_is_first kernel/locking/mutex.c:200 [inline]
- __mutex_lock_common+0x12cd/0x2fc0 kernel/locking/mutex.c:1040
- __mutex_lock kernel/locking/mutex.c:1103 [inline]
- mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
- hci_get_auth_info+0x69/0x3a0 net/bluetooth/hci_conn.c:1689
- hci_sock_bound_ioctl net/bluetooth/hci_sock.c:957 [inline]
- hci_sock_ioctl+0x5ae/0x750 net/bluetooth/hci_sock.c:1060
- sock_do_ioctl+0x7b/0x260 net/socket.c:1047
- sock_ioctl+0x4aa/0x690 net/socket.c:1198
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl fs/ioctl.c:753 [inline]
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:760
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ccd9
-Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f113a564c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 000000000001d300 RCX: 000000000045ccd9
-RDX: 0000000020000000 RSI: 00000000800448d7 RDI: 0000000000000005
-RBP: 000000000078bf40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007ffd62ea93af R14: 00007f113a5659c0 R15: 000000000078bf0c
+Not sure how I'd answer that, but here's the test to trigger the error:
 
-Allocated by task 6822:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x234/0x300 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- hci_alloc_dev+0x4c/0x1aa0 net/bluetooth/hci_core.c:3543
- __vhci_create_device drivers/bluetooth/hci_vhci.c:99 [inline]
- vhci_create_device+0x113/0x520 drivers/bluetooth/hci_vhci.c:148
- process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
- worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
- kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+mount /dev/sda1 /mnt
+cd /mnt
+ls
+cp file ~/ (if ls "works" and doesn't yet trigger the error)
 
-Freed by task 9965:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x220 mm/slab.c:3757
- bt_host_release+0x18/0x20 net/bluetooth/hci_sysfs.c:86
- device_release+0x70/0x1a0 drivers/base/core.c:1796
- kobject_cleanup lib/kobject.c:704 [inline]
- kobject_release lib/kobject.c:735 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1a0/0x2c0 lib/kobject.c:752
- vhci_release+0x7b/0xc0 drivers/bluetooth/hci_vhci.c:341
- __fput+0x2f0/0x750 fs/file_table.c:281
- task_work_run+0x137/0x1c0 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0x5f3/0x1f20 kernel/exit.c:806
- do_group_exit+0x161/0x2d0 kernel/exit.c:903
- __do_sys_exit_group+0x13/0x20 kernel/exit.c:914
- __ia32_sys_exit_group+0x0/0x40 kernel/exit.c:912
- __x64_sys_exit_group+0x37/0x40 kernel/exit.c:912
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+and that's the (familiar looking) logs when doing so. again: despite the
+mentioned workaround in scsi_error and the new expected_media_change
+flag *is* set and gets cleared, as it should be. REQ_FAILFAST_DEV seems
+to override what I want to do is scsi_error:
 
-The buggy address belongs to the object at ffff88808e668000
- which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 96 bytes inside of
- 8192-byte region [ffff88808e668000, ffff88808e66a000)
-The buggy address belongs to the page:
-page:ffffea0002399a00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0002399a00 order:2 compound_mapcount:0 compound_pincount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea000217a208 ffffea0001e6c008 ffff8880aa4021c0
-raw: 0000000000000000 ffff88808e668000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88808e667f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88808e667f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88808e668000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                       ^
- ffff88808e668080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88808e668100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+[   55.557629] sd 0:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result:
+hostbyte=0x00 driverbyte=0x08 cmd_age=0s
+[   55.557639] sd 0:0:0:0: [sda] tag#0 Sense Key : 0x6 [current]
+[   55.557646] sd 0:0:0:0: [sda] tag#0 ASC=0x28 ASCQ=0x0
+[   55.557657] sd 0:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 08 fc
+e0 00 00 01 00
+[   55.557666] blk_update_request: I/O error, dev sda, sector 589024 op
+0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
+[   55.568899] sd 0:0:0:0: [sda] tag#0 device offline or changed
+[   55.574691] blk_update_request: I/O error, dev sda, sector 589025 op
+0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
+[   55.585756] sd 0:0:0:0: [sda] tag#0 device offline or changed
+[   55.591562] blk_update_request: I/O error, dev sda, sector 589026 op
+0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
+[   55.602274] sd 0:0:0:0: [sda] tag#0 device offline or changed
+(... goes on with the same)
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+>> How can this be? What am I missing?
+> 
+> It's kind of hard to tell without seeing the error messages or system 
+> log or any debugging information.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+thanks a lot for getting back to me,
+
+                           martin
+
+
+> 
+> Alan Stern
+> 
+>> --- a/drivers/scsi/scsi_error.c
+>> +++ b/drivers/scsi/scsi_error.c
+>> @@ -565,6 +565,13 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
+>>  				return NEEDS_RETRY;
+>>  			}
+>>  		}
+>> +		if (scmd->device->expecting_media_change) {
+>> +			if (sshdr.asc == 0x28 && sshdr.ascq == 0x00) {
+>> +				scmd->device->expecting_media_change = 0;
+>> +				return NEEDS_RETRY;
+>> +			}
+>> +		}
+>> +
+>>  		/*
+>>  		 * we might also expect a cc/ua if another LUN on the target
+>>  		 * reported a UA with an ASC/ASCQ of 3F 0E -
+>> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+>> index d90fefffe31b..bb583e403b81 100644
+>> --- a/drivers/scsi/sd.c
+>> +++ b/drivers/scsi/sd.c
+>> @@ -3642,6 +3642,8 @@ static int sd_resume(struct device *dev)
+>>  	if (!sdkp)	/* E.g.: runtime resume at the start of sd_probe() */
+>>  		return 0;
+>>
+>> +	sdkp->device->expecting_media_change = 1;
+>> +
+>>  	if (!sdkp->device->manage_start_stop)
+>>  		return 0;
+>>
+>> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+>> index bc5909033d13..f5fc1af68e00 100644
+>> --- a/include/scsi/scsi_device.h
+>> +++ b/include/scsi/scsi_device.h
+>> @@ -169,6 +169,7 @@ struct scsi_device {
+>>  				 * this device */
+>>  	unsigned expecting_cc_ua:1; /* Expecting a CHECK_CONDITION/UNIT_ATTN
+>>  				     * because we did a bus reset. */
+>> +	unsigned expecting_media_change:1;
+>>  	unsigned use_10_for_rw:1; /* first try 10-byte read / write */
+>>  	unsigned use_10_for_ms:1; /* first try 10-byte mode sense/select */
+>>  	unsigned set_dbd_for_ms:1; /* Set "DBD" field in mode sense */
