@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B421A20672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B402206B5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930487;
-	bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+	s=default; t=1596930496;
+	bh=G5K0RJa7nYZUNphGIKeV64484sMdLIh3FAx+a8erWrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thwAGjjXCm7tymucs3poWKT1Wk8scbsRBLyYKZn9NJHIS1tqcVP9N2QoByrHcxl5P
-	 h2QetdhvDe1MZYUpMEGQUzlg1kr5aa5Llb+77asue7XNfMtQN7/xQED9AH20g6COEO
-	 jYv4lhFPZ/0+kYgoIjHMQ3IS4KhDUaWtLEGlXBn8=
+	b=FXpfwXn/QGFlYfpgfjetJ45XfGlKCQYCPuN/DHfzZ5LOxnNO4B0iVpiulD0wNGNGZ
+	 CLe+uFStIZAAmqZ2IjKvyJiJRTNp8k+PbmC0EEmCuQ3Okfpn2XxBvJCutFRlEfBg89
+	 EhHAe6nPfaIp1ANsD1zYzYLX725li5y0gPL4Uso4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgHHXsG (ORCPT
+        id S1728490AbgHHXsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50734 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:48:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbgHHXhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:36 -0400
+        id S1727985AbgHHXhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD0620748;
-        Sat,  8 Aug 2020 23:37:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F18A207BB;
+        Sat,  8 Aug 2020 23:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929856;
-        bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+        s=default; t=1596929851;
+        bh=G5K0RJa7nYZUNphGIKeV64484sMdLIh3FAx+a8erWrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOp8tDODG4IvAXdSYWtP55bX658F7nmVXwfiswZbcrjCYp7rmDw34Vk0OUvvxsGW/
-         zzy6yqIiVP+DJKQDMnhmHUrJpB+6PWTW33n7j5ZpBjb8gADT6r/bryTUREqAsnredB
-         sy2B2xlxL4nyKY4u7vNxw2RYTEojqb9VXlBOk3JE=
+        b=TyjTSw9Spthazbkj1ksAhzzcw4YUDRduDYUCkoQBx/x53uls2ziUvVX2eOlXillBx
+         sact/PJoYO9FyLpVS+80Bt0eSkiEZNFzZWiEBsq2NeBKCBS2F/COqIwX7GbQrb65XY
+         aaN5Qcppnc1cOJCUPoLttHceQOt+VNdXHHShg1Zo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 09/58] arm64: dts: rockchip: fix rk3399-puma vcc5v0-host gpio
-Date:   Sat,  8 Aug 2020 19:36:35 -0400
-Message-Id: <20200808233724.3618168-9-sashal@kernel.org>
+Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 05/58] x86, sched: Bail out of frequency invariance if turbo_freq/base_freq gives 0
+Date:   Sat,  8 Aug 2020 19:36:31 -0400
+Message-Id: <20200808233724.3618168-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,41 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Giovanni Gherdovich <ggherdovich@suse.cz>
 
-[ Upstream commit 7a7184f6cfa9279f1a1c10a1845d247d7fad54ff ]
+[ Upstream commit f4291df103315a696f0b8c4f45ca8ae773c17441 ]
 
-The puma vcc5v0_host regulator node currently uses opposite active-values
-for the enable pin. The gpio-declaration uses active-high while the
-separate enable-active-low property marks the pin as active low.
+Be defensive against the case where the processor reports a base_freq
+larger than turbo_freq (the ratio would be zero).
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
-
-So bring this in line and make both properties match, similar to the
-gmac fix.
-
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200604091239.424318-1-heiko@sntech.de
+Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lkml.kernel.org/r/20200531182453.15254-4-ggherdovich@suse.cz
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/smpboot.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 07694b196fdbe..063f59a420b65 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -101,7 +101,7 @@ vcc3v3_sys: vcc3v3-sys {
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 3917a2de1580c..e5b2b20a0aeee 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1974,6 +1974,7 @@ static bool core_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
+ static bool intel_set_max_freq_ratio(void)
+ {
+ 	u64 base_freq, turbo_freq;
++	u64 turbo_ratio;
  
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
--		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
- 		enable-active-low;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
+ 	if (slv_set_max_freq_ratio(&base_freq, &turbo_freq))
+ 		goto out;
+@@ -2007,9 +2008,15 @@ static bool intel_set_max_freq_ratio(void)
+ 		return false;
+ 	}
+ 
+-	arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
+-					base_freq);
++	turbo_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE, base_freq);
++	if (!turbo_ratio) {
++		pr_debug("Non-zero turbo and base frequencies led to a 0 ratio.\n");
++		return false;
++	}
++
++	arch_turbo_freq_ratio = turbo_ratio;
+ 	arch_set_max_freq_ratio(turbo_disabled());
++
+ 	return true;
+ }
+ 
 -- 
 2.25.1
 
