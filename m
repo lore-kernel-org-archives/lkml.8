@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1428C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 997232053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B5A2053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930106;
-	bh=nVOubqGaz1Pn4VP4TyGxSbinfJTFRl16sBbWFwEg4zM=;
+	s=default; t=1596930109;
+	bh=LthndcixR4U/nU7TTeLj3tEDBebmVUh9b9bTx4WDgoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJemCwuCZ/PT9s85BTQjlB+t7349mehaLZ6tT0uX7evwv/dD5ctWAd0nBqjPkUmfT
-	 s19vj/LdgReBUzlRbRgCptcZIFKI0V+KaFVvvIaIDm+y/ZzPHmZ63C4+oYM2E7LlQF
-	 3IW0xSP07/9WpCwG8733frAPlhe5mVsXAlfWbJLE=
+	b=DDBtFM64EW2VVKlGzoJ1hdbNNxFWPPhdGKgZp7R7iaxZgMnrk1Uu0K4Gl2uC5Ximg
+	 hGTTmItaIVYrmm8S9jaLM78AJneSi+dxDu9vYzgS2RYVjyQOGnsr/7+MouP3veIAHs
+	 81kzYCtDSnOszS/D4UkdcB3Yjz+MxWAVWGlZJD3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgHHXlp (ORCPT
+        id S1729006AbgHHXls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:41:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgHHXke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:40:34 -0400
+        id S1728843AbgHHXkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:40:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 485B320829;
-        Sat,  8 Aug 2020 23:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C85212053B;
+        Sat,  8 Aug 2020 23:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596930033;
-        bh=nVOubqGaz1Pn4VP4TyGxSbinfJTFRl16sBbWFwEg4zM=;
+        s=default; t=1596930031;
+        bh=LthndcixR4U/nU7TTeLj3tEDBebmVUh9b9bTx4WDgoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxEAj6s9awj+nbLkSXxBcbF8fwGYs/6HvTldncxJbg8HLUgI806PIBROZTcTZT7ox
-         6E+6MiSfWFlJ/lkcvRv+wHUdNBP+NIcN56ohCKrXkirU0gNQ2fxshOX/xU1l/1P7G9
-         gTUKCnpf1x1l0iT9lEcS/Ns+P4+5Ilu6FjpRF/0E=
+        b=ERIL3EIRVy1Q80DVGEZKQNYNncKOmslNzM/Xp0hSwHX29zRxi9EEacoiBFoAS7+i/
+         Ik8zOSvuWTsuoBdqh6NcR3tkgHIa6XpQs16LkgNqS+fIFCNEyRlxxtQ8LZ4GgRhrZz
+         NrJlnCfzAm5itnY9Mgvph7cfdVy5iOQ3Uop/dNOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc:     Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 12/14] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-Date:   Sat,  8 Aug 2020 19:40:11 -0400
-Message-Id: <20200808234013.3619541-12-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/14] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
+Date:   Sat,  8 Aug 2020 19:40:09 -0400
+Message-Id: <20200808234013.3619541-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808234013.3619541-1-sashal@kernel.org>
 References: <20200808234013.3619541-1-sashal@kernel.org>
@@ -60,62 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
+[ Upstream commit 71fbe886ce6dd0be17f20aded9c63fe58edd2806 ]
 
-if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-a corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+In the function check_acpi_dev(), if it fails to create
+platform device, the return value is ERR_PTR() or NULL.
+Thus it must use IS_ERR_OR_NULL() to check return value.
 
-Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
+Fixes: ecc83e52b28c ("intel-hid: new hid event driver for hotkeys")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel-hid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 849014c01cf4d..bebaa0b0aef40 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -456,13 +456,13 @@ static void __init at91_pm_sram_init(void)
- 	sram_pool = gen_pool_get(&pdev->dev, NULL);
- 	if (!sram_pool) {
- 		pr_warn("%s: sram pool unavailable!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index e34fd70b67afe..3add7b3f9658b 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -366,7 +366,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 		return AE_OK;
  
- 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
- 	if (!sram_base) {
- 		pr_warn("%s: unable to alloc sram!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
+ 	if (acpi_match_device_ids(dev, ids) == 0)
+-		if (acpi_create_platform_device(dev, NULL))
++		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+ 			dev_info(&dev->dev,
+ 				 "intel-hid: created platform device\n");
  
- 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
-@@ -470,12 +470,17 @@ static void __init at91_pm_sram_init(void)
- 					at91_pm_suspend_in_sram_sz, false);
- 	if (!at91_suspend_sram_fn) {
- 		pr_warn("SRAM: Could not map\n");
--		return;
-+		goto out_put_device;
- 	}
- 
- 	/* Copy the pm suspend handler to SRAM */
- 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
- 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
-+	return;
-+
-+out_put_device:
-+	put_device(&pdev->dev);
-+	return;
- }
- 
- static void __init at91_pm_backup_init(void)
 -- 
 2.25.1
 
