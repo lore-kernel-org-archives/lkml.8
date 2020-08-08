@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85739C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5381B20672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D6E20672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930614;
-	bh=iMAbjkb444Fs60V9JgSpamSFR5MPp1FyaSoD1MkeyFc=;
+	s=default; t=1596930620;
+	bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqXe9B7j1kW390DRGMXZeT4rFDgb8Fd34/Gzk17YPHIAdxlZpAjnamoGvYw/A/bpR
-	 a/0jagJt5VK7F/VjWxoWvHW4wXO+70rF+hvIaqRQyihL8R0p7Qo4OBOc6yAb2SoH3r
-	 2vKvLTTI0CiJD+NEHdVBLjcONtb2+QqfkZBHDCyw=
+	b=BnM9gzzrpOx8PMSMXjEwXI8RbUHynDTldcHKwQ8PCnTu7ikvhoDMczSessiFKiGE2
+	 /P/O3vJZVt4oH1fR8NteRpNeN1BWDuhgMcfYY7g2IyvkjDJF1FD2FEY6SP3G/55xir
+	 EGDpjATqGv/OLFblw59bjK2pGtEYabDygFkCJecg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgHHXuM (ORCPT
+        id S1728393AbgHHXuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbgHHXgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:44 -0400
+        id S1726984AbgHHXgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1995206C3;
-        Sat,  8 Aug 2020 23:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8445F2075D;
+        Sat,  8 Aug 2020 23:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929803;
-        bh=iMAbjkb444Fs60V9JgSpamSFR5MPp1FyaSoD1MkeyFc=;
+        s=default; t=1596929802;
+        bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YbIoF6IoJOKUTaN8bV9Ycp/tofdKTp5Xz835SavrA6RjphauJYmG4TbkzFAMuHTCd
-         bExa5wDItpzeOu4kzp7U8HMpuK8pi9IR6fndy4VpAM2JEOK2/4CzdAJBxO37bfP4XQ
-         CiZoTrK4AayOCtzwrdD9yxgMwsSVC9mgHmYPgbRU=
+        b=hFmRidix3ACMxyfkatuZ0PmPk3686DLPF5ZAlG29l0CDyoBwwEEhbswsiqIDmyqH5
+         UrIMZ+iug/vLwWYEyEBEEshu5lDMSqhJ0TpvM8oqdVnfd7F34EEfAroXUjxkBqfUkW
+         IypmmWtGFgu7nJXh3ExVCkM2nzWNdFiTqLxEJR1o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Delaunay <patrick.delaunay@st.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 41/72] ARM: dts: stm32: Fix spi4 pins in stm32mp15-pinctrl
-Date:   Sat,  8 Aug 2020 19:35:10 -0400
-Message-Id: <20200808233542.3617339-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 40/72] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
+Date:   Sat,  8 Aug 2020 19:35:09 -0400
+Message-Id: <20200808233542.3617339-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -62,67 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Delaunay <patrick.delaunay@st.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 4fe663890ac5b3b099f458b20cce13fe8efec12b ]
+[ Upstream commit e4dae01bf08b754de79072441c357737220b873f ]
 
-Move spi4_pins_a nodes from pinctrl_z to pinctrl as the associated pins
-are not in BANK Z.
+The Bananapi M2+ uses a GPIO line to change the effective resistance of
+the CPU supply regulator's feedback resistor network. The voltages
+described in the device tree were given directly by the vendor. This
+turns out to be slightly off compared to the real values.
 
-Fixes: 498a7014989d ("ARM: dts: stm32: Add missing pinctrl entries for STM32MP15")
+The updated voltages are based on calculations of the feedback resistor
+network, and verified down to three decimal places with a multi-meter.
 
-Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-4-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 28 ++++++++++++------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 49132921feeb9..cc505458da2fd 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1654,6 +1654,20 @@ pins2 {
- 		};
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index a628b5ee72b65..235994a4a2ebb 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -16,12 +16,12 @@ reg_vdd_cpux: vdd-cpux {
+ 		regulator-type = "voltage";
+ 		regulator-boot-on;
+ 		regulator-always-on;
+-		regulator-min-microvolt = <1100000>;
+-		regulator-max-microvolt = <1300000>;
++		regulator-min-microvolt = <1108475>;
++		regulator-max-microvolt = <1308475>;
+ 		regulator-ramp-delay = <50>; /* 4ms */
+ 		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
+ 		gpios-states = <0x1>;
+-		states = <1100000 0>, <1300000 1>;
++		states = <1108475 0>, <1308475 1>;
  	};
- 
-+	spi4_pins_a: spi4-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
-+				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
-+			bias-disable;
-+		};
-+	};
-+
- 	usart2_pins_a: usart2-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
-@@ -1776,18 +1790,4 @@ pins2 {
- 			bias-disable;
- 		};
- 	};
--
--	spi4_pins_a: spi4-0 {
--		pins {
--			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
--				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
--			bias-disable;
--			drive-push-pull;
--			slew-rate = <1>;
--		};
--		pins2 {
--			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
--			bias-disable;
--		};
--	};
  };
+ 
 -- 
 2.25.1
 
