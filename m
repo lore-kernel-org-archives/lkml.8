@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F082C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C77C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B81A20829
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EB02075D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929887;
-	bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
+	s=default; t=1596929889;
+	bh=s2bVGAhZxzkklepQXeBLPTCF0rSqnarv9PWI2eXr2p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqpum7fYl4iH0bUJ0k6+3E4SfD1/gQagKDBooyN4IQ96m1PlMLYS7K4dLL8mQgvTn
-	 2qJVKUvW0x1yX1zzzxYto5mL3+Yb/HPJghetnCe6FI8QOWrR8JS3ZOB8KYmU4sMM/a
-	 SqggSyVSxUmjobDXXCcZg8uE4ncK7mWh1oyZbsqk=
+	b=gbwu+To5JGwFtCSMTwue0rfd9SorHm1EvvwrajEWQVzyREY2vMt0AY1kyz3QxTPkt
+	 da41DM31RzzpR6QUk+fDAbhg52+9OJ568iWdPPwQO8wOw87BfmpoG+Ruaky421jExN
+	 0s8uqTqOpWt/fbu0qPTdygHLUQgcGgWWKEuUoVbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgHHXiF (ORCPT
+        id S1728188AbgHHXiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:38:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbgHHXiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:03 -0400
+        id S1728092AbgHHXiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6612F20748;
-        Sat,  8 Aug 2020 23:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB05E2073E;
+        Sat,  8 Aug 2020 23:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929883;
-        bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
+        s=default; t=1596929885;
+        bh=s2bVGAhZxzkklepQXeBLPTCF0rSqnarv9PWI2eXr2p4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lubaFHhjjGH2C3ojIRzSdoSFYlSgG53hONVo0eP6XUnApF6MAqW74H2QVtnMNVnuj
-         f8+Z9pGdnQ3XLzrxOPuwPMAYFCOIM9ExoeIxlcGBcsrH9ImbFYpDc3SDFmmTNbmbdK
-         bjNl6kW9GFEMwEkv255lpfQoF6em08aLYDi6uzns=
+        b=YDQY1y8YlKROpJERr8nUYZV5luZ/fQsMae5UXJBRrJqYtVNl3VPW9WACeHr+AmXpI
+         kabbvfo3jycSKDIMxqS4cuwxrndQxgEvD+q2RA1Mvl/oJNgQfLbrkjlAcQO8aqV+Uz
+         EHCKmDyVOWE2fXzrhfsA1zl+0mnjfGYw88xKT3KE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+Cc:     Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 5.7 26/58] m68k: mac: Fix IOP status/control register writes
-Date:   Sat,  8 Aug 2020 19:36:52 -0400
-Message-Id: <20200808233724.3618168-26-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 28/58] platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
+Date:   Sat,  8 Aug 2020 19:36:54 -0400
+Message-Id: <20200808233724.3618168-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -62,77 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit 931fc82a6aaf4e2e4a5490addaa6a090d78c24a7 ]
+[ Upstream commit 64dd4a5a7d214a07e3d9f40227ec30ac8ba8796e ]
 
-When writing values to the IOP status/control register make sure those
-values do not have any extraneous bits that will clear interrupt flags.
+In the function check_acpi_dev(), if it fails to create
+platform device, the return value is ERR_PTR() or NULL.
+Thus it must use IS_ERR_OR_NULL() to check return value.
 
-To place the SCC IOP into bypass mode would be desirable but this is not
-achieved by writing IOP_DMAINACTIVE | IOP_RUN | IOP_AUTOINC | IOP_BYPASS
-to the control register. Drop this ineffective register write.
-
-Remove the flawed and unused iop_bypass() function. Make use of the
-unused iop_stop() function.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/09bcb7359a1719a18b551ee515da3c4c3cf709e6.1590880333.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: 332e081225fc ("intel-vbtn: new driver for Intel Virtual Button")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mac/iop.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
-index d8f2282978f9c..c432bfafe63e2 100644
---- a/arch/m68k/mac/iop.c
-+++ b/arch/m68k/mac/iop.c
-@@ -183,7 +183,7 @@ static __inline__ void iop_writeb(volatile struct mac_iop *iop, __u16 addr, __u8
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index a05b80955dcdd..5db8b7ad1f5df 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -286,7 +286,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 		return AE_OK;
  
- static __inline__ void iop_stop(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl &= ~IOP_RUN;
-+	iop->status_ctrl = IOP_AUTOINC;
- }
+ 	if (acpi_match_device_ids(dev, ids) == 0)
+-		if (acpi_create_platform_device(dev, NULL))
++		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+ 			dev_info(&dev->dev,
+ 				 "intel-vbtn: created platform device\n");
  
- static __inline__ void iop_start(volatile struct mac_iop *iop)
-@@ -191,14 +191,9 @@ static __inline__ void iop_start(volatile struct mac_iop *iop)
- 	iop->status_ctrl = IOP_RUN | IOP_AUTOINC;
- }
- 
--static __inline__ void iop_bypass(volatile struct mac_iop *iop)
--{
--	iop->status_ctrl |= IOP_BYPASS;
--}
--
- static __inline__ void iop_interrupt(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl |= IOP_IRQ;
-+	iop->status_ctrl = IOP_IRQ | IOP_RUN | IOP_AUTOINC;
- }
- 
- static int iop_alive(volatile struct mac_iop *iop)
-@@ -244,7 +239,6 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_SCC] = (struct mac_iop *) SCC_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_SCC]->status_ctrl = 0x87;
- 		iop_scc_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_SCC] = NULL;
-@@ -256,7 +250,7 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_ISM] = (struct mac_iop *) ISM_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_ISM]->status_ctrl = 0;
-+		iop_stop(iop_base[IOP_NUM_ISM]);
- 		iop_ism_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_ISM] = NULL;
 -- 
 2.25.1
 
