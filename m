@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0CB2053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7D22053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930282;
-	bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
+	s=default; t=1596930290;
+	bh=tE+/jS+BvX9zc+s1uCDMixr7naVAWq9W2jUqiuF35ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t5rmrIDCb2M9AzrcN2es6INU2PfnQnLfiQPaCXyncbXQXRMNaTyZ4M5WslPYQnf9Q
-	 PKAXCExFEWyWT9+Aq30zl4tpy5IrjKMThfV6vpalJsR4tl5aWGYjNKKSQr+rsMp2Gs
-	 HXXcPa7+K8Y2q6ptXjV6MZJRQdGvokjUAJHE0bXU=
+	b=jwfRBSRovfUcSSKZ3f2uDrpCnnUBWrk+ukyBb1U5nnTKGTvmh/IeDcgPL3uWr+f/v
+	 roBvOOH1g2ZxHDbYD1ie6yCeMHaiIe5EVCGYeHzoroBp+g+a1PRXm7HZtF6coPmZHS
+	 l7CJ0uDlFV50McOtiAYpGs7u6aKjgLQ7Bus2XL2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgHHXok (ORCPT
+        id S1728524AbgHHXot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:44:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53818 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbgHHXjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:14 -0400
+        id S1728453AbgHHXjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3A382073E;
-        Sat,  8 Aug 2020 23:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CEF520716;
+        Sat,  8 Aug 2020 23:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929953;
-        bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
+        s=default; t=1596929942;
+        bh=tE+/jS+BvX9zc+s1uCDMixr7naVAWq9W2jUqiuF35ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8QLydbnjUj0+YphHlfCIoMZg3UJSOC05kmCBNyi27miK+rjwjiKAsr+tjLG2fdNe
-         eX1GpgafOMo08cfTezXnrQmZLswu0psnPRqa31ZCHT/K2/U9qMHV3Vgt/6y2R1xwcF
-         pBNGFewuinv1jONTDW2gitgtWqD5GZjVhpcYF7v8=
+        b=jSfZ9LUzF44Ah0eLvDQLlk+ZL0x/Btc8hdJTsbIP63pf2V5iBjMSWFcF/+Ow83RIZ
+         hYcjZ8uRgeth2avOU8N0/HRzzWDPJd42qLohzl/ir+AdJMSDLQny7qTQvIefFsHiDF
+         Can0edn0dNySH0RR8J+MPrSmf/JXCdpGwvpgmjxA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+Cc:     Cristian Marussi <cristian.marussi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 5.4 18/40] m68k: mac: Fix IOP status/control register writes
-Date:   Sat,  8 Aug 2020 19:38:22 -0400
-Message-Id: <20200808233844.3618823-18-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 13/40] firmware: arm_scmi: Fix SCMI genpd domain probing
+Date:   Sat,  8 Aug 2020 19:38:17 -0400
+Message-Id: <20200808233844.3618823-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -62,77 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-[ Upstream commit 931fc82a6aaf4e2e4a5490addaa6a090d78c24a7 ]
+[ Upstream commit e0f1a30cf184821499eeb67daedd7a3f21bbcb0b ]
 
-When writing values to the IOP status/control register make sure those
-values do not have any extraneous bits that will clear interrupt flags.
+When, at probe time, an SCMI communication failure inhibits the capacity
+to query power domains states, such domains should be skipped.
 
-To place the SCC IOP into bypass mode would be desirable but this is not
-achieved by writing IOP_DMAINACTIVE | IOP_RUN | IOP_AUTOINC | IOP_BYPASS
-to the control register. Drop this ineffective register write.
+Registering partially initialized SCMI power domains with genpd will
+causes kernel panic.
 
-Remove the flawed and unused iop_bypass() function. Make use of the
-unused iop_stop() function.
+ arm-scmi timed out in resp(caller: scmi_power_state_get+0xa4/0xd0)
+ scmi-power-domain scmi_dev.2: failed to get state for domain 9
+ Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+ Mem abort info:
+   ESR = 0x96000006
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000006
+   CM = 0, WnR = 0
+ user pgtable: 4k pages, 48-bit VAs, pgdp=00000009f3691000
+ [0000000000000000] pgd=00000009f1ca0003, p4d=00000009f1ca0003, pud=00000009f35ea003, pmd=0000000000000000
+ Internal error: Oops: 96000006 [#1] PREEMPT SMP
+ CPU: 2 PID: 381 Comm: bash Not tainted 5.8.0-rc1-00011-gebd118c2cca8 #2
+ Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan  3 2020
+ Internal error: Oops: 96000006 [#1] PREEMPT SMP
+ pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
+ pc : of_genpd_add_provider_onecell+0x98/0x1f8
+ lr : of_genpd_add_provider_onecell+0x48/0x1f8
+ Call trace:
+  of_genpd_add_provider_onecell+0x98/0x1f8
+  scmi_pm_domain_probe+0x174/0x1e8
+  scmi_dev_probe+0x90/0xe0
+  really_probe+0xe4/0x448
+  driver_probe_device+0xfc/0x168
+  device_driver_attach+0x7c/0x88
+  bind_store+0xe8/0x128
+  drv_attr_store+0x2c/0x40
+  sysfs_kf_write+0x4c/0x60
+  kernfs_fop_write+0x114/0x230
+  __vfs_write+0x24/0x50
+  vfs_write+0xbc/0x1e0
+  ksys_write+0x70/0xf8
+  __arm64_sys_write+0x24/0x30
+  el0_svc_common.constprop.3+0x94/0x160
+  do_el0_svc+0x2c/0x98
+  el0_sync_handler+0x148/0x1a8
+  el0_sync+0x158/0x180
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/09bcb7359a1719a18b551ee515da3c4c3cf709e6.1590880333.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Do not register any power domain that failed to be queried with genpd.
+
+Fixes: 898216c97ed2 ("firmware: arm_scmi: add device power domain support using genpd")
+Link: https://lore.kernel.org/r/20200619220330.12217-1-cristian.marussi@arm.com
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mac/iop.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/firmware/arm_scmi/scmi_pm_domain.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
-index d8f2282978f9c..c432bfafe63e2 100644
---- a/arch/m68k/mac/iop.c
-+++ b/arch/m68k/mac/iop.c
-@@ -183,7 +183,7 @@ static __inline__ void iop_writeb(volatile struct mac_iop *iop, __u16 addr, __u8
+diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+index 87f737e01473c..041f8152272bf 100644
+--- a/drivers/firmware/arm_scmi/scmi_pm_domain.c
++++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+@@ -85,7 +85,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
+ 	for (i = 0; i < num_domains; i++, scmi_pd++) {
+ 		u32 state;
  
- static __inline__ void iop_stop(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl &= ~IOP_RUN;
-+	iop->status_ctrl = IOP_AUTOINC;
- }
+-		domains[i] = &scmi_pd->genpd;
++		if (handle->power_ops->state_get(handle, i, &state)) {
++			dev_warn(dev, "failed to get state for domain %d\n", i);
++			continue;
++		}
  
- static __inline__ void iop_start(volatile struct mac_iop *iop)
-@@ -191,14 +191,9 @@ static __inline__ void iop_start(volatile struct mac_iop *iop)
- 	iop->status_ctrl = IOP_RUN | IOP_AUTOINC;
- }
+ 		scmi_pd->domain = i;
+ 		scmi_pd->handle = handle;
+@@ -94,13 +97,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
+ 		scmi_pd->genpd.power_off = scmi_pd_power_off;
+ 		scmi_pd->genpd.power_on = scmi_pd_power_on;
  
--static __inline__ void iop_bypass(volatile struct mac_iop *iop)
--{
--	iop->status_ctrl |= IOP_BYPASS;
--}
+-		if (handle->power_ops->state_get(handle, i, &state)) {
+-			dev_warn(dev, "failed to get state for domain %d\n", i);
+-			continue;
+-		}
 -
- static __inline__ void iop_interrupt(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl |= IOP_IRQ;
-+	iop->status_ctrl = IOP_IRQ | IOP_RUN | IOP_AUTOINC;
- }
+ 		pm_genpd_init(&scmi_pd->genpd, NULL,
+ 			      state == SCMI_POWER_STATE_GENERIC_OFF);
++
++		domains[i] = &scmi_pd->genpd;
+ 	}
  
- static int iop_alive(volatile struct mac_iop *iop)
-@@ -244,7 +239,6 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_SCC] = (struct mac_iop *) SCC_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_SCC]->status_ctrl = 0x87;
- 		iop_scc_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_SCC] = NULL;
-@@ -256,7 +250,7 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_ISM] = (struct mac_iop *) ISM_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_ISM]->status_ctrl = 0;
-+		iop_stop(iop_base[IOP_NUM_ISM]);
- 		iop_ism_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_ISM] = NULL;
+ 	scmi_pd_data->domains = domains;
 -- 
 2.25.1
 
