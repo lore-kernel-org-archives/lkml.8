@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A603C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F082C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DAC207BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B81A20829
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929881;
-	bh=yIxbhgabo7mdCS7x+F+liubHbDxp3iWHeZ2h1v7TaMs=;
+	s=default; t=1596929887;
+	bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G32AUXcm2n7RZsCS6Q+t/e8xiPomRCXVng8ZKJ86Tat1RAviMe7ZWqo857X8CvvjC
-	 WdTE1OsOXaGjB8FrsnW9euDHzghBHLOCqgfIQMC57M2eVnby60UasgvAQB6kUUDZiI
-	 obZh7ZPkgv1u58xJzVp8ZHVvYzYncu5UQph7LiCE=
+	b=jqpum7fYl4iH0bUJ0k6+3E4SfD1/gQagKDBooyN4IQ96m1PlMLYS7K4dLL8mQgvTn
+	 2qJVKUvW0x1yX1zzzxYto5mL3+Yb/HPJghetnCe6FI8QOWrR8JS3ZOB8KYmU4sMM/a
+	 SqggSyVSxUmjobDXXCcZg8uE4ncK7mWh1oyZbsqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgHHXh7 (ORCPT
+        id S1728019AbgHHXiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51300 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbgHHXhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:54 -0400
+        id S1728127AbgHHXiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6B2520825;
-        Sat,  8 Aug 2020 23:37:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6612F20748;
+        Sat,  8 Aug 2020 23:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929873;
-        bh=yIxbhgabo7mdCS7x+F+liubHbDxp3iWHeZ2h1v7TaMs=;
+        s=default; t=1596929883;
+        bh=TMZSxOWR4DoSRPwXZvMAnYvdUNi4BFmEtSVD2UmFTXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNizB4owajuime2g0flSfMh5Cwz6fQsDK6UOhynR+m5DaavhAirfW9YfFDHlrrmm5
-         b/iC/hBjqGN+PkGe45ixWwmZvGtL4yKtDBpEuPsmGkJ5u1DhVKEVtJH5L+GbManhwq
-         p9A5b80gjtf0QYpxzFlJ7dRJrF4zOcB0sYy6Jg2M=
+        b=lubaFHhjjGH2C3ojIRzSdoSFYlSgG53hONVo0eP6XUnApF6MAqW74H2QVtnMNVnuj
+         f8+Z9pGdnQ3XLzrxOPuwPMAYFCOIM9ExoeIxlcGBcsrH9ImbFYpDc3SDFmmTNbmbdK
+         bjNl6kW9GFEMwEkv255lpfQoF6em08aLYDi6uzns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 22/58] sched/uclamp: Fix initialization of struct uclamp_rq
-Date:   Sat,  8 Aug 2020 19:36:48 -0400
-Message-Id: <20200808233724.3618168-22-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 5.7 26/58] m68k: mac: Fix IOP status/control register writes
+Date:   Sat,  8 Aug 2020 19:36:52 -0400
+Message-Id: <20200808233724.3618168-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -61,73 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit d81ae8aac85ca2e307d273f6dc7863a721bf054e ]
+[ Upstream commit 931fc82a6aaf4e2e4a5490addaa6a090d78c24a7 ]
 
-struct uclamp_rq was zeroed out entirely in assumption that in the first
-call to uclamp_rq_inc() they'd be initialized correctly in accordance to
-default settings.
+When writing values to the IOP status/control register make sure those
+values do not have any extraneous bits that will clear interrupt flags.
 
-But when next patch introduces a static key to skip
-uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
-will fail to perform any frequency changes because the
-rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
-means all rqs are capped to 0 by default.
+To place the SCC IOP into bypass mode would be desirable but this is not
+achieved by writing IOP_DMAINACTIVE | IOP_RUN | IOP_AUTOINC | IOP_BYPASS
+to the control register. Drop this ineffective register write.
 
-Fix it by making sure we do proper initialization at init without
-relying on uclamp_rq_inc() doing it later.
+Remove the flawed and unused iop_bypass() function. Make use of the
+unused iop_stop() function.
 
-Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Tested-by: Lukasz Luba <lukasz.luba@arm.com>
-Link: https://lkml.kernel.org/r/20200630112123.12076-2-qais.yousef@arm.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/09bcb7359a1719a18b551ee515da3c4c3cf709e6.1590880333.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ arch/m68k/mac/iop.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a7ef76a62699a..1bae86fc128b2 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1237,6 +1237,20 @@ static void uclamp_fork(struct task_struct *p)
- 	}
+diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
+index d8f2282978f9c..c432bfafe63e2 100644
+--- a/arch/m68k/mac/iop.c
++++ b/arch/m68k/mac/iop.c
+@@ -183,7 +183,7 @@ static __inline__ void iop_writeb(volatile struct mac_iop *iop, __u16 addr, __u8
+ 
+ static __inline__ void iop_stop(volatile struct mac_iop *iop)
+ {
+-	iop->status_ctrl &= ~IOP_RUN;
++	iop->status_ctrl = IOP_AUTOINC;
  }
  
-+static void __init init_uclamp_rq(struct rq *rq)
-+{
-+	enum uclamp_id clamp_id;
-+	struct uclamp_rq *uc_rq = rq->uclamp;
-+
-+	for_each_clamp_id(clamp_id) {
-+		uc_rq[clamp_id] = (struct uclamp_rq) {
-+			.value = uclamp_none(clamp_id)
-+		};
-+	}
-+
-+	rq->uclamp_flags = 0;
-+}
-+
- static void __init init_uclamp(void)
+ static __inline__ void iop_start(volatile struct mac_iop *iop)
+@@ -191,14 +191,9 @@ static __inline__ void iop_start(volatile struct mac_iop *iop)
+ 	iop->status_ctrl = IOP_RUN | IOP_AUTOINC;
+ }
+ 
+-static __inline__ void iop_bypass(volatile struct mac_iop *iop)
+-{
+-	iop->status_ctrl |= IOP_BYPASS;
+-}
+-
+ static __inline__ void iop_interrupt(volatile struct mac_iop *iop)
  {
- 	struct uclamp_se uc_max = {};
-@@ -1245,11 +1259,8 @@ static void __init init_uclamp(void)
+-	iop->status_ctrl |= IOP_IRQ;
++	iop->status_ctrl = IOP_IRQ | IOP_RUN | IOP_AUTOINC;
+ }
  
- 	mutex_init(&uclamp_mutex);
- 
--	for_each_possible_cpu(cpu) {
--		memset(&cpu_rq(cpu)->uclamp, 0,
--				sizeof(struct uclamp_rq)*UCLAMP_CNT);
--		cpu_rq(cpu)->uclamp_flags = 0;
--	}
-+	for_each_possible_cpu(cpu)
-+		init_uclamp_rq(cpu_rq(cpu));
- 
- 	for_each_clamp_id(clamp_id) {
- 		uclamp_se_set(&init_task.uclamp_req[clamp_id],
+ static int iop_alive(volatile struct mac_iop *iop)
+@@ -244,7 +239,6 @@ void __init iop_preinit(void)
+ 		} else {
+ 			iop_base[IOP_NUM_SCC] = (struct mac_iop *) SCC_IOP_BASE_QUADRA;
+ 		}
+-		iop_base[IOP_NUM_SCC]->status_ctrl = 0x87;
+ 		iop_scc_present = 1;
+ 	} else {
+ 		iop_base[IOP_NUM_SCC] = NULL;
+@@ -256,7 +250,7 @@ void __init iop_preinit(void)
+ 		} else {
+ 			iop_base[IOP_NUM_ISM] = (struct mac_iop *) ISM_IOP_BASE_QUADRA;
+ 		}
+-		iop_base[IOP_NUM_ISM]->status_ctrl = 0;
++		iop_stop(iop_base[IOP_NUM_ISM]);
+ 		iop_ism_present = 1;
+ 	} else {
+ 		iop_base[IOP_NUM_ISM] = NULL;
 -- 
 2.25.1
 
