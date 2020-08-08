@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E58206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00E1206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930508;
-	bh=F592JwkZMMRW6U976eGgKBJ9UP2MyAhBL78uU1iPJ+E=;
+	s=default; t=1596930512;
+	bh=LeIfYr0l/Y0cKUOJyG6VPSw7hUwxWj1TrqOpoXJKVKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ffs6ucPnLeJk5KhUlAJIvXVnc0CfEBnCnQ/LIPEUJZWxP6819ngZP0JbqCvD6Ki53
-	 XZ+6+NDPAGIH8y0wkNWmrYaP9ELNAPLvQMEpnmN0fy8J2ArxwY9IAC0vSWhilIwrme
-	 yNvVFozcwEHx9JKkro/Vcgl9yK8l+R6J8tMh03+g=
+	b=IG8Hq4h6LFPoOdfutcyFZ73jmuQ180eS1SaIpKDEslrOsoZ2Zi6jqkDrmywH7XxBt
+	 UOHwhY+QhnlJuW1nvgSdcZOQKlWCAnaeNngnOzHN2ed7cGcW0eC76L8FG8CPS1It8d
+	 SWlTwVNNH+4iEajUgI9874uYPeKAl1WL8T9EGG/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgHHXs1 (ORCPT
+        id S1727939AbgHHXhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:48:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727906AbgHHXh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:29 -0400
+        id S1727897AbgHHXhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E881E20791;
-        Sat,  8 Aug 2020 23:37:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A5920723;
+        Sat,  8 Aug 2020 23:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929848;
-        bh=F592JwkZMMRW6U976eGgKBJ9UP2MyAhBL78uU1iPJ+E=;
+        s=default; t=1596929835;
+        bh=LeIfYr0l/Y0cKUOJyG6VPSw7hUwxWj1TrqOpoXJKVKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dsJfSGvo2ipKlmXK6gBF7Jws1S8iz+aEMdYnp1nzHxduQHebYGBhUvKWS1vTtKRm3
-         joATZ+mISFMiwa2mXp/nEmhsk/xkE0023HpE78QYYN2eGqSq8pfokm8en81Bnm9tXf
-         7hHCuqdafxmk96g4wVWwI1SSOsokn6mFmz/5JE3k=
+        b=z48B1ejWDUcCsxtCd0dMohzfZds6F1GNGZqW/x/0CX2ycCoNso/vK13hk0YhRVhRu
+         ba11/BilW9xk6BHr6S//+enCng/9oXY4ZsA5CZ/YCDVdp1RElAD73W/7j1vuh/BEy9
+         pZB3+VbYCXJzAArYPh3eZEC/ysoVNNNjWLTOqWdE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kan Liang <kan.liang@linux.intel.com>, Ammy Yi <ammy.yi@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chao Qin <chao.qin@intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 03/58] perf/x86/intel/uncore: Fix oops when counting IMC uncore events on some TGL
-Date:   Sat,  8 Aug 2020 19:36:29 -0400
-Message-Id: <20200808233724.3618168-3-sashal@kernel.org>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 66/72] irqchip/gic-v4.1: Use GFP_ATOMIC flag in allocate_vpe_l1_table()
+Date:   Sat,  8 Aug 2020 19:35:35 -0400
+Message-Id: <20200808233542.3617339-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
-References: <20200808233724.3618168-1-sashal@kernel.org>
+In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
+References: <20200808233542.3617339-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,57 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit 2af834f1faab3f1e218fcbcab70a399121620d62 ]
+[ Upstream commit d1bd7e0ba533a2a6f313579ec9b504f6614c35c4 ]
 
-When counting IMC uncore events on some TGL machines, an oops will be
-triggered.
-  [ 393.101262] BUG: unable to handle page fault for address:
-  ffffb45200e15858
-  [ 393.101269] #PF: supervisor read access in kernel mode
-  [ 393.101271] #PF: error_code(0x0000) - not-present page
+Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 enabled
+box, I get the following kernel splat:
 
-Current perf uncore driver still use the IMC MAP SIZE inherited from
-SNB, which is 0x6000.
-However, the offset of IMC uncore counters is larger than 0x6000,
-e.g. 0xd8a0.
+[    0.053766] BUG: sleeping function called from invalid context at mm/slab.h:567
+[    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 0, name: swapper/1
+[    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ #23
+[    0.053770] Call trace:
+[    0.053774]  dump_backtrace+0x0/0x218
+[    0.053775]  show_stack+0x2c/0x38
+[    0.053777]  dump_stack+0xc4/0x10c
+[    0.053779]  ___might_sleep+0xfc/0x140
+[    0.053780]  __might_sleep+0x58/0x90
+[    0.053782]  slab_pre_alloc_hook+0x7c/0x90
+[    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
+[    0.053785]  its_cpu_init+0x6f4/0xe40
+[    0.053786]  gic_starting_cpu+0x24/0x38
+[    0.053788]  cpuhp_invoke_callback+0xa0/0x710
+[    0.053789]  notify_cpu_starting+0xcc/0xd8
+[    0.053790]  secondary_start_kernel+0x148/0x200
 
-Enlarge the IMC MAP SIZE for TGL to 0xe000.
+ # ./scripts/faddr2line vmlinux its_cpu_init+0x6f4/0xe40
+its_cpu_init+0x6f4/0xe40:
+allocate_vpe_l1_table at drivers/irqchip/irq-gic-v3-its.c:2818
+(inlined by) its_cpu_init_lpis at drivers/irqchip/irq-gic-v3-its.c:3138
+(inlined by) its_cpu_init at drivers/irqchip/irq-gic-v3-its.c:5166
 
-Fixes: fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
-Reported-by: Ammy Yi <ammy.yi@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Ammy Yi <ammy.yi@intel.com>
-Tested-by: Chao Qin <chao.qin@intel.com>
-Link: https://lkml.kernel.org/r/1590679169-61823-1-git-send-email-kan.liang@linux.intel.com
+It turned out that we're allocating memory using GFP_KERNEL (may sleep)
+within the CPU hotplug notifier, which is indeed an atomic context. Bad
+thing may happen if we're playing on a system with more than a single
+CommonLPIAff group. Avoid it by turning this into an atomic allocation.
+
+Fixes: 5e5168461c22 ("irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER) allocation")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200630133746.816-1-yuzenghui@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/uncore_snb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 3de1065eefc44..1038e9f1e3542 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -1085,6 +1085,7 @@ static struct pci_dev *tgl_uncore_get_mc_dev(void)
- }
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index beac4caefad9a..da44bfa48bc25 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2814,7 +2814,7 @@ static int allocate_vpe_l1_table(void)
+ 	if (val & GICR_VPROPBASER_4_1_VALID)
+ 		goto out;
  
- #define TGL_UNCORE_MMIO_IMC_MEM_OFFSET		0x10000
-+#define TGL_UNCORE_PCI_IMC_MAP_SIZE		0xe000
+-	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
++	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_ATOMIC);
+ 	if (!gic_data_rdist()->vpe_table_mask)
+ 		return -ENOMEM;
  
- static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
- {
-@@ -1112,7 +1113,7 @@ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
- 	addr |= ((resource_size_t)mch_bar << 32);
- #endif
+@@ -2881,7 +2881,7 @@ static int allocate_vpe_l1_table(void)
  
--	box->io_addr = ioremap(addr, SNB_UNCORE_PCI_IMC_MAP_SIZE);
-+	box->io_addr = ioremap(addr, TGL_UNCORE_PCI_IMC_MAP_SIZE);
- }
+ 	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %d\n",
+ 		 np, npg, psz, epp, esz);
+-	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * PAGE_SIZE));
++	page = alloc_pages(GFP_ATOMIC | __GFP_ZERO, get_order(np * PAGE_SIZE));
+ 	if (!page)
+ 		return -ENOMEM;
  
- static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
 -- 
 2.25.1
 
