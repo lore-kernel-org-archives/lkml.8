@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7297BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3AE20723
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473BE20672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930460;
-	bh=8JV+rmwC4TMJFgVYMg7/BZTrgWw4TMd4Hsvprj762is=;
+	s=default; t=1596930466;
+	bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eeU0N+H6V3vQdZM7WGw1Fy8X3jJpW8hPEvD0iEqJKyFjX5uPegQfqTWDVvBM9mQOX
-	 jcZubS4H2PpMjVXjghO5dQ0qavb3RU51qvru4vpBdXaJTMXpCooRV3JSZ7Z0tT91Dp
-	 xsUYPYCysVwtQMih1gfVae34MWLeTwrU+UB/8Onk=
+	b=fwLb4P1Dkf6mfYMjHqwnV8LmFFzgKJPidTkJqJb+olem6AFCbDish1r5BbKfA54rb
+	 AzUQGmBkGRMF2ZY2fRkb7i6msKZySBjcwGv1PpPV66btInxOL8GK0klw4K76/uwUBR
+	 QK+FAM2OX+HM43pW1Cj0Ra3XxKYd2hRO8r+VS+gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgHHXrj (ORCPT
+        id S1727969AbgHHXho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51158 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728108AbgHHXhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:50 -0400
+        id S1728047AbgHHXhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 158702075D;
-        Sat,  8 Aug 2020 23:37:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71DC720716;
+        Sat,  8 Aug 2020 23:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929869;
-        bh=8JV+rmwC4TMJFgVYMg7/BZTrgWw4TMd4Hsvprj762is=;
+        s=default; t=1596929860;
+        bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kryjSU81loNH5v/0OV9hvL1cd90+LJkBdz6tL09rcmxhfJpreDn3SKCw7WO1AR5Ei
-         70GgIj49DzQlkvqjXBmXipp2Qv4HLn5pKfJInBrXTr6Vp5ndQDbzSwSPQuolm24Fo6
-         iIbbRtGGATjsk8vO415KZub25sWaCxFA/eGDzVn4=
+        b=Rdb+M9pc1YQqHvWz/lhCBsyCsrdbepzpD6fZWRFDOXv7oZG6SMWBCEWoyX5PIDpuJ
+         HPYTQAcpQGXvWIVblSbvfvVayNDFMrdeasV/aVbjLIYAmttBhcZl18XWf4p4NPi6VM
+         mKYfdp9D4+xTGEemLaMkRkB025zgWKHkVu3bdQlY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Marussi <cristian.marussi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 19/58] firmware: arm_scmi: Fix SCMI genpd domain probing
-Date:   Sat,  8 Aug 2020 19:36:45 -0400
-Message-Id: <20200808233724.3618168-19-sashal@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 12/58] crc-t10dif: Fix potential crypto notify dead-lock
+Date:   Sat,  8 Aug 2020 19:36:38 -0400
+Message-Id: <20200808233724.3618168-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,99 +60,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Marussi <cristian.marussi@arm.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit e0f1a30cf184821499eeb67daedd7a3f21bbcb0b ]
+[ Upstream commit 3906f640224dbe7714b52b66d7d68c0812808e19 ]
 
-When, at probe time, an SCMI communication failure inhibits the capacity
-to query power domains states, such domains should be skipped.
+The crypto notify call occurs with a read mutex held so you must
+not do any substantial work directly.  In particular, you cannot
+call crypto_alloc_* as they may trigger further notifications
+which may dead-lock in the presence of another writer.
 
-Registering partially initialized SCMI power domains with genpd will
-causes kernel panic.
+This patch fixes this by postponing the work into a work queue and
+taking the same lock in the module init function.
 
- arm-scmi timed out in resp(caller: scmi_power_state_get+0xa4/0xd0)
- scmi-power-domain scmi_dev.2: failed to get state for domain 9
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
- Mem abort info:
-   ESR = 0x96000006
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000006
-   CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=00000009f3691000
- [0000000000000000] pgd=00000009f1ca0003, p4d=00000009f1ca0003, pud=00000009f35ea003, pmd=0000000000000000
- Internal error: Oops: 96000006 [#1] PREEMPT SMP
- CPU: 2 PID: 381 Comm: bash Not tainted 5.8.0-rc1-00011-gebd118c2cca8 #2
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan  3 2020
- Internal error: Oops: 96000006 [#1] PREEMPT SMP
- pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
- pc : of_genpd_add_provider_onecell+0x98/0x1f8
- lr : of_genpd_add_provider_onecell+0x48/0x1f8
- Call trace:
-  of_genpd_add_provider_onecell+0x98/0x1f8
-  scmi_pm_domain_probe+0x174/0x1e8
-  scmi_dev_probe+0x90/0xe0
-  really_probe+0xe4/0x448
-  driver_probe_device+0xfc/0x168
-  device_driver_attach+0x7c/0x88
-  bind_store+0xe8/0x128
-  drv_attr_store+0x2c/0x40
-  sysfs_kf_write+0x4c/0x60
-  kernfs_fop_write+0x114/0x230
-  __vfs_write+0x24/0x50
-  vfs_write+0xbc/0x1e0
-  ksys_write+0x70/0xf8
-  __arm64_sys_write+0x24/0x30
-  el0_svc_common.constprop.3+0x94/0x160
-  do_el0_svc+0x2c/0x98
-  el0_sync_handler+0x148/0x1a8
-  el0_sync+0x158/0x180
+While we're at it this patch also ensures that all RCU accesses are
+marked appropriately (tested with sparse).
 
-Do not register any power domain that failed to be queried with genpd.
+Finally this also reveals a race condition in module param show
+function as it may be called prior to the module init function.
+It's fixed by testing whether crct10dif_tfm is NULL (this is true
+iff the init function has not completed assuming fallback is false).
 
-Fixes: 898216c97ed2 ("firmware: arm_scmi: add device power domain support using genpd")
-Link: https://lore.kernel.org/r/20200619220330.12217-1-cristian.marussi@arm.com
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: 11dcb1037f40 ("crc-t10dif: Allow current transform to be...")
+Fixes: b76377543b73 ("crc-t10dif: Pick better transform if one...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/scmi_pm_domain.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ lib/crc-t10dif.c | 54 +++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 42 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
-index bafbfe358f97d..9e44479f02842 100644
---- a/drivers/firmware/arm_scmi/scmi_pm_domain.c
-+++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
-@@ -85,7 +85,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
- 	for (i = 0; i < num_domains; i++, scmi_pd++) {
- 		u32 state;
+diff --git a/lib/crc-t10dif.c b/lib/crc-t10dif.c
+index 8cc01a6034165..c9acf1c12cfcb 100644
+--- a/lib/crc-t10dif.c
++++ b/lib/crc-t10dif.c
+@@ -19,39 +19,46 @@
+ static struct crypto_shash __rcu *crct10dif_tfm;
+ static struct static_key crct10dif_fallback __read_mostly;
+ static DEFINE_MUTEX(crc_t10dif_mutex);
++static struct work_struct crct10dif_rehash_work;
  
--		domains[i] = &scmi_pd->genpd;
-+		if (handle->power_ops->state_get(handle, i, &state)) {
-+			dev_warn(dev, "failed to get state for domain %d\n", i);
-+			continue;
-+		}
+-static int crc_t10dif_rehash(struct notifier_block *self, unsigned long val, void *data)
++static int crc_t10dif_notify(struct notifier_block *self, unsigned long val, void *data)
+ {
+ 	struct crypto_alg *alg = data;
+-	struct crypto_shash *new, *old;
  
- 		scmi_pd->domain = i;
- 		scmi_pd->handle = handle;
-@@ -94,13 +97,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
- 		scmi_pd->genpd.power_off = scmi_pd_power_off;
- 		scmi_pd->genpd.power_on = scmi_pd_power_on;
+ 	if (val != CRYPTO_MSG_ALG_LOADED ||
+ 	    static_key_false(&crct10dif_fallback) ||
+ 	    strncmp(alg->cra_name, CRC_T10DIF_STRING, strlen(CRC_T10DIF_STRING)))
+ 		return 0;
  
--		if (handle->power_ops->state_get(handle, i, &state)) {
--			dev_warn(dev, "failed to get state for domain %d\n", i);
--			continue;
--		}
--
- 		pm_genpd_init(&scmi_pd->genpd, NULL,
- 			      state == SCMI_POWER_STATE_GENERIC_OFF);
++	schedule_work(&crct10dif_rehash_work);
++	return 0;
++}
 +
-+		domains[i] = &scmi_pd->genpd;
++static void crc_t10dif_rehash(struct work_struct *work)
++{
++	struct crypto_shash *new, *old;
++
+ 	mutex_lock(&crc_t10dif_mutex);
+ 	old = rcu_dereference_protected(crct10dif_tfm,
+ 					lockdep_is_held(&crc_t10dif_mutex));
+ 	if (!old) {
+ 		mutex_unlock(&crc_t10dif_mutex);
+-		return 0;
++		return;
  	}
+ 	new = crypto_alloc_shash("crct10dif", 0, 0);
+ 	if (IS_ERR(new)) {
+ 		mutex_unlock(&crc_t10dif_mutex);
+-		return 0;
++		return;
+ 	}
+ 	rcu_assign_pointer(crct10dif_tfm, new);
+ 	mutex_unlock(&crc_t10dif_mutex);
  
- 	scmi_pd_data->domains = domains;
+ 	synchronize_rcu();
+ 	crypto_free_shash(old);
+-	return 0;
+ }
+ 
+ static struct notifier_block crc_t10dif_nb = {
+-	.notifier_call = crc_t10dif_rehash,
++	.notifier_call = crc_t10dif_notify,
+ };
+ 
+ __u16 crc_t10dif_update(__u16 crc, const unsigned char *buffer, size_t len)
+@@ -86,19 +93,26 @@ EXPORT_SYMBOL(crc_t10dif);
+ 
+ static int __init crc_t10dif_mod_init(void)
+ {
++	struct crypto_shash *tfm;
++
++	INIT_WORK(&crct10dif_rehash_work, crc_t10dif_rehash);
+ 	crypto_register_notifier(&crc_t10dif_nb);
+-	crct10dif_tfm = crypto_alloc_shash("crct10dif", 0, 0);
+-	if (IS_ERR(crct10dif_tfm)) {
++	mutex_lock(&crc_t10dif_mutex);
++	tfm = crypto_alloc_shash("crct10dif", 0, 0);
++	if (IS_ERR(tfm)) {
+ 		static_key_slow_inc(&crct10dif_fallback);
+-		crct10dif_tfm = NULL;
++		tfm = NULL;
+ 	}
++	RCU_INIT_POINTER(crct10dif_tfm, tfm);
++	mutex_unlock(&crc_t10dif_mutex);
+ 	return 0;
+ }
+ 
+ static void __exit crc_t10dif_mod_fini(void)
+ {
+ 	crypto_unregister_notifier(&crc_t10dif_nb);
+-	crypto_free_shash(crct10dif_tfm);
++	cancel_work_sync(&crct10dif_rehash_work);
++	crypto_free_shash(rcu_dereference_protected(crct10dif_tfm, 1));
+ }
+ 
+ module_init(crc_t10dif_mod_init);
+@@ -106,11 +120,27 @@ module_exit(crc_t10dif_mod_fini);
+ 
+ static int crc_t10dif_transform_show(char *buffer, const struct kernel_param *kp)
+ {
++	struct crypto_shash *tfm;
++	const char *name;
++	int len;
++
+ 	if (static_key_false(&crct10dif_fallback))
+ 		return sprintf(buffer, "fallback\n");
+ 
+-	return sprintf(buffer, "%s\n",
+-		crypto_tfm_alg_driver_name(crypto_shash_tfm(crct10dif_tfm)));
++	rcu_read_lock();
++	tfm = rcu_dereference(crct10dif_tfm);
++	if (!tfm) {
++		len = sprintf(buffer, "init\n");
++		goto unlock;
++	}
++
++	name = crypto_tfm_alg_driver_name(crypto_shash_tfm(tfm));
++	len = sprintf(buffer, "%s\n", name);
++
++unlock:
++	rcu_read_unlock();
++
++	return len;
+ }
+ 
+ module_param_call(transform, NULL, crc_t10dif_transform_show, NULL, 0644);
 -- 
 2.25.1
 
