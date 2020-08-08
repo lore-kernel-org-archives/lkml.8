@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8216720855
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613922075D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929969;
-	bh=oT7jG9BfMuNBbdbJS0ruyTwj9Rgd1ewmiE3dkRyR6Bo=;
+	s=default; t=1596929979;
+	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H3w1yy5/WKnWrd4viX+6MMQrXIeG5CprVpYlRDukiTE5M/aEc/4apbjelDQy3u0Lr
-	 AudAnRHTEeZ5Xtzsh573D/ZyXatXu1LzJKyLyqA9+yRSxhwhdk8i45LymI7CfWpt/R
-	 6+PSDxurEv/6GwppXcYUzeWhHtE6nyqU+LniOS24=
+	b=jIg81Vl4k/LfINaciyUrGMqX7joIuUcRHS1KbzLEx5lU4G/ZAJAxj36CDoF6r7/3G
+	 ulUUXMTflrCdaWKF3WNQbUR2Kg5FH0Aofd+vS5008c7MRmg0Oqf6ICusFJJzJWzZI+
+	 4XOiUhriE3urCHsF3EDRphO3yD9EYKvgejmxupjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgHHXj1 (ORCPT
+        id S1728604AbgHHXjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbgHHXjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:15 -0400
+        id S1728528AbgHHXjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 529672075D;
-        Sat,  8 Aug 2020 23:39:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86B8B20791;
+        Sat,  8 Aug 2020 23:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929955;
-        bh=oT7jG9BfMuNBbdbJS0ruyTwj9Rgd1ewmiE3dkRyR6Bo=;
+        s=default; t=1596929961;
+        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtQ7yKgAJucPHShzBLGk4N78PM0I7W6XaUZfccaoIFbXHuqaYZXQne+k7cWDCbtqO
-         p4o7vxKQf3Aoo4XUa64BKVQk7aG1RBap8az08MW0rYD6Esz/GFNDwKqYc4FOEj2dhF
-         P1v5hmoU51WJRU5g0GFczkuXrVRHTBZ+f40/HrzU=
+        b=NPt7TBdGnlxCJ+s4LUU12GN7i6pgVcWxyrZYX2Y1+wB2j5LxatNj9eq5rrl9kZJZs
+         +UdcqqujiSjXQkNBDH4kxClLD9lV+okWau3XykmJsVs9C2rp7AHNXuoNDGQ5RnM0jl
+         77XnyLZgYavjvdeQDnUdXihFQI/vyx3BxuUPlu6I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 19/40] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
-Date:   Sat,  8 Aug 2020 19:38:23 -0400
-Message-Id: <20200808233844.3618823-19-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 24/40] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
+Date:   Sat,  8 Aug 2020 19:38:28 -0400
+Message-Id: <20200808233844.3618823-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -60,36 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Wei <luwei32@huawei.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 71fbe886ce6dd0be17f20aded9c63fe58edd2806 ]
+[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
 
-In the function check_acpi_dev(), if it fails to create
-platform device, the return value is ERR_PTR() or NULL.
-Thus it must use IS_ERR_OR_NULL() to check return value.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
-Fixes: ecc83e52b28c ("intel-hid: new hid event driver for hotkeys")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Lu Wei <luwei32@huawei.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Assign the same regulator supply to the remaining CPU cores to address
+this.
+
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 7a506c1d01134..ad1399dcb21f5 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -570,7 +570,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
- 		return AE_OK;
- 
- 	if (acpi_match_device_ids(dev, ids) == 0)
--		if (acpi_create_platform_device(dev, NULL))
-+		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
- 			dev_info(&dev->dev,
- 				 "intel-hid: created platform device\n");
- 
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index 22466afd38a3a..a628b5ee72b65 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
+ };
++
++&cpu1 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu2 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu3 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 -- 
 2.25.1
 
