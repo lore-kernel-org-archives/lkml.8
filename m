@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D76C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67993C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7125B20672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EAB320672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930390;
-	bh=CD3HPUADLYe44TSi72mJmigB4TKXwZYje3mQ+Tm1oJA=;
+	s=default; t=1596930394;
+	bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dUiDyK6C9ph8ThlBhCcb++r24c8lnc8c94JBN2TGE5sdp6vUlIx691dzwe4ZIdCJg
-	 1DtJVfqKbme4dRgCJeVTY0W7EDICXmkzxEfalO/FK4U4oUnmJX34Yixr1mHKUCvbla
-	 ebUnDflvNqPxWZf+V7w9c9HVlegPZQCLHb/YwOUk=
+	b=ANbYZzaFu0hbJzGL2pYA2uwfgC0n/C0PL/8V7B1rYcksvQMjKyDL+YjQqqAUpRk5O
+	 fT/r7exc61udfiR60zJ/BmG4B1xOIY6aByv4pWt0RRh4/1U0mUqYoe4yYbGk32oUM6
+	 Gs7X6jgYdMlUJLE0dGliIUEUBo3eFGsAZH9C4RL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgHHXiT (ORCPT
+        id S1728595AbgHHXqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726458AbgHHXiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:13 -0400
+        id S1726627AbgHHXiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FA572075D;
-        Sat,  8 Aug 2020 23:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC90A20716;
+        Sat,  8 Aug 2020 23:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929892;
-        bh=CD3HPUADLYe44TSi72mJmigB4TKXwZYje3mQ+Tm1oJA=;
+        s=default; t=1596929899;
+        bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erAnDbao+nv0U1KfIjw0aYHeWLKVu3SUPwmGO8wajin/mB7JW66jTsIDl9RbaUzTZ
-         6UyY9fuZwpyk2wYyIalhNwAmWJgESptS+iPuj3zTW+aIpDiHo61SQQdu4SzAiBXL9V
-         or/E3hdQQv2ZhqNvyd1LM9Jlyu1wNxLyBm8wlWFM=
+        b=wBPvZJeOuZY+d36rebhyuGEowgkql5lAta60hQhbumJEsMz6yN52wcnaymnjeHG+5
+         O7qoysiPUaiIULRC9MsGhytpMof+I8eVLDziw0ZNYuEu9oCJ9GUrexKmdHLooHhdas
+         SudG/eNEDTS3EO+Uign7iGve12Q9Jfw2ukzo68i8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 33/58] ARM: dts: exynos: Disable frequency scaling for FSYS bus on Odroid XU3 family
-Date:   Sat,  8 Aug 2020 19:36:59 -0400
-Message-Id: <20200808233724.3618168-33-sashal@kernel.org>
+Cc:     Gregory Herrero <gregory.herrero@oracle.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 39/58] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
+Date:   Sat,  8 Aug 2020 19:37:05 -0400
+Message-Id: <20200808233724.3618168-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -62,56 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Gregory Herrero <gregory.herrero@oracle.com>
 
-[ Upstream commit 9ff416cf45a08f28167b75045222c762a0347930 ]
+[ Upstream commit ea0eada45632f4807b2f49de951072283e2d781c ]
 
-Commit 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the
-values correct for Exynos5422 Odroids") changed the parameters of the
-OPPs for the FSYS bus. Besides the frequency adjustments, it also removed
-the 'shared-opp' property from the OPP table used for FSYS_APB and FSYS
-busses.
+Currently, if a section has a relocation to '_mcount' symbol, a new
+__mcount_loc entry will be added whatever the relocation type is.
+This is problematic when a relocation to '_mcount' is in the middle of a
+section and is not a call for ftrace use.
 
-This revealed that in fact the FSYS bus frequency scaling never worked.
-When one OPP table is marked as 'opp-shared', only the first bus which
-selects the OPP sets the rate of its clock. Then OPP core assumes that
-the other busses have been changed to that OPP and no change to their
-clock rates are needed. Thus when FSYS_APB bus, which was registered
-first, set the rate for its clock, the OPP core did not change the FSYS
-bus clock later.
+Such relocation could be generated with below code for example:
+    bool is_mcount(unsigned long addr)
+    {
+        return (target == (unsigned long) &_mcount);
+    }
 
-The mentioned commit removed that behavior, what introduced a regression
-on some Odroid XU3 boards. Frequency scaling of the FSYS bus causes
-instability of the USB host operation, what can be observed as network
-hangs. To restore old behavior, simply disable frequency scaling for the
-FSYS bus.
+With this snippet of code, ftrace will try to patch the mcount location
+generated by this code on module load and fail with:
 
-Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Fixes: 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the values correct for Exynos5422 Odroids")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+    Call trace:
+     ftrace_bug+0xa0/0x28c
+     ftrace_process_locs+0x2f4/0x430
+     ftrace_module_init+0x30/0x38
+     load_module+0x14f0/0x1e78
+     __do_sys_finit_module+0x100/0x11c
+     __arm64_sys_finit_module+0x28/0x34
+     el0_svc_common+0x88/0x194
+     el0_svc_handler+0x38/0x8c
+     el0_svc+0x8/0xc
+    ---[ end trace d828d06b36ad9d59 ]---
+    ftrace failed to modify
+    [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
+     actual:   66:a9:3c:90
+    Initializing ftrace call sites
+    ftrace record flags: 2000000
+     (0)
+    expected tramp: ffffa2dc6cf66724
+
+So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
+recordmcount.
+
+Fixes: af64d2aa872a ("ftrace: Add arm64 support to recordmcount")
+Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
+ scripts/recordmcount.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index ab27ff8bc3dca..afe090578e8fa 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -411,12 +411,6 @@ &bus_fsys_apb {
- 	status = "okay";
- };
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index 7225107a9aafe..e59022b3f1254 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
+ 	return 1;
+ }
  
--&bus_fsys {
--	operating-points-v2 = <&bus_fsys2_opp_table>;
--	devfreq = <&bus_wcore>;
--	status = "okay";
--};
--
- &bus_fsys2 {
- 	operating-points-v2 = <&bus_fsys2_opp_table>;
- 	devfreq = <&bus_wcore>;
++static int arm64_is_fake_mcount(Elf64_Rel const *rp)
++{
++	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
++}
++
+ /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
+  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
+  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
+@@ -547,6 +552,7 @@ static int do_file(char const *const fname)
+ 		make_nop = make_nop_arm64;
+ 		rel_type_nop = R_AARCH64_NONE;
+ 		ideal_nop = ideal_nop4_arm64;
++		is_fake_mcount64 = arm64_is_fake_mcount;
+ 		break;
+ 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
+ 	case EM_MIPS:	/* reltype: e_class    */ break;
 -- 
 2.25.1
 
