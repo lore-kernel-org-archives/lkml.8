@@ -6,44 +6,49 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF48CC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5CED206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6573B206B5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgHHWRw (ORCPT
+        id S1726242AbgHHWSN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 18:17:52 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37712 "EHLO
+        Sat, 8 Aug 2020 18:18:13 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37752 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgHHWRw (ORCPT
+        with ESMTP id S1725779AbgHHWSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 18:17:52 -0400
+        Sat, 8 Aug 2020 18:18:12 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id EAB141C0BDA; Sun,  9 Aug 2020 00:17:49 +0200 (CEST)
-Date:   Sun, 9 Aug 2020 00:17:48 +0200
+        id C848E1C0BD9; Sun,  9 Aug 2020 00:18:09 +0200 (CEST)
+Date:   Sun, 9 Aug 2020 00:18:08 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Message-ID: <20200808221748.GA1020@bug>
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
- <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
- <20200804143018.GB7440@C02TD0UTHF1T.local>
- <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v36 23/24] docs: x86/sgx: Document SGX micro architecture
+ and kernel internals
+Message-ID: <20200808221808.GB1020@bug>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-24-jarkko.sakkinen@linux.intel.com>
+ <20200728213511.GB13081@duo.ucw.cz>
+ <20200806102148.GA14798@wind.enjellic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200806102148.GA14798@wind.enjellic.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,44 +57,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> Thanks for the lively discussion. I have tried to answer some of the
-> comments below.
-
-> > There are options today, e.g.
-> >
-> > a) If the restriction is only per-alias, you can have distinct aliases
-> >    where one is writable and another is executable, and you can make it
-> >    hard to find the relationship between the two.
-> >
-> > b) If the restriction is only temporal, you can write instructions into
-> >    an RW- buffer, transition the buffer to R--, verify the buffer
-> >    contents, then transition it to --X.
-> >
-> > c) You can have two processes A and B where A generates instrucitons into
-> >    a buffer that (only) B can execute (where B may be restricted from
-> >    making syscalls like write, mprotect, etc).
+> Good morning, I hope the week is progressing well for everyone.
 > 
-> The general principle of the mitigation is W^X. I would argue that
-> the above options are violations of the W^X principle. If they are
-> allowed today, they must be fixed. And they will be. So, we cannot
-> rely on them.
+> > > CPUs starting from Icelake use Total Memory Encryption (TME) in
+> > > the place of MEE. TME throws away the Merkle tree, which means
+> > > losing integrity and anti-replay protection but also enables
+> > > variable size memory pools for EPC.  Using this attack for
+> > > benefit would require an interposer on the system bus.
+> 
+> > It is not exactly clear what "this attack" means.
+> 
+> In the new world that is SGX, 'this attack', roughly means that
+> enclaves are susceptible to the same security threats that would be
+> faced if you were running TLS/HTTPS or SSH without packet checksums
+> and replay avoidance/detection mechanisms in place.
 
-Would you mind describing your threat model?
+Umm, ssh w/o checksums would be rather dangerous, no? As in... if I can guess what you
+are typing, I can make you type something else.
 
-Because I believe you are using model different from everyone else.
+Anyway, it would be nice to somehow fix the document. It talks about "this attack"
+without talking about any attack before, which is bad style.
 
-In particular, I don't believe b) is a problem or should be fixed.
-
-I'll add d), application mmaps a file(R--), and uses write syscall to change
-trampolines in it.
-
-> b) This is again a violation. The kernel should refuse to give execute
-> ???????? permission to a page that was writeable in the past and refuse to
-> ???????? give write permission to a page that was executable in the past.
-
-Why?
-
-										Pavel
+Best regards,
+									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
