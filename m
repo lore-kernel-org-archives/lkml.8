@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F234C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B469C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE10206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1755C20748
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929749;
-	bh=OSBbNWTMY2Y785oTTliEJuQjhRr8+lsvQKyr6/Eo6lg=;
+	s=default; t=1596929755;
+	bh=VLP/nBpUSkz4WWAdRvAhTstnn307YSe6AuseI60IAGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nrmagEONosi69SpCcqHUwQYIWkeWWB/3WYM593cQsTE2Q1uZFRq4q4tDxOXN5RROx
-	 uvLXbZktWEkViiT8MDA5UeuCUmB74bSCfxrbZQEtSPkCO5qSYmgXxz7B11MeXs4Etz
-	 nIvkYt92D62cGUNpanZ+8JTH5bGc/rSfn9/qUBC0=
+	b=JktZDU0qq6rWEkqL3GMnRuZUNt33e+o/PjtDlvIIwQVEDf2uepDHvgt5FEvRE6jCt
+	 +gIsR1qhf98hTyriljUBkEv1zURjI+6BOTRBT9JoyiJkqOrLHEypnozJ5/PqUZaBs+
+	 oPQOg5dwTKFa8+sha9T2I0NBCeqY34BUoR0Y3b4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgHHXfs (ORCPT
+        id S1726350AbgHHXfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 8 Aug 2020 19:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47950 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:47968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgHHXfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:35:46 -0400
+        id S1726049AbgHHXfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:35:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A12206E9;
-        Sat,  8 Aug 2020 23:35:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B806206D8;
+        Sat,  8 Aug 2020 23:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929745;
-        bh=OSBbNWTMY2Y785oTTliEJuQjhRr8+lsvQKyr6/Eo6lg=;
+        s=default; t=1596929747;
+        bh=VLP/nBpUSkz4WWAdRvAhTstnn307YSe6AuseI60IAGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jmS0HuE3XBkgDLEmJ0MJXPcyrNKcKZBKkHlsj62842h7und4pEnTsyBdNf6PGWSTs
-         DWwFqKIYhmXq9yU9/faSIStH3Iu+r77EFdvqK9ImmLohAEVyJkPCE2rm4uj0yDC0ry
-         BXJ8cOVvFxlY8KlV8ZOVIEAMTX4Jooftr3Rqf8CU=
+        b=N42b02SvhQH9fJsiDdRhhIJpsZGG5wPnKOSJ0X9iJ2wG0n5o1VblM3ECOp0L/YK7C
+         Xh3G+Dp22QGar/5ctK3J23Pj01A6ouVbfqe8G3rq92HU+of+QJjKbjjKr81wz/qHiX
+         mQz1hxSFVwMpahRcuiRBw2KbhTfyq0G+8uhZ3ysg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 02/72] ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
-Date:   Sat,  8 Aug 2020 19:34:31 -0400
-Message-Id: <20200808233542.3617339-2-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 03/72] x86/mce/inject: Fix a wrong assignment of i_mce.status
+Date:   Sat,  8 Aug 2020 19:34:32 -0400
+Message-Id: <20200808233542.3617339-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -61,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 391e437eedc0dab0a9f2c26997e68e040ae04ea3 ]
+[ Upstream commit 5d7f7d1d5e01c22894dee7c9c9266500478dca99 ]
 
-Fix uart7_pins_a comments to indicate UART7 pins instead of UART4 pins.
+The original code is a nop as i_mce.status is or'ed with part of itself,
+fix it.
 
-Fixes: bf4b5f379fed ("ARM: dts: stm32: Add missing pinctrl definitions for STM32MP157")
-
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Fixes: a1300e505297 ("x86/ras/mce_amd_inj: Trigger deferred and thresholding errors interrupts")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Link: https://lkml.kernel.org/r/20200611023238.3830-1-zhenzhong.duan@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/mce/inject.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index b31923a9498b5..49132921feeb9 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1615,15 +1615,15 @@ pins2 {
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index 0593b192eb8fa..7843ab3fde099 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -511,7 +511,7 @@ static void do_inject(void)
+ 	 */
+ 	if (inj_type == DFR_INT_INJ) {
+ 		i_mce.status |= MCI_STATUS_DEFERRED;
+-		i_mce.status |= (i_mce.status & ~MCI_STATUS_UC);
++		i_mce.status &= ~MCI_STATUS_UC;
+ 	}
  
- 	uart7_pins_a: uart7-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
--				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
--				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
-+			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART7_RX */
-+				 <STM32_PINMUX('E', 10, AF7)>, /* UART7_CTS */
-+				 <STM32_PINMUX('E', 9, AF7)>; /* UART7_RTS */
- 			bias-disable;
- 		};
- 	};
+ 	/*
 -- 
 2.25.1
 
