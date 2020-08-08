@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40170C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14C7220825
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240D5207BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929908;
-	bh=sXtgcI/FlirC232oacrQyf899CGFW8M7zfPMnh/iWzs=;
+	s=default; t=1596929910;
+	bh=rsrKN8/Zq2kTiieVqJx9AAitOPFHZwp5YN/wsqrv6uQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hYS5GClaR7GCkwUhn91QHZKN2cEI6YrtBbHz8NF9fmxP6JgaSBmeQ3o7fEeBzjCQo
-	 x/cktUoOF7pz6nn1gI6e6zGN+c48fhMn/aXx+ADfUmNncIertKL6R6JwZCu01YWA36
-	 kWNTCiWGqlPBwoKATQ7Vc0IEPilkW2IlBNYgfT3A=
+	b=B7nb6dmnAF54u+/0CPrXB9koL3FmxGuZtA1yomrnGYBrAdL39p31tX3eRBbJGaDNR
+	 vWbtNq5MPljKbn9ecLAaFysKYNX13TlnxnROGPPcinRfDJtzsYutV43BqFbKJ1MTBI
+	 5qjhSvmTE/Fw+rV9ebMM3xtCMkBfcvG3wB3L+D4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgHHXi0 (ORCPT
+        id S1728302AbgHHXi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52266 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:38:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgHHXiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:25 -0400
+        id S1726643AbgHHXi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A453520748;
-        Sat,  8 Aug 2020 23:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8F220748;
+        Sat,  8 Aug 2020 23:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929904;
-        bh=sXtgcI/FlirC232oacrQyf899CGFW8M7zfPMnh/iWzs=;
+        s=default; t=1596929907;
+        bh=rsrKN8/Zq2kTiieVqJx9AAitOPFHZwp5YN/wsqrv6uQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZZzHQdHYm+s0mSgcf9Ip8YAo7Zo4bTlzDheF0nkI+aiZih720A1Vt8lAuh1jQ1vu
-         aQ6e3ZY+NUmb5GNhyfqZ6mAILXA7N4DemmCNZWBOfFgWbmkzgIFpAGUQ55etKZM+oq
-         nSjT+tZpgVcdpm3aha2sevKuMe251NtXgOfAUkGw=
+        b=TUXHkCB7zRbHXrOsXjzKD9SJOOhO75Qz7U5K2cnJYWCVl7pQ6tYXfNklrf3lcGdaF
+         Is0KWH2+EXn/qQBpyw/qbaHXcARdA+VRoHUVAtuVAEEF/1bBEQrJaKuLeBfjYB7OzQ
+         1SSSBhpSViqo6Ef9RXW4fF2f4YkX8A9ghT7lD+KQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 43/58] soc: qcom: pdr: Reorder the PD state indication ack
-Date:   Sat,  8 Aug 2020 19:37:09 -0400
-Message-Id: <20200808233724.3618168-43-sashal@kernel.org>
+Cc:     Yu Kuai <yukuai3@huawei.com>, Dinh Nguyen <dinguyen@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 45/58] ARM: socfpga: PM: add missing put_device() call in socfpga_setup_ocram_self_refresh()
+Date:   Sat,  8 Aug 2020 19:37:11 -0400
+Message-Id: <20200808233724.3618168-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,48 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Yu Kuai <yukuai3@huawei.com>
 
-[ Upstream commit 72fe996f9643043c8f84e32c0610975b01aa555b ]
+[ Upstream commit 3ad7b4e8f89d6bcc9887ca701cf2745a6aedb1a0 ]
 
-The Protection Domains (PD) have a mechanism to keep its resources
-enabled until the PD down indication is acked. Reorder the PD state
-indication ack so that clients get to release the relevant resources
-before the PD goes down.
+if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh
+doesn't have a corresponding put_device(). Thus add a jump target to
+fix the exception handling for this function implementation.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
-Reported-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200701195954.9007-1-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/pdr_interface.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/mach-socfpga/pm.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-index 17ad3b8698e16..cd8828c857234 100644
---- a/drivers/soc/qcom/pdr_interface.c
-+++ b/drivers/soc/qcom/pdr_interface.c
-@@ -282,13 +282,15 @@ static void pdr_indack_work(struct work_struct *work)
+diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
+index 6ed887cf8dc9a..365c0428b21b6 100644
+--- a/arch/arm/mach-socfpga/pm.c
++++ b/arch/arm/mach-socfpga/pm.c
+@@ -49,14 +49,14 @@ static int socfpga_setup_ocram_self_refresh(void)
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
+ 	}
  
- 	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
- 		pds = ind->pds;
--		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
+ 	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
  
- 		mutex_lock(&pdr->status_lock);
- 		pds->state = ind->curr_state;
- 		pdr->status(pds->state, pds->service_path, pdr->priv);
- 		mutex_unlock(&pdr->status_lock);
+ 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -67,7 +67,7 @@ static int socfpga_setup_ocram_self_refresh(void)
+ 	if (!suspend_ocram_base) {
+ 		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
  
-+		/* Ack the indication after clients release the PD resources */
-+		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
-+
- 		mutex_lock(&pdr->list_lock);
- 		list_del(&ind->node);
- 		mutex_unlock(&pdr->list_lock);
+ 	/* Copy the code that puts DDR in self refresh to ocram */
+@@ -81,6 +81,8 @@ static int socfpga_setup_ocram_self_refresh(void)
+ 	if (!socfpga_sdram_self_refresh_in_ocram)
+ 		ret = -EFAULT;
+ 
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(np);
+ 
 -- 
 2.25.1
 
