@@ -5,49 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7506C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941EE20723
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D03820716
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929764;
-	bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+	s=default; t=1596929768;
+	bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YPo2vvn2h/OjfgB7BEK/MxUG6/H6n6FcvvrfGi4GEnUEmXkjU9VqcjXjiwwkiJDt+
-	 vSXqVrlSHBfhINAeOk66iYiceE0EVb9kBdRlRhHQaBUU9/OArXX6NrdM9sAu6meFvZ
-	 3M3NOdun8Ju9dHr+92IhV5O0ntobio3nVaMxT56k=
+	b=p7a1JmHwWg0rF5Mg4/zxssnaNc88S7G3zZDsoOxzNnR95eHRiKQAZqWqtWcEr1f4E
+	 4Q+EQ/SlnPVepXtlgbmGyg8E8bwY75q5GkjgydlCyQCkwFtgyibmc+vqsZz3lmX8MA
+	 CQgT/GOk2pvYItJc10tadjHTbsyNk1ErEwC+nwpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgHHXgC (ORCPT
+        id S1726641AbgHHXgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgHHXf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:35:57 -0400
+        id S1726528AbgHHXgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740D320791;
-        Sat,  8 Aug 2020 23:35:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE243207BB;
+        Sat,  8 Aug 2020 23:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929757;
-        bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+        s=default; t=1596929759;
+        bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nm63yhMHe8SE2JEv2KOGUVekIeJU05M6peQEx11dCDXpom/w65uq1Rn61kPwNeJ6/
-         18lN281Afxhw3F3HNb4iwC4D7sB3Wacg/I2ukig6F1j5rQmHnBsSBNohQERWF2K5FB
-         DOam7YUbSTQPIn8QLb4gsl2LwsGgCh1Nnm6KT6GU=
+        b=kXvBKkTXxKnqED25yLxtdhJUjPcIMwMJBTBZyOBXqsh4dnJWKHYNDEmFIQ7RnLNx6
+         3BPN3WRumBXsL+XwG1fG5juFgkedd5JAY3O1UBoE3JXeszA0SunTEaf0aZOZtHtsSb
+         CfYAg8MnnXmcpLuEcFYdNW/gt2WEy9D0iJyXjJXo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 11/72] arm64: dts: rockchip: fix rk3399-puma vcc5v0-host gpio
-Date:   Sat,  8 Aug 2020 19:34:40 -0400
-Message-Id: <20200808233542.3617339-11-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Borislav Petkov <bp@suse.de>,
+        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 13/72] EDAC: Fix reference count leaks
+Date:   Sat,  8 Aug 2020 19:34:42 -0400
+Message-Id: <20200808233542.3617339-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,41 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 7a7184f6cfa9279f1a1c10a1845d247d7fad54ff ]
+[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
 
-The puma vcc5v0_host regulator node currently uses opposite active-values
-for the enable pin. The gpio-declaration uses active-high while the
-separate enable-active-low property marks the pin as active low.
+When kobject_init_and_add() returns an error, it should be handled
+because kobject_init_and_add() takes a reference even when it fails. If
+this function returns an error, kobject_put() must be called to properly
+clean up the memory associated with the object.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+Therefore, replace calling kfree() and call kobject_put() and add a
+missing kobject_put() in the edac_device_register_sysfs_main_kobj()
+error path.
 
-So bring this in line and make both properties match, similar to the
-gmac fix.
+ [ bp: Massage and merge into a single patch. ]
 
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200604091239.424318-1-heiko@sntech.de
+Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
+Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/edac_device_sysfs.c | 1 +
+ drivers/edac/edac_pci_sysfs.c    | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 07694b196fdbe..063f59a420b65 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -101,7 +101,7 @@ vcc3v3_sys: vcc3v3-sys {
+diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
+index 0e7ea3591b781..5e75937537997 100644
+--- a/drivers/edac/edac_device_sysfs.c
++++ b/drivers/edac/edac_device_sysfs.c
+@@ -275,6 +275,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
  
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
--		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
- 		enable-active-low;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
+ 	/* Error exit stack */
+ err_kobj_reg:
++	kobject_put(&edac_dev->kobj);
+ 	module_put(edac_dev->owner);
+ 
+ err_out:
+diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
+index 72c9eb9fdffbe..53042af7262e2 100644
+--- a/drivers/edac/edac_pci_sysfs.c
++++ b/drivers/edac/edac_pci_sysfs.c
+@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
+ 
+ 	/* Error unwind statck */
+ kobject_init_and_add_fail:
+-	kfree(edac_pci_top_main_kobj);
++	kobject_put(edac_pci_top_main_kobj);
+ 
+ kzalloc_fail:
+ 	module_put(THIS_MODULE);
 -- 
 2.25.1
 
