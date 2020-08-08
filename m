@@ -2,148 +2,159 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86744C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 00:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 00:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2F520866
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 00:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B432320866
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 00:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="raa038Ca"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rIf44nbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgHHAUN (ORCPT
+        id S1726233AbgHHAXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 20:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
+        Fri, 7 Aug 2020 20:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgHHAUK (ORCPT
+        with ESMTP id S1726066AbgHHAXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 20:20:10 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263C8C061A2B
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 17:02:27 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id h22so2911414otq.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 17:02:27 -0700 (PDT)
+        Fri, 7 Aug 2020 20:23:36 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC61C061A28
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 17:23:36 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id s189so3624317iod.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 17:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5V4fSeXIIf10FVBMF3ZwZcNjvm3OCHIjH9V8C29Y8lQ=;
-        b=raa038CaUF9eWBraNH4WEyPuTHJSK6iOiV7k6AYrMeNgIhzFx6ZewrZSuo5lrAVEdK
-         9bOtaWtNfF07d9UEYUqPA6aNkM20agULeekqUYoS5Qe3Z22dBLbZuaZdwc0zac2dFT8n
-         N3xMKrgLDJwJrCyj4e9MYB3+ZJJ1gVbN1ypxreVVkfRzZh9Lwqwz7wDfTV0KYta5fshZ
-         OdIZMeVdyM0/ehI67+Kizp9fRZugyLsg7B4FbHuK8BMDqZEVUpWK0PH5DX68JkBYxfMs
-         aOpiQcc5HKPaKOyUagtLwMCbgtum4v9yvrQ01rY6uf9g56CM5kjZ1vx+55Z+jpg2jETd
-         tMrg==
+        bh=FTDGTiIacJbp80sJvWFI+4i26J3I7Pjj49muNpJiHT0=;
+        b=rIf44nbp0cYaA6k+R/H/rPD8A/tm9+Pduu37WBVATPHFReK07/92Tj08WMfz2FVfa9
+         tnAtcofY/E4+l21piiZdvVXlE0u22EqkJlH7WHAF9erTc03wLkiDP9bHkECoEckRBoaY
+         Mql3AHLLcU7uNeCVwOSo3GFPbBC4MdxDmasdzFdYxra9YGV6U2l6ZCVGQSmGvfne0YwT
+         WWtJe703lLCPFwroY7lo/vEFyDn2We1wzpGR4CrGb74qb9lxu5NIpeISpWNOR/u4g49L
+         wlh8VyFhI6EdgMx0eCK5ePlTVyrvrw9HzmSV6lLdAlAFFyRSB4XOdQ5JoNNIfJusvu6u
+         3DMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5V4fSeXIIf10FVBMF3ZwZcNjvm3OCHIjH9V8C29Y8lQ=;
-        b=t3QxkwhiRHePQZ20h0CKO84ajeauFfFuCzkA5wiVL7ud3xHfTuhatEbHMpf26Nex2a
-         kS22aCRumn64os5MDgwTk0psZ7JTA4iAFpI5/SLzIgjKFZ5J75Myyxb7Wc492AyB/oJp
-         eqvYsvWYOZCPR1vYOtu5qkFOWLEO8iw7rInt03m8sUeE/7R5TFiedoe6s2LiHFY48QKY
-         DiWQ+/mVS3N8KdMhNCipuVBgnSXGx/gj7UNQ7h2cy4mtPn9XmSEIZoKcs0KY+MjhTZnr
-         UT3wOVkfQAQgo/wFubCnRPqhgoBCB53TTqa6MU5OvpvMmmAtm6w6XYakWLfnUcyu92Gb
-         KOsA==
-X-Gm-Message-State: AOAM5311JYN6jV25Eha7BywFmGUlQIPZJgTYZ8pdQXPIlfjPzQ67N/e+
-        ksf6JIa8xNsjM+2b4LmnyQagqoLod00dnlUyeujG8A==
-X-Google-Smtp-Source: ABdhPJyt2wG3ZDTNWblVENQs5ccUnTXPuZbzbj0BnXWicp6XtJM28SQrhwmJ/s4VEOh4n6cv6N5dnVLVJsMlDVkrD+Y=
-X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr13338417oth.352.1596844946630;
- Fri, 07 Aug 2020 17:02:26 -0700 (PDT)
+        bh=FTDGTiIacJbp80sJvWFI+4i26J3I7Pjj49muNpJiHT0=;
+        b=AUcFZfkIkVcUjReJvXcY/64xjqC8KNwH8AiuJbRkZfUMyy1zOlyGYR2T3+BRQUWNxj
+         aysK0uDUwqhUoL66AR+b/ym4KuWQGeumR7mZBlk5JrytHJLxosE6oAJ+lSxv9e2arlx5
+         /u3acB4O4EOhn2OSRQtB+6d85oqSh6AFR7bXfM3vbggMVsKM0pnHwR7f0Zs2+erdjIfm
+         /ZUZvNWrb4++U1bOch9Q23d8RUois6Bv7dZurAcczgOFbLfG6gtgq4zrIXrp4r5zoFfz
+         Uiqiqu0c4/bPv7UKGn9918REAFP3eUHFSjhd96QMf4nXByz/vKNpACKxwaLUUaaJxTRq
+         9yDQ==
+X-Gm-Message-State: AOAM530ys1xkJX6IRlzICUNC8zq5Hml2y26k+aqZWFxpFZZcqRWeQj53
+        Ms2cTtLPkAuV6sayD+sNBJH5i6utMQDWqMgaxro=
+X-Google-Smtp-Source: ABdhPJzSDmjDvsAXdtCHfJuPZFkiDHSmbZRtQPOnsaTcaByUnjH8dmEn8++rNHuqTLmeL+dpoLmgg3P/7txeXbYYfDE=
+X-Received: by 2002:a5d:8f09:: with SMTP id f9mr7093264iof.187.1596846215379;
+ Fri, 07 Aug 2020 17:23:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709182642.1773477-1-keescook@chromium.org>
- <20200709182642.1773477-4-keescook@chromium.org> <CANcMJZAcDAG7Dq7vo=M-SZwujj+BOKMh7wKvywHq+tEX3GDbBQ@mail.gmail.com>
- <202008071516.83432C389@keescook>
-In-Reply-To: <202008071516.83432C389@keescook>
+References: <s5hbljocbxl.wl-tiwai@suse.de>
+In-Reply-To: <s5hbljocbxl.wl-tiwai@suse.de>
 From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 7 Aug 2020 17:02:15 -0700
-Message-ID: <CALAqxLXqjEN0S+eGeFA_obaunBK_+xqKbQtdQj1w+wegz-6U5w@mail.gmail.com>
-Subject: Re: [PATCH v7 3/9] net/scm: Regularize compat handling of scm_detach_fds()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Laight <David.Laight@aculab.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        containers@lists.linux-foundation.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
+Date:   Fri, 7 Aug 2020 17:23:24 -0700
+Message-ID: <CANcMJZCPPOOmKyRMKYRe5sRsqf-rrO6wXK5BPVwFrAPLZOEyMg@mail.gmail.com>
+Subject: Re: [GIT PULL] sound updates for 5.9
+To:     Takashi Iwai <tiwai@suse.de>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Amit Pundir <amit.pundir@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+        Vinod Koul <vkoul@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 3:18 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Aug 6, 2020 at 3:33 AM Takashi Iwai <tiwai@suse.de> wrote:
 >
-> On Fri, Aug 07, 2020 at 01:29:24PM -0700, John Stultz wrote:
-> > On Thu, Jul 9, 2020 at 11:28 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Duplicate the cleanups from commit 2618d530dd8b ("net/scm: cleanup
-> > > scm_detach_fds") into the compat code.
-> > >
-> > > Replace open-coded __receive_sock() with a call to the helper.
-> > >
-> > > Move the check added in commit 1f466e1f15cf ("net: cleanly handle kernel
-> > > vs user buffers for ->msg_control") to before the compat call, even
-> > > though it should be impossible for an in-kernel call to also be compat.
-> > >
-> > > Correct the int "flags" argument to unsigned int to match fd_install()
-> > > and similar APIs.
-> > >
-> > > Regularize any remaining differences, including a whitespace issue,
-> > > a checkpatch warning, and add the check from commit 6900317f5eff ("net,
-> > > scm: fix PaX detected msg_controllen overflow in scm_detach_fds") which
-> > > fixed an overflow unique to 64-bit. To avoid confusion when comparing
-> > > the compat handler to the native handler, just include the same check
-> > > in the compat handler.
-> > >
-> > > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> >
-> > Hey Kees,
-> >   So during the merge window (while chasing a few other regressions),
-> > I noticed occasionally my Dragonboard 845c running AOSP having trouble
-> > with the web browser crashing or other apps hanging, and I've bisected
-> > the issue down to this change.
-> >
-> > Unfortunately it doesn't revert cleanly so I can't validate reverting
-> > it sorts things against linus/HEAD.  Anyway, I wanted to check and see
-> > if you had any other reports of similar or any ideas what might be
-> > going wrong?
+> Linus,
 >
-> Hi; Yes, sorry for the trouble. I had a typo in a refactor of
-> SCM_RIGHTS. I suspect it'll be fixed by this:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1fa2c0a0c814fbae0eb3e79a510765225570d043
+> please pull sound updates for v5.9 from:
 >
-> Can you verify Linus's latest tree works for you? If not, there might be
-> something else hiding in the corners...
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.9-rc1
+>
+> The topmost commit is c7fabbc51352f50cc58242a6dc3b9c1a3599849b
+>
+> ----------------------------------------------------------------
+>
+> sound updates for 5.9
+>
+> This became wide and scattered updates all over the sound tree as
+> diffstat shows: lots of (still ongoing) refactoring works in ASoC,
+> fixes and cleanups caught by static analysis, inclusive term
+> conversions as well as lots of new drivers.  Below are highlights:
+>
+> ASoC core:
+> * API cleanups and conversions to the unified mute_stream() call
+> * Simplify I/O helper functions
+> * Use helper macros to retrieve RTD from substreams
+...
+> Kuninori Morimoto (90):
+>       ASoC: soc-component: add soc_component_pin() and share code
+>       ASoC: soc-component: move snd_soc_component_xxx_regmap() to soc-component
+>       ASoC: soc-component: move snd_soc_component_initialize() to soc-component.c
+>       ASoC: soc-component: add soc_component_err()
+>       ASoC: soc-component: add snd_soc_pcm_component_prepare()
+>       ASoC: soc-component: add snd_soc_pcm_component_hw_params()
+>       ASoC: soc-component: add snd_soc_pcm_component_hw_free()
+>       ASoC: soc-component: add snd_soc_pcm_component_trigger()
+>       ASoC: soc-component: add snd_soc_component_init()
+>       ASoC: soc-component: merge soc-io.c into soc-component.c
 
-Thanks so much! Yes, I just updated to Linus' latest and the issue has
-disappeared!
+So oddly, today I bisected down the change "ASoC: soc-component: merge
+soc-io.c into soc-component.c":
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=460b42d162e3cf634586999e6a84e74ca52e626d
 
-thanks again!
+as causing audio regressions on Dragonboard 845c running AOSP.
+
+On boot I was seeing tons of:
+q6routing remoteproc-adsp:glink-edge:apr:apr-service@8:routing: ASoC:
+error at soc_component_read_no_lock on
+remoteproc-adsp:glink-edge:apr:: -5
+
+And when audio was supposed to play I'd see:
+[  227.462986] qcom-q6afe aprsvc:apr-service:4:4: cmd = 0x100e5
+returned error = 0x9
+[  227.470720] qcom-q6afe aprsvc:apr-service:4:4: DSP returned error[9]
+[  227.477168] qcom-q6afe aprsvc:apr-service:4:4: AFE enable for port
+0x4000 failed -22
+[  227.485038] q6afe-dai
+remoteproc-adsp:glink-edge:apr:apr-service@4:dais: fail to start AFE
+port 2
+[  227.494013] q6afe-dai
+remoteproc-adsp:glink-edge:apr:apr-service@4:dais: ASoC: error at
+snd_soc_pcm_dai_prepare on SLIMBUS_0_RX: -22
+[  227.506034]  SLIM Playback: ASoC: DAI prepare error: -22
+[  227.511415]  SLIM Playback: ASoC: backend prepare failed -22
+
+Its strange, as the bisected patch is really just moving code around
+and there's very little in the way of logic changes. After minimizing
+the code movement and just focusing on what changed I forward ported a
+revert to mainline and minimized it until things were working.
+
+The resulting patch is a twoliner here:
+https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/db845c-mainline-WIP&id=a3527193f39b1224d59bf1519fce3ef8c57d0f5e
+
+I'm a bit baffled as to why this patch works. Logically we are
+returning the same value. I suspect when we hit the error, all the
+extra error print messages on the console slow things down and end up
+causing some timing related initialization failure?
+
+Anyway, I wanted to raise the issue in case anyone had ideas what
+might be going wrong.
+
+thanks
 -john
