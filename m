@@ -2,106 +2,141 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 303C72073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:34:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HWfhjFwZ"
+	by mail.kernel.org (Postfix) with ESMTP id C53592177B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgHHJez (ORCPT
+        id S1726250AbgHHJqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 05:34:55 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60538 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgHHJez (ORCPT
+        Sat, 8 Aug 2020 05:46:24 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:36925 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgHHJqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 05:34:55 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0789Iwqm072107;
-        Sat, 8 Aug 2020 09:34:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=aequKrZ1KJ/UX89lx0SVGQ55fnja0qVj925mD877PtE=;
- b=HWfhjFwZ+icFpDeQLMRFN1v5i9hnwVRzAkGQ0PWNkowGn7Ku6oHA5h9M2kcE5txMRA5u
- VMhZiTKchQh3eEdWig95IYtpOIeWIXdf17LvNnW/ovahgS13jt9yM+Pt6Di5tSnn88qu
- aCkMLCOSMry2R1PDi4WXQEKBJoZ3xXKzz916r9ZONtuoVTqUDAozZUtcQVJF7uu2QYa/
- vUGCK/JOI0zmoyGsJ0PaByRPS+7qXixOwTIowqxpzWm7dOhkPk+e5/355pop4RjkTNj6
- 7HM4hV80lFg5UTPcXDHZ2yKkIeACCCg0mma3FQCTPqIdnEah8JJ8+1/yzVb+gBQRIkN8 BA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 32sm0m8p2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 08 Aug 2020 09:34:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0789J7lv068917;
-        Sat, 8 Aug 2020 09:32:48 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 32skv0gqjq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Aug 2020 09:32:48 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0789WmoT013985;
-        Sat, 8 Aug 2020 09:32:48 GMT
-Received: from mwanda (/10.175.188.11)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 08 Aug 2020 02:32:47 -0700
-Date:   Sat, 8 Aug 2020 12:32:41 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>, Eli Cohen <eli@mellanox.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] vdpa/mlx5: Fix pointer math in mlx5_vdpa_get_config()
-Message-ID: <20200808093241.GB115053@mwanda>
+        Sat, 8 Aug 2020 05:46:22 -0400
+Received: by mail-io1-f69.google.com with SMTP id f6so3503109ioa.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 02:46:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Mgd7GqjjHZbKTVg1oMh8UpWpxgZW/6tvB9gNkmYnfYE=;
+        b=cK7FheJ39xWcwEVC957D5yiV9hylL/NewuLtqzXWtsQXqoV68ABfzNYmJgZ4nVgxdV
+         ysBT7TE0A+y/FZ9/9UZluI/y8pm+XdKCNCBJrr+7X4xVvYD8EbyZyfx45N9/riMo4oxh
+         NYAuCKW6cOUB83NS7WLpQR32R1/RbAqk1/LsEQWhHepTIjssLnXDGRPCVfy4PnWGare1
+         XcXHty8sSSCNxN3qPShFVatF6IZqD1VvDwUO0+Jzpfg6NPQH4cQMHH+7o0i0r7eBN76T
+         EvOuUSaMChbAzhbujjk4FnnPXjKRIONE1a7xpTI8abx9p2d+Ny7K/D92jYEq8Q6ZHalP
+         zy5g==
+X-Gm-Message-State: AOAM533C06D1ZqEjOT85eAJTPUgBLV8ckVY5VOSvu8zOuqY5v9j76Xqw
+        IbiMR4DfIJiWyPap39cafge9vt/4H8dTh9dgSqKhDFc8nIoV
+X-Google-Smtp-Source: ABdhPJzW8/kOTaphgcikkhZB1BACCXuyS9i2Q48y8/n1Uc0jg23uS5/J2KZB4W9dkahJKWLM4/ndHDDc3MSj9hj88H1XQl04F5BJ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008080067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008080067
+X-Received: by 2002:a6b:3e04:: with SMTP id l4mr8449851ioa.206.1596879981392;
+ Sat, 08 Aug 2020 02:46:21 -0700 (PDT)
+Date:   Sat, 08 Aug 2020 02:46:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000a389a05ac5a9864@google.com>
+Subject: KASAN: null-ptr-deref Write in l2cap_chan_put
+From:   syzbot <syzbot+452e9465a3b2817fa4c2@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a pointer math bug here so if "offset" is non-zero then this
-will copy memory from beyond the end of the array.
+Hello,
 
-Fixes: 1a86b377aa21 ("vdpa/mlx5: Add VDPA driver for supported mlx5 devices")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+syzbot found the following issue on:
+
+HEAD commit:    5631c5e0 Merge tag 'xfs-5.9-merge-7' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15c21934900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=afba7c06f91e56eb
+dashboard link: https://syzkaller.appspot.com/bug?extid=452e9465a3b2817fa4c2
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131e96aa900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+452e9465a3b2817fa4c2@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: null-ptr-deref in instrument_atomic_write include/linux/instrumented.h:71 [inline]
+BUG: KASAN: null-ptr-deref in atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
+BUG: KASAN: null-ptr-deref in refcount_sub_and_test include/linux/refcount.h:266 [inline]
+BUG: KASAN: null-ptr-deref in refcount_dec_and_test include/linux/refcount.h:294 [inline]
+BUG: KASAN: null-ptr-deref in kref_put include/linux/kref.h:64 [inline]
+BUG: KASAN: null-ptr-deref in l2cap_chan_put+0x28/0x230 net/bluetooth/l2cap_core.c:502
+Write of size 4 at addr 0000000000000018 by task kworker/0:1/7077
+
+CPU: 0 PID: 7077 Comm: kworker/0:1 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ __kasan_report mm/kasan/report.c:517 [inline]
+ kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
+ instrument_atomic_write include/linux/instrumented.h:71 [inline]
+ atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
+ refcount_sub_and_test include/linux/refcount.h:266 [inline]
+ refcount_dec_and_test include/linux/refcount.h:294 [inline]
+ kref_put include/linux/kref.h:64 [inline]
+ l2cap_chan_put+0x28/0x230 net/bluetooth/l2cap_core.c:502
+ l2cap_sock_kill+0xbd/0x180 net/bluetooth/l2cap_sock.c:1217
+ l2cap_chan_timeout+0x1c1/0x450 net/bluetooth/l2cap_core.c:438
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+==================================================================
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7077 Comm: kworker/0:1 Tainted: G    B             5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ end_report+0x4d/0x53 mm/kasan/report.c:104
+ __kasan_report mm/kasan/report.c:520 [inline]
+ kasan_report.cold+0xd/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
+ instrument_atomic_write include/linux/instrumented.h:71 [inline]
+ atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
+ refcount_sub_and_test include/linux/refcount.h:266 [inline]
+ refcount_dec_and_test include/linux/refcount.h:294 [inline]
+ kref_put include/linux/kref.h:64 [inline]
+ l2cap_chan_put+0x28/0x230 net/bluetooth/l2cap_core.c:502
+ l2cap_sock_kill+0xbd/0x180 net/bluetooth/l2cap_sock.c:1217
+ l2cap_chan_timeout+0x1c1/0x450 net/bluetooth/l2cap_core.c:438
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
- drivers/vdpa/mlx5/net/mlx5_vnet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-index 3ec44a4f0e45..9d1637cf772e 100644
---- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-+++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-@@ -1758,7 +1758,7 @@ static void mlx5_vdpa_get_config(struct vdpa_device *vdev, unsigned int offset,
- 	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
- 
- 	if (offset + len < sizeof(struct virtio_net_config))
--		memcpy(buf, &ndev->config + offset, len);
-+		memcpy(buf, (u8 *)&ndev->config + offset, len);
- }
- 
- static void mlx5_vdpa_set_config(struct vdpa_device *vdev, unsigned int offset, const void *buf,
--- 
-2.27.0
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
