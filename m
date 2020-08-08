@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69290C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE27D20672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3932120672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930708;
-	bh=76s7D4MfERblX/4AMHImA7rzFqIClB7ILCfxPsJZtjI=;
+	s=default; t=1596930713;
+	bh=F592JwkZMMRW6U976eGgKBJ9UP2MyAhBL78uU1iPJ+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUM1KfzSFeuT3yZFIDBtQfjfstakj43Vzg2TmoK9XQ3JltJTL6Je52ubil3807skR
-	 KbQmj0SehLZfoKKFA9wFg6NXccIygTeHwdDAW1/HdrNRHnBEaZC/BnVUbFHA8GrdOE
-	 A01YAAmI+hY1zMqz1kSPnx6Pw3wTNkCMhHZQYoy8=
+	b=dUgNBz0xTzfTjUWfDjbW1uU6XKz5NZWXL33PO+AQmLDC57z/vZFQ4C+duMGLyiVEn
+	 VNgLn1gs2L8gNmq1GgDvI8mESNSLGGIcPd/4WYw/zGEMxmRA9qOFbmOzQSpJQXjIoM
+	 vkNPocU4UC1GNcx8mKNYDCAN7PBQCR0CSm3hKntU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgHHXvr (ORCPT
+        id S1726392AbgHHXfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgHHXfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:35:52 -0400
+        id S1726266AbgHHXft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:35:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EF3120716;
-        Sat,  8 Aug 2020 23:35:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A934120723;
+        Sat,  8 Aug 2020 23:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929752;
-        bh=76s7D4MfERblX/4AMHImA7rzFqIClB7ILCfxPsJZtjI=;
+        s=default; t=1596929748;
+        bh=F592JwkZMMRW6U976eGgKBJ9UP2MyAhBL78uU1iPJ+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jsx5ZIR9lTTD+16/28HTXKGvcmm13K8teamLwicsPWlli14n/2d7tRHAlTzbnLXzY
-         y2kYCf0uw7pGkLJOEWk8mjnFGlpYLyRQl1KKTs7IDRe0NBh+4LaBHbR5otYYOkh3sr
-         tm4ucawBIQzf8hs51ZWIr27qEogNxbaqRe89QXlE=
+        b=DMkjRjEJS8VNnvZLiMOcv2F9nfeuGEv2dTfGrtX79xN5Z4V6BdkAFHt1JgplVbcyn
+         IHSUhrZPhrqCxqEXpJqxvRCqRo3+uVmYjeUFxsqT0abFiEFcTSoVIiYAXADPNu3CY1
+         4ULmzyTVFfo23HWrpelRzl3MjkTiHDZR3MUIdpGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+Cc:     Kan Liang <kan.liang@linux.intel.com>, Ammy Yi <ammy.yi@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 07/72] x86, sched: Bail out of frequency invariance if turbo_freq/base_freq gives 0
-Date:   Sat,  8 Aug 2020 19:34:36 -0400
-Message-Id: <20200808233542.3617339-7-sashal@kernel.org>
+        Chao Qin <chao.qin@intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 04/72] perf/x86/intel/uncore: Fix oops when counting IMC uncore events on some TGL
+Date:   Sat,  8 Aug 2020 19:34:33 -0400
+Message-Id: <20200808233542.3617339-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,53 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Giovanni Gherdovich <ggherdovich@suse.cz>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit f4291df103315a696f0b8c4f45ca8ae773c17441 ]
+[ Upstream commit 2af834f1faab3f1e218fcbcab70a399121620d62 ]
 
-Be defensive against the case where the processor reports a base_freq
-larger than turbo_freq (the ratio would be zero).
+When counting IMC uncore events on some TGL machines, an oops will be
+triggered.
+  [ 393.101262] BUG: unable to handle page fault for address:
+  ffffb45200e15858
+  [ 393.101269] #PF: supervisor read access in kernel mode
+  [ 393.101271] #PF: error_code(0x0000) - not-present page
 
-Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
-Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Current perf uncore driver still use the IMC MAP SIZE inherited from
+SNB, which is 0x6000.
+However, the offset of IMC uncore counters is larger than 0x6000,
+e.g. 0xd8a0.
+
+Enlarge the IMC MAP SIZE for TGL to 0xe000.
+
+Fixes: fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
+Reported-by: Ammy Yi <ammy.yi@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lkml.kernel.org/r/20200531182453.15254-4-ggherdovich@suse.cz
+Tested-by: Ammy Yi <ammy.yi@intel.com>
+Tested-by: Chao Qin <chao.qin@intel.com>
+Link: https://lkml.kernel.org/r/1590679169-61823-1-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/smpboot.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/uncore_snb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 20e1cea262e4b..518ac6bf752e0 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1977,6 +1977,7 @@ static bool core_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
- static bool intel_set_max_freq_ratio(void)
- {
- 	u64 base_freq, turbo_freq;
-+	u64 turbo_ratio;
- 
- 	if (slv_set_max_freq_ratio(&base_freq, &turbo_freq))
- 		goto out;
-@@ -2010,9 +2011,15 @@ static bool intel_set_max_freq_ratio(void)
- 		return false;
- 	}
- 
--	arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
--					base_freq);
-+	turbo_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE, base_freq);
-+	if (!turbo_ratio) {
-+		pr_debug("Non-zero turbo and base frequencies led to a 0 ratio.\n");
-+		return false;
-+	}
-+
-+	arch_turbo_freq_ratio = turbo_ratio;
- 	arch_set_max_freq_ratio(turbo_disabled());
-+
- 	return true;
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index 3de1065eefc44..1038e9f1e3542 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -1085,6 +1085,7 @@ static struct pci_dev *tgl_uncore_get_mc_dev(void)
  }
  
+ #define TGL_UNCORE_MMIO_IMC_MEM_OFFSET		0x10000
++#define TGL_UNCORE_PCI_IMC_MAP_SIZE		0xe000
+ 
+ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
+ {
+@@ -1112,7 +1113,7 @@ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
+ 	addr |= ((resource_size_t)mch_bar << 32);
+ #endif
+ 
+-	box->io_addr = ioremap(addr, SNB_UNCORE_PCI_IMC_MAP_SIZE);
++	box->io_addr = ioremap(addr, TGL_UNCORE_PCI_IMC_MAP_SIZE);
+ }
+ 
+ static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
 -- 
 2.25.1
 
