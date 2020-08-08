@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC234C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B625C2053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC4F2053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930189;
-	bh=tE+/jS+BvX9zc+s1uCDMixr7naVAWq9W2jUqiuF35ew=;
+	s=default; t=1596930199;
+	bh=QuTGwHFG4PfND3wv40WtsKr+cg9CyiMKlrNdZx2m/kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j51YazC3UZFviBg/uO2uiymcDljN6oKlz0lSjKcO+YZ3wEVcUWupFk5tfZL6PhFuj
-	 /VucRTF6exsqwjtmdljBLjevmVimNJG/RvRa6AVbhHgNWwjQ/UdWmnGW3G7HKbfV5R
-	 ptE6+olGr+rDyzJUtSqcBdP28gQN7vpOWg8tDVSs=
+	b=mPRlHMqg7w7MobQOr/SpufbgNlnf755tRUKPEDveoV1Gwosx0YuAXtUZ0u7aI+W2u
+	 21CWwAN08G8gHSGvwaqrjr3DYEs7FmYe20OKK207iwHkDI8Apw6D/aI5skjv2bc/Tj
+	 kqonpAPpCQmWSYJ83+2DhHtweZ8ev92P1D46ek7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgHHXnI (ORCPT
+        id S1729045AbgHHXnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:43:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55004 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728674AbgHHXjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:55 -0400
+        id S1728653AbgHHXju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6A7A208E4;
-        Sat,  8 Aug 2020 23:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCC022087C;
+        Sat,  8 Aug 2020 23:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929994;
-        bh=tE+/jS+BvX9zc+s1uCDMixr7naVAWq9W2jUqiuF35ew=;
+        s=default; t=1596929989;
+        bh=QuTGwHFG4PfND3wv40WtsKr+cg9CyiMKlrNdZx2m/kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aLf5IbNPREeyIWmtvDUGdm0te8WDuhkyyHa02WSIzfL9UWETDNyxw88UYmQiMscI8
-         qvj152kTg3VxdDqCr675Sv4Pv872r9INt1e/TFqM4nXSmt/5+bHHUDsPR5Gd4l77MA
-         cXxPc3luwQ2stkxidiFf79U3MdLkSVKs8drqRHL4=
+        b=IpkzfhOHxxprJxSa/LCdP6Qr+W+5OOTcuaZzsfOd9dZddKfMFHKJJKMRCNXKIKFxq
+         u/Fk+TCjGX+2FIYD5PymgyTb1Bel0dkfBGB6WvJXpUVDbX2w40cp5UZJEBvSZM13zd
+         y/nJwgfcqrtQea6/fa5umjbyLHsT0uyjUOQoKsdY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Marussi <cristian.marussi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 10/21] firmware: arm_scmi: Fix SCMI genpd domain probing
-Date:   Sat,  8 Aug 2020 19:39:30 -0400
-Message-Id: <20200808233941.3619277-10-sashal@kernel.org>
+Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 06/21] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
+Date:   Sat,  8 Aug 2020 19:39:26 -0400
+Message-Id: <20200808233941.3619277-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233941.3619277-1-sashal@kernel.org>
 References: <20200808233941.3619277-1-sashal@kernel.org>
@@ -60,99 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Marussi <cristian.marussi@arm.com>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-[ Upstream commit e0f1a30cf184821499eeb67daedd7a3f21bbcb0b ]
+[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
 
-When, at probe time, an SCMI communication failure inhibits the capacity
-to query power domains states, such domains should be skipped.
+The puma gmac node currently uses opposite active-values for the
+gmac phy reset pin. The gpio-declaration uses active-high while the
+separate snps,reset-active-low property marks the pin as active low.
 
-Registering partially initialized SCMI power domains with genpd will
-causes kernel panic.
+While on the kernel side this works ok, other DT users may get
+confused - as seen with uboot right now.
 
- arm-scmi timed out in resp(caller: scmi_power_state_get+0xa4/0xd0)
- scmi-power-domain scmi_dev.2: failed to get state for domain 9
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
- Mem abort info:
-   ESR = 0x96000006
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000006
-   CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=00000009f3691000
- [0000000000000000] pgd=00000009f1ca0003, p4d=00000009f1ca0003, pud=00000009f35ea003, pmd=0000000000000000
- Internal error: Oops: 96000006 [#1] PREEMPT SMP
- CPU: 2 PID: 381 Comm: bash Not tainted 5.8.0-rc1-00011-gebd118c2cca8 #2
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Jan  3 2020
- Internal error: Oops: 96000006 [#1] PREEMPT SMP
- pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
- pc : of_genpd_add_provider_onecell+0x98/0x1f8
- lr : of_genpd_add_provider_onecell+0x48/0x1f8
- Call trace:
-  of_genpd_add_provider_onecell+0x98/0x1f8
-  scmi_pm_domain_probe+0x174/0x1e8
-  scmi_dev_probe+0x90/0xe0
-  really_probe+0xe4/0x448
-  driver_probe_device+0xfc/0x168
-  device_driver_attach+0x7c/0x88
-  bind_store+0xe8/0x128
-  drv_attr_store+0x2c/0x40
-  sysfs_kf_write+0x4c/0x60
-  kernfs_fop_write+0x114/0x230
-  __vfs_write+0x24/0x50
-  vfs_write+0xbc/0x1e0
-  ksys_write+0x70/0xf8
-  __arm64_sys_write+0x24/0x30
-  el0_svc_common.constprop.3+0x94/0x160
-  do_el0_svc+0x2c/0x98
-  el0_sync_handler+0x148/0x1a8
-  el0_sync+0x158/0x180
+So bring this in line and make both properties match, similar to the
+other Rockchip board.
 
-Do not register any power domain that failed to be queried with genpd.
-
-Fixes: 898216c97ed2 ("firmware: arm_scmi: add device power domain support using genpd")
-Link: https://lore.kernel.org/r/20200619220330.12217-1-cristian.marussi@arm.com
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/scmi_pm_domain.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
-index 87f737e01473c..041f8152272bf 100644
---- a/drivers/firmware/arm_scmi/scmi_pm_domain.c
-+++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
-@@ -85,7 +85,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
- 	for (i = 0; i < num_domains; i++, scmi_pd++) {
- 		u32 state;
- 
--		domains[i] = &scmi_pd->genpd;
-+		if (handle->power_ops->state_get(handle, i, &state)) {
-+			dev_warn(dev, "failed to get state for domain %d\n", i);
-+			continue;
-+		}
- 
- 		scmi_pd->domain = i;
- 		scmi_pd->handle = handle;
-@@ -94,13 +97,10 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
- 		scmi_pd->genpd.power_off = scmi_pd_power_off;
- 		scmi_pd->genpd.power_on = scmi_pd_power_on;
- 
--		if (handle->power_ops->state_get(handle, i, &state)) {
--			dev_warn(dev, "failed to get state for domain %d\n", i);
--			continue;
--		}
--
- 		pm_genpd_init(&scmi_pd->genpd, NULL,
- 			      state == SCMI_POWER_STATE_GENERIC_OFF);
-+
-+		domains[i] = &scmi_pd->genpd;
- 	}
- 
- 	scmi_pd_data->domains = domains;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index baacb6e227b95..b155f657292bd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -156,7 +156,7 @@ &gmac {
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii_pins>;
+-	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
++	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+ 	tx_delay = <0x10>;
 -- 
 2.25.1
 
