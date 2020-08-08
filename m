@@ -2,350 +2,233 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B24EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E31E206C0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215FB206C0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i8scnWxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgHHWfC convert rfc822-to-8bit (ORCPT
+        id S1726084AbgHHWiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 18:35:02 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:41229 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHHWfC (ORCPT
+        Sat, 8 Aug 2020 18:38:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21758 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725950AbgHHWiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 18:35:02 -0400
-X-Originating-IP: 90.76.251.31
-Received: from xps13 (lfbn-tou-1-1195-31.w90-76.abo.wanadoo.fr [90.76.251.31])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 4572740002;
-        Sat,  8 Aug 2020 22:34:55 +0000 (UTC)
-Date:   Sun, 9 Aug 2020 00:34:53 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] mtd: Changes for 5.9
-Message-ID: <20200809003453.79673eb3@xps13>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 8 Aug 2020 18:38:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596926289;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hm04VRSPNOWAWag6GBV43qqvwU0AE+7Ghd/jAhwulxw=;
+        b=i8scnWxkEJ+0+rAQT244f0b7gV8e21ha6q3hJqO5JGdR0YuvavLSg39Ki7jn/7hdqK/5mH
+        zVeHth/xjIhPOYQVMsGpkf8vCP6FMKcTBWUEEMY0aQMVexZj6fwVBefsq0aqy1gPwEqkZs
+        0B5KAT5GgKprrf4FOC3WeINbr6jUSc0=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-437-UI7m8kqpOICFjbLNCyyseA-1; Sat, 08 Aug 2020 18:38:06 -0400
+X-MC-Unique: UI7m8kqpOICFjbLNCyyseA-1
+Received: by mail-qt1-f200.google.com with SMTP id h10so4660460qtc.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 15:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hm04VRSPNOWAWag6GBV43qqvwU0AE+7Ghd/jAhwulxw=;
+        b=mXU/nuoTsPWx1h3sozQVHnPiLpNR4O9rYwucDH74/LK3WUCZZxNVLhg2iQtjsHTefi
+         q1PNebV4rqHrWMNbOMbIGrkS2K6+XLn/tmh/DdngpUFXtEHiErupvg0KSJrtth5M2Fm3
+         ocYOP2sMrOJsHAgGYN5LdQvVmaC11EP7ORnBT4Jx09ljyJupM5NyAGsnPd43tu8pi8zD
+         RAJijBp5wZIEeEclXqWZcuNaQJvf78uDIC63VwNYyJm5OcDWRHyXR6RQ/K7az1gJmBww
+         Plf3LRTpBcJD3S+EFg1yYyC1AKb+BuTbwd7FqgvqFi0eNivYzDLxPJ2RqxiXVm/oJFEs
+         RNnA==
+X-Gm-Message-State: AOAM531PXxkVOuHTLGwgxesU6U1DXir4r2FQvgHwwSNryZxXYYEb4GXq
+        mIvWICOldc+hPgGTK//u9W2maeEkw4HXoUpWPmBuGHg82Pwu/5f3Gr5BDIQ9RlKCbgrMj0cth8S
+        yBthgquPsJTnObHK+1Z7Y6HJm
+X-Received: by 2002:a05:6214:1841:: with SMTP id d1mr5532516qvy.135.1596926285681;
+        Sat, 08 Aug 2020 15:38:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzmPVIWEUNy8xotgKUcg/jyaIL5QwRv/NmfY6IdCt6CqLIa+lxmHQ6UDh54vnPKDo5WtuB7WQ==
+X-Received: by 2002:a05:6214:1841:: with SMTP id d1mr5532502qvy.135.1596926285378;
+        Sat, 08 Aug 2020 15:38:05 -0700 (PDT)
+Received: from xz-x1.redhat.com (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
+        by smtp.gmail.com with ESMTPSA id h20sm9797647qkk.79.2020.08.08.15.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Aug 2020 15:38:04 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     peterx@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
+Subject: [PATCH] mm/gup: Allow real explicit breaking of COW
+Date:   Sat,  8 Aug 2020 18:38:02 -0400
+Message-Id: <20200808223802.11451-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+Starting from commit 17839856fd58 ("gup: document and work around "COW can
+break either way" issue", 2020-06-02), explicit copy-on-write behavior is
+enforced for private gup pages even if it's a read-only.  It is achieved by
+always passing FOLL_WRITE to emulate a write.
 
-This is the MTD PR for 5.9.
+That should fix the COW issue that we were facing, however above commit could
+also break userfaultfd-wp and applications like umapsort [1,2].
 
-Thanks,
-Miquèl
+One general routine of umap-like program is: userspace library will manage page
+allocations, and it will evict the least recently used pages from memory to
+external storages (e.g., file systems).  Below are the general steps to evict
+an in-memory page in the uffd service thread when the page pool is full:
 
-The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
+  (1) UFFDIO_WRITEPROTECT with mode=WP on some to-be-evicted page P, so that
+      further writes to page P will block (keep page P clean)
+  (2) Copy page P to external storage (e.g. file system)
+  (3) MADV_DONTNEED to evict page P
 
-  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
+Here step (1) makes sure that the page to dump will always be up-to-date, so
+that the page snapshot in the file system is consistent with the one that was
+in the memory.  However with commit 17839856fd58, step (2) can potentially hang
+itself because e.g. if we use write() to a file system fd to dump the page
+data, that will be a translated read gup request in the file system driver to
+read the page content, then the read gup will be translated to a write gup due
+to the new enforced COW behavior.  This write gup will further trigger
+handle_userfault() and hang the uffd service thread itself.
 
-are available in the Git repository at:
+I think the problem will go away too if we replace the write() to the file
+system into a memory write to a mmaped region in the userspace library, because
+normal page faults will not enforce COW, only gup is affected.  However we
+cannot forbid users to use write() or any form of kernel level read gup.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-5.9
+One solution is actually already mentioned in commit 17839856fd58, which is to
+provide an explicit BREAK_COW scemantics for enforced COW.  Then we can still
+use FAULT_FLAG_WRITE to identify whether this is a "real write request" or an
+"enfornced COW (read) request".
 
-for you to fetch changes up to 6a1380271b75e0d9a961e192e56b733fedf7a23a:
+[1] https://github.com/LLNL/umap-apps/blob/develop/src/umapsort/umapsort.cpp
+[2] https://github.com/LLNL/umap
 
-  Merge tag 'nand/for-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux into mtd/next (2020-08-07 08:54:16 +0200)
+CC: Marty Mcfadden <mcfadden8@llnl.gov>
+CC: Andrea Arcangeli <aarcange@redhat.com>
+CC: Linus Torvalds <torvalds@linux-foundation.org>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Jann Horn <jannh@google.com>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Oleg Nesterov <oleg@redhat.com>
+CC: Kirill Shutemov <kirill@shutemov.name>
+CC: Jan Kara <jack@suse.cz>
+Fixes: 17839856fd588f4ab6b789f482ed3ffd7c403e1f
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ include/linux/mm.h |  3 +++
+ mm/gup.c           |  4 ++--
+ mm/memory.c        | 15 ++++++++++++---
+ 3 files changed, 17 insertions(+), 5 deletions(-)
 
-----------------------------------------------------------------
-MTD core changes:
-* Spelling
-* http to https updates
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index f6a82f9bccd7..dacba5c7942f 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -409,6 +409,7 @@ extern pgprot_t protection_map[16];
+  * @FAULT_FLAG_REMOTE: The fault is not for current task/mm.
+  * @FAULT_FLAG_INSTRUCTION: The fault was during an instruction fetch.
+  * @FAULT_FLAG_INTERRUPTIBLE: The fault can be interrupted by non-fatal signals.
++ * @FAULT_FLAG_BREAK_COW: Do COW explicitly for the fault (even for read)
+  *
+  * About @FAULT_FLAG_ALLOW_RETRY and @FAULT_FLAG_TRIED: we can specify
+  * whether we would allow page faults to retry by specifying these two
+@@ -439,6 +440,7 @@ extern pgprot_t protection_map[16];
+ #define FAULT_FLAG_REMOTE			0x80
+ #define FAULT_FLAG_INSTRUCTION  		0x100
+ #define FAULT_FLAG_INTERRUPTIBLE		0x200
++#define FAULT_FLAG_BREAK_COW			0x400
+ 
+ /*
+  * The default fault flags that should be used by most of the
+@@ -2756,6 +2758,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+ #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
+ #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
+ #define FOLL_FAST_ONLY	0x80000	/* gup_fast: prevent fall-back to slow gup */
++#define FOLL_BREAK_COW  0x100000 /* request for explicit COW (even for read) */
+ 
+ /*
+  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
+diff --git a/mm/gup.c b/mm/gup.c
+index d8a33dd1430d..02267f5797a7 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1076,7 +1076,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+ 			}
+ 			if (is_vm_hugetlb_page(vma)) {
+ 				if (should_force_cow_break(vma, foll_flags))
+-					foll_flags |= FOLL_WRITE;
++					foll_flags |= FOLL_BREAK_COW;
+ 				i = follow_hugetlb_page(mm, vma, pages, vmas,
+ 						&start, &nr_pages, i,
+ 						foll_flags, locked);
+@@ -1095,7 +1095,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+ 		}
+ 
+ 		if (should_force_cow_break(vma, foll_flags))
+-			foll_flags |= FOLL_WRITE;
++			foll_flags |= FOLL_BREAK_COW;
+ 
+ retry:
+ 		/*
+diff --git a/mm/memory.c b/mm/memory.c
+index c39a13b09602..0c819056374e 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2900,7 +2900,8 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+ 
+-	if (userfaultfd_pte_wp(vma, *vmf->pte)) {
++	if ((vmf->flags & FAULT_FLAG_WRITE) &&
++	    userfaultfd_pte_wp(vma, *vmf->pte)) {
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		return handle_userfault(vmf, VM_UFFD_WP);
+ 	}
+@@ -3290,7 +3291,11 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		put_page(swapcache);
+ 	}
+ 
+-	if (vmf->flags & FAULT_FLAG_WRITE) {
++	/*
++	 * We'll do a COW if it's a write or the caller wants explicit COW
++	 * behavior (even if it's a read operation)
++	 */
++	if (vmf->flags & (FAULT_FLAG_WRITE | FAULT_FLAG_BREAK_COW)) {
+ 		ret |= do_wp_page(vmf);
+ 		if (ret & VM_FAULT_ERROR)
+ 			ret &= VM_FAULT_ERROR;
+@@ -4241,7 +4246,11 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 		update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
+ 		goto unlock;
+ 	}
+-	if (vmf->flags & FAULT_FLAG_WRITE) {
++	/*
++	 * We'll do a COW if it's a write or the caller wants explicit COW
++	 * behavior (even if it's a read operation)
++	 */
++	if (vmf->flags & (FAULT_FLAG_WRITE | FAULT_FLAG_BREAK_COW)) {
+ 		if (!pte_write(entry))
+ 			return do_wp_page(vmf);
+ 		entry = pte_mkdirty(entry);
+-- 
+2.26.2
 
-NAND core changes:
-* Drop useless 'depends on' in Kconfig
-* Add an extra level in the Kconfig hierarchy
-* Trivial spellings
-* Dynamic allocation of the interface configurations
-* Dropping the default ONFI timing mode
-* Various cleanup (types, structures, naming, comments)
-* Hide the chip->data_interface indirection
-* Add the generic rb-gpios property
-* Add the ->choose_interface_config() hook
-* Introduce nand_choose_best_sdr_timings()
-* Use default values for tPROG_max and tBERS_max
-* Avoid redefining tR_max and tCCS_min
-* Add a helper to find the closest ONFI mode
-* bcm63xx MTD parsers: simplify CFE detection
-
-Raw NAND controller drivers changes:
-* fsl-upm: Deprecation of specific DT properties
-* fsl_upm: Driver rework and cleanup in favor of ->exec_op()
-* Ingenic: Cleanup ARRAY_SIZE() vs sizeof() use
-* brcmnand: ECC error handling on EDU transfers
-* brcmnand: Don't default to EDU transfers
-* qcom: Set BAM mode only if not set already
-* qcom: Avoid write to unavailable register
-* gpio: Driver rework in favor of ->exec_op()
-* tango: ->exec_op() conversion
-* mtk: ->exec_op() conversion
-
-Raw NAND chip drivers changes:
-* toshiba: Implement ->choose_interface_config() for TH58NVG2S3HBAI4
-* toshiba: Implement ->choose_interface_config() for TC58NVG0S3E
-* toshiba: Implement ->choose_interface_config() for TC58TEG5DCLTA00
-* hynix: Implement ->choose_interface_config() for H27UCG8T2ATR-BC
-
-SPI NOR core changes:
-* Disable Quad Mode in spi_nor_restore().
-* Don't abort BFPT parsing when QER reserved value is used.
-* Add support/update capabilities for few flashes.
-* Drop s70fl01gs flash: it does not support RDSR(05h) which
-  is critical for erase/write.
-* Merge the SPIMEM DTR bits in spi-nor/next to avoid conflicts
-  during the release cycle.
-
-SPI NOR controller drivers changes:
-* Move the cadence-quadspi driver to spi-mem. The series was
-  taken through the SPI tree. Merge it also in spi-nor/next
-  to avoid conflicts during the release cycle.
-* intel-spi:
-   - Add new PCI IDs.
-   - Ignore the Write Disable command, the controller doesn't
-     support it.
-   - Fix performance regression.
-
-----------------------------------------------------------------
-Alexander A. Klimov (3):
-      mtd: hyperbus: Replace HTTP links with HTTPS ones
-      mtd: Replace HTTP links with HTTPS ones
-      mtd: rawnand: omap_elm: Replace HTTP links with HTTPS ones
-
-Alexander Sverdlin (1):
-      mtd: spi-nor: intel-spi: Simulate WRDI command
-
-Boris Brezillon (16):
-      mtd: rawnand: mtk: Convert the driver to exec_op()
-      mtd: rawnand: tango: Convert the driver to exec_op()
-      dt-bindings: mtd: nand: Document the generic rb-gpios property
-      mtd: rawnand: fsl_upm: Remove unused mtd var
-      mtd: rawnand: fsl_upm: Get rid of the unused fsl_upm_nand.parts field
-      mtd: rawnand: fsl_upm: Allocate the fsl_upm_nand object using devm_kzalloc()
-      mtd: rawnand: fsl_upm: Use devm_kasprintf() to allocate the MTD name
-      mtd: rawnand: fsl_upm: Use platform_get_resource() + devm_ioremap_resource()
-      mtd: rawnand: fsl_upm: Use gpio descriptors
-      mtd: rawnand: fsl_upm: Inherit from nand_controller
-      mtd: rawnand: fsl_upm: Implement exec_op()
-      mtd: rawnand: fsl_upm: Get rid of the legacy interface implementation
-      mtd: rawnand: gpio: Inherit from nand_controller
-      mtd: rawnand: gpio: Implement exec_op()
-      mtd: rawnand: gpio: Get rid of the legacy interface implementation
-      dt-bindings: mtd: fsl-upm-nand: Deprecate chip-delay and fsl, upm-wait-flags
-
-Christophe Kerello (6):
-      mtd: rawnand: stm32_fmc2: do not display errors if the driver is deferred
-      dt-bindings: mtd: update STM32 FMC2 NAND controller documentation
-      dt-bindings: memory-controller: add STM32 FMC2 EBI controller documentation
-      memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
-      mtd: rawnand: stm32_fmc2: use regmap APIs
-      mtd: rawnand: stm32_fmc2: get resources from parent node
-
-Dan Carpenter (1):
-      mtd: rawnand: ingenic: cleanup ARRAY_SIZE() vs sizeof() use
-
-David Clear (2):
-      mtd: spi-nor: macronix: Add support for mx66u2g45g
-      mtd: spi-nor: micron: Add SPI_NOR_DUAL_READ flag on mt25qu02g
-
-Frieder Schrempf (1):
-      mtd: spi-nor: macronix: Add support for MX25R1635F
-
-Kamal Dasu (2):
-      mtd: rawnand: brcmnand: Don't default to edu transfer
-      mtd: rawnand: brcmnand: ECC error handling on EDU transfers
-
-Kieran Bingham (1):
-      mtd: rawnand: trivial spelling
-
-Luis Alberto Herrera (1):
-      mtd: revert "spi-nor: intel: provide a range for poll_timout"
-
-Mika Westerberg (2):
-      mtd: spi-nor: intel-spi: Add support for Intel Emmitsburg SPI serial flash
-      mtd: spi-nor: intel-spi: Add support for Intel Tiger Lake-H SPI serial flash
-
-Miquel Raynal (31):
-      mtd: nand: Move nand_device forward declaration to the top
-      mtd: nand: Add an extra level in the Kconfig hierarchy
-      mtd: nand: Drop useless 'depends on' in Kconfig
-      mtd: nand: Rename a core structure
-      mtd: rawnand: Use unsigned types for nand_chip unsigned values
-      mtd: rawnand: Only use u8 instead of uint8_t in nand_chip structure
-      mtd: rawnand: Create a nand_chip operations structure
-      mtd: rawnand: Rename the manufacturer structure
-      mtd: rawnand: Declare the nand_manufacturer structure out of nand_chip
-      mtd: rawnand: Reorganize the nand_chip structure
-      mtd: rawnand: Compare the actual timing values
-      mtd: rawnand: Use the data interface mode entry when relevant
-      mtd: rawnand: Rename nand_has_setup_data_iface()
-      mtd: rawnand: Fix nand_setup_data_interface() description
-      mtd: rawnand: Rename nand_init_data_interface()
-      mtd: rawnand: timings: Update onfi_fill_data_interface() kernel doc
-      mtd: rawnand: timings: Provide onfi_fill_data_interface() with a data interface
-      mtd: rawnand: timings: onfi_fill_data_interface timing mode is unsigned
-      mtd: rawnand: timings: Add a helper to find the closest ONFI mode
-      mtd: rawnand: timings: Avoid redefining tR_max and tCCS_min
-      mtd: rawnand: timings: Use default values for tPROG_max and tBERS_max
-      mtd: rawnand: Hide the chip->data_interface indirection
-      mtd: rawnand: s/data_interface/interface_config/
-      mtd: rawnand: timings: Make onfi_fill_interface_config() a void helper
-      mtd: rawnand: Introduce nand_choose_best_sdr_timings()
-      mtd: rawnand: Add the ->choose_interface_config() hook
-      mtd: rawnand: toshiba: Implement ->choose_interface_config() for TC58TEG5DCLTA00
-      mtd: rawnand: toshiba: Implement ->choose_interface_config() for TC58NVG0S3E
-      mtd: rawnand: hynix: Implement ->choose_interface_config() for H27UCG8T2ATR-BC
-      mtd: rawnand: Get rid of the default ONFI timing mode
-      mtd: rawnand: Allocate the interface configurations dynamically
-
-Pratyush Yadav (5):
-      mtd: spi-nor: sfdp: do not make invalid quad enable fatal
-      spi: spi-mem: allow specifying whether an op is DTR or not
-      spi: spi-mem: allow specifying a command's extension
-      spi: atmel-quadspi: reject DTR ops
-      spi: spi-mtk-nor: reject DTR ops
-
-Ramuthevar Vadivel Murugan (2):
-      mtd: spi-nor: Convert cadence-quadspi to use spi-mem framework
-      spi: Move cadence-quadspi driver to drivers/spi/
-
-Randy Dunlap (2):
-      MTD: mtd-abi.h: drop a duplicated word
-      MTD: pfow.h: drop a duplicated word
-
-Rayagonda Kokatanur (1):
-      mtd: spi-nor: update read capabilities for w25q64 and s25fl064k
-
-Richard Weinberger (2):
-      Merge tag 'spi-nor/for-5.9' of https://git.kernel.org/.../mtd/linux into mtd/next
-      Merge tag 'nand/for-5.9' of git://git.kernel.org/.../mtd/linux into mtd/next
-
-Rickard x Andersson (1):
-      mtd: rawnand: toshiba: Choose the interface configuration for TH58NVG2S3HBAI4
-
-Sivaprakash Murugesan (2):
-      mtd: rawnand: qcom: avoid write to unavailable register
-      mtd: rawnand: qcom: set BAM mode only if not set already
-
-Sven Van Asbroeck (1):
-      mtd: spi-nor: winbond: Add support for w25q64jvm
-
-Takahiro Kuwano (1):
-      mtd: spi-nor: spansion: Remove s70fl01gs from flash_info
-
-Tudor Ambarus (2):
-      Merge tag 'cadence-mtd-spi-move' into spi-nor/next
-      Merge tag 'spi-mem-dtr' into spi-nor/next
-
-Vignesh Raghavendra (6):
-      mtd: spi-nor: cadence-quadspi: Make driver independent of flash geometry
-      mtd: spi-nor: cadence-quadspi: Provide a way to disable DAC mode
-      mtd: spi-nor: cadence-quadspi: Don't initialize rx_dma_complete on failure
-      mtd: spi-nor: cadence-quadspi: Fix error path on failure to acquire reset lines
-      mtd: spi-nor: cadence-quadspi: Handle probe deferral while requesting DMA channel
-      mtd: spi-nor: cadence-quadspi: Drop redundant WREN in erase path
-
-Yicong Yang (2):
-      mtd: spi-nor: Add capability to disable flash quad mode
-      mtd: spi-nor: Disable the flash quad mode in spi_nor_restore()
-
-Álvaro Fernández Rojas (1):
-      mtd: parsers: bcm63xx: simplify CFE detection
-
- Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml      |  252 ++++++++++++++++++
- Documentation/devicetree/bindings/mtd/davinci-nand.txt                           |    4 +-
- Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt                           |   10 +-
- Documentation/devicetree/bindings/mtd/nand-controller.yaml                       |    7 +
- Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml                    |   83 ++++--
- drivers/memory/Kconfig                                                           |   10 +
- drivers/memory/Makefile                                                          |    1 +
- drivers/memory/stm32-fmc2-ebi.c                                                  | 1206 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/mtd/chips/Kconfig                                                        |    2 +-
- drivers/mtd/hyperbus/hbmc-am654.c                                                |    2 +-
- drivers/mtd/hyperbus/hyperbus-core.c                                             |    2 +-
- drivers/mtd/maps/Kconfig                                                         |    2 +-
- drivers/mtd/maps/sc520cdp.c                                                      |    2 +-
- drivers/mtd/nand/Kconfig                                                         |    5 +
- drivers/mtd/nand/onenand/Kconfig                                                 |    1 -
- drivers/mtd/nand/raw/Kconfig                                                     |    2 +-
- drivers/mtd/nand/raw/ams-delta.c                                                 |    6 +-
- drivers/mtd/nand/raw/arasan-nand-controller.c                                    |    6 +-
- drivers/mtd/nand/raw/atmel/nand-controller.c                                     |   34 +--
- drivers/mtd/nand/raw/brcmnand/brcmnand.c                                         |   31 ++-
- drivers/mtd/nand/raw/cadence-nand-controller.c                                   |    6 +-
- drivers/mtd/nand/raw/denali.c                                                    |    8 +-
- drivers/mtd/nand/raw/fsl_upm.c                                                   |  311 ++++++++--------------
- drivers/mtd/nand/raw/fsmc_nand.c                                                 |    6 +-
- drivers/mtd/nand/raw/gpio.c                                                      |  112 ++++++--
- drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c                                       |    6 +-
- drivers/mtd/nand/raw/ingenic/jz4740_ecc.c                                        |    4 +-
- drivers/mtd/nand/raw/internals.h                                                 |   23 +-
- drivers/mtd/nand/raw/marvell_nand.c                                              |   18 +-
- drivers/mtd/nand/raw/meson_nand.c                                                |   14 +-
- drivers/mtd/nand/raw/mtk_nand.c                                                  |  122 +++++----
- drivers/mtd/nand/raw/mxc_nand.c                                                  |   22 +-
- drivers/mtd/nand/raw/mxic_nand.c                                                 |    6 +-
- drivers/mtd/nand/raw/nand_base.c                                                 |  279 +++++++++++---------
- drivers/mtd/nand/raw/nand_bbt.c                                                  |    2 +-
- drivers/mtd/nand/raw/nand_hynix.c                                                |   16 +-
- drivers/mtd/nand/raw/nand_ids.c                                                  |   24 +-
- drivers/mtd/nand/raw/nand_legacy.c                                               |    7 +-
- drivers/mtd/nand/raw/nand_macronix.c                                             |   10 +-
- drivers/mtd/nand/raw/nand_micron.c                                               |    2 +-
- drivers/mtd/nand/raw/nand_timings.c                                              |  116 ++++++---
- drivers/mtd/nand/raw/nand_toshiba.c                                              |   72 +++++-
- drivers/mtd/nand/raw/omap_elm.c                                                  |    2 +-
- drivers/mtd/nand/raw/qcom_nandc.c                                                |   18 +-
- drivers/mtd/nand/raw/s3c2410.c                                                   |    6 +-
- drivers/mtd/nand/raw/stm32_fmc2_nand.c                                           |  319 ++++++++++++-----------
- drivers/mtd/nand/raw/sunxi_nand.c                                                |    6 +-
- drivers/mtd/nand/raw/tango_nand.c                                                |  149 ++++++-----
- drivers/mtd/nand/raw/tegra_nand.c                                                |    6 +-
- drivers/mtd/parsers/bcm63xxpart.c                                                |   32 +--
- drivers/mtd/spi-nor/controllers/Kconfig                                          |   11 -
- drivers/mtd/spi-nor/controllers/Makefile                                         |    1 -
- drivers/mtd/spi-nor/controllers/intel-spi-pci.c                                  |    2 +
- drivers/mtd/spi-nor/controllers/intel-spi.c                                      |   13 +-
- drivers/mtd/spi-nor/core.c                                                       |   57 +++--
- drivers/mtd/spi-nor/core.h                                                       |   10 +-
- drivers/mtd/spi-nor/macronix.c                                                   |    6 +
- drivers/mtd/spi-nor/micron-st.c                                                  |    4 +-
- drivers/mtd/spi-nor/sfdp.c                                                       |    3 +-
- drivers/mtd/spi-nor/spansion.c                                                   |    4 +-
- drivers/mtd/spi-nor/winbond.c                                                    |    4 +-
- drivers/spi/Kconfig                                                              |   11 +
- drivers/spi/Makefile                                                             |    1 +
- drivers/spi/atmel-quadspi.c                                                      |    6 +
- drivers/{mtd/spi-nor/controllers/cadence-quadspi.c => spi/spi-cadence-quadspi.c} |  541 +++++++++++++++------------------------
- drivers/spi/spi-mem.c                                                            |   16 +-
- drivers/spi/spi-mtk-nor.c                                                        |   10 +-
- drivers/spi/spi-mxic.c                                                           |    3 +-
- drivers/spi/spi-zynq-qspi.c                                                      |   11 +-
- include/linux/mtd/hyperbus.h                                                     |    2 +-
- include/linux/mtd/nand.h                                                         |   12 +-
- include/linux/mtd/pfow.h                                                         |    2 +-
- include/linux/mtd/rawnand.h                                                      |  267 +++++++++----------
- include/linux/mtd/spinand.h                                                      |    2 +-
- include/linux/spi/spi-mem.h                                                      |   14 +-
- include/uapi/mtd/mtd-abi.h                                                       |    2 +-
- 76 files changed, 3069 insertions(+), 1338 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
- create mode 100644 drivers/memory/stm32-fmc2-ebi.c
- rename drivers/{mtd/spi-nor/controllers/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (74%)
