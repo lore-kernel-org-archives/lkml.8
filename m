@@ -2,97 +2,142 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52103C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23082206B6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB84206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pewx+Ujw"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BK/j4gLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgHHU1z (ORCPT
+        id S1726321AbgHHUk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 16:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgHHU1z (ORCPT
+        Sat, 8 Aug 2020 16:40:27 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36902 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgHHUk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 16:27:55 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235ADC061756
-        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 13:27:55 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id z20so2803480plo.6
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 13:27:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=yuWM4DIUwQmPQT7Mh/C4UCJ0P+zz+HJ6Yw1Tj1RgIH8=;
-        b=Pewx+UjwaR5478j7M2UM4nexiXMCwf1ZLb/0YNsySuIWgtC/2CGq8F7lwS+HpomAOv
-         TgFGxy9C/6/vxRxaJK9hchgHIC/UnP3YMyrMHKScQ3l/7xQkfbGbpswRyFZDcSHgqGDT
-         IKCU48/UyzlXWY0szuy97s2hUWIipQJ7qukqtsfwwLU9OXWXiNHYbUuqCG3ZmQ+exCfT
-         D3O6Vo2wzphIy91c+qCJhylZ4wPW73zdM4uUsTn/c7eugE3f9ZIh8u7MPuiTeQOjbHRj
-         V4+zMRiPB1PmVK9+EST6rs8dT48v0VR0ejkF6Gb1HdpuPSEDWJ5Gzc6ipo/V2m/UN+DR
-         bKzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=yuWM4DIUwQmPQT7Mh/C4UCJ0P+zz+HJ6Yw1Tj1RgIH8=;
-        b=CR5/M2hN17m5jCirs9IvjDStQlG+9QqWv3WzP4lokJkBmLvVbi6tr0kVfjK01+ao4t
-         47aWTa/uOC7XHmxRldfkQahE2hxGG+ILjU5nEgrEhfKmh+Uc9Ma1DGFx2aPgHj1Y5J/C
-         tR/NmFNip+xeF2TXb/czstHFfbP51wuYF0TuNVi8mLXytGordKXEYtQEz1PTzflaxQSM
-         j5Xoo0mTl1AtQMx+nIwDQ+D+/84/mF1CdhyXGlIo61QERcmcCw0cXwpbgxgynczepIpY
-         mqFLxKfe8zzlUOq6n6pj6BGaKrQ1JbFGNtZW4qIZzWfsxBJaXkHDznZcxnIKpGKg0yXz
-         6HoA==
-X-Gm-Message-State: AOAM531gxYJMDAEmok2ZeUAVfiCGByytjgIexyzgkL6D99M7DHXSwYXY
-        h6RuRTffLyq7IJ1u8X/6Xk8=
-X-Google-Smtp-Source: ABdhPJzuPBhn7v/lPaIPGv5raUAXmDi+JjhwpKI0vY9OxOKrZRfxJrI26g9Csvb6pVSpmdt7w1mXWw==
-X-Received: by 2002:a17:902:b193:: with SMTP id s19mr18892707plr.194.1596918473959;
-        Sat, 08 Aug 2020 13:27:53 -0700 (PDT)
-Received: from thinkpad ([69.172.171.109])
-        by smtp.gmail.com with ESMTPSA id e3sm14936263pgu.40.2020.08.08.13.27.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2020 13:27:53 -0700 (PDT)
-Date:   Sat, 8 Aug 2020 13:28:22 -0700
-From:   Rustam Kovhaev <rkovhaev@gmail.com>
-To:     xujialu <xujialu@vimux.org>, masahiroy@kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: realpath "No such file or directory" warnings when building
-Message-ID: <20200808202822.GA597061@thinkpad>
+        Sat, 8 Aug 2020 16:40:27 -0400
+Received: from pendragon.ideasonboard.com (85-76-78-184-nat.elisa-mobile.fi [85.76.78.184])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DF003F9;
+        Sat,  8 Aug 2020 22:40:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1596919224;
+        bh=vIReoEoXrYFf0pZEs/Z6RMS6MgwBIuS/weoocSp8iFM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BK/j4gLQ26C7kY2tV3PpvdTDzj7lhemCpLdn64YaGk/1HN4w3zssi31QzfsXCqpco
+         tjLkdruPned3KDD2jGclOkf9fK/WNEV1gZvP8sjcZXDmCru5DGSnDh7bNTYIB35lTm
+         yDA/SREk9c0Lo3VjH32GrNnaYQ4+KPlRTgYS124U=
+Date:   Sat, 8 Aug 2020 23:40:07 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     skhan@linuxfoundation.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/20] media: usb: uvc_ctrl.c: add temp variable for list
+ iteration
+Message-ID: <20200808204007.GI6186@pendragon.ideasonboard.com>
+References: <20200807083548.204360-3-dwlsalmeida@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20200807083548.204360-3-dwlsalmeida@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tags from KBUILD_OUTPUT directory
-Reply-To: 
+Hi Daniel,
 
-running 'make ARCH=x86_64 COMPILED_SOURCE=1 cscope tags' in
-KBUILD_OUTPUT directory produces lots of "No such file or directory"
-warnings from realpath
+Thank you for the patch.
 
-it seems like commit 4f491bb6ea2a greatly improved tags generation when
-COMPILED_SOURCE=1 is set, but should we add "-q" flag for realpath in 
-all_compiled_sources() or probably it would be better to fix root cause
-and make sure that for example we don't try to find objtool sources and
-exclude other similar dirs during tags generation? what do you think?
+On Fri, Aug 07, 2020 at 05:35:30AM -0300, Daniel W. S. Almeida wrote:
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> Fixes the following coccinelle report:
+> 
+> drivers/media/usb/uvc/uvc_ctrl.c:1860:5-11:
+> ERROR: invalid reference to the index variable of the iterator on line 1854
+> 
+> By introducing a temporary variable to iterate the list.
+> 
+> Do not dereference the 'entity' pointer if it is not found in the list.
+> 
+> Found using - Coccinelle (http://coccinelle.lip6.fr)
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> ---
+>  drivers/media/usb/uvc/uvc_ctrl.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> index e399b9fad757..567bdedc2ff2 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -1842,7 +1842,8 @@ static int uvc_ctrl_init_xu_ctrl(struct uvc_device *dev,
+>  int uvc_xu_ctrl_query(struct uvc_video_chain *chain,
+>  	struct uvc_xu_control_query *xqry)
+>  {
+> -	struct uvc_entity *entity;
+> +	struct uvc_entity *entity = NULL;
+> +	struct uvc_entity *cursor = NULL;
 
-...
-realpath: special.h: No such file or directory
-realpath: warn.h: No such file or directory
-realpath: sigchain.c: No such file or directory
-realpath: sigchain.h: No such file or directory
-realpath: orc_gen.c: No such file or directory
-realpath: objtool.c: No such file or directory
-...
+cursor doesn't have to be initialized to NULL.
+
+It may be a style preference, but instead of a cursor variable that
+doesn't tell in its name what it refers to, I'd prefer a
+
+	bool found = false;
+
+>  	struct uvc_control *ctrl;
+>  	unsigned int i, found = 0;
+>  	u32 reqflags;
+> @@ -1851,13 +1852,15 @@ int uvc_xu_ctrl_query(struct uvc_video_chain *chain,
+>  	int ret;
+>  
+>  	/* Find the extension unit. */
+> -	list_for_each_entry(entity, &chain->entities, chain) {
+> -		if (UVC_ENTITY_TYPE(entity) == UVC_VC_EXTENSION_UNIT &&
+> -		    entity->id == xqry->unit)
+> +	list_for_each_entry(cursor, &chain->entities, chain) {
+> +		if (UVC_ENTITY_TYPE(cursor) == UVC_VC_EXTENSION_UNIT &&
+> +		    cursor->id == xqry->unit) {
+
+All this would keep using entity.
+
+> +			entity = cursor;
+
+And this would be replaced with
+
+			found = true;
+
+>  			break;
+> +		    }
+>  	}
+>  
+> -	if (entity->id != xqry->unit) {
+> +	if (!entity || entity->id != xqry->unit) {
+
+The second part of the check isn't needed, it was only meant to check if
+the entity has been found.
+
+Here, we'd have 
+
+	if (!found) {
+
+I'f you're OK with these changes there's no need to resubmit, I can
+update when applying. Please let me know how you'd like to proceed.
+
+>  		uvc_trace(UVC_TRACE_CONTROL, "Extension unit %u not found.\n",
+>  			xqry->unit);
+>  		return -ENOENT;
+
+-- 
+Regards,
+
+Laurent Pinchart
