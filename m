@@ -2,142 +2,114 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC6B20759
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A7120866
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="a27s0HjD"
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="cWjYfVl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgHHMKq (ORCPT
+        id S1726389AbgHHMMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 08:10:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
+        Sat, 8 Aug 2020 08:12:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgHHMKp (ORCPT
+        with ESMTP id S1726338AbgHHMK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 08:10:45 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A43C061756
-        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 05:10:45 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id v15so2302534pgh.6
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 05:10:45 -0700 (PDT)
+        Sat, 8 Aug 2020 08:10:57 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD955C061A29
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 05:10:54 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id jp10so4778852ejb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 05:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EuDMSmp04hSHSVLRHL1PUWBPuYB4U3JnGDB9t2qv6ho=;
-        b=a27s0HjDAgd0N2W+2hyaEb/r9U8rPWgKPcToKVqzsY6g1RHey3lP/n73NLKJYe/Ok9
-         55O55oJSSu9auuHd0IZZMeayaFYrB0XkDdzao+sYMQoIml9w00hFjBH8r/pwdPpew/sz
-         D4U3ycTuRW2hhSyGQ/+vQPPBrkxE9ZKOeqrJhg7L0PM3vPL7tG3pJcxpNVs3aBK4ByJe
-         KCqGQqzLjn/hShsU0zUkoh4exC0lP0KHzK4vtrIfJ3N9ohkhYUxOT1oj/NDw/OG3J1d+
-         9y8hysX2pQorUHhg24RtZ6E+WgR2WN28nXtkQnzysvPpbbsZGt1ljbQWW59Kk3ViJl54
-         tcqA==
+        d=melexis.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D2hXjWV+Su7SyzOjgKgoYJpz+6E+ZQ5ynmL9qrjMvwI=;
+        b=cWjYfVl6qJDE6NyhUy7/UB9flUt/T86iuRQBMa5PL5BeddTjpUF+EPg0fZaKLqW4AA
+         NXY/cbgHqmB75Q6lZbLStYBxi2DXBQSYSymS95NKbQ+vuuLRk+pdO+kFPANQophFnWzc
+         l0ZJksdSIH7bVE1WB5+sTz1ysesa1wcSnstMa0nr9DF/TBPMN6HLUY/3JJIC6FIZeQXA
+         5hWdToTUzAkogy8SbYrtOGVx/86oVdn7niWyrK8759zFOw+cv7BCXVcLD2owC5TYZpXA
+         1jmOkPxRw7hjswrmf9oE8UsHiIpWUh5rbMMOtQjjBE5/pPw5l+R/X5OHjtRUCMEK0Sng
+         U9xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EuDMSmp04hSHSVLRHL1PUWBPuYB4U3JnGDB9t2qv6ho=;
-        b=n37rJubn47mfXO02SZg5GcsruowDOmntFMxvYmViQOUiAmSQ2tl5q0awil9PKjnFpY
-         aQ2qZrrPc2DyW7ZSHxYH7BDZijC/YbLkkVni+qaNKiOfFIipiQyExXOl31a75S55qDRy
-         AhzWjyzlEIHaZ7K4iu4L2HVPecxVok7wpTlaGaIbfZzUBZBJ6SvtOhxp9IjKkMe5jjRU
-         eemuq6a+KTOS0AK/EoPMTAlnqgXXfo3PZc/gO9Wm2M+IF7x7V0oasYDfu1FCUbFZfMbA
-         WGzvy1TA12zhQpZ6jFlghrx25JCnipBKMQDlnTp1MT/y5zBHyhphuwpe2egj9hEhz9Ap
-         mqLw==
-X-Gm-Message-State: AOAM531Sd+LHiPMiXvFLz/gGesles7hFNRKRuxvwsltVqI7U57LBoVin
-        KptGHnK4AmdxzoD+I9SQ45i5jg3IUBVB6586v26OLg==
-X-Google-Smtp-Source: ABdhPJzM1muWFLwLDSvo0MoNAYjZ2t7+UNajWvXxXMkjymrpkaeIPbZuHepCLbtxZZBVSatO1nbVYIIZ+/IHe775HYM=
-X-Received: by 2002:a63:4b44:: with SMTP id k4mr15861573pgl.305.1596888644708;
- Sat, 08 Aug 2020 05:10:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D2hXjWV+Su7SyzOjgKgoYJpz+6E+ZQ5ynmL9qrjMvwI=;
+        b=or8d2hK1PEGno8sc5oZdSCsTCl7CcOfJpUdmR7eEsHs4OakRxUiQ5l8IImPxZnhVLN
+         o6m1CD1aAxB1xIbnZdpcSnkSEC1gMiefy+KKhGOoyLjohK5qekNvS3VFrPPo5weE+n02
+         RFxgB4UZUl8B/uNxjVuX9aX6GFg7VA9CxgYOGoSlo7cUqMiOhAtQUH3nLcDcCSN1EqRn
+         0eQgAne0mgdufvIGLCqXXeBgQNbTWIp/tFceJfYxLPYRqQ/2bJZq9yAroexeWUBgfcEX
+         StF8W++pwHDmsVtn1FmnPgtk2tq9pjnaFKDo0qAgg0wSKtCI5pxu/mFc6vgNfmM+QP3+
+         P7nA==
+X-Gm-Message-State: AOAM533qeTAo0KLjIHFioJELkblBVQLLZ8x0esNgT/04BHhdVI7Ihn/o
+        xsoIfjNHAY6UN5DdAmo+Vz9lsEVke14CPw==
+X-Google-Smtp-Source: ABdhPJzgmdjIlMg74g4gc/3gfbiL+mo8XPUq/KwnPQLc0JNolNcTSpTd7m12QqQ8Vg0JELOJ7Ezcdg==
+X-Received: by 2002:a17:906:dbcb:: with SMTP id yc11mr12988891ejb.399.1596888647537;
+        Sat, 08 Aug 2020 05:10:47 -0700 (PDT)
+Received: from localhost.localdomain (ptr-4xajgywt9p1tstfsdfc.18120a2.ip6.access.telenet.be. [2a02:1810:a421:dd00:b0e6:1cd9:30c1:35f8])
+        by smtp.gmail.com with ESMTPSA id b2sm8130833ejg.70.2020.08.08.05.10.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Aug 2020 05:10:46 -0700 (PDT)
+From:   Crt Mori <cmo@melexis.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Crt Mori <cmo@melexis.com>
+Subject: [PATCH v4 0/4] iio: temperature: mlx90632: Add extended calibration calculations
+Date:   Sat,  8 Aug 2020 14:10:22 +0200
+Message-Id: <20200808121026.1300375-1-cmo@melexis.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200807162010.18979-1-andrei.botila@oss.nxp.com> <20200807162010.18979-17-andrei.botila@oss.nxp.com>
-In-Reply-To: <20200807162010.18979-17-andrei.botila@oss.nxp.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sat, 8 Aug 2020 15:10:33 +0300
-Message-ID: <CAOtvUMero-gF5ZE1unnD_wcDnzZX_SL0tQ2yJNqzc3rg5RhuDA@mail.gmail.com>
-Subject: Re: [PATCH 16/22] crypto: ccree - add check for xts input length
- equal to zero
-To:     Andrei Botila <andrei.botila@oss.nxp.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org, x86@kernel.org,
-        linux-arm-kernel@axis.com, Andrei Botila <andrei.botila@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 7:22 PM Andrei Botila <andrei.botila@oss.nxp.com> wr=
-ote:
->
-> From: Andrei Botila <andrei.botila@nxp.com>
->
-> Standardize the way input lengths equal to 0 are handled in all skcipher
-> algorithms. All the algorithms return 0 for input lengths equal to zero.
-> This change has implications not only for xts(aes) but also for cts(cbc(a=
-es))
-> and cts(cbc(paes)).
->
-> Cc: Gilad Ben-Yossef <gilad@benyossef.com>
-> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
-> ---
->  drivers/crypto/ccree/cc_cipher.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_c=
-ipher.c
-> index 076669dc1035..112bb8b4dce6 100644
-> --- a/drivers/crypto/ccree/cc_cipher.c
-> +++ b/drivers/crypto/ccree/cc_cipher.c
-> @@ -912,17 +912,18 @@ static int cc_cipher_process(struct skcipher_reques=
-t *req,
->
->         /* STAT_PHASE_0: Init and sanity checks */
->
-> -       if (validate_data_size(ctx_p, nbytes)) {
-> -               dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
-> -               rc =3D -EINVAL;
-> -               goto exit_process;
-> -       }
->         if (nbytes =3D=3D 0) {
->                 /* No data to process is valid */
->                 rc =3D 0;
->                 goto exit_process;
->         }
->
-> +       if (validate_data_size(ctx_p, nbytes)) {
-> +               dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
-> +               rc =3D -EINVAL;
-> +               goto exit_process;
-> +       }
-> +
->         if (ctx_p->fallback_on) {
->                 struct skcipher_request *subreq =3D skcipher_request_ctx(=
-req);
->
-> --
-> 2.17.1
->
+Since the second patch is dependent on the first and was still not
+merged, I have decided to send them together. First patch just makes
+second one more readable as it splits out the repeated calculation and
+that enables the second patch to tweak the variable to the new
+condition.
 
-Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
+V4 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
+	 - Move the function creation for Ta4 to first patch
+	 - Add kernel doc patch for documenting internal struct
+	 - Add patch to convert while loops to do-while loops for
+	   polling
 
-Thanks,
-Gilad
+V3 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
+	 - Change commit message text to more proper English as per suggestions
+	 - Drop unneeded brackets and parentheses
+	 - Use defines from limits.h
+	 - Remove userspace typedefs as leftovers from porting
+	 - Testing of timeout loops with iopoll.h was no successful,
+	   because delay between measurements is 10ms, but we need to
+	   fill at least 3 channels, so final timeout should be 40ms
+	   which is out of scope of usleep function
+	 - Fixing some typos in comments
 
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
+V2 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
+	 - Convert divison back to shifts to make it more readable
 
-values of =CE=B2 will give rise to dom!
+Crt Mori (4):
+  iio:temperature:mlx90632: Reduce number of equal calulcations
+  iio:temperature:mlx90632: Adding extended calibration option
+  iio:temperature:mlx90632: Add kerneldoc to the internal struct
+  iio:temperature:mlx90632: Convert polling while loops to do-while
+
+ drivers/iio/temperature/mlx90632.c | 251 +++++++++++++++++++++++++++--
+ 1 file changed, 236 insertions(+), 15 deletions(-)
+
+-- 
+2.25.1
+
