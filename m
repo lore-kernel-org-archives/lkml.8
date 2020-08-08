@@ -2,97 +2,91 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 15:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 15:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F129920747
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 15:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596900588;
-	bh=zF/xJR2FOJwu4V30N6nLpSiw1LpaGSCuquAHMuvzg7I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=awAujvLW4XjjUr42cenn2mT1/HOeIkcc6avE8rIODOx2JdxPgA8ATjL50Ky6t0AiX
-	 dulU/wZ/2oY5M7uewz6KCMO/FVK1UnqrluDEuJodHa3LxBVIyRdbAZ8qvv92Dacivr
-	 6eUGzRarBMDebRnb+Kr91H4zGgQmoLImbOHy0IQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 17E7D20747
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 15:59:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P24hH7Cz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgHHP3q (ORCPT
+        id S1726458AbgHHP7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 11:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbgHHP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 11:29:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B3EB2070A;
-        Sat,  8 Aug 2020 15:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596900585;
-        bh=zF/xJR2FOJwu4V30N6nLpSiw1LpaGSCuquAHMuvzg7I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EYMDmSt0iFDI3O+5p6pz8AChEXtEZUpYqjz0keW07x5+UckLp0Prc44ANBEgBGaGq
-         vJq1VZQOTib+9FCXbU590eCvBSKTSkynP00ZWGtDncP3x5rBdy0/KKom+5vW7sLs8k
-         O1CWMljrh4wd5CH4qUyd/SFC3dhkyY0CMeAaxOOM=
-Date:   Sat, 8 Aug 2020 17:29:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Gavin Shan <gshan@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Sumit Gupta <sumitg@nvidia.com>
-Subject: Re: [PATCH] fix arm64 build with lack of __cpu_logical_map exported
-Message-ID: <20200808152958.GB369184@kroah.com>
-References: <20200808124242.GA352821@kroah.com>
- <20200808150443.GA492@DESKTOP-O1885NU.localdomain>
+        Sat, 8 Aug 2020 11:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbgHHP7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 11:59:40 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A7CC061756;
+        Sat,  8 Aug 2020 08:59:40 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id j7so4870843oij.9;
+        Sat, 08 Aug 2020 08:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7dfDkqe0MohgZmH8uj4bGL4bJvNG2hnoF5m4hePOOcw=;
+        b=P24hH7Czrfi8mHom3UkoX8dd+bd6tG762PbSgVCnjlHykp4xlqR6xJFmV/5x2/wYSO
+         eNYzMDglpolZLyilCmOvuGWGHLw2wcsvi9E2GhKZU64yyoS/QYdp3Z5+Pm/fjiwICn4U
+         SmMSih8lnl8PjKaFJnKf8fV0NbQ+NlAyhETCEpRMnE2GvMWt8AOtxbGL9p57Npb4VTAf
+         ZfQ2G0fciNlm6vBNrNUmQWnfvIr48pb0mJxKJwKnuQRg5HnVP8rDq0hMNaUs2e7DTNFF
+         y+hlLnpJ9x86ttnUEL6P4n8GkfYYdS+4+VFTKJkUSlQad64dzqyuD5kI7u6OuqcDEgY1
+         BWjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7dfDkqe0MohgZmH8uj4bGL4bJvNG2hnoF5m4hePOOcw=;
+        b=VCyya8d712XHkePFmjUxfV5cCN00Uhl48R3BMHFSIjFqfiFxfALWJE0m6s11T3QjTn
+         egr94nSbc28A3zf0Nsro/uDYcRv3c6G7ocS2LKKoLnjG0q8G95QR26Kk5mBgqQcapa1Q
+         2yq8rLs3dR0RgDiUBQyEZ2qjabJmEL2XDBYS5TS2yCd2/mLTTBTdPv6DtEkuuDzB6Dsl
+         L0H+eIg1OuP6hqVqy0XZJUBUPM3/KYd+W9BjUowFRiARLZa6TioVj28dNHjq0Tgiw7vP
+         bnN1horZCrEKlsypOTpmkIuwLjjlN4RT+W63uSVf/xEsETmUvBBqsRF0+2EAKaxH7cVl
+         X//A==
+X-Gm-Message-State: AOAM530107+EeuyLw4UNkTKdqFmWmMpwPguBocyqSvJEiaESTdM6/HOM
+        azNH0Ku5atsxZ6EOmTMuFog=
+X-Google-Smtp-Source: ABdhPJymGhqPMQv0DitcITw4drSE2nmsiPaqGWl4u+UiEKPwMQO6DERlcaNl0E0OHtW6j9oT+0b5ow==
+X-Received: by 2002:aca:5489:: with SMTP id i131mr16232449oib.157.1596902379287;
+        Sat, 08 Aug 2020 08:59:39 -0700 (PDT)
+Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:2d6d:708e:ac93:f86b])
+        by smtp.googlemail.com with ESMTPSA id e18sm1646009oiy.52.2020.08.08.08.59.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Aug 2020 08:59:38 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/7] metricfs metric file system and examples
+To:     Andrew Lunn <andrew@lunn.ch>, Jonathan Adams <jwadams@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jim Mattson <jmattson@google.com>,
+        David Rientjes <rientjes@google.com>
+References: <20200807212916.2883031-1-jwadams@google.com>
+ <20200808020617.GD2028541@lunn.ch>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <191cb2fc-387a-006e-62fd-177096ac480e@gmail.com>
+Date:   Sat, 8 Aug 2020 09:59:34 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808150443.GA492@DESKTOP-O1885NU.localdomain>
+In-Reply-To: <20200808020617.GD2028541@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 08, 2020 at 04:05:00PM +0100, Catalin Marinas wrote:
-> Hi Greg,
-> 
-> On Sat, Aug 08, 2020 at 02:42:42PM +0200, Greg Kroah-Hartman wrote:
-> > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > index 87e81d29e6fb..b421a4756793 100644
-> > --- a/arch/arm64/kernel/setup.c
-> > +++ b/arch/arm64/kernel/setup.c
-> > @@ -275,6 +275,7 @@ static int __init reserve_memblock_reserved_regions(void)
-> >  arch_initcall(reserve_memblock_reserved_regions);
-> >  
-> >  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
-> > +EXPORT_SYMBOL_GPL(__cpu_logical_map);
-> 
-> This was still under discussion, Sudeep preferring an alternative in the
-> driver:
-> 
-> http://lkml.kernel.org/r/20200727172744.GD8003@bogus
-> http://lkml.kernel.org/r/20200724131059.GB6521@bogus
-> 
-> Sumit came with a new diff inline that fixes the driver instead of
-> exporting the __cpu_logical_map.
-> 
-> https://lore.kernel.org/linux-arm-kernel/e3a4bc21-c334-4d48-90b5-aab8d187939e@nvidia.com/
+On 8/7/20 8:06 PM, Andrew Lunn wrote:
+> So i personally don't think netdev statistics is a good idea, i doubt
+> it scales.
 
-Ok, but having a broken tree is not nice, how did this survive
-linux-next testing?
-
-> Sumit, Sudeep, is the above diff sufficient and can it go upstream?
-
-Note that MIPS already export this symbol, so perhaps the drivers that
-need it on that platform should also be fixed the same way?
-
-thanks,
-
-greg k-h
++1
