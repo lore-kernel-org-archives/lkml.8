@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE69C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC54208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E76C20885
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929992;
-	bh=rsrKN8/Zq2kTiieVqJx9AAitOPFHZwp5YN/wsqrv6uQ=;
+	s=default; t=1596929995;
+	bh=II2jU+hdZxVqYC9gS6Z+ZKE+DZDH2JmlXDJESTVV82k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UeyZMyBM0Cf1X/VY1wYzLLioL7J6paXJCYZXtFuDhJeI7P2qk+GbW3BoD7Ysxtbxx
-	 8Xno8pXag0LynA44xSY86MtSHQQVv/U+TgYOnmYbz/UBvwtdNU01Os0/oiMAuMisyu
-	 8vggJ6L9oglNmtfpHCsxhEFI7P+o2VDZEHAgsHcA=
+	b=DQpEADuexAuEx99JhKAIzXtfWgwgI1w+JRN8q2Gi1B3e0Oa0syNXA4CGCY0pfLl9a
+	 A8ItKY5YSKzV/0JQazO3Mf+PIJudouehFiAJ8c+YGHEmJwJq7RVxLO/j2uPxiNQRY+
+	 8lv3S/OjCzms/ORC73LXWS+1XRctdv22D5pglpjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgHHXju (ORCPT
+        id S1728672AbgHHXjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728563AbgHHXjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:31 -0400
+        id S1728566AbgHHXjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D54420791;
-        Sat,  8 Aug 2020 23:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3C020829;
+        Sat,  8 Aug 2020 23:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929970;
-        bh=rsrKN8/Zq2kTiieVqJx9AAitOPFHZwp5YN/wsqrv6uQ=;
+        s=default; t=1596929972;
+        bh=II2jU+hdZxVqYC9gS6Z+ZKE+DZDH2JmlXDJESTVV82k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DOKWtLfc1nonZw9jDcdRBe8woYUBvzTLXA/kaXDrNc3BnjUHGZOqm7FV39C0VyxtL
-         Uq5/9dcfhqKGgbuA61tFHo7DESvjw3x+6UuPAWmDiy1afEFbvw6GlQuX0ZRKrIKB0T
-         0VG8iVbjRS1Eje056e/G6ZHrhlzrp/uNveSzHTS0=
+        b=1lRJEHC6/nt+QD12oQcf1s1goVsi5di8odf722nuS8m2jUbc/LpBc2vyDFjpl/vvU
+         6zCK3vumxgEHwClCSrC7LTrh1Lh4JogbNlMleR+dRfuBlqJn69RMu3kGZFXS6es0xO
+         fYhE6jVFc6S2yAk0VMJVZPCGzU/YtD203VUhPzKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu Kuai <yukuai3@huawei.com>, Dinh Nguyen <dinguyen@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 32/40] ARM: socfpga: PM: add missing put_device() call in socfpga_setup_ocram_self_refresh()
-Date:   Sat,  8 Aug 2020 19:38:36 -0400
-Message-Id: <20200808233844.3618823-32-sashal@kernel.org>
+Cc:     Chengming Zhou <zhouchengming@bytedance.com>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 33/40] iocost: Fix check condition of iocg abs_vdebt
+Date:   Sat,  8 Aug 2020 19:38:37 -0400
+Message-Id: <20200808233844.3618823-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -59,60 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-[ Upstream commit 3ad7b4e8f89d6bcc9887ca701cf2745a6aedb1a0 ]
+[ Upstream commit d9012a59db54442d5b2fcfdfcded35cf566397d3 ]
 
-if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh
-doesn't have a corresponding put_device(). Thus add a jump target to
-fix the exception handling for this function implementation.
+We shouldn't skip iocg when its abs_vdebt is not zero.
 
-Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Fixes: 0b80f9866e6b ("iocost: protect iocg->abs_vdebt with iocg->waitq.lock")
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-socfpga/pm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ block/blk-iocost.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
-index 6ed887cf8dc9a..365c0428b21b6 100644
---- a/arch/arm/mach-socfpga/pm.c
-+++ b/arch/arm/mach-socfpga/pm.c
-@@ -49,14 +49,14 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -67,7 +67,7 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!suspend_ocram_base) {
- 		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	/* Copy the code that puts DDR in self refresh to ocram */
-@@ -81,6 +81,8 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!socfpga_sdram_self_refresh_in_ocram)
- 		ret = -EFAULT;
- 
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(np);
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 4d2bda812d9b4..dcc6685d5becc 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1377,7 +1377,7 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 	 * should have woken up in the last period and expire idle iocgs.
+ 	 */
+ 	list_for_each_entry_safe(iocg, tiocg, &ioc->active_iocgs, active_list) {
+-		if (!waitqueue_active(&iocg->waitq) && iocg->abs_vdebt &&
++		if (!waitqueue_active(&iocg->waitq) && !iocg->abs_vdebt &&
+ 		    !iocg_is_idle(iocg))
+ 			continue;
  
 -- 
 2.25.1
