@@ -2,98 +2,87 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AF3C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C8AC433E3
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 03:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1EDC22D00
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 03:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D88E22D37
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 03:38:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qA5UwQJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgHHDgq (ORCPT
+        id S1726530AbgHHDiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 23:36:46 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:48584 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726200AbgHHDgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 23:36:46 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 01C9FE04D439560D1802;
-        Sat,  8 Aug 2020 11:36:44 +0800 (CST)
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 8 Aug 2020 11:36:43 +0800
-Subject: Re: [PATCH net-next v1] hinic: fix strncpy output truncated compile
- warnings
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "luoxianjun@huawei.com" <luoxianjun@huawei.com>,
-        "yin.yinshi@huawei.com" <yin.yinshi@huawei.com>,
-        "cloud.wangxiaoyun@huawei.com" <cloud.wangxiaoyun@huawei.com>,
-        "chiqijun@huawei.com" <chiqijun@huawei.com>
-References: <20200807020914.3123-1-luobin9@huawei.com>
- <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <b886a6ff-8ed8-c857-f190-e99f8f735e02@huawei.com>
-Date:   Sat, 8 Aug 2020 11:36:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+        Fri, 7 Aug 2020 23:38:19 -0400
+Received: from m12-15.163.com ([220.181.12.15]:53170 "EHLO m12-15.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbgHHDiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Aug 2020 23:38:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=b4Vljfz11N5B3BsXB/
+        jU+jLNNdpMd3l8kupGK/FIHnQ=; b=qA5UwQJunYoKky7jyzdoOO7BiUiDJnfUpl
+        7FnzlXWMXhvNw0BXLLz2bFds0T3r/8u83UnJyKo3X0BVbvZRFPa/jb7If7+yosA7
+        eYh5A2j92mSxH/0QYsnSZfVYQ8wLOdv5U8h3l2ruH2EdsgFb9punixbmRP/vFaes
+        t0rAZ+ffs=
+Received: from localhost.localdomain (unknown [58.33.126.62])
+        by smtp11 (Coremail) with SMTP id D8CowACnoqoHHi5fN_NeEw--.35350S3;
+        Sat, 08 Aug 2020 11:37:50 +0800 (CST)
+From:   Grant Feng <von81@163.com>
+To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] leds: Add an optional property named 'sdb-gpios'
+Date:   Sat,  8 Aug 2020 11:37:31 +0800
+Message-Id: <20200808033731.15695-2-von81@163.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200808033731.15695-1-von81@163.com>
+References: <20200808033731.15695-1-von81@163.com>
+X-CM-TRANSID: D8CowACnoqoHHi5fN_NeEw--.35350S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4fCFWfXFW7XFy3XrWfAFb_yoWkKFX_G3
+        Z7JrsFqas8uF1vgr4qvr15Wr43Cr47AF1kCw15ZF48Aw1fXas09FZ7t34Yyr15WFZxurZx
+        C3ykCr4qqr17GjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU09qXPUUUUU==
+X-Originating-IP: [58.33.126.62]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/xtbBiA96OlaD8Fa+wAAAsK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/7 17:32, David Laight wrote:
-> From: Luo bin
->> Sent: 07 August 2020 03:09
->>
->> fix the compile warnings of 'strncpy' output truncated before
->> terminating nul copying N bytes from a string of the same length
->>
->> Signed-off-by: Luo bin <luobin9@huawei.com>
->> Reported-by: kernel test robot <lkp@intel.com>
->> ---
->> V0~V1:
->> - use the strlen()+1 pattern consistently
->>
->>  drivers/net/ethernet/huawei/hinic/hinic_devlink.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->> b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->> index c6adc776f3c8..1ec88ebf81d6 100644
->> --- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->> +++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->> @@ -342,9 +342,9 @@ static int chip_fault_show(struct devlink_fmsg *fmsg,
->>
->>  	level = event->event.chip.err_level;
->>  	if (level < FAULT_LEVEL_MAX)
->> -		strncpy(level_str, fault_level[level], strlen(fault_level[level]));
->> +		strncpy(level_str, fault_level[level], strlen(fault_level[level]) + 1);
-> 
-> Have you even considered what that code is actually doing?
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
-> .
-> 
-I'm sorry that I haven't got what you mean and I haven't found any defects in that code. Can you explain more to me?
+The chip enters hardware shutdown when the SDB pin is pulled low.
+The chip releases hardware shutdown when the SDB pin is pulled high.
+
+Signed-off-by: Grant Feng <von81@163.com>
+---
+ Documentation/devicetree/bindings/leds/leds-is31fl319x.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+index fc2603484544..e8bef4be57dc 100644
+--- a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+@@ -16,6 +16,7 @@ Optional properties:
+ - audio-gain-db : audio gain selection for external analog modulation input.
+ 	Valid values: 0 - 21, step by 3 (rounded down)
+ 	Default: 0
++- sdb-gpios : Specifier of the GPIO connected to SDB pin.
+ 
+ Each led is represented as a sub-node of the issi,is31fl319x device.
+ There can be less leds subnodes than the chip can support but not more.
+@@ -44,6 +45,7 @@ fancy_leds: leds@65 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	reg = <0x65>;
++	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+ 
+ 	red_aux: led@1 {
+ 		label = "red:aux";
+-- 
+2.17.1
+
+
