@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64996C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2892053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013092053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930234;
-	bh=aYbZFZAHTLy3UcV8xwsyYILmR4yEHjaWIROYwmwIX6I=;
+	s=default; t=1596930237;
+	bh=sF5VfJy25+hafkXHOrfSJKp4kxFC0hlEVXFCa6eqSVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bk2vcl3y4mXq3ZD39/CtX/u2uiM4mJ4Fe0cGn0NzJO2cqZ09At6TmNwzhO/W4GR7J
-	 IPM/RMUwq0U6RmouRG1rTgrtK3ctlYWA39lPoAdP0K02J/qeAEeVn/oXT6pu3RbZBy
-	 CUHc/cRGMVFJfzF75In2Hf9LopOETVRxOip5TT0c=
+	b=GY8R2vlJbbN8VCD9nIPxk+7aCJH7npniLVp74vs8YmwFb6xEPUYAeA5VsdgzJmzjz
+	 HuJqU+K28FL0AsClUhq31YczsW2uC6XxAocgzUSLvcsO8nseeP/OvVgaOuM0F9NBIr
+	 Oox5wMbWazF/xdvKCpYfbZGXh7pwX4rI4WUPprIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgHHXnw (ORCPT
+        id S1728584AbgHHXjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54464 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgHHXjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:36 -0400
+        id S1728523AbgHHXjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE45520855;
-        Sat,  8 Aug 2020 23:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65FB720748;
+        Sat,  8 Aug 2020 23:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929975;
-        bh=aYbZFZAHTLy3UcV8xwsyYILmR4yEHjaWIROYwmwIX6I=;
+        s=default; t=1596929960;
+        bh=sF5VfJy25+hafkXHOrfSJKp4kxFC0hlEVXFCa6eqSVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjyv/JLNT3L7TRfPYgtBfLn1DIp2bKMTKjyxKrWCToAFm0oE/KK+EBRzA5/jjt9BL
-         gzg7PO/T7BOkFw6BAzbO1UoDPaGAYkOxwh2J8PPcWA0gzfHSsmvo/Zt5zE5ayaoGyl
-         vXMtSQQupqDgzK7Nz5sy3OgVVwKodsnCkH0sdZbs=
+        b=gRu+0oBlPJ8FyMs0uxmnSQzMleSAtGYwM8N1t8GhnzfMGReY51h3g84TFu5oEHIIW
+         Qa5VOhso+ZSHbWxxmuq0O28NnD05szq54u7eiwmGwZCf25HCeWmIiRsSVYMWa3GjUQ
+         BqpFFsX7z7vz7uCWTdYsKivAhbPFMvfnssSTkJqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 36/40] md: raid0/linear: fix dereference before null check on pointer mddev
-Date:   Sat,  8 Aug 2020 19:38:40 -0400
-Message-Id: <20200808233844.3618823-36-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 23/40] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
+Date:   Sat,  8 Aug 2020 19:38:27 -0400
+Message-Id: <20200808233844.3618823-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -60,52 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 9a5a85972c073f720d81a7ebd08bfe278e6e16db ]
+[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
 
-Pointer mddev is being dereferenced with a test_bit call before mddev
-is being null checked, this may cause a null pointer dereference. Fix
-this by moving the null pointer checks to sanity check mddev before
-it is dereferenced.
+if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
+a corresponding put_device(). Thus add a jump target to fix the exception
+handling for this function implementation.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/mach-at91/pm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 5a378a453a2d4..acef01e519d06 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -376,17 +376,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
- 	struct mddev *mddev = q->queuedata;
- 	unsigned int sectors;
- 
--	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
-+	if (mddev == NULL || mddev->pers == NULL) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 52665f30d236d..6bc3000deb86e 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -592,13 +592,13 @@ static void __init at91_pm_sram_init(void)
+ 	sram_pool = gen_pool_get(&pdev->dev, NULL);
+ 	if (!sram_pool) {
+ 		pr_warn("%s: sram pool unavailable!\n", __func__);
+-		return;
++		goto out_put_device;
  	}
  
--	blk_queue_split(q, &bio);
--
--	if (mddev == NULL || mddev->pers == NULL) {
-+	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
+ 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
+ 	if (!sram_base) {
+ 		pr_warn("%s: unable to alloc sram!\n", __func__);
+-		return;
++		goto out_put_device;
  	}
+ 
+ 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
+@@ -606,12 +606,17 @@ static void __init at91_pm_sram_init(void)
+ 					at91_pm_suspend_in_sram_sz, false);
+ 	if (!at91_suspend_sram_fn) {
+ 		pr_warn("SRAM: Could not map\n");
+-		return;
++		goto out_put_device;
+ 	}
+ 
+ 	/* Copy the pm suspend handler to SRAM */
+ 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
+ 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
++	return;
 +
-+	blk_queue_split(q, &bio);
-+
- 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
- 		if (bio_sectors(bio) != 0)
- 			bio->bi_status = BLK_STS_IOERR;
++out_put_device:
++	put_device(&pdev->dev);
++	return;
+ }
+ 
+ static bool __init at91_is_pm_mode_active(int pm_mode)
 -- 
 2.25.1
 
