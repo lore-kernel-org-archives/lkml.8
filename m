@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5364EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E50620672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7FA20672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930653;
-	bh=ORDrPhiW/C1K4PvUL3C0PbJhhJpus4Ijq2OA4UXVseo=;
+	s=default; t=1596930658;
+	bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lKyqa3QvH9B3DNXYfh4EajMzpBVghf2hALibsbUGxNmxKuhXwGjc4UeV64TR3R5QB
-	 eRTtrbrTVZG0ZNFQERhruAuWpI4ds2MIQJjyeTSN952TrY8XhYZNCNAGwaXLkuMGtV
-	 ot2t20e2a3pdzlQ1ecwgJwG+X3LIsLF7VlsLQ1Gs=
+	b=QZ9GCaAd4/JuPuOB5gWstvBM7T531CO6zsB538oZ7yyh9Y3nDDr/63K+DdIrZZN0S
+	 RPPTi+0pHCc5KJwe9KmldFsV9lVOMDmryJnXxi07Mg8Iwne7oARwypd0VrjpcKL5VR
+	 EY4a52YrVcqlPQ3m/8KCvGhlPwvQJwV8d4gsgauk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgHHXgQ (ORCPT
+        id S1727902AbgHHXu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbgHHXgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:11 -0400
+        id S1726479AbgHHXgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC4EB20723;
-        Sat,  8 Aug 2020 23:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 572E820791;
+        Sat,  8 Aug 2020 23:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929770;
-        bh=ORDrPhiW/C1K4PvUL3C0PbJhhJpus4Ijq2OA4UXVseo=;
+        s=default; t=1596929773;
+        bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPj8g0qpQNOUFCrV88dyudcxMpFIBgJowj8CUpCeenAGD9ai30aE1wyfTnPxdxiGi
-         GYRwX1PT7LSMIA/Txwndx6nr9JrcbwI3Q/Pr8aU2CbPjtic+Tpi1CSXC4N0a4zf7sE
-         fSE/D8Bfyb90B8pKx+HTMR/RfxaHiiGlJvZB/uMQ=
+        b=f554LPEyCAzkyMCHnI5UtEhZlGOejBA9tDgbInlWXYwTrfjtTlYIcsS+V0nElGcUZ
+         rcOuYV6NHFgyBQ1aVB2BylQJvu5K5n/RB3R2RcVyv6dZCUVIgAVXZl44ooOOiJywhE
+         tqlwD1Nwcpu0x+Gi66rSPUSyyiMfapNUJmtN4tu8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 21/72] rcu/tree: Repeat the monitor if any free channel is busy
-Date:   Sat,  8 Aug 2020 19:34:50 -0400
-Message-Id: <20200808233542.3617339-21-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 23/72] arm64: dts: sun50i-pinephone: dldo4 must not be >= 1.8V
+Date:   Sat,  8 Aug 2020 19:34:52 -0400
+Message-Id: <20200808233542.3617339-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,58 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit 594aa5975b9b5cfe9edaec06170e43b8c0607377 ]
+[ Upstream commit 86be5c789690eb08656b08c072c50a7b02bf41f1 ]
 
-It is possible that one of the channels cannot be detached
-because its free channel is busy and previously queued data
-has not been processed yet. On the other hand, another
-channel can be successfully detached causing the monitor
-work to stop.
+Some outputs from the RTL8723CS are connected to the PL port (BT_WAKE_AP),
+which runs at 1.8V. When BT_WAKE_AP is high, the PL pin this signal is
+connected to is overdriven, and the whole PL port's voltage rises
+somewhat. This results in changing voltage on the R_PWM pin (PL10),
+which is the cause for backlight flickering very noticeably when typing
+on a Bluetooth keyboard, because backlight intensity is highly sensitive
+to the voltage of the R_PWM pin.
 
-Prevent that by rescheduling the monitor work if there are
-any channels in the pending state after a detach attempt.
+Limit the maximum WiFi/BT I/O voltage to 1.8V to avoid overdriving
+the PL port pins via BT and WiFi IO port signals. WiFi and BT
+functionality is unaffected by this change.
 
-Fixes: 34c881745549e ("rcu: Support kfree_bulk() interface in kfree_rcu()")
-Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+This completely stops the backlight flicker when using bluetooth.
+
+Fixes: 91f480d40942 ("arm64: dts: allwinner: Add initial support for Pine64 PinePhone")
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Link: https://lore.kernel.org/r/20200703194842.111845-4-megous@megous.com
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 6c6569e0586c5..1e9e500ff7906 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3105,7 +3105,7 @@ static void kfree_rcu_work(struct work_struct *work)
- static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
- {
- 	struct kfree_rcu_cpu_work *krwp;
--	bool queued = false;
-+	bool repeat = false;
- 	int i;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index cefda145c3c9d..342733a20c337 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -279,7 +279,7 @@ &reg_dldo3 {
  
- 	lockdep_assert_held(&krcp->lock);
-@@ -3143,11 +3143,14 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
- 			 * been detached following each other, one by one.
- 			 */
- 			queue_rcu_work(system_wq, &krwp->rcu_work);
--			queued = true;
- 		}
-+
-+		/* Repeat if any "free" corresponding channel is still busy. */
-+		if (krcp->bhead || krcp->head)
-+			repeat = true;
- 	}
+ &reg_dldo4 {
+ 	regulator-min-microvolt = <1800000>;
+-	regulator-max-microvolt = <3300000>;
++	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vcc-wifi-io";
+ };
  
--	return queued;
-+	return !repeat;
- }
- 
- static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
 -- 
 2.25.1
 
