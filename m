@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E125C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA0620723
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7150A20672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930562;
-	bh=AiOlWcS4Nc4rzG2Flyr2zCMjKAcNKrD8KD3GG6vV3I8=;
+	s=default; t=1596930565;
+	bh=IPrxSe+zlkAV1YF+9agKI2SRHHcxYLSZAX0ZjcL2ix0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g7AgpEkHXml9F6lA+f5t7eRw3c052fSKCt6o2BdT1wxHG2WXZWPIi59lnht733g3y
-	 +qQPWv7xmgpL6c+VnfdPhPdmflsgbpVOwLvaBl1p5dKLLJ9NhoxOMz+bOPmxSj2gjy
-	 V3gDe64crr9y/GwMAzGr5SOjo6jdTZHJlNUHKgB4=
+	b=EdZ7oJeXT+wX2mvRWYzBRus/MQ76yDRFi6lMWcNYpBVV3XA3VmPWqcBlZ5aKF+TT4
+	 jBM5hDre007UbxV251BY5bTVT9y2vqERqyIw204KEF053Wom/FrvO27tiYz0Y9grVo
+	 HrkM3htEwkqCxXC6BfRirdNNWtshPbxrUdb3oSXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgHHXtU (ORCPT
+        id S1727805AbgHHXhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbgHHXhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:06 -0400
+        id S1726338AbgHHXg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96EE206E9;
-        Sat,  8 Aug 2020 23:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27C352075D;
+        Sat,  8 Aug 2020 23:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929825;
-        bh=AiOlWcS4Nc4rzG2Flyr2zCMjKAcNKrD8KD3GG6vV3I8=;
+        s=default; t=1596929818;
+        bh=IPrxSe+zlkAV1YF+9agKI2SRHHcxYLSZAX0ZjcL2ix0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j3WQ4MPQ8x2mNgB65qSOE7LG44d1llo0Uj1t0a3S5T7tPnXhgTE9fGKVDrlRfgZy6
-         5C65AHYz448IiBNg/bvUUd1U9c8lmKrEzskitvQqT5KY20EEAWsbltpeq/8I499qSS
-         qu5cfk9E0YxMG8VoNlHPyceLHgO3Knn80mRANoDQ=
+        b=r0d+dF/iXCQBxzARNgvJ3NyolD/MDjAURNcLwz3xpsBTzGp4LEHeN/55fFTlUjGT7
+         EDjXVdmeMTG3ReGwDfNVftxHYbV9RrLqPv5GLyqVfc4NUby1l5S1g5GP5i1Nt60FbB
+         ilai6dTakfHCUaDaFkXeQ4K/+84Qauv2QKxIYYZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 58/72] md: raid0/linear: fix dereference before null check on pointer mddev
-Date:   Sat,  8 Aug 2020 19:35:27 -0400
-Message-Id: <20200808233542.3617339-58-sashal@kernel.org>
+Cc:     Jon Lin <jon.lin@rock-chips.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 52/72] spi: rockchip: Fix error in SPI slave pio read
+Date:   Sat,  8 Aug 2020 19:35:21 -0400
+Message-Id: <20200808233542.3617339-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,52 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jon Lin <jon.lin@rock-chips.com>
 
-[ Upstream commit 9a5a85972c073f720d81a7ebd08bfe278e6e16db ]
+[ Upstream commit 4294e4accf8d695ea5605f6b189008b692e3e82c ]
 
-Pointer mddev is being dereferenced with a test_bit call before mddev
-is being null checked, this may cause a null pointer dereference. Fix
-this by moving the null pointer checks to sanity check mddev before
-it is dereferenced.
+The RXFLR is possible larger than rx_left in Rockchip SPI, fix it.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 01b59ce5dac8 ("spi: rockchip: use irq rather than polling")
+Signed-off-by: Jon Lin <jon.lin@rock-chips.com>
+Tested-by: Emil Renner Berthing <kernel@esmil.dk>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Emil Renner Berthing <kernel@esmil.dk>
+Link: https://lore.kernel.org/r/20200723004356.6390-3-jon.lin@rock-chips.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/spi/spi-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index f567f536b529b..90756450b9588 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -470,17 +470,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
- 	struct mddev *mddev = bio->bi_disk->private_data;
- 	unsigned int sectors;
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 9b8a5e1233c06..4776aa815c3fa 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -288,7 +288,7 @@ static void rockchip_spi_pio_writer(struct rockchip_spi *rs)
+ static void rockchip_spi_pio_reader(struct rockchip_spi *rs)
+ {
+ 	u32 words = readl_relaxed(rs->regs + ROCKCHIP_SPI_RXFLR);
+-	u32 rx_left = rs->rx_left - words;
++	u32 rx_left = (rs->rx_left > words) ? rs->rx_left - words : 0;
  
--	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
-+	if (mddev == NULL || mddev->pers == NULL) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
- 	}
- 
--	blk_queue_split(q, &bio);
--
--	if (mddev == NULL || mddev->pers == NULL) {
-+	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
- 	}
-+
-+	blk_queue_split(q, &bio);
-+
- 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
- 		if (bio_sectors(bio) != 0)
- 			bio->bi_status = BLK_STS_IOERR;
+ 	/* the hardware doesn't allow us to change fifo threshold
+ 	 * level while spi is enabled, so instead make sure to leave
 -- 
 2.25.1
 
