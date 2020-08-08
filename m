@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4144C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A51F2053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883612053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930206;
-	bh=AJdfUHO4l5D00o3yPa3sY5WniLcDVEYNu3amYEpYBL8=;
+	s=default; t=1596930212;
+	bh=B9FMDVvr3fPuFO0rvt9cDBfcrTv/H4aJ3IcGv2fBJSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pzc11Lf6SSHAqEChpXC0JvlPo58T0cjbPaUfGTWkHBYcofMRo35z1PJisQnMawcfe
-	 HOftOiNaQr45uuQ4N5ekXcjsCWLMKr74xY/EqZ1LyMsXeI08ssgvWczgtixN5x5sPM
-	 OgalR3VGEKNW3NiPDw1eoJ4Sz6jCXOSWlJvOtLuo=
+	b=MqHckGGxV3LPPrCjMl+ubWER8Wtze9YP5TR3/QNnDsp2GLtyvNs6tjV1J8SZs3VPa
+	 4XRxF45p1Uv2j6UbS0NLcHTan6qyIy0oMupZmUCxQBI87FuW+gO8E6gepe+sHpiu1v
+	 DuDP62owFe6dc7Jt3PCWODCAKJnsiLtbN18oETNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgHHXnZ (ORCPT
+        id S1727931AbgHHXnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:43:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:43:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728648AbgHHXjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:48 -0400
+        id S1728629AbgHHXjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9996720825;
-        Sat,  8 Aug 2020 23:39:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F79C20791;
+        Sat,  8 Aug 2020 23:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929988;
-        bh=AJdfUHO4l5D00o3yPa3sY5WniLcDVEYNu3amYEpYBL8=;
+        s=default; t=1596929985;
+        bh=B9FMDVvr3fPuFO0rvt9cDBfcrTv/H4aJ3IcGv2fBJSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mUit9YM8EojmDseSy2UTCHQ52SsVskYCF74RtZy2SZuSQmYB5Ed9TknvtXJZyxkor
-         TtXKHroW+OJf+yIa3kmBNLlJ8lLrPcX3qeooR42tKsa8cB5ol8Mph2MnFxpx7k//pV
-         J51VQikhgAg83yt7fIH8o9qlIh3fDt+VWsav2FzM=
+        b=fkR4vWx58WRLXwhTi6qX3ITAp/ZoUIovWJXCgwNy87bXYZy1KM0YfSrQV8dAERxmt
+         32b6ODHzuNXc3ICGU5fmM77zLoT93jsLfUUPxL1SRWlDwgqFp01saltq/Ct8xWQs/V
+         2fI2rBsaH9ukHESOX1p4a6ckRStq6u3mrZvHvfa0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 05/21] arm64: dts: rockchip: fix rk3399-puma vcc5v0-host gpio
-Date:   Sat,  8 Aug 2020 19:39:25 -0400
-Message-Id: <20200808233941.3619277-5-sashal@kernel.org>
+Cc:     Peng Liu <iwtbavbm@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 03/21] sched: correct SD_flags returned by tl->sd_flags()
+Date:   Sat,  8 Aug 2020 19:39:23 -0400
+Message-Id: <20200808233941.3619277-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233941.3619277-1-sashal@kernel.org>
 References: <20200808233941.3619277-1-sashal@kernel.org>
@@ -60,41 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Peng Liu <iwtbavbm@gmail.com>
 
-[ Upstream commit 7a7184f6cfa9279f1a1c10a1845d247d7fad54ff ]
+[ Upstream commit 9b1b234bb86bcdcdb142e900d39b599185465dbb ]
 
-The puma vcc5v0_host regulator node currently uses opposite active-values
-for the enable pin. The gpio-declaration uses active-high while the
-separate enable-active-low property marks the pin as active low.
+During sched domain init, we check whether non-topological SD_flags are
+returned by tl->sd_flags(), if found, fire a waning and correct the
+violation, but the code failed to correct the violation. Correct this.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
-
-So bring this in line and make both properties match, similar to the
-gmac fix.
-
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200604091239.424318-1-heiko@sntech.de
+Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
+Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ kernel/sched/topology.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 0130b9f98c9de..baacb6e227b95 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -101,7 +101,7 @@ vcc3v3_sys: vcc3v3-sys {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 74b694392f2fd..f58efa5cc6474 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1098,7 +1098,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 		sd_flags = (*tl->sd_flags)();
+ 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
+ 			"wrong sd_flags in topology description\n"))
+-		sd_flags &= ~TOPOLOGY_SD_FLAGS;
++		sd_flags &= TOPOLOGY_SD_FLAGS;
  
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
--		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
- 		enable-active-low;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
+ 	*sd = (struct sched_domain){
+ 		.min_interval		= sd_weight,
 -- 
 2.25.1
 
