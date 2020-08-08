@@ -2,104 +2,166 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6C922D00
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68162070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E45zHX5v"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="FJCY0cku";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Cpx0PyH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgHHCkP (ORCPT
+        id S1726918AbgHHCk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 22:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgHHCkO (ORCPT
+        Fri, 7 Aug 2020 22:40:27 -0400
+Received: from relay4.mymailcheap.com ([137.74.80.156]:35976 "EHLO
+        relay4.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbgHHCk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 22:40:14 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAD2C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 19:40:14 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b14so3523211qkn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 19:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=THhj5iFgWxMtNikoc3f+QCgg413Vgg00KqaUvNNzEkY=;
-        b=E45zHX5vwbMaCrwetlsgJ6s8EnHVNXJyYFVG2Lky5qfYew+OdKifOYA0ucQCH4Gy8O
-         cSDh2btQfvJSCW/IC0mmyInX99QzpgIZstsSlfjN2FJM+19ktU+euDedifFLRwzoAxOf
-         GbBDRej5K9p8w6Kdv+RiXlH9RN5NJgU73fxEFIfXpazuwxLpFJToURIkGqFpxr4NY9hV
-         e5nv8kVgs4t9jbIF+3MT3ZxWwSXsq+u6yxxD1RDIVeZq1rVOy3NVtvPKeqjXJRIoseSB
-         8lbOXu8cge0kf1V3ehyAZuIdJgRmP3wYmjA49R7T7VnaE8Lx6Ct/8LSBS24UzQ3fFjjh
-         WheA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=THhj5iFgWxMtNikoc3f+QCgg413Vgg00KqaUvNNzEkY=;
-        b=FlraYtaEErGSgv7JRY8gRkEE0qk3kc+HQz67FdcDsBrSBaWOxh5QE0g3ua+zo8qmYz
-         wGnhR2waNl1L+mD4+WEqePlu+xoixnhGRtgPDhaPIrMmAl/dslwjGMAdeawsmL1wZkAq
-         9JN72hJ7gicCuIeDnYoG1UiMHEOtumtEWR6YkIBRsTiUad9Kls85muWuHaYG3J1xmVPf
-         6tKCrkjMaa/fW2xNh8zYRwZlHmBdSPU6OLes54bkEfcwLbETULs5xIN6n0ATNPEtipz+
-         R+ZUlsr70c8N4Gvwm0vmWbHtWVI2bD8G6YsXqYk3j+KNZnDgfDCTkrfx1oeKYxsc+cxW
-         YLVg==
-X-Gm-Message-State: AOAM533oYUzz99auxqLnG0rmBi276pPkUidjlJj3mRSbzDF+BhjIMkDp
-        NA66FLIbtjqLL93CtkuXdSk=
-X-Google-Smtp-Source: ABdhPJyLeEh/V+Y1ZDAYlfmsGOv0x53Ws9Q/Y0Ai/3QI03vadXxLt6UePQN2KdYx4OxmL+39008x4g==
-X-Received: by 2002:a37:9e48:: with SMTP id h69mr16850650qke.249.1596854413685;
-        Fri, 07 Aug 2020 19:40:13 -0700 (PDT)
-Received: from vultr.guest ([66.42.85.36])
-        by smtp.gmail.com with ESMTPSA id n33sm7818702qtd.43.2020.08.07.19.40.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 19:40:13 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v8 18/18] perf ftrace: add change log
-Date:   Sat,  8 Aug 2020 10:31:41 +0800
-Message-Id: <20200808023141.14227-19-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808023141.14227-1-changbin.du@gmail.com>
-References: <20200808023141.14227-1-changbin.du@gmail.com>
+        Fri, 7 Aug 2020 22:40:27 -0400
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
+        by relay4.mymailcheap.com (Postfix) with ESMTPS id 09CE13F1CF;
+        Sat,  8 Aug 2020 04:40:23 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter1.mymailcheap.com (Postfix) with ESMTP id 26D332A0FA;
+        Fri,  7 Aug 2020 22:40:22 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596854422;
+        bh=1nF3QarTGvr/e5w343LWySjb+/o2qTIdp+ZYnchZ+m0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FJCY0ckukaqVoLGGnl28WwcUotKJp+eQ2TLrAO2Rx5TRJPiZq+5dZgF7+bNNQCWDq
+         y2YZrjsDZx3D33/sMWwgfw66jfChP2LNDqB+ATdRMANHn3Y/uMlQ4/F4slTIos7RJA
+         xOw8ywUAUU3lRWF66VGWJPltWd9soqHWVPmSgPX8=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NA2cGUBcdtO1; Fri,  7 Aug 2020 22:40:20 -0400 (EDT)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter1.mymailcheap.com (Postfix) with ESMTPS;
+        Fri,  7 Aug 2020 22:40:20 -0400 (EDT)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 0B9344131B;
+        Sat,  8 Aug 2020 02:40:19 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="Cpx0PyH2";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [203.86.239.91])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 5AADE4131B;
+        Sat,  8 Aug 2020 02:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596854403;
+        bh=1nF3QarTGvr/e5w343LWySjb+/o2qTIdp+ZYnchZ+m0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Cpx0PyH2MXZgFu/nJtmUW98WbS7MVHnq2Bb6/XYA1Df7IbCwqZiy+GdN2Ci6xxv8s
+         MywhNxJm/sBOGf1chpXR6V8rac/eUr6EuOhpOy8zBQRXstIXhYESMgkyS4uqmtRLbM
+         nwh0m0MhyKi0TUpO0v5BmqJd1aVlMx7XY0V0Pj2A=
+Subject: Re: [PATCH 00/13] MIPS: Convert Ingenic to a generic board
+To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>, od@zcrc.me,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        =?UTF-8?B?5ryG6bmP5oyv?= <aric.pzqi@ingenic.com>,
+        dongsheng.qiu@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, xuwanhao@wanyeetech.com
+References: <20200803170124.231110-1-paul@crapouillou.net>
+ <ab985296-8441-4006-210d-a71503bd01f0@wanyeetech.com>
+ <L8DPEQ.71Z8YA0QXBJA@crapouillou.net>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <49bb320d-27a7-2c9c-aeaa-68ee67be74f2@flygoat.com>
+Date:   Sat, 8 Aug 2020 10:39:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <L8DPEQ.71Z8YA0QXBJA@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Rspamd-Queue-Id: 0B9344131B
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a change log after previous enhancements.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/builtin-ftrace.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 9da38dc8b542..167f1f57aba3 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -3,6 +3,7 @@
-  * builtin-ftrace.c
-  *
-  * Copyright (c) 2013  LG Electronics,  Namhyung Kim <namhyung@kernel.org>
-+ * Copyright (c) 2020  Changbin Du <changbin.du@gmail.com>, significant enhancement.
-  */
- 
- #include "builtin.h"
--- 
-2.25.1
+在 2020/8/8 上午12:45, Paul Cercueil 写道:
+> Hi Zhou,
+>
+> Le sam. 8 août 2020 à 0:23, Zhou Yanjie <zhouyanjie@wanyeetech.com> a 
+> écrit :
+>> Hi Paul,
+>>
+>> I'm not too sure if remove "cpu-feature-overrides.h" will cause some 
+>> problems for X2000, because according to my current test on X2000, I 
+>> found that it is somewhat different from the SoCs using XBurst1 CPU 
+>> core, with the kernel source code provided by Ingenic, for example, 
+>> we must configure "#define cpu_has_tlbinv 1" in 
+>> "cpu-feature-overrides.h" to make the X2000 work normally, otherwise 
+>> the kernel will get stuck. And X2000's interrupt controller has also 
+>> been redesigned. If these differences make it impossible to share 
+>> code, should we set a subdirectory of "xburst" and "xburst2" in 
+>> "arch/mips/ingenic"? (I am just worried about this situation, so far 
+>> I have not been able to successfully run the mainline kernel on X2000).
 
+Hi Yanjie,
+
+TLBINV is a optional feature. We can always invalidate TLB via rewrite 
+TLB entry. If X2000 can't work
+without TLBINV it means there are some thing went wrong with TLB.
+You'd better investigate in detail.
+
+Refined interrupt controller can be enabled via DeviceTree, you only 
+have to write a new irqchip driver for it.
+
+Btw: My X2000 EVB is on the way thanks to Taobao~
+
+Thanks.
+
+>
+> The <cpu-feature-overrides.h> is kind of a hack, to hardcode settings 
+> in case the CPU is not properly detected. The cpu-probe.c should be 
+> able to auto-detect these settings, including the inverted TLB that 
+> the X2000 has, reading from the CPU config registers ("TLB INV" info 
+> should be in config4). Right now cpu_probe_ingenic() doesn't read 
+> config4 (not present on older SoCs) but that's trivial to add.
+>
+> As for your other question, I don't see any reason why we wouldn't be 
+> able to support the X2000 aside the others in a generic kernel, so 
+> don't worry :)
+>
+> Cheers,
+> -Paul
+>
