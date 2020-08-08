@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A806AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C09C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86ABB2053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988FD2053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930096;
-	bh=ty18EZHzNNsdgv8w9u5VplsWbIv4nX7VRyU0h2WE+W4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OXdQbf177chl8uomWtRmUi81kh36y5hW+RTmxNKVTq+YA1Gi0fPBN7mQHiblUHyuV
-	 dh5FmlkObYcpnRXqqv9c7WXLajN01KuCDcMUiwNWPEhjcHztJ5r3EjCODiLgZ/9eXx
-	 Ax8oDTrxdeg583siOt9fkVmfgWm9cHicx59DLeNA=
+	s=default; t=1596930099;
+	bh=BmFvSYOC5avABBb19lAm61NvJ0ZOipqaWWp6VsdLIJA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rUtcf5XoPmHn8BemMRPj2QekJrZ3kHCn8UcFkXK8WD6szT/a2gkJ/fdKbcQqyZofq
+	 N9f0CVxsFVdI0Xx66k6Kz1ts/4BZxRelml2ZIX1vgwCM6C4ey3+d4Zp/PYtBOszQvW
+	 rRN8xtIJEOpaiZRDpgaRFxHriLQ00R1T0QYkldd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgHHXkj (ORCPT
+        id S1728991AbgHHXli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:40:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56198 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbgHHXkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:40:36 -0400
+        id S1727066AbgHHXkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 781A320658;
-        Sat,  8 Aug 2020 23:40:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 180F92053B;
+        Sat,  8 Aug 2020 23:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596930036;
-        bh=ty18EZHzNNsdgv8w9u5VplsWbIv4nX7VRyU0h2WE+W4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8MjUU2qv+9mNB1VvcUd6s9zjTDjevIWOHkZAonnb8yPNyqywEzC3EB8Y1W4liDn6
-         WOwsG+WBb2bjV6XThi61ttma8n3dZJ5Bw2g+h6IfCTDbyH7+QxBcfqLrcvrScoKL0M
-         +3nyM8WC9yO0VFtJeWAf7y04deU3fWvgfGkoRL3o=
+        s=default; t=1596930038;
+        bh=BmFvSYOC5avABBb19lAm61NvJ0ZOipqaWWp6VsdLIJA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OYaztwnEfGFy9pVknc+6SozoJU0EOcBWD3MucdmEwc1BM4yYCXYof/YNLYL3OjQ7o
+         Q4+IFFEjCvNxesocQN6h9sX5W3xHHlqGonqMrlAXQgtbSTXw3t+b8bknVyFk4VoyAi
+         JKN9N5CODvEiuSjl2Zav0tdfSTZ9hpkJmKDTFlAU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu Kuai <yukuai3@huawei.com>, Dinh Nguyen <dinguyen@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 14/14] ARM: socfpga: PM: add missing put_device() call in socfpga_setup_ocram_self_refresh()
-Date:   Sat,  8 Aug 2020 19:40:13 -0400
-Message-Id: <20200808234013.3619541-14-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Borislav Petkov <bp@suse.de>,
+        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 1/9] EDAC: Fix reference count leaks
+Date:   Sat,  8 Aug 2020 19:40:28 -0400
+Message-Id: <20200808234037.3619732-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808234013.3619541-1-sashal@kernel.org>
-References: <20200808234013.3619541-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,61 +56,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 3ad7b4e8f89d6bcc9887ca701cf2745a6aedb1a0 ]
+[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
 
-if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh
-doesn't have a corresponding put_device(). Thus add a jump target to
-fix the exception handling for this function implementation.
+When kobject_init_and_add() returns an error, it should be handled
+because kobject_init_and_add() takes a reference even when it fails. If
+this function returns an error, kobject_put() must be called to properly
+clean up the memory associated with the object.
 
-Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Therefore, replace calling kfree() and call kobject_put() and add a
+missing kobject_put() in the edac_device_register_sysfs_main_kobj()
+error path.
+
+ [ bp: Massage and merge into a single patch. ]
+
+Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
+Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-socfpga/pm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/edac/edac_device_sysfs.c | 1 +
+ drivers/edac/edac_pci_sysfs.c    | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
-index c378ab0c24317..93f2245c97750 100644
---- a/arch/arm/mach-socfpga/pm.c
-+++ b/arch/arm/mach-socfpga/pm.c
-@@ -60,14 +60,14 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
+diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
+index 93da1a45c7161..470b02fc2de96 100644
+--- a/drivers/edac/edac_device_sysfs.c
++++ b/drivers/edac/edac_device_sysfs.c
+@@ -275,6 +275,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
  
- 	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
+ 	/* Error exit stack */
+ err_kobj_reg:
++	kobject_put(&edac_dev->kobj);
+ 	module_put(edac_dev->owner);
  
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -78,7 +78,7 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!suspend_ocram_base) {
- 		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
+ err_out:
+diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
+index 6e3428ba400f3..622d117e25335 100644
+--- a/drivers/edac/edac_pci_sysfs.c
++++ b/drivers/edac/edac_pci_sysfs.c
+@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
  
- 	/* Copy the code that puts DDR in self refresh to ocram */
-@@ -92,6 +92,8 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!socfpga_sdram_self_refresh_in_ocram)
- 		ret = -EFAULT;
+ 	/* Error unwind statck */
+ kobject_init_and_add_fail:
+-	kfree(edac_pci_top_main_kobj);
++	kobject_put(edac_pci_top_main_kobj);
  
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(np);
- 
+ kzalloc_fail:
+ 	module_put(THIS_MODULE);
 -- 
 2.25.1
 
