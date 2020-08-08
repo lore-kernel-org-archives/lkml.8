@@ -2,106 +2,95 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100F7C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25915C433E1
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4182206C3
+	by mail.kernel.org (Postfix) with ESMTP id 007AD206CD
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9PMZbPi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0S+iJQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgHHWs1 (ORCPT
+        id S1726256AbgHHWtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 18:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
+        Sat, 8 Aug 2020 18:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgHHWsZ (ORCPT
+        with ESMTP id S1725988AbgHHWtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 18:48:25 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5410C061756
-        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 15:48:25 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g33so2860158pgb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 15:48:25 -0700 (PDT)
+        Sat, 8 Aug 2020 18:49:18 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401F9C061756
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 15:49:18 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id 2so2745106pjx.5
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 15:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=d5emEHeU0VdCmMZnn6BnVqQF21UzfzD0RJjo6t6lJzc=;
-        b=g9PMZbPi3HkAE2ef1slA/FZbJQ9A2/ISneUIqXHRSvIm1a5w70I2P+5h5Ktq79OagY
-         S4uQAS1NR3fzUHMv0T9MhrggEOZPUuR9fSojaM2gfbADEE2DwVv/cqGrXjpTKz2QhfWT
-         dqWzqecB5usUAX8y0XyC8TfiPefmjqXDzWKZ8MkNTXTBavb/TCBxv0sIIztWphPu8Syx
-         gn70nutP60p3GoIGrd9zkfmOKLfl2h8hoH+ORfJYWX1Im5ElFUBnpXPzJti7eol/gjgf
-         1DRZE+d41xzqtx6RNwWQEjdvvJjTACKbjCC9Ui34beNGfydM4CGY4LWc1BKYnXElTl1F
-         Hrlg==
+        bh=ywCTPY4bZpNxwToTdnk62PFiS8+In3aA+96LZvQPvtU=;
+        b=W0S+iJQhRjLsHp3h9LbUcRfBAV0Rb1p2ciZVu5gI6NqaqzHc/BuhZtNzie1OsdWojK
+         xNyusKGM4u21kxAQhBeJlO2alDe5hzVF3AfxuIVZwc8FTNiKLO142LG600NfrhFOohlX
+         Qqi8hDFM51A0u9Sdgic2VigRspe1+RhFl0n3RrIY4Cc0Dt9FTU/WmPgNx/7vuGXIjq6D
+         7tmGXW3AsG3E9M4Hx4bjxfUWplvMfGzmI59VtAgwLJEu9Kh8IU5yqwBpav3xN47al3hv
+         IRz/coFQTs0o2wDvZEf4vCTUlTsKhLIQdOO0jbkY5wNrRpkFSGfko3PIVQTXKSwD7Zbi
+         hgUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=d5emEHeU0VdCmMZnn6BnVqQF21UzfzD0RJjo6t6lJzc=;
-        b=kVIp7SUm3iLGsLKrP7Sfz6r33ofUMlxO14qezi+hjS9c6MtPLyCH2dYlzczXSHw+Re
-         Oio+G5xZKUSL8NW4ICn49+R1Ui6rxfdKa+2CoOeF2WJ/h8bDktWJ6mPH+saJWY3xGeX7
-         fz+dDcVwUfSDb+0K/0YfWdq2uHYGLr/pvvarMrz4oI9Pyp3fPc99jI7LPgMxipWmuMBV
-         Y4DKBphfvZ7FEp3QXPDshjLkkQPPyNHS18uNJ9WVSkBr9AN1qYl7hSlWidaWRt22Hauf
-         Nu8VnODplWYRcnlGBbyRE3FjLdoDV8rPEa64p9BqBtauzd2QgjCoyxgDdBalpn/7hmfd
-         WawA==
-X-Gm-Message-State: AOAM533FsZ8DlDB0CrWARwAoTrayCPxU23NbEyiiI9+AWZsxUDcn20UG
-        4fCvkBgrctm3jNOeuhVyKl0=
-X-Google-Smtp-Source: ABdhPJyW+c0znNsTBfE45CVaHIji2Gh8vNc+nD2vRkQ22H3TrwRYUDFv2Wd5Uz3Gi12LlxGVC1HqVA==
-X-Received: by 2002:a65:4044:: with SMTP id h4mr16591152pgp.371.1596926904997;
-        Sat, 08 Aug 2020 15:48:24 -0700 (PDT)
+        bh=ywCTPY4bZpNxwToTdnk62PFiS8+In3aA+96LZvQPvtU=;
+        b=Z/2Eb5G3YeBiBw7LJEnxbGPZbijos9cPYJ/Dpb7XM+SJ8qcEhNyfHCFA0iRxvRZCkv
+         BOBjNN6ZAsgEUZ+OzO5lnivCE980pBRHs8U4cbIgwGpeELWfvmiGuE9hFYhcTA1SAjG7
+         VtxYjkVUQEu1VoMDIhpukRJpk4M6apH+T1L9VlCSN+vZ9xZP/WKoaMbd4Qfq+cIhzkhN
+         BRuim3xUTAQL8FdBL/28oGFqx5xcVG4isgOmYm5XLLegsYhqiKtpIPs+7B4m5qXRm0BH
+         kjgzVJxdC2jzG0hf+P3QSevYSHh29bkb7Hhd8ctFWMZM2gi+rS04luXL/9PC7AhzvQLO
+         Bc0w==
+X-Gm-Message-State: AOAM531QQ2oFkNbHGM2IuC35e2Ffv7TqM1AG3KDK9aTzyI2k6sB8Z25F
+        BO6NVig7H1sX8LACHo6/UNaM3swF
+X-Google-Smtp-Source: ABdhPJxI8Y0cjzo3bxkaeo/qMhUIA1/BJUkspqYpl2q2K6DL/voaZHyST2ot9gq4jmB8Qp7MeTwcOA==
+X-Received: by 2002:a17:90a:ba93:: with SMTP id t19mr19822888pjr.213.1596926957834;
+        Sat, 08 Aug 2020 15:49:17 -0700 (PDT)
 Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
-        by smtp.gmail.com with ESMTPSA id f20sm19340786pfk.36.2020.08.08.15.48.23
+        by smtp.gmail.com with ESMTPSA id s67sm19372160pfs.117.2020.08.08.15.49.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2020 15:48:24 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 07:48:22 +0900
+        Sat, 08 Aug 2020 15:49:17 -0700 (PDT)
+Date:   Sun, 9 Aug 2020 07:49:15 +0900
 From:   Stafford Horne <shorne@gmail.com>
 To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        openrisc@lists.librecores.org
-Subject: Re: [PATCH v2 5/6] openrisc: signal: Fix sparse address space
- warnings
-Message-ID: <20200808224822.GQ80756@lianli.shorne-pla.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] OpenRISC header and sparse warning fixes for 5.9
+Message-ID: <20200808224915.GR80756@lianli.shorne-pla.net>
 References: <20200805210725.310301-1-shorne@gmail.com>
- <20200805210725.310301-6-shorne@gmail.com>
- <20200806190449.xqflhmbiiv5btusf@ltop.local>
+ <20200806191146.36xlfjwehe5lorav@ltop.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200806190449.xqflhmbiiv5btusf@ltop.local>
+In-Reply-To: <20200806191146.36xlfjwehe5lorav@ltop.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 09:04:49PM +0200, Luc Van Oostenryck wrote:
-> On Thu, Aug 06, 2020 at 06:07:24AM +0900, Stafford Horne wrote:
-> > ---
-> >  arch/openrisc/kernel/signal.c | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
+On Thu, Aug 06, 2020 at 09:11:46PM +0200, Luc Van Oostenryck wrote:
+> On Thu, Aug 06, 2020 at 06:07:19AM +0900, Stafford Horne wrote:
+> > Hello,
 > > 
-> > diff --git a/arch/openrisc/kernel/signal.c b/arch/openrisc/kernel/signal.c
-> > index 4f0754874d78..7ce0728412f6 100644
-> > --- a/arch/openrisc/kernel/signal.c
-> > +++ b/arch/openrisc/kernel/signal.c
-> > @@ -76,7 +76,7 @@ asmlinkage long _sys_rt_sigreturn(struct pt_regs *regs)
-> >  	 * then frame should be dword aligned here.  If it's
-> >  	 * not, then the user is trying to mess with us.
-> >  	 */
-> > -	if (((long)frame) & 3)
-> > +	if (((__force unsigned long)frame) & 3)
-> >  		goto badframe;
+> > Changes since v1:
+> >  - in "io: Fixup defines and move include to the end" added a linux/types.h
+> >    include as there were compiler failurs pointed out by kbuild.
+> > 
+> > This a series of fixes for OpenRISC sparse warnings.  The kbuild robots report
+> > many issues related to issues with OpenRISC headers having missing or incorrect
+> > sparse annotations.
 > 
-> Same as patch 6, the __force is not needed.
+> The changes look quite good to me (I just add 2 nits for patches 5 & 6).
+> 
+> Fell free to add my
+> Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-Thanks,  I thought this was complaining before, I tested now and there is no
-problem so I must have been mixed up with something else.
-
--Stafford
+Thank you.
