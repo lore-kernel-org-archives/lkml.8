@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB10C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B2A20672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9160206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930531;
-	bh=0AgMrIP7GP2rYQZIrGzD4CARHK1GDj4u+58ZN43cdUU=;
+	s=default; t=1596930533;
+	bh=gWkKBLqrFyWOSdK7if2G2dxRkh8/ELMIAsFk2X3V7AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wI+cy4KC8wBNZHNbo+rXOzjC5qbgRn4a5rH6fekLP1CRKgSOd0rJB1SMPQPknsboW
-	 4LcqWDU/VkN6FuuExL+GDts7xPZ8ycUiCAwluVrk5y51/lMMFExAIlT8S0zE+NuLdi
-	 ziDCd5MjJTWG9C0+9Dqhm1MkB2Q8JcqRwAHfOgDw=
+	b=O726uF17CFNRCTYXHsjp4McAI9k8upSD1SKfhCgHjiZDWmcYKy5xOyqL2Gte38J/v
+	 hpK35Wx69ptivm0Z36vqFZE1/Y4F0Tk13dlc0R4Q4SXoY7Did4DnbPTHWq0/Meqi8y
+	 qr9SUAw+XuCNSnmbfs+FLyhPpGQ89L1hMC+ASWNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgHHXhS (ORCPT
+        id S1728292AbgHHXsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:48:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbgHHXhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:11 -0400
+        id S1727918AbgHHXhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F231F206C3;
-        Sat,  8 Aug 2020 23:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5044920723;
+        Sat,  8 Aug 2020 23:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929830;
-        bh=0AgMrIP7GP2rYQZIrGzD4CARHK1GDj4u+58ZN43cdUU=;
+        s=default; t=1596929839;
+        bh=gWkKBLqrFyWOSdK7if2G2dxRkh8/ELMIAsFk2X3V7AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tODXCzQGtLJCBotl1l3dqedb3xpFFVlk1JUDfhkIZc+uJpjJCNmYyZuSqQerHOmST
-         kEf56fe2QMLexvygchBNVV4PL80ZaoOioDBD9YayJ2KoGRiLwJAQPfpa4vMNWywnXo
-         IGh6nDVjfkULlwEi9W5gGVkr7qF7JWZ7N0+r8Uno=
+        b=IB/cFFM0zT4GRvyWKBohqxUcDspXp9KNpMl+qU8Vz+vnPcuw8pfLOTcuHDdlmRD1v
+         822u4L7/5UJ5pyD3LeqyFTHj9f0q8ILy3FJSr2BXLsj6pFYNs1hlwiQutdfdN8DxBT
+         6dVL9UkctAfm2xOl0FzTaKnQLDWTtmhmdUSCiUag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 62/72] irqchip/loongson-liointc: Fix potential dead lock
-Date:   Sat,  8 Aug 2020 19:35:31 -0400
-Message-Id: <20200808233542.3617339-62-sashal@kernel.org>
+Cc:     Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 69/72] nvme-multipath: fix logic for non-optimized paths
+Date:   Sat,  8 Aug 2020 19:35:38 -0400
+Message-Id: <20200808233542.3617339-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,35 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit fa03587cad9bd32aa552377de4f05c50181a35a8 ]
+[ Upstream commit 3f6e3246db0e6f92e784965d9d0edb8abe6c6b74 ]
 
-In the function liointc_set_type(), we need to call the function
-irq_gc_unlock_irqrestore() before returning.
+Handle the special case where we have exactly one optimized path,
+which we should keep using in this case.
 
-Fixes: dbb152267908 ("irqchip: Add driver for Loongson I/O Local Interrupt Controller")
-Reported-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1594087972-21715-8-git-send-email-yangtiezhu@loongson.cn
+Fixes: 75c10e732724 ("nvme-multipath: round-robin I/O policy")
+Signed off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-loongson-liointc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvme/host/multipath.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index 63b61474a0cc2..6ef86a334c62d 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -114,6 +114,7 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
- 		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
- 		break;
- 	default:
-+		irq_gc_unlock_irqrestore(gc, flags);
- 		return -EINVAL;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 66509472fe06a..fe8f7f123fac7 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -246,6 +246,12 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
+ 			fallback = ns;
  	}
- 	irq_gc_unlock_irqrestore(gc, flags);
+ 
++	/* No optimized path found, re-check the current path */
++	if (!nvme_path_is_disabled(old) &&
++	    old->ana_state == NVME_ANA_OPTIMIZED) {
++		found = old;
++		goto out;
++	}
+ 	if (!fallback)
+ 		return NULL;
+ 	found = fallback;
 -- 
 2.25.1
 
