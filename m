@@ -2,62 +2,158 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14BFC206B6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17892206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:13:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NL2MjYY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgHHVNe (ORCPT
+        id S1726491AbgHHVNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 17:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45132 "EHLO
+        Sat, 8 Aug 2020 17:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgHHVNd (ORCPT
+        with ESMTP id S1726200AbgHHVNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 17:13:33 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A39C061756;
-        Sat,  8 Aug 2020 14:13:33 -0700 (PDT)
-Received: from localhost (50-47-102-2.evrt.wa.frontiernet.net [50.47.102.2])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1A79C1272873A;
-        Sat,  8 Aug 2020 13:56:46 -0700 (PDT)
-Date:   Sat, 08 Aug 2020 14:13:30 -0700 (PDT)
-Message-Id: <20200808.141330.786343612210808532.davem@davemloft.net>
-To:     johan@kernel.org
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: phy: fix memory leak in device-create error
- path
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200806153753.12247-1-johan@kernel.org>
-References: <20200806153753.12247-1-johan@kernel.org>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 08 Aug 2020 13:56:46 -0700 (PDT)
+        Sat, 8 Aug 2020 17:13:41 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A745AC061756;
+        Sat,  8 Aug 2020 14:13:41 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (85-76-78-184-nat.elisa-mobile.fi [85.76.78.184])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 92B2AF9;
+        Sat,  8 Aug 2020 23:13:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1596921219;
+        bh=rtS6tS3nmrZ2AAjnJbktvLuwGb3JE1Bru8oeDg8DkDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NL2MjYY6cydNHOnjQ3wufTITscClL0972hLsySCWwOibCWKCN688Uw4V3/Fbm2suL
+         W9K5hSXQP1N+476ZYm7l669wpGinOL66oDPrQi+t44XlEiJkRABi64nwAu30io5yBK
+         4FlXBL5PUt15aEtA3ql4FPp941fPuSr382DhpS+I=
+Date:   Sun, 9 Aug 2020 00:13:23 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 6/7] ARM: dts: r8a7742: Add LVDS support
+Message-ID: <20200808211323.GR6186@pendragon.ideasonboard.com>
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200807174954.14448-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
-Date: Thu,  6 Aug 2020 17:37:53 +0200
+Hi Prabhakar,
 
-> A recent commit introduced a late error path in phy_device_create()
-> which fails to release the device name allocated by dev_set_name().
+Thank you for the patch.
+
+On Fri, Aug 07, 2020 at 06:49:53PM +0100, Lad Prabhakar wrote:
+> Add LVDS encoder node to r8a7742 SoC DT.
 > 
-> Fixes: 13d0ab6750b2 ("net: phy: check return code when requesting PHY driver module")
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> ---
+>  arch/arm/boot/dts/r8a7742.dtsi | 54 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+> index a979a4b3de61..a7e66220d63a 100644
+> --- a/arch/arm/boot/dts/r8a7742.dtsi
+> +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> @@ -1534,11 +1534,65 @@
+>  				port@1 {
+>  					reg = <1>;
+>  					du_out_lvds0: endpoint {
+> +						remote-endpoint = <&lvds0_in>;
+>  					};
+>  				};
+>  				port@2 {
+>  					reg = <2>;
+>  					du_out_lvds1: endpoint {
+> +						remote-endpoint = <&lvds1_in>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		lvds0: lvds@feb90000 {
+> +			compatible = "renesas,r8a7742-lvds";
+> +			reg = <0 0xfeb90000 0 0x1c>;
 
-Applied and queued up for -stable, thank you.
+Isn't 0x14 enough for the size ? 0x1c won't hurt though. Same comment
+below.
+
+With or without this addressed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +			clocks = <&cpg CPG_MOD 726>;
+> +			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+> +			resets = <&cpg 726>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					lvds0_in: endpoint {
+> +						remote-endpoint = <&du_out_lvds0>;
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +					lvds0_out: endpoint {
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		lvds1: lvds@feb94000 {
+> +			compatible = "renesas,r8a7742-lvds";
+> +			reg = <0 0xfeb94000 0 0x1c>;
+> +			clocks = <&cpg CPG_MOD 725>;
+> +			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+> +			resets = <&cpg 725>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					lvds1_in: endpoint {
+> +						remote-endpoint = <&du_out_lvds1>;
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +					lvds1_out: endpoint {
+>  					};
+>  				};
+>  			};
+
+-- 
+Regards,
+
+Laurent Pinchart
