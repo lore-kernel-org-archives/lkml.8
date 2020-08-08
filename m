@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC128C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ECC433E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B0F206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D7420672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930544;
-	bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
+	s=default; t=1596930546;
+	bh=fw0ThbpYQA6LIUcE4wTI9DtbAVDrXtiAyNGq0cTApy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yFN7xIwvcZkAjwO7/ZZiquDxQZcEtCU2e/RU+9MleLPZ8Zp4/51o2awfFd1P/JHDZ
-	 TinxGO++XEVorxAUIEiFPBzH8xMQ70yLaqs1eSzhWCo0eDpyaKIM/RnSqkEJnJ1hKW
-	 PD0GnbbOGF/MdwjvSkt2DbRYRqee6L9pbmvMkiJM=
+	b=uQTsleD2Qts/6gCB6ajCsb8+5dtYiMEcdvzhkIJ8B0eZ9+DuFcW/d//B71nYHnrUr
+	 LTrk23vyRZWZN2ywMf8Vk/zDQgz9vkGdPYpxQ+P9ESkinkq7/DcacHFLyJrpc9Pr+7
+	 db5OAB/uH9FYgGLqmh4c+HD1gsdxZijvOHzVI3bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgHHXs7 (ORCPT
+        id S1727885AbgHHXhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727888AbgHHXhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:15 -0400
+        id S1727845AbgHHXhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A609520825;
-        Sat,  8 Aug 2020 23:37:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73C7020791;
+        Sat,  8 Aug 2020 23:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929834;
-        bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
+        s=default; t=1596929828;
+        bh=fw0ThbpYQA6LIUcE4wTI9DtbAVDrXtiAyNGq0cTApy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POxEnQl47KqTB1BryCZ85LRpRWdQJxmBWk1o0pfJTVJH/OS3iKbqTr4cEwUNGoUFp
-         1q3oQPGN8QUfUNPMCUVcRHp1kvaWZ9yz10d8ywlL0l29bmPSYX+OsIsnvcni2+JTWA
-         Rqkv/i9NFijamnHngsrcZFJykvF71xcfSkUjC2Z8=
+        b=qdyiWtVJAws9u6geLhAcFU6yJ5rX53Sh2agp8XhL930kHAsgdQ45iuP6wZXx0Z6P5
+         mUv+0pgv4/34kbxUt5ti7MchPigG5WmHlYwPByARIYkSoi5ci6X4kGu9sGyeZgq1x7
+         hbMuQmEAVl3cX6PNOfcSAZD/Isz3aNlgyY4Hvf9k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        kernel test robot <lkp@intel.com>,
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 65/72] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
-Date:   Sat,  8 Aug 2020 19:35:34 -0400
-Message-Id: <20200808233542.3617339-65-sashal@kernel.org>
+        linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 60/72] irqchip/loongson-htvec: Check return value of irq_domain_translate_onecell()
+Date:   Sat,  8 Aug 2020 19:35:29 -0400
+Message-Id: <20200808233542.3617339-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,51 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 9808357ff2e5bfe1e0dcafef5e78cc5b617a7078 ]
+[ Upstream commit dbec37048d27cee36e103e113b5f9b1852bfe997 ]
 
-cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
-UP configuration, the boot CPU is 0.
+Check the return value of irq_domain_translate_onecell() due to
+it may returns -EINVAL if failed.
 
-Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 818e915fbac5 ("irqchip: Add Loongson HyperTransport Vector support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200724184157.29150-1-f.fainelli@gmail.com
+Link: https://lore.kernel.org/r/1594087972-21715-5-git-send-email-yangtiezhu@loongson.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/irqchip/irq-loongson-htvec.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fd7c537fb42ac..4127eeab10af1 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
- 	u32 val;
+diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
+index b36d403383230..720cf96ae90ee 100644
+--- a/drivers/irqchip/irq-loongson-htvec.c
++++ b/drivers/irqchip/irq-loongson-htvec.c
+@@ -109,11 +109,14 @@ static struct irq_chip htvec_irq_chip = {
+ static int htvec_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 			      unsigned int nr_irqs, void *arg)
+ {
++	int ret;
+ 	unsigned long hwirq;
+ 	unsigned int type, i;
+ 	struct htvec *priv = domain->host_data;
  
- 	/* Wakeup interrupt should only come from the boot cpu */
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
+-	irq_domain_translate_onecell(domain, arg, &hwirq, &type);
++	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
++	if (ret)
++		return ret;
  
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
-@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
- 	struct bcm7038_l1_chip *intc;
- 	int boot_cpu, word;
- 
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
- 
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_domain_set_info(domain, virq + i, hwirq + i, &htvec_irq_chip,
 -- 
 2.25.1
 
