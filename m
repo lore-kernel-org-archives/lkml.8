@@ -2,147 +2,166 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B373CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B8220747
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:51:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="ylgj3ZeC";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="MJHIzbWP"
+	by mail.kernel.org (Postfix) with ESMTP id 916DB20747
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgHHNvU (ORCPT
+        id S1726238AbgHHNyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 09:51:20 -0400
-Received: from relay3.mymailcheap.com ([217.182.119.157]:44893 "EHLO
-        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgHHNvT (ORCPT
+        Sat, 8 Aug 2020 09:54:14 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:46108 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726240AbgHHNyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 09:51:19 -0400
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id 8226F3F15F;
-        Sat,  8 Aug 2020 15:51:15 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id 59A9E2A7CD;
-        Sat,  8 Aug 2020 15:51:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1596894675;
-        bh=aMvdZDiGSkgDY34UFhCXqMYg0yzNL97YlcKNxs7qbyM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ylgj3ZeC6SrvHrTDxBpi2JJuB5D7RxGXVhJeE0bC76iqaf7IVqu6A2BNQtR2+U+DB
-         vnPnz11HPKDlUFGFTjtkk/cE8Wg0i+vxqh3wd6vNALWoLc8YA9TFTemd8zcarvpg8Q
-         QxW1w/GTjxJYHX953UiWIlZ0KKp1FyeP5OtJmmTY=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pKApvAm2ixEj; Sat,  8 Aug 2020 15:51:13 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Sat,  8 Aug 2020 15:51:13 +0200 (CEST)
-Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 9CC79419E4;
-        Sat,  8 Aug 2020 13:51:11 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="MJHIzbWP";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [203.86.239.91])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 14D50419E4;
-        Sat,  8 Aug 2020 13:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1596894667;
-        bh=aMvdZDiGSkgDY34UFhCXqMYg0yzNL97YlcKNxs7qbyM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MJHIzbWPjOIoXUO93z3n0T2+G0nMiFSPIIPlB237bMTBEFDgVBTc0BIb3nV+BtZRI
-         cz3Mi7mHVmLK9Qo6WQ41zTNeQtb+WGgVP/pA/Ak+NP31tLS6Eh4Ggn5xPVFuRLKTep
-         /wz/8xlJ0A/eVao6Qh2XTZxKy1TCkbsaHMUVB0j8=
-Subject: Re: [PATCH] gpu/drm: Remove TTM_PL_FLAG_WC of VRAM to fix
- writecombine issue for Loongson64
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Alex Deucher <alexander.deucher@amd.com>, christian.koenig@amd.com,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <1596871502-3432-1-git-send-email-yangtiezhu@loongson.cn>
- <20200808134147.GA5772@alpha.franken.de>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <b7b16df1-d661-d59a-005b-da594ce9fc95@flygoat.com>
-Date:   Sat, 8 Aug 2020 21:50:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200808134147.GA5772@alpha.franken.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+        Sat, 8 Aug 2020 09:54:11 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-8-i9qSWaqDO72eG3L16A1dCQ-1;
+ Sat, 08 Aug 2020 14:54:08 +0100
+X-MC-Unique: i9qSWaqDO72eG3L16A1dCQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sat, 8 Aug 2020 14:54:07 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sat, 8 Aug 2020 14:54:07 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Eric Dumazet' <eric.dumazet@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>
+Subject: RE: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
+Thread-Topic: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
+Thread-Index: AQHWbD/ze4VO5Mh7NUG6O93LfP2Gq6ksXaowgACKZoCAAVFEkA==
+Date:   Sat, 8 Aug 2020 13:54:06 +0000
+Message-ID: <ed3741fdf1774cfbbd59d06ecb6994d8@AcuMS.aculab.com>
+References: <20200723060908.50081-1-hch@lst.de>
+ <20200723060908.50081-26-hch@lst.de>
+ <6357942b-0b6e-1901-7dce-e308c9fac347@gmail.com>
+ <f21589f1262640b09ca27ed20f8e6790@AcuMS.aculab.com>
+ <90f626a4-d9e5-91a5-b71d-498e3b125da1@gmail.com>
+In-Reply-To: <90f626a4-d9e5-91a5-b71d-498e3b125da1@gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-X-Rspamd-Queue-Id: 9CC79419E4
-X-Spamd-Result: default: False [-0.10 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         ML_SERVERS(-3.10)[213.133.102.83];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogRXJpYyBEdW1hemV0DQo+IFNlbnQ6IDA3IEF1Z3VzdCAyMDIwIDE5OjI5DQo+IA0KPiBP
+biA4LzcvMjAgMjoxOCBBTSwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IEZyb206IEVyaWMgRHVt
+YXpldA0KPiA+PiBTZW50OiAwNiBBdWd1c3QgMjAyMCAyMzoyMQ0KPiA+Pg0KPiA+PiBPbiA3LzIy
+LzIwIDExOjA5IFBNLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4gPj4+IFJld29yayB0aGUg
+cmVtYWluaW5nIHNldHNvY2tvcHQgY29kZSB0byBwYXNzIGEgc29ja3B0cl90IGluc3RlYWQgb2Yg
+YQ0KPiA+Pj4gcGxhaW4gdXNlciBwb2ludGVyLiAgVGhpcyByZW1vdmVzIHRoZSBsYXN0IHJlbWFp
+bmluZyBzZXRfZnMoS0VSTkVMX0RTKQ0KPiA+Pj4gb3V0c2lkZSBvZiBhcmNoaXRlY3R1cmUgc3Bl
+Y2lmaWMgY29kZS4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggSGVsbHdp
+ZyA8aGNoQGxzdC5kZT4NCj4gPj4+IEFja2VkLWJ5OiBTdGVmYW4gU2NobWlkdCA8c3RlZmFuQGRh
+dGVuZnJlaWhhZmVuLm9yZz4gW2llZWU4MDIxNTRdDQo+ID4+PiAtLS0NCj4gPj4NCj4gPj4NCj4g
+Pj4gLi4uDQo+ID4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvbmV0L2lwdjYvcmF3LmMgYi9uZXQvaXB2
+Ni9yYXcuYw0KPiA+Pj4gaW5kZXggNTk0ZTAxYWQ2NzBhYTYuLjg3NGYwMWNkN2FlYzQyIDEwMDY0
+NA0KPiA+Pj4gLS0tIGEvbmV0L2lwdjYvcmF3LmMNCj4gPj4+ICsrKyBiL25ldC9pcHY2L3Jhdy5j
+DQo+ID4+PiBAQCAtOTcyLDEzICs5NzIsMTMgQEAgc3RhdGljIGludCByYXd2Nl9zZW5kbXNnKHN0
+cnVjdCBzb2NrICpzaywgc3RydWN0IG1zZ2hkciAqbXNnLCBzaXplX3QgbGVuKQ0KPiA+Pj4gIH0N
+Cj4gPj4+DQo+ID4+DQo+ID4+IC4uLg0KPiA+Pg0KPiA+Pj4gIHN0YXRpYyBpbnQgZG9fcmF3djZf
+c2V0c29ja29wdChzdHJ1Y3Qgc29jayAqc2ssIGludCBsZXZlbCwgaW50IG9wdG5hbWUsDQo+ID4+
+PiAtCQkJICAgIGNoYXIgX191c2VyICpvcHR2YWwsIHVuc2lnbmVkIGludCBvcHRsZW4pDQo+ID4+
+PiArCQkJICAgICAgIHNvY2twdHJfdCBvcHR2YWwsIHVuc2lnbmVkIGludCBvcHRsZW4pDQo+ID4+
+PiAgew0KPiA+Pj4gIAlzdHJ1Y3QgcmF3Nl9zb2NrICpycCA9IHJhdzZfc2soc2spOw0KPiA+Pj4g
+IAlpbnQgdmFsOw0KPiA+Pj4NCj4gPj4+IC0JaWYgKGdldF91c2VyKHZhbCwgKGludCBfX3VzZXIg
+KilvcHR2YWwpKQ0KPiA+Pj4gKwlpZiAoY29weV9mcm9tX3NvY2twdHIoJnZhbCwgb3B0dmFsLCBz
+aXplb2YodmFsKSkpDQo+ID4+PiAgCQlyZXR1cm4gLUVGQVVMVDsNCj4gPj4+DQo+ID4+DQo+ID4+
+IGNvbnZlcnRpbmcgZ2V0X3VzZXIoLi4uKSAgIHRvICBjb3B5X2Zyb21fc29ja3B0ciguLi4pIHJl
+YWxseSBhc3N1bWVkIHRoZSBvcHRsZW4NCj4gPj4gaGFzIGJlZW4gdmFsaWRhdGVkIHRvIGJlID49
+IHNpemVvZihpbnQpIGVhcmxpZXIuDQo+ID4+DQo+ID4+IFdoaWNoIGlzIG5vdCBhbHdheXMgdGhl
+IGNhc2UsIGZvciBleGFtcGxlIGhlcmUuDQo+ID4+DQo+ID4+IFVzZXIgYXBwbGljYXRpb24gY2Fu
+IGZvb2wgdXMgcGFzc2luZyBvcHRsZW49MCwgYW5kIGEgdXNlciBwb2ludGVyIG9mIGV4YWN0bHkg
+VEFTS19TSVpFLTENCj4gPg0KPiA+IFdvbid0IHRoZSB1c2VyIHBvaW50ZXIgZm9yY2UgY29weV9m
+cm9tX3NvY2twdHIoKSB0byBjYWxsDQo+ID4gY29weV9mcm9tX3VzZXIoKSB3aGljaCB3aWxsIHRo
+ZW4gZG8gYWNjZXNzX29rKCkgb24gdGhlIGVudGlyZQ0KPiA+IHJhbmdlIGFuZCBzbyByZXR1cm4g
+LUVGQVVMVC4NCj4gPg0KPiA+IFRoZSBvbmx5IHByb2JsZW1zIGFyaXNlIGlmIHRoZSBrZXJuZWwg
+Y29kZSBhZGRzIGFuIG9mZnNldCB0byB0aGUNCj4gPiB1c2VyIGFkZHJlc3MuDQo+ID4gQW5kIHRo
+ZSBsYXRlciBwYXRjaCBhZGRlZCBhbiBvZmZzZXQgdG8gdGhlIGNvcHkgZnVuY3Rpb25zLg0KPiAN
+Cj4gSSBkdW5ubywgSSBkZWZpbml0ZWx5IGdvdCB0aGUgZm9sbG93aW5nIHN5emJvdCBjcmFzaA0K
+PiANCj4gTm8gcmVwcm8gZm91bmQgYnkgc3l6Ym90IHlldCwgYnV0IEkgc3VzcGVjdCBhIDMyYml0
+IGJpbmFyeSBwcm9ncmFtDQo+IGRpZCA6DQo+IA0KPiBzZXRzb2Nrb3B0KGZkLCAweDI5LCAweDI0
+LCAweGZmZmZmZmZmZmZmZmZmZmYsIDB4MCkNCg0KQSBmZXcgdG9vIG1hbnkgZmZzLi4uDQoNCj4g
+QlVHOiBLQVNBTjogd2lsZC1tZW1vcnktYWNjZXNzIGluIG1lbWNweSBpbmNsdWRlL2xpbnV4L3N0
+cmluZy5oOjQwNiBbaW5saW5lXQ0KPiBCVUc6IEtBU0FOOiB3aWxkLW1lbW9yeS1hY2Nlc3MgaW4g
+Y29weV9mcm9tX3NvY2twdHJfb2Zmc2V0IGluY2x1ZGUvbGludXgvc29ja3B0ci5oOjcxIFtpbmxp
+bmVdDQo+IEJVRzogS0FTQU46IHdpbGQtbWVtb3J5LWFjY2VzcyBpbiBjb3B5X2Zyb21fc29ja3B0
+ciBpbmNsdWRlL2xpbnV4L3NvY2twdHIuaDo3NyBbaW5saW5lXQ0KPiBCVUc6IEtBU0FOOiB3aWxk
+LW1lbW9yeS1hY2Nlc3MgaW4gZG9fcmF3djZfc2V0c29ja29wdCBuZXQvaXB2Ni9yYXcuYzoxMDIz
+IFtpbmxpbmVdDQo+IEJVRzogS0FTQU46IHdpbGQtbWVtb3J5LWFjY2VzcyBpbiByYXd2Nl9zZXRz
+b2Nrb3B0KzB4MWExLzB4NmYwIG5ldC9pcHY2L3Jhdy5jOjEwODQNCj4gUmVhZCBvZiBzaXplIDQg
+YXQgYWRkciAwMDAwMDAwMGZmZmZmZmZmIGJ5IHRhc2sgc3l6LWV4ZWN1dG9yLjAvMjgyNTENCg0K
+WWVwLCB0aGUgY29kZSBpcyBuZWFybHksIGJ1dCBub3QgcXVpdGUgcmlnaHQuDQpUaGUgcHJvYmxl
+bSBpcyBhbG1vc3QgY2VydGFpbmx5IHRoYXQgYWNjZXNzX29rKHgsIDApIGFsd2F5cyByZXR1cm5z
+IHN1Y2Nlc3MuDQoNCkluIGFueSBjYXNlIHRoZSBjaGVjayBmb3IgYSB2YWxpZCB1c2VyIGFkZHJl
+c3Mgb3VnaHQgdG8gYmUgZXhhY3RseQ0KdGhlIHNhbWUgb25lIHRoYXQgbGF0ZXIgc2VsZWN0cyBi
+ZXR3ZWVuIGNvcHlfdG8vZnJvbV91c2VyKCkgYW5kIG1lbWNweSgpLg0KDQpUaGUgbGF0dGVyIGNv
+bXBhcmVzIHRoZSBhZGRyZXNzIGFnYWluc3QgJ1RBU0tfU0laRScuDQpIb3dldmVyIHRoYXQgaXNu
+J3QgdGhlIHJpZ2h0IHZhbHVlIGVpdGhlciAtIEkgdGhpbmsgaXQgcmVhZHMNCnRoZSB2YWx1ZSBm
+cm9tICdjdXJyZW50JyB0aGF0IHNldF9mcygpIHNldHMuDQpXaGF0IHRoaXMgY29kZSBuZWVkcyBp
+cyBhbnkgYWRkcmVzcyB0aGF0IGlzIGFib3ZlIHRoZSBoaWdoZXN0DQp1c2VyIGFkZHJlc3MgYW5k
+IGJlbG93IChvciBlcXVhbCB0bykgdG8gbG93ZXN0IGtlcm5lbCBvbmUuDQoNCk9uIGkzODYgKGFu
+ZCBwcm9iYWJseSBtb3N0IDMyYml0IGxpbnV4KSB0aGlzIGlzIDB4YzAwMDAwMDAuDQpPbiB4ODYt
+NjQgdGhpcyBjb3VsZCBiZSBhbnkgYWRkcmVzcyBpbiB0aGUgYWRkcmVzcyAnYmxhY2sgaG9sZScu
+DQpQaWNraW5nIDF1bGw8PDYzIG1heSBiZSBiZXN0Lg0KUXVpdGUgd2hhdCB0aGUgY29ycmVjdCAj
+ZGVmaW5lIGlzIHJlcXVpcmVzIGZ1cnRoZXIgcmVzZWFyY2guDQoNClRoZXJlIGlzIGFjdHVhbGx5
+IHNjb3BlIGZvciBtYWtpbmcgaW5pdF91c2VyX3NvY2twdHIoa2Vybl9hZGRyZXNzKQ0Kc2F2ZSBh
+IHZhbHVlIHRoYXQgd2lsbCBjYXVzZSBjb3B5X3RvL2Zyb21fc29ja3B0cigpIGdvIGludG8NCnRo
+ZSB1c2VyLWNvcHkgcGF0aCB3aXRoIGFuIGFkZHJlc3MgdGhhdCBhY2Nlc3Nfb2soKSB3aWxsIHJl
+amVjdC4NClRoZW4gdGhlIC1FRkFVTFQgd2lsbCBnZXQgZ2VuZXJhdGVkIGluIHRoZSAnZXhwZWN0
+ZWQnIHBsYWNlDQphbmQgdGhlcmUgaXMgbm8gc2NvcGUgZm9yIGZhaWxpbmcgdG8gdGVzdCBpdCdz
+IHJldHVybiB2YWx1ZS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lk
+ZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0K
+UmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-
-ÔÚ 2020/8/8 ÏÂÎç9:41, Thomas Bogendoerfer Ð´µÀ:
-> On Sat, Aug 08, 2020 at 03:25:02PM +0800, Tiezhu Yang wrote:
->> Loongson processors have a writecombine issue that maybe failed to
->> write back framebuffer used with ATI Radeon or AMD GPU at times,
->> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
->> mapping for MIPS"), there exists some errors such as blurred screen
->> and lockup, and so on.
->>
->> Remove the flag TTM_PL_FLAG_WC of VRAM to fix writecombine issue for
->> Loongson64 to work well with ATI Radeon or AMD GPU, and it has no any
->> influence on the other platforms.
-> well it's not my call to take or reject this patch, but I already
-> indicated it might be better to disable writecombine on the CPU
-> detection side (or do you have other devices where writecombining
-> works ?). Something like below will disbale it for all loongson64 CPUs.
-> If you now find out where it works and where it doesn't, you can even
-> reduce it to the required minium of affected CPUs.
-Hi Tiezhu, Thomas,
-
-Yes, writecombine works well on LS7A's internal GPU....
-And even works well with some AMD GPUs (in my case, RX550).
-
-Tiezhu, is it possible to investigate the issue deeper in Loongson?
-Probably we just need to add some barrier to maintain the data coherency,
-or disable writecombine for AMD GPU's command buffer and leave texture/frame
-buffer wc accelerated.
-
-Thanks.
-
-- Jiaxun
