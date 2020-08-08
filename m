@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92809C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0E5206D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7317B206D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929780;
-	bh=o1hp91tWbFC0JPymhREMXQpAYm591TzRF4KoNiOC+jo=;
+	s=default; t=1596929781;
+	bh=5FS1bRYbhh3iZG9BJtPW8I/Q7cLQiRbWaIwY811DndM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n2MQk+v5N6HL8/oFHXBgwPb9X+OdzAKJ53yPa3ADaaLssjJn/ar0LjSP6Y89ujaIU
-	 dGT0/p/IylqBjw7IsbRjSh7emCPtEBJWlhW2/AYiRDxCF+WqsEUyRTAJ5eS73v8ZUj
-	 os8WzuzY6bss8B9706plhOnL2KW7ULhcwv2r9NaM=
+	b=heF7YB4fyW49+WTk4bXFiHIkCkoAN+2JQpbTCwdB8bET7QkYbDjGDo7HF18iJsA6t
+	 d3W8kfxax4ktE8F85rhrwUiF7DDvyFGjTZS/mGjfQCYaGJTOft11e3s9y6pZcKSdyl
+	 /ZGfXa0uzZb2a66FD7Rj8+cGAw6Zn5WsUdvSxo/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgHHXgS (ORCPT
+        id S1726817AbgHHXgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48622 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726734AbgHHXgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:16 -0400
+        id S1726798AbgHHXgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E14F3206C3;
-        Sat,  8 Aug 2020 23:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69B7920716;
+        Sat,  8 Aug 2020 23:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929775;
-        bh=o1hp91tWbFC0JPymhREMXQpAYm591TzRF4KoNiOC+jo=;
+        s=default; t=1596929778;
+        bh=5FS1bRYbhh3iZG9BJtPW8I/Q7cLQiRbWaIwY811DndM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AxVSXyTwJQiomJmbtis3eV1j337nhlfolEwQ1qYdgzfGNMIUF/optASeNj3URw11M
-         PNcWYIdrpg2gABxF95cWNnDJIgQuuYLNcYUV90nVoFM7dXQjYrwZZPGAxAfbctCPE+
-         lIu/PW9kxcvUcT8zjtnf7aOtspnzhgZO3JzaV1Bw=
+        b=cefXIEo0DVWHUp76r2okkzVKDnF5Emet+xGoImO7y5WqCWF3W+NefB3297jQl+2cA
+         SbDTV9yRlZLDMGKfRXBviq86iQIkqektuCn6X+wp+jSx89zcCHkJtkRDTMKtxC0MGO
+         Hsoy8aona2N/Qpw8Ad+pxmoTnoaigRdKSyyaSYzA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 25/72] sched/uclamp: Fix initialization of struct uclamp_rq
-Date:   Sat,  8 Aug 2020 19:34:54 -0400
-Message-Id: <20200808233542.3617339-25-sashal@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dien Pham <dien.pham.ry@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 27/72] clk: scmi: Fix min and max rate when registering clocks with discrete rates
+Date:   Sat,  8 Aug 2020 19:34:56 -0400
+Message-Id: <20200808233542.3617339-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -61,73 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit d81ae8aac85ca2e307d273f6dc7863a721bf054e ]
+[ Upstream commit fcd2e0deae50bce48450f14c8fc5611b08d7438c ]
 
-struct uclamp_rq was zeroed out entirely in assumption that in the first
-call to uclamp_rq_inc() they'd be initialized correctly in accordance to
-default settings.
+Currently we are not initializing the scmi clock with discrete rates
+correctly. We fetch the min_rate and max_rate value only for clocks with
+ranges and ignore the ones with discrete rates. This will lead to wrong
+initialization of rate range when clock supports discrete rate.
 
-But when next patch introduces a static key to skip
-uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
-will fail to perform any frequency changes because the
-rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
-means all rqs are capped to 0 by default.
+Fix this by using the first and the last rate in the sorted list of the
+discrete clock rates while registering the clock.
 
-Fix it by making sure we do proper initialization at init without
-relying on uclamp_rq_inc() doing it later.
-
-Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Tested-by: Lukasz Luba <lukasz.luba@arm.com>
-Link: https://lkml.kernel.org/r/20200630112123.12076-2-qais.yousef@arm.com
+Link: https://lore.kernel.org/r/20200709081705.46084-2-sudeep.holla@arm.com
+Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reported-and-tested-by: Dien Pham <dien.pham.ry@renesas.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2142c67676826..c3cbdc436e2e4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1237,6 +1237,20 @@ static void uclamp_fork(struct task_struct *p)
- 	}
- }
- 
-+static void __init init_uclamp_rq(struct rq *rq)
-+{
-+	enum uclamp_id clamp_id;
-+	struct uclamp_rq *uc_rq = rq->uclamp;
+diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+index c491f5de0f3f4..c754dfbb73fd4 100644
+--- a/drivers/clk/clk-scmi.c
++++ b/drivers/clk/clk-scmi.c
+@@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
+ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+ {
+ 	int ret;
++	unsigned long min_rate, max_rate;
 +
-+	for_each_clamp_id(clamp_id) {
-+		uc_rq[clamp_id] = (struct uclamp_rq) {
-+			.value = uclamp_none(clamp_id)
-+		};
+ 	struct clk_init_data init = {
+ 		.flags = CLK_GET_RATE_NOCACHE,
+ 		.num_parents = 0,
+@@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+ 
+ 	sclk->hw.init = &init;
+ 	ret = devm_clk_hw_register(dev, &sclk->hw);
+-	if (!ret)
+-		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
+-				      sclk->info->range.max_rate);
++	if (ret)
++		return ret;
++
++	if (sclk->info->rate_discrete) {
++		int num_rates = sclk->info->list.num_rates;
++
++		if (num_rates <= 0)
++			return -EINVAL;
++
++		min_rate = sclk->info->list.rates[0];
++		max_rate = sclk->info->list.rates[num_rates - 1];
++	} else {
++		min_rate = sclk->info->range.min_rate;
++		max_rate = sclk->info->range.max_rate;
 +	}
 +
-+	rq->uclamp_flags = 0;
-+}
-+
- static void __init init_uclamp(void)
- {
- 	struct uclamp_se uc_max = {};
-@@ -1245,11 +1259,8 @@ static void __init init_uclamp(void)
++	clk_hw_set_rate_range(&sclk->hw, min_rate, max_rate);
+ 	return ret;
+ }
  
- 	mutex_init(&uclamp_mutex);
- 
--	for_each_possible_cpu(cpu) {
--		memset(&cpu_rq(cpu)->uclamp, 0,
--				sizeof(struct uclamp_rq)*UCLAMP_CNT);
--		cpu_rq(cpu)->uclamp_flags = 0;
--	}
-+	for_each_possible_cpu(cpu)
-+		init_uclamp_rq(cpu_rq(cpu));
- 
- 	for_each_clamp_id(clamp_id) {
- 		uclamp_se_set(&init_task.uclamp_req[clamp_id],
 -- 
 2.25.1
 
