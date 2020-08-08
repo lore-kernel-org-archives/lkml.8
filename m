@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF36C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B69206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED41B20825
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929810;
-	bh=vbTAb44KZTHCUUR1fLwfmZ7ptgPtMwcHogXlu5gZoe0=;
+	s=default; t=1596929813;
+	bh=IHgBT8Vjik3BbIgxDcxrZBpBmFQ3aLVlSzGsnPVE574=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+iTJVte+2gQuBdyttrD5b6+HV+P3yIF5sX0KbLu7k13RSl/K8bWLBeRIjuP4KwOz
-	 JxdvCcBtVOG7TvxERvzwVLFE72DwGF8wki5uaZAwcRIMYIzf0cahtnbsM1hOzjpFlG
-	 /KHe4tmBI4GUvem+8+RcwalgH4JZnllrAewxDhwk=
+	b=uIJ7z34CI1Ta50zFarqFxmaYLX5TJAxg6Et2X4ffZEl9KFNH+Cm941YtOtJGn/84l
+	 lEjR7+ZQ9FQqPDTgJAhhOONzaFEa8s2xwCGcK5LA7HOPNgk4Q/cGN0JGgoZE2gHNpz
+	 ZwCaJKQxKcm6PmgfQtopQTd0BjY4NFxw0ursvI2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgHHXgt (ORCPT
+        id S1726482AbgHHXgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727012AbgHHXgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:46 -0400
+        id S1727027AbgHHXgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C0F207FB;
-        Sat,  8 Aug 2020 23:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C441C20716;
+        Sat,  8 Aug 2020 23:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929805;
-        bh=vbTAb44KZTHCUUR1fLwfmZ7ptgPtMwcHogXlu5gZoe0=;
+        s=default; t=1596929807;
+        bh=IHgBT8Vjik3BbIgxDcxrZBpBmFQ3aLVlSzGsnPVE574=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fqiUcET2QadCRQZmW3gj9AU15qUVwEnU21rfJF/SfEAt3Dg3CZ8+REML40nHh1OSM
-         TOP8zEB//3OItnf0MBatwad77Rxx/vSY/JAnQBkSmPKbZPEAT3JzvBiG/RAkMkgfBP
-         1Uds2rBYINq8j4hMZtIyY61j6O9ciFEph7oC5mMo=
+        b=yxh0eIuM3eM8/J0i6gwwopCXJ5jioROjcy5r1vXBYfanHPNSDKePjQihKlXsuQC3d
+         FfeIBWYi2Tur6i+lSc1N8cjFG5agvaEKb5yUv5dtVUkKCt3/TW2RvCgJCWBcOKCKXj
+         avwoKu2arCbl1w1U1L7KO8o6yIsCDkpopj/qyfcY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 42/72] spi: dw-dma: Fix Tx DMA channel working too fast
-Date:   Sat,  8 Aug 2020 19:35:11 -0400
-Message-Id: <20200808233542.3617339-42-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.8 44/72] crypto: x86/crc32c - fix building with clang ias
+Date:   Sat,  8 Aug 2020 19:35:13 -0400
+Message-Id: <20200808233542.3617339-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -62,64 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit affe93dd5b35bb0e7b0aa0505ae432dd0ac72c3f ]
+[ Upstream commit 44623b2818f4a442726639572f44fd9b6d0ef68c ]
 
-It turns out having a Rx DMA channel serviced with higher priority than
-a Tx DMA channel is not enough to provide a well balanced DMA-based SPI
-transfer interface. There might still be moments when the Tx DMA channel
-is occasionally handled faster than the Rx DMA channel. That in its turn
-will eventually cause the SPI Rx FIFO overflow if SPI bus speed is high
-enough to fill the SPI Rx FIFO in before it's cleared by the Rx DMA
-channel. That's why having the DMA-based SPI Tx interface too optimized
-is the errors prone, so the commit 0b2b66514fc9 ("spi: dw: Use DMA max
-burst to set the request thresholds") though being perfectly normal from
-the standard functionality point of view implicitly introduced the problem
-described above. In order to fix that the Tx DMA activity is intentionally
-slowed down by limiting the SPI Tx FIFO depth with a value twice bigger
-than the Tx burst length calculated earlier by the
-dw_spi_dma_maxburst_init() method.
+The clang integrated assembler complains about movzxw:
 
-Fixes: 0b2b66514fc9 ("spi: dw: Use DMA max burst to set the request thresholds")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Feng Tang <feng.tang@intel.com>
-Link: https://lore.kernel.org/r/20200721203951.2159-1-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+arch/x86/crypto/crc32c-pcl-intel-asm_64.S:173:2: error: invalid instruction mnemonic 'movzxw'
+
+It seems that movzwq is the mnemonic that it expects instead,
+and this is what objdump prints when disassembling the file.
+
+Fixes: 6a8ce1ef3940 ("crypto: crc32c - Optimize CRC32C calculation with PCLMULQDQ instruction")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-dma.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ arch/x86/crypto/crc32c-pcl-intel-asm_64.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
-index 5986c520b1965..bb390ff67d1d8 100644
---- a/drivers/spi/spi-dw-dma.c
-+++ b/drivers/spi/spi-dw-dma.c
-@@ -372,8 +372,20 @@ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- {
- 	u16 imr = 0, dma_ctrl = 0;
+diff --git a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
+index 8501ec4532f4f..442599cbe7960 100644
+--- a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
++++ b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
+@@ -170,7 +170,7 @@ continue_block:
  
-+	/*
-+	 * Having a Rx DMA channel serviced with higher priority than a Tx DMA
-+	 * channel might not be enough to provide a well balanced DMA-based
-+	 * SPI transfer interface. There might still be moments when the Tx DMA
-+	 * channel is occasionally handled faster than the Rx DMA channel.
-+	 * That in its turn will eventually cause the SPI Rx FIFO overflow if
-+	 * SPI bus speed is high enough to fill the SPI Rx FIFO in before it's
-+	 * cleared by the Rx DMA channel. In order to fix the problem the Tx
-+	 * DMA activity is intentionally slowed down by limiting the SPI Tx
-+	 * FIFO depth with a value twice bigger than the Tx burst length
-+	 * calculated earlier by the dw_spi_dma_maxburst_init() method.
-+	 */
- 	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
--	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
-+	dw_writel(dws, DW_SPI_DMATDLR, dws->txburst);
- 
- 	if (xfer->tx_buf)
- 		dma_ctrl |= SPI_DMA_TDMAE;
+ 	## branch into array
+ 	lea	jump_table(%rip), %bufp
+-	movzxw  (%bufp, %rax, 2), len
++	movzwq  (%bufp, %rax, 2), len
+ 	lea	crc_array(%rip), %bufp
+ 	lea     (%bufp, len, 1), %bufp
+ 	JMP_NOSPEC bufp
 -- 
 2.25.1
 
