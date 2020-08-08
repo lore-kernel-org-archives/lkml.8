@@ -2,145 +2,81 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40555206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:47:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X5mko/Zz"
+	by mail.kernel.org (Postfix) with ESMTP id A811B206B5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 20:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgHHUrl (ORCPT
+        id S1726316AbgHHUxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 16:47:41 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38116 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgHHUri (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 16:47:38 -0400
-Received: from pendragon.ideasonboard.com (85-76-78-184-nat.elisa-mobile.fi [85.76.78.184])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BEE45F9;
-        Sat,  8 Aug 2020 22:47:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1596919654;
-        bh=j3h1WbChf2VxpX2O6k5nMqVjNvVbW4O2dWg4Gi8M1Pw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X5mko/ZzoX2VTYfebiWilgCTiVs5DAosQc06AR2NO6Q2nsoT6Ft3QJqpZiu7gNhzB
-         GQBit5Q6bRd8eh1d6PTLCXM981WH+WkhJ50sWANVgCMlHf1RktpDCEX0og3bYIownU
-         QHedZ3pBALmo2s2tkM2qKlHGSZujOcM9G2gfg6Wo=
-Date:   Sat, 8 Aug 2020 23:47:21 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     skhan@linuxfoundation.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/20] media: usb: uvc_ctrl.c: add temp variable for list
- iteration
-Message-ID: <20200808204721.GK6186@pendragon.ideasonboard.com>
-References: <20200807083548.204360-3-dwlsalmeida@gmail.com>
- <20200808204007.GI6186@pendragon.ideasonboard.com>
+        Sat, 8 Aug 2020 16:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbgHHUxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 16:53:15 -0400
+Received: from localhost.localdomain (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E508E206B5;
+        Sat,  8 Aug 2020 20:53:13 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fix for 5.9-rc1
+Date:   Sat,  8 Aug 2020 21:53:12 +0100
+Message-Id: <20200808205312.565-1-catalin.marinas@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200808204007.GI6186@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Hi Linus,
 
-On Sat, Aug 08, 2020 at 11:40:13PM +0300, Laurent Pinchart wrote:
-> On Fri, Aug 07, 2020 at 05:35:30AM -0300, Daniel W. S. Almeida wrote:
-> > From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-> > 
-> > Fixes the following coccinelle report:
-> > 
-> > drivers/media/usb/uvc/uvc_ctrl.c:1860:5-11:
-> > ERROR: invalid reference to the index variable of the iterator on line 1854
-> > 
-> > By introducing a temporary variable to iterate the list.
-> > 
-> > Do not dereference the 'entity' pointer if it is not found in the list.
-> > 
-> > Found using - Coccinelle (http://coccinelle.lip6.fr)
-> > 
-> > Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> > ---
-> >  drivers/media/usb/uvc/uvc_ctrl.c | 13 ++++++++-----
-> >  1 file changed, 8 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> > index e399b9fad757..567bdedc2ff2 100644
-> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> > @@ -1842,7 +1842,8 @@ static int uvc_ctrl_init_xu_ctrl(struct uvc_device *dev,
-> >  int uvc_xu_ctrl_query(struct uvc_video_chain *chain,
-> >  	struct uvc_xu_control_query *xqry)
-> >  {
-> > -	struct uvc_entity *entity;
-> > +	struct uvc_entity *entity = NULL;
-> > +	struct uvc_entity *cursor = NULL;
-> 
-> cursor doesn't have to be initialized to NULL.
-> 
-> It may be a style preference, but instead of a cursor variable that
-> doesn't tell in its name what it refers to, I'd prefer a
-> 
-> 	bool found = false;
-> 
-> >  	struct uvc_control *ctrl;
-> >  	unsigned int i, found = 0;
-> >  	u32 reqflags;
-> > @@ -1851,13 +1852,15 @@ int uvc_xu_ctrl_query(struct uvc_video_chain *chain,
-> >  	int ret;
-> >  
-> >  	/* Find the extension unit. */
-> > -	list_for_each_entry(entity, &chain->entities, chain) {
-> > -		if (UVC_ENTITY_TYPE(entity) == UVC_VC_EXTENSION_UNIT &&
-> > -		    entity->id == xqry->unit)
-> > +	list_for_each_entry(cursor, &chain->entities, chain) {
-> > +		if (UVC_ENTITY_TYPE(cursor) == UVC_VC_EXTENSION_UNIT &&
-> > +		    cursor->id == xqry->unit) {
-> 
-> All this would keep using entity.
-> 
-> > +			entity = cursor;
-> 
-> And this would be replaced with
-> 
-> 			found = true;
-> 
-> >  			break;
-> > +		    }
+Please pull the arm64 updates below. The fix addresses a symbol export
+for the tegra194-cpufreq module that made its way into mainline (the
+issue was found in -next but still debating an alternative fix without
+exporting __cpu_logical_map).
 
-I forgot to mention that the indentation is incorrect here.
+Thanks.
 
-> >  	}
-> >  
-> > -	if (entity->id != xqry->unit) {
-> > +	if (!entity || entity->id != xqry->unit) {
-> 
-> The second part of the check isn't needed, it was only meant to check if
-> the entity has been found.
-> 
-> Here, we'd have 
-> 
-> 	if (!found) {
-> 
-> I'f you're OK with these changes there's no need to resubmit, I can
-> update when applying. Please let me know how you'd like to proceed.
-> 
-> >  		uvc_trace(UVC_TRACE_CONTROL, "Extension unit %u not found.\n",
-> >  			xqry->unit);
-> >  		return -ENOENT;
+The following changes since commit 0e4cd9f2654915be8d09a1bd1b405ce5426e64c4:
 
--- 
-Regards,
+  Merge branch 'for-next/read-barrier-depends' into for-next/core (2020-07-31 18:09:57 +0100)
 
-Laurent Pinchart
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+
+for you to fetch changes up to eaecca9e7710281be7c31d892c9f447eafd7ddd9:
+
+  arm64: Fix __cpu_logical_map undefined issue (2020-08-08 19:25:04 +0100)
+
+----------------------------------------------------------------
+- Fix tegra194-cpufreq module build failure caused  __cpu_logical_map
+  not exported.
+
+- Improve fixed_addresses comment regarding the fixmap buffer sizes.
+
+----------------------------------------------------------------
+Kefeng Wang (1):
+      arm64: Fix __cpu_logical_map undefined issue
+
+Pingfan Liu (1):
+      arm64/fixmap: make notes of fixed_addresses more precisely
+
+ arch/arm64/include/asm/fixmap.h | 7 +++----
+ arch/arm64/include/asm/smp.h    | 7 ++++++-
+ arch/arm64/kernel/setup.c       | 8 +++++++-
+ arch/arm64/kernel/smp.c         | 6 +++---
+ 4 files changed, 19 insertions(+), 9 deletions(-)
