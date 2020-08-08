@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7B320825
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04AE20791
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929998;
-	bh=cjtdBc3RixVqwCdUJQihsAUyE8l5VSflaCE6otsLWuA=;
+	s=default; t=1596930003;
+	bh=mDvJv/VK+kao2IarrXzUF5c67w22XnuUMVb8zUHLb6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qnjMPBjxzVtKevLgv5M/CUNzGAMTiXRNtTIvz7FA75vF36p22vlCOVrXaCbfyNTAJ
-	 1v8XdLSvLMGbNN8JpWBOjH5eLKJ0cRglWwPNgSi5I+sdfDW9FssDHNrPhPI6qF7vfD
-	 vtrDW7cpKD4v4Cpq4N7EsDFvEbax9L05MpsWeS2Q=
+	b=yNTXces/9YGah9723m685xWkqTo+/fte9U6ox/TVo6mzgDdp+DJGOZwjxfY1AFLM4
+	 k/u+sX68DiuUdd6lbiv/d/PsdnBv96+FaZLOj5kAShCOofa3lUebCdJ4TJR4HrswAF
+	 7JoMR3z/4rLjgfEsnfzeJbINwAPjjBRg7ql/WD5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgHHXj4 (ORCPT
+        id S1728382AbgHHXkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54450 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgHHXjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:35 -0400
+        id S1727103AbgHHXji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15B52073E;
-        Sat,  8 Aug 2020 23:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BBC221744;
+        Sat,  8 Aug 2020 23:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929974;
-        bh=cjtdBc3RixVqwCdUJQihsAUyE8l5VSflaCE6otsLWuA=;
+        s=default; t=1596929978;
+        bh=mDvJv/VK+kao2IarrXzUF5c67w22XnuUMVb8zUHLb6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTMKQpRFU5o2oVXu2H0JhjO2+iopwE+VJWgOGVKAaTKxAJ56JvcdM9lBVmSwIJdFr
-         IWUCnN/HIIVjxV94WHjzL45k4lkgJ+7Yqf9o/XeuHFluDJjVS/M1zWExg3Pnph4DF8
-         QrpwSAstKW7PrlQzoUkd0GR8hjz/GG+Ie/33BP6k=
+        b=iGW1vbYoF5K6gvmcicE48A399i24RnoqYzA/c6G3YzuIw5IoTNCgGJDt0QUM0mY9A
+         8m5X5vZBI0yQGmzUW0opg3B60bsIJFvBDj3QvV3nPxmH2cS9prQuUDIZZxrzl5X4Ho
+         mDd/ogtBIFCVvYJlMQ2IdCN7r4pm5pnSt3ScYl0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/40] seccomp: Fix ioctl number for SECCOMP_IOCTL_NOTIF_ID_VALID
-Date:   Sat,  8 Aug 2020 19:38:39 -0400
-Message-Id: <20200808233844.3618823-35-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 38/40] nvme-rdma: fix controller reset hang during traffic
+Date:   Sat,  8 Aug 2020 19:38:42 -0400
+Message-Id: <20200808233844.3618823-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -59,77 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 47e33c05f9f07cac3de833e531bcac9ae052c7ca ]
+[ Upstream commit 9f98772ba307dd89a3d17dc2589f213d3972fc64 ]
 
-When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced it had the wrong
-direction flag set. While this isn't a big deal as nothing currently
-enforces these bits in the kernel, it should be defined correctly. Fix
-the define and provide support for the old command until it is no longer
-needed for backward compatibility.
+commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+exposed an issue where we may hang trying to wait for queue freeze
+during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
+queue maps (which we have now for default/read/poll) is attempting to
+freeze the queue. However we never started queue freeze when starting the
+reset, which means that we have inflight pending requests that entered the
+queue that we will not complete once the queue is quiesced.
 
-Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-Signed-off-by: Kees Cook <keescook@chromium.org>
+So start a freeze before we quiesce the queue, and unfreeze the queue
+after we successfully connected the I/O queues (and make sure to call
+blk_mq_update_nr_hw_queues only after we are sure that the queue was
+already frozen).
+
+This follows to how the pci driver handles resets.
+
+Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/seccomp.h                  | 3 ++-
- kernel/seccomp.c                              | 9 +++++++++
- tools/testing/selftests/seccomp/seccomp_bpf.c | 2 +-
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/nvme/host/rdma.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-index 90734aa5aa363..b5f901af79f0b 100644
---- a/include/uapi/linux/seccomp.h
-+++ b/include/uapi/linux/seccomp.h
-@@ -93,5 +93,6 @@ struct seccomp_notif_resp {
- #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
- #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
- 						struct seccomp_notif_resp)
--#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
-+
- #endif /* _UAPI_LINUX_SECCOMP_H */
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 2c697ce7be21f..e0fd972356539 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -42,6 +42,14 @@
- #include <linux/uaccess.h>
- #include <linux/anon_inodes.h>
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index cd0d499781908..d0336545e1fe0 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -890,15 +890,20 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
+ 			ret = PTR_ERR(ctrl->ctrl.connect_q);
+ 			goto out_free_tag_set;
+ 		}
+-	} else {
+-		blk_mq_update_nr_hw_queues(&ctrl->tag_set,
+-			ctrl->ctrl.queue_count - 1);
+ 	}
  
-+/*
-+ * When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced, it had the
-+ * wrong direction flag in the ioctl number. This is the broken one,
-+ * which the kernel needs to keep supporting until all userspaces stop
-+ * using the wrong command number.
-+ */
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR	SECCOMP_IOR(2, __u64)
-+
- enum notify_state {
- 	SECCOMP_NOTIFY_INIT,
- 	SECCOMP_NOTIFY_SENT,
-@@ -1168,6 +1176,7 @@ static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
- 		return seccomp_notify_recv(filter, buf);
- 	case SECCOMP_IOCTL_NOTIF_SEND:
- 		return seccomp_notify_send(filter, buf);
-+	case SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR:
- 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
- 		return seccomp_notify_id_valid(filter, buf);
- 	default:
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 96bbda4f10fc6..19c7351eeb74b 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -177,7 +177,7 @@ struct seccomp_metadata {
- #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
- #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
- 						struct seccomp_notif_resp)
--#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
-+#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
+ 	ret = nvme_rdma_start_io_queues(ctrl);
+ 	if (ret)
+ 		goto out_cleanup_connect_q;
  
- struct seccomp_notif {
- 	__u64 id;
++	if (!new) {
++		nvme_start_queues(&ctrl->ctrl);
++		nvme_wait_freeze(&ctrl->ctrl);
++		blk_mq_update_nr_hw_queues(ctrl->ctrl.tagset,
++			ctrl->ctrl.queue_count - 1);
++		nvme_unfreeze(&ctrl->ctrl);
++	}
++
+ 	return 0;
+ 
+ out_cleanup_connect_q:
+@@ -931,6 +936,7 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
+ 		bool remove)
+ {
+ 	if (ctrl->ctrl.queue_count > 1) {
++		nvme_start_freeze(&ctrl->ctrl);
+ 		nvme_stop_queues(&ctrl->ctrl);
+ 		nvme_rdma_stop_io_queues(ctrl);
+ 		if (ctrl->ctrl.tagset) {
 -- 
 2.25.1
 
