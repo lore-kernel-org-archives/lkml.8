@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E125C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A45EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7150A20672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0416A206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930565;
-	bh=IPrxSe+zlkAV1YF+9agKI2SRHHcxYLSZAX0ZjcL2ix0=;
+	s=default; t=1596930569;
+	bh=i8CA6/j1VbHk5HL5gl8INswoxQFjy/h3zO5JJS8sS7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EdZ7oJeXT+wX2mvRWYzBRus/MQ76yDRFi6lMWcNYpBVV3XA3VmPWqcBlZ5aKF+TT4
-	 jBM5hDre007UbxV251BY5bTVT9y2vqERqyIw204KEF053Wom/FrvO27tiYz0Y9grVo
-	 HrkM3htEwkqCxXC6BfRirdNNWtshPbxrUdb3oSXU=
+	b=VpOM8yk3g9XTsbfO2EhPsyCr4iCTfMGo4b9Oopzdf78HFJPSMTIIfYvGRA78ojmlL
+	 r0+bMRZB8a6TXsDJSS9kFW9aNZXnmptuLtZT+vEber+wVuw8d4KFXG5CLjH3DGwQ4c
+	 6c6T4wbEU1LsWdNMU8P5V5xRziVnQT7cfsbqm2BI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgHHXhE (ORCPT
+        id S1728600AbgHHXt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgHHXg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:58 -0400
+        id S1727112AbgHHXhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C352075D;
-        Sat,  8 Aug 2020 23:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DB4C20855;
+        Sat,  8 Aug 2020 23:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929818;
-        bh=IPrxSe+zlkAV1YF+9agKI2SRHHcxYLSZAX0ZjcL2ix0=;
+        s=default; t=1596929821;
+        bh=i8CA6/j1VbHk5HL5gl8INswoxQFjy/h3zO5JJS8sS7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r0d+dF/iXCQBxzARNgvJ3NyolD/MDjAURNcLwz3xpsBTzGp4LEHeN/55fFTlUjGT7
-         EDjXVdmeMTG3ReGwDfNVftxHYbV9RrLqPv5GLyqVfc4NUby1l5S1g5GP5i1Nt60FbB
-         ilai6dTakfHCUaDaFkXeQ4K/+84Qauv2QKxIYYZ8=
+        b=H4NO4VrTvvhI4QCIuCjVhZFgTutmQN2OaqI3WLl0cdA7Yec5GwL6UPPE7nG3+oQom
+         Y2qJ1/SyvhnLFf4NrlI80Tg+SA6IWZ7DaEi8hpyHHTnDLNGziMOOq4MQKuPgvJnw//
+         Imf/5jSG3RuTig9sPIEpeaPtohMi7MuWTtMGZ4Oo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Lin <jon.lin@rock-chips.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 52/72] spi: rockchip: Fix error in SPI slave pio read
-Date:   Sat,  8 Aug 2020 19:35:21 -0400
-Message-Id: <20200808233542.3617339-52-sashal@kernel.org>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 55/72] scripts/selinux/mdp: fix initial SID handling
+Date:   Sat,  8 Aug 2020 19:35:24 -0400
+Message-Id: <20200808233542.3617339-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -63,37 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Lin <jon.lin@rock-chips.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
 
-[ Upstream commit 4294e4accf8d695ea5605f6b189008b692e3e82c ]
+[ Upstream commit 382c2b5d23b4245f1818f69286db334355488dc4 ]
 
-The RXFLR is possible larger than rx_left in Rockchip SPI, fix it.
+commit e3e0b582c321 ("selinux: remove unused initial SIDs and improve
+handling") broke scripts/selinux/mdp since the unused initial SID names
+were removed and the corresponding generation of policy initial SID
+definitions by mdp was not updated accordingly.  Fix it.  With latest
+upstream checkpolicy it is no longer necessary to include the SID context
+definitions for the unused initial SIDs but retain them for compatibility
+with older checkpolicy.
 
-Fixes: 01b59ce5dac8 ("spi: rockchip: use irq rather than polling")
-Signed-off-by: Jon Lin <jon.lin@rock-chips.com>
-Tested-by: Emil Renner Berthing <kernel@esmil.dk>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Emil Renner Berthing <kernel@esmil.dk>
-Link: https://lore.kernel.org/r/20200723004356.6390-3-jon.lin@rock-chips.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e3e0b582c321 ("selinux: remove unused initial SIDs and improve handling")
+Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/selinux/mdp/mdp.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 9b8a5e1233c06..4776aa815c3fa 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -288,7 +288,7 @@ static void rockchip_spi_pio_writer(struct rockchip_spi *rs)
- static void rockchip_spi_pio_reader(struct rockchip_spi *rs)
- {
- 	u32 words = readl_relaxed(rs->regs + ROCKCHIP_SPI_RXFLR);
--	u32 rx_left = rs->rx_left - words;
-+	u32 rx_left = (rs->rx_left > words) ? rs->rx_left - words : 0;
+diff --git a/scripts/selinux/mdp/mdp.c b/scripts/selinux/mdp/mdp.c
+index 576d11a60417b..6ceb88eb9b590 100644
+--- a/scripts/selinux/mdp/mdp.c
++++ b/scripts/selinux/mdp/mdp.c
+@@ -67,8 +67,14 @@ int main(int argc, char *argv[])
  
- 	/* the hardware doesn't allow us to change fifo threshold
- 	 * level while spi is enabled, so instead make sure to leave
+ 	initial_sid_to_string_len = sizeof(initial_sid_to_string) / sizeof (char *);
+ 	/* print out the sids */
+-	for (i = 1; i < initial_sid_to_string_len; i++)
+-		fprintf(fout, "sid %s\n", initial_sid_to_string[i]);
++	for (i = 1; i < initial_sid_to_string_len; i++) {
++		const char *name = initial_sid_to_string[i];
++
++		if (name)
++			fprintf(fout, "sid %s\n", name);
++		else
++			fprintf(fout, "sid unused%d\n", i);
++	}
+ 	fprintf(fout, "\n");
+ 
+ 	/* print out the class permissions */
+@@ -126,9 +132,16 @@ int main(int argc, char *argv[])
+ #define OBJUSERROLETYPE "user_u:object_r:base_t"
+ 
+ 	/* default sids */
+-	for (i = 1; i < initial_sid_to_string_len; i++)
+-		fprintf(fout, "sid %s " SUBJUSERROLETYPE "%s\n",
+-			initial_sid_to_string[i], mls ? ":" SYSTEMLOW : "");
++	for (i = 1; i < initial_sid_to_string_len; i++) {
++		const char *name = initial_sid_to_string[i];
++
++		if (name)
++			fprintf(fout, "sid %s ", name);
++		else
++			fprintf(fout, "sid unused%d\n", i);
++		fprintf(fout, SUBJUSERROLETYPE "%s\n",
++			mls ? ":" SYSTEMLOW : "");
++	}
+ 	fprintf(fout, "\n");
+ 
+ #define FS_USE(behavior, fstype)			    \
 -- 
 2.25.1
 
