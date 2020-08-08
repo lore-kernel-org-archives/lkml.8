@@ -2,1213 +2,318 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E65C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1978206B6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0009206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="DVpS7vF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgHHVAU (ORCPT
+        id S1726426AbgHHVBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 17:00:20 -0400
-Received: from 8.mo178.mail-out.ovh.net ([46.105.74.227]:47134 "EHLO
-        8.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgHHVAU (ORCPT
+        Sat, 8 Aug 2020 17:01:32 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:46639 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgHHVBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 17:00:20 -0400
-Received: from player732.ha.ovh.net (unknown [10.110.115.111])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 6D2AAA94C1
-        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 23:00:13 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player732.ha.ovh.net (Postfix) with ESMTPSA id 614CB15009AA4;
-        Sat,  8 Aug 2020 21:00:07 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-99G0032a3d5e6d-b57c-487a-b2bf-909a8cbebcdf,
-                    79D32C5DBA076DF52B56DF0DE49DD07428F72CA9) smtp.auth=steve@sk2.org
-From:   Stephen Kitt <steve@sk2.org>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v5] hwmon/pmbus: use simple i2c probe function
-Date:   Sat,  8 Aug 2020 23:00:04 +0200
-Message-Id: <20200808210004.30880-1-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
+        Sat, 8 Aug 2020 17:01:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=7ckVhzc9/VfGq+rMsDYb3pgmy8y9xne4ILOjK9rcAQ8=;
+        b=DVpS7vF4Kc7FNLDyB04imDa9Zx55BzS1S6jk0/JF71/Wu3Asv+0yz1MsF5i726APSXMh
+        tbfHz+fICU72+90DymFjmBN9NtUeJR5oS2SxauFg/medB8BT6PR+lm8NC9bJF8PoNBZp3k
+        74OM3cbCL+aVYZwCfm6kq2u2lbuI1XgQQ=
+Received: by filterdrecv-p3mdw1-7ff865655c-82wvk with SMTP id filterdrecv-p3mdw1-7ff865655c-82wvk-19-5F2F12AA-8
+        2020-08-08 21:01:30.152069925 +0000 UTC m=+873909.987941538
+Received: from [192.168.1.14] (unknown)
+        by ismtpd0005p1lon1.sendgrid.net (SG) with ESMTP
+        id F6xr0lzWTyGW67QhDNBbLg
+        Sat, 08 Aug 2020 21:01:29.887 +0000 (UTC)
+Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight
+ parameters
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+ <20200806151310.98624-4-ezequiel@collabora.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
+Date:   Sat, 08 Aug 2020 21:01:30 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 1323213866188229902
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkeeggddufeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefvddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+In-Reply-To: <20200806151310.98624-4-ezequiel@collabora.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h4O5Tr8bai3K3JVH3?=
+ =?us-ascii?Q?eNDC7XU+slOR+Usg5leeJmvM3cOjJLzXf=2FmKarl?=
+ =?us-ascii?Q?8gGn07et2rWh8S+nE8JaQQ2AJ5NosyE17XACTuU?=
+ =?us-ascii?Q?9ncdBRH1ivra=2FalDeLq=2FfMcAFI5atYxzYDVvSVB?=
+ =?us-ascii?Q?dDSs8hplCWLakTyknZV5+=2Fvx=2FrznEoOqG6SXX+b?=
+ =?us-ascii?Q?QtOM2Cle6mANswuR56cIA=3D=3D?=
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Language: sv
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pmbus_do_probe doesn't use the id information provided in its second
-argument, so this can be removed, which then allows using the
-single-parameter i2c probe function ("probe_new") for probes.
+On 2020-08-06 17:12, Ezequiel Garcia wrote:
+> The prediction weight parameters are only required under
+> certain conditions, which depend on slice header parameters.
+> 
+> As specified in section 7.3.3 Slice header syntax, the prediction
+> weight table is present if:
+> 
+> ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
+> (weighted_bipred_idc == 1 && slice_type == B))
 
-This avoids scanning the identifier tables during probes.
+Maybe a macro can be added to help check this contition?
 
-Drivers which didn't use the id are converted as-is; drivers which did
-are modified as follows:
+Something like this maybe:
 
-* if the information in i2c_client is sufficient, that's used instead
-  (client->name);
-* configured v. probed comparisons are performed by comparing the
-  configured name to the detected name, instead of the ids; this
-  involves strcmp but is still cheaper than comparing all the device
-  names when scanning the tables;
-* anything else is handled by calling i2c_match_id() with the same
-  level of error-handling (if any) as before.
+#define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
+	((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
+	 ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
+	   (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
+	 ((pps)->weighted_bipred_idc == 1 && \
+	  (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
 
-Additionally, the mismatch message in the ltc2978 driver is adjusted
-so that it no longer assumes that the driver_data is an index into
-ltc2978_id.
+> 
+> Given its size, it makes sense to move this table to its control,
+> so applications can avoid passing it if the slice doesn't specify it.
+> 
+> Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
+> With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
+> is 772 bytes.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> v2: Fix missing Cedrus changes and mssing control declaration,
+>     as noted by Hans and Jernej.
+> ---
+>  .../media/v4l/ext-ctrls-codec.rst             | 19 ++++++++++++-------
+>  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
+>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
+>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
+>  include/media/h264-ctrls.h                    |  5 +++--
+>  include/media/v4l2-ctrls.h                    |  2 ++
+>  8 files changed, 37 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index d1438b1e259f..c36ce5a95fc5 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1879,18 +1879,23 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>        - 0x00000008
+>        -
+>  
+> -``Prediction Weight Table``
+> +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
+> +    Prediction weight table defined according to :ref:`h264`,
+> +    section 7.4.3.2 "Prediction Weight Table Semantics".
+> +    The prediction weight table must be passed by applications
+> +    under the conditions explained in section 7.3.3 "Slice header
+> +    syntax".
+>  
+> -    The bitstream parameters are defined according to :ref:`h264`,
+> -    section 7.4.3.2 "Prediction Weight Table Semantics". For further
+> -    documentation, refer to the above specification, unless there is
+> -    an explicit comment stating otherwise.
+> +    .. note::
+> +
+> +       This compound control is not yet part of the public kernel API and
+> +       it is expected to change.
+>  
+> -.. c:type:: v4l2_h264_pred_weight_table
+> +.. c:type:: v4l2_ctrl_h264_pred_weights
+>  
+>  .. cssclass:: longtable
+>  
+> -.. flat-table:: struct v4l2_h264_pred_weight_table
+> +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
+>      :header-rows:  0
+>      :stub-columns: 0
+>      :widths:       1 1 2
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 3f3fbcd60cc6..76c8dc8fb31c 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:		return "H264 Decode Parameters";
+>  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:		return "H264 Decode Mode";
+>  	case V4L2_CID_MPEG_VIDEO_H264_START_CODE:		return "H264 Start Code";
+> +	case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:		return "H264 Prediction Weight Table";
+>  	case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:			return "MPEG2 Level";
+>  	case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:			return "MPEG2 Profile";
+>  	case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:		return "MPEG4 I-Frame QP Value";
+> @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
+>  		*type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
+>  		break;
+> +	case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
+> +		*type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
+> +		break;
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+>  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+>  		break;
+> @@ -1790,6 +1794,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  	case V4L2_CTRL_TYPE_H264_SPS:
+>  	case V4L2_CTRL_TYPE_H264_PPS:
+>  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> +	case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+>  	case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
+>  	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+>  		break;
+> @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+>  		elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
+>  		break;
+> +	case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+> +		elem_size = sizeof(struct v4l2_ctrl_h264_pred_weights);
+> +		break;
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+>  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+>  		break;
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> index bc27f9430eeb..027cdd1be5a0 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> @@ -78,6 +78,13 @@ static const struct cedrus_control cedrus_controls[] = {
+>  		.codec		= CEDRUS_CODEC_H264,
+>  		.required	= true,
+>  	},
+> +	{
+> +		.cfg = {
+> +			.id	= V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
+> +		},
+> +		.codec		= CEDRUS_CODEC_H264,
+> +		.required	= true,
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
-Changes since v1:
-  - i2c_device_id declarations are left unchanged;
-  - all drivers are converted, using client info or i2c_match_id().
-Changes since v2:
-  - updated the documentation;
-  - fixed unbalanced braces around the modified else in ibm-cffps.c.
-Changes since v3:
-  - fix ltc2978 to avoid assuming names and driver_data are bijective,
-    and that driver_data are indexes into ltc2978_id.
-Changes since v4:
-  - explicitly case id->driver_data to int in a printk call.
+This should probably be false if this control is to be optional as implied
+by the commit message.
 
- Documentation/hwmon/pmbus-core.rst |  3 +--
- Documentation/hwmon/pmbus.rst      |  7 +++----
- drivers/hwmon/pmbus/adm1275.c      | 11 +++++------
- drivers/hwmon/pmbus/bel-pfe.c      | 11 ++++++-----
- drivers/hwmon/pmbus/ibm-cffps.c    | 19 ++++++++++++-------
- drivers/hwmon/pmbus/inspur-ipsps.c |  7 +++----
- drivers/hwmon/pmbus/ir35221.c      |  7 +++----
- drivers/hwmon/pmbus/ir38064.c      |  7 +++----
- drivers/hwmon/pmbus/irps5401.c     |  7 +++----
- drivers/hwmon/pmbus/isl68137.c     | 11 ++++++-----
- drivers/hwmon/pmbus/lm25066.c      | 11 ++++++-----
- drivers/hwmon/pmbus/ltc2978.c      | 14 ++++++++------
- drivers/hwmon/pmbus/ltc3815.c      |  7 +++----
- drivers/hwmon/pmbus/max16064.c     |  7 +++----
- drivers/hwmon/pmbus/max16601.c     |  7 +++----
- drivers/hwmon/pmbus/max20730.c     | 11 ++++++-----
- drivers/hwmon/pmbus/max20751.c     |  7 +++----
- drivers/hwmon/pmbus/max31785.c     |  9 ++++-----
- drivers/hwmon/pmbus/max34440.c     | 13 +++++++------
- drivers/hwmon/pmbus/max8688.c      |  7 +++----
- drivers/hwmon/pmbus/pmbus.c        | 11 ++++++-----
- drivers/hwmon/pmbus/pmbus.h        |  3 +--
- drivers/hwmon/pmbus/pmbus_core.c   |  3 +--
- drivers/hwmon/pmbus/pxe1610.c      |  7 +++----
- drivers/hwmon/pmbus/tps40422.c     |  7 +++----
- drivers/hwmon/pmbus/tps53679.c     | 11 ++++++-----
- drivers/hwmon/pmbus/ucd9000.c      | 13 ++++++-------
- drivers/hwmon/pmbus/ucd9200.c      | 13 ++++++-------
- drivers/hwmon/pmbus/xdpe12284.c    |  7 +++----
- drivers/hwmon/pmbus/zl6100.c       | 11 +++++------
- 30 files changed, 131 insertions(+), 138 deletions(-)
+Best regards,
+Jonas
 
-diff --git a/Documentation/hwmon/pmbus-core.rst b/Documentation/hwmon/pmbus-core.rst
-index 501b37b0610d..e22c4f6808bc 100644
---- a/Documentation/hwmon/pmbus-core.rst
-+++ b/Documentation/hwmon/pmbus-core.rst
-@@ -270,8 +270,7 @@ obtain the chip status. Therefore, it must _not_ be called from that function.
- 
- ::
- 
--  int pmbus_do_probe(struct i2c_client *client, const struct i2c_device_id *id,
--		     struct pmbus_driver_info *info);
-+  int pmbus_do_probe(struct i2c_client *client, struct pmbus_driver_info *info);
- 
- Execute probe function. Similar to standard probe function for other drivers,
- with the pointer to struct pmbus_driver_info as additional argument. Calls
-diff --git a/Documentation/hwmon/pmbus.rst b/Documentation/hwmon/pmbus.rst
-index 2658ddee70eb..1f31317fe186 100644
---- a/Documentation/hwmon/pmbus.rst
-+++ b/Documentation/hwmon/pmbus.rst
-@@ -143,10 +143,9 @@ Emerson DS1200 power modules might look as follows::
- 		   | PMBUS_HAVE_FAN12 | PMBUS_HAVE_STATUS_FAN12,
-   };
- 
--  static int ds1200_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+  static int ds1200_probe(struct i2c_client *client)
-   {
--	return pmbus_do_probe(client, id, &ds1200_info);
-+	return pmbus_do_probe(client, &ds1200_info);
-   }
- 
-   static int ds1200_remove(struct i2c_client *client)
-@@ -166,7 +165,7 @@ Emerson DS1200 power modules might look as follows::
- 	.driver = {
- 		   .name = "ds1200",
- 		   },
--	.probe = ds1200_probe,
-+	.probe_new = ds1200_probe,
- 	.remove = ds1200_remove,
- 	.id_table = ds1200_id,
-   };
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 19317575d1c6..7fc3a3b1b55c 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -462,8 +462,7 @@ static const struct i2c_device_id adm1275_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, adm1275_id);
- 
--static int adm1275_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int adm1275_probe(struct i2c_client *client)
- {
- 	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
- 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
-@@ -506,10 +505,10 @@ static int adm1275_probe(struct i2c_client *client,
- 		return -ENODEV;
- 	}
- 
--	if (id->driver_data != mid->driver_data)
-+	if (strcmp(client->name, mid->name) != 0)
- 		dev_notice(&client->dev,
- 			   "Device mismatch: Configured %s, detected %s\n",
--			   id->name, mid->name);
-+			   client->name, mid->name);
- 
- 	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
- 	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
-@@ -791,14 +790,14 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->R[PSC_TEMPERATURE] = coefficients[tindex].R;
- 	}
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static struct i2c_driver adm1275_driver = {
- 	.driver = {
- 		   .name = "adm1275",
- 		   },
--	.probe = adm1275_probe,
-+	.probe_new = adm1275_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = adm1275_id,
- };
-diff --git a/drivers/hwmon/pmbus/bel-pfe.c b/drivers/hwmon/pmbus/bel-pfe.c
-index f236e18f45a5..2c5b853d6c7f 100644
---- a/drivers/hwmon/pmbus/bel-pfe.c
-+++ b/drivers/hwmon/pmbus/bel-pfe.c
-@@ -87,12 +87,13 @@ static struct pmbus_driver_info pfe_driver_info[] = {
- 	},
- };
- 
--static int pfe_pmbus_probe(struct i2c_client *client,
--			   const struct i2c_device_id *id)
-+static const struct i2c_device_id pfe_device_id[];
-+
-+static int pfe_pmbus_probe(struct i2c_client *client)
- {
- 	int model;
- 
--	model = (int)id->driver_data;
-+	model = (int)i2c_match_id(pfe_device_id, client)->driver_data;
- 
- 	/*
- 	 * PFE3000-12-069RA devices may not stay in page 0 during device
-@@ -104,7 +105,7 @@ static int pfe_pmbus_probe(struct i2c_client *client,
- 		i2c_smbus_write_byte_data(client, PMBUS_PAGE, 0);
- 	}
- 
--	return pmbus_do_probe(client, id, &pfe_driver_info[model]);
-+	return pmbus_do_probe(client, &pfe_driver_info[model]);
- }
- 
- static const struct i2c_device_id pfe_device_id[] = {
-@@ -119,7 +120,7 @@ static struct i2c_driver pfe_pmbus_driver = {
- 	.driver = {
- 		   .name = "bel-pfe",
- 	},
--	.probe = pfe_pmbus_probe,
-+	.probe_new = pfe_pmbus_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = pfe_device_id,
- };
-diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-index 7d300f2f338d..2fb7540ee952 100644
---- a/drivers/hwmon/pmbus/ibm-cffps.c
-+++ b/drivers/hwmon/pmbus/ibm-cffps.c
-@@ -91,6 +91,8 @@ struct ibm_cffps {
- 	struct led_classdev led;
- };
- 
-+static const struct i2c_device_id ibm_cffps_id[];
-+
- #define to_psu(x, y) container_of((x), struct ibm_cffps, debugfs_entries[(y)])
- 
- static ssize_t ibm_cffps_read_input_history(struct ibm_cffps *psu,
-@@ -473,8 +475,7 @@ static struct pmbus_platform_data ibm_cffps_pdata = {
- 	.flags = PMBUS_SKIP_STATUS_CHECK,
- };
- 
--static int ibm_cffps_probe(struct i2c_client *client,
--			   const struct i2c_device_id *id)
-+static int ibm_cffps_probe(struct i2c_client *client)
- {
- 	int i, rc;
- 	enum versions vs = cffps_unknown;
-@@ -482,11 +483,15 @@ static int ibm_cffps_probe(struct i2c_client *client,
- 	struct dentry *ibm_cffps_dir;
- 	struct ibm_cffps *psu;
- 	const void *md = of_device_get_match_data(&client->dev);
-+	const struct i2c_device_id *id;
- 
--	if (md)
-+	if (md) {
- 		vs = (enum versions)md;
--	else if (id)
--		vs = (enum versions)id->driver_data;
-+	} else {
-+		id = i2c_match_id(ibm_cffps_id, client);
-+		if (id)
-+			vs = (enum versions)id->driver_data;
-+	}
- 
- 	if (vs == cffps_unknown) {
- 		u16 ccin_revision = 0;
-@@ -519,7 +524,7 @@ static int ibm_cffps_probe(struct i2c_client *client,
- 	}
- 
- 	client->dev.platform_data = &ibm_cffps_pdata;
--	rc = pmbus_do_probe(client, id, &ibm_cffps_info[vs]);
-+	rc = pmbus_do_probe(client, &ibm_cffps_info[vs]);
- 	if (rc)
- 		return rc;
- 
-@@ -611,7 +616,7 @@ static struct i2c_driver ibm_cffps_driver = {
- 		.name = "ibm-cffps",
- 		.of_match_table = ibm_cffps_of_match,
- 	},
--	.probe = ibm_cffps_probe,
-+	.probe_new = ibm_cffps_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = ibm_cffps_id,
- };
-diff --git a/drivers/hwmon/pmbus/inspur-ipsps.c b/drivers/hwmon/pmbus/inspur-ipsps.c
-index 42e01549184a..be493182174d 100644
---- a/drivers/hwmon/pmbus/inspur-ipsps.c
-+++ b/drivers/hwmon/pmbus/inspur-ipsps.c
-@@ -190,11 +190,10 @@ static struct pmbus_platform_data ipsps_pdata = {
- 	.flags = PMBUS_SKIP_STATUS_CHECK,
- };
- 
--static int ipsps_probe(struct i2c_client *client,
--		       const struct i2c_device_id *id)
-+static int ipsps_probe(struct i2c_client *client)
- {
- 	client->dev.platform_data = &ipsps_pdata;
--	return pmbus_do_probe(client, id, &ipsps_info);
-+	return pmbus_do_probe(client, &ipsps_info);
- }
- 
- static const struct i2c_device_id ipsps_id[] = {
-@@ -216,7 +215,7 @@ static struct i2c_driver ipsps_driver = {
- 		.name = "inspur-ipsps",
- 		.of_match_table = of_match_ptr(ipsps_of_match),
- 	},
--	.probe = ipsps_probe,
-+	.probe_new = ipsps_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = ipsps_id,
- };
-diff --git a/drivers/hwmon/pmbus/ir35221.c b/drivers/hwmon/pmbus/ir35221.c
-index 3eea3e006a96..5fadb1def49f 100644
---- a/drivers/hwmon/pmbus/ir35221.c
-+++ b/drivers/hwmon/pmbus/ir35221.c
-@@ -67,8 +67,7 @@ static int ir35221_read_word_data(struct i2c_client *client, int page,
- 	return ret;
- }
- 
--static int ir35221_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int ir35221_probe(struct i2c_client *client)
- {
- 	struct pmbus_driver_info *info;
- 	u8 buf[I2C_SMBUS_BLOCK_MAX];
-@@ -123,7 +122,7 @@ static int ir35221_probe(struct i2c_client *client,
- 		| PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP;
- 	info->func[1] = info->func[0];
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct i2c_device_id ir35221_id[] = {
-@@ -137,7 +136,7 @@ static struct i2c_driver ir35221_driver = {
- 	.driver = {
- 		.name	= "ir35221",
- 	},
--	.probe		= ir35221_probe,
-+	.probe_new	= ir35221_probe,
- 	.remove		= pmbus_do_remove,
- 	.id_table	= ir35221_id,
- };
-diff --git a/drivers/hwmon/pmbus/ir38064.c b/drivers/hwmon/pmbus/ir38064.c
-index 1820f5077f66..9ac563ce7dd8 100644
---- a/drivers/hwmon/pmbus/ir38064.c
-+++ b/drivers/hwmon/pmbus/ir38064.c
-@@ -35,10 +35,9 @@ static struct pmbus_driver_info ir38064_info = {
- 	    | PMBUS_HAVE_POUT,
- };
- 
--static int ir38064_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int ir38064_probe(struct i2c_client *client)
- {
--	return pmbus_do_probe(client, id, &ir38064_info);
-+	return pmbus_do_probe(client, &ir38064_info);
- }
- 
- static const struct i2c_device_id ir38064_id[] = {
-@@ -53,7 +52,7 @@ static struct i2c_driver ir38064_driver = {
- 	.driver = {
- 		   .name = "ir38064",
- 		   },
--	.probe = ir38064_probe,
-+	.probe_new = ir38064_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = ir38064_id,
- };
-diff --git a/drivers/hwmon/pmbus/irps5401.c b/drivers/hwmon/pmbus/irps5401.c
-index d37daa001fb3..44aeafcbd56c 100644
---- a/drivers/hwmon/pmbus/irps5401.c
-+++ b/drivers/hwmon/pmbus/irps5401.c
-@@ -38,10 +38,9 @@ static struct pmbus_driver_info irps5401_info = {
- 	.func[4] = IRPS5401_LDO_FUNC,
- };
- 
--static int irps5401_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int irps5401_probe(struct i2c_client *client)
- {
--	return pmbus_do_probe(client, id, &irps5401_info);
-+	return pmbus_do_probe(client, &irps5401_info);
- }
- 
- static const struct i2c_device_id irps5401_id[] = {
-@@ -55,7 +54,7 @@ static struct i2c_driver irps5401_driver = {
- 	.driver = {
- 		   .name = "irps5401",
- 		   },
--	.probe = irps5401_probe,
-+	.probe_new = irps5401_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = irps5401_id,
- };
-diff --git a/drivers/hwmon/pmbus/isl68137.c b/drivers/hwmon/pmbus/isl68137.c
-index 0c622711ef7e..bb71bf2e943a 100644
---- a/drivers/hwmon/pmbus/isl68137.c
-+++ b/drivers/hwmon/pmbus/isl68137.c
-@@ -71,6 +71,8 @@ enum variants {
- 	raa_dmpvr2_hv,
- };
- 
-+static const struct i2c_device_id raa_dmpvr_id[];
-+
- static ssize_t isl68137_avs_enable_show_page(struct i2c_client *client,
- 					     int page,
- 					     char *buf)
-@@ -217,8 +219,7 @@ static struct pmbus_driver_info raa_dmpvr_info = {
- 	    | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT,
- };
- 
--static int isl68137_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int isl68137_probe(struct i2c_client *client)
- {
- 	struct pmbus_driver_info *info;
- 
-@@ -227,7 +228,7 @@ static int isl68137_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	memcpy(info, &raa_dmpvr_info, sizeof(*info));
- 
--	switch (id->driver_data) {
-+	switch (i2c_match_id(raa_dmpvr_id, client)->driver_data) {
- 	case raa_dmpvr1_2rail:
- 		info->pages = 2;
- 		info->R[PSC_VOLTAGE_IN] = 3;
-@@ -262,7 +263,7 @@ static int isl68137_probe(struct i2c_client *client,
- 		return -ENODEV;
- 	}
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct i2c_device_id raa_dmpvr_id[] = {
-@@ -317,7 +318,7 @@ static struct i2c_driver isl68137_driver = {
- 	.driver = {
- 		   .name = "isl68137",
- 		   },
--	.probe = isl68137_probe,
-+	.probe_new = isl68137_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = raa_dmpvr_id,
- };
-diff --git a/drivers/hwmon/pmbus/lm25066.c b/drivers/hwmon/pmbus/lm25066.c
-index 9e4cf0800186..429172a42902 100644
---- a/drivers/hwmon/pmbus/lm25066.c
-+++ b/drivers/hwmon/pmbus/lm25066.c
-@@ -211,6 +211,8 @@ struct lm25066_data {
- 
- #define to_lm25066_data(x)  container_of(x, struct lm25066_data, info)
- 
-+static const struct i2c_device_id lm25066_id[];
-+
- static int lm25066_read_word_data(struct i2c_client *client, int page,
- 				  int phase, int reg)
- {
-@@ -416,8 +418,7 @@ static int lm25066_write_word_data(struct i2c_client *client, int page, int reg,
- 	return ret;
- }
- 
--static int lm25066_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int lm25066_probe(struct i2c_client *client)
- {
- 	int config;
- 	struct lm25066_data *data;
-@@ -437,7 +438,7 @@ static int lm25066_probe(struct i2c_client *client,
- 	if (config < 0)
- 		return config;
- 
--	data->id = id->driver_data;
-+	data->id = i2c_match_id(lm25066_id, client)->driver_data;
- 	info = &data->info;
- 
- 	info->pages = 1;
-@@ -487,7 +488,7 @@ static int lm25066_probe(struct i2c_client *client,
- 		info->b[PSC_POWER] = coeff[PSC_POWER].b;
- 	}
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct i2c_device_id lm25066_id[] = {
-@@ -506,7 +507,7 @@ static struct i2c_driver lm25066_driver = {
- 	.driver = {
- 		   .name = "lm25066",
- 		   },
--	.probe = lm25066_probe,
-+	.probe_new = lm25066_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = lm25066_id,
- };
-diff --git a/drivers/hwmon/pmbus/ltc2978.c b/drivers/hwmon/pmbus/ltc2978.c
-index 7b0e6b37e247..9a024cf70145 100644
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -649,12 +649,12 @@ static int ltc2978_get_id(struct i2c_client *client)
- 	return -ENODEV;
- }
- 
--static int ltc2978_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int ltc2978_probe(struct i2c_client *client)
- {
- 	int i, chip_id;
- 	struct ltc2978_data *data;
- 	struct pmbus_driver_info *info;
-+	const struct i2c_device_id *id;
- 
- 	if (!i2c_check_functionality(client->adapter,
- 				     I2C_FUNC_SMBUS_READ_WORD_DATA))
-@@ -670,11 +670,13 @@ static int ltc2978_probe(struct i2c_client *client,
- 		return chip_id;
- 
- 	data->id = chip_id;
-+	id = i2c_match_id(ltc2978_id, client);
- 	if (data->id != id->driver_data)
- 		dev_warn(&client->dev,
--			 "Device mismatch: Configured %s, detected %s\n",
-+			 "Device mismatch: Configured %s (%d), detected %d\n",
- 			 id->name,
--			 ltc2978_id[data->id].name);
-+			 (int) id->driver_data,
-+			 chip_id);
- 
- 	info = &data->info;
- 	info->write_word_data = ltc2978_write_word_data;
-@@ -832,7 +834,7 @@ static int ltc2978_probe(struct i2c_client *client,
- 	}
- #endif
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- 
-@@ -872,7 +874,7 @@ static struct i2c_driver ltc2978_driver = {
- 		   .name = "ltc2978",
- 		   .of_match_table = of_match_ptr(ltc2978_of_match),
- 		   },
--	.probe = ltc2978_probe,
-+	.probe_new = ltc2978_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = ltc2978_id,
- };
-diff --git a/drivers/hwmon/pmbus/ltc3815.c b/drivers/hwmon/pmbus/ltc3815.c
-index 3036263e0a66..8328fb367ad6 100644
---- a/drivers/hwmon/pmbus/ltc3815.c
-+++ b/drivers/hwmon/pmbus/ltc3815.c
-@@ -178,8 +178,7 @@ static struct pmbus_driver_info ltc3815_info = {
- 	.write_word_data = ltc3815_write_word_data,
- };
- 
--static int ltc3815_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int ltc3815_probe(struct i2c_client *client)
- {
- 	int chip_id;
- 
-@@ -193,14 +192,14 @@ static int ltc3815_probe(struct i2c_client *client,
- 	if ((chip_id & LTC3815_ID_MASK) != LTC3815_ID)
- 		return -ENODEV;
- 
--	return pmbus_do_probe(client, id, &ltc3815_info);
-+	return pmbus_do_probe(client, &ltc3815_info);
- }
- 
- static struct i2c_driver ltc3815_driver = {
- 	.driver = {
- 		   .name = "ltc3815",
- 		   },
--	.probe = ltc3815_probe,
-+	.probe_new = ltc3815_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = ltc3815_id,
- };
-diff --git a/drivers/hwmon/pmbus/max16064.c b/drivers/hwmon/pmbus/max16064.c
-index 288e93f74c28..26e7f5ef9d7f 100644
---- a/drivers/hwmon/pmbus/max16064.c
-+++ b/drivers/hwmon/pmbus/max16064.c
-@@ -85,10 +85,9 @@ static struct pmbus_driver_info max16064_info = {
- 	.write_word_data = max16064_write_word_data,
- };
- 
--static int max16064_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int max16064_probe(struct i2c_client *client)
- {
--	return pmbus_do_probe(client, id, &max16064_info);
-+	return pmbus_do_probe(client, &max16064_info);
- }
- 
- static const struct i2c_device_id max16064_id[] = {
-@@ -103,7 +102,7 @@ static struct i2c_driver max16064_driver = {
- 	.driver = {
- 		   .name = "max16064",
- 		   },
--	.probe = max16064_probe,
-+	.probe_new = max16064_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = max16064_id,
- };
-diff --git a/drivers/hwmon/pmbus/max16601.c b/drivers/hwmon/pmbus/max16601.c
-index 51cdfaf9023c..71bb74e27a5c 100644
---- a/drivers/hwmon/pmbus/max16601.c
-+++ b/drivers/hwmon/pmbus/max16601.c
-@@ -239,8 +239,7 @@ static void max16601_remove(void *_data)
- 	i2c_unregister_device(data->vsa);
- }
- 
--static int max16601_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int max16601_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	u8 buf[I2C_SMBUS_BLOCK_MAX + 1];
-@@ -288,7 +287,7 @@ static int max16601_probe(struct i2c_client *client,
- 
- 	data->info = max16601_info;
- 
--	return pmbus_do_probe(client, id, &data->info);
-+	return pmbus_do_probe(client, &data->info);
- }
- 
- static const struct i2c_device_id max16601_id[] = {
-@@ -302,7 +301,7 @@ static struct i2c_driver max16601_driver = {
- 	.driver = {
- 		   .name = "max16601",
- 		   },
--	.probe = max16601_probe,
-+	.probe_new = max16601_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = max16601_id,
- };
-diff --git a/drivers/hwmon/pmbus/max20730.c b/drivers/hwmon/pmbus/max20730.c
-index c0bb05487e0e..b34202bda7d5 100644
---- a/drivers/hwmon/pmbus/max20730.c
-+++ b/drivers/hwmon/pmbus/max20730.c
-@@ -35,6 +35,8 @@ struct max20730_data {
- 
- #define MAX20730_MFR_DEVSET1	0xd2
- 
-+static const struct i2c_device_id max20730_id[];
-+
- /*
-  * Convert discreet value to direct data format. Strictly speaking, all passed
-  * values are constants, so we could do that calculation manually. On the
-@@ -260,8 +262,7 @@ static const struct pmbus_driver_info max20730_info[] = {
- 	},
- };
- 
--static int max20730_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int max20730_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	u8 buf[I2C_SMBUS_BLOCK_MAX + 1];
-@@ -321,7 +322,7 @@ static int max20730_probe(struct i2c_client *client,
- 	if (client->dev.of_node)
- 		chip_id = (enum chips)of_device_get_match_data(dev);
- 	else
--		chip_id = id->driver_data;
-+		chip_id = i2c_match_id(max20730_id, client)->driver_data;
- 
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
-@@ -335,7 +336,7 @@ static int max20730_probe(struct i2c_client *client,
- 		return ret;
- 	data->mfr_devset1 = ret;
- 
--	return pmbus_do_probe(client, id, &data->info);
-+	return pmbus_do_probe(client, &data->info);
- }
- 
- static const struct i2c_device_id max20730_id[] = {
-@@ -361,7 +362,7 @@ static struct i2c_driver max20730_driver = {
- 		.name = "max20730",
- 		.of_match_table = max20730_of_match,
- 	},
--	.probe = max20730_probe,
-+	.probe_new = max20730_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = max20730_id,
- };
-diff --git a/drivers/hwmon/pmbus/max20751.c b/drivers/hwmon/pmbus/max20751.c
-index da3c38cb9a5c..921e92d82aec 100644
---- a/drivers/hwmon/pmbus/max20751.c
-+++ b/drivers/hwmon/pmbus/max20751.c
-@@ -26,10 +26,9 @@ static struct pmbus_driver_info max20751_info = {
- 		PMBUS_HAVE_POUT,
- };
- 
--static int max20751_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int max20751_probe(struct i2c_client *client)
- {
--	return pmbus_do_probe(client, id, &max20751_info);
-+	return pmbus_do_probe(client, &max20751_info);
- }
- 
- static const struct i2c_device_id max20751_id[] = {
-@@ -43,7 +42,7 @@ static struct i2c_driver max20751_driver = {
- 	.driver = {
- 		   .name = "max20751",
- 		   },
--	.probe = max20751_probe,
-+	.probe_new = max20751_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = max20751_id,
- };
-diff --git a/drivers/hwmon/pmbus/max31785.c b/drivers/hwmon/pmbus/max31785.c
-index d9aa5c873d21..839b957bc03e 100644
---- a/drivers/hwmon/pmbus/max31785.c
-+++ b/drivers/hwmon/pmbus/max31785.c
-@@ -324,8 +324,7 @@ static int max31785_configure_dual_tach(struct i2c_client *client,
- 	return 0;
- }
- 
--static int max31785_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int max31785_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct pmbus_driver_info *info;
-@@ -354,7 +353,7 @@ static int max31785_probe(struct i2c_client *client,
- 	if (ret == MAX31785A) {
- 		dual_tach = true;
- 	} else if (ret == MAX31785) {
--		if (!strcmp("max31785a", id->name))
-+		if (!strcmp("max31785a", client->name))
- 			dev_warn(dev, "Expected max3175a, found max31785: cannot provide secondary tachometer readings\n");
- 	} else {
- 		return -ENODEV;
-@@ -366,7 +365,7 @@ static int max31785_probe(struct i2c_client *client,
- 			return ret;
- 	}
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct i2c_device_id max31785_id[] = {
-@@ -390,7 +389,7 @@ static struct i2c_driver max31785_driver = {
- 		.name = "max31785",
- 		.of_match_table = max31785_of_match,
- 	},
--	.probe = max31785_probe,
-+	.probe_new = max31785_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = max31785_id,
- };
-diff --git a/drivers/hwmon/pmbus/max34440.c b/drivers/hwmon/pmbus/max34440.c
-index 18b4e071067f..35f03defa4a6 100644
---- a/drivers/hwmon/pmbus/max34440.c
-+++ b/drivers/hwmon/pmbus/max34440.c
-@@ -41,6 +41,8 @@ struct max34440_data {
- 
- #define to_max34440_data(x)  container_of(x, struct max34440_data, info)
- 
-+static const struct i2c_device_id max34440_id[];
-+
- static int max34440_read_word_data(struct i2c_client *client, int page,
- 				   int phase, int reg)
- {
-@@ -461,8 +463,7 @@ static struct pmbus_driver_info max34440_info[] = {
- 	},
- };
- 
--static int max34440_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int max34440_probe(struct i2c_client *client)
- {
- 	struct max34440_data *data;
- 	int rv;
-@@ -471,8 +472,8 @@ static int max34440_probe(struct i2c_client *client,
- 			    GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
--	data->id = id->driver_data;
--	data->info = max34440_info[id->driver_data];
-+	data->id = i2c_match_id(max34440_id, client)->driver_data;
-+	data->info = max34440_info[data->id];
- 
- 	if (data->id == max34451) {
- 		rv = max34451_set_supported_funcs(client, data);
-@@ -480,7 +481,7 @@ static int max34440_probe(struct i2c_client *client,
- 			return rv;
- 	}
- 
--	return pmbus_do_probe(client, id, &data->info);
-+	return pmbus_do_probe(client, &data->info);
- }
- 
- static const struct i2c_device_id max34440_id[] = {
-@@ -499,7 +500,7 @@ static struct i2c_driver max34440_driver = {
- 	.driver = {
- 		   .name = "max34440",
- 		   },
--	.probe = max34440_probe,
-+	.probe_new = max34440_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = max34440_id,
- };
-diff --git a/drivers/hwmon/pmbus/max8688.c b/drivers/hwmon/pmbus/max8688.c
-index 643ccfc05106..4b2239a6afd3 100644
---- a/drivers/hwmon/pmbus/max8688.c
-+++ b/drivers/hwmon/pmbus/max8688.c
-@@ -165,10 +165,9 @@ static struct pmbus_driver_info max8688_info = {
- 	.write_word_data = max8688_write_word_data,
- };
- 
--static int max8688_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int max8688_probe(struct i2c_client *client)
- {
--	return pmbus_do_probe(client, id, &max8688_info);
-+	return pmbus_do_probe(client, &max8688_info);
- }
- 
- static const struct i2c_device_id max8688_id[] = {
-@@ -183,7 +182,7 @@ static struct i2c_driver max8688_driver = {
- 	.driver = {
- 		   .name = "max8688",
- 		   },
--	.probe = max8688_probe,
-+	.probe_new = max8688_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = max8688_id,
- };
-diff --git a/drivers/hwmon/pmbus/pmbus.c b/drivers/hwmon/pmbus/pmbus.c
-index 6d384e8ee1db..20f1af9165c2 100644
---- a/drivers/hwmon/pmbus/pmbus.c
-+++ b/drivers/hwmon/pmbus/pmbus.c
-@@ -20,6 +20,8 @@ struct pmbus_device_info {
- 	u32 flags;
- };
- 
-+static const struct i2c_device_id pmbus_id[];
-+
- /*
-  * Find sensor groups and status registers on each page.
-  */
-@@ -159,8 +161,7 @@ static int pmbus_identify(struct i2c_client *client,
- 	return ret;
- }
- 
--static int pmbus_probe(struct i2c_client *client,
--		       const struct i2c_device_id *id)
-+static int pmbus_probe(struct i2c_client *client)
- {
- 	struct pmbus_driver_info *info;
- 	struct pmbus_platform_data *pdata = NULL;
-@@ -171,7 +172,7 @@ static int pmbus_probe(struct i2c_client *client,
- 	if (!info)
- 		return -ENOMEM;
- 
--	device_info = (struct pmbus_device_info *)id->driver_data;
-+	device_info = (struct pmbus_device_info *)i2c_match_id(pmbus_id, client)->driver_data;
- 	if (device_info->flags & PMBUS_SKIP_STATUS_CHECK) {
- 		pdata = devm_kzalloc(dev, sizeof(struct pmbus_platform_data),
- 				     GFP_KERNEL);
-@@ -185,7 +186,7 @@ static int pmbus_probe(struct i2c_client *client,
- 	info->identify = pmbus_identify;
- 	dev->platform_data = pdata;
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct pmbus_device_info pmbus_info_one = {
-@@ -236,7 +237,7 @@ static struct i2c_driver pmbus_driver = {
- 	.driver = {
- 		   .name = "pmbus",
- 		   },
--	.probe = pmbus_probe,
-+	.probe_new = pmbus_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = pmbus_id,
- };
-diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-index 18e06fc6c53f..1ff5314287cb 100644
---- a/drivers/hwmon/pmbus/pmbus.h
-+++ b/drivers/hwmon/pmbus/pmbus.h
-@@ -476,8 +476,7 @@ int pmbus_update_byte_data(struct i2c_client *client, int page, u8 reg,
- void pmbus_clear_faults(struct i2c_client *client);
- bool pmbus_check_byte_register(struct i2c_client *client, int page, int reg);
- bool pmbus_check_word_register(struct i2c_client *client, int page, int reg);
--int pmbus_do_probe(struct i2c_client *client, const struct i2c_device_id *id,
--		   struct pmbus_driver_info *info);
-+int pmbus_do_probe(struct i2c_client *client, struct pmbus_driver_info *info);
- int pmbus_do_remove(struct i2c_client *client);
- const struct pmbus_driver_info *pmbus_get_driver_info(struct i2c_client
- 						      *client);
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 2191575a448b..065a81f6545d 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -2492,8 +2492,7 @@ static int pmbus_init_debugfs(struct i2c_client *client,
- }
- #endif	/* IS_ENABLED(CONFIG_DEBUG_FS) */
- 
--int pmbus_do_probe(struct i2c_client *client, const struct i2c_device_id *id,
--		   struct pmbus_driver_info *info)
-+int pmbus_do_probe(struct i2c_client *client, struct pmbus_driver_info *info)
- {
- 	struct device *dev = &client->dev;
- 	const struct pmbus_platform_data *pdata = dev_get_platdata(dev);
-diff --git a/drivers/hwmon/pmbus/pxe1610.c b/drivers/hwmon/pmbus/pxe1610.c
-index 517584cff3de..fa5c5dd29b7a 100644
---- a/drivers/hwmon/pmbus/pxe1610.c
-+++ b/drivers/hwmon/pmbus/pxe1610.c
-@@ -78,8 +78,7 @@ static struct pmbus_driver_info pxe1610_info = {
- 	.identify = pxe1610_identify,
- };
- 
--static int pxe1610_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int pxe1610_probe(struct i2c_client *client)
- {
- 	struct pmbus_driver_info *info;
- 	u8 buf[I2C_SMBUS_BLOCK_MAX];
-@@ -115,7 +114,7 @@ static int pxe1610_probe(struct i2c_client *client,
- 	if (!info)
- 		return -ENOMEM;
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct i2c_device_id pxe1610_id[] = {
-@@ -131,7 +130,7 @@ static struct i2c_driver pxe1610_driver = {
- 	.driver = {
- 			.name = "pxe1610",
- 			},
--	.probe = pxe1610_probe,
-+	.probe_new = pxe1610_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = pxe1610_id,
- };
-diff --git a/drivers/hwmon/pmbus/tps40422.c b/drivers/hwmon/pmbus/tps40422.c
-index 2b83dcda964a..edbdfa809d51 100644
---- a/drivers/hwmon/pmbus/tps40422.c
-+++ b/drivers/hwmon/pmbus/tps40422.c
-@@ -25,10 +25,9 @@ static struct pmbus_driver_info tps40422_info = {
- 		| PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT,
- };
- 
--static int tps40422_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int tps40422_probe(struct i2c_client *client)
- {
--	return pmbus_do_probe(client, id, &tps40422_info);
-+	return pmbus_do_probe(client, &tps40422_info);
- }
- 
- static const struct i2c_device_id tps40422_id[] = {
-@@ -43,7 +42,7 @@ static struct i2c_driver tps40422_driver = {
- 	.driver = {
- 		   .name = "tps40422",
- 		   },
--	.probe = tps40422_probe,
-+	.probe_new = tps40422_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = tps40422_id,
- };
-diff --git a/drivers/hwmon/pmbus/tps53679.c b/drivers/hwmon/pmbus/tps53679.c
-index 157c99ffb52b..db2bdf2a1f02 100644
---- a/drivers/hwmon/pmbus/tps53679.c
-+++ b/drivers/hwmon/pmbus/tps53679.c
-@@ -34,6 +34,8 @@ enum chips {
- 
- #define TPS53681_MFR_SPECIFIC_20	0xe4	/* Number of phases, per page */
- 
-+static const struct i2c_device_id tps53679_id[];
-+
- static int tps53679_identify_mode(struct i2c_client *client,
- 				  struct pmbus_driver_info *info)
- {
-@@ -183,8 +185,7 @@ static struct pmbus_driver_info tps53679_info = {
- 	.pfunc[5] = PMBUS_HAVE_IOUT,
- };
- 
--static int tps53679_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int tps53679_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct pmbus_driver_info *info;
-@@ -193,7 +194,7 @@ static int tps53679_probe(struct i2c_client *client,
- 	if (dev->of_node)
- 		chip_id = (enum chips)of_device_get_match_data(dev);
- 	else
--		chip_id = id->driver_data;
-+		chip_id = i2c_match_id(tps53679_id, client)->driver_data;
- 
- 	info = devm_kmemdup(dev, &tps53679_info, sizeof(*info), GFP_KERNEL);
- 	if (!info)
-@@ -220,7 +221,7 @@ static int tps53679_probe(struct i2c_client *client,
- 		return -ENODEV;
- 	}
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct i2c_device_id tps53679_id[] = {
-@@ -249,7 +250,7 @@ static struct i2c_driver tps53679_driver = {
- 		.name = "tps53679",
- 		.of_match_table = of_match_ptr(tps53679_of_match),
- 	},
--	.probe = tps53679_probe,
-+	.probe_new = tps53679_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = tps53679_id,
- };
-diff --git a/drivers/hwmon/pmbus/ucd9000.c b/drivers/hwmon/pmbus/ucd9000.c
-index 81f4c4f166cd..f8017993e2b4 100644
---- a/drivers/hwmon/pmbus/ucd9000.c
-+++ b/drivers/hwmon/pmbus/ucd9000.c
-@@ -487,8 +487,7 @@ static int ucd9000_init_debugfs(struct i2c_client *client,
- }
- #endif /* CONFIG_DEBUG_FS */
- 
--static int ucd9000_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int ucd9000_probe(struct i2c_client *client)
- {
- 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
- 	struct ucd9000_data *data;
-@@ -523,12 +522,12 @@ static int ucd9000_probe(struct i2c_client *client,
- 	if (client->dev.of_node)
- 		chip = (enum chips)of_device_get_match_data(&client->dev);
- 	else
--		chip = id->driver_data;
-+		chip = mid->driver_data;
- 
--	if (chip != ucd9000 && chip != mid->driver_data)
-+	if (chip != ucd9000 && strcmp(client->name, mid->name) != 0)
- 		dev_notice(&client->dev,
- 			   "Device mismatch: Configured %s, detected %s\n",
--			   id->name, mid->name);
-+			   client->name, mid->name);
- 
- 	data = devm_kzalloc(&client->dev, sizeof(struct ucd9000_data),
- 			    GFP_KERNEL);
-@@ -603,7 +602,7 @@ static int ucd9000_probe(struct i2c_client *client,
- 
- 	ucd9000_probe_gpio(client, mid, data);
- 
--	ret = pmbus_do_probe(client, mid, info);
-+	ret = pmbus_do_probe(client, info);
- 	if (ret)
- 		return ret;
- 
-@@ -621,7 +620,7 @@ static struct i2c_driver ucd9000_driver = {
- 		.name = "ucd9000",
- 		.of_match_table = of_match_ptr(ucd9000_of_match),
- 	},
--	.probe = ucd9000_probe,
-+	.probe_new = ucd9000_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = ucd9000_id,
- };
-diff --git a/drivers/hwmon/pmbus/ucd9200.c b/drivers/hwmon/pmbus/ucd9200.c
-index 7c04745a9709..e111e25e1619 100644
---- a/drivers/hwmon/pmbus/ucd9200.c
-+++ b/drivers/hwmon/pmbus/ucd9200.c
-@@ -71,8 +71,7 @@ static const struct of_device_id __maybe_unused ucd9200_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, ucd9200_of_match);
- 
--static int ucd9200_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int ucd9200_probe(struct i2c_client *client)
- {
- 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
- 	struct pmbus_driver_info *info;
-@@ -106,12 +105,12 @@ static int ucd9200_probe(struct i2c_client *client,
- 	if (client->dev.of_node)
- 		chip = (enum chips)of_device_get_match_data(&client->dev);
- 	else
--		chip = id->driver_data;
-+		chip = mid->driver_data;
- 
--	if (chip != ucd9200 && chip != mid->driver_data)
-+	if (chip != ucd9200 && strcmp(client->name, mid->name) != 0)
- 		dev_notice(&client->dev,
- 			   "Device mismatch: Configured %s, detected %s\n",
--			   id->name, mid->name);
-+			   client->name, mid->name);
- 
- 	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
- 			    GFP_KERNEL);
-@@ -192,7 +191,7 @@ static int ucd9200_probe(struct i2c_client *client,
- 	if (mid->driver_data == ucd9240)
- 		info->func[0] |= PMBUS_HAVE_FAN12 | PMBUS_HAVE_STATUS_FAN12;
- 
--	return pmbus_do_probe(client, mid, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- /* This is the driver that will be inserted */
-@@ -201,7 +200,7 @@ static struct i2c_driver ucd9200_driver = {
- 		.name = "ucd9200",
- 		.of_match_table = of_match_ptr(ucd9200_of_match),
- 	},
--	.probe = ucd9200_probe,
-+	.probe_new = ucd9200_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = ucd9200_id,
- };
-diff --git a/drivers/hwmon/pmbus/xdpe12284.c b/drivers/hwmon/pmbus/xdpe12284.c
-index d5103fc9e269..c95ac934fde4 100644
---- a/drivers/hwmon/pmbus/xdpe12284.c
-+++ b/drivers/hwmon/pmbus/xdpe12284.c
-@@ -127,8 +127,7 @@ static struct pmbus_driver_info xdpe122_info = {
- 	.read_word_data = xdpe122_read_word_data,
- };
- 
--static int xdpe122_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int xdpe122_probe(struct i2c_client *client)
- {
- 	struct pmbus_driver_info *info;
- 
-@@ -137,7 +136,7 @@ static int xdpe122_probe(struct i2c_client *client,
- 	if (!info)
- 		return -ENOMEM;
- 
--	return pmbus_do_probe(client, id, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static const struct i2c_device_id xdpe122_id[] = {
-@@ -160,7 +159,7 @@ static struct i2c_driver xdpe122_driver = {
- 		.name = "xdpe12284",
- 		.of_match_table = of_match_ptr(xdpe122_of_match),
- 	},
--	.probe = xdpe122_probe,
-+	.probe_new = xdpe122_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = xdpe122_id,
- };
-diff --git a/drivers/hwmon/pmbus/zl6100.c b/drivers/hwmon/pmbus/zl6100.c
-index 3a827d0a881d..e8bda340482b 100644
---- a/drivers/hwmon/pmbus/zl6100.c
-+++ b/drivers/hwmon/pmbus/zl6100.c
-@@ -301,8 +301,7 @@ static const struct i2c_device_id zl6100_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, zl6100_id);
- 
--static int zl6100_probe(struct i2c_client *client,
--			const struct i2c_device_id *id)
-+static int zl6100_probe(struct i2c_client *client)
- {
- 	int ret;
- 	struct zl6100_data *data;
-@@ -333,10 +332,10 @@ static int zl6100_probe(struct i2c_client *client,
- 		dev_err(&client->dev, "Unsupported device\n");
- 		return -ENODEV;
- 	}
--	if (id->driver_data != mid->driver_data)
-+	if (strcmp(client->name, mid->name) != 0)
- 		dev_notice(&client->dev,
- 			   "Device mismatch: Configured %s, detected %s\n",
--			   id->name, mid->name);
-+			   client->name, mid->name);
- 
- 	data = devm_kzalloc(&client->dev, sizeof(struct zl6100_data),
- 			    GFP_KERNEL);
-@@ -389,14 +388,14 @@ static int zl6100_probe(struct i2c_client *client,
- 	info->write_word_data = zl6100_write_word_data;
- 	info->write_byte = zl6100_write_byte;
- 
--	return pmbus_do_probe(client, mid, info);
-+	return pmbus_do_probe(client, info);
- }
- 
- static struct i2c_driver zl6100_driver = {
- 	.driver = {
- 		   .name = "zl6100",
- 		   },
--	.probe = zl6100_probe,
-+	.probe_new = zl6100_probe,
- 	.remove = pmbus_do_remove,
- 	.id_table = zl6100_id,
- };
-
-base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
--- 
-2.20.1
-
+> +	},
+>  	{
+>  		.cfg = {
+>  			.id	= V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> index 96765555ab8a..93c843ae14bb 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> @@ -62,6 +62,7 @@ struct cedrus_h264_run {
+>  	const struct v4l2_ctrl_h264_scaling_matrix	*scaling_matrix;
+>  	const struct v4l2_ctrl_h264_slice_params	*slice_params;
+>  	const struct v4l2_ctrl_h264_sps			*sps;
+> +	const struct v4l2_ctrl_h264_pred_weights	*pred_weights;
+>  };
+>  
+>  struct cedrus_mpeg2_run {
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> index 58c48e4fdfe9..6385026d1b6b 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> @@ -57,6 +57,8 @@ void cedrus_device_run(void *priv)
+>  			V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
+>  		run.h264.sps = cedrus_find_control_data(ctx,
+>  			V4L2_CID_MPEG_VIDEO_H264_SPS);
+> +		run.h264.pred_weights = cedrus_find_control_data(ctx,
+> +			V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS);
+>  		break;
+>  
+>  	case V4L2_PIX_FMT_HEVC_SLICE:
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> index cce527bbdf86..a9ba78b15907 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -256,10 +256,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
+>  static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
+>  					   struct cedrus_run *run)
+>  {
+> -	const struct v4l2_ctrl_h264_slice_params *slice =
+> -		run->h264.slice_params;
+> -	const struct v4l2_h264_pred_weight_table *pred_weight =
+> -		&slice->pred_weight_table;
+> +	const struct v4l2_ctrl_h264_pred_weights *pred_weight =
+> +		run->h264.pred_weights;
+>  	struct cedrus_dev *dev = ctx->dev;
+>  	int i, j, k;
+>  
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index 4c0bb7f5fb05..54cd9bec0b23 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -36,6 +36,7 @@
+>  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
+>  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE	(V4L2_CID_MPEG_BASE+1005)
+>  #define V4L2_CID_MPEG_VIDEO_H264_START_CODE	(V4L2_CID_MPEG_BASE+1006)
+> +#define V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS	(V4L2_CID_MPEG_BASE+1007)
+>  
+>  /* enum v4l2_ctrl_type type values */
+>  #define V4L2_CTRL_TYPE_H264_SPS			0x0110
+> @@ -43,6 +44,7 @@
+>  #define V4L2_CTRL_TYPE_H264_SCALING_MATRIX	0x0112
+>  #define V4L2_CTRL_TYPE_H264_SLICE_PARAMS	0x0113
+>  #define V4L2_CTRL_TYPE_H264_DECODE_PARAMS	0x0114
+> +#define V4L2_CTRL_TYPE_H264_PRED_WEIGHTS	0x0115
+>  
+>  enum v4l2_mpeg_video_h264_decode_mode {
+>  	V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> @@ -125,7 +127,7 @@ struct v4l2_h264_weight_factors {
+>  	__s16 chroma_offset[32][2];
+>  };
+>  
+> -struct v4l2_h264_pred_weight_table {
+> +struct v4l2_ctrl_h264_pred_weights {
+>  	__u16 luma_log2_weight_denom;
+>  	__u16 chroma_log2_weight_denom;
+>  	struct v4l2_h264_weight_factors weight_factors[2];
+> @@ -177,7 +179,6 @@ struct v4l2_ctrl_h264_slice_params {
+>  	__s32 delta_pic_order_cnt0;
+>  	__s32 delta_pic_order_cnt1;
+>  
+> -	struct v4l2_h264_pred_weight_table pred_weight_table;
+>  	/* Size in bits of dec_ref_pic_marking() syntax element. */
+>  	__u32 dec_ref_pic_marking_bit_size;
+>  	/* Size in bits of pic order count syntax. */
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index f40e2cbb21d3..cb25f345e9ad 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -51,6 +51,7 @@ struct video_device;
+>   * @p_h264_scaling_matrix:	Pointer to a struct v4l2_ctrl_h264_scaling_matrix.
+>   * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
+>   * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
+> + * @p_h264_pred_weights:	Pointer to a struct v4l2_ctrl_h264_pred_weights.
+>   * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
+>   * @p_hevc_sps:			Pointer to an HEVC sequence parameter set structure.
+>   * @p_hevc_pps:			Pointer to an HEVC picture parameter set structure.
+> @@ -74,6 +75,7 @@ union v4l2_ctrl_ptr {
+>  	struct v4l2_ctrl_h264_scaling_matrix *p_h264_scaling_matrix;
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+>  	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+> +	struct v4l2_ctrl_h264_pred_weights *p_h264_pred_weights;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+>  	struct v4l2_ctrl_hevc_sps *p_hevc_sps;
+>  	struct v4l2_ctrl_hevc_pps *p_hevc_pps;
+> 
