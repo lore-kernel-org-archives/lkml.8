@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06132C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613922075D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CCD20866
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929979;
-	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
+	s=default; t=1596929982;
+	bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jIg81Vl4k/LfINaciyUrGMqX7joIuUcRHS1KbzLEx5lU4G/ZAJAxj36CDoF6r7/3G
-	 ulUUXMTflrCdaWKF3WNQbUR2Kg5FH0Aofd+vS5008c7MRmg0Oqf6ICusFJJzJWzZI+
-	 4XOiUhriE3urCHsF3EDRphO3yD9EYKvgejmxupjM=
+	b=avJoLq7Lff01gvy+rg7RsAO0qCFIHwp287D+JRzQnfMkiPXDveJk2BxETK5lONUZM
+	 2EJS/wzEC+HR4OPJpo1bxcULheHNGMQ5fTr6MAuYYh7KjwpSWRuNdUvkUv885f7BHV
+	 l+ZNa5AllL/Y1gSBWWCp6MEQMZkxr0OL5OeDIZeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgHHXjh (ORCPT
+        id S1726093AbgHHXjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54058 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728528AbgHHXjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:21 -0400
+        id S1728538AbgHHXj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B8B20791;
-        Sat,  8 Aug 2020 23:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F68C2087C;
+        Sat,  8 Aug 2020 23:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929961;
-        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
+        s=default; t=1596929965;
+        bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPt7TBdGnlxCJ+s4LUU12GN7i6pgVcWxyrZYX2Y1+wB2j5LxatNj9eq5rrl9kZJZs
-         +UdcqqujiSjXQkNBDH4kxClLD9lV+okWau3XykmJsVs9C2rp7AHNXuoNDGQ5RnM0jl
-         77XnyLZgYavjvdeQDnUdXihFQI/vyx3BxuUPlu6I=
+        b=xWQd0MZ8yYYg3HUJfyX4iWiKIIDdSq8YRiIr9i66WXsEs+w8efqEO5Dwni7loCq12
+         stw/O/zUCrfC6LGhaRgaxJ+kgalQTaEb26yL/mkV+1eCeFjBRowQES7u0XHQOcD84l
+         lRDB6YGcOVxuHPXiK2TdRbiPWir13onS6nr1+bX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 24/40] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
-Date:   Sat,  8 Aug 2020 19:38:28 -0400
-Message-Id: <20200808233844.3618823-24-sashal@kernel.org>
+Cc:     Gregory Herrero <gregory.herrero@oracle.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 28/40] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
+Date:   Sat,  8 Aug 2020 19:38:32 -0400
+Message-Id: <20200808233844.3618823-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -59,47 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Gregory Herrero <gregory.herrero@oracle.com>
 
-[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
+[ Upstream commit ea0eada45632f4807b2f49de951072283e2d781c ]
 
-The device tree currently only assigns the a supply for the first CPU
-core, when in reality the regulator supply is shared by all four cores.
-This might cause an issue if the implementation does not realize the
-sharing of the supply.
+Currently, if a section has a relocation to '_mcount' symbol, a new
+__mcount_loc entry will be added whatever the relocation type is.
+This is problematic when a relocation to '_mcount' is in the middle of a
+section and is not a call for ftrace use.
 
-Assign the same regulator supply to the remaining CPU cores to address
-this.
+Such relocation could be generated with below code for example:
+    bool is_mcount(unsigned long addr)
+    {
+        return (target == (unsigned long) &_mcount);
+    }
 
-Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
+With this snippet of code, ftrace will try to patch the mcount location
+generated by this code on module load and fail with:
+
+    Call trace:
+     ftrace_bug+0xa0/0x28c
+     ftrace_process_locs+0x2f4/0x430
+     ftrace_module_init+0x30/0x38
+     load_module+0x14f0/0x1e78
+     __do_sys_finit_module+0x100/0x11c
+     __arm64_sys_finit_module+0x28/0x34
+     el0_svc_common+0x88/0x194
+     el0_svc_handler+0x38/0x8c
+     el0_svc+0x8/0xc
+    ---[ end trace d828d06b36ad9d59 ]---
+    ftrace failed to modify
+    [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
+     actual:   66:a9:3c:90
+    Initializing ftrace call sites
+    ftrace record flags: 2000000
+     (0)
+    expected tramp: ffffa2dc6cf66724
+
+So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
+recordmcount.
+
+Fixes: af64d2aa872a ("ftrace: Add arm64 support to recordmcount")
+Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ scripts/recordmcount.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-index 22466afd38a3a..a628b5ee72b65 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
- &cpu0 {
- 	cpu-supply = <&reg_vdd_cpux>;
- };
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index 7225107a9aafe..e59022b3f1254 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
+ 	return 1;
+ }
+ 
++static int arm64_is_fake_mcount(Elf64_Rel const *rp)
++{
++	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
++}
 +
-+&cpu1 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
+ /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
+  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
+  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
+@@ -547,6 +552,7 @@ static int do_file(char const *const fname)
+ 		make_nop = make_nop_arm64;
+ 		rel_type_nop = R_AARCH64_NONE;
+ 		ideal_nop = ideal_nop4_arm64;
++		is_fake_mcount64 = arm64_is_fake_mcount;
+ 		break;
+ 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
+ 	case EM_MIPS:	/* reltype: e_class    */ break;
 -- 
 2.25.1
 
