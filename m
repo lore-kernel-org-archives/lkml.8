@@ -2,97 +2,145 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EABC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66572C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDD42072D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:12:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDW/42cq"
+	by mail.kernel.org (Postfix) with ESMTP id 4406120748
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgHHOMJ (ORCPT
+        id S1726321AbgHHOPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 10:12:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgHHOMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 10:12:08 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58BDC061756
-        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 07:12:07 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t23so5106188ljc.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 07:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LMqHyf3LXGIDXUbopLnPGbd9R8RdUtyLXfTrrDv3V38=;
-        b=pDW/42cq+vOIDqCqYbV1QXe4jg8FuD4oivqyfWq1sfqthNl2URn5YsPARBeX8q2PiE
-         0ModzwAvC58HmS4KecqMUZL31Mvvj+FE7uXTzFD+8l/TvzB3OH0ltSb+D5klpnMfGQWC
-         OCa81PRHOyaCG7Lic9LljJPI3QbbC4WF+6KhiXfp5CbVKhBs6+fNXho4xae/aewQRKAX
-         k0ySsgQ8t1ZSH3QUlKi0lMxLPBuP4ljK44WVvbORPlEbKtqT9tc7ZhmstVXKfnr8CbhW
-         VD5WrTKArIJ9DndkmX3kUuSN5DODE6Pd5sLUh5yXo35APmmFoupN3gg6dhnX24IQpn/x
-         es/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LMqHyf3LXGIDXUbopLnPGbd9R8RdUtyLXfTrrDv3V38=;
-        b=YucLg5DJMnGvQnHc1M29itKs0757/bFw45ESPjn2WFDc8IIfGt6nrsXSvoCPzin19j
-         iYOnl4OliT9WdeoJADX2N5x7i0Daeet/uoimR3hl2G/9VofQQlyDzCC+iOs3X7LDymMC
-         ty5/GW8hnCrtqsTHoeHAM87T6FhR6wLeN0Vlrchgxjv+F3nXRlB+dHjqzIhvQHiyLhIJ
-         1pnnUZf+ElIvBuytlQH9iMEbvf531WiC0+C3J2aRCC0lJZ+qpZolCGljb2OU58WTBWD9
-         TUMQb4dFRpkhXB92ck1BqIQ5GHQmAiS0TLYDTHM6CnFwOJpVK2zNm90mP9hhhRP7gnOS
-         HIrQ==
-X-Gm-Message-State: AOAM533NDyxyPzc6AF9sR/XvNyKWscV2o7Qj03hYeQnkpLi9vSH7w6BG
-        bMjnjti5ALp3qJonAnlw0hMy0SAjPb9Y4Y5J+eDXm8Gj
-X-Google-Smtp-Source: ABdhPJw7eAXuL/cm4AaSYkulhCbbgUwXjubMMqsZbtXk26kQ274cYmXXsiRxvkBFTfMkv1vnfLV3N0TTNiTBpoT3LYE=
-X-Received: by 2002:a2e:920c:: with SMTP id k12mr8968852ljg.29.1596895926202;
- Sat, 08 Aug 2020 07:12:06 -0700 (PDT)
+        Sat, 8 Aug 2020 10:15:33 -0400
+Received: from mga01.intel.com ([192.55.52.88]:5963 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgHHOP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 10:15:26 -0400
+IronPort-SDR: Vq4LCGGi9/vhMwZi5GOGkpxlbUNzCGTlYm130ByuBK4bi2c1QgKI9Q/xPAEz3dXLc41KJptoZu
+ VdBIIn1Ef1YA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9707"; a="171353291"
+X-IronPort-AV: E=Sophos;i="5.75,449,1589266800"; 
+   d="scan'208";a="171353291"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2020 07:15:21 -0700
+IronPort-SDR: jgf0cMfi9O5x+BAvKSSBn6NGjYRZd9BXNJDWpOcI3ZHr0QBd/bTIWY4UNyZn5sY11Ea/KNWOPp
+ W0Qb6QUe6s7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,449,1589266800"; 
+   d="scan'208";a="324028868"
+Received: from lkp-server02.sh.intel.com (HELO 65e25449d42f) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 08 Aug 2020 07:15:20 -0700
+Received: from kbuild by 65e25449d42f with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k4Pd1-00009z-EB; Sat, 08 Aug 2020 14:15:19 +0000
+Date:   Sat, 08 Aug 2020 22:14:41 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.08.05a] BUILD SUCCESS
+ 3893c86425fd2f1480d8740aa6b9f55e72497c4d
+Message-ID: <5f2eb351.orB13Yoz51rhBHNA%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200708125622.14443-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200708125622.14443-1-grandmaster@al2klimov.de>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 8 Aug 2020 16:11:55 +0200
-Message-ID: <CANiq72m=pUsU9_4ZTGDKiO8DHtxcsofF3Nk6cfSKCyiWQPueSA@mail.gmail.com>
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: AUXILIARY DISPLAY DRIVERS
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.08.05a
+branch HEAD: 3893c86425fd2f1480d8740aa6b9f55e72497c4d  rcu: Provide optional RCU-reader exit delay for strict GPs
 
-On Wed, Jul 8, 2020 at 2:56 PM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
->
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+elapsed time: 723m
 
-Thanks! Queuing it up.
+configs tested: 75
+configs skipped: 3
 
-Cheers,
-Miguel
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+s390                       zfcpdump_defconfig
+mips                        workpad_defconfig
+sh                                  defconfig
+powerpc                     powernv_defconfig
+h8300                            alldefconfig
+x86_64                           allyesconfig
+powerpc                      mgcoge_defconfig
+arm                         palmz72_defconfig
+powerpc                     mpc83xx_defconfig
+xtensa                       common_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a004-20200808
+i386                 randconfig-a005-20200808
+i386                 randconfig-a001-20200808
+i386                 randconfig-a003-20200808
+i386                 randconfig-a002-20200808
+i386                 randconfig-a006-20200808
+x86_64               randconfig-a013-20200807
+x86_64               randconfig-a011-20200807
+x86_64               randconfig-a012-20200807
+x86_64               randconfig-a016-20200807
+x86_64               randconfig-a015-20200807
+x86_64               randconfig-a014-20200807
+i386                 randconfig-a011-20200808
+i386                 randconfig-a014-20200808
+i386                 randconfig-a015-20200808
+i386                 randconfig-a013-20200808
+i386                 randconfig-a012-20200808
+i386                 randconfig-a016-20200808
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
