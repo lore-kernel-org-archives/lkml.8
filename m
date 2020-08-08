@@ -2,101 +2,108 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD805C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9636C206E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9C9206E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 12:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="PE0cKnHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgHHMuc (ORCPT
+        id S1726375AbgHHMus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 08:50:32 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:46639 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbgHHMuW (ORCPT
+        Sat, 8 Aug 2020 08:50:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbgHHMub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 08:50:22 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-156-ZHfazWqmM5WHZGeQnmlm0A-1; Sat, 08 Aug 2020 13:50:16 +0100
-X-MC-Unique: ZHfazWqmM5WHZGeQnmlm0A-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sat, 8 Aug 2020 13:50:15 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sat, 8 Aug 2020 13:50:15 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'luobin (L)'" <luobin9@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "luoxianjun@huawei.com" <luoxianjun@huawei.com>,
-        "yin.yinshi@huawei.com" <yin.yinshi@huawei.com>,
-        "cloud.wangxiaoyun@huawei.com" <cloud.wangxiaoyun@huawei.com>,
-        "chiqijun@huawei.com" <chiqijun@huawei.com>
-Subject: RE: [PATCH net-next v1] hinic: fix strncpy output truncated compile
- warnings
-Thread-Topic: [PATCH net-next v1] hinic: fix strncpy output truncated compile
- warnings
-Thread-Index: AQHWbF+/LM1G8mFmIkykQEWb0Xuu7aksYh5wgAEeogCAAKsWsA==
-Date:   Sat, 8 Aug 2020 12:50:15 +0000
-Message-ID: <89ee89b8c4a54a848aa57a31c5f5c81a@AcuMS.aculab.com>
-References: <20200807020914.3123-1-luobin9@huawei.com>
- <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
- <b886a6ff-8ed8-c857-f190-e99f8f735e02@huawei.com>
-In-Reply-To: <b886a6ff-8ed8-c857-f190-e99f8f735e02@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sat, 8 Aug 2020 08:50:31 -0400
+Received: from mxwww.masterlogin.de (mxwww.masterlogin.de [IPv6:2a03:2900:1:1::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C9C9C061756
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 05:50:29 -0700 (PDT)
+Received: from mxout1.routing.net (unknown [192.168.10.81])
+        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id A7D9596281;
+        Sat,  8 Aug 2020 12:50:19 +0000 (UTC)
+Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
+        by mxout1.routing.net (Postfix) with ESMTP id 725683FEAF;
+        Sat,  8 Aug 2020 12:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1596891019;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Wj2UayRDflcnw5kUmZA37cOx3/QYiW/w9iZEs90Vdzw=;
+        b=PE0cKnHyhUjOHIKjyvMjunDc16plM449cKob0oqnP5TFPVjNbqPmHxAN3F+kLXiGV8uZnf
+        W0I5cMu7yoZkdufBKMuprfRu+s89EWgUenGcDqVljGo5+oPZqFrEm5w8MK/LP9dvZRk44S
+        RoLgsP5qDSGitsksqA0Nl9vipEs29/M=
+Received: from localhost.localdomain (fttx-pool-217.61.152.39.bambit.de [217.61.152.39])
+        by mxbox4.masterlogin.de (Postfix) with ESMTPSA id D25358018E;
+        Sat,  8 Aug 2020 12:50:18 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: xhci-mtk: Fix typo
+Date:   Sat,  8 Aug 2020 14:49:06 +0200
+Message-Id: <20200808124906.89976-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogbHVvYmluIChMKQ0KPiBTZW50OiAwOCBBdWd1c3QgMjAyMCAwNDozNw0KPiANCj4gT24g
-MjAyMC84LzcgMTc6MzIsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiBGcm9tOiBMdW8gYmluDQo+
-ID4+IFNlbnQ6IDA3IEF1Z3VzdCAyMDIwIDAzOjA5DQo+ID4+DQo+ID4+IGZpeCB0aGUgY29tcGls
-ZSB3YXJuaW5ncyBvZiAnc3RybmNweScgb3V0cHV0IHRydW5jYXRlZCBiZWZvcmUNCj4gPj4gdGVy
-bWluYXRpbmcgbnVsIGNvcHlpbmcgTiBieXRlcyBmcm9tIGEgc3RyaW5nIG9mIHRoZSBzYW1lIGxl
-bmd0aA0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBMdW8gYmluIDxsdW9iaW45QGh1YXdlaS5j
-b20+DQo+ID4+IFJlcG9ydGVkLWJ5OiBrZXJuZWwgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4N
-Cj4gPj4gLS0tDQo+ID4+IFYwflYxOg0KPiA+PiAtIHVzZSB0aGUgc3RybGVuKCkrMSBwYXR0ZXJu
-IGNvbnNpc3RlbnRseQ0KPiA+Pg0KPiA+PiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvaHVhd2VpL2hp
-bmljL2hpbmljX2RldmxpbmsuYyB8IDggKysrKy0tLS0NCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCA0
-IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL25ldC9ldGhlcm5ldC9odWF3ZWkvaGluaWMvaGluaWNfZGV2bGluay5jDQo+ID4+IGIv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvaHVhd2VpL2hpbmljL2hpbmljX2RldmxpbmsuYw0KPiA+PiBp
-bmRleCBjNmFkYzc3NmYzYzguLjFlYzg4ZWJmODFkNiAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvaHVhd2VpL2hpbmljL2hpbmljX2RldmxpbmsuYw0KPiA+PiArKysgYi9k
-cml2ZXJzL25ldC9ldGhlcm5ldC9odWF3ZWkvaGluaWMvaGluaWNfZGV2bGluay5jDQo+ID4+IEBA
-IC0zNDIsOSArMzQyLDkgQEAgc3RhdGljIGludCBjaGlwX2ZhdWx0X3Nob3coc3RydWN0IGRldmxp
-bmtfZm1zZyAqZm1zZywNCj4gPj4NCj4gPj4gIAlsZXZlbCA9IGV2ZW50LT5ldmVudC5jaGlwLmVy
-cl9sZXZlbDsNCj4gPj4gIAlpZiAobGV2ZWwgPCBGQVVMVF9MRVZFTF9NQVgpDQo+ID4+IC0JCXN0
-cm5jcHkobGV2ZWxfc3RyLCBmYXVsdF9sZXZlbFtsZXZlbF0sIHN0cmxlbihmYXVsdF9sZXZlbFts
-ZXZlbF0pKTsNCj4gPj4gKwkJc3RybmNweShsZXZlbF9zdHIsIGZhdWx0X2xldmVsW2xldmVsXSwg
-c3RybGVuKGZhdWx0X2xldmVsW2xldmVsXSkgKyAxKTsNCj4gPg0KPiA+IEhhdmUgeW91IGV2ZW4g
-Y29uc2lkZXJlZCB3aGF0IHRoYXQgY29kZSBpcyBhY3R1YWxseSBkb2luZz8NCj4gPg0KPiA+IAlE
-YXZpZA0KPg0KPiBJJ20gc29ycnkgdGhhdCBJIGhhdmVuJ3QgZ290IHdoYXQgeW91IG1lYW4gYW5k
-IEkgaGF2ZW4ndCBmb3VuZCBhbnkgZGVmZWN0cyBpbiB0aGF0IGNvZGUuIENhbiB5b3UNCj4gZXhw
-bGFpbiBtb3JlIHRvIG1lPw0KDQpJZiB5b3UgY2FuJ3Qgc2VlIGl0IHlvdSBwcm9iYWJseSBzaG91
-bGRuJ3QgYmUgc3VibWl0dGluZyBwYXRjaGVzLi4uLg0KDQpDb25zaWRlciB3aGF0IGhhcHBlbnMg
-d2hlbiB0aGUgc3RyaW5nIGlzIGxvbmcuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJl
-c3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsx
-IDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+From: Frank Wunderlich <frank-w@public-files.de>
+
+fix this small typo u3_ports_disabed => u3_ports_disabled
+
+Fixes: 55ba6e9e25a6 (usb: xhci-mtk: support option to disable usb3 ports)
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+---
+ drivers/usb/host/xhci-mtk.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 4311d4c9b68d..8f321f39ab96 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -77,7 +77,7 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
+ {
+ 	struct mu3c_ippc_regs __iomem *ippc = mtk->ippc_regs;
+ 	u32 value, check_val;
+-	int u3_ports_disabed = 0;
++	int u3_ports_disabled = 0;
+ 	int ret;
+ 	int i;
+ 
+@@ -92,7 +92,7 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
+ 	/* power on and enable u3 ports except skipped ones */
+ 	for (i = 0; i < mtk->num_u3_ports; i++) {
+ 		if ((0x1 << i) & mtk->u3p_dis_msk) {
+-			u3_ports_disabed++;
++			u3_ports_disabled++;
+ 			continue;
+ 		}
+ 
+@@ -117,7 +117,7 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
+ 	check_val = STS1_SYSPLL_STABLE | STS1_REF_RST |
+ 			STS1_SYS125_RST | STS1_XHCI_RST;
+ 
+-	if (mtk->num_u3_ports > u3_ports_disabed)
++	if (mtk->num_u3_ports > u3_ports_disabled)
+ 		check_val |= STS1_U3_MAC_RST;
+ 
+ 	ret = readl_poll_timeout(&ippc->ip_pw_sts1, value,
+-- 
+2.25.1
 
