@@ -2,184 +2,134 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6881C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B924CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8167620747
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999442072D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 14:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RIJaQbX3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="et9y6iE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgHHOfn (ORCPT
+        id S1726323AbgHHOr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 10:35:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54464 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgHHOfm (ORCPT
+        Sat, 8 Aug 2020 10:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbgHHOr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 10:35:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596897340;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T+f4z4GLJoXebjP9ayyv/XeddASIJXM2rQwkijn/wmY=;
-        b=RIJaQbX3SG42KBjiEf7E1mH5q9pH488L0kk3fnBF3F4FMC5wDVcUJTG91eiHMH72iBHwO2
-        jvzlmKSxgZ+ITcNrhyk1yym96xaMSuBO8s9qazfiANXnhjY9qk9UtofmygRbbNWIgO23wC
-        YPzUghHpAywHC/5va1siV+vdGUHyz0s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-QIk1NoQXOW-nKdcRvGiLoA-1; Sat, 08 Aug 2020 10:35:28 -0400
-X-MC-Unique: QIk1NoQXOW-nKdcRvGiLoA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54FBC8005B0;
-        Sat,  8 Aug 2020 14:35:27 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 225B45F1EA;
-        Sat,  8 Aug 2020 14:35:26 +0000 (UTC)
-Date:   Sat, 8 Aug 2020 10:35:26 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: drivers/md/dm-mpath.c:524 multipath_clone_and_map() error:
- double unlocked 'm->lock' (orig line 516)
-Message-ID: <20200808143526.GA6950@redhat.com>
-References: <202008082059.puvi6HNx%lkp@intel.com>
+        Sat, 8 Aug 2020 10:47:26 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC27C061756;
+        Sat,  8 Aug 2020 07:47:25 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id o22so3487616qtt.13;
+        Sat, 08 Aug 2020 07:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oy7Ecf/dRDd49hyOLVsUhynlyl/pEIRUC0Q/sOTmdy8=;
+        b=et9y6iE6T9Ye/ujITgPqkg245uIQDUk1gUMIJcB+Z6dqRSqWMSwi7CVYW44eyMMIrt
+         ojguruz/WoTisG+SFgE1ORejrFYfm8406T63I/Sm1pjVEMkMly/B/brMfuWtV/BNzN0K
+         Ks5fdu/85V/KmIHZL9lttfjpXOkUY9xBsa0TfSgj7GsUT++gcMXu0cWaldnkxWhAw37k
+         ISlP3H6iVdmsYzO9A3o1qZaTJkFdknmkhL3mt7EOSqEijoJtn5VtsozTgTvAwpPGHUeV
+         ss0NVQp8NcFjpsedsFWhol28itwpGnSZKEATax+bzYPYmIvTZyZMDL3qNxV8NU2AYuuy
+         n/Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oy7Ecf/dRDd49hyOLVsUhynlyl/pEIRUC0Q/sOTmdy8=;
+        b=uj2ktZm7ZqljdpoBi4BnjozEPWY9TQDJdCegnFBkPGQwLxLgMT+5DXUYhbmQqAdG51
+         s1BPQT1tyv+MrW3Y6EzLpj2Exy0opmzIFy/svqFLkR3mR0zprLOoKqkPbhzskJI3GGWY
+         +27IavPi0eKhucUz4zbs7HwTk3CMYE+tUD0297gYbnycJI/ODncR6LxraHyKsxw1Vc3Y
+         bafiRWUcmRJhKzxwDwXJjGk3NLlnSSLBaFFVY1T2ntGKE2oQY0DU+ItJJBTyTr9Mo+hr
+         GvEpNNq2NuATzgtSdgEtuSxW8sxCpIMyJd9FAYb2yNNllo+N5oNo2RTAVqqbRoB0GNqv
+         ZS4w==
+X-Gm-Message-State: AOAM530mSiI17hHzGeVmWMs4lzjmC2TPfhYpo2y7dSCf1V4nUH6fMWIa
+        X4YlbrAQirwQRfaawiMtJ1E=
+X-Google-Smtp-Source: ABdhPJy650xffuUDuio1syG4MlCMzzqUk689ijemjrQ1QqkFinKFcC2nctwhoOEab/Y47Xq1Zi4ynA==
+X-Received: by 2002:ac8:7454:: with SMTP id h20mr18843593qtr.84.1596898041978;
+        Sat, 08 Aug 2020 07:47:21 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id t8sm11100627qtc.50.2020.08.08.07.47.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Aug 2020 07:47:21 -0700 (PDT)
+Subject: Re: [PATCH v2] i2c: iproc: fix race between client unreg and isr
+To:     Dhananjay Phadke <dphadke@linux.microsoft.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rayagonda.kokatanur@broadcom.com,
+        rjui@broadcom.com, wsa@kernel.org
+References: <00a30ca7-d533-94ba-994a-9a133fadb045@gmail.com>
+ <1596858925-45763-1-git-send-email-dphadke@linux.microsoft.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <0f7063f5-8ca7-f469-574b-82382d49e266@gmail.com>
+Date:   Sat, 8 Aug 2020 07:47:16 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008082059.puvi6HNx%lkp@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <1596858925-45763-1-git-send-email-dphadke@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 08 2020 at  8:10am -0400,
-kernel test robot <lkp@intel.com> wrote:
 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   449dc8c97089a6e09fb2dac4d92b1b7ac0eb7c1e
-> commit: 374117ad4736c5a4f8012cfe59fc07d9d58191d5 dm mpath: use double checked locking in fast path
-> date:   4 weeks ago
-> config: arm-randconfig-m031-20200808 (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
+
+On 8/7/2020 8:55 PM, Dhananjay Phadke wrote:
+> On 8/7/2020, Florian Fainelli wrote:
+>>> When i2c client unregisters, synchronize irq before setting
+>>> iproc_i2c->slave to NULL.
+>>>
+>>> (1) disable_irq()
+>>> (2) Mask event enable bits in control reg
+>>> (3) Erase slave address (avoid further writes to rx fifo)
+>>> (4) Flush tx and rx FIFOs
+>>> (5) Clear pending event (interrupt) bits in status reg
+>>> (6) enable_irq()
+>>> (7) Set client pointer to NULL
+>>>
+>>
+>>> @@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+>>>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+>>>  	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
+>>>  
+>>> +	/* flush TX/RX FIFOs */
+>>> +	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
+>>> +	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
+>>> +
+>>> +	/* clear all pending slave interrupts */
+>>> +	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
+>>> +
+>>> +	enable_irq(iproc_i2c->irq);
+>>> +
+>>> +	iproc_i2c->slave = NULL;
+>>
+>> There is nothing that checks on iproc_i2c->slave being valid within the
+>> interrupt handler, we assume that the pointer is valid which is fin,
+>> however non functional it may be, it may feel more natural to move the
+>> assignment before the enable_irq()?
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+> As far as the teardown sequence ensures no more interrupts arrive after
+> enable_irq() and they are enabled only after setting pointer during
+> client register(); checking for NULL in ISR isn't necessary. 
 
-All 3 recent reports about smatch showing "double unlocked 'm->lock'"
-appear to be bogus.  Think smatch is generating false positives (and
-given "Old smatch warnings" it seems it has been doing so for some
-time).
+Agreed.
 
-In addition, does lkp@intel.com no longer test linux-next?  The dm-mpath
-locking changes that were just merged into mainline have been in
-linux-next since July 13.  Why were these tests only done against
-mainline?
-
-Mike
-
-
-
-> New smatch warnings:
-> drivers/md/dm-mpath.c:524 multipath_clone_and_map() error: double unlocked 'm->lock' (orig line 516)
 > 
-> Old smatch warnings:
-> drivers/md/dm-mpath.c:446 choose_pgpath() error: double unlocked 'm->lock' (orig line 416)
-> drivers/md/dm-mpath.c:457 choose_pgpath() error: double unlocked 'm->lock' (orig line 403)
-> drivers/md/dm-mpath.c:525 multipath_clone_and_map() error: double unlocked 'm->lock' (orig line 516)
-> drivers/md/dm-mpath.c:526 multipath_clone_and_map() error: double unlocked 'm->lock' (orig line 524)
-> drivers/md/dm-mpath.c:626 __map_bio() error: double unlocked 'm->lock' (orig line 615)
-> drivers/md/dm-mpath.c:627 __map_bio() error: double unlocked 'm->lock' (orig line 615)
-> drivers/md/dm-mpath.c:628 __map_bio() error: double unlocked 'm->lock' (orig line 626)
-> drivers/md/dm-mpath.c:629 __map_bio() error: double unlocked 'm->lock' (orig line 628)
-> drivers/md/dm-mpath.c:1607 pg_init_done() error: double unlocked 'm->lock' (orig line 1560)
-> drivers/md/dm-mpath.c:1707 multipath_end_io_bio() error: double unlocked 'm->lock' (orig line 1704)
-> drivers/md/dm-mpath.c:1988 multipath_prepare_ioctl() error: double unlocked 'm->lock' (orig line 1984)
-> drivers/md/dm-mpath.c:2012 multipath_prepare_ioctl() error: double unlocked 'm->lock' (orig line 2001)
-> 
-> vim +524 drivers/md/dm-mpath.c
-> 
->    498	
->    499	/*
->    500	 * Map cloned requests (request-based multipath)
->    501	 */
->    502	static int multipath_clone_and_map(struct dm_target *ti, struct request *rq,
->    503					   union map_info *map_context,
->    504					   struct request **__clone)
->    505	{
->    506		struct multipath *m = ti->private;
->    507		size_t nr_bytes = blk_rq_bytes(rq);
->    508		struct pgpath *pgpath;
->    509		struct block_device *bdev;
->    510		struct dm_mpath_io *mpio = get_mpio(map_context);
->    511		struct request_queue *q;
->    512		struct request *clone;
->    513	
->    514		/* Do we need to select a new pgpath? */
->    515		pgpath = READ_ONCE(m->current_pgpath);
->  > 516		if (!pgpath || !mpath_double_check_test_bit(MPATHF_QUEUE_IO, m))
->    517			pgpath = choose_pgpath(m, nr_bytes);
->    518	
->    519		if (!pgpath) {
->    520			if (must_push_back_rq(m))
->    521				return DM_MAPIO_DELAY_REQUEUE;
->    522			dm_report_EIO(m);	/* Failed */
->    523			return DM_MAPIO_KILL;
->  > 524		} else if (mpath_double_check_test_bit(MPATHF_QUEUE_IO, m) ||
->    525			   mpath_double_check_test_bit(MPATHF_PG_INIT_REQUIRED, m)) {
->    526			pg_init_all_paths(m);
->    527			return DM_MAPIO_DELAY_REQUEUE;
->    528		}
->    529	
->    530		mpio->pgpath = pgpath;
->    531		mpio->nr_bytes = nr_bytes;
->    532	
->    533		bdev = pgpath->path.dev->bdev;
->    534		q = bdev_get_queue(bdev);
->    535		clone = blk_get_request(q, rq->cmd_flags | REQ_NOMERGE,
->    536				BLK_MQ_REQ_NOWAIT);
->    537		if (IS_ERR(clone)) {
->    538			/* EBUSY, ENODEV or EWOULDBLOCK: requeue */
->    539			if (blk_queue_dying(q)) {
->    540				atomic_inc(&m->pg_init_in_progress);
->    541				activate_or_offline_path(pgpath);
->    542				return DM_MAPIO_DELAY_REQUEUE;
->    543			}
->    544	
->    545			/*
->    546			 * blk-mq's SCHED_RESTART can cover this requeue, so we
->    547			 * needn't deal with it by DELAY_REQUEUE. More importantly,
->    548			 * we have to return DM_MAPIO_REQUEUE so that blk-mq can
->    549			 * get the queue busy feedback (via BLK_STS_RESOURCE),
->    550			 * otherwise I/O merging can suffer.
->    551			 */
->    552			return DM_MAPIO_REQUEUE;
->    553		}
->    554		clone->bio = clone->biotail = NULL;
->    555		clone->rq_disk = bdev->bd_disk;
->    556		clone->cmd_flags |= REQ_FAILFAST_TRANSPORT;
->    557		*__clone = clone;
->    558	
->    559		if (pgpath->pg->ps.type->start_io)
->    560			pgpath->pg->ps.type->start_io(&pgpath->pg->ps,
->    561						      &pgpath->path,
->    562						      nr_bytes);
->    563		return DM_MAPIO_REMAPPED;
->    564	}
->    565	
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> If The teardown sequence doesn't guarantee quiescing of interrupts,
+> setting NULL before or after enable_irq() is equally vulnerable.
 
-
+The teardown sequence is sort of a critical section if we may say, so
+ensuring that everything happens within it and that enable_irq() is the
+last operation would seem more natural to me at least. Thanks
+-- 
+Florian
