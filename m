@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F06C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03466C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48A9120672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD3420672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930699;
-	bh=HKNX47HOPaaC2LDnjTvPIhIC71Ef+dbq7dsQNWQ4TvY=;
+	s=default; t=1596930700;
+	bh=3SszuFnMRkh91EddoT1fiCaR7YvhFDLhQ6A0QGRX8Ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a5arZn86gDSiTwJbwhXxInR4MIVTpes7QzWZ7JCmnfizOo20xDwR7LN+kgWken1BE
-	 n8YbboYeJWTqv7KNewk2kVnXzT5fGR3WQ6wwHX9PF7vTJjR+8pNXpG6KJclAd5GIdN
-	 1f+sqTQhcMPCxsVWEUA7hB502LNmgZJBz1SEe28U=
+	b=CVlCNH7mzYLd+FfC3N5uWI8IYA46LzcIqxQJi+oK8EnMSCD1wiOGkoUxFJ48wlqxA
+	 0ZjhJw6aUpfqCz7iip3JNMLhCkmD/Xn6CFaa9CCofXOC1DK4q75euRQkhLKTwwhGcM
+	 zNN5x+gUtodmSE8KpMm6aAjEgyxjRogfKBTUo4kU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgHHXf7 (ORCPT
+        id S1726472AbgHHXfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:35:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgHHXfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Aug 2020 19:35:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726398AbgHHXfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:35:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 093C22073E;
-        Sat,  8 Aug 2020 23:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A7A7206D8;
+        Sat,  8 Aug 2020 23:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929754;
-        bh=HKNX47HOPaaC2LDnjTvPIhIC71Ef+dbq7dsQNWQ4TvY=;
+        s=default; t=1596929751;
+        bh=3SszuFnMRkh91EddoT1fiCaR7YvhFDLhQ6A0QGRX8Ro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/T7mQ6a0Z5VlZFIlqF+RzjgbqJW1wGRR/HybBV/c5h9o87qKskb1NPNy2aXRUTsk
-         0OlfkPxEOopFvE012Qd5YlQpOVRwZLTd29rhyD6pLezRPOuFK89jzcMTF84Vx2Ik26
-         5rmiSSxngbWseUt2OrAGT2PJOUL7+gapsDQQT6bY=
+        b=0hH8xFtHk5Hdk3/dmJYZhxQfTsKtKRHSJRPPIETly5j5sNUOhy0Bs8UktHmczmoI6
+         6xErPRi9GxOpLFEHLy+I9fxdpPDEnUDS0lAPoXEr5g7cXEQONNU/RK9YRDjVgJnkGx
+         YtM5j9eVoTfAqZuKX6OXnkKKw1JnlDDBlDi3hotg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Liu <iwtbavbm@gmail.com>,
+Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 09/72] sched: correct SD_flags returned by tl->sd_flags()
-Date:   Sat,  8 Aug 2020 19:34:38 -0400
-Message-Id: <20200808233542.3617339-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 06/72] x86, sched: Bail out of frequency invariance if turbo frequency is unknown
+Date:   Sat,  8 Aug 2020 19:34:35 -0400
+Message-Id: <20200808233542.3617339-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -61,38 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Liu <iwtbavbm@gmail.com>
+From: Giovanni Gherdovich <ggherdovich@suse.cz>
 
-[ Upstream commit 9b1b234bb86bcdcdb142e900d39b599185465dbb ]
+[ Upstream commit 51beea8862a3095559862df39554f05042e1195b ]
 
-During sched domain init, we check whether non-topological SD_flags are
-returned by tl->sd_flags(), if found, fire a waning and correct the
-violation, but the code failed to correct the violation. Correct this.
+There may be CPUs that support turbo boost but don't declare any turbo
+ratio, i.e. their MSR_TURBO_RATIO_LIMIT is all zeroes. In that condition
+scale-invariant calculations can't be performed.
 
-Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
-Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200531182453.15254-3-ggherdovich@suse.cz
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/smpboot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index ba81187bb7af1..9079d865a9357 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1328,7 +1328,7 @@ sd_init(struct sched_domain_topology_level *tl,
- 		sd_flags = (*tl->sd_flags)();
- 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
- 			"wrong sd_flags in topology description\n"))
--		sd_flags &= ~TOPOLOGY_SD_FLAGS;
-+		sd_flags &= TOPOLOGY_SD_FLAGS;
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 18d292fc466cb..20e1cea262e4b 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -2002,9 +2002,11 @@ static bool intel_set_max_freq_ratio(void)
+ 	/*
+ 	 * Some hypervisors advertise X86_FEATURE_APERFMPERF
+ 	 * but then fill all MSR's with zeroes.
++	 * Some CPUs have turbo boost but don't declare any turbo ratio
++	 * in MSR_TURBO_RATIO_LIMIT.
+ 	 */
+-	if (!base_freq) {
+-		pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
++	if (!base_freq || !turbo_freq) {
++		pr_debug("Couldn't determine cpu base or turbo frequency, necessary for scale-invariant accounting.\n");
+ 		return false;
+ 	}
  
- 	/* Apply detected topology flags */
- 	sd_flags |= dflags;
 -- 
 2.25.1
 
