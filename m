@@ -5,48 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7135C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 225F020825
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B5820658
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930060;
-	bh=HOXa4eD0bvE5fye5g9+SaQbqIgVHHLMvawfQXnpAunQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=gHIDlHHh4MGEAuGOUQ3LnTHieQPDuPj2NB99FvW8VNUrTi0vqIaA3iSTLNJn008cn
-	 M8lsI0ScG6VlHT1ZYy+4rCWlOPOKakqK/IeQDZlJlmyNRC1nHcUJXJ2+rVi8EEp/lC
-	 zLVvyZ+zOofDjHl0VtLvnKYSOw/QyprIG6HFGM1c=
+	s=default; t=1596930062;
+	bh=NA/ndJV7K60CAH946kmTXs4ibWi53JfPfIOQEF4YGjc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QIFT+sZ5S5CohTbCeIuTbfX4hNa+FvhxoZKPuS5qgQ2qlwKFyezuUE88Yc02ICUYP
+	 kZplPmUKrTH7iPWSQGZK+lI+5OJyU6l465THKKHduRgctPPNGdZ6LgFN4WO/lzG0Ga
+	 +umN4UPD21cyCmJEeFpj8Ip2qvLtA0DhrJM8RmWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgHHXk6 (ORCPT
+        id S1728144AbgHHXky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56648 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbgHHXk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:40:56 -0400
+        id S1728154AbgHHXkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:40:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C77C221E2;
-        Sat,  8 Aug 2020 23:40:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 355EB20829;
+        Sat,  8 Aug 2020 23:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596930055;
-        bh=HOXa4eD0bvE5fye5g9+SaQbqIgVHHLMvawfQXnpAunQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JZE+oyexIC/7i0mM3Y+SGKJH/oBTQgT4UXeGXajYrm1HK7Dc8V1VinS2cMzEgVBzl
-         XT9mrd3CScOgAeiA7tVOBenhRwVNV7ypOT13+YFIDnUD+K2+D1UwMWymtd6KdoVaJ4
-         JdIg9b1fkBJG4ZtwnHIg/dBMZL1Cd8oKfjaG8ujs=
+        s=default; t=1596930051;
+        bh=NA/ndJV7K60CAH946kmTXs4ibWi53JfPfIOQEF4YGjc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BEdBPSSxe2GTEDHhSwKSawPOQ1NX64hLDVzZ+I4X/t+mfRlReVnUQTz7JOLW4rCwb
+         QNpcXvUzCTe6pILfVzSW73rfA1XmQr9OFqjzYoURx12pO4j9KqKT5BJBVgboWheAea
+         dR89mxeSa6hnS45QR6byK9GmUI7L26Q4GcSTNaSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Borislav Petkov <bp@suse.de>,
-        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/5] EDAC: Fix reference count leaks
-Date:   Sat,  8 Aug 2020 19:40:49 -0400
-Message-Id: <20200808234054.3619873-1-sashal@kernel.org>
+Cc:     Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 7/9] platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
+Date:   Sat,  8 Aug 2020 19:40:34 -0400
+Message-Id: <20200808234037.3619732-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200808234037.3619732-1-sashal@kernel.org>
+References: <20200808234037.3619732-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,57 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
+[ Upstream commit 64dd4a5a7d214a07e3d9f40227ec30ac8ba8796e ]
 
-When kobject_init_and_add() returns an error, it should be handled
-because kobject_init_and_add() takes a reference even when it fails. If
-this function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
+In the function check_acpi_dev(), if it fails to create
+platform device, the return value is ERR_PTR() or NULL.
+Thus it must use IS_ERR_OR_NULL() to check return value.
 
-Therefore, replace calling kfree() and call kobject_put() and add a
-missing kobject_put() in the edac_device_register_sysfs_main_kobj()
-error path.
-
- [ bp: Massage and merge into a single patch. ]
-
-Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
-Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
+Fixes: 332e081225fc ("intel-vbtn: new driver for Intel Virtual Button")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_device_sysfs.c | 1 +
- drivers/edac/edac_pci_sysfs.c    | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel-vbtn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
-index fb68a06ad6837..18991cfec2af4 100644
---- a/drivers/edac/edac_device_sysfs.c
-+++ b/drivers/edac/edac_device_sysfs.c
-@@ -280,6 +280,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index a74340dff530e..1cf2a38add5f9 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -168,7 +168,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 		return AE_OK;
  
- 	/* Error exit stack */
- err_kobj_reg:
-+	kobject_put(&edac_dev->kobj);
- 	module_put(edac_dev->owner);
+ 	if (acpi_match_device_ids(dev, ids) == 0)
+-		if (acpi_create_platform_device(dev, NULL))
++		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+ 			dev_info(&dev->dev,
+ 				 "intel-vbtn: created platform device\n");
  
- err_mod_get:
-diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
-index 24d877f6e5775..c56128402bc67 100644
---- a/drivers/edac/edac_pci_sysfs.c
-+++ b/drivers/edac/edac_pci_sysfs.c
-@@ -394,7 +394,7 @@ static int edac_pci_main_kobj_setup(void)
- 
- 	/* Error unwind statck */
- kobject_init_and_add_fail:
--	kfree(edac_pci_top_main_kobj);
-+	kobject_put(edac_pci_top_main_kobj);
- 
- kzalloc_fail:
- 	module_put(THIS_MODULE);
 -- 
 2.25.1
 
