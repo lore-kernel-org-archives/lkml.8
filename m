@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C201C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41606C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A993206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152F920672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930582;
-	bh=KNcgXN6WTnCYqd9oKfbJ81GTNU4+cy6iXLByrlnl1yY=;
+	s=default; t=1596930585;
+	bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7jqZiT4InA1MGFI1lI5YamReOxRB1NoxjxX2lLrivKZ6+xhgf/AW737w0hx9GG5i
-	 BO4Q6frBoC82+XtuAK3Cb+GB9NW+dVftbjlt29wf3KDkDD4xX1GnMg7fFcIa+CeOEI
-	 eAFAIBStldV3AjRhhXnmKUrKgp9vTuZQHAkXFNsM=
+	b=VE4OUKaRJ1onZ1x4i9Xj0hsBbB4z4f5ioElB8HhvNlidPmqTjQKucfVFBdETSWsl4
+	 ap7HGnGIb7STYc492sSlMTDOqdF6Z4Ksdx5iOn6m4n0CaoccGox30iJ7BCYItz/s6v
+	 kIIGRr7rCeVtpqZCOyaFLbGwOQ8xlJY/sXaMojp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgHHXg4 (ORCPT
+        id S1728648AbgHHXto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49620 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:49:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgHHXgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:52 -0400
+        id S1727104AbgHHXg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76869206C3;
-        Sat,  8 Aug 2020 23:36:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D2F206E9;
+        Sat,  8 Aug 2020 23:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929811;
-        bh=KNcgXN6WTnCYqd9oKfbJ81GTNU4+cy6iXLByrlnl1yY=;
+        s=default; t=1596929815;
+        bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKINeSfRkBMO0Jsfb7hHb/FMwV3An+GndB9gYF/UEjt9kZ/73ov32IvZEFCe77tAg
-         3pHosY9eJc5DwS3LGd89/voVD6tB6mcQgm5SD5bfmIlGqTTatcRsjRgvdxt3+VtDi7
-         a8ct7APvmUykKHiFT0Llkmj9U3O++72LT9B0defc=
+        b=ewEmXvHEUz/v5ymIVQSLy6frQ42+Hn04Dd43L67E7MFWp4AEB86nfu+Ebogw85gRl
+         4Awgh1UmvsgTQWF/A+iVTBmybzwEVmLcioDv3sDdXbpXtECqpJEW/W67teHos0w7TK
+         LMZQmCNPOk0O947YAVMxkjqrspn+QOF7juNwciSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 47/72] regulator: fix memory leak on error path of regulator_register()
-Date:   Sat,  8 Aug 2020 19:35:16 -0400
-Message-Id: <20200808233542.3617339-47-sashal@kernel.org>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 50/72] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Sat,  8 Aug 2020 19:35:19 -0400
+Message-Id: <20200808233542.3617339-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,114 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit 9177514ce34902b3adb2abd490b6ad05d1cfcb43 ]
+[ Upstream commit f1bb924e8f5b50752a80fa5b48c43003680a7b64 ]
 
-The change corrects registration and deregistration on error path
-of a regulator, the problem was manifested by a reported memory
-leak on deferred probe:
+Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+tuning errors on VIM3 after a few hours uptime:
 
-    as3722-regulator as3722-regulator: regulator 13 register failed -517
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
 
-    # cat /sys/kernel/debug/kmemleak
-    unreferenced object 0xecc43740 (size 64):
-      comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
-      hex dump (first 32 bytes):
-        72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
-        5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
-      backtrace:
-        [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
-        [<40c0ad48>] kvasprintf+0x64/0xd4
-        [<109abd29>] kvasprintf_const+0x70/0x84
-        [<c4215946>] kobject_set_name_vargs+0x34/0xa8
-        [<62282ea2>] dev_set_name+0x40/0x64
-        [<a39b6757>] regulator_register+0x3a4/0x1344
-        [<16a9543f>] devm_regulator_register+0x4c/0x84
-        [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
-        ...
+I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
+to silence the error, then (re)add it to the VIM3L dts.
 
-The memory leak problem was introduced as a side ef another fix in
-regulator_register() error path, I believe that the proper fix is
-to decouple device_register() function into its two compounds and
-initialize a struct device before assigning any values to its fields
-and then using it before actual registration of a device happens.
-
-This lets to call put_device() safely after initialization, and, since
-now a release callback is called, kfree(rdev->constraints) shall be
-removed to exclude a double free condition.
-
-Fixes: a3cde9534ebd ("regulator: core: fix regulator_register() error paths to properly release rdev")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Link: https://lore.kernel.org/r/20200724005013.23278-1-vz@mleia.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+Fixes: 700ab8d83927 ("arm64: dts: khadas-vim3: add support for the SM1 based VIM3L")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200721015950.11816-1-christianshewitt@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
+ arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 03154f5b939f7..720f28844795b 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5023,7 +5023,6 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	struct regulator_dev *rdev;
- 	bool dangling_cfg_gpiod = false;
- 	bool dangling_of_gpiod = false;
--	bool reg_device_fail = false;
- 	struct device *dev;
- 	int ret, i;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 1ef1e3672b967..ff5ba85b7562e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -270,7 +270,6 @@ &sd_emmc_a {
  
-@@ -5152,10 +5151,12 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	}
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
  
- 	/* register with sysfs */
-+	device_initialize(&rdev->dev);
- 	rdev->dev.class = &regulator_class;
- 	rdev->dev.parent = dev;
- 	dev_set_name(&rdev->dev, "regulator.%lu",
- 		    (unsigned long) atomic_inc_return(&regulator_no));
-+	dev_set_drvdata(&rdev->dev, rdev);
+ 	non-removable;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index dbbf29a0dbf6d..026b21708b078 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -88,6 +88,10 @@ &pcie {
+ 	status = "okay";
+ };
  
- 	/* set regulator constraints */
- 	if (init_data)
-@@ -5206,12 +5207,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	    !rdev->desc->fixed_uV)
- 		rdev->is_switch = true;
- 
--	dev_set_drvdata(&rdev->dev, rdev);
--	ret = device_register(&rdev->dev);
--	if (ret != 0) {
--		reg_device_fail = true;
-+	ret = device_add(&rdev->dev);
-+	if (ret != 0)
- 		goto unset_supplies;
--	}
- 
- 	rdev_init_debugfs(rdev);
- 
-@@ -5233,17 +5231,15 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	mutex_unlock(&regulator_list_mutex);
- wash:
- 	kfree(rdev->coupling_desc.coupled_rdevs);
--	kfree(rdev->constraints);
- 	mutex_lock(&regulator_list_mutex);
- 	regulator_ena_gpio_free(rdev);
- 	mutex_unlock(&regulator_list_mutex);
-+	put_device(&rdev->dev);
-+	rdev = NULL;
- clean:
- 	if (dangling_of_gpiod)
- 		gpiod_put(config->ena_gpiod);
--	if (reg_device_fail)
--		put_device(&rdev->dev);
--	else
--		kfree(rdev);
-+	kfree(rdev);
- 	kfree(config);
- rinse:
- 	if (dangling_cfg_gpiod)
++&sd_emmc_a {
++	sd-uhs-sdr50;
++};
++
+ &usb {
+ 	phys = <&usb2_phy0>, <&usb2_phy1>;
+ 	phy-names = "usb2-phy0", "usb2-phy1";
 -- 
 2.25.1
 
