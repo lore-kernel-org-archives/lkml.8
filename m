@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42903C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40170C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC56207BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C7220825
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929907;
-	bh=lc7hxZLB0QegXEzX7NqRavm14GKELH629t/S1CVA/tI=;
+	s=default; t=1596929908;
+	bh=sXtgcI/FlirC232oacrQyf899CGFW8M7zfPMnh/iWzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tcasQON8rv4oPOErO79dKJUXk+JMqwFpnRjILz1xYJvV+GklITvNhdQAJhm1MUrmC
-	 0iEJ1MBgdGdXGU+eDE+8VocM13ayXC3o6lZAHsYO9X1mYWGjRcsYAp1llAjDeLoIFb
-	 36nY2b2l7FyMt3EIMHisRnC4MCitVrSCHi/sf+II=
+	b=hYS5GClaR7GCkwUhn91QHZKN2cEI6YrtBbHz8NF9fmxP6JgaSBmeQ3o7fEeBzjCQo
+	 x/cktUoOF7pz6nn1gI6e6zGN+c48fhMn/aXx+ADfUmNncIertKL6R6JwZCu01YWA36
+	 kWNTCiWGqlPBwoKATQ7Vc0IEPilkW2IlBNYgfT3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgHHXiZ (ORCPT
+        id S1728292AbgHHXi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52132 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:38:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbgHHXiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:21 -0400
+        id S1726643AbgHHXiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D51702073E;
-        Sat,  8 Aug 2020 23:38:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A453520748;
+        Sat,  8 Aug 2020 23:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929900;
-        bh=lc7hxZLB0QegXEzX7NqRavm14GKELH629t/S1CVA/tI=;
+        s=default; t=1596929904;
+        bh=sXtgcI/FlirC232oacrQyf899CGFW8M7zfPMnh/iWzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=guN4eolZ7mIYWCGFzB0HIlx/EGdwVFVWQivMTvra6x0QgvymAkB6GYrfgRXiM28ht
-         tSvZL8PqRsIBe+vninbHHzQkkPy33ShAzX2Mq964Vm0T/c8+vHaLsSLROv7VX1Ss8N
-         OaBp6AqZZFEGiSrYheW7eWoaz+CjBrk4gO2UF5oI=
+        b=xZZzHQdHYm+s0mSgcf9Ip8YAo7Zo4bTlzDheF0nkI+aiZih720A1Vt8lAuh1jQ1vu
+         aQ6e3ZY+NUmb5GNhyfqZ6mAILXA7N4DemmCNZWBOfFgWbmkzgIFpAGUQ55etKZM+oq
+         nSjT+tZpgVcdpm3aha2sevKuMe251NtXgOfAUkGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 40/58] regulator: fix memory leak on error path of regulator_register()
-Date:   Sat,  8 Aug 2020 19:37:06 -0400
-Message-Id: <20200808233724.3618168-40-sashal@kernel.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 43/58] soc: qcom: pdr: Reorder the PD state indication ack
+Date:   Sat,  8 Aug 2020 19:37:09 -0400
+Message-Id: <20200808233724.3618168-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,114 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit 9177514ce34902b3adb2abd490b6ad05d1cfcb43 ]
+[ Upstream commit 72fe996f9643043c8f84e32c0610975b01aa555b ]
 
-The change corrects registration and deregistration on error path
-of a regulator, the problem was manifested by a reported memory
-leak on deferred probe:
+The Protection Domains (PD) have a mechanism to keep its resources
+enabled until the PD down indication is acked. Reorder the PD state
+indication ack so that clients get to release the relevant resources
+before the PD goes down.
 
-    as3722-regulator as3722-regulator: regulator 13 register failed -517
-
-    # cat /sys/kernel/debug/kmemleak
-    unreferenced object 0xecc43740 (size 64):
-      comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
-      hex dump (first 32 bytes):
-        72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
-        5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
-      backtrace:
-        [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
-        [<40c0ad48>] kvasprintf+0x64/0xd4
-        [<109abd29>] kvasprintf_const+0x70/0x84
-        [<c4215946>] kobject_set_name_vargs+0x34/0xa8
-        [<62282ea2>] dev_set_name+0x40/0x64
-        [<a39b6757>] regulator_register+0x3a4/0x1344
-        [<16a9543f>] devm_regulator_register+0x4c/0x84
-        [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
-        ...
-
-The memory leak problem was introduced as a side ef another fix in
-regulator_register() error path, I believe that the proper fix is
-to decouple device_register() function into its two compounds and
-initialize a struct device before assigning any values to its fields
-and then using it before actual registration of a device happens.
-
-This lets to call put_device() safely after initialization, and, since
-now a release callback is called, kfree(rdev->constraints) shall be
-removed to exclude a double free condition.
-
-Fixes: a3cde9534ebd ("regulator: core: fix regulator_register() error paths to properly release rdev")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Link: https://lore.kernel.org/r/20200724005013.23278-1-vz@mleia.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
+Reported-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200701195954.9007-1-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ drivers/soc/qcom/pdr_interface.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 7486f6e4e613c..0cb99bb090ef8 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5005,7 +5005,6 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	struct regulator_dev *rdev;
- 	bool dangling_cfg_gpiod = false;
- 	bool dangling_of_gpiod = false;
--	bool reg_device_fail = false;
- 	struct device *dev;
- 	int ret, i;
+diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+index 17ad3b8698e16..cd8828c857234 100644
+--- a/drivers/soc/qcom/pdr_interface.c
++++ b/drivers/soc/qcom/pdr_interface.c
+@@ -282,13 +282,15 @@ static void pdr_indack_work(struct work_struct *work)
  
-@@ -5134,10 +5133,12 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	}
+ 	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
+ 		pds = ind->pds;
+-		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
  
- 	/* register with sysfs */
-+	device_initialize(&rdev->dev);
- 	rdev->dev.class = &regulator_class;
- 	rdev->dev.parent = dev;
- 	dev_set_name(&rdev->dev, "regulator.%lu",
- 		    (unsigned long) atomic_inc_return(&regulator_no));
-+	dev_set_drvdata(&rdev->dev, rdev);
+ 		mutex_lock(&pdr->status_lock);
+ 		pds->state = ind->curr_state;
+ 		pdr->status(pds->state, pds->service_path, pdr->priv);
+ 		mutex_unlock(&pdr->status_lock);
  
- 	/* set regulator constraints */
- 	if (init_data)
-@@ -5188,12 +5189,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	    !rdev->desc->fixed_uV)
- 		rdev->is_switch = true;
- 
--	dev_set_drvdata(&rdev->dev, rdev);
--	ret = device_register(&rdev->dev);
--	if (ret != 0) {
--		reg_device_fail = true;
-+	ret = device_add(&rdev->dev);
-+	if (ret != 0)
- 		goto unset_supplies;
--	}
- 
- 	rdev_init_debugfs(rdev);
- 
-@@ -5215,17 +5213,15 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	mutex_unlock(&regulator_list_mutex);
- wash:
- 	kfree(rdev->coupling_desc.coupled_rdevs);
--	kfree(rdev->constraints);
- 	mutex_lock(&regulator_list_mutex);
- 	regulator_ena_gpio_free(rdev);
- 	mutex_unlock(&regulator_list_mutex);
-+	put_device(&rdev->dev);
-+	rdev = NULL;
- clean:
- 	if (dangling_of_gpiod)
- 		gpiod_put(config->ena_gpiod);
--	if (reg_device_fail)
--		put_device(&rdev->dev);
--	else
--		kfree(rdev);
-+	kfree(rdev);
- 	kfree(config);
- rinse:
- 	if (dangling_cfg_gpiod)
++		/* Ack the indication after clients release the PD resources */
++		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
++
+ 		mutex_lock(&pdr->list_lock);
+ 		list_del(&ind->node);
+ 		mutex_unlock(&pdr->list_lock);
 -- 
 2.25.1
 
