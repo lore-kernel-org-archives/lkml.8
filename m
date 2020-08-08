@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F345C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75B0C433E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D52B020672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B4820672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930372;
-	bh=e8/hC67URr55Z95bIdmfp2EdNaPne94nAC6wdFLFnB4=;
+	s=default; t=1596930378;
+	bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YfdpYWm307tqxbU8+2snHDGLVNH0dofb0UOH9e72umKXlbLHxKZej+vVBDfHr+AIZ
-	 Yw3acI6azUgW1fwk+SNgtdMaqi90hzpMcgkqMH90+ZE0Tl0l0KcGyN1tT5wgu1sxHA
-	 bYkaLiHKtJndNb1N2I9rmmIbv3Rs4YnKpMV1RYMo=
+	b=Y7v//SJo+AtNk1DkLiZMKAtC+wZwGn47zjUpgAgyEZ/n8I75iXYvnIGxQ/2EQ6nLK
+	 QaPC7KbB9xJmDf9cBHhiLkeUXVtB3LB1AbajpQwICj+JjLWa/4dZLJNpRsZ1XzYTYF
+	 UEaPMZ+foee4TVgQxlsWYuoBrARGNAGkRfRl4Sbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgHHXqL (ORCPT
+        id S1728891AbgHHXqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52330 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgHHXi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:26 -0400
+        id S1728278AbgHHXiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D56AC2073E;
-        Sat,  8 Aug 2020 23:38:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54CD020825;
+        Sat,  8 Aug 2020 23:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929905;
-        bh=e8/hC67URr55Z95bIdmfp2EdNaPne94nAC6wdFLFnB4=;
+        s=default; t=1596929903;
+        bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=izAFt1LG8T9jixWiZEPkNXNUy6d/4WYw9M3MYq+qud+H2maDxe+pzB46PHdg4wvzp
-         MU1v/9FB7giKhYZ3vKR581+nVQIHMOL0EwKT+5m+eJPOGz9MFNltMV8V29jon32S5Y
-         v4TrX6kwlVdj+LSTYoXXuxduqspaQh4BMmYFF+IY=
+        b=0asBzYcDcPKJ1XcwNEWBgH7bvtXSBwxytS95onbG66uccHC8rsYxpP0t+LgqXhyXR
+         YgFCKfRQQWqOgAoX1rD6Aqq4t4wsjwHDho5My4qLhxaP0qHt35l0IAvkUdp1LlWRy9
+         0AKmis6WAT6M+QV1VWwmuEHY3ucScnveQJe80dlQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Lin <jon.lin@rock-chips.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 44/58] spi: rockchip: Fix error in SPI slave pio read
-Date:   Sat,  8 Aug 2020 19:37:10 -0400
-Message-Id: <20200808233724.3618168-44-sashal@kernel.org>
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 42/58] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Sat,  8 Aug 2020 19:37:08 -0400
+Message-Id: <20200808233724.3618168-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -63,37 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Lin <jon.lin@rock-chips.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit 4294e4accf8d695ea5605f6b189008b692e3e82c ]
+[ Upstream commit f1bb924e8f5b50752a80fa5b48c43003680a7b64 ]
 
-The RXFLR is possible larger than rx_left in Rockchip SPI, fix it.
+Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+tuning errors on VIM3 after a few hours uptime:
 
-Fixes: 01b59ce5dac8 ("spi: rockchip: use irq rather than polling")
-Signed-off-by: Jon Lin <jon.lin@rock-chips.com>
-Tested-by: Emil Renner Berthing <kernel@esmil.dk>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Emil Renner Berthing <kernel@esmil.dk>
-Link: https://lore.kernel.org/r/20200723004356.6390-3-jon.lin@rock-chips.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
+
+I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
+to silence the error, then (re)add it to the VIM3L dts.
+
+Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+Fixes: 700ab8d83927 ("arm64: dts: khadas-vim3: add support for the SM1 based VIM3L")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200721015950.11816-1-christianshewitt@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
+ arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 70ef63e0b6b8d..02e9205355910 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -286,7 +286,7 @@ static void rockchip_spi_pio_writer(struct rockchip_spi *rs)
- static void rockchip_spi_pio_reader(struct rockchip_spi *rs)
- {
- 	u32 words = readl_relaxed(rs->regs + ROCKCHIP_SPI_RXFLR);
--	u32 rx_left = rs->rx_left - words;
-+	u32 rx_left = (rs->rx_left > words) ? rs->rx_left - words : 0;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 1ef1e3672b967..ff5ba85b7562e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -270,7 +270,6 @@ &sd_emmc_a {
  
- 	/* the hardware doesn't allow us to change fifo threshold
- 	 * level while spi is enabled, so instead make sure to leave
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
+ 
+ 	non-removable;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index dbbf29a0dbf6d..026b21708b078 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -88,6 +88,10 @@ &pcie {
+ 	status = "okay";
+ };
+ 
++&sd_emmc_a {
++	sd-uhs-sdr50;
++};
++
+ &usb {
+ 	phys = <&usb2_phy0>, <&usb2_phy1>;
+ 	phy-names = "usb2-phy0", "usb2-phy1";
 -- 
 2.25.1
 
