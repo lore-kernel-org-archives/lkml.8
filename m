@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98173C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69820C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD5720672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B6720672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930338;
-	bh=L07yy2GmUsjLM3+nAixezYsG4RZHhf9+qZPnLqSltYw=;
+	s=default; t=1596930342;
+	bh=l7DTXjuAfklnRbRkGFN8yM3xQMOqDlSYweAigS6M2Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJ89e50cPqCAZg4DhGDBYieHxLGptvCgWDRaRdJ23FI5kFj8AFbEIYz4CYPObMl88
-	 r9q2u/g94Xhyms83kTWcBfVcyajKzvMFRQZtwdYL9822h/QzSe5yFgeP8qoSfxiwff
-	 sWOO5AwlHGJybslkTQAVc1vxfcpMWcJT7FlXRsPc=
+	b=n5AXBxC26J7cbiyN1jFpcr96DhSQo9rKGmSOapP+lmdsUyx/neL5CkMrBSbeltzVK
+	 z8etwanq1F5dITYZ3s+8ye1VxIQdvWVYtZYq0d/z6MfljoMiEwak3hNUitKN5k2EHf
+	 CXB/TiZZhYaLDlwlDFjucpIUuhVq11MMIvjF4KYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgHHXip (ORCPT
+        id S1728512AbgHHXpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52866 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgHHXim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:42 -0400
+        id S1728326AbgHHXik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523D920825;
-        Sat,  8 Aug 2020 23:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC9C207BB;
+        Sat,  8 Aug 2020 23:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929922;
-        bh=L07yy2GmUsjLM3+nAixezYsG4RZHhf9+qZPnLqSltYw=;
+        s=default; t=1596929919;
+        bh=l7DTXjuAfklnRbRkGFN8yM3xQMOqDlSYweAigS6M2Yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WTxVKWDKWeDU+ufz5p2azMbcJu2XOPS7K5nUVCOZ8slbGY84lL3TUsqNWsxtVf2mp
-         D6O8/5KCM/B+D1rKHCTTf5W3F0FeqYOT/qR5qGwZJyKwxyLuXGHRZ7rQKIBR2or/+c
-         LAyRi+aCyALUyBFeq4Oyv8DL4CjEhgKHgojOgAZo=
+        b=C/0cVK1hRXAFxfkXjHrxlbhww9RqXSc1KAsa6FNpmwMvV3UAJ3CUVOwIDd1v9lVT/
+         ZhsZ4KAlbqjhkdTCThJThu2Z39qbE7598lPACP7pNzvGZ1dZwmm8EttD/jV8FXdess
+         /HjMUihuMr3qqj3Weiphe1zTh5QYF+qEvQUxjAro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.de>, Martin Wilck <mwilck@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 57/58] nvme-multipath: do not fall back to __nvme_find_path() for non-optimized paths
-Date:   Sat,  8 Aug 2020 19:37:23 -0400
-Message-Id: <20200808233724.3618168-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 55/58] nvme-rdma: fix controller reset hang during traffic
+Date:   Sat,  8 Aug 2020 19:37:21 -0400
+Message-Id: <20200808233724.3618168-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,46 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit fbd6a42d8932e172921c7de10468a2e12c34846b ]
+[ Upstream commit 9f98772ba307dd89a3d17dc2589f213d3972fc64 ]
 
-When nvme_round_robin_path() finds a valid namespace we should be using it;
-falling back to __nvme_find_path() for non-optimized paths will cause the
-result from nvme_round_robin_path() to be ignored for non-optimized paths.
+commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+exposed an issue where we may hang trying to wait for queue freeze
+during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
+queue maps (which we have now for default/read/poll) is attempting to
+freeze the queue. However we never started queue freeze when starting the
+reset, which means that we have inflight pending requests that entered the
+queue that we will not complete once the queue is quiesced.
 
-Fixes: 75c10e732724 ("nvme-multipath: round-robin I/O policy")
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+So start a freeze before we quiesce the queue, and unfreeze the queue
+after we successfully connected the I/O queues (and make sure to call
+blk_mq_update_nr_hw_queues only after we are sure that the queue was
+already frozen).
+
+This follows to how the pci driver handles resets.
+
+Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/nvme/host/rdma.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 2c94e084a61b8..d3914b7e8f52c 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -272,10 +272,13 @@ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
- 	struct nvme_ns *ns;
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 1f9a45145d0d3..19c94080512cf 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -882,15 +882,20 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
+ 			ret = PTR_ERR(ctrl->ctrl.connect_q);
+ 			goto out_free_tag_set;
+ 		}
+-	} else {
+-		blk_mq_update_nr_hw_queues(&ctrl->tag_set,
+-			ctrl->ctrl.queue_count - 1);
+ 	}
  
- 	ns = srcu_dereference(head->current_path[node], &head->srcu);
--	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR && ns)
--		ns = nvme_round_robin_path(head, node, ns);
--	if (unlikely(!ns || !nvme_path_is_optimized(ns)))
--		ns = __nvme_find_path(head, node);
-+	if (unlikely(!ns))
-+		return __nvme_find_path(head, node);
+ 	ret = nvme_rdma_start_io_queues(ctrl);
+ 	if (ret)
+ 		goto out_cleanup_connect_q;
+ 
++	if (!new) {
++		nvme_start_queues(&ctrl->ctrl);
++		nvme_wait_freeze(&ctrl->ctrl);
++		blk_mq_update_nr_hw_queues(ctrl->ctrl.tagset,
++			ctrl->ctrl.queue_count - 1);
++		nvme_unfreeze(&ctrl->ctrl);
++	}
 +
-+	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR)
-+		return nvme_round_robin_path(head, node, ns);
-+	if (unlikely(!nvme_path_is_optimized(ns)))
-+		return __nvme_find_path(head, node);
- 	return ns;
- }
+ 	return 0;
  
+ out_cleanup_connect_q:
+@@ -923,6 +928,7 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
+ 		bool remove)
+ {
+ 	if (ctrl->ctrl.queue_count > 1) {
++		nvme_start_freeze(&ctrl->ctrl);
+ 		nvme_stop_queues(&ctrl->ctrl);
+ 		nvme_rdma_stop_io_queues(ctrl);
+ 		if (ctrl->ctrl.tagset) {
 -- 
 2.25.1
 
