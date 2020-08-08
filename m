@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1AFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6468C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60DAC20825
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8330021744
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929920;
-	bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
+	s=default; t=1596929923;
+	bh=REczOt4TXKPZcId4XYB6HQe/95cS7RHQwDga/Y9APWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gr6L4MPdoMF3AqaVnnmpwZL9WW8S4ZpBidD3DdOQixE7erGo1gNEAVJhf5/4sbmVM
-	 RT3jSqZbLt048QiqRZ4tkLdfm41w0O53gqbL9L2UE+HriJ7qH07mLxp/SffIgBc/XA
-	 QElmV8BoxldxtOmCTHdB5ycGH1sw1jnrCoO7myzY=
+	b=Nr/kW4feCHFZZKEFKV4DCjlZJmLVTZ4LZpS60NQX5VOiZBMHg/WtYNpew5SCozri5
+	 exIx/UVcHabYzAuau9XL2kzHT0aHYvDv426OoPw4sJZTROeWAydXIGMS3M8m5OSAkK
+	 qYlrZBkWm+/bCtKASLwmu+3WoxDN5sRM1vBw+iYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgHHXij (ORCPT
+        id S1728353AbgHHXim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbgHHXig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:36 -0400
+        id S1728339AbgHHXii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B8DD20748;
-        Sat,  8 Aug 2020 23:38:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85AAE2075D;
+        Sat,  8 Aug 2020 23:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929916;
-        bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
+        s=default; t=1596929918;
+        bh=REczOt4TXKPZcId4XYB6HQe/95cS7RHQwDga/Y9APWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+KezyTDvP1bD1aJCqx8I/y72KOzuH/iHHEpr+SEzMVUYTB8HmezKnmD3VclyikaG
-         WmDiAqtfbVT4GHIt3wGjtM4gvdLuO0VOdj7HhU7JY3azCAzRpUu9HM4uuB1C7BY6a7
-         cu0+e82+oKu6Blk5ERUvVMMYsSO8sl6/25SHBstk=
+        b=T53sOhfHaCk5xgUL9AWPC9mJIIEoja6zFcN7MOTnWBAQC+aEZf07QovoGxD5cdOzo
+         hX5+M0ukVK6YBaP3bq3Rgt6uSJfRc26J9NstR6ttiWbGjjizD/nM3odoy+eQ54NDcA
+         xkfAcpinrjcVNzxRgNxDPRQAJTdmcZsP56QcEjBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        kernel test robot <lkp@intel.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 52/58] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
-Date:   Sat,  8 Aug 2020 19:37:18 -0400
-Message-Id: <20200808233724.3618168-52-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 54/58] nvme-tcp: fix controller reset hang during traffic
+Date:   Sat,  8 Aug 2020 19:37:20 -0400
+Message-Id: <20200808233724.3618168-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,51 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 9808357ff2e5bfe1e0dcafef5e78cc5b617a7078 ]
+[ Upstream commit 2875b0aecabe2f081a8432e2bc85b85df0529490 ]
 
-cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
-UP configuration, the boot CPU is 0.
+commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+exposed an issue where we may hang trying to wait for queue freeze
+during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
+queue maps (which we have now for default/read/poll) is attempting to
+freeze the queue. However we never started queue freeze when starting the
+reset, which means that we have inflight pending requests that entered the
+queue that we will not complete once the queue is quiesced.
 
-Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200724184157.29150-1-f.fainelli@gmail.com
+So start a freeze before we quiesce the queue, and unfreeze the queue
+after we successfully connected the I/O queues (and make sure to call
+blk_mq_update_nr_hw_queues only after we are sure that the queue was
+already frozen).
+
+This follows to how the pci driver handles resets.
+
+Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/nvme/host/tcp.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fd7c537fb42ac..4127eeab10af1 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
- 	u32 val;
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 26461bf3fdcc3..99eaa0474e10b 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1753,15 +1753,20 @@ static int nvme_tcp_configure_io_queues(struct nvme_ctrl *ctrl, bool new)
+ 			ret = PTR_ERR(ctrl->connect_q);
+ 			goto out_free_tag_set;
+ 		}
+-	} else {
+-		blk_mq_update_nr_hw_queues(ctrl->tagset,
+-			ctrl->queue_count - 1);
+ 	}
  
- 	/* Wakeup interrupt should only come from the boot cpu */
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
+ 	ret = nvme_tcp_start_io_queues(ctrl);
+ 	if (ret)
+ 		goto out_cleanup_connect_q;
  
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
-@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
- 	struct bcm7038_l1_chip *intc;
- 	int boot_cpu, word;
++	if (!new) {
++		nvme_start_queues(ctrl);
++		nvme_wait_freeze(ctrl);
++		blk_mq_update_nr_hw_queues(ctrl->tagset,
++			ctrl->queue_count - 1);
++		nvme_unfreeze(ctrl);
++	}
++
+ 	return 0;
  
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
- 
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
+ out_cleanup_connect_q:
+@@ -1866,6 +1871,7 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
+ {
+ 	if (ctrl->queue_count <= 1)
+ 		return;
++	nvme_start_freeze(ctrl);
+ 	nvme_stop_queues(ctrl);
+ 	nvme_tcp_stop_io_queues(ctrl);
+ 	if (ctrl->tagset) {
 -- 
 2.25.1
 
