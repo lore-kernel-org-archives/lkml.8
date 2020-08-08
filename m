@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6556BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4401C20866
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3342177B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929986;
-	bh=dz10XqBAs0YnUMWe3V7njFohRwrxUEghfJ/mtHXucnc=;
+	s=default; t=1596929990;
+	bh=aYG/jnikgEWyVG2dqQNg2g22DSYc7s2Ba/lJaKzMlRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJhgOvqP81EcAHz9oF2+MAHM/1Ml2DsymDi6tPkqtPh6UsLsyoMokcjASLm598Mb5
-	 reosIv+nlz9FN7yQmIhG2BNTZwE/GDRm5Z48mTHPe59Rkp1jz8WD1UHeOf7sIJyKUi
-	 BU6EfGHtk2aar7sZgSrlfkqID/iK+/jtWyBQozms=
+	b=ho3iQy0M1SFQ5xBM2ueipxtvBfDrZwA+/Aw0u14RhnA4gg9lL+RefBDKm/ESB00+s
+	 V22QnAOr3ufiMoY04vSreiKhLuZiyrXyLljsrG0WDPIWDaSTLqhxMYx4DbRkpolTZn
+	 Q6QC1XJkm0Uah9D7bPEZtfiCaKauAsqCpuZXSJXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgHHXjo (ORCPT
+        id S1728641AbgHHXjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54240 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728545AbgHHXj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:27 -0400
+        id S1728558AbgHHXja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B662177B;
-        Sat,  8 Aug 2020 23:39:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E612075D;
+        Sat,  8 Aug 2020 23:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929966;
-        bh=dz10XqBAs0YnUMWe3V7njFohRwrxUEghfJ/mtHXucnc=;
+        s=default; t=1596929969;
+        bh=aYG/jnikgEWyVG2dqQNg2g22DSYc7s2Ba/lJaKzMlRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdaRplqTnDTHTRcS3y3bq/fuxaaUo9TgYrWP9ipSeAAzeVEs1SIovrDtH841/65F4
-         mrg+jPhNz7EuGxqcT1L75bK7fGBU0bEv+HLd1rHuKZeI6tuQnFlChpWHQEuVyYQAN4
-         UvIXpVupzx16LrR8Q5Qnqc3C8qoqWeJFIddFTbOQ=
+        b=guc6XZv0/WcKC90L6iSV6HI/ZOsRRT8WZTytEa5RFMkRG5958Jxr4rUaTn7TlY7z1
+         tegcgNVInVSQLTboN763qsVlyVDNf4pFQbnmBh/tKazJOzXCmSWJ4cLAhPjRI6BCgG
+         H6NSTYrh1aNq6HLGWRhcuN1oXQE2MJReW5imrd+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
+Cc:     Jon Lin <jon.lin@rock-chips.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Heiko Stuebner <heiko@sntech.de>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 29/40] regulator: fix memory leak on error path of regulator_register()
-Date:   Sat,  8 Aug 2020 19:38:33 -0400
-Message-Id: <20200808233844.3618823-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 31/40] spi: rockchip: Fix error in SPI slave pio read
+Date:   Sat,  8 Aug 2020 19:38:35 -0400
+Message-Id: <20200808233844.3618823-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -60,114 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Jon Lin <jon.lin@rock-chips.com>
 
-[ Upstream commit 9177514ce34902b3adb2abd490b6ad05d1cfcb43 ]
+[ Upstream commit 4294e4accf8d695ea5605f6b189008b692e3e82c ]
 
-The change corrects registration and deregistration on error path
-of a regulator, the problem was manifested by a reported memory
-leak on deferred probe:
+The RXFLR is possible larger than rx_left in Rockchip SPI, fix it.
 
-    as3722-regulator as3722-regulator: regulator 13 register failed -517
-
-    # cat /sys/kernel/debug/kmemleak
-    unreferenced object 0xecc43740 (size 64):
-      comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
-      hex dump (first 32 bytes):
-        72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
-        5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
-      backtrace:
-        [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
-        [<40c0ad48>] kvasprintf+0x64/0xd4
-        [<109abd29>] kvasprintf_const+0x70/0x84
-        [<c4215946>] kobject_set_name_vargs+0x34/0xa8
-        [<62282ea2>] dev_set_name+0x40/0x64
-        [<a39b6757>] regulator_register+0x3a4/0x1344
-        [<16a9543f>] devm_regulator_register+0x4c/0x84
-        [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
-        ...
-
-The memory leak problem was introduced as a side ef another fix in
-regulator_register() error path, I believe that the proper fix is
-to decouple device_register() function into its two compounds and
-initialize a struct device before assigning any values to its fields
-and then using it before actual registration of a device happens.
-
-This lets to call put_device() safely after initialization, and, since
-now a release callback is called, kfree(rdev->constraints) shall be
-removed to exclude a double free condition.
-
-Fixes: a3cde9534ebd ("regulator: core: fix regulator_register() error paths to properly release rdev")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Link: https://lore.kernel.org/r/20200724005013.23278-1-vz@mleia.com
+Fixes: 01b59ce5dac8 ("spi: rockchip: use irq rather than polling")
+Signed-off-by: Jon Lin <jon.lin@rock-chips.com>
+Tested-by: Emil Renner Berthing <kernel@esmil.dk>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Emil Renner Berthing <kernel@esmil.dk>
+Link: https://lore.kernel.org/r/20200723004356.6390-3-jon.lin@rock-chips.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ drivers/spi/spi-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 0011bdc15afbb..a17aebe0aa7a7 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4994,7 +4994,6 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	struct regulator_dev *rdev;
- 	bool dangling_cfg_gpiod = false;
- 	bool dangling_of_gpiod = false;
--	bool reg_device_fail = false;
- 	struct device *dev;
- 	int ret, i;
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 2cc6d9951b52e..008b64f4e031a 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -286,7 +286,7 @@ static void rockchip_spi_pio_writer(struct rockchip_spi *rs)
+ static void rockchip_spi_pio_reader(struct rockchip_spi *rs)
+ {
+ 	u32 words = readl_relaxed(rs->regs + ROCKCHIP_SPI_RXFLR);
+-	u32 rx_left = rs->rx_left - words;
++	u32 rx_left = (rs->rx_left > words) ? rs->rx_left - words : 0;
  
-@@ -5123,10 +5122,12 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	}
- 
- 	/* register with sysfs */
-+	device_initialize(&rdev->dev);
- 	rdev->dev.class = &regulator_class;
- 	rdev->dev.parent = dev;
- 	dev_set_name(&rdev->dev, "regulator.%lu",
- 		    (unsigned long) atomic_inc_return(&regulator_no));
-+	dev_set_drvdata(&rdev->dev, rdev);
- 
- 	/* set regulator constraints */
- 	if (init_data)
-@@ -5177,12 +5178,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	    !rdev->desc->fixed_uV)
- 		rdev->is_switch = true;
- 
--	dev_set_drvdata(&rdev->dev, rdev);
--	ret = device_register(&rdev->dev);
--	if (ret != 0) {
--		reg_device_fail = true;
-+	ret = device_add(&rdev->dev);
-+	if (ret != 0)
- 		goto unset_supplies;
--	}
- 
- 	rdev_init_debugfs(rdev);
- 
-@@ -5204,17 +5202,15 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	mutex_unlock(&regulator_list_mutex);
- wash:
- 	kfree(rdev->coupling_desc.coupled_rdevs);
--	kfree(rdev->constraints);
- 	mutex_lock(&regulator_list_mutex);
- 	regulator_ena_gpio_free(rdev);
- 	mutex_unlock(&regulator_list_mutex);
-+	put_device(&rdev->dev);
-+	rdev = NULL;
- clean:
- 	if (dangling_of_gpiod)
- 		gpiod_put(config->ena_gpiod);
--	if (reg_device_fail)
--		put_device(&rdev->dev);
--	else
--		kfree(rdev);
-+	kfree(rdev);
- 	kfree(config);
- rinse:
- 	if (dangling_cfg_gpiod)
+ 	/* the hardware doesn't allow us to change fifo threshold
+ 	 * level while spi is enabled, so instead make sure to leave
 -- 
 2.25.1
 
