@@ -5,47 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE06C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C032053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494F42053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930301;
-	bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
+	s=default; t=1596930310;
+	bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+EmmG/jdKAPrEGj7Lcn7nQqdTaB2gIZJFBeBCSClvedVgTSlVQCEtmM93iq3uW9X
-	 11RnWuVCczSQlKo8WF0ZwuGexvrjQTT44TSYUvYVcteBeUQg6umuE5RyzsekOj1jV9
-	 xz4g7XTS7zpgFIw/7HykHdGGDWQk74mxNK+7DpHs=
+	b=gUlUfP52OnURRzzIF9qRL/+G2rjlOXRcOT3sEfHibAcIYtupFcRe66PSz3HfBsqmw
+	 m25hSrudE7PeARDaecevu7NgjkpsmHxujkcFr9SOd+kHEqabvaUqKYsfFjIbix5JWR
+	 ORVm7j44IryKFuP+v2rR+gYx/YGOQpo6lUneMs+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbgHHXi6 (ORCPT
+        id S1728858AbgHHXpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbgHHXiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:54 -0400
+        id S1728354AbgHHXi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23F4A2177B;
-        Sat,  8 Aug 2020 23:38:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 672A62177B;
+        Sat,  8 Aug 2020 23:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929933;
-        bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
+        s=default; t=1596929936;
+        bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xv4UIP8TqIkOP4N3vGUgwJLjNyMj9tCxj19kF4OufTndeFWDV4peZAAxOaiKHvbj5
-         t6HMMx8VzGzuRp8hpBl92yG1w1uCHR/n37NLo4hohMM8z6RzHzUmPFJADhA/NO5sCG
-         hynX6q/x07Wk5Y+XWdBCDSkM4CNuBTt1I0AWuWfI=
+        b=PFR6hvJ744GEBfSJ5MUw6GYQFuW0GtqV1YjOra74ECZDawllcTeEiZZKDLIkyJ+D5
+         NzYOYiFVuJejfTne9gcsWvl5WnhPT9LEY7veUDHQBsxEd1EV0Z4La6eP7eSak7CDcT
+         HBYoZ1wPy05J6MJqJp7HkfbRq7Y8WUbXHPKjFvY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Borislav Petkov <bp@suse.de>,
-        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/40] EDAC: Fix reference count leaks
-Date:   Sat,  8 Aug 2020 19:38:11 -0400
-Message-Id: <20200808233844.3618823-7-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/40] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
+Date:   Sat,  8 Aug 2020 19:38:13 -0400
+Message-Id: <20200808233844.3618823-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -58,57 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
+[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
 
-When kobject_init_and_add() returns an error, it should be handled
-because kobject_init_and_add() takes a reference even when it fails. If
-this function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
+msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
+pin configurations. This was likely copied from the qcom kernel fork
+where the same property was used for these audio pins.
 
-Therefore, replace calling kfree() and call kobject_put() and add a
-missing kobject_put() in the edac_device_register_sysfs_main_kobj()
-error path.
+However, "bias-pull-none" actually does not exist at all - not in
+mainline and not in downstream. I can only guess that the original
+intention was to configure "no pull", i.e. bias-disable.
 
- [ bp: Massage and merge into a single patch. ]
+Change it to that instead.
 
-Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
-Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
+Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_device_sysfs.c | 1 +
- drivers/edac/edac_pci_sysfs.c    | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
-index 0e7ea3591b781..5e75937537997 100644
---- a/drivers/edac/edac_device_sysfs.c
-+++ b/drivers/edac/edac_device_sysfs.c
-@@ -275,6 +275,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 242aaea688040..1235830ffd0b7 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -508,7 +508,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		cdc_pdm_lines_sus: pdm_lines_off {
+@@ -537,7 +537,7 @@ pinconf {
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
- 	/* Error exit stack */
- err_kobj_reg:
-+	kobject_put(&edac_dev->kobj);
- 	module_put(edac_dev->owner);
+@@ -565,7 +565,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio110";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
- err_out:
-diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
-index 72c9eb9fdffbe..53042af7262e2 100644
---- a/drivers/edac/edac_pci_sysfs.c
-+++ b/drivers/edac/edac_pci_sysfs.c
-@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
- 
- 	/* Error unwind statck */
- kobject_init_and_add_fail:
--	kfree(edac_pci_top_main_kobj);
-+	kobject_put(edac_pci_top_main_kobj);
- 
- kzalloc_fail:
- 	module_put(THIS_MODULE);
+@@ -591,7 +591,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_mclk_tlmm_lines_sus: mclk_lines_off {
+@@ -619,7 +619,7 @@ pinconf {
+ 				pins = "gpio112", "gpio117", "gpio118",
+ 					"gpio119";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_sec_tlmm_lines_sus: tlmm_lines_off {
 -- 
 2.25.1
 
