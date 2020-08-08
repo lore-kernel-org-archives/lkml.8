@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4763C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922052073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA18C2075D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929856;
-	bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
+	s=default; t=1596929867;
+	bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ayHPBb7qnbwfYVlVOZ7VHp2LPqXcAcmtAo53j+t3+0xzpoTjQ2oeFE95Hyb7gKxnJ
-	 /EK3gNiP4YRNICue6YN3c03sJE7KPhREpABadhS8Rau/c9xbPscVMy2b89rPcsKW2C
-	 kcEzYAWmgbYkNdUvYVb8aj7MyarFayR1FQassmGM=
+	b=mafWR6GxNh3G8L+BjLXrtybBDRneVEh74IjrMZLU3QilatKuWcq5O2JVjedrHcCKJ
+	 a1+5PKaTPXIdbzosNc4tZvEzKHxl7JtfLlp8lGu6QaFFUaew1mMw2tWeCJML9jd0cL
+	 eQHyRlFrUZlyqiw5mFzIfhxaL4RkM2nKlGAk7MQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHHXhf (ORCPT
+        id S1728091AbgHHXhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbgHHXhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:33 -0400
+        id S1728055AbgHHXhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F7542075D;
-        Sat,  8 Aug 2020 23:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C05972073E;
+        Sat,  8 Aug 2020 23:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929852;
-        bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
+        s=default; t=1596929861;
+        bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J7L+i3y3GLhM1QNdV22sPuyAT2ITUkrY01Q5qUbtbj9D6xTkGDCRPsMyZ7PzzNGNX
-         I8burm0BRrjgV5L+t03zF/89gZho8trjIC/RhTM416CqdJM8OSuosX9oup/s8DzBvX
-         dhHi7FmbMgcuboKjJj4nHeVEhAzvh50dBPxnB+fw=
+        b=CDqmoxZurqj+hAmU6sPo+2fiVxCGyyxacQJKSUr08nlHSfBNrDsmUQJjoL98FqcNE
+         eLnSNJbDdk1NR4+cZ1wdbMqnHCpRjyaZwz7Ff2Qgeop88LBFxh402H9kQeEh1LRXQ6
+         tkdjcAcgeu/B+o0H9ovz7d1ClIfLL9U+M02Sdb6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Peng Liu <iwtbavbm@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 06/58] sched/fair: Fix NOHZ next idle balance
-Date:   Sat,  8 Aug 2020 19:36:32 -0400
-Message-Id: <20200808233724.3618168-6-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 13/58] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
+Date:   Sat,  8 Aug 2020 19:36:39 -0400
+Message-Id: <20200808233724.3618168-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -61,84 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 3ea2f097b17e13a8280f1f9386c331b326a3dbef ]
+[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
 
-With commit:
-  'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
-rebalance_domains of the local cfs_rq happens before others idle cpus have
-updated nohz.next_balance and its value is overwritten.
+msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
+pin configurations. This was likely copied from the qcom kernel fork
+where the same property was used for these audio pins.
 
-Move the update of nohz.next_balance for other idles cpus before balancing
-and updating the next_balance of local cfs_rq.
+However, "bias-pull-none" actually does not exist at all - not in
+mainline and not in downstream. I can only guess that the original
+intention was to configure "no pull", i.e. bias-disable.
 
-Also, the nohz.next_balance is now updated only if all idle cpus got a
-chance to rebalance their domains and the idle balance has not been aborted
-because of new activities on the CPU. In case of need_resched, the idle
-load balance will be kick the next jiffie in order to address remaining
-ilb.
+Change it to that instead.
 
-Fixes: b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")
-Reported-by: Peng Liu <iwtbavbm@gmail.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Acked-by: Mel Gorman <mgorman@suse.de>
-Link: https://lkml.kernel.org/r/20200609123748.18636-1-vincent.guittot@linaro.org
+Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5c31875a7d9dc..e44332b829b4d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10033,7 +10033,12 @@ static void kick_ilb(unsigned int flags)
- {
- 	int ilb_cpu;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 242aaea688040..1235830ffd0b7 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -508,7 +508,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		cdc_pdm_lines_sus: pdm_lines_off {
+@@ -537,7 +537,7 @@ pinconf {
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
--	nohz.next_balance++;
-+	/*
-+	 * Increase nohz.next_balance only when if full ilb is triggered but
-+	 * not if we only update stats.
-+	 */
-+	if (flags & NOHZ_BALANCE_KICK)
-+		nohz.next_balance = jiffies+1;
+@@ -565,7 +565,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio110";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
- 	ilb_cpu = find_new_ilb();
- 
-@@ -10351,6 +10356,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 		}
- 	}
- 
-+	/*
-+	 * next_balance will be updated only when there is a need.
-+	 * When the CPU is attached to null domain for ex, it will not be
-+	 * updated.
-+	 */
-+	if (likely(update_next_balance))
-+		nohz.next_balance = next_balance;
-+
- 	/* Newly idle CPU doesn't need an update */
- 	if (idle != CPU_NEWLY_IDLE) {
- 		update_blocked_averages(this_cpu);
-@@ -10371,14 +10384,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 	if (has_blocked_load)
- 		WRITE_ONCE(nohz.has_blocked, 1);
- 
--	/*
--	 * next_balance will be updated only when there is a need.
--	 * When the CPU is attached to null domain for ex, it will not be
--	 * updated.
--	 */
--	if (likely(update_next_balance))
--		nohz.next_balance = next_balance;
--
- 	return ret;
- }
- 
+@@ -591,7 +591,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_mclk_tlmm_lines_sus: mclk_lines_off {
+@@ -619,7 +619,7 @@ pinconf {
+ 				pins = "gpio112", "gpio117", "gpio118",
+ 					"gpio119";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_sec_tlmm_lines_sus: tlmm_lines_off {
 -- 
 2.25.1
 
