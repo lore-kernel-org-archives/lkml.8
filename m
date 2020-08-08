@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C919C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC692053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACA920656
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930089;
-	bh=UjThr/AbDF+r+cHfs7kHV66RNhDFQIPaR76spC6viQE=;
+	s=default; t=1596930092;
+	bh=ZXv7bnXuZvWW5Lt2pE/RNj6XrUbrKNUDy20z6LOBy3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=msDF/WrTuEbaO3l//kUVTXgIxvI0KFhyfnBJnPfLZgOoiht1dg5eXiInxjrd+yik6
-	 c/TW1x6ZFm6mA61ro970F/1dTqh4UAak+HG9XpIlGL2Q2n3YFYuYn/y4joCB68FdbZ
-	 Ro0aRdQPkStikYm8ner7ry8/y29Ndm8BQ3Q5qw2g=
+	b=JxhsX2IbQ4bo7NcndDDKtHJEUyKc13au59hVRcOL+8xELEGgcttFGZ/CzDB0UbvPN
+	 G6+50TcMY+rAdEqv5pT4jNMUbPTuaqNW6Hls7XQC0AuLJyl/XHmskTOLXWvlzeQDx9
+	 Z8LsZk6A9vvcd+EfeqKS/alwyWi7ZcT+rUFBKSG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgHHXl2 (ORCPT
+        id S1728888AbgHHXkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:40:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbgHHXku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:40:50 -0400
+        id S1728867AbgHHXkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:40:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFBCB20658;
-        Sat,  8 Aug 2020 23:40:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47BFB20656;
+        Sat,  8 Aug 2020 23:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596930049;
-        bh=UjThr/AbDF+r+cHfs7kHV66RNhDFQIPaR76spC6viQE=;
+        s=default; t=1596930040;
+        bh=ZXv7bnXuZvWW5Lt2pE/RNj6XrUbrKNUDy20z6LOBy3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PPJVtMkiIpW5luR04xA+ywtDS9f9EXcvRkXJFsCzTo4b7mXJTxmBJPI+aRj5BJrGG
-         8P5w68YEFNk1BT6hoYqOEm3NAjwmW2u2juhgfxnICZgz1o35fIACFaAh/CLk9T3P3J
-         yuVo0+AOgZgfUGNj7yG/ilpE4nalF75nJIFTfWF8=
+        b=CVF1ZoCR4fVIad+6xlbNMxenKCGz1/2Fb+SOEYHGX8F+0KIvNkG+mvIAmHKo46Wvr
+         5G84CZBtA2h1wMQJs2uurIN/OQfM4FsUFfPtUqqj/HJWncq9LCzsyCjlO2hRgjEmvt
+         9YoGvFaFEKyPmeiO58rRzZEXq2nlEE7lij6BlgUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 6/9] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
-Date:   Sat,  8 Aug 2020 19:40:33 -0400
-Message-Id: <20200808234037.3619732-6-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 2/9] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
+Date:   Sat,  8 Aug 2020 19:40:29 -0400
+Message-Id: <20200808234037.3619732-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808234037.3619732-1-sashal@kernel.org>
 References: <20200808234037.3619732-1-sashal@kernel.org>
@@ -60,36 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Wei <luwei32@huawei.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 71fbe886ce6dd0be17f20aded9c63fe58edd2806 ]
+[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
 
-In the function check_acpi_dev(), if it fails to create
-platform device, the return value is ERR_PTR() or NULL.
-Thus it must use IS_ERR_OR_NULL() to check return value.
+msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
+pin configurations. This was likely copied from the qcom kernel fork
+where the same property was used for these audio pins.
 
-Fixes: ecc83e52b28c ("intel-hid: new hid event driver for hotkeys")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Lu Wei <luwei32@huawei.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+However, "bias-pull-none" actually does not exist at all - not in
+mainline and not in downstream. I can only guess that the original
+intention was to configure "no pull", i.e. bias-disable.
+
+Change it to that instead.
+
+Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 12dbb50633761..a5c645b9e3f2a 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -264,7 +264,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
- 		return AE_OK;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 10c83e11c272f..fabc0cebe2aa2 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -542,7 +542,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		cdc_pdm_lines_sus: pdm_lines_off {
+@@ -571,7 +571,7 @@ pinconf {
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
- 	if (acpi_match_device_ids(dev, ids) == 0)
--		if (acpi_create_platform_device(dev, NULL))
-+		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
- 			dev_info(&dev->dev,
- 				 "intel-hid: created platform device\n");
+@@ -599,7 +599,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio110";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
+@@ -625,7 +625,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_mclk_tlmm_lines_sus: mclk_lines_off {
+@@ -653,7 +653,7 @@ pinconf {
+ 				pins = "gpio112", "gpio117", "gpio118",
+ 					"gpio119";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_sec_tlmm_lines_sus: tlmm_lines_off {
 -- 
 2.25.1
 
