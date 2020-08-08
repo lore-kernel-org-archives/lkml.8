@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A67C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03611C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EC6208B3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86C620855
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929935;
-	bh=9Wfo/T5nRMTrgQs2EpSoH9Fb8QXefxTIJ/cvjSqMFsg=;
+	s=default; t=1596929944;
+	bh=OCdtGpikPC+tFtWcQ7q8PaqlbC4lWa1gfT8amJvtMAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AGEMPlNkothJM2v5CMmG5ZVqb++eUyqHrGcbZvAkJKa3GOPf+x2imNN1m7ok8aHT
-	 sN3vZJNtzS/u0mRjbcftXX+JvXWMQiqg8P7sniu1gJ5ehGEdlbHBglclP0vuv9m01J
-	 Pd45fUDmvCB2BxTgEMCWx0f/wjIcnbu5JRPCo5Z8=
+	b=X+As8deUzSz56owMtBZvJ8J54O6WHITQXsWg2w0GICJG9tvC22p78t6Z+sLjRHPHX
+	 XfC6EW20SrwD24tD/H9TjnH2vcIB3fdolXtNGZQ5ZaUzEseccDAB6zj8XboxUGNvbu
+	 mxNWmfMD023j0AGBGY6vLlpQ0HFGOvfrCg/DS4Ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgHHXiy (ORCPT
+        id S1728460AbgHHXjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53270 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbgHHXix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:53 -0400
+        id S1728439AbgHHXi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5EB620829;
-        Sat,  8 Aug 2020 23:38:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8036208B3;
+        Sat,  8 Aug 2020 23:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929932;
-        bh=9Wfo/T5nRMTrgQs2EpSoH9Fb8QXefxTIJ/cvjSqMFsg=;
+        s=default; t=1596929938;
+        bh=OCdtGpikPC+tFtWcQ7q8PaqlbC4lWa1gfT8amJvtMAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOs/966urLV5C8z0z7yetdffq05V4jD1WnDbBerGeai5Xjm3GKstrclztJr13/LQO
-         3cJb1u8DkOkmjfCyRsqAE8k2/m6EPkwdRffQyJtj8hjP75VWFr/dBe9FhfCHHoKrrf
-         Tw6Wc/U9OoECBXQm3fRCgRh8aKLGtUThJPLFk8u8=
+        b=O7xRlsPCW8jg8NfVFB84lI7EOuYxbSGXwN9g3J8lUEFZSQmIb3WKSPvqQmXB9pH+e
+         JrdTF4jHv84SRrOz+sKdf/RWfQ0lZBnX89HLAhAJZEYcEpfL1+eX5qYo8eyTAIheFm
+         YsToBY2d/VpKt0zIdZtJxuphZYz56TkLVIj2j92k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 06/40] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
-Date:   Sat,  8 Aug 2020 19:38:10 -0400
-Message-Id: <20200808233844.3618823-6-sashal@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        yu kuai <yukuai3@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 10/40] blktrace: fix debugfs use after free
+Date:   Sat,  8 Aug 2020 19:38:14 -0400
+Message-Id: <20200808233844.3618823-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -60,41 +69,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
+[ Upstream commit bad8e64fb19d3a0de5e564d9a7271c31bd684369 ]
 
-The puma gmac node currently uses opposite active-values for the
-gmac phy reset pin. The gpio-declaration uses active-high while the
-separate snps,reset-active-low property marks the pin as active low.
+On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+merged on v4.12 Omar fixed the original blktrace code for request-based
+drivers (multiqueue). This however left in place a possible crash, if you
+happen to abuse blktrace while racing to remove / add a device.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+We used to use asynchronous removal of the request_queue, and with that
+the issue was easier to reproduce. Now that we have reverted to
+synchronous removal of the request_queue, the issue is still possible to
+reproduce, its however just a bit more difficult.
 
-So bring this in line and make both properties match, similar to the
-other Rockchip board.
+We essentially run two instances of break-blktrace which add/remove
+a loop device, and setup a blktrace and just never tear the blktrace
+down. We do this twice in parallel. This is easily reproduced with the
+script run_0004.sh from break-blktrace [0].
 
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
+We can end up with two types of panics each reflecting where we
+race, one a failed blktrace setup:
+
+[  252.426751] debugfs: Directory 'loop0' with parent 'block' already present!
+[  252.432265] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+[  252.436592] #PF: supervisor write access in kernel mode
+[  252.439822] #PF: error_code(0x0002) - not-present page
+[  252.442967] PGD 0 P4D 0
+[  252.444656] Oops: 0002 [#1] SMP NOPTI
+[  252.446972] CPU: 10 PID: 1153 Comm: break-blktrace Tainted: G            E     5.7.0-rc2-next-20200420+ #164
+[  252.452673] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+[  252.456343] RIP: 0010:down_write+0x15/0x40
+[  252.458146] Code: eb ca e8 ae 22 8d ff cc cc cc cc cc cc cc cc cc cc cc cc
+               cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00
+               00 00 <f0> 48 0f b1 55 00 75 0f 48 8b 04 25 c0 8b 01 00 48 89
+               45 08 5d
+[  252.463638] RSP: 0018:ffffa626415abcc8 EFLAGS: 00010246
+[  252.464950] RAX: 0000000000000000 RBX: ffff958c25f0f5c0 RCX: ffffff8100000000
+[  252.466727] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+[  252.468482] RBP: 00000000000000a0 R08: 0000000000000000 R09: 0000000000000001
+[  252.470014] R10: 0000000000000000 R11: ffff958d1f9227ff R12: 0000000000000000
+[  252.471473] R13: ffff958c25ea5380 R14: ffffffff8cce15f1 R15: 00000000000000a0
+[  252.473346] FS:  00007f2e69dee540(0000) GS:ffff958c2fc80000(0000) knlGS:0000000000000000
+[  252.475225] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  252.476267] CR2: 00000000000000a0 CR3: 0000000427d10004 CR4: 0000000000360ee0
+[  252.477526] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  252.478776] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  252.479866] Call Trace:
+[  252.480322]  simple_recursive_removal+0x4e/0x2e0
+[  252.481078]  ? debugfs_remove+0x60/0x60
+[  252.481725]  ? relay_destroy_buf+0x77/0xb0
+[  252.482662]  debugfs_remove+0x40/0x60
+[  252.483518]  blk_remove_buf_file_callback+0x5/0x10
+[  252.484328]  relay_close_buf+0x2e/0x60
+[  252.484930]  relay_open+0x1ce/0x2c0
+[  252.485520]  do_blk_trace_setup+0x14f/0x2b0
+[  252.486187]  __blk_trace_setup+0x54/0xb0
+[  252.486803]  blk_trace_ioctl+0x90/0x140
+[  252.487423]  ? do_sys_openat2+0x1ab/0x2d0
+[  252.488053]  blkdev_ioctl+0x4d/0x260
+[  252.488636]  block_ioctl+0x39/0x40
+[  252.489139]  ksys_ioctl+0x87/0xc0
+[  252.489675]  __x64_sys_ioctl+0x16/0x20
+[  252.490380]  do_syscall_64+0x52/0x180
+[  252.491032]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+And the other on the device removal:
+
+[  128.528940] debugfs: Directory 'loop0' with parent 'block' already present!
+[  128.615325] BUG: kernel NULL pointer dereference, address: 00000000000000a0
+[  128.619537] #PF: supervisor write access in kernel mode
+[  128.622700] #PF: error_code(0x0002) - not-present page
+[  128.625842] PGD 0 P4D 0
+[  128.627585] Oops: 0002 [#1] SMP NOPTI
+[  128.629871] CPU: 12 PID: 544 Comm: break-blktrace Tainted: G            E     5.7.0-rc2-next-20200420+ #164
+[  128.635595] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+[  128.640471] RIP: 0010:down_write+0x15/0x40
+[  128.643041] Code: eb ca e8 ae 22 8d ff cc cc cc cc cc cc cc cc cc cc cc cc
+               cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00
+               00 00 <f0> 48 0f b1 55 00 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89
+               45 08 5d
+[  128.650180] RSP: 0018:ffffa9c3c05ebd78 EFLAGS: 00010246
+[  128.651820] RAX: 0000000000000000 RBX: ffff8ae9a6370240 RCX: ffffff8100000000
+[  128.653942] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
+[  128.655720] RBP: 00000000000000a0 R08: 0000000000000002 R09: ffff8ae9afd2d3d0
+[  128.657400] R10: 0000000000000056 R11: 0000000000000000 R12: 0000000000000000
+[  128.659099] R13: 0000000000000000 R14: 0000000000000003 R15: 00000000000000a0
+[  128.660500] FS:  00007febfd995540(0000) GS:ffff8ae9afd00000(0000) knlGS:0000000000000000
+[  128.662204] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  128.663426] CR2: 00000000000000a0 CR3: 0000000420042003 CR4: 0000000000360ee0
+[  128.664776] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  128.666022] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  128.667282] Call Trace:
+[  128.667801]  simple_recursive_removal+0x4e/0x2e0
+[  128.668663]  ? debugfs_remove+0x60/0x60
+[  128.669368]  debugfs_remove+0x40/0x60
+[  128.669985]  blk_trace_free+0xd/0x50
+[  128.670593]  __blk_trace_remove+0x27/0x40
+[  128.671274]  blk_trace_shutdown+0x30/0x40
+[  128.671935]  blk_release_queue+0x95/0xf0
+[  128.672589]  kobject_put+0xa5/0x1b0
+[  128.673188]  disk_release+0xa2/0xc0
+[  128.673786]  device_release+0x28/0x80
+[  128.674376]  kobject_put+0xa5/0x1b0
+[  128.674915]  loop_remove+0x39/0x50 [loop]
+[  128.675511]  loop_control_ioctl+0x113/0x130 [loop]
+[  128.676199]  ksys_ioctl+0x87/0xc0
+[  128.676708]  __x64_sys_ioctl+0x16/0x20
+[  128.677274]  do_syscall_64+0x52/0x180
+[  128.677823]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The common theme here is:
+
+debugfs: Directory 'loop0' with parent 'block' already present
+
+This crash happens because of how blktrace uses the debugfs directory
+where it places its files. Upon init we always create the same directory
+which would be needed by blktrace but we only do this for make_request
+drivers (multiqueue) block drivers. When you race a removal of these
+devices with a blktrace setup you end up in a situation where the
+make_request recursive debugfs removal will sweep away the blktrace
+files and then later blktrace will also try to remove individual
+dentries which are already NULL. The inverse is also possible and hence
+the two types of use after frees.
+
+We don't create the block debugfs directory on init for these types of
+block devices:
+
+  * request-based block driver block devices
+  * every possible partition
+  * scsi-generic
+
+And so, this race should in theory only be possible with make_request
+drivers.
+
+We can fix the UAF by simply re-using the debugfs directory for
+make_request drivers (multiqueue) and only creating the ephemeral
+directory for the other type of block devices. The new clarifications
+on relying on the q->blk_trace_mutex *and* also checking for q->blk_trace
+*prior* to processing a blktrace ensures the debugfs directories are
+only created if no possible directory name clashes are possible.
+
+This goes tested with:
+
+  o nvme partitions
+  o ISCSI with tgt, and blktracing against scsi-generic with:
+    o block
+    o tape
+    o cdrom
+    o media changer
+  o blktests
+
+This patch is part of the work which disputes the severity of
+CVE-2019-19770 which shows this issue is not a core debugfs issue, but
+a misuse of debugfs within blktace.
+
+Fixes: 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+Reported-by: syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index fb47e4046f4e4..45b86933c6ea0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -157,7 +157,7 @@ &gmac {
- 	phy-mode = "rgmii";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rgmii_pins>;
--	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
- 	tx_delay = <0x10>;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index eaee960153e1e..a4c8f9d9522e4 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -521,10 +521,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	if (!bt->msg_data)
+ 		goto err;
+ 
+-	ret = -ENOENT;
+-
+-	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+-	if (!dir)
++#ifdef CONFIG_BLK_DEBUG_FS
++	/*
++	 * When tracing whole make_request drivers (multiqueue) block devices,
++	 * reuse the existing debugfs directory created by the block layer on
++	 * init. For request-based block devices, all partitions block devices,
++	 * and scsi-generic block devices we create a temporary new debugfs
++	 * directory that will be removed once the trace ends.
++	 */
++	if (queue_is_mq(q) && bdev && bdev == bdev->bd_contains)
++		dir = q->debugfs_dir;
++	else
++#endif
+ 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+ 
+ 	bt->dev = dev;
+@@ -565,8 +573,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 
+ 	ret = 0;
+ err:
+-	if (dir && !bt->dir)
+-		dput(dir);
+ 	if (ret)
+ 		blk_trace_free(bt);
+ 	return ret;
 -- 
 2.25.1
 
