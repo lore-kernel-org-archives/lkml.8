@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5464CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F5720672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB0020672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930354;
-	bh=0AgMrIP7GP2rYQZIrGzD4CARHK1GDj4u+58ZN43cdUU=;
+	s=default; t=1596930358;
+	bh=bpCArGqYhu7XR0T4plFq2F98eNWRFqKGrxCDzFsaknQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tc8nL5geGTDK745pOBaXyWuQzHbi5E1gkIuQEhfWf1iaiwnOJTHiWXQ2xbsWBLzNB
-	 gYxZv+lFAGIAUJm2KW6wmF2P2+ce47qOGnAFALSCrW5fX2yC/wHICXNRzgtbp+rBXF
-	 gcLN40wNv+37NdGzgDxHXcNJPRlKiLQLbPijlm9o=
+	b=WxTShh1A2X10KfFCTCXQYVs7+z+3iU8IhtOa2fGaAFaSWsPyveGOB4312jOAOa4OO
+	 12FnMjsBnmmJipQX9n1ujBfJyfdSRotOt3r/MzDKZ30GDcLilcKuB/GpuMuEO1/5q1
+	 P8z9vU+7FO4dxb9D4ScV4ez5JoJp+FxWRvIewtYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgHHXpw (ORCPT
+        id S1728589AbgHHXp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52630 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727976AbgHHXif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:35 -0400
+        id S1728274AbgHHXie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E0B208E4;
-        Sat,  8 Aug 2020 23:38:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D2712073E;
+        Sat,  8 Aug 2020 23:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929914;
-        bh=0AgMrIP7GP2rYQZIrGzD4CARHK1GDj4u+58ZN43cdUU=;
+        s=default; t=1596929913;
+        bh=bpCArGqYhu7XR0T4plFq2F98eNWRFqKGrxCDzFsaknQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fAKOFLqYQ/ihpcYLgJ9d9MMit65PnTvlzuMoUIKATrRSgGsNi7bJN94w9yt+EVYB/
-         db2m7q+T3fghZYlIOM3B3rhVzUUkf6lyqZlRZO39SDrUO3TH6GidvtRMT74a0oI5+p
-         yORMBhVay9cL68xOGU2CyDeR42GhM4wtuws2zI+E=
+        b=DCvCjWkCXNMFho5CSDxtKBaxqeIoLr9Lu+MPg957KIuStaQnKXP2bfP4jE5Ssr3Ug
+         JqwZQUO/sHAo7qPjEcqMvSN66jZJSQI8fshTWhS7He888PelER5v7blZ9JLo9OKc7k
+         hTlPGaLhVyScxkxvz9ZUjnxd4gyuz2mtS1nBHnDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 51/58] irqchip/loongson-liointc: Fix potential dead lock
-Date:   Sat,  8 Aug 2020 19:37:17 -0400
-Message-Id: <20200808233724.3618168-51-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 50/58] md: raid0/linear: fix dereference before null check on pointer mddev
+Date:   Sat,  8 Aug 2020 19:37:16 -0400
+Message-Id: <20200808233724.3618168-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,35 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit fa03587cad9bd32aa552377de4f05c50181a35a8 ]
+[ Upstream commit 9a5a85972c073f720d81a7ebd08bfe278e6e16db ]
 
-In the function liointc_set_type(), we need to call the function
-irq_gc_unlock_irqrestore() before returning.
+Pointer mddev is being dereferenced with a test_bit call before mddev
+is being null checked, this may cause a null pointer dereference. Fix
+this by moving the null pointer checks to sanity check mddev before
+it is dereferenced.
 
-Fixes: dbb152267908 ("irqchip: Add driver for Loongson I/O Local Interrupt Controller")
-Reported-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1594087972-21715-8-git-send-email-yangtiezhu@loongson.cn
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-loongson-liointc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/md.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index 63b61474a0cc2..6ef86a334c62d 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -114,6 +114,7 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
- 		liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
- 		break;
- 	default:
-+		irq_gc_unlock_irqrestore(gc, flags);
- 		return -EINVAL;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 41eead9cbee98..d5a5c18813985 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -469,17 +469,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
+ 	struct mddev *mddev = q->queuedata;
+ 	unsigned int sectors;
+ 
+-	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
++	if (mddev == NULL || mddev->pers == NULL) {
+ 		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
  	}
- 	irq_gc_unlock_irqrestore(gc, flags);
+ 
+-	blk_queue_split(q, &bio);
+-
+-	if (mddev == NULL || mddev->pers == NULL) {
++	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
+ 		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
+ 	}
++
++	blk_queue_split(q, &bio);
++
+ 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
+ 		if (bio_sectors(bio) != 0)
+ 			bio->bi_status = BLK_STS_IOERR;
 -- 
 2.25.1
 
