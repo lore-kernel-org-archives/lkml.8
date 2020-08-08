@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D43C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D65AA20672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3B0206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930432;
-	bh=pwd8sTXOmkL22U64OXCCpqiQ23X2e4TzpaRY8PfRy+M=;
+	s=default; t=1596930437;
+	bh=LgP2OlZL56NdcDzxmOX1Pp5E0+D4FDy8ClRGYt4r8wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJQ/9ACsvjxIy/gJEH+qw0wgguUvteIYasx/mCqneffsn5lnLUeDOLvXxNaYtTLmC
-	 ufamicEHFmxE7ptcahPH/hKt8Y5kH3HOFH/toq3RHJ/OM0r4QVSdtS9MxCt3w79CXD
-	 YsAvJjGU2IcaZdBhGSFUVgCS/rU8j/C9gfGIj4W8=
+	b=L/oVoZaL40po/Fc9+VTkHAB7jWRRYuoTLh6GNHgNifHk6dOISlg8NxOp/LEs5xPkv
+	 x4Mg7sP1DNfx9O7Y7RwsTRIowftpvATZ55PbbhO7o9zBBchTzTi7EqRrBVf/UUC0RG
+	 rXIE/DHSjpbXtoRuWMF9SMNkdoc9C8fM/cmlsTE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgHHXh5 (ORCPT
+        id S1728855AbgHHXrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:47:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgHHXhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:46 -0400
+        id S1728164AbgHHXiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F3F2073E;
-        Sat,  8 Aug 2020 23:37:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6B372073E;
+        Sat,  8 Aug 2020 23:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929866;
-        bh=pwd8sTXOmkL22U64OXCCpqiQ23X2e4TzpaRY8PfRy+M=;
+        s=default; t=1596929879;
+        bh=LgP2OlZL56NdcDzxmOX1Pp5E0+D4FDy8ClRGYt4r8wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TWaneOvpP8E0FeT9f+mdKj78TYLIYQ6s1VW0KQ6i4mMTXMbYLZsgrNqNkA+DL20jP
-         svqbFGmzUUKPZWm5jJ3KC28l/46iNWxhM65FOOByzBgrYbCfOcfPHNDquvgRoZF7jF
-         TUQJpz61gMkqT9sUNp03jg78f+9BvfurAb6Bxbz0=
+        b=dksMcNo8fujg2wYkfT/CRXdwqmLwih0zPk1VDLwaM8VW93kKVzBLUEz4gPc9QrSO2
+         gzFC3mLnjpC29R5Yq0MSZPFzyJzAOvkVLsEEjAOySYMlBTeiLSPm2X6wueWMbLKmMU
+         rwIM8Pa+OXI7WON9iuowEtp0QJi57Ua9PI8JjR3Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 16/58] crypto: ccree - fix resource leak on error path
-Date:   Sat,  8 Aug 2020 19:36:42 -0400
-Message-Id: <20200808233724.3618168-16-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 5.7 25/58] m68k: mac: Don't send IOP message until channel is idle
+Date:   Sat,  8 Aug 2020 19:36:51 -0400
+Message-Id: <20200808233724.3618168-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,84 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 9bc6165d608d676f05d8bf156a2c9923ee38d05b ]
+[ Upstream commit aeb445bf2194d83e12e85bf5c65baaf1f093bd8f ]
 
-Fix a small resource leak on the error path of cipher processing.
+In the following sequence of calls, iop_do_send() gets called when the
+"send" channel is not in the IOP_MSG_IDLE state:
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Fixes: 63ee04c8b491e ("crypto: ccree - add skcipher support")
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+	iop_ism_irq()
+		iop_handle_send()
+			(msg->handler)()
+				iop_send_message()
+			iop_do_send()
+
+Avoid this by testing the channel state before calling iop_do_send().
+
+When sending, and iop_send_queue is empty, call iop_do_send() because
+the channel is idle. If iop_send_queue is not empty, iop_do_send() will
+get called later by iop_handle_send().
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/6d667c39e53865661fa5a48f16829d18ed8abe54.1590880333.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccree/cc_cipher.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ arch/m68k/mac/iop.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
-index a84335328f371..89f7661f0dce8 100644
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -159,7 +159,6 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 				     skcipher_alg.base);
- 	struct device *dev = drvdata_to_dev(cc_alg->drvdata);
- 	unsigned int max_key_buf_size = cc_alg->skcipher_alg.max_keysize;
--	int rc = 0;
- 
- 	dev_dbg(dev, "Initializing context @%p for %s\n", ctx_p,
- 		crypto_tfm_alg_name(tfm));
-@@ -171,10 +170,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	ctx_p->flow_mode = cc_alg->flow_mode;
- 	ctx_p->drvdata = cc_alg->drvdata;
- 
-+	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
-+		/* Alloc hash tfm for essiv */
-+		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
-+		if (IS_ERR(ctx_p->shash_tfm)) {
-+			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
-+			return PTR_ERR(ctx_p->shash_tfm);
-+		}
-+	}
-+
- 	/* Allocate key buffer, cache line aligned */
- 	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
- 	if (!ctx_p->user.key)
--		return -ENOMEM;
-+		goto free_shash;
- 
- 	dev_dbg(dev, "Allocated key buffer in context. key=@%p\n",
- 		ctx_p->user.key);
-@@ -186,21 +194,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	if (dma_mapping_error(dev, ctx_p->user.key_dma_addr)) {
- 		dev_err(dev, "Mapping Key %u B at va=%pK for DMA failed\n",
- 			max_key_buf_size, ctx_p->user.key);
--		return -ENOMEM;
-+		goto free_key;
- 	}
- 	dev_dbg(dev, "Mapped key %u B at va=%pK to dma=%pad\n",
- 		max_key_buf_size, ctx_p->user.key, &ctx_p->user.key_dma_addr);
- 
--	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
--		/* Alloc hash tfm for essiv */
--		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
--		if (IS_ERR(ctx_p->shash_tfm)) {
--			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
--			return PTR_ERR(ctx_p->shash_tfm);
--		}
--	}
-+	return 0;
- 
--	return rc;
-+free_key:
-+	kfree(ctx_p->user.key);
-+free_shash:
-+	crypto_free_shash(ctx_p->shash_tfm);
-+
-+	return -ENOMEM;
+diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
+index 9bfa170157688..d8f2282978f9c 100644
+--- a/arch/m68k/mac/iop.c
++++ b/arch/m68k/mac/iop.c
+@@ -416,7 +416,8 @@ static void iop_handle_send(uint iop_num, uint chan)
+ 	msg->status = IOP_MSGSTATUS_UNUSED;
+ 	msg = msg->next;
+ 	iop_send_queue[iop_num][chan] = msg;
+-	if (msg) iop_do_send(msg);
++	if (msg && iop_readb(iop, IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE)
++		iop_do_send(msg);
  }
  
- static void cc_cipher_exit(struct crypto_tfm *tfm)
+ /*
+@@ -490,16 +491,12 @@ int iop_send_message(uint iop_num, uint chan, void *privdata,
+ 
+ 	if (!(q = iop_send_queue[iop_num][chan])) {
+ 		iop_send_queue[iop_num][chan] = msg;
++		iop_do_send(msg);
+ 	} else {
+ 		while (q->next) q = q->next;
+ 		q->next = msg;
+ 	}
+ 
+-	if (iop_readb(iop_base[iop_num],
+-	    IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE) {
+-		iop_do_send(msg);
+-	}
+-
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
