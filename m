@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E76C20885
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7B320825
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929995;
-	bh=II2jU+hdZxVqYC9gS6Z+ZKE+DZDH2JmlXDJESTVV82k=;
+	s=default; t=1596929998;
+	bh=cjtdBc3RixVqwCdUJQihsAUyE8l5VSflaCE6otsLWuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQpEADuexAuEx99JhKAIzXtfWgwgI1w+JRN8q2Gi1B3e0Oa0syNXA4CGCY0pfLl9a
-	 A8ItKY5YSKzV/0JQazO3Mf+PIJudouehFiAJ8c+YGHEmJwJq7RVxLO/j2uPxiNQRY+
-	 8lv3S/OjCzms/ORC73LXWS+1XRctdv22D5pglpjQ=
+	b=qnjMPBjxzVtKevLgv5M/CUNzGAMTiXRNtTIvz7FA75vF36p22vlCOVrXaCbfyNTAJ
+	 1v8XdLSvLMGbNN8JpWBOjH5eLKJ0cRglWwPNgSi5I+sdfDW9FssDHNrPhPI6qF7vfD
+	 vtrDW7cpKD4v4Cpq4N7EsDFvEbax9L05MpsWeS2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgHHXjy (ORCPT
+        id S1727876AbgHHXj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728566AbgHHXjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:32 -0400
+        id S1728579AbgHHXjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B3C020829;
-        Sat,  8 Aug 2020 23:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C15B52073E;
+        Sat,  8 Aug 2020 23:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929972;
-        bh=II2jU+hdZxVqYC9gS6Z+ZKE+DZDH2JmlXDJESTVV82k=;
+        s=default; t=1596929974;
+        bh=cjtdBc3RixVqwCdUJQihsAUyE8l5VSflaCE6otsLWuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1lRJEHC6/nt+QD12oQcf1s1goVsi5di8odf722nuS8m2jUbc/LpBc2vyDFjpl/vvU
-         6zCK3vumxgEHwClCSrC7LTrh1Lh4JogbNlMleR+dRfuBlqJn69RMu3kGZFXS6es0xO
-         fYhE6jVFc6S2yAk0VMJVZPCGzU/YtD203VUhPzKw=
+        b=RTMKQpRFU5o2oVXu2H0JhjO2+iopwE+VJWgOGVKAaTKxAJ56JvcdM9lBVmSwIJdFr
+         IWUCnN/HIIVjxV94WHjzL45k4lkgJ+7Yqf9o/XeuHFluDJjVS/M1zWExg3Pnph4DF8
+         QrpwSAstKW7PrlQzoUkd0GR8hjz/GG+Ie/33BP6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengming Zhou <zhouchengming@bytedance.com>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 33/40] iocost: Fix check condition of iocg abs_vdebt
-Date:   Sat,  8 Aug 2020 19:38:37 -0400
-Message-Id: <20200808233844.3618823-33-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 35/40] seccomp: Fix ioctl number for SECCOMP_IOCTL_NOTIF_ID_VALID
+Date:   Sat,  8 Aug 2020 19:38:39 -0400
+Message-Id: <20200808233844.3618823-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -59,34 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengming Zhou <zhouchengming@bytedance.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit d9012a59db54442d5b2fcfdfcded35cf566397d3 ]
+[ Upstream commit 47e33c05f9f07cac3de833e531bcac9ae052c7ca ]
 
-We shouldn't skip iocg when its abs_vdebt is not zero.
+When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced it had the wrong
+direction flag set. While this isn't a big deal as nothing currently
+enforces these bits in the kernel, it should be defined correctly. Fix
+the define and provide support for the old command until it is no longer
+needed for backward compatibility.
 
-Fixes: 0b80f9866e6b ("iocost: protect iocg->abs_vdebt with iocg->waitq.lock")
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iocost.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/linux/seccomp.h                  | 3 ++-
+ kernel/seccomp.c                              | 9 +++++++++
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 2 +-
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 4d2bda812d9b4..dcc6685d5becc 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1377,7 +1377,7 @@ static void ioc_timer_fn(struct timer_list *timer)
- 	 * should have woken up in the last period and expire idle iocgs.
- 	 */
- 	list_for_each_entry_safe(iocg, tiocg, &ioc->active_iocgs, active_list) {
--		if (!waitqueue_active(&iocg->waitq) && iocg->abs_vdebt &&
-+		if (!waitqueue_active(&iocg->waitq) && !iocg->abs_vdebt &&
- 		    !iocg_is_idle(iocg))
- 			continue;
+diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+index 90734aa5aa363..b5f901af79f0b 100644
+--- a/include/uapi/linux/seccomp.h
++++ b/include/uapi/linux/seccomp.h
+@@ -93,5 +93,6 @@ struct seccomp_notif_resp {
+ #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
+ #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
+ 						struct seccomp_notif_resp)
+-#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
++#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
++
+ #endif /* _UAPI_LINUX_SECCOMP_H */
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 2c697ce7be21f..e0fd972356539 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -42,6 +42,14 @@
+ #include <linux/uaccess.h>
+ #include <linux/anon_inodes.h>
  
++/*
++ * When SECCOMP_IOCTL_NOTIF_ID_VALID was first introduced, it had the
++ * wrong direction flag in the ioctl number. This is the broken one,
++ * which the kernel needs to keep supporting until all userspaces stop
++ * using the wrong command number.
++ */
++#define SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR	SECCOMP_IOR(2, __u64)
++
+ enum notify_state {
+ 	SECCOMP_NOTIFY_INIT,
+ 	SECCOMP_NOTIFY_SENT,
+@@ -1168,6 +1176,7 @@ static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
+ 		return seccomp_notify_recv(filter, buf);
+ 	case SECCOMP_IOCTL_NOTIF_SEND:
+ 		return seccomp_notify_send(filter, buf);
++	case SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR:
+ 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
+ 		return seccomp_notify_id_valid(filter, buf);
+ 	default:
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 96bbda4f10fc6..19c7351eeb74b 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -177,7 +177,7 @@ struct seccomp_metadata {
+ #define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
+ #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
+ 						struct seccomp_notif_resp)
+-#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
++#define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
+ 
+ struct seccomp_notif {
+ 	__u64 id;
 -- 
 2.25.1
 
