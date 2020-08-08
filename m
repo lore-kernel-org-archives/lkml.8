@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F76C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C201C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC8020672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A993206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930577;
-	bh=rsrKN8/Zq2kTiieVqJx9AAitOPFHZwp5YN/wsqrv6uQ=;
+	s=default; t=1596930582;
+	bh=KNcgXN6WTnCYqd9oKfbJ81GTNU4+cy6iXLByrlnl1yY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fqYOsDEm/xPfq4u2PD4ImxFt/zOhkv8A4Puu431N3m+3jBoIUwFaW60wiAod0J8z5
-	 pWLoPxNTT+AX+rZvLDvXOdS63ak4+/VytIXW/KrSzZVLUJLNhIY3KIawGYinQGkqdv
-	 S9JEvrgjI8OVXK1CW+S+KVnActKPOt+fp3GlCnus=
+	b=L7jqZiT4InA1MGFI1lI5YamReOxRB1NoxjxX2lLrivKZ6+xhgf/AW737w0hx9GG5i
+	 BO4Q6frBoC82+XtuAK3Cb+GB9NW+dVftbjlt29wf3KDkDD4xX1GnMg7fFcIa+CeOEI
+	 eAFAIBStldV3AjRhhXnmKUrKgp9vTuZQHAkXFNsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgHHXtg (ORCPT
+        id S1727111AbgHHXg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:49:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgHHXg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:59 -0400
+        id S1727061AbgHHXgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E2B1206E9;
-        Sat,  8 Aug 2020 23:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76869206C3;
+        Sat,  8 Aug 2020 23:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929819;
-        bh=rsrKN8/Zq2kTiieVqJx9AAitOPFHZwp5YN/wsqrv6uQ=;
+        s=default; t=1596929811;
+        bh=KNcgXN6WTnCYqd9oKfbJ81GTNU4+cy6iXLByrlnl1yY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0wrVi2HtIL2C7ndKgudEw2gDgLP+NFjvKDuPANBwEGBLqNlHciCmQv/H25u3zSsnB
-         xzupMxc2LtRKP2qv7G6aMjVy/+I9ZZkdI7yphSbbl7P2Pbl0lbSzKOqD+FLMcrhw8w
-         0fWefq122p/gXmfly+I7xNNIdZS434kO8fXtHoy0=
+        b=VKINeSfRkBMO0Jsfb7hHb/FMwV3An+GndB9gYF/UEjt9kZ/73ov32IvZEFCe77tAg
+         3pHosY9eJc5DwS3LGd89/voVD6tB6mcQgm5SD5bfmIlGqTTatcRsjRgvdxt3+VtDi7
+         a8ct7APvmUykKHiFT0Llkmj9U3O++72LT9B0defc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu Kuai <yukuai3@huawei.com>, Dinh Nguyen <dinguyen@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 53/72] ARM: socfpga: PM: add missing put_device() call in socfpga_setup_ocram_self_refresh()
-Date:   Sat,  8 Aug 2020 19:35:22 -0400
-Message-Id: <20200808233542.3617339-53-sashal@kernel.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 47/72] regulator: fix memory leak on error path of regulator_register()
+Date:   Sat,  8 Aug 2020 19:35:16 -0400
+Message-Id: <20200808233542.3617339-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -59,61 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit 3ad7b4e8f89d6bcc9887ca701cf2745a6aedb1a0 ]
+[ Upstream commit 9177514ce34902b3adb2abd490b6ad05d1cfcb43 ]
 
-if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh
-doesn't have a corresponding put_device(). Thus add a jump target to
-fix the exception handling for this function implementation.
+The change corrects registration and deregistration on error path
+of a regulator, the problem was manifested by a reported memory
+leak on deferred probe:
 
-Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+    as3722-regulator as3722-regulator: regulator 13 register failed -517
+
+    # cat /sys/kernel/debug/kmemleak
+    unreferenced object 0xecc43740 (size 64):
+      comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
+      hex dump (first 32 bytes):
+        72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
+        5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
+      backtrace:
+        [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
+        [<40c0ad48>] kvasprintf+0x64/0xd4
+        [<109abd29>] kvasprintf_const+0x70/0x84
+        [<c4215946>] kobject_set_name_vargs+0x34/0xa8
+        [<62282ea2>] dev_set_name+0x40/0x64
+        [<a39b6757>] regulator_register+0x3a4/0x1344
+        [<16a9543f>] devm_regulator_register+0x4c/0x84
+        [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
+        ...
+
+The memory leak problem was introduced as a side ef another fix in
+regulator_register() error path, I believe that the proper fix is
+to decouple device_register() function into its two compounds and
+initialize a struct device before assigning any values to its fields
+and then using it before actual registration of a device happens.
+
+This lets to call put_device() safely after initialization, and, since
+now a release callback is called, kfree(rdev->constraints) shall be
+removed to exclude a double free condition.
+
+Fixes: a3cde9534ebd ("regulator: core: fix regulator_register() error paths to properly release rdev")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Wen Yang <wenyang@linux.alibaba.com>
+Link: https://lore.kernel.org/r/20200724005013.23278-1-vz@mleia.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-socfpga/pm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/regulator/core.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
-index 6ed887cf8dc9a..365c0428b21b6 100644
---- a/arch/arm/mach-socfpga/pm.c
-+++ b/arch/arm/mach-socfpga/pm.c
-@@ -49,14 +49,14 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 03154f5b939f7..720f28844795b 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5023,7 +5023,6 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	struct regulator_dev *rdev;
+ 	bool dangling_cfg_gpiod = false;
+ 	bool dangling_of_gpiod = false;
+-	bool reg_device_fail = false;
+ 	struct device *dev;
+ 	int ret, i;
+ 
+@@ -5152,10 +5151,12 @@ regulator_register(const struct regulator_desc *regulator_desc,
  	}
  
- 	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
+ 	/* register with sysfs */
++	device_initialize(&rdev->dev);
+ 	rdev->dev.class = &regulator_class;
+ 	rdev->dev.parent = dev;
+ 	dev_set_name(&rdev->dev, "regulator.%lu",
+ 		    (unsigned long) atomic_inc_return(&regulator_no));
++	dev_set_drvdata(&rdev->dev, rdev);
  
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -67,7 +67,7 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!suspend_ocram_base) {
- 		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
+ 	/* set regulator constraints */
+ 	if (init_data)
+@@ -5206,12 +5207,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	    !rdev->desc->fixed_uV)
+ 		rdev->is_switch = true;
  
- 	/* Copy the code that puts DDR in self refresh to ocram */
-@@ -81,6 +81,8 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!socfpga_sdram_self_refresh_in_ocram)
- 		ret = -EFAULT;
+-	dev_set_drvdata(&rdev->dev, rdev);
+-	ret = device_register(&rdev->dev);
+-	if (ret != 0) {
+-		reg_device_fail = true;
++	ret = device_add(&rdev->dev);
++	if (ret != 0)
+ 		goto unset_supplies;
+-	}
  
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(np);
+ 	rdev_init_debugfs(rdev);
  
+@@ -5233,17 +5231,15 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	mutex_unlock(&regulator_list_mutex);
+ wash:
+ 	kfree(rdev->coupling_desc.coupled_rdevs);
+-	kfree(rdev->constraints);
+ 	mutex_lock(&regulator_list_mutex);
+ 	regulator_ena_gpio_free(rdev);
+ 	mutex_unlock(&regulator_list_mutex);
++	put_device(&rdev->dev);
++	rdev = NULL;
+ clean:
+ 	if (dangling_of_gpiod)
+ 		gpiod_put(config->ena_gpiod);
+-	if (reg_device_fail)
+-		put_device(&rdev->dev);
+-	else
+-		kfree(rdev);
++	kfree(rdev);
+ 	kfree(config);
+ rinse:
+ 	if (dangling_cfg_gpiod)
 -- 
 2.25.1
 
