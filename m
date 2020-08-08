@@ -2,129 +2,260 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4301C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C346520719
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9B92072D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5zmyG2W"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JrXR5rqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgHHRNT (ORCPT
+        id S1726386AbgHHRTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 13:13:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbgHHRNT (ORCPT
+        Sat, 8 Aug 2020 13:19:38 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:16177 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbgHHRTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 13:13:19 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA417C061756;
-        Sat,  8 Aug 2020 10:13:18 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id w12so4971921iom.4;
-        Sat, 08 Aug 2020 10:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=10CvMVkFP5s0ogDLDyQLYDDtzvGA2GFASeeImWfNvUk=;
-        b=V5zmyG2WJuuFRtXQWYNAehEPBSYzwi8qVw7YmJ9J92ZGxTUI3Tj3VA5ZAXaOo5E7dX
-         jW1jq+SfY6CsA9PNjUeGHqd4HxfznppRMyHO1Ny4OvIpxpEfp7kg2chqEQR/fw2d/txO
-         l+S+yq8d2X/KRIoBmR4WVsYIWi5Jg7OuIlpSXqu+FVDL2sHDoRL9yhZpLmaMc9PiyKOp
-         ijCw2OapJAkYJut0Qf7mVS/5Ngs3I4a9M45wN1OvyUirQD1D8aYlYnFK8CEvIS0R34Br
-         aCwcrLJdAvGPoRoHU778k01OI+CZg5kJbehPUkdprZUJ7OaLz6cw/VU1hOeMkjE9kuNv
-         MorQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=10CvMVkFP5s0ogDLDyQLYDDtzvGA2GFASeeImWfNvUk=;
-        b=WZQBwAGBTuyDJbfgfLvpx03D+uACpAzmZY/rIn6O4elef036wITx5cC9sCgoWuv/Bj
-         KCgts0RgK3wh0D6l4jqaVWwiLYTZ2HFJ/2YMfsIps8IAPWbgoflctUjOZy2ej9oIBQrX
-         bhtqsrIUFg09N+SLOySE5XoEttOtba0bUBoVBphjt6CQCpW6zTS2MvDb8rfGvAZL0IEk
-         rfcn2Xo4yVoZwyQL31viMLz7o9x3wDq6+WTqymdGeN9EfwDvUnnpN1snSO95NbY+LLDg
-         sHLjoB1IVygFCqRHaLdo1zoq9LNQnh/7MiB9F20+fwULXMBDgs0UjWmQIorf7WZoZPa4
-         XNKQ==
-X-Gm-Message-State: AOAM533+C7896IFeqb4vCUhNrpzYDKHYIz2tV2AmqW73fl8evOUt5D43
-        Ndf73PQDfMdXPBx+cOgT0ooFeSV66pT76dy+qU8=
-X-Google-Smtp-Source: ABdhPJyX64YtKJWSqwizyrJNygwkrIk1NowT0wwl2BNXq6x0fsRJt7GgJsT1h3wjxw22Xa+W7TBt26KkFZ2Np3csNIc=
-X-Received: by 2002:a6b:b888:: with SMTP id i130mr9996946iof.182.1596906797218;
- Sat, 08 Aug 2020 10:13:17 -0700 (PDT)
+        Sat, 8 Aug 2020 13:19:17 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200808171913epoutp01372c1a86e9f12bbc2ad8817cf224efac~pWphykY6s2831728317epoutp01J
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 17:19:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200808171913epoutp01372c1a86e9f12bbc2ad8817cf224efac~pWphykY6s2831728317epoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596907153;
+        bh=Maph2+9eU8UGURrBHVNh/awFTHY6ZDtHaXDwhs5jWno=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=JrXR5rqvDJ0ehVF+8HEcMyftdjycxK8mulSVnubf+nJfshvUZXF6ALsbJ7zqhCJbZ
+         WPPj61vfWEKulLIx9axgYvhYidwbyooznWT+2vDSdCbRfCKt+q4IJvpVvcZO625ylA
+         BBgsP/UNl6PnN9iu4qUJke9mHUFUuctyw0OosKnA=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200808171912epcas1p37f8f0c2c144b8ba05187c6f998c21439~pWpgZp1Ij2713927139epcas1p36;
+        Sat,  8 Aug 2020 17:19:12 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.160]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4BP88v22dpzMqYkV; Sat,  8 Aug
+        2020 17:19:11 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4F.F9.28578.F8EDE2F5; Sun,  9 Aug 2020 02:19:11 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200808171910epcas1p1ffc9984fce920ad0e00e589c5676a2e8~pWpe_btbF1675516755epcas1p1g;
+        Sat,  8 Aug 2020 17:19:10 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200808171910epsmtrp15a4c0762f5b2197d4dd73027f5db953e~pWpe93Cqa1286512865epsmtrp1C;
+        Sat,  8 Aug 2020 17:19:10 +0000 (GMT)
+X-AuditID: b6c32a39-8c9ff70000006fa2-51-5f2ede8fd551
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E1.B4.08303.E8EDE2F5; Sun,  9 Aug 2020 02:19:10 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200808171910epsmtip17f402df95c66d39688b798639607e214~pWpe0fyI-1027610276epsmtip1B;
+        Sat,  8 Aug 2020 17:19:10 +0000 (GMT)
+From:   "Sungjong Seo" <sj1557.seo@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Namjae Jeon'" <namjae.jeon@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200806055653.9329-2-kohada.t2@gmail.com>
+Subject: RE: [PATCH 2/2] exfat: unify name extraction
+Date:   Sun, 9 Aug 2020 02:19:10 +0900
+Message-ID: <000201d66da8$07a2c750$16e855f0$@samsung.com>
 MIME-Version: 1.0
-References: <CGME20200806160653eucas1p2b7fd860f5d89589cf9df0ad0f8d3981f@eucas1p2.samsung.com>
- <20200806160646.1997-1-s.nawrocki@samsung.com> <CA+Ln22HGSj4gFRmw1rSLaTvw3TiPC9jaM6JB4Z1fbxpwsWNZWw@mail.gmail.com>
- <d980e369-73ef-89a8-6669-f7e9c5dd3243@samsung.com>
-In-Reply-To: <d980e369-73ef-89a8-6669-f7e9c5dd3243@samsung.com>
-From:   Tomasz Figa <tomasz.figa@gmail.com>
-Date:   Sat, 8 Aug 2020 19:13:05 +0200
-Message-ID: <CA+Ln22EY1HDMLKpSsfj+9UyON-51_b-pkPgd3MCyArQSAjKYSw@mail.gmail.com>
-Subject: Re: [PATCH] clk: samsung: Prevent potential endless loop in the PLL
- set_rate ops
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQGp1IjqD1H8gBd2v567dvdPOf7sigI0j+eiAeStLz2pZtYrsA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmnm7/Pb14g80r2S1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsfgxvd6B3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
+        PT5vkgtgi8qxyUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXL
+        zAE6RUmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYGhQoFecmFtcmpeul5yfa2Vo
+        YGBkClSZkJMxedNOloL3ihVnbq9gb2C8LdXFyMkhIWAicfzFFbYuRi4OIYEdjBIPbh1jBkkI
+        CXxilLjWUAaR+MwosevNMXaYjhPdRxkhErsYJa6cO8AE4bxklJjR9husnU1AV+LJjZ9gtoiA
+        nsTJk9fZQGxmgUYmiRMvs0FsTgELiY3nF7GC2MICphKTtz8Cq2ERUJFYdOclWJxXwFLizIyp
+        ULagxMmZT1gg5shLbH87hxniIgWJ3Z+OAtVwAO1ykrh4iBuiRERidmcbM8htEgJzOSTeb13G
+        DFIjIeAicfehCUSrsMSr41ugHpOSeNnfBmXXS/yfv5YdoreFUeLhp21MEL32Eu8vWYCYzAKa
+        Eut36UOUK0rs/D2XEWItn8S7rz2sENW8Eh1tQhAlKhLfP+xkgdl05cdVpgmMSrOQ/DULyV+z
+        kDwwC2HZAkaWVYxiqQXFuempxYYFpshRvYkRnEi1LHcwTn/7Qe8QIxMH4yFGCQ5mJRHerBfa
+        8UK8KYmVValF+fFFpTmpxYcYTYEhPZFZSjQ5H5jK80riDU2NjI2NLUzMzM1MjZXEeR/eUogX
+        EkhPLEnNTk0tSC2C6WPi4JRqYNK+zNP24MW6pWc/m39yl3cr2V1i51Lue7PpgpS+o3t886Lt
+        udGsz17uCPRss5TYPdFDTPfVVJ20DrmZJQvVdHNtTBiuSxZ0GZ97GmbHwnlR7ev914JOwmXn
+        wkN7RZe2Vr/f7RM1iW/ZuvyVp/8tOqG1KSDCd+u26G7zxDt3xcRZZzEZsc/6zzhr2e4pwYtK
+        J/Fd17vDy33hr92vyuKzXgzbe6ee7/7dHM72ZtO6Pc7ZjDXVLmF34lb/mbaSo+3RAdcf3f06
+        b3MeH8/1i8x5Lf3UJEZlQVTiIuNHF73/L7HNm/I64lHioqhpa96lft8YFjhD86RybPHS+E01
+        XRbmMs2JZUd0BE4t9ziwf94GeSWW4oxEQy3mouJEAIfNqEgtBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42LZdlhJTrfvnl68wee5ShY/5t5msXhzciqL
+        xZ69J1ksLu+aw2Zx+f8nFotlXyazWPyYXu/A7vFlznF2j7bJ/9g9mo+tZPPYOesuu0ffllWM
+        Hp83yQWwRXHZpKTmZJalFunbJXBlTN60k6XgvWLFmdsr2BsYb0t1MXJySAiYSJzoPsoIYgsJ
+        7GCU6Jul28XIARSXkji4TxPCFJY4fLi4i5ELqOI5o0T7rBXsIOVsAroST278ZAaxRQT0JE6e
+        vM4GUsQs0Mwk0fqlmQmiYyujxIXvrWALOAUsJDaeX8QKYgsLmEpM3v6IDcRmEVCRWHTnJVic
+        V8BS4syMqVC2oMTJmU9YQK5gBtrQthFsDLOAvMT2t3OYIe5XkNj96SgrSImIgJPExUPcECUi
+        ErM725gnMArPQjJoFsKgWUgGzULSsYCRZRWjZGpBcW56brFhgVFearlecWJucWleul5yfu4m
+        RnA8aWntYNyz6oPeIUYmDsZDjBIczEoivFkvtOOFeFMSK6tSi/Lji0pzUosPMUpzsCiJ836d
+        tTBOSCA9sSQ1OzW1ILUIJsvEwSnVwHSFLcGo9YXaX92IeRn6s2adtt/8/OuXevbph5b13rVs
+        D+04flHcNCt+YvZcsU+zFFctW35y2rGc6I1KX7Ydtu+rfWDDkL5vihjjDMPz5Vmxn/rUr779
+        +yLt/WJbReallYKRH5+5K6pfXaZoxmPKIOHp8GGbV3NXe7/cX7tjwh5O1y9K3sxP0NZhZc5v
+        6Ij2vlbHmlF6bO/CQ+/a9eoVy5T0jObd9JZq9OysM2DIZwmSuz9N/eWFV7O3fTbubdU42MZ5
+        M0i5taNn3qosjsTyyUfZj2Vm7zq06+KfknNsjq1b/5jILzulLTwhIFjcJIjfxWbbncuGgnNO
+        +roccjbt31+cc9L3wdrJPVYrVsQ+UGIpzkg01GIuKk4EAGSn+JQWAwAA
+X-CMS-MailID: 20200808171910epcas1p1ffc9984fce920ad0e00e589c5676a2e8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200806055726epcas1p2f36810983abf14d3aa27f8a102bbbc4d
+References: <20200806055653.9329-1-kohada.t2@gmail.com>
+        <CGME20200806055726epcas1p2f36810983abf14d3aa27f8a102bbbc4d@epcas1p2.samsung.com>
+        <20200806055653.9329-2-kohada.t2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=E5=B9=B48=E6=9C=887=E6=97=A5(=E9=87=91) 19:06 Sylwester Nawrocki <s.na=
-wrocki@samsung.com>:
->
-> Hi Tomasz,
->
-> On 8/6/20 18:11, Tomasz Figa wrote:
-> >> --- a/drivers/clk/samsung/clk-pll.c
-> >> +++ b/drivers/clk/samsung/clk-pll.c
-> >> @@ -63,6 +63,27 @@ static long samsung_pll_round_rate(struct clk_hw *h=
-w,
-> >>         return rate_table[i - 1].rate;
-> >>  }
-> >>
-> >> +static int samsung_pll_lock_wait(struct samsung_clk_pll *pll,
-> >> +                                unsigned int reg_mask)
-> >> +{
-> >> +       ktime_t timeout;
-> >> +
-> >> +       /* Wait until the PLL is in steady locked state */
-> >> +       timeout =3D ktime_add_ms(ktime_get(), PLL_TIMEOUT_MS);
-> >> +
-> >> +       while (!(readl_relaxed(pll->con_reg) & reg_mask)) {
-> >> +               if (ktime_after(ktime_get(), timeout)) {
-> >> +                       pr_err("%s: Could not lock PLL %s\n",
-> >> +                               __func__, clk_hw_get_name(&pll->hw));
-> >> +                       return -EFAULT;
-> >> +               }
-> >> +
-> >> +               cpu_relax();
-> >> +       }
->
-> > Thanks for the patch! Good to have this consolidated. How about going
-> > one step further and using the generic
-> > readl_relaxed_poll_timeout_atomic() helper?
->
-> Might be a good suggestion, I was considering those helpers but ended
-> up not using them in the patch. The cpu_relax() call might also not be
-> really needed now, when there is the ktime code within the loop.
-> Having multiple occurrences of readl_relaxed_poll_timeout_atomic() could
-> increase the code size due to inlining. How about keeping the
-> samsung_pll_lock_wait() function and just changing its implementation?
+> Name extraction in exfat_find_dir_entry() also doesn't care NameLength, so
+> the name may be incorrect.
+> Replace the name extraction in exfat_find_dir_entry() with using
+> exfat_entry_set_cache and exfat_get_uniname_from_name_entries(),
+> like exfat_readdir().
+> Replace the name extraction with using exfat_entry_set_cache and
+> exfat_get_uniname_from_name_entries(), like exfat_readdir().
+> And, remove unused functions/parameters.
+> 
+> ** This patch depends on:
+>   '[PATCH v3] exfat: integrates dir-entry getting and validation'.
+> 
+> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+> ---
+>  fs/exfat/dir.c      | 161 ++++++++++----------------------------------
+>  fs/exfat/exfat_fs.h |   2 +-
+>  fs/exfat/namei.c    |   4 +-
+>  3 files changed, 38 insertions(+), 129 deletions(-)
+> 
+> diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c index
+> 545bb73b95e9..c9715c7a55a1 100644
+> --- a/fs/exfat/dir.c
+> +++ b/fs/exfat/dir.c
+> @@ -10,24 +10,6 @@
+>  #include "exfat_raw.h"
+>  #include "exfat_fs.h"
+[snip]
+> @@ -963,80 +942,38 @@ int exfat_find_dir_entry(struct super_block *sb,
+> struct exfat_inode_info *ei,
+>  			num_empty = 0;
+>  			candi_empty.eidx = EXFAT_HINT_NONE;
+> 
+[snip]
+> 
+> -			if (entry_type &
+> -					(TYPE_CRITICAL_SEC |
+TYPE_BENIGN_SEC)) {
+> -				if (step == DIRENT_STEP_SECD) {
+> -					if (++order == num_ext)
+> -						goto found;
+> -					continue;
+> -				}
+> +			exfat_get_uniname_from_name_entries(es, &uni_name);
 
-Sounds good to me, thanks!
+It is needed to check a return value.
 
-Best regards,
-Tomasz
+> +			exfat_free_dentry_set(es, false);
+> +
+> +			if (!exfat_uniname_ncmp(sb,
+> +						p_uniname->name,
+> +						uni_name.name,
+> +						name_len)) {
+> +				/* set the last used position as hint */
+> +				hint_stat->clu = clu.dir;
+> +				hint_stat->eidx = dentry;
+
+eidx and clu of hint_stat should have one for the next entry we'll start
+looking for.
+Did you intentionally change the concept?
+
+> +				return dentry;
+>  			}
+> -			step = DIRENT_STEP_FILE;
+>  		}
+> 
+>  		if (clu.flags == ALLOC_NO_FAT_CHAIN) { @@ -1069,32 +1006,6
+> @@ int exfat_find_dir_entry(struct super_block *sb, struct
+> exfat_inode_info *ei,
+>  	hint_stat->clu = p_dir->dir;
+>  	hint_stat->eidx = 0;
+>  	return -ENOENT;
+> -
+> -found:
+> -	/* next dentry we'll find is out of this cluster */
+> -	if (!((dentry + 1) & (dentries_per_clu - 1))) {
+> -		int ret = 0;
+> -
+> -		if (clu.flags == ALLOC_NO_FAT_CHAIN) {
+> -			if (--clu.size > 0)
+> -				clu.dir++;
+> -			else
+> -				clu.dir = EXFAT_EOF_CLUSTER;
+> -		} else {
+> -			ret = exfat_get_next_cluster(sb, &clu.dir);
+> -		}
+> -
+> -		if (ret || clu.dir == EXFAT_EOF_CLUSTER) {
+> -			/* just initialized hint_stat */
+> -			hint_stat->clu = p_dir->dir;
+> -			hint_stat->eidx = 0;
+> -			return (dentry - num_ext);
+> -		}
+> -	}
+> -
+> -	hint_stat->clu = clu.dir;
+> -	hint_stat->eidx = dentry + 1;
+> -	return dentry - num_ext;
+>  }
+> 
+>  int exfat_count_ext_entries(struct super_block *sb, struct exfat_chain
+> *p_dir, diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h index
+> b88b7abc25bd..62a4768a4f6e 100644
+> --- a/fs/exfat/exfat_fs.h
+> +++ b/fs/exfat/exfat_fs.h
+> @@ -456,7 +456,7 @@ void exfat_update_dir_chksum_with_entry_set(struct
+> exfat_entry_set_cache *es);  int exfat_calc_num_entries(struct
+> exfat_uni_name *p_uniname);  int exfat_find_dir_entry(struct super_block
+> *sb, struct exfat_inode_info *ei,
+>  		struct exfat_chain *p_dir, struct exfat_uni_name *p_uniname,
+> -		int num_entries, unsigned int type);
+> +		int num_entries);
+>  int exfat_alloc_new_dir(struct inode *inode, struct exfat_chain *clu);
+> int exfat_find_location(struct super_block *sb, struct exfat_chain *p_dir,
+>  		int entry, sector_t *sector, int *offset); diff --git
+> a/fs/exfat/namei.c b/fs/exfat/namei.c index a65d60ef93f4..c59d523547ca
+> 100644
+> --- a/fs/exfat/namei.c
+> +++ b/fs/exfat/namei.c
+> @@ -625,9 +625,7 @@ static int exfat_find(struct inode *dir, struct qstr
+> *qname,
+>  	}
+> 
+>  	/* search the file name for directories */
+> -	dentry = exfat_find_dir_entry(sb, ei, &cdir, &uni_name,
+> -			num_entries, TYPE_ALL);
+> -
+> +	dentry = exfat_find_dir_entry(sb, ei, &cdir, &uni_name,
+> num_entries);
+>  	if ((dentry < 0) && (dentry != -EEXIST))
+>  		return dentry; /* -error value */
+> 
+> --
+> 2.25.1
+
+
