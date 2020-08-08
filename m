@@ -2,94 +2,129 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 00:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C446AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 01:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1220F221E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 00:57:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Lhfq1HY0"
+	by mail.kernel.org (Postfix) with ESMTP id A7D3520866
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 01:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbgHHA5M (ORCPT
+        id S1726204AbgHHBB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 20:57:12 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:43481 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726066AbgHHA5M (ORCPT
+        Fri, 7 Aug 2020 21:01:57 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:50561 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgHHBB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 20:57:12 -0400
-X-UUID: a16b5c5f65a8420c856dde4b7f4962f3-20200808
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=tl8qgIAJrElb58CrFhs8MW6abG2NpTHnjHQaoObZ1ys=;
-        b=Lhfq1HY0SQYAnJxzdfY99qFyLIhW9bXQntZGG/P/tOBWtxed6zBus811ScUgYOcrQiXm8KiPJ3prZYJj3d9h9k5JF8lTmqFBoGep/JQ4vLPeqBUOTqcd8UCPqfp3byeE9KXGHbZAUxgxHxWchp6YHSfoWYcR0Qg5zOQFpo22TrY=;
-X-UUID: a16b5c5f65a8420c856dde4b7f4962f3-20200808
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 149535832; Sat, 08 Aug 2020 08:57:07 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs02n2.mediatek.inc
- (172.21.101.101) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 8 Aug
- 2020 08:57:06 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 8 Aug 2020 08:57:04 +0800
-Message-ID: <1596848179.8263.11.camel@mhfsdcap03>
-Subject: Re: [v2] i2c: mediatek: Fix i2c_spec_values description
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     <matthias.bgg@kernel.org>
-CC:     <matthias.bgg@gmail.com>, <wsa@the-dreams.de>,
-        <yingjoe.chen@mediatek.com>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Matthias Brugger" <mbrugger@suse.com>
-Date:   Sat, 8 Aug 2020 08:56:19 +0800
-In-Reply-To: <20200807131904.6515-1-matthias.bgg@kernel.org>
-References: <20200807131904.6515-1-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 7 Aug 2020 21:01:57 -0400
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07811SRb017623;
+        Sat, 8 Aug 2020 10:01:28 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp);
+ Sat, 08 Aug 2020 10:01:28 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07811M8g017602
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sat, 8 Aug 2020 10:01:28 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: INFO: task hung in pipe_read (2)
+To:     Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+96cc7aba7e969b1d305c@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <00000000000045b3fe05abcced2f@google.com>
+ <fc097a54-0384-9d21-323f-c3ca52cdb956@I-love.SAKURA.ne.jp>
+ <CAHk-=wj15SDiHjP2wPiC=Ru-RrUjOuT4AoULj6N_9pVvSXaWiw@mail.gmail.com>
+ <20200807053148.GA10409@redhat.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <e673cccb-1b67-802a-84e3-6aeea4513a09@i-love.sakura.ne.jp>
+Date:   Sat, 8 Aug 2020 10:01:21 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 228AB456F0D1809A0D32EF84CD12D6E7106F8FEF72C429D702EDD5E86D0510A32000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200807053148.GA10409@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA4LTA3IGF0IDE1OjE5ICswMjAwLCBtYXR0aGlhcy5iZ2dAa2VybmVsLm9y
-ZyB3cm90ZToNCj4gRnJvbTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+DQo+
-IA0KPiBUaGUgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyBoYXZlIGl0J3MgbWVtYmVycyBkb2N1bWVu
-dGVkIGJ1dCBpcw0KPiBtaXNzaW5nIHRoZSBzdGFydGluZyAnQCcsIHdoaWNoIGxlYWRzIHRvIHdh
-cmluZ3MgbGlrZToNCj4gDQo+IGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmM6MjY3OiB3
-YXJuaW5nOiBGdW5jdGlvbiBwYXJhbWV0ZXIgb3IgbWVtYmVyICdtaW5fbG93X25zJyBub3QgZGVz
-Y3JpYmVkIGluICdpMmNfc3BlY192YWx1ZXMnDQo+IA0KPiBXZSBhbHNvIGRlbGV0ZSBtaW5faGln
-aF9ucyBtZW1iZXIgYXMgaXQgaXMgbm90IHVzZWQgaW4gdGhlIGNvZGUuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT4NCg0KUmV2aWV3ZWQt
-Ynk6IFFpaSBXYW5nIDxxaWkud2FuZ0BtZWRpYXRlay5jb20+DQoNCj4gLS0tDQo+IA0KPiBDaGFu
-Z2VzIHNpbmNlIHYxOg0KPiBkZWxldGUgbWludF9oaWdoX25zIG1lbWJlcg0KPiANCj4gIGRyaXZl
-cnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCA5ICsrKystLS0tLQ0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDQgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1t
-dDY1eHguYw0KPiBpbmRleCBlODg5Zjc0NzAzZTQuLmVmYzE0MDQxZDQ1YiAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiArKysgYi9kcml2ZXJzL2kyYy9i
-dXNzZXMvaTJjLW10NjV4eC5jDQo+IEBAIC0yNTMsMTQgKzI1MywxMyBAQCBzdHJ1Y3QgbXRrX2ky
-YyB7DQo+ICANCj4gIC8qKg0KPiAgICogc3RydWN0IGkyY19zcGVjX3ZhbHVlczoNCj4gLSAqIG1p
-bl9sb3dfbnM6IG1pbiBMT1cgcGVyaW9kIG9mIHRoZSBTQ0wgY2xvY2sNCj4gLSAqIG1pbl9zdV9z
-dGFfbnM6IG1pbiBzZXQtdXAgdGltZSBmb3IgYSByZXBlYXRlZCBTVEFSVCBjb25kaXRpb24NCj4g
-LSAqIG1heF9oZF9kYXRfbnM6IG1heCBkYXRhIGhvbGQgdGltZQ0KPiAtICogbWluX3N1X2RhdF9u
-czogbWluIGRhdGEgc2V0LXVwIHRpbWUNCj4gKyAqIEBtaW5fbG93X25zOiBtaW4gTE9XIHBlcmlv
-ZCBvZiB0aGUgU0NMIGNsb2NrDQo+ICsgKiBAbWluX3N1X3N0YV9uczogbWluIHNldC11cCB0aW1l
-IGZvciBhIHJlcGVhdGVkIFNUQVJUIGNvbmRpdGlvbg0KPiArICogQG1heF9oZF9kYXRfbnM6IG1h
-eCBkYXRhIGhvbGQgdGltZQ0KPiArICogQG1pbl9zdV9kYXRfbnM6IG1pbiBkYXRhIHNldC11cCB0
-aW1lDQo+ICAgKi8NCj4gIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KPiAgCXVuc2lnbmVkIGlu
-dCBtaW5fbG93X25zOw0KPiAtCXVuc2lnbmVkIGludCBtaW5faGlnaF9uczsNCj4gIAl1bnNpZ25l
-ZCBpbnQgbWluX3N1X3N0YV9uczsNCj4gIAl1bnNpZ25lZCBpbnQgbWF4X2hkX2RhdF9uczsNCj4g
-IAl1bnNpZ25lZCBpbnQgbWluX3N1X2RhdF9uczsNCg0K
+On 2020/08/07 14:31, Andrea Arcangeli wrote:
+>> Andrea? Comments? As mentioned, this is probably much too aggressive,
+>> but I do think we need to limit the time that the kernel will wait for
+>> page faults.
+> 
+> Why is pipe preventing to SIGKILL the task that is blocked on the
+> mutex_lock? Is there any good reason for it or it simply has margin
+> for improvement regardless of the hangcheck report? It'd be great if
+> we can look into that before looking into the uffd specific bits.
+
+It would be possible to use _killable version for this specific function, but
+
+> 
+> The hangcheck timer would have zero issues with tasks that can be
+> killed, if only the pipe code could be improved to use mutex_lock_killable.
+> 
+> 		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
+> 		if (t->state == TASK_UNINTERRUPTIBLE)
+> 			check_hung_task(t, timeout);
+> 
+> The hangcheck report is just telling us one task was in D state a
+> little too long, but it wasn't fatal error and the kernel wasn't
+> actually destabilized and the only malfunction reported is that a task
+> was unkillable for too long.
+
+use of killable waits disables ability to detect possibility of deadlock (because
+lockdep can't check possibility of deadlock which involves actions in userspace), for
+syzkaller process is SIGKILLed after 5 seconds while khungtaskd's timeout is 140 seconds.
+
+If we encounter a deadlock in an unattended operation (e.g. some server process),
+we don't have a method for resolving the deadlock. Therefore, I consider that
+t->state == TASK_UNINTERRUPTIBLE check is a bad choice. Unless a sleep is neutral
+(e.g. no lock is held, or obviously safe to sleep with that specific lock held),
+sleeping for 140 seconds inside the kernel is a bad sign even if interruptible/killable.
+
+> 
+> Now if it's impossible to improve the pipe code so it works better not
+> just for uffd, there's still no reason to worry: we could disable uffd
+> in the pipe context. For example ptrace opts-out of uffds, so that gdb
+> doesn't get stuck if you read a pointer that should be handled by the
+> process that is under debug. I hope it won't be necessary but it
+> wouldn't be a major issue, certainly it wouldn't risk breaking qemu
+> (and non-cooperative APIs are privileged so it could still skip the
+> timeout).
+
+Can we do something like this?
+
+  bool retried = false;
+retry:
+  lock();
+  disable_fault();
+  ret = access_memory_that_might_fault();
+  enable_fault();
+  if (ret == -EWOULDFAULT && !retried)
+    goto retry_without_lock;
+  if (ret == 0)
+    ret = do_something();
+  unlock();
+  return ret;
+retry_without_lock:
+  unlock();
+  ret = access_memory_that_might_fault();
+  retried = true;
+  goto retry;
 
