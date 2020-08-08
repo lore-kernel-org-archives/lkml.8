@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA03C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B1420672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE10620672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930412;
-	bh=WY+eO/9Lahljm8HW8woM/npGtNCkHd0cv1BtYYsClx4=;
+	s=default; t=1596930417;
+	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dEP4KakZILParkQhEJfA/2mw99y9hPeRoCiS8mMenbGf32fhnT/cYG+T3qsTG9EYB
-	 xwOEwaZGXUs5p7q8XDrrcLBBXIE+kiFcVU92MdUZt4LAyDJH94Lis8c2b81henl4cV
-	 e9yjfu6LfNm+vVLffYEsGr3PK/NZX4dy53tZcjWk=
+	b=uA/AxdBTboDpk/wL1/ky+O3AYqgRGL2enVg2nokac6kXjviJ5Bw2WBGOIyQ7yfT0L
+	 qXQHyz/qxtO4g3kI6N/qzKkJGN58B1f8k84XnSknHJFjvPSRq1I6HdH6cOz9lP/D09
+	 Tw4qUrjhvPtJ9EyxShmEL7+vl6k2vFStBjyZPeG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgHHXiP (ORCPT
+        id S1728830AbgHHXqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51860 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:46:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbgHHXiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:11 -0400
+        id S1728212AbgHHXiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 653222073E;
-        Sat,  8 Aug 2020 23:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E4A3207BB;
+        Sat,  8 Aug 2020 23:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929891;
-        bh=WY+eO/9Lahljm8HW8woM/npGtNCkHd0cv1BtYYsClx4=;
+        s=default; t=1596929894;
+        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ukrhb8h1mO09dDdeMxhd7mkYWHD9HRdNY3mB+APLxnJz8V+J1D+DTKTZ14aAeZdl1
-         bu/Ru6LKfUDozWEZ3GDSYXpNriZiEqoi5x6Ff4OBOZ33/yZdsvd6HRIDLpB1eqz1vP
-         kD9QWbwz6KckjCZj3AVEyhKf00bDeIIHnqvAgKsU=
+        b=mrGcMgdB7nOmzxrhnpKPs9OON3vUIklA7HO16FZvgMsMRCHX+8OtYoVRG2NAwlBVn
+         4syq+dnkZ9lFG4kbGhiYbEQtJmHElArqzEBU64BeLKViMc9gBgHBabeoJPxULF40+E
+         ueR6kHKF3SbX5lMku4W6FkeQ2GAtDvcrepU6CnuM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 32/58] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-Date:   Sat,  8 Aug 2020 19:36:58 -0400
-Message-Id: <20200808233724.3618168-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 35/58] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
+Date:   Sat,  8 Aug 2020 19:37:01 -0400
+Message-Id: <20200808233724.3618168-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,62 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
+[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
 
-if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-a corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
-Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
+Assign the same regulator supply to the remaining CPU cores to address
+this.
+
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 074bde64064e4..2aab043441e8f 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -592,13 +592,13 @@ static void __init at91_pm_sram_init(void)
- 	sram_pool = gen_pool_get(&pdev->dev, NULL);
- 	if (!sram_pool) {
- 		pr_warn("%s: sram pool unavailable!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
- 
- 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
- 	if (!sram_base) {
- 		pr_warn("%s: unable to alloc sram!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
- 
- 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
-@@ -606,12 +606,17 @@ static void __init at91_pm_sram_init(void)
- 					at91_pm_suspend_in_sram_sz, false);
- 	if (!at91_suspend_sram_fn) {
- 		pr_warn("SRAM: Could not map\n");
--		return;
-+		goto out_put_device;
- 	}
- 
- 	/* Copy the pm suspend handler to SRAM */
- 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
- 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
-+	return;
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index 22466afd38a3a..a628b5ee72b65 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
+ };
 +
-+out_put_device:
-+	put_device(&pdev->dev);
-+	return;
- }
- 
- static bool __init at91_is_pm_mode_active(int pm_mode)
++&cpu1 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu2 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu3 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 -- 
 2.25.1
 
