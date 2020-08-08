@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C805FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59A52053B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B8A2053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930294;
-	bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
+	s=default; t=1596930298;
+	bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLEzds1Qy724NSM+p1lDk1FsHO+zot+c6wvD7j/lkcPEcHp+cdI0pJfcQAhey8YNI
-	 rIUKgUqrcNaRv37ZnwhG75sW/ZqmMoLE9lEORFywvch8jj1WlKTVnXPlqu0S6Ckspj
-	 yRWxTDIYgPMVfHX10Aw4EqsFepZgvACiw2p8mdm8=
+	b=j6kDe/9OJ+yxTt+2HhluvawgqUG0dFIJj5CGZvBOJJ8ie6ioF1prn/SbSFj918sPp
+	 Zsn18/vTMyigGkJfjsTMa0GDEbnRczdBxSZrloqkgADCSbaidY5LSlVqyNXqWJIwq7
+	 +Wn97h8o/Y+lUDyn6/vS6vzOLS9eMUPwVpmGnQiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgHHXjB (ORCPT
+        id S1728911AbgHHXo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53318 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbgHHXiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:55 -0400
+        id S1728332AbgHHXjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49520221E2;
-        Sat,  8 Aug 2020 23:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 160B620748;
+        Sat,  8 Aug 2020 23:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929935;
-        bh=iVo0GPoeKyLafUTHicn9yxl086QZHMa+h8QT9zS3jU8=;
+        s=default; t=1596929940;
+        bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=he6n+iYdQuSqv5TV+tTqC+83M6qJqicOKvlLKglhq52FlbkTY5gMRWrmywF0+IoGm
-         /ikTOXWWqMSWLaluK6gKYZ5AZMre5Hzth85hOAbn6OgMAPTONg7rxoEjuCjvrhMeUP
-         mQp4KKPIXdXEOxzlByvWNJ3FV//fzaKvmGkvSTBY=
+        b=NpZCWtnq71kpXJ9iYHfq59ckJG1JzewA3B0h+ZiagwtbXVuENCQGR684Fox9k0d5R
+         koO/RvSS0l7uQn+DUx7ulBEUpr/wBoZE9wUQlxmhvcwCpRgLK9nLHIBRLcogi1n8mH
+         O47902uCqJdlx0drmF1mdDufD6ufHJbmba3y3JvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 08/40] crc-t10dif: Fix potential crypto notify dead-lock
-Date:   Sat,  8 Aug 2020 19:38:12 -0400
-Message-Id: <20200808233844.3618823-8-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/40] ARM: exynos: MCPM: Restore big.LITTLE cpuidle support
+Date:   Sat,  8 Aug 2020 19:38:16 -0400
+Message-Id: <20200808233844.3618823-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -60,155 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 3906f640224dbe7714b52b66d7d68c0812808e19 ]
+[ Upstream commit ea9dd8f61c8a890843f68e8dc0062ce78365aab8 ]
 
-The crypto notify call occurs with a read mutex held so you must
-not do any substantial work directly.  In particular, you cannot
-call crypto_alloc_* as they may trigger further notifications
-which may dead-lock in the presence of another writer.
+Call exynos_cpu_power_up(cpunr) unconditionally. This is needed by the
+big.LITTLE cpuidle driver and has no side-effects on other code paths.
 
-This patch fixes this by postponing the work into a work queue and
-taking the same lock in the module init function.
+The additional soft-reset call during little core power up has been added
+to properly boot all cores on the Exynos5422-based boards with secure
+firmware (like Odroid XU3/XU4 family). This however broke big.LITTLE
+CPUidle driver, which worked only on boards without secure firmware (like
+Peach-Pit/Pi Chromebooks). Apply the workaround only when board is
+running under secure firmware.
 
-While we're at it this patch also ensures that all RCU accesses are
-marked appropriately (tested with sparse).
-
-Finally this also reveals a race condition in module param show
-function as it may be called prior to the module init function.
-It's fixed by testing whether crct10dif_tfm is NULL (this is true
-iff the init function has not completed assuming fallback is false).
-
-Fixes: 11dcb1037f40 ("crc-t10dif: Allow current transform to be...")
-Fixes: b76377543b73 ("crc-t10dif: Pick better transform if one...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 833b5794e330 ("ARM: EXYNOS: reset Little cores when cpu is up")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/crc-t10dif.c | 54 +++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 42 insertions(+), 12 deletions(-)
+ arch/arm/mach-exynos/mcpm-exynos.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/lib/crc-t10dif.c b/lib/crc-t10dif.c
-index 8cc01a6034165..c9acf1c12cfcb 100644
---- a/lib/crc-t10dif.c
-+++ b/lib/crc-t10dif.c
-@@ -19,39 +19,46 @@
- static struct crypto_shash __rcu *crct10dif_tfm;
- static struct static_key crct10dif_fallback __read_mostly;
- static DEFINE_MUTEX(crc_t10dif_mutex);
-+static struct work_struct crct10dif_rehash_work;
+diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
+index 9a681b421ae11..cd861c57d5adf 100644
+--- a/arch/arm/mach-exynos/mcpm-exynos.c
++++ b/arch/arm/mach-exynos/mcpm-exynos.c
+@@ -26,6 +26,7 @@
+ #define EXYNOS5420_USE_L2_COMMON_UP_STATE	BIT(30)
  
--static int crc_t10dif_rehash(struct notifier_block *self, unsigned long val, void *data)
-+static int crc_t10dif_notify(struct notifier_block *self, unsigned long val, void *data)
+ static void __iomem *ns_sram_base_addr __ro_after_init;
++static bool secure_firmware __ro_after_init;
+ 
+ /*
+  * The common v7_exit_coherency_flush API could not be used because of the
+@@ -58,15 +59,16 @@ static void __iomem *ns_sram_base_addr __ro_after_init;
+ static int exynos_cpu_powerup(unsigned int cpu, unsigned int cluster)
  {
- 	struct crypto_alg *alg = data;
--	struct crypto_shash *new, *old;
+ 	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
++	bool state;
  
- 	if (val != CRYPTO_MSG_ALG_LOADED ||
- 	    static_key_false(&crct10dif_fallback) ||
- 	    strncmp(alg->cra_name, CRC_T10DIF_STRING, strlen(CRC_T10DIF_STRING)))
- 		return 0;
+ 	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+ 	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
+ 		cluster >= EXYNOS5420_NR_CLUSTERS)
+ 		return -EINVAL;
  
-+	schedule_work(&crct10dif_rehash_work);
-+	return 0;
-+}
-+
-+static void crc_t10dif_rehash(struct work_struct *work)
-+{
-+	struct crypto_shash *new, *old;
-+
- 	mutex_lock(&crc_t10dif_mutex);
- 	old = rcu_dereference_protected(crct10dif_tfm,
- 					lockdep_is_held(&crc_t10dif_mutex));
- 	if (!old) {
- 		mutex_unlock(&crc_t10dif_mutex);
--		return 0;
-+		return;
+-	if (!exynos_cpu_power_state(cpunr)) {
+-		exynos_cpu_power_up(cpunr);
+-
++	state = exynos_cpu_power_state(cpunr);
++	exynos_cpu_power_up(cpunr);
++	if (!state && secure_firmware) {
+ 		/*
+ 		 * This assumes the cluster number of the big cores(Cortex A15)
+ 		 * is 0 and the Little cores(Cortex A7) is 1.
+@@ -258,6 +260,8 @@ static int __init exynos_mcpm_init(void)
+ 		return -ENOMEM;
  	}
- 	new = crypto_alloc_shash("crct10dif", 0, 0);
- 	if (IS_ERR(new)) {
- 		mutex_unlock(&crc_t10dif_mutex);
--		return 0;
-+		return;
- 	}
- 	rcu_assign_pointer(crct10dif_tfm, new);
- 	mutex_unlock(&crc_t10dif_mutex);
  
- 	synchronize_rcu();
- 	crypto_free_shash(old);
--	return 0;
- }
- 
- static struct notifier_block crc_t10dif_nb = {
--	.notifier_call = crc_t10dif_rehash,
-+	.notifier_call = crc_t10dif_notify,
- };
- 
- __u16 crc_t10dif_update(__u16 crc, const unsigned char *buffer, size_t len)
-@@ -86,19 +93,26 @@ EXPORT_SYMBOL(crc_t10dif);
- 
- static int __init crc_t10dif_mod_init(void)
- {
-+	struct crypto_shash *tfm;
++	secure_firmware = exynos_secure_firmware_available();
 +
-+	INIT_WORK(&crct10dif_rehash_work, crc_t10dif_rehash);
- 	crypto_register_notifier(&crc_t10dif_nb);
--	crct10dif_tfm = crypto_alloc_shash("crct10dif", 0, 0);
--	if (IS_ERR(crct10dif_tfm)) {
-+	mutex_lock(&crc_t10dif_mutex);
-+	tfm = crypto_alloc_shash("crct10dif", 0, 0);
-+	if (IS_ERR(tfm)) {
- 		static_key_slow_inc(&crct10dif_fallback);
--		crct10dif_tfm = NULL;
-+		tfm = NULL;
- 	}
-+	RCU_INIT_POINTER(crct10dif_tfm, tfm);
-+	mutex_unlock(&crc_t10dif_mutex);
- 	return 0;
- }
- 
- static void __exit crc_t10dif_mod_fini(void)
- {
- 	crypto_unregister_notifier(&crc_t10dif_nb);
--	crypto_free_shash(crct10dif_tfm);
-+	cancel_work_sync(&crct10dif_rehash_work);
-+	crypto_free_shash(rcu_dereference_protected(crct10dif_tfm, 1));
- }
- 
- module_init(crc_t10dif_mod_init);
-@@ -106,11 +120,27 @@ module_exit(crc_t10dif_mod_fini);
- 
- static int crc_t10dif_transform_show(char *buffer, const struct kernel_param *kp)
- {
-+	struct crypto_shash *tfm;
-+	const char *name;
-+	int len;
-+
- 	if (static_key_false(&crct10dif_fallback))
- 		return sprintf(buffer, "fallback\n");
- 
--	return sprintf(buffer, "%s\n",
--		crypto_tfm_alg_driver_name(crypto_shash_tfm(crct10dif_tfm)));
-+	rcu_read_lock();
-+	tfm = rcu_dereference(crct10dif_tfm);
-+	if (!tfm) {
-+		len = sprintf(buffer, "init\n");
-+		goto unlock;
-+	}
-+
-+	name = crypto_tfm_alg_driver_name(crypto_shash_tfm(tfm));
-+	len = sprintf(buffer, "%s\n", name);
-+
-+unlock:
-+	rcu_read_unlock();
-+
-+	return len;
- }
- 
- module_param_call(transform, NULL, crc_t10dif_transform_show, NULL, 0644);
+ 	/*
+ 	 * To increase the stability of KFC reset we need to program
+ 	 * the PMU SPARE3 register
 -- 
 2.25.1
 
