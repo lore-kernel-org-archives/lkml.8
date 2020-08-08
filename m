@@ -2,100 +2,94 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AADC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 636D42072D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C5D206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/xJ6Alb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgHHReg (ORCPT
+        id S1726426AbgHHRhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 13:34:36 -0400
-Received: from smtprelay0203.hostedemail.com ([216.40.44.203]:54000 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726242AbgHHReg (ORCPT
+        Sat, 8 Aug 2020 13:37:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbgHHRhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 13:34:36 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 25F30182244FF;
-        Sat,  8 Aug 2020 17:34:35 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fifth29_370365026fca
-X-Filterd-Recvd-Size: 2511
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  8 Aug 2020 17:34:34 +0000 (UTC)
-Message-ID: <841240882e8b21aa069d8ca863a67d5d407cda30.camel@perches.com>
-Subject: Re: [PATCH] mailmap: Update comments for with format and more
- detalis
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Date:   Sat, 08 Aug 2020 10:34:33 -0700
-In-Reply-To: <202008080013.58EBD83@keescook>
-References: <202008080013.58EBD83@keescook>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sat, 8 Aug 2020 13:37:40 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B8DC061756;
+        Sat,  8 Aug 2020 10:37:40 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id l15so4398461ils.2;
+        Sat, 08 Aug 2020 10:37:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jd2roWdNEMfG+4gvo7ecPuN3gEg3eBvXK66IE/OKjWE=;
+        b=Q/xJ6Albug/dh/TXnY1J/dhPZmpKUvB5cALfJoCdN2NdkDaQ61DhMyydWZZe/1xS/6
+         +YePUHa2cXlO9SV2VKxJo2ur1hnmc7nM9nJVkyM1lpv2n/2H3M/oMnX5HR8oHzUzz8oK
+         zuIkIg6iTm2CN9E4mfevEhpUcegEo+wMcYsWBH5tbxA2WYCc8SOf4jtUtFqPMpq06ISJ
+         1PBvmxFmUSO86qPY09aXej6XJIpvmFLs9iXbXLW+0wLTTDNV+C1wLqdtSm7XQ/PC+nFk
+         He6M7FTpEwISlHf0MQFCAtpbOqGT5Fdl+3SWQZ8pXc2DHO1uaKwJNrhyUj8adxxJrFqO
+         LsIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jd2roWdNEMfG+4gvo7ecPuN3gEg3eBvXK66IE/OKjWE=;
+        b=KlPH9rj0lGhwyXamovqimDIhe0tehT+ZJ4O275UsdZQJ99GUupW85G/C6Wxj0CgUC2
+         2VuFvv/7edfiBzHFZ5DtyNanX6mClyMQed1n8PXqvZQoOUDqirzaK9tCjpv3FWHGc8Hl
+         vObZaU41l7z6ItN2RDpv3lFFqmBcj9ffN7i1iJbp61SAGeeI3iQS9NsDQLh4CvV14y0U
+         WBbeYQZWu+4SfEMrvim86y6QaXcY+oaZHt0G+knWbHtkFp/iZFiph8RG29nRSsSgr78A
+         JA4FsN5BVt5iJ1tANGV+n2NIyS8f0HQFLll9rjs/FdNoS/cFWCebUdD6we1sfX5sg8Fe
+         AlaQ==
+X-Gm-Message-State: AOAM532QiLjeW/hWaJHXJUGMnpRJxFdLRTY8jKuuwwFtrQYou1In+EHj
+        r2DQpPABntZFQqAWs3Ocu2Ylkxgr+x13jqRpwXU=
+X-Google-Smtp-Source: ABdhPJzBAzrH7FehaQ18kJ2CFVpEnYMbY6TD8YjBFV5r/TwNOAOadvIzgnlZpF/HOVFIeCxFBSmSCLhng/cwiRcOGws=
+X-Received: by 2002:a05:6e02:f94:: with SMTP id v20mr10495513ilo.268.1596908257845;
+ Sat, 08 Aug 2020 10:37:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200728021348.4116-1-gaurav1086@gmail.com> <20200808170653.8515-1-gaurav1086@gmail.com>
+In-Reply-To: <20200808170653.8515-1-gaurav1086@gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat, 8 Aug 2020 10:37:26 -0700
+Message-ID: <CAM_iQpWd4Z+7-WFUW0vCuRXMrJ4PjP424LDu6wce0O_A-y2rng@mail.gmail.com>
+Subject: Re: [PATCH] [net/ipv6] ip6_output: Add ipv6_pinfo null check
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, Shaohua Li <shli@fb.com>,
+        "open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-08 at 00:14 -0700, Kees Cook wrote:
-> Without having first read the git-shortlog man-page first, the format
-> of .mailmap may not be immediately obvious. Add comments with pointers
-> to the man-page, along with other details.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> I'm adding this to my earlier .mailmap update series:
-> https://lore.kernel.org/lkml/20200730183702.702552-1-keescook@chromium.org/
-> ---
->  .mailmap | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/.mailmap b/.mailmap
-> index 6c1c04a63b18..3a991e19928c 100644
-> --- a/.mailmap
-> +++ b/.mailmap
-> @@ -2,11 +2,16 @@
->  # This list is used by git-shortlog
+On Sat, Aug 8, 2020 at 10:07 AM Gaurav Singh <gaurav1086@gmail.com> wrote:
+>
+> This PR fixes a possible segmentation violation.
+>
+> In function: ip6_xmit(), we have
+> const struct ipv6_pinfo *np = inet6_sk(sk); which returns NULL
+> unconditionally (regardless sk being  NULL or not).
+>
+> In include/linux/ipv6.h:
+>
+> static inline struct ipv6_pinfo * inet6_sk(const struct sock *__sk)
+> {
+>     return NULL;
+> }
+>
 
-and scripts/get_maintainer.pl
-
-Today, this list is primarily used not for
-messed up email addresses.  It's mostly used
-to map no longer in-use email addresses to
-current email address.
-
->  to fix a few botched name translations
->  # in the git archive, either because the author's full name was messed up
->  # and/or not always written the same way, making contributions from the
-> -# same person appearing not to be so or badly displayed.
-> +# same person appearing not to be so or badly displayed. Also allows for
-> +# old email addresses to map to new email addresses.
->  #
-> +# For format details, see "MAPPING AUTHORS" in "man git-shortlog".
-> +#
-> +# Please keep this list dictionary sorted.
-> +#
-> +# This comment is parsed by git-shortlog:
->  # repo-abbrev: /pub/scm/linux/kernel/git/
->  #
-> -
->  Aaron Durbin <adurbin@google.com>
->  Adam Oldham <oldhamca@gmail.com>
->  Adam Radford <aradford@gmail.com>
-> -- 
-> 2.25.1
-> 
-> 
-
+Tell us who will use ip6_autoflowlabel() when CONFIG_IPV6
+is disabled. :)
