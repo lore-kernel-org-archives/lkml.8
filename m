@@ -2,150 +2,150 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E81C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 05:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 05:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5145120855
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 05:45:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gFgiaaUI"
+	by mail.kernel.org (Postfix) with ESMTP id 90FEE221E5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 05:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596865620;
+	bh=xrVQkv5zXrjsh+ypiZ3p5okFdR9ZJ5Lla8NwIloJgBI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kZCI9k6pR5JnpTT1wJLpyc6MJPZN21QV9XLoH3H9bLP4e1ngia8Y0GpLbhrA/xk1w
+	 cvTQsb8lm2uHyDWgNCs4pzWtBGSIqDhMr/koA6bfpuuIAaGK7w9rG6/ie/S0peq/bD
+	 teGLpraQxVyxlkXjIePDBP10e7GQX34tZsD4CwxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHHFpT (ORCPT
+        id S1726542AbgHHFq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 01:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgHHFpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 01:45:18 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384F6C061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 22:45:18 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 9so3357451wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Aug 2020 22:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=441erG+nQmp/Gw1mKUcyWCbdvIu4tY4AskgERTUrfjg=;
-        b=gFgiaaUI3R97K8gVNTA0DZeC1udE44Xe94EfLuFG1QpmUFFLrLEysS/L41zYbhywlR
-         mPQkkd+eeFz/LTsg34gxiKRGptrqJhCYX9JpHb2zPZDfvKDf4EC824Em7a6WPF+Qx6ZG
-         IyHyoO7cF3GP1ylR3urde/Y1x+HM1HMXDCaEEVM4N9t9AX+Nvr8VlhnUnpo9OMzUsDnt
-         mYOmnT2IEGD86AG63um15D87y76SR2uMql/cULk2BXS9r+afuQlHDsuuw+vpjp0vdeya
-         4kBLhd/DC2NyDWZh4c7JaDvRiK6eGx6TtAeR/UQVZ1NFR/F6HprG8LVCJH1H0RttbBcE
-         0eTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=441erG+nQmp/Gw1mKUcyWCbdvIu4tY4AskgERTUrfjg=;
-        b=F65Fah5w+DCNm1lQllJ4Q082TcVUN72GXwKwbljxjfbQvnEqidGEfHcHeK0Fk+v/bo
-         reNeRbkzKjWxFLdy71piDGk9R6TeKbFu/rxBUgMUyuhCzx8Gqrpfa01r0NP88xAmOYZH
-         IBPOmyaFxECBg/XCuUnKdBccdRwKdcISVm2eIs/vx1LOkIyjIzOmoRx0JmXdCJfE046H
-         aMwRCgymqmFrRdIRhGShE+4r0hcc8tqs8g9hY9pZULCtyI3k8icsOrTDYq4x6Roca+SA
-         6rcx3mIBMhdjb2qvfHB+Cuq7PAa/qnf4txrtNGwtm0ujA1vViuAZIGO46B4fTfiWg+7C
-         /mgg==
-X-Gm-Message-State: AOAM530PBY5+rM19fYIfV0FhIH0JUk+6Bnl8mvKpOPWjmnmZ/h72F1g+
-        HvCN5uQsh7MKMWtrf+D0d668KlzLI41D25vzb8WMOQ==
-X-Google-Smtp-Source: ABdhPJx0rFe0zGAHdrBJuE8AHpoJMag7cGGMlYcCrkYzgb+JqKHHTSUqvpypkcKFaRZqkqXKMiukGIhlzijpTrDC9gs=
-X-Received: by 2002:a7b:c2aa:: with SMTP id c10mr15492330wmk.86.1596865516755;
- Fri, 07 Aug 2020 22:45:16 -0700 (PDT)
+        Sat, 8 Aug 2020 01:46:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbgHHFq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 01:46:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9988B20855;
+        Sat,  8 Aug 2020 05:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596865618;
+        bh=xrVQkv5zXrjsh+ypiZ3p5okFdR9ZJ5Lla8NwIloJgBI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CgH8+piv/FhjLc1XCHrjSAoGsFzXSiTjchCTJpTmdb7KYDgvaTH4CvLKnWvs6XlaQ
+         b7cOFyjsFr9xG3zkHajvVq9H68GMEHYwxveiWdsvGyuSOOnqcrKeRGmVs6acF5xJ15
+         rCoVwXYodi0la1FI3AzCbhMCNMefhV5ZEA/6HVRs=
+Date:   Sat, 8 Aug 2020 07:46:55 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jonathan Adams <jwadams@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [RFC PATCH 4/7] core/metricfs: expose softirq information
+ through metricfs
+Message-ID: <20200808054655.GE1037591@kroah.com>
+References: <20200807212916.2883031-1-jwadams@google.com>
+ <20200807212916.2883031-5-jwadams@google.com>
 MIME-Version: 1.0
-References: <20200808011651.2113930-1-brendanhiggins@google.com>
-In-Reply-To: <20200808011651.2113930-1-brendanhiggins@google.com>
-From:   David Gow <davidgow@google.com>
-Date:   Sat, 8 Aug 2020 13:45:05 +0800
-Message-ID: <CABVgOSkEiQkcOy+gF9irJo-R6xCeiCvDRZXa_ubzCfz+9Yx2ZA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] kunit: tool: fix running kunit_tool from outside
- kernel tree
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807212916.2883031-5-jwadams@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 8, 2020 at 9:17 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> Currently kunit_tool does not work correctly when executed from a path
-> outside of the kernel tree, so make sure that the current working
-> directory is correct and the kunit_dir is properly initialized before
-> running.
->
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+On Fri, Aug 07, 2020 at 02:29:13PM -0700, Jonathan Adams wrote:
+> Add metricfs support for displaying percpu softirq counters.  The
+> top directory is /sys/kernel/debug/metricfs/softirq.  Then there
+> is a subdirectory for each softirq type.  For example:
+> 
+>     cat /sys/kernel/debug/metricfs/softirq/NET_RX/values
+> 
+> Signed-off-by: Jonathan Adams <jwadams@google.com>
+> 
 > ---
->  tools/testing/kunit/kunit.py | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> index 425ef40067e7..96344a11ff1f 100755
-> --- a/tools/testing/kunit/kunit.py
-> +++ b/tools/testing/kunit/kunit.py
-> @@ -237,9 +237,14 @@ def main(argv, linux=None):
->
->         cli_args = parser.parse_args(argv)
->
-> +       if get_kernel_root_path():
-> +               print('cd ' + get_kernel_root_path())
-Do we want to print this, or is it a leftover debug statement?
-
-
-> +               os.chdir(get_kernel_root_path())
+> 
+> jwadams@google.com: rebased to 5.8-pre6
+> 	This is work originally done by another engineer at
+> 	google, who would rather not have their name associated with this
+> 	patchset. They're okay with me sending it under my name.
+> ---
+>  kernel/softirq.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/kernel/softirq.c b/kernel/softirq.c
+> index c4201b7f42b1..1ae3a540b789 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -25,6 +25,8 @@
+>  #include <linux/smpboot.h>
+>  #include <linux/tick.h>
+>  #include <linux/irq.h>
+> +#include <linux/jump_label.h>
+> +#include <linux/metricfs.h>
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/irq.h>
+> @@ -738,3 +740,46 @@ unsigned int __weak arch_dynirq_lower_bound(unsigned int from)
+>  {
+>  	return from;
+>  }
 > +
->         if cli_args.subcommand == 'run':
->                 if not os.path.exists(cli_args.build_dir):
->                         os.mkdir(cli_args.build_dir)
-> +                       create_default_kunitconfig()
-Why are we adding this everywhere when it's already in config_tests,
-which should already be called in all of the places where a
-kunitconfig is required?
-Is the goal to always copy the default kunitconfig when creating a new
-build_dir? While I can sort-of see why we might want to do that, if
-the build dir doesn't exist, most of the subcommands will fail anyway
-(maybe we should only create the build-dir for 'config' and 'run'?)
+> +#ifdef CONFIG_METRICFS
+> +
+> +#define METRICFS_ITEM(name) \
+> +static void \
+> +metricfs_##name(struct metric_emitter *e, int cpu) \
+> +{ \
+> +	int64_t v = kstat_softirqs_cpu(name##_SOFTIRQ, cpu); \
+> +	METRIC_EMIT_PERCPU_INT(e, cpu, v); \
+> +} \
+> +METRIC_EXPORT_PERCPU_COUNTER(name, #name " softirq", metricfs_##name)
+> +
+> +METRICFS_ITEM(HI);
+> +METRICFS_ITEM(TIMER);
+> +METRICFS_ITEM(NET_TX);
+> +METRICFS_ITEM(NET_RX);
+> +METRICFS_ITEM(BLOCK);
+> +METRICFS_ITEM(IRQ_POLL);
+> +METRICFS_ITEM(TASKLET);
+> +METRICFS_ITEM(SCHED);
+> +METRICFS_ITEM(HRTIMER);
+> +METRICFS_ITEM(RCU);
+> +
+> +static int __init init_softirq_metricfs(void)
+> +{
+> +	struct metricfs_subsys *subsys;
+> +
+> +	subsys = metricfs_create_subsys("softirq", NULL);
+> +	metric_init_HI(subsys);
+> +	metric_init_TIMER(subsys);
+> +	metric_init_NET_TX(subsys);
+> +	metric_init_NET_RX(subsys);
+> +	metric_init_BLOCK(subsys);
+> +	metric_init_IRQ_POLL(subsys);
+> +	metric_init_TASKLET(subsys);
+> +	metric_init_SCHED(subsys);
+> +	metric_init_RCU(subsys);
+> +
+> +	return 0;
+> +}
+> +module_init(init_softirq_metricfs);
 
+I like the "simple" ways these look, and think you will be better off
+just adding this type of api to debugfs.  That way people can use them
+anywhere they currently use debugfs.
 
->
->                 if not linux:
->                         linux = kunit_kernel.LinuxSourceTree()
-> @@ -257,6 +262,7 @@ def main(argv, linux=None):
->                 if cli_args.build_dir:
->                         if not os.path.exists(cli_args.build_dir):
->                                 os.mkdir(cli_args.build_dir)
-> +                               create_default_kunitconfig()
->
->                 if not linux:
->                         linux = kunit_kernel.LinuxSourceTree()
-> @@ -273,6 +279,7 @@ def main(argv, linux=None):
->                 if cli_args.build_dir:
->                         if not os.path.exists(cli_args.build_dir):
->                                 os.mkdir(cli_args.build_dir)
-> +                               create_default_kunitconfig()
->
->                 if not linux:
->                         linux = kunit_kernel.LinuxSourceTree()
-> @@ -291,6 +298,7 @@ def main(argv, linux=None):
->                 if cli_args.build_dir:
->                         if not os.path.exists(cli_args.build_dir):
->                                 os.mkdir(cli_args.build_dir)
-> +                               create_default_kunitconfig()
->
->                 if not linux:
->                         linux = kunit_kernel.LinuxSourceTree()
->
-> base-commit: 30185b69a2d533c4ba6ca926b8390ce7de495e29
-> --
-> 2.28.0.236.gb10cc79966-goog
->
+But note, we already have simple ways of exporting single variable data
+in debugfs, so why do we need yet-another-macro for them?
+
+thanks,
+
+greg k-h
