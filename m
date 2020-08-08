@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4763C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3089A20791
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922052073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929855;
-	bh=n5BejSjOLaNTzyZ8gbGcxvwo3oVY7+1z+ltbc4YdsIE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xKF4TKVb50/NmSbHf0QTisSP0+R3e+yPh7nCSg10EBmDpiH4C88XhVeazL90xMsq6
-	 jQW/VIa9UeqpTtHK/5p87+Yf96CEGjTb5z4ONel68oOlRP0D68+1cSJTJjz38BVqa4
-	 Zm6d1uMc0a5/LuufNU0YRqwn12JiOAVYpgc4faEo=
+	s=default; t=1596929856;
+	bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ayHPBb7qnbwfYVlVOZ7VHp2LPqXcAcmtAo53j+t3+0xzpoTjQ2oeFE95Hyb7gKxnJ
+	 /EK3gNiP4YRNICue6YN3c03sJE7KPhREpABadhS8Rau/c9xbPscVMy2b89rPcsKW2C
+	 kcEzYAWmgbYkNdUvYVb8aj7MyarFayR1FQassmGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHHXhd (ORCPT
+        id S1728018AbgHHXhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgHHXh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:26 -0400
+        id S1727990AbgHHXhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E49B2075D;
-        Sat,  8 Aug 2020 23:37:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F7542075D;
+        Sat,  8 Aug 2020 23:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929846;
-        bh=n5BejSjOLaNTzyZ8gbGcxvwo3oVY7+1z+ltbc4YdsIE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WotUL1i2ejVWD/YZk+P7yvZT/3r0jpOf0Cs3F3KYsgdSv6AnGc4b2DEYTg6ADSvXT
-         geHelzUydwp3LvikxNFZv66q7akoZRNHD+IYTcA0eN5q8K8nIdZU1yK9j1yiJIvOU4
-         ezZ3QzbDxcsJPDyEcqT8iOnL0GKZyKd8RIo5C7fU=
+        s=default; t=1596929852;
+        bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J7L+i3y3GLhM1QNdV22sPuyAT2ITUkrY01Q5qUbtbj9D6xTkGDCRPsMyZ7PzzNGNX
+         I8burm0BRrjgV5L+t03zF/89gZho8trjIC/RhTM416CqdJM8OSuosX9oup/s8DzBvX
+         dhHi7FmbMgcuboKjJj4nHeVEhAzvh50dBPxnB+fw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 01/58] ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
-Date:   Sat,  8 Aug 2020 19:36:27 -0400
-Message-Id: <20200808233724.3618168-1-sashal@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peng Liu <iwtbavbm@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 06/58] sched/fair: Fix NOHZ next idle balance
+Date:   Sat,  8 Aug 2020 19:36:32 -0400
+Message-Id: <20200808233724.3618168-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
+References: <20200808233724.3618168-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,45 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit 391e437eedc0dab0a9f2c26997e68e040ae04ea3 ]
+[ Upstream commit 3ea2f097b17e13a8280f1f9386c331b326a3dbef ]
 
-Fix uart7_pins_a comments to indicate UART7 pins instead of UART4 pins.
+With commit:
+  'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
+rebalance_domains of the local cfs_rq happens before others idle cpus have
+updated nohz.next_balance and its value is overwritten.
 
-Fixes: bf4b5f379fed ("ARM: dts: stm32: Add missing pinctrl definitions for STM32MP157")
+Move the update of nohz.next_balance for other idles cpus before balancing
+and updating the next_balance of local cfs_rq.
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Also, the nohz.next_balance is now updated only if all idle cpus got a
+chance to rebalance their domains and the idle balance has not been aborted
+because of new activities on the CPU. In case of need_resched, the idle
+load balance will be kick the next jiffie in order to address remaining
+ilb.
+
+Fixes: b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")
+Reported-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Link: https://lkml.kernel.org/r/20200609123748.18636-1-vincent.guittot@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 73c07f0dfad27..4b67b682dd53f 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1095,15 +1095,15 @@ pins2 {
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 5c31875a7d9dc..e44332b829b4d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10033,7 +10033,12 @@ static void kick_ilb(unsigned int flags)
+ {
+ 	int ilb_cpu;
  
- 	uart7_pins_a: uart7-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
--				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
--				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
-+			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART7_RX */
-+				 <STM32_PINMUX('E', 10, AF7)>, /* UART7_CTS */
-+				 <STM32_PINMUX('E', 9, AF7)>; /* UART7_RTS */
- 			bias-disable;
- 		};
- 	};
+-	nohz.next_balance++;
++	/*
++	 * Increase nohz.next_balance only when if full ilb is triggered but
++	 * not if we only update stats.
++	 */
++	if (flags & NOHZ_BALANCE_KICK)
++		nohz.next_balance = jiffies+1;
+ 
+ 	ilb_cpu = find_new_ilb();
+ 
+@@ -10351,6 +10356,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+ 		}
+ 	}
+ 
++	/*
++	 * next_balance will be updated only when there is a need.
++	 * When the CPU is attached to null domain for ex, it will not be
++	 * updated.
++	 */
++	if (likely(update_next_balance))
++		nohz.next_balance = next_balance;
++
+ 	/* Newly idle CPU doesn't need an update */
+ 	if (idle != CPU_NEWLY_IDLE) {
+ 		update_blocked_averages(this_cpu);
+@@ -10371,14 +10384,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+ 	if (has_blocked_load)
+ 		WRITE_ONCE(nohz.has_blocked, 1);
+ 
+-	/*
+-	 * next_balance will be updated only when there is a need.
+-	 * When the CPU is attached to null domain for ex, it will not be
+-	 * updated.
+-	 */
+-	if (likely(update_next_balance))
+-		nohz.next_balance = next_balance;
+-
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
