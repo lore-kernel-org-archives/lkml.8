@@ -2,137 +2,170 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ECDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 01:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE39C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 01:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF94E2177B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 01:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB262087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 01:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YChznlMy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOuvOjIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgHHBWQ (ORCPT
+        id S1726240AbgHHBnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 21:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
+        Fri, 7 Aug 2020 21:43:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHHBWQ (ORCPT
+        with ESMTP id S1726167AbgHHBnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 21:22:16 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10AAC061756
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Aug 2020 18:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=2Eey4zyvvBAtzwJbwbbfgGW0KZPfiiNUMcUuzDm1GX8=; b=YChznlMyJ0OeIA4y4fS8d7uUiY
-        J+z7MmNjodYepNgfc7rxeBcXX4Nv2YvpOTcRQ0KC2lnb6ONsm8w6zm1SYiCAvr335FGHBYapfPGfB
-        hlLZBnEUsXHaFSwQ5D/ELsLvOuVxDJIYR3R5+eXygs80s+5y8DFqaxdf1Djh9sa2xCDSju1xdW7TJ
-        JzTlEOc3gVrIA5qdeF8t4gaanPY42EY204Q/drVsMGMLEluUzFAIvi22lsXKMaPil9CZXjPjlzkc9
-        e+knS5lJL/cFipC1V9ST6urokfJmyJFE9c9CKLD3gXsq6TXPTM7R/+YmvD1ohelHCgfxo451b5T8C
-        VkPy6NrA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac] (helo=smtpauth.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k4DYr-0001IK-I4; Sat, 08 Aug 2020 01:22:14 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH] ASoC: various vendors: delete repeated words in comments
-Date:   Fri,  7 Aug 2020 18:22:09 -0700
-Message-Id: <20200808012209.10880-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Fri, 7 Aug 2020 21:43:32 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35092C061756;
+        Fri,  7 Aug 2020 18:43:32 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 2so3417920qkf.10;
+        Fri, 07 Aug 2020 18:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NeMTx5ad2H12Pv+IrkQPOiim237u3kUlwVWeiu51cS0=;
+        b=QOuvOjIQJhIMpytXpSq3TMC4lNM5MBHoI8vZYRffUd51TB01fBRPXNmRthqpOuatYk
+         SLIplZ3mxDOzQGSllvpaeSgXRqiEDfMENNWmxYSxGwpXpwBnJ+/6ZRqxY/yF74bTv04A
+         1JOSOJhkhr4lAoIN3V1AkfGdRhOFslvYE3RfV36XWoErH9WtY3bw4WX32nN2l0+TbJqp
+         7rlplxGLBmRsg7eemTB2COECA6Snl+w5DIBEGrVpTLWCjK3oAMfth7vGnJETV5W1FxtH
+         jYK68EOesjd/JEverBJfOJZnyG0XPPtIMB+RRQ4iwQgJnpyOuaTdoIN9VYGaTEvGLSO5
+         QLvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=NeMTx5ad2H12Pv+IrkQPOiim237u3kUlwVWeiu51cS0=;
+        b=m32LASIXmvTKFPNwul4gGxUrafDVjhkKpjDNphngutMTAmiQqzY6q7tgtVgi20VWGA
+         L2t7jUPuZIt2ERhzzGwzSfI01stV5g0xmN9kr/K6t+nNZD/cmLCv/gdw+QhDshhjStjK
+         ZbvhNRcZ+DBiXCzp6lujwXrTjmS1uTX/MpXdBqSemfCRkyk6eorY3lf99x3NKf2MbyjO
+         FB3Y1cjQrDVF7skVg0663Zjm7ynrk+Sh01p3QT7qcqtx1hrDCLkGymGkoAZ2YNz7Gcsq
+         hCWdwYrLm62ddTFSDa7YzKB3iBtgJUbYtGPqy4f2HxBoc+dPZh+hXOyI8Bh3wbDlqoYs
+         dBAA==
+X-Gm-Message-State: AOAM531FEQqdA/bt+lDlssoZiVvx8zp/6EIclJYJj7VooMbbGWYKCbZ6
+        xRqnt5aEX97AoM2+Xxrz1d4=
+X-Google-Smtp-Source: ABdhPJyLrHEGAYXBmTWqrCyDqQATZplH/FFgvjgbLtLoexuagfgzWG1h3JzrFb+Kc9u5ntsSTbVQ/Q==
+X-Received: by 2002:a37:9f13:: with SMTP id i19mr15547501qke.316.1596851010808;
+        Fri, 07 Aug 2020 18:43:30 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id j31sm9699527qtb.63.2020.08.07.18.43.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 18:43:30 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 7 Aug 2020 21:43:27 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        e5ten.arch@gmail.com, "# 3.4.x" <stable@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Dmitry Golovin <dima@golovin.in>,
+        Marco Elver <elver@google.com>, Nick Terrell <terrelln@fb.com>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/boot: avoid relaxable symbols with Clang
+Message-ID: <20200808014327.GA1925552@rani.riverdale.lan>
+References: <20200807194100.3570838-1-ndesaulniers@google.com>
+ <20200807212914.GB1454138@rani.riverdale.lan>
+ <CAKwvOdmD1OMnYE55O+YUkAh+C4Der+2CqKd7JVzfr0+6hYx6jw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmD1OMnYE55O+YUkAh+C4Der+2CqKd7JVzfr0+6hYx6jw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the repeated words {related, we, is, the} in comments.
+On Fri, Aug 07, 2020 at 02:54:39PM -0700, Nick Desaulniers wrote:
+> On Fri, Aug 7, 2020 at 2:29 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Fri, Aug 07, 2020 at 12:41:00PM -0700, Nick Desaulniers wrote:
+> > > A recent change to a default value of configuration variable
+> > > (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+> > > integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+> > > relocations. LLD will relax instructions with these relocations based on
+> > > whether the image is being linked as position independent or not.  When
+> > > not, then LLD will relax these instructions to use absolute addressing
+> > > mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with Clang
+> > > and linked with LLD to fail to boot.
+> >
+> > It could also cause kernels compiled with gcc and linked with LLD to
+> > fail in the same way, no? The gcc/gas combination will generate the
+> > relaxed relocations from I think gas-2.26 onward. Although the only
+> > troublesome symbol in the case of gcc/gas is trampoline_32bit_src,
+> > referenced from pgtable_64.c (gcc doesn't use a GOTPC reloc for _pgtable
+> > etc).
+> 
+> Thanks for taking a look, and the feedback. I appreciate it!
+> 
+> $ gcc --version | head -n 1
+> gcc (Debian 9.3.0-11) 9.3.0
+> $ make -j71 clean defconfig bzImage
+> $ llvm-readelf -r arch/x86/boot/compressed/*.o | grep -e
+> R_X86_64_GOTPCRELX -e R_X86_64_REX_GOTPCRELX
+> 0000000000000114  000000120000002a R_X86_64_REX_GOTPCRELX
+> 0000000000000000 trampoline_32bit_src - 4
+> $ llvm-readelf -r arch/x86/boot/compressed/vmlinux | grep -e
+> R_X86_64_GOTPCRELX -e R_X86_64_REX_GOTPCRELX
+> $
+> 
+> So it looks like yes.  I guess then we'd need to add a check for
+> CONFIG_LD_IS_LLD and CONFIG_CC_IS_GCC and binutils version is 2.26+?
+> I don't mind adding support for that combination, but I'd like to skip
+> it in this patch for the sake of backporting something small to stable
+> to get our CI green ASAP, since CONFIG_LD_IS_LLD probably doesn't
+> exist for those stable branches, which will complicate the backport of
+> such a patch.  So I'd do it in a follow up patch if we're cool with
+> that?
+> 
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org
----
- sound/soc/fsl/fsl_dma.c             |    2 +-
- sound/soc/intel/skylake/skl-sst.c   |    2 +-
- sound/soc/meson/axg-tdm-formatter.c |    2 +-
- sound/soc/sprd/sprd-pcm-compress.c  |    2 +-
- sound/soc/sunxi/sun4i-codec.c       |    2 +-
- sound/soc/ti/davinci-mcasp.c        |    2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+What if we did it only if we couldn't enable -pie, like the below patch?
+I think this should cover all the cases without needing LD_IS_LLD
+checks.
 
---- linux-next-20200807.orig/sound/soc/fsl/fsl_dma.c
-+++ linux-next-20200807/sound/soc/fsl/fsl_dma.c
-@@ -154,7 +154,7 @@ static void fsl_dma_abort_stream(struct
- /**
-  * fsl_dma_update_pointers - update LD pointers to point to the next period
-  *
-- * As each period is completed, this function changes the the link
-+ * As each period is completed, this function changes the link
-  * descriptor pointers for that period to point to the next period.
-  */
- static void fsl_dma_update_pointers(struct fsl_dma_private *dma_private)
---- linux-next-20200807.orig/sound/soc/intel/skylake/skl-sst.c
-+++ linux-next-20200807/sound/soc/intel/skylake/skl-sst.c
-@@ -354,7 +354,7 @@ static int skl_transfer_module(struct ss
- 	/*
- 	 * if bytes_left > 0 then wait for BDL complete interrupt and
- 	 * copy the next chunk till bytes_left is 0. if bytes_left is
--	 * is zero, then wait for load module IPC reply
-+	 * zero, then wait for load module IPC reply
- 	 */
- 	while (bytes_left > 0) {
- 		curr_pos = size - bytes_left;
---- linux-next-20200807.orig/sound/soc/meson/axg-tdm-formatter.c
-+++ linux-next-20200807/sound/soc/meson/axg-tdm-formatter.c
-@@ -398,7 +398,7 @@ void axg_tdm_stream_free(struct axg_tdm_
- 	/*
- 	 * If the list is not empty, it would mean that one of the formatter
- 	 * widget is still powered and attached to the interface while we
--	 * we are removing the TDM DAI. It should not be possible
-+	 * are removing the TDM DAI. It should not be possible
- 	 */
- 	WARN_ON(!list_empty(&ts->formatter_list));
- 	mutex_destroy(&ts->lock);
---- linux-next-20200807.orig/sound/soc/sprd/sprd-pcm-compress.c
-+++ linux-next-20200807/sound/soc/sprd/sprd-pcm-compress.c
-@@ -559,7 +559,7 @@ static int sprd_platform_compr_copy(stru
- 		} else {
- 			/*
- 			 * If the data count is larger than the available spaces
--			 * of the the stage 0 IRAM buffer, we should copy one
-+			 * of the stage 0 IRAM buffer, we should copy one
- 			 * partial data to the stage 0 IRAM buffer, and copy
- 			 * the left to the stage 1 DDR buffer.
- 			 */
---- linux-next-20200807.orig/sound/soc/sunxi/sun4i-codec.c
-+++ linux-next-20200807/sound/soc/sunxi/sun4i-codec.c
-@@ -335,7 +335,7 @@ static int sun4i_codec_prepare_capture(s
+For BFD, the only case that should change is binutils-2.26, which
+supports relaxations but not -z noreloc-overflow, and will now have
+relax-relocations disabled. It currently works (with gcc) only because
+the relaxation of
+	movq foo@GOTPCREL(%rip), %reg
+to
+	movq $foo, %reg
+in the non-pie case was only added in 2.27, which is also when -z
+noreloc-overflow was added, allowing -pie to be enabled. With 2.26, it
+only gets relaxed to
+	leaq foo(%rip), %reg
+which is all LLD currently does as well.
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 8abc30b27ba3..d25bb71f195a 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -60,6 +60,13 @@ else
+ KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
+ 	&& echo "-z noreloc-overflow -pie --no-dynamic-linker")
+ endif
++
++# Disable relocation relaxation if not building as PIE
++ifeq ($(filter -pie,$(KBUILD_LDFLAGS)),)
++KBUILD_CFLAGS += $(call as-option, -Wa$(comma)-mrelax-relocations=no)
++KBUILD_AFLAGS += $(call as-option, -Wa$(comma)-mrelax-relocations=no)
++endif
++
+ LDFLAGS_vmlinux := -T
  
- 	/*
- 	 * FIXME: Undocumented in the datasheet, but
--	 *        Allwinner's code mentions that it is related
-+	 *        Allwinner's code mentions that it is
- 	 *        related to microphone gain
- 	 */
- 	if (of_device_is_compatible(scodec->dev->of_node,
---- linux-next-20200807.orig/sound/soc/ti/davinci-mcasp.c
-+++ linux-next-20200807/sound/soc/ti/davinci-mcasp.c
-@@ -633,7 +633,7 @@ static int __davinci_mcasp_set_clkdiv(st
- 		 * right channels), so it has to be divided by number
- 		 * of tdm-slots (for I2S - divided by 2).
- 		 * Instead of storing this ratio, we calculate a new
--		 * tdm_slot width by dividing the the ratio by the
-+		 * tdm_slot width by dividing the ratio by the
- 		 * number of configured tdm slots.
- 		 */
- 		mcasp->slot_width = div / mcasp->tdm_slots;
+ hostprogs	:= mkpiggy
