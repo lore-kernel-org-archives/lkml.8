@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97937C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727CB20716
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749F520791
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929815;
-	bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
+	s=default; t=1596929820;
+	bh=VEdUDKOT/j4tNNjAZhf9dajJ/UBZ+sm27EXjtBHuY3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVgIReE3f7RLmOQTAPMm29dlqkSntxNvnrGNOSUgbCho5AV6ALBQVpoImNhY8+ptm
-	 n6OIimBT773Ho3/6PlOvKXkC6KVDLxQw17BYDCYNFp39q+9QgJRV97NLAx1fs9kCfr
-	 8jvjmuy5oScfDNy5Kxl3EkDNr9l5CqXm8rcPVfVA=
+	b=vpcAXKOym4Ly+Gzii6H5ux6836Bb87lBTKID3Ux3e3cS0rRXQ9HKDOj+j/8E8JoPM
+	 BO64tgshAr91T0EbpsE+AAgowNDUII1hO+tl7eOOlyuzPw30cPII1t78D2HRqhUQss
+	 Hsq56OoCgvnXTa4H/U8TFLkTDdDKilgrGTNYpe5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHHXgy (ORCPT
+        id S1727772AbgHHXg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbgHHXgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:50 -0400
+        id S1727063AbgHHXgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A03206D8;
-        Sat,  8 Aug 2020 23:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9AD0207FB;
+        Sat,  8 Aug 2020 23:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929810;
-        bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
+        s=default; t=1596929812;
+        bh=VEdUDKOT/j4tNNjAZhf9dajJ/UBZ+sm27EXjtBHuY3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwewU1+frNasqUdeQ8QIy5Nb+GWMZA8Umn8Xus+eu/FZUP7bknV97nAF+gmFEK+lI
-         SQmyqldFAJkiBm7XuZUfhUwBmdYpBuYbxV6OUa0QeR1/QI7sneUGuF+cpirMNLYnmP
-         eCcGE7qvQ4mcqGy2QHEe3PyvpaB37TKNoeffu9Z8=
+        b=YyL9ObPA4RKCl6slRgn+FRHgDINBStjHdo+494zB+OSEB4gcRmcLqRkd0fS7fbIMC
+         w9rBGUHTBWsijmDi/AWLHWZcyEUN50hr281pmb2BV2lhFD1ngkQJMEZyQeZBkY+5z6
+         KSk5j2TcBQRZpFgr2UpamwkNVBihOm/7zUppDQto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory Herrero <gregory.herrero@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 46/72] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
-Date:   Sat,  8 Aug 2020 19:35:15 -0400
-Message-Id: <20200808233542.3617339-46-sashal@kernel.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Hristo Venev <hristo@venev.name>, io-uring@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 48/72] io_uring: fix sq array offset calculation
+Date:   Sat,  8 Aug 2020 19:35:17 -0400
+Message-Id: <20200808233542.3617339-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,80 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory Herrero <gregory.herrero@oracle.com>
+From: Dmitry Vyukov <dvyukov@google.com>
 
-[ Upstream commit ea0eada45632f4807b2f49de951072283e2d781c ]
+[ Upstream commit b36200f543ff07a1cb346aa582349141df2c8068 ]
 
-Currently, if a section has a relocation to '_mcount' symbol, a new
-__mcount_loc entry will be added whatever the relocation type is.
-This is problematic when a relocation to '_mcount' is in the middle of a
-section and is not a call for ftrace use.
+rings_size() sets sq_offset to the total size of the rings (the returned
+value which is used for memory allocation). This is wrong: sq array should
+be located within the rings, not after them. Set sq_offset to where it
+should be.
 
-Such relocation could be generated with below code for example:
-    bool is_mcount(unsigned long addr)
-    {
-        return (target == (unsigned long) &_mcount);
-    }
-
-With this snippet of code, ftrace will try to patch the mcount location
-generated by this code on module load and fail with:
-
-    Call trace:
-     ftrace_bug+0xa0/0x28c
-     ftrace_process_locs+0x2f4/0x430
-     ftrace_module_init+0x30/0x38
-     load_module+0x14f0/0x1e78
-     __do_sys_finit_module+0x100/0x11c
-     __arm64_sys_finit_module+0x28/0x34
-     el0_svc_common+0x88/0x194
-     el0_svc_handler+0x38/0x8c
-     el0_svc+0x8/0xc
-    ---[ end trace d828d06b36ad9d59 ]---
-    ftrace failed to modify
-    [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
-     actual:   66:a9:3c:90
-    Initializing ftrace call sites
-    ftrace record flags: 2000000
-     (0)
-    expected tramp: ffffa2dc6cf66724
-
-So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
-recordmcount.
-
-Fixes: af64d2aa872a ("ftrace: Add arm64 support to recordmcount")
-Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 75b28affdd6a ("io_uring: allocate the two rings together")
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Hristo Venev <hristo@venev.name>
+Cc: io-uring@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/io_uring.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 7225107a9aafe..e59022b3f1254 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
- 	return 1;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 493e5047e67c9..edb5e9d6ae3a4 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7086,6 +7086,9 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
+ 		return SIZE_MAX;
+ #endif
+ 
++	if (sq_offset)
++		*sq_offset = off;
++
+ 	sq_array_size = array_size(sizeof(u32), sq_entries);
+ 	if (sq_array_size == SIZE_MAX)
+ 		return SIZE_MAX;
+@@ -7093,9 +7096,6 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
+ 	if (check_add_overflow(off, sq_array_size, &off))
+ 		return SIZE_MAX;
+ 
+-	if (sq_offset)
+-		*sq_offset = off;
+-
+ 	return off;
  }
  
-+static int arm64_is_fake_mcount(Elf64_Rel const *rp)
-+{
-+	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
-+}
-+
- /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
-  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
-  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
-@@ -547,6 +552,7 @@ static int do_file(char const *const fname)
- 		make_nop = make_nop_arm64;
- 		rel_type_nop = R_AARCH64_NONE;
- 		ideal_nop = ideal_nop4_arm64;
-+		is_fake_mcount64 = arm64_is_fake_mcount;
- 		break;
- 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
- 	case EM_MIPS:	/* reltype: e_class    */ break;
 -- 
 2.25.1
 
