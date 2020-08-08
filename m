@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8298FC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53E2E20825
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5DD206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929833;
-	bh=BSX9EcTnUekZaIJkQio+Eo14SvKz1ux0nZh1+7uibnk=;
+	s=default; t=1596929840;
+	bh=S52HMP+iGIQTiPXzc+/0cRLoLrDrJlI50TCAzbDwHIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Svfz2so3IRb5RnLyLXpF3sZhe8+3AKb7QpCvd1VCnJhPLWZlUUbUT3q588KRxEFlG
-	 EZPNqiqsxVbr7ZjbUjORsHZxz2gPikWauXKAypRGs/pc69g7uOD6ZM417Nx/F3Ktew
-	 1WRmQpwlnb6N3l7qw5LVckg8jKrogJetRcTKF0e4=
+	b=BW2uwD0WSXa1r9wnrwAhLS+jRXL60wl94Re7LKcNY31D50PVIjgINprpDZfWgKo5h
+	 0E/R2/ZBSWu2LK+V/wOcrm60+U0oW4GsfxDc6prBD22KMM9N8T//bWBVQQ+k1D022k
+	 lQ09xbWZkTHF3LSwc/iEIjmRhl0SWwI6WRMp4P5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgHHXhM (ORCPT
+        id S1727931AbgHHXhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49992 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgHHXhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:07 -0400
+        id S1727879AbgHHXhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4969220716;
-        Sat,  8 Aug 2020 23:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 741002075D;
+        Sat,  8 Aug 2020 23:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929827;
-        bh=BSX9EcTnUekZaIJkQio+Eo14SvKz1ux0nZh1+7uibnk=;
+        s=default; t=1596929833;
+        bh=S52HMP+iGIQTiPXzc+/0cRLoLrDrJlI50TCAzbDwHIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nTaSD538e8S5vKBicQoars1cYk23evCgKf+9YQYwzKAtiLu48xb+xrNXYZDL4hh0H
-         BJ4YhwYqvMOWPhxAO17a6C9LDRWwyVMPSpOM4guvv7ZmbTi1XmUypYF7FZSjDtlur5
-         rcghnF7FO+/4SUAE2FNqHZtGSXESD4Nlhs33Facw=
+        b=rIcsOjGIxKYTZ1V8CQfasOxObj1NYQvuZVMksI4MVw6pytudwEuLPBJH68PlhhA/a
+         sZQxjUW/mVpE9jok2hMFt9dZ+nFHWbzCs7gSmcG/vvY2Px3PG0Wbrfo3ocsP35cbZH
+         BvWFXpuPR4ULpZ/uP809bvKLCo4iFpArOTMFTKxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 59/72] irqchip/loongson-htvec: Fix potential resource leak
-Date:   Sat,  8 Aug 2020 19:35:28 -0400
-Message-Id: <20200808233542.3617339-59-sashal@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+Subject: [PATCH AUTOSEL 5.8 64/72] kunit: tool: fix improper treatment of file location
+Date:   Sat,  8 Aug 2020 19:35:33 -0400
+Message-Id: <20200808233542.3617339-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -59,46 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Brendan Higgins <brendanhiggins@google.com>
 
-[ Upstream commit 652d54e77a438cf38a5731d8f9983c81e72dc429 ]
+[ Upstream commit d43c7fb05765152d4d4a39a8ef957c4ea14d8847 ]
 
-In the function htvec_of_init(), system resource "parent_irq"
-was not released in an error case. Thus add a jump target for
-the completion of the desired exception handling.
+Commit 01397e822af4 ("kunit: Fix TabError, remove defconfig code and
+handle when there is no kunitconfig") and commit 45ba7a893ad8 ("kunit:
+kunit_tool: Separate out config/build/exec/parse") introduced two
+closely related issues which built off of each other: they excessively
+created the build directory when not present and modified a constant
+(constants in Python only exist by convention).
 
-Fixes: 818e915fbac5 ("irqchip: Add Loongson HyperTransport Vector support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1594087972-21715-4-git-send-email-yangtiezhu@loongson.cn
+Together these issues broken a number of unit tests for KUnit tool, so
+fix them.
+
+Fixed up commit log to fic checkpatch commit description style error.
+Shuah Khan <skhan@linuxfoundation.org>
+
+Fixes: 01397e822af4 ("kunit: Fix TabError, remove defconfig code and handle when there is no kunitconfig")
+Fixes: 45ba7a893ad8 ("kunit: kunit_tool: Separate out config/build/exec/parse")
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-loongson-htvec.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/testing/kunit/kunit.py           | 24 ------------------------
+ tools/testing/kunit/kunit_tool_test.py |  4 ++--
+ 2 files changed, 2 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
-index 1ece9337c78dc..b36d403383230 100644
---- a/drivers/irqchip/irq-loongson-htvec.c
-+++ b/drivers/irqchip/irq-loongson-htvec.c
-@@ -192,7 +192,7 @@ static int htvec_of_init(struct device_node *node,
- 	if (!priv->htvec_domain) {
- 		pr_err("Failed to create IRQ domain\n");
- 		err = -ENOMEM;
--		goto iounmap_base;
-+		goto irq_dispose;
- 	}
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index f9b769f3437dd..425ef40067e7e 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -240,12 +240,6 @@ def main(argv, linux=None):
+ 	if cli_args.subcommand == 'run':
+ 		if not os.path.exists(cli_args.build_dir):
+ 			os.mkdir(cli_args.build_dir)
+-		kunit_kernel.kunitconfig_path = os.path.join(
+-			cli_args.build_dir,
+-			kunit_kernel.kunitconfig_path)
+-
+-		if not os.path.exists(kunit_kernel.kunitconfig_path):
+-			create_default_kunitconfig()
  
- 	htvec_reset(priv);
-@@ -203,6 +203,9 @@ static int htvec_of_init(struct device_node *node,
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+@@ -263,12 +257,6 @@ def main(argv, linux=None):
+ 		if cli_args.build_dir:
+ 			if not os.path.exists(cli_args.build_dir):
+ 				os.mkdir(cli_args.build_dir)
+-			kunit_kernel.kunitconfig_path = os.path.join(
+-				cli_args.build_dir,
+-				kunit_kernel.kunitconfig_path)
+-
+-		if not os.path.exists(kunit_kernel.kunitconfig_path):
+-			create_default_kunitconfig()
  
- 	return 0;
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+@@ -285,12 +273,6 @@ def main(argv, linux=None):
+ 		if cli_args.build_dir:
+ 			if not os.path.exists(cli_args.build_dir):
+ 				os.mkdir(cli_args.build_dir)
+-			kunit_kernel.kunitconfig_path = os.path.join(
+-				cli_args.build_dir,
+-				kunit_kernel.kunitconfig_path)
+-
+-		if not os.path.exists(kunit_kernel.kunitconfig_path):
+-			create_default_kunitconfig()
  
-+irq_dispose:
-+	for (; i > 0; i--)
-+		irq_dispose_mapping(parent_irq[i - 1]);
- iounmap_base:
- 	iounmap(priv->base);
- free_priv:
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+@@ -309,12 +291,6 @@ def main(argv, linux=None):
+ 		if cli_args.build_dir:
+ 			if not os.path.exists(cli_args.build_dir):
+ 				os.mkdir(cli_args.build_dir)
+-			kunit_kernel.kunitconfig_path = os.path.join(
+-				cli_args.build_dir,
+-				kunit_kernel.kunitconfig_path)
+-
+-		if not os.path.exists(kunit_kernel.kunitconfig_path):
+-			create_default_kunitconfig()
+ 
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index ee942d80bdd02..287c74d821c33 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -251,7 +251,7 @@ class KUnitMainTest(unittest.TestCase):
+ 		pass
+ 
+ 	def test_config_passes_args_pass(self):
+-		kunit.main(['config'], self.linux_source_mock)
++		kunit.main(['config', '--build_dir=.kunit'], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+ 		assert self.linux_source_mock.run_kernel.call_count == 0
+ 
+@@ -326,7 +326,7 @@ class KUnitMainTest(unittest.TestCase):
+ 
+ 	def test_run_builddir(self):
+ 		build_dir = '.kunit'
+-		kunit.main(['run', '--build_dir', build_dir], self.linux_source_mock)
++		kunit.main(['run', '--build_dir=.kunit'], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+ 		self.linux_source_mock.run_kernel.assert_called_once_with(
+ 			build_dir=build_dir, timeout=300)
 -- 
 2.25.1
 
