@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A95C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1786C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5034620672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE6820672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930521;
-	bh=aKTOyl9duLwPf7+O5+vQT/Ns1nC3HmsArkT1Gs9u4B8=;
+	s=default; t=1596930522;
+	bh=QDAW9zoveqrWFCuC7xBLGn80jtKBU8onUkR3R7/heiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eJG75cej87pV9OoMfGI9BPqswvD+dtXyssU57eB8vOHyg4UpMHlb/lK4icJs9p2qa
-	 uIBAGHfDOokOU5rkSvNSgUIC5MEokDTlTRtfo2yqxIjymTAkUZHjuJ4JI9aHJCkwiS
-	 k2+nQfzOu1ns9aBxaa1LeiUOINBniWuMwOg2QAdk=
+	b=d2QA8D4Qx2i4PH33J2TIXmBIpxOtPC/NbabbPycrPDiUzosg3qico73ZJUk6BxkM1
+	 eMmDKNUsvlxZvddOhGA7DYbdaZiK3gAa+Jj8auMit2noZiP+tV5AgHFo5foMPmv6Nh
+	 lCJoG0eeUcFG3fAv3h6iig+Ykl4o2O3D0kzF1zZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgHHXsg (ORCPT
+        id S1728244AbgHHXsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50296 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbgHHXhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:22 -0400
+        id S1726469AbgHHXhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA2392073E;
-        Sat,  8 Aug 2020 23:37:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB0F206E9;
+        Sat,  8 Aug 2020 23:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929841;
-        bh=aKTOyl9duLwPf7+O5+vQT/Ns1nC3HmsArkT1Gs9u4B8=;
+        s=default; t=1596929840;
+        bh=QDAW9zoveqrWFCuC7xBLGn80jtKBU8onUkR3R7/heiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YyePYPWzm0hXJYz3xzjGV90tc42xOFQtlRqNUGsQxGcYxsXsk3QqC+NW/uhuyVdto
-         5Mc31J6TGIcMUQWqQQiwlOMRZUmH8D98qbM6fyFfbvFi3aRlO21lKtfXCTa3vR1fNz
-         vCgD+vthmAzJJtDexCNLP/Ac2X0Zb+KBEzD3m5xk=
+        b=AcwZA6Y+ypqr2wkInlkOpVtuLEsfUZeJoy/SZdl3IkdRwjGE7xBfVZjuzh2AkeJkz
+         +TC3EYFLvI7t0mMfKzi5BxM77X2sXquLXVQUVMA282C+eN7J/7xXwH2LCrhVW7njQ1
+         fY3q3y9xxeQ0u0Z/ZsdJFi7+uargv+Ujvok4oKqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huacai Chen <chenhc@lemote.com>, Marc Zyngier <maz@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 71/72] irqchip/loongson-pch-pic: Fix the misused irq flow handler
-Date:   Sat,  8 Aug 2020 19:35:40 -0400
-Message-Id: <20200808233542.3617339-71-sashal@kernel.org>
+Cc:     Hannes Reinecke <hare@suse.de>, Martin Wilck <mwilck@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 70/72] nvme-multipath: do not fall back to __nvme_find_path() for non-optimized paths
+Date:   Sat,  8 Aug 2020 19:35:39 -0400
+Message-Id: <20200808233542.3617339-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -59,70 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Hannes Reinecke <hare@suse.de>
 
-[ Upstream commit ac62460c24126eb2442e3653a266ebbf05b004d8 ]
+[ Upstream commit fbd6a42d8932e172921c7de10468a2e12c34846b ]
 
-Loongson PCH PIC is a standard level triggered PIC, and it need to clear
-interrupt during unmask.
+When nvme_round_robin_path() finds a valid namespace we should be using it;
+falling back to __nvme_find_path() for non-optimized paths will cause the
+result from nvme_round_robin_path() to be ignored for non-optimized paths.
 
-Fixes: ef8c01eb64ca6719da449dab0 ("irqchip: Add Loongson PCH PIC controller")
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Link: https://lore.kernel.org/r/1596099090-23516-6-git-send-email-chenhc@lemote.com
+Fixes: 75c10e732724 ("nvme-multipath: round-robin I/O policy")
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-loongson-pch-pic.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ drivers/nvme/host/multipath.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index 016f32c4cbe18..9bf6b9a5f7348 100644
---- a/drivers/irqchip/irq-loongson-pch-pic.c
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -64,15 +64,6 @@ static void pch_pic_bitclr(struct pch_pic *priv, int offset, int bit)
- 	raw_spin_unlock(&priv->pic_lock);
- }
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index fe8f7f123fac7..57d51148e71b6 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -272,10 +272,13 @@ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
+ 	struct nvme_ns *ns;
  
--static void pch_pic_eoi_irq(struct irq_data *d)
--{
--	u32 idx = PIC_REG_IDX(d->hwirq);
--	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
--
--	writel(BIT(PIC_REG_BIT(d->hwirq)),
--			priv->base + PCH_PIC_CLR + idx * 4);
--}
--
- static void pch_pic_mask_irq(struct irq_data *d)
- {
- 	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-@@ -85,6 +76,9 @@ static void pch_pic_unmask_irq(struct irq_data *d)
- {
- 	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
- 
-+	writel(BIT(PIC_REG_BIT(d->hwirq)),
-+			priv->base + PCH_PIC_CLR + PIC_REG_IDX(d->hwirq) * 4);
+ 	ns = srcu_dereference(head->current_path[node], &head->srcu);
+-	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR && ns)
+-		ns = nvme_round_robin_path(head, node, ns);
+-	if (unlikely(!ns || !nvme_path_is_optimized(ns)))
+-		ns = __nvme_find_path(head, node);
++	if (unlikely(!ns))
++		return __nvme_find_path(head, node);
 +
- 	irq_chip_unmask_parent(d);
- 	pch_pic_bitclr(priv, PCH_PIC_MASK, d->hwirq);
++	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR)
++		return nvme_round_robin_path(head, node, ns);
++	if (unlikely(!nvme_path_is_optimized(ns)))
++		return __nvme_find_path(head, node);
+ 	return ns;
  }
-@@ -124,7 +118,6 @@ static struct irq_chip pch_pic_irq_chip = {
- 	.irq_mask		= pch_pic_mask_irq,
- 	.irq_unmask		= pch_pic_unmask_irq,
- 	.irq_ack		= irq_chip_ack_parent,
--	.irq_eoi		= pch_pic_eoi_irq,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- 	.irq_set_type		= pch_pic_set_type,
- };
-@@ -153,7 +146,7 @@ static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
  
- 	irq_domain_set_info(domain, virq, hwirq,
- 			    &pch_pic_irq_chip, priv,
--			    handle_fasteoi_ack_irq, NULL, NULL);
-+			    handle_level_irq, NULL, NULL);
- 	irq_set_probe(virq);
- 
- 	return 0;
 -- 
 2.25.1
 
