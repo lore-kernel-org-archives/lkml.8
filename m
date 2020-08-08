@@ -2,84 +2,113 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7576C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6573B206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D20206CD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 22:35:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3PLCcId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgHHWSN convert rfc822-to-8bit (ORCPT
+        id S1726207AbgHHWfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 18:18:13 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37752 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgHHWSM (ORCPT
+        Sat, 8 Aug 2020 18:35:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgHHWfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 18:18:12 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C848E1C0BD9; Sun,  9 Aug 2020 00:18:09 +0200 (CEST)
-Date:   Sun, 9 Aug 2020 00:18:08 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 23/24] docs: x86/sgx: Document SGX micro architecture
- and kernel internals
-Message-ID: <20200808221808.GB1020@bug>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-24-jarkko.sakkinen@linux.intel.com>
- <20200728213511.GB13081@duo.ucw.cz>
- <20200806102148.GA14798@wind.enjellic.com>
+        Sat, 8 Aug 2020 18:35:05 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542C2C061756
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Aug 2020 15:35:05 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mt12so2740277pjb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Aug 2020 15:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=I/495s6jK4+K+lb6gJ13kJw9U3KMzAEyRbv/wQPm9f8=;
+        b=H3PLCcIdqUB3EIjsg8we5jSGI9NkkuDvWgva4xebovhozPZytq9rBepnyTmSuYCkKO
+         8E7+pKxRjIoIvtunYP1O+4A+yPxtXwNYXUi1ToAzG8O0kgjOpUP5WdbULMZ0zpx2bPmh
+         qzlcpfMbk2iDSkMqBQNDNL83I3ZOB6RajjCDS6khFj4cYF89Cmi6bxq+EpDduudOc16s
+         OEYAVV2uA2Hmz6WgWKCSSa6bJazvH9z06VGgg7RbEd7l0VQYngs4gFnMo8rHJLCCXHwG
+         X9SecNqMrx3wv/M4bGKVLlEgbhdYLmHSAiU1WrHFx96fo/BKuX4uGtYOJRtYUoxGORvv
+         5jEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I/495s6jK4+K+lb6gJ13kJw9U3KMzAEyRbv/wQPm9f8=;
+        b=Lb1DJmkfJ9YaOXZTBQ6W45UPxRwWPQv1Pro22hnOgTyhNa6IlEoqNvMKl0dd3FKaRq
+         YiO+1RM6oGPlCRYzxpa3QBU+Sgu2VTgXC+S/wF1/B0eK32Rlk7Vm6fgUw9HGIMRuuZ7v
+         vOCWCYf5YQFY7hWmWEY2eq1BuACuf44St1kbkG4lB3B00cwwckp2k7xj8paQbMK6Mia+
+         MMi2Um+hMkh4/QoHc9sdOGxgy7dW3PSPdfrlrZZTaFnVe/yQzrZ1NMlljaerC8FtsMG4
+         8NEE17JIkQ4Zud2s/4RHBdOU338RJx+5DMoDl64x+zWbrPqN3c/67R3KSlw62JL6/+hw
+         A+lA==
+X-Gm-Message-State: AOAM531MYmQgpAFXCo1rdjwTxnwWjZAHo5b7SuPLiKJYI0+oOi8dHfc0
+        a93sccE9qIiosa4ff8aAIWw=
+X-Google-Smtp-Source: ABdhPJy18GEJMoZI66OE79WvxRq8YUz5aQXgKLgGrq2t6mfzL2oSPYvAGnuZyP8XL9T0CkaQJuQ9og==
+X-Received: by 2002:a17:90a:1a42:: with SMTP id 2mr18451210pjl.16.1596926104709;
+        Sat, 08 Aug 2020 15:35:04 -0700 (PDT)
+Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
+        by smtp.gmail.com with ESMTPSA id y196sm18148356pfc.202.2020.08.08.15.35.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Aug 2020 15:35:03 -0700 (PDT)
+Date:   Sun, 9 Aug 2020 07:35:01 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH v2 6/6] openrisc: uaccess: Add user address space check
+ to access_ok
+Message-ID: <20200808223501.GP80756@lianli.shorne-pla.net>
+References: <20200805210725.310301-1-shorne@gmail.com>
+ <20200805210725.310301-7-shorne@gmail.com>
+ <20200806190229.b7jbmkavu7qqzegy@ltop.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200806102148.GA14798@wind.enjellic.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200806190229.b7jbmkavu7qqzegy@ltop.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-> Good morning, I hope the week is progressing well for everyone.
+On Thu, Aug 06, 2020 at 09:02:29PM +0200, Luc Van Oostenryck wrote:
+> On Thu, Aug 06, 2020 at 06:07:25AM +0900, Stafford Horne wrote:
+> > Now that __user annotations are fixed for openrisc uaccess api's we can
+> > add checking to the access_ok macro.  This patch adds the __chk_user_ptr
+> > check, on normal builds the added check is a nop.
+> > 
+> > Signed-off-by: Stafford Horne <shorne@gmail.com>
+> > ---
+> >  arch/openrisc/include/asm/uaccess.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/openrisc/include/asm/uaccess.h b/arch/openrisc/include/asm/uaccess.h
+> > index 85a55359b244..53ddc66abb3f 100644
+> > --- a/arch/openrisc/include/asm/uaccess.h
+> > +++ b/arch/openrisc/include/asm/uaccess.h
+> > @@ -57,7 +57,8 @@ static inline int __range_ok(unsigned long addr, unsigned long size)
+> >  
+> >  #define access_ok(addr, size)						\
+> >  ({ 									\
+> > -	__range_ok((unsigned long)(addr), (size));			\
+> > +	__chk_user_ptr(addr);						\
+> > +	__range_ok((__force unsigned long)(addr), (size));		\
+> >  })
 > 
-> > > CPUs starting from Icelake use Total Memory Encryption (TME) in
-> > > the place of MEE. TME throws away the Merkle tree, which means
-> > > losing integrity and anti-replay protection but also enables
-> > > variable size memory pools for EPC.  Using this attack for
-> > > benefit would require an interposer on the system bus.
-> 
-> > It is not exactly clear what "this attack" means.
-> 
-> In the new world that is SGX, 'this attack', roughly means that
-> enclaves are susceptible to the same security threats that would be
-> faced if you were running TLS/HTTPS or SSH without packet checksums
-> and replay avoidance/detection mechanisms in place.
+> Just for info, __force is not needed when casting a pointer to
+> unsigned long (or uintptr_t). It's not incorrect to use one
+> but I think it's to avoid __force as much as possible.
 
-Umm, ssh w/o checksums would be rather dangerous, no? As in... if I can guess what you
-are typing, I can make you type something else.
+Thanks, I didn't realize that.  I will fix.
 
-Anyway, it would be nice to somehow fix the document. It talks about "this attack"
-without talking about any attack before, which is bad style.
-
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+-Stafford
