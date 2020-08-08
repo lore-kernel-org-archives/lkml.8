@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4947DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90825C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24D0520716
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAB820791
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929849;
-	bh=9bkHb39tOTEUTlknkrd/yFf5OeUdFtEmEuhvmxeL6wM=;
+	s=default; t=1596929853;
+	bh=xfYaG1bsvUo5UvyrUtAI4ovzdgEKIRkl9oapADRDFIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uow41j18OlolfhGdmG9+Yv7xEBb0ifrw93FfhxWO2L3IUWs65NNT+n6AOpXejIG4h
-	 rOY36EkR+DC+VSUcldJqdGV2eQsB/DngWooTTPK+EG9RwDHh7jb2d5iSEs/UTVgKq/
-	 94t+3HyEB3lM22yz8VewLKzn4gbluWg7tH8vy3JE=
+	b=nzY3NjtTQjuLECDJF74IUDzwgbfwzm+cqpNUhH1j/keWwP6UBk58EdHOt76d3XIRO
+	 2wwbqGKV7GFxt0SEKsLbEoNxg8muYWUXyWf7ov25T4dLunTCWy8VwuV4TA6JYEHf+Y
+	 KoqH0Y+HSWFVde2qZTrjmO2n9Oz1X+u+9HuYhQyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgHHXh1 (ORCPT
+        id S1727987AbgHHXhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727906AbgHHXhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:18 -0400
+        id S1727968AbgHHXh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B017206D8;
-        Sat,  8 Aug 2020 23:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E372073E;
+        Sat,  8 Aug 2020 23:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929837;
-        bh=9bkHb39tOTEUTlknkrd/yFf5OeUdFtEmEuhvmxeL6wM=;
+        s=default; t=1596929847;
+        bh=xfYaG1bsvUo5UvyrUtAI4ovzdgEKIRkl9oapADRDFIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZrOXFhBZFro+uE+W5mbDZJiYIznJoOqrp8pYyo73FSEKve3Kei6NLDlcUnKot8XwI
-         rBUfljMTQEXbuRKyQpTeZh3yDK9wG/IrO/LHJlDpIlS0oUgcMp6uq0FE+bz8BtIPNj
-         85ET88Y44WCK/9MyJ/SkFEvJUm+ZOWopWk3QE6X0=
+        b=RTc1w1vs7ynS+jp7sZGYRtf4wBwrok+j8mnBA21n+tbFqAcZbNZPwrKIwdOqhhAn1
+         S9VO/5GlTe/biiSXnF0deyxCxMbaOExrjNKG53Tts6MJX0X69PRMVaogSOcDmKIPdt
+         HKJ+b+uT3ZU3alOhFrRyaBcpnvVTCtFtI/0ajtQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 68/72] nvme-rdma: fix controller reset hang during traffic
-Date:   Sat,  8 Aug 2020 19:35:37 -0400
-Message-Id: <20200808233542.3617339-68-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 02/58] x86/mce/inject: Fix a wrong assignment of i_mce.status
+Date:   Sat,  8 Aug 2020 19:36:28 -0400
+Message-Id: <20200808233724.3618168-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
-References: <20200808233542.3617339-1-sashal@kernel.org>
+In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
+References: <20200808233724.3618168-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,69 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 9f98772ba307dd89a3d17dc2589f213d3972fc64 ]
+[ Upstream commit 5d7f7d1d5e01c22894dee7c9c9266500478dca99 ]
 
-commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
-exposed an issue where we may hang trying to wait for queue freeze
-during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
-queue maps (which we have now for default/read/poll) is attempting to
-freeze the queue. However we never started queue freeze when starting the
-reset, which means that we have inflight pending requests that entered the
-queue that we will not complete once the queue is quiesced.
+The original code is a nop as i_mce.status is or'ed with part of itself,
+fix it.
 
-So start a freeze before we quiesce the queue, and unfreeze the queue
-after we successfully connected the I/O queues (and make sure to call
-blk_mq_update_nr_hw_queues only after we are sure that the queue was
-already frozen).
-
-This follows to how the pci driver handles resets.
-
-Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: a1300e505297 ("x86/ras/mce_amd_inj: Trigger deferred and thresholding errors interrupts")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Link: https://lkml.kernel.org/r/20200611023238.3830-1-zhenzhong.duan@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mce/inject.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 13506a87a4444..af0cfd25ed7a4 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -941,15 +941,20 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
- 			ret = PTR_ERR(ctrl->ctrl.connect_q);
- 			goto out_free_tag_set;
- 		}
--	} else {
--		blk_mq_update_nr_hw_queues(&ctrl->tag_set,
--			ctrl->ctrl.queue_count - 1);
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index 3413b41b8d55f..dc28a615e340f 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -511,7 +511,7 @@ static void do_inject(void)
+ 	 */
+ 	if (inj_type == DFR_INT_INJ) {
+ 		i_mce.status |= MCI_STATUS_DEFERRED;
+-		i_mce.status |= (i_mce.status & ~MCI_STATUS_UC);
++		i_mce.status &= ~MCI_STATUS_UC;
  	}
  
- 	ret = nvme_rdma_start_io_queues(ctrl);
- 	if (ret)
- 		goto out_cleanup_connect_q;
- 
-+	if (!new) {
-+		nvme_start_queues(&ctrl->ctrl);
-+		nvme_wait_freeze(&ctrl->ctrl);
-+		blk_mq_update_nr_hw_queues(ctrl->ctrl.tagset,
-+			ctrl->ctrl.queue_count - 1);
-+		nvme_unfreeze(&ctrl->ctrl);
-+	}
-+
- 	return 0;
- 
- out_cleanup_connect_q:
-@@ -982,6 +987,7 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
- 		bool remove)
- {
- 	if (ctrl->ctrl.queue_count > 1) {
-+		nvme_start_freeze(&ctrl->ctrl);
- 		nvme_stop_queues(&ctrl->ctrl);
- 		nvme_rdma_stop_io_queues(ctrl);
- 		if (ctrl->ctrl.tagset) {
+ 	/*
 -- 
 2.25.1
 
