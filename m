@@ -2,152 +2,95 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED50C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73793C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5022177B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C1A2177B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 02:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FtXVTd8a"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PdgSFw7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHHCxJ (ORCPT
+        id S1726629AbgHHCyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Aug 2020 22:53:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49060 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgHHCxJ (ORCPT
+        Fri, 7 Aug 2020 22:54:51 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31249 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726402AbgHHCyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Aug 2020 22:53:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 077NqoSK174205;
-        Sat, 8 Aug 2020 00:02:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=pRss8K84ABZhW+aCcIYrAd7OGGKvba8jWPFZbS6GPjs=;
- b=FtXVTd8aOYb4zRtenSiHSQNkfm2nsBUN0eE7SnF+3fJaWxc5d3NFPzy71gYnMy9v6s9F
- aZJbyP2WyS1aWGyVszPfiCZITejQotp9BM/QwkCaxWSEDEbvBfrsDcra2/U9XXueaPs6
- DKAHSZYgv+mkcg35mt5Wpm9hvbugW7aGmSH2aNZ71ZQLOSpBwib3kr4dDLqvZhhnNH2T
- kLlgWucPtnCr1kiYV2hA6jBjvhusPBLobNJQqaZRUfuPjX5kyLmWYNxTA7R5PlHVkBti
- +4t/cLoKqgXk97p15xfpk+wn8y9Vt1igXt7qXs49L4d3ypNHuxWVGZdbCNyXZOrOeE7s kA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32r6epb636-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 08 Aug 2020 00:02:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 077NrFM0173446;
-        Sat, 8 Aug 2020 00:02:33 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32qy8rmw5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Aug 2020 00:02:33 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07802L38016066;
-        Sat, 8 Aug 2020 00:02:21 GMT
-Received: from localhost.localdomain (/10.159.159.21)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Aug 2020 17:02:21 -0700
-Subject: Re: [PATCH] KVM: SVM: Mark SEV launch secret pages as dirty.
-To:     Cfir Cohen <cfir@google.com>,
-        "kvm @ vger . kernel . org" <kvm@vger.kernel.org>,
-        Lendacky Thomas <thomas.lendacky@amd.com>,
-        Singh Brijesh <brijesh.singh@amd.com>
-Cc:     Grimm Jon <Jon.Grimm@amd.com>,
-        David Rientjes <rientjes@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200807012303.3769170-1-cfir@google.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <dc4f24b2-2b7f-f7a2-eef9-6e40dc6f3797@oracle.com>
-Date:   Fri, 7 Aug 2020 17:02:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Aug 2020 22:54:50 -0400
+X-UUID: ddbac345f5e74a21981891c55e09fc18-20200808
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=kWZieeEiWrI+QZxqM8iMJlo9waGC/mplSmKIIdhtLMI=;
+        b=PdgSFw7vspKz17JdzFIEkma5RdcW3k+kTkWggYb+mTlFmeJaGYU7ME7rm+AluucggevyUCyMCYlJPEjeALEnG2OYS34lOqjJkAPdklg0qIWN9tedegs5HpN3tAss310WcTUHlHClWWk8VDM+BijQtxBRku3nW+dcLpzxBUneLNA=;
+X-UUID: ddbac345f5e74a21981891c55e09fc18-20200808
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 8359250; Sat, 08 Aug 2020 10:54:41 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 8 Aug 2020 10:54:39 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 8 Aug 2020 10:54:39 +0800
+From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [RESEND v7, PATCH 1/7] dt-bindings: mediatek: add rdma_fifo_size description for mt8183 display
+Date:   Sat, 8 Aug 2020 10:53:45 +0800
+Message-ID: <1596855231-5782-2-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200807012303.3769170-1-cfir@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- spamscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008070162
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 bulkscore=0
- malwarescore=0 clxscore=1011 mlxscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008070162
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+cmRtYSBmaWZvIHNpemUgbWF5IGJlIGRpZmZlcmVudCBldmVuIGluIHNhbWUgU09DLCBhZGQgdGhp
+cw0KcHJvcGVydHkgdG8gdGhlIGNvcnJlc3BvbmRpbmcgcmRtYQ0KDQpDaGFuZ2UtSWQ6IEk2NzYz
+NWVjN2YzZjU5Y2Y0Y2JjNzczNzI4NWU1ZTI4ZmYwYWI3MWM5DQpTaWduZWQtb2ZmLWJ5OiBZb25n
+cWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgfCAxNCArKysr
+KysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
+ZWRpYXRlayxkaXNwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0DQppbmRleCBiOTFlNzA5Li5lNmJiZTMyIDEw
+MDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
+aWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0DQpAQCAtNjYsNiArNjYs
+MTEgQEAgUmVxdWlyZWQgcHJvcGVydGllcyAoRE1BIGZ1bmN0aW9uIGJsb2Nrcyk6DQogICBhcmd1
+bWVudCwgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9tZWRpYXRl
+ayxpb21tdS50eHQNCiAgIGZvciBkZXRhaWxzLg0KIA0KK09wdGlvbmFsIHByb3BlcnRpZXMgKFJE
+TUEgZnVuY3Rpb24gYmxvY2tzKToNCistIG1lZGlhdGVrLHJkbWFfZmlmb19zaXplOiByZG1hIGZp
+Zm8gc2l6ZSBtYXkgYmUgZGlmZmVyZW50IGV2ZW4gaW4gc2FtZSBTT0MsIGFkZCB0aGlzDQorICBw
+cm9wZXJ0eSB0byB0aGUgY29ycmVzcG9uZGluZyByZG1hDQorICB0aGUgdmFsdWUgaXMgdGhlIE1h
+eCB2YWx1ZSB3aGljaCBkZWZpbmVkIGluIGhhcmR3YXJlIGRhdGEgc2hlZXQuDQorDQogRXhhbXBs
+ZXM6DQogDQogbW1zeXM6IGNsb2NrLWNvbnRyb2xsZXJAMTQwMDAwMDAgew0KQEAgLTIwNywzICsy
+MTIsMTIgQEAgb2RAMTQwMjMwMDAgew0KIAlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTcz
+X1BPV0VSX0RPTUFJTl9NTT47DQogCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfT0Q+Ow0K
+IH07DQorDQorcmRtYTE6IHJkbWFAMTQwMGMwMDAgew0KKwljb21wYXRpYmxlID0gIm1lZGlhdGVr
+LG10ODE4My1kaXNwLXJkbWEiOw0KKwlyZWcgPSA8MCAweDE0MDBjMDAwIDAgMHgxMDAwPjsNCisJ
+aW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyOSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KKwlwb3dlci1k
+b21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCisJY2xvY2tzID0g
+PCZtbXN5cyBDTEtfTU1fRElTUF9SRE1BMT47DQorCW1lZGlhdGVrLHJkbWFfZmlmb19zaXplID0g
+PDIwNDg+Ow0KK307DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
-On 8/6/20 6:23 PM, Cfir Cohen wrote:
-> The LAUNCH_SECRET command performs encryption of the
-> launch secret memory contents. Mark pinned pages as
-> dirty, before unpinning them.
-> This matches the logic in sev_launch_update().
-sev_launch_update_data() instead of sev_launch_update() ?
->
-> Signed-off-by: Cfir Cohen <cfir@google.com>
-> ---
->   arch/x86/kvm/svm/sev.c | 15 ++++++++++++++-
->   1 file changed, 14 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 5573a97f1520..37c47d26b9f7 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -850,7 +850,7 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
->   	struct kvm_sev_launch_secret params;
->   	struct page **pages;
->   	void *blob, *hdr;
-> -	unsigned long n;
-> +	unsigned long n, i;
->   	int ret, offset;
->   
->   	if (!sev_guest(kvm))
-> @@ -863,6 +863,14 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
->   	if (!pages)
->   		return -ENOMEM;
->   
-> +	/*
-> +	 * The LAUNCH_SECRET command will perform in-place encryption of the
-> +	 * memory content (i.e it will write the same memory region with C=1).
-> +	 * It's possible that the cache may contain the data with C=0, i.e.,
-> +	 * unencrypted so invalidate it first.
-> +	 */
-> +	sev_clflush_pages(pages, n);
-> +
->   	/*
->   	 * The secret must be copied into contiguous memory region, lets verify
->   	 * that userspace memory pages are contiguous before we issue command.
-> @@ -908,6 +916,11 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
->   e_free:
->   	kfree(data);
->   e_unpin_memory:
-> +	/* content of memory is updated, mark pages dirty */
-> +	for (i = 0; i < n; i++) {
-> +		set_page_dirty_lock(pages[i]);
-> +		mark_page_accessed(pages[i]);
-> +	}
->   	sev_unpin_memory(kvm, pages, n);
->   	return ret;
->   }
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
