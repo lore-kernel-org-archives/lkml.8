@@ -2,220 +2,109 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EABC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55402177B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4AE2073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 09:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SX4hDaAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgHHJZ3 (ORCPT
+        id S1726242AbgHHJcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 05:25:29 -0400
-Received: from gofer.mess.org ([88.97.38.141]:55705 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbgHHJZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 05:25:29 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 18261C638B; Sat,  8 Aug 2020 10:25:27 +0100 (BST)
-Date:   Sat, 8 Aug 2020 10:25:26 +0100
-From:   Sean Young <sean@mess.org>
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     syzbot <syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com>,
-        andreyknvl@google.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in rc_dev_uevent
-Message-ID: <20200808092526.GA31150@gofer.mess.org>
-References: <00000000000003dcbd05ac44862c@google.com>
- <20200807091504.GA7397@gofer.mess.org>
- <CAAEAJfDfc_vw15g_5OEG4uX+ynZpZH3M_P16DNFjstwsUnZtCw@mail.gmail.com>
+        Sat, 8 Aug 2020 05:32:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57308 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgHHJcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 05:32:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0789IwhO196333;
+        Sat, 8 Aug 2020 09:32:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=BjxU2hYpE9qnHJRvR45YvDyFi9RxTKJ3dwV9r3j2u5E=;
+ b=SX4hDaAtWjLoSp9bV+lFqb8NzZXc8N95/YVQ3PgsqBU0W8p4TsfrMRYgldIAaKv5Z9T0
+ TYnw4ffDR1k53g7LhyPSxgqgVRmBOs4Bssf2wsVI8+o/h6K6Mret/3n7m6Q/pZjDFBNc
+ MrRK8J8zHD/JHCTuzxEPjB+k4fLNCsJygAQGwvUNLGrq8yH8oWbm0oxIqt/4WkzsRSex
+ /LiQnySmTMgQq/m4oQgbfaqz0USvMLMKT85zR/fwHKcLI8TV3IrTBvfcAYY+0olTvgY2
+ tj6V4Q0GFm6hkC8PnS8aKse2ueDwTE4bojh49nBB/B6Hf+BjSeZJlTUUWQb64MzPoNxA YQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32smpn0mej-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 08 Aug 2020 09:32:15 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0789JKes005490;
+        Sat, 8 Aug 2020 09:32:15 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32sj396asa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 Aug 2020 09:32:15 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0789WEYZ013841;
+        Sat, 8 Aug 2020 09:32:14 GMT
+Received: from mwanda (/10.175.188.11)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 08 Aug 2020 02:32:14 -0700
+Date:   Sat, 8 Aug 2020 12:32:07 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, Eli Cohen <eli@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] vdpa/mlx5: Missing error code on allocation failure
+Message-ID: <20200808093207.GA115053@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAEAJfDfc_vw15g_5OEG4uX+ynZpZH3M_P16DNFjstwsUnZtCw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008080067
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9706 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 impostorscore=0 phishscore=0 clxscore=1011 spamscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008080067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eze,
+This should return -ENOMEM if the allocation fails.  Currently it
+either returns success or an uninitialized value.
 
-On Fri, Aug 07, 2020 at 08:45:12PM -0300, Ezequiel Garcia wrote:
-> On Fri, 7 Aug 2020 at 06:15, Sean Young <sean@mess.org> wrote:
-> >
-> > On Fri, Aug 07, 2020 at 12:26:29AM -0700, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following issue on:
-> > >
-> > > HEAD commit:    7b4ea945 Revert "x86/mm/64: Do not sync vmalloc/ioremap ma..
-> > > git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=11a7813a900000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=72a84c46d0c668c
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=ceef16277388d6f24898
-> > > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > >
-> > > Unfortunately, I don't have any reproducer for this issue yet.
-> > >
-> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > Reported-by: syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com
-> > >
-> > > ==================================================================
-> > > BUG: KASAN: use-after-free in string_nocheck lib/vsprintf.c:611 [inline]
-> > > BUG: KASAN: use-after-free in string+0x39c/0x3d0 lib/vsprintf.c:693
-> > > Read of size 1 at addr ffff8881ca21cd20 by task systemd-udevd/5147
-> > >
-> > > CPU: 1 PID: 5147 Comm: systemd-udevd Not tainted 5.8.0-syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > Call Trace:
-> > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > >  dump_stack+0xf6/0x16e lib/dump_stack.c:118
-> > >  print_address_description.constprop.0+0x1a/0x210 mm/kasan/report.c:383
-> > >  __kasan_report mm/kasan/report.c:513 [inline]
-> > >  kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
-> > >  string_nocheck lib/vsprintf.c:611 [inline]
-> > >  string+0x39c/0x3d0 lib/vsprintf.c:693
-> > >  vsnprintf+0x71b/0x14f0 lib/vsprintf.c:2617
-> > >  add_uevent_var+0x14d/0x310 lib/kobject_uevent.c:664
-> > >  rc_dev_uevent+0x54/0x140 drivers/media/rc/rc-main.c:1616
-> > >  dev_uevent+0x30e/0x780 drivers/base/core.c:1916
-> > >  uevent_show+0x1bb/0x360 drivers/base/core.c:1963
-> > >  dev_attr_show+0x4b/0x90 drivers/base/core.c:1667
-> > >  sysfs_kf_seq_show+0x1f8/0x400 fs/sysfs/file.c:60
-> > >  seq_read+0x432/0x1070 fs/seq_file.c:208
-> > >  kernfs_fop_read+0xe9/0x590 fs/kernfs/file.c:251
-> > >  vfs_read+0x1df/0x520 fs/read_write.c:479
-> > >  ksys_read+0x12d/0x250 fs/read_write.c:607
-> > >  do_syscall_64+0x2d/0x40 arch/x86/entry/common.c:46
-> > >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > RIP: 0033:0x7f6e6c02f910
-> > > Code: b6 fe ff ff 48 8d 3d 0f be 08 00 48 83 ec 08 e8 06 db 01 00 66 0f 1f 44 00 00 83 3d f9 2d 2c 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 de 9b 01 00 48 89 04 24
-> > > RSP: 002b:00007fff3cddeae8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> > > RAX: ffffffffffffffda RBX: 0000558492caaae0 RCX: 00007f6e6c02f910
-> > > RDX: 0000000000001000 RSI: 0000558492cc7530 RDI: 0000000000000007
-> > > RBP: 00007f6e6c2ea440 R08: 00007f6e6c2ee298 R09: 0000000000001010
-> > > R10: 0000558492caaae0 R11: 0000000000000246 R12: 0000000000001000
-> > > R13: 0000000000000d68 R14: 0000558492cc7530 R15: 00007f6e6c2e9900
-> >
-> > This thread is reading the uevent sysfs file, which reads
-> > rc_dev->map.name, and also rc_dev->device_name, but that is not causing
-> > problems is this case.
-> >
-> > >
-> > > Allocated by task 5:
-> > >  save_stack+0x1b/0x40 mm/kasan/common.c:48
-> > >  set_track mm/kasan/common.c:56 [inline]
-> > >  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
-> > >  slab_post_alloc_hook mm/slab.h:586 [inline]
-> > >  slab_alloc_node mm/slub.c:2824 [inline]
-> > >  slab_alloc mm/slub.c:2832 [inline]
-> > >  __kmalloc_track_caller+0xec/0x280 mm/slub.c:4430
-> > >  kstrdup+0x36/0x70 mm/util.c:60
-> > >  ir_create_table drivers/media/rc/rc-main.c:217 [inline]
-> > >  ir_setkeytable drivers/media/rc/rc-main.c:477 [inline]
-> > >  rc_prepare_rx_device drivers/media/rc/rc-main.c:1786 [inline]
-> > >  rc_register_device+0x464/0x1600 drivers/media/rc/rc-main.c:1914
-> > >  igorplugusb_probe+0x7e6/0xc98 drivers/media/rc/igorplugusb.c:209
-> > >  usb_probe_interface+0x315/0x7f0 drivers/usb/core/driver.c:374
-> > >  really_probe+0x291/0xde0 drivers/base/dd.c:553
-> > >  driver_probe_device+0x26b/0x3d0 drivers/base/dd.c:738
-> > >  __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:844
-> > >  bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
-> > >  __device_attach+0x228/0x4a0 drivers/base/dd.c:912
-> > >  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
-> > >  device_add+0xb51/0x1c70 drivers/base/core.c:2930
-> > >  usb_set_configuration+0xf05/0x18a0 drivers/usb/core/message.c:2032
-> > >  usb_generic_driver_probe+0xba/0xf2 drivers/usb/core/generic.c:239
-> > >  usb_probe_device+0xd9/0x250 drivers/usb/core/driver.c:272
-> > >  really_probe+0x291/0xde0 drivers/base/dd.c:553
-> > >  driver_probe_device+0x26b/0x3d0 drivers/base/dd.c:738
-> > >  __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:844
-> > >  bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
-> > >  __device_attach+0x228/0x4a0 drivers/base/dd.c:912
-> > >  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
-> > >  device_add+0xb51/0x1c70 drivers/base/core.c:2930
-> > >  usb_new_device.cold+0x71d/0xfd4 drivers/usb/core/hub.c:2554
-> > >  hub_port_connect drivers/usb/core/hub.c:5208 [inline]
-> > >  hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
-> > >  port_event drivers/usb/core/hub.c:5494 [inline]
-> > >  hub_event+0x2361/0x4390 drivers/usb/core/hub.c:5576
-> > >  process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
-> > >  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
-> > >  kthread+0x392/0x470 kernel/kthread.c:292
-> > >  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-> >
-> > .. this probed the device ..
-> >
-> > > Freed by task 5:
-> > >  save_stack+0x1b/0x40 mm/kasan/common.c:48
-> > >  set_track mm/kasan/common.c:56 [inline]
-> > >  kasan_set_free_info mm/kasan/common.c:316 [inline]
-> > >  __kasan_slab_free+0x116/0x160 mm/kasan/common.c:455
-> > >  slab_free_hook mm/slub.c:1474 [inline]
-> > >  slab_free_freelist_hook+0x53/0x140 mm/slub.c:1507
-> > >  slab_free mm/slub.c:3072 [inline]
-> > >  kfree+0xbc/0x2c0 mm/slub.c:4052
-> > >  ir_free_table drivers/media/rc/rc-main.c:245 [inline]
-> > >  rc_free_rx_device drivers/media/rc/rc-main.c:1875 [inline]
-> > >  rc_unregister_device+0x142/0x410 drivers/media/rc/rc-main.c:2014
-> > >  igorplugusb_disconnect+0x58/0x110 drivers/media/rc/igorplugusb.c:232
-> > >  usb_unbind_interface+0x1d8/0x8d0 drivers/usb/core/driver.c:436
-> > >  __device_release_driver+0x3c6/0x6f0 drivers/base/dd.c:1153
-> > >  device_release_driver_internal drivers/base/dd.c:1184 [inline]
-> > >  device_release_driver+0x26/0x40 drivers/base/dd.c:1207
-> > >  bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
-> > >  device_del+0x481/0xd90 drivers/base/core.c:3107
-> > >  usb_disable_device+0x387/0x930 drivers/usb/core/message.c:1245
-> > >  usb_disconnect.cold+0x27d/0x780 drivers/usb/core/hub.c:2217
-> > >  hub_port_connect drivers/usb/core/hub.c:5059 [inline]
-> > >  hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
-> > >  port_event drivers/usb/core/hub.c:5494 [inline]
-> > >  hub_event+0x1c93/0x4390 drivers/usb/core/hub.c:5576
-> > >  process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
-> > >  process_scheduled_works kernel/workqueue.c:2331 [inline]
-> > >  worker_thread+0x82b/0x1120 kernel/workqueue.c:2417
-> > >  kthread+0x392/0x470 kernel/kthread.c:292
-> > >  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-> >
-> > This unplugged the device, and freed rc_dev->map->name and sets
-> > it to NULL. There is no locking between the two threads so this is
-> > a race condition.
-> >
-> > I think there are worse, related problems here. For example, iguanair
-> > driver allocates rc_dev->device_name and frees it in its usb disconnect
-> > handler. This field is also read by uevent, and not set to null by
-> > the disconnect handler.
-> >
-> > Not sure what the best solution is yet.
-> >
-> 
-> All USB drivers (and also any kind of driver that can be hotplugged)
-> should implement some sort of refcounting, to avoid this kind of
-> use-after-free issue.
-> 
-> Drivers can't free memory that may be associated with an open
-> handle, until you remove the device node.
+Fixes: 94abbccdf291 ("vdpa/mlx5: Add shared memory registration code")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/vdpa/mlx5/core/mr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thank you for trying to be helpful, but I do know all these things; I
-added the registered boolean on rc_dev since it was a disaster before that,
-there were all sorts of read-after-free on usb disconnect.
+diff --git a/drivers/vdpa/mlx5/core/mr.c b/drivers/vdpa/mlx5/core/mr.c
+index f5dec0274133..ef1c550f8266 100644
+--- a/drivers/vdpa/mlx5/core/mr.c
++++ b/drivers/vdpa/mlx5/core/mr.c
+@@ -319,8 +319,10 @@ static int add_direct_chain(struct mlx5_vdpa_dev *mvdev, u64 start, u64 size, u8
+ 	while (size) {
+ 		sz = (u32)min_t(u64, MAX_KLM_SIZE, size);
+ 		dmr = kzalloc(sizeof(*dmr), GFP_KERNEL);
+-		if (!dmr)
++		if (!dmr) {
++			err = -ENOMEM;
+ 			goto err_alloc;
++		}
+ 
+ 		dmr->start = st;
+ 		dmr->end = st + sz;
+-- 
+2.27.0
 
-With rc-core it can get a little bit tricky between the lifetime of the
-usb device, rc_dev device, lirc file descriptor, input device, and sysfs. Even
-after spending lots of time trying to make sure this is correct and
-thinking through all possible code paths, it is so easy to miss code
-paths like these.
-
-
-Thanks
-
-Sean
