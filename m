@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B28D206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E50620672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930636;
-	bh=WY+eO/9Lahljm8HW8woM/npGtNCkHd0cv1BtYYsClx4=;
+	s=default; t=1596930653;
+	bh=ORDrPhiW/C1K4PvUL3C0PbJhhJpus4Ijq2OA4UXVseo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IoG2J1SgIOGVkA9tdNu8AG3ONX5k76e6EwKnf6WS7/iG+MfhHaLa8g2Lh3qL2VlT8
-	 Q04bqJnzfbEGMZ44EcUJkkDu2ceOvEpkKIkZ5VQARDYR+zn/gdcS2gEYJyOHXfc+ix
-	 sWP7kiu4qRdqLbaCVWjMvqTiAJQFsLlKwmfktVy4=
+	b=lKyqa3QvH9B3DNXYfh4EajMzpBVghf2hALibsbUGxNmxKuhXwGjc4UeV64TR3R5QB
+	 eRTtrbrTVZG0ZNFQERhruAuWpI4ds2MIQJjyeTSN952TrY8XhYZNCNAGwaXLkuMGtV
+	 ot2t20e2a3pdzlQ1ecwgJwG+X3LIsLF7VlsLQ1Gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgHHXuf (ORCPT
+        id S1726755AbgHHXgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49194 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbgHHXgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:36 -0400
+        id S1726655AbgHHXgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7749E20716;
-        Sat,  8 Aug 2020 23:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC4EB20723;
+        Sat,  8 Aug 2020 23:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929796;
-        bh=WY+eO/9Lahljm8HW8woM/npGtNCkHd0cv1BtYYsClx4=;
+        s=default; t=1596929770;
+        bh=ORDrPhiW/C1K4PvUL3C0PbJhhJpus4Ijq2OA4UXVseo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=saogdyKJo1qG8cIn2cht3KIxaC+EDwTettzFkt43W6XCG7/erulgQ8V/559HnFWQm
-         5zqj4wpR/VTnf9U4xDB6J8IE3RCSF/tEXGhP644SVkxM3H4nJcgcp1FWnOomInY3ct
-         BunfTQ8qpnCzHV8T5GWepx/zT+vikiLcYnNGxxFk=
+        b=hPj8g0qpQNOUFCrV88dyudcxMpFIBgJowj8CUpCeenAGD9ai30aE1wyfTnPxdxiGi
+         GYRwX1PT7LSMIA/Txwndx6nr9JrcbwI3Q/Pr8aU2CbPjtic+Tpi1CSXC4N0a4zf7sE
+         fSE/D8Bfyb90B8pKx+HTMR/RfxaHiiGlJvZB/uMQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 35/72] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-Date:   Sat,  8 Aug 2020 19:35:04 -0400
-Message-Id: <20200808233542.3617339-35-sashal@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 21/72] rcu/tree: Repeat the monitor if any free channel is busy
+Date:   Sat,  8 Aug 2020 19:34:50 -0400
+Message-Id: <20200808233542.3617339-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,62 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
+[ Upstream commit 594aa5975b9b5cfe9edaec06170e43b8c0607377 ]
 
-if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-a corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+It is possible that one of the channels cannot be detached
+because its free channel is busy and previously queued data
+has not been processed yet. On the other hand, another
+channel can be successfully detached causing the monitor
+work to stop.
 
-Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
+Prevent that by rescheduling the monitor work if there are
+any channels in the pending state after a detach attempt.
+
+Fixes: 34c881745549e ("rcu: Support kfree_bulk() interface in kfree_rcu()")
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/rcu/tree.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 074bde64064e4..2aab043441e8f 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -592,13 +592,13 @@ static void __init at91_pm_sram_init(void)
- 	sram_pool = gen_pool_get(&pdev->dev, NULL);
- 	if (!sram_pool) {
- 		pr_warn("%s: sram pool unavailable!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 6c6569e0586c5..1e9e500ff7906 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3105,7 +3105,7 @@ static void kfree_rcu_work(struct work_struct *work)
+ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ {
+ 	struct kfree_rcu_cpu_work *krwp;
+-	bool queued = false;
++	bool repeat = false;
+ 	int i;
  
- 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
- 	if (!sram_base) {
- 		pr_warn("%s: unable to alloc sram!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
- 
- 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
-@@ -606,12 +606,17 @@ static void __init at91_pm_sram_init(void)
- 					at91_pm_suspend_in_sram_sz, false);
- 	if (!at91_suspend_sram_fn) {
- 		pr_warn("SRAM: Could not map\n");
--		return;
-+		goto out_put_device;
- 	}
- 
- 	/* Copy the pm suspend handler to SRAM */
- 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
- 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
-+	return;
+ 	lockdep_assert_held(&krcp->lock);
+@@ -3143,11 +3143,14 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ 			 * been detached following each other, one by one.
+ 			 */
+ 			queue_rcu_work(system_wq, &krwp->rcu_work);
+-			queued = true;
+ 		}
 +
-+out_put_device:
-+	put_device(&pdev->dev);
-+	return;
++		/* Repeat if any "free" corresponding channel is still busy. */
++		if (krcp->bhead || krcp->head)
++			repeat = true;
+ 	}
+ 
+-	return queued;
++	return !repeat;
  }
  
- static bool __init at91_is_pm_mode_active(int pm_mode)
+ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
 -- 
 2.25.1
 
