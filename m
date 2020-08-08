@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33441C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C902206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0892820723
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930448;
-	bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
+	s=default; t=1596930452;
+	bh=D/f7KeSvbnpfeuO5AHy05pktd39Vhn5bLwVvks2iLkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+2jwXdYly8+eDc4jR2jaR9gW8IAdPfiMWGVAKXVPqlAo8NsixGdZ0zZDagYV1fzk
-	 yHVy/HhdaWRdOjAOATqXojokoBr0XS2WecGxBq7Co53ffY0Xah6EU1588IxM5RVKzS
-	 ZTeix3NU33oNXa7klNqiWjhdtYY5cncTr2/a0PFE=
+	b=P/48etyo42wQKFrmrwpA9bNylivDsTrg3GTEuPSNCIiAW4Mfcnoi+LAZAcULc6XbX
+	 hu0jimbVZV91vrEH4B+6LxLcmTm2vyhoxw8ICGXGxw0ST0/0U76avboqgsYnuCmLjZ
+	 imbmi1LLNVWB46aEKb4Wr3O1Sl1P9rD/419hsnWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgHHXr1 (ORCPT
+        id S1728387AbgHHXrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:47:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbgHHXhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:52 -0400
+        id S1728134AbgHHXhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A0BE20748;
-        Sat,  8 Aug 2020 23:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F239A207BB;
+        Sat,  8 Aug 2020 23:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929872;
-        bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
+        s=default; t=1596929874;
+        bh=D/f7KeSvbnpfeuO5AHy05pktd39Vhn5bLwVvks2iLkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=luasppqFyozVxgim5pGoH9snd7KkaTHKMJgGPzMKOUWJrTi5BWzvKSvax1ViF4n0c
-         ePLc1IIYOG14eKFt3awd+tmFdHrzezcjuEWYm86hJs8VZAiW8dzBgznRBfMm3Ycf33
-         NrSKc6rW45WHzupUFZ1Z7IiLfaTdQW+oKvGFSFNQ=
+        b=A5RwIr+SKqs1+/ltmxSZA6CQI0jdpmhCv2eqEkNz1ZYczYLJg+41Y3XXEb5b/SO2n
+         oUFx5LlTfmCmcYFz+or5qQGo7j2q6sjA3UybqZTA4H38jIUU/Fh2czSByI9xqVnG5B
+         0fchd5LqdG768W9m9QwDGH5ctzBunljpuvHfU5VU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 21/58] arm64: dts: exynos: Fix silent hang after boot on Espresso
-Date:   Sat,  8 Aug 2020 19:36:47 -0400
-Message-Id: <20200808233724.3618168-21-sashal@kernel.org>
+Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, qat-linux@intel.com,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 23/58] crypto: qat - allow xts requests not multiple of block
+Date:   Sat,  8 Aug 2020 19:36:49 -0400
+Message-Id: <20200808233724.3618168-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -61,35 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 
-[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
+[ Upstream commit 528f776df67c440361b2847b4da400d8754bf030 ]
 
-Once regulators are disabled after kernel boot, on Espresso board silent
-hang observed because of LDO7 being disabled.  LDO7 actually provide
-power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
-always-on to fix this hang.
+Allow AES-XTS requests that are not multiple of the block size.
+If a request is smaller than the block size, return -EINVAL.
 
-Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This fixes the following issue reported by the crypto testmgr self-test:
+
+  alg: skcipher: qat_aes_xts encryption failed on test vector "random: len=116 klen=64"; expected_error=0, actual_error=-22, cfg="random: inplace may_sleep use_finup src_divs=[<reimport>45.85%@+4077, <flush>54.15%@alignmask+18]"
+
+Fixes: 96ee111a659e ("crypto: qat - return error for block...")
+Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/qat/qat_common/qat_algs.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 7af288fa9475f..a9412805c1d6a 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1150000>;
- 				regulator-enable-ramp-delay = <125>;
-+				regulator-always-on;
- 			};
+diff --git a/drivers/crypto/qat/qat_common/qat_algs.c b/drivers/crypto/qat/qat_common/qat_algs.c
+index e14d3dd291f09..1b050391c0c90 100644
+--- a/drivers/crypto/qat/qat_common/qat_algs.c
++++ b/drivers/crypto/qat/qat_common/qat_algs.c
+@@ -55,6 +55,7 @@
+ #include <crypto/hmac.h>
+ #include <crypto/algapi.h>
+ #include <crypto/authenc.h>
++#include <crypto/xts.h>
+ #include <linux/dma-mapping.h>
+ #include "adf_accel_devices.h"
+ #include "adf_transport.h"
+@@ -1102,6 +1103,14 @@ static int qat_alg_skcipher_blk_encrypt(struct skcipher_request *req)
+ 	return qat_alg_skcipher_encrypt(req);
+ }
  
- 			ldo8_reg: LDO8 {
++static int qat_alg_skcipher_xts_encrypt(struct skcipher_request *req)
++{
++	if (req->cryptlen < XTS_BLOCK_SIZE)
++		return -EINVAL;
++
++	return qat_alg_skcipher_encrypt(req);
++}
++
+ static int qat_alg_skcipher_decrypt(struct skcipher_request *req)
+ {
+ 	struct crypto_skcipher *stfm = crypto_skcipher_reqtfm(req);
+@@ -1161,6 +1170,15 @@ static int qat_alg_skcipher_blk_decrypt(struct skcipher_request *req)
+ 
+ 	return qat_alg_skcipher_decrypt(req);
+ }
++
++static int qat_alg_skcipher_xts_decrypt(struct skcipher_request *req)
++{
++	if (req->cryptlen < XTS_BLOCK_SIZE)
++		return -EINVAL;
++
++	return qat_alg_skcipher_decrypt(req);
++}
++
+ static int qat_alg_aead_init(struct crypto_aead *tfm,
+ 			     enum icp_qat_hw_auth_algo hash,
+ 			     const char *hash_name)
+@@ -1354,8 +1372,8 @@ static struct skcipher_alg qat_skciphers[] = { {
+ 	.init = qat_alg_skcipher_init_tfm,
+ 	.exit = qat_alg_skcipher_exit_tfm,
+ 	.setkey = qat_alg_skcipher_xts_setkey,
+-	.decrypt = qat_alg_skcipher_blk_decrypt,
+-	.encrypt = qat_alg_skcipher_blk_encrypt,
++	.decrypt = qat_alg_skcipher_xts_decrypt,
++	.encrypt = qat_alg_skcipher_xts_encrypt,
+ 	.min_keysize = 2 * AES_MIN_KEY_SIZE,
+ 	.max_keysize = 2 * AES_MAX_KEY_SIZE,
+ 	.ivsize = AES_BLOCK_SIZE,
 -- 
 2.25.1
 
