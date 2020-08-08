@@ -2,127 +2,134 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B18C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 309E120866
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568C220885
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596893272;
+	bh=IKNDctw8eaqDUmhLYS20d90D4oduBKl5cJTRFCqj0Ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PDtgFtNlIwTEEczt0LaEfTM8XbiW5ci3iTfR5m9b5rkzZlQ6kJADT8mJlKZJw1J+7
+	 RCLJRzPFLwx6kiAkgc6Y8NTurXUMkuoD/kN+uCPSD/a8fVtyos2ZQpuyRiBB5jGefI
+	 sxSBNG7GhauCLHTsd9zgVZx97PTRB9CzpjX89kko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgHHNW6 (ORCPT
+        id S1726338AbgHHN1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 09:22:58 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:58819 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbgHHNW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 09:22:58 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U56q4nE_1596892973;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U56q4nE_1596892973)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 08 Aug 2020 21:22:54 +0800
-Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200731151655.GB491801@cmpxchg.org>
- <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
- <20200803081815.GD5174@dhcp22.suse.cz>
- <bd61e672-b997-c4cd-2047-fca9dc11cc4c@linux.alibaba.com>
- <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
- <5622ef68-5e70-d1a9-d1be-b45411b6be5c@linux.alibaba.com>
-Message-ID: <4740bac1-72f6-a640-ab6a-a8801e68c27a@linux.alibaba.com>
-Date:   Sat, 8 Aug 2020 21:22:29 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sat, 8 Aug 2020 09:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbgHHN1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 09:27:50 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 050382072D;
+        Sat,  8 Aug 2020 13:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596893270;
+        bh=IKNDctw8eaqDUmhLYS20d90D4oduBKl5cJTRFCqj0Ow=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BqNsO3UyVb3g8gWXLEvvIkNHLQ0pAjsqVwHYVD6761hq1w6VYDTGzsmcz5B25aRsZ
+         oj4AhgRxiTRqWUcs0BM94uOdOiHeVEWFnCbxzbG4pSE/1pwVFAMvmfF7toYOfYdqZq
+         FMg5m3Bv8Lj2JQABtsj+vI4gaRE1yhaCRcPsovyo=
+Received: by pali.im (Postfix)
+        id 1865B688; Sat,  8 Aug 2020 15:27:48 +0200 (CEST)
+Date:   Sat, 8 Aug 2020 15:27:47 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        David Heidelberg <david@ixit.cz>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Removal of HCI commands? (Was: Re: OCF_READ_LOCAL_CODECS is
+ permitted only for root user)
+Message-ID: <20200808132747.4byefjg5ysddgkel@pali>
+References: <20191228171212.56anj4d4kvjeqhms@pali>
+ <45BB2908-4E16-4C74-9DB4-8BAD93B42A21@holtmann.org>
+ <20200104102436.bhqagqrfwupj6hkm@pali>
+ <20200209132137.7pi4pgnassosh3ax@pali>
+ <20200414225618.zgh5h4jexahfukdl@pali>
 MIME-Version: 1.0
-In-Reply-To: <5622ef68-5e70-d1a9-d1be-b45411b6be5c@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414225618.zgh5h4jexahfukdl@pali>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wednesday 15 April 2020 00:56:18 Pali Rohár wrote:
+> On Sunday 09 February 2020 14:21:37 Pali Rohár wrote:
+> > On Saturday 04 January 2020 11:24:36 Pali Rohár wrote:
+> > > On Saturday 04 January 2020 10:44:52 Marcel Holtmann wrote:
+> > > > Hi Pali,
+> > > > 
+> > > > > I wrote a simple script "sco_features.pl" which show all supported
+> > > > > codecs by local HCI bluetooth adapter. Script is available at:
+> > > > > 
+> > > > > https://github.com/pali/hsphfpd-prototype/blob/prototype/sco_features.pl
+> > > > > 
+> > > > > And I found out that OCF_READ_LOCAL_CODECS HCI command cannot be send by
+> > > > > non-root user. Kernel returns "Operation not permitted" error.
+> > > > > 
+> > > > > What is reason that kernel blocks OCF_READ_LOCAL_CODECS command for
+> > > > > non-root users? Without it (audio) application does not know which
+> > > > > codecs local bluetooth adapter supports.
+> > > > > 
+> > > > > E.g. OCF_READ_LOCAL_EXT_FEATURES or OCF_READ_VOICE_SETTING commands can
+> > > > > be send also by non-root user and kernel does not block them.
+> > > > 
+> > > > actually the direct access to HCI commands is being removed. So we have no plans to add new commands into the list since that it what the kernel is suppose to handle. If we wanted to expose this, then it has to be via mgmt.
+> > > 
+> > > Hi Marcel! Thank you for information. I have not know that this API is
+> > > "deprecated" and is going to be removed. But userspace audio
+> > > applications need to know what bluetooth adapter supports, so can you
+> > > export result of these commands to userspace? My script linked above
+> > > calls: OCF_READ_VOICE_SETTING, OCF_READ_LOCAL_COMMANDS,
+> > > OCF_READ_LOCAL_EXT_FEATURES, OCF_READ_LOCAL_CODECS
+> > 
+> > Hello! Just a gently reminder for this question. How to retrieve
+> > information about supported codecs from userspace by non-root user?
+> > Because running all bluetooth audio applications by root is not really a
+> > solution. Plus if above API for root user is going to be removed, what
+> > is a replacement?
+> 
+> Hello!
+> 
+> I have not got any answer to my email from Marcel for months, so I'm
+> adding other developers to loop. Could somebody tell me that is the
+> replacement API if above one is going to be removed?
+> 
+> I was not able to find any documentation where could be described this
+> API nor information about deprecation / removal.
+> 
+> And are you aware of the fact that removing of API could potentially
+> break existing applications?
+> 
+> I really need to know which API should I use, because when I use API
+> which is going to be removed, then my application stops working. And I
+> really want to avoid it.
+> 
+> Also I have not got any response yet, how can I read list of supported
+> codecs by bluetooth adapter by ordinary non-root user? Audio application
+> needs to know list of supported codecs and it is really insane to run it
+> as root.
 
+Hello! This is just another reminder that I have not got any reply to
+this email.
 
-在 2020/8/5 下午9:02, Alex Shi 写道:
-> 
-> 
-> 在 2020/8/5 下午8:28, Alex Shi 写道:
->> The last patch has a problem on define. this version could fix it.
->>
->> BTW, I see some !memcg happens when MEMCG compilered but disabled by cgroup_disable
->>
->>
->> [   94.657666] ---[ end trace f1f34bfc3b32ed2f ]---
->> [   95.138995] anon flags: 0x5005b48008000d(locked|uptodate|dirty|swapbacked)
->> [   95.146220] raw: 005005b48008000d dead000000000100 dead000000000122 ffff8897c7c76ad1
->> [   95.154549] raw: 0000000000000022 0000000000000000 0000000200000000 0000000000000000
->> [   95.162876] page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
->>
->>
-> 
-> The following patch may helpful.
-
-Any comments for the 2 patches?
-
-Thanks
-Alex
-
-> 
-> From 8bfb26a2e37e08dc61d20212bcfa5812a367ba94 Mon Sep 17 00:00:00 2001
-> From: Alex Shi <alex.shi@linux.alibaba.com>
-> Date: Wed, 5 Aug 2020 20:32:12 +0800
-> Subject: [PATCH] mm/memcg: don't try charge swap if memcg disabled
-> 
-> If we disabled memcg by cgroup_disable=memory, the swap charges are
-> still called. Let's return from the funcs earlier and keep WARN_ON
-> monitor.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/memcontrol.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index cb07a48d53aa..65f2b42d25af 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -7163,6 +7163,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
->  	VM_BUG_ON_PAGE(PageLRU(page), page);
->  	VM_BUG_ON_PAGE(page_count(page), page);
->  
-> +	if (mem_cgroup_disabled())
-> +		return;
-> +
->  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
->  		return;
->  
-> @@ -7228,6 +7231,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
->  	struct mem_cgroup *memcg;
->  	unsigned short oldid;
->  
-> +	if (mem_cgroup_disabled())
-> +		return 0;
-> +
->  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
->  		return 0;
->  
-> 
+Does silence mean that audio applications are expected to work only
+under root account and ordinary users are not able to use audio and list
+supported codecs?
