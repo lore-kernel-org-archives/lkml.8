@@ -2,134 +2,101 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568C220885
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596893272;
-	bh=IKNDctw8eaqDUmhLYS20d90D4oduBKl5cJTRFCqj0Ow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PDtgFtNlIwTEEczt0LaEfTM8XbiW5ci3iTfR5m9b5rkzZlQ6kJADT8mJlKZJw1J+7
-	 RCLJRzPFLwx6kiAkgc6Y8NTurXUMkuoD/kN+uCPSD/a8fVtyos2ZQpuyRiBB5jGefI
-	 sxSBNG7GhauCLHTsd9zgVZx97PTRB9CzpjX89kko=
+	by mail.kernel.org (Postfix) with ESMTP id 6D7D020748
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 13:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgHHN1v (ORCPT
+        id S1726344AbgHHNmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 09:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 09:42:12 -0400
+Received: from elvis.franken.de ([193.175.24.41]:39026 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgHHN1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 09:27:50 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 050382072D;
-        Sat,  8 Aug 2020 13:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596893270;
-        bh=IKNDctw8eaqDUmhLYS20d90D4oduBKl5cJTRFCqj0Ow=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BqNsO3UyVb3g8gWXLEvvIkNHLQ0pAjsqVwHYVD6761hq1w6VYDTGzsmcz5B25aRsZ
-         oj4AhgRxiTRqWUcs0BM94uOdOiHeVEWFnCbxzbG4pSE/1pwVFAMvmfF7toYOfYdqZq
-         FMg5m3Bv8Lj2JQABtsj+vI4gaRE1yhaCRcPsovyo=
-Received: by pali.im (Postfix)
-        id 1865B688; Sat,  8 Aug 2020 15:27:48 +0200 (CEST)
-Date:   Sat, 8 Aug 2020 15:27:47 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        David Heidelberg <david@ixit.cz>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Removal of HCI commands? (Was: Re: OCF_READ_LOCAL_CODECS is
- permitted only for root user)
-Message-ID: <20200808132747.4byefjg5ysddgkel@pali>
-References: <20191228171212.56anj4d4kvjeqhms@pali>
- <45BB2908-4E16-4C74-9DB4-8BAD93B42A21@holtmann.org>
- <20200104102436.bhqagqrfwupj6hkm@pali>
- <20200209132137.7pi4pgnassosh3ax@pali>
- <20200414225618.zgh5h4jexahfukdl@pali>
+        id S1726190AbgHHNmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 09:42:04 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k4P6k-0004vB-00; Sat, 08 Aug 2020 15:41:58 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 19B0AC0C98; Sat,  8 Aug 2020 15:41:47 +0200 (CEST)
+Date:   Sat, 8 Aug 2020 15:41:47 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Alex Deucher <alexander.deucher@amd.com>, christian.koenig@amd.com,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpu/drm: Remove TTM_PL_FLAG_WC of VRAM to fix
+ writecombine issue for Loongson64
+Message-ID: <20200808134147.GA5772@alpha.franken.de>
+References: <1596871502-3432-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414225618.zgh5h4jexahfukdl@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1596871502-3432-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 15 April 2020 00:56:18 Pali Rohár wrote:
-> On Sunday 09 February 2020 14:21:37 Pali Rohár wrote:
-> > On Saturday 04 January 2020 11:24:36 Pali Rohár wrote:
-> > > On Saturday 04 January 2020 10:44:52 Marcel Holtmann wrote:
-> > > > Hi Pali,
-> > > > 
-> > > > > I wrote a simple script "sco_features.pl" which show all supported
-> > > > > codecs by local HCI bluetooth adapter. Script is available at:
-> > > > > 
-> > > > > https://github.com/pali/hsphfpd-prototype/blob/prototype/sco_features.pl
-> > > > > 
-> > > > > And I found out that OCF_READ_LOCAL_CODECS HCI command cannot be send by
-> > > > > non-root user. Kernel returns "Operation not permitted" error.
-> > > > > 
-> > > > > What is reason that kernel blocks OCF_READ_LOCAL_CODECS command for
-> > > > > non-root users? Without it (audio) application does not know which
-> > > > > codecs local bluetooth adapter supports.
-> > > > > 
-> > > > > E.g. OCF_READ_LOCAL_EXT_FEATURES or OCF_READ_VOICE_SETTING commands can
-> > > > > be send also by non-root user and kernel does not block them.
-> > > > 
-> > > > actually the direct access to HCI commands is being removed. So we have no plans to add new commands into the list since that it what the kernel is suppose to handle. If we wanted to expose this, then it has to be via mgmt.
-> > > 
-> > > Hi Marcel! Thank you for information. I have not know that this API is
-> > > "deprecated" and is going to be removed. But userspace audio
-> > > applications need to know what bluetooth adapter supports, so can you
-> > > export result of these commands to userspace? My script linked above
-> > > calls: OCF_READ_VOICE_SETTING, OCF_READ_LOCAL_COMMANDS,
-> > > OCF_READ_LOCAL_EXT_FEATURES, OCF_READ_LOCAL_CODECS
-> > 
-> > Hello! Just a gently reminder for this question. How to retrieve
-> > information about supported codecs from userspace by non-root user?
-> > Because running all bluetooth audio applications by root is not really a
-> > solution. Plus if above API for root user is going to be removed, what
-> > is a replacement?
+On Sat, Aug 08, 2020 at 03:25:02PM +0800, Tiezhu Yang wrote:
+> Loongson processors have a writecombine issue that maybe failed to
+> write back framebuffer used with ATI Radeon or AMD GPU at times,
+> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+> mapping for MIPS"), there exists some errors such as blurred screen
+> and lockup, and so on.
 > 
-> Hello!
-> 
-> I have not got any answer to my email from Marcel for months, so I'm
-> adding other developers to loop. Could somebody tell me that is the
-> replacement API if above one is going to be removed?
-> 
-> I was not able to find any documentation where could be described this
-> API nor information about deprecation / removal.
-> 
-> And are you aware of the fact that removing of API could potentially
-> break existing applications?
-> 
-> I really need to know which API should I use, because when I use API
-> which is going to be removed, then my application stops working. And I
-> really want to avoid it.
-> 
-> Also I have not got any response yet, how can I read list of supported
-> codecs by bluetooth adapter by ordinary non-root user? Audio application
-> needs to know list of supported codecs and it is really insane to run it
-> as root.
+> Remove the flag TTM_PL_FLAG_WC of VRAM to fix writecombine issue for
+> Loongson64 to work well with ATI Radeon or AMD GPU, and it has no any
+> influence on the other platforms.
 
-Hello! This is just another reminder that I have not got any reply to
-this email.
+well it's not my call to take or reject this patch, but I already
+indicated it might be better to disable writecombine on the CPU
+detection side (or do you have other devices where writecombining
+works ?). Something like below will disbale it for all loongson64 CPUs.
+If you now find out where it works and where it doesn't, you can even
+reduce it to the required minium of affected CPUs.
 
-Does silence mean that audio applications are expected to work only
-under root account and ordinary users are not able to use audio and list
-supported codecs?
+Thomas.
+
+
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index def1659fe262..cdd87009e931 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -2043,7 +2043,6 @@ static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
+ 			set_isa(c, MIPS_CPU_ISA_M64R2);
+ 			break;
+ 		}
+-		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
+ 		c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_EXT |
+ 				MIPS_ASE_LOONGSON_EXT2);
+ 		break;
+@@ -2073,7 +2072,6 @@ static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
+ 		 * register, we correct it here.
+ 		 */
+ 		c->options |= MIPS_CPU_FTLB | MIPS_CPU_TLBINV | MIPS_CPU_LDPTE;
+-		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
+ 		c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
+ 			MIPS_ASE_LOONGSON_EXT | MIPS_ASE_LOONGSON_EXT2);
+ 		c->ases &= ~MIPS_ASE_VZ; /* VZ of Loongson-3A2000/3000 is incomplete */
+@@ -2084,7 +2082,6 @@ static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
+ 		set_elf_platform(cpu, "loongson3a");
+ 		set_isa(c, MIPS_CPU_ISA_M64R2);
+ 		decode_cpucfg(c);
+-		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
+ 		break;
+ 	default:
+ 		panic("Unknown Loongson Processor ID!");
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
