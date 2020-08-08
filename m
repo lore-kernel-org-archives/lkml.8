@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2992C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4947DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEAB207FB
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D0520716
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929846;
-	bh=n4p+AeW6JiuIsLx1WW7NJfTXfksep1+709oM9kBwEgI=;
+	s=default; t=1596929849;
+	bh=9bkHb39tOTEUTlknkrd/yFf5OeUdFtEmEuhvmxeL6wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F+hDlRmFIGF1O9+DPfMuhLRDOKxzjXpBm3BzlDipW1ImvVYtXXtF8inFilv8l1sq1
-	 RuQCrrZb3CAsyRl0IQRmPWk2HTH0hZ7AAPUu3JnD/DsGP30S1ZhXWlqmPKLxu6zkK0
-	 Gvx2uDI41dEq53tgcySD+noeNIQydPnAVWXA85pU=
+	b=uow41j18OlolfhGdmG9+Yv7xEBb0ifrw93FfhxWO2L3IUWs65NNT+n6AOpXejIG4h
+	 rOY36EkR+DC+VSUcldJqdGV2eQsB/DngWooTTPK+EG9RwDHh7jb2d5iSEs/UTVgKq/
+	 94t+3HyEB3lM22yz8VewLKzn4gbluWg7tH8vy3JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgHHXhZ (ORCPT
+        id S1727965AbgHHXh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50184 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727899AbgHHXhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:17 -0400
+        id S1727906AbgHHXhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0605420716;
-        Sat,  8 Aug 2020 23:37:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B017206D8;
+        Sat,  8 Aug 2020 23:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929836;
-        bh=n4p+AeW6JiuIsLx1WW7NJfTXfksep1+709oM9kBwEgI=;
+        s=default; t=1596929837;
+        bh=9bkHb39tOTEUTlknkrd/yFf5OeUdFtEmEuhvmxeL6wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KViAebb0CFrW9Tm9xR+XkQvF25HJvWtBFXXG2ijKVVNkQv37xAm7EIAsEYnMFryy7
-         +YUnMas5wNs+OZqckMUQ7DlVGkTdyAOsVavhn8JMK0J2HHO/yjg4A+dB/6Gf7JdraY
-         w5/8rgW5mRlJxMpT03aTj+C+Sau/q9e8sE2BGm3I=
+        b=ZrOXFhBZFro+uE+W5mbDZJiYIznJoOqrp8pYyo73FSEKve3Kei6NLDlcUnKot8XwI
+         rBUfljMTQEXbuRKyQpTeZh3yDK9wG/IrO/LHJlDpIlS0oUgcMp6uq0FE+bz8BtIPNj
+         85ET88Y44WCK/9MyJ/SkFEvJUm+ZOWopWk3QE6X0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 67/72] nvme-tcp: fix controller reset hang during traffic
-Date:   Sat,  8 Aug 2020 19:35:36 -0400
-Message-Id: <20200808233542.3617339-67-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 68/72] nvme-rdma: fix controller reset hang during traffic
+Date:   Sat,  8 Aug 2020 19:35:37 -0400
+Message-Id: <20200808233542.3617339-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 2875b0aecabe2f081a8432e2bc85b85df0529490 ]
+[ Upstream commit 9f98772ba307dd89a3d17dc2589f213d3972fc64 ]
 
 commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
 exposed an issue where we may hang trying to wait for queue freeze
@@ -82,45 +82,45 @@ Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 12 +++++++++---
+ drivers/nvme/host/rdma.c | 12 +++++++++---
  1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index f3a91818167b1..83bb329d4113a 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1744,15 +1744,20 @@ static int nvme_tcp_configure_io_queues(struct nvme_ctrl *ctrl, bool new)
- 			ret = PTR_ERR(ctrl->connect_q);
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 13506a87a4444..af0cfd25ed7a4 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -941,15 +941,20 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
+ 			ret = PTR_ERR(ctrl->ctrl.connect_q);
  			goto out_free_tag_set;
  		}
 -	} else {
--		blk_mq_update_nr_hw_queues(ctrl->tagset,
--			ctrl->queue_count - 1);
+-		blk_mq_update_nr_hw_queues(&ctrl->tag_set,
+-			ctrl->ctrl.queue_count - 1);
  	}
  
- 	ret = nvme_tcp_start_io_queues(ctrl);
+ 	ret = nvme_rdma_start_io_queues(ctrl);
  	if (ret)
  		goto out_cleanup_connect_q;
  
 +	if (!new) {
-+		nvme_start_queues(ctrl);
-+		nvme_wait_freeze(ctrl);
-+		blk_mq_update_nr_hw_queues(ctrl->tagset,
-+			ctrl->queue_count - 1);
-+		nvme_unfreeze(ctrl);
++		nvme_start_queues(&ctrl->ctrl);
++		nvme_wait_freeze(&ctrl->ctrl);
++		blk_mq_update_nr_hw_queues(ctrl->ctrl.tagset,
++			ctrl->ctrl.queue_count - 1);
++		nvme_unfreeze(&ctrl->ctrl);
 +	}
 +
  	return 0;
  
  out_cleanup_connect_q:
-@@ -1857,6 +1862,7 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
+@@ -982,6 +987,7 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
+ 		bool remove)
  {
- 	if (ctrl->queue_count <= 1)
- 		return;
-+	nvme_start_freeze(ctrl);
- 	nvme_stop_queues(ctrl);
- 	nvme_tcp_stop_io_queues(ctrl);
- 	if (ctrl->tagset) {
+ 	if (ctrl->ctrl.queue_count > 1) {
++		nvme_start_freeze(&ctrl->ctrl);
+ 		nvme_stop_queues(&ctrl->ctrl);
+ 		nvme_rdma_stop_io_queues(ctrl);
+ 		if (ctrl->ctrl.tagset) {
 -- 
 2.25.1
 
