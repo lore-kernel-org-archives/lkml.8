@@ -2,144 +2,219 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC80C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322C7206B6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6817206B6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 21:51:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="J7G/GPP/";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="SkKAmV3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgHHVrj (ORCPT
+        id S1726120AbgHHVvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 17:47:39 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35784 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHHVrh (ORCPT
+        Sat, 8 Aug 2020 17:51:39 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57526 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725950AbgHHVvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 17:47:37 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2D2E81C0BD9; Sat,  8 Aug 2020 23:47:34 +0200 (CEST)
-Date:   Sat, 8 Aug 2020 23:47:33 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org
-Subject: -next on 32-bit thinkpad x60: blinking screen, intel DRM responsible?
-Message-ID: <20200808214733.GA25436@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+        Sat, 8 Aug 2020 17:51:38 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 078LoVuo015561;
+        Sat, 8 Aug 2020 14:51:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=facebook;
+ bh=shnf3XUgsWxS5mb56nP4OtfUtcLVG0fBIS33PQJ7Yxs=;
+ b=J7G/GPP/vEc6PNiadBQK7JaBSYjB6uEZyIFj9QlTkcJMoj96aS62Wu90YrFAS7SUUrOe
+ UQsumHCHMs3YhiRAAH8w9eWRLgYphFy5tJP4pXwO1vQx/7ahPYWG+wWMUGSF8gtDILFE
+ pTEt514/4GgXz6Koo6C8/iZyK79yB38CTqw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32ssjk1np7-20
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 08 Aug 2020 14:51:27 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sat, 8 Aug 2020 14:43:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nfJg/5SDpBmbTG+V4LfoAlwFY9uuDtFOCDeor9fYbrvnZGz9uS4nym5HGGYaAlYhwhE4mZJp02XzfPF50RezhSEHKr1PsLWh6BAPL+5VwoDkzunENtxEJlUM6OukX98EiL/RYrZb4SIzh9WqC86x7OwLeoyMJBzP6QIRsLox4jnQK0P9KcGo6yCggDJwTQ+YAbvOzmro59LeGm29lla/uVn+k5Q8h9h4Ms7seO7HNCJSEOmEJoBoQHazws3BjeBD524pxBApfW+n61axMPgU0wxwb4nb4oABgpaeQuGkCOaotrZox6js1IxY/TRfB+HzR8U2xqg20SV73DZBTSgYkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=shnf3XUgsWxS5mb56nP4OtfUtcLVG0fBIS33PQJ7Yxs=;
+ b=KLImhLBZLIFUcpHWFMKr2LQ9Y66MYkX03dnHB2ORA60HsyhHM3OGuRdyqhjp0DNvXQvMnQnzmrT3XsNmKjcqFShGO5ZKdpIlDIwJuU7WduykjJjM2hZhW2XIGXAQbVVII5uDaOnFNaWtbtOh5PcrqtGA35dQ4CSRzwxJF0N0seEG5sI8gl/KdO5MkPbosa+bBwa0hsJa+NpCxeDF0uxQeJDk2xL/sg/2fFHnOZDDFvji5TEfQiNNcobKv0qOwMR+KNmXMpog9BZbT7Ac0chLYD49y8u6Cxjnp1oG/v9KrZhhoe8mt8lAFrsCxggsaNm7MS7zDAoRoDtOzUI2DnWUkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=shnf3XUgsWxS5mb56nP4OtfUtcLVG0fBIS33PQJ7Yxs=;
+ b=SkKAmV3wTQNoFBzbF9n/Y1HlbhVvxJ8FB7lOB4plKtLB28KPffMqzyx6HFV/e5kCeBMlSP8GwtbKQJb+NV7XLWhzXWYLX1jZFWdXfjU/gXh3ZL8VtaKPBMM4OPCOzhDf4AGh1K4J0SC7deAetmoxdLArSNPXYxuZljcNhjOl4wE=
+Authentication-Results: linux.alibaba.com; dkim=none (message not signed)
+ header.d=none;linux.alibaba.com; dmarc=none action=none header.from=fb.com;
+Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
+ (2603:10b6:805:e3::14) by SA0PR15MB3952.namprd15.prod.outlook.com
+ (2603:10b6:806:8d::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Sat, 8 Aug
+ 2020 21:43:11 +0000
+Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
+ ([fe80::197f:d445:824d:1efa]) by SN6PR1501MB4141.namprd15.prod.outlook.com
+ ([fe80::197f:d445:824d:1efa%6]) with mapi id 15.20.3261.019; Sat, 8 Aug 2020
+ 21:43:11 +0000
+Date:   Sat, 8 Aug 2020 14:43:06 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+CC:     Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
+Message-ID: <20200808214306.GA1409287@carbon.dhcp.thefacebook.com>
+References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200731151655.GB491801@cmpxchg.org>
+ <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
+ <20200803081815.GD5174@dhcp22.suse.cz>
+ <bd61e672-b997-c4cd-2047-fca9dc11cc4c@linux.alibaba.com>
+ <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
+ <5622ef68-5e70-d1a9-d1be-b45411b6be5c@linux.alibaba.com>
+ <4740bac1-72f6-a640-ab6a-a8801e68c27a@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4740bac1-72f6-a640-ab6a-a8801e68c27a@linux.alibaba.com>
+X-ClientProxiedBy: BYAPR03CA0031.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::44) To SN6PR1501MB4141.namprd15.prod.outlook.com
+ (2603:10b6:805:e3::14)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:a2b8) by BYAPR03CA0031.namprd03.prod.outlook.com (2603:10b6:a02:a8::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend Transport; Sat, 8 Aug 2020 21:43:09 +0000
+X-Originating-IP: [2620:10d:c090:400::5:a2b8]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1e17b8cd-3a25-46e9-a694-08d83be40b98
+X-MS-TrafficTypeDiagnostic: SA0PR15MB3952:
+X-Microsoft-Antispam-PRVS: <SA0PR15MB3952F4B3FD54ABCC32A8F9F2BE460@SA0PR15MB3952.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vY6OM+dFvNJdYV6ZEq4ihnekAMtHh3irqsh7V1dDqR3GIjHZ3pakqvKgenJGTN5r+NMnxGCA4DSROqMdSnltAale+O9NOtYoWda2/TCkaBmItwkB2R8ndHPtDbDWN6OgDj+NYK0AVITAxyMh//6dChBB/22Oa+2MWK4+6s/u6qR8QcW6pBPorM/a74qDNYknzq4dkRXaoFm0hN6uuC5MwXozWiTSuLumPsYK9SmtJJGsafhX0HFB0eUEw/hlNArZ7toKygYsGhQjZOiNCc3YZYs7BJ5idlXV3JjOYgQ3HiPbFj7sej/fWWACmlKMNOLwyK/HX2Q3mspahw4XbBWoYQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB4141.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(39860400002)(396003)(136003)(346002)(16526019)(186003)(6916009)(316002)(2906002)(66946007)(66476007)(5660300002)(8936002)(478600001)(66556008)(54906003)(83380400001)(52116002)(55016002)(33656002)(6666004)(7696005)(86362001)(8676002)(53546011)(1076003)(9686003)(6506007)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Doo6V85qf02dtQ4HVz///kuqFHmRmqnBSyRTCojcm5IROT2eCqrgVqyuOSaPvP53Rl0a7XAlcskFpOWXyMWO4ekcKkuVEdICxhHrmwltCdReijDwYF/RqlR3Vbh3F7npZ1cK/Nhc7xoImvGId2FnSwZSsqz/ZSuH2Szhxd6uyYn51vnHoNavQwzJlCWCXqKc0440VH6A1j5mxEnnHrKcyXcbR012V9VP9FC3x8lif9VtXOz3Ol9V/ZPKF+0XwJDyz6b/wddT+CJryRwVvGuds+b3xwQn0TgH+Yw35kUiqtorrWLB2HjbhGcz1gfxzRyTHpiisWchr/R7N0sdy8wFMNewzb5GnOoE7KRjDjXeFbLTFabOlpz6P7gWshtipxfg3x1hpS5EZJ4YxCvPiXGFYfTQcqcj52N+4mn/g7PqWJZjtL3A+6ZjqVrSEg0bHDlZkWGiKs7moDKq308yVjC5oMroXpr/pTcN/dF5Cseg2FUkH1R6bzw4bl8I0lFCZMSM0Vz4YAV1wZ7/PRJl5vT43htQnVaHzlVZnlzG+P69PIc0L0Er3EQ1xKVtYt//kgsvmrJH6+D7wDjW4I+uImPoj48ILFHLer67rkCLK/P0ggFiNqgOeE7B49+WDk3PEEKBnaLhFonWRTeuLt87rJsiHLgIUOlZXwJnnETk36Pg48c=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e17b8cd-3a25-46e9-a694-08d83be40b98
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB4141.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2020 21:43:10.9369
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3qZJEKxkxpIhy2e4yro6JK7Or8oasAm8Owgrq3MHpsn2l+Y/GFHMUMv9c6t48E0M
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR15MB3952
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-08_15:2020-08-06,2020-08-08 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011
+ phishscore=0 suspectscore=1 bulkscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008080167
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-Next has been unusable for a while, but today I got dmesg.
-
-Screen is blinking, machine is very unhappy, and ssh is slow/hangs,
-but I got this:
-
-This is recurring patern, usually machine dies like this within 30
-minutes of boot.
-
-
-[  455.019838] perf: interrupt took too long (2509 > 2500), lowering kernel=
-=2Eperf_event_max_sample_rate to 79500
-[  752.720607] perf: interrupt took too long (3153 > 3136), lowering kernel=
-=2Eperf_event_max_sample_rate to 63250
-[ 1235.055394] BUG: unable to handle page fault for address: f8801000
-[ 1235.055408] #PF: supervisor write access in kernel mode
-[ 1235.055414] #PF: error_code(0x0002) - not-present page
-[ 1235.055420] *pdpt =3D 0000000031ff2001 *pde =3D 0000000000000000=20
-[ 1235.055436] Oops: 0002 [#1] PREEMPT SMP PTI
-[ 1235.055446] CPU: 1 PID: 3013 Comm: Xorg Not tainted 5.8.0-next-20200807+=
- #132
-[ 1235.055453] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[ 1235.055466] EIP: eb_relocate_vma+0xdee/0xf50
-[ 1235.055475] Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4 fd ff ff ff ff ff =
-ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00 00 8b 85 d0 fd ff ff <c7=
-> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89 43 08 e9 2c f6 ff
-[ 1235.055483] EAX: 009a706c EBX: f8801000 ECX: 0034e000 EDX: 00000000
-[ 1235.055490] ESI: f1fd5cd4 EDI: f1fd5a5c EBP: f1fd5c6c ESP: f1fd5a04
-[ 1235.055498] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
-[ 1235.055505] CR0: 80050033 CR2: f8801000 CR3: 31856000 CR4: 000006b0
-[ 1235.055511] Call Trace:
-[ 1235.055529]  ? i915_vma_pin+0x2f4/0x850
-[ 1235.055540]  ? __mutex_unlock_slowpath+0x2b/0x2c0
-[ 1235.055549]  ? __active_retire+0x7e/0xd0
-[ 1235.055557]  ? mutex_unlock+0xb/0x10
-[ 1235.055564]  ? i915_vma_pin+0x2f4/0x850
-[ 1235.055573]  ? eb_lookup_vmas+0x272/0x9f0
-[ 1235.055581]  i915_gem_do_execbuffer+0xa7b/0x2730
-[ 1235.055595]  ? intel_runtime_pm_put_unchecked+0xd/0x10
-[ 1235.055602]  ? i915_gem_gtt_pwrite_fast+0xf6/0x520
-[ 1235.055613]  ? __lock_acquire.isra.0+0x223/0x500
-[ 1235.055624]  ? cache_alloc_debugcheck_after+0x151/0x180
-[ 1235.055632]  ? kvmalloc_node+0x69/0x80
-[ 1235.055639]  ? __kmalloc+0x92/0x120
-[ 1235.055646]  ? kvmalloc_node+0x69/0x80
-[ 1235.055654]  i915_gem_execbuffer2_ioctl+0xdd/0x350
-[ 1235.055662]  ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-[ 1235.055671]  drm_ioctl_kernel+0x91/0xe0
-[ 1235.055679]  ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-[ 1235.055686]  drm_ioctl+0x1fd/0x371
-[ 1235.055694]  ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-[ 1235.055706]  ? posix_get_monotonic_timespec+0x1d/0x80
-[ 1235.055714]  ? drm_ioctl_kernel+0xe0/0xe0
-[ 1235.055723]  __ia32_sys_ioctl+0x14b/0x7c6
-[ 1235.055732]  ? _copy_to_user+0x21/0x30
-[ 1235.055742]  ? exit_to_user_mode_prepare+0x53/0x100
-[ 1235.055752]  do_int80_syscall_32+0x2c/0x40
-[ 1235.055761]  entry_INT80_32+0x116/0x116
-[ 1235.055768] EIP: 0xb7f08092
-[ 1235.055776] Code: 00 00 00 e9 90 ff ff ff ff a3 24 00 00 00 68 30 00 00 =
-00 e9 80 ff ff ff ff a3 e8 ff ff ff 66 90 00 00 00 00 00 00 00 00 cd 80 <c3=
-> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-[ 1235.055784] EAX: ffffffda EBX: 0000000a ECX: c0406469 EDX: bfe9cd4c
-[ 1235.055791] ESI: b72f6000 EDI: c0406469 EBP: 0000000a ESP: bfe9ccc4
-[ 1235.055798] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00200292
-[ 1235.055808]  ? asm_exc_nmi+0xcc/0x2bc
-[ 1235.055813] Modules linked in:
-[ 1235.055823] CR2: 00000000f8801000
-[ 1235.055833] ---[ end trace f487886b697d29e8 ]---
-[ 1235.055840] EIP: eb_relocate_vma+0xdee/0xf50
-[ 1235.055848] Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4 fd ff ff ff ff ff =
-ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00 00 8b 85 d0 fd ff ff <c7=
-> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89 43 08 e9 2c f6 ff
-[ 1235.055855] EAX: 009a706c EBX: f8801000 ECX: 0034e000 EDX: 00000000
-[ 1235.055862] ESI: f1fd5cd4 EDI: f1fd5a5c EBP: f1fd5c6c ESP: f1fd5a04
-[ 1235.055870] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
-[ 1235.055877] CR0: 80050033 CR2: f8801000 CR3: 31856000 CR4: 000006b0
-[ 1235.062533] BUG: unable to handle page fault for address: f8803038
+On Sat, Aug 08, 2020 at 09:22:29PM +0800, Alex Shi wrote:
+> 
+> 
+> 在 2020/8/5 下午9:02, Alex Shi 写道:
+> > 
+> > 
+> > 在 2020/8/5 下午8:28, Alex Shi 写道:
+> >> The last patch has a problem on define. this version could fix it.
+> >>
+> >> BTW, I see some !memcg happens when MEMCG compilered but disabled by cgroup_disable
+> >>
+> >>
+> >> [   94.657666] ---[ end trace f1f34bfc3b32ed2f ]---
+> >> [   95.138995] anon flags: 0x5005b48008000d(locked|uptodate|dirty|swapbacked)
+> >> [   95.146220] raw: 005005b48008000d dead000000000100 dead000000000122 ffff8897c7c76ad1
+> >> [   95.154549] raw: 0000000000000022 0000000000000000 0000000200000000 0000000000000000
+> >> [   95.162876] page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
+> >>
+> >>
+> > 
+> > The following patch may helpful.
+> 
+> Any comments for the 2 patches?
+> 
+> Thanks
+> Alex
+> 
+> > 
+> > From 8bfb26a2e37e08dc61d20212bcfa5812a367ba94 Mon Sep 17 00:00:00 2001
+> > From: Alex Shi <alex.shi@linux.alibaba.com>
+> > Date: Wed, 5 Aug 2020 20:32:12 +0800
+> > Subject: [PATCH] mm/memcg: don't try charge swap if memcg disabled
+> > 
+> > If we disabled memcg by cgroup_disable=memory, the swap charges are
+> > still called. Let's return from the funcs earlier and keep WARN_ON
+> > monitor.
+> > 
+> > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: cgroups@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  mm/memcontrol.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index cb07a48d53aa..65f2b42d25af 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -7163,6 +7163,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+> >  	VM_BUG_ON_PAGE(PageLRU(page), page);
+> >  	VM_BUG_ON_PAGE(page_count(page), page);
+> >  
+> > +	if (mem_cgroup_disabled())
+> > +		return;
+> > +
+> >  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+> >  		return;
+> >  
+> > @@ -7228,6 +7231,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+> >  	struct mem_cgroup *memcg;
+> >  	unsigned short oldid;
+> >  
+> > +	if (mem_cgroup_disabled())
+> > +		return 0;
+> > +
+> >  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+> >  		return 0;
+> >  
+> > 
 
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Hi Alex,
 
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
+this patch looks good to me. Please, feel free to add
+Reviewed-by: Roman Gushchin <guro@fb.com>
 
------BEGIN PGP SIGNATURE-----
+What's the second patch?
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXy8ddQAKCRAw5/Bqldv6
-8teVAJ4gtPJwn/k0a6WPRONPwwEifAJZqgCffRvyBv+ciHbaaFjYXOw/fM26ECo=
-=oyKA
------END PGP SIGNATURE-----
+Thanks!
 
---qMm9M+Fa2AknHoGS--
