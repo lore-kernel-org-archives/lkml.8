@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBECEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0786F20825
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DA42053B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930139;
-	bh=Ue6zaatc1/GW/qRdV39PeAYjP7EWTq+M9mE+0jKMtgE=;
+	s=default; t=1596930143;
+	bh=sYiXg3G94M+HiuTnzDDfRf926aFKFASDQAR01m4WSwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8ivDRLmoTfgntLBsfwtg0n1l3yEXOiARXbWqSotp82psDo8bsJY9ypWSyij9dmu4
-	 0fxnukD/T2lu5v2eCet66N7F5AnanDs5LYjWqR4OlTuk+K5hkU0ukFSvUL45HaYFsG
-	 EbKqqdpQHTAkeyScFVCV3DFUWFR2CissJWa1Y4Z4=
+	b=s7zyUZrU/Z8KCbMVRfp8Elfp1Lu0SBxzVADOZrONnWzKFZtKraWsTrNMSuCfXWpGN
+	 U6jXqoAcNJhGYqkSs2bx0IJcMBC09JGlSOkCozFAJAaV2AgPOyWUxSw25jNPlqTh7Y
+	 X95cofwEbEkmkEEqNaTlJ2+n6twmLthiNsMoy378=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgHHXmR (ORCPT
+        id S1728785AbgHHXkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:42:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55716 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728798AbgHHXkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:40:19 -0400
+        id S1728687AbgHHXj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1125220791;
-        Sat,  8 Aug 2020 23:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 372242087C;
+        Sat,  8 Aug 2020 23:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596930018;
-        bh=Ue6zaatc1/GW/qRdV39PeAYjP7EWTq+M9mE+0jKMtgE=;
+        s=default; t=1596929997;
+        bh=sYiXg3G94M+HiuTnzDDfRf926aFKFASDQAR01m4WSwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HloBrSKUdu5eirSafeow1Rb+LX+wBDbtmgnj5RD+/KKRO61C3JKm0mP03KcHk37of
-         dwPTlz2hkw5Zk1drr8vyDaRX5oL2GtQYxkqnUB+S0RBNzBt3C+hp/LGFmq0Na2Oe/8
-         sSdcOs8xHiFFVQmuiQKmlwQXvM95Hw+8kO2Lu3QI=
+        b=r4RuEWVIKEHUBPPTxvZdRuc4Fe2YbVVl26QfWec7OjbNBhCzibBCCAeMTUTBbWeXz
+         WQXct0DoOq1gOno0q7JbtiVasxCW19T+5WyCrun9kQ7MyjhfIN5LC/IN6ClscdBn1S
+         eT5Lxt7YgU+p+T8A6+yFZvX+g8Slcn6ZHRws3UFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 04/14] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
-Date:   Sat,  8 Aug 2020 19:40:03 -0400
-Message-Id: <20200808234013.3619541-4-sashal@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dien Pham <dien.pham.ry@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/21] clk: scmi: Fix min and max rate when registering clocks with discrete rates
+Date:   Sat,  8 Aug 2020 19:39:32 -0400
+Message-Id: <20200808233941.3619277-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808234013.3619541-1-sashal@kernel.org>
-References: <20200808234013.3619541-1-sashal@kernel.org>
+In-Reply-To: <20200808233941.3619277-1-sashal@kernel.org>
+References: <20200808233941.3619277-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
+[ Upstream commit fcd2e0deae50bce48450f14c8fc5611b08d7438c ]
 
-The puma gmac node currently uses opposite active-values for the
-gmac phy reset pin. The gpio-declaration uses active-high while the
-separate snps,reset-active-low property marks the pin as active low.
+Currently we are not initializing the scmi clock with discrete rates
+correctly. We fetch the min_rate and max_rate value only for clocks with
+ranges and ignore the ones with discrete rates. This will lead to wrong
+initialization of rate range when clock supports discrete rate.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+Fix this by using the first and the last rate in the sorted list of the
+discrete clock rates while registering the clock.
 
-So bring this in line and make both properties match, similar to the
-other Rockchip board.
-
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
+Link: https://lore.kernel.org/r/20200709081705.46084-2-sudeep.holla@arm.com
+Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reported-and-tested-by: Dien Pham <dien.pham.ry@renesas.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index b08a998ca1024..0d5679380b2a6 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -193,7 +193,7 @@ &gmac {
- 	phy-mode = "rgmii";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rgmii_pins>;
--	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
- 	tx_delay = <0x10>;
+diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+index a985bf5e1ac61..c65d30bba7005 100644
+--- a/drivers/clk/clk-scmi.c
++++ b/drivers/clk/clk-scmi.c
+@@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
+ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+ {
+ 	int ret;
++	unsigned long min_rate, max_rate;
++
+ 	struct clk_init_data init = {
+ 		.flags = CLK_GET_RATE_NOCACHE,
+ 		.num_parents = 0,
+@@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+ 
+ 	sclk->hw.init = &init;
+ 	ret = devm_clk_hw_register(dev, &sclk->hw);
+-	if (!ret)
+-		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
+-				      sclk->info->range.max_rate);
++	if (ret)
++		return ret;
++
++	if (sclk->info->rate_discrete) {
++		int num_rates = sclk->info->list.num_rates;
++
++		if (num_rates <= 0)
++			return -EINVAL;
++
++		min_rate = sclk->info->list.rates[0];
++		max_rate = sclk->info->list.rates[num_rates - 1];
++	} else {
++		min_rate = sclk->info->range.min_rate;
++		max_rate = sclk->info->range.max_rate;
++	}
++
++	clk_hw_set_rate_range(&sclk->hw, min_rate, max_rate);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
