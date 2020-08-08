@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B402206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1333D206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930496;
-	bh=G5K0RJa7nYZUNphGIKeV64484sMdLIh3FAx+a8erWrg=;
+	s=default; t=1596930501;
+	bh=ZP78nRBu0zFa6HikHbRlcMnRoQrOzDOzp1XtjT6hGhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FXpfwXn/QGFlYfpgfjetJ45XfGlKCQYCPuN/DHfzZ5LOxnNO4B0iVpiulD0wNGNGZ
-	 CLe+uFStIZAAmqZ2IjKvyJiJRTNp8k+PbmC0EEmCuQ3Okfpn2XxBvJCutFRlEfBg89
-	 EhHAe6nPfaIp1ANsD1zYzYLX725li5y0gPL4Uso4=
+	b=QKxke+SGyloX8969RhH3eNr8gW3Lm2kqezv68N4CbIu0JWD0jEYDBI1AT7fAC9Dhq
+	 V8A1TPC6yJae9DI338DTxhCM6kFQS/uWNabqqjKLUXGHSORcBvL7QD4LJAYLGWuwUf
+	 /8osG46K+7zyaoA62zIZ+LiTLmoPmQ/qMGIWqKz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgHHXsN (ORCPT
+        id S1728612AbgHHXsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:48:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727985AbgHHXhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:31 -0400
+        id S1727981AbgHHXha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F18A207BB;
-        Sat,  8 Aug 2020 23:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 262AD2073E;
+        Sat,  8 Aug 2020 23:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929851;
-        bh=G5K0RJa7nYZUNphGIKeV64484sMdLIh3FAx+a8erWrg=;
+        s=default; t=1596929849;
+        bh=ZP78nRBu0zFa6HikHbRlcMnRoQrOzDOzp1XtjT6hGhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TyjTSw9Spthazbkj1ksAhzzcw4YUDRduDYUCkoQBx/x53uls2ziUvVX2eOlXillBx
-         sact/PJoYO9FyLpVS+80Bt0eSkiEZNFzZWiEBsq2NeBKCBS2F/COqIwX7GbQrb65XY
-         aaN5Qcppnc1cOJCUPoLttHceQOt+VNdXHHShg1Zo=
+        b=PMQTR8HaRIvFGgrgrjGJn6oDDjoXU6ZOy1P9wquXdHuT5uu7BmNPW87p7OJ8AB7X2
+         0ryluCDF25quubk5oxweZ3xZDmYxantkQ1ITxOOXo3ZyPcXR89ZNa+5jOJf6PViHUD
+         9uADV2TrWc5iRh8OI69rEuYClAfazgf5xeeuDD58=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 05/58] x86, sched: Bail out of frequency invariance if turbo_freq/base_freq gives 0
-Date:   Sat,  8 Aug 2020 19:36:31 -0400
-Message-Id: <20200808233724.3618168-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 04/58] x86, sched: Bail out of frequency invariance if turbo frequency is unknown
+Date:   Sat,  8 Aug 2020 19:36:30 -0400
+Message-Id: <20200808233724.3618168-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -62,50 +63,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Giovanni Gherdovich <ggherdovich@suse.cz>
 
-[ Upstream commit f4291df103315a696f0b8c4f45ca8ae773c17441 ]
+[ Upstream commit 51beea8862a3095559862df39554f05042e1195b ]
 
-Be defensive against the case where the processor reports a base_freq
-larger than turbo_freq (the ratio would be zero).
+There may be CPUs that support turbo boost but don't declare any turbo
+ratio, i.e. their MSR_TURBO_RATIO_LIMIT is all zeroes. In that condition
+scale-invariant calculations can't be performed.
 
 Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lkml.kernel.org/r/20200531182453.15254-4-ggherdovich@suse.cz
+Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200531182453.15254-3-ggherdovich@suse.cz
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/smpboot.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/x86/kernel/smpboot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 3917a2de1580c..e5b2b20a0aeee 100644
+index 2f24c334a938b..3917a2de1580c 100644
 --- a/arch/x86/kernel/smpboot.c
 +++ b/arch/x86/kernel/smpboot.c
-@@ -1974,6 +1974,7 @@ static bool core_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
- static bool intel_set_max_freq_ratio(void)
- {
- 	u64 base_freq, turbo_freq;
-+	u64 turbo_ratio;
- 
- 	if (slv_set_max_freq_ratio(&base_freq, &turbo_freq))
- 		goto out;
-@@ -2007,9 +2008,15 @@ static bool intel_set_max_freq_ratio(void)
+@@ -1999,9 +1999,11 @@ static bool intel_set_max_freq_ratio(void)
+ 	/*
+ 	 * Some hypervisors advertise X86_FEATURE_APERFMPERF
+ 	 * but then fill all MSR's with zeroes.
++	 * Some CPUs have turbo boost but don't declare any turbo ratio
++	 * in MSR_TURBO_RATIO_LIMIT.
+ 	 */
+-	if (!base_freq) {
+-		pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
++	if (!base_freq || !turbo_freq) {
++		pr_debug("Couldn't determine cpu base or turbo frequency, necessary for scale-invariant accounting.\n");
  		return false;
  	}
- 
--	arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
--					base_freq);
-+	turbo_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE, base_freq);
-+	if (!turbo_ratio) {
-+		pr_debug("Non-zero turbo and base frequencies led to a 0 ratio.\n");
-+		return false;
-+	}
-+
-+	arch_turbo_freq_ratio = turbo_ratio;
- 	arch_set_max_freq_ratio(turbo_disabled());
-+
- 	return true;
- }
  
 -- 
 2.25.1
