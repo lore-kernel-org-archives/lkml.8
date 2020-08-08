@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24928C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6E8C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1F7620672
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F57920672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930599;
-	bh=8W+7jwLj8l+bpUwYU6QTJexa6n0bhJcPmzX46pZ5JNw=;
+	s=default; t=1596930602;
+	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5YIr94XYZtC85uzaTcxn3XsahJYqcioDKXpMUlWKliq3fHZHCFsG97BP4Fpg+9HH
-	 lteY078G4OlBFYJOWPHSdCblNbXlgESRSL65/gv83jKoeRr18PtCnqooo4h1hbWT4l
-	 dGmi1cEj5obpV5lMCrwlPKIeFymGrVUAW/xgD1bA=
+	b=m9yjkAdeZyW7RczJhLmDA5Zr+IlAG1VhzdTZ2DNAq+frdCYQNOn0ZEGfq1w/E8yeC
+	 /9EjVvy7sdqB681QX1pgzvw3L0Tp0YHWyHh+5yoMACJooBFSTSnWOYRcHdKwyxw3tM
+	 7TWGrAAoLw3yIlWDhdtDgAtny2IhfInq908wAYoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgHHXtz (ORCPT
+        id S1727025AbgHHXgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:49:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbgHHXgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:49 -0400
+        id S1726981AbgHHXgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25FD9206C3;
-        Sat,  8 Aug 2020 23:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B61D20716;
+        Sat,  8 Aug 2020 23:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929808;
-        bh=8W+7jwLj8l+bpUwYU6QTJexa6n0bhJcPmzX46pZ5JNw=;
+        s=default; t=1596929801;
+        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=riI7WuH95uy0neiXFdNVsjjSdBLYEAsjrfLW1iE/KmEf/b/QEeo5g3PBZQI70Oqvy
-         NA4Zt8Llx3S//L5Jqb6GMlmUMLCJqnXxvwr8Zocqp1mffRO660DgllQO0nE6PhAgl8
-         OJf9oKQmaiFaqvWhU6SO6XJo/LRr9P5Y9YgAEHvY=
+        b=BCquYTAzRcdAbRzXcQBw0eA203YR1lLTO+QNTy5JTLgm5vblZlNKc01iR7puxgwb+
+         nVSCR1oGo88usBJMHbckJTdU3lHC/5Fs3aYTdU5f5aR0rLlf+lVuNGcFCtJ46S0Dwu
+         pFEVtyQ3ZgF2p6NtXLkp9fHiaqhMwPFSnIssvp+c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 45/72] tpm: Require that all digests are present in TCG_PCR_EVENT2 structures
-Date:   Sat,  8 Aug 2020 19:35:14 -0400
-Message-Id: <20200808233542.3617339-45-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 39/72] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
+Date:   Sat,  8 Aug 2020 19:35:08 -0400
+Message-Id: <20200808233542.3617339-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -59,113 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 7f3d176f5f7e3f0477bf82df0f600fcddcdcc4e4 ]
+[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
 
-Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-TCG_PCClientPCREvent event log header. Also require that
-TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
-The TCG PC Client Platform Firmware Profile Specification section 9.1
-(Family "2.0", Level 00 Revision 1.04) states:
+Assign the same regulator supply to the remaining CPU cores to address
+this.
 
- For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
- there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
- Note: This includes EV_NO_ACTION events which do not extend the PCR.
-
-Section 9.4.5.1 provides this description of
-TCG_EfiSpecIdEvent.numberOfAlgorithms:
-
- The number of Hash algorithms in the digestSizes field. This field MUST
- be set to a value of 0x01 or greater.
-
-Enforce these restrictions, as required by the above specification, in
-order to better identify and ignore invalid sequences of bytes at the
-end of an otherwise valid TPM2 event log. Firmware doesn't always have
-the means necessary to inform the kernel of the actual event log size so
-the kernel's event log parsing code should be stringent when parsing the
-event log for resiliency against firmware bugs. This is true, for
-example, when firmware passes the event log to the kernel via a reserved
-memory region described in device tree.
-
-POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
-device tree properties to describe the memory region used to pass the
-event log from firmware to the kernel. Unfortunately, the
-"linux,sml-size" property describes the size of the entire reserved
-memory region rather than the size of the event long within the memory
-region and the event log format does not include information describing
-the size of the event log.
-
-tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
-"linux,sml-size" property is used. At the end of that function,
-log->bios_event_log_end is pointing at the end of the reserved memory
-region. That's typically 0x10000 bytes offset from "linux,sml-base",
-depending on what's defined in the device tree source.
-
-The firmware event log only fills a portion of those 0x10000 bytes and
-the rest of the memory region should be zeroed out by firmware. Even in
-the case of a properly zeroed bytes in the remainder of the memory
-region, the only thing allowing the kernel's event log parser to detect
-the end of the event log is the following conditional in
-__calc_tpm2_event_size():
-
-        if (event_type == 0 && event_field->event_size == 0)
-                size = 0;
-
-If that wasn't there, __calc_tpm2_event_size() would think that a 16
-byte sequence of zeroes, following an otherwise valid event log, was
-a valid event.
-
-However, problems can occur if a single bit is set in the offset
-corresponding to either the TCG_PCR_EVENT2.eventType or
-TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
-This could confuse the parser into thinking that an additional entry is
-present in the event log and exposing this invalid entry to userspace in
-the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
-problems have been seen if firmware does not fully zero the memory
-region upon a warm reboot.
-
-This patch significantly raises the bar on how difficult it is for
-stale/invalid memory to confuse the kernel's event log parser but
-there's still, ultimately, a reliance on firmware to properly initialize
-the remainder of the memory region reserved for the event log as the
-parser cannot be expected to detect a stale but otherwise properly
-formatted firmware event log entry.
-
-Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/tpm_eventlog.h | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 64356b199e945..739ba9a03ec16 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 
- 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
- 
--	/* Check if event is malformed. */
-+	/*
-+	 * Perform validation of the event in order to identify malformed
-+	 * events. This function may be asked to parse arbitrary byte sequences
-+	 * immediately following a valid event log. The caller expects this
-+	 * function to recognize that the byte sequence is not a valid event
-+	 * and to return an event size of 0.
-+	 */
- 	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
--		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
-+		   sizeof(TCG_SPECID_SIG)) ||
-+	    !efispecid->num_algs || count != efispecid->num_algs) {
- 		size = 0;
- 		goto out;
- 	}
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index 22466afd38a3a..a628b5ee72b65 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
+ };
++
++&cpu1 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu2 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu3 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 -- 
 2.25.1
 
