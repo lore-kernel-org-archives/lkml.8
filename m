@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2C8207BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DAC20825
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929917;
-	bh=i8CA6/j1VbHk5HL5gl8INswoxQFjy/h3zO5JJS8sS7M=;
+	s=default; t=1596929920;
+	bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ID7GoPQR4fd/xrgo/W12kXl7HlRWykn67DHWMYZEBSt82yZ064QaHMQj1PtFZcuvr
-	 UPB430MZAl0GIEsgvpyHFpR+/Slh/wdG0o2cBjLzFAQkpt7Ajj5zKwpjsWTDaq/RT2
-	 KGxGtH2Ml8P5zaKVLzW8Ca8OTBM3N4pu1nz9gA1o=
+	b=gr6L4MPdoMF3AqaVnnmpwZL9WW8S4ZpBidD3DdOQixE7erGo1gNEAVJhf5/4sbmVM
+	 RT3jSqZbLt048QiqRZ4tkLdfm41w0O53gqbL9L2UE+HriJ7qH07mLxp/SffIgBc/XA
+	 QElmV8BoxldxtOmCTHdB5ycGH1sw1jnrCoO7myzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgHHXig (ORCPT
+        id S1728343AbgHHXij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52470 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:38:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbgHHXia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:30 -0400
+        id S1728326AbgHHXig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAE2D2075D;
-        Sat,  8 Aug 2020 23:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B8DD20748;
+        Sat,  8 Aug 2020 23:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929909;
-        bh=i8CA6/j1VbHk5HL5gl8INswoxQFjy/h3zO5JJS8sS7M=;
+        s=default; t=1596929916;
+        bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrBgI4rw7+1tucuYaLtNo4TCE4hd8Lpfsk9kB9XVxd510A6AWr8jvGYeezTcv4m7I
-         Yxu9m1Hw63LhOxgbLZbj2EWL06SmHBXNxTLWkNGv6rS+1/Z1+uW9Aq4/H4uwamZTnD
-         v/yrh/ZHzBkKSxIFoBfm3BYVAtX8wVd7d7mQ/n5g=
+        b=w+KezyTDvP1bD1aJCqx8I/y72KOzuH/iHHEpr+SEzMVUYTB8HmezKnmD3VclyikaG
+         WmDiAqtfbVT4GHIt3wGjtM4gvdLuO0VOdj7HhU7JY3azCAzRpUu9HM4uuB1C7BY6a7
+         cu0+e82+oKu6Blk5ERUvVMMYsSO8sl6/25SHBstk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 47/58] scripts/selinux/mdp: fix initial SID handling
-Date:   Sat,  8 Aug 2020 19:37:13 -0400
-Message-Id: <20200808233724.3618168-47-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 52/58] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
+Date:   Sat,  8 Aug 2020 19:37:18 -0400
+Message-Id: <20200808233724.3618168-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -59,67 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 382c2b5d23b4245f1818f69286db334355488dc4 ]
+[ Upstream commit 9808357ff2e5bfe1e0dcafef5e78cc5b617a7078 ]
 
-commit e3e0b582c321 ("selinux: remove unused initial SIDs and improve
-handling") broke scripts/selinux/mdp since the unused initial SID names
-were removed and the corresponding generation of policy initial SID
-definitions by mdp was not updated accordingly.  Fix it.  With latest
-upstream checkpolicy it is no longer necessary to include the SID context
-definitions for the unused initial SIDs but retain them for compatibility
-with older checkpolicy.
+cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
+UP configuration, the boot CPU is 0.
 
-Fixes: e3e0b582c321 ("selinux: remove unused initial SIDs and improve handling")
-Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200724184157.29150-1-f.fainelli@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/selinux/mdp/mdp.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/scripts/selinux/mdp/mdp.c b/scripts/selinux/mdp/mdp.c
-index 576d11a60417b..6ceb88eb9b590 100644
---- a/scripts/selinux/mdp/mdp.c
-+++ b/scripts/selinux/mdp/mdp.c
-@@ -67,8 +67,14 @@ int main(int argc, char *argv[])
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index fd7c537fb42ac..4127eeab10af1 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
+ 	u32 val;
  
- 	initial_sid_to_string_len = sizeof(initial_sid_to_string) / sizeof (char *);
- 	/* print out the sids */
--	for (i = 1; i < initial_sid_to_string_len; i++)
--		fprintf(fout, "sid %s\n", initial_sid_to_string[i]);
-+	for (i = 1; i < initial_sid_to_string_len; i++) {
-+		const char *name = initial_sid_to_string[i];
-+
-+		if (name)
-+			fprintf(fout, "sid %s\n", name);
-+		else
-+			fprintf(fout, "sid unused%d\n", i);
-+	}
- 	fprintf(fout, "\n");
+ 	/* Wakeup interrupt should only come from the boot cpu */
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
  
- 	/* print out the class permissions */
-@@ -126,9 +132,16 @@ int main(int argc, char *argv[])
- #define OBJUSERROLETYPE "user_u:object_r:base_t"
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
+@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
+ 	struct bcm7038_l1_chip *intc;
+ 	int boot_cpu, word;
  
- 	/* default sids */
--	for (i = 1; i < initial_sid_to_string_len; i++)
--		fprintf(fout, "sid %s " SUBJUSERROLETYPE "%s\n",
--			initial_sid_to_string[i], mls ? ":" SYSTEMLOW : "");
-+	for (i = 1; i < initial_sid_to_string_len; i++) {
-+		const char *name = initial_sid_to_string[i];
-+
-+		if (name)
-+			fprintf(fout, "sid %s ", name);
-+		else
-+			fprintf(fout, "sid unused%d\n", i);
-+		fprintf(fout, SUBJUSERROLETYPE "%s\n",
-+			mls ? ":" SYSTEMLOW : "");
-+	}
- 	fprintf(fout, "\n");
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
  
- #define FS_USE(behavior, fstype)			    \
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
 -- 
 2.25.1
 
