@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A95C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2F8B206B5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5034620672
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930513;
-	bh=APvDs6SRzrE3GBnZEeLG0DagUxL255mNjD/D2GdW9DY=;
+	s=default; t=1596930521;
+	bh=aKTOyl9duLwPf7+O5+vQT/Ns1nC3HmsArkT1Gs9u4B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vrCRUw1yGZ9G1YtoV0+dBSsYKYSYQbJwmt+NGPdTw9kXr1OHvwCKSdetwseFXKF69
-	 PSoIuj9651UzOn0fPCnGbRdwQsfZ/ik2vBwLo3q+c5UjKU9gNZneVuvhHpT6XA+gaG
-	 csOlz08O7QmE3BF+l7ud4Xu64mxVLejIOcLGpT5Q=
+	b=eJG75cej87pV9OoMfGI9BPqswvD+dtXyssU57eB8vOHyg4UpMHlb/lK4icJs9p2qa
+	 uIBAGHfDOokOU5rkSvNSgUIC5MEokDTlTRtfo2yqxIjymTAkUZHjuJ4JI9aHJCkwiS
+	 k2+nQfzOu1ns9aBxaa1LeiUOINBniWuMwOg2QAdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgHHXsc (ORCPT
+        id S1728138AbgHHXsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgHHXhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:23 -0400
+        id S1727936AbgHHXhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36CD3206C3;
-        Sat,  8 Aug 2020 23:37:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA2392073E;
+        Sat,  8 Aug 2020 23:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929843;
-        bh=APvDs6SRzrE3GBnZEeLG0DagUxL255mNjD/D2GdW9DY=;
+        s=default; t=1596929841;
+        bh=aKTOyl9duLwPf7+O5+vQT/Ns1nC3HmsArkT1Gs9u4B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kcNwrWDFoejdO/9LgUR1q3AXA7Yz8WJ/gjZdXz/pHdntIQdzuAYrgVHfOE5ZrU2/g
-         Vc9AMaUbEUmddo8CajInyeggf2CKd9GrdAK+fSKwsDhqOfsbE2b30kWMp1uOVbpdIT
-         oY7M5SU9y4xkZ8Ux215hJXr2eEvwY3c1Q5MBZOeQ=
+        b=YyePYPWzm0hXJYz3xzjGV90tc42xOFQtlRqNUGsQxGcYxsXsk3QqC+NW/uhuyVdto
+         5Mc31J6TGIcMUQWqQQiwlOMRZUmH8D98qbM6fyFfbvFi3aRlO21lKtfXCTa3vR1fNz
+         vCgD+vthmAzJJtDexCNLP/Ac2X0Zb+KBEzD3m5xk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 72/72] block: don't do revalidate zones on invalid devices
-Date:   Sat,  8 Aug 2020 19:35:41 -0400
-Message-Id: <20200808233542.3617339-72-sashal@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>, Marc Zyngier <maz@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 71/72] irqchip/loongson-pch-pic: Fix the misused irq flow handler
+Date:   Sat,  8 Aug 2020 19:35:40 -0400
+Message-Id: <20200808233542.3617339-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,103 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit 1a1206dc4cf02cee4b5cbce583ee4c22368b4c28 ]
+[ Upstream commit ac62460c24126eb2442e3653a266ebbf05b004d8 ]
 
-When we loose a device for whatever reason while (re)scanning zones, we
-trip over a NULL pointer in blk_revalidate_zone_cb, like in the following
-log:
+Loongson PCH PIC is a standard level triggered PIC, and it need to clear
+interrupt during unmask.
 
-sd 0:0:0:0: [sda] 3418095616 4096-byte logical blocks: (14.0 TB/12.7 TiB)
-sd 0:0:0:0: [sda] 52156 zones of 65536 logical blocks
-sd 0:0:0:0: [sda] Write Protect is off
-sd 0:0:0:0: [sda] Mode Sense: 37 00 00 08
-sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-sd 0:0:0:0: [sda] REPORT ZONES start lba 1065287680 failed
-sd 0:0:0:0: [sda] REPORT ZONES: Result: hostbyte=0x00 driverbyte=0x08
-sd 0:0:0:0: [sda] Sense Key : 0xb [current]
-sd 0:0:0:0: [sda] ASC=0x0 ASCQ=0x6
-sda: failed to revalidate zones
-sd 0:0:0:0: [sda] 0 4096-byte logical blocks: (0 B/0 B)
-sda: detected capacity change from 14000519643136 to 0
-==================================================================
-BUG: KASAN: null-ptr-deref in blk_revalidate_zone_cb+0x1b7/0x550
-Write of size 8 at addr 0000000000000010 by task kworker/u4:1/58
-
-CPU: 1 PID: 58 Comm: kworker/u4:1 Not tainted 5.8.0-rc1 #692
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
-Workqueue: events_unbound async_run_entry_fn
-Call Trace:
- dump_stack+0x7d/0xb0
- ? blk_revalidate_zone_cb+0x1b7/0x550
- kasan_report.cold+0x5/0x37
- ? blk_revalidate_zone_cb+0x1b7/0x550
- check_memory_region+0x145/0x1a0
- blk_revalidate_zone_cb+0x1b7/0x550
- sd_zbc_parse_report+0x1f1/0x370
- ? blk_req_zone_write_trylock+0x200/0x200
- ? sectors_to_logical+0x60/0x60
- ? blk_req_zone_write_trylock+0x200/0x200
- ? blk_req_zone_write_trylock+0x200/0x200
- sd_zbc_report_zones+0x3c4/0x5e0
- ? sd_dif_config_host+0x500/0x500
- blk_revalidate_disk_zones+0x231/0x44d
- ? _raw_write_lock_irqsave+0xb0/0xb0
- ? blk_queue_free_zone_bitmaps+0xd0/0xd0
- sd_zbc_read_zones+0x8cf/0x11a0
- sd_revalidate_disk+0x305c/0x64e0
- ? __device_add_disk+0x776/0xf20
- ? read_capacity_16.part.0+0x1080/0x1080
- ? blk_alloc_devt+0x250/0x250
- ? create_object.isra.0+0x595/0xa20
- ? kasan_unpoison_shadow+0x33/0x40
- sd_probe+0x8dc/0xcd2
- really_probe+0x20e/0xaf0
- __driver_attach_async_helper+0x249/0x2d0
- async_run_entry_fn+0xbe/0x560
- process_one_work+0x764/0x1290
- ? _raw_read_unlock_irqrestore+0x30/0x30
- worker_thread+0x598/0x12f0
- ? __kthread_parkme+0xc6/0x1b0
- ? schedule+0xed/0x2c0
- ? process_one_work+0x1290/0x1290
- kthread+0x36b/0x440
- ? kthread_create_worker_on_cpu+0xa0/0xa0
- ret_from_fork+0x22/0x30
-==================================================================
-
-When the device is already gone we end up with the following scenario:
-The device's capacity is 0 and thus the number of zones will be 0 as well. When
-allocating the bitmap for the conventional zones, we then trip over a NULL
-pointer.
-
-So if we encounter a zoned block device with a 0 capacity, don't dare to
-revalidate the zones sizes.
-
-Fixes: 6c6b35491422 ("block: set the zone size in blk_revalidate_disk_zones atomically")
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: ef8c01eb64ca6719da449dab0 ("irqchip: Add Loongson PCH PIC controller")
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://lore.kernel.org/r/1596099090-23516-6-git-send-email-chenhc@lemote.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-zoned.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/irqchip/irq-loongson-pch-pic.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/block/blk-zoned.c b/block/blk-zoned.c
-index 23831fa8701d8..480dfff69a00c 100644
---- a/block/blk-zoned.c
-+++ b/block/blk-zoned.c
-@@ -497,6 +497,9 @@ int blk_revalidate_disk_zones(struct gendisk *disk,
- 	if (WARN_ON_ONCE(!queue_is_mq(q)))
- 		return -EIO;
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index 016f32c4cbe18..9bf6b9a5f7348 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -64,15 +64,6 @@ static void pch_pic_bitclr(struct pch_pic *priv, int offset, int bit)
+ 	raw_spin_unlock(&priv->pic_lock);
+ }
  
-+	if (!get_capacity(disk))
-+		return -EIO;
+-static void pch_pic_eoi_irq(struct irq_data *d)
+-{
+-	u32 idx = PIC_REG_IDX(d->hwirq);
+-	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
+-
+-	writel(BIT(PIC_REG_BIT(d->hwirq)),
+-			priv->base + PCH_PIC_CLR + idx * 4);
+-}
+-
+ static void pch_pic_mask_irq(struct irq_data *d)
+ {
+ 	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
+@@ -85,6 +76,9 @@ static void pch_pic_unmask_irq(struct irq_data *d)
+ {
+ 	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
+ 
++	writel(BIT(PIC_REG_BIT(d->hwirq)),
++			priv->base + PCH_PIC_CLR + PIC_REG_IDX(d->hwirq) * 4);
 +
- 	/*
- 	 * Ensure that all memory allocations in this context are done as if
- 	 * GFP_NOIO was specified.
+ 	irq_chip_unmask_parent(d);
+ 	pch_pic_bitclr(priv, PCH_PIC_MASK, d->hwirq);
+ }
+@@ -124,7 +118,6 @@ static struct irq_chip pch_pic_irq_chip = {
+ 	.irq_mask		= pch_pic_mask_irq,
+ 	.irq_unmask		= pch_pic_unmask_irq,
+ 	.irq_ack		= irq_chip_ack_parent,
+-	.irq_eoi		= pch_pic_eoi_irq,
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
+ 	.irq_set_type		= pch_pic_set_type,
+ };
+@@ -153,7 +146,7 @@ static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
+ 
+ 	irq_domain_set_info(domain, virq, hwirq,
+ 			    &pch_pic_irq_chip, priv,
+-			    handle_fasteoi_ack_irq, NULL, NULL);
++			    handle_level_irq, NULL, NULL);
+ 	irq_set_probe(virq);
+ 
+ 	return 0;
 -- 
 2.25.1
 
