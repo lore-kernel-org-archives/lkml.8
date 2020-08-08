@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BEAC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0006E20716
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CDC20748
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929949;
-	bh=NoKBmNF1CPMXkPxFxDReFjhMpjaSUi0JQfGvv1WQiBM=;
+	s=default; t=1596929954;
+	bh=mPYpUOLwPa6N6HVe+fte52UqhbZ4u8iZpGJl2gAFN0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j1WelDfM6qCc5sWZJucxPwuFE3z869fBUnQSYA+BMMLcSmT8+HPytem2WndsKxVPX
-	 lw4GtViQUjkmb7K6o2C7Iy+GzlrydYJIRyN7+tXzyxgDtPYWnHC0ecRsDBPtLQfjvn
-	 +e9aeTFZfmcXpSJ+pOXQvoKl/2srcSkCKoy4xMAA=
+	b=j6b+RVm4pA3DSS+KAk+/s8ks8U9S6g5130VVG9DFwNkEnBKwWIN1KuV/iYqcSrd5q
+	 IeLia66mSoSJCliF9Kydzv+1AHUOei4POrhcfR9BC7iTBeM6V6cAaw9/B03mNIvlNJ
+	 wcJE4N1C/BeSozhq0ivJh7U+7AZrmUbkTVHyi95U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgHHXjI (ORCPT
+        id S1726956AbgHHXjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53464 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgHHXjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:00 -0400
+        id S1728468AbgHHXjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9F122B49;
-        Sat,  8 Aug 2020 23:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E0C20748;
+        Sat,  8 Aug 2020 23:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929939;
-        bh=NoKBmNF1CPMXkPxFxDReFjhMpjaSUi0JQfGvv1WQiBM=;
+        s=default; t=1596929945;
+        bh=mPYpUOLwPa6N6HVe+fte52UqhbZ4u8iZpGJl2gAFN0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJANconnNCIsW/B+GBKyp/oZ7+Swe0E60pMm+lIvPvi2yge3+UlygFKSNCBUytz02
-         1Tw2r9c4zQ6tyqJKVHB+xbvI1/+dqLEh3Rdxa3S/9lGD8rGcwfCZ6e4LgdwKQXogfF
-         MzldtDcFZ4FyPrWF84/4h0QQjiS/5hERMAMiEkuc=
+        b=hZNLj3DzkmPPKSuWG5GQvufgwSKMiyC8sa0LaJSoovecx9Fb5n6JfpZ3QCIdcLbGK
+         4nJ2F3lwymrn8O093fOFwY64075QWjrRbrk8oaQqxZMVzaOuLkYNuyzu0mTKt2jcpe
+         d/d8FxeZrUxQfVw19yaoDSl4puVcjxEAWZCO/WKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 11/40] crypto: ccree - fix resource leak on error path
-Date:   Sat,  8 Aug 2020 19:38:15 -0400
-Message-Id: <20200808233844.3618823-11-sashal@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dien Pham <dien.pham.ry@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 16/40] clk: scmi: Fix min and max rate when registering clocks with discrete rates
+Date:   Sat,  8 Aug 2020 19:38:20 -0400
+Message-Id: <20200808233844.3618823-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -60,84 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 9bc6165d608d676f05d8bf156a2c9923ee38d05b ]
+[ Upstream commit fcd2e0deae50bce48450f14c8fc5611b08d7438c ]
 
-Fix a small resource leak on the error path of cipher processing.
+Currently we are not initializing the scmi clock with discrete rates
+correctly. We fetch the min_rate and max_rate value only for clocks with
+ranges and ignore the ones with discrete rates. This will lead to wrong
+initialization of rate range when clock supports discrete rate.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Fixes: 63ee04c8b491e ("crypto: ccree - add skcipher support")
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fix this by using the first and the last rate in the sorted list of the
+discrete clock rates while registering the clock.
+
+Link: https://lore.kernel.org/r/20200709081705.46084-2-sudeep.holla@arm.com
+Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reported-and-tested-by: Dien Pham <dien.pham.ry@renesas.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccree/cc_cipher.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
-index cd9c60268bf8d..9bf0cce578f02 100644
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -163,7 +163,6 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 				     skcipher_alg.base);
- 	struct device *dev = drvdata_to_dev(cc_alg->drvdata);
- 	unsigned int max_key_buf_size = cc_alg->skcipher_alg.max_keysize;
--	int rc = 0;
+diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+index 886f7c5df51a9..e3cdb4a282fea 100644
+--- a/drivers/clk/clk-scmi.c
++++ b/drivers/clk/clk-scmi.c
+@@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
+ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+ {
+ 	int ret;
++	unsigned long min_rate, max_rate;
++
+ 	struct clk_init_data init = {
+ 		.flags = CLK_GET_RATE_NOCACHE,
+ 		.num_parents = 0,
+@@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
  
- 	dev_dbg(dev, "Initializing context @%p for %s\n", ctx_p,
- 		crypto_tfm_alg_name(tfm));
-@@ -175,10 +174,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	ctx_p->flow_mode = cc_alg->flow_mode;
- 	ctx_p->drvdata = cc_alg->drvdata;
- 
-+	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
-+		/* Alloc hash tfm for essiv */
-+		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
-+		if (IS_ERR(ctx_p->shash_tfm)) {
-+			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
-+			return PTR_ERR(ctx_p->shash_tfm);
-+		}
+ 	sclk->hw.init = &init;
+ 	ret = devm_clk_hw_register(dev, &sclk->hw);
+-	if (!ret)
+-		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
+-				      sclk->info->range.max_rate);
++	if (ret)
++		return ret;
++
++	if (sclk->info->rate_discrete) {
++		int num_rates = sclk->info->list.num_rates;
++
++		if (num_rates <= 0)
++			return -EINVAL;
++
++		min_rate = sclk->info->list.rates[0];
++		max_rate = sclk->info->list.rates[num_rates - 1];
++	} else {
++		min_rate = sclk->info->range.min_rate;
++		max_rate = sclk->info->range.max_rate;
 +	}
 +
- 	/* Allocate key buffer, cache line aligned */
- 	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
- 	if (!ctx_p->user.key)
--		return -ENOMEM;
-+		goto free_shash;
- 
- 	dev_dbg(dev, "Allocated key buffer in context. key=@%p\n",
- 		ctx_p->user.key);
-@@ -190,21 +198,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
- 	if (dma_mapping_error(dev, ctx_p->user.key_dma_addr)) {
- 		dev_err(dev, "Mapping Key %u B at va=%pK for DMA failed\n",
- 			max_key_buf_size, ctx_p->user.key);
--		return -ENOMEM;
-+		goto free_key;
- 	}
- 	dev_dbg(dev, "Mapped key %u B at va=%pK to dma=%pad\n",
- 		max_key_buf_size, ctx_p->user.key, &ctx_p->user.key_dma_addr);
- 
--	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
--		/* Alloc hash tfm for essiv */
--		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
--		if (IS_ERR(ctx_p->shash_tfm)) {
--			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
--			return PTR_ERR(ctx_p->shash_tfm);
--		}
--	}
-+	return 0;
- 
--	return rc;
-+free_key:
-+	kfree(ctx_p->user.key);
-+free_shash:
-+	crypto_free_shash(ctx_p->shash_tfm);
-+
-+	return -ENOMEM;
++	clk_hw_set_rate_range(&sclk->hw, min_rate, max_rate);
+ 	return ret;
  }
  
- static void cc_cipher_exit(struct crypto_tfm *tfm)
 -- 
 2.25.1
 
