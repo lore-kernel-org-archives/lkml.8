@@ -2,113 +2,100 @@ Return-Path: <SRS0=uMsS=BS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70E620716
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:28:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrumZTBT"
+	by mail.kernel.org (Postfix) with ESMTP id 636D42072D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Aug 2020 17:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgHHR2b (ORCPT
+        id S1726395AbgHHReg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 13:28:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbgHHR2a (ORCPT
+        Sat, 8 Aug 2020 13:34:36 -0400
+Received: from smtprelay0203.hostedemail.com ([216.40.44.203]:54000 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726242AbgHHReg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 13:28:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F1FC061756;
-        Sat,  8 Aug 2020 10:28:30 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ha11so2594120pjb.1;
-        Sat, 08 Aug 2020 10:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v4VG68yjsSgJtRppBPF3uOrudyHEUR7Dzur3xN68sJo=;
-        b=LrumZTBTGBsFlxmSWq3tdNULI4G/LxjTqO7lrauGcYh59HaMmOQ/HpjplxEAKGw3Wr
-         jnZC8tOCSXmxU/n9HkWPLYthFW4fCWd13GtKO5vG6VJfRz4I/IkwnAeddxRxGNOKvhBI
-         yGRkyfpKht291PbtrNkaNHspu/bkYnSPFQFoKTpeo5EXO20TcjjCrMPq3F9y1HfXXFVu
-         C1INfLwg9aSZiLnCDM7h6sAecEmB2JjpviqYLyw09Wp+Rr+rkHxHwbeTJBdu4Q+sGBFG
-         Cns1iJ+Rd4NQL+vC47RX4oLc3fCFhwP2Iv8VDSWc2a7C5RHJ2jccZXAvKzIypxC3SqU6
-         prbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v4VG68yjsSgJtRppBPF3uOrudyHEUR7Dzur3xN68sJo=;
-        b=qChbr6OMg7qr9QinAoVuWmZILRm+wwbYcXGC8J7+UQQeWKTb6hJUGjjHNT9+EJuBWC
-         +NXGn67qWPtnG7WacZq4e7bZNJlTw/Dx5IgoKRE0isXtM7NIAvTSULbo5s+ZtENhQ3qU
-         8cH1XtaSoGRX5esBNMgp+mX0vWOPc6PKhSJmLqSwYPaq8Qw9/O3e6DH8ClBOAjAJohUf
-         wvmMn5boUWw4ReVC5T3wEcrWlZionhTELcAcb6O+tiBxC0rq1walfUbsz79YwA1b9Bil
-         EHSw3bSJiLuvpOJBXx3AhxwWaCmQQBBdugiRHWZtQz8nLlLUWb2DG1dYuNu3uDJ2acHH
-         KfNQ==
-X-Gm-Message-State: AOAM532dxNlBho5NGzhw9c8Po5nmBA/R9JExREioxNDZb4Sx27US2EBj
-        NDLfV0WR8CDtuQE2vk4IlTc=
-X-Google-Smtp-Source: ABdhPJzYr7usx3fGNyyPrJWCnyL3rFFa3Db/Q54TjWtTPXqE1GkwwM99QtEJztB1F3g1c1ejhy8NjA==
-X-Received: by 2002:a17:90b:378d:: with SMTP id mz13mr18857396pjb.98.1596907709800;
-        Sat, 08 Aug 2020 10:28:29 -0700 (PDT)
-Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id a7sm7594801pfd.194.2020.08.08.10.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2020 10:28:28 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm/a6xx: fix crashdec section name typo
-Date:   Sat,  8 Aug 2020 10:29:11 -0700
-Message-Id: <20200808172913.380050-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Sat, 8 Aug 2020 13:34:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 25F30182244FF;
+        Sat,  8 Aug 2020 17:34:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fifth29_370365026fca
+X-Filterd-Recvd-Size: 2511
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  8 Aug 2020 17:34:34 +0000 (UTC)
+Message-ID: <841240882e8b21aa069d8ca863a67d5d407cda30.camel@perches.com>
+Subject: Re: [PATCH] mailmap: Update comments for with format and more
+ detalis
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Date:   Sat, 08 Aug 2020 10:34:33 -0700
+In-Reply-To: <202008080013.58EBD83@keescook>
+References: <202008080013.58EBD83@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Sat, 2020-08-08 at 00:14 -0700, Kees Cook wrote:
+> Without having first read the git-shortlog man-page first, the format
+> of .mailmap may not be immediately obvious. Add comments with pointers
+> to the man-page, along with other details.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> I'm adding this to my earlier .mailmap update series:
+> https://lore.kernel.org/lkml/20200730183702.702552-1-keescook@chromium.org/
+> ---
+>  .mailmap | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/.mailmap b/.mailmap
+> index 6c1c04a63b18..3a991e19928c 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -2,11 +2,16 @@
+>  # This list is used by git-shortlog
 
-Backport note: maybe wait some time for the crashdec MR[1] to look for
-both the old typo'd name and the corrected name to land in mesa 20.2
+and scripts/get_maintainer.pl
 
-[1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/6242
+Today, this list is primarily used not for
+messed up email addresses.  It's mostly used
+to map no longer in-use email addresses to
+current email address.
 
-Fixes: 1707add81551 ("drm/msm/a6xx: Add a6xx gpu state")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
-index 846fd5b54c23..2fb58b7098e4 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
-@@ -372,7 +372,7 @@ static const struct a6xx_indexed_registers {
- 	u32 data;
- 	u32 count;
- } a6xx_indexed_reglist[] = {
--	{ "CP_SEQ_STAT", REG_A6XX_CP_SQE_STAT_ADDR,
-+	{ "CP_SQE_STAT", REG_A6XX_CP_SQE_STAT_ADDR,
- 		REG_A6XX_CP_SQE_STAT_DATA, 0x33 },
- 	{ "CP_DRAW_STATE", REG_A6XX_CP_DRAW_STATE_ADDR,
- 		REG_A6XX_CP_DRAW_STATE_DATA, 0x100 },
--- 
-2.26.2
+>  to fix a few botched name translations
+>  # in the git archive, either because the author's full name was messed up
+>  # and/or not always written the same way, making contributions from the
+> -# same person appearing not to be so or badly displayed.
+> +# same person appearing not to be so or badly displayed. Also allows for
+> +# old email addresses to map to new email addresses.
+>  #
+> +# For format details, see "MAPPING AUTHORS" in "man git-shortlog".
+> +#
+> +# Please keep this list dictionary sorted.
+> +#
+> +# This comment is parsed by git-shortlog:
+>  # repo-abbrev: /pub/scm/linux/kernel/git/
+>  #
+> -
+>  Aaron Durbin <adurbin@google.com>
+>  Adam Oldham <oldhamca@gmail.com>
+>  Adam Radford <aradford@gmail.com>
+> -- 
+> 2.25.1
+> 
+> 
 
