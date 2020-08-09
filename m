@@ -2,135 +2,90 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D59C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4212065C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:36:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7tPPT0u"
+	by mail.kernel.org (Postfix) with ESMTP id 82A562067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgHICgU (ORCPT
+        id S1726393AbgHICiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgHICgU (ORCPT
+        Sat, 8 Aug 2020 22:38:01 -0400
+Received: from smtprelay0082.hostedemail.com ([216.40.44.82]:55698 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726097AbgHICiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:36:20 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E6AC061756;
-        Sat,  8 Aug 2020 19:36:20 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so3044344pgi.9;
-        Sat, 08 Aug 2020 19:36:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kub7wUC7iBpeOQedwXMHPG2fSSd6JGXHHrf1fpHFbPE=;
-        b=t7tPPT0uU7FlYa5L++Ikfzy6rXwiljuECk4lu27SHPAazvDNgSpuEhfFcZmx93l1AH
-         4FXV9lW+dfDAsIT2irs4JEaXxK5+3SEpW94sI3r5vATWanaXb+QxPhujqw21y2fOjc8A
-         rcF4sU0WgHaJeTdFZr3QnBI0Ib/YIiwWPQmwVUpHpBGOnupStR9XSZUz8KuKSWb7QBj1
-         ySmX1yVqxYQpcpdm4w676QrfjnI4WURyuCRNcPjyRzuYZoUsIFrg8BJvnG/Wp4hFUbX3
-         d+87ReIhWqwn2GaEwpDHlszH3AcIy1PcTIa9PJsrm9XNE0bi2rQSI4/JxSfGF9fGEMnn
-         4Krw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kub7wUC7iBpeOQedwXMHPG2fSSd6JGXHHrf1fpHFbPE=;
-        b=WWr0VdZhq3e/18bmLCewcS/RHHhdaoXmkM2Tps5jnZS3/tidJyI/OSE3CbnlUtSMnI
-         54VU2ZSO3pilOB6RIEHrLw+7mCEt0OUODANOa8eEOGCSD8IauHHerMJCryEQimg0cCfU
-         xBvqrh79NylDHOaKjWtBUlzqU1VH5UcoiMIkZ4xdYyBFbfj9QFfossFsSKwWrVyJbrGD
-         9cRhBXteEAlR36f8GV85aH635yb7wKbbTDMCmDud1SxXkWM4FWLt6qIrj6XZ4B3kRG2b
-         KfF3zbf9/Gv1PkYeuycGfUVRvo0cw5U4xsKsqJyKyXSVh9lZH0tEfIPoSy6GluPJ3rKC
-         EpzQ==
-X-Gm-Message-State: AOAM533w5MtdYxQBXofqdXxwMlf1RIkazgOp3VMn52/tEKrEVQlvXKrL
-        RONv1ZOdFP/kwQFd5QtVw98=
-X-Google-Smtp-Source: ABdhPJzBKl/FpkmB9RNIJz9i97dyxxK2mcalwmGHXp0o63E43rV9CYCkzDT49Htdm+uZqq+Iz0Jg7Q==
-X-Received: by 2002:a63:cd56:: with SMTP id a22mr16634662pgj.259.1596940579278;
-        Sat, 08 Aug 2020 19:36:19 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:8cf2:183:7fb5:ce6a])
-        by smtp.gmail.com with ESMTPSA id gn13sm15280089pjb.17.2020.08.08.19.36.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2020 19:36:18 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH net] drivers/net/wan/x25_asy: Added needed_headroom and a skb->len check
-Date:   Sat,  8 Aug 2020 19:35:48 -0700
-Message-Id: <20200809023548.684217-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 8 Aug 2020 22:38:00 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 8E2EF18224512;
+        Sun,  9 Aug 2020 02:37:59 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: join82_5c010db26fce
+X-Filterd-Recvd-Size: 2767
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  9 Aug 2020 02:37:58 +0000 (UTC)
+Message-ID: <cd3a39d4ef3da9968026549e285dea3ef4261795.camel@perches.com>
+Subject: Re: [PATCH v3 1/3] scsi: 3w-9xxx: Use flexible array members to
+ avoid struct padding
+From:   Joe Perches <joe@perches.com>
+To:     Samuel Holland <samuel@sholland.org>,
+        Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 08 Aug 2020 19:37:57 -0700
+In-Reply-To: <20200809004727.53107-1-samuel@sholland.org>
+References: <20200809004727.53107-1-samuel@sholland.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Added a skb->len check
+On Sat, 2020-08-08 at 19:47 -0500, Samuel Holland wrote:
+> In preparation for removing the "#pragma pack(1)" from the driver, fix
+> all instances where a trailing array member could be replaced by a
+> flexible array member. Since a flexible array member has zero size, it
+> introduces no padding, whether or not the struct is packed.
+[]
+> diff --git a/drivers/scsi/3w-9xxx.c b/drivers/scsi/3w-9xxx.c
+[]
+> @@ -676,7 +676,7 @@ static long twa_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+>  	data_buffer_length_adjusted = (driver_command.buffer_length + 511) & ~511;
+>  
+>  	/* Now allocate ioctl buf memory */
+> -	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, &dma_handle, GFP_KERNEL);
+> +	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_Ioctl_Buf_Apache), &dma_handle, GFP_KERNEL);
 
-This driver expects upper layers to include a pseudo header of 1 byte
-when passing down a skb for transmission. This driver will read this
-1-byte header. This patch added a skb->len check before reading the
-header to make sure the header exists.
+Trivia:
 
-2. Added needed_headroom
+It's perhaps more sensible to order the arguments with
+the size of the struct first then the data length so
+the argument is in the order of the expected content.
 
-When this driver transmits data,
-  first this driver will remove a pseudo header of 1 byte,
-  then the lapb module will prepend the LAPB header of 2 or 3 bytes.
-So the value of needed_headroom in this driver should be 3 - 1.
+	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev,
+				      sizeof(TW_Ioctl_Buf_Apache) + data_buffer_length_adjusted,
+				      &dma_handle, GFP_KERNEL);
 
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
----
- drivers/net/wan/x25_asy.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> @@ -685,7 +685,7 @@ static long twa_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+>  	tw_ioctl = (TW_Ioctl_Buf_Apache *)cpu_addr;
+>  
+>  	/* Now copy down the entire ioctl */
+> -	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache) - 1))
+> +	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache)))
 
-diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
-index 84640a0c13f3..de7984463595 100644
---- a/drivers/net/wan/x25_asy.c
-+++ b/drivers/net/wan/x25_asy.c
-@@ -307,6 +307,14 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
- 		return NETDEV_TX_OK;
- 	}
- 
-+	/* There should be a pseudo header of 1 byte added by upper layers.
-+	 * Check to make sure it is there before reading it.
-+	 */
-+	if (skb->len < 1) {
-+		kfree_skb(skb);
-+		return NETDEV_TX_OK;
-+	}
-+
- 	switch (skb->data[0]) {
- 	case X25_IFACE_DATA:
- 		break;
-@@ -752,6 +760,12 @@ static void x25_asy_setup(struct net_device *dev)
- 	dev->type		= ARPHRD_X25;
- 	dev->tx_queue_len	= 10;
- 
-+	/* When transmitting data:
-+	 * first this driver removes a pseudo header of 1 byte,
-+	 * then the lapb module prepends an LAPB header of at most 3 bytes.
-+	 */
-+	dev->needed_headroom	= 3 - 1;
-+
- 	/* New-style flags. */
- 	dev->flags		= IFF_NOARP;
- }
--- 
-2.25.1
+	if (copy_from_user(tw_ioctl, argp, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length))
+
+etc...
+
 
