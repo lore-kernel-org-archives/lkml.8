@@ -2,365 +2,140 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE7F0206B2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D091A206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="k60BxlkF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dwB1HrHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgHIN4G (ORCPT
+        id S1726296AbgHIN72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 09:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
+        Sun, 9 Aug 2020 09:59:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgHIN4F (ORCPT
+        with ESMTP id S1726009AbgHIN70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 09:56:05 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7AFC061786
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 06:56:04 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c10so4551276edk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 06:56:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0XBhU+3ruxtditMCY5MbDWUBKoSVvXlXtnbZQW25RRE=;
-        b=k60BxlkFKTXbVl0h+E1es2xVbrMxQeNnuIQwb1RRiEPTFurYMJzeTWMFhFVUr5aa7X
-         o8goltLy5CYpU8Os0rfq3k58vFW5OUI3rRymBiise7LnmeShZlP3k3Omd60XnHeI4cXU
-         cdQK47OS/+SKWifUwBuVqpNo1QPPqV4KE8TplocHe+ctE3QRF3ueT0Kgo/2DAC01G7Jz
-         MOgvKC6EM3SIBlyqxwAH1KqV4FYRRZOkffTxMxIakP0YpPJVfnQsNGm7EGdhO1c44IG6
-         2jPk1wZ8NUoKHpxkZQflAs+3pRtKhK78sKjOjfC0myRQyMoeXHdH+01EjpOWNm8GG+JM
-         M7MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0XBhU+3ruxtditMCY5MbDWUBKoSVvXlXtnbZQW25RRE=;
-        b=L34Pg+wp/Gh3KkgfDnD1YZ4f+pR6vM09fxSiFEpt5E05kLuuMWfKldjb+I0ejo16Zp
-         Q87bGcMRtFPCauwRVTWdHVcE1wnhD7d51I2pG1AU6LHd+7PJj4xFr2mfK/3vPfeZrZJA
-         7qkp7LlHbYcpIRUSMFoSuxG+FJNocCNih3E10qTj7wBb5eSaa23rAbtgeH5Oe/dONW41
-         U2qwl+asnyLhImScvgbw4RbbngKtOF1/LBWqTGH37ESIC6X9+isuh+AsuRWGfnYVgqyb
-         qqPLrLxxkjsvz2Rkv+vpmhcuUHF2LQJASBn4MdRpg5VzdFZ4NBNeam5YLaveIiueyvAC
-         vi4A==
-X-Gm-Message-State: AOAM533b7ms5iMF68wOTUCOyDc3CDT2Nwh6yCDcsyFYHAzTxvg8lgi4s
-        27kcuzvlK9sxxr44i3GFtHY3VQ+h83RCaoP1Y94dDA==
-X-Google-Smtp-Source: ABdhPJyGphQpjfI/gkwEmKSzx0z/3cFG54FFRHVt2FGPGlWPnWQU3sSOF0IPn7nst4VXatnowi72vNRQU8qE7MkoPZE=
-X-Received: by 2002:aa7:c251:: with SMTP id y17mr17544588edo.13.1596981362548;
- Sun, 09 Aug 2020 06:56:02 -0700 (PDT)
+        Sun, 9 Aug 2020 09:59:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83194C061756;
+        Sun,  9 Aug 2020 06:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=oWaAVN9sykw0k8emUxb5wR5jVQ2o1BQPhSy1+U7qzfo=; b=dwB1HrHVbcF0ijM9GFl6ucXzXt
+        FbQeUXzkeE1IKxVGEWzwlkKuuy30Yj21HbhKusxteFAb3y3Bzp25Fv+FjPXXWSLcHBhNhjEPxGZIK
+        5ZcVAQ4jMJXCjNhtslJ4SbtpPgDjYk35EPUF5UjAVeTpkCeiLTuLP5Vlmfg6i47pMVpeBilVwa/y/
+        cIhOEOXd2r3FPWa0eGHHbWN1Xo0XRwRr5VPOE/IR+tMQm3EyA67Yxd+/Eje5ed4tcBPtqevvDORJQ
+        K9f+fdF/PwbB73uK2y+XsLrUVxNQJ2i6iJ05y4mxLZjF7/letkuCkxqzxXF8p0OCXsldkDLnWGyC2
+        MjDClEMQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k4lr5-0007d5-9Q; Sun, 09 Aug 2020 13:59:19 +0000
+Subject: Re: [PATCH v6 2/4] SFH: PCIe driver to add support of AMD sensor
+ fusion
+To:     Sandeep Singh <Sandeep.Singh@amd.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
+        jic23@kernel.org, linux-iio@vger.kernel.org, hdegoede@redhat.com,
+        Nehal-bakulchandra.Shah@amd.com, andy.shevchenko@gmail.com,
+        mail@richard-neumann.de, m.felsch@pengutronix.de
+Cc:     Shyam-sundar.S-k@amd.com
+References: <20200809102511.2657644-1-Sandeep.Singh@amd.com>
+ <20200809102511.2657644-3-Sandeep.Singh@amd.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3ef30a57-08b4-5908-b13e-c1a52cdc135d@infradead.org>
+Date:   Sun, 9 Aug 2020 06:59:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200806151310.98624-1-ezequiel@collabora.com>
- <20200806151310.98624-4-ezequiel@collabora.com> <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
-In-Reply-To: <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Sun, 9 Aug 2020 10:55:50 -0300
-Message-ID: <CAAEAJfAGW6M1YPQhPqdvpYugWk+RRTNOQbKfSWrnw_A8M2k=EA@mail.gmail.com>
-Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight parameters
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200809102511.2657644-3-Sandeep.Singh@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Aug 2020 at 18:01, Jonas Karlman <jonas@kwiboo.se> wrote:
->
-> On 2020-08-06 17:12, Ezequiel Garcia wrote:
-> > The prediction weight parameters are only required under
-> > certain conditions, which depend on slice header parameters.
-> >
-> > As specified in section 7.3.3 Slice header syntax, the prediction
-> > weight table is present if:
-> >
-> > ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
-> > (weighted_bipred_idc == 1 && slice_type == B))
->
-> Maybe a macro can be added to help check this contition?
->
-> Something like this maybe:
->
-> #define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
->         ((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
->          ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
->            (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
->          ((pps)->weighted_bipred_idc == 1 && \
->           (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
->
+On 8/9/20 3:25 AM, Sandeep Singh wrote:
+> From: Sandeep Singh <sandeep.singh@amd.com>
+> 
+> AMD SFH uses HID over PCIe bus.SFH fw is part of MP2 processor
+> (MP2 which is an ARM® Cortex-M4 core based co-processor to x86) and
+> it runs on MP2 where in driver resides on X86. This part of module
+> will communicate with MP2 FW and provide that data into DRAM
+> 
+> Signed-off-by: Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
+> Signed-off-by: Sandeep Singh <sandeep.singh@amd.com>
+> ---
+>  drivers/hid/Kconfig                    |   2 +
+>  drivers/hid/Makefile                   |   2 +
+>  drivers/hid/amd-sfh-hid/Kconfig        |  21 ++++
+>  drivers/hid/amd-sfh-hid/Makefile       |  15 +++
+>  drivers/hid/amd-sfh-hid/amd_mp2_pcie.c | 162 +++++++++++++++++++++++++
+>  drivers/hid/amd-sfh-hid/amd_mp2_pcie.h |  83 +++++++++++++
+>  6 files changed, 285 insertions(+)
+>  create mode 100644 drivers/hid/amd-sfh-hid/Kconfig
+>  create mode 100644 drivers/hid/amd-sfh-hid/Makefile
+>  create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+>  create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
 
-Yeah, that could make sense.
+Hi,
 
-Note that the biggest value in having the prediction weight table
-separated is to allow  applications to skip setting this largish control,
-reducing the amount of data that needs to be passed from userspace
--- especially when not needed :-)
+> diff --git a/drivers/hid/amd-sfh-hid/Kconfig b/drivers/hid/amd-sfh-hid/Kconfig
+> new file mode 100644
+> index 000000000000..e73cf9fe1324
+> --- /dev/null
+> +++ b/drivers/hid/amd-sfh-hid/Kconfig
+> @@ -0,0 +1,21 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +menu "AMD SFH HID support"
+> +	depends on X86_64 || COMPILE_TEST
+> +	depends on PCI
+> +
+> +config AMD_SFH_HID
+> +	tristate "AMD Sensor Fusion Hub"
+> +	select HID
 
-> >
-> > Given its size, it makes sense to move this table to its control,
-> > so applications can avoid passing it if the slice doesn't specify it.
-> >
-> > Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
-> > With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
-> > is 772 bytes.
-> >
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> > v2: Fix missing Cedrus changes and mssing control declaration,
-> >     as noted by Hans and Jernej.
-> > ---
-> >  .../media/v4l/ext-ctrls-codec.rst             | 19 ++++++++++++-------
-> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
-> >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
-> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
-> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
-> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
-> >  include/media/h264-ctrls.h                    |  5 +++--
-> >  include/media/v4l2-ctrls.h                    |  2 ++
-> >  8 files changed, 37 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > index d1438b1e259f..c36ce5a95fc5 100644
-> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > @@ -1879,18 +1879,23 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >        - 0x00000008
-> >        -
-> >
-> > -``Prediction Weight Table``
-> > +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
-> > +    Prediction weight table defined according to :ref:`h264`,
-> > +    section 7.4.3.2 "Prediction Weight Table Semantics".
-> > +    The prediction weight table must be passed by applications
-> > +    under the conditions explained in section 7.3.3 "Slice header
-> > +    syntax".
-> >
-> > -    The bitstream parameters are defined according to :ref:`h264`,
-> > -    section 7.4.3.2 "Prediction Weight Table Semantics". For further
-> > -    documentation, refer to the above specification, unless there is
-> > -    an explicit comment stating otherwise.
-> > +    .. note::
-> > +
-> > +       This compound control is not yet part of the public kernel API and
-> > +       it is expected to change.
-> >
-> > -.. c:type:: v4l2_h264_pred_weight_table
-> > +.. c:type:: v4l2_ctrl_h264_pred_weights
-> >
-> >  .. cssclass:: longtable
-> >
-> > -.. flat-table:: struct v4l2_h264_pred_weight_table
-> > +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
-> >      :header-rows:  0
-> >      :stub-columns: 0
-> >      :widths:       1 1 2
-> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > index 3f3fbcd60cc6..76c8dc8fb31c 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
-> >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:            return "H264 Decode Parameters";
-> >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:              return "H264 Decode Mode";
-> >       case V4L2_CID_MPEG_VIDEO_H264_START_CODE:               return "H264 Start Code";
-> > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:             return "H264 Prediction Weight Table";
-> >       case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:                   return "MPEG2 Level";
-> >       case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:                 return "MPEG2 Profile";
-> >       case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return "MPEG4 I-Frame QP Value";
-> > @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
-> >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
-> >               *type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
-> >               break;
-> > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
-> > +             *type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
-> > +             break;
-> >       case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
-> >               *type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
-> >               break;
-> > @@ -1790,6 +1794,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
-> >       case V4L2_CTRL_TYPE_H264_SPS:
-> >       case V4L2_CTRL_TYPE_H264_PPS:
-> >       case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
-> > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
-> >       case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
-> >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-> >               break;
-> > @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
-> >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-> >               elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
-> >               break;
-> > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
-> > +             elem_size = sizeof(struct v4l2_ctrl_h264_pred_weights);
-> > +             break;
-> >       case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
-> >               elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
-> >               break;
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > index bc27f9430eeb..027cdd1be5a0 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > @@ -78,6 +78,13 @@ static const struct cedrus_control cedrus_controls[] = {
-> >               .codec          = CEDRUS_CODEC_H264,
-> >               .required       = true,
-> >       },
-> > +     {
-> > +             .cfg = {
-> > +                     .id     = V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
-> > +             },
-> > +             .codec          = CEDRUS_CODEC_H264,
-> > +             .required       = true,
->
-> This should probably be false if this control is to be optional as implied
-> by the commit message.
->
+How about
+	depends on HID
 
-Well, the control is optional if the driver implements it as optional,
-which Cedrus isn't currently doing :-)
+We try hard not to select/enable entire subsystems just because one driver
+wants it.
 
-I have been reluctant to change Cedrus much, since I am not
-testing there. Perhaps we can address this with a follow-up patch,
-adding the macro you suggest and changing the control to optional?
+Also, HID depends on INPUT, so it's not safe to select HID unless INPUT is
+already enabled.
 
-Speaking of optional controls, note that v4l2 controls are cached
-per-fd (per context). This means for instance, that the active PPS
-and SPS need only be passed to drivers when activated,
-and not on each frame.
+> +	help
+> +	If you say yes to this option, support will be included for the AMD
+> +	Sensor Fusion Hub.
+> +	This driver will enable sensors functionality to user through HID
+> +	framework. Basically this driver will get data from MP2 FW
 
-Similarly, another optimization to reduce the amount of
-data passed is to have default scaling matrices in the kernel,
-and allow applications to not pass them, and have the drivers
-fallback to default (default or previously set?) in that case.
+s/FW/firmware/
+or is it "framework" ?
 
-I have tested these things, but haven't posted patches because
-I'm not entirely sure how well-defined and specified this behavior
-currently is. It is something to keep in mind though, as a future
-optimization.
+> +	and provide that data to HID framework.
+> +	MP2 which is an ARM® Cortex-M4 core based co-processor to x86.
+> +
+> +	This driver can also be built as modules. If so, the modules will
 
-Thanks!
-Ezequiel
+	                        built as a module. If so, the module will
 
+> +	be  called amd-sfhtp-hid.
+> +	Say Y or M here if you want to support AMD SFH. If unsure, say N.
+> +
+> +endmenu
 
+thanks.
+-- 
+~Randy
 
-> Best regards,
-> Jonas
->
-> > +     },
-> >       {
-> >               .cfg = {
-> >                       .id     = V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > index 96765555ab8a..93c843ae14bb 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> > @@ -62,6 +62,7 @@ struct cedrus_h264_run {
-> >       const struct v4l2_ctrl_h264_scaling_matrix      *scaling_matrix;
-> >       const struct v4l2_ctrl_h264_slice_params        *slice_params;
-> >       const struct v4l2_ctrl_h264_sps                 *sps;
-> > +     const struct v4l2_ctrl_h264_pred_weights        *pred_weights;
-> >  };
-> >
-> >  struct cedrus_mpeg2_run {
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > index 58c48e4fdfe9..6385026d1b6b 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > @@ -57,6 +57,8 @@ void cedrus_device_run(void *priv)
-> >                       V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
-> >               run.h264.sps = cedrus_find_control_data(ctx,
-> >                       V4L2_CID_MPEG_VIDEO_H264_SPS);
-> > +             run.h264.pred_weights = cedrus_find_control_data(ctx,
-> > +                     V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS);
-> >               break;
-> >
-> >       case V4L2_PIX_FMT_HEVC_SLICE:
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > index cce527bbdf86..a9ba78b15907 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > @@ -256,10 +256,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
-> >  static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
-> >                                          struct cedrus_run *run)
-> >  {
-> > -     const struct v4l2_ctrl_h264_slice_params *slice =
-> > -             run->h264.slice_params;
-> > -     const struct v4l2_h264_pred_weight_table *pred_weight =
-> > -             &slice->pred_weight_table;
-> > +     const struct v4l2_ctrl_h264_pred_weights *pred_weight =
-> > +             run->h264.pred_weights;
-> >       struct cedrus_dev *dev = ctx->dev;
-> >       int i, j, k;
-> >
-> > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> > index 4c0bb7f5fb05..54cd9bec0b23 100644
-> > --- a/include/media/h264-ctrls.h
-> > +++ b/include/media/h264-ctrls.h
-> > @@ -36,6 +36,7 @@
-> >  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS       (V4L2_CID_MPEG_BASE+1004)
-> >  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (V4L2_CID_MPEG_BASE+1005)
-> >  #define V4L2_CID_MPEG_VIDEO_H264_START_CODE  (V4L2_CID_MPEG_BASE+1006)
-> > +#define V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS        (V4L2_CID_MPEG_BASE+1007)
-> >
-> >  /* enum v4l2_ctrl_type type values */
-> >  #define V4L2_CTRL_TYPE_H264_SPS                      0x0110
-> > @@ -43,6 +44,7 @@
-> >  #define V4L2_CTRL_TYPE_H264_SCALING_MATRIX   0x0112
-> >  #define V4L2_CTRL_TYPE_H264_SLICE_PARAMS     0x0113
-> >  #define V4L2_CTRL_TYPE_H264_DECODE_PARAMS    0x0114
-> > +#define V4L2_CTRL_TYPE_H264_PRED_WEIGHTS     0x0115
-> >
-> >  enum v4l2_mpeg_video_h264_decode_mode {
-> >       V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-> > @@ -125,7 +127,7 @@ struct v4l2_h264_weight_factors {
-> >       __s16 chroma_offset[32][2];
-> >  };
-> >
-> > -struct v4l2_h264_pred_weight_table {
-> > +struct v4l2_ctrl_h264_pred_weights {
-> >       __u16 luma_log2_weight_denom;
-> >       __u16 chroma_log2_weight_denom;
-> >       struct v4l2_h264_weight_factors weight_factors[2];
-> > @@ -177,7 +179,6 @@ struct v4l2_ctrl_h264_slice_params {
-> >       __s32 delta_pic_order_cnt0;
-> >       __s32 delta_pic_order_cnt1;
-> >
-> > -     struct v4l2_h264_pred_weight_table pred_weight_table;
-> >       /* Size in bits of dec_ref_pic_marking() syntax element. */
-> >       __u32 dec_ref_pic_marking_bit_size;
-> >       /* Size in bits of pic order count syntax. */
-> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> > index f40e2cbb21d3..cb25f345e9ad 100644
-> > --- a/include/media/v4l2-ctrls.h
-> > +++ b/include/media/v4l2-ctrls.h
-> > @@ -51,6 +51,7 @@ struct video_device;
-> >   * @p_h264_scaling_matrix:   Pointer to a struct v4l2_ctrl_h264_scaling_matrix.
-> >   * @p_h264_slice_params:     Pointer to a struct v4l2_ctrl_h264_slice_params.
-> >   * @p_h264_decode_params:    Pointer to a struct v4l2_ctrl_h264_decode_params.
-> > + * @p_h264_pred_weights:     Pointer to a struct v4l2_ctrl_h264_pred_weights.
-> >   * @p_vp8_frame_header:              Pointer to a VP8 frame header structure.
-> >   * @p_hevc_sps:                      Pointer to an HEVC sequence parameter set structure.
-> >   * @p_hevc_pps:                      Pointer to an HEVC picture parameter set structure.
-> > @@ -74,6 +75,7 @@ union v4l2_ctrl_ptr {
-> >       struct v4l2_ctrl_h264_scaling_matrix *p_h264_scaling_matrix;
-> >       struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
-> >       struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
-> > +     struct v4l2_ctrl_h264_pred_weights *p_h264_pred_weights;
-> >       struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
-> >       struct v4l2_ctrl_hevc_sps *p_hevc_sps;
-> >       struct v4l2_ctrl_hevc_pps *p_hevc_pps;
-> >
