@@ -2,137 +2,180 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF834C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77806C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B625B206B2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396F3206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:24:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="t4LVxzQX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tMMos/Ta"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qKLyJ/T7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgHICS0 (ORCPT
+        id S1726229AbgHICYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:18:26 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:42003 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725988AbgHICS0 (ORCPT
+        Sat, 8 Aug 2020 22:24:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56088 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgHICYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:18:26 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 3D98F9B0;
-        Sat,  8 Aug 2020 22:18:25 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sat, 08 Aug 2020 22:18:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=gHv/rpfSLcjiU1EWYFEkVOAG62
-        ry5U4QM/lSUqvQPZg=; b=t4LVxzQXi70hcj1qWNqY4NM/GErtsMOi5aiuJ2atIL
-        tOB6XxOSz4yZFnHiT5aTP4rlFsLiStigtTUWodyZiPXKpj5d1L1g4/3oyt95qs5R
-        xFLySds5QLSBob6+r+0CLxKycckfmaNqB3Mjn1QMAmyxZQDal0g0ODn45UKx6oQd
-        cVSJ6fOL083WcFL32tPFQdoUScZzyVJt5v0GpxUJoH3e3zdgyavM/E+hLh/lKxq4
-        4Vu0CzeU14Qxkfp/yzfOtglOHbOIYy1vqOr0rCZnUcx9DK3gZUBunc3A4vyks9If
-        L00Aeqg8/7vLTEkIboxBOmGAAXyOKpFNhclGb9FK7prQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=gHv/rpfSLcjiU1EWY
-        FEkVOAG62ry5U4QM/lSUqvQPZg=; b=tMMos/TajiRlbynnTcvRwRIJhirYjp4r1
-        BdT8B4CUAfGjjs0UrVd01gZQVLTPjXRVuQFFXXnyFOBColIzahdMYAL1O0824EmI
-        /MnK0j56bxrP0QlVi3Jto30KdLHAGNd/QOksgF4pxRp3oEbyqAF8hzmT1g8uwce9
-        9mQXAI0I4daQ+GuoZE8edXbh+ffGLqrjkqxuZuSAV3n4mfbUDsUFaUpKz2N7/+RG
-        dLZ5dL5BbuHeP/LvnwFaOdQY7HbDpBS/YqhirJA4wzPfecH3pKWLDNKcxXBAWQ0K
-        44fF+oDTnDd5sZdrPfxk2xOrGPYQPZwrrdOs5xrbGdYLtX9VfPAZQ==
-X-ME-Sender: <xms:71wvXxYTuqDkgkxdv-0O8GQcTu4abrM3bs2hxCxsaWR9rta1nLQ4UQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkeehgdehkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
-    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrfgrth
-    htvghrnhepieetkefhheduudfgledtudefjeejfeegveehkeeufffhhfejkeehiefftdev
-    tdevnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdho
-    rhhg
-X-ME-Proxy: <xmx:71wvX4YAnpBS3YQnj-kWUK4fQyLk8Keu12_VoQx9uK2ISs2kFuc1_g>
-    <xmx:71wvXz_1pi6sDLSfhda_v5e0ob2R0T_bUau3KXkXtUwvufuIWo0zaA>
-    <xmx:71wvX_pxZNo4tvUwYKiDJFC1M-GpaUwyul2FF5c04Sy0544UQT7TyA>
-    <xmx:8FwvXz1kty-PT2Bn6mjCo2Rxqsw5803bXqcOVt5BI90zlJXc5Wh_pw>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 13A8930600A9;
-        Sat,  8 Aug 2020 22:18:23 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH] arm64: dts: allwinner: Mark timer as stopped in suspend
-Date:   Sat,  8 Aug 2020 21:18:22 -0500
-Message-Id: <20200809021822.5285-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.26.2
+        Sat, 8 Aug 2020 22:24:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0792Mkq7008496;
+        Sun, 9 Aug 2020 02:24:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=KDJ+jCsIdC7X/bzGxKLszgvp0oAdjJ7d+BTcByVJjQI=;
+ b=qKLyJ/T75v46keNrVtfM+2ck5obpWzZhtcOYpIFydR6yzMh5oDxJQ2LT2ITDlP6sR0C4
+ GKsP8Ed2s2Ckxpvx3xP1ac4fmXlBXp9uk4o/34gw/DWfmFpYK1+2lBTSAc17axwz7rQD
+ gS2hdh53gFCu9x03O3J1NmTgyIkm1GQ4tHaFGwP26t2BDgwZA0xcqgdhLGmaX1pWDOn3
+ z7/zeuL1siT5Y9xpF4KZTkr5HFoQUF1RznEqbQV8kLaE9qG2d5sPcQT6v1j9Ow8iCbWG
+ N9x+IcsGtjfVL68K3xQBw+cwxRT+tp3gJxSzvfzjeoqtNuW66Cdl8NNUs/lOTX6X5L9b lA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32t2yd8bcm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 09 Aug 2020 02:24:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0792HL1w051571;
+        Sun, 9 Aug 2020 02:22:19 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 32t5mjmjxx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 09 Aug 2020 02:22:19 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0792MH0V030284;
+        Sun, 9 Aug 2020 02:22:17 GMT
+Received: from [192.168.29.236] (/73.249.50.119)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 09 Aug 2020 02:22:17 +0000
+Subject: Re: [PATCH v3 3/7] x86/xen: drop tests for highmem in pv code
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200807083826.16794-1-jgross@suse.com>
+ <20200807083826.16794-4-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <60f40558-a3a8-2c1e-2c32-09f93bfca724@oracle.com>
+Date:   Sat, 8 Aug 2020 22:22:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200807083826.16794-4-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When possible, system firmware on 64-bit Allwinner platforms disables
-OSC24M during system suspend. Since this oscillator is the clock source
-for the ARM architectural timer, this causes the timer to stop counting.
-Therefore, the ARM architectural timer must not be marked as NONSTOP on
-these platforms, or the time will be wrong after system resume.
+On 8/7/20 4:38 AM, Juergen Gross wrote:
+> With support for 32-bit pv guests gone pure pv-code no longer needs to
+> test for highmem. Dropping those tests removes the need for flushing
+> in some places.
+>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-Adding the arm,no-tick-in-suspend property forces the kernel to ignore
-the ARM architectural timer when calculating sleeptime; it falls back to
-reading the RTC. Note that this only affects deep suspend, not s2idle.
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 1 +
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 1 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 1 +
- 3 files changed, 3 insertions(+)
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8dfbcd144072..5d19cf6f6d4f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -157,6 +157,7 @@ link_codec: simple-audio-card,codec {
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		allwinner,erratum-unknown1;
-+		arm,no-tick-in-suspend;
- 		interrupts = <GIC_PPI 13
- 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
- 			     <GIC_PPI 14
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index 4462a68c0681..a6c8b43b99a3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -53,6 +53,7 @@ psci {
- 
- 	timer {
- 		compatible = "arm,armv8-timer";
-+		arm,no-tick-in-suspend;
- 		interrupts = <GIC_PPI 13
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 14
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 9ce78a7b117d..28c77d6872f6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -90,6 +90,7 @@ psci {
- 
- 	timer {
- 		compatible = "arm,armv8-timer";
-+		arm,no-tick-in-suspend;
- 		interrupts = <GIC_PPI 13
- 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
- 			     <GIC_PPI 14
--- 
-2.26.2
+
+with a suggestion
+
+
+> ---
+>  arch/x86/xen/enlighten_pv.c |  11 ++-
+>  arch/x86/xen/mmu_pv.c       | 138 ++++++++++++++----------------------=
+
+>  2 files changed, 57 insertions(+), 92 deletions(-)
+>
+> diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+> index 7d90b3da8bb4..9fec952f84f3 100644
+> --- a/arch/x86/xen/enlighten_pv.c
+> +++ b/arch/x86/xen/enlighten_pv.c
+> @@ -347,6 +347,7 @@ static void set_aliased_prot(void *v, pgprot_t prot=
+)
+>  	unsigned long pfn;
+>  	struct page *page;
+>  	unsigned char dummy;
+> +	void *av;
+
+
+to rename this to va since you are modifying those lines anyway.
+
+
+> =20
+>  	ptep =3D lookup_address((unsigned long)v, &level);
+>  	BUG_ON(ptep =3D=3D NULL);
+> @@ -383,14 +384,10 @@ static void set_aliased_prot(void *v, pgprot_t pr=
+ot)
+>  	if (HYPERVISOR_update_va_mapping((unsigned long)v, pte, 0))
+>  		BUG();
+> =20
+> -	if (!PageHighMem(page)) {
+> -		void *av =3D __va(PFN_PHYS(pfn));
+> +	av =3D __va(PFN_PHYS(pfn));
+> =20
+
 
