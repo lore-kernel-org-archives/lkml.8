@@ -2,111 +2,202 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA933C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90986C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24692065D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hr0dQiEv"
+	by mail.kernel.org (Postfix) with ESMTP id 6E1DD206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596991550;
+	bh=o3+gvkRYHXmkCK5K6UoAuUi+HTxdUxSJHGrGr2DP/Ng=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=WQj+IO0SamqY+k8UMBQKIsBtHIzHr3E9NIAh2MznDw1i4xGbcbpbOX1KimY7ZDUML
+	 23TLsetw1rlLGrmFjztITXTFVr+avYu5frW6379u/XqPukqfp5xEaApLjERyn/umSQ
+	 D5C/g2iX9dAPenjvDDwkA/JCZDn+GAfaNnTalF8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgHIQpV (ORCPT
+        id S1726505AbgHIQpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 12:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgHIQpH (ORCPT
+        Sun, 9 Aug 2020 12:45:45 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:57832 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgHIQpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 12:45:07 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AC3C061756;
-        Sun,  9 Aug 2020 09:45:06 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o23so7079930ejr.1;
-        Sun, 09 Aug 2020 09:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H88mI1Spa78eFKDo3i2s+xvsEIQcDrNyhC7EnGO216s=;
-        b=Hr0dQiEvmVUgZL4L7p3nMX+qobFHt8gj89ULFPGVZBMlbTvDqQoekVTvPkT3Xjt3qC
-         i90nWPF1lXAgQYQj6tyG9Z1+w+lSSr4RX1ONQnwwjzA+ekkUV52soxdGtV/WMfAYm+pi
-         9XLV19lkFE9afUEKo1v2USo33E0HmcqzUUi4kC1Z7aR5zhHif2LgW0b+Ta5wdsXDeIfm
-         4hOs+OHHQCWcMwdMBSkgJz3EdhZQBkIU5XbeQWd2b8rP9bzjjHEHi3thg7AmUMM/n/Ta
-         dkTv62qRz8Kg7g0YT7hYsC+FXC7MVA6Sq2e6ZnZGIGombeLROPt+fREX5qu0Al6pUsxB
-         InbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H88mI1Spa78eFKDo3i2s+xvsEIQcDrNyhC7EnGO216s=;
-        b=iJdRV6Wcnb6UXQ/1k8yIL0V1zhPHUtvlvVfwaTNZbcotVDSH1ALHFvl2avP9tUYKqi
-         D6E53Q1LI5bHeofAavTN/kKqqY8cQbW51V1EC6T5XpH+lhTWWvLoor7ogYBF49lVEFgX
-         UamO6eg5Wu/QqReU446V6/Idoj57qkwyQqdMfTDC+z1Yf8wNiVUXrc0QBOdmeEL+EQmM
-         ouezLr6m6GANMF1cOGIwYcj+9LVJnUalz61VFslZuXK6KqDJG/px5rF1ITJVJPIotOaH
-         K7aytwH18DTlKbSYH9+XW1pSIqiYZ+staCPgYG3MGUGKcR8SE5RVgQ5Wfv7UkhpRIjv+
-         WQaA==
-X-Gm-Message-State: AOAM531GRWVUvbPabSt3pbLJdinYaTM86ybXIuAAdFBFuA5VKH9WNLW9
-        BAMacY0Yh7Y7J1HDjsBgEYw=
-X-Google-Smtp-Source: ABdhPJx1xkw0A5gHdxlA02kBB2qFvGFR9pJGK1Jm97xiVxTUdwHuTfRjdK72XmyZs0hdwh/EY50NFg==
-X-Received: by 2002:a17:906:924b:: with SMTP id c11mr18877533ejx.75.1596991504160;
-        Sun, 09 Aug 2020 09:45:04 -0700 (PDT)
-Received: from blackhead.home ([2a01:112f:a1c:7900:7316:ce1e:7b0b:6bd7])
-        by smtp.gmail.com with ESMTPSA id b24sm10423215edn.33.2020.08.09.09.45.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 09:45:03 -0700 (PDT)
-From:   Marcin Sloniewski <marcin.sloniewski@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, mani@kernel.org,
-        marcin.sloniewski@gmail.com, a.fatoum@pengutronix.de,
-        sam@ravnborg.org, linus.walleij@linaro.org, arnd@arndb.de,
-        broonie@kernel.org, lkundrak@v3.sk, daniel@0x0f.com,
-        kuninori.morimoto.gx@renesas.com, allen.chen@ite.com.tw,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/3] dt-bindings: arm: stm32: document Odyssey compatible
-Date:   Sun,  9 Aug 2020 18:44:49 +0200
-Message-Id: <20200809164450.289731-2-marcin.sloniewski@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
-References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
+        Sun, 9 Aug 2020 12:45:18 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 079GixTM028732;
+        Mon, 10 Aug 2020 01:45:00 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 079GixTM028732
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596991500;
+        bh=4/Wuc/SZmcBLjxjCab/4kWn1GAKRas6rkaBR2EHWo20=;
+        h=From:Date:Subject:To:Cc:From;
+        b=fXe5iqgEsZZNZOomxBIqwTx2ZpqZ0c2DwWZO7dBnUdO4hPRH1OPigz3cAVRNurY8y
+         clfvDuhM0ntIqNCs8JfNqTiH8Vu+qbGDLW8h2WnThIu8z5Avqg6Ufs48strU48F+W/
+         FOeBZJNr+WTA2nrKooBvjvJJQqKxLHBD8CiKAiJyHR9bA6NTlTcYY7w1aFDlWcnyCP
+         nlCBMJF3KhMjdMaSdXBgVv972N63E0HG0ZTmg06sJtiNZsXr4CMyiixzt+K6ppGhPT
+         Fn9v5tDeXxYQKTZc/JKO51ExqbbahqHAmnQMUf0DJzAwWVS5AauvQnKgvObzuKuuKP
+         5RKrp2J4TuzCg==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id i129so3129589vsi.3;
+        Sun, 09 Aug 2020 09:45:00 -0700 (PDT)
+X-Gm-Message-State: AOAM530xo3yOb+t5ZZFMO/C1Hb4t9M/AlTNzyFJONdlImQp7tAbyoMdv
+        hwKsRI/6btemzSMTXKbeBu7sGCGwfhKWIg9JO4Q=
+X-Google-Smtp-Source: ABdhPJzmegxrhBUJkpqQlxlRB6LMHJWnb2qh+gXiiLgEY5iHTAm8kJYLhuDU2AlNZBxL8OXAxsDf5A54WI/UKy740Ac=
+X-Received: by 2002:a05:6102:2247:: with SMTP id e7mr16099231vsb.181.1596991498725;
+ Sun, 09 Aug 2020 09:44:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 10 Aug 2020 01:44:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARMCg0vPjZL0o-sFr+vMu17-nFcV4v4pbLazLK8iTSQWQ@mail.gmail.com>
+Message-ID: <CAK7LNARMCg0vPjZL0o-sFr+vMu17-nFcV4v4pbLazLK8iTSQWQ@mail.gmail.com>
+Subject: [GIT PULL] Kbuild updates for v5.9-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document device tree bindings of Seeed SoM and carrier board.
+Hi Linus,
 
-Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Please pull Kbuild updates for v5.9-rc1
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-index 790e6dd48e34..3b318fe15194 100644
---- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-+++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-@@ -50,4 +50,10 @@ properties:
-           - const: st,stm32mp157c-ev1
-           - const: st,stm32mp157c-ed1
-           - const: st,stm32mp157
-+      - description: Odyssey STM32MP1 SoM based Boards
-+        items:
-+              - enum:
-+                  - seeed,stm32mp157c-odyssey
-+              - const: seeed,stm32mp157c-odyssey-som
-+              - const: st,stm32mp157
- ...
+
+The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
+
+  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.9
+
+for you to fetch changes up to 132305b3b474a85152302ceda4551384cce3904e:
+
+  kbuild: stop filtering out $(GCC_PLUGINS_CFLAGS) from cc-option base
+(2020-08-10 01:32:59 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.9
+
+ - run the checker (e.g. sparse) after the compiler
+
+ - remove unneeded cc-option tests for old compiler flags
+
+ - fix tar-pkg to install dtbs
+
+ - introduce ccflags-remove-y and asflags-remove-y syntax
+
+ - allow to trace functions in sub-directories of lib/
+
+ - introduce hostprogs-always-y and userprogs-always-y syntax
+
+ - various Makefile cleanups
+
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      kbuild: Replace HTTP links with HTTPS ones
+
+Domenico Andreoli (1):
+      kbuild: buildtar: add dtbs support
+
+Luc Van Oostenryck (1):
+      kbuild: run the checker after the compiler
+
+Masahiro Yamada (13):
+      Revert "kbuild: Create directory for target DTB"
+      kbuild: remove cc-option test of -fno-stack-protector
+      kbuild: remove cc-option test of -ffreestanding
+      powerpc/boot: add DTB to 'targets'
+      kbuild: always create directories of targets
+      kbuild: do not export LDFLAGS_vmlinux
+      kbuild: introduce ccflags-remove-y and asflags-remove-y
+      kbuild: trace functions in subdirectories of lib/
+      kbuild: move host .so build rules to scripts/gcc-plugins/Makefile
+      kbuild: sort hostprogs before passing it to ifneq
+      kbuild: introduce hostprogs-always-y and userprogs-always-y
+      kbuild: include scripts/Makefile.* only when relevant CONFIG is enabled
+      kbuild: stop filtering out $(GCC_PLUGINS_CFLAGS) from cc-option base
+
+ Documentation/kbuild/Kconfig.recursion-issue-02 |  2 +-
+ Documentation/kbuild/kconfig-language.rst       | 18 +++++++-------
+ Documentation/kbuild/llvm.rst                   |  2 +-
+ Documentation/kbuild/makefiles.rst              | 45
+++++++++++++++++++++++++++++++++++-
+ Makefile                                        | 26 ++++++++++++---------
+ arch/Kconfig                                    |  3 ---
+ arch/arm/boot/compressed/Makefile               |  9 ++-----
+ arch/mips/vdso/Makefile                         |  3 +--
+ arch/powerpc/boot/Makefile                      |  2 ++
+ arch/powerpc/kernel/Makefile                    |  2 +-
+ arch/powerpc/platforms/powermac/Makefile        |  2 +-
+ arch/powerpc/xmon/Makefile                      |  3 +--
+ arch/s390/Makefile                              |  2 +-
+ arch/sh/boot/compressed/Makefile                |  5 +---
+ arch/sparc/vdso/Makefile                        |  4 ++--
+ arch/um/Makefile                                |  3 +--
+ arch/x86/Makefile                               |  4 ++--
+ arch/x86/boot/compressed/Makefile               |  4 ++--
+ arch/x86/entry/vdso/Makefile                    |  4 ++--
+ arch/x86/kernel/cpu/Makefile                    |  3 +--
+ arch/x86/lib/Makefile                           |  2 +-
+ arch/x86/mm/Makefile                            |  7 +++---
+ arch/x86/power/Makefile                         |  3 +--
+ arch/x86/purgatory/Makefile                     |  2 +-
+ arch/x86/um/vdso/Makefile                       |  2 +-
+ arch/x86/xen/Makefile                           |  5 ++--
+ arch/xtensa/boot/boot-elf/Makefile              |  2 +-
+ drivers/firmware/efi/libstub/Makefile           |  4 ++--
+ drivers/xen/Makefile                            |  3 +--
+ kernel/trace/Makefile                           |  4 ++--
+ lib/Makefile                                    |  9 +++----
+ lib/livepatch/Makefile                          |  4 ----
+ mm/kasan/Makefile                               |  2 +-
+ samples/auxdisplay/Makefile                     |  3 +--
+ samples/binderfs/Makefile                       |  3 +--
+ samples/connector/Makefile                      |  3 +--
+ samples/hidraw/Makefile                         |  3 +--
+ samples/mei/Makefile                            |  4 +---
+ samples/pidfd/Makefile                          |  4 +---
+ samples/seccomp/Makefile                        |  4 +---
+ samples/timers/Makefile                         |  3 +--
+ samples/uhid/Makefile                           |  3 +--
+ samples/vfs/Makefile                            |  3 +--
+ samples/watch_queue/Makefile                    |  3 +--
+ samples/watchdog/Makefile                       |  3 +--
+ scripts/Kbuild.include                          | 10 +++-----
+ scripts/Makefile                                | 18 +++++++-------
+ scripts/Makefile.build                          | 15 ++++++------
+ scripts/Makefile.clean                          | 13 +++++++----
+ scripts/Makefile.host                           | 40
++++++--------------------------
+ scripts/Makefile.kcov                           |  4 ----
+ scripts/Makefile.kcsan                          |  4 ----
+ scripts/Makefile.lib                            | 28 +++++++++++++++-------
+ scripts/Makefile.ubsan                          |  3 ---
+ scripts/basic/Makefile                          |  3 +--
+ scripts/dtc/Makefile                            |  5 ++--
+ scripts/gcc-plugins/Makefile                    | 61
++++++++++++++++++++++++++++++++++++++++---------
+ scripts/genksyms/Makefile                       |  3 +--
+ scripts/link-vmlinux.sh                         |  4 ++++
+ scripts/mod/Makefile                            |  4 ++--
+ scripts/package/buildtar                        | 12 ++++++++++
+ scripts/package/mkdebian                        |  2 +-
+ scripts/package/mkspec                          |  2 +-
+ scripts/selinux/genheaders/Makefile             |  4 +---
+ scripts/selinux/mdp/Makefile                    |  3 +--
+ 65 files changed, 251 insertions(+), 221 deletions(-)
+
+
 -- 
-2.27.0
-
+Best Regards
+Masahiro Yamada
