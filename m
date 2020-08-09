@@ -2,77 +2,131 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B826FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9716B206D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD32206D8
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:40:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bnv3HvBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHIWdG (ORCPT
+        id S1726401AbgHIWkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 18:33:06 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55022 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgHIWdG (ORCPT
+        Sun, 9 Aug 2020 18:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgHIWj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 18:33:06 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2D58E1C0BD7; Mon, 10 Aug 2020 00:33:03 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 00:33:02 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     trix@redhat.com
-Cc:     sean.wang@mediatek.com, dmurphy@ti.com, matthias.bgg@gmail.com,
-        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leds: mt6323: move period calculation
-Message-ID: <20200809223302.qdsv2ghuju5jrhvw@duo.ucw.cz>
-References: <20200809163221.32413-1-trix@redhat.com>
+        Sun, 9 Aug 2020 18:39:59 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246E6C061756;
+        Sun,  9 Aug 2020 15:39:58 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BPvDR2Wnhz9sT6;
+        Mon, 10 Aug 2020 08:39:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597012793;
+        bh=7ka+PPpKYTC2okkl81seR+XRtYr2bKPFf+xXLPpJc2Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bnv3HvBqQxRnaAC9+tup+NY3lyuPpqGjdTVB+lKvIv2jSvc/CYc/hd9hXSj8ZpSzX
+         ufrfC3IHRxmz3XzPxXBUyMirYdbAlIw6lW19nfEfxTZpyuWtaVXGl5MkaDo1jgZgIh
+         eZn2Cf3iWsD9mAfOY3B8ncA0qIcz5K45SIRgmVbKYPQnoIxFwuD0AEKzurtExnnnYQ
+         GXMYXJheIr2/BTjDyG511p0keAIuJe7qsWuoj8dKPAcK+8YbWguQWmoxT0D9VTajcm
+         R3ZOeJIWNqDDkv8Tv4xITCmPOUfiISaEFqzrNFWugjvPQPTjFnNhkN06RKzX94+x91
+         VA/3jDdnthwRQ==
+Date:   Mon, 10 Aug 2020 08:39:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rich Felker <dalias@libc.org>, Guo Ren <ren_guo@c-sky.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Subject: Re: linux-next: manual merge of the sh tree with the csky tree
+Message-ID: <20200810083949.4ab8963b@canb.auug.org.au>
+In-Reply-To: <20200728101846.73cf063c@canb.auug.org.au>
+References: <20200728101846.73cf063c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6pmfl3utzqfdvq76"
-Content-Disposition: inline
-In-Reply-To: <20200809163221.32413-1-trix@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/signed; boundary="Sig_/fQFP9gOGye96/Po_IrVpiCb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6pmfl3utzqfdvq76
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/fQFP9gOGye96/Po_IrVpiCb
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi all,
 
-> Setting the delay_on/off means period needs to be recalculated
-> anyway.  So move the period statements after this check.
+On Tue, 28 Jul 2020 10:18:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the sh tree got a conflict in:
 >=20
-> Fixes: 216ec6cc4c19 ("leds: Add LED support for MT6323 PMIC")
+>   tools/testing/selftests/seccomp/seccomp_bpf.c
+>=20
+> between commit:
+>=20
+>   f4dd2edafba0 ("csky: add support for SECCOMP and SECCOMP_FILTER")
+>=20
+> from the csky tree and commit:
+>=20
+>   469023465e79 ("sh: Add SECCOMP_FILTER")
+>=20
+> from the sh tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> diff --cc tools/testing/selftests/seccomp/seccomp_bpf.c
+> index 8d18a0ddafdd,6eb21685c88f..000000000000
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@@ -1703,8 -1699,7 +1709,8 @@@ void change_syscall(struct __test_metad
+>   	EXPECT_EQ(0, ret) {}
+>  =20
+>   #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) ||=
+ \
+>  -	defined(__s390__) || defined(__hppa__) || defined(__riscv) || defined(=
+__sh__)
+>  +	defined(__s390__) || defined(__hppa__) || defined(__riscv) || \
+> - 	defined(__csky__)
+> ++	defined(__csky__) || defined(__sh__)
+>   	{
+>   		regs.SYSCALL_NUM =3D syscall;
+>   	}
 
-Makes sense, thanks, applied.
+This is now a conflict between the sh tree and Linus' tree.
 
-Best regards,
-							Pavel
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Cheers,
+Stephen Rothwell
 
---6pmfl3utzqfdvq76
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/fQFP9gOGye96/Po_IrVpiCb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzB5ngAKCRAw5/Bqldv6
-8uf3AKC8otj4qmrAy7nXmwkFnaclBh7UEQCgl72i78Bq13jVd6zxnZFWIzOE6vc=
-=/+iR
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8wezUACgkQAVBC80lX
+0GxMSgf+Iu3w44IN5Z9wHbexiHvSw70evUEHDsNosbeETDWVBLRE9UHR5JSirOWG
+aTGwRD2Gb+p99WAUPzhr8s+YcTbHsEQXnX3FJIp3AKHF++J7Z4UlSW8uLO4wAZDQ
+eXhIJ5c5V0lm5jxLPgXT1HJCk7+5VrfkVHTEVVSXqx4BtbWVhsGMeUIH+nuinAfw
+K553FnpPfr5O40o8qvsOinsPrYQ8xn7BIB0HmjltswJv0sdAyHlkVNGBjiHw0IKy
+ta3XmynHn/gD15kkr5jap7Hf6CPUzCokQE0KvNBXFBnme/GQQXg9ErUCskN+I41d
+X+3Wso3RP4nWMWMpQns9dOZ6/p1PzA==
+=AT+g
 -----END PGP SIGNATURE-----
 
---6pmfl3utzqfdvq76--
+--Sig_/fQFP9gOGye96/Po_IrVpiCb--
