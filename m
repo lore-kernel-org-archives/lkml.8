@@ -2,169 +2,184 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C00C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD55C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD0D2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C09206C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="E0T+ouj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgHIQcu (ORCPT
+        id S1726293AbgHIQoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 12:32:50 -0400
-Received: from magic.merlins.org ([209.81.13.136]:34540 "EHLO
-        mail1.merlins.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgHIQcj (ORCPT
+        Sun, 9 Aug 2020 12:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHIQoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 12:32:39 -0400
-Received: from merlin by mail1.merlins.org with local (Exim 4.92 #3)
-        id 1k4oEj-0006Wu-M3 by authid <merlin>; Sun, 09 Aug 2020 09:31:53 -0700
-Date:   Sun, 9 Aug 2020 09:31:53 -0700
-From:   Marc MERLIN <marc@merlins.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Matthias Andree <matthias.andree@gmx.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: Introduce pcie_wait_for_link_delay()
-Message-ID: <20200809163152.GA8863@merlins.org>
-References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
- <20191004123947.11087-2-mika.westerberg@linux.intel.com>
- <20200808202202.GA12007@merlins.org>
+        Sun, 9 Aug 2020 12:44:12 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 719B1C061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 09:44:11 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id j10so3147425qvo.13
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 09:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VtVUcbqA/O73EOSUUlMvyg/Az0u0gAuQ6qRQ4VdVDjQ=;
+        b=E0T+ouj/gm9ezQDrznurtjO9fbYkBjs/PaHDBFowTFWpw9rPmyCLEWDZqz7S1GySXD
+         5ro+pqAdWhINcPeN2Ytdd+yegA8c6hgg0FsaKN3fcLTnnvoennBckoBvMjJd/d2VaTPp
+         PQDV0jMhgltAOS280vFGqyN4pimIjXvnWQKS8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VtVUcbqA/O73EOSUUlMvyg/Az0u0gAuQ6qRQ4VdVDjQ=;
+        b=OVrvzkLJAaA3mPVLHzqBQITlw4E3S+U2osNcGiGPJQZBj72NorWSjlHorljg4gyllP
+         v5aiCnh5qpJrBvKZCDgBmtDDqY05rVB/cCNPNgsHyzx1iltZgWw2fEhxPWl6hUOF8SKb
+         6Gch0birbj3ybUGYeg3ARJ+5RSImJfOSmnBYoke2LTXbQduCIx3mDi/QkT0ytxqvntQs
+         HZfuiAXWdyuHF/tuUeS9m1bzYgW7elWcWsGg1f+2WzsLzU30iUoLnWEJYli1DJzVBYh/
+         U6/3tSULMg+yByIBqm7H4ojZBHJwrQ6RpV2bCI+L6BpEqBh6VQrpiO8z9uGqf6IZxgeC
+         F+Ww==
+X-Gm-Message-State: AOAM531WNTXr//EUYNDMdVfHDYu6xifr7GdU+wj2DnK8SmMUqYvGNb8O
+        5BWyegPGHLPR25biKLfQfjMICg==
+X-Google-Smtp-Source: ABdhPJyKeHBg0TXoYIMgPREwAltlUPuvuVPjyksh8hkUKqC4pz0KNXpC2FrozeVyJDVjLUCBj2sw6g==
+X-Received: by 2002:ad4:46ac:: with SMTP id br12mr24597161qvb.236.1596991450241;
+        Sun, 09 Aug 2020 09:44:10 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id k1sm11778846qkf.12.2020.08.09.09.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2020 09:44:09 -0700 (PDT)
+Date:   Sun, 9 Aug 2020 12:44:08 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc:     viremana@linux.microsoft.com,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vineeth Pillai <vineethrp@gmail.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Ning, Hongyu" <hongyu.ning@linux.intel.com>,
+        =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+Subject: Re: [RFC PATCH 00/16] Core scheduling v6
+Message-ID: <20200809164408.GA342447@google.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <6d0f9fc0-2e34-f559-29bc-4143e6d3f751@linux.intel.com>
+ <CAEXW_YS6oW_AAkmOuXNMCj_N5763aG9SXEcWz_onPhQQU2TZ0g@mail.gmail.com>
+ <f986f5a9-5c97-10ed-1e44-84bbd929e605@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200808202202.GA12007@merlins.org>
-X-Sysadmin: BOFH
-X-URL:  http://marc.merlins.org/
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: marc@merlins.org
+In-Reply-To: <f986f5a9-5c97-10ed-1e44-84bbd929e605@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 08, 2020 at 01:22:02PM -0700, Marc MERLIN wrote:
-> Basically, I'm getting the same thing than this person with a P53 (which
-> is a mostly identical lenovo thinkpad, to mine)
-> kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
-> kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
-> kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
-> kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
-> kernel: pcieport 0000:00:01.0: PME: Spurious native interrupt!
-> https://bbs.archlinux.org/viewtopic.php?id=250658
- 
-I had to reboot today and tried my 5.7.11 kernel 6 times.
-It never booted and each time got stuck on 
-pcieport 0000:00:01.0: PME: Spurious native interrupt!
+Hi Aubrey,
 
-This is the nvidia driver and claimed by nouveau (I don't use nvidia graphics
-but I'm forced to use nouveau to turn the nvidia chip down so that it
-doesn't drain my batteries).
+Apologies for replying late as I was still looking into the details.
 
-I ended up being able to boot the 7th time after removing the yubikey in my USB-C 
-port, which is also thunderbolt.
-PME messages shown below. Let me know if you'd like further data.
+On Wed, Aug 05, 2020 at 11:57:20AM +0800, Li, Aubrey wrote:
+[...]
+> +/*
+> + * Core scheduling policy:
+> + * - CORE_SCHED_DISABLED: core scheduling is disabled.
+> + * - CORE_COOKIE_MATCH: tasks with same cookie can run
+> + *                     on the same core concurrently.
+> + * - CORE_COOKIE_TRUST: trusted task can run with kernel
+> 			thread on the same core concurrently. 
+> + * - CORE_COOKIE_LONELY: tasks with cookie can run only
+> + *                     with idle thread on the same core.
+> + */
+> +enum coresched_policy {
+> +       CORE_SCHED_DISABLED,
+> +       CORE_SCHED_COOKIE_MATCH,
+> +	CORE_SCHED_COOKIE_TRUST,
+> +       CORE_SCHED_COOKIE_LONELY,
+> +};
+> 
+> We can set policy to CORE_COOKIE_TRUST of uperf cgroup and fix this kind
+> of performance regression. Not sure if this sounds attractive?
 
-Thanks,
-Marc
+Instead of this, I think it can be something simpler IMHO:
 
-[    4.142484] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME PCIeCapability LTR DPC]
-[    4.151715] pci 0000:00:01.0: PME# supported from D0 D3hot D3cold
-[    4.151727] pci 0000:00:01.0: PME# disabled
-[    4.165979] pci 0000:00:14.0: PME# supported from D3hot D3cold
-[    4.166000] pci 0000:00:14.0: PME# disabled
-[    4.177746] pci 0000:00:16.0: PME# supported from D3hot
-[    4.177767] pci 0000:00:16.0: PME# disabled
-[    4.180850] pci 0000:00:17.0: PME# supported from D3hot
-[    4.180862] pci 0000:00:17.0: PME# disabled
-[    4.183830] pci 0000:00:1b.0: PME# supported from D0 D3hot D3cold
-[    4.183847] pci 0000:00:1b.0: PME# disabled
-[    4.189643] pci 0000:00:1c.0: PME# supported from D0 D3hot D3cold
-[    4.189660] pci 0000:00:1c.0: PME# disabled
-[    4.193085] pci 0000:00:1c.5: PME# supported from D0 D3hot D3cold
-[    4.193101] pci 0000:00:1c.5: PME# disabled
-[    4.196462] pci 0000:00:1c.7: PME# supported from D0 D3hot D3cold
-[    4.196478] pci 0000:00:1c.7: PME# disabled
-[    4.206057] pci 0000:00:1f.3: PME# supported from D3hot D3cold
-[    4.206079] pci 0000:00:1f.3: PME# disabled
-[    4.214993] pci 0000:00:1f.6: PME# supported from D0 D3hot D3cold
-[    4.215015] pci 0000:00:1f.6: PME# disabled
-[    4.217978] pci 0000:01:00.0: PME# supported from D0 D3hot
-[    4.217991] pci 0000:01:00.0: PME# disabled
-[    4.219129] pci 0000:01:00.2: PME# supported from D0 D3hot
-[    4.219142] pci 0000:01:00.2: PME# disabled
-[    4.219578] pci 0000:01:00.3: PME# supported from D0 D3hot
-[    4.219591] pci 0000:01:00.3: PME# disabled
-[    4.221398] pci 0000:04:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-[    4.221433] pci 0000:04:00.0: PME# disabled
-[    4.222282] pci 0000:05:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-[    4.222297] pci 0000:05:00.0: PME# disabled
-[    4.222792] pci 0000:05:01.0: PME# supported from D0 D1 D2 D3hot D3cold
-[    4.222806] pci 0000:05:01.0: PME# disabled
-[    4.223289] pci 0000:05:02.0: PME# supported from D0 D1 D2 D3hot D3cold
-[    4.223304] pci 0000:05:02.0: PME# disabled
-[    4.223839] pci 0000:05:04.0: PME# supported from D0 D1 D2 D3hot D3cold
-[    4.223854] pci 0000:05:04.0: PME# disabled
-[    4.224645] pci 0000:06:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-[    4.224661] pci 0000:06:00.0: PME# disabled
-[    4.225644] pci 0000:2c:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-[    4.225661] pci 0000:2c:00.0: PME# disabled
-[    4.227557] pci 0000:52:00.0: PME# supported from D0 D3hot D3cold
-[    4.227708] pci 0000:52:00.0: PME# disabled
-[    4.229139] pci 0000:54:00.0: PME# supported from D1 D2 D3hot D3cold
-[    4.229155] pci 0000:54:00.0: PME# disabled
-[    7.238126] pcieport 0000:00:01.0: PME: Signaling with IRQ 122
-[    7.239208] pcieport 0000:00:1b.0: PME: Signaling with IRQ 123
-[    7.239861] pcieport 0000:00:1c.0: PME: Signaling with IRQ 124
-[    7.241522] pcieport 0000:00:1c.5: PME: Signaling with IRQ 125
-[    7.242499] pcieport 0000:00:1c.7: PME: Signaling with IRQ 126
-[    7.401422] pcieport 0000:05:01.0: PME# enabled
-[    7.401868] pcieport 0000:05:04.0: PME# enabled
-[    8.985668] xhci_hcd 0000:01:00.2: PME# enabled
-[    8.988738] xhci_hcd 0000:2c:00.0: PME# enabled
-[    9.008649] pcieport 0000:05:02.0: PME# enabled
-[   12.378450] nvidia-gpu 0000:01:00.3: PME# enabled
-[   25.610848] thunderbolt 0000:06:00.0: PME# enabled
-[   25.628766] pcieport 0000:05:00.0: PME# enabled
-[   25.648762] pcieport 0000:04:00.0: PME# enabled
-[   25.668889] pcieport 0000:00:1c.0: PME# enabled
-[  179.608847] nvidia-gpu 0000:01:00.3: PME# disabled
-[  179.608873] pcieport 0000:00:01.0: PME: Spurious native interrupt!
-[  183.359454] nvidia-gpu 0000:01:00.3: PME# enabled
-[  183.396832] nvidia-gpu 0000:01:00.3: PME# disabled
-[  183.396859] pcieport 0000:00:01.0: PME: Spurious native interrupt!
-[  187.147398] nvidia-gpu 0000:01:00.3: PME# enabled
-[  187.184826] nvidia-gpu 0000:01:00.3: PME# disabled
-[  187.184852] pcieport 0000:00:01.0: PME: Spurious native interrupt!
-[  190.932329] nvidia-gpu 0000:01:00.3: PME# enabled
-[  190.972359] nvidia-gpu 0000:01:00.3: PME# disabled
-[  190.972366] pcieport 0000:00:01.0: PME: Spurious native interrupt!
-[  192.351330] snd_hda_intel 0000:00:1f.3: PME# enabled
-[  192.468365] snd_hda_intel 0000:00:1f.3: PME# disabled
-[  192.736342] xhci_hcd 0000:01:00.2: PME# disabled
-[  194.296431] pcieport 0000:00:1c.0: PME# disabled
-[  194.432427] pcieport 0000:04:00.0: PME# disabled
-[  194.432591] pcieport 0000:05:01.0: PME# disabled
-[  194.432771] pcieport 0000:05:00.0: PME# disabled
-[  194.432943] pcieport 0000:05:02.0: PME# disabled
-[  194.433102] pcieport 0000:05:04.0: PME# disabled
-[  194.556299] pcieport 0000:05:01.0: PME# enabled
-[  194.556417] pcieport 0000:05:04.0: PME# enabled
-[  195.560440] thunderbolt 0000:06:00.0: PME# disabled
+1. Consider all cookie-0 task as trusted. (Even right now, if you apply the
+   core-scheduling patchset, such tasks will share a core and sniff on each
+   other. So let us not pretend that such tasks are not trusted).
+
+2. All kernel threads and idle task would have a cookie 0 (so that will cover
+   ksoftirqd reported in your original issue).
+
+3. Add a config option (CONFIG_SCHED_CORE_DEFAULT_TASKS_UNTRUSTED). Default
+   enable it. Setting this option would tag all tasks that are forked from a
+   cookie-0 task with their own cookie. Later on, such tasks can be added to
+   a group. This cover's PeterZ's ask about having 'default untrusted').
+   (Users like ChromeOS that don't want to userspace system processes to be
+   tagged can disable this option so such tasks will be cookie-0).
+
+4. Allow prctl/cgroup interfaces to create groups of tasks and override the
+   above behaviors.
+
+5. Document everything clearly so the semantics are clear both to the
+   developers of core scheduling and to system administrators.
+
+Note that, with the concept of "system trusted cookie", we can also do
+optimizations like:
+1. Disable STIBP when switching into trusted tasks.
+2. Disable L1D flushing / verw stuff for L1TF/MDS issues, when switching into
+   trusted tasks.
+
+At least #1 seems to be biting enabling HT on ChromeOS right now, and one
+other engineer requested I do something like #2 already.
+
+Once we get full-syscall isolation working, threads belonging to a process
+can also share a core so those can just share a core with the task-group
+leader.
+
+> > Is the uperf throughput worse with SMT+core-scheduling versus no-SMT ?
+> 
+> This is a good question, from the data we measured by uperf,
+> SMT+core-scheduling is 28.2% worse than no-SMT, :(
+
+This is worrying for sure. :-(. We ought to debug/profile it more to see what
+is causing the overhead. Me/Vineeth added it as a topic for LPC as well.
+
+Any other thoughts from others on this?
+
+thanks,
+
+ - Joel
 
 
--- 
-"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
- 
-Home page: http://marc.merlins.org/  
+> > thanks,
+> > 
+> >  - Joel
+> > PS: I am planning to write a patch behind a CONFIG option that tags
+> > all processes (default untrusted) so everything gets a cookie which
+> > some folks said was how they wanted (have a whitelist instead of
+> > blacklist).
+> > 
+> 
