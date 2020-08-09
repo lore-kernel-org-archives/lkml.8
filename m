@@ -2,67 +2,94 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA084C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B921C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4138206B5
+	by mail.kernel.org (Postfix) with ESMTP id E748E206B5
 	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBLCXUjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgHIRHL (ORCPT
+        id S1726426AbgHIRLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 13:07:11 -0400
-Received: from smtprelay0226.hostedemail.com ([216.40.44.226]:58734 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726175AbgHIRHK (ORCPT
+        Sun, 9 Aug 2020 13:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHIRLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 13:07:10 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 5E97B182CED2A;
-        Sun,  9 Aug 2020 17:07:09 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: crate03_55148a926fd3
-X-Filterd-Recvd-Size: 1638
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  9 Aug 2020 17:07:08 +0000 (UTC)
-Message-ID: <5788fcd4bc9d055fa40302ecb6728265c7618772.camel@perches.com>
-Subject: Re: [PATCH] cifs: Convert to use the fallthrough macro
-From:   Joe Perches <joe@perches.com>
-To:     Steve French <smfrench@gmail.com>, linmiaohe <linmiaohe@huawei.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Sun, 09 Aug 2020 10:07:07 -0700
-In-Reply-To: <CAH2r5mvHLXtCAam9Wcw6PJUGg3bY8PvjYG8ijFh0km-CKNEUnA@mail.gmail.com>
-References: <1596875797-22710-1-git-send-email-linmiaohe@huawei.com>
-         <CAH2r5mvHLXtCAam9Wcw6PJUGg3bY8PvjYG8ijFh0km-CKNEUnA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sun, 9 Aug 2020 13:11:52 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9669C061756;
+        Sun,  9 Aug 2020 10:11:51 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d19so3598517pgl.10;
+        Sun, 09 Aug 2020 10:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mgOLBezWt79zIQjvAdBmYqr2eyqE9EwffvrtOtN04PU=;
+        b=oBLCXUjlfrw4Fre6KD2wOrQhSVwagOpit8lWuYFs+toIXiUArJWCy86Re6GKyRN6BY
+         97PeSSdm39pOiofcF7ufAjWYkjLXxjTARF5pAjRPRE3dyo5ZUwOu4W5zt7nBazPcHJj+
+         JVkVGvtc5r0Rn+qCg6pONe+gjA0XH/gKEoOWqmjjE4HoJ+V3HaZKe4shnUSEQpnDpAKz
+         U/v8rZ/Vz7nLgX3lsvyFhGQVgd6x/Hzw38qjqYj8kF4jhHsaPlZqT6rvPTAFu2yTOqH4
+         fZK5HD9vFCbrBw2nczI9YgZbbtHtzVfpwrs2NNGDRHsbEBKoQKyRAgs8zZbZk8fYa68O
+         TqiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mgOLBezWt79zIQjvAdBmYqr2eyqE9EwffvrtOtN04PU=;
+        b=BvPrXew93w8bftw9MkUxKayh1g/2wsJiSoVOpdyCX/rBSFjFNldRTvYuPPF9FBJLOC
+         ic3MRXI5bBLpLGlMCbUEBEH681rTmYwubMpXD/QbzS8/kVmQ3uEyTI7FYFnZEzWKY25O
+         FQNCaR8oL+2MkTBN6ocGJQgiDQ2qGT+T7a/t19vmajUk0ov8VAdhaC/yByLNS7bQJOX4
+         3GhbseMEG9qPF1FFoFVbskVFZ/Rh1hO95rBbWBhaDzs3pcQi3xjyHAr+W6Dz9y6LaHJi
+         5C38nBVCBl2ovLw9EUkxlPBLgJ8gvenNVQU71lLqI4B8Aph0wydo1+pFuCJk5ZFCHFnV
+         Jnqw==
+X-Gm-Message-State: AOAM5306fITPalTwuPVpwZF/wzEUHmN8bUBWAzQH9NogYHucnXfZFV/O
+        bKEbMb79QGT6/8ZMtxO9g0URyyxrl2TnMui971iapLVR
+X-Google-Smtp-Source: ABdhPJyCUol4h225ibfdgf3Jy311kXgBRVjVSzQWrRCBbfv77xoPEuKheCtOWWFlnucf5iy3PKPK7K7qcKWfP896FJk=
+X-Received: by 2002:a62:8303:: with SMTP id h3mr1814729pfe.169.1596993109816;
+ Sun, 09 Aug 2020 10:11:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200808175251.582781-1-xie.he.0141@gmail.com> <CA+FuTSfxWhq0pxEGPtOMjFUB7-4Vax6XMGsLL++28LwSOU5b3g@mail.gmail.com>
+In-Reply-To: <CA+FuTSfxWhq0pxEGPtOMjFUB7-4Vax6XMGsLL++28LwSOU5b3g@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Sun, 9 Aug 2020 10:11:39 -0700
+Message-ID: <CAJht_EM9q9u34LMAeYsYe5voZ54s3Z7OzxtvSomcF9a9wRvuCQ@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/lapbether: Added needed_tailroom
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-08-09 at 11:46 -0500, Steve French wrote:
-> Is this conversion from "/* Fallthrough */"   to the preferred (?)
-> "fallthrough;" documented anywhere?
+On Sun, Aug 9, 2020 at 1:48 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> Does this solve an actual observed bug?
+>
+> In many ways lapbeth is similar to tunnel devices. This is not common.
 
-Documentation/process/deprecated.rst
+Thank you for your comment!
 
-As there have been a long list of flaws `due to missing "break" statements
-<https://cwe.mitre.org/data/definitions/484.html>`_, we no longer allow
-implicit fall-through. In order to identify intentional fall-through
-cases, we have adopted a pseudo-keyword macro "fallthrough" which
-expands to gcc's extension `__attribute__((__fallthrough__))
-<https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html>`_.
+This doesn't solve a bug observed by me. But I think this should be
+necessary considering the logic of the code.
 
-
-
+Using "grep", I found that there were indeed Ethernet drivers that set
+needed_tailroom. I found it was set in these files:
+    drivers/net/ethernet/sun/sunvnet.c
+    drivers/net/ethernet/sun/ldmvsw.c
+Setting needed_tailroom may be necessary for this driver to run those
+Ethernet devices.
