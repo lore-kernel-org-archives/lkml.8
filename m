@@ -2,111 +2,94 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C85DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DAB206C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7267E206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgHIRhO (ORCPT
+        id S1726415AbgHIRlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 13:37:14 -0400
-Received: from 5.mo173.mail-out.ovh.net ([46.105.40.148]:44347 "EHLO
-        5.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgHIRhN (ORCPT
+        Sun, 9 Aug 2020 13:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHIRlJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 13:37:13 -0400
-Received: from player786.ha.ovh.net (unknown [10.110.208.245])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 731ED147CEB
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 19:18:38 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player786.ha.ovh.net (Postfix) with ESMTPSA id E71D4154A57BB;
-        Sun,  9 Aug 2020 17:18:28 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-103G005786e44e3-536c-4e5d-8a3b-a89e4d0b380b,
-                    949AEE3423C323647D875781C307A391B5D7792E) smtp.auth=steve@sk2.org
-Date:   Sun, 9 Aug 2020 19:18:27 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        Sun, 9 Aug 2020 13:41:09 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DAFEC061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 10:41:09 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1k4pJh-00024Q-Fk; Sun, 09 Aug 2020 19:41:05 +0200
+Subject: Re: [PATCH v7 3/3] ARM: dts: stm32: add initial support for
+ stm32mp157-odyssey board
+To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, mani@kernel.org, sam@ravnborg.org,
+        linus.walleij@linaro.org, arnd@arndb.de, broonie@kernel.org,
+        lkundrak@v3.sk, daniel@0x0f.com, kuninori.morimoto.gx@renesas.com,
+        allen.chen@ite.com.tw, robh@kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arch/arm: use simple i2c probe function
-Message-ID: <20200809191819.3eb1a26e@heffalump.sk2.org>
-In-Reply-To: <20200809083858.GA7517@kozik-lap>
-References: <20200807153100.384845-1-steve@sk2.org>
-        <20200809083858.GA7517@kozik-lap>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
+ <20200809164450.289731-3-marcin.sloniewski@gmail.com>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <73c2439a-0250-4010-ad5d-601ac9f4b7df@pengutronix.de>
+Date:   Sun, 9 Aug 2020 19:40:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/r8FuAjjB0+jvxp._ZcfcNev"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 3453697967987576217
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkeeigddutdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertddvnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeejkeffvdfhjeekffdukeehvddtvdfhieehhedvheekteekudefjeffueeuvedvvdenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeekiedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+In-Reply-To: <20200809164450.289731-3-marcin.sloniewski@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/r8FuAjjB0+jvxp._ZcfcNev
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Marcin,
 
-Hi,
+On 8/9/20 6:44 PM, Marcin Sloniewski wrote:
+> Add support for Seeed Studio's stm32mp157c odyssey board.
+> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
+> and carrier board with USB and ETH interfaces, SD card connector,
+> wifi and BT chip AP6236.
+> 
+> In this patch only basic kernel boot is supported and interfacing
+> SD card and on-board eMMC.
+> 
+> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
 
-On Sun, 9 Aug 2020 10:38:58 +0200, Krzysztof Kozlowski <krzk@kernel.org>
-wrote:
-> On Fri, Aug 07, 2020 at 05:31:00PM +0200, Stephen Kitt wrote:
-> > The i2c probe functions here don't use the id information provided in
-> > their second argument, so the single-parameter i2c probe function
-> > ("probe_new") can be used instead.
-> >=20
-> > This avoids scanning the identifier tables during probes.
-> >=20
-> > Signed-off-by: Stephen Kitt <steve@sk2.org>
-> > ---
-> >  arch/arm/mach-davinci/board-dm644x-evm.c     |  5 ++---
-> >  arch/arm/mach-davinci/board-dm646x-evm.c     | 10 ++++------
-> >  arch/arm/mach-s3c64xx/mach-crag6410-module.c |  5 ++---
-> >  3 files changed, 8 insertions(+), 12 deletions(-)
->=20
-> You need to split it per sub architecture maintainers.  The subject
-> prefix is then for example: "ARM: s3c64xx: ".
+Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-Thanks, will do!
+> ---
 
-Regards,
+> +
+> +&rng1 {
+> +	status = "okay";
+> +};
 
-Stephen
+I think we should put this into the SoC dtsi instead.
 
---Sig_/r8FuAjjB0+jvxp._ZcfcNev
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Cheers
+Ahmad
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl8wL+MACgkQgNMC9Yht
-g5ynpQ/+JCiOZ6kn0uvccrDB1MG/W3gaD6/G1SZiDlxSo9amrPhH7XkYfPGuNaLe
-PKtvkx6o13jAf7L5vdWv41PtqbKYaZqNvh2Nd4rqTsm/LQEUezL4KsruqglS8nGW
-Z4avzwQVc58MqI1IK9EbdxWJgioSMhTj1/HpvXCyLfVL8jXvT7Ap6IEgw3BOL635
-3B7oFpAh7D6eLb14AakA3nCtvpD6Bcm7UITKCdMCCoW9J+dTqAae56Fw00iAkoJy
-1iQKtRA5eZ+UxM1f6dcDY118jjbpFQjFb3Aed6RNu6fH/4l1UK70opcdZdNIcRCw
-QTG1t23czA7BWC6h37lEOUIbMLwwjoeZ+rAWRH2Q5Ennr+5UttUpBlbIOE5Lx7d5
-blEy5iSwqTHOEYl0zPHYgMeXSEJZp+kar4jYZsTDEKoX7YaY4fU42jMfGHHzcUNY
-mK33nPBAhfbd+dq/+zRW9xYPmw7PXDJGOOTFG+Wzi0ux6w4K0NqavDOGkuikQQJw
-ebRVxkmReY7XG9G4TL4fjoabrVIIBWkrraG2peidB0N+hF2lqgdKqOCtiwrjNWr8
-Fg89RuAkep6ZorVIr2IRena2b9UtFcUkhnwTN7DpzAKQG37WmaYUjvQ5jAMPKLOK
-8RRVz55ygKMf48p+pZ2kKEQvnQoeqxftWKC6rtAthn3alIKBGGI=
-=XZqW
------END PGP SIGNATURE-----
-
---Sig_/r8FuAjjB0+jvxp._ZcfcNev--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
