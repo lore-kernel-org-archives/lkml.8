@@ -2,96 +2,188 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD76C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A05FF206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6C12070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgHIHiD (ORCPT
+        id S1726250AbgHIHo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 03:38:03 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41450 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbgHIHiC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 03:38:02 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a65so4885364otc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 00:38:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kl9VEf5ldM1YlPJARQPMBMKo35p5dIfFaxCFs5UVWBo=;
-        b=UfbMtJYV31A0G4dQsZGWqXjmCGsc4rhdp3MnPl2YdYqrc3vkfaZU0vmh3tO9JlZ74r
-         Qn13UceGHh4A7jC/Rprh4XZPqjjThEr+9Tssd2Zc0w1rpYUTyV9F8l0eAbFZG6tqHVL+
-         JQl3HCrkcOtSWfZLZeaXf8j6DCv29BwxaSvo/Pppojql+RaKhm/u/8Lh3vOCm5iEPHnC
-         ThbWdWfFWYfCcx1aOisoH2nmAxOiQ6iItf19HOZ+Wgm3WI5IE4VonRrJHG0qMcA+8MQb
-         4DDTQoq53fNKhGdb4/9ra37ugaUZPUwagIHnWvAXa5qI7oh78l8snNCWl66qIZBcNdYl
-         E4Zw==
-X-Gm-Message-State: AOAM531ZgOONPl22muHpMC1wwsP3cmrXc7CeEAcVVThnuv7Br/Q9ixEi
-        EoCaXjuIvO2ggry5ytG6OV36Ls2chPOlwP8SeR8=
-X-Google-Smtp-Source: ABdhPJy1x/KnzpSV0eBQUMidxwNIj+tfW5AxOcHQmC58its6CxW1iNWznDPhEYu6i7saKqdEFxprrFqHcS95sKLHbY4=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr19090034otn.250.1596958681967;
- Sun, 09 Aug 2020 00:38:01 -0700 (PDT)
+        Sun, 9 Aug 2020 03:44:28 -0400
+Received: from mailout05.rmx.de ([94.199.90.90]:53858 "EHLO mailout05.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgHIHo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 03:44:27 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout05.rmx.de (Postfix) with ESMTPS id 4BPWMB117cz9x91;
+        Sun,  9 Aug 2020 09:44:22 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BPWLg2sk0z2xDN;
+        Sun,  9 Aug 2020 09:43:55 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.10) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Sun, 9 Aug
+ 2020 09:43:55 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Christian Eggers <ceggers@arri.de>
+Subject: [PATCH] iio: documentation: light: Add as73211 sysfs documentation
+Date:   Sun, 9 Aug 2020 09:43:35 +0200
+Message-ID: <20200809074335.23734-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200808171443.114c8e05@archlinux>
+References: <20200808171443.114c8e05@archlinux>
 MIME-Version: 1.0
-References: <202008090832.Fd08yQlD%lkp@intel.com>
-In-Reply-To: <202008090832.Fd08yQlD%lkp@intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 9 Aug 2020 09:37:50 +0200
-Message-ID: <CAMuHMdW7aq=oRTGiCW5CPFA+3ebJ5wEvJawxRuYvhgsp42ObeQ@mail.gmail.com>
-Subject: Re: drivers/crypto/sa2ul.c:1349:33: warning: cast from pointer to
- integer of different size
-To:     kernel test robot <lkp@intel.com>
-Cc:     Keerthy <j-keerthy@ti.com>, kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Tero Kristo <t-kristo@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.10]
+X-RMX-ID: 20200809-094355-4BPWLg2sk0z2xDN-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 9, 2020 at 2:49 AM kernel test robot <lkp@intel.com> wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   06a81c1c7db9bd5de0bd38cd5acc44bb22b99150
-> commit: 2dc53d0047458e28ed05b4548844ba78199857bf crypto: sa2ul - add sha1/sha256/sha512 support
-> date:   2 weeks ago
-> config: m68k-randconfig-r002-20200809 (attached as .config)
-> compiler: m68k-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 2dc53d0047458e28ed05b4548844ba78199857bf
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
+The driver for the as73211 light sensor provides the following not yet
+documented sysfs entries:
+- in_intensity_(x|y|z)_raw
+- in_intensity_(x|y|z)_scale
+- in_intensity_sampling_frequency(_available)
+- in_intensity_hardwaregain(_available)
+- in_intensity_integration_time
 
->    In file included from include/linux/device.h:15,
->                     from include/linux/dmaengine.h:8,
->                     from drivers/crypto/sa2ul.c:12:
->    drivers/crypto/sa2ul.c: In function 'sa_sha_init':
-> >> drivers/crypto/sa2ul.c:1349:33: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->     1349 |   crypto_ahash_digestsize(tfm), (u64)rctx);
->          |                                 ^
->    include/linux/dev_printk.h:123:47: note: in definition of macro 'dev_dbg'
->      123 |   dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
->          |                                               ^~~~~~~~~~~
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
 
-Fix available since last Tuesday:
-https://lore.kernel.org/linux-crypto/20200804092927.7417-1-geert@linux-m68k.org/
+On Thursday, 6 August 2020, 19:44:51 CEST, Jonathan Cameron wrote:
+Hi Jonathan,
 
-Gr{oetje,eeting}s,
+> Hi Christian,
+> 
+> I'll take this, but please send a follow up patch to add documentation
+> for in_intensity_x_raw and all the other new ABI this adds in
+> Documentation/ABI/testing/sysfs-bus-iio
+> I should have mentioned that earlier, but kind of assumed we already
+> had these documented for some reason!  
+> [...]
+> Insert them into the relevant groups that already exist.  In some cases
+> it will just be adding an entry with no specific explanation.
+> For the _raw attribute add a bit more info about what x, y and z are
+> (basically just say they are from cie1931 (I think?)
 
-                        Geert
+I added all sysfs entries which were not present in 5.8-rc6.
 
+Best regards
+Christian
+
+ Documentation/ABI/testing/sysfs-bus-iio | 26 ++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index d3e53a6d8331..14ae4bf053c5 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -40,6 +40,7 @@ Description:
+ 		buffered samples and events for device X.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/sampling_frequency
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency
+ What:		/sys/bus/iio/devices/iio:deviceX/buffer/sampling_frequency
+ What:		/sys/bus/iio/devices/triggerX/sampling_frequency
+ KernelVersion:	2.6.35
+@@ -55,6 +56,7 @@ Description:
+ 		then it is to be found in the base device directory.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/sampling_frequency_available
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency_available
+ What:		/sys/bus/iio/devices/iio:deviceX/in_proximity_sampling_frequency_available
+ What:		/sys/.../iio:deviceX/buffer/sampling_frequency_available
+ What:		/sys/bus/iio/devices/triggerX/sampling_frequency_available
+@@ -374,6 +376,9 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_angl_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_x_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_y_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_z_scale
+ KernelVersion:	2.6.35
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+@@ -484,6 +489,7 @@ Description:
+ 		are listed in this attribute.
+ 
+ What		/sys/bus/iio/devices/iio:deviceX/out_voltageY_hardwaregain
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_hardwaregain
+ What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_red_hardwaregain
+ What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_green_hardwaregain
+ What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_blue_hardwaregain
+@@ -494,6 +500,13 @@ Description:
+ 		Hardware applied gain factor. If shared across all channels,
+ 		<type>_hardwaregain is used.
+ 
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_hardwaregain_available
++KernelVersion:	5.10
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Lists all available hardware applied gain factors. Shared across all
++		channels.
++
+ What:		/sys/.../in_accel_filter_low_pass_3db_frequency
+ What:		/sys/.../in_magn_filter_low_pass_3db_frequency
+ What:		/sys/.../in_anglvel_filter_low_pass_3db_frequency
+@@ -1333,6 +1346,7 @@ Description:
+ 		standardised CIE Erythemal Action Spectrum. UV index values range
+ 		from 0 (low) to >=11 (extreme).
+ 
++What:		/sys/.../iio:deviceX/in_intensity_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_green_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_blue_integration_time
+@@ -1342,7 +1356,8 @@ KernelVersion:	3.12
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		This attribute is used to get/set the integration time in
+-		seconds.
++		seconds. If shared across all channels, <type>_integration_time
++		is used.
+ 
+ What:		/sys/.../iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_integration_time
+ KernelVersion:	4.0
+@@ -1739,3 +1754,12 @@ KernelVersion:	5.5
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		One of the following thermocouple types: B, E, J, K, N, R, S, T.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_x_raw
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_y_raw
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_z_raw
++KernelVersion:	5.10
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Unscaled light intensity according to CIE 1931/DIN 5033 color space.
++		Units after application of scale are nano nanowatts per square meter.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Christian Eggers
+Embedded software developer
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+
