@@ -2,107 +2,80 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9736DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489F9206B2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3+JpB+W"
+	by mail.kernel.org (Postfix) with ESMTP id 7BE96206B5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgHIPLb (ORCPT
+        id S1726266AbgHIPVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 11:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgHIPLa (ORCPT
+        Sun, 9 Aug 2020 11:21:51 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:34067 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726175AbgHIPVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 11:11:30 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2A4C061756;
-        Sun,  9 Aug 2020 08:11:30 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d22so3799557pfn.5;
-        Sun, 09 Aug 2020 08:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3U1YVfZ3/r+GTB6gjCpbjGoBmp0JEystLJz/+YctVAQ=;
-        b=P3+JpB+WUDWhDsCjxZF/OtdUOVzHJ2RM0GUjGZgEfAuODBqdcetEXFytsyhvGwl6iG
-         7jpquCJudc/UWaMo2r5UmytWUIad6p4gl3MgSZ76uY6+ZLepknpkIuMk05vC5NXY8bPB
-         aC51eq5rPnX+oKQxQH9bBrJ7br6kkKvzPrY1zrguhbxJBaCCzEOxZhf+TL2ai/FxeTej
-         lkQtf9a6iELZuOC21MKzCS3UaPmm8sopmJRzp1OwN//Bvrzol9XQfo6i7epSZuTZhZrZ
-         utgbV1GnmdNimoiQ9LjVflso8qd9fYitfT2WG8XjtGrF4f97ADt1xHf0swQ9yDq+clP3
-         4FLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3U1YVfZ3/r+GTB6gjCpbjGoBmp0JEystLJz/+YctVAQ=;
-        b=O18pH8w2GBQEJCIUj27eDROwtu001Z+ylN7rbHPHtrZAidqD2e+Bpe9qMulxZ0Ja9g
-         FyDRJSrDbegnQCJkjqOC+Q8ZkQUDoNh3mn6o6lSnQsJEwWSInlpku8KPHBNKXqJwzUf2
-         zypBuhMFLwH3P4YKVEEEVUlixEygMSg0uV7XkUj5fBjMXPptEv1QYbMMlIUFnnCJaeyF
-         xgvYihScRTwQ3nLKxbtmV3NKHCfTXVmQ3d75fOx2DAMYEES2uKQijyfMVehiU2M8xnzz
-         0W2aQQDPhCwqHqpu+dlED203A0vLZN+kNV1shkk5qimsjzNtY7rzTGumhn4N+6QCegBD
-         xABg==
-X-Gm-Message-State: AOAM531lTs5P6SKiSfzgdfVDc/2jin97FV3Zxx9Wxp+DrYk4rvN4a2KW
-        HINFMa5DWXxsu5wAybotd9s=
-X-Google-Smtp-Source: ABdhPJz/uaoGAS5YWNepVNhd+qI9FEZQoovPOeRinCilOF8oTvZhXjcN0GCoq4mHzXqPeYQENoyadA==
-X-Received: by 2002:a62:2e45:: with SMTP id u66mr22488619pfu.121.1596985889720;
-        Sun, 09 Aug 2020 08:11:29 -0700 (PDT)
-Received: from [192.168.86.81] ([49.206.15.28])
-        by smtp.gmail.com with ESMTPSA id w82sm19869911pff.7.2020.08.09.08.11.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 08:11:29 -0700 (PDT)
-Subject: Re: [PATCH] lib: Convert test_hexdump.c to KUnit
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     brendanhiggins@google.com, skhan@linuxfoundation.org,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200806094440.14962-1-98.arpi@gmail.com>
- <20200806100540.GE3703480@smile.fi.intel.com>
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-Message-ID: <caf314b0-c090-26e6-3593-cb23aab1cbe3@gmail.com>
-Date:   Sun, 9 Aug 2020 20:41:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 9 Aug 2020 11:21:49 -0400
+X-IronPort-AV: E=Sophos;i="5.75,454,1589234400"; 
+   d="scan'208";a="462926077"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2020 17:21:37 +0200
+Date:   Sun, 9 Aug 2020 17:21:37 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Tomas Winkler <tomas.winkler@intel.com>
+cc:     kbuild-all@lists.01.org, Zhou Furong <furong.zhou@intel.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: block: fix memdup.cocci warnings
+Message-ID: <alpine.DEB.2.22.394.2008091720080.2450@hadrien>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <20200806100540.GE3703480@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/08/20 3:35 pm, Andy Shevchenko wrote:
-> On Thu, Aug 06, 2020 at 03:14:40PM +0530, Arpitha Raghunandan wrote:
->> Converts test lib/test_hexdump.c to KUnit.
->> More information about KUnit can be found at
->> https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
->> KUnit provides a common framework for unit tests in the kernel.
-> 
-> ...
-> 
->> -	if (memcmp(test, real, TEST_HEXDUMP_BUF_SIZE)) {
->> -		pr_err("Len: %zu row: %d group: %d\n", len, rowsize, groupsize);
->> -		pr_err("Result: '%s'\n", real);
->> -		pr_err("Expect: '%s'\n", test);
->> -		failed_tests++;
->> -	}
->> +	KUNIT_EXPECT_EQ(kunittest, 0, memcmp(test, real, TEST_HEXDUMP_BUF_SIZE));
-> 
-> 
-> Ah, can you explain how user will see now what is being expected and what is in
-> reality in the buffer? I'm not gonna accept such changes without showing in
-> explicitly that user is not going to suffer of this change.
-> 
-I have sent another patch replacing KUNIT_EXPECT_EQ() with KUNIT_EXPECT_EQ_MSG() and KUNIT_EXPECT_NE() with KUNIT_EXPECT_NE_MSG(). These methods log what is being expected and what is in reality in the buffer in case of test failure similar to the original test.
+From: kernel test robot <lkp@intel.com>
+
+ Use kmemdup rather than duplicating its implementation
+
+Generated by: scripts/coccinelle/api/memdup.cocci
+
+Fixes: 68083eebfb0a ("mmc: block: register RPMB partition with the RPMB subsystem")
+CC: Tomas Winkler <tomas.winkler@intel.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+---
+
+tree:   https://github.com/intel/linux-intel-lts.git 5.4/preempt-rt
+head:   64f494c08613ebb24a83b69223e7f90e8b7ce956
+commit: 68083eebfb0a008e9bec30cefb2260f0543ed5ec [97/9103] mmc: block: register RPMB partition with the RPMB subsystem
+:::::: branch date: 4 days ago
+:::::: commit date: 9 months ago
+
+ block.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -1270,11 +1270,10 @@ static int mmc_blk_rpmb_set_dev_id(struc
+ {
+ 	char *id;
+
+-	id = kmalloc(sizeof(card->raw_cid), GFP_KERNEL);
++	id = kmemdup(card->raw_cid, sizeof(card->raw_cid), GFP_KERNEL);
+ 	if (!id)
+ 		return -ENOMEM;
+
+-	memcpy(id, card->raw_cid, sizeof(card->raw_cid));
+ 	ops->dev_id = id;
+ 	ops->dev_id_len = sizeof(card->raw_cid);
+
