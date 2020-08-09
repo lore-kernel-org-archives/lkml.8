@@ -2,168 +2,99 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9882F206D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138A9206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Wn49Z8jb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOEmf5SB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgHICFY (ORCPT
+        id S1726234AbgHICRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:05:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46314 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgHICFY (ORCPT
+        Sat, 8 Aug 2020 22:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgHICRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:05:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0791wEeD054014;
-        Sun, 9 Aug 2020 02:05:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=YxSp4K2wlTC691uVVaHqry3eVtQTsiPQ4FKxKCSNgVM=;
- b=Wn49Z8jbrnrAquD6556G4OJjQNFVm6TWY8i1IxiQXNXWITmodXsfhfhtXKopCQ4nX0LO
- LDd+/+UmQtRyKU2yn6rD+g8ZWlhgr9bflWA0wBPKk3v9a2fXC7pGzommcHb9GIhX4Xyy
- iz9CHcY5Exol9BOqpkxQhxpEoW9l9xoVWC/n3fZBvLgZIwS+KA+OkHh2i6AneZAwN/ak
- /ImywwJ99owJVeEzV/P6w/K6FtUZpUNwH7X3bZh+i370P7BFcqV8Ll6Hwj9mkAc3O3cS
- +mmCC9JCip0DSfwaBu/goVwzLambbSqDMsC7A0Ev7N36jvsXFe0sGnSzQ27mACfOChCu Qg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32smpn1wmp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 09 Aug 2020 02:05:03 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07923QGs126587;
-        Sun, 9 Aug 2020 02:05:02 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32t5xvgk8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 09 Aug 2020 02:05:02 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 079250m5010498;
-        Sun, 9 Aug 2020 02:05:00 GMT
-Received: from [192.168.29.236] (/73.249.50.119)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 09 Aug 2020 02:05:00 +0000
-Subject: Re: [PATCH v3 2/7] x86/xen: eliminate xen-asm_64.S
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20200807083826.16794-1-jgross@suse.com>
- <20200807083826.16794-3-jgross@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- xsFNBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
- PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
- MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
- C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
- d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
- woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
- FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
- SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
- Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
- 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABzTNCb3JpcyBPc3Ry
- b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT7CwXgEEwECACIFAlH8
- CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
- 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
- JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
- VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
- jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
- qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
- tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
- kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
- m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
- nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
- hWwveNeRTkxh+2x1Qb3GT46uzsFNBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
- Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
- yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
- kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
- KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
- BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
- gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
- XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
- 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
- kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
- SQARAQABwsFfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
- jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
- 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
- PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
- u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
- qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
- t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
- ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
- Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
- 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
- Jg6OxFYd01z+a+oL
-Message-ID: <b0c1c8cf-7a7e-33be-2b83-7895bcb9c36b@oracle.com>
-Date:   Sat, 8 Aug 2020 22:04:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200807083826.16794-3-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008090011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 phishscore=0 clxscore=1015 spamscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008090010
+        Sat, 8 Aug 2020 22:17:36 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CF5C061756;
+        Sat,  8 Aug 2020 19:17:35 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e5so4285546qth.5;
+        Sat, 08 Aug 2020 19:17:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=N9Cxjqana//WEni2QSUMEdjKG1ybH4mJ0UhJQDd8N9Q=;
+        b=iOEmf5SBqdR8ZYXhHSpNYLbXvvfwXzyuBDRb/XP1bG4O0ogQEdUasEIWwtDEga5cyW
+         4OyRAR9GjI7yw1gaye/RYMPYU+6mAgRcZh2ZnUN/KtqSeXqzG4MRiWILSxG3HRdpWk3V
+         IxWHU7VqpH4ChJW6A2ikxnc8hfRFxC6ZhYSyuykKxG2kExTebUx0uzxAtysgfZaHtPjz
+         8ErWZ9yOr4havrqHcX8VekC3mIRfLWzj7mxL1ouM2ZpyxA7DqClB4v+863Jta6/8A09n
+         jfDfliklTjNT3Wn98WERRsaYg1JaBKHb7MD5RcCFDIh4PLUjPwaINQ+d6D7sTej/VZK0
+         enow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=N9Cxjqana//WEni2QSUMEdjKG1ybH4mJ0UhJQDd8N9Q=;
+        b=ZwBq9S2EPmMG5fNm15VFgKA6p+s9EOpoSU1FCXM0E8DQ4EVM+P1y+R4aCPj4I45xxV
+         +cWqsSLjuv88hqnrmVTOhzSEqelTi6cuOpgXydbHAQ0IHphIXXtUZB5aMzqtsWyz9spy
+         wLcgaHIIAPEOVQh7eaw1HLKeMyPZ3CbGgn9prEwCrs6du6uApKd37vVMlG0ZvqaEX6Z+
+         fldBbMTKZEAANt+wunTdcOEJQgPSiCU2gY6N6I/3/LIWtH/54CXAc1Mp3lRRcFn1wq5y
+         DYwX9kqUJqzKvK63eUp+kHQPIzqed9VLxwi/2v18ApQNwfeSuCAYGlOjpjo4xwcgXw9t
+         1MFw==
+X-Gm-Message-State: AOAM531tXAfyS7lVmc+kVPejk8EMm90ahbxqhV0/QYcG4qKoNsEKugjb
+        gFr4I9fI/GmgjUsZZtb0htM=
+X-Google-Smtp-Source: ABdhPJwBFV/x0aNfatq9WLPnP9IdRT3hGwSB2vUkre4eawfo6J75qig8NMyDmmyWXCMBkNNzE2BfKA==
+X-Received: by 2002:ac8:5189:: with SMTP id c9mr20625837qtn.202.1596939455059;
+        Sat, 08 Aug 2020 19:17:35 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:c96d:c91a:c6a9:dcf8])
+        by smtp.googlemail.com with ESMTPSA id n6sm10466456qkh.74.2020.08.08.19.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Aug 2020 19:17:34 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org (open list:FAILOVER MODULE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] net/failover: remove redundant fops null check
+Date:   Sat,  8 Aug 2020 22:17:28 -0400
+Message-Id: <20200809021728.17431-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 4:38 AM, Juergen Gross wrote:
-> With 32-bit pv-guest support removed xen-asm_64.S can be merged with
-> xen-asm.S
->
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+Remove redundant fops null check
+Fixes: 30c8bd5aa8b2c ("net: Introduce generic failover module")
 
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ net/core/failover.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-
-
-except for
-
-
-> diff --git a/arch/x86/xen/xen-asm.S b/arch/x86/xen/xen-asm.S
-> index c59d077510bf..d1272a63f097 100644
-> --- a/arch/x86/xen/xen-asm.S
-> +++ b/arch/x86/xen/xen-asm.S
-> @@ -6,12 +6,19 @@
->   * operations here; the indirect forms are better handled in C.
->   */
->  
-> +#include <asm/errno.h>
->  #include <asm/asm-offsets.h>
->  #include <asm/percpu.h>
->  #include <asm/processor-flags.h>
-> +#include <asm/segment.h>
-> +#include <asm/thread_info.h>
-> +#include <asm/asm.h>
->  #include <asm/frame.h>
->  #include <asm/asm.h>
-
-
-asm/asm.h included twice now.
-
-
+diff --git a/net/core/failover.c b/net/core/failover.c
+index b5cd3c727285..63213347f51c 100644
+--- a/net/core/failover.c
++++ b/net/core/failover.c
+@@ -82,7 +82,7 @@ static int failover_slave_register(struct net_device *slave_dev)
+ 
+ 	slave_dev->priv_flags |= (IFF_FAILOVER_SLAVE | IFF_LIVE_RENAME_OK);
+ 
+-	if (fops && fops->slave_register &&
++	if (fops->slave_register &&
+ 	    !fops->slave_register(slave_dev, failover_dev))
+ 		return NOTIFY_OK;
+ 
+-- 
+2.17.1
 
