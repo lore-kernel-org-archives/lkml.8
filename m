@@ -2,100 +2,66 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E171C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 03:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 03:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B80F206D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 03:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4975206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 03:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="RzVfooby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgHIC77 (ORCPT
+        id S1726207AbgHIDKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:59:59 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725988AbgHIC77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:59:59 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 67C582EDB366618F78EA;
-        Sun,  9 Aug 2020 10:59:55 +0800 (CST)
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sun, 9 Aug 2020 10:59:54 +0800
-Subject: Re: [PATCH net-next v1] hinic: fix strncpy output truncated compile
- warnings
-To:     David Miller <davem@davemloft.net>
-CC:     <David.Laight@ACULAB.COM>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-References: <20200807020914.3123-1-luobin9@huawei.com>
- <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
- <b886a6ff-8ed8-c857-f190-e99f8f735e02@huawei.com>
- <20200807.204243.696618708291045170.davem@davemloft.net>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <2e4eeea0-0531-f12c-423b-c7b858560eb5@huawei.com>
-Date:   Sun, 9 Aug 2020 10:59:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 8 Aug 2020 23:10:08 -0400
+Received: from mail.cock.li ([37.120.193.124]:56550 "EHLO mail.cock.li"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgHIDKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 23:10:08 -0400
 MIME-Version: 1.0
-In-Reply-To: <20200807.204243.696618708291045170.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
+        t=1596942603; bh=GjTGfoW9F+VaziRLEHlDkhHQnJaM8xdQcIqswe3AOsc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RzVfoobygpsiz2644bqiA5GQbK77LhvITYczTd9+/dvw7GGfQ+Kp3ft8oXOayuWfV
+         ZgNIt7bmro8b3juLuuecdzD9WHiiDNV0NaJ/J2uKlqZs01nZ4q+56/LwjD1cyauiIg
+         1CbRGDDT+p3kXDkCGKRGtMmX3Jd7JoWatIyqi8yXNLwUeW+hMZ/cDbQki0zk/P9wwn
+         qrH4gyv9nQmFRYhUcGkKNfpVAnmLgwzv/2lLXca0O9xTK7veBqGbCcAFiPLwkxnRQ9
+         BBedOlVvB1bLj0sLnDOkMtz6E/1K1O8lmQtAiFRZ5JF6XOST5vHfnpNUPMOsiGqOjD
+         aZ7kxl99zr5ig==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 09 Aug 2020 03:10:02 +0000
+From:   nipponmail@firemail.cc
+To:     bruce@perens.com
+Cc:     linux-kernel@vger.kernel.org, esr@thyrsus.com, moglen@columbia.edu,
+        blukashev@sempervictus.com, tcallawa@redhat.com, editor@lwn.net,
+        skraw.ml@ithnet.com, torvalds@osdl.org, rms@gnu.org
+Subject: Bradly Spengler interview (GRSecurity) (Blatant GPL violators vs GCC
+ and Linux Kernel)
+Message-ID: <dddaf3541c2a9c01f9f7d08ec6b0bb8f@firemail.cc>
+X-Sender: nipponmail@firemail.cc
+User-Agent: Roundcube Webmail/1.3.10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/8 11:42, David Miller wrote:
-> From: "luobin (L)" <luobin9@huawei.com>
-> Date: Sat, 8 Aug 2020 11:36:42 +0800
-> 
->> On 2020/8/7 17:32, David Laight wrote:
->>>> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->>>> b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->>>> index c6adc776f3c8..1ec88ebf81d6 100644
->>>> --- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->>>> +++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
->>>> @@ -342,9 +342,9 @@ static int chip_fault_show(struct devlink_fmsg *fmsg,
->>>>
->>>>  	level = event->event.chip.err_level;
->>>>  	if (level < FAULT_LEVEL_MAX)
->>>> -		strncpy(level_str, fault_level[level], strlen(fault_level[level]));
->>>> +		strncpy(level_str, fault_level[level], strlen(fault_level[level]) + 1);
->>>
->>> Have you even considered what that code is actually doing?
->  ...
->> I'm sorry that I haven't got what you mean and I haven't found any defects in that code. Can you explain more to me?
-> 
-> David is trying to express the same thing I was trying to explain to
-> you, you should use sizeof(level_str) as the third argument because
-> the code is trying to make sure that the destination buffer is not
-> overrun.
-> 
-> If you use the strlen() of the source buffer, the strncpy() can still
-> overflow the destination buffer.
-> 
-> Now do you understand?
-> .
-> 
-Thanks for your explanation. I explained that why I didn't use sizeof(level_str) as the third argument in my previous reply e-mail to you.
-Because using sizeof(level_str) as the third argument will still cause the following compile warning:
+Thought you might be interested:
+https://www.youtube.com/watch?v=rv3a2tzUTn4
 
-In function ‘strncpy’,
-    inlined from ‘chip_fault_show’ at drivers/net/ethernet/huawei/hinic/hinic_devlink.c:345:3:
-./include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ specified bound 17 equals destination size [-Wstringop-truncation]
-  297 | #define __underlying_strncpy __builtin_strncpy
-
-Now I know that using strncpy() on NUL-terminated strings is deprecated as Kees Cook points out and actually there is no need to use it
-in my code.
+GRSecurity violates both the Linux kernel's copyright and the GCC 
+copyright by forbidding redistribution of the patches (in their Access 
+Agreement): which are non-seperable derivative works of the kernel and 
+(in the case of the GCC plugins) GCC. Yes: threatening consequences if a 
+licensee redistributes is a restraint on the "rights" given by the 
+original copyright owners. Those "plugins" he is talking about as-well 
+as the kernel patch violate the GPLv2. The GPLv2 _FORBIDS_ adding 
+additional clauses not-within the GPL between the derivative-licensee 
+and the down-the-line licensee. Bradly Spengler / OpenSourceSecurity are 
+violating this stipulation, blatantly, in writing. They are also 
+violating the "no additional restrictions" stipulation in the GPLv2. 
+They ARE violating the Linux and the GCC copyright.
