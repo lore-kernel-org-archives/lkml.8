@@ -2,63 +2,64 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	SUBJ_ALL_CAPS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18AB0206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CC2206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmxdgDnJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPiShrji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgHIUoG (ORCPT
+        id S1726464AbgHIUoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 16:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34182 "EHLO
+        Sun, 9 Aug 2020 16:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgHIUoG (ORCPT
+        with ESMTP id S1726392AbgHIUoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 16:44:06 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B5EC061756;
-        Sun,  9 Aug 2020 13:44:05 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t23so7454926ljc.3;
-        Sun, 09 Aug 2020 13:44:05 -0700 (PDT)
+        Sun, 9 Aug 2020 16:44:08 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C24ABC061786;
+        Sun,  9 Aug 2020 13:44:07 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t6so7432340ljk.9;
+        Sun, 09 Aug 2020 13:44:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SvDAYJLcZBgTsyI3IaDujHuoZCk3THaG/ArcfhJ0GWI=;
-        b=GmxdgDnJfiMvbGkhskAMmhvwWFIywN7TCDp+2/6/kRsL1IzbleBtKRWN34/wAYC5g/
-         nBEq0kPXP2SBmJz7F2p1yYi5aggjrvqqmk3mFP9MXiH56Ot2W8ZSYdniknQpRnvErsf5
-         hHJ76yI/SpvjAhkSak0Ak6pFjyD+cUpzGywpzo7KcrYvZgxA+U7aZkdG48d9SihPQSF4
-         OdENNtxsWQH2Xl+ju0SQVJED7D/NFkt3CgcfdGlYY876QVs0gFEk10je3pgDZajUlY0I
-         q2HB/joDS9dZR/N5MX3KF/egEJh/LRm2U1CfEp8iB9nB75K43PUibwk5wDjTmftP4SVD
-         ODZQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uuKzMy8ewGXUSBJtIFW0KX3RN99yxbeLmlHXP4MWBpY=;
+        b=oPiShrjiXPEdy2Cco0DaYWuVYysn0jRQlB+C7ArO0yieudE5NAPxFgcc78p6eCl6xQ
+         eUYcIXo3hUVx6AeVpVePfK4c1s4oxxqecRJST0kCQRYovO+T6bv/0FIhNs7vbqeo8wjB
+         EameDLmP6EniKNI0ezXFKoLzlNbtBaBOyvLrWiYI4iLyBsvrRIBQ1buAzjRdl8gRzcVF
+         6Q2n1w99ZlOq+QtQcheIWmvxXVovkoko4w+eKO/NrpSFYVbi0P1cF5MciP9XteH+Lbc1
+         SXNF/RYhb0uAEfjx1sfex+S+O2DRjg9b4+oCIGIdgJAdfKCnik70hP7mk+cjjUsUbZgb
+         b/ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SvDAYJLcZBgTsyI3IaDujHuoZCk3THaG/ArcfhJ0GWI=;
-        b=dRPfHwSX0OygST223EB3381MV/WE+vUNGMvercjQOXhfrcyKC05jfmI1NfDY5FCs/q
-         SeyAklgyFSBEGUE6tjjFhbQYJjfaHeQyUSrqPU5lp3Q9/qNqKHkQYxYER0VdfDEu7icr
-         cYmkVbYwenar/vDwWMixW1PFJy8c5wcD705AL9cQhr/HEX76bg+odVnfvDSBSF/OywLy
-         IBWVQQ4/l5ai4jbxvRfu4T4eY/dFE9w3Z/qRiDCX4F6sfj+plja6tVYEgffBzemfkSpH
-         DWw2ljG7zZdWvoUNDnHMH9YdGDmDQZ4Fne5aJGznJQC09JmS6F/H/w/zthFdnJbz4h6H
-         N0sA==
-X-Gm-Message-State: AOAM532OoLWugqw2PaN4a2E+67N+LMRiEJENGL05IlJoF1nu4jvPaNCb
-        iRWyIJxV8p4PHzjoNH21AiHIKeSFxyc=
-X-Google-Smtp-Source: ABdhPJxe/b92Z2GqoBPeYDyLCZJRAhOMt12bGw+W+K9D7jJB9I8hfv0+hQN6Bltk3MwPUO8Z6nqKHg==
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr10287452ljc.371.1597005843876;
-        Sun, 09 Aug 2020 13:44:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uuKzMy8ewGXUSBJtIFW0KX3RN99yxbeLmlHXP4MWBpY=;
+        b=YwiLSHvOaGbOhIhSGDDhpTW4OmQXfRoWCucNLOlVUCfxwpA674mKNBAfGtAVcMB5vl
+         thZ2ED7S2n8tcaoFxwIxswb6fN6hAJJh2NILzqvroWjj/PmwjNMQZg4FP4dR4hn/+FwJ
+         ai52RZMjAYjK610veUNV29IZesjPkMXDUoUwGR06cR+6PBPoT7J8aRuE1LRJsDVeLRjk
+         j0ClLnkr7UDM6L6ZDGzE3RGs2u5v9aiVCnBI6bGYPTYmSqL5zavEN9gKCzYlAdIyrFCy
+         YoFhug4Ctqxkgy9j20EbB385WUAdeEUeRgAtdsPTAZkg7Ek3MYPa0EU65a9H2uPb9xWd
+         8PhA==
+X-Gm-Message-State: AOAM533F57eBHIt7YT10LjeQ0tQMaJeh07SOAD1XQXzTt1MFY7xJRBdw
+        epo1xsz7ry4ur4FulirFmeYyECG6qM4=
+X-Google-Smtp-Source: ABdhPJze7IbNW/h8CDiwh7ppwJgta/7FPLU8nmFubdLHUR0XB3cjuCTYs4AdpvuvPw70SotORU6WdQ==
+X-Received: by 2002:a2e:8084:: with SMTP id i4mr11562182ljg.447.1597005846020;
+        Sun, 09 Aug 2020 13:44:06 -0700 (PDT)
 Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id c17sm9529603lfr.23.2020.08.09.13.44.02
+        by smtp.gmail.com with ESMTPSA id c17sm9529603lfr.23.2020.08.09.13.44.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 13:44:03 -0700 (PDT)
+        Sun, 09 Aug 2020 13:44:05 -0700 (PDT)
 From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
         linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
@@ -70,10 +71,12 @@ Cc:     "Theodore Y . Ts'o" <tytso@mit.edu>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Uladzislau Rezki <urezki@gmail.com>,
         Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [RFC-PATCH 0/2] __GFP_NO_LOCKS
-Date:   Sun,  9 Aug 2020 22:43:52 +0200
-Message-Id: <20200809204354.20137-1-urezki@gmail.com>
+Subject: [PATCH 2/2] rcu/tree: use __GFP_NO_LOCKS flag
+Date:   Sun,  9 Aug 2020 22:43:54 +0200
+Message-Id: <20200809204354.20137-3-urezki@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200809204354.20137-1-urezki@gmail.com>
+References: <20200809204354.20137-1-urezki@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,27 +84,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, folk!
+Enter the page allocator with newly introduced __GFP_NO_LOCKS flag
+instead of former GFP_NOWAIT | __GFP_NOWARN sequence. Such approach
+address two concerns. See them below:
 
-This small series introduces __GFP_NO_LOCKS flag. Detailed description
-is here https://lkml.org/lkml/2020/8/3/961. I would like to get some
-input at least about [1] patch. 
+a) If built with CONFIG_PROVE_RAW_LOCK_NESTING, the lockdep complains
+about violation("BUG: Invalid wait context") of the nesting rules. It
+does the raw_spinlock vs. spinlock nesting checks, i.e. it is not legal
+to acquire a spinlock_t while holding a raw_spinlock_t.
 
-Please RFC. Appreciate for valubale comments, review and proposals :)
+Internally the kfree_rcu() uses raw_spinlock_t whereas the page allocator
+internally deals with spinlock_t to access to its zones. The code also
+can be broken from higher level of view:
+<snip>
+    raw_spin_lock(&some_lock);
+    kfree_rcu(some_pointer, some_field_offset);
+<snip>
 
-Thanks!
+b) If built with CONFIG_PREEMPT_RT. Please note, in that case spinlock_t
+is converted into sleepable variant. Invoking the page allocator from
+atomic contexts leads to: "BUG: scheduling while atomic".
 
-Uladzislau Rezki (Sony) (2):
-  mm: Add __GFP_NO_LOCKS flag [1]
-  rcu/tree: use __GFP_NO_LOCKS flag [2]
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- include/linux/gfp.h            | 11 +++++++++--
- include/trace/events/mmflags.h |  1 +
- kernel/rcu/tree.c              |  2 +-
- mm/page_alloc.c                | 31 +++++++++++++++++++++++++------
- tools/perf/builtin-kmem.c      |  1 +
- 5 files changed, 37 insertions(+), 9 deletions(-)
-
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 30e7e252b9e7..48cb64800108 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3327,7 +3327,7 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+ 			 * pages are available.
+ 			 */
+ 			bnode = (struct kvfree_rcu_bulk_data *)
+-				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
++				__get_free_page(__GFP_NO_LOCKS);
+ 		}
+ 
+ 		/* Switch to emergency path. */
 -- 
 2.20.1
 
