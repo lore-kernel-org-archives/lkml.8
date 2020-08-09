@@ -2,197 +2,93 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B96C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF73E206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:45:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xd0h+wS8"
+	by mail.kernel.org (Postfix) with ESMTP id 78B34206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgHIHpc (ORCPT
+        id S1726321AbgHIHxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 03:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgHIHpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 03:45:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C73C061756;
-        Sun,  9 Aug 2020 00:45:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x25so134116pff.4;
-        Sun, 09 Aug 2020 00:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=99KLVxoGYktpAH84WHol6L1wVNytU8WR1EzojQK+pz8=;
-        b=Xd0h+wS84C7743+jiJu6F/MDNB44b8vDRcmzyzHrSa3zikoSElfyGdicdY/QObsqVq
-         JXB3M8Yo7WFdtPZzOvbbAPiW5P47PVYST0u1HLpazfzVyL9O8q2hjh/VRuujCbqydfsU
-         LwQIEE5FsiYwwi//yXXqCbdDfYpPo8HMj0pYfpZ628WM0LffgW8laRFCc1jW1hP4tAoX
-         dGDOgrmHTwdDyz68fEkWsgXGW43z4CwpsndwvT2rJOSuk9dq73X9Zn38oHizhpuPJ98p
-         pZQfkL+7IGukWJc1kkGw89dwl6veFPYUp8Z3pYa5im+skuH2IlnyGj7xD5y62BEVhYlw
-         DoOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=99KLVxoGYktpAH84WHol6L1wVNytU8WR1EzojQK+pz8=;
-        b=OOMQx6bRQIMYXcGA7wVw47gmIBZkjXLUabnTIjDWcRelR4cvwrqt1OA7GP5EAR+9Gs
-         yLyn2m65khlPIrglT4nK8GG2Be0fqQrFTiVl0GdqnsSoj4eZdwo329FRugRY3KnUC5QS
-         8gl+AqpLOJfKnSblmKRHETx9Fhazrj6UbbEQDepZBeVXdYXnhwOKbVgLl0tK8F062biP
-         7rjzwFxexfKgHcQ+/6pVmPKTGr41/7yF+oETeSqXxFdNCCiZTV2g2QnTG9K8aIUoX3qv
-         dM85ZZ/7mNbr+BH6eJhE6WWzhLgLTJOqfp/I6KcYUyP/vVRHKBZxmnPUgi3gzXCIVHlg
-         aMPA==
-X-Gm-Message-State: AOAM532JLOv+u+46RU5Z8POiz9jGeToNOgbr5AA+iAePpegpOLA3s3et
-        I7IKdDJZR17dQBYxyHgrheM=
-X-Google-Smtp-Source: ABdhPJzsoCfxEnjao2KRuJ3zQCm54AGcQIDsaAojukQtP1HlpPxerMu0nntSsKFFpS0BGPEcKWSK3A==
-X-Received: by 2002:a63:5b65:: with SMTP id l37mr17172064pgm.72.1596959130108;
-        Sun, 09 Aug 2020 00:45:30 -0700 (PDT)
-Received: from blackclown ([103.88.82.9])
-        by smtp.gmail.com with ESMTPSA id b18sm5559113pgj.12.2020.08.09.00.45.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Aug 2020 00:45:29 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 13:15:17 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, galpress@amazon.com,
-        sleybo@amazon.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH 5/4] RDMA/efa : Remove pci-dma-compat wrapper APIs
-Message-ID: <20200809074517.GA4419@blackclown>
-References: <cover.1596957073.git.usuraj35@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1596957073.git.usuraj35@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 9 Aug 2020 03:53:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:53373 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbgHIHxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 03:53:07 -0400
+IronPort-SDR: uTdu0WnETwMpV9IgQMY5EeiXwdG9hh+RGX6AXRfNfi0tI564tCm62gTP2m+CeFRSyUxZg5jHMc
+ 668zncq4hQZw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9707"; a="217734909"
+X-IronPort-AV: E=Sophos;i="5.75,452,1589266800"; 
+   d="scan'208";a="217734909"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2020 00:53:06 -0700
+IronPort-SDR: kF4gYMiUwIdTNdNaYqdtwFP1fqW6C8uXoxz0o5s5VIQlgpCFsT3o1PWBhgtAOPKC+3AJaIgy8A
+ c8wzo7x1WjaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,452,1589266800"; 
+   d="scan'208";a="277033463"
+Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.238.156.127])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Aug 2020 00:53:01 -0700
+From:   Cathy Zhang <cathy.zhang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        tony.luck@intel.com, dave.hansen@intel.com,
+        kyung.min.park@intel.com, ricardo.neri-calderon@linux.intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        jpoimboe@redhat.com, ak@linux.intel.com, ravi.v.shankar@intel.com,
+        Cathy Zhang <cathy.zhang@intel.com>
+Subject: [PATCH v3 0/2] Expose new features for Intel processor
+Date:   Sun,  9 Aug 2020 15:47:20 +0800
+Message-Id: <1596959242-2372-1-git-send-email-cathy.zhang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs.
+This patchset is to expose two new features, SERIALIZE and
+TSX suspend load tracking to KVM CPUID for processors which 
+support them. KVM reports this information and guest can 
+make use of them finally.
 
-Instead use dma-mapping.h APIs directly.
+Detailed information on the instructions and CPUID feature
+flags can be found in the latest "extensions" manual [1].
 
-The patch has been generated with the coccinelle script below
-and compile-tested.
+This series applies on top of TIP tree as it depends on
 
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=85b23fbc7d88f8c6e3951721802d7845bc39663d
 
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
+Changes since v2:
+  * Combine the two kvm patches into a single one.
+  * Provide features' overview introduction in kvm patch commit message.
+  * Get the latest kernel patches.
+  * Change definition from TSX_LDTRK to TSXLDTRK for TSX new feature.
+  * Change kernel patches Author to the owner.
+  * Remove SERIALIZE enumeration patch.
 
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
+Reference:
+[1]. https://software.intel.com/content/dam/develop/public/us/en/documents/architecture-instruction-set-extensions-programming-reference.pdf
 
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
+Cathy Zhang (1):
+  x86/kvm: Expose new features for supported cpuid
 
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
+Kyung Min Park (1):
+  x86/cpufeatures: Enumerate TSX suspend load address tracking
+    instructions
 
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kvm/cpuid.c               | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/infiniband/hw/efa/efa_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/hw/efa/efa_main.c b/drivers/infiniband/hw/efa/efa_main.c
-index 92d701146320..bcc931ad71b0 100644
---- a/drivers/infiniband/hw/efa/efa_main.c
-+++ b/drivers/infiniband/hw/efa/efa_main.c
-@@ -405,13 +405,13 @@ static int efa_device_init(struct efa_com_dev *edev, struct pci_dev *pdev)
-                return err;
-        }
-
--       err = pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_width));
-+       err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(dma_width));
-        if (err) {
-                dev_err(&pdev->dev, "pci_set_dma_mask failed %d\n", err);
-                return err;
-        }
-
--       err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(dma_width));
-+       err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(dma_width));
-        if (err) {
-                dev_err(&pdev->dev,
-                        "err_pci_set_consistent_dma_mask failed %d\n",
 -- 
-2.17.1
+1.8.3.1
 
