@@ -2,121 +2,181 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB39C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEBE4206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24A12065D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dxBNrcTa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ndmsystems-com.20150623.gappssmtp.com header.i=@ndmsystems-com.20150623.gappssmtp.com header.b="d43EQWhn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgHIQAF (ORCPT
+        id S1726361AbgHIQNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 12:00:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51174 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726200AbgHIP7s (ORCPT
+        Sun, 9 Aug 2020 12:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHIQM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 11:59:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596988784;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=xG+8uieNrMAP0UGTh1w832zRGIBKTtCxlShJe5RBqBY=;
-        b=dxBNrcTa6ohjcTdxtSU3u/KqS2oh4TwuGdGJ4BaHXyBNURZQ9XBny0isOVWIIRNGc1jTqW
-        C+hB+dBip1+mXlW326TKj9GKlQwT1phAo+o7k8vUeDzze85ely+8hAR//INedhLTQWPSM8
-        vNDDS8Andd1gsdEtKnYnkrDsoW5kl+0=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-9QuKDFC6NAqav10xHGktiw-1; Sun, 09 Aug 2020 11:59:42 -0400
-X-MC-Unique: 9QuKDFC6NAqav10xHGktiw-1
-Received: by mail-qk1-f200.google.com with SMTP id 195so5425506qke.14
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 08:59:42 -0700 (PDT)
+        Sun, 9 Aug 2020 12:12:58 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCD7C061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 09:12:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i10so7087350ljn.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 09:12:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndmsystems-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UEpCtsZEvZZgbvhsQBYBWkiCjgyox61Emg/c1y2ZN3I=;
+        b=d43EQWhnMIUnO0ayF/xBZT66+CQu7CKKb9TlQuBYJY4hAWz5E8yZRWDTEdRQnG2kqu
+         L61G1YrcApisjNwWDUvL4ubvfMXQrCIB5FxuoJU/2qtM5OuABh8ga92lCA7AoPtaKYcK
+         5mt9H91rLaEnDHSTHv6nSqQ8iFr2UNaToaQckqZWfqkLttr+uy6icA5qVu2f62rE4kCf
+         H9k6PJjAP4YHc0P7f3sXBiUv/8J4KEm5GfWiLGUpHDU45ePXR2jZ6S+UhLVhPHoHSJk5
+         9oP0jZItKO3v8hjrcF4KROr+5jFbL6fRtl0TjGcufpp7Kh8mYSRsiXAbsUkMLu9p9VWU
+         dXVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xG+8uieNrMAP0UGTh1w832zRGIBKTtCxlShJe5RBqBY=;
-        b=rtZOSgo8a8ewxGWeKZyNND3VjRvqSnk+ANsNM548KnDuKGcFoHCcz3jUu+o7yBM0Lz
-         aVM3JnnrJalU0xiZxynK7lulsvH62lbXTWfOZ2fb7hYCG5riMHesr4wm7BloCK/FCW2I
-         yko3XlvwcG+4HH/2rDhhEsMHjTJmPAAS53EI9wIIIaL1cTZFWcpQS5WphzZC8xiDZBOS
-         xcw0E/ap3z2txYV8DarVDGRhYVgE1xtssZ5q9Lo0BYOL43WkFvDeeePA3giZWehzQ7YX
-         2XKM3PHZDRky2X5TLgJiBzAEB/A1tAtFwLeQvuQeiTcbAKDGFkBEL8hVvquWOXRYPG7i
-         eBdA==
-X-Gm-Message-State: AOAM533yOWS5lf6Y9gYlWZpJKbxE5xyAFZa3P0+g1RsgiIGtLZ1NfQuc
-        WGg07yH7k6baDWrAEeGUAY2ij0izzfkn4Z/zrBYOZbT0zxJ1xzGAL3Hvo7t7RVLWuf8T3JYKLzx
-        kINnwo9YmCVu4E5FOvUqwedh7
-X-Received: by 2002:a05:620a:676:: with SMTP id a22mr22806364qkh.8.1596988782402;
-        Sun, 09 Aug 2020 08:59:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzek1KpoZ0Rpa2MTqiHLJFcD8g4Cwdl2ExzIA00XyXHgllNcIpXqt/H9tlORP5vMgXoeqUj/w==
-X-Received: by 2002:a05:620a:676:: with SMTP id a22mr22806349qkh.8.1596988782146;
-        Sun, 09 Aug 2020 08:59:42 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k48sm14978268qtk.44.2020.08.09.08.59.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UEpCtsZEvZZgbvhsQBYBWkiCjgyox61Emg/c1y2ZN3I=;
+        b=fRF+vSZR0MpHzHQ3t37RsgdBVwcQlZKa51ujomIbKGjoaKabXHWSbGiQzBr4jqDt3K
+         cwdIlcdQxqIFGDag79fWIjQomNGYLHOVcbNAN6KiyeHOSo+AdQEnpn8qU1nMDBNe+YhH
+         KKHw0KL7hE9IQNpR65mU9BudhkCNrDcar50GSLlmjgGBOOFFWdq/ved6NHME8tAgjhPd
+         qfvR4rMTP1Myj3OllyPpCXf0zP7UiISRflTFQhPyFaA+DXPtzqEbok3sqaIdKozEGmN1
+         abUrWZdXsBoljGPzz/+E6r4J0sCPOyHbXmau8vb8ELW5M+gVXboZeiZsgR4B5efaRWsu
+         nn5w==
+X-Gm-Message-State: AOAM532lAqe51/4fcgP/CNEpcWWq3pszSEXRV6URoyCh6XuETKKUajhs
+        miW+DuW9Cr51Ib1ZocYkrlZqGw==
+X-Google-Smtp-Source: ABdhPJxXNK/GX8iSF0+tUBzVrcJpI1Es27dIWpe2bDfWKcMa57w6DbPTwf60cmVZckN83ZjxqYj20w==
+X-Received: by 2002:a2e:9c0b:: with SMTP id s11mr9170576lji.117.1596989571429;
+        Sun, 09 Aug 2020 09:12:51 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:4a:1645::2])
+        by smtp.googlemail.com with ESMTPSA id r14sm9066069lfe.29.2020.08.09.09.12.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 08:59:41 -0700 (PDT)
-From:   trix@redhat.com
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, jmaneyrol@invensense.com,
-        mirq-linux@rere.qmqm.pl, lee.jones@linaro.org
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] iio: imu: inv_mpu6050: check for temp_fifo_enable
-Date:   Sun,  9 Aug 2020 08:59:36 -0700
-Message-Id: <20200809155936.16898-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Sun, 09 Aug 2020 09:12:50 -0700 (PDT)
+From:   Sergey Korolev <s.korolev@ndmsystems.com>
+Cc:     s.korolev@ndmsystems.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Rob Gill <rrobgill@protonmail.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Johan Hovold <johan@kernel.org>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] USB: core: remove polling for /sys/kernel/debug/usb/devices
+Date:   Sun,  9 Aug 2020 19:12:30 +0300
+Message-Id: <20200809161233.13135-1-s.korolev@ndmsystems.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+The latest reference to usbfs_conn_disc_event() removed in
+commit fb28d58b72aa ("USB: remove CONFIG_USB_DEVICEFS")
+in 2012 and now a user poll() waits infinitely for content changes.
 
-clang static analysis reports this problem
-
-inv_mpu_ring.c:181:18: warning: Division by zero
-        nb = fifo_count / bytes_per_datum;
-             ~~~~~~~~~~~^~~~~~~~~~~~~~~~~
-
-This is a false positive.
-Dividing by 0 is protected by this check
-
-	if (!(st->chip_config.accl_fifo_enable |
-		st->chip_config.gyro_fifo_enable |
-		st->chip_config.magn_fifo_enable))
-		goto end_session;
-	bytes_per_datum = 0;
-
-But there is another fifo, temp_fifo
-
-	if (st->chip_config.temp_fifo_enable)
-		bytes_per_datum += INV_MPU6050_BYTES_PER_TEMP_SENSOR;
-
-Which would be skipped if it was the only enabled fifo.
-So add to the check.
-
-Fixes: 2e4c0a5e2576 ("iio: imu: inv_mpu6050: add fifo temperature data support")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Sergey Korolev <s.korolev@ndmsystems.com>
 ---
- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/core/devices.c | 41 --------------------------------------
+ drivers/usb/core/usb.h     |  1 -
+ 2 files changed, 42 deletions(-)
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-index b533fa2dad0a..5240a400dcb4 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-@@ -141,6 +141,7 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+diff --git a/drivers/usb/core/devices.c b/drivers/usb/core/devices.c
+index 696b2b692b83..1ef2de6e375a 100644
+--- a/drivers/usb/core/devices.c
++++ b/drivers/usb/core/devices.c
+@@ -39,7 +39,6 @@
+ #include <linux/fs.h>
+ #include <linux/mm.h>
+ #include <linux/gfp.h>
+-#include <linux/poll.h>
+ #include <linux/usb.h>
+ #include <linux/usbdevice_fs.h>
+ #include <linux/usb/hcd.h>
+@@ -97,22 +96,6 @@ static const char format_endpt[] =
+ /* E:  Ad=xx(s) Atr=xx(ssss) MxPS=dddd Ivl=D?s */
+   "E:  Ad=%02x(%c) Atr=%02x(%-4s) MxPS=%4d Ivl=%d%cs\n";
  
- 	if (!(st->chip_config.accl_fifo_enable |
- 		st->chip_config.gyro_fifo_enable |
-+		st->chip_config.temp_fifo_enable |
- 		st->chip_config.magn_fifo_enable))
- 		goto end_session;
- 	bytes_per_datum = 0;
+-/*
+- * Wait for an connect/disconnect event to happen. We initialize
+- * the event counter with an odd number, and each event will increment
+- * the event counter by two, so it will always _stay_ odd. That means
+- * that it will never be zero, so "event 0" will never match a current
+- * event, and thus 'poll' will always trigger as readable for the first
+- * time it gets called.
+- */
+-static struct device_connect_event {
+-	atomic_t count;
+-	wait_queue_head_t wait;
+-} device_event = {
+-	.count = ATOMIC_INIT(1),
+-	.wait = __WAIT_QUEUE_HEAD_INITIALIZER(device_event.wait)
+-};
+-
+ struct class_info {
+ 	int class;
+ 	char *class_name;
+@@ -146,12 +129,6 @@ static const struct class_info clas_info[] = {
+ 
+ /*****************************************************************/
+ 
+-void usbfs_conn_disc_event(void)
+-{
+-	atomic_add(2, &device_event.count);
+-	wake_up(&device_event.wait);
+-}
+-
+ static const char *class_decode(const int class)
+ {
+ 	int ix;
+@@ -623,25 +600,7 @@ static ssize_t usb_device_read(struct file *file, char __user *buf,
+ 	return total_written;
+ }
+ 
+-/* Kernel lock for "lastev" protection */
+-static __poll_t usb_device_poll(struct file *file,
+-				    struct poll_table_struct *wait)
+-{
+-	unsigned int event_count;
+-
+-	poll_wait(file, &device_event.wait, wait);
+-
+-	event_count = atomic_read(&device_event.count);
+-	if (file->f_version != event_count) {
+-		file->f_version = event_count;
+-		return EPOLLIN | EPOLLRDNORM;
+-	}
+-
+-	return 0;
+-}
+-
+ const struct file_operations usbfs_devices_fops = {
+ 	.llseek =	no_seek_end_llseek,
+ 	.read =		usb_device_read,
+-	.poll =		usb_device_poll,
+ };
+diff --git a/drivers/usb/core/usb.h b/drivers/usb/core/usb.h
+index 98e7d1ee63dc..c893f54a3420 100644
+--- a/drivers/usb/core/usb.h
++++ b/drivers/usb/core/usb.h
+@@ -191,7 +191,6 @@ extern const struct attribute_group *usb_interface_groups[];
+ extern struct usb_driver usbfs_driver;
+ extern const struct file_operations usbfs_devices_fops;
+ extern const struct file_operations usbdev_file_operations;
+-extern void usbfs_conn_disc_event(void);
+ 
+ extern int usb_devio_init(void);
+ extern void usb_devio_cleanup(void);
 -- 
-2.18.1
+2.20.1
 
