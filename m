@@ -2,117 +2,130 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E26C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8212A206E9
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oZIVE34b"
+	by mail.kernel.org (Postfix) with ESMTP id 970D5206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596964356;
+	bh=EvMkiAV/QPaNxSiF1QV6aIN8GUE6bYJn6W6e14MfThU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IZi6HjP6stzISr7sPz2YDYpslgKL6lHad+Yp6O8UG5I59EQxuAZuo7nXUo4q6HIUu
+	 Dk1njks9Dd8Oa11ZBcLFXDLxVjti1pHHDJAZOTY0gw/aH5xBOSro8XtIZQFktZt1H4
+	 m8zxxqGYlFMXl2YgkVDFfr+jy2obm78y5cVxgdiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgHIJE4 (ORCPT
+        id S1726250AbgHIJMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 05:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgHIJE4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 05:04:56 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6CE1C061756;
-        Sun,  9 Aug 2020 02:04:55 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Sun, 9 Aug 2020 05:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbgHIJMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 05:12:34 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BPY8527Jzz9sRK;
-        Sun,  9 Aug 2020 19:04:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596963894;
-        bh=CqZG1JMCrLO5uGHp+pSWgPRJe50FU0pO/9V1cf5xzUQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oZIVE34bypIXOZJOg3IlbOF2sUJyMARguCLVPHEXuQVCC9HpyuEQrcQ6R0v+yemB+
-         novccSms0Y1wHWc4s4y8i1YW8k8bz+j6MtsNys0hgYmJ3ZpijvcW1469EVlaJkSieY
-         BM6yi4b3GpJKzyClljgX1OMPQDlyjXqWXyDsemGEOm/TQSnG0b/qlkXghTP/g/c8EO
-         J5/MUjbpQ9c4iEn7ohJaZxNx4uqD7Q0gbuzABRTK0iLaR8qnoamnq3Q2JPy0n1g7rW
-         3So7gTJ/JG/6XX8pMXsbTtaNSW2Gg62Dg32aDJ92QO8H56dO+izH6K7FywKY/USoJd
-         0SqTgs8Jr82Dw==
-Date:   Sun, 9 Aug 2020 19:04:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>
-Subject: Re: linux-next: manual merge of the set_fs tree with the tip tree
-Message-ID: <20200809190452.5c1a19c3@canb.auug.org.au>
-In-Reply-To: <20200727210444.458c56fd@canb.auug.org.au>
-References: <20200727210444.458c56fd@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A5720729;
+        Sun,  9 Aug 2020 09:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596964353;
+        bh=EvMkiAV/QPaNxSiF1QV6aIN8GUE6bYJn6W6e14MfThU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DOzwTXZctisZhFn3SMxaGkMAKPzOBqgDA8rZVkrzEHJTCnkctn56nOVEW8Bxh/KVm
+         VKg3RJtRqoTwIPmAv1Nhw1q8b5G9H6u7dfMU/7CyXJUO8B2xnTmAgu7PrVH/1kUQRS
+         sFbtIsBnnLeGufxim4j5A1e82yoJ4LPfGa4ztatU=
+Received: by mail-lj1-f180.google.com with SMTP id t23so6504149ljc.3;
+        Sun, 09 Aug 2020 02:12:33 -0700 (PDT)
+X-Gm-Message-State: AOAM530jM2F/lvAc3BAx5ZZyWkOCLlRLP9cQ1xJyM9jmG98VyRBsIMjY
+        2uOapglOfRYRq0W80rIFSSXAQUgXLnswGbcdixM=
+X-Google-Smtp-Source: ABdhPJznCulEjN/KcLzYGMk3mIIrcG1fmWkPOR29sS+cEcZOxbPrWV3J7BBHAjxBcBj1e9zHDrdwzNW8LNaWXqSZ+VM=
+X-Received: by 2002:a2e:86da:: with SMTP id n26mr10264938ljj.311.1596964351660;
+ Sun, 09 Aug 2020 02:12:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hQw+IFV54xMdhX6nyX1rg3M";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200724180857.22119-1-krzk@kernel.org> <3522860a-8158-6e71-9d65-01d0e0c15f0d@arm.com>
+In-Reply-To: <3522860a-8158-6e71-9d65-01d0e0c15f0d@arm.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Sun, 9 Aug 2020 11:12:20 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPe3OeKFhmtbF4OZup_ii_rxRHTaSK5BT-3T6ijqUukqtg@mail.gmail.com>
+Message-ID: <CAJKOXPe3OeKFhmtbF4OZup_ii_rxRHTaSK5BT-3T6ijqUukqtg@mail.gmail.com>
+Subject: Re: [RFC] memory: exynos5422-dmc: Document mutex scope
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hQw+IFV54xMdhX6nyX1rg3M
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 04, 2020 at 11:40:07AM +0100, Lukasz Luba wrote:
+> Hi Krzysztof,
+>
+> On 7/24/20 7:08 PM, Krzysztof Kozlowski wrote:
+> > Document scope of the mutex used by driver.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > It seems mutex was introduced to protect:
+> > 1. setting actual frequency/voltage,
+> > 2. dmc->curr_rate (in exynos5_dmc_get_cur_freq()).
+> >
+> > However dmc->curr_rate in exynos5_dmc_get_status() is not protected. Is
+> > it a bug?
+>
+> The callback get_dev_status() from devfreq->profile, which here is the
+> exynos5_dmc_get_status() should be already called with devfreq->lock
+> mutex hold, like e.g from simple_ondemand governor or directly
+> using update_devfreq exported function:
+> update_devfreq()
+>   ->get_target_freq()
+>     devfreq_update_stats()
+>         df->profile->get_dev_status()
+>
+> The dmc->curr_rate is also used from sysfs interface from devfreq.
+> The local dmc lock serializes also this use case (when the HW freq
+> has changed but not set yet into curr_rate.
 
-Hi all,
+These are different locks. You cannot protect dmc->curr_rate with
+devfreq->lock in one place and dmc-lock in other place. This won't
+protect it.
 
-On Mon, 27 Jul 2020 21:04:44 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Today's linux-next merge of the set_fs tree got a conflict in:
->=20
->   lib/debugobjects.c
->=20
-> between commit:
->=20
->   0f85c4805184 ("debugobjects: Convert to DEFINE_SHOW_ATTRIBUTE")
->=20
-> from the tip tree and commit:
->=20
->   4d4901c6d748 ("seq_file: switch over direct seq_read method calls to se=
-q_read_iter")
->=20
-> from the set_fs tree.
->=20
-> I fixed it up (I just used the former) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+> > ---
+> >   drivers/memory/samsung/exynos5422-dmc.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> > index 93e9c2429c0d..0388066a7d96 100644
+> > --- a/drivers/memory/samsung/exynos5422-dmc.c
+> > +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> > @@ -114,6 +114,7 @@ struct exynos5_dmc {
+> >     void __iomem *base_drexi0;
+> >     void __iomem *base_drexi1;
+> >     struct regmap *clk_regmap;
+> > +   /* Protects curr_rate and frequency/voltage setting section */
+> >     struct mutex lock;
+> >     unsigned long curr_rate;
+> >     unsigned long curr_volt;
+> >
+>
+> I assume this missing comment for the lock was required by some scripts.
+> In this case LGTM:
+>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-This is now a conflict between the set_fs tree and Linus' tree.
+Such comments are always useful. It is also pointed by strict
+checkpatch:
+CHECK: struct mutex definition without comment
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hQw+IFV54xMdhX6nyX1rg3M
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8vvDQACgkQAVBC80lX
-0Gy4uAf/VXhnsR1Ooz6BAR12buNOIzDnWXyLlpyzbVAmScWlpLV3cSQxNSBmHhgD
-k1qV5dyGgYDoTggLhhcuFSAEvEMrAmSVp0Q8wDjgPi/zmq73o2dpc7yc2EqI7DhE
-SOesD5vcVgifWjLSE9InieBx5vMCBcWhLtZLy2yJHU6dwdXnU1F8RG81RMIFLvWr
-B5oFj2MzPzP6FEIiTMBAZ4YPI1SG8QwbYc8CG4mU8n+aAKKVljkz2DksmgHr4dkw
-ySRktpIgeHjnbMrYe8MJMQ3iQ4FcgBPxdLAcwglJe+AH5KIiV/unvb3GXUEdBwEl
-B7onrkrLSxAq6ve7dbJAh+Rcgq+Amg==
-=m5Us
------END PGP SIGNATURE-----
-
---Sig_/hQw+IFV54xMdhX6nyX1rg3M--
+Best regards,
+Krzysztof
