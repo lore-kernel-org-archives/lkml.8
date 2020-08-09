@@ -2,185 +2,109 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FAFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E13A3206B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9297920658
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bfmNLCMB"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tt6tce1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgHIITI (ORCPT
+        id S1726323AbgHIIgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 04:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgHIITH (ORCPT
+        Sun, 9 Aug 2020 04:36:05 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:42954 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgHIIgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 04:19:07 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1306C061756;
-        Sun,  9 Aug 2020 01:19:04 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BPX740SrZz9sPC;
-        Sun,  9 Aug 2020 18:18:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596961137;
-        bh=uKWy2IfgEzOHSNPz/t4uOiupkdhItCM53w/SOe9uhhw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bfmNLCMBbaeig7U1WRCbHz0RkVzXFNCjsx9r3w/i98bnVR0HeyxWvNp5pOjdKsAH3
-         W822EQCeJEmB4TNkwIPBI1trMhgLofw5jLvDobhW/l3K1A8qRuVSzosi/TLEpfCJMO
-         PqdQs7JuGb5Uu4w+qgpIjMsqwjpQeDQ0SyStAUXRvV3SiK5YTmeqDYz6kfP1CURH1+
-         ee6X4mjuMLDeJ2P5FOp4kiBSpIce1r67cFK1MejddepNDPTIhy95PrDGhhv9g+3Fp3
-         I6vIebu7Ek6GCu7g/y8OCTCtTEXOvtZ26dzFdTeNHhmH366AnV1CsaS9s5ii7w+9sk
-         Sho3Mmi0OLMNg==
-Date:   Sun, 9 Aug 2020 18:18:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: linux-next: build failure after merge of the thunderbolt tree
-Message-ID: <20200809181838.23c6b829@canb.auug.org.au>
-In-Reply-To: <20200630160346.696f6419@canb.auug.org.au>
-References: <20200630160346.696f6419@canb.auug.org.au>
+        Sun, 9 Aug 2020 04:36:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596962165; x=1628498165;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=G6sNgHTlfA39QjdSkKJD9tDLhIyODeSKXQPkPpdaSbM=;
+  b=tt6tce1UlUrCjPvBtr1vNOd2KUAlsur2zG+R+MOOo9qPASiNrxqRzubC
+   6fFgrW4oB/ZwPRpQ3qnda54pd1nHR/pLd7uY4p9t5h5iWuyxSuHw5EJYb
+   9Gu+pKJ5UndTrav1FY7M5qdBwfPyTJ9wSCoE6nyRpErt/637/xEVbxCWL
+   Y=;
+IronPort-SDR: qEEIWK+V6ELPO6t2XtOAyIEnDrIehEVP+f4d2bt2EDMPZkAfnd+p6Jo9HC9GjmJYSOulrwYepf
+ EHNnDNgu1r/A==
+X-IronPort-AV: E=Sophos;i="5.75,453,1589241600"; 
+   d="scan'208";a="65346983"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 09 Aug 2020 08:36:03 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id C9A43A176B;
+        Sun,  9 Aug 2020 08:36:01 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 9 Aug 2020 08:36:01 +0000
+Received: from 8c85908914bf.ant.amazon.com (10.43.161.145) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 9 Aug 2020 08:35:57 +0000
+Subject: Re: [PATCH 0/4] Infiniband Subsystem: Remove pci-dma-compat wrapper
+ APIs.
+To:     Suraj Upadhyay <usuraj35@gmail.com>, <dledford@redhat.com>,
+        <jgg@ziepe.ca>
+CC:     <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <cover.1596957073.git.usuraj35@gmail.com>
+From:   Gal Pressman <galpress@amazon.com>
+Message-ID: <9220090e-7340-df50-a998-57a5e7752f90@amazon.com>
+Date:   Sun, 9 Aug 2020 11:35:51 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uLNdZKn8oKfs6EIHutgeU2g";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <cover.1596957073.git.usuraj35@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D21UWA004.ant.amazon.com (10.43.160.252) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uLNdZKn8oKfs6EIHutgeU2g
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 09/08/2020 10:24, Suraj Upadhyay wrote:
+> Hii Developers,
+> 
+> 	This patch series will replace all the legacy pci-dma-compat wrappers
+> with the dma-mapping APIs directly in the INFINIBAND Subsystem.
+> 
+> This task is done through a coccinelle script which is described in each commit
+> message.
+> 
+> The changes are compile tested.
+> 
+> Thanks,
+> 
+> Suraj Upadhyay.
+> 
+> Suraj Upadhyay (4):
+>   IB/hfi1: Remove pci-dma-compat wrapper APIs
+>   IB/mthca: Remove pci-dma-compat wrapper APIs
+>   RDMA/qib: Remove pci-dma-compat wrapper APIs
+>   RDMA/pvrdma: Remove pci-dma-compat wrapper APIs
+> 
+>  drivers/infiniband/hw/hfi1/pcie.c             |  8 +++----
+>  drivers/infiniband/hw/hfi1/user_exp_rcv.c     | 13 +++++------
+>  drivers/infiniband/hw/mthca/mthca_eq.c        | 21 +++++++++--------
+>  drivers/infiniband/hw/mthca/mthca_main.c      |  8 +++----
+>  drivers/infiniband/hw/mthca/mthca_memfree.c   | 23 +++++++++++--------
+>  drivers/infiniband/hw/qib/qib_file_ops.c      | 12 +++++-----
+>  drivers/infiniband/hw/qib/qib_init.c          |  4 ++--
+>  drivers/infiniband/hw/qib/qib_pcie.c          |  8 +++----
+>  drivers/infiniband/hw/qib/qib_user_pages.c    | 12 +++++-----
+>  .../infiniband/hw/vmw_pvrdma/pvrdma_main.c    |  6 ++---
+>  10 files changed, 59 insertions(+), 56 deletions(-)
+> 
 
-Hi Linus,
-
-On Tue, 30 Jun 2020 16:03:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the thunderbolt tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->=20
->=20
-> Caused by commit
->=20
->   54509f5005ca ("thunderbolt: Add KUnit tests for path walking")
->=20
-> interacting with commit
->=20
->   d4cdd146d0db ("kunit: generalize kunit_resource API beyond allocated re=
-sources")
->=20
-> from the kunit-next tree.
->=20
-> I have applied the following merge fix patch.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 30 Jun 2020 15:51:50 +1000
-> Subject: [PATCH] thunderbolt: merge fix for kunix_resource changes
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/thunderbolt/test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/thunderbolt/test.c b/drivers/thunderbolt/test.c
-> index acb8b6256847..a4d78811f7e2 100644
-> --- a/drivers/thunderbolt/test.c
-> +++ b/drivers/thunderbolt/test.c
-> @@ -17,13 +17,13 @@ static int __ida_init(struct kunit_resource *res, voi=
-d *context)
->  	struct ida *ida =3D context;
-> =20
->  	ida_init(ida);
-> -	res->allocation =3D ida;
-> +	res->data =3D ida;
->  	return 0;
->  }
-> =20
->  static void __ida_destroy(struct kunit_resource *res)
->  {
-> -	struct ida *ida =3D res->allocation;
-> +	struct ida *ida =3D res->data;
-> =20
->  	ida_destroy(ida);
->  }
-> --=20
-> 2.27.0
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
-
-I looks like the above report got lost along the way to you :-(
-
-Here's the patch in case you want to directly apply it:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 30 Jun 2020 15:51:50 +1000
-Subject: [PATCH] thunderbolt: merge fix for kunix_resource changes
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/thunderbolt/test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/thunderbolt/test.c b/drivers/thunderbolt/test.c
-index acb8b6256847..a4d78811f7e2 100644
---- a/drivers/thunderbolt/test.c
-+++ b/drivers/thunderbolt/test.c
-@@ -17,13 +17,13 @@ static int __ida_init(struct kunit_resource *res, void =
-*context)
- 	struct ida *ida =3D context;
-=20
- 	ida_init(ida);
--	res->allocation =3D ida;
-+	res->data =3D ida;
- 	return 0;
- }
-=20
- static void __ida_destroy(struct kunit_resource *res)
- {
--	struct ida *ida =3D res->allocation;
-+	struct ida *ida =3D res->data;
-=20
- 	ida_destroy(ida);
- }
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/uLNdZKn8oKfs6EIHutgeU2g
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8vsV4ACgkQAVBC80lX
-0GxxvggAkwBgTVCErSJxweAYYV171zZEPU7+MpFd4WzZsJSxG0Bih2yrOF9TMqKj
-WN3IFrliFsTAZUIrSFZ83NHBT3v4Lk5V/t0cdHiDHDdVJrcA5twlA6cGwjl/Qjqc
-NVmOIIEFg1GsVHMhtDzHxqz2G8uMBrICkkgqSh5Ys6fQV6kwifqDcKj0ufpudbRV
-AL+PVLMbiaEvlaisSw4e/qkcOktDIyvy76pSGg3wwZJCshv8G1FXDFwTFk6gqaVx
-aVweehWuIq7JPl8Su8NqvSoCL3PW5Uj0TkYZ4OSZY5hNNh101Z1iCWXlBKeNoGEf
-L6hRJajG+g1mlSrzLPLcGKWrkjVYHg==
-=eU45
------END PGP SIGNATURE-----
-
---Sig_/uLNdZKn8oKfs6EIHutgeU2g--
+The efa patch isn't listed here, and it shows as patch 5/4?
