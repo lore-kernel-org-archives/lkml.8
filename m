@@ -2,114 +2,77 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFCBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23031C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6B7206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X7e0AEcJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0BA90206D8
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgHIXMR (ORCPT
+        id S1726389AbgHIXPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 19:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgHIXMP (ORCPT
+        Sun, 9 Aug 2020 19:15:32 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:55664 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbgHIXPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 19:12:15 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E132C061756;
-        Sun,  9 Aug 2020 16:12:15 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id h4so1352196ioe.5;
-        Sun, 09 Aug 2020 16:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=alLW1LflvonptwdYTfDyuOKeW8wJ3Z5ZzgiFOBxMxyk=;
-        b=X7e0AEcJnUFIDHo7POyVpSf7TOVm4D/eHPFU/cJB/W5t+vZHgZ4uZtakf83tv0AqeL
-         0pKL0DAW5WcoTaS93o/nwwdkvLx+/RIoND6TdllMy06dsk4WZ8O+tEtK9Hf/ieIPeabd
-         arznZdwbsjXEPq38fU4o4tGShHp7YrhPGdJMNHNbyIM+ms67txYmkNo7lKELoQU0jsZo
-         tSF5mgkLuwmXlE/ScSBIe3sO2EcZe0yFBdyKQ2B538eetKfVsGwBGASIpEDR2qpu7QC7
-         dJjHycfFPTL2OLfDU69LdQT3oLF0I7+3X4NwwZGjCeuAxPdEWRuqDkshW19xH5iC72rR
-         m3rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=alLW1LflvonptwdYTfDyuOKeW8wJ3Z5ZzgiFOBxMxyk=;
-        b=pnWZf8rWczc82iMWVvwH1Fhqxj4siEHnTMm4kpC3X/tLWXhTuJFoCQdWGWc8iOn3Sx
-         9a1Sar2EQAI+g/q3UUkVqT+l+bl7+7+V/AlgRJKJ9Jpshuayd/C6t9wabbfq+lzv1O11
-         BfieeQQM4z2gZ9AZjw2DCALvf9ZcKfP9Ig33FaEt2pAA1GVFxdhdIlKCBHFK7oHGLFoO
-         92o9AwbcGb2z4EBSjVLld8rOGur21ZOx7GHfXP8CB3Tm2sr6kOroL6GCXnJAVNR9pUS9
-         ZurdfNv1Jlr3vPFb6LEvYZ8LWdIO+f5yyYmSldqJ07R+onp/LkxaOPAjzlICmD2v78iS
-         CaWw==
-X-Gm-Message-State: AOAM531SmURniQSvitj4OlWyffDZj6Sjr6Kfw8jxnKPwAlAIKqQGqxKf
-        DQm2C7rZ6c+ImzZ85YP2MOQ=
-X-Google-Smtp-Source: ABdhPJxTbP0h5ErtS32xUstdlrrQQtL2dX0QriUiD0MU/qrT2T/EEbDpS+ECoXs/pQTaxfBXJMtMOA==
-X-Received: by 2002:a05:6638:27a:: with SMTP id x26mr16766464jaq.43.1597014734889;
-        Sun, 09 Aug 2020 16:12:14 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [160.94.145.20])
-        by smtp.googlemail.com with ESMTPSA id r6sm10219198iod.7.2020.08.09.16.12.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 16:12:14 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>, linux-clk@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu
-Subject: [PATCH] clk: bcm2835: add missing release if devm_clk_hw_register fails
-Date:   Sun,  9 Aug 2020 18:11:58 -0500
-Message-Id: <20200809231202.15811-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 9 Aug 2020 19:15:32 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 9F8A729B87;
+        Sun,  9 Aug 2020 19:15:28 -0400 (EDT)
+Date:   Mon, 10 Aug 2020 09:15:18 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org,
+        Laurent Vivier <lvivier@redhat.com>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/9] macintosh/via-macii: Access autopoll_devs when inside
+ lock
+In-Reply-To: <20200809190138.GA133890@roeck-us.net>
+Message-ID: <alpine.LNX.2.23.453.2008100859330.8@nippy.intranet>
+References: <cover.1593318192.git.fthain@telegraphics.com.au> <5952dd8a9bc9de90f1acc4790c51dd42b4c98065.1593318192.git.fthain@telegraphics.com.au> <20200809190138.GA133890@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of bcm2835_register_pll(), the allocated pll is
-leaked if devm_clk_hw_register() fails to register hw. Release pll if
-devm_clk_hw_register() fails.
+On Sun, 9 Aug 2020, Guenter Roeck wrote:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/clk/bcm/clk-bcm2835.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> Hi,
+> 
+> On Sun, Jun 28, 2020 at 02:23:12PM +1000, Finn Thain wrote:
+> > The interrupt handler should be excluded when accessing the 
+> > autopoll_devs variable.
+> > 
+> 
+> I am quite baffled by this patch. Other than adding an unnecessary lock 
+> / unlock sequence,
 
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 6bb7efa12037..12b950d50252 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1321,8 +1321,10 @@ static struct clk_hw *bcm2835_register_pll(struct bcm2835_cprman *cprman,
- 	pll->hw.init = &init;
- 
- 	ret = devm_clk_hw_register(cprman->dev, &pll->hw);
--	if (ret)
-+	if (ret) {
-+		kfree(pll);
- 		return NULL;
-+	}
- 	return &pll->hw;
- }
- 
--- 
-2.17.1
+The new lock/unlock sequence means that the expression (autopoll_devs && 
+!current_req) can be understood to be atomic. That makes it easier for me 
+to follow (being that both variables are shared state).
 
+> accessing a variable (which is derived from another variable) from 
+> inside or outside a lock does not make a difference. If autopoll_devs = 
+> devs & 0xfffe is 0 inside the lock, it will just as much be 0 outside 
+> the lock, and vice versa.
+> 
+> Can you explain this in some more detail ? Not that is matters much 
+> since the change already made it into mainline, but I would like to 
+> understand what if anything I am missing here.
+> 
+
+I think the new code is more readable and is obviously free of race 
+conditions. It's not obvious to me why the old code was free of race 
+conditions but if you can easily establish that by inspection then you are 
+a better auditor than I am. Regardless, I'll stick with "Keep It Simple, 
+Stupid".
