@@ -2,155 +2,158 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0125DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E07C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE34F206B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay2vzmjJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9962E206D8
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596980549;
+	bh=z5ggloJNSGbzFqqy5FHmnwMWQ3MZ9nRoSWZRpWR9klU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wTMJ0NUD/dDJzvlNoX+6ZiIS/C/xoV/VJW0rcmsNaoG+FDPOzFH8kBR6bEZr8T4UA
+	 8oZ+K9LnUoG4dbkwV3J+GQ9MjM0FYqSQkRU8nxHMVHQqPmCLa3c09Gz0FE4zJ6RaiH
+	 IJy7ZDCqfj0BKo345AnMsqpRnev5PyFvGpC2d0Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgHINir (ORCPT
+        id S1726289AbgHINm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 09:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgHINio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 09:38:44 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97958C061756;
-        Sun,  9 Aug 2020 06:38:43 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u20so3737628pfn.0;
-        Sun, 09 Aug 2020 06:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e43BGIqjUtFLkllWZLVnRPk7JR3nJMKINK9MXa2Oc1o=;
-        b=Ay2vzmjJW0yzDZutiLDKugvlcDR7WBCF12bPD3pf1FV/pMOd6c9Uc9Qpn+ZsReiq7s
-         EBjWLrFkoipRafMcrZ5q3TwoLsm9I8UK27IQX9lcmPKe/G+9+DiuPOSe1whfKL5YOrqt
-         AuA2xh4MuU6YbFNY5DqwEl1lO/zdn/jgH6PAj0XIgp10qIxaAxCujIuLh6Pwk46IKKVl
-         w43z4yJBUM2XSKaLHfCZZkqWGtdCy3ty8S9cQWAxi7pBtFI0Z+LxAtecaGmjOcXUeDaE
-         6Z+vlYgoj/qwfW8ZOzg+59GgRGSkXK+/GilfUwM6FWzzvp+8qvFiITCzGtkLNlF6UFfh
-         /Dkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=e43BGIqjUtFLkllWZLVnRPk7JR3nJMKINK9MXa2Oc1o=;
-        b=XMJ4sSb1VtlezyDNv8OFB+XowWc4QvzTTUt5Dlyb57d1cNZ4hH/l9z0ZHM+Hj3CUni
-         ov/QDh/fcy5+y2KGaIPDX/qEFYxzR6IuNqG0IfHxzVi0GREQM4ROvs2m3BPL1Fm2V7S/
-         NJVUAkDXaesF2pXQFOtx2KwKvLSQn9zAKH2p1adZG6D0jjH+0B0sPoNE9Ih76QOlYfvs
-         +EnBKLaT0Q51ZwrlrVLwM4a0kBzmmUXKFsHNwhOpxtgyUenttbzlj2kIMwwUt80TulbX
-         j3qMbc+J66IUTOvtvMnTShumCs0Ab82Hf5B+kT9PnR5Ryf7uvbRoxaBKpxvgTdz693St
-         01VA==
-X-Gm-Message-State: AOAM531v9RZDEyjtHelzACGKimBERZ+NFywNpwAvwnVRkqmbu75S3JFC
-        7Baf/K4GVktLz7jzMFWLP510Z++i
-X-Google-Smtp-Source: ABdhPJzXE9qQ6GW7nBeHTr/VqtdCUVwKWqEoue4QKyW1B3Xr0sUa8tBJAo74/7pex3Pt367JclBrmg==
-X-Received: by 2002:a63:e017:: with SMTP id e23mr18496702pgh.125.1596980322799;
-        Sun, 09 Aug 2020 06:38:42 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n22sm16127568pjq.25.2020.08.09.06.38.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 06:38:42 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: pcwd_usb: Avoid GFP_ATOMIC where it is not
- needed
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        wim@linux-watchdog.org
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200809071912.742836-1-christophe.jaillet@wanadoo.fr>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <42ad4fb9-e16a-147f-1732-950e657c0a79@roeck-us.net>
-Date:   Sun, 9 Aug 2020 06:38:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 9 Aug 2020 09:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgHINm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 09:42:27 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9E6206B6;
+        Sun,  9 Aug 2020 13:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596980546;
+        bh=z5ggloJNSGbzFqqy5FHmnwMWQ3MZ9nRoSWZRpWR9klU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2pP5p4l1UBj7LXtrfSEqaHQi1n0qTCP2tOejp5K7tgGCUl6sNPoRWR4+F2B1j36ln
+         Fxh9c6u9oZyaisvh5P5Jd3KjTd7l82acjPoytbL3BDvwbNcUOWSlv/RqjfDf98xFkM
+         IVcCj3Fm7boVUIEUt1TtKu+9xLkxS1x8Be74b/pM=
+Date:   Sun, 9 Aug 2020 14:42:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     David Lechner <david@lechnology.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        David.Laight@ACULAB.COM
+Subject: Re: [PATCH v4 1/5] counter: Internalize sysfs interface code
+Message-ID: <20200809144221.6947ea6e@archlinux>
+In-Reply-To: <4061c9e4-775e-b7a6-14fa-446de4fae537@lechnology.com>
+References: <cover.1595358237.git.vilhelm.gray@gmail.com>
+        <e13d43849f68af8227c6aaa0ef672b459d47e9ab.1595358237.git.vilhelm.gray@gmail.com>
+        <7209ac3d-d1ca-1b4c-b22c-8d98b13742e2@lechnology.com>
+        <20200802210415.GA606173@shinobu>
+        <4061c9e4-775e-b7a6-14fa-446de4fae537@lechnology.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200809071912.742836-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/9/20 12:19 AM, Christophe JAILLET wrote:
-> There is no need to use GFP_ATOMIC here. It is a probe function, no
-> spinlock is taken and GFP_KERNEL is used just before and just after this
-> 'usb_alloc_coherent()' call.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Mon, 3 Aug 2020 15:00:49 -0500
+David Lechner <david@lechnology.com> wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  drivers/watchdog/pcwd_usb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 8/2/20 4:04 PM, William Breathitt Gray wrote:
+> > On Tue, Jul 28, 2020 at 05:45:53PM -0500, David Lechner wrote:  
+> >> On 7/21/20 2:35 PM, William Breathitt Gray wrote:  
+> >>> This is a reimplementation of the Generic Counter driver interface.  
 > 
-> diff --git a/drivers/watchdog/pcwd_usb.c b/drivers/watchdog/pcwd_usb.c
-> index 2f44af1831d0..ea67b98ed35d 100644
-> --- a/drivers/watchdog/pcwd_usb.c
-> +++ b/drivers/watchdog/pcwd_usb.c
-> @@ -657,7 +657,7 @@ static int usb_pcwd_probe(struct usb_interface *interface,
->  
->  	/* set up the memory buffer's */
->  	usb_pcwd->intr_buffer = usb_alloc_coherent(udev, usb_pcwd->intr_size,
-> -					GFP_ATOMIC, &usb_pcwd->intr_dma);
-> +					GFP_KERNEL, &usb_pcwd->intr_dma);
->  	if (!usb_pcwd->intr_buffer) {
->  		pr_err("Out of memory\n");
->  		goto error;
+> ...
 > 
+> >>> -F:	include/linux/counter_enum.h
+> >>> +F:	include/uapi/linux/counter.h  
+> >>
+> >> Seems odd to be introducing a uapi header here since this patch doesn't
+> >> make any changes to userspace.  
+> > 
+> > These defines are needed by userspace for the character device
+> > interface, but I see your point that at this point in the patchset they
+> > don't need to be exposed yet.
+> > 
+> > I could create temporary include/linux/counter_types.h to house these
+> > defines, and then later move them to include/uapi/linux/counter.h in the
+> > character device interface introduction patch. Do you think I should do
+> > so?  
+> 
+> Since this patch is independent of the chardev changes and probably ready
+> to merge after one more round of review, I would say it probably makes
+> sense to just leave them in counter.h for now and move them to uapi when
+> the chardev interface is finalized. This way, we can just merge this patch
+> as soon as it is ready.
+> 
+Agreed.
 
+...
+
+> >>>    /**
+> >>>     * struct counter_device - Counter data structure
+> >>> - * @name:		name of the device as it appears in the datasheet
+> >>> + * @name:		name of the device
+> >>>     * @parent:		optional parent device providing the counters
+> >>> - * @device_state:	internal device state container
+> >>> - * @ops:		callbacks from driver
+> >>> + * @signal_read:	optional read callback for Signals. The read value of
+> >>> + *			the respective Signal should be passed back via the
+> >>> + *			value parameter.
+> >>> + * @count_read:		optional read callback for Counts. The read value of the
+> >>> + *			respective Count should be passed back via the value
+> >>> + *			parameter.
+> >>> + * @count_write:	optional write callback for Counts. The write value for
+> >>> + *			the respective Count is passed in via the value
+> >>> + *			parameter.
+> >>> + * @function_read:	optional read callback the Count function modes. The
+> >>> + *			read function mode of the respective Count should be
+> >>> + *			passed back via the function parameter.
+> >>> + * @function_write:	option write callback for Count function modes. The
+> >>> + *			function mode to write for the respective Count is
+> >>> + *			passed in via the function parameter.
+> >>> + * @action_read:	optional read callback the Synapse action modes. The
+> >>> + *			read action mode of the respective Synapse should be
+> >>> + *			passed back via the action parameter.
+> >>> + * @action_write:	option write callback for Synapse action modes. The
+> >>> + *			action mode to write for the respective Synapse is
+> >>> + *			passed in via the action parameter.
+> >>>     * @signals:		array of Signals  
+> >>
+> >> Why not keep the ops struct?  
+> > 
+> > Defining static ops structures in the drivers seemed to have no
+> > advantage when those callbacks are always used via the counter_device
+> > structure. I decided it'd be simpler to just set them directly in the
+> > counter_device structure then.
+> > 
+> > I could reorganize them into an ops structure again if there's enough
+> > interest.  
+> 
+> I've been working on really constrained systems lately where every byte
+> counts, so this stuck out to me since there would be a copy of all
+> functions for each counter instance. But probably not that big of a deal
+> in the Linux kernel. :-)
+> 
+In addition to that..
+
+There are other advantages to keeping an ops structure including
+easy function order randomization (for security), plus
+the fact that we want to make any function pointers build time assignments
+if we possibly can.  Makes them harder to attack.
+
+So in more recent kernel code we try to use ops structures wherever possible.
+
+Jonathan
