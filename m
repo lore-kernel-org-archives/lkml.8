@@ -4,180 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023D82067D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2172C2065C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RqkMrHDO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gLSskbVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgHICbr (ORCPT
+        id S1726266AbgHICf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:31:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22207 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726097AbgHICbq (ORCPT
+        Sat, 8 Aug 2020 22:35:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33118 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgHICf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:31:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596940303;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MbLkPd5h+w3HuYbUtFGo2ztSxrORHhNasP5E8T/5k6w=;
-        b=RqkMrHDOg/9TazNBVVmkPuJYyotu1WGscoFKAXHusiJ4qyNhW54scke0b0Ct77HS7mHM+h
-        iR0zSrTdhB9kkr8ToERtYOrMETuo7Xm/TJ1MhXJ9kGhQeZL/yeLM/XvH8uFZsULW69l/xr
-        HvAN+COp2JhEXvcqALhMxPtUep4kA/w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-lJlH5iseOYKkf00s_8JW6w-1; Sat, 08 Aug 2020 22:31:39 -0400
-X-MC-Unique: lJlH5iseOYKkf00s_8JW6w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA29E79EC0;
-        Sun,  9 Aug 2020 02:31:37 +0000 (UTC)
-Received: from T590 (ovpn-12-63.pek2.redhat.com [10.72.12.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82CD25F9DC;
-        Sun,  9 Aug 2020 02:31:28 +0000 (UTC)
-Date:   Sun, 9 Aug 2020 10:31:23 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: splice: infinite busy loop lockup bug
-Message-ID: <20200809023123.GB2134904@T590>
-References: <00000000000084b59f05abe928ee@google.com>
- <29de15ff-15e9-5c52-cf87-e0ebdfa1a001@I-love.SAKURA.ne.jp>
- <20200807122727.GR1236603@ZenIV.linux.org.uk>
- <20200807123854.GS1236603@ZenIV.linux.org.uk>
- <20200807134114.GA2114050@T590>
- <20200807141148.GD17456@casper.infradead.org>
+        Sat, 8 Aug 2020 22:35:26 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0792XvX2026168;
+        Sun, 9 Aug 2020 02:35:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=6ZRtf8FS7xL94chgQEhL0kkialPRsW1/lgBWdpFkeLY=;
+ b=gLSskbVPU/hnTzo16mBN+3izzI2KqatJ7h4zdzGkzah6ndd0ahT8tbPwjD61pUZv9uUv
+ y1vE/7wpASwdwZwaNC1KeaetOvb8AqDOfioEZ92zOZKkumb9E9JYYWFU6WESgLGoZEAE
+ LOj/wyjKqwGOFNs5o+UMPh1GUSaWu7MiNPazSyldJA1BwgRSQpic8lN5OeH7lIO7OiDZ
+ XGpT/GgkUvqOtgpv2kiZ/5FaKbfxzVIlKTUVzeuagVswurLh8IjM0XFWiPcOcwDlJjRy
+ uo5m8UOJ1M32zRpFWAxsyjp8ZBe3pTGHxGK7ojrXEuipijCoQGt+zsBp57Y/gG3QoUpA BQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32t2yd8bpk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 09 Aug 2020 02:35:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0792XSPI088134;
+        Sun, 9 Aug 2020 02:35:09 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 32t5mjmsje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 09 Aug 2020 02:35:09 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0792Z6GH028575;
+        Sun, 9 Aug 2020 02:35:06 GMT
+Received: from [192.168.29.236] (/73.249.50.119)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 09 Aug 2020 02:35:06 +0000
+Subject: Re: [PATCH v3 4/7] x86/paravirt: remove 32-bit support from
+ PARAVIRT_XXL
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20200807083826.16794-1-jgross@suse.com>
+ <20200807083826.16794-5-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <a1073b86-ebd5-68b6-7761-99669dd93e1c@oracle.com>
+Date:   Sat, 8 Aug 2020 22:34:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807141148.GD17456@casper.infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200807083826.16794-5-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 03:11:48PM +0100, Matthew Wilcox wrote:
-> On Fri, Aug 07, 2020 at 09:41:14PM +0800, Ming Lei wrote:
-> > On Fri, Aug 07, 2020 at 01:38:54PM +0100, Al Viro wrote:
-> > > FWIW, my preference would be to have for_each_bvec() advance past zero-length
-> > > segments; I'll need to go through its uses elsewhere in the tree first, though
-> > > (after I grab some sleep),
-> > 
-> > Usually block layer doesn't allow/support zero bvec, however we can make
-> > for_each_bvec() to support it only.
-> > 
-> > Tetsuo, can you try the following patch?
-> > 
-> > diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-> > index ac0c7299d5b8..b03c793dd28d 100644
-> > --- a/include/linux/bvec.h
-> > +++ b/include/linux/bvec.h
-> > @@ -117,11 +117,19 @@ static inline bool bvec_iter_advance(const struct bio_vec *bv,
-> >  	return true;
-> >  }
-> >  
-> > +static inline void bvec_iter_skip_zero_vec(const struct bio_vec *bv,
-> > +		struct bvec_iter *iter)
-> > +{
-> > +	iter->bi_idx++;
-> > +	iter->bi_bvec_done = 0;
-> > +}
-> > +
-> >  #define for_each_bvec(bvl, bio_vec, iter, start)			\
-> >  	for (iter = (start);						\
-> >  	     (iter).bi_size &&						\
-> > -		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);	\
-> > -	     bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len))
-> > +		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);		\
-> > +	  (bvl).bv_len ? bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len) : \
-> > +			bvec_iter_skip_zero_vec((bio_vec), &(iter)))
-> 
-> Uhm, bvec_iter_advance() already skips over zero length bio_vecs.
-> 
->         while (bytes && bytes >= bv[idx].bv_len) {
->                 bytes -= bv[idx].bv_len;
->                 idx++;
->         }
-
-The issue is that zero (bvl).bv_len passed to bvec_iter_advance(), so
-the iterator can't move on.
-
-And I tried to avoid change to bvec_iter_advance() since this exact
-issue only exists on for_each_bvec, and block layer won't support/allow
-zero-length bvec.
-
-> 
-> The problem is when the _first_ bio_vec is zero length.
-
-It can be any zero-length bvec during the iterating. 
-
-> Maybe something more
-> like this (which doesn't even compile, but hopefully makes my point):
-> 
-> @@ -86,12 +86,24 @@ struct bvec_iter_all {
->         (mp_bvec_iter_page((bvec), (iter)) +                    \
->          mp_bvec_iter_page_idx((bvec), (iter)))
+On 8/7/20 4:38 AM, Juergen Gross wrote:
+> @@ -377,10 +373,7 @@ static inline pte_t __pte(pteval_t val)
+>  {
+>  	pteval_t ret;
 >  
-> -#define bvec_iter_bvec(bvec, iter)                             \
-> -((struct bio_vec) {                                            \
-> -       .bv_page        = bvec_iter_page((bvec), (iter)),       \
-> -       .bv_len         = bvec_iter_len((bvec), (iter)),        \
-> -       .bv_offset      = bvec_iter_offset((bvec), (iter)),     \
-> -})
-> +static inline bool bvec_iter_bvec(struct bio_vec *bv, struct bio_vec *bvec,
-> +               struct bvec_iter *iter)
-> +{
-> +       unsigned int idx = iter->bi_idx;
-> +
-> +       if (!iter->bi_size)
-> +               return false;
-> +
-> +       while (!bv[idx].bv_len)
-> +               idx++;
-> +       iter->bi_idx = idx;
-> +
-> +       bv->bv_page = bvec_iter_page(bvec, *iter);
-> +       bv->bv_len = bvec_iter_len(bvec, *iter);
-> +       bv->bv_offset = bvec_iter_offset(bvec, *iter);
-> +
-> +       return true;
-> +}
+> -	if (sizeof(pteval_t) > sizeof(long))
+> -		ret = PVOP_CALLEE2(pteval_t, mmu.make_pte, val, (u64)val >> 32);
+> -	else
+> -		ret = PVOP_CALLEE1(pteval_t, mmu.make_pte, val);
+> +	ret = PVOP_CALLEE1(pteval_t, mmu.make_pte, val);
 >  
->  static inline bool bvec_iter_advance(const struct bio_vec *bv,
->                 struct bvec_iter *iter, unsigned bytes)
-> @@ -119,8 +131,7 @@ static inline bool bvec_iter_advance(const struct bio_vec *bv,
->  
->  #define for_each_bvec(bvl, bio_vec, iter, start)                       \
->         for (iter = (start);                                            \
-> -            (iter).bi_size &&                                          \
-> -               ((bvl = bvec_iter_bvec((bio_vec), (iter))), 1); \
-> +            bvec_iter_bvec(&(bvl), (bio_vec), &(iter));                \
->              bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len))
->  
->  /* for iterating one bio from start to end */
-> 
-> (I find the whole bvec handling a mess of confusing macros and would
-> welcome more of it being inline functions, in general).
-
-The above change may bring more code duplication. Meantime, it can't
-work because (bvl).bv_len isn't taken into account into bvec_iter_bvec(),
-then how can the iterator advance?
+>  	return (pte_t) { .pte = ret };
 
 
-Thanks,
-Ming
+Can this now simply return (pte_t) ret?
+
+
+-boris
+
+
 
