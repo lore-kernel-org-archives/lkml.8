@@ -2,131 +2,97 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BF8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C773C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BDA206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:52:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbLG+4ED"
+	by mail.kernel.org (Postfix) with ESMTP id 661FB206CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597002936;
+	bh=2rAR+M5zs3J36b2LT6iT34FnFrmyMvuYFf/H5HRm2D0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nQuTpjjMB9Y+BSa25fDDjYYbgdCgYkzpxdBxXQWX17/tNRnRSJpEBoORg+qW3dDlm
+	 Rdyjk6Qbepk97vTU4zqIiJZuR4tEojLZbOl/IRbAxnTvTDBjMHwm57RQR2n1a5gSW+
+	 k2u3o6+8wqyllUYpuvljhbFZ0+c4kfSWUSFXISf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHITo3 (ORCPT
+        id S1726392AbgHITzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 15:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
+        Sun, 9 Aug 2020 15:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbgHITo3 (ORCPT
+        with ESMTP id S1726296AbgHITzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 15:44:29 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B432DC061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 12:44:28 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id t23so7378942ljc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 12:44:28 -0700 (PDT)
+        Sun, 9 Aug 2020 15:55:31 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521D2C061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 12:55:31 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id j22so3629898lfm.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 12:55:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4szbnufHQF2HK5pviSPitVDKxjvvCLZrgBO3PzVaDDg=;
-        b=SbLG+4EDjGYXnzmZ7ginX4OdN5TAAOvQz1lG3gmnuLEugh5tiQpVasccdKer+S98HD
-         NYd9f/ugN33J3Af9QOweklnnOJK63L6FEL2ygafhM/UE9ADudllLRwx0LiIYhNPhWI2Z
-         Pr3twaBP8dOI0BNYuuPQ6X3vvlvPFwhpZu5jxeHJdOT9RxOms9TtBjFImfw/wrdEUalD
-         QNdQfrJJpm9E6g6OHx/ddXW6WsJ98nbCTvCvMa2gQ9Joy91/DQbtD6Mmt/ljN49IJKpi
-         G0nsk0PTvIlJvliuwfTBbgI8gKvpQC6qroJ49alIbdche1xbrIbJSNWVcXJVm/5ntIL6
-         v7BQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gb6GBTcn1DdG5c+MbfZGxeWOEsq1soV0Ir9YyDDSzao=;
+        b=h1FboOCE7RlnYs62A2tbSEYOTjOhRbOyxysffdQzD97v64yqUYH+LkI3uaTSf73Ffz
+         F/Wk/pzRKYDgYSUQJrPlZr627hNEwmRCKd7HGP8+n5OpijIXum4wlwitfZWSyD14YYsD
+         OGw9ZyXnBt2185IQ/b/Xc6NtGDoeXKNyqsp6U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4szbnufHQF2HK5pviSPitVDKxjvvCLZrgBO3PzVaDDg=;
-        b=p4BsX/wS/Em2uBUOEPueNr4dy6ZrC7bU5JcM3fAmv2sYeLtO7kpYsPsLf8dVwrYCnh
-         Hd286pc9natyhLUvSRNiFCYD45d4Qprz7pglg+ZvBFHljRT6fwrZFJvR6T0YAhTcPLjG
-         SWPuxesVIQlWOD01qclPYbO8rFjZPbjCxozt09GG+lWt98eJ69nAl1qN4t4GEkBisAFY
-         tySIH0xCj/ut5wXzwlNbGAyCMgxtiNhX7FcREmCFtYu9aHIbfsYx7wH9wuLzQEVdOqZe
-         m8h+gwrWIjXVIKL8ltRMfSVAJdXLXf6N11852niUJK42PuR2jMqz0BGG3Z04JsPB8gYW
-         x+Lg==
-X-Gm-Message-State: AOAM530Yi59oXaNEb7UiQEItYvc23EXlBY4AfUUwAVevvHOM7J2WQyeP
-        yUbr+3l0QiDjvzKUWapYM71EpAI9
-X-Google-Smtp-Source: ABdhPJxZdbdMahR1o14qFC5IQGT5HLbw1UYhP9/vHyR9O7povccGjjyNPPLctYLejWwI/M9DIPs/1w==
-X-Received: by 2002:a2e:9c59:: with SMTP id t25mr10418764ljj.402.1597002266869;
-        Sun, 09 Aug 2020 12:44:26 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id z20sm8238087ljk.97.2020.08.09.12.44.25
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gb6GBTcn1DdG5c+MbfZGxeWOEsq1soV0Ir9YyDDSzao=;
+        b=AtgAzRB0bHzfkLnqQ/xjYNqODr9Hc8lBP59FfplKvsv4M2Ea2/y/StsBfHgpiIAQL1
+         ySF8053GA/F7P7l5odURVPsCLGT9fr5FIonY0Ureq7RUiOR0lCnDH6DxPs3rT1lTV+9y
+         8M1DioCOvI2BN3I6Qp3OwZa+dROIRLYzDkAZCZFXyLiYR+ZDvlOYekcO9z59JMI3usSx
+         6df0+mFy4wSbFdzbCIZ9Mt/LUFulFk8pL6ogKEf0A6aqVNOSErFA7Ydkjxzuf7cNNbYg
+         7pucmBnMjddKn+oF3+cn6JTrjHR4EshxFgWWdIvx8sb3Ppa1mlc4rVRnmkSO1XYIBr8F
+         neYg==
+X-Gm-Message-State: AOAM531zQpGet8jvEvafE8xPqNXCFzQSJdV5srDXjORZVNMJCv94eKVL
+        0kFKNPJvM9R5ncpKggUAsMbIeMDTfSI=
+X-Google-Smtp-Source: ABdhPJy6eSxdUSjwXBGUpnaN9S4faYaBsktqJPO5ki4Z+GsqXtlCF0yG/fWPNTKiyWUVfRtLmkuIHw==
+X-Received: by 2002:ac2:5f64:: with SMTP id c4mr11862667lfc.170.1597002929503;
+        Sun, 09 Aug 2020 12:55:29 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id h6sm9386008lfc.84.2020.08.09.12.55.28
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 12:44:26 -0700 (PDT)
-Subject: Re: [PATCH] regulator: fix pointer table overallocation
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <407fbd06a02caf038a9ba3baa51c7d6d47cd6517.1597000795.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5ef51b56-c533-46c8-621d-7907129594e9@gmail.com>
-Date:   Sun, 9 Aug 2020 22:44:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 09 Aug 2020 12:55:28 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id z14so7413250ljm.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 12:55:28 -0700 (PDT)
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr9469780ljk.421.1597002927878;
+ Sun, 09 Aug 2020 12:55:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <407fbd06a02caf038a9ba3baa51c7d6d47cd6517.1597000795.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
+In-Reply-To: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 9 Aug 2020 12:55:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjHNkPHvGG_Ca_f8=+w5od9_XTQ8yD55+v-3WCKhvKviw@mail.gmail.com>
+Message-ID: <CAHk-=wjHNkPHvGG_Ca_f8=+w5od9_XTQ8yD55+v-3WCKhvKviw@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control changes for the v5.9 kernel cycle
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2020 22:21, Michał Mirosław пишет:
-> The code allocates sizeof(regulator_dev) for a pointer. Make it less
-> generous. Let kcalloc() calculate the size, while at it.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: d8ca7d184b33 ("regulator: core: Introduce API for regulators coupling customization")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/regulator/core.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> index 75ff7c563c5d..9e18997777d3 100644
-> --- a/drivers/regulator/core.c
-> +++ b/drivers/regulator/core.c
-> @@ -5011,20 +5011,20 @@ static void regulator_remove_coupling(struct regulator_dev *rdev)
->  
->  static int regulator_init_coupling(struct regulator_dev *rdev)
->  {
-> +	struct regulator_dev **coupled;
->  	int err, n_phandles;
-> -	size_t alloc_size;
->  
->  	if (!IS_ENABLED(CONFIG_OF))
->  		n_phandles = 0;
->  	else
->  		n_phandles = of_get_n_coupled(rdev);
->  
-> -	alloc_size = sizeof(*rdev) * (n_phandles + 1);
-> -
-> -	rdev->coupling_desc.coupled_rdevs = kzalloc(alloc_size, GFP_KERNEL);
-> -	if (!rdev->coupling_desc.coupled_rdevs)
-> +	coupled = kcalloc(n_phandles + 1, sizeof(*coupled), GFP_KERNEL);
-> +	if (!coupled)
->  		return -ENOMEM;
->  
-> +	rdev->coupling_desc.coupled_rdevs = coupled;
-> +
->  	/*
->  	 * Every regulator should always have coupling descriptor filled with
->  	 * at least pointer to itself.
-> 
+On Sun, Aug 9, 2020 at 6:06 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Driver improvements:
+>
+> - Linear improvement and cleanups of the Intel drivers for
+>   Cherryview, Lynxpoint, Baytrail etc. Improved locking among
+>   other things.
 
-Hello, Michał! Thank you for the patch! Not sure whether it's worthwhile
-to backport this change since it's an improvement, I'll leave it to Mark
-to decide, otherwise looks good to me.
+I'm having a hard time parsing that. What does "Linear improvement" mean?
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Anyway, pulled and explanation left as-is.
+
+              Linus
