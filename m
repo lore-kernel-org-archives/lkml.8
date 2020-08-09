@@ -2,128 +2,100 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE61C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A60BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F5E206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595EF206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:21:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkEegYiu"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fWHyD700"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgHIWPC (ORCPT
+        id S1726406AbgHIWVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 18:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgHIWPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 18:15:02 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F01C061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 15:15:02 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s189so7083286iod.2
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 15:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=sQaF90PpIcuP+xs/1px5CITaSQ2qw7KzLG5oySQrZ38=;
-        b=EkEegYiusOb5wI6CQxsIU+qTY1cIDF+iZq3K3WNDmV8FT3TONvjhZHaZMgxKVHvoNO
-         Ro9VFZ+NMhYA+6l3XjqyXBf5bVBx5f71VgT7cM+jkPlBx/Jv2+BjwiG+sApvsBZKN76H
-         ez6KFI8+LKh2cZuRgCxpZDYjt5JAV7xcQOidRrls0vSXYE4TF6Y6BPwDdZcSMMAEX4l2
-         B+X5S9SSHr/HPudhrkB+ATPuXEG8JzLhmFFh4LCP/1jozWRWQSBcE3ueclClmAJ6ROAJ
-         lD/5UfaGZCLVJTWRoqOQgxkmR5aiyeFJQWHZ/Ij7q2FINyZ9VEcvhPdt2CgYTwR0r3dN
-         xPDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sQaF90PpIcuP+xs/1px5CITaSQ2qw7KzLG5oySQrZ38=;
-        b=VsY4Cwb/Pjps1naIySrcU1S4tW02sA/7K8BOm9Ml5ImxV5CssCGwDGC/Kacp6tya3a
-         jrvsIhuW+7nYLV5tULY/eK5a+2rnxSsi+xuGPVfVQzjF/V9WMNyBjLbjZiy+qd9/+Jxk
-         dAhT2hxTS2E2s7EnWgSh81yD8gV+KWZM7lUluPZpRKkEgPAhKCXd+vlecaaD+BA4J6ay
-         DB8vqw8sp6+MbIlMLLxUq1K7uvvvYG/3iL8EyUuIYnnjuQFDxBMge+rhVbCOhfaQNLh1
-         mR2rcT/AWzgpsG8yly2ID2sgLeTfdTouqdRM66PqJ4doWqsInSY7URez/UI4vmZ/c91O
-         uSIQ==
-X-Gm-Message-State: AOAM532UMjRC+s5SrtiQ7x8dpdEJ7nee82qh64JxSAMfcp+x0qX8Frms
-        Mh9sa+zN/vt8pSQePY9lxq0=
-X-Google-Smtp-Source: ABdhPJwbOlyHy0wSJGCn4IKp7kRY/+u4L0k6pHrwBcDzNftpzuGLdpJ25uCJUFu6HDuJ+s9DaU3CdA==
-X-Received: by 2002:a02:9149:: with SMTP id b9mr16792126jag.50.1597011300459;
-        Sun, 09 Aug 2020 15:15:00 -0700 (PDT)
-Received: from localhost.localdomain (x-128-101-215-112.reshalls.umn.edu. [128.101.215.112])
-        by smtp.gmail.com with ESMTPSA id c14sm10675549ild.41.2020.08.09.15.14.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 15:14:59 -0700 (PDT)
-From:   James Bond <jameslouisebond@gmail.com>
-To:     jameslouisebond@gmail.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Michel Lespinasse <walken@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] tty/vt: fix a memory leak in con_insert_unipair
-Date:   Sun,  9 Aug 2020 17:14:52 -0500
-Message-Id: <20200809221453.10235-1-jameslouisebond@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 9 Aug 2020 18:21:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:58919 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbgHIWVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 18:21:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BPtqG6GHrz9sTT;
+        Mon, 10 Aug 2020 08:21:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597011693;
+        bh=v6D2lxNtiWgNxr32g/QMI0OKH/O0ynYoUjKZUya41Fw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fWHyD700031bSyQm9Px0xCwiTJQXmlGB9v6Ob4FnMAXZeYyH0qV+6W0SOsALdHFOv
+         dTLfTELR3EelwnRRDcGj6ZBakgSPqqH5Un6aXrOjnNauSuZ7e7l8T/A7vzVLWvHWt6
+         EqU3FpIpzcexMDNszialVCkpAI70pPsGaaWzcyZs2HqbwRk7XdDIGnxH4NJW6xw3vq
+         8ZvcGryxJwd86wWecfWPJI2Oa/PDeX1FVdr/ItZ5hIU/4q2b5PG8uTSdmbd+7FT7nM
+         po2rPUNQR6tw0mVrMIPLBzBq+Yn+e7nqBaiYBU8Mk9rptkLG3R/2w7I4AwWlEVzp2Z
+         flzQRwTOc8AdQ==
+Date:   Mon, 10 Aug 2020 08:21:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warnings after merge of the arm-soc tree
+Message-ID: <20200810082130.5482ace2@canb.auug.org.au>
+In-Reply-To: <20200723092717.0f90fd26@canb.auug.org.au>
+References: <20200723092717.0f90fd26@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/rvb57Z6GKGM6gwSOCQR+vDw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzkaller find a memory leak in con_insert_unipair:
-    BUG: memory leak
-    unreferenced object 0xffff88804893d100 (size 256):
-    comm "syz-executor.3", pid 16154, jiffies 4295043307 (age 2392.340s)
-    hex dump (first 32 bytes):
-    80 af 88 4e 80 88 ff ff 00 a8 88 4e 80 88 ff ff  ...N.......N....
-    80 ad 88 4e 80 88 ff ff 00 aa 88 4e 80 88 ff ff  ...N.......N....
-    backtrace:
-    [<00000000f76ff1de>] kmalloc include/linux/slab.h:555 [inline]
-    [<00000000f76ff1de>] kmalloc_array include/linux/slab.h:596 [inline]
-    [<00000000f76ff1de>] con_insert_unipair+0x9e/0x1a0 drivers/tty/vt/consolemap.c:482
-    [<000000002f1ad7da>] con_set_unimap+0x244/0x2a0 drivers/tty/vt/consolemap.c:595
-    [<0000000046ccb106>] do_unimap_ioctl drivers/tty/vt/vt_ioctl.c:297 [inline]
-    [<0000000046ccb106>] vt_ioctl+0x863/0x12f0 drivers/tty/vt/vt_ioctl.c:1018
-    [<00000000db1577ff>] tty_ioctl+0x4cd/0xa30 drivers/tty/tty_io.c:2656
-    [<00000000e5cdf5ed>] vfs_ioctl fs/ioctl.c:48 [inline]
-    [<00000000e5cdf5ed>] ksys_ioctl+0xa6/0xd0 fs/ioctl.c:753
-    [<00000000fb4aa12c>] __do_sys_ioctl fs/ioctl.c:762 [inline]
-    [<00000000fb4aa12c>] __se_sys_ioctl fs/ioctl.c:760 [inline]
-    [<00000000fb4aa12c>] __x64_sys_ioctl+0x1a/0x20 fs/ioctl.c:760
-    [<00000000f561f260>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:384
-    [<0000000056206928>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    BUG: leak checking failed
+--Sig_/rvb57Z6GKGM6gwSOCQR+vDw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-To fix this issue, we need to release the pointer p1 when the call of
-the function kmalloc_array fail.
+Hi all,
 
-Signed-off-by: James Bond <jameslouisebond@gmail.com>
----
- drivers/tty/vt/consolemap.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Thu, 23 Jul 2020 09:27:17 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> After merging the arm-soc tree, today's linux-next build (arm
+> multi_v7_defconfig) produced these warnings:
+>=20
+> arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /soc/=
+apb@d4000000/spi@d4037000: incorrect #address-cells for SPI bus
+>   also defined at arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts:225.7-237.3
+> arch/arm/boot/dts/mmp2.dtsi:472.23-480.6: Warning (spi_bus_bridge): /soc/=
+apb@d4000000/spi@d4037000: incorrect #size-cells for SPI bus
+>   also defined at arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts:225.7-237.3
+> arch/arm/boot/dts/mmp2-olpc-xo-1-75.dtb: Warning (spi_bus_reg): Failed pr=
+erequisite 'spi_bus_bridge'
 
-diff --git a/drivers/tty/vt/consolemap.c b/drivers/tty/vt/consolemap.c
-index 5947b54d92be..1e8d06c32ca1 100644
---- a/drivers/tty/vt/consolemap.c
-+++ b/drivers/tty/vt/consolemap.c
-@@ -489,7 +489,10 @@ con_insert_unipair(struct uni_pagedir *p, u_short unicode, u_short fontpos)
- 	p2 = p1[n = (unicode >> 6) & 0x1f];
- 	if (!p2) {
- 		p2 = p1[n] = kmalloc_array(64, sizeof(u16), GFP_KERNEL);
--		if (!p2) return -ENOMEM;
-+		if (!p2) {
-+			kfree(p1);
-+			return -ENOMEM;
-+		}
- 		memset(p2, 0xff, 64*sizeof(u16)); /* No glyphs for the characters (yet) */
- 	}
- 
--- 
-2.17.1
+These warnings now appear in builds of Linus' tree.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/rvb57Z6GKGM6gwSOCQR+vDw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8wduoACgkQAVBC80lX
+0GzsgAf+N5QWqeXQfh3gX5KCPzdumETqBV8W4xXawLW10ICD9VAjm2V6Xf7RQz6j
+r5N5QtOjconpvFw19AyAVM3Jf9qkmL5Y4RmgR1V8VjOw7Hkm25TCsyXCYDa1OCD5
+eHbp3KsKbg4wSl9oa/R8O5peWo4FtrsfmakomIobzt79W4gwODiLRaaAKEo3IVrX
+CObtaknnQT+kP4ZeG3U85kmHORN03l8ATwUwzAHGjOg+u9p966xHzWCvYG1TZ5lv
+J1WragAqOycsOC46x38cK0DM/pZ+3klKJOOPLDE3pUDPWUdtWpOJYr7oPDXApPq/
+nkRAm5fT/ZixOcuj5ye9wFxOMIGw1g==
+=Cq5g
+-----END PGP SIGNATURE-----
+
+--Sig_/rvb57Z6GKGM6gwSOCQR+vDw--
