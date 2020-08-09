@@ -2,261 +2,129 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34660C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7A4206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9980206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQCqbz9W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umebzz1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgHIVgU (ORCPT
+        id S1726402AbgHIVkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 17:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
+        Sun, 9 Aug 2020 17:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgHIVgT (ORCPT
+        with ESMTP id S1726307AbgHIVkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 17:36:19 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5DBC061756;
-        Sun,  9 Aug 2020 14:36:19 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id e14so4143279ybf.4;
-        Sun, 09 Aug 2020 14:36:19 -0700 (PDT)
+        Sun, 9 Aug 2020 17:40:08 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD6AC061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 14:40:07 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id v15so3683381lfg.6
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 14:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gSgeMeM92UZgCX6qDhSZFFvtX43xfRefeT6Hws5M7oI=;
-        b=XQCqbz9WfysmOgYmCKuxLbxrP7Oa3PJYKZHPk4tTYoiNcL6xw3dGbGxCtbPlj5sCZ3
-         NFcIpOV5Ze7UObTmt5FVJTH0AhOCwM0emH5wiXY947E3W9g7etNrbsm3JqYjyRQUQYcr
-         +6Mwt0Ez7KVSGmXOhT9B7+rVZpdrsQAdpowPb/EluQ4QAEHvZG8kVSqoaG0/sQ5TQ8or
-         ftH4q5JatOohq5T9K4aWna8sTu6pACBDAB9ywTZU3L/EYKEoFLnwgf7FlKeLQxx+BIFo
-         ekjSz6bPDrmSgPahYgHLkyOs10pqGvFHCg8dSLYTOycxaiwbghhVcUq3oFaktg26Fdh3
-         mHCg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+ep4HojIQDcPfiGIdNJSmErIHNth9ZyqLjovwLChR98=;
+        b=umebzz1A/fKNdhwy09ATaiKEGNk6aY1qV/L7qFryoORsJN0s4VhQLKbJCotKTfxmTB
+         BxXLFUoD457Nb+PD4kKbd6xI5t4P5vDgIb2ZAd7aAQ0ExrElioJEkrkYaAmKDEIRYY8B
+         2etoYNm28mEe1sn1QoOj5T41hcyBx28YpBoCBTurs9UxDUDYThI1zLNodZe46igFNV65
+         KO2CT3TsyO2jWm4WljSCrLo0qQHtWds8IPF/3coLvNCKLQFtOQBWJwWeXjLXF1qa71BZ
+         IPCtELmpWGA1stzqMmdqGfYXVBaSQ06oFAKt7zqz89OBE2tQfgQ0y9IwIiLdtiAvGuHa
+         YQSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gSgeMeM92UZgCX6qDhSZFFvtX43xfRefeT6Hws5M7oI=;
-        b=k32STlGqGE4IbK284OKZ2Tw8scOUfQGJJ5WVfYxqbGUPdF3TpO4fUOX/5F5VxKWGIa
-         TrkjqOUW6FLPMue9GaU787I5tJko7V8p8Hb1epdPDuJzVlqPCAA2Xtf/A8XtmtXG9vig
-         W3dUXjJgJ2kusARYURlZaFhQPeJ57kUhoYXLSG8HH3FzWtI0j9VrQ862rdG1mYdp+9re
-         dfwcA4Zl6I0PleYR11qPlttMlerDMpSNtvkK3A3rOZkghFtsPkdzVJHSQKmaX1nUma9+
-         lM3i/nmUvSd6P9OCUBmr/i3k5ntpgTZBUEoOjUhKlCCHz5fq7hEPwpeaoL2ooNegsGwC
-         PglA==
-X-Gm-Message-State: AOAM533LdTRJ3qUsf1mvRjugdrwtMddVKoYcP92arG+uOmJWMkb0CXyo
-        5zLm7fNDLpxDTiLviFDBI1mf2CRYX8NySHqObvU=
-X-Google-Smtp-Source: ABdhPJxoVO1r86GGnFCKO+vhg2M3UxMaaechdbpAQp++qmRpPuBLos7WAHroyuf2blk9J3m4QQTX3cr9vMgKYKekOJ8=
-X-Received: by 2002:a25:3355:: with SMTP id z82mr36932104ybz.445.1597008978611;
- Sun, 09 Aug 2020 14:36:18 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+ep4HojIQDcPfiGIdNJSmErIHNth9ZyqLjovwLChR98=;
+        b=m318q0IlwMf267E+ZvNA4mA/O/c9VaIf6g8Z8npQw4V9xXpeqhObSNVr1YslwHl/tA
+         XjfCFfAgHpCjDBAZbEAiqBMELtDfkYWquHJGCZCvgQnQvQmYYSaIuRr3W1ZGwgmG8n6I
+         mwvTvYHt5R3ZPqZDJPLznU1dfaEwFpf7j+bK9V469zrVWmxuQ1LQNFNJpWGBwTMbMG+O
+         FrvlFs1VCWgnrw23FE9autcuj8lVt1Jk6rSjmXdEC4yzDKQqCY4JcM2WAum5oFAZf8nb
+         DvwqEAmV84SlZwtdIdmd4Gn5yLHRvOuMUPNrmcY9f/ms26VaClCOPqZkg5FMUS+4gKZH
+         Avvw==
+X-Gm-Message-State: AOAM530F8voPBTREYg9QOrFDaRwNsPDH9H3OEJLtRdbTl73SNhRkB7tJ
+        eJStCwJh15pa7XxNol++vdrYxDrD
+X-Google-Smtp-Source: ABdhPJxvRqCxkdqK4RhVC0L0JMyALNvVwiMye+l5FlVVQ1aqKx0OIQpNQNy/2RUaxhdTYe/N02HpSQ==
+X-Received: by 2002:ac2:58d5:: with SMTP id u21mr11435036lfo.31.1597009205791;
+        Sun, 09 Aug 2020 14:40:05 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id w8sm8287705ljm.48.2020.08.09.14.40.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 14:40:05 -0700 (PDT)
+Subject: Re: [PATCH] regulator: simplify locking
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <b22fadc413fd7a1f4018c2c9dc261abf837731cb.1597007683.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <40871bc7-2d6c-10d4-53b3-0aded21edf3b@gmail.com>
+Date:   Mon, 10 Aug 2020 00:40:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200807174954.14448-8-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200808212259.GT6186@pendragon.ideasonboard.com>
-In-Reply-To: <20200808212259.GT6186@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sun, 9 Aug 2020 22:35:52 +0100
-Message-ID: <CA+V-a8uQg3Jjdwe7PQM=v3Hs+Hm9yKGbQ0G0v5B17QAqjNy6MA@mail.gmail.com>
-Subject: Re: [PATCH 7/7] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b22fadc413fd7a1f4018c2c9dc261abf837731cb.1597007683.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+10.08.2020 00:16, Michał Mirosław пишет:
+> Simplify regulator locking by removing locking around locking. rdev->ref
+> is now accessed only when the lock is taken. The code still smells fishy,
+> but now its obvious why.
+> 
+> Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/regulator/core.c         | 37 ++++++--------------------------
+>  include/linux/regulator/driver.h |  1 -
+>  2 files changed, 6 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index 9e18997777d3..b0662927487c 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -45,7 +45,6 @@
+>  	pr_debug("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
+>  
+>  static DEFINE_WW_CLASS(regulator_ww_class);
+> -static DEFINE_MUTEX(regulator_nesting_mutex);
+>  static DEFINE_MUTEX(regulator_list_mutex);
+>  static LIST_HEAD(regulator_map_list);
+>  static LIST_HEAD(regulator_ena_gpio_list);
+> @@ -150,32 +149,13 @@ static bool regulator_ops_is_valid(struct regulator_dev *rdev, int ops)
+>  static inline int regulator_lock_nested(struct regulator_dev *rdev,
+>  					struct ww_acquire_ctx *ww_ctx)
+>  {
+> -	bool lock = false;
+>  	int ret = 0;
+>  
+> -	mutex_lock(&regulator_nesting_mutex);
+> +	if (ww_ctx || !mutex_trylock_recursive(&rdev->mutex.base))
 
-Thank you for the review.
+Have you seen comment to the mutex_trylock_recursive()?
 
+https://elixir.bootlin.com/linux/v5.8/source/include/linux/mutex.h#L205
 
-On Sat, Aug 8, 2020 at 10:23 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Fri, Aug 07, 2020 at 06:49:54PM +0100, Lad Prabhakar wrote:
-> > The iwg21d comes with a 7" capacitive touch screen, therefore
-> > add support for it.
->
-> I can't review most of this properly as I don't have access to the
-> schematics. Is there a way to get it ?
->
-I'll check with Chris, how we could get the schematics for you.
+ * This function should not be used, _ever_. It is purely for hysterical GEM
+ * raisins, and once those are gone this will be removed.
 
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > ---
-> >  arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 84 +++++++++++++++++++++++++
-> >  1 file changed, 84 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > index b3461a61a4bf..cf59fd61e422 100644
-> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > @@ -30,6 +30,7 @@
-> >
-> >  /dts-v1/;
-> >  #include "r8a7742-iwg21m.dtsi"
-> > +#include <dt-bindings/pwm/pwm.h>
-> >
-> >  / {
-> >       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
-> > @@ -52,6 +53,50 @@
-> >               clock-frequency = <26000000>;
-> >       };
-> >
-> > +     lcd_backlight: backlight {
-> > +             compatible = "pwm-backlight";
-> > +             pwms = <&tpu 2 5000000 0>;
-> > +             brightness-levels = <0 4 8 16 32 64 128 255>;
-> > +             pinctrl-0 = <&backlight_pins>;
-> > +             pinctrl-names = "default";
-> > +             default-brightness-level = <7>;
-> > +             enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
-> > +     };
-> > +
-> > +     lvds-receiver {
-> > +             compatible = "ti,ds90cf384a", "lvds-decoder";
-> > +             powerdown-gpios = <&gpio5 28 GPIO_ACTIVE_LOW>;
-> > +
-> > +             ports {
-> > +                     #address-cells = <1>;
-> > +                     #size-cells = <0>;
-> > +
-> > +                     port@0 {
-> > +                             reg = <0>;
-> > +                             lvds_receiver_in: endpoint {
-> > +                                     remote-endpoint = <&lvds0_out>;
-> > +                             };
-> > +                     };
-> > +                     port@1 {
-> > +                             reg = <1>;
-> > +                             lvds_receiver_out: endpoint {
-> > +                                     remote-endpoint = <&panel_in>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> > +     panel {
-> > +             compatible = "edt,etm0700g0dh6";
-> > +             backlight = <&lcd_backlight>;
-> > +
-> > +             port {
-> > +                     panel_in: endpoint {
-> > +                             remote-endpoint = <&lvds_receiver_out>;
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> >       reg_1p5v: 1p5v {
-> >               compatible = "regulator-fixed";
-> >               regulator-name = "1P5V";
-> > @@ -129,12 +174,31 @@
-> >               VDDIO-supply = <&reg_3p3v>;
-> >               VDDD-supply = <&reg_1p5v>;
-> >       };
-> > +
-> > +     touch: touchpanel@38 {
-> > +             compatible = "edt,edt-ft5406";
-> > +             reg = <0x38>;
-> > +             interrupt-parent = <&gpio0>;
-> > +             interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
-> > +     };
-> >  };
-> >
-> >  &cmt0 {
-> >       status = "okay";
-> >  };
-> >
-> > +&du {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&gpio0 {
-> > +     touch-interrupt {
-> > +             gpio-hog;
-> > +             gpios = <24 GPIO_ACTIVE_LOW>;
-> > +             input;
->
-> Is this required, won't requesting the interrupt be enough to configure
-> the pin properly ?
->
-Agreed.
+I knew about this function and I don't think it's okay to use it, hence
+this is why there is that "nesting_mutex" and "owner" checking.
 
-Cheers,
-Prabhakar
-
-> > +     };
-> > +};
-> > +
-> >  &hsusb {
-> >       pinctrl-0 = <&usb0_pins>;
-> >       pinctrl-names = "default";
-> > @@ -165,6 +229,11 @@
-> >               function = "avb";
-> >       };
-> >
-> > +     backlight_pins: backlight {
-> > +             groups = "tpu0_to2";
-> > +             function = "tpu0";
-> > +     };
-> > +
-> >       i2c2_pins: i2c2 {
-> >               groups = "i2c2_b";
-> >               function = "i2c2";
-> > @@ -208,6 +277,17 @@
-> >       };
-> >  };
-> >
-> > +&lvds0 {
-> > +     status = "okay";
-> > +     ports {
-> > +             port@1 {
-> > +                     lvds0_out: endpoint {
-> > +                             remote-endpoint = <&lvds_receiver_in>;
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> >  &rcar_sound {
-> >       pinctrl-0 = <&sound_pins>;
-> >       pinctrl-names = "default";
-> > @@ -261,6 +341,10 @@
-> >       shared-pin;
-> >  };
-> >
-> > +&tpu {
-> > +     status = "okay";
-> > +};
-> > +
-> >  &usbphy {
-> >       status = "okay";
-> >  };
->
-> --
-> Regards,
->
-> Laurent Pinchart
+If you disagree, then perhaps you should make another patch to remove
+the stale comment to trylock_recursive().
