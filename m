@@ -2,105 +2,107 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B87BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 542B0206B2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489F9206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQ6dYle3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3+JpB+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgHIPK2 (ORCPT
+        id S1726350AbgHIPLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 11:10:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39838 "EHLO
+        Sun, 9 Aug 2020 11:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgHIPKV (ORCPT
+        with ESMTP id S1726070AbgHIPLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 11:10:21 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF40DC061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 08:10:19 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id n4so3047474vsl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 08:10:18 -0700 (PDT)
+        Sun, 9 Aug 2020 11:11:30 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2A4C061756;
+        Sun,  9 Aug 2020 08:11:30 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d22so3799557pfn.5;
+        Sun, 09 Aug 2020 08:11:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tk3U73URR05lkh2ICGJjJ/tKPSgnTaTWlg1TLB6sub0=;
-        b=YQ6dYle3zzGv2KDt0bQ3nieuGAXW5cvBGy/K/L0sYBQFK//6nRoiHX9X32W7xDgOMF
-         XzNG/T1r83a+yuQ6IkDzJhuJrHTfJQd1KSYaNN61BEzYAaQstXuPvJ8B/Pjz+M9cs4TL
-         EnTgrC9Fd7BuYprSMKmYqonO4tSyKiDQeHf4UGwBrLE1/RTBrUYnZTe9qxFNqAWVLoGO
-         YCgWkKTjZgA4v4VnsZufQwuWlX+G7EdDlb4JEEykjLOYBpuR96rm81Ey32/EOdIIt80G
-         tH3ZfmWGeWuo2Q8ktOyNtGWC2TpBbQUTEECcKjroqCPhHUWKQ4/YOJlU7FDLwvfB82nf
-         u40g==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3U1YVfZ3/r+GTB6gjCpbjGoBmp0JEystLJz/+YctVAQ=;
+        b=P3+JpB+WUDWhDsCjxZF/OtdUOVzHJ2RM0GUjGZgEfAuODBqdcetEXFytsyhvGwl6iG
+         7jpquCJudc/UWaMo2r5UmytWUIad6p4gl3MgSZ76uY6+ZLepknpkIuMk05vC5NXY8bPB
+         aC51eq5rPnX+oKQxQH9bBrJ7br6kkKvzPrY1zrguhbxJBaCCzEOxZhf+TL2ai/FxeTej
+         lkQtf9a6iELZuOC21MKzCS3UaPmm8sopmJRzp1OwN//Bvrzol9XQfo6i7epSZuTZhZrZ
+         utgbV1GnmdNimoiQ9LjVflso8qd9fYitfT2WG8XjtGrF4f97ADt1xHf0swQ9yDq+clP3
+         4FLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tk3U73URR05lkh2ICGJjJ/tKPSgnTaTWlg1TLB6sub0=;
-        b=oJ4NeeXCnbNVw+J32GyN911bRvN2NQHmzPeLaJucR1DnmUX3y7B+CuNFPH/P4P6b8H
-         zbAVzHQ0/JQP2A0hthwizi3Np63AvGqf3UPg0Q+FyLcYZY9AQXRZ/JVY6c1u4JXMqYU/
-         RE/yBlB/vHo45XsB0DtdQNV/o6bRG7dTUtRao+wWXlZ9w9A5cAhy2xM47NSb50TvSSga
-         gzteGL/Qyc3VEKxOzErTExxz10HZxUS2RtsBgcanACu7LvurSgNgXOZ8VVCzxEvOdC9w
-         GS6rZCs/LIraevzMa9PT/pxWGn8cb/IvzcA3fQAeTZT6wmheHRihaVuGsbrT5NMZ4ctx
-         sg5w==
-X-Gm-Message-State: AOAM531zBI2kqqbjXGPU+zzOiqfy6iKZMbESkcVxacv3qvGzQmTH3GfC
-        3erwxz5fQCnOfxdPxJFfdb1P7EZxJ3VfbMNNN973RU6AmYQ=
-X-Google-Smtp-Source: ABdhPJyjtziLzBoEdWKJbz3N4Ml9RM0C6QwBecCBdSh0wcenY7FbZxpAA7xFHS7wXeSNO8+9Zr3Obwzgc+qewrtr9zY=
-X-Received: by 2002:a67:fe15:: with SMTP id l21mr16216028vsr.78.1596985813241;
- Sun, 09 Aug 2020 08:10:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3U1YVfZ3/r+GTB6gjCpbjGoBmp0JEystLJz/+YctVAQ=;
+        b=O18pH8w2GBQEJCIUj27eDROwtu001Z+ylN7rbHPHtrZAidqD2e+Bpe9qMulxZ0Ja9g
+         FyDRJSrDbegnQCJkjqOC+Q8ZkQUDoNh3mn6o6lSnQsJEwWSInlpku8KPHBNKXqJwzUf2
+         zypBuhMFLwH3P4YKVEEEVUlixEygMSg0uV7XkUj5fBjMXPptEv1QYbMMlIUFnnCJaeyF
+         xgvYihScRTwQ3nLKxbtmV3NKHCfTXVmQ3d75fOx2DAMYEES2uKQijyfMVehiU2M8xnzz
+         0W2aQQDPhCwqHqpu+dlED203A0vLZN+kNV1shkk5qimsjzNtY7rzTGumhn4N+6QCegBD
+         xABg==
+X-Gm-Message-State: AOAM531lTs5P6SKiSfzgdfVDc/2jin97FV3Zxx9Wxp+DrYk4rvN4a2KW
+        HINFMa5DWXxsu5wAybotd9s=
+X-Google-Smtp-Source: ABdhPJz/uaoGAS5YWNepVNhd+qI9FEZQoovPOeRinCilOF8oTvZhXjcN0GCoq4mHzXqPeYQENoyadA==
+X-Received: by 2002:a62:2e45:: with SMTP id u66mr22488619pfu.121.1596985889720;
+        Sun, 09 Aug 2020 08:11:29 -0700 (PDT)
+Received: from [192.168.86.81] ([49.206.15.28])
+        by smtp.gmail.com with ESMTPSA id w82sm19869911pff.7.2020.08.09.08.11.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 08:11:29 -0700 (PDT)
+Subject: Re: [PATCH] lib: Convert test_hexdump.c to KUnit
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     brendanhiggins@google.com, skhan@linuxfoundation.org,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200806094440.14962-1-98.arpi@gmail.com>
+ <20200806100540.GE3703480@smile.fi.intel.com>
+From:   Arpitha Raghunandan <98.arpi@gmail.com>
+Message-ID: <caf314b0-c090-26e6-3593-cb23aab1cbe3@gmail.com>
+Date:   Sun, 9 Aug 2020 20:41:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200807200957.1269454-1-jim.cromie@gmail.com>
- <20200807200957.1269454-4-jim.cromie@gmail.com> <7e5c90bf-eb04-4b63-2990-7be18e22664f@infradead.org>
-In-Reply-To: <7e5c90bf-eb04-4b63-2990-7be18e22664f@infradead.org>
-From:   jim.cromie@gmail.com
-Date:   Sun, 9 Aug 2020 09:09:46 -0600
-Message-ID: <CAJfuBxzafMKtD88TmwYqQ-UuvS1Wvtn1ehz-7gtF8KtiRojFaw@mail.gmail.com>
-Subject: Re: [PATCH 3/7] dyndbg: select ZPOOL in Kconfig.debug
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200806100540.GE3703480@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 8, 2020 at 11:06 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 8/7/20 1:09 PM, Jim Cromie wrote:
-> > dyndbg will next need zs_malloc and friends, so add config reqs now,
-> > to avoid touching make-deps late in a patch-set.
-> >
-> > I used select in order not to hide dyndbg inadvertently.
-> > I want to say recommends, since it could be an optional feature.
-> > Whats the best way ?
->
-> Hi Jim,
-> Can you elaborate on what/why/when it could be an optional feature?
->
-
-hi Randy,
-
-I dont think making it optional adds any real value.
-if ZPOOL/ZRAM/ZSWAP is not included, we dont get any of
-that sweet sweet compression. or the off-lining of >1/2 the memory.
-I've got 46 callsites enabled atm, which is more than average, ~3100
-callsites offlined.
-This is the payoff for the added complexity and memory (the site pointer)
-
-fwiw, Im not entirely clear on which of ZPOOL/ZRAM/ZSWAP
-is the correct dependency/ies.   ZSWAP feels like the best destination
-for the data,
-especially if the data can be pushed aggressively into it.
+On 06/08/20 3:35 pm, Andy Shevchenko wrote:
+> On Thu, Aug 06, 2020 at 03:14:40PM +0530, Arpitha Raghunandan wrote:
+>> Converts test lib/test_hexdump.c to KUnit.
+>> More information about KUnit can be found at
+>> https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
+>> KUnit provides a common framework for unit tests in the kernel.
+> 
+> ...
+> 
+>> -	if (memcmp(test, real, TEST_HEXDUMP_BUF_SIZE)) {
+>> -		pr_err("Len: %zu row: %d group: %d\n", len, rowsize, groupsize);
+>> -		pr_err("Result: '%s'\n", real);
+>> -		pr_err("Expect: '%s'\n", test);
+>> -		failed_tests++;
+>> -	}
+>> +	KUNIT_EXPECT_EQ(kunittest, 0, memcmp(test, real, TEST_HEXDUMP_BUF_SIZE));
+> 
+> 
+> Ah, can you explain how user will see now what is being expected and what is in
+> reality in the buffer? I'm not gonna accept such changes without showing in
+> explicitly that user is not going to suffer of this change.
+> 
+I have sent another patch replacing KUNIT_EXPECT_EQ() with KUNIT_EXPECT_EQ_MSG() and KUNIT_EXPECT_NE() with KUNIT_EXPECT_NE_MSG(). These methods log what is being expected and what is in reality in the buffer in case of test failure similar to the original test.
