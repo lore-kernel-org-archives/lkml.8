@@ -2,191 +2,100 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84006C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E171C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 03:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC12206D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:50:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IEtypn46"
+	by mail.kernel.org (Postfix) with ESMTP id 1B80F206D8
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 03:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHICuS (ORCPT
+        id S1726293AbgHIC77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:50:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20068 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726093AbgHICuQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:50:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596941414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5vwi+xqRl0iyLXLH/ypzw2pXZxpVvRbjBDnPD7xhC3I=;
-        b=IEtypn46sp2nMPHhm5qNYiQ6V8PaaTgTcRU6dj/WNurtBYEX35DDgFRUlpPkrJpTjVxGi5
-        ljNC+P6u9//t5YZ5mwDHtSSKPFspVyfKixW0XbR3RD36hgb6oSIvKx8REu+os7oUzbjPc5
-        LZ4RHIMPzLXrxYfab5A5PU9MHdT1MbY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-27-m7uh_Sb6NS2MlY7NwnDz7g-1; Sat, 08 Aug 2020 22:50:12 -0400
-X-MC-Unique: m7uh_Sb6NS2MlY7NwnDz7g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB16710059A9;
-        Sun,  9 Aug 2020 02:50:10 +0000 (UTC)
-Received: from T590 (ovpn-12-63.pek2.redhat.com [10.72.12.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E29A01002397;
-        Sun,  9 Aug 2020 02:50:02 +0000 (UTC)
-Date:   Sun, 9 Aug 2020 10:49:57 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: splice: infinite busy loop lockup bug
-Message-ID: <20200809024957.GD2134904@T590>
-References: <00000000000084b59f05abe928ee@google.com>
- <29de15ff-15e9-5c52-cf87-e0ebdfa1a001@I-love.SAKURA.ne.jp>
- <20200807122727.GR1236603@ZenIV.linux.org.uk>
- <20200807123854.GS1236603@ZenIV.linux.org.uk>
- <20200807134114.GA2114050@T590>
- <20200807141148.GD17456@casper.infradead.org>
- <20200809023123.GB2134904@T590>
+        Sat, 8 Aug 2020 22:59:59 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3108 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725988AbgHIC77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 22:59:59 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 67C582EDB366618F78EA;
+        Sun,  9 Aug 2020 10:59:55 +0800 (CST)
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sun, 9 Aug 2020 10:59:54 +0800
+Subject: Re: [PATCH net-next v1] hinic: fix strncpy output truncated compile
+ warnings
+To:     David Miller <davem@davemloft.net>
+CC:     <David.Laight@ACULAB.COM>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <chiqijun@huawei.com>
+References: <20200807020914.3123-1-luobin9@huawei.com>
+ <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
+ <b886a6ff-8ed8-c857-f190-e99f8f735e02@huawei.com>
+ <20200807.204243.696618708291045170.davem@davemloft.net>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <2e4eeea0-0531-f12c-423b-c7b858560eb5@huawei.com>
+Date:   Sun, 9 Aug 2020 10:59:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809023123.GB2134904@T590>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200807.204243.696618708291045170.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 10:31:23AM +0800, Ming Lei wrote:
-> On Fri, Aug 07, 2020 at 03:11:48PM +0100, Matthew Wilcox wrote:
-> > On Fri, Aug 07, 2020 at 09:41:14PM +0800, Ming Lei wrote:
-> > > On Fri, Aug 07, 2020 at 01:38:54PM +0100, Al Viro wrote:
-> > > > FWIW, my preference would be to have for_each_bvec() advance past zero-length
-> > > > segments; I'll need to go through its uses elsewhere in the tree first, though
-> > > > (after I grab some sleep),
-> > > 
-> > > Usually block layer doesn't allow/support zero bvec, however we can make
-> > > for_each_bvec() to support it only.
-> > > 
-> > > Tetsuo, can you try the following patch?
-> > > 
-> > > diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-> > > index ac0c7299d5b8..b03c793dd28d 100644
-> > > --- a/include/linux/bvec.h
-> > > +++ b/include/linux/bvec.h
-> > > @@ -117,11 +117,19 @@ static inline bool bvec_iter_advance(const struct bio_vec *bv,
-> > >  	return true;
-> > >  }
-> > >  
-> > > +static inline void bvec_iter_skip_zero_vec(const struct bio_vec *bv,
-> > > +		struct bvec_iter *iter)
-> > > +{
-> > > +	iter->bi_idx++;
-> > > +	iter->bi_bvec_done = 0;
-> > > +}
-> > > +
-> > >  #define for_each_bvec(bvl, bio_vec, iter, start)			\
-> > >  	for (iter = (start);						\
-> > >  	     (iter).bi_size &&						\
-> > > -		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);	\
-> > > -	     bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len))
-> > > +		((bvl = bvec_iter_bvec((bio_vec), (iter))), 1);		\
-> > > +	  (bvl).bv_len ? bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len) : \
-> > > +			bvec_iter_skip_zero_vec((bio_vec), &(iter)))
-> > 
-> > Uhm, bvec_iter_advance() already skips over zero length bio_vecs.
-> > 
-> >         while (bytes && bytes >= bv[idx].bv_len) {
-> >                 bytes -= bv[idx].bv_len;
-> >                 idx++;
-> >         }
+On 2020/8/8 11:42, David Miller wrote:
+> From: "luobin (L)" <luobin9@huawei.com>
+> Date: Sat, 8 Aug 2020 11:36:42 +0800
 > 
-> The issue is that zero (bvl).bv_len passed to bvec_iter_advance(), so
-> the iterator can't move on.
+>> On 2020/8/7 17:32, David Laight wrote:
+>>>> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+>>>> b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+>>>> index c6adc776f3c8..1ec88ebf81d6 100644
+>>>> --- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+>>>> +++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
+>>>> @@ -342,9 +342,9 @@ static int chip_fault_show(struct devlink_fmsg *fmsg,
+>>>>
+>>>>  	level = event->event.chip.err_level;
+>>>>  	if (level < FAULT_LEVEL_MAX)
+>>>> -		strncpy(level_str, fault_level[level], strlen(fault_level[level]));
+>>>> +		strncpy(level_str, fault_level[level], strlen(fault_level[level]) + 1);
+>>>
+>>> Have you even considered what that code is actually doing?
+>  ...
+>> I'm sorry that I haven't got what you mean and I haven't found any defects in that code. Can you explain more to me?
 > 
-> And I tried to avoid change to bvec_iter_advance() since this exact
-> issue only exists on for_each_bvec, and block layer won't support/allow
-> zero-length bvec.
+> David is trying to express the same thing I was trying to explain to
+> you, you should use sizeof(level_str) as the third argument because
+> the code is trying to make sure that the destination buffer is not
+> overrun.
 > 
-> > 
-> > The problem is when the _first_ bio_vec is zero length.
+> If you use the strlen() of the source buffer, the strncpy() can still
+> overflow the destination buffer.
 > 
-> It can be any zero-length bvec during the iterating. 
+> Now do you understand?
+> .
 > 
-> > Maybe something more
-> > like this (which doesn't even compile, but hopefully makes my point):
-> > 
-> > @@ -86,12 +86,24 @@ struct bvec_iter_all {
-> >         (mp_bvec_iter_page((bvec), (iter)) +                    \
-> >          mp_bvec_iter_page_idx((bvec), (iter)))
-> >  
-> > -#define bvec_iter_bvec(bvec, iter)                             \
-> > -((struct bio_vec) {                                            \
-> > -       .bv_page        = bvec_iter_page((bvec), (iter)),       \
-> > -       .bv_len         = bvec_iter_len((bvec), (iter)),        \
-> > -       .bv_offset      = bvec_iter_offset((bvec), (iter)),     \
-> > -})
-> > +static inline bool bvec_iter_bvec(struct bio_vec *bv, struct bio_vec *bvec,
-> > +               struct bvec_iter *iter)
-> > +{
-> > +       unsigned int idx = iter->bi_idx;
-> > +
-> > +       if (!iter->bi_size)
-> > +               return false;
-> > +
-> > +       while (!bv[idx].bv_len)
-> > +               idx++;
-> > +       iter->bi_idx = idx;
-> > +
-> > +       bv->bv_page = bvec_iter_page(bvec, *iter);
-> > +       bv->bv_len = bvec_iter_len(bvec, *iter);
-> > +       bv->bv_offset = bvec_iter_offset(bvec, *iter);
-> > +
-> > +       return true;
-> > +}
-> >  
-> >  static inline bool bvec_iter_advance(const struct bio_vec *bv,
-> >                 struct bvec_iter *iter, unsigned bytes)
-> > @@ -119,8 +131,7 @@ static inline bool bvec_iter_advance(const struct bio_vec *bv,
-> >  
-> >  #define for_each_bvec(bvl, bio_vec, iter, start)                       \
-> >         for (iter = (start);                                            \
-> > -            (iter).bi_size &&                                          \
-> > -               ((bvl = bvec_iter_bvec((bio_vec), (iter))), 1); \
-> > +            bvec_iter_bvec(&(bvl), (bio_vec), &(iter));                \
-> >              bvec_iter_advance((bio_vec), &(iter), (bvl).bv_len))
-> >  
-> >  /* for iterating one bio from start to end */
-> > 
-> > (I find the whole bvec handling a mess of confusing macros and would
-> > welcome more of it being inline functions, in general).
-> 
-> The above change may bring more code duplication. Meantime, it can't
-> work because (bvl).bv_len isn't taken into account into bvec_iter_bvec(),
-> then how can the iterator advance?
+Thanks for your explanation. I explained that why I didn't use sizeof(level_str) as the third argument in my previous reply e-mail to you.
+Because using sizeof(level_str) as the third argument will still cause the following compile warning:
 
-oops, looks you change bvec_iter_bvec() only for skipping zero length bvec,
-and this way might work(still ->bi_bvec_done isn't reset). However the
-change is ugly, cause the iterator is supposed to not be updated in
-bvec_iter_bvec(). Also block layer code doesn't require such change.
+In function ‘strncpy’,
+    inlined from ‘chip_fault_show’ at drivers/net/ethernet/huawei/hinic/hinic_devlink.c:345:3:
+./include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ specified bound 17 equals destination size [-Wstringop-truncation]
+  297 | #define __underlying_strncpy __builtin_strncpy
 
-BTW, I agree on switching to inline if performance isn't affected.
-
-
-Thanks,
-Ming
-
+Now I know that using strncpy() on NUL-terminated strings is deprecated as Kees Cook points out and actually there is no need to use it
+in my code.
