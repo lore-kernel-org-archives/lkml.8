@@ -2,112 +2,72 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE52C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0BDF206E9
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVj0/PQ/"
+	by mail.kernel.org (Postfix) with ESMTP id 6501B206CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597002972;
+	bh=5sMrsy2EEveGl4nlwCywba/xRt3KKs5jiqpLXwQ4910=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=zZ5C2968+jbjrfpJadOm6RU0cxxRofkaF6DC7AOmFaJbRYJZ0VKeoianzwJR3XXzQ
+	 PafK2FObwtfVemDdAKjOJrMv+K9eRvITZXEOciseN9Hp9LtPqQF6MZqzcD9u/tEWMg
+	 UlralsRrhxrJeoVBfzA+695Xh7ECXMKjm8AgEXX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgHITzg (ORCPT
+        id S1726450AbgHIT4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 15:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgHITzf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 15:55:35 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FCAC061756;
-        Sun,  9 Aug 2020 12:55:35 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v9so7391323ljk.6;
-        Sun, 09 Aug 2020 12:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:cc:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=gEex+sxqDKUVPlri56W6GJ2mSxGnivkW+gKH+hakLOQ=;
-        b=HVj0/PQ/3OaMWrCoamAvziPNkznvcRrRng7jJaKfouGJ+fj8l4IdZmMKlgCVKAhg6k
-         2k0QP0SGtM0J+Ju8SxQt/OrmAc49RRrrjmjDlwzq1pBK2H8PnC/fuff6nYliQifl3lca
-         KDG3BWcSEF3QjnJGnHPfGbOb4dBs/e5FK8Uhbs1jokgiaSCHQiKzH9LR5bve08N4AMD8
-         HvsgNFESfguyXkbervtBdyrD7wOgh0NponO5mihsBkohjAoGWOVkrzgY+SyW8ZBgYRvr
-         e2XYU/fgjpDOoF4hd6a464pcVLGsDs4619zFK5pnAQodHNq5xZA4KrJOl5NA60YrFaKg
-         ZosA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gEex+sxqDKUVPlri56W6GJ2mSxGnivkW+gKH+hakLOQ=;
-        b=epCE/WcY5N6GN/mG/3Z/qtHmXXKoDVT19Xeaazchr8irDg5hi5zVlGc0fxi1LJDcDy
-         CiyJ8yYveK8pAbuUHtTYqdz2hz1+FH+ymmINJ+YSfMS8BZzfzFSg1YaKs7/hom7ltKLR
-         lzIrVk++a+qiYxM0p+jUCujsZJqTqZ+2Uf3QRfc1BkwCh/7OPt8W7UhuGag/Act5kOXq
-         twKGsCa3qv0mTahjQ494bYEgTdvvcXOaqwm1Ua3PBVL+xyLJiBZwvdcNtk/U2pSlQKBu
-         DLEERwmbKPqxRM8csS9RDWQFbS9apJ5bXWH1++U4HfHGqwjsVbjeTfNrs/POJoOk03pt
-         M8vg==
-X-Gm-Message-State: AOAM531ohVdTwIgL/CJNLl7ilT4ctPKWKX9obYF99miLOy563b+y3LCn
-        XQBJcjQy2A8IDlMF/APAGSUJEsOhxuk=
-X-Google-Smtp-Source: ABdhPJwDZkj1p7MsiBCLaRLyV7loewdezRxQeqbc7Ppnj9H8iwVf0EgGpDw2ny0QUDQTWNaa4Zp6mw==
-X-Received: by 2002:a2e:96d9:: with SMTP id d25mr10568109ljj.376.1597002933351;
-        Sun, 09 Aug 2020 12:55:33 -0700 (PDT)
-Received: from [192.168.1.100] (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
-        by smtp.gmail.com with ESMTPSA id h17sm8191818ljj.118.2020.08.09.12.55.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 12:55:32 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: qcom: pm660: Fix missing pound sign in
- interrupt-cells
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200725082417.8507-1-priv.luk@gmail.com>
-From:   LuK1337 <priv.luk@gmail.com>
-Message-ID: <ce0da794-14fa-2e50-4b90-003d46668c8e@gmail.com>
-Date:   Sun, 9 Aug 2020 21:55:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200725082417.8507-1-priv.luk@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Sun, 9 Aug 2020 15:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbgHIT4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 15:56:10 -0400
+Subject: Re: [GIT PULL] mtd: Changes for 5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597002970;
+        bh=5sMrsy2EEveGl4nlwCywba/xRt3KKs5jiqpLXwQ4910=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=pOF7jVFkoiPdD4W9+QZw0fF2yEF+5b+iAQ94wn+T9I7m0PtS79j3UHBQ0CRXtgVv5
+         rMCy3bzwJULjwy1sJJmc0+8gYThtECUxZvHS6BPG+O+owfQ3B6HMj4+UnaYoNb80as
+         ESlPLCQDdLhXw36Py6ZVQtMI8xEGfjmSlL69Por0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200809003453.79673eb3@xps13>
+References: <20200809003453.79673eb3@xps13>
+X-PR-Tracked-List-Id: Linux MTD discussion mailing list <linux-mtd.lists.infradead.org>
+X-PR-Tracked-Message-Id: <20200809003453.79673eb3@xps13>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-5.9
+X-PR-Tracked-Commit-Id: 6a1380271b75e0d9a961e192e56b733fedf7a23a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: dec1fbbc1d7c46aed9fc1d3ee1f7f4fc04d6ed51
+Message-Id: <159700297006.31137.5146495495916399431.pr-tracker-bot@kernel.org>
+Date:   Sun, 09 Aug 2020 19:56:10 +0000
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-kernel@vger.kernel.org,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        linux-mtd@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bumping this thread, would be nice if someone could handle this simple fix.
+The pull request you sent on Sun, 9 Aug 2020 00:34:53 +0200:
 
-On 7/25/20 10:24 AM, LuK1337 wrote:
-> From: Łukasz Patron <priv.luk@gmail.com>
-> 
-> Also add a space after '=' while at it.
-> 
-> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
-> ---
->   arch/arm64/boot/dts/qcom/pm660.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm660.dtsi b/arch/arm64/boot/dts/qcom/pm660.dtsi
-> index ea0e9558d0f2..2e6a6f6c3b66 100644
-> --- a/arch/arm64/boot/dts/qcom/pm660.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm660.dtsi
-> @@ -44,7 +44,7 @@ pm660_gpios: gpios@c000 {
->   			gpio-ranges = <&pm660_gpios 0 0 13>;
->   			#gpio-cells = <2>;
->   			interrupt-controller;
-> -			interrupt-cells =<2>;
-> +			#interrupt-cells = <2>;
->   		};
->   	};
->   };
-> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-5.9
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/dec1fbbc1d7c46aed9fc1d3ee1f7f4fc04d6ed51
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
