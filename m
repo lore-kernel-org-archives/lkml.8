@@ -2,265 +2,365 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C706CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26C8206D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596980898;
-	bh=QFbCWOIw77RPUSpBEnXe/qUsqDO2Fuu1fu/YIqmRp7U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qOH7rlbZCt/lqof3GyaYh1ugn9biufIk6IiQwXPkoArzTuGAJ6RUrDqT2zq1e5gUg
-	 QnYkaM9NPitQbwuZrx7s03kkziR/+6sR9xghHCF19bVIQ+yhHdmY9jT73y05FVFgb1
-	 iZ4vKb5bhsYLytTExbhz9dGJhcUr3xbU/tCzTvyc=
+	by mail.kernel.org (Postfix) with ESMTP id AE7F0206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="k60BxlkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgHINsQ (ORCPT
+        id S1726256AbgHIN4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 09:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgHINsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 09:48:07 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DDEF206B2;
-        Sun,  9 Aug 2020 13:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596980886;
-        bh=QFbCWOIw77RPUSpBEnXe/qUsqDO2Fuu1fu/YIqmRp7U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MQUwZzNFX77Gyl0xvoJxmAgvhqPoqlBHOB1sH8j7Nx+PBTWHuD+wZr82yCEDSXuxc
-         AiYMnxxiFcqd4usf8MwHlq7uvzzCNpYfPOQXVnhtlf2bKuGANZBA8OcyPNrCl3hZ9q
-         MAv6nbJaAIL3TeYKX7QfMYk9+vlTngGD3Iqs+qZc=
-Date:   Sun, 9 Aug 2020 14:48:00 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        alexandre.belloni@bootlin.com, david@lechnology.com,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH v4 0/5] Introduce the Counter character device interface
-Message-ID: <20200809144800.6b067dea@archlinux>
-In-Reply-To: <cover.1595358237.git.vilhelm.gray@gmail.com>
-References: <cover.1595358237.git.vilhelm.gray@gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 9 Aug 2020 09:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgHIN4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 09:56:05 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7AFC061786
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 06:56:04 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c10so4551276edk.6
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 06:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0XBhU+3ruxtditMCY5MbDWUBKoSVvXlXtnbZQW25RRE=;
+        b=k60BxlkFKTXbVl0h+E1es2xVbrMxQeNnuIQwb1RRiEPTFurYMJzeTWMFhFVUr5aa7X
+         o8goltLy5CYpU8Os0rfq3k58vFW5OUI3rRymBiise7LnmeShZlP3k3Omd60XnHeI4cXU
+         cdQK47OS/+SKWifUwBuVqpNo1QPPqV4KE8TplocHe+ctE3QRF3ueT0Kgo/2DAC01G7Jz
+         MOgvKC6EM3SIBlyqxwAH1KqV4FYRRZOkffTxMxIakP0YpPJVfnQsNGm7EGdhO1c44IG6
+         2jPk1wZ8NUoKHpxkZQflAs+3pRtKhK78sKjOjfC0myRQyMoeXHdH+01EjpOWNm8GG+JM
+         M7MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0XBhU+3ruxtditMCY5MbDWUBKoSVvXlXtnbZQW25RRE=;
+        b=L34Pg+wp/Gh3KkgfDnD1YZ4f+pR6vM09fxSiFEpt5E05kLuuMWfKldjb+I0ejo16Zp
+         Q87bGcMRtFPCauwRVTWdHVcE1wnhD7d51I2pG1AU6LHd+7PJj4xFr2mfK/3vPfeZrZJA
+         7qkp7LlHbYcpIRUSMFoSuxG+FJNocCNih3E10qTj7wBb5eSaa23rAbtgeH5Oe/dONW41
+         U2qwl+asnyLhImScvgbw4RbbngKtOF1/LBWqTGH37ESIC6X9+isuh+AsuRWGfnYVgqyb
+         qqPLrLxxkjsvz2Rkv+vpmhcuUHF2LQJASBn4MdRpg5VzdFZ4NBNeam5YLaveIiueyvAC
+         vi4A==
+X-Gm-Message-State: AOAM533b7ms5iMF68wOTUCOyDc3CDT2Nwh6yCDcsyFYHAzTxvg8lgi4s
+        27kcuzvlK9sxxr44i3GFtHY3VQ+h83RCaoP1Y94dDA==
+X-Google-Smtp-Source: ABdhPJyGphQpjfI/gkwEmKSzx0z/3cFG54FFRHVt2FGPGlWPnWQU3sSOF0IPn7nst4VXatnowi72vNRQU8qE7MkoPZE=
+X-Received: by 2002:aa7:c251:: with SMTP id y17mr17544588edo.13.1596981362548;
+ Sun, 09 Aug 2020 06:56:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+ <20200806151310.98624-4-ezequiel@collabora.com> <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
+In-Reply-To: <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Sun, 9 Aug 2020 10:55:50 -0300
+Message-ID: <CAAEAJfAGW6M1YPQhPqdvpYugWk+RRTNOQbKfSWrnw_A8M2k=EA@mail.gmail.com>
+Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight parameters
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 15:35:46 -0400
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+On Sat, 8 Aug 2020 at 18:01, Jonas Karlman <jonas@kwiboo.se> wrote:
+>
+> On 2020-08-06 17:12, Ezequiel Garcia wrote:
+> > The prediction weight parameters are only required under
+> > certain conditions, which depend on slice header parameters.
+> >
+> > As specified in section 7.3.3 Slice header syntax, the prediction
+> > weight table is present if:
+> >
+> > ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
+> > (weighted_bipred_idc == 1 && slice_type == B))
+>
+> Maybe a macro can be added to help check this contition?
+>
+> Something like this maybe:
+>
+> #define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
+>         ((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
+>          ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
+>            (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
+>          ((pps)->weighted_bipred_idc == 1 && \
+>           (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
+>
 
-> Changes in v4:
->  - Reimplement character device interface to report Counter events
->  - Implement Counter timestamps
->  - Implement poll() support
->  - Convert microchip-tcb-capture.c to new driver interface
->  - Add IRQ support for the 104-quad-8 Counter driver
-> 
-> Over the past couple years we have noticed some shortcomings with the
-> Counter sysfs interface. Although useful in the majority of situations,
-> there are certain use-cases where interacting through sysfs attributes
-> can become cumbersome and inefficient. A desire to support more advanced
-> functionality such as timestamps, multi-axes positioning tables, and
-> other such latency-sensitive applications, has motivated a reevaluation
-> of the Counter subsystem. I believe a character device interface will be
-> helpful for this more niche area of counter device use.
-> 
-> To quell any concerns from the offset: this patchset makes no changes to
-> the existing Counter sysfs userspace interface -- existing userspace
-> applications will continue to work with no modifications necessary. I
-> request that driver maintainers please test their applications to verify
-> that this is true, and report any discrepancies if they arise.
-> 
-> However, this patchset does contain a major reimplementation of the
-> Counter subsystem core and driver API. A reimplementation was necessary
-> in order to separate the sysfs code from the counter device drivers and
-> internalize it as a dedicated component of the core Counter subsystem
-> module. A minor benefit from all of this is that the sysfs interface is
-> now ensured a certain amount of consistency because the translation is
-> performed outside of individual counter device drivers.
-> 
-> Essentially, the reimplementation has enabled counter device drivers to
-> pass and handle data as native C datatypes now rather than the sysfs
-> strings from before. A high-level view of how a count value is passed
-> down from a counter device driver can be exemplified by the following:
-> 
->                  ----------------------
->                 / Counter device       \
->                 +----------------------+
->                 | Count register: 0x28 |
->                 +----------------------+
->                         |
->                  -----------------
->                 / raw count data /
->                 -----------------
->                         |
->                         V
->                 +----------------------------+
->                 | Counter device driver      |----------+
->                 +----------------------------+          |
->                 | Processes data from device |   -------------------
->                 |----------------------------|  / driver callbacks /
->                 | Type: u64                  |  -------------------
->                 | Value: 42                  |          |
->                 +----------------------------+          |
->                         |                               |
->                  ----------                             |
->                 / u64     /                             |
->                 ----------                              |
->                         |                               |
->                         |                               V
->                         |               +----------------------+
->                         |               | Counter core         |
->                         |               +----------------------+
->                         |               | Routes device driver |
->                         |               | callbacks to the     |
->                         |               | userspace interfaces |
->                         |               +----------------------+
->                         |                       |
->                         |                -------------------
->                         |               / driver callbacks /
->                         |               -------------------
->                         |                       |
->                 +-------+---------------+       |
->                 |                       |       |
->                 |               +-------|-------+
->                 |               |       |
->                 V               |       V
->         +--------------------+  |  +---------------------+
->         | Counter sysfs      |<-+->| Counter chrdev      |
->         +--------------------+     +---------------------+
->         | Translates to the  |     | Translates to the   |
->         | standard Counter   |     | standard Counter    |
->         | sysfs output       |     | character device    |
->         |--------------------|     |---------------------+
->         | Type: const char * |     | Type: u64           |
->         | Value: "42"        |     | Value: 42           |
->         +--------------------+     +---------------------+
->                 |                               |
->          ---------------                 -----------------------
->         / const char * /                / struct counter_event /
->         ---------------                 -----------------------
->                 |                               |
->                 |                               V
->                 |                       +-----------+
->                 |                       | read      |
->                 |                       +-----------+
->                 |                       \ Count: 42 /
->                 |                        -----------
->                 |
->                 V
->         +--------------------------------------------------+
->         | `/sys/bus/counter/devices/counterX/countY/count` |
->         +--------------------------------------------------+
->         \ Count: "42"                                      /
->          --------------------------------------------------
-> 
-> Counter device data is exposed through standard character device read
-> operations. Device data is gathered when a Counter event is pushed by
-> the respective Counter device driver. Configuration is handled via ioctl
-> operations on the respective Counter character device node.
-> 
-> The following are some questions I have about this patchset:
-> 
-> 1. Should I support multiple file descriptors for the character device
->    in this introduction patchset?
-> 
->    I intend to add support for multiple file descriptors to the Counter
->    character device, but I restricted this patchset to a single file
->    descriptor to simplify the code logic for the sake of review. If
->    there is enough interest, I can add support for multiple file
->    descriptors in the next revision; I anticipate that this should be
->    simple to implement through the allocation of a kfifo for each file
->    descriptor during the open callback.
+Yeah, that could make sense.
 
-What is the use case?  I can conjecture one easily enough, but I'm not
-sure how real it actually is.  We've been around this question a few
-times in IIO :)
+Note that the biggest value in having the prediction weight table
+separated is to allow  applications to skip setting this largish control,
+reducing the amount of data that needs to be passed from userspace
+-- especially when not needed :-)
 
-Certainly makes sense to design an interface that would allow you to
-add this support later if needed though.
+> >
+> > Given its size, it makes sense to move this table to its control,
+> > so applications can avoid passing it if the slice doesn't specify it.
+> >
+> > Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
+> > With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
+> > is 772 bytes.
+> >
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> > v2: Fix missing Cedrus changes and mssing control declaration,
+> >     as noted by Hans and Jernej.
+> > ---
+> >  .../media/v4l/ext-ctrls-codec.rst             | 19 ++++++++++++-------
+> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
+> >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
+> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
+> >  include/media/h264-ctrls.h                    |  5 +++--
+> >  include/media/v4l2-ctrls.h                    |  2 ++
+> >  8 files changed, 37 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > index d1438b1e259f..c36ce5a95fc5 100644
+> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > @@ -1879,18 +1879,23 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >        - 0x00000008
+> >        -
+> >
+> > -``Prediction Weight Table``
+> > +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
+> > +    Prediction weight table defined according to :ref:`h264`,
+> > +    section 7.4.3.2 "Prediction Weight Table Semantics".
+> > +    The prediction weight table must be passed by applications
+> > +    under the conditions explained in section 7.3.3 "Slice header
+> > +    syntax".
+> >
+> > -    The bitstream parameters are defined according to :ref:`h264`,
+> > -    section 7.4.3.2 "Prediction Weight Table Semantics". For further
+> > -    documentation, refer to the above specification, unless there is
+> > -    an explicit comment stating otherwise.
+> > +    .. note::
+> > +
+> > +       This compound control is not yet part of the public kernel API and
+> > +       it is expected to change.
+> >
+> > -.. c:type:: v4l2_h264_pred_weight_table
+> > +.. c:type:: v4l2_ctrl_h264_pred_weights
+> >
+> >  .. cssclass:: longtable
+> >
+> > -.. flat-table:: struct v4l2_h264_pred_weight_table
+> > +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
+> >      :header-rows:  0
+> >      :stub-columns: 0
+> >      :widths:       1 1 2
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index 3f3fbcd60cc6..76c8dc8fb31c 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+> >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:            return "H264 Decode Parameters";
+> >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:              return "H264 Decode Mode";
+> >       case V4L2_CID_MPEG_VIDEO_H264_START_CODE:               return "H264 Start Code";
+> > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:             return "H264 Prediction Weight Table";
+> >       case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:                   return "MPEG2 Level";
+> >       case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:                 return "MPEG2 Profile";
+> >       case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return "MPEG4 I-Frame QP Value";
+> > @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+> >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
+> >               *type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
+> >               break;
+> > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
+> > +             *type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
+> > +             break;
+> >       case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+> >               *type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+> >               break;
+> > @@ -1790,6 +1794,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+> >       case V4L2_CTRL_TYPE_H264_SPS:
+> >       case V4L2_CTRL_TYPE_H264_PPS:
+> >       case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+> >       case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
+> >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> >               break;
+> > @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+> >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> >               elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
+> >               break;
+> > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+> > +             elem_size = sizeof(struct v4l2_ctrl_h264_pred_weights);
+> > +             break;
+> >       case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+> >               elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+> >               break;
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > index bc27f9430eeb..027cdd1be5a0 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > @@ -78,6 +78,13 @@ static const struct cedrus_control cedrus_controls[] = {
+> >               .codec          = CEDRUS_CODEC_H264,
+> >               .required       = true,
+> >       },
+> > +     {
+> > +             .cfg = {
+> > +                     .id     = V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
+> > +             },
+> > +             .codec          = CEDRUS_CODEC_H264,
+> > +             .required       = true,
+>
+> This should probably be false if this control is to be optional as implied
+> by the commit message.
+>
+
+Well, the control is optional if the driver implements it as optional,
+which Cedrus isn't currently doing :-)
+
+I have been reluctant to change Cedrus much, since I am not
+testing there. Perhaps we can address this with a follow-up patch,
+adding the macro you suggest and changing the control to optional?
+
+Speaking of optional controls, note that v4l2 controls are cached
+per-fd (per context). This means for instance, that the active PPS
+and SPS need only be passed to drivers when activated,
+and not on each frame.
+
+Similarly, another optimization to reduce the amount of
+data passed is to have default scaling matrices in the kernel,
+and allow applications to not pass them, and have the drivers
+fallback to default (default or previously set?) in that case.
+
+I have tested these things, but haven't posted patches because
+I'm not entirely sure how well-defined and specified this behavior
+currently is. It is something to keep in mind though, as a future
+optimization.
+
+Thanks!
+Ezequiel
 
 
-> 
-> 2. Should struct counter_event have a union for different value types,
->    or just a value u8 array?
-> 
->    Currently I expose the event data value via a union containing the
->    various possible Counter data types (value_u8 and value_u64). It is
->    up to the user to select the right union member for the data they
->    received. Would it make sense to return this data in a u8 array
->    instead, with the expectation that the user will cast to the
->    necessary data type?
 
-Be careful on alignment if you do that. We would need to ensure that the
-buffer is suitable aligned for a cast to work as expected.
-
-> 
-> 3. How should errors be returned for Counter data reads performed by
->    Counter events?
-> 
->    Counter events are configured with a list of Counter data read
->    operations to perform for the user. Any one of those data reads can
->    return an error code, but not necessarily all of them. Currently, the
->    code exits early when an error code is returned. Should the code
->    instead continue on, saving the error code to the struct
->    counter_event for userspace to handle?
-
-I'd argue that errors are expected to be rare, so it isn't a problem
-to just fault out hard on the first one.
-
-> 
-> William Breathitt Gray (5):
->   counter: Internalize sysfs interface code
->   docs: counter: Update to reflect sysfs internalization
->   counter: Add character device interface
->   docs: counter: Document character device interface
->   counter: 104-quad-8: Add IRQ support for the ACCES 104-QUAD-8
-> 
->  .../ABI/testing/sysfs-bus-counter-104-quad-8  |   32 +
->  Documentation/driver-api/generic-counter.rst  |  363 +++-
->  .../userspace-api/ioctl/ioctl-number.rst      |    1 +
->  MAINTAINERS                                   |    2 +-
->  drivers/counter/104-quad-8.c                  |  753 +++++----
->  drivers/counter/Kconfig                       |    6 +-
->  drivers/counter/Makefile                      |    1 +
->  drivers/counter/counter-chrdev.c              |  441 +++++
->  drivers/counter/counter-chrdev.h              |   16 +
->  drivers/counter/counter-core.c                |  188 +++
->  drivers/counter/counter-sysfs.c               |  849 ++++++++++
->  drivers/counter/counter-sysfs.h               |   14 +
->  drivers/counter/counter.c                     | 1496 -----------------
->  drivers/counter/ftm-quaddec.c                 |   59 +-
->  drivers/counter/microchip-tcb-capture.c       |  104 +-
->  drivers/counter/stm32-lptimer-cnt.c           |  161 +-
->  drivers/counter/stm32-timer-cnt.c             |  139 +-
->  drivers/counter/ti-eqep.c                     |  211 +--
->  include/linux/counter.h                       |  633 +++----
->  include/linux/counter_enum.h                  |   45 -
->  include/uapi/linux/counter.h                  |   90 +
->  21 files changed, 2919 insertions(+), 2685 deletions(-)
->  create mode 100644 drivers/counter/counter-chrdev.c
->  create mode 100644 drivers/counter/counter-chrdev.h
->  create mode 100644 drivers/counter/counter-core.c
->  create mode 100644 drivers/counter/counter-sysfs.c
->  create mode 100644 drivers/counter/counter-sysfs.h
->  delete mode 100644 drivers/counter/counter.c
->  delete mode 100644 include/linux/counter_enum.h
->  create mode 100644 include/uapi/linux/counter.h
-> 
-
+> Best regards,
+> Jonas
+>
+> > +     },
+> >       {
+> >               .cfg = {
+> >                       .id     = V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > index 96765555ab8a..93c843ae14bb 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > @@ -62,6 +62,7 @@ struct cedrus_h264_run {
+> >       const struct v4l2_ctrl_h264_scaling_matrix      *scaling_matrix;
+> >       const struct v4l2_ctrl_h264_slice_params        *slice_params;
+> >       const struct v4l2_ctrl_h264_sps                 *sps;
+> > +     const struct v4l2_ctrl_h264_pred_weights        *pred_weights;
+> >  };
+> >
+> >  struct cedrus_mpeg2_run {
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > index 58c48e4fdfe9..6385026d1b6b 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > @@ -57,6 +57,8 @@ void cedrus_device_run(void *priv)
+> >                       V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
+> >               run.h264.sps = cedrus_find_control_data(ctx,
+> >                       V4L2_CID_MPEG_VIDEO_H264_SPS);
+> > +             run.h264.pred_weights = cedrus_find_control_data(ctx,
+> > +                     V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS);
+> >               break;
+> >
+> >       case V4L2_PIX_FMT_HEVC_SLICE:
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > index cce527bbdf86..a9ba78b15907 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > @@ -256,10 +256,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
+> >  static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
+> >                                          struct cedrus_run *run)
+> >  {
+> > -     const struct v4l2_ctrl_h264_slice_params *slice =
+> > -             run->h264.slice_params;
+> > -     const struct v4l2_h264_pred_weight_table *pred_weight =
+> > -             &slice->pred_weight_table;
+> > +     const struct v4l2_ctrl_h264_pred_weights *pred_weight =
+> > +             run->h264.pred_weights;
+> >       struct cedrus_dev *dev = ctx->dev;
+> >       int i, j, k;
+> >
+> > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > index 4c0bb7f5fb05..54cd9bec0b23 100644
+> > --- a/include/media/h264-ctrls.h
+> > +++ b/include/media/h264-ctrls.h
+> > @@ -36,6 +36,7 @@
+> >  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS       (V4L2_CID_MPEG_BASE+1004)
+> >  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (V4L2_CID_MPEG_BASE+1005)
+> >  #define V4L2_CID_MPEG_VIDEO_H264_START_CODE  (V4L2_CID_MPEG_BASE+1006)
+> > +#define V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS        (V4L2_CID_MPEG_BASE+1007)
+> >
+> >  /* enum v4l2_ctrl_type type values */
+> >  #define V4L2_CTRL_TYPE_H264_SPS                      0x0110
+> > @@ -43,6 +44,7 @@
+> >  #define V4L2_CTRL_TYPE_H264_SCALING_MATRIX   0x0112
+> >  #define V4L2_CTRL_TYPE_H264_SLICE_PARAMS     0x0113
+> >  #define V4L2_CTRL_TYPE_H264_DECODE_PARAMS    0x0114
+> > +#define V4L2_CTRL_TYPE_H264_PRED_WEIGHTS     0x0115
+> >
+> >  enum v4l2_mpeg_video_h264_decode_mode {
+> >       V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> > @@ -125,7 +127,7 @@ struct v4l2_h264_weight_factors {
+> >       __s16 chroma_offset[32][2];
+> >  };
+> >
+> > -struct v4l2_h264_pred_weight_table {
+> > +struct v4l2_ctrl_h264_pred_weights {
+> >       __u16 luma_log2_weight_denom;
+> >       __u16 chroma_log2_weight_denom;
+> >       struct v4l2_h264_weight_factors weight_factors[2];
+> > @@ -177,7 +179,6 @@ struct v4l2_ctrl_h264_slice_params {
+> >       __s32 delta_pic_order_cnt0;
+> >       __s32 delta_pic_order_cnt1;
+> >
+> > -     struct v4l2_h264_pred_weight_table pred_weight_table;
+> >       /* Size in bits of dec_ref_pic_marking() syntax element. */
+> >       __u32 dec_ref_pic_marking_bit_size;
+> >       /* Size in bits of pic order count syntax. */
+> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> > index f40e2cbb21d3..cb25f345e9ad 100644
+> > --- a/include/media/v4l2-ctrls.h
+> > +++ b/include/media/v4l2-ctrls.h
+> > @@ -51,6 +51,7 @@ struct video_device;
+> >   * @p_h264_scaling_matrix:   Pointer to a struct v4l2_ctrl_h264_scaling_matrix.
+> >   * @p_h264_slice_params:     Pointer to a struct v4l2_ctrl_h264_slice_params.
+> >   * @p_h264_decode_params:    Pointer to a struct v4l2_ctrl_h264_decode_params.
+> > + * @p_h264_pred_weights:     Pointer to a struct v4l2_ctrl_h264_pred_weights.
+> >   * @p_vp8_frame_header:              Pointer to a VP8 frame header structure.
+> >   * @p_hevc_sps:                      Pointer to an HEVC sequence parameter set structure.
+> >   * @p_hevc_pps:                      Pointer to an HEVC picture parameter set structure.
+> > @@ -74,6 +75,7 @@ union v4l2_ctrl_ptr {
+> >       struct v4l2_ctrl_h264_scaling_matrix *p_h264_scaling_matrix;
+> >       struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+> >       struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+> > +     struct v4l2_ctrl_h264_pred_weights *p_h264_pred_weights;
+> >       struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+> >       struct v4l2_ctrl_hevc_sps *p_hevc_sps;
+> >       struct v4l2_ctrl_hevc_pps *p_hevc_pps;
+> >
