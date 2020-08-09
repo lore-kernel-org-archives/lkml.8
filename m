@@ -2,86 +2,70 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF2FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB65C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1A2206C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596957559;
-	bh=kdmLQTT1+ZfSRaikynsl/nezDlKC4eIbb3+p1+WV0KU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fR4k/9txlJQBnCS6Nla7Cp+/5QhsU1Gl6YrbPZXGrKcXnBDT2zrlwKZRIpXn8bnLa
-	 NjeMd8OQQyj7+RkLlJOJZb0EpgnYCJaAPRlrjzkKVShbqdILSbxdJl2zcnfBeopNJw
-	 oUbZU2W41oGOZMnF4fQRWn4atf+HwBaMnoPH17/U=
+	by mail.kernel.org (Postfix) with ESMTP id 74DFD206C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgHIHQa (ORCPT
+        id S1726386AbgHIHTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 03:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgHIHQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 03:16:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FD562065C;
-        Sun,  9 Aug 2020 07:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596957389;
-        bh=kdmLQTT1+ZfSRaikynsl/nezDlKC4eIbb3+p1+WV0KU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yHCmq0RdIm8d1QbXtgmJbLtweXAuWLsRH++kWTh3I+VJDrFAze0rHbbH2wlF8dOTy
-         lMdxQV9TKZ424GW8KAXM2WeWMxZZs95sR3L4bMQBhjFshoqEUxLvIoP5pDaZzdYj0j
-         CnhKtgDeVxv50uWqcq6F+iMHxXJrOC68ZbPYQc18=
-Date:   Sun, 9 Aug 2020 09:16:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rustam Kovhaev <rkovhaev@gmail.com>
-Cc:     xujialu <xujialu@vimux.org>, masahiroy@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: realpath "No such file or directory" warnings when building
-Message-ID: <20200809071627.GC1098830@kroah.com>
-References: <20200808202822.GA597061@thinkpad>
+        Sun, 9 Aug 2020 03:19:19 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:26878 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHIHTS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 03:19:18 -0400
+Received: from localhost.localdomain ([93.22.150.139])
+        by mwinf5d64 with ME
+        id DKKE2300N30hzCV03KKFvD; Sun, 09 Aug 2020 09:19:16 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 09 Aug 2020 09:19:16 +0200
+X-ME-IP: 93.22.150.139
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] watchdog: pcwd_usb: Avoid GFP_ATOMIC where it is not needed
+Date:   Sun,  9 Aug 2020 09:19:12 +0200
+Message-Id: <20200809071912.742836-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808202822.GA597061@thinkpad>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 08, 2020 at 01:28:22PM -0700, Rustam Kovhaev wrote:
-> tags from KBUILD_OUTPUT directory
-> Reply-To: 
-> 
-> running 'make ARCH=x86_64 COMPILED_SOURCE=1 cscope tags' in
-> KBUILD_OUTPUT directory produces lots of "No such file or directory"
-> warnings from realpath
-> 
-> it seems like commit 4f491bb6ea2a greatly improved tags generation when
-> COMPILED_SOURCE=1 is set, but should we add "-q" flag for realpath in 
-> all_compiled_sources() or probably it would be better to fix root cause
-> and make sure that for example we don't try to find objtool sources and
-> exclude other similar dirs during tags generation? what do you think?
-> 
-> ...
-> realpath: special.h: No such file or directory
-> realpath: warn.h: No such file or directory
-> realpath: sigchain.c: No such file or directory
-> realpath: sigchain.h: No such file or directory
-> realpath: orc_gen.c: No such file or directory
-> realpath: objtool.c: No such file or directory
-> ...
+There is no need to use GFP_ATOMIC here. It is a probe function, no
+spinlock is taken and GFP_KERNEL is used just before and just after this
+'usb_alloc_coherent()' call.
 
-Care to send a patch for this?
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/watchdog/pcwd_usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/drivers/watchdog/pcwd_usb.c b/drivers/watchdog/pcwd_usb.c
+index 2f44af1831d0..ea67b98ed35d 100644
+--- a/drivers/watchdog/pcwd_usb.c
++++ b/drivers/watchdog/pcwd_usb.c
+@@ -657,7 +657,7 @@ static int usb_pcwd_probe(struct usb_interface *interface,
+ 
+ 	/* set up the memory buffer's */
+ 	usb_pcwd->intr_buffer = usb_alloc_coherent(udev, usb_pcwd->intr_size,
+-					GFP_ATOMIC, &usb_pcwd->intr_dma);
++					GFP_KERNEL, &usb_pcwd->intr_dma);
+ 	if (!usb_pcwd->intr_buffer) {
+ 		pr_err("Out of memory\n");
+ 		goto error;
+-- 
+2.25.1
 
-greg k-h
