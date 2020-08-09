@@ -2,479 +2,194 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC50D206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596979184;
-	bh=iTu5UBpW//vYIp4GNxcrCaGxAxJ7MBenSau01VYcviA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zjuEM4eVqq9YNedZYn0OcpT0W4uWpOmbnLoLy5Df4bRUwcqBZm/KNmRxqcePW63Sh
-	 mPz+ZFl2HdTrSoA43KAK9poNseRYD72LoptoJQm4sYJnL1VWQV0F0fc6hiHwwwKKjj
-	 IxAiByXJxf5FRiayeCNf6V+UVWD/XiyFGJ/KcRrw=
+	by mail.kernel.org (Postfix) with ESMTP id AC66F206B5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ePSnpeT6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgHINTl (ORCPT
+        id S1726382AbgHINVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 09:19:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbgHINT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 09:19:27 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F36DF206B5;
-        Sun,  9 Aug 2020 13:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596979166;
-        bh=iTu5UBpW//vYIp4GNxcrCaGxAxJ7MBenSau01VYcviA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=W1d6lyiiyqsyfyvh+Qqn9fvgPw+rNXQrSnwmDwVaAoaQhY+hZhstslm29pxfkQIr/
-         seQkxvWqJ8+EvIgWSPJFz6YmPIslVqJGm1t60A2kNGcBF1MkToom9c7KnX2igGbTcl
-         HGwKVzrpjaxBHQiybPfMUSJuo3DZC12hbinwBHmY=
-Date:   Sun, 9 Aug 2020 14:19:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/3] iio: accel: adxl372: add event interface
-Message-ID: <20200809141922.71c0f487@archlinux>
-In-Reply-To: <20200803172219.33911-3-alexandru.tachici@analog.com>
-References: <20200803172219.33911-1-alexandru.tachici@analog.com>
-        <20200803172219.33911-3-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sun, 9 Aug 2020 09:21:39 -0400
+Received: from mail-eopbgr50069.outbound.protection.outlook.com ([40.107.5.69]:55745
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726070AbgHINVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 09:21:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ar1teoYckXje65/7unTW37DNY7P9ACnBgMl39OwMOMxTz+teLs8rb+gaB0JWlxWYYHVl/z5oYXzayh6gsEV5mqD0lkx5QZNKzf+2L3BPeIU5aj32ex2mkObzAqDMstm15oAeyHGJY8fqnQcOgTA0d5AzAeYl3MospQhHDKxsH8dr2QajeRkh4fGdPkyiZ27zShyUkk66ChqF7K5xHxLnSYIh9bRHegj6aoEPVLQDw2Jp3aFJ0AUQSFAmuznggBsSycOrMf0+KuNlYEuGrA6cGyx5FR8xbF6kpEdzqJ23X6JOnPLvKfxrF6n4VPZB/AS4etObwZj8SKtAd1K+u9vDNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2twGEFVLLRbRs6cwYMIJTDIKiLaiiQKvsTSD0yJTFs0=;
+ b=CpoP488b1OZ7st2fzvaitjaFv/WAsT6TnNY1maIGJQkUAL3Mf2cDmhcfzal/cENzukr9SDRTYIYApIhaDM0xWq1dsQYSrDr1/q24bNaYra0Q2l6NycI1OAuiW39KU/jV2++ZTih67U7sqVPIv1atkP6DyXC4TkyOPInfM5NjmgfWdbAdzJYPW7HHXEB8IEHu5B5EUkrYAaOsUyfKpD6tsE3Rp7GD2CXSMaFJ8EqigCogHL5+gHFujbfdSByP66GkgA3xsACxR/P86hv1qddhNs+98ZjPCH95/n2kHctLQqRjrNKmSpOtJjcs25eFYjQEyt7GT1+O9dp+3I8iQ8cKpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2twGEFVLLRbRs6cwYMIJTDIKiLaiiQKvsTSD0yJTFs0=;
+ b=ePSnpeT68KUzDWuDxSbqF0RvZdV6Ey7wpS5ZmiGqQ7q2kXAZ6IFVOB7IfYWd+w5ybVaN8COFbZ/fC2yhLbPnmRx8Tgq8gjF2yWGBHoOrZ5ch49Sj3Wu9Xj+YJxLF4uK/SzOmM0Dilc6fh2qbj+d4YKkOPxVCIr2Grk7hGyGERJQ=
+Authentication-Results: broadcom.com; dkim=none (message not signed)
+ header.d=none;broadcom.com; dmarc=none action=none header.from=mellanox.com;
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com (2603:10a6:208:63::16)
+ by AM0PR05MB5683.eurprd05.prod.outlook.com (2603:10a6:208:11a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20; Sun, 9 Aug
+ 2020 13:21:34 +0000
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f]) by AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f%3]) with mapi id 15.20.3261.022; Sun, 9 Aug 2020
+ 13:21:34 +0000
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+To:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+References: <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+ <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+ <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
+ <20200803141442.GB2290@nanopsycho>
+ <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200804100418.GA2210@nanopsycho>
+ <20200804133946.7246514e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200805110258.GA2169@nanopsycho>
+ <20200806112530.0588b3ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Moshe Shemesh <moshe@mellanox.com>
+Message-ID: <8b06ade2-dfbe-8894-0d6a-afe9c2f41b4e@mellanox.com>
+Date:   Sun, 9 Aug 2020 16:21:29 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <20200806112530.0588b3ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: FR2P281CA0010.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::20) To AM0PR05MB4290.eurprd05.prod.outlook.com
+ (2603:10a6:208:63::16)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.0.0.9] (141.226.210.185) by FR2P281CA0010.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.7 via Frontend Transport; Sun, 9 Aug 2020 13:21:33 +0000
+X-Originating-IP: [141.226.210.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4403c194-00a6-44ef-68ce-08d83c672328
+X-MS-TrafficTypeDiagnostic: AM0PR05MB5683:
+X-LD-Processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr,ExtFwd
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR05MB5683477F9F98EE28E2E58A91D9470@AM0PR05MB5683.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RZz7QpIO61OnW+G613a9DTRnbMQVSS0BiJ7DNIMDwy4bZGzCi6mSOEph14PKFb//JjC7EhUULHh8qll30fB39txiZB3HERRBjgeQ5DqEMiRFZQCQ+ER6saXt9OhQCVi5xi7eazNss15v1UwDmN2Idd+unSwjTylUMPyHaeqkCDBawNWtpQJFOW4OeVuTR8EYi4JJr5BKMVjCvvq9CxrrXFxaxAx8e1TVTbS162mnHTSt2cK70U1FKIqbFEdSOWfdJqKyweSJP+saWPG2Rzbe5+8ojjMGbLxgGUBWVVV+BYBeszjoVGjCDRHj4SRwdh1iUNI2y5Pb7GvdxP3mYfKmoXxhPwO9A+M9EX2HKwBtXzb548PYsT0SrmYJ7qHI/Ncr
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4290.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(346002)(396003)(39860400002)(8936002)(2906002)(8676002)(66476007)(66556008)(66946007)(16576012)(26005)(83380400001)(36756003)(54906003)(316002)(6666004)(53546011)(52116002)(956004)(110136005)(2616005)(31686004)(4326008)(6486002)(31696002)(5660300002)(186003)(86362001)(508600001)(16526019)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: cT55lLR5ni9DgSH7p0asHspYg9XynQ/uJ3BrClWZv0NiRIfS1hFU2mQlDuNXQrYNEfAghBmZNT29Az5YAWnYeDbyp7TfNFsZYilujcUNn1rbPla0UiYEuXPzhIG4Bz7zE7NfHrjtXmYY7QnHH+YZW2rtwglPte61xYAfIGgC7W1rv8IoLub3qjtbfCmZjRi9gBUhGS3zVf0BV0RrNPfnOovgWNsUuhm0+ThPijx+W6nk+gEyTB/hKLzUidvFR6X5pnUbL7hvz6fr0aqnfLWpk1kby978BLrunkLxjMnPWxguAlOgRTY1uWFnqfh8dJNrXbRNA9N60UVnF4oHJ6eJWcf83FheQEl6vsNRhWoCdyC+i7vVPWN3o/8NDXYgwdL/IRhVdl0SoGgs+v+GDfxPaKRXu2zJCj+zAhmepEuWLMpRa2ldZoFU3l1JO4cCjXwtuu7q2jDJ8G7IcxPD/GlO15LJ9LEs2ilEbO/3knS5FlqRsruADUT8lDz19vv1Dt7vEx48krJFoysgmpkeOE+3KbFYtdw6oO3ZRVj41b9DY79NtK1CTfucjj8V99ipIsE1NoX2wFBnFGgSFwctt5WIxk1EUGWuqLdZ7Razkldd5BTusS0j9EDRlqT7rMRQiPt5Tu0iBmn+Acf6OVXE92FhSA==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4403c194-00a6-44ef-68ce-08d83c672328
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4290.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2020 13:21:34.3893
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: r+MaOMHDWO/GIjRyrIYNJtJzCHFkMIcw80k0iHGclWimq0P4mMuuRsx0IMOrHoMPpAhlkajfa+Uz7OFCmD/4Iw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5683
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 20:22:18 +0300
-<alexandru.tachici@analog.com> wrote:
 
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
-> 
-> Currently the driver configures adxl372 to work in loop mode.
-> The inactivity and activity timings  decide how fast the chip
-> will loop through the awake and waiting states and the
-> thresholds on x,y,z axis decide when activity or inactivity
-> will be detected.
-> 
-> This patch adds standard events sysfs entries for the inactivity
-> and activity timings: thresh_falling_period/thresh_rising_period
-> and for the in_accel_x_thresh_falling/rising_value.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-
-Ah. This makes sense of some of the elements in the previous patch that
-didn't stand alone.  I'd take the easy approach and just combine the two
-patches.  Alternative would be to move some of bits that are refactored
-to use int1_bitmask into a precursor to both patches that is just a
-refactor with no functional changes.  At the moment it's not possible
-to  review the patches independently.
-
-Jonathan
+On 8/6/2020 9:25 PM, Jakub Kicinski wrote:
+> On Wed, 5 Aug 2020 13:02:58 +0200 Jiri Pirko wrote:
+>> Tue, Aug 04, 2020 at 10:39:46PM CEST, kuba@kernel.org wrote:
+>>> AFAIU the per-driver default is needed because we went too low
+>>> level with what the action constitutes. We need maintain the higher
+>>> level actions.
+>>>
+>>> The user clearly did not care if FW was reset during devlink reload
+>>> before this set, so what has changed? The objective user has is to
+>> Well for mlxsw, the user is used to this flow:
+>> devlink dev flash - flash new fw
+>> devlink dev reload - new fw is activated and reset and driver instances
+>> are re-created.
+> Ugh, if the current behavior already implies fw-activation for some
+> drivers then the default has to probably be "do all the things" :S
 
 
-> ---
->  drivers/iio/accel/adxl372.c | 256 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 250 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-> index cce25cde6252..644c409862b5 100644
-> --- a/drivers/iio/accel/adxl372.c
-> +++ b/drivers/iio/accel/adxl372.c
-> @@ -5,6 +5,7 @@
->   * Copyright 2018 Analog Devices Inc.
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/bitops.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> @@ -113,6 +114,11 @@
->  #define ADXL372_STATUS_1_AWAKE(x)		(((x) >> 6) & 0x1)
->  #define ADXL372_STATUS_1_ERR_USR_REGS(x)	(((x) >> 7) & 0x1)
->  
-> +/* ADXL372_STATUS_2 */
-> +#define ADXL372_STATUS_2_INACT(x)		(((x) >> 4) & 0x1)
-> +#define ADXL372_STATUS_2_ACT(x)			(((x) >> 5) & 0x1)
-> +#define ADXL372_STATUS_2_AC2(x)			(((x) >> 6) & 0x1)
-> +
->  /* ADXL372_INT1_MAP */
->  #define ADXL372_INT1_MAP_DATA_RDY_MSK		BIT(0)
->  #define ADXL372_INT1_MAP_DATA_RDY_MODE(x)	(((x) & 0x1) << 0)
-> @@ -131,6 +137,14 @@
->  #define ADXL372_INT1_MAP_LOW_MSK		BIT(7)
->  #define ADXL372_INT1_MAP_LOW_MODE(x)		(((x) & 0x1) << 7)
->  
-> +/* ADX372_THRESH */
-> +#define ADXL372_THRESH_VAL_H_MSK		GENMASK(10, 3)
-> +#define ADXL372_THRESH_VAL_H_SEL(x)		\
-> +		FIELD_GET(ADXL372_THRESH_VAL_H_MSK, x)
-#define ADXL372_THRESH_VAL_H_SEL(x)		FIELD_GET(ADXL372_THRESH_VAL_H_MSK, x)
+Okay, so devlink reload default for mlx5 will include also fw-activate 
+to align with mlxsw default.
 
-Given we can now got up to 100 chars, let us making this more readable and keep them
-on single lines.
+Meaning drivers that supports fw-activate will add it to the default.
 
-> +#define ADXL372_THRESH_VAL_L_MSK		GENMASK(2, 0)
-> +#define ADXL372_THRESH_VAL_L_SEL(x)		\
-> +		FIELD_GET(ADXL372_THRESH_VAL_L_MSK, x)
-> +
->  /* The ADXL372 includes a deep, 512 sample FIFO buffer */
->  #define ADXL372_FIFO_SIZE			512
->  #define ADXL372_X_AXIS_EN(x)			(((x) >> 0) & 0x1)
-> @@ -225,6 +239,22 @@ static const struct adxl372_axis_lookup adxl372_axis_lookup_table[] = {
->  	{ BIT(0) | BIT(1) | BIT(2), ADXL372_XYZ_FIFO },
->  };
->  
-> +static const struct iio_event_spec adxl372_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-> +		.mask_shared_by_all = BIT(IIO_EV_INFO_PERIOD) |
-> +				      BIT(IIO_EV_INFO_ENABLE),
-> +	}, {
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-> +		.mask_shared_by_all = BIT(IIO_EV_INFO_PERIOD) |
-> +				      BIT(IIO_EV_INFO_ENABLE),
-> +	},
-> +};
-> +
->  #define ADXL372_ACCEL_CHANNEL(index, reg, axis) {			\
->  	.type = IIO_ACCEL,						\
->  	.address = reg,							\
-> @@ -241,6 +271,8 @@ static const struct adxl372_axis_lookup adxl372_axis_lookup_table[] = {
->  		.storagebits = 16,					\
->  		.shift = 4,						\
->  	},								\
-> +	.event_spec = adxl372_events,					\
-> +	.num_event_specs = ARRAY_SIZE(adxl372_events)			\
->  }
->  
->  static const struct iio_chan_spec adxl372_channels[] = {
-> @@ -270,6 +302,7 @@ struct adxl372_state {
->  	u16				watermark;
->  	__be16				fifo_buf[ADXL372_FIFO_SIZE];
->  	bool				peak_fifo_mode_en;
-> +	struct mutex			threshold_m; /* lock for threshold */
->  };
->  
->  static const unsigned long adxl372_channel_masks[] = {
-> @@ -281,6 +314,49 @@ static const unsigned long adxl372_channel_masks[] = {
->  	0
->  };
->  
-> +static ssize_t adxl372_read_threshold_value(struct iio_dev *indio_dev,
-> +					    unsigned int addr,
-> +					    u16 *threshold)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +	__be16 raw_regval;
-> +	u16 regval;
-> +	int ret;
-> +
-> +	ret = regmap_bulk_read(st->regmap, addr, &raw_regval,
-> +			       sizeof(raw_regval));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	regval = be16_to_cpu(raw_regval);
-> +	regval >>= 5;
-> +
-> +	*threshold = regval;
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t adxl372_write_threshold_value(struct iio_dev *indio_dev,
-> +					     unsigned int addr,
-> +					     u16 threshold)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	mutex_lock(&st->threshold_m);
-> +	ret = regmap_write(st->regmap, addr,
-> +			   ADXL372_THRESH_VAL_H_SEL(threshold));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(st->regmap, addr + 1, GENMASK(7, 5),
-> +				 ADXL372_THRESH_VAL_L_SEL(threshold) << 5);
-> +
-> +	mutex_unlock(&st->threshold_m);
-> +
-> +	return ret;
-> +}
-> +
->  static int adxl372_read_axis(struct adxl372_state *st, u8 addr)
->  {
->  	__be16 regval;
-> @@ -544,6 +620,27 @@ static void adxl372_arrange_axis_data(struct adxl372_state *st, __be16 *sample)
->  	memcpy(sample, axis_sample, 3 * sizeof(__be16));
->  }
->  
-> +static void adxl372_push_event(struct iio_dev *indio_dev, s64 timestamp,
-> +			       u8 status2)
-> +{
-> +	unsigned int ev_dir = IIO_EV_DIR_NONE;
-> +
-> +	if (ADXL372_STATUS_2_ACT(status2))
-> +		ev_dir = IIO_EV_DIR_RISING;
-> +
-> +	if (ADXL372_STATUS_2_INACT(status2))
-> +		ev_dir = IIO_EV_DIR_FALLING;
-> +
-> +	if (ev_dir != IIO_EV_DIR_NONE)
-> +		iio_push_event(indio_dev,
-> +			       IIO_MOD_EVENT_CODE(IIO_ACCEL,
-> +						  0,
-> +						  IIO_MOD_X_OR_Y_OR_Z,
-> +						  IIO_EV_TYPE_THRESH,
-> +						  ev_dir),
-> +						  timestamp);
-> +}
-> +
->  static irqreturn_t adxl372_trigger_handler(int irq, void  *p)
->  {
->  	struct iio_poll_func *pf = p;
-> @@ -557,6 +654,8 @@ static irqreturn_t adxl372_trigger_handler(int irq, void  *p)
->  	if (ret < 0)
->  		goto err;
->  
-> +	adxl372_push_event(indio_dev, iio_get_time_ns(indio_dev), status2);
-> +
->  	if (st->fifo_mode != ADXL372_FIFO_BYPASSED &&
->  	    ADXL372_STATUS_1_FIFO_FULL(status1)) {
->  		/*
-> @@ -748,6 +847,143 @@ static int adxl372_write_raw(struct iio_dev *indio_dev,
->  	}
->  }
->  
-> +static int adxl372_read_event_value(struct iio_dev *indio_dev,
-> +				    const struct iio_chan_spec *chan,
-> +				    enum iio_event_type type,
-> +				    enum iio_event_direction dir,
-> +				    enum iio_event_info info,
-> +				    int *val, int *val2)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +	unsigned int addr;
-> +	u16 raw_value;
-> +	int ret;
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			addr = ADXL372_X_THRESH_ACT_H + 2 * chan->scan_index;
-> +			ret = adxl372_read_threshold_value(indio_dev, addr,
-> +							   &raw_value);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = raw_value * ADXL372_USCALE;
-> +			*val2 = 1000000;
-> +			return IIO_VAL_FRACTIONAL;
-> +		case IIO_EV_DIR_FALLING:
-> +			addr = ADXL372_X_THRESH_INACT_H + 2 * chan->scan_index;
-> +			ret =  adxl372_read_threshold_value(indio_dev, addr,
-> +							    &raw_value);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = raw_value * ADXL372_USCALE;
-> +			*val2 = 1000000;
-> +			return IIO_VAL_FRACTIONAL;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	case IIO_EV_INFO_PERIOD:
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			*val = st->act_time_ms;
-> +			*val2 = 1000;
-> +			return IIO_VAL_FRACTIONAL;
-> +		case IIO_EV_DIR_FALLING:
-> +			*val = st->inact_time_ms;
-> +			*val2 = 1000;
-> +			return IIO_VAL_FRACTIONAL;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int adxl372_write_event_value(struct iio_dev *indio_dev,
-> +				     const struct iio_chan_spec *chan,
-> +				     enum iio_event_type type,
-> +				     enum iio_event_direction dir,
-> +				     enum iio_event_info info,
-> +				     int val, int val2)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +	unsigned int val_ms;
-> +	unsigned int addr;
-> +	u16 raw_val;
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		raw_val = DIV_ROUND_UP(val * 1000000, ADXL372_USCALE);
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			addr = ADXL372_X_THRESH_ACT_H + 2 * chan->scan_index;
-> +			return adxl372_write_threshold_value(indio_dev, addr,
-> +							     raw_val);
+The flow of devlink reload default on mlx5 will be:
 
-I respinning this, perhaps take advantage of more relaxed view on line length and
-put these all on oneline.
+If there is FW image pending and live patch is suitable to apply, do 
+live patch and driver re-initialization.
 
-> +		case IIO_EV_DIR_FALLING:
-> +			addr = ADXL372_X_THRESH_INACT_H + 2 * chan->scan_index;
-> +			return adxl372_write_threshold_value(indio_dev, addr,
-> +							     raw_val);
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	case IIO_EV_INFO_PERIOD:
-> +		val_ms = val * 1000 + DIV_ROUND_UP(val2, 1000);
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			return adxl372_set_activity_time_ms(st, val_ms);
-> +		case IIO_EV_DIR_FALLING:
-> +			return adxl372_set_inactivity_time_ms(st, val_ms);
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int adxl372_read_event_config(struct iio_dev *indio_dev,
-> +				     const struct iio_chan_spec *chan,
-> +				     enum iio_event_type type,
-> +				     enum iio_event_direction dir)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +
-> +	switch (dir) {
-> +	case IIO_EV_DIR_RISING:
-> +		return FIELD_GET(ADXL372_INT1_MAP_ACT_MSK, st->int1_bitmask);
-> +	case IIO_EV_DIR_FALLING:
-> +		return FIELD_GET(ADXL372_INT1_MAP_INACT_MSK, st->int1_bitmask);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int adxl372_write_event_config(struct iio_dev *indio_dev,
-> +				      const struct iio_chan_spec *chan,
-> +				      enum iio_event_type type,
-> +				      enum iio_event_direction dir,
-> +				      int state)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +
-> +	switch (dir) {
-> +	case IIO_EV_DIR_RISING:
-> +		set_mask_bits(&st->int1_bitmask, ADXL372_INT1_MAP_ACT_MSK,
-> +			      ADXL372_INT1_MAP_ACT_MODE(state));
-> +		break;
-> +	case IIO_EV_DIR_FALLING:
-> +		set_mask_bits(&st->int1_bitmask, ADXL372_INT1_MAP_INACT_MSK,
-> +			      ADXL372_INT1_MAP_INACT_MODE(state));
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return adxl372_set_interrupts(st, st->int1_bitmask, 0);
-> +}
-> +
->  static ssize_t adxl372_show_filter_freq_avail(struct device *dev,
->  					      struct device_attribute *attr,
->  					      char *buf)
-> @@ -824,7 +1060,8 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
-> +	st->int1_bitmask |= ADXL372_INT1_MAP_FIFO_FULL_MSK;
-> +	ret = adxl372_set_interrupts(st, st->int1_bitmask, 0);
->  	if (ret < 0)
->  		goto err;
->  
-> @@ -866,7 +1103,8 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
->  	ret = adxl372_configure_fifo(st);
->  	if (ret < 0) {
->  		st->fifo_mode = ADXL372_FIFO_BYPASSED;
-> -		adxl372_set_interrupts(st, 0, 0);
-> +		st->int1_bitmask &= ~ADXL372_INT1_MAP_FIFO_FULL_MSK;
-> +		adxl372_set_interrupts(st, st->int1_bitmask, 0);
->  		goto err;
->  	}
->  
-> @@ -881,7 +1119,8 @@ static int adxl372_buffer_predisable(struct iio_dev *indio_dev)
->  {
->  	struct adxl372_state *st = iio_priv(indio_dev);
->  
-> -	adxl372_set_interrupts(st, 0, 0);
-> +	st->int1_bitmask &= ~ADXL372_INT1_MAP_FIFO_FULL_MSK;
-> +	adxl372_set_interrupts(st, st->int1_bitmask, 0);
->  	st->fifo_mode = ADXL372_FIFO_BYPASSED;
->  	adxl372_configure_fifo(st);
->  
-> @@ -898,12 +1137,11 @@ static int adxl372_dready_trig_set_state(struct iio_trigger *trig,
->  {
->  	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
->  	struct adxl372_state *st = iio_priv(indio_dev);
-> -	unsigned long int mask = 0;
->  
->  	if (state)
-> -		mask = ADXL372_INT1_MAP_FIFO_FULL_MSK;
-> +		st->int1_bitmask |= ADXL372_INT1_MAP_FIFO_FULL_MSK;
->  
-> -	return adxl372_set_interrupts(st, mask, 0);
-> +	return adxl372_set_interrupts(st, st->int1_bitmask, 0);
+If there is FW image pending but live patch doesn't fit do fw-reset and 
+driver-initialization.
 
-Ah. Previous code makes a bit more sense with this patch at least
-ensuring int1_bitmask is used here as well.  However don't we need
-to clear it somewhere?
+If no FW image pending just do driver-initialization.
 
->  }
->  
->  static int adxl372_validate_trigger(struct iio_dev *indio_dev,
-> @@ -960,6 +1198,10 @@ static const struct iio_info adxl372_info = {
->  	.attrs = &adxl372_attrs_group,
->  	.read_raw = adxl372_read_raw,
->  	.write_raw = adxl372_write_raw,
-> +	.read_event_config = adxl372_read_event_config,
-> +	.write_event_config = adxl372_write_event_config,
-> +	.read_event_value = adxl372_read_event_value,
-> +	.write_event_value = adxl372_write_event_value,
->  	.debugfs_reg_access = &adxl372_reg_access,
->  	.hwfifo_set_watermark = adxl372_set_watermark,
->  };
-> @@ -988,6 +1230,8 @@ int adxl372_probe(struct device *dev, struct regmap *regmap,
->  	st->regmap = regmap;
->  	st->irq = irq;
->  
-> +	mutex_init(&st->threshold_m);
-> +
->  	indio_dev->channels = adxl372_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(adxl372_channels);
->  	indio_dev->available_scan_masks = adxl372_channel_masks;
 
+I still think I should on top of that add the level option to be 
+selected by the user if he prefers a specific action, so the uAPI would be:
+
+devlink dev reload [ netns { PID | NAME | ID } ] [ level { fw-live-patch 
+| driver-reinit |fw-activate } ]
+
+But I am still missing something: fw-activate implies that it will 
+activate a new FW image stored on flash, pending activation. What if the 
+user wants to reset and reload the FW if no new FW pending ? Should we 
+add --force option to fw-activate level ?
+
+
+>>> activate their config / FW / move to different net ns.
+>>>
+>>> Reloading the driver or resetting FW is a low level detail which
+>>> achieves different things for different implementations. So it's
+>>> not a suitable abstraction -> IOW we need the driver default.
+>> I'm confused. So you think we need the driver default?
+> No, I'm talking about the state of this patch set. _In this patchset_
+> we need a driver default because of the unsuitable abstraction.
+>
+> Better design would not require it.
+>
+>>> The work flow for the user is:
+>>>
+>>> 0. download fw to /lib/firmware
+>>> 1. devlink flash $dev $fw
+>>> 2. if live activation is enabled
+>>>    yes - devlink reload $dev $live-activate
+>>>    no - report machine has to be drained for reboot
+>>>
+>>> fw-reset can't be $live-activate, because as Jake said fw-reset does
+>>> not activate the new image for Intel. So will we end up per-driver
+>>> defaults in the kernel space, and user space maintaining a mapping from
+>> Well, that is what what is Moshe's proposal. Per-driver kernel default..
+>> I'm not sure what we are arguing about then :/
+> The fact that if I do a pure "driver reload" it will active new
+> firmware for mlxsw but not for mlx5. In this patchset for mlx5 I need
+> driver reload fw-reset. And for Intel there is no suitable option.
+>
+>>> a driver to what a "level" of reset implies.
+>>>
+>>> I hope this makes things crystal clear. Please explain what problems
+>>> you're seeing and extensions you're expecting. A list of user scenarios
+>>> you foresee would be v. useful.
