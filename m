@@ -2,191 +2,183 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F443C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C497C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34BE12068F
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB8D2068F
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgHIQ0s (ORCPT
+        id S1726462AbgHIQ1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 12:26:48 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:60456 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbgHIQ0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 12:26:46 -0400
-Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
-        by mail.ispras.ru (Postfix) with ESMTPS id B6F6C40A2045;
-        Sun,  9 Aug 2020 16:26:42 +0000 (UTC)
-Date:   Sun, 9 Aug 2020 19:26:42 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     amd-gfx@lists.freedesktop.org
-cc:     linux-kernel@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: Re: [PATCH v2] drm/amd/display: use correct scale for
- actual_brightness
-In-Reply-To: <20200804201313.6464-1-amonakov@ispras.ru>
-Message-ID: <alpine.LNX.2.20.13.2008091925270.2454@monopod.intra.ispras.ru>
-References: <20200804201313.6464-1-amonakov@ispras.ru>
-User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
+        Sun, 9 Aug 2020 12:27:30 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44712 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbgHIQ1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 12:27:19 -0400
+Received: by mail-io1-f71.google.com with SMTP id m12so5385074iov.11
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 09:27:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4XSXq+pkr3PFjgGjwOy8V7S5LJrWfQdXc+zd762spFo=;
+        b=MI4HNeJlIdcU8j8SEMgDf4E6jeTdI9IW0esfgCmzWqykQZ0bfvcN45Cl3HwV0Tk3+W
+         gIChFUi430WpfAxZnI1bYuaQYGTymekingf6Cq0zsoVrwvFmpLRu9BhoEWODWDjNnD9b
+         oHX2tH6rRa8C+uU5Pn4gHa8PxMYwu+MszXeSlFXT55KooqwLRemTazfeIxL28ZMeEW1e
+         0iyRNFneN2K64CM7LFHxjByT2uwDRlzyQbzR6E/Nt1vhYaSx1cy7ihti0ppOHRKovIoC
+         re3hMQgk6/ekQmvj7ifzAGTQALIUvMQhT1OUmac5rR0kCqEBFSJ444SekfsDGlB9msX7
+         39xQ==
+X-Gm-Message-State: AOAM5338791aof+Vl3CemRiis8DV6cbJHInZ+MGVuc2HYNzfgixC0RPc
+        Pkm8msbyogr4ZB3umj6d7xw89OXV9//bWyKDEzrMOzeSx4WC
+X-Google-Smtp-Source: ABdhPJxCb8Fc9gj7xJ+738Iy5K3TiYRUKs+DEiRZYCnd9cRMmFmxLa8rdrZjOLEpssozQCq8J6+vTEW/PuRy1QsjTxu8mqAFxiNp
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a92:480f:: with SMTP id v15mr13207248ila.123.1596990437671;
+ Sun, 09 Aug 2020 09:27:17 -0700 (PDT)
+Date:   Sun, 09 Aug 2020 09:27:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bf4b3605ac744f22@google.com>
+Subject: KMSAN: uninit-value in batadv_hard_if_event (2)
+From:   syzbot <syzbot+abbc768b560c84d92fd3@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, glider@google.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=106e4c3c900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=abbc768b560c84d92fd3
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+abbc768b560c84d92fd3@syzkaller.appspotmail.com
+
+usb 1-1: config 0 descriptor??
+=====================================================
+BUG: KMSAN: uninit-value in batadv_check_known_mac_addr net/batman-adv/hard-interface.c:512 [inline]
+BUG: KMSAN: uninit-value in batadv_hardif_add_interface net/batman-adv/hard-interface.c:944 [inline]
+BUG: KMSAN: uninit-value in batadv_hard_if_event+0x28d7/0x3bd0 net/batman-adv/hard-interface.c:1034
+CPU: 0 PID: 8697 Comm: kworker/0:3 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ batadv_check_known_mac_addr net/batman-adv/hard-interface.c:512 [inline]
+ batadv_hardif_add_interface net/batman-adv/hard-interface.c:944 [inline]
+ batadv_hard_if_event+0x28d7/0x3bd0 net/batman-adv/hard-interface.c:1034
+ notifier_call_chain kernel/notifier.c:83 [inline]
+ __raw_notifier_call_chain kernel/notifier.c:361 [inline]
+ raw_notifier_call_chain+0x123/0x290 kernel/notifier.c:368
+ call_netdevice_notifiers_info net/core/dev.c:2027 [inline]
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ register_netdevice+0x3120/0x37d0 net/core/dev.c:9545
+ register_netdev+0xbe/0x100 net/core/dev.c:9645
+ rtl8150_probe+0x12d9/0x15b0 drivers/net/usb/rtl8150.c:916
+ usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
+ usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+ __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
+ set_ethernet_addr drivers/net/usb/rtl8150.c:282 [inline]
+ rtl8150_probe+0x1236/0x15b0 drivers/net/usb/rtl8150.c:912
+ usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
+ usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+Local variable ----node_id.i@rtl8150_probe created at:
+ get_registers drivers/net/usb/rtl8150.c:911 [inline]
+ set_ethernet_addr drivers/net/usb/rtl8150.c:281 [inline]
+ rtl8150_probe+0xea7/0x15b0 drivers/net/usb/rtl8150.c:912
+ get_registers drivers/net/usb/rtl8150.c:911 [inline]
+ set_ethernet_addr drivers/net/usb/rtl8150.c:281 [inline]
+ rtl8150_probe+0xea7/0x15b0 drivers/net/usb/rtl8150.c:912
+=====================================================
 
 
-On Tue, 4 Aug 2020, Alexander Monakov wrote:
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> Documentation for sysfs backlight level interface requires that
-> values in both 'brightness' and 'actual_brightness' files are
-> interpreted to be in range from 0 to the value given in the
-> 'max_brightness' file.
-> 
-> With amdgpu, max_brightness gives 255, and values written by the user
-> into 'brightness' are internally rescaled to a wider range. However,
-> reading from 'actual_brightness' gives the raw register value without
-> inverse rescaling. This causes issues for various userspace tools such
-> as PowerTop and systemd that expect the value to be in the correct
-> range.
-> 
-> Introduce a helper to retrieve internal backlight range. Use it to
-> reimplement 'convert_brightness' as 'convert_brightness_from_user' and
-> introduce 'convert_brightness_to_user'.
-> 
-> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
-> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-> Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-> ---
-> v2: split convert_brightness to &_from_user and &_to_user (Nicholas)
-
-Nicholas, does this implement the kind of split you had in mind?
-
->  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 81 +++++++++----------
->  1 file changed, 40 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 710edc70e37e..b60a763f3f95 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -2881,51 +2881,50 @@ static int set_backlight_via_aux(struct dc_link *link, uint32_t brightness)
->  	return rc ? 0 : 1;
->  }
->  
-> -static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
-> -			      const uint32_t user_brightness)
-> +static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
-> +				unsigned *min, unsigned *max)
->  {
-> -	u32 min, max, conversion_pace;
-> -	u32 brightness = user_brightness;
-> -
->  	if (!caps)
-> -		goto out;
-> +		return 0;
->  
-> -	if (!caps->aux_support) {
-> -		max = caps->max_input_signal;
-> -		min = caps->min_input_signal;
-> -		/*
-> -		 * The brightness input is in the range 0-255
-> -		 * It needs to be rescaled to be between the
-> -		 * requested min and max input signal
-> -		 * It also needs to be scaled up by 0x101 to
-> -		 * match the DC interface which has a range of
-> -		 * 0 to 0xffff
-> -		 */
-> -		conversion_pace = 0x101;
-> -		brightness =
-> -			user_brightness
-> -			* conversion_pace
-> -			* (max - min)
-> -			/ AMDGPU_MAX_BL_LEVEL
-> -			+ min * conversion_pace;
-> +	if (caps->aux_support) {
-> +		// Firmware limits are in nits, DC API wants millinits.
-> +		*max = 1000 * caps->aux_max_input_signal;
-> +		*min = 1000 * caps->aux_min_input_signal;
->  	} else {
-> -		/* TODO
-> -		 * We are doing a linear interpolation here, which is OK but
-> -		 * does not provide the optimal result. We probably want
-> -		 * something close to the Perceptual Quantizer (PQ) curve.
-> -		 */
-> -		max = caps->aux_max_input_signal;
-> -		min = caps->aux_min_input_signal;
-> -
-> -		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
-> -			       + user_brightness * max;
-> -		// Multiple the value by 1000 since we use millinits
-> -		brightness *= 1000;
-> -		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
-> +		// Firmware limits are 8-bit, PWM control is 16-bit.
-> +		*max = 0x101 * caps->max_input_signal;
-> +		*min = 0x101 * caps->min_input_signal;
->  	}
-> +	return 1;
-> +}
->  
-> -out:
-> -	return brightness;
-> +static u32 convert_brightness_from_user(const struct amdgpu_dm_backlight_caps *caps,
-> +					uint32_t brightness)
-> +{
-> +	unsigned min, max;
-> +
-> +	if (!get_brightness_range(caps, &min, &max))
-> +		return brightness;
-> +
-> +	// Rescale 0..255 to min..max
-> +	return min + DIV_ROUND_CLOSEST((max - min) * brightness,
-> +				       AMDGPU_MAX_BL_LEVEL);
-> +}
-> +
-> +static u32 convert_brightness_to_user(const struct amdgpu_dm_backlight_caps *caps,
-> +				      uint32_t brightness)
-> +{
-> +	unsigned min, max;
-> +
-> +	if (!get_brightness_range(caps, &min, &max))
-> +		return brightness;
-> +
-> +	if (brightness < min)
-> +		return 0;
-> +	// Rescale min..max to 0..255
-> +	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
-> +				 max - min);
->  }
->  
->  static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
-> @@ -2941,7 +2940,7 @@ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
->  
->  	link = (struct dc_link *)dm->backlight_link;
->  
-> -	brightness = convert_brightness(&caps, bd->props.brightness);
-> +	brightness = convert_brightness_from_user(&caps, bd->props.brightness);
->  	// Change brightness based on AUX property
->  	if (caps.aux_support)
->  		return set_backlight_via_aux(link, brightness);
-> @@ -2958,7 +2957,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
->  
->  	if (ret == DC_ERROR_UNEXPECTED)
->  		return bd->props.brightness;
-> -	return ret;
-> +	return convert_brightness_to_user(&dm->backlight_caps, ret);
->  }
->  
->  static const struct backlight_ops amdgpu_dm_backlight_ops = {
-> 
-> base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
-> 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
