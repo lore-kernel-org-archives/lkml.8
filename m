@@ -2,87 +2,185 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C496C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 125CC206C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13A3206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bfmNLCMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgHIIKu (ORCPT
+        id S1726291AbgHIITI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 04:10:50 -0400
-Received: from smtprelay0073.hostedemail.com ([216.40.44.73]:44738 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726250AbgHIIKu (ORCPT
+        Sun, 9 Aug 2020 04:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgHIITH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 04:10:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 5FE701800028E;
-        Sun,  9 Aug 2020 08:10:49 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: tin89_2a09b8826fd0
-X-Filterd-Recvd-Size: 2260
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  9 Aug 2020 08:10:47 +0000 (UTC)
-Message-ID: <91159e176c090f2d7ada6957af342c4b6d787973.camel@perches.com>
-Subject: Re: [PATCH 5/4] RDMA/efa : Remove pci-dma-compat wrapper APIs
-From:   Joe Perches <joe@perches.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>, dledford@redhat.com,
-        jgg@ziepe.ca, galpress@amazon.com, sleybo@amazon.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Sun, 09 Aug 2020 01:10:46 -0700
-In-Reply-To: <20200809074517.GA4419@blackclown>
-References: <cover.1596957073.git.usuraj35@gmail.com>
-         <20200809074517.GA4419@blackclown>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sun, 9 Aug 2020 04:19:07 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1306C061756;
+        Sun,  9 Aug 2020 01:19:04 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BPX740SrZz9sPC;
+        Sun,  9 Aug 2020 18:18:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596961137;
+        bh=uKWy2IfgEzOHSNPz/t4uOiupkdhItCM53w/SOe9uhhw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bfmNLCMBbaeig7U1WRCbHz0RkVzXFNCjsx9r3w/i98bnVR0HeyxWvNp5pOjdKsAH3
+         W822EQCeJEmB4TNkwIPBI1trMhgLofw5jLvDobhW/l3K1A8qRuVSzosi/TLEpfCJMO
+         PqdQs7JuGb5Uu4w+qgpIjMsqwjpQeDQ0SyStAUXRvV3SiK5YTmeqDYz6kfP1CURH1+
+         ee6X4mjuMLDeJ2P5FOp4kiBSpIce1r67cFK1MejddepNDPTIhy95PrDGhhv9g+3Fp3
+         I6vIebu7Ek6GCu7g/y8OCTCtTEXOvtZ26dzFdTeNHhmH366AnV1CsaS9s5ii7w+9sk
+         Sho3Mmi0OLMNg==
+Date:   Sun, 9 Aug 2020 18:18:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: linux-next: build failure after merge of the thunderbolt tree
+Message-ID: <20200809181838.23c6b829@canb.auug.org.au>
+In-Reply-To: <20200630160346.696f6419@canb.auug.org.au>
+References: <20200630160346.696f6419@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/uLNdZKn8oKfs6EIHutgeU2g";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-08-09 at 13:15 +0530, Suraj Upadhyay wrote:
-> The legacy API wrappers in include/linux/pci-dma-compat.h
-> should go away as it creates unnecessary midlayering
-> for include/linux/dma-mapping.h APIs.
-> 
-> Instead use dma-mapping.h APIs directly.
-> 
-> The patch has been generated with the coccinelle script below
-> and compile-tested.
-[]
-> diff --git a/drivers/infiniband/hw/efa/efa_main.c b/drivers/infiniband/hw/efa/efa_main.c
-[]
-> @@ -405,13 +405,13 @@ static int efa_device_init(struct efa_com_dev *edev, struct pci_dev *pdev)
->                 return err;
->         }
-> 
-> -       err = pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_width));
-> +       err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(dma_width));
->         if (err) {
->                 dev_err(&pdev->dev, "pci_set_dma_mask failed %d\n", err);
+--Sig_/uLNdZKn8oKfs6EIHutgeU2g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Coccinelle is great for some things, but not
-necessarily for these sorts of changes in an
-completely automated way.
+Hi Linus,
 
-The dev_err messages also need to be changed
-as the format string contains the old name.
+On Tue, 30 Jun 2020 16:03:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the thunderbolt tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+>=20
+>=20
+> Caused by commit
+>=20
+>   54509f5005ca ("thunderbolt: Add KUnit tests for path walking")
+>=20
+> interacting with commit
+>=20
+>   d4cdd146d0db ("kunit: generalize kunit_resource API beyond allocated re=
+sources")
+>=20
+> from the kunit-next tree.
+>=20
+> I have applied the following merge fix patch.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 30 Jun 2020 15:51:50 +1000
+> Subject: [PATCH] thunderbolt: merge fix for kunix_resource changes
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/thunderbolt/test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/thunderbolt/test.c b/drivers/thunderbolt/test.c
+> index acb8b6256847..a4d78811f7e2 100644
+> --- a/drivers/thunderbolt/test.c
+> +++ b/drivers/thunderbolt/test.c
+> @@ -17,13 +17,13 @@ static int __ida_init(struct kunit_resource *res, voi=
+d *context)
+>  	struct ida *ida =3D context;
+> =20
+>  	ida_init(ida);
+> -	res->allocation =3D ida;
+> +	res->data =3D ida;
+>  	return 0;
+>  }
+> =20
+>  static void __ida_destroy(struct kunit_resource *res)
+>  {
+> -	struct ida *ida =3D res->allocation;
+> +	struct ida *ida =3D res->data;
+> =20
+>  	ida_destroy(ida);
+>  }
+> --=20
+> 2.27.0
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
 
-> -       err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(dma_width));
-> +       err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(dma_width));
->         if (err) {
->                 dev_err(&pdev->dev,
->                         "err_pci_set_consistent_dma_mask failed %d\n",
+I looks like the above report got lost along the way to you :-(
+
+Here's the patch in case you want to directly apply it:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 30 Jun 2020 15:51:50 +1000
+Subject: [PATCH] thunderbolt: merge fix for kunix_resource changes
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/thunderbolt/test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thunderbolt/test.c b/drivers/thunderbolt/test.c
+index acb8b6256847..a4d78811f7e2 100644
+--- a/drivers/thunderbolt/test.c
++++ b/drivers/thunderbolt/test.c
+@@ -17,13 +17,13 @@ static int __ida_init(struct kunit_resource *res, void =
+*context)
+ 	struct ida *ida =3D context;
+=20
+ 	ida_init(ida);
+-	res->allocation =3D ida;
++	res->data =3D ida;
+ 	return 0;
+ }
+=20
+ static void __ida_destroy(struct kunit_resource *res)
+ {
+-	struct ida *ida =3D res->allocation;
++	struct ida *ida =3D res->data;
+=20
+ 	ida_destroy(ida);
+ }
 
 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/uLNdZKn8oKfs6EIHutgeU2g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8vsV4ACgkQAVBC80lX
+0GxxvggAkwBgTVCErSJxweAYYV171zZEPU7+MpFd4WzZsJSxG0Bih2yrOF9TMqKj
+WN3IFrliFsTAZUIrSFZ83NHBT3v4Lk5V/t0cdHiDHDdVJrcA5twlA6cGwjl/Qjqc
+NVmOIIEFg1GsVHMhtDzHxqz2G8uMBrICkkgqSh5Ys6fQV6kwifqDcKj0ufpudbRV
+AL+PVLMbiaEvlaisSw4e/qkcOktDIyvy76pSGg3wwZJCshv8G1FXDFwTFk6gqaVx
+aVweehWuIq7JPl8Su8NqvSoCL3PW5Uj0TkYZ4OSZY5hNNh101Z1iCWXlBKeNoGEf
+L6hRJajG+g1mlSrzLPLcGKWrkjVYHg==
+=eU45
+-----END PGP SIGNATURE-----
+
+--Sig_/uLNdZKn8oKfs6EIHutgeU2g--
