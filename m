@@ -2,193 +2,191 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C52EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3275A206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5301C206D8
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skYyeSEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgHIV1N (ORCPT
+        id S1726401AbgHIVaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 17:27:13 -0400
-Received: from mail-lj1-f170.google.com ([209.85.208.170]:38004 "EHLO
-        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgHIV1M (ORCPT
+        Sun, 9 Aug 2020 17:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgHIVaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 17:27:12 -0400
-Received: by mail-lj1-f170.google.com with SMTP id m22so7437045ljj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 14:27:10 -0700 (PDT)
+        Sun, 9 Aug 2020 17:30:01 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 417A2C061756;
+        Sun,  9 Aug 2020 14:30:01 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id x2so4111415ybf.12;
+        Sun, 09 Aug 2020 14:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ORAT8UucilC3IwrKP3UItEtUbW3Qy+oRV7IOUt8IGrw=;
+        b=skYyeSEoTdqbH1+pnfJFV9NFJ+4eS+a2Mks1/TnaCZu4YH64WLfkTPwkE+nCEc82xO
+         FRJMQN5rQHvWHAAeqA2pVaXn+UbvK13FrkBNMXADx+yoaQjvIwZxCFjTjwx4LI1WyvFH
+         nYMfGKGMUvSIFdSZn7ViEsu7X/GCxA/4iFe1GUenYqCbCaufBOW8yF6nTnuqJm1Rhbq7
+         iLFs+MvzRQ8Qn8wvbiSZLlZvDQcWRxaFKFp3H2bXzrLKvf6iBSjQ0Jw5rWTnNz3BTGUj
+         zFIlO+sgQyLYlulJF2/xofKQjyzTBF4vQrm53HqYrX5+i1ZGhrHW9Nh89+LejHNCKMAE
+         +1HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=V+0cPGM3bRsE7YkU0y2eQl4qVGY5GO2VaxSnu9p+qWk=;
-        b=bvTEEGRjdmMQmoWiieDZXptvFAM10aNifoYPcMgIan2n/G9AJAG+0z6pUi0aEORTUH
-         O4fjnytd9+Jv1+amEBCnugLYXt5jGmkpiy1L0sDrXoFmVU9tmu+q1H01rwwYErEWLJBq
-         /weV04BPN+Kt4QLaQazfpGnTz1Bck/QuhOkpDZZIkkz/n2mXRUEzNS16mBK6u93udBRe
-         Ix2EnTQJNgT5S4vI5AWF6IxEBGUsBuHPwe4kZ+GmR8roLmWAxeFs+xi2XM2AsoVpg+Kt
-         wNKgxKGo3KXiUyD+StXA7q0fV6vP2SIqaaNfxtcF6T0oLQO1ha8ysIyUsLrd3oLmioyS
-         4iSg==
-X-Gm-Message-State: AOAM5324a/Dn9vO1l6Nlsa4TtgBW6/vnRRnn9YnnP8GwzgxPjejgoRq8
-        qw2b0vnejy8Hp+hpUCJ0pQo=
-X-Google-Smtp-Source: ABdhPJywEO7G7AjBEBjlke7hxs6urEH6pmbyTMrO5IqAjs+lVoCFfvgzB6RBDCyMWzMcpThbsBF+9w==
-X-Received: by 2002:a2e:9bc8:: with SMTP id w8mr10166240ljj.351.1597008429929;
-        Sun, 09 Aug 2020 14:27:09 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id b204sm9684239lfd.48.2020.08.09.14.27.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 14:27:09 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Subject: [PATCH v2] coccinelle: misc: add flexible_array.cocci script
-Date:   Mon, 10 Aug 2020 00:26:55 +0300
-Message-Id: <20200809212655.58457-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200806220342.25426-1-efremov@linux.com>
-References: <20200806220342.25426-1-efremov@linux.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ORAT8UucilC3IwrKP3UItEtUbW3Qy+oRV7IOUt8IGrw=;
+        b=fPBOSDMZzsBJwsWT7Ys56Vnw1Jk2aK0RDf54FYmcPBxDMsFX/pkopGQp6FUjdoGet5
+         5q8bNvv5vyum7u68mmt0f12IIY8g0jmPREdzEk3IirQgM1lKQKsIMJzZlgXDJxDc8yb9
+         fcgLjlIU/cHdUo5zVz0IVCBsONUzAxqqZ/egZitemB57PsyxlQqOAH/lA3FyXaLAbJJi
+         0yYxjN+FPPjq33yW5/S8ql0WuwxNv7USHBdrR178K/2nz4sZ/0mhAeGGV6wAGD3y+MNp
+         MvmbIFVS2tajr7FzecdBwSCHzW4virG9D1LdLtjiVXXP9JhxJouUWglgLmKWGDU54IgG
+         F3lQ==
+X-Gm-Message-State: AOAM533DTvmoqNJd9G1fYT3Vem1nOV5sTa8oEx1sF4WC4MxWlQ6GlaZb
+        YRDOWL7+4zZvNp9VsOpvtwcO2DSzJSGJ2tjUx30=
+X-Google-Smtp-Source: ABdhPJykZDTT3kd4F6y0xhJQLQH0CY1/8xLgR6i6+pWRSXQv+cKO4hgtt71iv+8B4K1WLpq6EaUav0+9fAu/PlN+990=
+X-Received: by 2002:a25:6ad6:: with SMTP id f205mr35763935ybc.76.1597008599048;
+ Sun, 09 Aug 2020 14:29:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200808211323.GR6186@pendragon.ideasonboard.com>
+In-Reply-To: <20200808211323.GR6186@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sun, 9 Aug 2020 22:29:32 +0100
+Message-ID: <CA+V-a8v0nXwe0iN2ymqE5YgcgOymWYv-Xf6N+rw_nJnUgx4yMQ@mail.gmail.com>
+Subject: Re: [PATCH 6/7] ARM: dts: r8a7742: Add LVDS support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 68e4cd17e218 ("docs: deprecated.rst: Add zero-length and one-element
-arrays") marks one-element and zero-length arrays as deprecated. Kernel
-code should always use "flexible array members" instead.
+Hi Laurent,
 
-The script warns about one-element and zero-length arrays in structs.
+Thank you for the review.
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-Changes in v2:
- - all uapi headers are now filtered-out. Unfortunately, coccinelle
-   doesn't provide structure names in Location.current_element.
-   For structures the field is always "something_else". Thus, there is
-   no easy way to create a list of existing structures in uapi headers
-   and suppress the warning only for them, but not for the newly added
-   uapi structures.
- - The pattern doesn't require 2+ fields in a structure/union anymore.
-   Now it also checks single field structures/unions.
- - The pattern simplified and now uses disjuction in array elements
-   (Thanks, Markus)
- - Unions are removed from patch mode
- - one-element arrays are removed from patch mode. Correct patch may
-   involve turning the array to a simple field instead of a flexible
-   array.
+On Sat, Aug 8, 2020 at 10:13 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> Thank you for the patch.
+>
+> On Fri, Aug 07, 2020 at 06:49:53PM +0100, Lad Prabhakar wrote:
+> > Add LVDS encoder node to r8a7742 SoC DT.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > ---
+> >  arch/arm/boot/dts/r8a7742.dtsi | 54 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+> > index a979a4b3de61..a7e66220d63a 100644
+> > --- a/arch/arm/boot/dts/r8a7742.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> > @@ -1534,11 +1534,65 @@
+> >                               port@1 {
+> >                                       reg = <1>;
+> >                                       du_out_lvds0: endpoint {
+> > +                                             remote-endpoint = <&lvds0_in>;
+> >                                       };
+> >                               };
+> >                               port@2 {
+> >                                       reg = <2>;
+> >                                       du_out_lvds1: endpoint {
+> > +                                             remote-endpoint = <&lvds1_in>;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             lvds0: lvds@feb90000 {
+> > +                     compatible = "renesas,r8a7742-lvds";
+> > +                     reg = <0 0xfeb90000 0 0x1c>;
+>
+> Isn't 0x14 enough for the size ? 0x1c won't hurt though. Same comment
+> below.
+>
+Agreed, 0x1c comes from Gen-3 manuals.
 
-On the current master branch, the rule generates:
- - context: https://gist.github.com/evdenis/e2b4323491f9eff35376372df07f723c
- - patch: https://gist.github.com/evdenis/46081da9d68ecefd07edc3769cebcf32
+Cheers,
+Prabhakar
 
- scripts/coccinelle/misc/flexible_array.cocci | 88 ++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 scripts/coccinelle/misc/flexible_array.cocci
-
-diff --git a/scripts/coccinelle/misc/flexible_array.cocci b/scripts/coccinelle/misc/flexible_array.cocci
-new file mode 100644
-index 000000000000..bf6dcda1783e
---- /dev/null
-+++ b/scripts/coccinelle/misc/flexible_array.cocci
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+///
-+/// Zero-length and one-element arrays are deprecated, see
-+/// Documentation/process/deprecated.rst
-+/// Flexible-array members should be used instead.
-+///
-+//
-+// Confidence: High
-+// Copyright: (C) 2020 Denis Efremov ISPRAS.
-+// Comments:
-+// Options: --no-includes --include-headers
-+
-+virtual context
-+virtual report
-+virtual org
-+virtual patch
-+
-+@initialize:python@
-+@@
-+def relevant(positions):
-+    for p in positions:
-+        if "uapi" in p.file:
-+             return False
-+    return True
-+
-+@r depends on !patch@
-+identifier name, array;
-+type T;
-+position p : script:python() { relevant(p) };
-+@@
-+
-+(
-+  struct name {
-+    ...
-+*   T array@p[\(0\|1\)];
-+  };
-+|
-+  struct {
-+    ...
-+*   T array@p[\(0\|1\)];
-+  };
-+|
-+  union name {
-+    ...
-+*   T array@p[\(0\|1\)];
-+  };
-+|
-+  union {
-+    ...
-+*   T array@p[\(0\|1\)];
-+  };
-+)
-+
-+@depends on patch exists@
-+identifier name, array;
-+type T;
-+position p : script:python() { relevant(p) };
-+@@
-+
-+(
-+  struct name {
-+    ...
-+    T array@p[
-+-       0
-+    ];
-+  };
-+|
-+  struct {
-+    ...
-+    T array@p[
-+-       0
-+    ];
-+  };
-+)
-+
-+@script: python depends on report@
-+p << r.p;
-+@@
-+
-+msg = "WARNING: use flexible-array member instead"
-+coccilib.report.print_report(p[0], msg)
-+
-+@script: python depends on org@
-+p << r.p;
-+@@
-+
-+msg = "WARNING: use flexible-array member instead"
-+coccilib.org.print_todo(p, msg)
--- 
-2.26.2
-
+> With or without this addressed,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +                     clocks = <&cpg CPG_MOD 726>;
+> > +                     power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+> > +                     resets = <&cpg 726>;
+> > +                     status = "disabled";
+> > +
+> > +                     ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     lvds0_in: endpoint {
+> > +                                             remote-endpoint = <&du_out_lvds0>;
+> > +                                     };
+> > +                             };
+> > +                             port@1 {
+> > +                                     reg = <1>;
+> > +                                     lvds0_out: endpoint {
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             lvds1: lvds@feb94000 {
+> > +                     compatible = "renesas,r8a7742-lvds";
+> > +                     reg = <0 0xfeb94000 0 0x1c>;
+> > +                     clocks = <&cpg CPG_MOD 725>;
+> > +                     power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+> > +                     resets = <&cpg 725>;
+> > +                     status = "disabled";
+> > +
+> > +                     ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     lvds1_in: endpoint {
+> > +                                             remote-endpoint = <&du_out_lvds1>;
+> > +                                     };
+> > +                             };
+> > +                             port@1 {
+> > +                                     reg = <1>;
+> > +                                     lvds1_out: endpoint {
+> >                                       };
+> >                               };
+> >                       };
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
