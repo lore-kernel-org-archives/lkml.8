@@ -2,155 +2,153 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58542067D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8FD206B5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596933335;
+	bh=coQD0wBPaBdDQivRZlkVTAL9bKjxlMoqwYidiCYobu8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1XfOEsm+aAlZR6hsen4M0TYT+B8mfRB6vQRckfQEWO1I9E9+axUEYIuVSxVbbtqi1
+	 Os4i9eTK5gWOgpXiTRuqDcB2GEDmCtD9gSD5CtL6fw4+ZqNtSV10Ec4dALxFuPMcI+
+	 +/CVE4uGGVl6WlMaNrSSc6axfXdwlMfE1Bw6qz2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgHIA3b (ORCPT
+        id S1726316AbgHIAfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 20:29:31 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37372 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHIA3a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 20:29:30 -0400
-Received: by mail-pj1-f66.google.com with SMTP id mw10so2929904pjb.2;
-        Sat, 08 Aug 2020 17:29:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=k0Q617GOOxsvAC/qWphQFDLOhIM15Suvk09+e7APeMc=;
-        b=Ny8iCLmLvYqXA2Qh5ci/RKuSMJ6yN/taSI5CJtQ7EJGx2nNDYCfNLfX4OwacV+Ay91
-         k1Mt4EOP/Gp7xETdRvwiLuspjA4Le7bLpvE0Dx4VYUfz1ch+BEQ/21tILUno5dipGSZg
-         eykIOwReCno6T8xf3uLh1fz0Fh/hqGbXjusSjAQkiHKieHELiMgUGxOvhw1bDedec26r
-         Z7XNFXfRZ5xVkuWynaYpxCMwlO8krSwlZMKScG96CjFqepUX1TA6DE2lzJuYXkQF4HqZ
-         dLLAqFggICl2boxBfnXM0UTCwgyN51jkvhQCRvZlloMbfkVqo8sQU3srbGgoUwIEfpM0
-         Q88Q==
-X-Gm-Message-State: AOAM5325TzTzYw66ReMUj4FoPNuEfgDvQYGXPNhFdwW620V6Lqmkx4BR
-        xEYjG0dJKVvKO/JmRxWOOJo=
-X-Google-Smtp-Source: ABdhPJxAXJgUl9eao4GGGiqBo2jRE3ZEDtN/XTPLmTD+8g4tnCK3YJfMH0t/SE8ieE3Uxc9ja3Ul1w==
-X-Received: by 2002:a17:902:900b:: with SMTP id a11mr18140800plp.315.1596932969668;
-        Sat, 08 Aug 2020 17:29:29 -0700 (PDT)
-Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id f195sm17756723pfa.96.2020.08.08.17.29.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Aug 2020 17:29:28 -0700 (PDT)
-Subject: Re: [PATCH v8 3/4] scsi: ufs: L2P map management for HPB read
-To:     daejun7.park@samsung.com,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-References: <231786897.01596705302142.JavaMail.epsvc@epcpadp1>
- <231786897.01596705001840.JavaMail.epsvc@epcpadp1>
- <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
- <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p2>
- <336371513.41596705485601.JavaMail.epsvc@epcpadp2>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <86a04d4f-bb6f-9bc8-cb64-a50b0ed2fdb7@acm.org>
-Date:   Sat, 8 Aug 2020 17:29:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 8 Aug 2020 20:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbgHIAfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 20:35:34 -0400
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1A73206B5;
+        Sun,  9 Aug 2020 00:35:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596933333;
+        bh=coQD0wBPaBdDQivRZlkVTAL9bKjxlMoqwYidiCYobu8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZhdXHSbGknQR+b+3YLI9YqMjsJmJW+yYdR4b9uOVrGZRu+SOjPpI4W6MI+qb4zD1G
+         gQCWZk7GJOgQQakgyUQUaM48Ej8u9z1HE0O4IHBQDQqlhWYb/hADg8auRSzisTMMQe
+         pg7hsgKz1+jnLfV6QaWpVMMtJuJb+6xgSPjrKjkg=
+Received: by mail-ed1-f44.google.com with SMTP id cq28so3716024edb.10;
+        Sat, 08 Aug 2020 17:35:32 -0700 (PDT)
+X-Gm-Message-State: AOAM530xMZrks3g24WatN8/NDN+FKy5Y0OfPXiyEt+aJ4CJJ6ai0rA/E
+        BEtbl92qhp8Y4A5U+NK8/dwSymM7pObCp9vWvg==
+X-Google-Smtp-Source: ABdhPJxZvcW8PgfFlsq/+msJNbIn+ca0CblF0488HSrYloUzKvPr/KfxkqW6W3mw1LCCbvI377JkyUuaVPVehXXvAnA=
+X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr14822310edb.48.1596933331512;
+ Sat, 08 Aug 2020 17:35:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <336371513.41596705485601.JavaMail.epsvc@epcpadp2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com> <1596855231-5782-7-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1596855231-5782-7-git-send-email-yongqiang.niu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 9 Aug 2020 08:35:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8B0xC5QspmLS0NNTD5fG1V+OY6hNU9F4+qcqHFdQtCWw@mail.gmail.com>
+Message-ID: <CAAOTY_8B0xC5QspmLS0NNTD5fG1V+OY6hNU9F4+qcqHFdQtCWw@mail.gmail.com>
+Subject: Re: [RESEND v7, PATCH 6/7] drm/mediatek: add support for mediatek SOC MT8183
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-06 02:15, Daejun Park wrote:
-> +	req->end_io_data = (void *)map_req;
+Hi, Yongqiang:
 
-Please leave the (void *) cast out since explicit casts from a non-void
-to a void pointer are not necessary in C.
+Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8811:05=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> This patch add support for mediatek SOC MT8183
+> 1. add ovl private data
+> 2. add rdma private data
+> 3. add mutes private data
+> 4. add main and external path module for crtc create
+>
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-> +static inline struct
-> +ufshpb_rsp_field *ufshpb_get_hpb_rsp(struct ufshcd_lrb *lrbp)
-> +{
-> +	return (struct ufshpb_rsp_field *)&lrbp->ucd_rsp_ptr->sr.sense_data_len;
-> +}
+[snip]
 
-Please introduce a union in struct utp_cmd_rsp instead of using casts
-to reinterpret a part of a data structure.
+> +
+>  static const struct of_device_id mtk_disp_ovl_driver_dt_match[] =3D {
+>         { .compatible =3D "mediatek,mt2701-disp-ovl",
+>           .data =3D &mt2701_ovl_driver_data},
+>         { .compatible =3D "mediatek,mt8173-disp-ovl",
+>           .data =3D &mt8173_ovl_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-ovl",
 
-> +/* routine : isr (ufs) */
+"mediatek,mt8183-disp-ovl" is not defined in binding document [1]
 
-The above comment looks very cryptic. Should it perhaps be expanded?
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt?h=3Dv=
+5.8
 
-> +struct ufshpb_active_field {
-> +	__be16 active_rgn;
-> +	__be16 active_srgn;
-> +} __packed;
+> +         .data =3D &mt8183_ovl_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-ovl-2l",
 
-Since "__packed" is not necessary for the above data structure, please
-remove it. Note: a typical approach in the Linux kernel to verify that
-the compiler has not inserted any padding bytes is to add a BUILD_BUG_ON()
-statement in an initialization function that verifies the size of ABI data
-structures. See also the output of the following command:
+Ditto.
 
-git grep -nH 'BUILD_BUG_ON.sizeof.*!='
+> +         .data =3D &mt8183_ovl_2l_driver_data},
+>         {},
+>  };
 
-> +struct ufshpb_rsp_field {
-> +	__be16 sense_data_len;
-> +	u8 desc_type;
-> +	u8 additional_len;
-> +	u8 hpb_type;
-> +	u8 reserved;
-> +	u8 active_rgn_cnt;
-> +	u8 inactive_rgn_cnt;
-> +	struct ufshpb_active_field hpb_active_field[2];
-> +	__be16 hpb_inactive_field[2];
-> +} __packed;
+[snip]
 
-I think the above __packed statement should also be left out.
+> +
+>  static const struct of_device_id mtk_disp_rdma_driver_dt_match[] =3D {
+>         { .compatible =3D "mediatek,mt2701-disp-rdma",
+>           .data =3D &mt2701_rdma_driver_data},
+>         { .compatible =3D "mediatek,mt8173-disp-rdma",
+>           .data =3D &mt8173_rdma_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-rdma",
 
-Thanks,
+Ditto.
 
-Bart.
+> +         .data =3D &mt8183_rdma_driver_data},
+>         {},
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_disp_rdma_driver_dt_match);
+
+[snip]
+
+> +
+>  struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned i=
+nt id)
+>  {
+>         struct mtk_ddp *ddp =3D dev_get_drvdata(dev);
+> @@ -402,6 +447,8 @@ static int mtk_ddp_remove(struct platform_device *pde=
+v)
+>           .data =3D &mt2712_ddp_driver_data},
+>         { .compatible =3D "mediatek,mt8173-disp-mutex",
+>           .data =3D &mt8173_ddp_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-mutex",
+
+Ditto.
+
+Regards,
+Chun-Kuang.
+
+> +         .data =3D &mt8183_ddp_driver_data},
+>         {},
+>  };
+>  MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
