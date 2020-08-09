@@ -2,151 +2,99 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7941DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A39C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5758A206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:37:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596933428;
-	bh=OwZbj9j2fVznBXJWG+kGBBS6B2y4BHwVj3nvv2bUc+o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GHIQUTc+zTH6y1+gvf4uDdUHaE8rJVGNZ7AuZ3S+Dr5utOZEuCd4B7g4cpEHyfk2P
-	 6HkokheyqAw5UC2z0IQ8gBTs2nIvX2E09kySwPtowREd58a1ioc4jPCPJ3UaFg8f0j
-	 JN+FKBMXTgaKs9XxIMxXTSn54WSU0BTIamsVWvYQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1C892206B5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:40:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7w+q029"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgHIAhG (ORCPT
+        id S1726232AbgHIAkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 20:37:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbgHIAhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 20:37:06 -0400
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 190C9206D8;
-        Sun,  9 Aug 2020 00:37:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596933425;
-        bh=OwZbj9j2fVznBXJWG+kGBBS6B2y4BHwVj3nvv2bUc+o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TlFTbbMV/k+o66PWyKj3MJLo37tNkgYDcrrUiK+N73KaD55/NMcj9yl4sXEqJV+Ve
-         8sU2kjCPKUYEX7g0XgGoRl8cq5fnESFhrnVv4Z+af7+hm6EgI9NLQlKLqlzc+cFXLT
-         /NFLdgtWCZuXa/8F1GZhNh0CeqKGSZRSA133jfII=
-Received: by mail-ej1-f49.google.com with SMTP id o23so5883887ejr.1;
-        Sat, 08 Aug 2020 17:37:05 -0700 (PDT)
-X-Gm-Message-State: AOAM532TPaFDjnLnLocy1y2clMYxexZzYeQWFmaAC4ndhpF8N7a86J3C
-        3KeaWHCCmldVXRvtm1kexgfVCUSuJKDjWqfPfg==
-X-Google-Smtp-Source: ABdhPJyRhNiwUtOdFe5BV5TXi2CdPsenCRK7yZwtV8dYfmYgEntYLcapnDUx1Pn9vQyDNpXrZ1cECP5wWDwV76cWsVI=
-X-Received: by 2002:a17:906:12d8:: with SMTP id l24mr4040593ejb.260.1596933423727;
- Sat, 08 Aug 2020 17:37:03 -0700 (PDT)
+        Sat, 8 Aug 2020 20:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgHIAkM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 20:40:12 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F06C061756;
+        Sat,  8 Aug 2020 17:40:11 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id q17so2989536pls.9;
+        Sat, 08 Aug 2020 17:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OoI02kIPv5v2lQrEFtWYTVFM7JZrBv3uT+arvbEzRC8=;
+        b=O7w+q029hE2KX4W8MHGLpAX6jI7rJTMsRIVLfGKcz4IDDrum74DBgfi/oS6bOM0xOv
+         5nt6w4rcu6Wv8mPvg0cJVFGaZgTIF6UYC0zVyKsTfebJHS6jn2Z19BpAzIaTevZfKhsv
+         ldZLWj4PgusGw+dcJfro0TSwI4Zex4GOSFI9TxeiPs9LMq0ovRMyLqYwzN13jAXJg2v3
+         qCauBZAaBriDfmqxtgbJnTT01UWwBOWMUALtWCW1gJ9kBu/MKIU89gCEHrlYjcFuXO5e
+         gj4Ss5YHfrnq4NytbkeXvOHx3xOA+u1jIyCJkKSJNCEfiF1rDwZ0x+0/XU9SkIQfH038
+         cJtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OoI02kIPv5v2lQrEFtWYTVFM7JZrBv3uT+arvbEzRC8=;
+        b=H2gcUUqgcEfLCYf99sPX8rJl9Hwez12rgME2SoVEIlBlmN3CsIzhzkz9ETyEmkpfja
+         dOKhD5e/J6Zkp3oUBDD0w09q19GBoT9NSP7EFs0ZcQ8Z+SbH8B+GvTLhs5fgs9gwAzEO
+         YCzXGBSoiJ0OSMlz4BDyJswFzkhpFV4sKPpM0EwUaOGlV8fbMsVK7jnodKvmwN8PSDXM
+         i7u97piagXNMP8MiuYEEEukJT5KPFOp5rid/BXFQ8QF7lA4v2CxuZj6pDT9Uxd/wLwVW
+         avm6TtSc41sIyJd4eDo9iREF7mlU1PYvutDQTR3NwGKHualT5NHnDga15vAL4qgtIiH4
+         SpdQ==
+X-Gm-Message-State: AOAM531hVicW5DWJuUzIVRrZpv/mVRwtRFL/+0PSUnGXW3NYGilhKbsM
+        akgULP/XTC3GWTgjSHulqQI=
+X-Google-Smtp-Source: ABdhPJybEzbAts0RW8NMwyR4Aw7rMrZw1oGKzNLjQ+QABcupg38fRhfBMrvsw9hvY/vFeMXGqKtkPA==
+X-Received: by 2002:a17:90a:8909:: with SMTP id u9mr20792249pjn.119.1596933611431;
+        Sat, 08 Aug 2020 17:40:11 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q2sm18909579pfc.40.2020.08.08.17.40.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 08 Aug 2020 17:40:10 -0700 (PDT)
+Date:   Sat, 8 Aug 2020 17:40:09 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, mirq-linux@rere.qmqm.pl,
+        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bbasu@nvidia.com, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 3/3] cpufreq: Add Tegra194 cpufreq
+ driver
+Message-ID: <20200809004009.GA96704@roeck-us.net>
+References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+ <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
-References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
-In-Reply-To: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 9 Aug 2020 08:36:52 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8nE4mHq0O2hnqr7+ooKSPS-O2CB6MprODF95gEJB_naQ@mail.gmail.com>
-Message-ID: <CAAOTY_8nE4mHq0O2hnqr7+ooKSPS-O2CB6MprODF95gEJB_naQ@mail.gmail.com>
-Subject: Re: [RESEND v7, PATCH 0/7] add drm support for MT8183
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+On Wed, Jul 15, 2020 at 07:01:25PM +0530, Sumit Gupta wrote:
+> Add support for CPU frequency scaling on Tegra194. The frequency
+> of each core can be adjusted by writing a clock divisor value to
+> a MSR on the core. The range of valid divisors is queried from
+> the BPMP.
+> 
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 
-This series is 'v8', not 'RESEND v7'
+If built as module:
 
-Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8810:56=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> This series are based on 5.8-rc1 and provide 7 patch
-> to support mediatek SOC MT8183
->
-> Change since v6
-> - move ddp component define into mtk_mmsys.h
-> - add mmsys private data to support different ic path connection
-> - add mt8183-mmsys.c to support 8183 path connection
-> - fix reviewed issue in v6
->
-> Change since v5
-> - fix reviewed issue in v5
-> base https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D2=
-13219
->
-> Change since v4
-> - fix reviewed issue in v4
->
-> Change since v3
-> - fix reviewed issue in v3
-> - fix type error in v3
-> - fix conflict with iommu patch
->
-> Change since v2
-> - fix reviewed issue in v2
-> - add mutex node into dts file
->
-> Changes since v1:
-> - fix reviewed issue in v1
-> - add dts for mt8183 display nodes
-> - adjust display clock control flow in patch 22
-> - add vmap support for mediatek drm in patch 23
-> - fix page offset issue for mmap function in patch 24
-> - enable allow_fb_modifiers for mediatek drm in patch 25
->
-> Yongqiang Niu (7):
->   dt-bindings: mediatek: add rdma_fifo_size description for mt8183
->     display
->   drm/mediatek: move ddp component define into mtk_mmsys.h
->   mtk-mmsys: add mmsys private data
->   mtk-mmsys: add mt8183 mmsys support
->   drm/mediatek: add fifo_size into rdma private data
->   drm/mediatek: add support for mediatek SOC MT8183
->   arm64: dts: add display nodes for mt8183
->
->  .../bindings/display/mediatek/mediatek,disp.txt    |  14 ++
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi           |  98 ++++++++
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  18 ++
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  25 +-
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             |  47 ++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  34 +--
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  43 ++++
->  drivers/soc/mediatek/Makefile                      |   1 +
->  drivers/soc/mediatek/mmsys/Makefile                |   3 +
->  drivers/soc/mediatek/mmsys/mt2701-mmsys.c          | 250 +++++++++++++++=
-++++
->  drivers/soc/mediatek/mmsys/mt8183-mmsys.c          | 154 ++++++++++++
->  drivers/soc/mediatek/mtk-mmsys.c                   | 276 ++++-----------=
-------
->  include/linux/soc/mediatek/mtk-mmsys.h             |  48 ++++
->  13 files changed, 749 insertions(+), 262 deletions(-)
->  create mode 100644 drivers/soc/mediatek/mmsys/Makefile
->  create mode 100644 drivers/soc/mediatek/mmsys/mt2701-mmsys.c
->  create mode 100644 drivers/soc/mediatek/mmsys/mt8183-mmsys.c
->
-> --
-> 1.8.1.1.dirty
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+
+Guenter
