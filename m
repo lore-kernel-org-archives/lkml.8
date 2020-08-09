@@ -2,180 +2,155 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0125DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3199206B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596979949;
-	bh=x6hX5hmHtgNXUpMMJKzfq2gMV3FBFrP/xYq9lyBrJcs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=n/ovMTq/GZKf3U9Vd2hoOQlEnS0gLW86Spi1tWH70hbTEceyLSihNVwpLStWvfjle
-	 YkzAvqPt/PldZ6Y98tQlYw2lSy1POlYAsxUbldKieE6G8O3XR1XvbBm5qbG0caBS6T
-	 Jpnw87ISX+acZC2EFEwZ2NpiZFm+FXPLZGGLzfZo=
+	by mail.kernel.org (Postfix) with ESMTP id CE34F206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay2vzmjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgHINc1 (ORCPT
+        id S1726266AbgHINir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 09:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbgHINc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 09:32:26 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4F98206B6;
-        Sun,  9 Aug 2020 13:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596979945;
-        bh=x6hX5hmHtgNXUpMMJKzfq2gMV3FBFrP/xYq9lyBrJcs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cdU7jvqsvRA99y1tAOZjJre7pKdrkjgJGNC1NJRQStZ5+VBClhBupnCfrwhR7ZzcI
-         h2FTdhTCSM5lC/pYXU76djpASYaCUEBvFVY3mMKl15iQHwU4N97qFmhQYMY9KnH8g4
-         eXfoW2EWAD6HUzECMNTluDfaat1XoE0MAf5Z2+0M=
-Date:   Sun, 9 Aug 2020 14:32:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Crt Mori <cmo@melexis.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/4] iio:temperature:mlx90632: Adding extended
- calibration option
-Message-ID: <20200809143222.4e19ea38@archlinux>
-In-Reply-To: <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com>
-References: <20200808121026.1300375-1-cmo@melexis.com>
-        <20200808121026.1300375-3-cmo@melexis.com>
-        <CAHp75VfWk7pCy4Osv0uY0UH4yFS=PRGbE1CNCakuRFTE33SDJg@mail.gmail.com>
-        <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 9 Aug 2020 09:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgHINio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 09:38:44 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97958C061756;
+        Sun,  9 Aug 2020 06:38:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u20so3737628pfn.0;
+        Sun, 09 Aug 2020 06:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e43BGIqjUtFLkllWZLVnRPk7JR3nJMKINK9MXa2Oc1o=;
+        b=Ay2vzmjJW0yzDZutiLDKugvlcDR7WBCF12bPD3pf1FV/pMOd6c9Uc9Qpn+ZsReiq7s
+         EBjWLrFkoipRafMcrZ5q3TwoLsm9I8UK27IQX9lcmPKe/G+9+DiuPOSe1whfKL5YOrqt
+         AuA2xh4MuU6YbFNY5DqwEl1lO/zdn/jgH6PAj0XIgp10qIxaAxCujIuLh6Pwk46IKKVl
+         w43z4yJBUM2XSKaLHfCZZkqWGtdCy3ty8S9cQWAxi7pBtFI0Z+LxAtecaGmjOcXUeDaE
+         6Z+vlYgoj/qwfW8ZOzg+59GgRGSkXK+/GilfUwM6FWzzvp+8qvFiITCzGtkLNlF6UFfh
+         /Dkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=e43BGIqjUtFLkllWZLVnRPk7JR3nJMKINK9MXa2Oc1o=;
+        b=XMJ4sSb1VtlezyDNv8OFB+XowWc4QvzTTUt5Dlyb57d1cNZ4hH/l9z0ZHM+Hj3CUni
+         ov/QDh/fcy5+y2KGaIPDX/qEFYxzR6IuNqG0IfHxzVi0GREQM4ROvs2m3BPL1Fm2V7S/
+         NJVUAkDXaesF2pXQFOtx2KwKvLSQn9zAKH2p1adZG6D0jjH+0B0sPoNE9Ih76QOlYfvs
+         +EnBKLaT0Q51ZwrlrVLwM4a0kBzmmUXKFsHNwhOpxtgyUenttbzlj2kIMwwUt80TulbX
+         j3qMbc+J66IUTOvtvMnTShumCs0Ab82Hf5B+kT9PnR5Ryf7uvbRoxaBKpxvgTdz693St
+         01VA==
+X-Gm-Message-State: AOAM531v9RZDEyjtHelzACGKimBERZ+NFywNpwAvwnVRkqmbu75S3JFC
+        7Baf/K4GVktLz7jzMFWLP510Z++i
+X-Google-Smtp-Source: ABdhPJzXE9qQ6GW7nBeHTr/VqtdCUVwKWqEoue4QKyW1B3Xr0sUa8tBJAo74/7pex3Pt367JclBrmg==
+X-Received: by 2002:a63:e017:: with SMTP id e23mr18496702pgh.125.1596980322799;
+        Sun, 09 Aug 2020 06:38:42 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n22sm16127568pjq.25.2020.08.09.06.38.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 06:38:42 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: pcwd_usb: Avoid GFP_ATOMIC where it is not
+ needed
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        wim@linux-watchdog.org
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200809071912.742836-1-christophe.jaillet@wanadoo.fr>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <42ad4fb9-e16a-147f-1732-950e657c0a79@roeck-us.net>
+Date:   Sun, 9 Aug 2020 06:38:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200809071912.742836-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Aug 2020 23:57:59 +0200
-Crt Mori <cmo@melexis.com> wrote:
+On 8/9/20 12:19 AM, Christophe JAILLET wrote:
+> There is no need to use GFP_ATOMIC here. It is a probe function, no
+> spinlock is taken and GFP_KERNEL is used just before and just after this
+> 'usb_alloc_coherent()' call.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-> Hi,
-> I am very sorry you missed them, I thought you saw it (reply on v3 of
-> the patch). Maybe something happened to that mail, as it contained
-> link to datasheet, so I will omit it now.
-> 
-> Except for the order, only the remarks below are still open (did you
-> get the polling trail I did?)
-> 
-> On Sat, 8 Aug 2020 at 22:04, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Sat, Aug 8, 2020 at 3:11 PM Crt Mori <cmo@melexis.com> wrote:  
-> > >
-> > > For some time the market wants medical grade accuracy in medical range,
-> > > while still retaining the declared accuracy outside of the medical range
-> > > within the same sensor. That is why we created extended calibration
-> > > which is automatically switched to when object temperature is too high.
-> > >
-> > > This patch also introduces the object_ambient_temperature variable which
-> > > is needed for more accurate calculation of the object infra-red
-> > > footprint as sensor's ambient temperature might be totally different
-> > > than what the ambient temperature is at object and that is why we can
-> > > have some more errors which can be eliminated. Currently this temperature
-> > > is fixed at 25, but the interface to adjust it by user (with external
-> > > sensor or just IR measurement of the other object which acts as ambient),
-> > > will be introduced in another commit.  
-> >
-> > The kernel doc patch should go before this patch.
-> >
-> > ...
-> >  
-> > > +       *ambient_new_raw = (s16)read_tmp;  
-> >  
-> > > +       *ambient_old_raw = (s16)read_tmp;  
-> >
-> > Sorry, did I miss your answer about these castings all over the patch?
-> >  
-> 
-> These castings are in fact needed. You read unsigned integer, but the
-> return value is signed integer. Without the cast it did not extend the
-> signed bit, but just wrote the value to signed. Also I find it more
-> obvious with casts, that I did not "accidentally" convert to signed.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Should we perhaps be making this explicit for the cases where we
-are sign extending?  That doesn't include these two as the lvalue
-is s16, but does include some of the others.
-
-sign_extend32(read_tmp, 15)
-
+> ---
+>  drivers/watchdog/pcwd_usb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > ...
-> >  
-> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
-> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
-> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
-> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
-> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
-> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);  
-> >
-> > What so special about these magic 17, 18, 19? Can you provide definitions?
-> >  
-> When we started 0 to 19 were all open for access, from userspace, then
-> only 1 and 2 were used with calculations, and now we use 17, 18 and
-> 19. Matter of fact is, I can't provide a descriptive name as it
-> depends on DSP version and as you can see now within the same DSP
-> version, also on the ID part. While RAM3 vs RAM1 and RAM2 could be
-> named RAM_OBJECT1, RAM_OBJECT2, RAM_AMBIENT, knowing our development
-> that might not be true in the next configuration, so I rather keep the
-> naming as in the datasheet.
-Normal solution for that is to version the defines as well.
+> diff --git a/drivers/watchdog/pcwd_usb.c b/drivers/watchdog/pcwd_usb.c
+> index 2f44af1831d0..ea67b98ed35d 100644
+> --- a/drivers/watchdog/pcwd_usb.c
+> +++ b/drivers/watchdog/pcwd_usb.c
+> @@ -657,7 +657,7 @@ static int usb_pcwd_probe(struct usb_interface *interface,
+>  
+>  	/* set up the memory buffer's */
+>  	usb_pcwd->intr_buffer = usb_alloc_coherent(udev, usb_pcwd->intr_size,
+> -					GFP_ATOMIC, &usb_pcwd->intr_dma);
+> +					GFP_KERNEL, &usb_pcwd->intr_dma);
+>  	if (!usb_pcwd->intr_buffer) {
+>  		pr_err("Out of memory\n");
+>  		goto error;
+> 
 
-MLX90632_FW3_RAM_1_AMBIENT etc
-When a new version changes this, then you introduced new defines to
-support that firmware.
-
-> 
-> > ...
-> >  
-> > > +       int tries = 4;  
-> >  
-> > > +       while (tries-- > 0) {
-> > > +               ret = mlx90632_perform_measurement(data);
-> > > +               if (ret < 0)
-> > > +                       goto read_unlock;
-> > > +
-> > > +               if (ret == 19)
-> > > +                       break;
-> > > +       }
-> > > +       if (tries < 0) {
-> > > +               ret = -ETIMEDOUT;
-> > > +               goto read_unlock;
-> > > +       }  
-> >
-> > Please avoid ping-pong type of changes in the same series (similar way
-> > as for kernel doc), which means don't introduce something you are
-> > going to change later on. Patch to move to do {} while () should go
-> > before this one.  
-> 
-> OK, will fix that ordering in v5, but will wait till we solve also
-> above discussions to avoid adding new versions.
-> 
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko  
-> 
-> And about that voodoo stuff with numbers:
-> 
-> Honestly, the equation is in the datasheet[1] and this is just making
-> floating point to fixed point with proper intermediate scaling
-> (initially I had defines of TENTOX, but that was not desired). There
-> is no better explanation of this voodoo.
-
-We all love fixed point arithmetic :)
-
-Jonathan
