@@ -2,149 +2,106 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	SUBJ_ALL_CAPS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E36B8206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AB0206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 20:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saVBVhYh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmxdgDnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHIUid (ORCPT
+        id S1726386AbgHIUoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 16:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33340 "EHLO
+        Sun, 9 Aug 2020 16:44:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgHIUid (ORCPT
+        with ESMTP id S1726307AbgHIUoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 16:38:33 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BC6C061756;
-        Sun,  9 Aug 2020 13:38:32 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id s195so2661326ybc.8;
-        Sun, 09 Aug 2020 13:38:32 -0700 (PDT)
+        Sun, 9 Aug 2020 16:44:06 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B5EC061756;
+        Sun,  9 Aug 2020 13:44:05 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t23so7454926ljc.3;
+        Sun, 09 Aug 2020 13:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2kAXaCbVRwpQJ/QcWFbP9jMZCECl1RbYXm9sxJ41L1E=;
-        b=saVBVhYh18DoSp1a1uNYqKqMnvq5nycV1cbYPmydXPtibPN2hPwlpJuu0qO+epIXxj
-         ZICiYPxBKlUmrg8MTG+aAEv5NvlQhlLRkVS0K5FB0IsAyBZUINOPYtMbwuD78yx5fS8b
-         Xr7Q/njziaFDfh+Cr1xTeIQUOVMlRu4W27IzVpRZ43N0nQ2Sv6G7/IFtDGOGJ/H5h9nz
-         5kSFRazOBiYJx4IdWZlzcBk0dHIAjP1FncvqouY6GfsRi9HZ8IbS1GsJX4wLAWHr13Fj
-         paIVtSgAG7YvI7Y7CH6AkN/dQolHugFFwycnGBocjCd0+kcimoKs8fG7vX3pXuJQuaFU
-         hjEg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SvDAYJLcZBgTsyI3IaDujHuoZCk3THaG/ArcfhJ0GWI=;
+        b=GmxdgDnJfiMvbGkhskAMmhvwWFIywN7TCDp+2/6/kRsL1IzbleBtKRWN34/wAYC5g/
+         nBEq0kPXP2SBmJz7F2p1yYi5aggjrvqqmk3mFP9MXiH56Ot2W8ZSYdniknQpRnvErsf5
+         hHJ76yI/SpvjAhkSak0Ak6pFjyD+cUpzGywpzo7KcrYvZgxA+U7aZkdG48d9SihPQSF4
+         OdENNtxsWQH2Xl+ju0SQVJED7D/NFkt3CgcfdGlYY876QVs0gFEk10je3pgDZajUlY0I
+         q2HB/joDS9dZR/N5MX3KF/egEJh/LRm2U1CfEp8iB9nB75K43PUibwk5wDjTmftP4SVD
+         ODZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2kAXaCbVRwpQJ/QcWFbP9jMZCECl1RbYXm9sxJ41L1E=;
-        b=QWMPO5MnADRiYyymQ9KZSAoMUvqVtqlLJc7n0B4ukLd8A0hZF8xBfS3LoBdSmrd5Hl
-         WrcbsVyUX1b/54KEEy1yfSyTs7DTDXi6hmx/2DJlSS/HhCzg9uyXEc+S+AmHHJajscIq
-         FtNyCWiAsHH245WU0zajO0OMgKLO6tvfaugkzYIYWxNrmlUCy0FZ4PnvvPmHs3vPTZqD
-         RXkZKzS+nokHezd3RSbQIiRXE0dELkYDB1HkS9KQ+lcBozGCAsd5aGPJB4l2htzdGf4E
-         gX8NldMs5Hmml184ZSc2Wa1qPnowY+T3MeZ87z4VjMcW2LH7Wz81S+uzM8b4VjkGGcWE
-         7cwA==
-X-Gm-Message-State: AOAM533pgWNNbXxpADhYKjfKqVArq4gs80rM9recak/gVzneNmcUflC2
-        QEOVKiUotBF+vJ4ujBf7wQ48bo0zjNGMVSYQXNVwUF6Ec50=
-X-Google-Smtp-Source: ABdhPJy+P+qfq0PsJ1YSndL5GAELxPD7MwA2VPXNB/5Lf46Iz9hpDv+wjwGD/4M6hg3bs7NAoXi83sS/eBvFkjrvidY=
-X-Received: by 2002:a25:6ad6:: with SMTP id f205mr35554300ybc.76.1597005511330;
- Sun, 09 Aug 2020 13:38:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SvDAYJLcZBgTsyI3IaDujHuoZCk3THaG/ArcfhJ0GWI=;
+        b=dRPfHwSX0OygST223EB3381MV/WE+vUNGMvercjQOXhfrcyKC05jfmI1NfDY5FCs/q
+         SeyAklgyFSBEGUE6tjjFhbQYJjfaHeQyUSrqPU5lp3Q9/qNqKHkQYxYER0VdfDEu7icr
+         cYmkVbYwenar/vDwWMixW1PFJy8c5wcD705AL9cQhr/HEX76bg+odVnfvDSBSF/OywLy
+         IBWVQQ4/l5ai4jbxvRfu4T4eY/dFE9w3Z/qRiDCX4F6sfj+plja6tVYEgffBzemfkSpH
+         DWw2ljG7zZdWvoUNDnHMH9YdGDmDQZ4Fne5aJGznJQC09JmS6F/H/w/zthFdnJbz4h6H
+         N0sA==
+X-Gm-Message-State: AOAM532OoLWugqw2PaN4a2E+67N+LMRiEJENGL05IlJoF1nu4jvPaNCb
+        iRWyIJxV8p4PHzjoNH21AiHIKeSFxyc=
+X-Google-Smtp-Source: ABdhPJxe/b92Z2GqoBPeYDyLCZJRAhOMt12bGw+W+K9D7jJB9I8hfv0+hQN6Bltk3MwPUO8Z6nqKHg==
+X-Received: by 2002:a2e:7615:: with SMTP id r21mr10287452ljc.371.1597005843876;
+        Sun, 09 Aug 2020 13:44:03 -0700 (PDT)
+Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id c17sm9529603lfr.23.2020.08.09.13.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2020 13:44:03 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: [RFC-PATCH 0/2] __GFP_NO_LOCKS
+Date:   Sun,  9 Aug 2020 22:43:52 +0200
+Message-Id: <20200809204354.20137-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200807174954.14448-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200808210219.GN6186@pendragon.ideasonboard.com>
-In-Reply-To: <20200808210219.GN6186@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sun, 9 Aug 2020 21:38:05 +0100
-Message-ID: <CA+V-a8ts72UAUbtcN6TTDwcHqFEF3HipLx=dkQxFCXTLLzgfXA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] drm: rcar-du: Add r8a7742 support
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+Hello, folk!
 
-Thank you for the review.
+This small series introduces __GFP_NO_LOCKS flag. Detailed description
+is here https://lkml.org/lkml/2020/8/3/961. I would like to get some
+input at least about [1] patch. 
 
-On Sat, Aug 8, 2020 at 10:02 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Fri, Aug 07, 2020 at 06:49:49PM +0100, Lad Prabhakar wrote:
-> > Add direct support for the r8a7742 (RZ/G1H).
-> >
-> > The RZ/G1H shares a common, compatible configuration with the r8a7790
-> > (R-Car H2) so that device info structure is reused, the only difference
-> > being TCON is unsupported on RZ/G1H (Currently unsupported by the driver).
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > index 3e67cf70f040..7e286c7a7a6c 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > @@ -216,8 +216,8 @@ static const struct rcar_du_device_info rcar_du_r8a7790_info = {
-> >       .channels_mask = BIT(2) | BIT(1) | BIT(0),
-> >       .routes = {
-> >               /*
-> > -              * R8A7790 has one RGB output, two LVDS outputs and one
-> > -              * (currently unsupported) TCON output.
-> > +              * R8A7742 and R8A7790 each have one RGB output and two LVDS outputs. Additionally
-> > +              * R8A7790 supports one TCON output (currently unsupported by the driver).
->
-> Once we support TCON we'll have to split this, but for now I suppose
-> it's fine. Would you however mind wrapping this to 80 columns ? I can do
-> so when applying if it's fine with you.
->
-Agreed once TCON is added this has to be split. But isn't  the column
-size has been increased (checkpatch too doesn't complain about), but
-feel free to wrapp it for 80 columns.
+Please RFC. Appreciate for valubale comments, review and proposals :)
 
-Cheers,
-Prabhakar
+Thanks!
 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> >                */
-> >               [RCAR_DU_OUTPUT_DPAD0] = {
-> >                       .possible_crtcs = BIT(2) | BIT(1) | BIT(0),
-> > @@ -443,6 +443,7 @@ static const struct rcar_du_device_info rcar_du_r8a7799x_info = {
-> >  };
-> >
-> >  static const struct of_device_id rcar_du_of_table[] = {
-> > +     { .compatible = "renesas,du-r8a7742", .data = &rcar_du_r8a7790_info },
-> >       { .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
-> >       { .compatible = "renesas,du-r8a7744", .data = &rzg1_du_r8a7743_info },
-> >       { .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
->
-> --
-> Regards,
->
-> Laurent Pinchart
+Uladzislau Rezki (Sony) (2):
+  mm: Add __GFP_NO_LOCKS flag [1]
+  rcu/tree: use __GFP_NO_LOCKS flag [2]
+
+ include/linux/gfp.h            | 11 +++++++++--
+ include/trace/events/mmflags.h |  1 +
+ kernel/rcu/tree.c              |  2 +-
+ mm/page_alloc.c                | 31 +++++++++++++++++++++++++------
+ tools/perf/builtin-kmem.c      |  1 +
+ 5 files changed, 37 insertions(+), 9 deletions(-)
+
+-- 
+2.20.1
+
