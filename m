@@ -3,104 +3,215 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82097206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2DF20709
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6WXu9+x"
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="WvIXphsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgHIVA3 (ORCPT
+        id S1726406AbgHIVG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 17:00:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36694 "EHLO
+        Sun, 9 Aug 2020 17:06:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgHIVA2 (ORCPT
+        with ESMTP id S1726307AbgHIVGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 17:00:28 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F645C061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 14:00:28 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d19so3818670pgl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 14:00:28 -0700 (PDT)
+        Sun, 9 Aug 2020 17:06:25 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A834C061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 14:06:25 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id a5so6941988ioa.13
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 14:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8aCJEZf4WEBTwITZBbhB6tXQBzDbqQHz0bfAnaUx6qs=;
-        b=T6WXu9+xEDiJ7an8AcxVIStPcb1AdtIN3L1aO00LS4X5PRdZMPY5jR04uTlujVuaT7
-         kEk++vl2e0HBgGXnmycZT4T3AJTM9WazVKcAI7Ya3NE+yK3vktMd6OwJ9KA0aOCYYv9a
-         0VL5UeQ95TtvN0Y6P3MvoQhInCma3tsUdzzEFzl6IAZGNu181WePZO+jQ50Q0trva505
-         Tjo9MAsM3fZl8Rfdv7nXhUqPnOXWI22Pg4t3RA9IoW2rRQLLFleBcrnzYxJ9hiW7hTzq
-         dX1WqUeg3jbOF0Um72qPTumDwnuRIMZCMs61PT+i7ob8x04hZhGpzZO/5tqc3iR2G92r
-         /tYw==
+        d=melexis.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o8F23zcscVB1QKocpaxhAuhbpCbH7PudCZvz9GajNE0=;
+        b=WvIXphsumD/84UBawdSSvREujkdf++uBtSv4umWl22VRHIoN6yBCv+q8wgI0qJhYZW
+         38ImT5eSAcP/1G0QePaN1/zphOkBibq+FUKPcNazwOfXnmSmibjBXj4tsTWIaKkpn+to
+         lFajnQlHUicGE20GwnMnRqrt5x/qWM84NXHINpctJAfso2iO++Hf+ShA/3e/oD7KrZm9
+         /LNeHMLVUOsHNN6dem0t5od2nE5My68LU1yspryaRGcRrD54a7W8x8hWyFfF2oW7WMjO
+         jjPYZrp++yYF4QZ6exBV3JPyDDiJfJsAEcUnCzCfymhxc/gxkwxy2D+B02SHftrX7tGU
+         cHHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8aCJEZf4WEBTwITZBbhB6tXQBzDbqQHz0bfAnaUx6qs=;
-        b=V8neKcUYnfdUUaGq2IA0A5HmRL3T1AyTjpyHyIk9CoFVklLkivtCzr9MQgBkQfFNnr
-         99B0gr1qmqbKS182yap6LTBenbF6UO59NJWq/BUBMdHIPsyDShVgMhyJl/T/Kedq748W
-         PtAYXmIrNv8Tfc4BmY6AQiXGIg8RA3oEuYK/51Gd2gLJ/XpDrI26DPCRacRpLNH88mZn
-         lUoB8RPD1qJh5so2wmNn7X35RXZBX+kAeSpIDx99IMpAezslPiRvjsKtTLd70OI1yWrS
-         lwM4B3fTlhS4Kk8dYQwuclJNz9lWQygCVGEGuBNmxc7YtWtL87xgvlU4sYFVUYAsy/n7
-         nCuA==
-X-Gm-Message-State: AOAM5317BCznM174NUM7VNe59rs0qodWbYolQ31t8KHXELAma2STnSUF
-        RuX+AvzoODo63JZA97tZdhw=
-X-Google-Smtp-Source: ABdhPJw7qg6WwEw+c7lgngvfzj1mQ73HM9myLMInvTDB5Phgrfxjwf1VC1+VWbFwlhUIe5FzUV0xFw==
-X-Received: by 2002:a65:6289:: with SMTP id f9mr19212430pgv.272.1597006827473;
-        Sun, 09 Aug 2020 14:00:27 -0700 (PDT)
-Received: from thinkpad ([69.172.171.109])
-        by smtp.gmail.com with ESMTPSA id gm9sm17046793pjb.12.2020.08.09.14.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 14:00:26 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 14:00:56 -0700
-From:   Rustam Kovhaev <rkovhaev@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     xujialu <xujialu@vimux.org>, masahiroy@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: realpath "No such file or directory" warnings when building tags
- from KBUILD_OUTPUT directory
-Message-ID: <20200809210056.GA1344537@thinkpad>
-References: <20200808202822.GA597061@thinkpad>
- <20200809071627.GC1098830@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o8F23zcscVB1QKocpaxhAuhbpCbH7PudCZvz9GajNE0=;
+        b=gbIJIe017mgo/135w5/6q+ITsPPMgYazdi/l2yEU1NozPWHBemL+/quErBL14ymiL1
+         H4Vf1C52fUr/EloyieVDtqvJrHgdLr6P6xbRH027NYWFDkKgXHafjUw57+vu7qCAB4PO
+         sn7yOTdm3acbUq6JCqoSrNXHtDY89ZfWerHyTiyygd1TGH6XQXkouY+ShQEpBcHkmAb8
+         554Qij4gkS9DuNsWyBemv7BbdD+7rYcokIeBnHbLtp0cEOkMvqTwIC7B385UQYk5hFUF
+         b06uHRRo148G53Hq/WgowwRWy2FxSVha6rIcso46H8mVIGAYNmE9VFp/Eio8zuFp22nz
+         tu3g==
+X-Gm-Message-State: AOAM530+BIwS1jZgLFAapzKbMH6xQf+/8SpIymDtUI/O0HmjexURgPPd
+        lxpJ0144Apt3HXgIeohkK/YaBujrBZ3q9Hzz5UHp1+OM99jMrA==
+X-Google-Smtp-Source: ABdhPJxmAU+FLwMQ4506/816ftkTWYnxP1ud8npU59QPwwAgSXXbLRgYfLHltss7WKtgC6mSfhUcGt9qpR7lLslSnOU=
+X-Received: by 2002:a5e:dd4c:: with SMTP id u12mr14004089iop.93.1597007184650;
+ Sun, 09 Aug 2020 14:06:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809071627.GC1098830@kroah.com>
+References: <20200808121026.1300375-1-cmo@melexis.com> <20200808121026.1300375-3-cmo@melexis.com>
+ <CAHp75VfWk7pCy4Osv0uY0UH4yFS=PRGbE1CNCakuRFTE33SDJg@mail.gmail.com>
+ <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com> <20200809143222.4e19ea38@archlinux>
+In-Reply-To: <20200809143222.4e19ea38@archlinux>
+From:   Crt Mori <cmo@melexis.com>
+Date:   Sun, 9 Aug 2020 23:05:48 +0200
+Message-ID: <CAKv63uu1cRVCujM0nR5BstDYLZnCuGQTeFxhyUF0QK0mr0hvkQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] iio:temperature:mlx90632: Adding extended
+ calibration option
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 09:16:27AM +0200, Greg Kroah-Hartman wrote:
-> On Sat, Aug 08, 2020 at 01:28:22PM -0700, Rustam Kovhaev wrote:
-> > running 'make ARCH=x86_64 COMPILED_SOURCE=1 cscope tags' in
-> > KBUILD_OUTPUT directory produces lots of "No such file or directory"
-> > warnings from realpath
-> > 
-> > it seems like commit 4f491bb6ea2a greatly improved tags generation when
-> > COMPILED_SOURCE=1 is set, but should we add "-q" flag for realpath in 
-> > all_compiled_sources() or probably it would be better to fix root cause
-> > and make sure that for example we don't try to find objtool sources and
-> > exclude other similar dirs during tags generation? what do you think?
-> > 
-> > ...
-> > realpath: special.h: No such file or directory
-> > realpath: warn.h: No such file or directory
-> > realpath: sigchain.c: No such file or directory
-> > realpath: sigchain.h: No such file or directory
-> > realpath: orc_gen.c: No such file or directory
-> > realpath: objtool.c: No such file or directory
-> > ...
-> 
-> Care to send a patch for this?
-hi Greg, yes i do, thank you!
+On Sun, 9 Aug 2020 at 15:32, Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Sat, 8 Aug 2020 23:57:59 +0200
+> Crt Mori <cmo@melexis.com> wrote:
+>
+> > Hi,
+> > I am very sorry you missed them, I thought you saw it (reply on v3 of
+> > the patch). Maybe something happened to that mail, as it contained
+> > link to datasheet, so I will omit it now.
+> >
+> > Except for the order, only the remarks below are still open (did you
+> > get the polling trail I did?)
+> >
+> > On Sat, 8 Aug 2020 at 22:04, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > On Sat, Aug 8, 2020 at 3:11 PM Crt Mori <cmo@melexis.com> wrote:
+> > > >
+> > > > For some time the market wants medical grade accuracy in medical range,
+> > > > while still retaining the declared accuracy outside of the medical range
+> > > > within the same sensor. That is why we created extended calibration
+> > > > which is automatically switched to when object temperature is too high.
+> > > >
+> > > > This patch also introduces the object_ambient_temperature variable which
+> > > > is needed for more accurate calculation of the object infra-red
+> > > > footprint as sensor's ambient temperature might be totally different
+> > > > than what the ambient temperature is at object and that is why we can
+> > > > have some more errors which can be eliminated. Currently this temperature
+> > > > is fixed at 25, but the interface to adjust it by user (with external
+> > > > sensor or just IR measurement of the other object which acts as ambient),
+> > > > will be introduced in another commit.
+> > >
+> > > The kernel doc patch should go before this patch.
+> > >
+> > > ...
+> > >
+> > > > +       *ambient_new_raw = (s16)read_tmp;
+> > >
+> > > > +       *ambient_old_raw = (s16)read_tmp;
+> > >
+> > > Sorry, did I miss your answer about these castings all over the patch?
+> > >
+> >
+> > These castings are in fact needed. You read unsigned integer, but the
+> > return value is signed integer. Without the cast it did not extend the
+> > signed bit, but just wrote the value to signed. Also I find it more
+> > obvious with casts, that I did not "accidentally" convert to signed.
+>
+> Should we perhaps be making this explicit for the cases where we
+> are sign extending?  That doesn't include these two as the lvalue
+> is s16, but does include some of the others.
+>
+> sign_extend32(read_tmp, 15)
+>
 
+So for you lines like
+s32 read;
+read = (read + (s16)read_tmp) / 2;
+
+would actually be better as:
+read = (read + sign_extend32(read_tmp, 15)) / 2;
+
+Hm, strange. I would read that more align the read_tmp to 32 bit than
+the value you have in read_tmp is actually a signed 16 bit integer...
+
+> >
+> > > ...
+> > >
+> > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
+> > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
+> > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
+> > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
+> > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
+> > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);
+> > >
+> > > What so special about these magic 17, 18, 19? Can you provide definitions?
+> > >
+> > When we started 0 to 19 were all open for access, from userspace, then
+> > only 1 and 2 were used with calculations, and now we use 17, 18 and
+> > 19. Matter of fact is, I can't provide a descriptive name as it
+> > depends on DSP version and as you can see now within the same DSP
+> > version, also on the ID part. While RAM3 vs RAM1 and RAM2 could be
+> > named RAM_OBJECT1, RAM_OBJECT2, RAM_AMBIENT, knowing our development
+> > that might not be true in the next configuration, so I rather keep the
+> > naming as in the datasheet.
+> Normal solution for that is to version the defines as well.
+>
+> MLX90632_FW3_RAM_1_AMBIENT etc
+> When a new version changes this, then you introduced new defines to
+> support that firmware.
+>
+
+OK will add those, but it is ending up as:
+MLX90632_RAM_DSP5_AMBIENT
+MLX90632_RAM_DSP5_EXTENDED_AMBIENT
+MLX90632_RAM_DSP5_OBJECT_1
+MLX90632_RAM_DSP5_EXTENDED_OBJECT_1
+MLX90632_RAM_DSP5_OBJECT_2
+MLX90632_RAM_DSP5_EXTENDED_OBJECT_2
+
+ok?
+> >
+> > > ...
+> > >
+> > > > +       int tries = 4;
+> > >
+> > > > +       while (tries-- > 0) {
+> > > > +               ret = mlx90632_perform_measurement(data);
+> > > > +               if (ret < 0)
+> > > > +                       goto read_unlock;
+> > > > +
+> > > > +               if (ret == 19)
+> > > > +                       break;
+> > > > +       }
+> > > > +       if (tries < 0) {
+> > > > +               ret = -ETIMEDOUT;
+> > > > +               goto read_unlock;
+> > > > +       }
+> > >
+> > > Please avoid ping-pong type of changes in the same series (similar way
+> > > as for kernel doc), which means don't introduce something you are
+> > > going to change later on. Patch to move to do {} while () should go
+> > > before this one.
+> >
+> > OK, will fix that ordering in v5, but will wait till we solve also
+> > above discussions to avoid adding new versions.
+> >
+> > >
+> > > --
+> > > With Best Regards,
+> > > Andy Shevchenko
+> >
+> > And about that voodoo stuff with numbers:
+> >
+> > Honestly, the equation is in the datasheet[1] and this is just making
+> > floating point to fixed point with proper intermediate scaling
+> > (initially I had defines of TENTOX, but that was not desired). There
+> > is no better explanation of this voodoo.
+>
+> We all love fixed point arithmetic :)
+>
+> Jonathan
