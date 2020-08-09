@@ -2,147 +2,180 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D97C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC57206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:28:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLzytDvk"
+	by mail.kernel.org (Postfix) with ESMTP id B3199206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596979949;
+	bh=x6hX5hmHtgNXUpMMJKzfq2gMV3FBFrP/xYq9lyBrJcs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n/ovMTq/GZKf3U9Vd2hoOQlEnS0gLW86Spi1tWH70hbTEceyLSihNVwpLStWvfjle
+	 YkzAvqPt/PldZ6Y98tQlYw2lSy1POlYAsxUbldKieE6G8O3XR1XvbBm5qbG0caBS6T
+	 Jpnw87ISX+acZC2EFEwZ2NpiZFm+FXPLZGGLzfZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgHIN2M (ORCPT
+        id S1726234AbgHINc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 09:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgHIN2L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 09:28:11 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB25C061756;
-        Sun,  9 Aug 2020 06:28:11 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id x6so3439068pgx.12;
-        Sun, 09 Aug 2020 06:28:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HaME3Z5uLAfT5ND31CqQyrNIC7MORGaQXez8ygNaWV4=;
-        b=NLzytDvk7e3IFdRRH9He4ucBUq/gJBsZ5qjPWWibdb1MfGRPca7DJwH9ty7kw4aEZf
-         5ZZjc8vnKRKM8fTrJ3SFD1cPd7SZ4W5GIelKI3FxDDVk0Kbk0pz7LaiS8EzkRc5eIokf
-         wkZ9ikNhpN1shIszAo5UOVmya2/V3cbNiWTdh5hgIwernkWWpNUUPyJS1mwQu5tC8Bn1
-         S3FPZn4EKO5lDS3bCb3gNDf5ZYuncSahFN6QEoGn0ww73bwcAPDrYsoARC31Kr2ycGkS
-         oRZ7UfU1pG2FZh10vAX9Rk0YWYUTZdNBPUmdc7G9o71SUA5JMLHRqZHRXAgyzpcw0KmA
-         qM+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HaME3Z5uLAfT5ND31CqQyrNIC7MORGaQXez8ygNaWV4=;
-        b=C1/sRleAaBXyxJg6SNgMG4VH3u60wdLZmyfHP5kcthGqL2Iqs0SW7y2VMeD0DCXIRx
-         XJM9vYmVZR5zIC1KdYLqxu2GhvVIJw9aOFv3urm8K8RmYjoKbreQJtGLUL1IQoywHkBH
-         9ySQZFjoQSQRpTWuKciTvImTLvcBznH/r3H7+NOHnMfq3D7QVTZcfb7+3Qs+UPZVURRw
-         gy+1BThQLou1/SAE4Hdi58uTY1HL2IsGe+FEu53miU22adqfb+iB0NXSp9zqdK8BzCmx
-         yhxlc62oT5XSh5CeLCBN7N3WH4NPC29bja0E+3Y1Uwk/weJqafFaN/gv2OsZDZiqJT58
-         mJKA==
-X-Gm-Message-State: AOAM530f1Z7PXbkDgXHfK6OZE7wMVydISjsZ2F27TRrhjv7u7XOiMpJc
-        Tje4eL9ObJ/d2lGGl6K80MSb/hCh
-X-Google-Smtp-Source: ABdhPJwyrw+9WQ33uwO74GP2k5JsZS8rNn13zo1THGlGYBNPbsQCvetv+4xtO+7HxMlHqYG7r8hHyg==
-X-Received: by 2002:aa7:8a4d:: with SMTP id n13mr23175412pfa.143.1596979690802;
-        Sun, 09 Aug 2020 06:28:10 -0700 (PDT)
-Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id j10sm9127414pff.171.2020.08.09.06.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 06:28:10 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v3 18/18] tools: gpio: add debounce support to gpio-event-mon
-Date:   Sun,  9 Aug 2020 21:25:29 +0800
-Message-Id: <20200809132529.264312-19-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200809132529.264312-1-warthog618@gmail.com>
-References: <20200809132529.264312-1-warthog618@gmail.com>
+        Sun, 9 Aug 2020 09:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726070AbgHINc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 09:32:26 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4F98206B6;
+        Sun,  9 Aug 2020 13:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596979945;
+        bh=x6hX5hmHtgNXUpMMJKzfq2gMV3FBFrP/xYq9lyBrJcs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cdU7jvqsvRA99y1tAOZjJre7pKdrkjgJGNC1NJRQStZ5+VBClhBupnCfrwhR7ZzcI
+         h2FTdhTCSM5lC/pYXU76djpASYaCUEBvFVY3mMKl15iQHwU4N97qFmhQYMY9KnH8g4
+         eXfoW2EWAD6HUzECMNTluDfaat1XoE0MAf5Z2+0M=
+Date:   Sun, 9 Aug 2020 14:32:22 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Crt Mori <cmo@melexis.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/4] iio:temperature:mlx90632: Adding extended
+ calibration option
+Message-ID: <20200809143222.4e19ea38@archlinux>
+In-Reply-To: <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com>
+References: <20200808121026.1300375-1-cmo@melexis.com>
+        <20200808121026.1300375-3-cmo@melexis.com>
+        <CAHp75VfWk7pCy4Osv0uY0UH4yFS=PRGbE1CNCakuRFTE33SDJg@mail.gmail.com>
+        <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for debouncing monitored lines to gpio-event-mon.
+On Sat, 8 Aug 2020 23:57:59 +0200
+Crt Mori <cmo@melexis.com> wrote:
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/gpio-event-mon.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+> Hi,
+> I am very sorry you missed them, I thought you saw it (reply on v3 of
+> the patch). Maybe something happened to that mail, as it contained
+> link to datasheet, so I will omit it now.
+> 
+> Except for the order, only the remarks below are still open (did you
+> get the polling trail I did?)
+> 
+> On Sat, 8 Aug 2020 at 22:04, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Sat, Aug 8, 2020 at 3:11 PM Crt Mori <cmo@melexis.com> wrote:  
+> > >
+> > > For some time the market wants medical grade accuracy in medical range,
+> > > while still retaining the declared accuracy outside of the medical range
+> > > within the same sensor. That is why we created extended calibration
+> > > which is automatically switched to when object temperature is too high.
+> > >
+> > > This patch also introduces the object_ambient_temperature variable which
+> > > is needed for more accurate calculation of the object infra-red
+> > > footprint as sensor's ambient temperature might be totally different
+> > > than what the ambient temperature is at object and that is why we can
+> > > have some more errors which can be eliminated. Currently this temperature
+> > > is fixed at 25, but the interface to adjust it by user (with external
+> > > sensor or just IR measurement of the other object which acts as ambient),
+> > > will be introduced in another commit.  
+> >
+> > The kernel doc patch should go before this patch.
+> >
+> > ...
+> >  
+> > > +       *ambient_new_raw = (s16)read_tmp;  
+> >  
+> > > +       *ambient_old_raw = (s16)read_tmp;  
+> >
+> > Sorry, did I miss your answer about these castings all over the patch?
+> >  
+> 
+> These castings are in fact needed. You read unsigned integer, but the
+> return value is signed integer. Without the cast it did not extend the
+> signed bit, but just wrote the value to signed. Also I find it more
+> obvious with casts, that I did not "accidentally" convert to signed.
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index e50bb107ea3a..bd5ea3cc6e85 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -148,11 +148,12 @@ void print_usage(void)
- 		"  -s         Set line as open source\n"
- 		"  -r         Listen for rising edges\n"
- 		"  -f         Listen for falling edges\n"
-+		"  -b <n>     Debounce the line with period n microseconds\n"
- 		" [-c <n>]    Do <n> loops (optional, infinite loop if not stated)\n"
- 		"  -?         This helptext\n"
- 		"\n"
- 		"Example:\n"
--		"gpio-event-mon -n gpiochip0 -o 4 -r -f\n"
-+		"gpio-event-mon -n gpiochip0 -o 4 -r -f -b 10000\n"
- 	);
- }
- 
-@@ -167,11 +168,12 @@ int main(int argc, char **argv)
- 	unsigned int num_lines = 0;
- 	unsigned int loops = 0;
- 	struct gpio_v2_line_config config;
--	int c;
-+	int c, attr, i;
-+	unsigned long debounce_period = 0;
- 
- 	memset(&config, 0, sizeof(config));
- 	config.flags = GPIO_V2_LINE_FLAG_INPUT;
--	while ((c = getopt(argc, argv, "c:n:o:dsrf?")) != -1) {
-+	while ((c = getopt(argc, argv, "c:n:o:b:dsrf?")) != -1) {
- 		switch (c) {
- 		case 'c':
- 			loops = strtoul(optarg, NULL, 10);
-@@ -187,6 +189,9 @@ int main(int argc, char **argv)
- 			lines[num_lines] = strtoul(optarg, NULL, 10);
- 			num_lines++;
- 			break;
-+		case 'b':
-+			debounce_period = strtoul(optarg, NULL, 10);
-+			break;
- 		case 'd':
- 			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
- 			break;
-@@ -205,6 +210,15 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
-+	if (debounce_period) {
-+		attr = config.num_attrs;
-+		config.num_attrs++;
-+		for (i = 0; i < num_lines; i++)
-+			gpiotools_set_bit(&config.attrs[attr].mask, i);
-+		config.attrs[attr].attr.id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
-+		config.attrs[attr].attr.debounce_period = debounce_period;
-+	}
-+
- 	if (!device_name || num_lines == 0) {
- 		print_usage();
- 		return -1;
--- 
-2.28.0
+Should we perhaps be making this explicit for the cases where we
+are sign extending?  That doesn't include these two as the lvalue
+is s16, but does include some of the others.
 
+sign_extend32(read_tmp, 15)
+
+> 
+> > ...
+> >  
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
+> > > +       ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);  
+> >
+> > What so special about these magic 17, 18, 19? Can you provide definitions?
+> >  
+> When we started 0 to 19 were all open for access, from userspace, then
+> only 1 and 2 were used with calculations, and now we use 17, 18 and
+> 19. Matter of fact is, I can't provide a descriptive name as it
+> depends on DSP version and as you can see now within the same DSP
+> version, also on the ID part. While RAM3 vs RAM1 and RAM2 could be
+> named RAM_OBJECT1, RAM_OBJECT2, RAM_AMBIENT, knowing our development
+> that might not be true in the next configuration, so I rather keep the
+> naming as in the datasheet.
+Normal solution for that is to version the defines as well.
+
+MLX90632_FW3_RAM_1_AMBIENT etc
+When a new version changes this, then you introduced new defines to
+support that firmware.
+
+> 
+> > ...
+> >  
+> > > +       int tries = 4;  
+> >  
+> > > +       while (tries-- > 0) {
+> > > +               ret = mlx90632_perform_measurement(data);
+> > > +               if (ret < 0)
+> > > +                       goto read_unlock;
+> > > +
+> > > +               if (ret == 19)
+> > > +                       break;
+> > > +       }
+> > > +       if (tries < 0) {
+> > > +               ret = -ETIMEDOUT;
+> > > +               goto read_unlock;
+> > > +       }  
+> >
+> > Please avoid ping-pong type of changes in the same series (similar way
+> > as for kernel doc), which means don't introduce something you are
+> > going to change later on. Patch to move to do {} while () should go
+> > before this one.  
+> 
+> OK, will fix that ordering in v5, but will wait till we solve also
+> above discussions to avoid adding new versions.
+> 
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko  
+> 
+> And about that voodoo stuff with numbers:
+> 
+> Honestly, the equation is in the datasheet[1] and this is just making
+> floating point to fixed point with proper intermediate scaling
+> (initially I had defines of TENTOX, but that was not desired). There
+> is no better explanation of this voodoo.
+
+We all love fixed point arithmetic :)
+
+Jonathan
