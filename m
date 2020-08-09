@@ -2,111 +2,101 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6204C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6540CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A292F206C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2E0206C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUBeK3xA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTuxgSGi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgHIHYr (ORCPT
+        id S1726401AbgHIHZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 03:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53478 "EHLO
+        Sun, 9 Aug 2020 03:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgHIHYq (ORCPT
+        with ESMTP id S1725710AbgHIHZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 03:24:46 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95869C061756;
-        Sun,  9 Aug 2020 00:24:46 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w17so3238822ply.11;
-        Sun, 09 Aug 2020 00:24:46 -0700 (PDT)
+        Sun, 9 Aug 2020 03:25:39 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F1AC061756;
+        Sun,  9 Aug 2020 00:25:39 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 17so3474498pfw.9;
+        Sun, 09 Aug 2020 00:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=rlCw9bXNz9amSiyruivuB3SKCYjIcaIfTwgEtm92qW4=;
-        b=jUBeK3xAvto7PSUx2HYYsmFHvicywYI+71jRXaFkgIUUbmk9vB/d9Aa95hlzr/lV1K
-         5zvwZehnn0cJx0I0FiLh100a1z3ZNfb+1Z0mcKu8agANAm5CzpLUitLJSP8GuyuaXyxN
-         U4/M8Dtf62WRdfOcmcenjPcQENnXoo1LczVOe+hhE0jhGbTzMcluRRdZpF/E6Pp9frFt
-         YV0Hrx+5GVLWPdIXTNF9RB9I+9uckf/jIOKPz7xANgvwpPAeOUldXMkNvz1PxiYlQQ97
-         /O2YWFFdHP3gkz4dcsKe53OyzUaN1FTUj8QzBEgIHKtOLy7NWhLcc4h/d21qs6J+WBZ1
-         HMrg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LXRSiIIsdnywtiWIezzvW9bD/x7NcWCcTqyfL9gD3uA=;
+        b=jTuxgSGiRxcq2P0c4zCzQVGkKUXnW72njViEDu2UqsELULaRrrvefVtmdzbqhX1w1i
+         n+dDIuOuMuQ6fYCWbBBjY1IRqDaiIK9bbf5R4xoVzK3L+YRtayZyRMPqee9Xa3ECWum3
+         UhDUewKiPcz+d+z3nKGOxtRH966wCewfCtOkWXyXf7TdHvTXRGDDeUCxBdrMzx6hv8aZ
+         jQezRA1C6bspfmHJwhj4VASRBPZCDzpIM+jGXjUxH8dsH/roWiS9sI2grqe+X7FBD+60
+         OD7xNcemiev6I9jy/0cgA8tU5rDsCZvY1nW243cPIZpBcNGmDzJd1kOLAPPdlimCwNLP
+         QKAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=rlCw9bXNz9amSiyruivuB3SKCYjIcaIfTwgEtm92qW4=;
-        b=qTUKrpmv01tYAvUs3F/I8ptG+rzTVpmIOpAQerhWLT+aoLtjsjV80EwureuWatS/7k
-         7zVB22vnhUyqzUb5bAoFJHSai1rA9M77bFIppo8dRxrPHYwtTzU8XTAdasFVdocKdpaE
-         B/GZMNNcVOnXfwOc/vBr8wg5UwV6KrCcSU8xtIi0whKJixa0DcLsGl87XgCxOKpJQ4wu
-         aQZCGv8MfhilQojFn0jbizCH3dUdbuz68fboKwD3u18unUoSF/yO53bd0RhIs2+gS8To
-         vqvfM/SbzF5JpdHvcVHrZzks6aHksN1TYgyhC9tkRZlzHNDRgvgLT92kbI4A093evuC2
-         YNdA==
-X-Gm-Message-State: AOAM530WJaXu4sbee6A6EfPODkSDqv3qJZhM3a3wTGXdAe0cBbv7Sc+w
-        OUGK7gd3r0/eTkkV6q/V4/ofxn8OCX4=
-X-Google-Smtp-Source: ABdhPJxuKuH6lag//Z3lCgAfLwYaAPCgKfW1uCamkewUti6WnhVFWc3MOF6OUpwZx60wnjApbHFjXg==
-X-Received: by 2002:a17:90a:202c:: with SMTP id n41mr22176095pjc.126.1596957886122;
-        Sun, 09 Aug 2020 00:24:46 -0700 (PDT)
-Received: from blackclown ([103.88.82.9])
-        by smtp.gmail.com with ESMTPSA id gl9sm565272pjb.41.2020.08.09.00.24.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Aug 2020 00:24:45 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 12:54:28 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     dledford@redhat.com, jgg@ziepe.ca
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH 0/4] Infiniband Subsystem: Remove pci-dma-compat wrapper APIs.
-Message-ID: <cover.1596957073.git.usuraj35@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LXRSiIIsdnywtiWIezzvW9bD/x7NcWCcTqyfL9gD3uA=;
+        b=ICc9+khSAXoIuFU1ALI0ABjm5RuSn/+cqXlFcO5WvHNB/GHNYx+QF461q6elH5lcNV
+         Vi0j+aO/c2A2ggNNLZn+nj4h8a3STfwvE/E1QGzHl3YtmoUArhPcvtfBhPWl8eniPlJr
+         hhqhz2v6GHhTHWF34jIrKXmdM9q6Ad+pXoBPbSM8MHJzE4kbNizJx99fnXWtevcprrk9
+         nqFAp/7IlXQky8e4Y1KS4HPcJEnbw1ljR/N7WvKbQrPB7Qlf0KrUDJRSK3bOm0pS87AM
+         03psy05XGIfd0pUmx7VjTzfXYlARXT4N3/kGSU+/OOJ+WX9PJgkT2vUbdqgs4W9LdQB8
+         66dA==
+X-Gm-Message-State: AOAM5328rIaf661TKl8jxziEq+7iTTMl7H6gTexV9ZlDy6HpPveV2S3m
+        JtHOTJKulCtJYEZJ/zKULe0=
+X-Google-Smtp-Source: ABdhPJw58c9cbbVQ4EeDel38Sb8HMMdoskAIBG4iV5s2tEWaCOtmA5+GVFN7EqxkwXKPTcEwCcQ9mg==
+X-Received: by 2002:a62:5284:: with SMTP id g126mr19969971pfb.139.1596957938246;
+        Sun, 09 Aug 2020 00:25:38 -0700 (PDT)
+Received: from localhost.localdomain (c-24-16-167-223.hsd1.wa.comcast.net. [24.16.167.223])
+        by smtp.gmail.com with ESMTPSA id z4sm17935792pfb.55.2020.08.09.00.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2020 00:25:37 -0700 (PDT)
+From:   YourName <argoz1701@gmail.com>
+To:     marcel@holtmann.org
+Cc:     johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org, argoz1701 <argoz1701@gmail.com>
+Subject: [PATCH] drivers: bluetooth: btintel.c: fixed format issue.
+Date:   Sun,  9 Aug 2020 00:25:32 -0700
+Message-Id: <20200809072532.14919-1-argoz1701@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hii Developers,
+From: argoz1701 <argoz1701@gmail.com>
 
-	This patch series will replace all the legacy pci-dma-compat wrappers
-with the dma-mapping APIs directly in the INFINIBAND Subsystem.
+Fixed a coding style issue.
 
-This task is done through a coccinelle script which is described in each commit
-message.
+Signed-off-by: Daniel West <argoz1701@gmail.com>
+---
+ drivers/bluetooth/btintel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The changes are compile tested.
-
-Thanks,
-
-Suraj Upadhyay.
-
-Suraj Upadhyay (4):
-  IB/hfi1: Remove pci-dma-compat wrapper APIs
-  IB/mthca: Remove pci-dma-compat wrapper APIs
-  RDMA/qib: Remove pci-dma-compat wrapper APIs
-  RDMA/pvrdma: Remove pci-dma-compat wrapper APIs
-
- drivers/infiniband/hw/hfi1/pcie.c             |  8 +++----
- drivers/infiniband/hw/hfi1/user_exp_rcv.c     | 13 +++++------
- drivers/infiniband/hw/mthca/mthca_eq.c        | 21 +++++++++--------
- drivers/infiniband/hw/mthca/mthca_main.c      |  8 +++----
- drivers/infiniband/hw/mthca/mthca_memfree.c   | 23 +++++++++++--------
- drivers/infiniband/hw/qib/qib_file_ops.c      | 12 +++++-----
- drivers/infiniband/hw/qib/qib_init.c          |  4 ++--
- drivers/infiniband/hw/qib/qib_pcie.c          |  8 +++----
- drivers/infiniband/hw/qib/qib_user_pages.c    | 12 +++++-----
- .../infiniband/hw/vmw_pvrdma/pvrdma_main.c    |  6 ++---
- 10 files changed, 59 insertions(+), 56 deletions(-)
-
+diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
+index 5fa5be3c5598..d0512506fa05 100644
+--- a/drivers/bluetooth/btintel.c
++++ b/drivers/bluetooth/btintel.c
+@@ -29,7 +29,7 @@ int btintel_check_bdaddr(struct hci_dev *hdev)
+ 			     HCI_INIT_TIMEOUT);
+ 	if (IS_ERR(skb)) {
+ 		int err = PTR_ERR(skb);
+-		bt_dev_err(hdev, "Reading Intel device address failed (%d)",
++			bt_dev_err(hdev, "Reading Intel device address failed (%d)",
+ 			   err);
+ 		return err;
+ 	}
 -- 
-2.17.1
+2.25.1
 
