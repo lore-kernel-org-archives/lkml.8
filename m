@@ -2,202 +2,547 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90986C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D0AC433DF
 	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1DD206E9
+	by mail.kernel.org (Postfix) with ESMTP id 46C72206B2
 	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 16:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596991550;
-	bh=o3+gvkRYHXmkCK5K6UoAuUi+HTxdUxSJHGrGr2DP/Ng=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=WQj+IO0SamqY+k8UMBQKIsBtHIzHr3E9NIAh2MznDw1i4xGbcbpbOX1KimY7ZDUML
-	 23TLsetw1rlLGrmFjztITXTFVr+avYu5frW6379u/XqPukqfp5xEaApLjERyn/umSQ
-	 D5C/g2iX9dAPenjvDDwkA/JCZDn+GAfaNnTalF8U=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTGomXpC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgHIQpp (ORCPT
+        id S1726479AbgHIQpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 12:45:45 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:57832 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgHIQpS (ORCPT
+        Sun, 9 Aug 2020 12:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgHIQpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 12:45:18 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 079GixTM028732;
-        Mon, 10 Aug 2020 01:45:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 079GixTM028732
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596991500;
-        bh=4/Wuc/SZmcBLjxjCab/4kWn1GAKRas6rkaBR2EHWo20=;
-        h=From:Date:Subject:To:Cc:From;
-        b=fXe5iqgEsZZNZOomxBIqwTx2ZpqZ0c2DwWZO7dBnUdO4hPRH1OPigz3cAVRNurY8y
-         clfvDuhM0ntIqNCs8JfNqTiH8Vu+qbGDLW8h2WnThIu8z5Avqg6Ufs48strU48F+W/
-         FOeBZJNr+WTA2nrKooBvjvJJQqKxLHBD8CiKAiJyHR9bA6NTlTcYY7w1aFDlWcnyCP
-         nlCBMJF3KhMjdMaSdXBgVv972N63E0HG0ZTmg06sJtiNZsXr4CMyiixzt+K6ppGhPT
-         Fn9v5tDeXxYQKTZc/JKO51ExqbbahqHAmnQMUf0DJzAwWVS5AauvQnKgvObzuKuuKP
-         5RKrp2J4TuzCg==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id i129so3129589vsi.3;
-        Sun, 09 Aug 2020 09:45:00 -0700 (PDT)
-X-Gm-Message-State: AOAM530xo3yOb+t5ZZFMO/C1Hb4t9M/AlTNzyFJONdlImQp7tAbyoMdv
-        hwKsRI/6btemzSMTXKbeBu7sGCGwfhKWIg9JO4Q=
-X-Google-Smtp-Source: ABdhPJzmegxrhBUJkpqQlxlRB6LMHJWnb2qh+gXiiLgEY5iHTAm8kJYLhuDU2AlNZBxL8OXAxsDf5A54WI/UKy740Ac=
-X-Received: by 2002:a05:6102:2247:: with SMTP id e7mr16099231vsb.181.1596991498725;
- Sun, 09 Aug 2020 09:44:58 -0700 (PDT)
+        Sun, 9 Aug 2020 12:45:09 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F8FC061786;
+        Sun,  9 Aug 2020 09:45:08 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id qc22so7065666ejb.4;
+        Sun, 09 Aug 2020 09:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=f6GceXpV/IHfaJaRQd7xDBG5y4ojnE6AoHD31OqAqtA=;
+        b=OTGomXpCHuuP4cJikykUt9HwkJ1qH/DYmiroDHoq79GuH2nYaC6VWSwlmPs6A7IcqQ
+         NkAijzPA8TWdAjiW1nxx+XfNrq/ne/NmRj4RMxUeU4nGL+Lz+qHd1/Ylcw976OYJW9Ki
+         HxVUA0/4lOm6zpMdf7p8G3xSex3M+XEO66SInaspMKIA4kbkk/Otm3DJsO0MqXE7C7R9
+         nay6ZFl1tYQy77y1VMbT/kTDXQyaktoz12wPv0wodzcL1mxIz1YO50hI5teX2lzNM+RX
+         M910zlR0wWkg2flqFyYtMQPvpv6n1Gzm2EoWUBFEab08SiFo0K+vBNjLpNdPsCtvqgsS
+         Vypw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f6GceXpV/IHfaJaRQd7xDBG5y4ojnE6AoHD31OqAqtA=;
+        b=ZbCyBo1hMNV830ZVWop7WbKxrEP0N6V6DFmY7lcgKC4QqC3bfiIcbgMQpvvEUzNBVb
+         yEzScQsLYiv17UcgkbxbKxd3HgcgbMUU60adadt2ehjQIDqNW2qtzlHV4SlP9eDZAx2N
+         L/FQKh7wtAJ453GeqHVJYT5UUeF+vjFtZr792hrXkZn+GfpfgMIVbNC3HuzoZZGAgbr/
+         SqZ9bjZGTxGZLSsCaFkvY3kn/SaPUVy+ZFIXn5YQOuYUpo/DtmcyzyKfUh+7w9meEzym
+         34O1O+fI562wC7K7OjKrR6KX6kIbOvyogX0Rrp4mKI94b2nJms0Xk5mqLZM41aZnFkr1
+         JUcA==
+X-Gm-Message-State: AOAM533nQGju150zcl3eOUycn8XtLVzGSHSlwuW5aBVdx7xi5zhF0Mex
+        w0TH7168/34Ah/zFBtvSkPU=
+X-Google-Smtp-Source: ABdhPJx638U9XwWalUsNbYtRix3dPdDZEnx9jVudX1ISGnEDPEQfCQSIgLL42eJdfbiPHZNQd9aYIQ==
+X-Received: by 2002:a17:906:a84f:: with SMTP id dx15mr17924296ejb.377.1596991506778;
+        Sun, 09 Aug 2020 09:45:06 -0700 (PDT)
+Received: from blackhead.home ([2a01:112f:a1c:7900:7316:ce1e:7b0b:6bd7])
+        by smtp.gmail.com with ESMTPSA id b24sm10423215edn.33.2020.08.09.09.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2020 09:45:06 -0700 (PDT)
+From:   Marcin Sloniewski <marcin.sloniewski@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, mani@kernel.org,
+        marcin.sloniewski@gmail.com, a.fatoum@pengutronix.de,
+        sam@ravnborg.org, linus.walleij@linaro.org, arnd@arndb.de,
+        broonie@kernel.org, lkundrak@v3.sk, daniel@0x0f.com,
+        kuninori.morimoto.gx@renesas.com, allen.chen@ite.com.tw,
+        robh@kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 3/3] ARM: dts: stm32: add initial support for stm32mp157-odyssey board
+Date:   Sun,  9 Aug 2020 18:44:50 +0200
+Message-Id: <20200809164450.289731-3-marcin.sloniewski@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
+References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
 MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 10 Aug 2020 01:44:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARMCg0vPjZL0o-sFr+vMu17-nFcV4v4pbLazLK8iTSQWQ@mail.gmail.com>
-Message-ID: <CAK7LNARMCg0vPjZL0o-sFr+vMu17-nFcV4v4pbLazLK8iTSQWQ@mail.gmail.com>
-Subject: [GIT PULL] Kbuild updates for v5.9-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Add support for Seeed Studio's stm32mp157c odyssey board.
+Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
+and carrier board with USB and ETH interfaces, SD card connector,
+wifi and BT chip AP6236.
 
-Please pull Kbuild updates for v5.9-rc1
-Thanks.
+In this patch only basic kernel boot is supported and interfacing
+SD card and on-board eMMC.
 
+Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+---
 
-The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
+Changes in v7:
+- fix eth: added clock assignement for phy.
+  It gets clock from PLL4_P which must be configured
+  in u-boot/ATF as stmicroelectronics suggests.
 
-  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
+Changes in v6:
+- add reset pin for eth phy
+- move pinctrl for sdmmc2 to stm32mp15-pinctrl.dtsi
 
-are available in the Git repository at:
+Changes in v5:
+- fix schema for board's dts
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-v5.9
+Changes in v4:
+- add seeed,stm32mp157c-odyssey-som in compatible
+  for carrier board
+- fix sdmmc2 interface by changing one of the pins
+  to use
+- change eth phy address to 7
 
-for you to fetch changes up to 132305b3b474a85152302ceda4551384cce3904e:
+Changes in v3:
+- fix compilation on tip of stm32-next
+  due to change in names for pinctrl
+- fix deprecated binding for led node
+- fix redundant "okay" statuses
+- add phy part number for eth in comment
 
-  kbuild: stop filtering out $(GCC_PLUGINS_CFLAGS) from cc-option base
-(2020-08-10 01:32:59 +0900)
+Changes in v2:
+- add new odyssey dts to Makefile
 
-----------------------------------------------------------------
-Kbuild updates for v5.9
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      |  18 ++
+ .../arm/boot/dts/stm32mp157c-odyssey-som.dtsi | 276 ++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-odyssey.dts     |  80 +++++
+ 4 files changed, 376 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey.dts
 
- - run the checker (e.g. sparse) after the compiler
-
- - remove unneeded cc-option tests for old compiler flags
-
- - fix tar-pkg to install dtbs
-
- - introduce ccflags-remove-y and asflags-remove-y syntax
-
- - allow to trace functions in sub-directories of lib/
-
- - introduce hostprogs-always-y and userprogs-always-y syntax
-
- - various Makefile cleanups
-
-----------------------------------------------------------------
-Alexander A. Klimov (1):
-      kbuild: Replace HTTP links with HTTPS ones
-
-Domenico Andreoli (1):
-      kbuild: buildtar: add dtbs support
-
-Luc Van Oostenryck (1):
-      kbuild: run the checker after the compiler
-
-Masahiro Yamada (13):
-      Revert "kbuild: Create directory for target DTB"
-      kbuild: remove cc-option test of -fno-stack-protector
-      kbuild: remove cc-option test of -ffreestanding
-      powerpc/boot: add DTB to 'targets'
-      kbuild: always create directories of targets
-      kbuild: do not export LDFLAGS_vmlinux
-      kbuild: introduce ccflags-remove-y and asflags-remove-y
-      kbuild: trace functions in subdirectories of lib/
-      kbuild: move host .so build rules to scripts/gcc-plugins/Makefile
-      kbuild: sort hostprogs before passing it to ifneq
-      kbuild: introduce hostprogs-always-y and userprogs-always-y
-      kbuild: include scripts/Makefile.* only when relevant CONFIG is enabled
-      kbuild: stop filtering out $(GCC_PLUGINS_CFLAGS) from cc-option base
-
- Documentation/kbuild/Kconfig.recursion-issue-02 |  2 +-
- Documentation/kbuild/kconfig-language.rst       | 18 +++++++-------
- Documentation/kbuild/llvm.rst                   |  2 +-
- Documentation/kbuild/makefiles.rst              | 45
-++++++++++++++++++++++++++++++++++-
- Makefile                                        | 26 ++++++++++++---------
- arch/Kconfig                                    |  3 ---
- arch/arm/boot/compressed/Makefile               |  9 ++-----
- arch/mips/vdso/Makefile                         |  3 +--
- arch/powerpc/boot/Makefile                      |  2 ++
- arch/powerpc/kernel/Makefile                    |  2 +-
- arch/powerpc/platforms/powermac/Makefile        |  2 +-
- arch/powerpc/xmon/Makefile                      |  3 +--
- arch/s390/Makefile                              |  2 +-
- arch/sh/boot/compressed/Makefile                |  5 +---
- arch/sparc/vdso/Makefile                        |  4 ++--
- arch/um/Makefile                                |  3 +--
- arch/x86/Makefile                               |  4 ++--
- arch/x86/boot/compressed/Makefile               |  4 ++--
- arch/x86/entry/vdso/Makefile                    |  4 ++--
- arch/x86/kernel/cpu/Makefile                    |  3 +--
- arch/x86/lib/Makefile                           |  2 +-
- arch/x86/mm/Makefile                            |  7 +++---
- arch/x86/power/Makefile                         |  3 +--
- arch/x86/purgatory/Makefile                     |  2 +-
- arch/x86/um/vdso/Makefile                       |  2 +-
- arch/x86/xen/Makefile                           |  5 ++--
- arch/xtensa/boot/boot-elf/Makefile              |  2 +-
- drivers/firmware/efi/libstub/Makefile           |  4 ++--
- drivers/xen/Makefile                            |  3 +--
- kernel/trace/Makefile                           |  4 ++--
- lib/Makefile                                    |  9 +++----
- lib/livepatch/Makefile                          |  4 ----
- mm/kasan/Makefile                               |  2 +-
- samples/auxdisplay/Makefile                     |  3 +--
- samples/binderfs/Makefile                       |  3 +--
- samples/connector/Makefile                      |  3 +--
- samples/hidraw/Makefile                         |  3 +--
- samples/mei/Makefile                            |  4 +---
- samples/pidfd/Makefile                          |  4 +---
- samples/seccomp/Makefile                        |  4 +---
- samples/timers/Makefile                         |  3 +--
- samples/uhid/Makefile                           |  3 +--
- samples/vfs/Makefile                            |  3 +--
- samples/watch_queue/Makefile                    |  3 +--
- samples/watchdog/Makefile                       |  3 +--
- scripts/Kbuild.include                          | 10 +++-----
- scripts/Makefile                                | 18 +++++++-------
- scripts/Makefile.build                          | 15 ++++++------
- scripts/Makefile.clean                          | 13 +++++++----
- scripts/Makefile.host                           | 40
-+++++--------------------------
- scripts/Makefile.kcov                           |  4 ----
- scripts/Makefile.kcsan                          |  4 ----
- scripts/Makefile.lib                            | 28 +++++++++++++++-------
- scripts/Makefile.ubsan                          |  3 ---
- scripts/basic/Makefile                          |  3 +--
- scripts/dtc/Makefile                            |  5 ++--
- scripts/gcc-plugins/Makefile                    | 61
-+++++++++++++++++++++++++++++++++++++++---------
- scripts/genksyms/Makefile                       |  3 +--
- scripts/link-vmlinux.sh                         |  4 ++++
- scripts/mod/Makefile                            |  4 ++--
- scripts/package/buildtar                        | 12 ++++++++++
- scripts/package/mkdebian                        |  2 +-
- scripts/package/mkspec                          |  2 +-
- scripts/selinux/genheaders/Makefile             |  4 +---
- scripts/selinux/mdp/Makefile                    |  3 +--
- 65 files changed, 251 insertions(+), 221 deletions(-)
-
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4572db3fa5ae..f4a43a9420f1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1056,7 +1056,8 @@ dtb-$(CONFIG_ARCH_STM32) += \
+ 	stm32mp157c-dk2.dtb \
+ 	stm32mp157c-ed1.dtb \
+ 	stm32mp157c-ev1.dtb \
+-	stm32mp157c-lxa-mc1.dtb
++	stm32mp157c-lxa-mc1.dtb \
++	stm32mp157c-odyssey.dtb
+ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-a1000.dtb \
+ 	sun4i-a10-ba10-tvbox.dtb \
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index b5a66429670c..a47eaecbde42 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -1437,6 +1437,24 @@ pins {
+ 		};
+ 	};
+ 
++	sdmmc2_d47_pins_d: sdmmc2-d47-3 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
++				 <STM32_PINMUX('A', 9, AF10)>, /* SDMMC2_D5 */
++				 <STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
++				 <STM32_PINMUX('C', 7, AF10)>; /* SDMMC2_D7 */
++		};
++	};
++
++	sdmmc2_d47_sleep_pins_d: sdmmc2-d47-sleep-3 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 8, ANALOG)>, /* SDMMC2_D4 */
++				 <STM32_PINMUX('A', 9, ANALOG)>, /* SDMMC2_D5 */
++				 <STM32_PINMUX('E', 5, ANALOG)>, /* SDMMC2_D6 */
++				 <STM32_PINMUX('C', 7, ANALOG)>; /* SDMMC2_D7 */
++		};
++	};
++
+ 	sdmmc3_b4_pins_a: sdmmc3-b4-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('F', 0, AF9)>, /* SDMMC3_D0 */
+diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
+new file mode 100644
+index 000000000000..6cf49a0a9e69
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
+@@ -0,0 +1,276 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
++ */
++
++/dts-v1/;
++
++#include "stm32mp157.dtsi"
++#include "stm32mp15xc.dtsi"
++#include "stm32mp15-pinctrl.dtsi"
++#include "stm32mp15xxac-pinctrl.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/mfd/st,stpmic1.h>
++
++/ {
++	model = "Seeed Studio Odyssey-STM32MP157C SOM";
++	compatible = "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
++
++	memory@c0000000 {
++		device_type = "memory";
++		reg = <0xc0000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		mcuram2: mcuram2@10000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10000000 0x40000>;
++			no-map;
++		};
++
++		vdev0vring0: vdev0vring0@10040000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10040000 0x1000>;
++			no-map;
++		};
++
++		vdev0vring1: vdev0vring1@10041000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10041000 0x1000>;
++			no-map;
++		};
++
++		vdev0buffer: vdev0buffer@10042000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10042000 0x4000>;
++			no-map;
++		};
++
++		mcuram: mcuram@30000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x30000000 0x40000>;
++			no-map;
++		};
++
++		retram: retram@38000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x38000000 0x10000>;
++			no-map;
++		};
++
++		gpu_reserved: gpu@d4000000 {
++			reg = <0xd4000000 0x4000000>;
++			no-map;
++		};
++	};
++
++	led {
++		compatible = "gpio-leds";
++		led-blue {
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_HEARTBEAT;
++			gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
++
++&gpu {
++	contiguous-area = <&gpu_reserved>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	status = "okay";
++	/* spare dmas for other usage */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++
++	pmic: stpmic@33 {
++		compatible = "st,stpmic1";
++		reg = <0x33>;
++		interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		regulators {
++			compatible = "st,stpmic1-regulators";
++			ldo1-supply = <&v3v3>;
++			ldo3-supply = <&vdd_ddr>;
++			ldo6-supply = <&v3v3>;
++			pwr_sw1-supply = <&bst_out>;
++			pwr_sw2-supply = <&bst_out>;
++
++			vddcore: buck1 {
++				regulator-name = "vddcore";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd_ddr: buck2 {
++				regulator-name = "vdd_ddr";
++				regulator-min-microvolt = <1350000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd: buck3 {
++				regulator-name = "vdd";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				st,mask-reset;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			v3v3: buck4 {
++				regulator-name = "v3v3";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++				regulator-initial-mode = <0>;
++			};
++
++			v1v8_audio: ldo1 {
++				regulator-name = "v1v8_audio";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO1 0>;
++			};
++
++			v3v3_hdmi: ldo2 {
++				regulator-name = "v3v3_hdmi";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO2 0>;
++			};
++
++			vtt_ddr: ldo3 {
++				regulator-name = "vtt_ddr";
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <750000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			vdd_usb: ldo4 {
++				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				interrupts = <IT_CURLIM_LDO4 0>;
++			};
++
++			vdda: ldo5 {
++				regulator-name = "vdda";
++				regulator-min-microvolt = <2900000>;
++				regulator-max-microvolt = <2900000>;
++				interrupts = <IT_CURLIM_LDO5 0>;
++				regulator-boot-on;
++			};
++
++			v1v2_hdmi: ldo6 {
++				regulator-name = "v1v2_hdmi";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO6 0>;
++			};
++
++			vref_ddr: vref_ddr {
++				regulator-name = "vref_ddr";
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			 bst_out: boost {
++				regulator-name = "bst_out";
++				interrupts = <IT_OCP_BOOST 0>;
++			 };
++
++			vbus_otg: pwr_sw1 {
++				regulator-name = "vbus_otg";
++				interrupts = <IT_OCP_OTG 0>;
++			 };
++
++			 vbus_sw: pwr_sw2 {
++				regulator-name = "vbus_sw";
++				interrupts = <IT_OCP_SWOUT 0>;
++				regulator-active-discharge;
++			 };
++		};
++
++		onkey {
++			compatible = "st,stpmic1-onkey";
++			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
++			interrupt-names = "onkey-falling", "onkey-rising";
++			power-off-time-sec = <10>;
++		};
++
++		watchdog {
++			compatible = "st,stpmic1-wdt";
++			status = "disabled";
++		};
++	};
++};
++
++&ipcc {
++	status = "okay";
++};
++
++&iwdg2 {
++	timeout-sec = <32>;
++	status = "okay";
++};
++
++&m4_rproc {
++	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
++			<&vdev0vring1>, <&vdev0buffer>;
++	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
++	mbox-names = "vq0", "vq1", "shutdown";
++	interrupt-parent = <&exti>;
++	interrupts = <68 1>;
++	status = "okay";
++};
++
++&rng1 {
++	status = "okay";
++};
++
++&rtc {
++	status = "okay";
++};
++
++&sdmmc2 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_d>;
++	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_d>;
++	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_d>;
++	non-removable;
++	no-sd;
++	no-sdio;
++	st,neg-edge;
++	bus-width = <8>;
++	vmmc-supply = <&v3v3>;
++	vqmmc-supply = <&v3v3>;
++	mmc-ddr-3_3v;
++	status = "okay";
++};
++
+diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+new file mode 100644
+index 000000000000..a7ffec8f1516
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+@@ -0,0 +1,80 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
++ */
++
++/dts-v1/;
++
++#include "stm32mp157c-odyssey-som.dtsi"
++
++/ {
++	model = "Seeed Studio Odyssey-STM32MP157C Board";
++	compatible = "seeed,stm32mp157c-odyssey",
++		     "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
++
++	aliases {
++		ethernet0 = &ethernet0;
++		serial0 = &uart4;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&ethernet0 {
++	status = "okay";
++	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
++	pinctrl-1 = <&ethernet0_rgmii_sleep_pins_a>;
++	pinctrl-names = "default", "sleep";
++	phy-mode = "rgmii-id";
++	max-speed = <1000>;
++	phy-handle = <&phy0>;
++	assigned-clocks = <&rcc ETHCK_K>, <&rcc PLL4_P>;
++	assigned-clock-parents = <&rcc PLL4_P>;
++	assigned-clock-rates = <125000000>; /* Clock PLL4 to 750Mhz in ATF/U-Boot */
++	st,eth-clk-sel;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy0: ethernet-phy@7 { /* KSZ9031RN */
++			reg = <7>;
++			reset-gpios = <&gpiog 0 GPIO_ACTIVE_LOW>; /* ETH_RST# */
++			reset-assert-us = <10000>;
++			reset-deassert-us = <300>;
++		};
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i2c1_pins_a>;
++	pinctrl-1 = <&i2c1_sleep_pins_a>;
++	i2c-scl-rising-time-ns = <100>;
++	i2c-scl-falling-time-ns = <7>;
++	status = "okay";
++	/delete-property/dmas;
++	/delete-property/dma-names;
++};
++
++&sdmmc1 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc1_b4_pins_a>;
++	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
++	cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
++	disable-wp;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins_a>;
++	status = "okay";
++};
++
 -- 
-Best Regards
-Masahiro Yamada
+2.27.0
+
