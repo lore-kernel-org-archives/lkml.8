@@ -2,101 +2,70 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C88DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 10:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E451920716
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1527C206B5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 10:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgHIJ3R (ORCPT
+        id S1726307AbgHIKLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 05:29:17 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:50068 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgHIJ3Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 05:29:16 -0400
-Received: from localhost.localdomain ([93.22.150.139])
-        by mwinf5d05 with ME
-        id DMV72300G30hzCV03MV8BZ; Sun, 09 Aug 2020 11:29:14 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 09 Aug 2020 11:29:14 +0200
-X-ME-IP: 93.22.150.139
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     amitkarwar@gmail.com, ganapathi.bhat@nxp.com,
-        huxinming820@gmail.com, kvalo@codeaurora.org, davem@davemloft.net,
-        kuba@kernel.org, yogeshp@marvell.com, bzhao@marvell.com,
-        linville@tuxdriver.com
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] mwifiex: Do not use GFP_KERNEL in atomic context
-Date:   Sun,  9 Aug 2020 11:29:06 +0200
-Message-Id: <20200809092906.744621-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sun, 9 Aug 2020 06:11:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbgHIKLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 06:11:06 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11818206B2;
+        Sun,  9 Aug 2020 10:11:02 +0000 (UTC)
+Date:   Sun, 9 Aug 2020 11:11:00 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, will@kernel.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, mirq-linux@rere.qmqm.pl,
+        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bbasu@nvidia.com, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 3/3] cpufreq: Add Tegra194 cpufreq
+ driver
+Message-ID: <20200809101059.GA22286@gaia>
+References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+ <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
+ <20200809004009.GA96704@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200809004009.GA96704@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A possible call chain is as follow:
-  mwifiex_sdio_interrupt                            (sdio.c)
-    --> mwifiex_main_process                        (main.c)
-      --> mwifiex_process_cmdresp                   (cmdevt.c)
-        --> mwifiex_process_sta_cmdresp             (sta_cmdresp.c)
-          --> mwifiex_ret_802_11_scan               (scan.c)
-            --> mwifiex_parse_single_response_buf   (scan.c)
+On Sat, Aug 08, 2020 at 05:40:09PM -0700, Guenter Roeck wrote:
+> On Wed, Jul 15, 2020 at 07:01:25PM +0530, Sumit Gupta wrote:
+> > Add support for CPU frequency scaling on Tegra194. The frequency
+> > of each core can be adjusted by writing a clock divisor value to
+> > a MSR on the core. The range of valid divisors is queried from
+> > the BPMP.
+> > 
+> > Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> > Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> 
+> If built as module:
+> 
+> ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
 
-'mwifiex_sdio_interrupt()' is an interrupt function.
+The exporting of this arm64 symbol went in last night.
 
-Also note that 'mwifiex_ret_802_11_scan()' already uses GFP_ATOMIC.
-
-So use GFP_ATOMIC instead of GFP_KERNEL when memory is allocated in
-'mwifiex_parse_single_response_buf()'.
-
-Fixes: 7c6fa2a843c5 ("mwifiex: use cfg80211 dynamic scan table and cfg80211_get_bss API")
-or
-Fixes: 601216e12c65e ("mwifiex: process RX packets in SDIO IRQ thread directly")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-This is completely speculative. I don't know if the call chain given above
-if possible in RL application.
-So review carefully :)
-
-I'm not sure of the Fixes tag. If I'm correct:
- - The first one is when the GFP_KERNEL has been introduced.
- - the 2nd one is when some logic has been changed to call interrupt
-   handler directly instead of existing workqueue
-
-Note that if my analysis is completely broken, it is likely that
-'mwifiex_ret_802_11_scan()' could use GFP_KERNEL in order to relax some
-memory allocation constrains.
----
- drivers/net/wireless/marvell/mwifiex/scan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index ff932627a46c..2fb69a590bd8 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1889,7 +1889,7 @@ mwifiex_parse_single_response_buf(struct mwifiex_private *priv, u8 **bss_info,
- 					    chan, CFG80211_BSS_FTYPE_UNKNOWN,
- 					    bssid, timestamp,
- 					    cap_info_bitmap, beacon_period,
--					    ie_buf, ie_len, rssi, GFP_KERNEL);
-+					    ie_buf, ie_len, rssi, GFP_ATOMIC);
- 			if (bss) {
- 				bss_priv = (struct mwifiex_bss_priv *)bss->priv;
- 				bss_priv->band = band;
 -- 
-2.25.1
-
+Catalin
