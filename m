@@ -2,119 +2,155 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F16C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832F8206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596932234;
-	bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eyhAS37c6EmcrqwakXynG5DhTI8JFBo0SO0N4G5n4FAVo0+wpf/WR73BRzVYGCAcG
-	 cCVQFih61kL/lTmFghXg/KppUi6Tt8BX0FIZDT1ULYGSd6d+Aadp+PQ+inu1bVzNal
-	 SQBBy8cUhwjYkehErafVaG6ESXJuXBrpmlSvBtTM=
+	by mail.kernel.org (Postfix) with ESMTP id D58542067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgHIARN (ORCPT
+        id S1726209AbgHIA3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 20:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbgHIARM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 20:17:12 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8D2067D;
-        Sun,  9 Aug 2020 00:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596932232;
-        bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Vv9wm6DIxUbHozRvA1AyxMizji9rUv8gSn3bnmKzgNyQUT59XCuSpVianl1FP2xDO
-         NSa6d3yKuHd8zLwIotp5zI0vf34jeLzSopbflNOV58GA3NKWOO1xrTfdkvhQG92GG4
-         0YgAHkE74fzWggP0wdmyN1FmG2fZVztME3deAnKA=
-Received: by mail-ej1-f50.google.com with SMTP id bo3so5827444ejb.11;
-        Sat, 08 Aug 2020 17:17:12 -0700 (PDT)
-X-Gm-Message-State: AOAM530dcZJV9hhkZg6Fm9HRvXQM03xfY2zkSjKW98wMOAAh6wb8TrEj
-        nd2ZuCgkMByNvbUHZFJJ5UicZBeFsejk9TB1sg==
-X-Google-Smtp-Source: ABdhPJxtuqSyNCglh1lnoj77PKcLmVpUqyOklSdTDUwAHMVSJ1wm9tl/cLlSapqD2wcderKhmNy5ajxAxrVAyBhhL3s=
-X-Received: by 2002:a17:906:60d5:: with SMTP id f21mr15560600ejk.94.1596932230832;
- Sat, 08 Aug 2020 17:17:10 -0700 (PDT)
+        Sat, 8 Aug 2020 20:29:31 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37372 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgHIA3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 20:29:30 -0400
+Received: by mail-pj1-f66.google.com with SMTP id mw10so2929904pjb.2;
+        Sat, 08 Aug 2020 17:29:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=k0Q617GOOxsvAC/qWphQFDLOhIM15Suvk09+e7APeMc=;
+        b=Ny8iCLmLvYqXA2Qh5ci/RKuSMJ6yN/taSI5CJtQ7EJGx2nNDYCfNLfX4OwacV+Ay91
+         k1Mt4EOP/Gp7xETdRvwiLuspjA4Le7bLpvE0Dx4VYUfz1ch+BEQ/21tILUno5dipGSZg
+         eykIOwReCno6T8xf3uLh1fz0Fh/hqGbXjusSjAQkiHKieHELiMgUGxOvhw1bDedec26r
+         Z7XNFXfRZ5xVkuWynaYpxCMwlO8krSwlZMKScG96CjFqepUX1TA6DE2lzJuYXkQF4HqZ
+         dLLAqFggICl2boxBfnXM0UTCwgyN51jkvhQCRvZlloMbfkVqo8sQU3srbGgoUwIEfpM0
+         Q88Q==
+X-Gm-Message-State: AOAM5325TzTzYw66ReMUj4FoPNuEfgDvQYGXPNhFdwW620V6Lqmkx4BR
+        xEYjG0dJKVvKO/JmRxWOOJo=
+X-Google-Smtp-Source: ABdhPJxAXJgUl9eao4GGGiqBo2jRE3ZEDtN/XTPLmTD+8g4tnCK3YJfMH0t/SE8ieE3Uxc9ja3Ul1w==
+X-Received: by 2002:a17:902:900b:: with SMTP id a11mr18140800plp.315.1596932969668;
+        Sat, 08 Aug 2020 17:29:29 -0700 (PDT)
+Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id f195sm17756723pfa.96.2020.08.08.17.29.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Aug 2020 17:29:28 -0700 (PDT)
+Subject: Re: [PATCH v8 3/4] scsi: ufs: L2P map management for HPB read
+To:     daejun7.park@samsung.com,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+References: <231786897.01596705302142.JavaMail.epsvc@epcpadp1>
+ <231786897.01596705001840.JavaMail.epsvc@epcpadp1>
+ <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+ <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p2>
+ <336371513.41596705485601.JavaMail.epsvc@epcpadp2>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <86a04d4f-bb6f-9bc8-cb64-a50b0ed2fdb7@acm.org>
+Date:   Sat, 8 Aug 2020 17:29:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
- <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
-In-Reply-To: <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 9 Aug 2020 08:16:59 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
-Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        chunkuang Hu <chunkuang.hu@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <336371513.41596705485601.JavaMail.epsvc@epcpadp2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Frank:
+On 2020-08-06 02:15, Daejun Park wrote:
+> +	req->end_io_data = (void *)map_req;
 
-Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=888:27=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> Hi,
->
-> as i made a mistake in cover-letter, it is not assigned to the series.
->
-> to show its content, i send it here as comment (instead of resending the =
-whole series):
->
-> based on series from David Woodhouse [1]
-> i moved more display-nodes out of mt7623.dtsi to new mt7623n.dtsi
-> and changed last part from my series [2] to add these nodes to this new d=
-tsi
->
-> the depency of dtsi-dtsi-dts is already done for mt7623a, so i guess it's=
- a good
-> way to use it for mt7623n too.
->
-> this first set is an RFC if all nodes are in right order and if it is wan=
-ted to move
-> them out as i have no technical document about mt7623a/n which describes =
-which parts
-> are available on both or only on one of them
->
-> added MTK DRM Maintainer CK Hu, Ryder Lee and Sean Wang, maybe they can g=
-ive me some advice
-> how to proceed further here
->
-> [1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D32=
-9209
-> [2] https://patchwork.kernel.org/patch/11700699/
+Please leave the (void *) cast out since explicit casts from a non-void
+to a void pointer are not necessary in C.
 
-I would like to put all device in mt7623.dtsi with some device's
-status is "disabled" and change its status in platform dtsi.
-I would like to see all device in mt7623.dtsi because of its name. If
-you move some device to platform dtsi, we would trace all platform
-dtsi to find out how many device in mt7623. One day a new platform
-enable different devices, you would reorganize all these platform
-dtsi?
+> +static inline struct
+> +ufshpb_rsp_field *ufshpb_get_hpb_rsp(struct ufshcd_lrb *lrbp)
+> +{
+> +	return (struct ufshpb_rsp_field *)&lrbp->ucd_rsp_ptr->sr.sense_data_len;
+> +}
 
-Regards,
-Chun-Kuang.
+Please introduce a union in struct utp_cmd_rsp instead of using casts
+to reinterpret a part of a data structure.
+
+> +/* routine : isr (ufs) */
+
+The above comment looks very cryptic. Should it perhaps be expanded?
+
+> +struct ufshpb_active_field {
+> +	__be16 active_rgn;
+> +	__be16 active_srgn;
+> +} __packed;
+
+Since "__packed" is not necessary for the above data structure, please
+remove it. Note: a typical approach in the Linux kernel to verify that
+the compiler has not inserted any padding bytes is to add a BUILD_BUG_ON()
+statement in an initialization function that verifies the size of ABI data
+structures. See also the output of the following command:
+
+git grep -nH 'BUILD_BUG_ON.sizeof.*!='
+
+> +struct ufshpb_rsp_field {
+> +	__be16 sense_data_len;
+> +	u8 desc_type;
+> +	u8 additional_len;
+> +	u8 hpb_type;
+> +	u8 reserved;
+> +	u8 active_rgn_cnt;
+> +	u8 inactive_rgn_cnt;
+> +	struct ufshpb_active_field hpb_active_field[2];
+> +	__be16 hpb_inactive_field[2];
+> +} __packed;
+
+I think the above __packed statement should also be left out.
+
+Thanks,
+
+Bart.
