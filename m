@@ -2,134 +2,154 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79C8C206B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168E6206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:13:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZSd6umuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgHIMNV (ORCPT
+        id S1726389AbgHIMNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 08:13:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2868 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgHIMLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 08:11:38 -0400
-IronPort-SDR: O2qktHtnCA2GSgqznWDmb0jJ+4atBvuNNA6NHVKdfIrUWPdRH8PYSHAJQPahm2TWdY6P9eR+L1
- fnb/5SQ2Ox8w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9707"; a="141024427"
-X-IronPort-AV: E=Sophos;i="5.75,453,1589266800"; 
-   d="scan'208";a="141024427"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2020 05:11:36 -0700
-IronPort-SDR: DORVzznwUnpcJ1QioXnxsjvUe9JaYCG/7mF0c704yejo/eRMxTHp1ptYDeKur7tyS5I20G+7yr
- q/wQRfTqz7Zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,453,1589266800"; 
-   d="scan'208";a="307803767"
-Received: from lkp-server02.sh.intel.com (HELO 5ad9e2f13e37) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 09 Aug 2020 05:11:34 -0700
-Received: from kbuild by 5ad9e2f13e37 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k4kAo-00008y-9S; Sun, 09 Aug 2020 12:11:34 +0000
-Date:   Sun, 9 Aug 2020 20:10:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Chao Yu <yuchao0@huawei.com>, Chao Yu <chao@kernel.org>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: fs/f2fs/file.c:761:9: warning: Identical condition 'err', second
- condition is always false
-Message-ID: <202008092050.gjiX70dJ%lkp@intel.com>
+        Sun, 9 Aug 2020 08:13:33 -0400
+Received: from mail-co1nam11on2069.outbound.protection.outlook.com ([40.107.220.69]:16128
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726009AbgHIMN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 08:13:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VRXFOOL9dQviBmuhHHmEzJGqIxYVjRbTYQhQT0dpg+Qy2ZDKDnm3odXtJnvEvnwsrAVJ07aDICGYYgvDjTlvV6+WVHJU20YxbLfbcnzQI5VVLKcAm5nezq4dE9QzIZP03TGlGI32HCN4CM+LGjPBdOWSOxrsMur5xxw10ohXpWLdK3De+IeVPOvhXvYuuUKCHmqYgf4PjEGspa6TU1Cr9uObSXcREEtUucG24Ef/b9B1N73RsWq9tcpdogPh8EgihcUVCv5t+gaT3pxIPBiL1isYlnpGd/k2muFE7ROJCPSBAcoIbWF+Hf4V+caaZ1ThPUE7AT87Lg1qf94266gpDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GqMl/ywsyFOJ1cIT3GhjhamVIVIYTPF9BSkLV7w3hZQ=;
+ b=cxsHsYX8vEdtpQyTCx+fqpeVLMBU1ccdujYhiKx6z4BojOrJYbc54tm7uM8tNC7f/cIUlHUSqfF3XbXQ0fppapVheJ6VLrtMkmNnWMCXwt9N+qaq6FgREEgHInUurEljnPmRgt08TJtbhk3hawUqFUY7ChKQ2pYGbmDPXqGtBEe9Tr6rq3ynp4THibPDwG4QC0o2OFHRY+xTfueZBWSsCtobD5WGfhia3UppDXyZzV8d8TysqgAVurygi3S2caDixz+CM6LAZsottHUP65m/Wo3o+SWwTcpGwq3EGHT2BmBmRQD4jM8t7c6/xp/LHnPeDFQVuk/5pyQZmbkarE7jAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GqMl/ywsyFOJ1cIT3GhjhamVIVIYTPF9BSkLV7w3hZQ=;
+ b=ZSd6umuF6vKIE9BekmevIPrYMLxDxMDDmgR6kIiVghYJr4uC4EwJT8TlpeRXe6tH8WSXthOhKu4KWcpueMaSFjQ8vwfBtouGOuf04zNcYIM8AR8HkZX9WI96gxeCuVNAFczIugcWkmQO3cAIxVtk/VbGf5p1Myj7GZYHsInM6tU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+ by MN2PR12MB4125.namprd12.prod.outlook.com (2603:10b6:208:1d9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Sun, 9 Aug
+ 2020 12:13:24 +0000
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3261.022; Sun, 9 Aug 2020
+ 12:13:23 +0000
+Subject: Re: [PATCH] gpu/drm: Remove TTM_PL_FLAG_WC of VRAM to fix
+ writecombine issue for Loongson64
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <1596871502-3432-1-git-send-email-yangtiezhu@loongson.cn>
+ <20200808134147.GA5772@alpha.franken.de>
+ <b7b16df1-d661-d59a-005b-da594ce9fc95@flygoat.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <38857c24-25c4-cff3-569e-5bcb773bfae6@amd.com>
+Date:   Sun, 9 Aug 2020 14:13:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <b7b16df1-d661-d59a-005b-da594ce9fc95@flygoat.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR07CA0010.eurprd07.prod.outlook.com
+ (2603:10a6:208:ac::23) To MN2PR12MB3775.namprd12.prod.outlook.com
+ (2603:10b6:208:159::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR07CA0010.eurprd07.prod.outlook.com (2603:10a6:208:ac::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.7 via Frontend Transport; Sun, 9 Aug 2020 12:13:21 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b5c63698-e1d9-42ba-a989-08d83c5d9c88
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4125:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB4125AD19075424D0E5D970D083470@MN2PR12MB4125.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uN8Y5xJg/KLD8QPvwgezJpZ0r4VCinFUcwfwimT/glg1ehEDVWmVdzI7rEiPHp6E0w6O3nSaHiLOi3furEHw4Q//bJXeNj+z0wUj/5KMTCuB5F/Btdmkp7vzs3kDwPEMhMuPDDjOT87NyE5sQOCGdjn1jq7yeHo54y0QBv+YabV7zUatCad4z0WH9cY31tpJICkw1t5ULPGOwhmtjulgMm9qnA4jUxPYnD/ZtxTRii52UJNSQYrHEkN+V05uT9JTfg2swssZn6gN2WyzVPxDt4Gxw3RPiyBJVawvVCry38TPLFpR4u4iSVrne/SR+Z0pRvTviwVlGQaW45dWI1TxkyZZEEvmiBZSMTeCZ1JB9xBQphlMSVet0/GjXZem8qwg
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(5660300002)(83380400001)(478600001)(36756003)(52116002)(66476007)(66556008)(6666004)(6486002)(110136005)(54906003)(66946007)(8676002)(31696002)(2616005)(16526019)(86362001)(2906002)(31686004)(8936002)(316002)(186003)(4326008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 2rj0ni+RFjrw9Vu3DRmSNHmtBsIxZKQMNJpdBqls7kK73gSEuu693TbiAJErpn0nT3Z9Wgzuw7K1I/tSaagnyaty3+42DIBrLs8WP5ZXES1Q++h6r7o2y+YeL4GLlx3IljMXOYgeAykbHYvkJeVX2sT7dv3qlX1X0fSGS+fiB+kwjfKPdLYYN7nDEXGqQLHkIxuHLgR6lM9W9yh9tK/CQ9nW0P59SwFqurLYWQ00sqjAOr4EUVQaXAEJtr5CS1AEGID46QILURR/xesSkCsmzp6nPI6YzKZBG0Uz2fpp778PP3uTksVnV5ZgrmVOM3p9v+W6FllzzC+OTbrs+toVHlu8Zq3dC/PPnXE4lAHYZFD/zTaRjAMwMpzlAyRkghUWxlW5Q7M/Vs2C0k/gkpP3Kq2MLPlgZWXxSQcM9P9jZ3gfBowZBL7md2eZq9/5Gm6iY8Wj2qPcKaLKfaizgepWeL1erjO+97kPCAmhhCHJbxyXQ9JU4Twa8gIIJlLwSouYmAUDx0vSD255Gp0g6QfzfrKnwKO/f5AP9aDHuGHDANps8kUiijfAZRwBmm1/khUR279E203fICA7jpNBW48Yuga1rDdTT/Zmyz38DDsL7BKezqBVcRVwkUabd6tEVD9FlI26poTUZDhNoqKX0/KkWz2vJDFR4QazwpP9dQ+ds+IzFHcC7CJXJLgLACb47qNrB5/ANAIqAxM291U1brdGbg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5c63698-e1d9-42ba-a989-08d83c5d9c88
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2020 12:13:23.7107
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YDgOsZI0O83TVmJ8yX7Cbzv04xALq9Z9fNvkiGf4J7qQpZ0EDjZnPoyvVZUtnrFe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   06a81c1c7db9bd5de0bd38cd5acc44bb22b99150
-commit: 3265d3db1f16395cfc6b8ea9b31b4001d98d05ef f2fs: support partial truncation on compressed inode
-date:   3 months ago
-compiler: xtensa-linux-gcc (GCC) 9.3.0
+Am 08.08.20 um 15:50 schrieb Jiaxun Yang:
+>
+>
+> ÔÚ 2020/8/8 ÏÂÎç9:41, Thomas Bogendoerfer Ð´µÀ:
+>> On Sat, Aug 08, 2020 at 03:25:02PM +0800, Tiezhu Yang wrote:
+>>> Loongson processors have a writecombine issue that maybe failed to
+>>> write back framebuffer used with ATI Radeon or AMD GPU at times,
+>>> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+>>> mapping for MIPS"), there exists some errors such as blurred screen
+>>> and lockup, and so on.
+>>>
+>>> Remove the flag TTM_PL_FLAG_WC of VRAM to fix writecombine issue for
+>>> Loongson64 to work well with ATI Radeon or AMD GPU, and it has no any
+>>> influence on the other platforms.
+>> well it's not my call to take or reject this patch, but I already
+>> indicated it might be better to disable writecombine on the CPU
+>> detection side (or do you have other devices where writecombining
+>> works ?). Something like below will disbale it for all loongson64 CPUs.
+>> If you now find out where it works and where it doesn't, you can even
+>> reduce it to the required minium of affected CPUs.
+> Hi Tiezhu, Thomas,
+>
+> Yes, writecombine works well on LS7A's internal GPU....
+> And even works well with some AMD GPUs (in my case, RX550).
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+In this case the patch is a clear NAK since you haven't root caused the 
+issue and are just working around it in a very questionable manner.
 
+>
+> Tiezhu, is it possible to investigate the issue deeper in Loongson?
+> Probably we just need to add some barrier to maintain the data coherency,
+> or disable writecombine for AMD GPU's command buffer and leave 
+> texture/frame
+> buffer wc accelerated.
 
-cppcheck warnings: (new ones prefixed by >>)
+Have you moved any buffer to VRAM and forgot to add an HDP flush/invalidate?
 
->> fs/f2fs/file.c:761:9: warning: Identical condition 'err', second condition is always false [identicalConditionAfterEarlyExit]
-    return err;
-           ^
-   fs/f2fs/file.c:753:6: note: first condition
-    if (err)
-        ^
-   fs/f2fs/file.c:761:9: note: second condition
-    return err;
-           ^
->> fs/f2fs/file.c:1689:12: warning: Variable 'new_size' is reassigned a value before the old one has been used. [redundantAssignment]
-     new_size = (last_off == pg_end) ? offset + len :
-              ^
-   fs/f2fs/file.c:1620:0: note: Variable 'new_size' is reassigned a value before the old one has been used.
-    loff_t new_size = i_size_read(inode);
-   ^
-   fs/f2fs/file.c:1689:12: note: Variable 'new_size' is reassigned a value before the old one has been used.
-     new_size = (last_off == pg_end) ? offset + len :
-              ^
->> fs/f2fs/file.c:2789:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
-    ret = -EINVAL;
-        ^
-   fs/f2fs/file.c:2784:7: note: Variable 'ret' is reassigned a value before the old one has been used.
-     ret = -EBUSY;
-         ^
-   fs/f2fs/file.c:2789:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = -EINVAL;
-        ^
-   fs/f2fs/file.c:2811:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
-    ret = f2fs_convert_inline_inode(src);
-        ^
-   fs/f2fs/file.c:2789:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = -EINVAL;
-        ^
-   fs/f2fs/file.c:2811:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = f2fs_convert_inline_inode(src);
-        ^
-   fs/f2fs/file.c:2840:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
-    ret = __exchange_data_block(src, dst, pos_in >> F2FS_BLKSIZE_BITS,
-        ^
-   fs/f2fs/file.c:2834:7: note: Variable 'ret' is reassigned a value before the old one has been used.
-     ret = -EBUSY;
-         ^
-   fs/f2fs/file.c:2840:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = __exchange_data_block(src, dst, pos_in >> F2FS_BLKSIZE_BITS,
-        ^
-   fs/f2fs/f2fs.h:2209:15: warning: Local variable valid_node_count shadows outer function [shadowFunction]
-    unsigned int valid_node_count, user_block_count;
-                 ^
-   fs/f2fs/f2fs.h:2305:28: note: Shadowed declaration
-   static inline unsigned int valid_node_count(struct f2fs_sb_info *sbi)
-                              ^
-   fs/f2fs/f2fs.h:2209:15: note: Shadow variable
-    unsigned int valid_node_count, user_block_count;
-                 ^
+The acceleration is not much of a problem, but if WC doesn't work in 
+general you need to disable it for the whole CPU and not for individual 
+drivers.
 
-vim +/err +761 fs/f2fs/file.c
+Regards,
+Christian.
 
-   760	
- > 761		return err;
-   762	}
-   763	
+>
+> Thanks.
+>
+> - Jiaxun
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
