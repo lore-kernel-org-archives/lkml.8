@@ -2,441 +2,106 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98C7A20678
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 14:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14035206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VsjSFE7r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MKtuhae+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgHIOv3 (ORCPT
+        id S1726529AbgHIPEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 10:51:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgHIOv1 (ORCPT
+        Sun, 9 Aug 2020 11:04:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58216 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726510AbgHIPEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 10:51:27 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C9AC061756;
-        Sun,  9 Aug 2020 07:51:27 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id b2so3067667qvp.9;
-        Sun, 09 Aug 2020 07:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BZtBKlgri4TkTnE2aSnSUNMWxmvTviox3gYBSXakEG8=;
-        b=VsjSFE7rNTeRHd/PLdnYQJ+qnYZZ60N/8S2FPZeoCiYahT9qZyLzO37mPUhegxwalq
-         RLjNYb0DY/xydOIoav9TAFwRVbenbn1JxvzCxrQXlJwbZxhRpW82jKFuhMHgs3rT5Gev
-         gDvxnPTMFHWlKnq546kQ1GrpnW6TnyfkYnQSeWXvMhIvwBzbpUWtDzKwf2ZWqlvvcWBL
-         QvAiujNEXe1YmxKbWCCBEwZcj/ziWEGc2jjHz6ky3vWz6GkUZp3ZuXUhp8ktXU9lm2lg
-         jzKpTVtk/WfRvqj/Km6+tOpYNqm0N4I//10Pz1ZK9Ge7LFsxa8sqWR7EAbXzQWlkOgYr
-         2Ifw==
+        Sun, 9 Aug 2020 11:04:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596985472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=FuXqqlyBLIh85DO5/avWuTbEGQOdsQUAzmArktoPV3E=;
+        b=MKtuhae+pF23MamyWE0rsIZun/wJQI4/3jCx81nkfQgbBkUVa152MvQ03+gLh9HDGRFXcX
+        1ectv1sgTw56yxS4hGwLHG6Voi19a1aKBdxn6fp30UEWWuit/z+Q5GAGkJz9+hrerkeVal
+        fEAolXxvad8KPCXwFFd19NAqYkyCZHI=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-cX_rsJ_zOKG_I_SGrdHLhQ-1; Sun, 09 Aug 2020 11:04:30 -0400
+X-MC-Unique: cX_rsJ_zOKG_I_SGrdHLhQ-1
+Received: by mail-qv1-f71.google.com with SMTP id r12so5530451qvx.20
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 08:04:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BZtBKlgri4TkTnE2aSnSUNMWxmvTviox3gYBSXakEG8=;
-        b=BMxfghMxsvvxkWa9frEEKz5JMmR/Zv3Jnp8NU9QheXTse9jGwysbsUS0CqOsln/R7l
-         O1tzCw/eWzBcztSG5S5ti5vmyYS3TCLDNZ+DyJnJtSrLX0/lCSxkF6WpoBJ91+x6Y9h9
-         ap6GOO7Tc87Qs3T10dSG7xSpGfiMMnhfYdnGHaFk2WoxkZ/RfJ9fjewD62ms3W+Ip1y6
-         JP1kW9mkCNKSmryulS+32/3TfitH0IOyIYgBhXjsCY7Hs30emycdkhj7xpR+A6h/BalR
-         DXa9hXFcrX0SzdW6Wn85Tb5NLNBFY1zhyBKJf92gfCM1GREgIw7i3iZq7RAEaL8GEVF5
-         qf+Q==
-X-Gm-Message-State: AOAM530yt+1YW6o7iHXf9uFNrX1v/1ytV6mN5e4JG6nh58mlR/ckCk3z
-        wiiAMZDXPAnUxmZ9NpSytO3+LvEJ34A=
-X-Google-Smtp-Source: ABdhPJxCmk7THhFjP7/N4JrJXHVOZ9ivg3IcNpIUHpDGDDuRAKtK+kWYRVuosNo2PJYJpBriM1Pl8g==
-X-Received: by 2002:ad4:46ac:: with SMTP id br12mr24211039qvb.236.1596984684251;
-        Sun, 09 Aug 2020 07:51:24 -0700 (PDT)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id t8sm14064330qtc.50.2020.08.09.07.51.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FuXqqlyBLIh85DO5/avWuTbEGQOdsQUAzmArktoPV3E=;
+        b=nvYGbCeYWFWdQbhg12gO2MjcrcFPBUYkluMj0LGvbgX9sP0WjJrgPS5FbNeTA2f7Q4
+         DqUq3Z/iH5Drebtc1nfeItFxrcafC6x53Tt6dAmrFTMtDFJDffTT/QJ5mffFTYVxgK/a
+         xEQ3tnuSEk7ikdszr9u2cceoBiR7f/oAO6spCliOPdtv44sBWy/p+XiryDGcDOXOiD7U
+         dDmo/dDLK0+muSxWvbXJXYUNPUuKYupQnI081tHCG8HR4bOyYLA2ENXkxl1xLrmbH4x3
+         64SgEq4SHxwRthfQEGpEo/IQPcFPOWb5cmQzoi02Y8E53Khs9bik8IE7+HZhyPYQkg8E
+         xg9g==
+X-Gm-Message-State: AOAM530851wiICKvBNyrRjVNQOU8PdaRxgSZCI7NpashlD+h9jwIncGt
+        WfNgSzu8xwfNzsT6OxPtSmgVAWRvZauWuMh3jjF6ndQ2/NxF5etPP9/tw/XrEAYF1l3dOlPotgX
+        xbR+mYI5IE0kLve0A1DeHDAdq
+X-Received: by 2002:ad4:52e3:: with SMTP id p3mr24354567qvu.70.1596985469796;
+        Sun, 09 Aug 2020 08:04:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzwhusDKO/YhHzoC56SKWKm7gS4s2SkPT/PI9PLLl8Yf4JlkBUQcMSrM8EoXGJTMRGCr1kbtg==
+X-Received: by 2002:ad4:52e3:: with SMTP id p3mr24354553qvu.70.1596985469573;
+        Sun, 09 Aug 2020 08:04:29 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id n33sm11389118qtd.43.2020.08.09.08.04.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 07:51:23 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 10:51:07 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH v4 3/5] counter: Add character device interface
-Message-ID: <20200809145107.GA6542@shinobu>
-References: <cover.1595358237.git.vilhelm.gray@gmail.com>
- <08b3ac7349a59ba7fa5cd438bbe78360842ccd11.1595358237.git.vilhelm.gray@gmail.com>
- <415ee9ad-255e-cee7-22a6-ffa977999691@lechnology.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
-Content-Disposition: inline
-In-Reply-To: <415ee9ad-255e-cee7-22a6-ffa977999691@lechnology.com>
+        Sun, 09 Aug 2020 08:04:29 -0700 (PDT)
+From:   trix@redhat.com
+To:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] hwrng : cleanup initialization
+Date:   Sun,  9 Aug 2020 08:04:23 -0700
+Message-Id: <20200809150423.31557-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tom Rix <trix@redhat.com>
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+clang static analysis reports this problem
 
-On Tue, Jul 28, 2020 at 07:20:03PM -0500, David Lechner wrote:
-> On 7/21/20 2:35 PM, William Breathitt Gray wrote:
-> > This patch introduces a character device interface for the Counter
-> > subsystem. Device data is exposed through standard character device read
-> > operations. Device data is gathered when a Counter event is pushed by
-> > the respective Counter device driver. Configuration is handled via ioctl
-> > operations on the respective Counter character device node.
->=20
-> This sounds similar to triggers and buffers in the iio subsystem. And
-> I can see how it might be useful in some cases. But I think it would not
-> give the desired results when performance is important.
->=20
-> Thinking through a few cases here...
->=20
-> Suppose there was a new counter device that used the I2C bus. This would
-> either have to be periodically polled for events or it might have a
-> separate GPIO line to notify the MCU. In any case, with the proposed
-> implementation, there would be a separate I2C transaction for each data
-> point for that event. So none of the data for that event would actually
-> be from the same point in time. And with I2C, this time difference could
-> be significant.
->=20
-> With the TI eQEP I have been working with, there are special latched
-> registers for some events. To make use of these with events, we would have
-> add extensions for each one we want to use (and expose it in sysfs). But
-> really, the fact that we are using a latched register should be an
-> implementation detail in the driver and not something userspace should ha=
-ve
-> to know about.
->=20
-> So, I'm wondering if it would make sense to keep things simpler and have
-> events like the input subsystem where the event value is directly tied
-> to the event. It would probably be rare for an event to have more than
-> one or two values. And error events probably would not have a value at
-> all.
->=20
-> For example, with the TI eQEP, there is a unit timer time out event.
-> This latches the position count, the timer count and the timer period.
-> To translate this to an event data structure, the latched time would
-> be the event timestamp and the position count would be the event value.
-> The timer period should already be known since we would have configured
-> the timer ourselves. There is also a count event that works similarly.
-> In this case, the latched time would be the event timestamp and the
-> latched timer period would be the event value. We would know the count
-> already since we get an event for each count (and a separate direction
-> change event if the direction changes).
+intel-rng.c:333:2: warning: Assigned value is garbage or undefined
+        void __iomem *mem = mem;
+        ^~~~~~~~~~~~~~~~~   ~~~
 
-There are use-cases where it would be useful to have the extension reads
-occur as close to the event trigger as possible (e.g. multiple-axes
-positioning with boundary sensor flags) so I don't think this
-functionality should be completely abadoned, but I think your argument
-for standard event types makes sense.
+Because mem is assigned before it is used, this is not
+a real problem.  But the initialization is strange and not
+needed, so remove it.
 
-We could treat those extensions reads as an optional feature that can be
-enabled and configured by ioctls. However, the use-case you are
-concerned with, we can redesign Counter events to return specific data
-based on the specific event type.
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/char/hw_random/intel-rng.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For example, we could have a COUNTER_EVENT_INDEX which occurs when an
-Index signal edge is detected, and the return data is the Count value
-for that channel; we can also have a COUNTER_EVENT_TIMEOUT which occurs
-when a unit timer times out, and returns the data you mentioned you are
-interested in seeing.
+diff --git a/drivers/char/hw_random/intel-rng.c b/drivers/char/hw_random/intel-rng.c
+index 9f205bd1acc0..eb7db27f9f19 100644
+--- a/drivers/char/hw_random/intel-rng.c
++++ b/drivers/char/hw_random/intel-rng.c
+@@ -330,7 +330,7 @@ static int __init mod_init(void)
+ 	int err = -ENODEV;
+ 	int i;
+ 	struct pci_dev *dev = NULL;
+-	void __iomem *mem = mem;
++	void __iomem *mem;
+ 	u8 hw_status;
+ 	struct intel_rng_hw *intel_rng_hw;
+ 
+-- 
+2.18.1
 
-These Counter event types would be standard, so user applications
-wouldn't need to know driver/device implementation details, but instead
-just follow the API to get the data they expect for that particular
-event type. Would this kind of design work for your needs?
-
-> >=20
-> > A high-level view of how a count value is passed down from a counter
-> > driver is exemplified by the following:
-> >=20
-> >                   ----------------------
-> >                  / Counter device       \
-> >                  +----------------------+
-> >                  | Count register: 0x28 |
-> >                  +----------------------+
-> >                          |
-> >                   -----------------
-> >                  / raw count data /
-> >                  -----------------
-> >                          |
-> >                          V
-> >                  +----------------------------+
-> >                  | Counter device driver      |----------+
-> >                  +----------------------------+          |
-> >                  | Processes data from device |   -------------------
-> >                  |----------------------------|  / driver callbacks /
-> >                  | Type: u64                  |  -------------------
-> >                  | Value: 42                  |          |
-> >                  +----------------------------+          |
-> >                          |                               |
-> >                   ----------                             |
-> >                  / u64     /                             |
-> >                  ----------                              |
-> >                          |                               |
-> >                          |                               V
-> >                          |               +----------------------+
-> >                          |               | Counter core         |
-> >                          |               +----------------------+
-> >                          |               | Routes device driver |
-> >                          |               | callbacks to the     |
-> >                          |               | userspace interfaces |
-> >                          |               +----------------------+
-> >                          |                       |
-> >                          |                -------------------
-> >                          |               / driver callbacks /
-> >                          |               -------------------
-> >                          |                       |
-> >                  +-------+---------------+       |
-> >                  |                       |       |
-> >                  |               +-------|-------+
-> >                  |               |       |
-> >                  V               |       V
-> >          +--------------------+  |  +---------------------+
-> >          | Counter sysfs      |<-+->| Counter chrdev      |
-> >          +--------------------+     +---------------------+
-> >          | Translates to the  |     | Translates to the   |
-> >          | standard Counter   |     | standard Counter    |
-> >          | sysfs output       |     | character device    |
-> >          |--------------------|     |---------------------+
-> >          | Type: const char * |     | Type: u64           |
-> >          | Value: "42"        |     | Value: 42           |
-> >          +--------------------+     +---------------------+
-> >                  |                               |
-> >           ---------------                 -----------------------
-> >          / const char * /                / struct counter_event /
-> >          ---------------                 -----------------------
-> >                  |                               |
-> >                  |                               V
-> >                  |                       +-----------+
-> >                  |                       | read      |
-> >                  |                       +-----------+
-> >                  |                       \ Count: 42 /
-> >                  |                        -----------
-> >                  |
-> >                  V
-> >          +--------------------------------------------------+
-> >          | `/sys/bus/counter/devices/counterX/countY/count` |
-> >          +--------------------------------------------------+
-> >          \ Count: "42"                                      /
-> >           --------------------------------------------------
-> >=20
-> > Counter character device nodes are created under the `/dev` directory as
-> > `counterX`, where `X` is the respective counter device id. Defines for
-> > the standard Counter data types are exposed via the userspace
-> > `include/uapi/linux/counter.h` file.
-> >=20
-> > Counter events
-> > --------------
-> > Counter device drivers can support Counter events by utilizing the
-> > `counter_push_event` function:
-> >=20
-> >      int counter_push_event(struct counter_device *const counter,
-> >                             const u8 event);
-> >=20
-> > The event id is specified by the `event` parameter. When this function
-> > is called, the Counter data associated with the respective event is
-> > gathered, and a `struct counter_event` is generated for each datum and
-> > pushed to userspace.
-> >=20
-> > Counter events can be configured by users to report various Counter
-> > data of interest. This can be conceptualized as a list of Counter
-> > component read calls to perform. For example:
-> >=20
-> >      +------------------------+------------------------+
-> >      | Event 0                | Event 1                |
-> >      +------------------------+------------------------+
-> >      | * Count 0              | * Signal 0             |
-> >      | * Count 1              | * Signal 0 Extension 0 |
-> >      | * Signal 3             | * Extension 4          |
-> >      | * Count 4 Extension 2  |                        |
-> >      | * Signal 5 Extension 0 |                        |
-> >      +------------------------+------------------------+
->=20
-> In the current implementation, I can't tell if the event number correspon=
-ds
-> to the individual counter or some device-specific interrupt bits. In eith=
-er
-> case, it seems like it would be better to have a generic enum of possible
-> counter events like overflow, underflow, direction change, etc.
-
-In the current implementation, the event number is arbitrarily chosen by
-the driver author. It would be best to have these well defined, and I
-think a group of standard Counter events would be the way to go as you
-point out. We can define a few common ones we expect for this
-introduction patch, and expand it from there if new types of events are
-necessary for future drivers.
-
-> >=20
-> > When `counter_push_event(counter, 1)` is called for example, it will go
-> > down the list for Event 1 and execute the read callbacks for Signal 0,
-> > Signal 0 Extension 0, and Extension 4 -- the data returned for each is
-> > pushed to a kfifo as a `struct counter_event`, which userspace can
-> > retrieve via a standard read operation on the respective character
-> > device node.
-> >=20
-> > Userspace
-> > ---------
-> > Userspace applications can configure Counter events via ioctl operations
-> > on the Counter character device node. There following ioctl codes are
-> > supported and provided by the `linux/counter.h` userspace header file:
-> >=20
-> > * COUNTER_CLEAR_WATCHES_IOCTL:
-> >    Clear all Counter watches from all events
-> >=20
-> > * COUNTER_SET_WATCH_IOCTL:
-> >    Set a Counter watch on the specified event
-> >=20
-> > To configure events to gather Counter data, users first populate a
-> > `struct counter_watch` with the relevant event id and the information
-> > for the desired Counter component from which to read, and then pass it
-> > via the `COUNTER_SET_WATCH_IOCTL` ioctl command.
-> >=20
-> > Userspace applications can then execute a `read` operation (optionally
-> > calling `poll` first) on the Counter character device node to retrieve
-> > `struct counter_event` elements with the desired data.
-> >=20
-> > For example, the following userspace code opens `/dev/counter0`,
-> > configures Event 0 to gather Count 0 and Count 1, and prints out the
-> > data as it becomes available on the character device node:
-> >=20
-> >      #include <fcntl.h>
-> >      #include <linux/counter.h>
-> >      #include <poll.h>
-> >      #include <stdio.h>
-> >      #include <sys/ioctl.h>
-> >      #include <unistd.h>
-> >=20
-> >      struct counter_watch watches[2] =3D {
-> >              {
-> >                      .event =3D 0,
-> >                      .component.owner_type =3D COUNTER_OWNER_TYPE_COUNT,
-> >                      .component.owner_id =3D 0,
-> >                      .component.type =3D COUNTER_COMPONENT_TYPE_COUNT,
-> >              },
-> >              {
-> >                      .event =3D 0,
-> >                      .component.owner_type =3D COUNTER_OWNER_TYPE_COUNT,
-> >                      .component.owner_id =3D 1,
-> >                      .component.type =3D COUNTER_COMPONENT_TYPE_COUNT,
-> >              },
-> >      };
-> >=20
-> >      int main(void)
-> >      {
-> >              struct pollfd pfd =3D { .events =3D POLLIN };
-> >              struct counter_event event_data[2];
-> >=20
-> >              pfd.fd =3D open("/dev/counter0", O_RDWR);
-> >=20
-> >              ioctl(pfd.fd, COUNTER_SET_WATCH_IOCTL, watches);
-> >              ioctl(pfd.fd, COUNTER_SET_WATCH_IOCTL, watches + 1);
->=20
-> What enables events? If an event is enabled for each of these ioctls,
-> then we have a race condition where events events from the first watch
-> can start to be queued before the second watch is added. So we would
-> have to flush the chardev first before polling, otherwise the assumption
-> that event_data[0] is owner_id=3D0 and event_data[1] is owner_id=3D1 is
-> not true.
-
-That's a good point, we could theoretically have a situation where an
-event is pushed before the configuration of watches is complete. I'm not
-sure if the solution is to implement an enable/disable ioctl to control
-when events are recorded, or a flush ioctl to remove the invalid events
-in the queue.
-
-> This is also racy if we want to clear watches and set up new watches
-> at runtime. There would be a period of time where there were no watches
-> and we could miss events.
-
-I'm not sure how typical this use-case is -- would an operator ever want
-to change watch configuration on-the-fly? I assumed watches configured
-once at the start of a production run, and then stay essentially static
-until the production stops.
-
-Well regardless, if we want to support this kind of functionality we
-will need to implement a kind of atomic replacement for all watches with
-new ones. This shouldn't be too difficult to achieve: buffer the desired
-watches instead, and then activate them together atomically via a new
-ioctl command.
-
-> With my suggested changes of having fixed values per event and generic
-> events, we could just have a single ioctl to enable and disable events.
-> This would probably need to take an array of event descriptors as an
-> argument where event descriptors contain the component type/id and the
-> event to enable.
-
-I agree with having specified data for particular event types, but I
-think we should still be able to support general extension watches as an
-optional functionality. In fact, I don't think we'll need to implement
-enable/disable event ioctl commands.
-
-The current implementation only records events if the user is watching
-for them (i.e. a watch has been set); if no one is watching for these
-events, they are just silently dropped by the counter_event_push
-function. If we implement an ioctl to atomically set the watches, there
-is no need to explicitly enable/disable events: events will always
-report the specified data for those their respective type -- the watch
-data is extra optional data and will start flowing automatically when
-atomically activated.
-
-William Breathitt Gray
-
-> >=20
-> >              for (;;) {
-> >                      poll(&pfd, 1, -1);
-> >=20
-> >                      read(pfd.fd, event_data, sizeof(event_data));
-> >=20
-> >                      printf("Timestamp 0: %llu\nCount 0: %llu\n"
-> >                             "Timestamp 1: %llu\nCount 1: %llu\n",
-> >                             (unsigned long long)event_data[0].timestamp,
-> >                             (unsigned long long)event_data[0].value_u64,
-> >                             (unsigned long long)event_data[1].timestamp,
-> >                             (unsigned long long)event_data[1].value_u64=
-);
-> >              }
-> >=20
-> >              return 0;
-> >      }
-> >=20
-> > Cc: David Lechner <david@lechnology.com>
-> > Cc: Gwendal Grignou <gwendal@chromium.org>
-> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> > ---
->=20
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl8wDUMACgkQhvpINdm7
-VJJ+aQ//aYl5Nh3OTkDLViHGYIqbS1E18rKNOsojm35X0QphXCY3cSvedRFkdSGe
-LTOqDcMcSE88yT8psfTT0pqWUyPIyd9cTq1Qqe9C/0rVV7CN1cnMEPSWtB/GcFXf
-md7SVNToX88e03gv8nrMdPpk3CHC8fdpNPxxgADOhwLs7sl8upg8UPrB1zx+P4Od
-TLLvreG/JZJdqbCJDgrQtGBH2ebQYa+sjggR+jAeZltNOBsXqoaGS4/ND0AGTdUv
-gDAiX3ZMTPVr2aXbJVzOdSB5ZCE0weyQahb4saYKEhWU/r0g9pqgiaoDKEeb+meh
-iWJzCf3QJB8p+ZCRutm5gUipBLsnwrT2InaIyFBUZ9mpb/cSMCR91KeEeQ9BulfX
-nb3q0ZD/l92iDanVg/DRnwbWbRra4U9gG6+AAFO8q1IVu5FCdLICQ/zK8k9HYsMY
-JsalGleavxr3xyTFPTpzQsvBNxcbKzSHFPbBGXKqU0CTLMSgi2BEd/5YF6O08xoC
-dJg1CAErJY0Y/oMn+NRfjhCD5WUhynEFuCkoNzQ6SkFQX/bp6nhdmgNNh1dFWmSK
-vUUHww/TBilDooxbW7TLr19IsJWpKHpLPlPY6K866ObtUNk8yCb4ddYcHkJIZQ18
-s//fD8hHGse3at7Th2h4j2Si1ek7qsRX8vG+apEg6FSERLm20Sg=
-=VM/9
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
