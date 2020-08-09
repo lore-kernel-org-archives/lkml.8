@@ -2,200 +2,96 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD76C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA174206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3xjq6WD"
+	by mail.kernel.org (Postfix) with ESMTP id A05FF206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgHIHds (ORCPT
+        id S1726241AbgHIHiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 03:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbgHIHdr (ORCPT
+        Sun, 9 Aug 2020 03:38:03 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41450 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbgHIHiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 03:33:47 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28588C061756;
-        Sun,  9 Aug 2020 00:33:47 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u20so3497474pfn.0;
-        Sun, 09 Aug 2020 00:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WZOtmEvxCn7v3WdQf7nTtkGqxqBfHwfePf0SShmSnEs=;
-        b=g3xjq6WDE2JHOHG8sn+Dug1jZhh1k+4Vl8O7mn4+vVnAxIbENpH+xsHH4kcKfjD726
-         dCt/8BVyjrjNbDVyrue4B3m91i742Scq+ZT77Ey5pqerxKpyEzfEx8YqAp8VUZ9sF5Fr
-         xOcRe8ZP2d+y2VqhUJCOn+lb1lBuzY84Ku2szgOWPekTE3Rn0KfqNYMpdmJfn7Ivl8lo
-         uywKHLjnoBeEZHSlMcOGOslm4EPRsC12i6pUQSqkBIcbFzrPTosaGgmTZ5DEm/R9T6ZA
-         /11lfVOLWXMAlSjqZYwdukKjCteraEYHZ9dMCuN6Lqt+oepGxoE6WbNkHbx1JWFZde9S
-         EgMA==
+        Sun, 9 Aug 2020 03:38:02 -0400
+Received: by mail-ot1-f68.google.com with SMTP id a65so4885364otc.8
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 00:38:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WZOtmEvxCn7v3WdQf7nTtkGqxqBfHwfePf0SShmSnEs=;
-        b=TfdC8s9K1gI5aPcZXHgMK1qbDDfy8768uLw/Ww2zKYe67mtob/3nb/uCc+ytjS68gq
-         Vw5EEKRMQXxhYiclDgzyqaILfcSyegLAD0Z6WDuIBPpXfs6Te4TMYZaMH2CaTAg3UGrk
-         h32wIZCvRdyumU82fmIC6ZbJqP5s0PhI2WlDtnRmXczDpvj3z1qBRQ+2r1M1UjZJmNzp
-         xbwT/c7Ggk8SllnNuSL9/kOu61qQ+soVWRUIRNC3P/Ns04gk1sdTkyl3W1Z7yWs4+KNy
-         FN3XZ6DkszItBMkmn8i13XWxt7AxhWnHo1y+uWNjLmehH206FrtnYOE8UlAtxJKhou6D
-         3Yug==
-X-Gm-Message-State: AOAM532jiqR4oHI7hJPosY6ozJhPQky+lESChvaMdrnhUFkSJGmKgpMS
-        VKAapT8uASbOCLe0E/5md9w=
-X-Google-Smtp-Source: ABdhPJzT9snL3ubyfewamf+zN8YRVQffeAGJ3brjFc/lUodTbxdZO0mAzv29Ik947iqOHeadlh3ddA==
-X-Received: by 2002:a62:7794:: with SMTP id s142mr19260524pfc.99.1596958426667;
-        Sun, 09 Aug 2020 00:33:46 -0700 (PDT)
-Received: from blackclown ([103.88.82.9])
-        by smtp.gmail.com with ESMTPSA id p20sm15773023pjz.49.2020.08.09.00.33.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Aug 2020 00:33:46 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 13:03:33 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, aditr@vmware.com,
-        pv-drivers@vmware.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH 4/4] RDMA/pvrdma: Remove pci-dma-compat wrapper APIs
-Message-ID: <57d345ca9a34f2b75b8b3a46bf473772194a0681.1596957073.git.usuraj35@gmail.com>
-References: <cover.1596957073.git.usuraj35@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kl9VEf5ldM1YlPJARQPMBMKo35p5dIfFaxCFs5UVWBo=;
+        b=UfbMtJYV31A0G4dQsZGWqXjmCGsc4rhdp3MnPl2YdYqrc3vkfaZU0vmh3tO9JlZ74r
+         Qn13UceGHh4A7jC/Rprh4XZPqjjThEr+9Tssd2Zc0w1rpYUTyV9F8l0eAbFZG6tqHVL+
+         JQl3HCrkcOtSWfZLZeaXf8j6DCv29BwxaSvo/Pppojql+RaKhm/u/8Lh3vOCm5iEPHnC
+         ThbWdWfFWYfCcx1aOisoH2nmAxOiQ6iItf19HOZ+Wgm3WI5IE4VonRrJHG0qMcA+8MQb
+         4DDTQoq53fNKhGdb4/9ra37ugaUZPUwagIHnWvAXa5qI7oh78l8snNCWl66qIZBcNdYl
+         E4Zw==
+X-Gm-Message-State: AOAM531ZgOONPl22muHpMC1wwsP3cmrXc7CeEAcVVThnuv7Br/Q9ixEi
+        EoCaXjuIvO2ggry5ytG6OV36Ls2chPOlwP8SeR8=
+X-Google-Smtp-Source: ABdhPJy1x/KnzpSV0eBQUMidxwNIj+tfW5AxOcHQmC58its6CxW1iNWznDPhEYu6i7saKqdEFxprrFqHcS95sKLHbY4=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr19090034otn.250.1596958681967;
+ Sun, 09 Aug 2020 00:38:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1596957073.git.usuraj35@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <202008090832.Fd08yQlD%lkp@intel.com>
+In-Reply-To: <202008090832.Fd08yQlD%lkp@intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sun, 9 Aug 2020 09:37:50 +0200
+Message-ID: <CAMuHMdW7aq=oRTGiCW5CPFA+3ebJ5wEvJawxRuYvhgsp42ObeQ@mail.gmail.com>
+Subject: Re: drivers/crypto/sa2ul.c:1349:33: warning: cast from pointer to
+ integer of different size
+To:     kernel test robot <lkp@intel.com>
+Cc:     Keerthy <j-keerthy@ti.com>, kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Tero Kristo <t-kristo@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs.
+On Sun, Aug 9, 2020 at 2:49 AM kernel test robot <lkp@intel.com> wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   06a81c1c7db9bd5de0bd38cd5acc44bb22b99150
+> commit: 2dc53d0047458e28ed05b4548844ba78199857bf crypto: sa2ul - add sha1/sha256/sha512 support
+> date:   2 weeks ago
+> config: m68k-randconfig-r002-20200809 (attached as .config)
+> compiler: m68k-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 2dc53d0047458e28ed05b4548844ba78199857bf
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
 
-Instead use dma-mapping.h APIs directly.
+>    In file included from include/linux/device.h:15,
+>                     from include/linux/dmaengine.h:8,
+>                     from drivers/crypto/sa2ul.c:12:
+>    drivers/crypto/sa2ul.c: In function 'sa_sha_init':
+> >> drivers/crypto/sa2ul.c:1349:33: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>     1349 |   crypto_ahash_digestsize(tfm), (u64)rctx);
+>          |                                 ^
+>    include/linux/dev_printk.h:123:47: note: in definition of macro 'dev_dbg'
+>      123 |   dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
+>          |                                               ^~~~~~~~~~~
 
-The patch has been generated with the coccinelle script below
-and compile-tested.
+Fix available since last Tuesday:
+https://lore.kernel.org/linux-crypto/20200804092927.7417-1-geert@linux-m68k.org/
 
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
+Gr{oetje,eeting}s,
 
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
+                        Geert
 
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
-
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
-
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-index 780fd2dfc07e..3c7802f7e298 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-@@ -839,15 +839,15 @@ static int pvrdma_pci_probe(struct pci_dev *pdev,
- 	}
- 
- 	/* Enable 64-Bit DMA */
--	if (pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) == 0) {
--		ret = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
-+	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)) == 0) {
-+		ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
- 		if (ret != 0) {
- 			dev_err(&pdev->dev,
- 				"pci_set_consistent_dma_mask failed\n");
- 			goto err_free_resource;
- 		}
- 	} else {
--		ret = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+		ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
- 		if (ret != 0) {
- 			dev_err(&pdev->dev,
- 				"pci_set_dma_mask failed\n");
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
