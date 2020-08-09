@@ -2,156 +2,135 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2172C2065C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4212065C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gLSskbVP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7tPPT0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgHICf1 (ORCPT
+        id S1726377AbgHICgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:35:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33118 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgHICf0 (ORCPT
+        Sat, 8 Aug 2020 22:36:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgHICgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:35:26 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0792XvX2026168;
-        Sun, 9 Aug 2020 02:35:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=6ZRtf8FS7xL94chgQEhL0kkialPRsW1/lgBWdpFkeLY=;
- b=gLSskbVPU/hnTzo16mBN+3izzI2KqatJ7h4zdzGkzah6ndd0ahT8tbPwjD61pUZv9uUv
- y1vE/7wpASwdwZwaNC1KeaetOvb8AqDOfioEZ92zOZKkumb9E9JYYWFU6WESgLGoZEAE
- LOj/wyjKqwGOFNs5o+UMPh1GUSaWu7MiNPazSyldJA1BwgRSQpic8lN5OeH7lIO7OiDZ
- XGpT/GgkUvqOtgpv2kiZ/5FaKbfxzVIlKTUVzeuagVswurLh8IjM0XFWiPcOcwDlJjRy
- uo5m8UOJ1M32zRpFWAxsyjp8ZBe3pTGHxGK7ojrXEuipijCoQGt+zsBp57Y/gG3QoUpA BQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32t2yd8bpk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 09 Aug 2020 02:35:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0792XSPI088134;
-        Sun, 9 Aug 2020 02:35:09 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32t5mjmsje-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 09 Aug 2020 02:35:09 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0792Z6GH028575;
-        Sun, 9 Aug 2020 02:35:06 GMT
-Received: from [192.168.29.236] (/73.249.50.119)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 09 Aug 2020 02:35:06 +0000
-Subject: Re: [PATCH v3 4/7] x86/paravirt: remove 32-bit support from
- PARAVIRT_XXL
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20200807083826.16794-1-jgross@suse.com>
- <20200807083826.16794-5-jgross@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <a1073b86-ebd5-68b6-7761-99669dd93e1c@oracle.com>
-Date:   Sat, 8 Aug 2020 22:34:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 8 Aug 2020 22:36:20 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E6AC061756;
+        Sat,  8 Aug 2020 19:36:20 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j21so3044344pgi.9;
+        Sat, 08 Aug 2020 19:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kub7wUC7iBpeOQedwXMHPG2fSSd6JGXHHrf1fpHFbPE=;
+        b=t7tPPT0uU7FlYa5L++Ikfzy6rXwiljuECk4lu27SHPAazvDNgSpuEhfFcZmx93l1AH
+         4FXV9lW+dfDAsIT2irs4JEaXxK5+3SEpW94sI3r5vATWanaXb+QxPhujqw21y2fOjc8A
+         rcF4sU0WgHaJeTdFZr3QnBI0Ib/YIiwWPQmwVUpHpBGOnupStR9XSZUz8KuKSWb7QBj1
+         ySmX1yVqxYQpcpdm4w676QrfjnI4WURyuCRNcPjyRzuYZoUsIFrg8BJvnG/Wp4hFUbX3
+         d+87ReIhWqwn2GaEwpDHlszH3AcIy1PcTIa9PJsrm9XNE0bi2rQSI4/JxSfGF9fGEMnn
+         4Krw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kub7wUC7iBpeOQedwXMHPG2fSSd6JGXHHrf1fpHFbPE=;
+        b=WWr0VdZhq3e/18bmLCewcS/RHHhdaoXmkM2Tps5jnZS3/tidJyI/OSE3CbnlUtSMnI
+         54VU2ZSO3pilOB6RIEHrLw+7mCEt0OUODANOa8eEOGCSD8IauHHerMJCryEQimg0cCfU
+         xBvqrh79NylDHOaKjWtBUlzqU1VH5UcoiMIkZ4xdYyBFbfj9QFfossFsSKwWrVyJbrGD
+         9cRhBXteEAlR36f8GV85aH635yb7wKbbTDMCmDud1SxXkWM4FWLt6qIrj6XZ4B3kRG2b
+         KfF3zbf9/Gv1PkYeuycGfUVRvo0cw5U4xsKsqJyKyXSVh9lZH0tEfIPoSy6GluPJ3rKC
+         EpzQ==
+X-Gm-Message-State: AOAM533w5MtdYxQBXofqdXxwMlf1RIkazgOp3VMn52/tEKrEVQlvXKrL
+        RONv1ZOdFP/kwQFd5QtVw98=
+X-Google-Smtp-Source: ABdhPJzBKl/FpkmB9RNIJz9i97dyxxK2mcalwmGHXp0o63E43rV9CYCkzDT49Htdm+uZqq+Iz0Jg7Q==
+X-Received: by 2002:a63:cd56:: with SMTP id a22mr16634662pgj.259.1596940579278;
+        Sat, 08 Aug 2020 19:36:19 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:8cf2:183:7fb5:ce6a])
+        by smtp.gmail.com with ESMTPSA id gn13sm15280089pjb.17.2020.08.08.19.36.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Aug 2020 19:36:18 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>
+Subject: [PATCH net] drivers/net/wan/x25_asy: Added needed_headroom and a skb->len check
+Date:   Sat,  8 Aug 2020 19:35:48 -0700
+Message-Id: <20200809023548.684217-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200807083826.16794-5-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008090015
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9707 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008090015
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 4:38 AM, Juergen Gross wrote:
-> @@ -377,10 +373,7 @@ static inline pte_t __pte(pteval_t val)
->  {
->  	pteval_t ret;
->  
-> -	if (sizeof(pteval_t) > sizeof(long))
-> -		ret = PVOP_CALLEE2(pteval_t, mmu.make_pte, val, (u64)val >> 32);
-> -	else
-> -		ret = PVOP_CALLEE1(pteval_t, mmu.make_pte, val);
-> +	ret = PVOP_CALLEE1(pteval_t, mmu.make_pte, val);
->  
->  	return (pte_t) { .pte = ret };
+1. Added a skb->len check
 
+This driver expects upper layers to include a pseudo header of 1 byte
+when passing down a skb for transmission. This driver will read this
+1-byte header. This patch added a skb->len check before reading the
+header to make sure the header exists.
 
-Can this now simply return (pte_t) ret?
+2. Added needed_headroom
 
+When this driver transmits data,
+  first this driver will remove a pseudo header of 1 byte,
+  then the lapb module will prepend the LAPB header of 2 or 3 bytes.
+So the value of needed_headroom in this driver should be 3 - 1.
 
--boris
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+---
+ drivers/net/wan/x25_asy.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-
+diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
+index 84640a0c13f3..de7984463595 100644
+--- a/drivers/net/wan/x25_asy.c
++++ b/drivers/net/wan/x25_asy.c
+@@ -307,6 +307,14 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
+ 		return NETDEV_TX_OK;
+ 	}
+ 
++	/* There should be a pseudo header of 1 byte added by upper layers.
++	 * Check to make sure it is there before reading it.
++	 */
++	if (skb->len < 1) {
++		kfree_skb(skb);
++		return NETDEV_TX_OK;
++	}
++
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:
+ 		break;
+@@ -752,6 +760,12 @@ static void x25_asy_setup(struct net_device *dev)
+ 	dev->type		= ARPHRD_X25;
+ 	dev->tx_queue_len	= 10;
+ 
++	/* When transmitting data:
++	 * first this driver removes a pseudo header of 1 byte,
++	 * then the lapb module prepends an LAPB header of at most 3 bytes.
++	 */
++	dev->needed_headroom	= 3 - 1;
++
+ 	/* New-style flags. */
+ 	dev->flags		= IFF_NOARP;
+ }
+-- 
+2.25.1
 
