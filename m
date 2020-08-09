@@ -2,128 +2,133 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23386C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16CC3206D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0E6206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="koKnTka2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="liNxTb77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgHIMyM (ORCPT
+        id S1726382AbgHIM5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 08:54:12 -0400
-Received: from crapouillou.net ([89.234.176.41]:33422 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgHIMyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 08:54:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1596977646; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=cnkmqD3TG3gz8m5XcYrWDZ+GrLOHBws185ObzDx76W4=;
-        b=koKnTka2TQh1Pi5bezaIUxvSZNqIOH73m0JLB50SXT/kS7HRy7RE3eYCxF0kylxdMBaKtz
-        r9SBDWb9XR5VPe1KBCjk0EHZ5Hw2sMjWvsHqhuynBpq810w3G5kunugipyx8SQ0lKVHCmG
-        tn2xrwbelnBWR2TEEIiThPD3FT4ktgo=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Bin Liu <b-liu@ti.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Johan Hovold <johan@kernel.org>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org
-Subject: [PATCH] usb: musb: Fix runtime PM race in musb_queue_resume_work
-Date:   Sun,  9 Aug 2020 14:53:59 +0200
-Message-Id: <20200809125359.31025-1-paul@crapouillou.net>
+        Sun, 9 Aug 2020 08:57:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgHIM5z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 08:57:55 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BB5C061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 05:57:54 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c19so11738743wmd.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 05:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dQcFptD/1jRl7mtWn7+XF9FKOWnm02CLbG2ixWaKNCw=;
+        b=liNxTb77yswgSB08pnXCpdwB9KXzCG/4hNutmbv+lj5VXkFDYwQtACsOCGoFvabcEI
+         SrvZWzqS7fgLo9TignDJ0fY7E9DAg1Asld5CGW/frEheM+SexebgmK3rX//fGe2dwqOe
+         PBNnWJAJsmQ+QaDLI+1y6WDyO4bHxEvyEMT/yOQSG/CSwMI+8Sc+SbQ9UlJyioLgyzCy
+         c7tSe8Fh1ST8FcR4DeUyxnZBAkWaWI7HkqDRgmrI+rWhKiMXwKyuItg/RGCjSwrbVKpc
+         6AAnozCc67gobQSY+pgqMItg0/7T5FhsCMMdVrjgtAcdY9FLibkBOQhGa/KeLWtvKxUV
+         qnJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dQcFptD/1jRl7mtWn7+XF9FKOWnm02CLbG2ixWaKNCw=;
+        b=BnVY7fKLI5m/iIxNpwK0Shik0jKH0nNSy7f+O+xgwU60ueq/AUstbDimr4ZScTfvqn
+         W+Vd2eys/Kfz4tur+xkcb4uRNSs+VKahLHJtdcHQoCwe0Os3rddmoLa8UnmWBM3ZPks0
+         Byn6597ptM1/TTPzG4Sc1oUp96iLWbf888jzgfU1mhlSR/Ok0tWyaR6a9kB1fLQ7Az3U
+         I1dakw9mr28TRqnnIR2Ki556wgk0+sFSqaK6x+4HD4ArCz9oy9OqgAhI7zfSElf3NFlo
+         UQVvzm0OTyl9P6UsPEwn4uUOmSIBkbiBHGGxOX8TVbbznP3XimtppTLedbXT6vR/l/Vr
+         yGSA==
+X-Gm-Message-State: AOAM530n8uf3NJT0zIrBQoc0LVHJav1L/P7f+OVPea8MoC2kpPIfQJPq
+        EopYDbrwD8q2thh2hjXk57M=
+X-Google-Smtp-Source: ABdhPJwoQDJIPt1TT1tW4mhtOM3YcR2P/SlUGyEL1ZpI/LVs9AYbh9e2P/VbRq+KeLj9KPzQhBVaLw==
+X-Received: by 2002:a1c:7407:: with SMTP id p7mr10635654wmc.117.1596977872403;
+        Sun, 09 Aug 2020 05:57:52 -0700 (PDT)
+Received: from pc-sobremesa.mundo-R.com (162.189.27.77.dynamic.reverse-mundo-r.com. [77.27.189.162])
+        by smtp.gmail.com with ESMTPSA id y17sm18418818wrh.63.2020.08.09.05.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2020 05:57:51 -0700 (PDT)
+From:   =?UTF-8?q?Alejandro=20Gonz=C3=A1lez?= 
+        <alejandro.gonzalez.correo@gmail.com>
+To:     f.fainelli@gmail.com, markus.mayer@broadcom.com,
+        daniel.lezcano@linaro.org, rui.zhang@intel.com,
+        computersforpeace@gmail.com
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Alejandro=20Gonz=C3=A1lez?= 
+        <alejandro.gonzalez.correo@gmail.com>
+Subject: RE: [PATCH] tools/thermal: tmon: include pthread and time headers in tmon.h
+Date:   Sun,  9 Aug 2020 14:57:20 +0200
+Message-Id: <20200809125720.2111347-1-alejandro.gonzalez.correo@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <3C3E65E75D9910479323816378A812E7417797A2@BGSMSX104.gar.corp.intel.com>
+References: <20200617235809.6817-1-mmayer@broadcom.com> <f5e160e0-ac4f-8c14-d06e-38f859690ff9@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-musb_queue_resume_work() would call the provided callback if the runtime
-PM status was 'active'. Otherwise, it would enqueue the request if the
-hardware was still suspended (musb->is_runtime_suspended is true).
+> > -----Original Message-----
+> > From: Florian Fainelli <f.fainelli@gmail.com>
+> > Sent: Thursday, June 18, 2020 8:23 AM
+> > To: Markus Mayer <markus.mayer@broadcom.com>; Daniel Lezcano
+> > <daniel.lezcano@linaro.org>; Pawnikar, Sumeet R
+> > <sumeet.r.pawnikar@intel.com>; Zhang, Rui <rui.zhang@intel.com>; Brian
+> > Norris <computersforpeace@gmail.com>
+> > Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>; Linux
+> > Kernel Mailing List <linux-kernel@vger.kernel.org>
+> > Subject: Re: [PATCH] tools/thermal: tmon: include pthread and time headers
+> > in tmon.h
+> > 
+> > 
+> > 
+> > On 6/17/2020 4:58 PM, Markus Mayer wrote:
+> > > Include sys/time.h and pthread.h in tmon.h, so that types
+> > > "pthread_mutex_t" and "struct timeval tv" are known when tmon.h
+> > > references them.
+> > >
+> > > Without these headers, compiling tmon against musl-libc will fail with
+> > > these errors:
+> > >
+> > > In file included from sysfs.c:31:0:
+> > > tmon.h:47:8: error: unknown type name 'pthread_mutex_t'
+> > >  extern pthread_mutex_t input_lock;
+> > >         ^~~~~~~~~~~~~~~
+> > > make[3]: *** [<builtin>: sysfs.o] Error 1
+> > > make[3]: *** Waiting for unfinished jobs....
+> > > In file included from tui.c:31:0:
+> > > tmon.h:54:17: error: field 'tv' has incomplete type
+> > >   struct timeval tv;
+> > >                  ^~
+> > > make[3]: *** [<builtin>: tui.o] Error 1
+> > > make[2]: *** [Makefile:83: tmon] Error 2
+> > >
+> > > Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+> > 
+> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> > --
+> > Florian
+> 
+> Reviewed-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+> 
+> Thanks,
+> Sumeet.
 
-This causes a race with the runtime PM handlers, as it is possible to be
-in the case where the runtime PM status is not yet 'active', but the
-hardware has been awaken (PM resume function has been called).
+I've tested this patch with musl-libc for the same arch. It works like a charm.
 
-When hitting the race, the resume work was not enqueued, which probably
-triggered other bugs further down the stack. For instance, a telnet
-connection on Ingenic SoCs would result in a 50/50 chance of a
-segmentation fault somewhere in the musb code.
-
-Rework the code so that either we call the callback directly if
-(musb->is_runtime_suspended == 0), or enqueue the query otherwise.
-
-Fixes: ea2f35c01d5e ("usb: musb: Fix sleeping function called from invalid context for hdrc glue")
-Cc: stable@vger.kernel.org # v4.9
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/usb/musb/musb_core.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-index 384a8039a7fd..462c10d7455a 100644
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -2241,32 +2241,35 @@ int musb_queue_resume_work(struct musb *musb,
- {
- 	struct musb_pending_work *w;
- 	unsigned long flags;
-+	bool is_suspended;
- 	int error;
- 
- 	if (WARN_ON(!callback))
- 		return -EINVAL;
- 
--	if (pm_runtime_active(musb->controller))
--		return callback(musb, data);
-+	spin_lock_irqsave(&musb->list_lock, flags);
-+	is_suspended = musb->is_runtime_suspended;
-+
-+	if (is_suspended) {
-+		w = devm_kzalloc(musb->controller, sizeof(*w), GFP_ATOMIC);
-+		if (!w) {
-+			error = -ENOMEM;
-+			goto out_unlock;
-+		}
- 
--	w = devm_kzalloc(musb->controller, sizeof(*w), GFP_ATOMIC);
--	if (!w)
--		return -ENOMEM;
-+		w->callback = callback;
-+		w->data = data;
- 
--	w->callback = callback;
--	w->data = data;
--	spin_lock_irqsave(&musb->list_lock, flags);
--	if (musb->is_runtime_suspended) {
- 		list_add_tail(&w->node, &musb->pending_list);
- 		error = 0;
--	} else {
--		dev_err(musb->controller, "could not add resume work %p\n",
--			callback);
--		devm_kfree(musb->controller, w);
--		error = -EINPROGRESS;
- 	}
-+
-+out_unlock:
- 	spin_unlock_irqrestore(&musb->list_lock, flags);
- 
-+	if (!is_suspended)
-+		error = callback(musb, data);
-+
- 	return error;
- }
- EXPORT_SYMBOL_GPL(musb_queue_resume_work);
--- 
-2.28.0
-
+Acked-by: Alejandro González <alejandro.gonzalez.correo@gmail.com>
+Tested-by: Alejandro González <alejandro.gonzalez.correo@gmail.com>
