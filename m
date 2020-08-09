@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC89C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E363F206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFC9206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgHIMRK (ORCPT
+        id S1726291AbgHIMS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 08:17:10 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:19764 "EHLO
+        Sun, 9 Aug 2020 08:18:29 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:28989 "EHLO
         labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgHIMQU (ORCPT
+        with ESMTP id S1726335AbgHIMQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 08:16:20 -0400
-IronPort-SDR: 92jKMmQlN7NLWOviB47xxBHdJPo1Qfzrcjb9k76EApeNJxsJbjh671BckgoRNKwMFNf0jxFmUx
- R7/Hh6CYBVwzvir+aA9p7IwfZbZXKdmb+W4foMK3OX0wMAuvVE5eBn+1ZtDAwKSW3S2qh2v5MN
- IRlmlxi+0OYJWfLUzFZK3DMfPMOxaUNHxZaD2IOzmiuA0Xq4FRz/ujBBH87AqE/S6lBlceYmsx
- qFlmHazaJTguduaTe7EyK2ACWY5ZqGY9LYakmeonmCR46Onmk0g95McIPJWYK7bCAncg+DlVFz
- NRs=
+        Sun, 9 Aug 2020 08:16:40 -0400
+IronPort-SDR: Lm1UeYQPCvuG1NTvN13LOM0YExeKKeb8sdRg6irHFkvpsB1B7lWeuYwZqytohvd2Bism7rDX4N
+ jYI/Iju5guCvpxrFj7WdbzXEXGY19H8mX0z+J3LzpA3nP2E6woOJcf7SOvpk0H0PE/IuFfcYXP
+ 4aksfmpCqpmgQpVMPjnRm3MAjUDHPWuf90nCmGLET1Tj//t6xg4XemDYodhqxDb8saMftX+ELL
+ cJ8JhqZsKqhJDS9u/OP/Imr2YT8RfrqMF273D80ZoSKiQ7VRpZcLkXdhL5MoWq6QA8PjgYIDE9
+ QLA=
 X-IronPort-AV: E=Sophos;i="5.75,453,1589266800"; 
-   d="scan'208";a="47246499"
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by labrats.qualcomm.com with ESMTP; 09 Aug 2020 05:16:06 -0700
-Received: from wsp769891wss.qualcomm.com (HELO stor-presley.qualcomm.com) ([192.168.140.85])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 09 Aug 2020 05:16:04 -0700
+   d="scan'208";a="29073794"
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by labrats.qualcomm.com with ESMTP; 09 Aug 2020 05:16:30 -0700
+Received: from stor-presley.qualcomm.com ([192.168.140.85])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 09 Aug 2020 05:16:29 -0700
 Received: by stor-presley.qualcomm.com (Postfix, from userid 359480)
-        id C864B2156E; Sun,  9 Aug 2020 05:16:04 -0700 (PDT)
+        id A2D722156E; Sun,  9 Aug 2020 05:16:29 -0700 (PDT)
 From:   Can Guo <cang@codeaurora.org>
 To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         hongwus@codeaurora.org, rnayak@codeaurora.org,
         linux-scsi@vger.kernel.org, kernel-team@android.com,
         saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
         Avri Altman <avri.altman@wdc.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/9] scsi: ufs-qcom: Remove testbus dump in ufs_qcom_dump_dbg_regs
-Date:   Sun,  9 Aug 2020 05:15:49 -0700
-Message-Id: <1596975355-39813-4-git-send-email-cang@codeaurora.org>
+Subject: [PATCH 7/9] scsi: ufs: Move dumps in IRQ handler to error handler
+Date:   Sun,  9 Aug 2020 05:15:53 -0700
+Message-Id: <1596975355-39813-8-git-send-email-cang@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596975355-39813-1-git-send-email-cang@codeaurora.org>
 References: <1596975355-39813-1-git-send-email-cang@codeaurora.org>
@@ -58,64 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dumping testbus registers is heavy enough to cause stability issues
-sometime, just remove them as of now.
+Sometime dumps in IRQ handler are heavy enough to cause system stability
+issues, move them to error handler and only print basic host regs here.
 
 Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
 Reviewed-by: Bean Huo <beanhuo@micron.com>
 Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 823eccf..6b75338 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1630,44 +1630,12 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
- 	return 0;
- }
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index ed24582..602c746 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5696,6 +5696,19 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 				    UFSHCD_UIC_DL_TCx_REPLAY_ERROR))))
+ 		needs_reset = true;
  
--static void ufs_qcom_testbus_read(struct ufs_hba *hba)
--{
--	ufshcd_dump_regs(hba, UFS_TEST_BUS, 4, "UFS_TEST_BUS ");
--}
--
--static void ufs_qcom_print_unipro_testbus(struct ufs_hba *hba)
--{
--	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	u32 *testbus = NULL;
--	int i, nminor = 256, testbus_len = nminor * sizeof(u32);
--
--	testbus = kmalloc(testbus_len, GFP_KERNEL);
--	if (!testbus)
--		return;
--
--	host->testbus.select_major = TSTBUS_UNIPRO;
--	for (i = 0; i < nminor; i++) {
--		host->testbus.select_minor = i;
--		ufs_qcom_testbus_config(host);
--		testbus[i] = ufshcd_readl(hba, UFS_TEST_BUS);
--	}
--	print_hex_dump(KERN_ERR, "UNIPRO_TEST_BUS ", DUMP_PREFIX_OFFSET,
--			16, 4, testbus, testbus_len, false);
--	kfree(testbus);
--}
--
- static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
- {
- 	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
- 			 "HCI Vendor Specific Registers ");
++	if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR |
++			      UFSHCD_UIC_HIBERN8_MASK)) {
++		bool pr_prdt = !!(hba->saved_err & SYSTEM_BUS_FATAL_ERROR);
++
++		spin_unlock_irqrestore(hba->host->host_lock, flags);
++		ufshcd_print_host_state(hba);
++		ufshcd_print_pwr_info(hba);
++		ufshcd_print_host_regs(hba);
++		ufshcd_print_tmrs(hba, hba->outstanding_tasks);
++		ufshcd_print_trs(hba, hba->outstanding_reqs, pr_prdt);
++		spin_lock_irqsave(hba->host->host_lock, flags);
++	}
++
+ 	/*
+ 	 * if host reset is required then skip clearing the pending
+ 	 * transfers forcefully because they will get cleared during
+@@ -5915,18 +5928,12 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
  
--	/* sleep a bit intermittently as we are dumping too much data */
- 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
--	udelay(1000);
--	ufs_qcom_testbus_read(hba);
--	udelay(1000);
--	ufs_qcom_print_unipro_testbus(hba);
--	udelay(1000);
- }
- 
- /**
+ 		/* dump controller state before resetting */
+ 		if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR)) {
+-			bool pr_prdt = !!(hba->saved_err &
+-					SYSTEM_BUS_FATAL_ERROR);
+-
+ 			dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
+ 					__func__, hba->saved_err,
+ 					hba->saved_uic_err);
+-
+-			ufshcd_print_host_regs(hba);
++			ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE,
++					 "host_regs: ");
+ 			ufshcd_print_pwr_info(hba);
+-			ufshcd_print_tmrs(hba, hba->outstanding_tasks);
+-			ufshcd_print_trs(hba, hba->outstanding_reqs,
+-					pr_prdt);
+ 		}
+ 		ufshcd_schedule_eh_work(hba);
+ 		retval |= IRQ_HANDLED;
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
