@@ -2,133 +2,469 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23386C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC0E6206B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 12:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83407206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 13:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="liNxTb77"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQp1lzfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgHIM5z (ORCPT
+        id S1726335AbgHINGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 08:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47686 "EHLO
+        Sun, 9 Aug 2020 09:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgHIM5z (ORCPT
+        with ESMTP id S1726175AbgHINGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 08:57:55 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BB5C061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 05:57:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c19so11738743wmd.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 05:57:54 -0700 (PDT)
+        Sun, 9 Aug 2020 09:06:22 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11935C061A27
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 06:06:18 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id k13so3329816lfo.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 06:06:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dQcFptD/1jRl7mtWn7+XF9FKOWnm02CLbG2ixWaKNCw=;
-        b=liNxTb77yswgSB08pnXCpdwB9KXzCG/4hNutmbv+lj5VXkFDYwQtACsOCGoFvabcEI
-         SrvZWzqS7fgLo9TignDJ0fY7E9DAg1Asld5CGW/frEheM+SexebgmK3rX//fGe2dwqOe
-         PBNnWJAJsmQ+QaDLI+1y6WDyO4bHxEvyEMT/yOQSG/CSwMI+8Sc+SbQ9UlJyioLgyzCy
-         c7tSe8Fh1ST8FcR4DeUyxnZBAkWaWI7HkqDRgmrI+rWhKiMXwKyuItg/RGCjSwrbVKpc
-         6AAnozCc67gobQSY+pgqMItg0/7T5FhsCMMdVrjgtAcdY9FLibkBOQhGa/KeLWtvKxUV
-         qnJg==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=VmTzzfDBJiSQkMltLCbHrfMBNTVx2GG6UiB8oZglHO4=;
+        b=ZQp1lzfYeIQwUbTzwd+S6ONOioYJ1IwTaABGreoxDPlkhohWn0BKKaEkhBoFoHPKeG
+         0ZbA/Pd9tN0PcgBw5uKB5FbtWntC1fcYvKIdSwZIkF7gXsAXmtY+Br8p+d3mIznV3Cid
+         5dL5CbqxLD78mIzIMmR0Pvy5LdSR9m/B9btOrw9WEq13+SX+zbkeKX+zbrc9IhAcM0rb
+         NM0VW+n4pif+uc6JM2iMLYOTAXBDe/ADlRpiqwBD63XLxWlqEfOyjsUBHJM0Innlh+yR
+         7o4KlTCscUuSmSqmetItV7TOvxFaCPk8sUrp76xiy63dgWmtvI2Me9iRFWMLsR9pkY7x
+         dfIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dQcFptD/1jRl7mtWn7+XF9FKOWnm02CLbG2ixWaKNCw=;
-        b=BnVY7fKLI5m/iIxNpwK0Shik0jKH0nNSy7f+O+xgwU60ueq/AUstbDimr4ZScTfvqn
-         W+Vd2eys/Kfz4tur+xkcb4uRNSs+VKahLHJtdcHQoCwe0Os3rddmoLa8UnmWBM3ZPks0
-         Byn6597ptM1/TTPzG4Sc1oUp96iLWbf888jzgfU1mhlSR/Ok0tWyaR6a9kB1fLQ7Az3U
-         I1dakw9mr28TRqnnIR2Ki556wgk0+sFSqaK6x+4HD4ArCz9oy9OqgAhI7zfSElf3NFlo
-         UQVvzm0OTyl9P6UsPEwn4uUOmSIBkbiBHGGxOX8TVbbznP3XimtppTLedbXT6vR/l/Vr
-         yGSA==
-X-Gm-Message-State: AOAM530n8uf3NJT0zIrBQoc0LVHJav1L/P7f+OVPea8MoC2kpPIfQJPq
-        EopYDbrwD8q2thh2hjXk57M=
-X-Google-Smtp-Source: ABdhPJwoQDJIPt1TT1tW4mhtOM3YcR2P/SlUGyEL1ZpI/LVs9AYbh9e2P/VbRq+KeLj9KPzQhBVaLw==
-X-Received: by 2002:a1c:7407:: with SMTP id p7mr10635654wmc.117.1596977872403;
-        Sun, 09 Aug 2020 05:57:52 -0700 (PDT)
-Received: from pc-sobremesa.mundo-R.com (162.189.27.77.dynamic.reverse-mundo-r.com. [77.27.189.162])
-        by smtp.gmail.com with ESMTPSA id y17sm18418818wrh.63.2020.08.09.05.57.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 05:57:51 -0700 (PDT)
-From:   =?UTF-8?q?Alejandro=20Gonz=C3=A1lez?= 
-        <alejandro.gonzalez.correo@gmail.com>
-To:     f.fainelli@gmail.com, markus.mayer@broadcom.com,
-        daniel.lezcano@linaro.org, rui.zhang@intel.com,
-        computersforpeace@gmail.com
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Alejandro=20Gonz=C3=A1lez?= 
-        <alejandro.gonzalez.correo@gmail.com>
-Subject: RE: [PATCH] tools/thermal: tmon: include pthread and time headers in tmon.h
-Date:   Sun,  9 Aug 2020 14:57:20 +0200
-Message-Id: <20200809125720.2111347-1-alejandro.gonzalez.correo@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <3C3E65E75D9910479323816378A812E7417797A2@BGSMSX104.gar.corp.intel.com>
-References: <20200617235809.6817-1-mmayer@broadcom.com> <f5e160e0-ac4f-8c14-d06e-38f859690ff9@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=VmTzzfDBJiSQkMltLCbHrfMBNTVx2GG6UiB8oZglHO4=;
+        b=UNiHb8WtR8u7X4Ws12EAl9aWQXDdgnbhdjeIrJue3zNbxwAcvvDoGcCkw0galuii0x
+         D9uG60T1SEz4CJtKOfw++BPKn2j39rDmkyvTEDezCX+EK/TXqB+3Jxcidik/NGrlJyaj
+         uawMxqsGGUF1cAh4qivBYtOygnwVdaC/d1KWEkl0cEgJP7Yp08n+inq2zpQpisX7spE1
+         1ePJjfyN+APxdGWl70zNJpVy6/sk+D4OSkLQkXUHdnR98qa1ITFNPPMbGmxCG4aPFDug
+         IrVA3x3wiCFG2FuZsTehJSDedSpEnYtLnwXuz6AVDOk4Dd+uFhX88Wvhemht8ZPhxtq1
+         ZyDA==
+X-Gm-Message-State: AOAM530ag6E6mhGSirY7vRDKZwiCJviUtQ5JYhZsHeTyEvjUKGaQIitT
+        O9teyC1iLY1BWGWDXUDqojpvvnfR8+RoVCdJ+xIrTg==
+X-Google-Smtp-Source: ABdhPJxRs/6nh1/XQdh+o37RlQsV+yyruKnaIS3oVkoSkv+utO+keGCR0h8uIMi2pMzWsufXXLtcR/PwghyMiSd9WN0=
+X-Received: by 2002:ac2:4d16:: with SMTP id r22mr10911715lfi.21.1596978370600;
+ Sun, 09 Aug 2020 06:06:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 9 Aug 2020 15:05:59 +0200
+Message-ID: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
+Subject: [GIT PULL] pin control changes for the v5.9 kernel cycle
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > -----Original Message-----
-> > From: Florian Fainelli <f.fainelli@gmail.com>
-> > Sent: Thursday, June 18, 2020 8:23 AM
-> > To: Markus Mayer <markus.mayer@broadcom.com>; Daniel Lezcano
-> > <daniel.lezcano@linaro.org>; Pawnikar, Sumeet R
-> > <sumeet.r.pawnikar@intel.com>; Zhang, Rui <rui.zhang@intel.com>; Brian
-> > Norris <computersforpeace@gmail.com>
-> > Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>; Linux
-> > Kernel Mailing List <linux-kernel@vger.kernel.org>
-> > Subject: Re: [PATCH] tools/thermal: tmon: include pthread and time headers
-> > in tmon.h
-> > 
-> > 
-> > 
-> > On 6/17/2020 4:58 PM, Markus Mayer wrote:
-> > > Include sys/time.h and pthread.h in tmon.h, so that types
-> > > "pthread_mutex_t" and "struct timeval tv" are known when tmon.h
-> > > references them.
-> > >
-> > > Without these headers, compiling tmon against musl-libc will fail with
-> > > these errors:
-> > >
-> > > In file included from sysfs.c:31:0:
-> > > tmon.h:47:8: error: unknown type name 'pthread_mutex_t'
-> > >  extern pthread_mutex_t input_lock;
-> > >         ^~~~~~~~~~~~~~~
-> > > make[3]: *** [<builtin>: sysfs.o] Error 1
-> > > make[3]: *** Waiting for unfinished jobs....
-> > > In file included from tui.c:31:0:
-> > > tmon.h:54:17: error: field 'tv' has incomplete type
-> > >   struct timeval tv;
-> > >                  ^~
-> > > make[3]: *** [<builtin>: tui.o] Error 1
-> > > make[2]: *** [Makefile:83: tmon] Error 2
-> > >
-> > > Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> > 
-> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> > --
-> > Florian
-> 
-> Reviewed-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-> 
-> Thanks,
-> Sumeet.
+Hi Linus,
 
-I've tested this patch with musl-libc for the same arch. It works like a charm.
+here is the big bulk of pin control changes for the v5.9
+kernel cycle, nothing is particularly interesting.
 
-Acked-by: Alejandro González <alejandro.gonzalez.correo@gmail.com>
-Tested-by: Alejandro González <alejandro.gonzalez.correo@gmail.com>
+I expect you to see two conflicts:
+
+drivers/pinctrl/intel/pinctrl-baytrail.c - no idea what this
+is about as both HEAD and mine look the same to human
+eyes, I suppose whitespace. Take whichever version you
+like.
+
+drivers/pinctrl/pinctrl-single.c - use my version, the
+documentation fix shall prevail.
+
+There is a revert I made, it was because I by mistake
+merged a GPIO patch to the pin control tree and then
+later realized my mistake, but other development
+was done on top. Sorry.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407=
+:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.9-1
+
+for you to fetch changes up to 7ee193e2dda3f48b692fad46ab9df90e99e7b811:
+
+  dt-bindings: pinctrl: add bindings for MediaTek MT6779 SoC
+(2020-08-04 01:29:58 +0200)
+
+----------------------------------------------------------------
+This is the bulk of the pin control changes for the v5.9
+kernel series:
+
+Core changes:
+
+- The GPIO patch "gpiolib: Introduce
+  for_each_requested_gpio_in_range() macro" was put in an
+  immutable branch and merged into the pinctrl tree as well.
+  We see these changes also here.
+
+- Improved debug output for pins used as GPIO.
+
+New drivers:
+
+- Ocelot Sparx5 SoC driver.
+
+- Intel Emmitsburg SoC subdriver.
+
+- Intel Tiger Lake-H SoC subdriver.
+
+- Qualcomm PM660 SoC subdriver.
+
+- Renesas SH-PFC R8A774E1 subdriver.
+
+Driver improvements:
+
+- Linear improvement and cleanups of the Intel drivers for
+  Cherryview, Lynxpoint, Baytrail etc. Improved locking among
+  other things.
+
+- Renesas SH-PFC has added support for RPC pins, groups, and
+  functions to r8a77970 and r8a77980.
+
+- The newere Freescale (now NXP) i.MX8 pin controllers have
+  been modularized. This is driven by the Google Android
+  GKI initiative I think.
+
+- Open drain support for pins on the Qualcomm IPQ4019.
+
+- The Ingenic driver can handle both edges IRQ detection.
+
+- A big slew of documentation fixes all over the place.
+
+- A few irqchip template conversions by yours truly.
+
+----------------------------------------------------------------
+Alexander A. Klimov (2):
+      pinctrl: rockchip: Replace HTTP links with HTTPS ones
+      pinctl: ti: iodelay: Replace HTTP links with HTTPS ones
+
+Alexandre Torgue (2):
+      pinctrl: stm32: return proper error code in pin_config_set
+      pinctrl: stm32: add possibility to configure pins individually
+
+Andrew Jeffery (2):
+      pinctrl: aspeed: Improve debug output
+      pinctrl: aspeed: Describe the heartbeat function on ball Y23
+
+Andy Shevchenko (26):
+      gpiolib: Introduce for_each_requested_gpio_in_range() macro
+      ARM/orion/gpio: Make use of for_each_requested_gpio()
+      gpio: mvebu: Make use of for_each_requested_gpio()
+      gpio: xra1403: Make use of for_each_requested_gpio()
+      pinctrl: at91: Make use of for_each_requested_gpio()
+      pinctrl: cherryview: Introduce chv_readl() helper
+      pinctrl: cherryview: Introduce helpers to IO with common registers
+      pinctrl: cherryview: Convert chv_writel() to use chv_padreg()
+      pinctrl: intel: Allow drivers to define total amount of IRQs per comm=
+unity
+      pinctrl: intel: Allow drivers to define ACPI address space ID
+      pinctrl: cherryview: Re-use data structures from pinctrl-intel.h (par=
+t 3)
+      pinctrl: intel: Disable input and output buffer when switching to GPI=
+O
+      pinctrl: intel: Reduce scope of the lock
+      pinctrl: intel: Make use of IRQ_RETVAL()
+      pinctrl: intel: Get rid of redundant 'else' in intel_config_set_debou=
+nce()
+      pinctrl: intel: Drop the only label in the code for consistency
+      pinctrl: intel: Split intel_config_get() to three functions
+      pinctrl: intel: Protect IO in few call backs by lock
+      pinctrl: intel: Make use of for_each_requested_gpio_in_range()
+      pinctrl: lynxpoint: Make use of for_each_requested_gpio()
+      pinctrl: lynxpoint: Introduce helpers to enable or disable input
+      pinctrl: lynxpoint: Drop no-op ACPI_PTR() call
+      pinctrl: baytrail: Drop no-op ACPI_PTR() call
+      pinctrl: merrifield: Update pin names in accordance with official lis=
+t
+      pinctrl: merrifield: Add I=C2=B2S bus 2 pins to groups and functions
+      pinctrl: intel: Add Intel Emmitsburg pin controller support
+
+Andy Teng (1):
+      dt-bindings: pinctrl: add bindings for MediaTek MT6779 SoC
+
+Anson Huang (9):
+      pinctrl: imx: Support i.MX8 SoCs pinctrl driver built as module
+      pinctrl: imx: scu: Support i.MX8 SCU SoCs pinctrl driver built as mod=
+ule
+      pinctrl: imx8mm: Support building as module
+      pinctrl: imx8mn: Support building as module
+      pinctrl: imx8mq: Support building as module
+      pinctrl: imx8mp: Support building as module
+      pinctrl: imx8qxp: Support building as module
+      pinctrl: imx8qm: Support building as module
+      pinctrl: imx8dxl: Support building as module
+
+Brian Norris (1):
+      dt-bindings: pinctrl: qcom: add drive-open-drain to ipq4019
+
+Drew Fustini (6):
+      pinctrl-single: fix pcs_parse_pinconf() return value
+      pinctrl: single: parse #pinctrl-cells =3D 2
+      ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
+      pinctrl: single: fix function name in documentation
+      gpio: omap: handle pin config bias flags
+      pinctrl: core: print gpio in pins debugfs file
+
+Etienne Carriere (2):
+      pinctrl: stm32: don't print an error on probe deferral during clock g=
+et
+      pinctrl: stm32: defer probe if reset resource is not yet ready
+
+Fabien Dessenne (1):
+      pinctrl: stm32: use the hwspin_lock_timeout_in_atomic() API
+
+Furquan Shaikh (1):
+      pinctrl: amd: Honor IRQ trigger type requested by the caller
+
+Geert Uytterhoeven (1):
+      dt-bindings: pinctrl: renesas,rza2-pinctrl: Convert to json-schema
+
+Gustavo A. R. Silva (4):
+      pinctrl: lpc18xx: Use fallthrough pseudo-keyword
+      pinctrl: baytrail: Use fallthrough pseudo-keyword
+      pinctrl: qcom: spmi-gpio: Use fallthrough pseudo-keyword
+      pinctrl: single: Use fallthrough pseudo-keyword
+
+Hanks Chen (4):
+      pinctrl: mediatek: update pinmux definitions for mt6779
+      pinctrl: mediatek: avoid virtual gpio trying to set reg
+      pinctrl: mediatek: add pinctrl support for MT6779 SoC
+      pinctrl: mediatek: add mt6779 eint support
+
+Hans de Goede (1):
+      pinctrl: baytrail: Fix pin being driven low for a while on
+gpiod_get(..., GPIOD_OUT_HIGH)
+
+Hyeonki Hong (1):
+      pinctrl: meson: fix drive strength register and bit calculation
+
+Jaiganesh Narayanan (1):
+      pinctrl: qcom: ipq4019: add open drain support
+
+Kathiravan T (1):
+      pinctrl: qcom: ipq8074: route gpio interrupts to APPS
+
+Konrad Dybcio (2):
+      pinctrl: qcom: spmi-gpio: Add pm660(l) compatibility
+      Documentation: Document pm660(l) SPMI GPIOs compatible
+
+Lad Prabhakar (1):
+      pinctrl: sh-pfc: pfc-r8a77951: Add R8A774E1 PFC support
+
+Lars Povlsen (1):
+      pinctrl: ocelot: Add Sparx5 SoC support
+
+Lee Jones (24):
+      pinctrl: rza1: Demote some kerneldoc headers and fix others
+      pinctrl: actions: pinctrl-owl: Supply missing 'struct
+owl_pinctrl' attribute descriptions
+      pinctrl: sirf: pinctrl-atlas7: Fix a bunch of documentation misdemean=
+ours
+      pinctrl: bcm: pinctrl-bcm281xx: Demote obvious misuse of
+kerneldoc to standard comment blocks
+      pinctrl: bcm: pinctrl-iproc-gpio: Rename incorrectly documented
+function param
+      pinctrl: qcom: pinctrl-msm: Complete 'struct msm_pinctrl' documentati=
+on
+      pinctrl: samsung: pinctrl-samsung: Demote obvious misuse of
+kerneldoc to standard comment blocks
+      pinctrl: samsung: pinctrl-s3c24xx: Fix formatting issues
+      pinctrl: samsung: pinctrl-s3c64xx: Fix formatting issues
+      pinctrl: qcom: pinctrl-msm8976: Remove unused variable 'nav_tsync_gro=
+ups'
+      pinctrl: mediatek: pinctrl-mtk-common-v2: Mark
+'mtk_default_register_base_names' as __maybe_unused
+      pinctrl: core: Fix a bunch of kerneldoc issues
+      pinctrl: pinmux: Add some missing parameter descriptions
+      pinctrl: devicetree: Add one new attribute description and
+rename another two
+      pinctrl: pinconf-generic: Add function parameter description 'pctldev=
+'
+      pinctrl: pinctrl-at91-pio4: PM related attribute descriptions
+      pinctrl: pinctrl-at91: Demote non-kerneldoc header and complete anoth=
+er
+      pinctrl: pinctrl-bm1880: Rename ill documented struct attribute entri=
+es
+      pinctrl: pinctrl-rockchip: Fix a bunch of kerneldoc misdemeanours
+      pinctrl: pinctrl-single: Fix struct/function documentation blocks
+      pinctrl: tegra: pinctrl-tegra194: Do not initialise field twice
+      pinctrl: meson: pinctrl-meson-a1: Remove unused const variable
+'i2c_slave_groups'
+      pinctrl: mvebu: pinctrl-armada-37xx: Update documentation block
+for 'struct armada_37xx_pin_group'
+      pinctrl: pinctrl-amd: Do not define 'struct acpi_device_id' when
+!CONFIG_ACPI
+
+Linus Walleij (9):
+      Merge branch 'ib-for-each-requested' of /home/linus/linux-gpio into d=
+evel
+      Merge tag 'sh-pfc-for-v5.9-tag1' of
+git://git.kernel.org/.../geert/renesas-drivers into devel
+      Merge tag 'sh-pfc-for-v5.9-tag2' of
+git://git.kernel.org/.../geert/renesas-drivers into devel
+      Revert "gpio: omap: handle pin config bias flags"
+      Merge tag 'intel-pinctrl-v5.9-1' of
+git://git.kernel.org/.../pinctrl/intel into devel
+      pinctrl: sx150x: Use irqchip template
+      pinctrl: mcp23s08: Use irqchip template
+      pinctrl: amd: Use irqchip template
+      pinctrl: stmfx: Use irqchip template
+
+Marek Szyprowski (1):
+      pinctrl: samsung: Use bank name as irqchip name
+
+Marian-Cristian Rotariu (1):
+      dt-bindings: pinctrl: sh-pfc: Document r8a774e1 PFC support
+
+Mark Tomlinson (1):
+      pinctrl: nsp: Set irq handler based on trig type
+
+Mika Westerberg (1):
+      pinctrl: tigerlake: Add support for Tiger Lake-H
+
+Paul Cercueil (6):
+      pinctrl: ingenic: Add NAND FRE/FWE pins for JZ4740
+      pinctrl: ingenic: Add ingenic,jz4725b-gpio compatible string
+      dt-bindings: pinctrl: Convert ingenic,pinctrl.txt to YAML
+      pinctrl: ingenic: Enhance support for IRQ_TYPE_EDGE_BOTH
+      pinctrl: ingenic: Properly detect GPIO direction when configured for =
+IRQ
+      dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
+
+Randy Dunlap (1):
+      pinctrl: mediatek: fix build for tristate changes
+
+Sergei Shtylyov (2):
+      pinctrl: sh-pfc: r8a77980: Add RPC pins, groups, and functions
+      pinctrl: sh-pfc: r8a77970: Add RPC pins, groups, and functions
+
+ .../bindings/pinctrl/ingenic,pinctrl.txt           |   81 -
+ .../bindings/pinctrl/ingenic,pinctrl.yaml          |  176 ++
+ .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |  202 ++
+ .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt      |    3 +-
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |    2 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
+ .../bindings/pinctrl/renesas,rza2-pinctrl.txt      |   87 -
+ .../bindings/pinctrl/renesas,rza2-pinctrl.yaml     |  100 +
+ arch/arm/boot/dts/am33xx-l4.dtsi                   |    2 +-
+ arch/arm/plat-orion/gpio.c                         |    8 +-
+ drivers/gpio/gpio-mvebu.c                          |    8 +-
+ drivers/gpio/gpio-xra1403.c                        |    8 +-
+ drivers/pinctrl/actions/pinctrl-owl.c              |    4 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         |    7 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c            |   25 +-
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c             |    6 +-
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |    2 +-
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c             |   18 +-
+ drivers/pinctrl/core.c                             |   33 +-
+ drivers/pinctrl/devicetree.c                       |    5 +-
+ drivers/pinctrl/freescale/Kconfig                  |   14 +-
+ drivers/pinctrl/freescale/pinctrl-imx.c            |    2 +
+ drivers/pinctrl/freescale/pinctrl-imx8dxl.c        |    5 +
+ drivers/pinctrl/freescale/pinctrl-imx8mm.c         |    6 +
+ drivers/pinctrl/freescale/pinctrl-imx8mn.c         |    6 +
+ drivers/pinctrl/freescale/pinctrl-imx8mp.c         |    6 +
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c         |    6 +
+ drivers/pinctrl/freescale/pinctrl-imx8qm.c         |    5 +
+ drivers/pinctrl/freescale/pinctrl-imx8qxp.c        |    5 +
+ drivers/pinctrl/freescale/pinctrl-scu.c            |    4 +
+ drivers/pinctrl/intel/Kconfig                      |    8 +
+ drivers/pinctrl/intel/Makefile                     |    1 +
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |   74 +-
+ drivers/pinctrl/intel/pinctrl-cherryview.c         |  418 ++--
+ drivers/pinctrl/intel/pinctrl-emmitsburg.c         |  387 ++++
+ drivers/pinctrl/intel/pinctrl-intel.c              |  192 +-
+ drivers/pinctrl/intel/pinctrl-intel.h              |    4 +
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c          |   28 +-
+ drivers/pinctrl/intel/pinctrl-merrifield.c         |   50 +-
+ drivers/pinctrl/intel/pinctrl-tigerlake.c          |  358 ++++
+ drivers/pinctrl/mediatek/Kconfig                   |   12 +
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt6779.c          |  785 ++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c   |   26 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h   |    3 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h      | 2085 ++++++++++++++++=
+++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |    7 +
+ drivers/pinctrl/meson/pinctrl-meson-a1.c           |    5 -
+ drivers/pinctrl/meson/pinctrl-meson.c              |   11 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |    7 +-
+ drivers/pinctrl/pinconf-generic.c                  |    3 +-
+ drivers/pinctrl/pinctrl-amd.c                      |   34 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c                |    2 +
+ drivers/pinctrl/pinctrl-at91.c                     |   13 +-
+ drivers/pinctrl/pinctrl-bm1880.c                   |    4 +-
+ drivers/pinctrl/pinctrl-ingenic.c                  |   15 +-
+ drivers/pinctrl/pinctrl-lpc18xx.c                  |   12 +-
+ drivers/pinctrl/pinctrl-mcp23s08.c                 |   44 +-
+ drivers/pinctrl/pinctrl-ocelot.c                   |  430 +++-
+ drivers/pinctrl/pinctrl-rockchip.c                 |   24 +-
+ drivers/pinctrl/pinctrl-rza1.c                     |   24 +-
+ drivers/pinctrl/pinctrl-single.c                   |   39 +-
+ drivers/pinctrl/pinctrl-stmfx.c                    |   32 +-
+ drivers/pinctrl/pinctrl-sx150x.c                   |   44 +-
+ drivers/pinctrl/pinmux.c                           |    5 +-
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c             |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c             |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |   19 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |    2 +
+ drivers/pinctrl/qcom/pinctrl-msm8976.c             |    3 -
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    8 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |    2 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |   58 +-
+ drivers/pinctrl/samsung/pinctrl-s3c24xx.c          |    6 +-
+ drivers/pinctrl/samsung/pinctrl-s3c64xx.c          |    6 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    4 +-
+ drivers/pinctrl/sh-pfc/Kconfig                     |    4 +
+ drivers/pinctrl/sh-pfc/Makefile                    |    1 +
+ drivers/pinctrl/sh-pfc/core.c                      |    6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77951.c              |  877 ++++----
+ drivers/pinctrl/sh-pfc/pfc-r8a77970.c              |   76 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77980.c              |   76 +
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |    1 +
+ drivers/pinctrl/sirf/pinctrl-atlas7.c              |   21 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  138 +-
+ drivers/pinctrl/tegra/pinctrl-tegra194.c           |    1 -
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c            |    2 +-
+ include/dt-bindings/pinctrl/mt6779-pinfunc.h       | 1242 ++++++++++++
+ include/dt-bindings/pinctrl/omap.h                 |    2 +-
+ include/linux/gpio/driver.h                        |   16 +
+ 90 files changed, 7371 insertions(+), 1226 deletions(-)
+ delete mode 100644
+Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/intel/pinctrl-emmitsburg.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6779.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h
+ create mode 100644 include/dt-bindings/pinctrl/mt6779-pinfunc.h
