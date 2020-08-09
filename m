@@ -2,88 +2,212 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9681DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACCEC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB71206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBE3206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 15:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0b13Uuz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgHIP0q (ORCPT
+        id S1726370AbgHIPqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 11:26:46 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:44127 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726199AbgHIP0o (ORCPT
+        Sun, 9 Aug 2020 11:46:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53276 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHIPqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 11:26:44 -0400
-Received: (qmail 277409 invoked by uid 1000); 9 Aug 2020 11:26:43 -0400
-Date:   Sun, 9 Aug 2020 11:26:43 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200809152643.GA277165@rowland.harvard.edu>
-References: <20200729182515.GB1580638@rowland.harvard.edu>
- <1596047349.4356.84.camel@HansenPartnership.com>
- <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
- <20200730151030.GB6332@rowland.harvard.edu>
- <9b80ca7c-39f8-e52d-2535-8b0baf93c7d1@puri.sm>
- <425990b3-4b0b-4dcf-24dc-4e7e60d5869d@puri.sm>
- <20200807143002.GE226516@rowland.harvard.edu>
- <b0abab28-880e-4b88-eb3c-9ffd927d1ed9@puri.sm>
- <20200808150542.GB256751@rowland.harvard.edu>
- <d3b6f7b8-5345-1ae1-4f79-5dde226e74f1@puri.sm>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3b6f7b8-5345-1ae1-4f79-5dde226e74f1@puri.sm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 9 Aug 2020 11:46:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 079Fc05X124024;
+        Sun, 9 Aug 2020 15:46:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : message-id : date :
+ cc : to; s=corp-2020-01-29;
+ bh=7sO52o8n45ywtCixPuR/wFX+kO5/oyb73FG2RAil3P0=;
+ b=0b13Uuz9pvueL2TT4Z+y4R0JHGO7ahiyj+FXKoRbuMFZBEjuUONDbbCDLA3heVO31Zmt
+ SMU0HYh5NJnN5s20C7CMn+N3v+wyRokkFP1jmxwIIvdIIybwkMT/PIIgyIsLglccU5cn
+ cAKD/ZDWc+X+6EwnzFJ/H118kws0M1++OBwyqS/3Cp08iUwlVGfI12zIVT00B7dciJmi
+ ovuE6Ne1cmQObFwF4kU13oyuDYyDdNqeHoeFlc9G+B9vG0bkZNDDR7xrjz+uaG0swPw2
+ WidFk39fxsF9GQzb5Q85oawUmwFB4hROLb/YZ6LRjelX5wdJo98UR0x/OxjTmK2lZJTn UQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32t2yd9kpa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 09 Aug 2020 15:46:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 079FhJtT102028;
+        Sun, 9 Aug 2020 15:44:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 32t5tprvs5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 09 Aug 2020 15:44:17 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 079FiGcm019359;
+        Sun, 9 Aug 2020 15:44:16 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 09 Aug 2020 15:44:16 +0000
+From:   Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Please pull NFS server updates for v5.9
+Message-Id: <F9B8940D-9F7B-47F5-9946-D77C17CF959A@oracle.com>
+Date:   Sun, 9 Aug 2020 11:44:15 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008090117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 11:20:22AM +0200, Martin Kepplinger wrote:
-> Hey Alan, I'm really glad for that, I suspected some of this but I have
-> little experience in scsi/block layers, so that is super helpful.
-> 
-> I'd appreciate an opinion on the below workaround that *seems* to work
-> now (let's see, I had thought so before :)
-> 
-> Whether or not this helps to find a real solution, let's see. But
-> integration of such a flag in the error handling paths is what's
-> interesting for now:
-> 
-> 
-> --- a/drivers/scsi/scsi_error.c
-> +++ b/drivers/scsi/scsi_error.c
-> @@ -565,6 +565,17 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
->  				return NEEDS_RETRY;
->  			}
->  		}
-> +		if (scmd->device->expecting_media_change) {
-> +			if (sshdr.asc == 0x28 && sshdr.ascq == 0x00) {
-> +				/* clear expecting_media_change in
-> +				 * scsi_noretry_cmd() because we need
-> +				 * to override possible "failfast" overrides
-> +				 * that block readahead can cause.
-> +				 */
-> +				return NEEDS_RETRY;
+Hello Linus-
 
-This is a somewhat fragile approach.  You don't know for certain that 
-scsi_noretry_cmd will be called.  Also, scsi_noretry_cmd can be called 
-from other places.
+The following changes since commit =
+11ba468877bb23f28956a35e896356252d63c983:
 
-It would be better to clear the expecting_media_change flag just before 
-returning from scsi_decide_disposition.  That way its use is localized 
-to one routine, not spread out between two.
+  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
 
-Alan Stern
+are available in the Git repository at:
+
+  git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.9
+
+for you to fetch changes up to b297fed699ad9e50315b27e78de42ac631c9990d:
+
+  svcrdma: CM event handler clean up (2020-07-28 10:18:15 -0400)
+
+----------------------------------------------------------------
+Highlights:
+
+- Support for user extended attributes on NFS (RFC 8276)
+- Further reduce unnecessary NFSv4 delegation recalls
+
+Notable fixes:
+
+- Fix recent krb5p regression
+- Address a few resource leaks and a rare NULL dereference
+
+Other:
+
+- De-duplicate RPC/RDMA error handling and other utility functions
+- Replace storage and display of kernel memory addresses by tracepoints
+
+----------------------------------------------------------------
+Chuck Lever (24):
+      SUNRPC: Augment server-side rpcgss tracepoints
+      svcrdma: Fix page leak in svc_rdma_recv_read_chunk()
+      svcrdma: Remove save_io_pages() call from send_error_msg()
+      svcrdma: Add @rctxt parameter to svc_rdma_send_error() functions
+      svcrdma: Add a @status parameter to svc_rdma_send_error_msg()
+      svcrdma: Eliminate return value for svc_rdma_send_error_msg()
+      svcrdma: Make svc_rdma_send_error_msg() a global function
+      svcrdma: Consolidate send_error helper functions
+      svcrdma: Clean up trace_svcrdma_send_failed() tracepoint
+      svcrdma: Remove declarations for functions long removed
+      SUNRPC: Add helpers for decoding list discriminators symbolically
+      svcrdma: Add common XDR decoders for RDMA and Read segments
+      svcrdma: Add common XDR encoders for RDMA and Read segments
+      svcrdma: Introduce infrastructure to support completion IDs
+      svcrdma: Introduce Receive completion IDs
+      svcrdma: Record Receive completion ID in svc_rdma_decode_rqst
+      svcrdma: Introduce Send completion IDs
+      svcrdma: Record send_ctxt completion ID in =
+trace_svcrdma_post_send()
+      svcrdma: Display chunk completion ID when posting a rw_ctxt
+      SUNRPC: Fix ("SUNRPC: Add "@len" parameter to gss_unwrap()")
+      SUNRPC: Refresh the show_rqstp_flags() macro
+      svcrdma: Fix another Receive buffer leak
+      svcrdma: Remove transport reference counting
+      svcrdma: CM event handler clean up
+
+Frank van der Linden (10):
+      nfs,nfsd: NFSv4.2 extended attribute protocol definitions
+      xattr: break delegations in {set,remove}xattr
+      xattr: add a function to check if a namespace is supported
+      nfsd: split off the write decode code into a separate function
+      nfsd: add defines for NFSv4.2 extended attribute support
+      nfsd: define xattr functions to call into their vfs counterparts
+      nfsd: take xattr bits into account for permission checks
+      nfsd: add structure definitions for xattr requests / responses
+      nfsd: implement the xattr functions and en/decode logic
+      nfsd: add fattr support for user extended attributes
+
+J. Bruce Fields (1):
+      nfsd4: a client's own opens needn't prevent delegations
+
+Randy Dunlap (1):
+      nfsd: netns.h: delete a duplicated word
+
+Scott Mayhew (1):
+      nfsd: avoid a NULL dereference in __cld_pipe_upcall()
+
+Xu Wang (1):
+      nfsd: Use seq_putc() in two functions
+
+ fs/locks.c                                 |   3 +
+ fs/nfsd/netns.h                            |   2 +-
+ fs/nfsd/nfs4idmap.c                        |   4 +-
+ fs/nfsd/nfs4proc.c                         | 128 =
+++++++++++++++++++++++-
+ fs/nfsd/nfs4recover.c                      |  24 ++---
+ fs/nfsd/nfs4state.c                        |  54 +++++++---
+ fs/nfsd/nfs4xdr.c                          | 531 =
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
++++++++++++++------
+ fs/nfsd/nfsd.h                             |   5 +-
+ fs/nfsd/vfs.c                              | 239 =
+++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/vfs.h                              |  10 ++
+ fs/nfsd/xdr4.h                             |  31 ++++++
+ fs/xattr.c                                 | 111 ++++++++++++++++++--
+ include/linux/nfs4.h                       |  22 +++-
+ include/linux/sunrpc/rpc_rdma.h            |  74 +++++++++++++
+ include/linux/sunrpc/rpc_rdma_cid.h        |  24 +++++
+ include/linux/sunrpc/svc_rdma.h            |  17 ++-
+ include/linux/sunrpc/xdr.h                 |  26 +++++
+ include/linux/xattr.h                      |   4 +
+ include/trace/events/rpcgss.h              | 168 =
++++++++++++++++++++++++++-----
+ include/trace/events/rpcrdma.h             | 207 =
++++++++++++++++++++-----------------
+ include/trace/events/sunrpc.h              |  35 +++++--
+ include/uapi/linux/nfs4.h                  |   3 +
+ net/sunrpc/auth_gss/gss_krb5_wrap.c        |   2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c          | 118 ++++++++++++++-------
+ net/sunrpc/auth_gss/trace.c                |   3 +
+ net/sunrpc/xprtrdma/frwr_ops.c             |   1 -
+ net/sunrpc/xprtrdma/rpc_rdma.c             |  31 ++----
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   2 +-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    | 115 +++++++-------------
+ net/sunrpc/xprtrdma/svc_rdma_rw.c          |  81 +++++++++------
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c      | 124 ++++++++++++++--------
+ net/sunrpc/xprtrdma/svc_rdma_transport.c   |  74 +++++--------
+ 32 files changed, 1807 insertions(+), 466 deletions(-)
+ create mode 100644 include/linux/sunrpc/rpc_rdma_cid.h
+--
+Chuck Lever
+
+
+
