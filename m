@@ -2,130 +2,130 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E26C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6317BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970D5206B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596964356;
-	bh=EvMkiAV/QPaNxSiF1QV6aIN8GUE6bYJn6W6e14MfThU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IZi6HjP6stzISr7sPz2YDYpslgKL6lHad+Yp6O8UG5I59EQxuAZuo7nXUo4q6HIUu
-	 Dk1njks9Dd8Oa11ZBcLFXDLxVjti1pHHDJAZOTY0gw/aH5xBOSro8XtIZQFktZt1H4
-	 m8zxxqGYlFMXl2YgkVDFfr+jy2obm78y5cVxgdiw=
+	by mail.kernel.org (Postfix) with ESMTP id 3E0B1206B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 09:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCfT5JrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgHIJMf (ORCPT
+        id S1726380AbgHIJNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 05:12:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgHIJMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 05:12:34 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A5720729;
-        Sun,  9 Aug 2020 09:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596964353;
-        bh=EvMkiAV/QPaNxSiF1QV6aIN8GUE6bYJn6W6e14MfThU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DOzwTXZctisZhFn3SMxaGkMAKPzOBqgDA8rZVkrzEHJTCnkctn56nOVEW8Bxh/KVm
-         VKg3RJtRqoTwIPmAv1Nhw1q8b5G9H6u7dfMU/7CyXJUO8B2xnTmAgu7PrVH/1kUQRS
-         sFbtIsBnnLeGufxim4j5A1e82yoJ4LPfGa4ztatU=
-Received: by mail-lj1-f180.google.com with SMTP id t23so6504149ljc.3;
-        Sun, 09 Aug 2020 02:12:33 -0700 (PDT)
-X-Gm-Message-State: AOAM530jM2F/lvAc3BAx5ZZyWkOCLlRLP9cQ1xJyM9jmG98VyRBsIMjY
-        2uOapglOfRYRq0W80rIFSSXAQUgXLnswGbcdixM=
-X-Google-Smtp-Source: ABdhPJznCulEjN/KcLzYGMk3mIIrcG1fmWkPOR29sS+cEcZOxbPrWV3J7BBHAjxBcBj1e9zHDrdwzNW8LNaWXqSZ+VM=
-X-Received: by 2002:a2e:86da:: with SMTP id n26mr10264938ljj.311.1596964351660;
- Sun, 09 Aug 2020 02:12:31 -0700 (PDT)
+        Sun, 9 Aug 2020 05:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgHIJNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 05:13:13 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524F2C061A27
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 02:13:13 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id g20so1638414uan.7
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 02:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r+74zSb8Mdp9nDMJHIbR9g9Xvn68Ir31r0eIPx9VKJQ=;
+        b=uCfT5JrYlSPG0FEa68vEPgOHLYMvfbUL6H6bDMPguXZp/Qlh6YGNBBSj7uXfYtckc3
+         cCO8ZypmSwK+tFs6jZQZ8bV5QoFG6dMLcGwBbYmTjQcJwhzbAZy1FuTLz8rCe1U3HJeC
+         zKvA5bxJpLgNBw3IKo6tBM7xvaAiyNa4gqbUktEbvi/BpJLo4OBC3d6nFRRMLvo0jYFV
+         mPIozp32zeE+OPwRs8ihRtN221ms6sh5PQG6jmDjxMWrjY1xXxJxA5cEv4MHobpF6mWm
+         6+gT3Jq0cUI/PRGxlQM9zzh+6uviWzHh/PFTNjQmhz9Z6vZaU+wg6EVnCUNC5JBQVOpM
+         bM2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r+74zSb8Mdp9nDMJHIbR9g9Xvn68Ir31r0eIPx9VKJQ=;
+        b=jRial0VyIzOJjLRtJx3Tg2tHLmCiK76rMkNNclZ3ZTi2nErQEv6jZ3K1aT4q10WPO8
+         mh30bDxbXgl8b6jT1ks9fk+RuBisEQJfn8xVBT+ug+xU8PU7nP0F5DJxbZcqWWrXsVVP
+         xxvQYq2reHpFpN4Fcmk9mIulE+yCtwOp5QZuPC8kJlJjQXG/GKVtTGv/SkyDs4UdFBZU
+         Hnq345fygXvwHnzaBBo7VD16ARVJWswgojmYU8zgIt0DqsQ1ZesjgSCTTE24L2DVd9Qg
+         PaOIcnX5rxUIc0C1A9qj5Ytp5UDzzbVwcaY89oAJ2bNNDOTYD7lEa3FGk7VyoY0RXKTl
+         ektA==
+X-Gm-Message-State: AOAM531B6ZMnbzZ231MBdkA45Qx0gYCdR5vyLxRCWwqcttahoHjzZ18K
+        xUZu1Zyikuxav/jhTXGh2OYvnsA8ftM=
+X-Google-Smtp-Source: ABdhPJxn3bPSXAHzL/cGHzzAzh8yjISoHM903w+UZfVQ3H2TWUZoiWr5i0+QjsuGCIB4VdwJZ6FrWA==
+X-Received: by 2002:a9f:3630:: with SMTP id r45mr15569087uad.31.1596964391562;
+        Sun, 09 Aug 2020 02:13:11 -0700 (PDT)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id u74sm3347308vsu.14.2020.08.09.02.13.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 02:13:10 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id a1so2835986vsp.4
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 02:13:10 -0700 (PDT)
+X-Received: by 2002:a05:6102:517:: with SMTP id l23mr15265082vsa.114.1596964389659;
+ Sun, 09 Aug 2020 02:13:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200724180857.22119-1-krzk@kernel.org> <3522860a-8158-6e71-9d65-01d0e0c15f0d@arm.com>
-In-Reply-To: <3522860a-8158-6e71-9d65-01d0e0c15f0d@arm.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Sun, 9 Aug 2020 11:12:20 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPe3OeKFhmtbF4OZup_ii_rxRHTaSK5BT-3T6ijqUukqtg@mail.gmail.com>
-Message-ID: <CAJKOXPe3OeKFhmtbF4OZup_ii_rxRHTaSK5BT-3T6ijqUukqtg@mail.gmail.com>
-Subject: Re: [RFC] memory: exynos5422-dmc: Document mutex scope
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
+References: <20200809023548.684217-1-xie.he.0141@gmail.com>
+In-Reply-To: <20200809023548.684217-1-xie.he.0141@gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Sun, 9 Aug 2020 11:12:33 +0200
+X-Gmail-Original-Message-ID: <CA+FuTSe-FaQFn4WNvVPJ1v+jVZAghgd1AZc-cWn2+GjPR4GzVQ@mail.gmail.com>
+Message-ID: <CA+FuTSe-FaQFn4WNvVPJ1v+jVZAghgd1AZc-cWn2+GjPR4GzVQ@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/x25_asy: Added needed_headroom and a
+ skb->len check
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 11:40:07AM +0100, Lukasz Luba wrote:
-> Hi Krzysztof,
+On Sun, Aug 9, 2020 at 4:36 AM Xie He <xie.he.0141@gmail.com> wrote:
 >
-> On 7/24/20 7:08 PM, Krzysztof Kozlowski wrote:
-> > Document scope of the mutex used by driver.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > It seems mutex was introduced to protect:
-> > 1. setting actual frequency/voltage,
-> > 2. dmc->curr_rate (in exynos5_dmc_get_cur_freq()).
-> >
-> > However dmc->curr_rate in exynos5_dmc_get_status() is not protected. Is
-> > it a bug?
+> 1. Added a skb->len check
 >
-> The callback get_dev_status() from devfreq->profile, which here is the
-> exynos5_dmc_get_status() should be already called with devfreq->lock
-> mutex hold, like e.g from simple_ondemand governor or directly
-> using update_devfreq exported function:
-> update_devfreq()
->   ->get_target_freq()
->     devfreq_update_stats()
->         df->profile->get_dev_status()
+> This driver expects upper layers to include a pseudo header of 1 byte
+> when passing down a skb for transmission. This driver will read this
+> 1-byte header. This patch added a skb->len check before reading the
+> header to make sure the header exists.
 >
-> The dmc->curr_rate is also used from sysfs interface from devfreq.
-> The local dmc lock serializes also this use case (when the HW freq
-> has changed but not set yet into curr_rate.
+> 2. Added needed_headroom
+>
+> When this driver transmits data,
+>   first this driver will remove a pseudo header of 1 byte,
+>   then the lapb module will prepend the LAPB header of 2 or 3 bytes.
+> So the value of needed_headroom in this driver should be 3 - 1.
+>
+> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Cc: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
 
-These are different locks. You cannot protect dmc->curr_rate with
-devfreq->lock in one place and dmc-lock in other place. This won't
-protect it.
+The patch is analogous to commit c7ca03c216ac
+("drivers/net/wan/lapbether: Added needed_headroom and a skb->len
+check").
 
-> > ---
-> >   drivers/memory/samsung/exynos5422-dmc.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> > index 93e9c2429c0d..0388066a7d96 100644
-> > --- a/drivers/memory/samsung/exynos5422-dmc.c
-> > +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> > @@ -114,6 +114,7 @@ struct exynos5_dmc {
-> >     void __iomem *base_drexi0;
-> >     void __iomem *base_drexi1;
-> >     struct regmap *clk_regmap;
-> > +   /* Protects curr_rate and frequency/voltage setting section */
-> >     struct mutex lock;
-> >     unsigned long curr_rate;
-> >     unsigned long curr_volt;
-> >
->
-> I assume this missing comment for the lock was required by some scripts.
-> In this case LGTM:
->
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Seems to make sense based on call stack
 
-Such comments are always useful. It is also pointed by strict
-checkpatch:
-CHECK: struct mutex definition without comment
+  x25_asy_xmit               // skb_pull(skb, 1)
+  lapb_data_request
+  lapb_kick
+  lapb_send_iframe        // skb_push(skb, 2)
+  lapb_transmit_buffer    // skb_push(skb, 1)
+  lapb_data_transmit
+  x25_asy_data_transmit
+  x25_asy_encaps
 
-Best regards,
-Krzysztof
+But I frankly don't know this code and would not modify logic that no
+one has complained about for many years without evidence of a real
+bug.
+
+Were you able to actually exercise this path, similar to lapb_ether:
+configure the device, send data from a packet socket? If so, can you
+share the configuration steps?
