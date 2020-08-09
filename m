@@ -2,128 +2,142 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20217C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCF820658
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F183B20678
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRitf7/x"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aSj9S23x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgHIIjH (ORCPT
+        id S1726242AbgHIIoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 04:39:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgHIIjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 04:39:04 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A050AC061756;
-        Sun,  9 Aug 2020 01:39:04 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d188so3535308pfd.2;
-        Sun, 09 Aug 2020 01:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UUqjBFLSFj07bofmN+lmejWkKSobWy2Q37QPpM9tfM4=;
-        b=DRitf7/xZbhFIbD4BmPyA9TTpOSRlwfq/F3xuOaDUsJO3IzpFeV1oVGTH8+Wi2SwGn
-         My0qxHjKHMVTZ9DvI8QegnU3vp+xPjg26dsp6Ti4mW/lVmRg5Cp3A7CithXfxdgzlOhr
-         qNSN4k+BoYJ25CZOj9PufG1/NM/JGTho6uEgF0BvQDvdKAzH2k302BvV4Eh5WdXRAtF+
-         UUcqBgmwbJO5STQ4bAhV8foXLHWSGrvkM6gHQZ2U4pRJPDhxWmGxBGHqCb0RAdK/bInU
-         it58SLgxoUYtnmLJ6h7limNeaE8Zjp0KuNCNQG8n5lhh1ti0MpH+5RLg2U+5zThs2DRm
-         i/zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UUqjBFLSFj07bofmN+lmejWkKSobWy2Q37QPpM9tfM4=;
-        b=cv9H+fjZLmNCWIEU/5+HbL40YUnpfugrRiAAcXF1Hgs1PZh79CtYZnDtE6nnSwo8/Y
-         pUw12z+ANmbYADmn/gP32FDvDl3POq5FQ/BFr/bIm2w/hjxiSiL1R1oNaKwZjcaVfKWt
-         yxgmwHB7bpwg9b9X7mXlKM0DSLrY1LkEGbunuT8sovMG2cylfPzq3RE9GbKa3ztKwwDW
-         vf1u79vu3AKQadzGxxDe345fbXrkuU937yR9B7GicnwyAtFVblNHZRnbA5rhLjvhF+ln
-         e0W3rJ+m3UHu51hjXhc7ZuMm2bG3sUhrZBvn3ujD344vLFtupxG+iKOk8/papuGFQbnP
-         6I0A==
-X-Gm-Message-State: AOAM533ed3JjbVZaFIreuLOviL4ybMrfuY8FV8xEkCBCV+SS9S4qdSPI
-        X3EDvdolR8by/MfXXWl8fb4=
-X-Google-Smtp-Source: ABdhPJyvUr21NMad5ZRJfyYb5NwR2zQVU55Q8hb8qn25pFJb7Nomw/QR5LtliW/Q8gDkiMd+7/wHXQ==
-X-Received: by 2002:aa7:8f0d:: with SMTP id x13mr20702677pfr.193.1596962344142;
-        Sun, 09 Aug 2020 01:39:04 -0700 (PDT)
-Received: from blackclown ([103.88.82.9])
-        by smtp.gmail.com with ESMTPSA id s2sm16760513pjb.33.2020.08.09.01.39.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Aug 2020 01:39:03 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 14:08:57 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     Gal Pressman <galpress@amazon.com>
-Cc:     dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 0/4] Infiniband Subsystem: Remove pci-dma-compat wrapper
- APIs.
-Message-ID: <20200809083857.GB4419@blackclown>
-References: <cover.1596957073.git.usuraj35@gmail.com>
- <9220090e-7340-df50-a998-57a5e7752f90@amazon.com>
+        Sun, 9 Aug 2020 04:44:09 -0400
+Received: from ozlabs.org ([203.11.71.1]:56207 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbgHIIoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 04:44:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BPXh353pvz9sPC;
+        Sun,  9 Aug 2020 18:44:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596962645;
+        bh=bkqpeA8hJXRKZhX5To79DYhW6lFpYbJLRp9jA2KTtMw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aSj9S23x5sFVombGEXAroKJ7zbce1TIAVXR8JsYXTVHwAz0RWGTcoNZqGBeegO1DQ
+         PVtAmAjZfQmFjfXEUbSzRPU1Oxp+ZT6mTOMgMKu2kPjTLNsGNGEzGJNR05B3N82Krq
+         GnTs61PeSt+N9v5XbNFSoB4lBRHVmVzzxyXQ7el57MC3jiBXv4nTBf2QRsfjtaygbh
+         phCjqkYr4zTa6GRuHIHw2dnhF695C/FAjt80o83dfZPrE34ZVS4TxYjxO/cC4yvxIL
+         A3r05TpApQ1eEY2FnHLIFqyzJWTDiUnkAy9X9xSqGGAGDIitYODM/0n91yeteJoGCc
+         x7D4I6uEevAsA==
+Date:   Sun, 9 Aug 2020 18:44:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Satya Tangirala <satyat@google.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: Re: linux-next: manual merge of the f2fs tree with the fscrypt tree
+Message-ID: <20200809184402.20a29137@canb.auug.org.au>
+In-Reply-To: <20200708103858.1196bb65@canb.auug.org.au>
+References: <20200708103858.1196bb65@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9220090e-7340-df50-a998-57a5e7752f90@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/=sT6bNjnPvTnddTKeX23DSc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 11:35:51AM +0300, Gal Pressman wrote:
-> On 09/08/2020 10:24, Suraj Upadhyay wrote:
-> > Hii Developers,
-> > 
-> > 	This patch series will replace all the legacy pci-dma-compat wrappers
-> > with the dma-mapping APIs directly in the INFINIBAND Subsystem.
-> > 
-> > This task is done through a coccinelle script which is described in each commit
-> > message.
-> > 
-> > The changes are compile tested.
-> > 
-> > Thanks,
-> > 
-> > Suraj Upadhyay.
-> > 
-> > Suraj Upadhyay (4):
-> >   IB/hfi1: Remove pci-dma-compat wrapper APIs
-> >   IB/mthca: Remove pci-dma-compat wrapper APIs
-> >   RDMA/qib: Remove pci-dma-compat wrapper APIs
-> >   RDMA/pvrdma: Remove pci-dma-compat wrapper APIs
-> > 
-> >  drivers/infiniband/hw/hfi1/pcie.c             |  8 +++----
-> >  drivers/infiniband/hw/hfi1/user_exp_rcv.c     | 13 +++++------
-> >  drivers/infiniband/hw/mthca/mthca_eq.c        | 21 +++++++++--------
-> >  drivers/infiniband/hw/mthca/mthca_main.c      |  8 +++----
-> >  drivers/infiniband/hw/mthca/mthca_memfree.c   | 23 +++++++++++--------
-> >  drivers/infiniband/hw/qib/qib_file_ops.c      | 12 +++++-----
-> >  drivers/infiniband/hw/qib/qib_init.c          |  4 ++--
-> >  drivers/infiniband/hw/qib/qib_pcie.c          |  8 +++----
-> >  drivers/infiniband/hw/qib/qib_user_pages.c    | 12 +++++-----
-> >  .../infiniband/hw/vmw_pvrdma/pvrdma_main.c    |  6 ++---
-> >  10 files changed, 59 insertions(+), 56 deletions(-)
-> > 
-> 
-> The efa patch isn't listed here, and it shows as patch 5/4?
+--Sig_/=sT6bNjnPvTnddTKeX23DSc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I forgot to add it in the queue.
+Hi all,
 
-Thought it would be nice if the patch ("efa") would be in the chain.
+On Wed, 8 Jul 2020 10:38:58 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>=20
+> Today's linux-next merge of the f2fs tree got a conflict in:
+>=20
+>   Documentation/filesystems/f2fs.rst
+>=20
+> between commit:
+>=20
+>   38dff4e50c12 ("f2fs: add inline encryption support")
+>=20
+> from the fscrypt tree and commit:
+>=20
+>   a7c77c387b60 ("f2fs: fix to document reserved special compression exten=
+sion")
+>=20
+> from the f2fs tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> diff --cc Documentation/filesystems/f2fs.rst
+> index 8b4fac44f4e1,535021c46260..000000000000
+> --- a/Documentation/filesystems/f2fs.rst
+> +++ b/Documentation/filesystems/f2fs.rst
+> @@@ -258,13 -258,8 +258,15 @@@ compress_extension=3D%s  Support adding s
+>                          on compression extension list and enable compres=
+sion on
+>                          these file by default rather than to enable it v=
+ia ioctl.
+>                          For other files, we can still enable compression=
+ via ioctl.
+> +                        Note that, there is one reserved special extensi=
+on '*', it
+> +                        can be set to enable compression for all files.
+>  +inlinecrypt
+>  +                       When possible, encrypt/decrypt the contents of e=
+ncrypted
+>  +                       files using the blk-crypto framework rather than
+>  +                       filesystem-layer encryption. This allows the use=
+ of
+>  +                       inline encryption hardware. The on-disk format is
+>  +                       unaffected. For more details, see
+>  +                       Documentation/block/inline-encryption.rst.
+>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  =20
+>   Debugfs Entries
 
-Though I am sending a v2 for that patch following joe perches suggestion.
+This is now a conflict between the f2fs tree and Linus' tree.
 
-Hope this wasn't an annoyance.
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
+--Sig_/=sT6bNjnPvTnddTKeX23DSc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Suraj Upadhyay.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8vt1IACgkQAVBC80lX
+0Gxm8gf/ca3/+5VpjZjqqaJQvN9wDIrenb9IZk29DUn3iulxcY9XfuSX+g3KLAez
+YP/l7qKs4GSOsniTjJp4wIh+fjT0asTkmMBLWuwN2vzTptmrHvGZBCA4hP7vekVi
+HBlsJb3A/dZ77lZ5s3DboMUPBmecNE6oNtmiKPFzQPw0IEAWpeUvjVipiy2vzDZn
+eAWs/oFbBjdpkj5S+a/obVDJygr3vwd6yz5QokPgYVqX3E22CUCCflEG0V0wLjOI
+A2fKJHMarcVYOo+1RZmIHeOHZrMw2529CXVHi6EPndAPNPcrvnIL8lQRu1syt+4s
+jpRomTKt8/ZimN9M8UegHgwVff6SIw==
+=nT0Q
+-----END PGP SIGNATURE-----
+
+--Sig_/=sT6bNjnPvTnddTKeX23DSc--
