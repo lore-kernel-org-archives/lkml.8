@@ -2,152 +2,84 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C54C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBADC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC9F206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:47:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J4NGEFo7"
+	by mail.kernel.org (Postfix) with ESMTP id 49585206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgHIWrO (ORCPT
+        id S1726335AbgHIW6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 18:47:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:36329 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgHIWrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 18:47:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BPvNr2BcHz9sTT;
-        Mon, 10 Aug 2020 08:47:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597013229;
-        bh=h3ZagsVIucyTEwdsg2dwiVt2ir6VGtqyV8dklVONgso=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J4NGEFo7vtlf2/N+uabDjIbyApEMECqZbtJGHVa2ND4DKdYzwjwQePeSH8/IpA/wO
-         l249HfblC536ePWvQRz2FLLAgIG49Op45pcTDzbddFG+aKJeOtsP7BQ62ab6IPauW6
-         cxbZyvHRtCOj1ZKkBvKLmRFpqjpPAR4SohCw524x4wy4Fxhry53TzHropuPwXTqJuX
-         sb378Rw5OWb1OnLetPT+HToNUyYns24oQCLfTnFwUAhaeUvDAbxG+cYV9ZsoQBSWkI
-         462xgfp03ecNWg5mMupNr0BGpO2RuzG8smeFtglbzB46J/lpGPWeNE4r9kHsy/vgMW
-         NDfKR/uN3LSzQ==
-Date:   Mon, 10 Aug 2020 08:47:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the fsinfo tree with the vfs tree
-Message-ID: <20200810084707.0745be30@canb.auug.org.au>
-In-Reply-To: <20200803190532.5b69d3f4@canb.auug.org.au>
-References: <20200803190532.5b69d3f4@canb.auug.org.au>
+        Sun, 9 Aug 2020 18:58:51 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:55466 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgHIW6u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 18:58:50 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 07F1129B87;
+        Sun,  9 Aug 2020 18:58:44 -0400 (EDT)
+Date:   Mon, 10 Aug 2020 08:58:43 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org,
+        Laurent Vivier <lvivier@redhat.com>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/9] macintosh/via-macii: Poll the device most likely to
+ respond
+In-Reply-To: <20200809185541.GA133779@roeck-us.net>
+Message-ID: <alpine.LNX.2.23.453.2008100844450.8@nippy.intranet>
+References: <cover.1593318192.git.fthain@telegraphics.com.au> <5836f80886ebcfbe5be5fb7e0dc49feed6469712.1593318192.git.fthain@telegraphics.com.au> <20200809185541.GA133779@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1Wa9cyAcdtD4B16icUayXhM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1Wa9cyAcdtD4B16icUayXhM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 9 Aug 2020, Guenter Roeck wrote:
 
-Hi all,
+> Hi,
+> 
+> On Sun, Jun 28, 2020 at 02:23:12PM +1000, Finn Thain wrote:
+> > Poll the most recently polled device by default, rather than the lowest
+> > device address that happens to be enabled in autopoll_devs. This improves
+> > input latency. Re-use macii_queue_poll() rather than duplicate that logic.
+> > This eliminates a static struct and function.
+> > 
+> > Fixes: d95fd5fce88f0 ("m68k: Mac II ADB fixes") # v5.0+
+> > Tested-by: Stan Johnson <userm57@yahoo.com>
+> > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+> 
+> With this patch applied, the qemu "q800" emulation no longer works and 
+> is stuck in early boot. Any idea why that might be the case, and/or how 
+> to debug it ?
+> 
 
-On Mon, 3 Aug 2020 19:05:32 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->=20
-> Today's linux-next merge of the fsinfo tree got a conflict in:
->=20
->   fs/internal.h
->=20
-> between commits:
->=20
->   c60166f04283 ("init: add an init_mount helper")
->   09267defa36a ("init: add an init_umount helper")
->=20
-> from the vfs tree and commits:
->=20
->   8c62d62ddd1f ("fsinfo: Allow retrieval of superblock devname, options a=
-nd stats")
->   df9f487eeb11 ("fsinfo: Allow fsinfo() to look up a mount object by ID")
->   0a83b1d9fdcd ("fsinfo: Allow mount information to be queried")
->   969ba80e4121 ("fsinfo: Allow mount topology and propagation info to be =
-retrieved")
->   a177ce034bec ("fsinfo: Add an attribute that lists all the visible moun=
-ts in a namespace")
->=20
-> from the fsinfo tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> diff --cc fs/internal.h
-> index 10517ece4516,267b4aaf0271..000000000000
-> --- a/fs/internal.h
-> +++ b/fs/internal.h
-> @@@ -96,11 -95,15 +102,20 @@@ extern int __mnt_want_write_file(struc
->   extern void __mnt_drop_write_file(struct file *);
->  =20
->   extern void dissolve_on_fput(struct vfsmount *);
->  +
->  +int path_mount(const char *dev_name, struct path *path,
->  +		const char *type_page, unsigned long flags, void *data_page);
->  +int path_umount(struct path *path, int flags);
->  +
-> + extern int lookup_mount_object(struct path *, unsigned int, struct path=
- *);
-> + extern int fsinfo_generic_mount_source(struct path *, struct fsinfo_con=
-text *);
-> + extern int fsinfo_generic_mount_info(struct path *, struct fsinfo_conte=
-xt *);
-> + extern int fsinfo_generic_mount_topology(struct path *, struct fsinfo_c=
-ontext *);
-> + extern int fsinfo_generic_mount_point(struct path *, struct fsinfo_cont=
-ext *);
-> + extern int fsinfo_generic_mount_point_full(struct path *, struct fsinfo=
-_context *);
-> + extern int fsinfo_generic_mount_children(struct path *, struct fsinfo_c=
-ontext *);
-> + extern int fsinfo_generic_mount_all(struct path *, struct fsinfo_contex=
-t *);
-> +=20
->   /*
->    * fs_struct.c
->    */
+The problem you're seeing was mentioned in the cover letter,
+https://lore.kernel.org/linux-m68k/cover.1593318192.git.fthain@telegraphics.com.au/
 
-This is now a conflict between the fsinfo tree and Linus' tree.
+Since this series was merged, Linus' tree is no longer compatible with 
+long-standing QEMU bugs.
 
---=20
-Cheers,
-Stephen Rothwell
+The best way to fix this is to upgrade QEMU (latest is 5.1.0-rc3). Or use 
+the serial console instead of the framebuffer console.
 
---Sig_/1Wa9cyAcdtD4B16icUayXhM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I regret the inconvenience but the alternative was worse: adding code to 
+Linux to get compatibility with QEMU bugs (which were added to QEMU due to 
+Linux bugs).
 
------BEGIN PGP SIGNATURE-----
+My main concern is correct operation on actual hardware, as always. But 
+some QEMU developers are working on support for operating systems besides 
+Linux.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8wfOsACgkQAVBC80lX
-0GyCZwgAnsLaOvYhWFrARnKSabV2BCotjmm0h/XdAYvP9z74PyQYO7TnhPDCrvC7
-5dm9XMGhS/FI6p24vnJkrmb9YQdPTAg2LBynyQ3TGpbduMom9rDK7rbhSQn38mTT
-uY4oN8PRJDCzYeJfDaxS8DTYt/+ikDrsPOCQe0UotuEW4aBn8o1n4902hi1Ecfd8
-rfgaUS4nYyGbOxZ66j97MGOZfq3SY9RkzGdxxXmObqSaHxj7Hwhk9vCYLVx6zGOJ
-J2xjwbTn6tgOQDLHAFf4BNHDutY5KjniH5e0FP30UIc22poBqV3UUpWkWm3wp6MJ
-Uq7+bbFp7iYJqZPedezKcTN4KPVGZQ==
-=Q9Xw
------END PGP SIGNATURE-----
-
---Sig_/1Wa9cyAcdtD4B16icUayXhM--
+Therefore, I believe that both QEMU and Linux should aim for compatibility 
+with actual hardware and not bug compatibility with each other.
