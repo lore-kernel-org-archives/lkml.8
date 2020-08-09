@@ -2,97 +2,112 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C773C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661FB206CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597002936;
-	bh=2rAR+M5zs3J36b2LT6iT34FnFrmyMvuYFf/H5HRm2D0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nQuTpjjMB9Y+BSa25fDDjYYbgdCgYkzpxdBxXQWX17/tNRnRSJpEBoORg+qW3dDlm
-	 Rdyjk6Qbepk97vTU4zqIiJZuR4tEojLZbOl/IRbAxnTvTDBjMHwm57RQR2n1a5gSW+
-	 k2u3o6+8wqyllUYpuvljhbFZ0+c4kfSWUSFXISf8=
+	by mail.kernel.org (Postfix) with ESMTP id E0BDF206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVj0/PQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbgHITzd (ORCPT
+        id S1726412AbgHITzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 15:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
+        Sun, 9 Aug 2020 15:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgHITzb (ORCPT
+        with ESMTP id S1726296AbgHITzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 15:55:31 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521D2C061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 12:55:31 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id j22so3629898lfm.2
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 12:55:31 -0700 (PDT)
+        Sun, 9 Aug 2020 15:55:35 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FCAC061756;
+        Sun,  9 Aug 2020 12:55:35 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v9so7391323ljk.6;
+        Sun, 09 Aug 2020 12:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gb6GBTcn1DdG5c+MbfZGxeWOEsq1soV0Ir9YyDDSzao=;
-        b=h1FboOCE7RlnYs62A2tbSEYOTjOhRbOyxysffdQzD97v64yqUYH+LkI3uaTSf73Ffz
-         F/Wk/pzRKYDgYSUQJrPlZr627hNEwmRCKd7HGP8+n5OpijIXum4wlwitfZWSyD14YYsD
-         OGw9ZyXnBt2185IQ/b/Xc6NtGDoeXKNyqsp6U=
+        d=gmail.com; s=20161025;
+        h=subject:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=gEex+sxqDKUVPlri56W6GJ2mSxGnivkW+gKH+hakLOQ=;
+        b=HVj0/PQ/3OaMWrCoamAvziPNkznvcRrRng7jJaKfouGJ+fj8l4IdZmMKlgCVKAhg6k
+         2k0QP0SGtM0J+Ju8SxQt/OrmAc49RRrrjmjDlwzq1pBK2H8PnC/fuff6nYliQifl3lca
+         KDG3BWcSEF3QjnJGnHPfGbOb4dBs/e5FK8Uhbs1jokgiaSCHQiKzH9LR5bve08N4AMD8
+         HvsgNFESfguyXkbervtBdyrD7wOgh0NponO5mihsBkohjAoGWOVkrzgY+SyW8ZBgYRvr
+         e2XYU/fgjpDOoF4hd6a464pcVLGsDs4619zFK5pnAQodHNq5xZA4KrJOl5NA60YrFaKg
+         ZosA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gb6GBTcn1DdG5c+MbfZGxeWOEsq1soV0Ir9YyDDSzao=;
-        b=AtgAzRB0bHzfkLnqQ/xjYNqODr9Hc8lBP59FfplKvsv4M2Ea2/y/StsBfHgpiIAQL1
-         ySF8053GA/F7P7l5odURVPsCLGT9fr5FIonY0Ureq7RUiOR0lCnDH6DxPs3rT1lTV+9y
-         8M1DioCOvI2BN3I6Qp3OwZa+dROIRLYzDkAZCZFXyLiYR+ZDvlOYekcO9z59JMI3usSx
-         6df0+mFy4wSbFdzbCIZ9Mt/LUFulFk8pL6ogKEf0A6aqVNOSErFA7Ydkjxzuf7cNNbYg
-         7pucmBnMjddKn+oF3+cn6JTrjHR4EshxFgWWdIvx8sb3Ppa1mlc4rVRnmkSO1XYIBr8F
-         neYg==
-X-Gm-Message-State: AOAM531zQpGet8jvEvafE8xPqNXCFzQSJdV5srDXjORZVNMJCv94eKVL
-        0kFKNPJvM9R5ncpKggUAsMbIeMDTfSI=
-X-Google-Smtp-Source: ABdhPJy6eSxdUSjwXBGUpnaN9S4faYaBsktqJPO5ki4Z+GsqXtlCF0yG/fWPNTKiyWUVfRtLmkuIHw==
-X-Received: by 2002:ac2:5f64:: with SMTP id c4mr11862667lfc.170.1597002929503;
-        Sun, 09 Aug 2020 12:55:29 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id h6sm9386008lfc.84.2020.08.09.12.55.28
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gEex+sxqDKUVPlri56W6GJ2mSxGnivkW+gKH+hakLOQ=;
+        b=epCE/WcY5N6GN/mG/3Z/qtHmXXKoDVT19Xeaazchr8irDg5hi5zVlGc0fxi1LJDcDy
+         CiyJ8yYveK8pAbuUHtTYqdz2hz1+FH+ymmINJ+YSfMS8BZzfzFSg1YaKs7/hom7ltKLR
+         lzIrVk++a+qiYxM0p+jUCujsZJqTqZ+2Uf3QRfc1BkwCh/7OPt8W7UhuGag/Act5kOXq
+         twKGsCa3qv0mTahjQ494bYEgTdvvcXOaqwm1Ua3PBVL+xyLJiBZwvdcNtk/U2pSlQKBu
+         DLEERwmbKPqxRM8csS9RDWQFbS9apJ5bXWH1++U4HfHGqwjsVbjeTfNrs/POJoOk03pt
+         M8vg==
+X-Gm-Message-State: AOAM531ohVdTwIgL/CJNLl7ilT4ctPKWKX9obYF99miLOy563b+y3LCn
+        XQBJcjQy2A8IDlMF/APAGSUJEsOhxuk=
+X-Google-Smtp-Source: ABdhPJwDZkj1p7MsiBCLaRLyV7loewdezRxQeqbc7Ppnj9H8iwVf0EgGpDw2ny0QUDQTWNaa4Zp6mw==
+X-Received: by 2002:a2e:96d9:: with SMTP id d25mr10568109ljj.376.1597002933351;
+        Sun, 09 Aug 2020 12:55:33 -0700 (PDT)
+Received: from [192.168.1.100] (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
+        by smtp.gmail.com with ESMTPSA id h17sm8191818ljj.118.2020.08.09.12.55.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 12:55:28 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id z14so7413250ljm.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 12:55:28 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr9469780ljk.421.1597002927878;
- Sun, 09 Aug 2020 12:55:27 -0700 (PDT)
+        Sun, 09 Aug 2020 12:55:32 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: qcom: pm660: Fix missing pound sign in
+ interrupt-cells
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200725082417.8507-1-priv.luk@gmail.com>
+From:   LuK1337 <priv.luk@gmail.com>
+Message-ID: <ce0da794-14fa-2e50-4b90-003d46668c8e@gmail.com>
+Date:   Sun, 9 Aug 2020 21:55:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
-In-Reply-To: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 9 Aug 2020 12:55:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjHNkPHvGG_Ca_f8=+w5od9_XTQ8yD55+v-3WCKhvKviw@mail.gmail.com>
-Message-ID: <CAHk-=wjHNkPHvGG_Ca_f8=+w5od9_XTQ8yD55+v-3WCKhvKviw@mail.gmail.com>
-Subject: Re: [GIT PULL] pin control changes for the v5.9 kernel cycle
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200725082417.8507-1-priv.luk@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 9, 2020 at 6:06 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> Driver improvements:
->
-> - Linear improvement and cleanups of the Intel drivers for
->   Cherryview, Lynxpoint, Baytrail etc. Improved locking among
->   other things.
+Bumping this thread, would be nice if someone could handle this simple fix.
 
-I'm having a hard time parsing that. What does "Linear improvement" mean?
-
-Anyway, pulled and explanation left as-is.
-
-              Linus
+On 7/25/20 10:24 AM, LuK1337 wrote:
+> From: Łukasz Patron <priv.luk@gmail.com>
+> 
+> Also add a space after '=' while at it.
+> 
+> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
+> ---
+>   arch/arm64/boot/dts/qcom/pm660.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm660.dtsi b/arch/arm64/boot/dts/qcom/pm660.dtsi
+> index ea0e9558d0f2..2e6a6f6c3b66 100644
+> --- a/arch/arm64/boot/dts/qcom/pm660.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm660.dtsi
+> @@ -44,7 +44,7 @@ pm660_gpios: gpios@c000 {
+>   			gpio-ranges = <&pm660_gpios 0 0 13>;
+>   			#gpio-cells = <2>;
+>   			interrupt-controller;
+> -			interrupt-cells =<2>;
+> +			#interrupt-cells = <2>;
+>   		};
+>   	};
+>   };
+> 
