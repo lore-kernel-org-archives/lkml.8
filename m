@@ -2,216 +2,134 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2DF20709
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960F0207BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:10:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="WvIXphsu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQRUBrsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgHIVG1 (ORCPT
+        id S1726472AbgHIVKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 17:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
+        Sun, 9 Aug 2020 17:10:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgHIVGZ (ORCPT
+        with ESMTP id S1726323AbgHIVKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 17:06:25 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A834C061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 14:06:25 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id a5so6941988ioa.13
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 14:06:25 -0700 (PDT)
+        Sun, 9 Aug 2020 17:10:33 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CEAC061756;
+        Sun,  9 Aug 2020 14:10:33 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id q16so4125262ybk.6;
+        Sun, 09 Aug 2020 14:10:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=melexis.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=o8F23zcscVB1QKocpaxhAuhbpCbH7PudCZvz9GajNE0=;
-        b=WvIXphsumD/84UBawdSSvREujkdf++uBtSv4umWl22VRHIoN6yBCv+q8wgI0qJhYZW
-         38ImT5eSAcP/1G0QePaN1/zphOkBibq+FUKPcNazwOfXnmSmibjBXj4tsTWIaKkpn+to
-         lFajnQlHUicGE20GwnMnRqrt5x/qWM84NXHINpctJAfso2iO++Hf+ShA/3e/oD7KrZm9
-         /LNeHMLVUOsHNN6dem0t5od2nE5My68LU1yspryaRGcRrD54a7W8x8hWyFfF2oW7WMjO
-         jjPYZrp++yYF4QZ6exBV3JPyDDiJfJsAEcUnCzCfymhxc/gxkwxy2D+B02SHftrX7tGU
-         cHHQ==
+        bh=FS8VaTKhvmE9nkcm+P7/rVO4xd8egtxbMts7IrjMZwI=;
+        b=ZQRUBrsPLmUUs7t88nCb6LotejwEP/cgcI98kyJDCKbSVi2Kololr0uWmXdZ01Bg66
+         wFLgXUSdinK/mEHiVQaUOwXdNcfU/8T7bzJvmhasepu3KGqp6GvvGGzjHj7a7jRZ4s3E
+         RpkAkbyttWxwchd2mE7vxkKqF4KynL+rlghuwUqTDg0KsrXR6ZedXD54/l9dNhdapTBo
+         fl+qvqSQT5wYii5j9Z/RpMZ4GbMG4uha9zP6a6FnfzjNH4+AEsM3tYj1zWEoRu1b+s9r
+         vJrq9+l2M4NA/P8uXUpqolBNY3Ey2QbpIfjI/TFKvhI/1suRYlRAdP1LiiVf580gGp18
+         YZUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=o8F23zcscVB1QKocpaxhAuhbpCbH7PudCZvz9GajNE0=;
-        b=gbIJIe017mgo/135w5/6q+ITsPPMgYazdi/l2yEU1NozPWHBemL+/quErBL14ymiL1
-         H4Vf1C52fUr/EloyieVDtqvJrHgdLr6P6xbRH027NYWFDkKgXHafjUw57+vu7qCAB4PO
-         sn7yOTdm3acbUq6JCqoSrNXHtDY89ZfWerHyTiyygd1TGH6XQXkouY+ShQEpBcHkmAb8
-         554Qij4gkS9DuNsWyBemv7BbdD+7rYcokIeBnHbLtp0cEOkMvqTwIC7B385UQYk5hFUF
-         b06uHRRo148G53Hq/WgowwRWy2FxSVha6rIcso46H8mVIGAYNmE9VFp/Eio8zuFp22nz
-         tu3g==
-X-Gm-Message-State: AOAM530+BIwS1jZgLFAapzKbMH6xQf+/8SpIymDtUI/O0HmjexURgPPd
-        lxpJ0144Apt3HXgIeohkK/YaBujrBZ3q9Hzz5UHp1+OM99jMrA==
-X-Google-Smtp-Source: ABdhPJxmAU+FLwMQ4506/816ftkTWYnxP1ud8npU59QPwwAgSXXbLRgYfLHltss7WKtgC6mSfhUcGt9qpR7lLslSnOU=
-X-Received: by 2002:a5e:dd4c:: with SMTP id u12mr14004089iop.93.1597007184650;
- Sun, 09 Aug 2020 14:06:24 -0700 (PDT)
+        bh=FS8VaTKhvmE9nkcm+P7/rVO4xd8egtxbMts7IrjMZwI=;
+        b=NkhdaHH0KxhhK4NtJbyDS2tPFzBQ0Ffz4/nR4C+ClWbxZSNsxs4rW0hl2o1PsIT4ny
+         cFTAWbgxLsrMb1PWQlFkz3AYRsvXXoE4r/G4/UH3gasAxDzGQLrBTED96QV+iagBkYiL
+         a7M+Rirn6yvAr2E4hCNcxNAKCpZNZ409i88p0DoUEM2k5PPcWsS+ptpupxchws/J3dWM
+         pyk98+r3ClAE+0C/vEWvaUJFO8I67g4i6AJ74g/vFWkVXW8T7Z5L84FAINYyMcwIwzgr
+         ZQ9nvJMUf+1Pz/bDCIrU1dVwaWkg7Y3uQHqGSjUquAf8yKfI4iVsHPg8mfXUOPmZJGup
+         6FAA==
+X-Gm-Message-State: AOAM53256xoQHNQU+HKyOefMEliSvsNNqwg2h3PvS1W2J/NQQl71Z8ys
+        2heSByIHRkkBmr26ca3OZVSKcQKS+1NZeRzdtLk=
+X-Google-Smtp-Source: ABdhPJzkl+3oTLnEZzeGv+iWA/CW3+k2mTV9RRXQRR9+q7yU8D9yy1zyS867h86taMVevrq1/x0F54w50zETzAA9MFQ=
+X-Received: by 2002:a5b:40f:: with SMTP id m15mr32122222ybp.25.1597007432213;
+ Sun, 09 Aug 2020 14:10:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200808121026.1300375-1-cmo@melexis.com> <20200808121026.1300375-3-cmo@melexis.com>
- <CAHp75VfWk7pCy4Osv0uY0UH4yFS=PRGbE1CNCakuRFTE33SDJg@mail.gmail.com>
- <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com> <20200809143222.4e19ea38@archlinux>
-In-Reply-To: <20200809143222.4e19ea38@archlinux>
-From:   Crt Mori <cmo@melexis.com>
-Date:   Sun, 9 Aug 2020 23:05:48 +0200
-Message-ID: <CAKv63uu1cRVCujM0nR5BstDYLZnCuGQTeFxhyUF0QK0mr0hvkQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] iio:temperature:mlx90632: Adding extended
- calibration option
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200808210321.GO6186@pendragon.ideasonboard.com> <20200808210507.GP6186@pendragon.ideasonboard.com>
+In-Reply-To: <20200808210507.GP6186@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sun, 9 Aug 2020 22:10:06 +0100
+Message-ID: <CA+V-a8vGYtVUjXXGAMeZjMYq4BCt2ZVkkWeuqn8EffcRx46P0g@mail.gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: display: renesas,lvds: Document r8a7742 bindings
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 9 Aug 2020 at 15:32, Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Sat, 8 Aug 2020 23:57:59 +0200
-> Crt Mori <cmo@melexis.com> wrote:
->
-> > Hi,
-> > I am very sorry you missed them, I thought you saw it (reply on v3 of
-> > the patch). Maybe something happened to that mail, as it contained
-> > link to datasheet, so I will omit it now.
-> >
-> > Except for the order, only the remarks below are still open (did you
-> > get the polling trail I did?)
-> >
-> > On Sat, 8 Aug 2020 at 22:04, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Sat, Aug 8, 2020 at 3:11 PM Crt Mori <cmo@melexis.com> wrote:
-> > > >
-> > > > For some time the market wants medical grade accuracy in medical range,
-> > > > while still retaining the declared accuracy outside of the medical range
-> > > > within the same sensor. That is why we created extended calibration
-> > > > which is automatically switched to when object temperature is too high.
-> > > >
-> > > > This patch also introduces the object_ambient_temperature variable which
-> > > > is needed for more accurate calculation of the object infra-red
-> > > > footprint as sensor's ambient temperature might be totally different
-> > > > than what the ambient temperature is at object and that is why we can
-> > > > have some more errors which can be eliminated. Currently this temperature
-> > > > is fixed at 25, but the interface to adjust it by user (with external
-> > > > sensor or just IR measurement of the other object which acts as ambient),
-> > > > will be introduced in another commit.
-> > >
-> > > The kernel doc patch should go before this patch.
-> > >
-> > > ...
-> > >
-> > > > +       *ambient_new_raw = (s16)read_tmp;
-> > >
-> > > > +       *ambient_old_raw = (s16)read_tmp;
-> > >
-> > > Sorry, did I miss your answer about these castings all over the patch?
-> > >
-> >
-> > These castings are in fact needed. You read unsigned integer, but the
-> > return value is signed integer. Without the cast it did not extend the
-> > signed bit, but just wrote the value to signed. Also I find it more
-> > obvious with casts, that I did not "accidentally" convert to signed.
->
-> Should we perhaps be making this explicit for the cases where we
-> are sign extending?  That doesn't include these two as the lvalue
-> is s16, but does include some of the others.
->
-> sign_extend32(read_tmp, 15)
->
+Hi Laurent,
 
-So for you lines like
-s32 read;
-read = (read + (s16)read_tmp) / 2;
+Thank you for the review.
 
-would actually be better as:
-read = (read + sign_extend32(read_tmp, 15)) / 2;
-
-Hm, strange. I would read that more align the read_tmp to 32 bit than
-the value you have in read_tmp is actually a signed 16 bit integer...
-
-> >
-> > > ...
-> > >
-> > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
-> > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
-> > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
-> > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
-> > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
-> > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);
-> > >
-> > > What so special about these magic 17, 18, 19? Can you provide definitions?
-> > >
-> > When we started 0 to 19 were all open for access, from userspace, then
-> > only 1 and 2 were used with calculations, and now we use 17, 18 and
-> > 19. Matter of fact is, I can't provide a descriptive name as it
-> > depends on DSP version and as you can see now within the same DSP
-> > version, also on the ID part. While RAM3 vs RAM1 and RAM2 could be
-> > named RAM_OBJECT1, RAM_OBJECT2, RAM_AMBIENT, knowing our development
-> > that might not be true in the next configuration, so I rather keep the
-> > naming as in the datasheet.
-> Normal solution for that is to version the defines as well.
+On Sat, Aug 8, 2020 at 10:05 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
-> MLX90632_FW3_RAM_1_AMBIENT etc
-> When a new version changes this, then you introduced new defines to
-> support that firmware.
+> On Sun, Aug 09, 2020 at 12:03:27AM +0300, Laurent Pinchart wrote:
+> > Hi Prabhakar,
+> >
+> > Thank you for the patch.
+> >
+> > On Fri, Aug 07, 2020 at 06:49:50PM +0100, Lad Prabhakar wrote:
+> > > Document the RZ/G1H (R8A7742) LVDS bindings.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 >
+> I actually spoke too soon, this binding has been concerted to YAML in
+> drm-next. I can fix this when applying, no need to resubmit just for
+> this.
+>
+Thank you for taking care of it.
 
-OK will add those, but it is ending up as:
-MLX90632_RAM_DSP5_AMBIENT
-MLX90632_RAM_DSP5_EXTENDED_AMBIENT
-MLX90632_RAM_DSP5_OBJECT_1
-MLX90632_RAM_DSP5_EXTENDED_OBJECT_1
-MLX90632_RAM_DSP5_OBJECT_2
-MLX90632_RAM_DSP5_EXTENDED_OBJECT_2
+Cheers,
+Prabhakar
 
-ok?
-> >
-> > > ...
+> > > ---
+> > >  .../devicetree/bindings/display/bridge/renesas,lvds.txt          | 1 +
+> > >  1 file changed, 1 insertion(+)
 > > >
-> > > > +       int tries = 4;
+> > > diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > > index c62ce2494ed9..40aa809f41cd 100644
+> > > --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> > > @@ -7,6 +7,7 @@ Gen2, R-Car Gen3 and RZ/G SoCs.
+> > >  Required properties:
 > > >
-> > > > +       while (tries-- > 0) {
-> > > > +               ret = mlx90632_perform_measurement(data);
-> > > > +               if (ret < 0)
-> > > > +                       goto read_unlock;
-> > > > +
-> > > > +               if (ret == 19)
-> > > > +                       break;
-> > > > +       }
-> > > > +       if (tries < 0) {
-> > > > +               ret = -ETIMEDOUT;
-> > > > +               goto read_unlock;
-> > > > +       }
-> > >
-> > > Please avoid ping-pong type of changes in the same series (similar way
-> > > as for kernel doc), which means don't introduce something you are
-> > > going to change later on. Patch to move to do {} while () should go
-> > > before this one.
-> >
-> > OK, will fix that ordering in v5, but will wait till we solve also
-> > above discussions to avoid adding new versions.
-> >
-> > >
-> > > --
-> > > With Best Regards,
-> > > Andy Shevchenko
-> >
-> > And about that voodoo stuff with numbers:
-> >
-> > Honestly, the equation is in the datasheet[1] and this is just making
-> > floating point to fixed point with proper intermediate scaling
-> > (initially I had defines of TENTOX, but that was not desired). There
-> > is no better explanation of this voodoo.
+> > >  - compatible : Shall contain one of
+> > > +  - "renesas,r8a7742-lvds" for R8A7742 (RZ/G1H) compatible LVDS encoders
+> > >    - "renesas,r8a7743-lvds" for R8A7743 (RZ/G1M) compatible LVDS encoders
+> > >    - "renesas,r8a7744-lvds" for R8A7744 (RZ/G1N) compatible LVDS encoders
+> > >    - "renesas,r8a774a1-lvds" for R8A774A1 (RZ/G2M) compatible LVDS encoders
 >
-> We all love fixed point arithmetic :)
+> --
+> Regards,
 >
-> Jonathan
+> Laurent Pinchart
