@@ -2,140 +2,158 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C28C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0895CC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA9B206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA719206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 17:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IM1uvdDM"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OmeQE4ma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHIROW (ORCPT
+        id S1726448AbgHIRRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 13:14:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53224 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726234AbgHIROV (ORCPT
+        Sun, 9 Aug 2020 13:17:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39118 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726175AbgHIRQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 13:14:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596993259;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5aIvYuYAfmzjU/4cUefgKnF7K6Yva+vu1KK2EKEvHYg=;
-        b=IM1uvdDM4gGINObJ+SLWq2IuX6gJ094NeuunFv/UMs1fNqaKrnVOoI+ziz2mu1LmoFAk94
-        wYkXRTHxn74DXgwAdX1ODPUswEhno6xcH/YQPfuk+K2BhSuoLFxtcDSDsrbHljxBcN/BQU
-        MAAhC3rGsP5kw6EQ9pCsoh3CHYnHYOg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-DExwwADhMNSPIFhbEUuThg-1; Sun, 09 Aug 2020 13:14:17 -0400
-X-MC-Unique: DExwwADhMNSPIFhbEUuThg-1
-Received: by mail-wm1-f72.google.com with SMTP id u14so5020719wml.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 10:14:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5aIvYuYAfmzjU/4cUefgKnF7K6Yva+vu1KK2EKEvHYg=;
-        b=oE6uaiOE/2CC4O4X/uypPh6pqpJFh2GL48xJWwfOPpSgVZW4D0ZNxc3CAPVqHF0kFc
-         EMZTdAlXx9b4OFRvbGzNFMyWP5rKwSo7pwyQM9wSsXuvNgLyRdDEKzpXnJ0Ntke0m+Pn
-         r2OLjqZL8YR5UEYL348FFDqsh6Wr+g4h6TwCX0ptQF7LugyUPsrA1Z/qjBX28uyrmb84
-         YnQI6dW00ZitciIXtzMWbTEvqnuMMxtV/jAkKbvpHnx3WAZHEfKEYL+3Uq9vYn2Sc6wa
-         LcM3J31lSjc5FMQasINn96AuCiQNW6aEToMyhxjIhwJiod8QfVmSptYmoe+Vh7OXL9Gk
-         zATw==
-X-Gm-Message-State: AOAM53140T9+UuMK1aCj5aNL8ekDWgLfI0mGIltA3kPfJB6g/0G+ZW0z
-        yMY3LoZirNu2JizNhEBiP1UnQB60cRAZQDHJuNKNed2pEqUJg4kdjRKt5jJqpGTDotHWUt9Q8cw
-        YavZX0VOx/FDzWkv/1H9v+3ls
-X-Received: by 2002:adf:ed0c:: with SMTP id a12mr20743861wro.24.1596993256456;
-        Sun, 09 Aug 2020 10:14:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzGfGVS8W1JBuwWvPc5P7ERK9kpactbm0lYtoqO2+fZ2kEMeys4tMDh0EgeZGZlleIsOevMiQ==
-X-Received: by 2002:adf:ed0c:: with SMTP id a12mr20743843wro.24.1596993256133;
-        Sun, 09 Aug 2020 10:14:16 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8deb:6d34:4b78:b801? ([2001:b07:6468:f312:8deb:6d34:4b78:b801])
-        by smtp.gmail.com with ESMTPSA id j145sm19845367wmj.12.2020.08.09.10.14.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 10:14:15 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] x86/kvm: Expose new features for supported cpuid
-To:     Cathy Zhang <cathy.zhang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     sean.j.christopherson@intel.com, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, tony.luck@intel.com, dave.hansen@intel.com,
-        kyung.min.park@intel.com, ricardo.neri-calderon@linux.intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        jpoimboe@redhat.com, ak@linux.intel.com, ravi.v.shankar@intel.com
-References: <1596959242-2372-1-git-send-email-cathy.zhang@intel.com>
- <1596959242-2372-3-git-send-email-cathy.zhang@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d7e9fb9a-e392-73b1-5fc8-3876cb30665c@redhat.com>
-Date:   Sun, 9 Aug 2020 19:14:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1596959242-2372-3-git-send-email-cathy.zhang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Sun, 9 Aug 2020 13:16:59 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 079H3DIk149722;
+        Sun, 9 Aug 2020 13:16:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=Y4/CY+X1bLpw0h7ULwkEbRs6wZfUb58vfksYUxmO+cI=;
+ b=OmeQE4maRujd34oSR3XBPZw15i9p001MOKNm6gHiU1w5MUhhwDszEZ3EMk+BYBzC5h3X
+ tX7H0bziDCgaiDdqOmUCT2Z3f9GNNq76+WUD4GS+cXGkdY2W/8BT+jxAE8vGXSQNDLq2
+ pnmAp5LwuGvXkf51LOVJOLG53UNqI/7WmWXYApRYNRMWkvABPw9iHhfNYqRSKqSVPPJX
+ GQEBH9h7BHC0jOfgIYutD5ERSFwihelpvWle/ojdtD2uqO3eEJt2J0yHqI22rOUMtlvO
+ C7X55BfvsNJ+fqZ5BoSdrBHiJIvZ7hv/VwIiJVklB3Eojw7vsFZkyxU/wGRwUc9N5dUS nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr4qdvby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 09 Aug 2020 13:16:32 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 079H3Fog149899;
+        Sun, 9 Aug 2020 13:16:31 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr4qdvbj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 09 Aug 2020 13:16:31 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 079HG5EI011619;
+        Sun, 9 Aug 2020 17:16:29 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32skp81cqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 09 Aug 2020 17:16:29 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 079HGRT320054392
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 9 Aug 2020 17:16:27 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4105F11C058;
+        Sun,  9 Aug 2020 17:16:27 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B839C11C050;
+        Sun,  9 Aug 2020 17:16:21 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.25.223])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun,  9 Aug 2020 17:16:21 +0000 (GMT)
+Message-ID: <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Chuck Lever <chucklever@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Sun, 09 Aug 2020 13:16:09 -0400
+In-Reply-To: <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+         <20200802143143.GB20261@amd>
+         <1596386606.4087.20.camel@HansenPartnership.com>
+         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+         <1596639689.3457.17.camel@HansenPartnership.com>
+         <alpine.LRH.2.21.2008050934060.28225@namei.org>
+         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-09_09:2020-08-06,2020-08-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008090130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/20 09:47, Cathy Zhang wrote:
-> Expose the SERIALIZE and TSX Suspend Load Address Tracking
-> features in KVM CPUID, so when running on processors which
-> support them, KVM could pass this information to guests and
-> they can make use of these features accordingly.
-> 
-> SERIALIZE is a faster serializing instruction which does not modify
-> registers, arithmetic flags or memory, will not cause VM exit. It's
-> availability is indicated by CPUID.(EAX=7,ECX=0):ECX[bit 14].
-> 
-> TSX suspend load tracking instruction aims to give a way to choose
-> which memory accesses do not need to be tracked in the TSX read set.
-> It's availability is indicated as CPUID.(EAX=7,ECX=0):EDX[bit 16].
-> 
-> Those instructions are currently documented in the the latest "extensions"
-> manual (ISE). It will appear in the "main" manual (SDM) in the future.
-> 
-> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
-> Changes since v2:
->  * Merge two patches into a single one. (Luck, Tony)
->  * Add overview introduction for features. (Sean Christopherson)
->  * Refactor commit message to explain why expose feature bits. (Luck, Tony)
-> ---
->  arch/x86/kvm/cpuid.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 8a294f9..dcf48cc 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -341,7 +341,8 @@ void kvm_set_cpu_caps(void)
->  	kvm_cpu_cap_mask(CPUID_7_EDX,
->  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
->  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
-> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
-> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
-> +		F(SERIALIZE) | F(TSXLDTRK)
->  	);
->  
->  	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
-> 
+On Sat, 2020-08-08 at 13:47 -0400, Chuck Lever wrote:
+> > On Aug 5, 2020, at 2:15 PM, Mimi Zohar <zohar@linux.ibm.com> wrote:
 
-TSXLDTRK is not going to be in 5.9 as far as I can see, so I split back
-again the patches (this is why I prefer them to be split, sorry Tony :))
-and committed the SERIALIZE part.
+<snip>
 
-Paolo
+> > If block layer integrity was enough, there wouldn't have been a need
+> > for fs-verity.   Even fs-verity is limited to read only filesystems,
+> > which makes validating file integrity so much easier.  From the
+> > beginning, we've said that fs-verity signatures should be included in
+> > the measurement list.  (I thought someone signed on to add that support
+> > to IMA, but have not yet seen anything.)
+> 
+> Mimi, when you and I discussed this during LSS NA 2019, I didn't fully
+> understand that you expected me to implement signed Merkle trees for all
+> filesystems. At the time, it sounded to me like you wanted signed Merkle
+> trees only for NFS files. Is that still the case?
+
+I definitely do not expect you to support signed Merkle trees for all
+filesystems.  My interested is from an IMA perspective of measuring and
+verifying the fs-verity Merkle tree root (and header info) signature. 
+This is independent of which filesystems support it.
+
+> 
+> The first priority (for me, anyway) therefore is getting the ability to
+> move IMA metadata between NFS clients and servers shoveled into the NFS
+> protocol, but that's been blocked for various legal reasons.
+
+Up to now, verifying remote filesystem file integrity has been out of
+scope for IMA.   With fs-verity file signatures I can at least grasp
+how remote file integrity could possibly work.  I don't understand how
+remote file integrity with existing IMA formats could be supported. You
+might want to consider writing a whitepaper, which could later be used
+as the basis for a patch set cover letter.
+
+Mimi
+
+> 
+> IMO we need agreement from everyone (integrity developers, FS
+> implementers, and Linux distributors) that a signed Merkle tree IMA
+> metadata format, stored in either an xattr or appended to an executable
+> file, will be the way forward for IMA in all filesystems.
 
