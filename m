@@ -2,108 +2,111 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5038C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6204C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3AC9206C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A292F206C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 07:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JN1c5gPk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUBeK3xA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgHIHWb (ORCPT
+        id S1726396AbgHIHYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 03:22:31 -0400
-Received: from mout.gmx.net ([212.227.15.19]:50745 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgHIHWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 03:22:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1596957732;
-        bh=Ufa1u1M+5bfMDK9Ye7gYRHBggJJfXwVAm6B1GwwGHn0=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=JN1c5gPkbSMDS3AuVB/mkGhzPEHGlalH9zHg41MUb+e9ga3Fpj5TnRYeTjuToicNc
-         T518lKuczJP0pyeVTixAKClgtNaDfEt6fMpqA1HVkrQBJGlNKz9VaruJ2aPhKsRwuD
-         7nxawJrckCXpi1UGH+YKWvrvBm+qa4apG7kSWA6o=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([217.61.157.211]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MwQT9-1ku1OI3gc1-00sNVR; Sun, 09
- Aug 2020 09:22:12 +0200
-Date:   Sun, 09 Aug 2020 09:21:37 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
-References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de> <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69> <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
+        Sun, 9 Aug 2020 03:24:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgHIHYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 03:24:46 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95869C061756;
+        Sun,  9 Aug 2020 00:24:46 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id w17so3238822ply.11;
+        Sun, 09 Aug 2020 00:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=rlCw9bXNz9amSiyruivuB3SKCYjIcaIfTwgEtm92qW4=;
+        b=jUBeK3xAvto7PSUx2HYYsmFHvicywYI+71jRXaFkgIUUbmk9vB/d9Aa95hlzr/lV1K
+         5zvwZehnn0cJx0I0FiLh100a1z3ZNfb+1Z0mcKu8agANAm5CzpLUitLJSP8GuyuaXyxN
+         U4/M8Dtf62WRdfOcmcenjPcQENnXoo1LczVOe+hhE0jhGbTzMcluRRdZpF/E6Pp9frFt
+         YV0Hrx+5GVLWPdIXTNF9RB9I+9uckf/jIOKPz7xANgvwpPAeOUldXMkNvz1PxiYlQQ97
+         /O2YWFFdHP3gkz4dcsKe53OyzUaN1FTUj8QzBEgIHKtOLy7NWhLcc4h/d21qs6J+WBZ1
+         HMrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=rlCw9bXNz9amSiyruivuB3SKCYjIcaIfTwgEtm92qW4=;
+        b=qTUKrpmv01tYAvUs3F/I8ptG+rzTVpmIOpAQerhWLT+aoLtjsjV80EwureuWatS/7k
+         7zVB22vnhUyqzUb5bAoFJHSai1rA9M77bFIppo8dRxrPHYwtTzU8XTAdasFVdocKdpaE
+         B/GZMNNcVOnXfwOc/vBr8wg5UwV6KrCcSU8xtIi0whKJixa0DcLsGl87XgCxOKpJQ4wu
+         aQZCGv8MfhilQojFn0jbizCH3dUdbuz68fboKwD3u18unUoSF/yO53bd0RhIs2+gS8To
+         vqvfM/SbzF5JpdHvcVHrZzks6aHksN1TYgyhC9tkRZlzHNDRgvgLT92kbI4A093evuC2
+         YNdA==
+X-Gm-Message-State: AOAM530WJaXu4sbee6A6EfPODkSDqv3qJZhM3a3wTGXdAe0cBbv7Sc+w
+        OUGK7gd3r0/eTkkV6q/V4/ofxn8OCX4=
+X-Google-Smtp-Source: ABdhPJxuKuH6lag//Z3lCgAfLwYaAPCgKfW1uCamkewUti6WnhVFWc3MOF6OUpwZx60wnjApbHFjXg==
+X-Received: by 2002:a17:90a:202c:: with SMTP id n41mr22176095pjc.126.1596957886122;
+        Sun, 09 Aug 2020 00:24:46 -0700 (PDT)
+Received: from blackclown ([103.88.82.9])
+        by smtp.gmail.com with ESMTPSA id gl9sm565272pjb.41.2020.08.09.00.24.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Aug 2020 00:24:45 -0700 (PDT)
+Date:   Sun, 9 Aug 2020 12:54:28 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     dledford@redhat.com, jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH 0/4] Infiniband Subsystem: Remove pci-dma-compat wrapper APIs.
+Message-ID: <cover.1596957073.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
-        chunkuang Hu <chunkuang.hu@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de>
-X-Provags-ID: V03:K1:n2qOhvlM6adm2ED7/EAyQ9chstcoSUaBCZ6wyxFwFq1RLFhTUfN
- JDFDMl3ZckGfptmX8EU7AWQ5a/C5hfkiCJcgo5CYN1C2VLc/SvVXPD92osy8F6WnQzX0p6y
- l1VZ0dlWhqt4KFi7bhGjuMIACuBFx1fEsKbMyCjE9HAasMx3UhhcXbeZbuIZLdgeynxXGXa
- Qhwd1J0BrPeTGElNAOS6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lifgRDGqB34=:OmQNACUUwo1xm4dOfYmlUB
- zZdCiwyN7n6DAkLrAHIaZXWygE6qWAzGHzQIiKsQcUFa2IIJ3A7gxA2zobcJsr/FyOyK7NR4W
- QRNjcFgjCi65aEU1CIwsGYABgKWhOf0Z54ch9223vHJCGBPT4M2AC3wc8gidlKR0mvQTJa8Pk
- z5dpKKJiOAEDJzMR8STuMefGushGSdmVYEvvgZW+EzacyjJZPKpi0SBp8IUe6eszRXNgUTDel
- 1ajlpTnxaa9soh4ndFfb1HQlIEgNcIFLktADeqosOKvbbcOvagCXh3mSppXT6LgQEVy5oAKUq
- 6s6fnG4aHWQEnse4rOHoUYUUR1PaNpUxtdJMSoPOZzZly2RWz8jvngjLR7qoCmpzITTIQaSDI
- cW/B8msV0KDUNfIJUvlJxC0g1i5pAx/mYHu9H4PrcSftO4uhlMmAWe3uW+DZ6NFaHGuYvJw89
- Pb/iRc9P9s/yE2Joz6vdEdj48xGVWgJIuSczmIPtBerHm/hREU2DDkZjf5yLePuTsLUpakxx9
- SVBud/WWBiJy7ekIXan1LB/9nFOKa3PJjPfHXISX3dbZaMqiuf25gwhG4vctmsdAA45lxlBug
- uvY2b9VFm1A7O3jYfk5cp18BLo/ITDUPJaUuc4ANRAhHmItB7UpbzmlvCJn2j87r5qpM4BpwB
- C9wnSFy/saWUU3hJqCkxCfx5zLLSC7G94TdVXmKQmJAqCgf6sQH6ZdShm5rLkwvuMb0U34Q8U
- VoOTsc9ASDHeFR+Ayo373wU1LBJ/L/YcdZUfU3vTIXRlGjF20T3DR4xv2wkWSbUZCbfcoiioo
- YMOCwevjieGo1PLUD4kiZQxELWj355gF5ygEErN1a1sfBYDbE6V9YsnU8lh7p5YzDQvDAjI7L
- beIX6GTgYxQUbyo+Pap1OUK+YpcUXOzW2eRw7ptxWCIB14EvdIKhZ4j2YPx1jYsellgkzZJ45
- UH+VSVMPwlUHjm9MKbpaks1QS88Tku7fjc7CywsjytUoGAcJgf76zh60AmWogQyB8453xaSgn
- NWFED5MBmqEZjfo0oAH49bGCi/OqF4e4+LDedcZEuJDkhD0S4/OiRu8Jk9KoMeqA2P6Dxo4im
- S7wFeYsdubB1a74cq0VriEyJBMbWHrm93gT/wWY7jKtxfbc/yiqmfQn1tjor8Jl9mjnYxUsQS
- /dt3wa4/GTeD9RnzCrfB38epnDx2VFcGY0QgTdZJczaAXzxjJYyVawufDMOb+kHRgOxFHwXzs
- BU8qrhYAke+JTu1NKozIp6No4H1dmk2mPfE/1zw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hii Developers,
 
+	This patch series will replace all the legacy pci-dma-compat wrappers
+with the dma-mapping APIs directly in the INFINIBAND Subsystem.
 
-Am 9=2E August 2020 02:16:59 MESZ schrieb Chun-Kuang Hu <chunkuang=2Ehu@ke=
-rnel=2Eorg>:
->
->I would like to put all device in mt7623=2Edtsi with some device's
->status is "disabled" and change its status in platform dtsi=2E
->I would like to see all device in mt7623=2Edtsi because of its name=2E If
->you move some device to platform dtsi, we would trace all platform
->dtsi to find out how many device in mt7623=2E One day a new platform
->enable different devices, you would reorganize all these platform
->dtsi?
+This task is done through a coccinelle script which is described in each commit
+message.
 
-Ok,then i change the dts-patch from hdmi-series to disable all nodes and e=
-nabling them in bpi-r2 dts=2E Do they need to be in alphabetical order (or =
-any other)?
+The changes are compile tested.
 
-Is the tmds Patch ok? (because review missing) https://patchwork=2Ekernel=
-=2Eorg/patch/11700679/
+Thanks,
 
-Just to know before reposting series as v5 :)
-regards Frank
+Suraj Upadhyay.
+
+Suraj Upadhyay (4):
+  IB/hfi1: Remove pci-dma-compat wrapper APIs
+  IB/mthca: Remove pci-dma-compat wrapper APIs
+  RDMA/qib: Remove pci-dma-compat wrapper APIs
+  RDMA/pvrdma: Remove pci-dma-compat wrapper APIs
+
+ drivers/infiniband/hw/hfi1/pcie.c             |  8 +++----
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c     | 13 +++++------
+ drivers/infiniband/hw/mthca/mthca_eq.c        | 21 +++++++++--------
+ drivers/infiniband/hw/mthca/mthca_main.c      |  8 +++----
+ drivers/infiniband/hw/mthca/mthca_memfree.c   | 23 +++++++++++--------
+ drivers/infiniband/hw/qib/qib_file_ops.c      | 12 +++++-----
+ drivers/infiniband/hw/qib/qib_init.c          |  4 ++--
+ drivers/infiniband/hw/qib/qib_pcie.c          |  8 +++----
+ drivers/infiniband/hw/qib/qib_user_pages.c    | 12 +++++-----
+ .../infiniband/hw/vmw_pvrdma/pvrdma_main.c    |  6 ++---
+ 10 files changed, 59 insertions(+), 56 deletions(-)
+
+-- 
+2.17.1
+
