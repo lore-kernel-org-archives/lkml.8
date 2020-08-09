@@ -2,116 +2,95 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B35C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E321720658
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOw2PCDN"
+	by mail.kernel.org (Postfix) with ESMTP id E7FBE20658
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 08:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596962344;
+	bh=XphsqSEI8Q+yYfIlCnVMM0Wq81vvP+2/GeTkUDQq61Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=liR1IRZr1a5I0m99bQAw5FxGKMshkV2iIvgYckRZ+GmvEAcM+xegGTTOFLB/t6w6r
+	 Cg8BYUq/70H2bTj37P1Be7xWvIUGrGAoBpDurzol5dbM3pC3xmcfH2l38jVqNXy67u
+	 WoJapliNFfjKPLwITDg4wpB7f+sasl54F6BJeeZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgHIIhe (ORCPT
+        id S1726399AbgHIIjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 04:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgHIIhd (ORCPT
+        Sun, 9 Aug 2020 04:39:03 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42599 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgHIIjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 04:37:33 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60079C061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 01:37:33 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so3268854pgm.7
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 01:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=effaZxDoaPjAVLtSBxTjGyQSyg5AQ1OCLPD98F6vZZU=;
-        b=pOw2PCDNzyhV+BalCz8X7TiYGqtLVoyHeD1Cwg1Fwb41scx8+5bq5Nx/x5+nTylCXl
-         OqZTv29FIBO7psYi/Lbrlrqg1ZytFXb/fa8Uwme4rzZQ5hG55aUia5A3QJVOlxALZLnC
-         2PluKIdr7iv2U5AaQMLqV5JOG00FgENu/eskg7XG4/BnAoig5V7orHyrtQkKHPaV+z3m
-         E+W1QMtk65QPeErY1HF4J5pKSGBVyq0vz3oThSAsLP48/l+dGupq58LJAwg4FjvC+y8q
-         6I0/cMJlbNsaouq9Xe4wAeybvdTPanIOVKR1zRCWUZiv214Yo29kRg9R5H3Xh7kgeRlR
-         7IxA==
+        Sun, 9 Aug 2020 04:39:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id df16so4248551edb.9;
+        Sun, 09 Aug 2020 01:39:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=effaZxDoaPjAVLtSBxTjGyQSyg5AQ1OCLPD98F6vZZU=;
-        b=XGJCCbPvmR2dWwKx0vS6HUSN0s0W5b7wncvpi7pYogT9NLA7f3r9Q08xO2+HEkk3f4
-         xb2+wbXn7I3VK3MXh6RXDDUR2g9ghdEnnscrmyGL6UMQvaA0V40N7as1Kw27aioiGw1A
-         IdwbuzlYU2/a8IkmWgSkCALo7YTPqiktCRcscFQwal31k9yFLkr3v6CLPMgWsPRetKj7
-         LMZc8TZ7T+QCmswbfjWHJ8UtyVtrpmjrgFDZTpEdl7d7Tiew1IeDf547XfJZrzlZe9W9
-         DEM79rD5YOxm5KfWm6/rsSrC7UtkIBkxHuER5iDe5CxKlwiJm4NZf1uMSQrbB2CcnYmG
-         pxQw==
-X-Gm-Message-State: AOAM531AFCqPO+cJ1VrmDTGaGayEMl0kTouBUmF5V2OlNjW9FU+H45b6
-        5Crd6MSCAMn3lvVEXpmnW/k=
-X-Google-Smtp-Source: ABdhPJzJ6PyzofN3DmXQ31M1LSv44ZrdGfruc2zeZg12q1HJ9zZeHmGm9Jhy9S6HFE7F3zuYQ9TREw==
-X-Received: by 2002:a63:6dcd:: with SMTP id i196mr707641pgc.70.1596962252669;
-        Sun, 09 Aug 2020 01:37:32 -0700 (PDT)
-Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
-        by smtp.gmail.com with ESMTPSA id 25sm18861661pfh.133.2020.08.09.01.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 01:37:31 -0700 (PDT)
-Date:   Sun, 9 Aug 2020 17:37:29 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        openrisc@lists.librecores.org
-Subject: Re: [PATCH v2 5/6] openrisc: signal: Fix sparse address space
- warnings
-Message-ID: <20200809083729.GS80756@lianli.shorne-pla.net>
-References: <20200805210725.310301-1-shorne@gmail.com>
- <20200805210725.310301-6-shorne@gmail.com>
- <20200806190449.xqflhmbiiv5btusf@ltop.local>
- <20200808224822.GQ80756@lianli.shorne-pla.net>
- <20200808230842.4bdwrvuz3lbgkcom@ltop.local>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z/saybbfxMjaXzIe6opzcQCOPXkRMkvzjnIaZUfO3tk=;
+        b=k/Wzgtpkk+CIK/NdZeBuWTxhUPXwxH9IlPkaHa1qutyUdVMEH1d3+IJFzV3IzlWYyo
+         4QIOHv6RrT56/WnRs0cCQzNWLDl+4WaWkOZc/DBV1+nFtQe+KDCOnJidXwAacHgEqgaQ
+         wGVvqBkkeXZ5JsZavD4VhBUyUbR6pWQeLU1FEteLc3BowTXN9drnK77CEWmLJhdqsAjg
+         AWCwPDFOZJXD69UJx35QIkphIF+52/eoMVOmWNJlIKsdvhjJqi2G+HzZXeHxyZVi0TDU
+         1E86xpO6LzDBAaAihz53b5ugeYhSjxRKZ8xT+7F1NNtyCxIdTLCwm84Em3SP3R1Nxh4x
+         3NRw==
+X-Gm-Message-State: AOAM530a7wJTiWH+gsrC1DM9H57H6RxB3+JwPvWuMjMtQ7D0K5jlEMVS
+        IC7yLE9ckFRmsEy4qQPYrxd/JcyHzxQLhA==
+X-Google-Smtp-Source: ABdhPJwmZeN96PN/ZIAPlxWpqko234mQ9lsp9dbVEg22MBGEl66tMuP7+R6WuTo7ZFtLkn1884Z6WQ==
+X-Received: by 2002:a50:a6d2:: with SMTP id f18mr15832396edc.374.1596962341313;
+        Sun, 09 Aug 2020 01:39:01 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.117])
+        by smtp.googlemail.com with ESMTPSA id x16sm9477456edr.25.2020.08.09.01.39.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Aug 2020 01:39:00 -0700 (PDT)
+Date:   Sun, 9 Aug 2020 10:38:58 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arch/arm: use simple i2c probe function
+Message-ID: <20200809083858.GA7517@kozik-lap>
+References: <20200807153100.384845-1-steve@sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200808230842.4bdwrvuz3lbgkcom@ltop.local>
+In-Reply-To: <20200807153100.384845-1-steve@sk2.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 01:08:42AM +0200, Luc Van Oostenryck wrote:
-> On Sun, Aug 09, 2020 at 07:48:22AM +0900, Stafford Horne wrote:
-> > On Thu, Aug 06, 2020 at 09:04:49PM +0200, Luc Van Oostenryck wrote:
-> > > On Thu, Aug 06, 2020 at 06:07:24AM +0900, Stafford Horne wrote:
-> > > > ---
-> > > >  arch/openrisc/kernel/signal.c | 14 +++++++-------
-> > > >  1 file changed, 7 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/arch/openrisc/kernel/signal.c b/arch/openrisc/kernel/signal.c
-> > > > index 4f0754874d78..7ce0728412f6 100644
-> > > > --- a/arch/openrisc/kernel/signal.c
-> > > > +++ b/arch/openrisc/kernel/signal.c
-> > > > @@ -76,7 +76,7 @@ asmlinkage long _sys_rt_sigreturn(struct pt_regs *regs)
-> > > >  	 * then frame should be dword aligned here.  If it's
-> > > >  	 * not, then the user is trying to mess with us.
-> > > >  	 */
-> > > > -	if (((long)frame) & 3)
-> > > > +	if (((__force unsigned long)frame) & 3)
-> > > >  		goto badframe;
-> > > 
-> > > Same as patch 6, the __force is not needed.
-> > 
-> > Thanks,  I thought this was complaining before, I tested now and there is no
-> > problem so I must have been mixed up with something else.
+On Fri, Aug 07, 2020 at 05:31:00PM +0200, Stephen Kitt wrote:
+> The i2c probe functions here don't use the id information provided in
+> their second argument, so the single-parameter i2c probe function
+> ("probe_new") can be used instead.
 > 
-> Sparse should have complained with with the cast to long but
-> purposely doesn't with unsigned long (or uintptr_t).
-> So, no mix up, I think.
+> This avoids scanning the identifier tables during probes.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+>  arch/arm/mach-davinci/board-dm644x-evm.c     |  5 ++---
+>  arch/arm/mach-davinci/board-dm646x-evm.c     | 10 ++++------
+>  arch/arm/mach-s3c64xx/mach-crag6410-module.c |  5 ++---
+>  3 files changed, 8 insertions(+), 12 deletions(-)
+> 
 
-You are right, I noticed that right after I sent that email.  Thanks a lot.
+Hi,
 
--Stafford
+You need to split it per sub architecture maintainers.  The subject
+prefix is then for example: "ARM: s3c64xx: ".
+
+Best regards,
+Krzysztof
