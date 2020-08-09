@@ -2,139 +2,113 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92401C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B2D2065D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DFD2065D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:42:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bzp4nvwY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fsv0VzaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgHISls (ORCPT
+        id S1726464AbgHISmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 14:41:48 -0400
-Received: from 8.mo3.mail-out.ovh.net ([87.98.172.249]:32801 "EHLO
-        8.mo3.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgHISlr (ORCPT
+        Sun, 9 Aug 2020 14:42:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46754 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgHISmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 14:41:47 -0400
-X-Greylist: delayed 119947 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Aug 2020 14:41:47 EDT
-Received: from player795.ha.ovh.net (unknown [10.108.42.215])
-        by mo3.mail-out.ovh.net (Postfix) with ESMTP id 2E47D25E3EE
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 19:24:57 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player795.ha.ovh.net (Postfix) with ESMTPSA id 2BBEF14FE8470;
-        Sun,  9 Aug 2020 17:24:49 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-96R0015649a600-0f68-4a5c-85ee-d70978482479,
-                    949AEE3423C323647D875781C307A391B5D7792E) smtp.auth=steve@sk2.org
-From:   Stephen Kitt <steve@sk2.org>
-To:     Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v2] ARM: davinci: use simple i2c probe function
-Date:   Sun,  9 Aug 2020 19:24:44 +0200
-Message-Id: <20200809172444.16019-1-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
+        Sun, 9 Aug 2020 14:42:51 -0400
+Date:   Sun, 9 Aug 2020 20:42:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596998569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WFLB3TBK6fJfIcKCoZtE+lRNYpp7h26frAFau4FZd5U=;
+        b=Bzp4nvwYV/adkunmZqjDgzm4J8ZvNK0+EFM3qznN9T/r/eIHKQJMbE6dRcRkY2gk1CWp6n
+        zC3/SiPizr67T9Q7KnmPsn0bf4F86l8695uf+wd6sb9nKQgx6QjpUD0uhAKNlRvfC9OkZE
+        bUN6Xir+Y8wlwSbmKXtGWDphp+TuBcjE4kkx5KiBLe1vhyikx6L8kyZXlX6BByRIye7Eh4
+        xb9XmrIaof/SvLhq9xxwGnDX4VmPwWATxy2bdoBhT5lUzMK4FqcbqSBQ0iO0/zKVCm/Zd7
+        OdiG0Hi9W8FYGiVNJbZIDSX4X6sVR++IM+2wHDDgn4MkTDhEV13MLhdgVe76Zw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596998569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WFLB3TBK6fJfIcKCoZtE+lRNYpp7h26frAFau4FZd5U=;
+        b=Fsv0VzaBJjZ4X6r+zG/tgnVyugFlwIw3Kj34YpoG5f7cNhBrZuKTX6ef63RuHoyR3pJ6GM
+        hDfvoRMkmlG6WvBw==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 08/24] seqlock: lockdep assert non-preemptibility on
+ seqcount_t write
+Message-ID: <20200809184251.GA94072@lx-t490>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-9-a.darwish@linutronix.de>
+ <20200808232122.GA176509@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 3560095507233459702
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkeeigdduudduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeelhedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200808232122.GA176509@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c probe functions here don't use the id information provided in
-their second argument, so the single-parameter i2c probe function
-("probe_new") can be used instead.
+On Sat, Aug 08, 2020 at 04:21:22PM -0700, Guenter Roeck wrote:
+> On Mon, Jul 20, 2020 at 05:55:14PM +0200, Ahmed S. Darwish wrote:
+> > Preemption must be disabled before entering a sequence count write side
+> > critical section.  Failing to do so, the seqcount read side can preempt
+> > the write side section and spin for the entire scheduler tick.  If that
+> > reader belongs to a real-time scheduling class, it can spin forever and
+> > the kernel will livelock.
+> >
+> > Assert through lockdep that preemption is disabled for seqcount writers.
+> >
+>
+> This patch is causing compile failures for various images (eg arm:allmodconfig,
+> arm:imx_v6_v7_defconfig, mips:allmodconfig).
+>
+> In file included from arch/arm/include/asm/bug.h:60,
+>                  from include/linux/bug.h:5,
+>                  from include/linux/thread_info.h:12,
+>                  from include/asm-generic/current.h:5,
+>                  from ./arch/arm/include/generated/asm/current.h:1,
+>                  from include/linux/sched.h:12,
+>                  from arch/arm/kernel/asm-offsets.c:11:
+> include/linux/seqlock.h: In function 'write_seqcount_begin_nested':
+> include/asm-generic/percpu.h:31:40: error: implicit declaration of function 'raw_smp_processor_id'
+>
+> Reverting it fixes the problem. Is this being addressed ?
+>
 
-This avoids scanning the identifier tables during probes.
+@Peter, I think let's revert this one for now?
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
-Changes since v1:
-  - split into per-sub-architecture patches.
+Shall I also send you a version of:
 
- arch/arm/mach-davinci/board-dm644x-evm.c |  5 ++---
- arch/arm/mach-davinci/board-dm646x-evm.c | 10 ++++------
- 2 files changed, 6 insertions(+), 9 deletions(-)
+    [PATCH v4 09/24] seqlock: Extend seqcount API with associated locks
+    https://lkml.kernel.org/r/20200720155530.1173732-10-a.darwish@linutronix.de/
 
-diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
-index a5d3708fedf6..d0dcf69cc76d 100644
---- a/arch/arm/mach-davinci/board-dm644x-evm.c
-+++ b/arch/arm/mach-davinci/board-dm644x-evm.c
-@@ -548,8 +548,7 @@ static const struct property_entry eeprom_properties[] = {
-  */
- static struct i2c_client *dm6446evm_msp;
- 
--static int dm6446evm_msp_probe(struct i2c_client *client,
--		const struct i2c_device_id *id)
-+static int dm6446evm_msp_probe(struct i2c_client *client)
- {
- 	dm6446evm_msp = client;
- 	return 0;
-@@ -569,7 +568,7 @@ static const struct i2c_device_id dm6446evm_msp_ids[] = {
- static struct i2c_driver dm6446evm_msp_driver = {
- 	.driver.name	= "dm6446evm_msp",
- 	.id_table	= dm6446evm_msp_ids,
--	.probe		= dm6446evm_msp_probe,
-+	.probe_new	= dm6446evm_msp_probe,
- 	.remove		= dm6446evm_msp_remove,
- };
- 
-diff --git a/arch/arm/mach-davinci/board-dm646x-evm.c b/arch/arm/mach-davinci/board-dm646x-evm.c
-index 4600b617f9b4..2dce16fff77e 100644
---- a/arch/arm/mach-davinci/board-dm646x-evm.c
-+++ b/arch/arm/mach-davinci/board-dm646x-evm.c
-@@ -160,8 +160,7 @@ static struct platform_device davinci_aemif_device = {
- #define DM646X_EVM_ATA_PWD		BIT(1)
- 
- /* CPLD Register 0 Client: used for I/O Control */
--static int cpld_reg0_probe(struct i2c_client *client,
--			   const struct i2c_device_id *id)
-+static int cpld_reg0_probe(struct i2c_client *client)
- {
- 	if (HAS_ATA) {
- 		u8 data;
-@@ -197,7 +196,7 @@ static const struct i2c_device_id cpld_reg_ids[] = {
- static struct i2c_driver dm6467evm_cpld_driver = {
- 	.driver.name	= "cpld_reg0",
- 	.id_table	= cpld_reg_ids,
--	.probe		= cpld_reg0_probe,
-+	.probe_new	= cpld_reg0_probe,
- };
- 
- /* LEDS */
-@@ -402,8 +401,7 @@ static struct snd_platform_data dm646x_evm_snd_data[] = {
- #ifdef CONFIG_I2C
- static struct i2c_client *cpld_client;
- 
--static int cpld_video_probe(struct i2c_client *client,
--			const struct i2c_device_id *id)
-+static int cpld_video_probe(struct i2c_client *client)
- {
- 	cpld_client = client;
- 	return 0;
-@@ -424,7 +422,7 @@ static struct i2c_driver cpld_video_driver = {
- 	.driver = {
- 		.name	= "cpld_video",
- 	},
--	.probe		= cpld_video_probe,
-+	.probe_new	= cpld_video_probe,
- 	.remove		= cpld_video_remove,
- 	.id_table	= cpld_video_id,
- };
+with the problematic "lockdep_assert_preemption_disabled()" removed?
 
-base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
--- 
-2.20.1
+> Guenter
+>
 
+Thanks,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
