@@ -2,84 +2,126 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBADC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D84C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49585206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 22:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46100206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:03:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VtVnT3xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHIW6v (ORCPT
+        id S1726460AbgHIXDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 18:58:51 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:55466 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgHIW6u (ORCPT
+        Sun, 9 Aug 2020 19:03:47 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48038 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgHIXDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 18:58:50 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 07F1129B87;
-        Sun,  9 Aug 2020 18:58:44 -0400 (EDT)
-Date:   Mon, 10 Aug 2020 08:58:43 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org,
-        Laurent Vivier <lvivier@redhat.com>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] macintosh/via-macii: Poll the device most likely to
- respond
-In-Reply-To: <20200809185541.GA133779@roeck-us.net>
-Message-ID: <alpine.LNX.2.23.453.2008100844450.8@nippy.intranet>
-References: <cover.1593318192.git.fthain@telegraphics.com.au> <5836f80886ebcfbe5be5fb7e0dc49feed6469712.1593318192.git.fthain@telegraphics.com.au> <20200809185541.GA133779@roeck-us.net>
+        Sun, 9 Aug 2020 19:03:47 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 04897F9;
+        Mon, 10 Aug 2020 01:03:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597014224;
+        bh=Kk+tp0hb9UsCcHFvuEh/LTmlcLsTugnaUod79jKG4WQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VtVnT3xcPU0HcewhkSz1Wn++3m01M5NnNU4t08w/nWeK+64gvqP4zx20lfCoW+zN8
+         pDnNZS1BJp8kAg7W8V4A1sCQaftbW6Ski6g+mBr4cDIzVP3uflcMDSH1g2yjyh77fo
+         7IEa7S52D4HtgH3h48Gsuzl/83sUGAD7xo8HDDSM=
+Date:   Mon, 10 Aug 2020 02:03:30 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/7] drm: rcar-du: Add r8a7742 support
+Message-ID: <20200809230330.GA12018@pendragon.ideasonboard.com>
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200808210219.GN6186@pendragon.ideasonboard.com>
+ <CA+V-a8ts72UAUbtcN6TTDwcHqFEF3HipLx=dkQxFCXTLLzgfXA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8ts72UAUbtcN6TTDwcHqFEF3HipLx=dkQxFCXTLLzgfXA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 9 Aug 2020, Guenter Roeck wrote:
+Hi Prabhakar,
 
-> Hi,
-> 
-> On Sun, Jun 28, 2020 at 02:23:12PM +1000, Finn Thain wrote:
-> > Poll the most recently polled device by default, rather than the lowest
-> > device address that happens to be enabled in autopoll_devs. This improves
-> > input latency. Re-use macii_queue_poll() rather than duplicate that logic.
-> > This eliminates a static struct and function.
-> > 
-> > Fixes: d95fd5fce88f0 ("m68k: Mac II ADB fixes") # v5.0+
-> > Tested-by: Stan Johnson <userm57@yahoo.com>
-> > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> 
-> With this patch applied, the qemu "q800" emulation no longer works and 
-> is stuck in early boot. Any idea why that might be the case, and/or how 
-> to debug it ?
-> 
+On Sun, Aug 09, 2020 at 09:38:05PM +0100, Lad, Prabhakar wrote:
+> On Sat, Aug 8, 2020 at 10:02 PM Laurent Pinchart wrote:
+> > On Fri, Aug 07, 2020 at 06:49:49PM +0100, Lad Prabhakar wrote:
+> > > Add direct support for the r8a7742 (RZ/G1H).
+> > >
+> > > The RZ/G1H shares a common, compatible configuration with the r8a7790
+> > > (R-Car H2) so that device info structure is reused, the only difference
+> > > being TCON is unsupported on RZ/G1H (Currently unsupported by the driver).
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > > ---
+> > >  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> > > index 3e67cf70f040..7e286c7a7a6c 100644
+> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> > > @@ -216,8 +216,8 @@ static const struct rcar_du_device_info rcar_du_r8a7790_info = {
+> > >       .channels_mask = BIT(2) | BIT(1) | BIT(0),
+> > >       .routes = {
+> > >               /*
+> > > -              * R8A7790 has one RGB output, two LVDS outputs and one
+> > > -              * (currently unsupported) TCON output.
+> > > +              * R8A7742 and R8A7790 each have one RGB output and two LVDS outputs. Additionally
+> > > +              * R8A7790 supports one TCON output (currently unsupported by the driver).
+> >
+> > Once we support TCON we'll have to split this, but for now I suppose
+> > it's fine. Would you however mind wrapping this to 80 columns ? I can do
+> > so when applying if it's fine with you.
+>
+> Agreed once TCON is added this has to be split. But isn't  the column
+> size has been increased (checkpatch too doesn't complain about), but
 
-The problem you're seeing was mentioned in the cover letter,
-https://lore.kernel.org/linux-m68k/cover.1593318192.git.fthain@telegraphics.com.au/
+It has, but it doesn't mean it's mandatory to increase line length :-)
+I think aligning with the style of the existing code should be favoured.
 
-Since this series was merged, Linus' tree is no longer compatible with 
-long-standing QEMU bugs.
+> feel free to wrapp it for 80 columns.
 
-The best way to fix this is to upgrade QEMU (latest is 5.1.0-rc3). Or use 
-the serial console instead of the framebuffer console.
+OK, I'll do that.
 
-I regret the inconvenience but the alternative was worse: adding code to 
-Linux to get compatibility with QEMU bugs (which were added to QEMU due to 
-Linux bugs).
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> > >                */
+> > >               [RCAR_DU_OUTPUT_DPAD0] = {
+> > >                       .possible_crtcs = BIT(2) | BIT(1) | BIT(0),
+> > > @@ -443,6 +443,7 @@ static const struct rcar_du_device_info rcar_du_r8a7799x_info = {
+> > >  };
+> > >
+> > >  static const struct of_device_id rcar_du_of_table[] = {
+> > > +     { .compatible = "renesas,du-r8a7742", .data = &rcar_du_r8a7790_info },
+> > >       { .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
+> > >       { .compatible = "renesas,du-r8a7744", .data = &rzg1_du_r8a7743_info },
+> > >       { .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
 
-My main concern is correct operation on actual hardware, as always. But 
-some QEMU developers are working on support for operating systems besides 
-Linux.
+-- 
+Regards,
 
-Therefore, I believe that both QEMU and Linux should aim for compatibility 
-with actual hardware and not bug compatibility with each other.
+Laurent Pinchart
