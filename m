@@ -2,108 +2,139 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB83C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92401C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C342065D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B2D2065D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgHISkj convert rfc822-to-8bit (ORCPT
+        id S1726453AbgHISls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 14:40:39 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:37487 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgHISki (ORCPT
+        Sun, 9 Aug 2020 14:41:48 -0400
+Received: from 8.mo3.mail-out.ovh.net ([87.98.172.249]:32801 "EHLO
+        8.mo3.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgHISlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 14:40:38 -0400
-Received: by mail-ej1-f66.google.com with SMTP id qc22so7229083ejb.4;
-        Sun, 09 Aug 2020 11:40:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RZ2r2fEGzTZM9l6ALM21HkIBfxbLLAFJENwfeQcKsXs=;
-        b=oxwahWGK8RsgRJDqLrzRbV0pYraaXpTSsphw57FNZKxk8quXc5a3oChoATV9nM5cM4
-         cK5GOPjwItxGITR5M4Fgov+/XlE7oQ1E1TVnJwNqsB9WWmXzb/W+a4hibYzLCj9ndY6P
-         rThZ6TSKUoQshXYsNl+s6paCfQTF4sYtuNJkXcnN5UImrNGfpi28XA98DGEnTXU3xOPB
-         FXewKP2ITKWeOpZ/Yits7Pxhm7cLXCL1pKdh8+fpFvv95KH+cj2uViunYqTc5GmgQOVk
-         HZppZvIoq/89K2ZMHpUX57+zy3pWy8NcMLaXEGGa7GR8139yThGXX8vHtovT9VgjgC2X
-         XA2A==
-X-Gm-Message-State: AOAM531fSpNt0tCMD5c194KACHqWZLZzYJaIBnQX9lW9CjF1yxX2rDLT
-        2T8mI/Ch/DrjTb2Q7Dz3qzldN28R+eICt1WwEYdwJAu0
-X-Google-Smtp-Source: ABdhPJwdaNQKUc35CAq1Vl+g4p0CKN8xjonX62rbI+Usre2BHByWTnCU4SNyNAUh+RC0zEUvP1W2rHdr75LflYZlZhg=
-X-Received: by 2002:a17:906:f914:: with SMTP id lc20mr18351445ejb.138.1596998435939;
- Sun, 09 Aug 2020 11:40:35 -0700 (PDT)
+        Sun, 9 Aug 2020 14:41:47 -0400
+X-Greylist: delayed 119947 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Aug 2020 14:41:47 EDT
+Received: from player795.ha.ovh.net (unknown [10.108.42.215])
+        by mo3.mail-out.ovh.net (Postfix) with ESMTP id 2E47D25E3EE
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 19:24:57 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player795.ha.ovh.net (Postfix) with ESMTPSA id 2BBEF14FE8470;
+        Sun,  9 Aug 2020 17:24:49 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-96R0015649a600-0f68-4a5c-85ee-d70978482479,
+                    949AEE3423C323647D875781C307A391B5D7792E) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v2] ARM: davinci: use simple i2c probe function
+Date:   Sun,  9 Aug 2020 19:24:44 +0200
+Message-Id: <20200809172444.16019-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200807100411.2904279-1-noltari@gmail.com> <20200807100411.2904279-2-noltari@gmail.com>
-In-Reply-To: <20200807100411.2904279-2-noltari@gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Sun, 9 Aug 2020 20:40:24 +0200
-Message-ID: <CAAdtpL4EydRG0jLqCKuggc4SvKe=qk3Z1aYuD51vnXp8DoRT5g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] MIPS: BCM63xx: remove duplicated new lines
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 3560095507233459702
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrkeeigdduudduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeelhedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 12:06 PM Álvaro Fernández Rojas
-<noltari@gmail.com> wrote:
->
-> There are 3 duplicated new lines, let's remove them.
->
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+The i2c probe functions here don't use the id information provided in
+their second argument, so the single-parameter i2c probe function
+("probe_new") can be used instead.
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-=)
+This avoids scanning the identifier tables during probes.
 
-> ---
->  v2: no changes.
->
->  arch/mips/bcm63xx/boards/board_bcm963xx.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> index 230bf27c1fb8..744aa16bab12 100644
-> --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> @@ -32,7 +32,6 @@
->
->  #include <uapi/linux/bcm933xx_hcs.h>
->
-> -
->  #define HCS_OFFSET_128K                        0x20000
->
->  static struct board_info board;
-> @@ -337,7 +336,6 @@ static struct board_info __initdata board_96348gw_11 = {
->                 .force_duplex_full      = 1,
->         },
->
-> -
->         .has_ohci0 = 1,
->         .has_pccard = 1,
->         .has_ehci0 = 1,
-> @@ -580,7 +578,6 @@ static struct board_info __initdata board_96358vw2 = {
->                 .force_duplex_full      = 1,
->         },
->
-> -
->         .has_ohci0 = 1,
->         .has_pccard = 1,
->         .has_ehci0 = 1,
-> --
-> 2.27.0
->
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+Changes since v1:
+  - split into per-sub-architecture patches.
+
+ arch/arm/mach-davinci/board-dm644x-evm.c |  5 ++---
+ arch/arm/mach-davinci/board-dm646x-evm.c | 10 ++++------
+ 2 files changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
+index a5d3708fedf6..d0dcf69cc76d 100644
+--- a/arch/arm/mach-davinci/board-dm644x-evm.c
++++ b/arch/arm/mach-davinci/board-dm644x-evm.c
+@@ -548,8 +548,7 @@ static const struct property_entry eeprom_properties[] = {
+  */
+ static struct i2c_client *dm6446evm_msp;
+ 
+-static int dm6446evm_msp_probe(struct i2c_client *client,
+-		const struct i2c_device_id *id)
++static int dm6446evm_msp_probe(struct i2c_client *client)
+ {
+ 	dm6446evm_msp = client;
+ 	return 0;
+@@ -569,7 +568,7 @@ static const struct i2c_device_id dm6446evm_msp_ids[] = {
+ static struct i2c_driver dm6446evm_msp_driver = {
+ 	.driver.name	= "dm6446evm_msp",
+ 	.id_table	= dm6446evm_msp_ids,
+-	.probe		= dm6446evm_msp_probe,
++	.probe_new	= dm6446evm_msp_probe,
+ 	.remove		= dm6446evm_msp_remove,
+ };
+ 
+diff --git a/arch/arm/mach-davinci/board-dm646x-evm.c b/arch/arm/mach-davinci/board-dm646x-evm.c
+index 4600b617f9b4..2dce16fff77e 100644
+--- a/arch/arm/mach-davinci/board-dm646x-evm.c
++++ b/arch/arm/mach-davinci/board-dm646x-evm.c
+@@ -160,8 +160,7 @@ static struct platform_device davinci_aemif_device = {
+ #define DM646X_EVM_ATA_PWD		BIT(1)
+ 
+ /* CPLD Register 0 Client: used for I/O Control */
+-static int cpld_reg0_probe(struct i2c_client *client,
+-			   const struct i2c_device_id *id)
++static int cpld_reg0_probe(struct i2c_client *client)
+ {
+ 	if (HAS_ATA) {
+ 		u8 data;
+@@ -197,7 +196,7 @@ static const struct i2c_device_id cpld_reg_ids[] = {
+ static struct i2c_driver dm6467evm_cpld_driver = {
+ 	.driver.name	= "cpld_reg0",
+ 	.id_table	= cpld_reg_ids,
+-	.probe		= cpld_reg0_probe,
++	.probe_new	= cpld_reg0_probe,
+ };
+ 
+ /* LEDS */
+@@ -402,8 +401,7 @@ static struct snd_platform_data dm646x_evm_snd_data[] = {
+ #ifdef CONFIG_I2C
+ static struct i2c_client *cpld_client;
+ 
+-static int cpld_video_probe(struct i2c_client *client,
+-			const struct i2c_device_id *id)
++static int cpld_video_probe(struct i2c_client *client)
+ {
+ 	cpld_client = client;
+ 	return 0;
+@@ -424,7 +422,7 @@ static struct i2c_driver cpld_video_driver = {
+ 	.driver = {
+ 		.name	= "cpld_video",
+ 	},
+-	.probe		= cpld_video_probe,
++	.probe_new	= cpld_video_probe,
+ 	.remove		= cpld_video_remove,
+ 	.id_table	= cpld_video_id,
+ };
+
+base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
+-- 
+2.20.1
+
