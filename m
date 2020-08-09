@@ -2,103 +2,103 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C91C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C347C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEF5F206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE518206B5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 18:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WD/x3d6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgHISts convert rfc822-to-8bit (ORCPT
+        id S1726458AbgHISzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 14:49:48 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:45003 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgHISts (ORCPT
+        Sun, 9 Aug 2020 14:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgHISzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 14:49:48 -0400
-Received: by mail-ej1-f65.google.com with SMTP id bo3so7219757ejb.11;
-        Sun, 09 Aug 2020 11:49:46 -0700 (PDT)
+        Sun, 9 Aug 2020 14:55:09 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9266C061756;
+        Sun,  9 Aug 2020 11:55:08 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z18so6201023wrm.12;
+        Sun, 09 Aug 2020 11:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LkK1EIAgZylgRKWRlji+TY5L9QOPoxkZUp8VwA6Thvs=;
+        b=WD/x3d6lwSejSqnSDks1Dp81FxXMvHsGtZKPWT3L63St1zxI3VLGT9rvyionRjxchq
+         LI6lMQCV6UDKL25BRxUYgA4Ki2DwOkwl+xoWPWgVxUUTMxr4zF1KtH/v5g0Cp+G0kakW
+         3lT+/RKAbwv1lj2pqX0VmG9+W1g65d7e9pQQz0FmKY6n+jKj5PSrz9hs2TttZJvaur3G
+         omsZaIngi465WC6l0nXoXY+VO7EaZQ0HTdq1iu2WeOwwmD2+VorucFeAVBcsPmGcGcWK
+         u5qfH6EyOxy4ohbSSWwIgr480hYQ5D2jzWk5Hnc8CzSXg5M3pBP849m34fy7no/hYRd7
+         vHJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=alj+kfoN+eiarYYjruTtRCY4nIK6VsYUfX1Hud++nqE=;
-        b=UKVdH4XBbgJCQCzNQZ3AVL26j7hagA3oZ46MwL/plL0xfsjPo2UbH+9VCEXT8KJCE4
-         KNpCL3mLtj3bpkc7mo/OBDU7FmWEGvuHrP9pj5niLDi1AgjXfI8mgiOdkj3MTGyHU6bT
-         BbUEZNMISKNMw5+KB4zjeFvKJNxWgfmEgzskyVT9+ogS1l1EydfZ5Gghslkm0KUcF2ZR
-         lLUlpt8OHW9uFL8LdDoBhq6ZQMixJ2PlyGZf1suVAhrsLpaSzwJEK5bhD1I1LYNr1Mz6
-         C1rniKvIHUXO4ZtRAHuabuf2tyWPekjfvwXAzIxhi6IAdb9enPSi1IdvLCxpO+VHL1Xk
-         9HRw==
-X-Gm-Message-State: AOAM5333OOZnLmkITDIjBGoe/OAVu2kvIxZNZAHB8UZhaO514/16uCqN
-        0MNHpJLreqkCfjkahljhSw+Zvt0OsTFh+eUYUxs=
-X-Google-Smtp-Source: ABdhPJyU3N9uvim4xkSI3BHETCWemPV1h7wCd/svgGV47SPVIyk5kbfW4sbROmqJuY1srOoKAYAvA8XhU2feujNpSNI=
-X-Received: by 2002:a17:907:42a0:: with SMTP id ny24mr18884449ejb.328.1596998986146;
- Sun, 09 Aug 2020 11:49:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LkK1EIAgZylgRKWRlji+TY5L9QOPoxkZUp8VwA6Thvs=;
+        b=jRr+DfIr5/ja6IaxkE8Kn+HqIsnAY6MtQxJoSqW71IyUhMeo3c4zm75EVY/v1dIGtG
+         ktgLNKg6Ox1OT+NBaodX8NaSc9/YWkp5/ZVLRI0wA6UeTvnBHSRof2yKOUaCkuxgn5j9
+         9ONSvKN+S+wK+/D6HP0LvNAny0ZHxM8IkfIerr5LQUxSR6xtQPOmi27w7baJaucKVs8w
+         a3WYGkUvtBNxzpTcUndWzwX7W5Sk0PbXYnAVPto78RVL+Z87N3HnOksdgEA4CWGvufT+
+         qF8RCzbb6cBrX6Cu9E1IvDOd69xq4ZXGtIIG8mxNhtGiZDucvrnIQ3O899RrjGhZXNSB
+         bnag==
+X-Gm-Message-State: AOAM532C9XvtPiVmVtfFHUdx8mICfMc3aFIfqNWh86ASiWoltMSVEpN/
+        iFtJTHmW8uan7WfrmsWEHMw=
+X-Google-Smtp-Source: ABdhPJx3U9dY6P4zPqtSfUGUdZT7wbwvW39SH6n3WFMylMzQt2GzmB9hSffBH8CQp3ZwfvalnOembA==
+X-Received: by 2002:adf:f64a:: with SMTP id x10mr20009736wrp.99.1596999307151;
+        Sun, 09 Aug 2020 11:55:07 -0700 (PDT)
+Received: from localhost.localdomain (cpc83647-brig20-2-0-cust926.3-3.cable.virginm.net. [82.19.195.159])
+        by smtp.gmail.com with ESMTPSA id h13sm18063867wrx.17.2020.08.09.11.55.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2020 11:55:06 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        David Lechner <david@lechnology.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH] power: supply: Add dependency to lego-ev3-battery Kconfig options
+Date:   Sun,  9 Aug 2020 19:54:44 +0100
+Message-Id: <20200809185444.54247-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200807100411.2904279-1-noltari@gmail.com> <20200807100411.2904279-4-noltari@gmail.com>
-In-Reply-To: <20200807100411.2904279-4-noltari@gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Sun, 9 Aug 2020 20:49:34 +0200
-Message-ID: <CAAdtpL7+_inNrbDpq_wt1Eo=tU6+e+yYR9ox-BF7bN82HVV5_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] MIPS: BCM63xx: enable EHCI for DWV-S0 board
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Álvaro,
+This battery appears only to be used by a single board (DA850), so it
+makes sense to add this to the Kconfig file so that users don't build
+the module unnecessarily. It currently seems to be built for the x86
+Arch Linux kernel where it's probably not doing much good.
 
-On Fri, Aug 7, 2020 at 12:05 PM Álvaro Fernández Rojas
-<noltari@gmail.com> wrote:
->
-> EHCI and OHCI share the same USB ports. Therefore, if the board has OHCI
-> it should also have EHCI.
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/power/supply/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This statement isn't correct. OHCI doesn't imply EHCI...
-(although the opposite is almost always true).
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index faf2830aa1527..9f76e2f47ac6d 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -164,7 +164,7 @@ config BATTERY_DS2782
+ 
+ config BATTERY_LEGO_EV3
+ 	tristate "LEGO MINDSTORMS EV3 battery"
+-	depends on OF && IIO && GPIOLIB
++	depends on OF && IIO && GPIOLIB && (ARCH_DAVINCI_DA850 || COMPILE_TEST)
+ 	help
+ 	  Say Y here to enable support for the LEGO MINDSTORMS EV3 battery.
+ 
+-- 
+2.28.0
 
-Now per 6358-PB01-R the bcm6358 indeed has a EHCI controller.
-
-Do you mind rewording the commit description?
-
-Regards,
-
-Phil.
-
->
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> ---
->  v2: no changes.
->
->  arch/mips/bcm63xx/boards/board_bcm963xx.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> index 45f1bc437245..ac9570b66f37 100644
-> --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> @@ -645,6 +645,7 @@ static struct board_info __initdata board_DWVS0 = {
->         },
->
->         .has_ohci0                      = 1,
-> +       .has_ehci0                      = 1,
->  };
->  #endif /* CONFIG_BCM63XX_CPU_6358 */
->
-> --
-> 2.27.0
->
