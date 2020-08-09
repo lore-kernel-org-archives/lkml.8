@@ -2,159 +2,119 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48621C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F16C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2225C2065C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:15:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="tu9NneHp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cWW6BWrU"
+	by mail.kernel.org (Postfix) with ESMTP id 832F8206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596932234;
+	bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eyhAS37c6EmcrqwakXynG5DhTI8JFBo0SO0N4G5n4FAVo0+wpf/WR73BRzVYGCAcG
+	 cCVQFih61kL/lTmFghXg/KppUi6Tt8BX0FIZDT1ULYGSd6d+Aadp+PQ+inu1bVzNal
+	 SQBBy8cUhwjYkehErafVaG6ESXJuXBrpmlSvBtTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgHIAPs (ORCPT
+        id S1726262AbgHIARN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 20:15:48 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:57397 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725988AbgHIAPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 20:15:46 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 9BB1BB60;
-        Sat,  8 Aug 2020 20:15:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 08 Aug 2020 20:15:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=y
-        vOPStliDSglBNmDnBR6AYqxqz09pbG16uf9qIobP9Y=; b=tu9NneHpzFHCfUUFy
-        nsp69Qbe1EDlYhZld10jheHFWTlV1Q2x4CFOzdIGa+fhNtCb/s0mr9kxy++jX4lI
-        f8tOM8l/x3cM9SgnN4Z6F4hfte/XR9JYGh6CteFZ4Tnf12SUqFWtp25rNlC8TV59
-        /VBIcJDXpIFhu8UFBOLWFFINhyY39TItxNSZcY1r1BHUalhtiyhsXh/3lA24ncoy
-        njKj9FxUi27sR6der5GJkqpBz3i9Vi8WRLrw+xJJmFGhj5D29T4NVM0x45863QcI
-        hZ2scZvA11TyAWTQIruySsg1mCHNrqmmsCjB5tbyeoY2UgrjNDiI7hMoyixlUaiM
-        N5L4w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=yvOPStliDSglBNmDnBR6AYqxqz09pbG16uf9qIobP
-        9Y=; b=cWW6BWrUeVKqVtUbaNVcNcuEiOLtGUK10d+yf4zi5cbB6prRy5wfUjSfo
-        /lQlSHTtB8CUwxqsAABb4i+210pr29+keB7DJEEWp4lMDeDc1BUseqnlsyc25XDd
-        HPKa0bwWMRQrAA8R5MdQB9mSeo9kcZFy0KJkZT5QPT+RtY2mn/XCQcAUC9UFnGlm
-        T113VsW3zfE25yEs1j0Cou39xvKxn1TWZjF/GmAye+M2wCcWWqbk2Za77Uz8KAJh
-        fhFC5rJQbbeVqctGM9p/g3RESiGi7CMnckfOgsVQ6B9uOQ7Vv1MtEVoAwnJB+q6c
-        wTs3jfSD0D/XYw4kSu3aFXBxaRLZw==
-X-ME-Sender: <xms:LkAvX1Zhn2aGkjAWiT1ry6Csjz6_Kwa-zjAD5QDhPIRC6chHZQa4Gg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkeehgdeffecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
-    frrghtthgvrhhnpedvleejhfdtfeduveeiueelffehvdegieelhfegheevvdeugfeftdei
-    ieefveelkeenucffohhmrghinhepghhnuhdrohhrghenucfkphepjedtrddufeehrdduge
-    ekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:LkAvX8bRjXqpSbDUw5fJ5zDLprl_XsqM2IX2U_FtFSVHmwl9Oh_SAw>
-    <xmx:LkAvX3-NwqZDeIz1UJZnmcYInNCqoJAAoWFv5Qv7JImOIuEhYXQLcw>
-    <xmx:LkAvXzrF7aOzM12uXH3xug_bcLigThwmkFY450rVfyQVztlosv5gew>
-    <xmx:L0AvX31eL35nKWLFgzuMy0Wyoz0ll7w3yTz_QW4QzErElvk5kYiS0g>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 614B73280059;
-        Sat,  8 Aug 2020 20:15:42 -0400 (EDT)
-Subject: Re: [PATCH v2] scsi: 3w-9xxx: Fix endianness issues found by sparse
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200730220750.18158-1-samuel@sholland.org>
- <CAK8P3a2p7dWhhCqAYF_Zos-X-zBK+id-xO5hPu2fRTbNyPo9Xg@mail.gmail.com>
- <29ea8d0f-bcab-9ffd-0e2f-f022911f4bf2@sholland.org>
- <CAK8P3a0xSyyaLHziuv4JKimUggF96frwLPKmjQ4G9VBWRW2EMg@mail.gmail.com>
- <0bd43d61-4d9a-40cb-27c6-18aaf7f58b48@sholland.org>
- <CAK8P3a3bPb+-i2YbHmn84MEuCe4xG_BKP15vNO1B1kTkYZ+=pg@mail.gmail.com>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <3493a479-3468-02e4-6eed-3645875b7841@sholland.org>
-Date:   Sat, 8 Aug 2020 19:16:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 8 Aug 2020 20:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbgHIARM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Aug 2020 20:17:12 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8D2067D;
+        Sun,  9 Aug 2020 00:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596932232;
+        bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Vv9wm6DIxUbHozRvA1AyxMizji9rUv8gSn3bnmKzgNyQUT59XCuSpVianl1FP2xDO
+         NSa6d3yKuHd8zLwIotp5zI0vf34jeLzSopbflNOV58GA3NKWOO1xrTfdkvhQG92GG4
+         0YgAHkE74fzWggP0wdmyN1FmG2fZVztME3deAnKA=
+Received: by mail-ej1-f50.google.com with SMTP id bo3so5827444ejb.11;
+        Sat, 08 Aug 2020 17:17:12 -0700 (PDT)
+X-Gm-Message-State: AOAM530dcZJV9hhkZg6Fm9HRvXQM03xfY2zkSjKW98wMOAAh6wb8TrEj
+        nd2ZuCgkMByNvbUHZFJJ5UicZBeFsejk9TB1sg==
+X-Google-Smtp-Source: ABdhPJxtuqSyNCglh1lnoj77PKcLmVpUqyOklSdTDUwAHMVSJ1wm9tl/cLlSapqD2wcderKhmNy5ajxAxrVAyBhhL3s=
+X-Received: by 2002:a17:906:60d5:: with SMTP id f21mr15560600ejk.94.1596932230832;
+ Sat, 08 Aug 2020 17:17:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3bPb+-i2YbHmn84MEuCe4xG_BKP15vNO1B1kTkYZ+=pg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
+ <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+In-Reply-To: <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 9 Aug 2020 08:16:59 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
+Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        chunkuang Hu <chunkuang.hu@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/20 2:17 AM, Arnd Bergmann wrote:
-> On Wed, Aug 5, 2020 at 3:44 AM Samuel Holland <samuel@sholland.org> wrote:
->> On 8/3/20 9:02 AM, Arnd Bergmann wrote:
->>> On Mon, Aug 3, 2020 at 5:42 AM Samuel Holland <samuel@sholland.org> wrote:
->>>> All of the command structures are packed, due to the "#pragma pack(1)" earlier
->>>> in the file. So alignment is not an issue. This dma_addr_t member _is_ the
->>>> explicit padding to make sizeof(TW_Command) -
->>>> sizeof(TW_Command.byte8_offset.{io,param}.sgl) equal TW_COMMAND_SIZE * 4. And
->>>> indeed the structure is expected to be a different size depending on
->>>> sizeof(dma_addr_t).
->>>
->>> Ah, so only the first few members are accessed by hardware and the
->>> last union is only accessed by the OS then? In that case I suppose it is
->>> all fine, but I would also suggest removing the "#pragma packed"
->>> to get somewhat more efficient access on systems that have  problems
->>> with misaligned accesses.
->>
->> I don't know what part the hardware accesses; everything I know about the
->> hardware comes from reading the driver.
-> 
-> I see now from your explanation below that this is a hardware-defined
-> structure. I was confused by how it can be either 32 or 64 bits wide but
-> found the
-> 
-> tw_initconnect->features |= sizeof(dma_addr_t) > 4 ? 1 : 0;
-> 
-> line now that tells the hardware about which format is used.
-> 
->> The problem with removing the "#pragma pack(1)" is that the structure is
->> inherently misaligned: byte8_offset.io.sgl starts at offset 12, but it may begin
->> with a __le64.
-> 
-> I think a fairly clean way to handle this would be to remove the pragma
-> and instead define a local type like
-> 
-> #if IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT)
-> typedef  __le64 twa_address_t __packed;
-> #else
-> typedef __le32 twa_addr_t;
-> #endif
+Hi, Frank:
 
-I would be happy to implement this... but __packed only works on enums, structs,
-and unions[1]:
+Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=888:27=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> Hi,
+>
+> as i made a mistake in cover-letter, it is not assigned to the series.
+>
+> to show its content, i send it here as comment (instead of resending the =
+whole series):
+>
+> based on series from David Woodhouse [1]
+> i moved more display-nodes out of mt7623.dtsi to new mt7623n.dtsi
+> and changed last part from my series [2] to add these nodes to this new d=
+tsi
+>
+> the depency of dtsi-dtsi-dts is already done for mt7623a, so i guess it's=
+ a good
+> way to use it for mt7623n too.
+>
+> this first set is an RFC if all nodes are in right order and if it is wan=
+ted to move
+> them out as i have no technical document about mt7623a/n which describes =
+which parts
+> are available on both or only on one of them
+>
+> added MTK DRM Maintainer CK Hu, Ryder Lee and Sean Wang, maybe they can g=
+ive me some advice
+> how to proceed further here
+>
+> [1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D32=
+9209
+> [2] https://patchwork.kernel.org/patch/11700699/
 
-In file included from drivers/scsi/3w-9xxx.c:100:
-drivers/scsi/3w-9xxx.h:474:1: warning: 'packed' attribute ignored [-Wattributes]
-  474 | typedef __le64 twa_addr_t __packed;
-      | ^~~~~~~
-
-[1]:
-https://gcc.gnu.org/onlinedocs/gcc/Common-Type-Attributes.html#index-packed-type-attribute
-
-> The problem with marking the entire structure as packed, rather than
-> just individual members is that you end up with very inefficient bytewise
-> access on some architectures (especially those without cache-coherent
-> DMA or hardware unaligned access in the CPU), so I would recommend
-> avoiding that in portable driver code.
-
-I agree, but I think this is a separate issue from what this patch is fixing. I
-would prefer to save this change for a separate patch.
+I would like to put all device in mt7623.dtsi with some device's
+status is "disabled" and change its status in platform dtsi.
+I would like to see all device in mt7623.dtsi because of its name. If
+you move some device to platform dtsi, we would trace all platform
+dtsi to find out how many device in mt7623. One day a new platform
+enable different devices, you would reorganize all these platform
+dtsi?
 
 Regards,
-Samuel
+Chun-Kuang.
