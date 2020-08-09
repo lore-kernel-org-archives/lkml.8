@@ -3,98 +3,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF834C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 138A9206B2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B625B206B2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 02:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOEmf5SB"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="t4LVxzQX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tMMos/Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgHICRg (ORCPT
+        id S1726323AbgHICS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Aug 2020 22:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgHICRg (ORCPT
+        Sat, 8 Aug 2020 22:18:26 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:42003 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbgHICS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Aug 2020 22:17:36 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CF5C061756;
-        Sat,  8 Aug 2020 19:17:35 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id e5so4285546qth.5;
-        Sat, 08 Aug 2020 19:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=N9Cxjqana//WEni2QSUMEdjKG1ybH4mJ0UhJQDd8N9Q=;
-        b=iOEmf5SBqdR8ZYXhHSpNYLbXvvfwXzyuBDRb/XP1bG4O0ogQEdUasEIWwtDEga5cyW
-         4OyRAR9GjI7yw1gaye/RYMPYU+6mAgRcZh2ZnUN/KtqSeXqzG4MRiWILSxG3HRdpWk3V
-         IxWHU7VqpH4ChJW6A2ikxnc8hfRFxC6ZhYSyuykKxG2kExTebUx0uzxAtysgfZaHtPjz
-         8ErWZ9yOr4havrqHcX8VekC3mIRfLWzj7mxL1ouM2ZpyxA7DqClB4v+863Jta6/8A09n
-         jfDfliklTjNT3Wn98WERRsaYg1JaBKHb7MD5RcCFDIh4PLUjPwaINQ+d6D7sTej/VZK0
-         enow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=N9Cxjqana//WEni2QSUMEdjKG1ybH4mJ0UhJQDd8N9Q=;
-        b=ZwBq9S2EPmMG5fNm15VFgKA6p+s9EOpoSU1FCXM0E8DQ4EVM+P1y+R4aCPj4I45xxV
-         +cWqsSLjuv88hqnrmVTOhzSEqelTi6cuOpgXydbHAQ0IHphIXXtUZB5aMzqtsWyz9spy
-         wLcgaHIIAPEOVQh7eaw1HLKeMyPZ3CbGgn9prEwCrs6du6uApKd37vVMlG0ZvqaEX6Z+
-         fldBbMTKZEAANt+wunTdcOEJQgPSiCU2gY6N6I/3/LIWtH/54CXAc1Mp3lRRcFn1wq5y
-         DYwX9kqUJqzKvK63eUp+kHQPIzqed9VLxwi/2v18ApQNwfeSuCAYGlOjpjo4xwcgXw9t
-         1MFw==
-X-Gm-Message-State: AOAM531tXAfyS7lVmc+kVPejk8EMm90ahbxqhV0/QYcG4qKoNsEKugjb
-        gFr4I9fI/GmgjUsZZtb0htM=
-X-Google-Smtp-Source: ABdhPJwBFV/x0aNfatq9WLPnP9IdRT3hGwSB2vUkre4eawfo6J75qig8NMyDmmyWXCMBkNNzE2BfKA==
-X-Received: by 2002:ac8:5189:: with SMTP id c9mr20625837qtn.202.1596939455059;
-        Sat, 08 Aug 2020 19:17:35 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:c96d:c91a:c6a9:dcf8])
-        by smtp.googlemail.com with ESMTPSA id n6sm10466456qkh.74.2020.08.08.19.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2020 19:17:34 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev@vger.kernel.org (open list:FAILOVER MODULE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] net/failover: remove redundant fops null check
-Date:   Sat,  8 Aug 2020 22:17:28 -0400
-Message-Id: <20200809021728.17431-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 8 Aug 2020 22:18:26 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 3D98F9B0;
+        Sat,  8 Aug 2020 22:18:25 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sat, 08 Aug 2020 22:18:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=gHv/rpfSLcjiU1EWYFEkVOAG62
+        ry5U4QM/lSUqvQPZg=; b=t4LVxzQXi70hcj1qWNqY4NM/GErtsMOi5aiuJ2atIL
+        tOB6XxOSz4yZFnHiT5aTP4rlFsLiStigtTUWodyZiPXKpj5d1L1g4/3oyt95qs5R
+        xFLySds5QLSBob6+r+0CLxKycckfmaNqB3Mjn1QMAmyxZQDal0g0ODn45UKx6oQd
+        cVSJ6fOL083WcFL32tPFQdoUScZzyVJt5v0GpxUJoH3e3zdgyavM/E+hLh/lKxq4
+        4Vu0CzeU14Qxkfp/yzfOtglOHbOIYy1vqOr0rCZnUcx9DK3gZUBunc3A4vyks9If
+        L00Aeqg8/7vLTEkIboxBOmGAAXyOKpFNhclGb9FK7prQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=gHv/rpfSLcjiU1EWY
+        FEkVOAG62ry5U4QM/lSUqvQPZg=; b=tMMos/TajiRlbynnTcvRwRIJhirYjp4r1
+        BdT8B4CUAfGjjs0UrVd01gZQVLTPjXRVuQFFXXnyFOBColIzahdMYAL1O0824EmI
+        /MnK0j56bxrP0QlVi3Jto30KdLHAGNd/QOksgF4pxRp3oEbyqAF8hzmT1g8uwce9
+        9mQXAI0I4daQ+GuoZE8edXbh+ffGLqrjkqxuZuSAV3n4mfbUDsUFaUpKz2N7/+RG
+        dLZ5dL5BbuHeP/LvnwFaOdQY7HbDpBS/YqhirJA4wzPfecH3pKWLDNKcxXBAWQ0K
+        44fF+oDTnDd5sZdrPfxk2xOrGPYQPZwrrdOs5xrbGdYLtX9VfPAZQ==
+X-ME-Sender: <xms:71wvXxYTuqDkgkxdv-0O8GQcTu4abrM3bs2hxCxsaWR9rta1nLQ4UQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkeehgdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrfgrth
+    htvghrnhepieetkefhheduudfgledtudefjeejfeegveehkeeufffhhfejkeehiefftdev
+    tdevnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdho
+    rhhg
+X-ME-Proxy: <xmx:71wvX4YAnpBS3YQnj-kWUK4fQyLk8Keu12_VoQx9uK2ISs2kFuc1_g>
+    <xmx:71wvXz_1pi6sDLSfhda_v5e0ob2R0T_bUau3KXkXtUwvufuIWo0zaA>
+    <xmx:71wvX_pxZNo4tvUwYKiDJFC1M-GpaUwyul2FF5c04Sy0544UQT7TyA>
+    <xmx:8FwvXz1kty-PT2Bn6mjCo2Rxqsw5803bXqcOVt5BI90zlJXc5Wh_pw>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 13A8930600A9;
+        Sat,  8 Aug 2020 22:18:23 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH] arm64: dts: allwinner: Mark timer as stopped in suspend
+Date:   Sat,  8 Aug 2020 21:18:22 -0500
+Message-Id: <20200809021822.5285-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redundant fops null check
-Fixes: 30c8bd5aa8b2c ("net: Introduce generic failover module")
+When possible, system firmware on 64-bit Allwinner platforms disables
+OSC24M during system suspend. Since this oscillator is the clock source
+for the ARM architectural timer, this causes the timer to stop counting.
+Therefore, the ARM architectural timer must not be marked as NONSTOP on
+these platforms, or the time will be wrong after system resume.
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Adding the arm,no-tick-in-suspend property forces the kernel to ignore
+the ARM architectural timer when calculating sleeptime; it falls back to
+reading the RTC. Note that this only affects deep suspend, not s2idle.
+
+Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- net/core/failover.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/net/core/failover.c b/net/core/failover.c
-index b5cd3c727285..63213347f51c 100644
---- a/net/core/failover.c
-+++ b/net/core/failover.c
-@@ -82,7 +82,7 @@ static int failover_slave_register(struct net_device *slave_dev)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 8dfbcd144072..5d19cf6f6d4f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -157,6 +157,7 @@ link_codec: simple-audio-card,codec {
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		allwinner,erratum-unknown1;
++		arm,no-tick-in-suspend;
+ 		interrupts = <GIC_PPI 13
+ 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 14
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index 4462a68c0681..a6c8b43b99a3 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -53,6 +53,7 @@ psci {
  
- 	slave_dev->priv_flags |= (IFF_FAILOVER_SLAVE | IFF_LIVE_RENAME_OK);
+ 	timer {
+ 		compatible = "arm,armv8-timer";
++		arm,no-tick-in-suspend;
+ 		interrupts = <GIC_PPI 13
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 14
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 9ce78a7b117d..28c77d6872f6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -90,6 +90,7 @@ psci {
  
--	if (fops && fops->slave_register &&
-+	if (fops->slave_register &&
- 	    !fops->slave_register(slave_dev, failover_dev))
- 		return NOTIFY_OK;
- 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
++		arm,no-tick-in-suspend;
+ 		interrupts = <GIC_PPI 13
+ 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 14
 -- 
-2.17.1
+2.26.2
 
