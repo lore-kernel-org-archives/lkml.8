@@ -2,71 +2,99 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8258EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17831C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66926206B5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4A2206CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 19:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597002766;
+	bh=7KmUMjSQsMRnOeXErSmPaijU4VM2a63DTzKAX/5gUCc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ss0j64QN/a0J+TZUNojT3dEKoribCUisS/XC1VkQu7hNIt6PoHHcWHiP3A78/z0WZ
+	 5sJNrnRTo59MkFil7s3Lg+aBsOqWJz1DvPY3H0iyt3g2fTaiOHvUzpgekCOchS1SCq
+	 yRO5juJ2WGWOuCkdVIB2EGZ5uWSMggnPocxWrE1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgHITfw (ORCPT
+        id S1726386AbgHITrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 15:35:52 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:43008 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726242AbgHITfv (ORCPT
+        Sun, 9 Aug 2020 15:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbgHITrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 15:35:51 -0400
-X-IronPort-AV: E=Sophos;i="5.75,454,1589209200"; 
-   d="scan'208";a="54030776"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 10 Aug 2020 04:35:49 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9713140DD1CC;
-        Mon, 10 Aug 2020 04:35:47 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] dt-bindings: iommu: renesas,ipmmu-vmsa: Sort compatible string in increasing number of the SoC
-Date:   Sun,  9 Aug 2020 20:35:27 +0100
-Message-Id: <20200809193527.19659-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 9 Aug 2020 15:47:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C890C061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 12:47:22 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 185so7366738ljj.7
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 12:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vy2/Tr7nL0xv4oVageuubwhBrv+oQnLE6xMeTiKzlWg=;
+        b=LTKE7gQHSMbXFk9BVmgefSL/wzopLbPob90qw8+5pHE5gKF0rhLL+EohGdbeXMjNcS
+         q9+Yl4CrJIBM4pVPQ58/QvBFG4KfA/1bQIvG4TBGrX8oLdm1W5xqR6zgWfQVzINniybL
+         6c1mtrtqdtE5kji/ppywZ7rFT9FwrRXNif3a0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vy2/Tr7nL0xv4oVageuubwhBrv+oQnLE6xMeTiKzlWg=;
+        b=g9XUuXLZ4Dx7x6wILbTcI96C/et8e5KSZkXvwi+U5OXHfUEOF+wqjJkMmLCyaNKGZn
+         aOWkPtNcVD5ElqLYXWESd80r/Hsc5Nwa/I1DZzLCsmd1R9Uv094ow0C3s/A9n+6Djik5
+         v1+0VWXkTGC4+PX8I1rujQMETe2QjWxkHL9hDI8dIerEFL4cYVyFefKUYo/j0XB2Z9nl
+         77pIB22mdzA+kP5XfnVPl3yGeLLgrJUneOJT5p4Qf3FNuL7aYjsIzizjfJVQGOGjX8Jc
+         czQjAaB/MR62S9Vh1oiTJdQjGN7GESbtCTZ5lJZUzGuXWfVFz04o+t3Pf8hzipEWxml8
+         Hmvg==
+X-Gm-Message-State: AOAM532G/jDDOZMd04UoJBpuRdBdZIhUZ1nZaEUA5wok0f3LDIxkNMAt
+        ho5fX5JO0NNMyc52s6WMqeHxnFSXxrU=
+X-Google-Smtp-Source: ABdhPJzMX905ufDwnoKP7o3umfTlDPEJMLL/w41hCxGHGUD73g0RnlzcSKzYx1JNfgBnIH6pyNRHcA==
+X-Received: by 2002:a2e:9904:: with SMTP id v4mr10405068lji.321.1597002439719;
+        Sun, 09 Aug 2020 12:47:19 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id q8sm9356179lfm.92.2020.08.09.12.47.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 12:47:18 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id v4so7390870ljd.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 12:47:18 -0700 (PDT)
+X-Received: by 2002:a2e:7615:: with SMTP id r21mr10223230ljc.371.1597002437691;
+ Sun, 09 Aug 2020 12:47:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200809003453.79673eb3@xps13>
+In-Reply-To: <20200809003453.79673eb3@xps13>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 9 Aug 2020 12:47:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whJ0SQjLeMiVvMXayxvxCmAMdROxyb-Pzs=kr4-Ba5BCA@mail.gmail.com>
+Message-ID: <CAHk-=whJ0SQjLeMiVvMXayxvxCmAMdROxyb-Pzs=kr4-Ba5BCA@mail.gmail.com>
+Subject: Re: [GIT PULL] mtd: Changes for 5.9
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     linux-mtd <linux-mtd@lists.infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sort the items in the compatible string list in increasing number of SoC.
+On Sat, Aug 8, 2020 at 3:35 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> MTD core changes:
+..
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You didn't even mention the stm32 controller change, which seems to be
+the biggest individual thing in here..
 
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-index 6bfa090fd73a..9ada67b1f5f4 100644
---- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-@@ -32,8 +32,8 @@ properties:
-           - enum:
-               - renesas,ipmmu-r8a774a1 # RZ/G2M
-               - renesas,ipmmu-r8a774b1 # RZ/G2N
--              - renesas,ipmmu-r8a774e1 # RZ/G2H
-               - renesas,ipmmu-r8a774c0 # RZ/G2E
-+              - renesas,ipmmu-r8a774e1 # RZ/G2H
-               - renesas,ipmmu-r8a7795  # R-Car H3
-               - renesas,ipmmu-r8a7796  # R-Car M3-W
-               - renesas,ipmmu-r8a77961 # R-Car M3-W+
--- 
-2.17.1
+Hmm?
 
+              Linus
