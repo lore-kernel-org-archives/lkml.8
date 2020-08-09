@@ -2,129 +2,136 @@ Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D620DC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9980206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25C9206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 21:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umebzz1A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+3X8gR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgHIVkI (ORCPT
+        id S1726415AbgHIVoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 17:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
+        Sun, 9 Aug 2020 17:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgHIVkI (ORCPT
+        with ESMTP id S1726307AbgHIVoJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 17:40:08 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD6AC061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 14:40:07 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id v15so3683381lfg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 14:40:07 -0700 (PDT)
+        Sun, 9 Aug 2020 17:44:09 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF9C2C061756;
+        Sun,  9 Aug 2020 14:44:08 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id m200so4132401ybf.10;
+        Sun, 09 Aug 2020 14:44:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+ep4HojIQDcPfiGIdNJSmErIHNth9ZyqLjovwLChR98=;
-        b=umebzz1A/fKNdhwy09ATaiKEGNk6aY1qV/L7qFryoORsJN0s4VhQLKbJCotKTfxmTB
-         BxXLFUoD457Nb+PD4kKbd6xI5t4P5vDgIb2ZAd7aAQ0ExrElioJEkrkYaAmKDEIRYY8B
-         2etoYNm28mEe1sn1QoOj5T41hcyBx28YpBoCBTurs9UxDUDYThI1zLNodZe46igFNV65
-         KO2CT3TsyO2jWm4WljSCrLo0qQHtWds8IPF/3coLvNCKLQFtOQBWJwWeXjLXF1qa71BZ
-         IPCtELmpWGA1stzqMmdqGfYXVBaSQ06oFAKt7zqz89OBE2tQfgQ0y9IwIiLdtiAvGuHa
-         YQSg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AY8il3Wt49EokcoJKHZYjeimbzzjX5ulhSQxuFxM9VQ=;
+        b=L+3X8gR120+/AszKDfAq8knBOg+qtogECisCO3G9vB8LxxEFyPISbzURj9LiksUG21
+         G4WQ/vmbteeBB0VErwZNlAbFv6MDCDpVdA+yfyAYzGaydQDOhM2/VYhRFVGeMAt91bHk
+         ovK8fqMmmhtGchqiDd8n5flhruvOOawqIV4CfZFOQHQPvbgrW6bXp5TrAEVE47/HfrLl
+         4KlpeJqGVcNMYHCeljQ0wCHVshwIWKr/hmqqgwOtM4UAxT4PkCntFkLzGkPEyhQTi3gs
+         pxwiDoOweJwFJQiYYTj75FT+pqcyfavxHi4jCU6eAedTtkMVe84bzAHEwUv4vN7wQKF3
+         ncew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+ep4HojIQDcPfiGIdNJSmErIHNth9ZyqLjovwLChR98=;
-        b=m318q0IlwMf267E+ZvNA4mA/O/c9VaIf6g8Z8npQw4V9xXpeqhObSNVr1YslwHl/tA
-         XjfCFfAgHpCjDBAZbEAiqBMELtDfkYWquHJGCZCvgQnQvQmYYSaIuRr3W1ZGwgmG8n6I
-         mwvTvYHt5R3ZPqZDJPLznU1dfaEwFpf7j+bK9V469zrVWmxuQ1LQNFNJpWGBwTMbMG+O
-         FrvlFs1VCWgnrw23FE9autcuj8lVt1Jk6rSjmXdEC4yzDKQqCY4JcM2WAum5oFAZf8nb
-         DvwqEAmV84SlZwtdIdmd4Gn5yLHRvOuMUPNrmcY9f/ms26VaClCOPqZkg5FMUS+4gKZH
-         Avvw==
-X-Gm-Message-State: AOAM530F8voPBTREYg9QOrFDaRwNsPDH9H3OEJLtRdbTl73SNhRkB7tJ
-        eJStCwJh15pa7XxNol++vdrYxDrD
-X-Google-Smtp-Source: ABdhPJxvRqCxkdqK4RhVC0L0JMyALNvVwiMye+l5FlVVQ1aqKx0OIQpNQNy/2RUaxhdTYe/N02HpSQ==
-X-Received: by 2002:ac2:58d5:: with SMTP id u21mr11435036lfo.31.1597009205791;
-        Sun, 09 Aug 2020 14:40:05 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id w8sm8287705ljm.48.2020.08.09.14.40.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 14:40:05 -0700 (PDT)
-Subject: Re: [PATCH] regulator: simplify locking
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <b22fadc413fd7a1f4018c2c9dc261abf837731cb.1597007683.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <40871bc7-2d6c-10d4-53b3-0aded21edf3b@gmail.com>
-Date:   Mon, 10 Aug 2020 00:40:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AY8il3Wt49EokcoJKHZYjeimbzzjX5ulhSQxuFxM9VQ=;
+        b=L5e/RACZEDjpRJH7OTgJ/m/IN7ZsVB/aH+uLcECB+BFzRPDrR5Av1mqCdB+9U3Bt/P
+         XAGLYYc4I7agGepTQODxSDf9B0i+pMky8pPUVcblGZ93nxGXl2PXWz17ihm14VFAdm1V
+         sQE8bV5mjQWK/LJGJJhoQDWQ5/xxrto+yd5jcOcCr11alNaPPj36OdSyZ6w9WS6wQHuo
+         MpvJvpRfWvow1ICUaEHh2979VwgrTZjEnPu1uuaLTYRkP2kcd8/8nfxbuqdXHqmOspDH
+         W2I75b5y+YpRtO73yd3AUa9pZpm0Bm7ZlCfZJlclQQ/maUElI8z7YIb5p6kDwfqPMLHK
+         26sg==
+X-Gm-Message-State: AOAM530yLpUtt8CCaKZ4WGkY1RV52a+t47ZAqIAi69MP8jnuUydn3lVL
+        TSiwVwgNXy+V7sTjoxGu53mNrTrK9oWTXYd6A+Q=
+X-Google-Smtp-Source: ABdhPJxI4pCVKXBSAk81XQXXkNUql/V+LGhgpGXDjZGBg+PuJHyb/00tCJJ2MNhe9buIQ1Hrvof0VNq51l9Xprh9tdQ=
+X-Received: by 2002:a5b:40f:: with SMTP id m15mr32241076ybp.25.1597009448057;
+ Sun, 09 Aug 2020 14:44:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b22fadc413fd7a1f4018c2c9dc261abf837731cb.1597007683.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200808205543.GL6186@pendragon.ideasonboard.com>
+In-Reply-To: <20200808205543.GL6186@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sun, 9 Aug 2020 22:43:42 +0100
+Message-ID: <CA+V-a8tisbiAuk6sVDokAjxwrLv1Xjkd6ydU_2haqtOKJucB2w@mail.gmail.com>
+Subject: Re: [PATCH 0/7] r8a7742: Enable DU and LVDS
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.08.2020 00:16, Michał Mirosław пишет:
-> Simplify regulator locking by removing locking around locking. rdev->ref
-> is now accessed only when the lock is taken. The code still smells fishy,
-> but now its obvious why.
-> 
-> Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/regulator/core.c         | 37 ++++++--------------------------
->  include/linux/regulator/driver.h |  1 -
->  2 files changed, 6 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> index 9e18997777d3..b0662927487c 100644
-> --- a/drivers/regulator/core.c
-> +++ b/drivers/regulator/core.c
-> @@ -45,7 +45,6 @@
->  	pr_debug("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
->  
->  static DEFINE_WW_CLASS(regulator_ww_class);
-> -static DEFINE_MUTEX(regulator_nesting_mutex);
->  static DEFINE_MUTEX(regulator_list_mutex);
->  static LIST_HEAD(regulator_map_list);
->  static LIST_HEAD(regulator_ena_gpio_list);
-> @@ -150,32 +149,13 @@ static bool regulator_ops_is_valid(struct regulator_dev *rdev, int ops)
->  static inline int regulator_lock_nested(struct regulator_dev *rdev,
->  					struct ww_acquire_ctx *ww_ctx)
->  {
-> -	bool lock = false;
->  	int ret = 0;
->  
-> -	mutex_lock(&regulator_nesting_mutex);
-> +	if (ww_ctx || !mutex_trylock_recursive(&rdev->mutex.base))
+Hi Laurent,
 
-Have you seen comment to the mutex_trylock_recursive()?
+Thank you for the quick review.
 
-https://elixir.bootlin.com/linux/v5.8/source/include/linux/mutex.h#L205
+On Sat, Aug 8, 2020 at 9:55 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> Thank you for the patches.
+>
+> On Fri, Aug 07, 2020 at 06:49:47PM +0100, Lad Prabhakar wrote:
+> > Hi All,
+> >
+> > This patch series adds support for DU and LVDS to r8a7742
+> > SoC and enables LCD support on r8a7742-iwg21d-q7 board.
+> >
+> > This patch series applies on top of [1].
+> >
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
+> >     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
+>
+> The driver changes will need to go through the DRM/KMS tree, and I'd
+> recommend the DT binding changes to go the same route as well. I can
+> handle the rebase when applying, and once the bindings get accept, you
+> can ask Geert to upstream the last 3 patchs. Would that work for you ?
+>
+I'm OK with it as long as Geert is happy. (Fyi I still have bunch of
+patches for G1H)
 
- * This function should not be used, _ever_. It is purely for hysterical GEM
- * raisins, and once those are gone this will be removed.
+Cheers,
+Prabhakar
 
-I knew about this function and I don't think it's okay to use it, hence
-this is why there is that "nesting_mutex" and "owner" checking.
-
-If you disagree, then perhaps you should make another patch to remove
-the stale comment to trylock_recursive().
+> > Lad Prabhakar (7):
+> >   dt-bindings: display: renesas,du: Document the r8a7742 bindings
+> >   drm: rcar-du: Add r8a7742 support
+> >   dt-bindings: display: renesas,lvds: Document r8a7742 bindings
+> >   drm: rcar-du: lvds: Add r8a7742 support
+> >   ARM: dts: r8a7742: Add DU support
+> >   ARM: dts: r8a7742: Add LVDS support
+> >   ARM: dts: r8a7742-iwg21d-q7: Add LCD support
+> >
+> >  .../bindings/display/bridge/renesas,lvds.txt  |  1 +
+> >  .../bindings/display/renesas,du.txt           |  2 +
+> >  arch/arm/boot/dts/r8a7742-iwg21d-q7.dts       | 84 +++++++++++++++++
+> >  arch/arm/boot/dts/r8a7742.dtsi                | 89 +++++++++++++++++++
+> >  drivers/gpu/drm/rcar-du/rcar_du_drv.c         |  5 +-
+> >  drivers/gpu/drm/rcar-du/rcar_lvds.c           |  1 +
+> >  6 files changed, 180 insertions(+), 2 deletions(-)
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
