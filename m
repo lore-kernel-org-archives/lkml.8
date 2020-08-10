@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1672C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8890EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8412080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523E82080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087687;
-	bh=c5QOL1QgbzR/JoY99O/Ik4GYLGGKIIPwqLUVpA8E+kA=;
+	s=default; t=1597087690;
+	bh=x9GG5gygsBiraECBSOqumUJcpCscr6B3l3sBiltVbKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7n9WTwRcSvgAIDG05eW72AMA6d4tag7u+66qCCK6wkIRKHoNmu2C4gi7KN5SWDQf
-	 EoO+17Qvrqpx94gkELAtVPPsTEdKxgWijcKElF+puMmUvzlYcz6H6+YV6Xd2JAZVVo
-	 KjmOxokCPfxRhlBeMecCADoyFvsQMJWvFyAHy0Qc=
+	b=CxLPB3kaZ83jrsPpia+sPjDZxa2q9cujUieIds4msQedLtKMeTUoT/7WGQWuHuUqf
+	 r2TFhhcFaMwsu6PoyNE2S4Ig82j8+mMzA4tNmGyzUHXn3HOFWdPyzjWzO/hAgW0LBg
+	 pzMdE828YgxkjLezB+1pR8Sx/mSTdgCr126oMEZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgHJTLT (ORCPT
+        id S1729212AbgHJTLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729158AbgHJTLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:06 -0400
+        id S1729118AbgHJTLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC1B82078D;
-        Mon, 10 Aug 2020 19:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BF42078D;
+        Mon, 10 Aug 2020 19:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086665;
-        bh=c5QOL1QgbzR/JoY99O/Ik4GYLGGKIIPwqLUVpA8E+kA=;
+        s=default; t=1597086661;
+        bh=x9GG5gygsBiraECBSOqumUJcpCscr6B3l3sBiltVbKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J9QZzEdn+dnFvTPu4DscTaIVjWk+ty29HgnoJKp3aZ13lO+Jy2pdW01IgVc0c9vgG
-         IW2HNqT+8PkACCXbxHje2eWnvODI3Jtzpy2Xp8yzQgSbm/3JLEnEmh+bVMGEd6VPnv
-         cGcDFP2DftTSrEiCUPZxJVxJMJDbmN34TpXyTHsc=
+        b=YMscp0VU+h/1Of6GnSav01mq8r3K7Z47w9R4hc+Pee0ay3Q20yth+bAeo4s0cnKGA
+         fuyvG9flrdG6CisWRht0GBqOu4iMhpO4ranU+hca7kIVw9UzG+4iaWkjl0D2BQOslm
+         HoiSDVcbQ9u1LRKPE3Xy7zaUV3KoIdkN6Co4sy44=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Tretter <m.tretter@pengutronix.de>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 27/60] drm/debugfs: fix plain echo to connector "force" attribute
-Date:   Mon, 10 Aug 2020 15:09:55 -0400
-Message-Id: <20200810191028.3793884-27-sashal@kernel.org>
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 24/60] usb: mtu3: clear dual mode of u3port when disable device
+Date:   Mon, 10 Aug 2020 15:09:52 -0400
+Message-Id: <20200810191028.3793884-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -61,49 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
+[ Upstream commit f1e51e99ed498d4aa9ae5df28e43d558ea627781 ]
 
-Using plain echo to set the "force" connector attribute fails with
--EINVAL, because echo appends a newline to the output.
+If not clear u3port's dual mode when disable device, the IP
+will fail to enter sleep mode when suspend.
 
-Replace strcmp with sysfs_streq to also accept strings that end with a
-newline.
-
-v2: use sysfs_streq instead of stripping trailing whitespace
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Link: https://lore.kernel.org/r/1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_debugfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/mtu3/mtu3_core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 4e673d318503c..fb251c00fdd3e 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -336,13 +336,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index 9dd02160cca97..e3780d4d65149 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -131,8 +131,12 @@ static void mtu3_device_disable(struct mtu3 *mtu)
+ 	mtu3_setbits(ibase, SSUSB_U2_CTRL(0),
+ 		SSUSB_U2_PORT_DIS | SSUSB_U2_PORT_PDN);
  
- 	buf[len] = '\0';
+-	if (mtu->ssusb->dr_mode == USB_DR_MODE_OTG)
++	if (mtu->ssusb->dr_mode == USB_DR_MODE_OTG) {
+ 		mtu3_clrbits(ibase, SSUSB_U2_CTRL(0), SSUSB_U2_PORT_OTG_SEL);
++		if (mtu->is_u3_ip)
++			mtu3_clrbits(ibase, SSUSB_U3_CTRL(0),
++				     SSUSB_U3_PORT_DUAL_MODE);
++	}
  
--	if (!strcmp(buf, "on"))
-+	if (sysfs_streq(buf, "on"))
- 		connector->force = DRM_FORCE_ON;
--	else if (!strcmp(buf, "digital"))
-+	else if (sysfs_streq(buf, "digital"))
- 		connector->force = DRM_FORCE_ON_DIGITAL;
--	else if (!strcmp(buf, "off"))
-+	else if (sysfs_streq(buf, "off"))
- 		connector->force = DRM_FORCE_OFF;
--	else if (!strcmp(buf, "unspecified"))
-+	else if (sysfs_streq(buf, "unspecified"))
- 		connector->force = DRM_FORCE_UNSPECIFIED;
- 	else
- 		return -EINVAL;
+ 	mtu3_setbits(ibase, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
+ }
 -- 
 2.25.1
 
