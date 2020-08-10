@@ -2,174 +2,143 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85256C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7C9206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5944D2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k3lBQMah"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gBtIsrAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgHJMcc (ORCPT
+        id S1726798AbgHJMeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:32:32 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:61112 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726450AbgHJMcb (ORCPT
+        Mon, 10 Aug 2020 08:34:05 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51523 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726536AbgHJMeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:32:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597062750; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=YATn2IQenXC1AZhlnO1R/hOYwlccU9AexyRTM+qvl5Y=; b=k3lBQMahbpo0p8P3wFhF41SFJCshrNNG9XCHIFpA2GNYEEKrYC4ZPyraMd5yA5CFcZXmiO4l
- 5ApxJ2rOU+Otg6MbHOImfLAXhOqNlQ3qJCeXTwxA1bFjJ3eBK78so7gS+CSe7BRhJ2+pEqpj
- syuY7BH8EoT0dbD5P9yuuvmVdK8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f313e49d96d28d61e297dee (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 12:32:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EEE58C4339C; Mon, 10 Aug 2020 12:32:08 +0000 (UTC)
-Received: from [192.168.1.100] (unknown [47.8.236.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04822C433C6;
-        Mon, 10 Aug 2020 12:32:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04822C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH] serial: qcom_geni_serial: Fix recent kdb hang
-To:     Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net,
-        Mukesh Savaliya <msavaliy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-References: <20200806221904.1.I4455ff86f0ef5281c2a0cd0a4712db614548a5ca@changeid>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <adaef6bf-7887-feea-fedf-d3bc5566bb9d@codeaurora.org>
-Date:   Mon, 10 Aug 2020 18:01:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 10 Aug 2020 08:34:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597062842;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2rZgeNC1EUi6JPr5GLAH/Le84z9qh03h/k4kDHsCbO8=;
+        b=gBtIsrAOe3rYcYJejEmaMaXdSVCNjoIVPpB/D4PjVHnkVIkYuy+12HpnuxEhK8E2Rl5zYo
+        8rqj9K1AB4nUfbSCQl/NKXQ8h80PzK9bbaPXhX1bjl2SRo8dFVqWfcvd8u1nRGeyQ7p+Lv
+        KvQpsaAMCitrJHTpEIwn51XpwEgo+rU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-zpZpcA-tN2CCifBMIhPJjg-1; Mon, 10 Aug 2020 08:33:54 -0400
+X-MC-Unique: zpZpcA-tN2CCifBMIhPJjg-1
+Received: by mail-wr1-f72.google.com with SMTP id d6so4162251wrv.23
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:33:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2rZgeNC1EUi6JPr5GLAH/Le84z9qh03h/k4kDHsCbO8=;
+        b=AJtMvyOc9/xgPlygHOdTmlxEFqxNSbaGM/FroAartUqwS9oiu6u979kxOPOdKlKkgn
+         0ksIUarvukAC7bWKX+b25yQm5ShNzeumRWPLx3eMwkEHMz0JALuOuJx7xdUQx4XnDXFI
+         jG5XHmb4HsPKLc0XpXCwhqh9817/f5AM0zz0ARKtSiETCUnODo1MbILRd2p2QiLs3kf5
+         theHCt56BUFYhotqGNpsPCtYdlqMSTab0PaZ6Pav07h4r5cciIbSaTVCmtTkXd3v5LLm
+         yFcWOe6Ww0kISu4p5ypvUuTTuF/4S44BCGDs4hfKuyxgKkz5SYDDhKOtKuS1x3XMVvOw
+         6rKg==
+X-Gm-Message-State: AOAM532/+r6p7KqxwjNdFhb9IeQBl3hhqQBnO0sWZzQnuYsDxz/RiOAS
+        RC+Bylr7WI8+k0NW52ah1dNYxISzDqgYnnm2XakI6aBYxgLkwfhqYRWvvJDr06B9lugP2gfk/zX
+        pk4f8BMHqBhNfIOc00un5OmFC
+X-Received: by 2002:adf:f6cb:: with SMTP id y11mr23950490wrp.169.1597062832237;
+        Mon, 10 Aug 2020 05:33:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyxykxXM7P/dNEtUe9T5wlqyb90H1dE63BSZtx8LmNq8+Y+eKW5JWtGmEO7c+v+xDiC7cNFOQ==
+X-Received: by 2002:adf:f6cb:: with SMTP id y11mr23950479wrp.169.1597062832057;
+        Mon, 10 Aug 2020 05:33:52 -0700 (PDT)
+Received: from redhat.com (bzq-109-67-41-16.red.bezeqint.net. [109.67.41.16])
+        by smtp.gmail.com with ESMTPSA id f6sm3096761wme.32.2020.08.10.05.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 05:33:51 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:33:48 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: drivers/vhost/net.c:1010 vhost_net_rx_peek_head_len() error:
+ double unlocked 'sk->sk_receive_queue.lock' (orig line 1002)
+Message-ID: <20200810083313-mutt-send-email-mst@kernel.org>
+References: <202008081502.F9nEsAf6%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200806221904.1.I4455ff86f0ef5281c2a0cd0a4712db614548a5ca@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008081502.F9nEsAf6%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+On Sat, Aug 08, 2020 at 03:37:07PM +0800, kernel test robot wrote:
+> Hi Jason,
+> 
+> First bad commit (maybe != root cause):
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   449dc8c97089a6e09fb2dac4d92b1b7ac0eb7c1e
+> commit: 20c384f1ea1a0bc7320bc445c72dd02d2970d594 vhost: refine vhost and vringh kconfig
+> date:   4 months ago
+> config: arm-randconfig-m031-20200808 (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> New smatch warnings:
+> drivers/vhost/net.c:1010 vhost_net_rx_peek_head_len() error: double unlocked 'sk->sk_receive_queue.lock' (orig line 1002)
+> drivers/vhost/net.c:1010 vhost_net_rx_peek_head_len() error: double unlocked 'sk->sk_receive_queue.lock' (orig line 1002)
 
-On 8/7/2020 10:49 AM, Douglas Anderson wrote:
-> The commit e42d6c3ec0c7 ("serial: qcom_geni_serial: Make kgdb work
-> even if UART isn't console") worked pretty well and I've been doing a
-> lot of debugging with it.  However, recently I typed "dmesg" in kdb
-> and then held the space key down to scroll through the pagination.  My
-> device hung.  This was repeatable and I found that it was introduced
-> with the aforementioned commit.
->
-> It turns out that there are some strange boundary cases in geni where
-> in some weird situations it will signal RX_LAST but then will put 0 in
-> RX_LAST_BYTE.  This means that the entire last FIFO entry is valid.
-
-IMO that means we received a word in RX_FIFO and it is the last word 
-hence RX_LAST bit is set.
-
-RX_LAST_BYTE is 0 means none of the bytes are valid in the last word.
-
-In such scenario we should just read RX_FIFO buffer (to empty it), 
-discard the word and return NO_POLL_CHAR. Something like below.
-
----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                 else
-                         private_data->poll_cached_bytes_cnt = 4;
-
-                 private_data->poll_cached_bytes =
-                         readl(uport->membase + SE_GENI_RX_FIFOn);
-         }
-
-+        if (!private_data->poll_cached_bytes_cnt)
-+              return NO_POLL_CHAR;
-         private_data->poll_cached_bytes_cnt--;
-         ret = private_data->poll_cached_bytes & 0xff;
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-Please let me know whether above code helps.
-
-I am not sure about what all scenario can leads to this behavior from 
-hardware, I will try to get an answer from hardware team.
-
-Any error bit was set for SE_GENI_S_IRQ_STATUS & SE_GENI_M_IRQ_STATUS 
-registers?
+Weird. Can't figure out where the double unlock is ...
 
 
-I guess the hang was seen because *poll_cached_bytes_cnt* is unsigned 
-int and it's value was 0, when it's decremented by 1 it's value become 
-'4294967295' (very large) and dummy RX (0x00) would happen that
+> Old smatch warnings:
+> drivers/vhost/net.c:1528 vhost_net_set_backend() warn: passing a valid pointer to 'PTR_ERR'
 
-many times before reading any actual RX transfers/bytes.
+this stumped me too...
 
-Regards,
-
-Akash
-
-
-> This weird corner case is handled in qcom_geni_serial_handle_rx()
-> where you can see that we only honor RX_LAST_BYTE if RX_LAST is set
-> _and_ RX_LAST_BYTE is non-zero.  If either of these is not true we use
-> BYTES_PER_FIFO_WORD (4) for the size of the last FIFO word.
->
-> Let's fix kgdb.  While at it, also use the proper #define for 4.
->
-> Fixes: e42d6c3ec0c7 ("serial: qcom_geni_serial: Make kgdb work even if UART isn't console")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> vim +1010 drivers/vhost/net.c
+> 
+> 8dd014adfea6f17 David Stevens   2010-07-27   994  
+> be294a51adfc1e1 Toshiaki Makita 2018-07-03   995  static int vhost_net_rx_peek_head_len(struct vhost_net *net, struct sock *sk,
+> be294a51adfc1e1 Toshiaki Makita 2018-07-03   996  				      bool *busyloop_intr)
+> 030881372460654 Jason Wang      2016-03-04   997  {
+> 28b9b33b983f4de Toshiaki Makita 2018-07-03   998  	struct vhost_net_virtqueue *rnvq = &net->vqs[VHOST_NET_VQ_RX];
+> 28b9b33b983f4de Toshiaki Makita 2018-07-03   999  	struct vhost_net_virtqueue *tnvq = &net->vqs[VHOST_NET_VQ_TX];
+> 6369fec5be0aad4 Toshiaki Makita 2018-07-03  1000  	struct vhost_virtqueue *rvq = &rnvq->vq;
+> 28b9b33b983f4de Toshiaki Makita 2018-07-03  1001  	struct vhost_virtqueue *tvq = &tnvq->vq;
+> 28b9b33b983f4de Toshiaki Makita 2018-07-03 @1002  	int len = peek_head_len(rnvq, sk);
+> 030881372460654 Jason Wang      2016-03-04  1003  
+> dc151282bbdaed0 Tonghao Zhang   2018-09-25  1004  	if (!len && rvq->busyloop_timeout) {
+> f5a4941aa6d190e Jason Wang      2018-05-29  1005  		/* Flush batched heads first */
+> 09c3248938c3e3b Jason Wang      2018-07-20  1006  		vhost_net_signal_used(rnvq);
+> 030881372460654 Jason Wang      2016-03-04  1007  		/* Both tx vq and rx socket were polled here */
+> dc151282bbdaed0 Tonghao Zhang   2018-09-25  1008  		vhost_net_busy_poll(net, rvq, tvq, busyloop_intr, true);
+> 030881372460654 Jason Wang      2016-03-04  1009  
+> 28b9b33b983f4de Toshiaki Makita 2018-07-03 @1010  		len = peek_head_len(rnvq, sk);
+> 030881372460654 Jason Wang      2016-03-04  1011  	}
+> 030881372460654 Jason Wang      2016-03-04  1012  
+> 030881372460654 Jason Wang      2016-03-04  1013  	return len;
+> 030881372460654 Jason Wang      2016-03-04  1014  }
+> 030881372460654 Jason Wang      2016-03-04  1015  
+> 
+> :::::: The code at line 1010 was first introduced by commit
+> :::::: 28b9b33b983f4de3ce9e660e3efe1e08adabf779 vhost_net: Rename local variables in vhost_net_rx_peek_head_len
+> 
+> :::::: TO: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
+> :::::: CC: David S. Miller <davem@davemloft.net>
+> 
 > ---
->
->   drivers/tty/serial/qcom_geni_serial.c | 9 +++++++--
->   1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 07b7b6b05b8b..e27077656939 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -361,11 +361,16 @@ static int qcom_geni_serial_get_char(struct uart_port *uport)
->   			return NO_POLL_CHAR;
->   
->   		if (word_cnt == 1 && (status & RX_LAST))
-> +			/*
-> +			 * NOTE: If RX_LAST_BYTE_VALID is 0 it needs to be
-> +			 * treated as if it was BYTES_PER_FIFO_WORD.
-> +			 */
->   			private_data->poll_cached_bytes_cnt =
->   				(status & RX_LAST_BYTE_VALID_MSK) >>
->   				RX_LAST_BYTE_VALID_SHFT;
-> -		else
-> -			private_data->poll_cached_bytes_cnt = 4;
-> +
-> +		if (private_data->poll_cached_bytes_cnt == 0)
-> +			private_data->poll_cached_bytes_cnt = BYTES_PER_FIFO_WORD;
->   
->   		private_data->poll_cached_bytes =
->   			readl(uport->membase + SE_GENI_RX_FIFOn);
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
