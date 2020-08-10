@@ -2,53 +2,52 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A9923134
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841AF23134
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073931;
-	bh=9MYJ4viWV0IEtWiX47EV+1kFx/B6YnfEQUrVtqU1GEY=;
+	s=default; t=1597073936;
+	bh=xn6WjHRNun+91wxlEFjur4mhWmoemTK089x9wa+Bzf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7jE/Dzyz7ivPmExuXAqj1/N0TAiTdAwE5rCBh9wgKdnrv/Y8MTaEqypdXgD4dcqg
-	 v3NXzVE+rwDRtVP5GeI95YCPSG1WJBSPO/YpSnoW63T64ZT2uN3F3a9au8pCXM9NwO
-	 HwG+uyA2ZtBIe0tOhScMfb9175SiYhIM1tXFeP+s=
+	b=cSN4I4cCDC+emuxqQRo47FPneR5SlxqU3MvgtizQfNzIJC940wcehUAet8q4SselS
+	 dUJq7yZadCmH0ZKrUmR9bA+b0yKUuHGUEgOO7pKhMxl1kcpPrRdRYlAyFxhn8D8Q0W
+	 BpGTvO3+1s/KzfaN8TT+UmODKNgH+sioi+bSRBkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgHJPZd (ORCPT
+        id S1728830AbgHJPiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:25:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58992 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:38:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbgHJPZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:17 -0400
+        id S1728523AbgHJPZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D2EB20772;
-        Mon, 10 Aug 2020 15:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BC912078E;
+        Mon, 10 Aug 2020 15:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073117;
-        bh=9MYJ4viWV0IEtWiX47EV+1kFx/B6YnfEQUrVtqU1GEY=;
+        s=default; t=1597073128;
+        bh=xn6WjHRNun+91wxlEFjur4mhWmoemTK089x9wa+Bzf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K1x7tyvkWLzJ6ugYPUnIG378mc2vHt0W572RIDJxUk1cEJJzrJrJlFvC1C9B0R4F2
-         Ohj3chpIBJk/uT4ldHzUIKhO3akVzpuKleFDaURY+ZTEzKdpy24YkZEQmhNMJqJJQc
-         IhfRLPAohMKvDG1WT0DIHGKr7jaDAt6f46koYpU0=
+        b=2qSytlaKGmRp5+Ij7GWvhGFGKiRlChUjxNSy6nW7LQv/abq3nqvuPRMpCpsFSIC/E
+         7/wL12Kf16Ee6fOnohGOTmWrEkuiGX1ZGQf9pIUtaVcTyrB9DnAW6FgnvhBiUC1ZIz
+         A9g5wybZhQ6QaMPiudH9RJpYt9a2VAj1UJR8gQLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 42/79] i2c: slave: improve sanity check when registering
-Date:   Mon, 10 Aug 2020 17:21:01 +0200
-Message-Id: <20200810151814.351579726@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Matteo Croce <mcroce@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 69/79] net: mvpp2: fix memory leak in mvpp2_rx
+Date:   Mon, 10 Aug 2020 17:21:28 +0200
+Message-Id: <20200810151815.638917711@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,38 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 1b1be3bf27b62f5abcf85c6f3214bdb9c7526685 ]
+[ Upstream commit d6526926de7397a97308780911565e31a6b67b59 ]
 
-Add check for ERR_PTR and simplify code while here.
+Release skb memory in mvpp2_rx() if mvpp2_rx_refill routine fails
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Alain Volmat <alain.volmat@st.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: b5015854674b ("net: mvpp2: fix refilling BM pools in RX path")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Acked-by: Matteo Croce <mcroce@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/i2c-core-slave.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/i2c-core-slave.c b/drivers/i2c/i2c-core-slave.c
-index 5427f047faf06..549751347e6c7 100644
---- a/drivers/i2c/i2c-core-slave.c
-+++ b/drivers/i2c/i2c-core-slave.c
-@@ -18,10 +18,8 @@ int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb)
- {
- 	int ret;
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -2981,6 +2981,7 @@ static int mvpp2_rx(struct mvpp2_port *p
+ 		err = mvpp2_rx_refill(port, bm_pool, pool);
+ 		if (err) {
+ 			netdev_err(port->dev, "failed to refill BM pools\n");
++			dev_kfree_skb_any(skb);
+ 			goto err_drop_frame;
+ 		}
  
--	if (!client || !slave_cb) {
--		WARN(1, "insufficient data\n");
-+	if (WARN(IS_ERR_OR_NULL(client) || !slave_cb, "insufficient data\n"))
- 		return -EINVAL;
--	}
- 
- 	if (!(client->flags & I2C_CLIENT_SLAVE))
- 		dev_warn(&client->dev, "%s: client slave flag not set. You might see address collisions\n",
--- 
-2.25.1
-
 
 
