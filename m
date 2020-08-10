@@ -2,146 +2,117 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFEF52070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D892070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BKII8mKW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KJCkJkb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgHJLZL (ORCPT
+        id S1726695AbgHJLZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:25:11 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:39380 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbgHJLVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 07:21:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597058501; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=wCH2n0Q7ydePXVwUlLWJAGuuKVfyJIQu6/ufchdgTHs=; b=BKII8mKWyDhHaFXhE/kCsEgwlMHO+EZEsujz6Euy5H5QpjCoZhj4DK2IezW4CmCiTphjISIf
- ttgQNpmVTfbSrfgJSGGjkvBF99Lp9q0z1CS/RZUs4qTZsxcItQtTTsgs33hnlV0pc+FimkwW
- MKujo3frpOoxJrHhqOPwlMyiVtM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5f312daed78a2e58335e0987 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 11:21:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A7A78C43395; Mon, 10 Aug 2020 11:21:17 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3FCB3C433C6;
-        Mon, 10 Aug 2020 11:21:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3FCB3C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, maz@kernel.org,
-        linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v4 0/7] irqchip: qcom: pdc: Introduce irq_set_wake call
-Date:   Mon, 10 Aug 2020 16:50:53 +0530
-Message-Id: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 10 Aug 2020 07:25:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47306 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726415AbgHJLVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 07:21:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597058494;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1wbjRsGzwJSEIgmC6+jZ5HmKMMdsjr2TIwdTADa3P68=;
+        b=KJCkJkb0jjDc5tCbiZLFEeDefar3p3nzvGoOgPEWWPsPSYw1iTonmAL1/i0LKaFlUhuRDp
+        BzCNj8XPpltMuGLEmHlfsB5xA4rQ584zPNRdKJES/b5h2q3ISLXVEVr73Ia4+E5L7G3HIa
+        PR7lGCi5k69zElt5JvmEhT8rf1EyyFE=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-9-GCjHInxFMtC3DKVzcmohmA-1; Mon, 10 Aug 2020 07:21:32 -0400
+X-MC-Unique: GCjHInxFMtC3DKVzcmohmA-1
+Received: by mail-wm1-f69.google.com with SMTP id c124so2659656wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 04:21:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1wbjRsGzwJSEIgmC6+jZ5HmKMMdsjr2TIwdTADa3P68=;
+        b=qzzvTsO7FtJEFc6SxJ1AkASIsfH3SOhBkqofQWoNGF41fkvfm/YdPONW9m6NgiR3w2
+         MB/xgS85IzB+JTk/rFXY3leTcwYUFmSwH/LJfOTYIf16kmKN+2WX3nXOG/0JVSTaP7Fa
+         pDEhFwOw8pY0d40cnXdxnlWichfxGoBij8ypDHEUwBW5dvVBU1g7uedpfyOm1il8I1UQ
+         Bazn6YC+4MmJbUjX9ja1LVholVLnN7GQCmd1fb0lYDyU+bEdx9nRHMKCd7uuLrZMO7XI
+         e+/I6QGeETH7QOUIdIav/y8kFoCy2QbsDp6UARqEGGRGoMw01Lcc5ZMLicrWEgw8qx4u
+         iMVw==
+X-Gm-Message-State: AOAM5314c3U7pZGZ1ekf9JQlfW9ScEVTmQ6EBuNDeaqmOyuIuGh5uEWb
+        H2lKnIqlsKokhtFIMFOeMrxjk/sTqpq+gqfiNnTLkONeAwiFkRPp1JJZ9BJTTzYThLvtFKkQC9W
+        JDjM13YRgjHwzGD7n9k4tq3pY
+X-Received: by 2002:a1c:4d12:: with SMTP id o18mr24714534wmh.55.1597058491550;
+        Mon, 10 Aug 2020 04:21:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy4UxkLVkYR0qaII68uf1rniVKRN+p8dcjGLxPoccx8ZjhNhB4Iqyr7JqQEeHpxQbiDZVqm6Q==
+X-Received: by 2002:a1c:4d12:: with SMTP id o18mr24714515wmh.55.1597058491320;
+        Mon, 10 Aug 2020 04:21:31 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:5d6c:f50:4462:5103? ([2001:b07:6468:f312:5d6c:f50:4462:5103])
+        by smtp.gmail.com with ESMTPSA id o125sm23557595wma.27.2020.08.10.04.21.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 04:21:30 -0700 (PDT)
+Subject: Re: [PATCH] kvm: selftests: fix spelling mistake: "missmatch" ->
+ "missmatch"
+To:     Colin King <colin.king@canonical.com>,
+        Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200810101647.62039-1-colin.king@canonical.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bb65571b-555d-c5e6-1242-a12881a13e01@redhat.com>
+Date:   Mon, 10 Aug 2020 13:21:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200810101647.62039-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v4:
-- Drop "Remove irq_disable callback from msmgpio irqchip" patch from v3
-- Introduce irq_suspend_one() and irq_resume_one() callbacks
-- Use the new callbacks to unmask wake interrupts during suspend
-- Reset only pdc interrupts that are mapped in DTSI
+On 10/08/20 12:16, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in an error message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  tools/testing/selftests/kvm/lib/sparsebit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/lib/sparsebit.c b/tools/testing/selftests/kvm/lib/sparsebit.c
+> index 031ba3c932ed..59ffba902e61 100644
+> --- a/tools/testing/selftests/kvm/lib/sparsebit.c
+> +++ b/tools/testing/selftests/kvm/lib/sparsebit.c
+> @@ -1866,7 +1866,7 @@ void sparsebit_validate_internal(struct sparsebit *s)
+>  		 * of total bits set.
+>  		 */
+>  		if (s->num_set != total_bits_set) {
+> -			fprintf(stderr, "Number of bits set missmatch,\n"
+> +			fprintf(stderr, "Number of bits set mismatch,\n"
+>  				"  s->num_set: 0x%lx total_bits_set: 0x%lx",
+>  				s->num_set, total_bits_set);
+>  
+> 
 
-Changes in v3:
-- Drop gpiolib change (v2 patch 1) since its already in linux-next
-- Add Acked-by Linus Walleij for v2 patch 2 and v2 patch 3.
-- Address Stephen's comment to on v2 patch 3
-- Address Stephen's comment to change variable to static on v2 patch 4.
-- Add a new change to use return value from .irq_set_wake callback
-- Add a new change to reset PDC irq enable bank during init time
+If you have a script that generates the commit message, that needs a
+fix. :)  Queued though.
 
-Changes in v2:
-- Fix compiler error on gpiolib patch
-
-This series adds support to lazy disable pdc interrupt.
-
-Some drivers using gpio interrupts want to configure gpio for wakeup using
-enable_irq_wake() but during suspend entry disables irq and expects system
-to resume when interrupt occurs. In the driver resume call interrupt is
-re-enabled and removes wakeup capability using disable_irq_wake() one such
-example is cros ec driver.
-
-With [1] in documentation saying "An irq can be disabled with disable_irq()
-and still wake the system as long as the irq has wake enabled".
-
-The PDC IRQs are currently "unlazy disabled" (disable here means that it
-will be masked in PDC & GIC HW GICD_ISENABLER, the moment driver invokes
-disable_irq()) such IRQs can not wakeup from low power modes like suspend
-to RAM since the driver chosen to disable this.
-
-During suspend entry, no one re-enable/unmask in HW, even if its marked for
-wakeup.
-
-One solutions thought to address this problem was...During suspend entry at
-last point, irq chip driver re-enable/unmask IRQs in HW that are marked for
-wakeup. This was attemped in [2].
-
-This series adds alternate solution to [2] by "lazy disable" IRQs in HW.
-The genirq takes care of lazy disable in case if irqchip did not implement
-irq_disable callback. Below is high level steps on how this works out..
-
-a. During driver's disable_irq() call, IRQ will be marked disabled in SW
-b. IRQ will still be enabled(read unmasked in HW)
-c. The device then enters low power mode like suspend to RAM
-d. The HW detects unmasked IRQs and wakesup the CPU
-e. During resume after local_irq_enable() CPU goes to handle the wake IRQ
-f. Generic handler comes to know that IRQ is disabled in SW
-g. Generic handler marks IRQ as pending and now invokes mask callback
-h. IRQ gets disabled/masked in HW now
-i. When driver invokes enable_irq() the SW pending IRQ leads IRQ's handler
-j. enable_irq() will again enable/unmask in HW
-
-[1] https://www.spinics.net/lists/kernel/msg3398294.html
-[2] https://patchwork.kernel.org/patch/11466021/
-
-Douglas Anderson (4):
-  genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
-  genirq: introduce irq_suspend_parent() and irq_resume_parent()
-  pinctrl: qcom: Call our parent for irq_suspend_one / irq_resume_one
-  irqchip: qcom-pdc: Unmask wake up irqs during suspend
-
-Maulik Shah (3):
-  pinctrl: qcom: Add msmgpio irqchip flags
-  pinctrl: qcom: Use return value from irq_set_wake call
-  irqchip: qcom-pdc: Reset all pdc interrupts during init
-
- drivers/irqchip/qcom-pdc.c         | 63 ++++++++++++++++++++++++++++++++++++--
- drivers/pinctrl/qcom/pinctrl-msm.c | 12 +++++---
- include/linux/irq.h                | 15 +++++++--
- kernel/irq/chip.c                  | 44 ++++++++++++++++++++++++++
- kernel/irq/internals.h             |  2 ++
- kernel/irq/pm.c                    | 15 +++++++--
- 6 files changed, 138 insertions(+), 13 deletions(-)
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Paolo
 
