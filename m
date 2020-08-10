@@ -2,93 +2,120 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D80C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5748DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0EA52073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E12F206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJM2otlY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6Whz9sE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgHJNI0 (ORCPT
+        id S1726657AbgHJNKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:08:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53126 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726462AbgHJNIZ (ORCPT
+        Mon, 10 Aug 2020 09:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgHJNKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:08:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597064904;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pbpPyMxeUTZufAlT4TB0KbZ9dM5w1NZ9B6YwnpXi1/s=;
-        b=hJM2otlYUoPY7VxeCg+9S/SuDdXK/EMb63r95YBavEpwFYYx2bHe7xw5vabFMzkA9bv3aG
-        GO+rnV5h9LFmhpGEzzGShn29p21HXvBnVGFrRX+y6S4jLgkre3rLGiwT2g0SAsWo7octz4
-        xzEhTG6JX1B3/EzsojREJRmGfBPmSv8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-bwrUS9gAOm6o0zWQN2BguA-1; Mon, 10 Aug 2020 09:08:21 -0400
-X-MC-Unique: bwrUS9gAOm6o0zWQN2BguA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B63918A0F03;
-        Mon, 10 Aug 2020 13:08:20 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.10.115.251])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B5EAE10013C2;
-        Mon, 10 Aug 2020 13:08:10 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 3286022036A; Mon, 10 Aug 2020 09:08:09 -0400 (EDT)
-Date:   Mon, 10 Aug 2020 09:08:09 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs-list <virtio-fs@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 00/20] virtiofs: Add DAX support
-Message-ID: <20200810130809.GA455528@redhat.com>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <CAJfpegtboe-XssmqrcvsJm1R0FBP8fYFrTMv5cuBhfmebiGfQw@mail.gmail.com>
+        Mon, 10 Aug 2020 09:10:51 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F20BC061756;
+        Mon, 10 Aug 2020 06:10:51 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id n129so2535141qkd.6;
+        Mon, 10 Aug 2020 06:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding:content-disposition;
+        bh=ujiAdgT+/a8lkUEdLHIcLIc1M7AMlHOeXKUBIZSN4YU=;
+        b=o6Whz9sEOU24iSepBzhEUAwpb1491mF7wazNBqguAhSXidNblShAUmjT0ULKRkdxcC
+         CfNSPrBbSH3yqO8MRsc1x5hSqDvpzd3A29aprp9/xqFg9YlGt9VpOtl+h9PeF3oenLYN
+         JbYAI73pZUcD2MK4TpsESV5uOE4QgE6o4HbijFIxnm68JtexOnRXvW2mLhB7X/R6tap+
+         SaeML+LcJ30+yaUYveXBAMejOEvcrAebWZRGy1SN7IB1ZHJKUuDy/41ABAltlbkmXZL5
+         rq+KHqqju8U63UEaXGVnV6HL1FTcwGck6WjCb8aD4Mfjoa5ZSToaMvhEanWoo6IHaGxM
+         BCVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding
+         :content-disposition;
+        bh=ujiAdgT+/a8lkUEdLHIcLIc1M7AMlHOeXKUBIZSN4YU=;
+        b=kfrrG9HeA1/2aSKf7jOdsgFTUxn61yJL55RT/ODDVy/LqMrHBVpGERnLqloFuCwZud
+         UhUJRyQwP4H99/QlQzvR4UNiOHxZMBXKriAcxDfYK8LX5EayF5kzLubkOTKgIkiWEgCV
+         8C/8hOY3lc7xo1yRb+l/m555L9l4hCXveuDnnO2hYHvW2OQFk2IGP2JLT23tOsk76I0+
+         UoNnQDy/PK9UN5nFl4XwXYomlAxXy7ovPyGIo4UVxdUFenxMbcrjwrq6w2DqRXThGerW
+         V8Xa5ReAlxRYCSCP5FthLKTAchBA7EvjRJAn6ffreNEEJneYYvcZ0v0sbE02TsY4Kcz/
+         Nx1Q==
+X-Gm-Message-State: AOAM531/8dJrMT1kemlzvnL5oOBGsU3LNbqtbvnUfV7PMjRkwnV2Jb1U
+        LKyoWbblcyNNFrdgNmSpkAE=
+X-Google-Smtp-Source: ABdhPJyebrqHyf2sIFVLFzm8DaF3vOf/GUcosAoNFNy94psyps5t6cMgWC/xXwFlnC4NhKF8yG+KqQ==
+X-Received: by 2002:a37:b787:: with SMTP id h129mr24913657qkf.402.1597065049358;
+        Mon, 10 Aug 2020 06:10:49 -0700 (PDT)
+Received: from dwls-dell ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id l1sm15388418qtp.96.2020.08.10.06.10.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Aug 2020 06:10:48 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 10:10:45 -0300
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     "=?utf-8?Q?skhan=40linuxfoundation.org?=" <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "=?utf-8?Q?linux-media=40vger.kernel.org?=" 
+        <linux-media@vger.kernel.org>,
+        "=?utf-8?Q?linux-kernel=40vger.kernel.org?=" 
+        <linux-kernel@vger.kernel.org>
+Message-ID: <6FF983D6-F754-42CB-8745-EF1DFA76B12F@getmailspring.com>
+In-Reply-To: <20200808204517.GJ6186@pendragon.ideasonboard.com>
+References: <20200808204517.GJ6186@pendragon.ideasonboard.com>
+Subject: Re: [PATCH 04/20] media: uvc: uvc_v4l2.c: add temp variable for
+ list iteration
+X-Mailer: Mailspring
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <CAJfpegtboe-XssmqrcvsJm1R0FBP8fYFrTMv5cuBhfmebiGfQw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 09:29:47AM +0200, Miklos Szeredi wrote:
-> On Fri, Aug 7, 2020 at 9:55 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >
-> 
-> > Most of the changes are limited to fuse/virtiofs. There are couple
-> > of changes needed in generic dax infrastructure and couple of changes
-> > in virtio to be able to access shared memory region.
-> 
-> So what's the plan for merging the different subsystems?  I can take
-> all that into the fuse tree, but would need ACKs from the respective
-> maintainers.
+Hi Laurent, thanks for reviewing!
 
-I am assuming for DAX patches we need ACK from Dan Williams and for
-virtio patches we need ack from Michael S. Tsirkin.
+> If no entity is found by this loop the next line will dereference a NULL
+> pointer. There's a similar issue below.
 
-Dan, Michael, can you please review the dax and virtio patches
-respectively and if there are no concerns, please provide ACK. Or
-suggest an alternative way of how these patches can be merged.
+You mean this line, right?
+>		pin = iterm->id;
 
-Thanks
-Vivek
+In which case, yes I missed it!
 
+> I think the issues reported by coccinelle are false positives, as every
+> chain is guaranteed to have the proper input terminals (ITERM). This is
+> verified when constructing the chain at probe time.
+
+I thought so too, but I thought it would be nice to get rid of the
+warning anyways. Probably other people will send patches for this same
+issue in the future too, i.e. until this warning is not there anymore.
+
+Do you have any suggestions or should we just leave this alone? :)
+
+Maybe:
+
+if (iterm)
+  pin = iterm->id
+
+
+This line will return an error if the iterm is not found anyway:
+
+	if (iterm == NULL || iterm->id != pin)
+		return -EINVAL
+
+
+Let me know what you think
+
+- Daniel
