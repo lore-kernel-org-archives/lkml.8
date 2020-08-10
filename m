@@ -2,106 +2,251 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED59C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1995F2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656F82073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SMQ+HDqc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vqsl98sY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgHJHVZ (ORCPT
+        id S1726422AbgHJHVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:21:25 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:42672 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725869AbgHJHVX (ORCPT
+        Mon, 10 Aug 2020 03:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgHJHVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:21:23 -0400
-X-UUID: 9ef467e8e3c44a80abe745e271563427-20200810
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8hb1XmCOYYfoHO2INc2JsSa/wZHmidgJRDdB3egeX9U=;
-        b=SMQ+HDqc9JZ3FaxSewQJaEBxCuE2aLVL/LY32B9mIdtH7TldvAJw0kksEXpoORisUxJU0rqFiysRM95qk12M1qJ7FoYRDti/B3QK4LK40GZjEa8EDF2epUmuERB+BuUur64cCu8nn9VO/NCGsGoAQllAC0loyzK2wTsx3CH/Ioo=;
-X-UUID: 9ef467e8e3c44a80abe745e271563427-20200810
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1691687393; Mon, 10 Aug 2020 15:21:18 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 10 Aug 2020 15:21:15 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 10 Aug 2020 15:21:15 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH 0/5] kasan: add workqueue and timer stack for generic KASAN
-Date:   Mon, 10 Aug 2020 15:21:15 +0800
-Message-ID: <20200810072115.429-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 10 Aug 2020 03:21:39 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DC4C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:21:38 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id g11so2183176ual.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZuLaH0X1DjxkMIYvUZjBNQpk5tuEvtJPSM7s3zpgVA=;
+        b=Vqsl98sYIlry7YsaqgssuM5FYIzcM1D1osf7noHDmEMsN0q9nuXfpONaiOGWw4ZjNC
+         GxhEAINLCMhMJDXOQSwp0eT1EuzFIPK7K9sBVCA7MqB9w8S9as0fdMVPzkQztlI+7WOt
+         /rNLveVzyktnS6wtY82qfRfX2+vhRGoSTiY3sFsqzzrUVCALKkg6UEDeAAEwvLaSoBsr
+         XI4q4keaf/eP45qsUCtETI3Z8DZP3nBImstSbgruJmYJ4/vZGz2l0dj4nlPSEblvxSRT
+         6WN9Zy9y9GA/sLzBO/UHTY4UZ6sLECmSe7Fky3fjpNkkWQyi3isxhpzHbDgcYc+Njtee
+         WPtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZuLaH0X1DjxkMIYvUZjBNQpk5tuEvtJPSM7s3zpgVA=;
+        b=CxmmZcvKk4bFUuvnqJeu6fgHJtN4SBDOrgv80TDD6uGW9C3LBUQZ0oXk5U+DrXNDcq
+         sKsebN/7P9skKWHu26vWPrlTgprofrtcyshJCjm4dpVRIW67ObbkVytlsyoXbdBO/Q2w
+         NTzZilUoS2hqbZoClEJ0FsmG5c6snjSsJkEcIqGLbvODADWo93X3bAqU9DSjWG4Rd7cl
+         MSKAwvJoJmmX3vVBH9jiCDX1acuiOICjpQPP/IfJQ1IHVacfnMHjgcqAayKJzKm+fIVx
+         TIqoZYl+YRaRARwR0lKzjAQyXAv55WHcge1pzbigBTDYS1PBP9ancgv2h6gbJNTpTOlw
+         U+tg==
+X-Gm-Message-State: AOAM533ILOxj3YCF/VB/uVcg0MGOkxNqBmPCoBx9vB5STmD2wMrkWyiZ
+        48NaYoWLDHU9yorw8IEnVvJ55XBop5c=
+X-Google-Smtp-Source: ABdhPJyLzrYdLMeCai2m+tubfarxOqo0fuqpeUQigsvyB/QMc/Z3K4Vh0cZFReL9RQmb/3kuTFgcaw==
+X-Received: by 2002:a9f:300f:: with SMTP id h15mr18278308uab.47.1597044096554;
+        Mon, 10 Aug 2020 00:21:36 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id u4sm4506448vkg.42.2020.08.10.00.21.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 00:21:35 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id y8so3725244vsq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:21:35 -0700 (PDT)
+X-Received: by 2002:a67:bb06:: with SMTP id m6mr19237225vsn.54.1597044094565;
+ Mon, 10 Aug 2020 00:21:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200809023548.684217-1-xie.he.0141@gmail.com>
+ <CA+FuTSe-FaQFn4WNvVPJ1v+jVZAghgd1AZc-cWn2+GjPR4GzVQ@mail.gmail.com> <CAJht_EOao3-kA-W-SdJqKRiFMAFUxw7OARFGY5DL8pXvKd4TLw@mail.gmail.com>
+In-Reply-To: <CAJht_EOao3-kA-W-SdJqKRiFMAFUxw7OARFGY5DL8pXvKd4TLw@mail.gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Mon, 10 Aug 2020 09:20:56 +0200
+X-Gmail-Original-Message-ID: <CA+FuTSc7c+XTDU10Bh1ZviQomHgiTjiUvOO0iR1X95rq61Snrg@mail.gmail.com>
+Message-ID: <CA+FuTSc7c+XTDU10Bh1ZviQomHgiTjiUvOO0iR1X95rq61Snrg@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/x25_asy: Added needed_headroom and a
+ skb->len check
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U3l6Ym90IHJlcG9ydHMgbWFueSBVQUYgaXNzdWVzIGZvciB3b3JrcXVldWUgb3IgdGltZXIsIHNl
-ZSBbMV0gYW5kIFsyXS4NCkluIHNvbWUgb2YgdGhlc2UgYWNjZXNzL2FsbG9jYXRpb24gaGFwcGVu
-ZWQgaW4gcHJvY2Vzc19vbmVfd29yaygpLA0Kd2Ugc2VlIHRoZSBmcmVlIHN0YWNrIGlzIHVzZWxl
-c3MgaW4gS0FTQU4gcmVwb3J0LCBpdCBkb2Vzbid0IGhlbHANCnByb2dyYW1tZXJzIHRvIHNvbHZl
-IFVBRiBvbiB3b3JrcXVldWUuIFRoZSBzYW1lIG1heSBzdGFuZCBmb3IgdGltZXMuDQoNClRoaXMg
-cGF0Y2hzZXQgaW1wcm92ZXMgS0FTQU4gcmVwb3J0cyBieSBtYWtpbmcgdGhlbSB0byBoYXZlIHdv
-cmtxdWV1ZQ0KcXVldWVpbmcgc3RhY2sgYW5kIHRpbWVyIHF1ZXVlaW5nIHN0YWNrIGluZm9ybWF0
-aW9uLiBJdCBpcyB1c2VmdWwgZm9yDQpwcm9ncmFtbWVycyB0byBzb2x2ZSB1c2UtYWZ0ZXItZnJl
-ZSBvciBkb3VibGUtZnJlZSBtZW1vcnkgaXNzdWUuDQoNCkdlbmVyaWMgS0FTQU4gd2lsbCByZWNv
-cmQgdGhlIGxhc3QgdHdvIHdvcmtxdWV1ZSBhbmQgdGltZXIgc3RhY2tzLA0KcHJpbnQgdGhlbSBp
-biBLQVNBTiByZXBvcnQuIEl0IGlzIG9ubHkgc3VpdGFibGUgZm9yIGdlbmVyaWMgS0FTQU4uDQoN
-CkluIG9yZGVyIHRvIHByaW50IHRoZSBsYXN0IHR3byB3b3JrcXVldWUgYW5kIHRpbWVyIHN0YWNr
-cywgc28gdGhhdA0Kd2UgYWRkIG5ldyBtZW1iZXJzIGluIHN0cnVjdCBrYXNhbl9hbGxvY19tZXRh
-Lg0KLSB0d28gd29ya3F1ZXVlIHF1ZXVlaW5nIHdvcmsgc3RhY2tzLCB0b3RhbCBzaXplIGlzIDgg
-Ynl0ZXMuDQotIHR3byB0aW1lciBxdWV1ZWluZyBzdGFja3MsIHRvdGFsIHNpemUgaXMgOCBieXRl
-cy4NCg0KT3JpZ25pYWwgc3RydWN0IGthc2FuX2FsbG9jX21ldGEgc2l6ZSBpcyAxNiBieXRlcy4g
-QWZ0ZXIgYWRkIG5ldw0KbWVtYmVycywgdGhlbiB0aGUgc3RydWN0IGthc2FuX2FsbG9jX21ldGEg
-dG90YWwgc2l6ZSBpcyAzMiBieXRlcywNCkl0IGlzIGEgZ29vZCBudW1iZXIgb2YgYWxpZ25tZW50
-LiBMZXQgaXQgZ2V0IGJldHRlciBtZW1vcnkgY29uc3VtcHRpb24uDQoNClsxXWh0dHBzOi8vZ3Jv
-dXBzLmdvb2dsZS5jb20vZy9zeXprYWxsZXItYnVncy9zZWFyY2g/cT0lMjJ1c2UtYWZ0ZXItZnJl
-ZSUyMitwcm9jZXNzX29uZV93b3JrDQpbMl1odHRwczovL2dyb3Vwcy5nb29nbGUuY29tL2cvc3l6
-a2FsbGVyLWJ1Z3Mvc2VhcmNoP3E9JTIydXNlLWFmdGVyLWZyZWUlMjIlMjBleHBpcmVfdGltZXJz
-DQpbM11odHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5ODQzNw0K
-DQpXYWx0ZXIgV3UgKDUpOg0KdGltZXI6IGthc2FuOiByZWNvcmQgYW5kIHByaW50IHRpbWVyIHN0
-YWNrDQp3b3JrcXVldWU6IGthc2FuOiByZWNvcmQgYW5kIHByaW50IHdvcmtxdWV1ZSBzdGFjaw0K
-bGliL3Rlc3Rfa2FzYW4uYzogYWRkIHRpbWVyIHRlc3QgY2FzZQ0KbGliL3Rlc3Rfa2FzYW4uYzog
-YWRkIHdvcmtxdWV1ZSB0ZXN0IGNhc2UNCmthc2FuOiB1cGRhdGUgZG9jdW1lbnRhdGlvbiBmb3Ig
-Z2VuZXJpYyBrYXNhbg0KDQpEb2N1bWVudGF0aW9uL2Rldi10b29scy9rYXNhbi5yc3QgfCAgNCAr
-Ky0tDQppbmNsdWRlL2xpbnV4L2thc2FuLmggICAgICAgICAgICAgfCAgNCArKysrDQprZXJuZWwv
-dGltZS90aW1lci5jICAgICAgICAgICAgICAgfCAgMiArKw0Ka2VybmVsL3dvcmtxdWV1ZS5jICAg
-ICAgICAgICAgICAgIHwgIDMgKysrDQpsaWIvdGVzdF9rYXNhbi5jICAgICAgICAgICAgICAgICAg
-fCA1NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysNCm1tL2thc2FuL2dlbmVyaWMuYyAgICAgICAgICAgICAgICB8IDQyICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KbW0va2FzYW4va2FzYW4uaCAgICAgICAgICAg
-ICAgICAgIHwgIDYgKysrKystDQptbS9rYXNhbi9yZXBvcnQuYyAgICAgICAgICAgICAgICAgfCAy
-MiArKysrKysrKysrKysrKysrKysrKysrDQo4IGZpbGVzIGNoYW5nZWQsIDEzNCBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQ==
+On Sun, Aug 9, 2020 at 8:08 PM Xie He <xie.he.0141@gmail.com> wrote:
+>
+> On Sun, Aug 9, 2020 at 2:13 AM Willem de Bruijn
+> <willemdebruijn.kernel@gmail.com> wrote:
+> >
+> > The patch is analogous to commit c7ca03c216ac
+> > ("drivers/net/wan/lapbether: Added needed_headroom and a skb->len
+> > check").
 
+Acked-by: Willem de Bruijn <willemb@google.com>
+
+> >
+> > Seems to make sense based on call stack
+> >
+> >   x25_asy_xmit               // skb_pull(skb, 1)
+> >   lapb_data_request
+> >   lapb_kick
+> >   lapb_send_iframe        // skb_push(skb, 2)
+> >   lapb_transmit_buffer    // skb_push(skb, 1)
+> >   lapb_data_transmit
+> >   x25_asy_data_transmit
+> >   x25_asy_encaps
+>
+> Thank you!
+>
+> > But I frankly don't know this code and would not modify logic that no
+> > one has complained about for many years without evidence of a real
+> > bug.
+>
+> Maybe it's better to submit this patch to "net-next"?
+
+That depends on whether this solves a bug. If it is possible to send a
+0 byte packet and make ndo_start_xmit read garbage, then net is the
+right target.
+
+> I want to do this change because:
+>
+> 1) I hope to set needed_headroom properly for all three X.25 drivers
+> (lapbether, x25_asy, hdlc_x25) in the kernel. So that the upper layer
+> (net/x25) can be changed to use needed_headroom to allocate skb,
+> instead of the current way of using a constant to estimate the needed
+> headroom.
+
+Which constant, X25_MAX_L2_LEN?
+
+> 2) The code quality of this driver is actually very low, and I also
+> hope to improve it gradually. Actually this driver had been completely
+> broken for many years and no one had noticed this until I fixed it in
+> commit 8fdcabeac398 (drivers/net/wan/x25_asy: Fix to make it work)
+> last month.
+
+Just curious: how come that netif_rx could be removed?
+
+> This driver has a lot of other issues and I wish I can
+> gradually fix them, too.
+>
+> > Were you able to actually exercise this path, similar to lapb_ether:
+> > configure the device, send data from a packet socket? If so, can you
+> > share the configuration steps?
+>
+> Yes, I can run this driver. The driver is a software driver that runs
+> over TTY links. We can set up a x25_asy link over a virtual TTY link
+> using this method:
+>
+> First:
+>   sudo modprobe lapb
+>   sudo modprobe x25_asy
+>
+> Then set up a virtual TTY link:
+>   socat -d -d pty,cfmakeraw pty,cfmakeraw &
+> This will open a pair of PTY ports.
+> (The "socat" program can be installed from package managers.)
+>
+> Then use a C program to set the line discipline for the two PTY ports:
+> Simplified version for reading:
+>   int ldisc = N_X25;
+>   int fd = open("path/to/pty", O_RDWR);
+>   ioctl(fd, TIOCSETD, &ldisc);
+>   close(fd);
+> Complete version for running:
+>   https://github.com/hyanggi/testing_linux/blob/master/network_x25/lapb/set_ldisc.c
+> Then we'll get two network interfaces named x25asy0 and x25asy1.
+>
+> Then we do:
+>   sudo ip link set x25asyN up
+> to bring them up.
+>
+> After we set up this x25_asy link, we can test it using AF_PACKET sockets:
+>
+> In the connected-side C program:
+> Complete version for running:
+>   https://github.com/hyanggi/testing_linux/blob/master/network_x25/lapb/receiver.c
+> Simplified version for reading:
+>   int sockfd = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_ALL));
+>
+>   /* Get interface index */
+>   struct ifreq ifr;
+>   strcpy(ifr.ifr_name, "interface_name");
+>   ioctl(sockfd, SIOCGIFINDEX, &ifr);
+>   int ifindex = ifr.ifr_ifindex;
+>
+>   struct sockaddr_ll sender_addr;
+>   socklen_t sender_addr_len = sizeof sender_addr;
+>   char buffer[1500];
+>
+>   while (1) {
+>       ssize_t length = recvfrom(sockfd, buffer, sizeof buffer, 0,
+>                                 (struct sockaddr *)&sender_addr,
+>                                 &sender_addr_len);
+>       if (sender_addr.sll_ifindex != ifindex)
+>           continue;
+>       else if (buffer[0] == 0)
+>           printf("Data received.\n");
+>       else if (buffer[0] == 1)
+>           printf("Connected by the other side.\n");
+>       else if (buffer[0] == 2) {
+>           printf("Disconnected by the other side.\n");
+>           break;
+>       }
+>   }
+>
+>   close(sockfd);
+>
+> In the connecting-side C program:
+> Complete version for running:
+>   https://github.com/hyanggi/testing_linux/blob/master/network_x25/lapb/sender.c
+> Simplified version for reading:
+>   int sockfd = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_ALL));
+>
+>   /* Get interface index */
+>   struct ifreq ifr;
+>   strcpy(ifr.ifr_name, "interface_name");
+>   ioctl(sockfd, SIOCGIFINDEX, &ifr);
+>   int ifindex = ifr.ifr_ifindex;
+>
+>   struct sockaddr_ll addr = {
+>       .sll_family = AF_PACKET,
+>       .sll_ifindex = ifindex,
+>   };
+>
+>   /* Connect */
+>   sendto(sockfd, "\x01", 1, 0, (struct sockaddr *)&addr, sizeof addr);
+>
+>   /* Send data */
+>   sendto(sockfd, "\x00" "data", 5, 0, (struct sockaddr *)&addr,
+>          sizeof addr);
+>
+>   sleep(1); /* Wait a while before disconnecting */
+>
+>   /* Disconnect */
+>   sendto(sockfd, "\x02", 1, 0, (struct sockaddr *)&addr, sizeof addr);
+>
+>   close(sockfd);
+>
+> I'm happy to answer any questions. Thank you so much!
+
+Thanks very much for the detailed reproducer.
+
+One thing to keep in mind is that AF_PACKET sockets are not the normal
+datapath. AF_X25 sockets are. But you mention that you also exercise
+the upper layer? That gives confidence that these changes are not
+accidentally introducing regressions for the default path while fixing
+oddly crafted packets with (root only for a reason) packet sockets.
