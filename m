@@ -2,56 +2,57 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E20C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D248C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 682832080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4508A22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087586;
-	bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
+	s=default; t=1597087594;
+	bh=g+Wy7iCnNpmyB5BLU7r9saNvxQus1BUEvV7pAy8bNcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VUv9ZkiE38iDOIbEoVcWhniR2qDx9qtcyL0KG7kxskrdO50DXIin/0XK5xFBrm2ix
-	 Tg8CqufD+YuZwxiwM1Ev0pen8p+ZvCHz14BVyP24ggMYzsI3YjCIcw+mAUd7oZvi1U
-	 JkcH1SwBMPbWVqOsondIIiPcTlrLovlzE/7K6J6g=
+	b=jrnSfYczN3aIeEld7VkcVxfEo15JbG1vgex4v2SRC9gkGKLgpHNVstlC3I5EXFdNR
+	 59/jIY6+YhX1d3pcz0EEbReCHpqQqGnniSjEXi+MlZ41vzuVBGCv7ukLVT5fzTP6oQ
+	 Vilo144LhLS2aHG+gxo87ECtF3wsIYGul7OIAMqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgHJT0Z (ORCPT
+        id S1729865AbgHJT0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40638 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:26:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgHJTLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:50 -0400
+        id S1729398AbgHJTLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F1AD22BED;
-        Mon, 10 Aug 2020 19:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3053F2078D;
+        Mon, 10 Aug 2020 19:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086710;
-        bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
+        s=default; t=1597086706;
+        bh=g+Wy7iCnNpmyB5BLU7r9saNvxQus1BUEvV7pAy8bNcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sASTmFKia7lY4Xrq9LIs+2PklDrutaes823Js8953dH/ujPmcaea5Dqzka1ZDBUJK
-         s9vt9kAt3fTpuM4JcOsszApmUCJ1G94xdH2kf4l367NCjRCZclFZz1wTO1HcGeHNOF
-         zYM061LoXQYFAC/WpDw8GRHxhUNgW8IY/oWfR9WA=
+        b=gTwovJ3XtEUAvrFZ/kAPuMPKGOcHlCy5nPn3bH2MU0F9wd8J9Y8poAVJnhVUQbgI9
+         pXJ0VvmTHo4/Gf25oBdQkNItDzRSxEN187LJ/qeC8uxbl4RytFKZiHuSx8uHacviWI
+         eSZ/gwi5Xnf3cxkL3/2WVlNjGI/9XDb69fhGdHvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 59/60] crypto: caam - silence .setkey in case of bad key length
-Date:   Mon, 10 Aug 2020 15:10:27 -0400
-Message-Id: <20200810191028.3793884-59-sashal@kernel.org>
+Cc:     Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 5.7 56/60] ACPICA: Do not increment operation_region reference counts for field units
+Date:   Mon, 10 Aug 2020 15:10:24 -0400
+Message-Id: <20200810191028.3793884-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,63 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-[ Upstream commit da6a66853a381864f4b040832cf11f0dbba0a097 ]
+[ Upstream commit 6a54ebae6d047c988a31f5ac5a64ab5cf83797a2 ]
 
-In case of bad key length, driver emits "key size mismatch" messages,
-but only for xts(aes) algorithms.
+ACPICA commit e17b28cfcc31918d0db9547b6b274b09c413eb70
 
-Reduce verbosity by making them visible only when debugging.
-This way crypto fuzz testing log cleans up a bit.
+Object reference counts are used as a part of ACPICA's garbage
+collection mechanism. This mechanism keeps track of references to
+heap-allocated structures such as the ACPI operand objects.
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Recent server firmware has revealed that this reference count can
+overflow on large servers that declare many field units under the
+same operation_region. This occurs because each field unit declaration
+will add a reference count to the source operation_region.
+
+This change solves the reference count overflow for operation_regions
+objects by preventing fieldunits from incrementing their
+operation_region's reference count. Each operation_region's reference
+count will not be changed by named objects declared under the Field
+operator. During namespace deletion, the operation_region namespace
+node will be deleted and each fieldunit will be deleted without
+touching the deleted operation_region object.
+
+Link: https://github.com/acpica/acpica/commit/e17b28cf
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/caam/caamalg.c     | 2 +-
- drivers/crypto/caam/caamalg_qi.c  | 2 +-
- drivers/crypto/caam/caamalg_qi2.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/acpi/acpica/exprep.c   | 4 ----
+ drivers/acpi/acpica/utdelete.c | 6 +-----
+ 2 files changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index b2f9882bc010f..bf90a4fcabd1f 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -838,7 +838,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 	u32 *desc;
+diff --git a/drivers/acpi/acpica/exprep.c b/drivers/acpi/acpica/exprep.c
+index a4e306690a21b..4a0f03157e082 100644
+--- a/drivers/acpi/acpica/exprep.c
++++ b/drivers/acpi/acpica/exprep.c
+@@ -473,10 +473,6 @@ acpi_status acpi_ex_prep_field_value(struct acpi_create_field_info *info)
+ 				    (u8)access_byte_width;
+ 			}
+ 		}
+-		/* An additional reference for the container */
+-
+-		acpi_ut_add_reference(obj_desc->field.region_obj);
+-
+ 		ACPI_DEBUG_PRINT((ACPI_DB_BFIELD,
+ 				  "RegionField: BitOff %X, Off %X, Gran %X, Region %p\n",
+ 				  obj_desc->field.start_field_bit_offset,
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index c365faf4e6cd4..4c0d4e4341961 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -568,11 +568,6 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 			next_object = object->buffer_field.buffer_obj;
+ 			break;
  
- 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
--		dev_err(jrdev, "key size mismatch\n");
-+		dev_dbg(jrdev, "key size mismatch\n");
- 		return -EINVAL;
- 	}
+-		case ACPI_TYPE_LOCAL_REGION_FIELD:
+-
+-			next_object = object->field.region_obj;
+-			break;
+-
+ 		case ACPI_TYPE_LOCAL_BANK_FIELD:
  
-diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
-index 27e36bdf6163b..315d53499ce85 100644
---- a/drivers/crypto/caam/caamalg_qi.c
-+++ b/drivers/crypto/caam/caamalg_qi.c
-@@ -728,7 +728,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 	int ret = 0;
+ 			next_object = object->bank_field.bank_obj;
+@@ -613,6 +608,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 			}
+ 			break;
  
- 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
--		dev_err(jrdev, "key size mismatch\n");
-+		dev_dbg(jrdev, "key size mismatch\n");
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index 28669cbecf77c..e1b6bc6ef091b 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -1058,7 +1058,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 	u32 *desc;
- 
- 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
--		dev_err(dev, "key size mismatch\n");
-+		dev_dbg(dev, "key size mismatch\n");
- 		return -EINVAL;
- 	}
++		case ACPI_TYPE_LOCAL_REGION_FIELD:
+ 		case ACPI_TYPE_REGION:
+ 		default:
  
 -- 
 2.25.1
