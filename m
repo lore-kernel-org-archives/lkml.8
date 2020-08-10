@@ -2,165 +2,133 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C01E4206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mhtQBufT"
+	by mail.kernel.org (Postfix) with ESMTP id 2FEE5206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgHJWdg (ORCPT
+        id S1727010AbgHJWgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgHJWde (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:33:34 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177E0C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:33:34 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d188so6534256pfd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i7ZfdynehOdybqijT/Iim3hOWf1+yvwIpK/H7v550UQ=;
-        b=mhtQBufTPANHwJt2YnyJ/vLi8+sR6/jg0gf8krTkW7x+L/KIh2eF3Y25ypKQKj9eWQ
-         tgbLDbBM6IE0m6FyEMSx9Lf8gKi71rjxKVxlh3QgXE0PD70t5TUELjSWWcr5FzHWft0p
-         fWjKTYUFd1tCnYomCDpU5Yqyob35Egp5DlfkjDxCOKcqU60ZTJ0HqbJ5sfR2yQtWnyHy
-         jKM+WiclhG925nM7/r3iiPEa8WPWjOP4ajTCyse9YDiMGVgHVi3YwcBU4yyPWBXUtBV6
-         aC2kcORjgG0XDv3MmSZfNNvxhdZO+QvJ9aeXFO4p1uX7Dl+iIDUCvT1cLvyyyZdT/8IK
-         KfcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i7ZfdynehOdybqijT/Iim3hOWf1+yvwIpK/H7v550UQ=;
-        b=s3PIZ/GjIkXUp5ww2f+1ecdnLcoCYoSjPDkQk7SKT8z6PHYB+slf/kQl/jPVU+KE4e
-         h9OEWG3KG72fOXoSmvUc87zuc7PETsJbGk6CuX4OfOfww/4zG8Pu68uip9h+4WjWwRxm
-         di2ctPKDDOyAq1+shKW8K2QDk6VlPmGDL6UkCmuFDT7Gj6DWFNih0SPFYfGzIjhMGOW7
-         aekkEB+cihWNbiQ/3i3LLa2ogX+rFAjD50lXPl1N372xYOAUHUrMbd2o3NmAPkb6KZf5
-         LxKsiCIGSbybhuEZQ0GPIIZJzLiY1KcVCVsau01v7HXV4Rnheeki3rQtkF0uB7Bnom0W
-         j0zA==
-X-Gm-Message-State: AOAM5321l8Ht/D3Q5BDqUax7XRmTEcZ7IMxaonIbo+dt7afyRLCKiwEk
-        NKgU5rqkYlzAjp9t1FQvd2c+MPvhWC7Cgx5u2SRnlg==
-X-Google-Smtp-Source: ABdhPJzXTvIZAHfH9jpUrtK3vUE/qI8VWhuaoQktb5lbMLN9zEI8agpeALqtVf0qPpZVQ0WKCLyimURi+ymlHxcwJLA=
-X-Received: by 2002:a63:4e56:: with SMTP id o22mr8537935pgl.381.1597098813343;
- Mon, 10 Aug 2020 15:33:33 -0700 (PDT)
+        Mon, 10 Aug 2020 18:36:10 -0400
+Received: from mga04.intel.com ([192.55.52.120]:14994 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgHJWgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:36:08 -0400
+IronPort-SDR: ONvBJm4F2+NXH8x2bTrbAynVrxJaPB6GedCZjQNhUDpqxvf+l1v/+6zdqnrPq12alEb9qQqxwb
+ BQt8rTdpmf3g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="151063379"
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="151063379"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 15:36:06 -0700
+IronPort-SDR: IIv3FE73gPTs/Q+5ELdW4MGfoGtSnoW5zIK59DW3ZgjMseBTrSLt6kLfslueMwuyJ6BSEaavk2
+ TFxnP3TbKXCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="326653118"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Aug 2020 15:36:06 -0700
+Received: from [10.254.81.180] (kliang2-MOBL.ccr.corp.intel.com [10.254.81.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 5D08F580785;
+        Mon, 10 Aug 2020 15:36:05 -0700 (PDT)
+Subject: Re: [PATCH V6 01/16] perf/core: Add PERF_SAMPLE_DATA_PAGE_SIZE
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, eranian@google.com, ak@linux.intel.com,
+        dave.hansen@intel.com, kirill.shutemov@linux.intel.com
+References: <20200810212436.8026-1-kan.liang@linux.intel.com>
+ <20200810212436.8026-2-kan.liang@linux.intel.com>
+ <20200810213909.GJ3982@worktop.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <719f19f7-a368-7a5c-7e08-84deafbf8473@linux.intel.com>
+Date:   Mon, 10 Aug 2020 18:36:03 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200730205112.2099429-1-ndesaulniers@google.com>
- <20200730205112.2099429-3-ndesaulniers@google.com> <CAN=-Rxty=Ux5rj-VQSZH-ryj1RiNJvy7mRE7uyx_YAndGtcq7Q@mail.gmail.com>
-In-Reply-To: <CAN=-Rxty=Ux5rj-VQSZH-ryj1RiNJvy7mRE7uyx_YAndGtcq7Q@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 10 Aug 2020 15:33:22 -0700
-Message-ID: <CAKwvOdkNLK2cRfY+DA0u3KuY5PuEss5Qox6X3zzpL053pARfrA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: backtrace-clang: add fixup for lr dereference
-To:     Nathan Huckleberry <nhuck15@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Lvqiang Huang <lvqiang.huang@unisoc.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200810213909.GJ3982@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 3:39 PM Nathan Huckleberry <nhuck15@gmail.com> wrote:
->
-> Mostly looks good to me. Just a minor nit.
->
-> On Thu, Jul 30, 2020 at 3:51 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > If the value of the link register is not correct (tail call from asm
-> > that didn't set it, stack corruption, memory no longer mapped), then
-> > using it for an address calculation may trigger an exception.  Without a
-> > fixup handler, this will lead to a panic, which will unwind, which will
-> > trigger the fault repeatedly in an infinite loop.
-> >
-> > We don't observe such failures currently, but we have. Just to be safe,
-> > add a fixup handler here so that at least we don't have an infinite
-> > loop.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: commit 6dc5fd93b2f1 ("ARM: 8900/1: UNWINDER_FRAME_POINTER implementation for Clang")
-> > Reported-by: Miles Chen <miles.chen@mediatek.com>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> >  arch/arm/lib/backtrace-clang.S | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/lib/backtrace-clang.S b/arch/arm/lib/backtrace-clang.S
-> > index 5388ac664c12..40eb2215eaf4 100644
-> > --- a/arch/arm/lib/backtrace-clang.S
-> > +++ b/arch/arm/lib/backtrace-clang.S
-> > @@ -146,7 +146,7 @@ for_each_frame:     tst     frame, mask             @ Check for address exceptions
-> >
-> >                 tst     sv_lr, #0               @ If there's no previous lr,
-> >                 beq     finished_setup          @ we're done.
-> > -               ldr     r0, [sv_lr, #-4]        @ get call instruction
-> > +prev_call:     ldr     r0, [sv_lr, #-4]        @ get call instruction
-> >                 ldr     r3, .Lopcode+4
-> >                 and     r2, r3, r0              @ is this a bl call
-> >                 teq     r2, r3
-> > @@ -206,6 +206,13 @@ finished_setup:
-> >                 mov     r2, frame
-> >                 bl      printk
-> >  no_frame:      ldmfd   sp!, {r4 - r9, fp, pc}
-> > +/*
-> > + * Accessing the address pointed to by the link register triggered an
-> > + * exception, don't try to unwind through it.
-> > + */
-> > +bad_lr:                mov     sv_fp, #0
->
-> It might be nice to emit a warning here since we'll
-> only hit this case if something fishy is going on
-> with the saved lr.
-
-Yeah, something fishy is going on if that ever happens.  Let me create
-a V2 with an additional print.
-
->
-> > +               mov     sv_lr, #0
-> > +               b       finished_setup
-> >  ENDPROC(c_backtrace)
-> >                 .pushsection __ex_table,"a"
-> >                 .align  3
-> > @@ -214,6 +221,7 @@ ENDPROC(c_backtrace)
-> >                 .long   1003b, 1006b
-> >                 .long   1004b, 1006b
-> >                 .long   1005b, 1006b
-> > +               .long   prev_call, bad_lr
-> >                 .popsection
-> >
-> >  .Lbad:         .asciz  "%sBacktrace aborted due to bad frame pointer <%p>\n"
-> > --
-> > 2.28.0.163.g6104cc2f0b6-goog
-> >
->
-> Thanks,
-> Huck
 
 
+On 8/10/2020 5:39 PM, Peter Zijlstra wrote:
+> On Mon, Aug 10, 2020 at 02:24:21PM -0700, Kan Liang wrote:
+>> Current perf can report both virtual addresses and physical addresses,
+>> but not the page size. Without the page size information of the utilized
+>> page, users cannot decide whether to promote/demote large pages to
+>> optimize memory usage.
+>>
+>> Add a new sample type for the data page size.
+>>
+>> Current perf already has a facility to collect data virtual addresses.
+>> A page walker is required to walk the pages tables and calculate the
+>> page size from a given virtual address.
+>>
+>> On some platforms, e.g., X86, the page walker is invoked in an NMI
+>> handler. So the page walker must be IRQ-safe and low overhead. Besides,
+>> the page walker should work for both user and kernel virtual address.
+>> The existing generic page walker, e.g., walk_page_range_novma(), is a
+>> little bit complex and doesn't guarantee the IRQ-safe. The follow_page()
+>> is only for user-virtual address.
+>>
+>> Add a new function perf_get_page_size() to walk the page tables and
+>> calculate the page size. In the function:
+>> - Interrupts have to be disabled to prevent any teardown of the page
+>>    tables.
+>> - The size of a normal page is from the pre-defined page size macros.
+>> - The size of a compound page is retrieved from the helper function,
+>>    page_size().
+>>
+>> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+>>   /* default value for data source */
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index 52ca2093831c..32484accc7a3 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -143,8 +143,9 @@ enum perf_event_sample_format {
+>>   	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
+>>   	PERF_SAMPLE_AUX				= 1U << 20,
+>>   	PERF_SAMPLE_CGROUP			= 1U << 21,
+>> +	PERF_SAMPLE_DATA_PAGE_SIZE		= 1U << 22,
+>>   
+>> -	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
+>> +	PERF_SAMPLE_MAX = 1U << 23,		/* non-ABI */
+>>   
+>>   	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
+>>   };
+> 
+>> @@ -7151,6 +7269,9 @@ void perf_prepare_sample(struct perf_event_header *header,
+>>   	}
+>>   #endif
+>>   
+>> +	if (sample_type & PERF_SAMPLE_DATA_PAGE_SIZE)
+>> +		data->data_page_size = perf_get_page_size(data->addr);
+>> +
+> 
+> We could just require SAMPLE_DATA_PAGE requires SAMPLE_ADDR.
+> 
 
--- 
+If we only require the SAMPLE_DATA_PAGE_SIZE and no SAMPLE_ADDR, the 
+data->addr will be updated implicitly, but the value will not dump to 
+userspace tool. I will add a comment here.
+
 Thanks,
-~Nick Desaulniers
+Kan
