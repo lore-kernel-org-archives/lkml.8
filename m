@@ -2,125 +2,120 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0444EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6CBA206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="jqwS+cN5"
+	by mail.kernel.org (Postfix) with ESMTP id D1AFE2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597053466;
+	bh=Y+KH9N8ktz4rNGDsvRAGiG/Y5k3ax0fEm1fFpk+IFQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DiFBhOuB2ODz0KI8qcKlMvQDDiERv1V6Z0WHYZe4YtHR9B2dJFQghG7HYvLQmd2QA
+	 88o3d+CBeTTGBhg0P9G/CzMBejC1dxkK5MxS+9A/E8GaYp4TfM83XiUYBjeA8sCP4N
+	 lba4EKKJ+Fd77FvFRLO1Bpz6V+MHQ6za20JIqEZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgHJJ5O (ORCPT
+        id S1726688AbgHJJ5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:57:14 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:59274 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbgHJJ5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:57:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1597053434; x=1628589434;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=fgsFSgHthR1f7WWfooMBWx4lK2mZmhBHIFfrqDvnW3A=;
-  b=jqwS+cN5JVZhyhV+0EhC6RZgRcTaMbT+soxl2XDaYbhiP09zCYEKS+BV
-   7itQbwfVpF8cIK2PdiSI2CnmLQXuK/IhMj/w5pK2zqGB1t22N/uzJoOiv
-   HV6KqJrx54s5zrQ0JdNsO3PIGBz96/go/nimdRrROHxlb8aCh+sv8Ux4m
-   U=;
-IronPort-SDR: oDdE0v8ZPK5Lkk7yWvz3oUN9YB/R8fiwPqgiI3yviaucVfVSB0zLRy1fm+BvPtfKkoVYNjbbS5
- zt7lO9XkxXog==
-X-IronPort-AV: E=Sophos;i="5.75,457,1589241600"; 
-   d="scan'208";a="66803826"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Aug 2020 09:57:11 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id BDB1EA1DD4;
-        Mon, 10 Aug 2020 09:57:09 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 10 Aug 2020 09:57:09 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.71) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 10 Aug 2020 09:57:04 +0000
-Subject: Re: [PATCH v6 10/18] nitro_enclaves: Add logic for getting the
- enclave image load info
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Karen Noel <knoel@redhat.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>
-References: <20200805091017.86203-1-andraprs@amazon.com>
- <20200805091017.86203-11-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <70ec8010-cb3b-50a8-5472-a96c5aa2cf8d@amazon.de>
-Date:   Mon, 10 Aug 2020 11:57:02 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Mon, 10 Aug 2020 05:57:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbgHJJ5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:57:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCBB4206B5;
+        Mon, 10 Aug 2020 09:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597053463;
+        bh=Y+KH9N8ktz4rNGDsvRAGiG/Y5k3ax0fEm1fFpk+IFQ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wT3SsHtloU7F1ectB3ldMXM84mI94tNU+Sfk4CxdAcmKSlu4oqD2YvCA0+gDbt4xj
+         OMk7KaVKLuFAJmITQPgDji0LosJc+V5tEEHKXI33HbCT5p5cuFIdAsWQC+OEPfpkY8
+         Vx84Hw2CKF8xqJJf1Q/t6iWBfgUnMj2X0HbwkykU=
+Date:   Mon, 10 Aug 2020 11:57:54 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>, balbi@kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexander Potapenko <glider@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KMSAN: kernel-infoleak in raw_ioctl
+Message-ID: <20200810095754.GA2404978@kroah.com>
+References: <000000000000ce85c405ac744ff6@google.com>
+ <20200810074706.GD1529187@kroah.com>
+ <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
+ <20200810090833.GA2271719@kroah.com>
+ <20200810091538.GA2273701@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200805091017.86203-11-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.71]
-X-ClientProxiedBy: EX13D23UWC002.ant.amazon.com (10.43.162.22) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810091538.GA2273701@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 10, 2020 at 11:15:38AM +0200, Greg KH wrote:
+> On Mon, Aug 10, 2020 at 11:08:33AM +0200, Greg KH wrote:
+> > On Mon, Aug 10, 2020 at 11:00:07AM +0200, Dmitry Vyukov wrote:
+> > > On Mon, Aug 10, 2020 at 9:46 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Sun, Aug 09, 2020 at 09:27:18AM -0700, syzbot wrote:
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following issue on:
+> > > > >
+> > > > > HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+> > > > > git tree:       https://github.com/google/kmsan.git master
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=141eb8b2900000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a7e220df5a81d1ab400e
+> > > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > > > userspace arch: i386
+> > > > >
+> > > > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > >
+> > > > The irony of a kernel module written for syzbot testing, causing syzbot
+> > > > reports....
+> > > 
+> > > The raw gadget and KCOV are also kernel code and subject to all the
+> > > same rules as any other kernel code from syzkaller point of view.
+> > > 
+> > > But I think the root cause of this bug is the origin of the uninitialized-ness:
+> > > 
+> > > Local variable ----buf.i@asix_get_phy_addr created at:
+> > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+> > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+> > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
+> > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+> > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+> > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
+> > 
+> > read buffers sent to USB hardware are ment to be filled in by the
+> > hardware with the data received from it, we do not zero-out those
+> > buffers before passing the pointer there.
+> > 
+> > Perhaps with testing frameworks like the raw usb controller, that might
+> > cause a number of false-positives to happen?
+> 
+> Ah, wait, that buffer is coming from the stack, which isn't allowed in
+> the first place :(
+> 
+> So that should be changed anyway to a dynamic allocation, I'll go write
+> up a patch...
 
+Nope, my fault, the data is not coming from the stack, so all is good.
 
-On 05.08.20 11:10, Andra Paraschiv wrote:
-> Before setting the memory regions for the enclave, the enclave image
-> needs to be placed in memory. After the memory regions are set, this
-> memory cannot be used anymore by the VM, being carved out.
-> =
+thanks,
 
-> Add ioctl command logic to get the offset in enclave memory where to
-> place the enclave image. Then the user space tooling copies the enclave
-> image in the memory using the given memory offset.
-> =
-
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-
-Reviewed-by: Alexander Graf <graf@amazon.com>
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+greg k-h
