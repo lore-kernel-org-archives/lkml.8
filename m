@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF27CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A2E2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8D822BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073730;
-	bh=huoOYfcKyaUOK8hL/8fSmuObPoGf1DDnVZ56Nnv6+pE=;
+	s=default; t=1597073737;
+	bh=eFV6/1DVxbuvKgaNF9KshFIO2aypYMCe3MCJB+UeSnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OE52ocntidg8g8bWOa5rCyvEaWcDIag6abNMH8XXntPQOpvRivzZN187HGP2A3npG
-	 OJ5fUytK39emCPjDpMBQLCJpZSxIKm9jlNwuatNJUgdCWxBwre2DqoQ42djJKtLHPm
-	 IcKojAJGQJba6eNown6lVK0YtHsoNjYabjqCq20w=
+	b=DELz9s4wLqk+kWxgyFXH1Z+YPsrYiU9MJxrul8vUEg7HSHdejo8awezq6iL+tsdMC
+	 7EyAHkse+xp5TOBTz/s33/E1RFd2N9J/TBJHROpShmzteAEDxUwTJk4hIww1u/8WXu
+	 Y/8PRsRd0KfrlCPV8M748lIbrDbgghOaQ3z9J15E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgHJPf3 (ORCPT
+        id S1729116AbgHJPff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbgHJP2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:16 -0400
+        id S1728106AbgHJP14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 189CC22CF7;
-        Mon, 10 Aug 2020 15:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 153DC22CF7;
+        Mon, 10 Aug 2020 15:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073295;
-        bh=huoOYfcKyaUOK8hL/8fSmuObPoGf1DDnVZ56Nnv6+pE=;
+        s=default; t=1597073275;
+        bh=eFV6/1DVxbuvKgaNF9KshFIO2aypYMCe3MCJB+UeSnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCtTVjY2e6vXTjOX6FTnU99PpcuPcvoz2HxzSARFl6cAzOZP10vYw2smva5ux87rP
-         b212KqnyASa5Ua2F2m4xrBGZUz6z4RH13Fpt1Zv1rNo52KkiD7wqCWsKqsjKs+iOjK
-         9kbD73J9XTP2h91K2OrZ+NnqpdqKCHdYH3aJylbc=
+        b=Nxuv4+tVlj30SIrW9JNRWUYqwUDfZXN3PAkSGLGudHo7d+DmyFpL5jt2jaGSa2uo0
+         BppYIxFSZCA9N18YtaqjmyEKFtMiRWPr420mQoGFUAc2aGqBXcTE7Wqmb1tblf5qDL
+         0sO71FW7ulY03DEdmuNNRfFtM5yVNtDDeKAJe/l4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Landen Chao <landen.chao@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 53/67] net: ethernet: mtk_eth_soc: fix MTU warnings
-Date:   Mon, 10 Aug 2020 17:21:40 +0200
-Message-Id: <20200810151812.102839623@linuxfoundation.org>
+        stable@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 5.4 47/67] xattr: break delegations in {set,remove}xattr
+Date:   Mon, 10 Aug 2020 17:21:34 +0200
+Message-Id: <20200810151811.758822254@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -61,38 +61,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Landen Chao <landen.chao@mediatek.com>
+From: Frank van der Linden <fllinden@amazon.com>
 
-[ Upstream commit 555a893303872e044fb86f0a5834ce78d41ad2e2 ]
+commit 08b5d5014a27e717826999ad20e394a8811aae92 upstream.
 
-in recent kernel versions there are warnings about incorrect MTU size
-like these:
+set/removexattr on an exported filesystem should break NFS delegations.
+This is true in general, but also for the upcoming support for
+RFC 8726 (NFSv4 extended attribute support). Make sure that they do.
 
-eth0: mtu greater than device maximum
-mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA overhead
+Additionally, they need to grow a _locked variant, since callers might
+call this with i_rwsem held (like the NFS server code).
 
-Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
-Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the MTU")
-Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
-Signed-off-by: Landen Chao <landen.chao@mediatek.com>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org # v4.9+
+Cc: linux-fsdevel@vger.kernel.org
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2878,6 +2878,8 @@ static int mtk_add_mac(struct mtk_eth *e
- 	eth->netdev[id]->irq = eth->irq[0];
- 	eth->netdev[id]->dev.of_node = np;
+---
+ fs/xattr.c            |   84 +++++++++++++++++++++++++++++++++++++++++++++-----
+ include/linux/xattr.h |    2 +
+ 2 files changed, 79 insertions(+), 7 deletions(-)
+
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -204,10 +204,22 @@ int __vfs_setxattr_noperm(struct dentry
+ 	return error;
+ }
  
-+	eth->netdev[id]->max_mtu = MTK_MAX_RX_LENGTH - MTK_RX_ETH_HLEN;
+-
++/**
++ * __vfs_setxattr_locked: set an extended attribute while holding the inode
++ * lock
++ *
++ *  @dentry - object to perform setxattr on
++ *  @name - xattr name to set
++ *  @value - value to set @name to
++ *  @size - size of @value
++ *  @flags - flags to pass into filesystem operations
++ *  @delegated_inode - on return, will contain an inode pointer that
++ *  a delegation was broken on, NULL if none.
++ */
+ int
+-vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
+-		size_t size, int flags)
++__vfs_setxattr_locked(struct dentry *dentry, const char *name,
++		const void *value, size_t size, int flags,
++		struct inode **delegated_inode)
+ {
+ 	struct inode *inode = dentry->d_inode;
+ 	int error;
+@@ -216,15 +228,40 @@ vfs_setxattr(struct dentry *dentry, cons
+ 	if (error)
+ 		return error;
+ 
+-	inode_lock(inode);
+ 	error = security_inode_setxattr(dentry, name, value, size, flags);
+ 	if (error)
+ 		goto out;
+ 
++	error = try_break_deleg(inode, delegated_inode);
++	if (error)
++		goto out;
 +
- 	return 0;
+ 	error = __vfs_setxattr_noperm(dentry, name, value, size, flags);
  
- free_netdev:
+ out:
++	return error;
++}
++EXPORT_SYMBOL_GPL(__vfs_setxattr_locked);
++
++int
++vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
++		size_t size, int flags)
++{
++	struct inode *inode = dentry->d_inode;
++	struct inode *delegated_inode = NULL;
++	int error;
++
++retry_deleg:
++	inode_lock(inode);
++	error = __vfs_setxattr_locked(dentry, name, value, size, flags,
++	    &delegated_inode);
+ 	inode_unlock(inode);
++
++	if (delegated_inode) {
++		error = break_deleg_wait(&delegated_inode);
++		if (!error)
++			goto retry_deleg;
++	}
+ 	return error;
+ }
+ EXPORT_SYMBOL_GPL(vfs_setxattr);
+@@ -378,8 +415,18 @@ __vfs_removexattr(struct dentry *dentry,
+ }
+ EXPORT_SYMBOL(__vfs_removexattr);
+ 
++/**
++ * __vfs_removexattr_locked: set an extended attribute while holding the inode
++ * lock
++ *
++ *  @dentry - object to perform setxattr on
++ *  @name - name of xattr to remove
++ *  @delegated_inode - on return, will contain an inode pointer that
++ *  a delegation was broken on, NULL if none.
++ */
+ int
+-vfs_removexattr(struct dentry *dentry, const char *name)
++__vfs_removexattr_locked(struct dentry *dentry, const char *name,
++		struct inode **delegated_inode)
+ {
+ 	struct inode *inode = dentry->d_inode;
+ 	int error;
+@@ -388,11 +435,14 @@ vfs_removexattr(struct dentry *dentry, c
+ 	if (error)
+ 		return error;
+ 
+-	inode_lock(inode);
+ 	error = security_inode_removexattr(dentry, name);
+ 	if (error)
+ 		goto out;
+ 
++	error = try_break_deleg(inode, delegated_inode);
++	if (error)
++		goto out;
++
+ 	error = __vfs_removexattr(dentry, name);
+ 
+ 	if (!error) {
+@@ -401,12 +451,32 @@ vfs_removexattr(struct dentry *dentry, c
+ 	}
+ 
+ out:
++	return error;
++}
++EXPORT_SYMBOL_GPL(__vfs_removexattr_locked);
++
++int
++vfs_removexattr(struct dentry *dentry, const char *name)
++{
++	struct inode *inode = dentry->d_inode;
++	struct inode *delegated_inode = NULL;
++	int error;
++
++retry_deleg:
++	inode_lock(inode);
++	error = __vfs_removexattr_locked(dentry, name, &delegated_inode);
+ 	inode_unlock(inode);
++
++	if (delegated_inode) {
++		error = break_deleg_wait(&delegated_inode);
++		if (!error)
++			goto retry_deleg;
++	}
++
+ 	return error;
+ }
+ EXPORT_SYMBOL_GPL(vfs_removexattr);
+ 
+-
+ /*
+  * Extended attribute SET operations
+  */
+--- a/include/linux/xattr.h
++++ b/include/linux/xattr.h
+@@ -51,8 +51,10 @@ ssize_t vfs_getxattr(struct dentry *, co
+ ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
+ int __vfs_setxattr(struct dentry *, struct inode *, const char *, const void *, size_t, int);
+ int __vfs_setxattr_noperm(struct dentry *, const char *, const void *, size_t, int);
++int __vfs_setxattr_locked(struct dentry *, const char *, const void *, size_t, int, struct inode **);
+ int vfs_setxattr(struct dentry *, const char *, const void *, size_t, int);
+ int __vfs_removexattr(struct dentry *, const char *);
++int __vfs_removexattr_locked(struct dentry *, const char *, struct inode **);
+ int vfs_removexattr(struct dentry *, const char *);
+ 
+ ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size);
 
 
