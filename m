@@ -2,88 +2,111 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4374C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD5B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03CD206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:09:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGgTbNUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgHJJIs (ORCPT
+        id S1726687AbgHJJJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:08:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52743 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgHJJIr (ORCPT
+        Mon, 10 Aug 2020 05:09:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgHJJJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:08:47 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k53nP-0002Kl-HR; Mon, 10 Aug 2020 09:08:43 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: csiostor: fix fix spelling mistake "couldnt" -> "couldn't"
-Date:   Mon, 10 Aug 2020 10:08:43 +0100
-Message-Id: <20200810090843.49553-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 10 Aug 2020 05:09:26 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A6FC061756;
+        Mon, 10 Aug 2020 02:09:26 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id k4so8277384oik.2;
+        Mon, 10 Aug 2020 02:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2ZxKqwz9lSZTNdM2JRyLmnn11T86+ZQVjo9KIOGVrW4=;
+        b=eGgTbNUubrz/u1OgSKbdEfsjnghjDcxJZk0fj4J3j12p6Zx9zpUoyQKXdeAWpAZDEc
+         cBDLcDjgyf4U1xRh2+1Bwqv8PWULp8GObJ6AMcCbZbXf0cM83BtqPnMbg17YRq3lGo0S
+         w2Ak9UqbwCoQwVUsSzUlWaNcScDVbAwRgY9YbswxyOLqvIBTl0Vo6EJgcRO3KbX0xLgI
+         ROCYhUiDMmw3AL6a6gu2BtqpudvPdFTKcZdDCcVd2gIhCZfoRMxwO8suEcACaMyaHFW6
+         kJZ2+5XuFBSM3E+iu48kiaO1S9fsswNJJSC4M9K7nw/rHabYR2eqgBNdJodnc7BZCITM
+         10yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2ZxKqwz9lSZTNdM2JRyLmnn11T86+ZQVjo9KIOGVrW4=;
+        b=Xxg6hpPOOr0PIQawBBAmVfu50jDMIXvGYoiRiSH9bSygOLsa0OP6L12RJp6mRxQk7K
+         Lkbsfgb8vvlASIHldNQX7tUXZKQuC7vsceKFJA2Uft4qgGtEWPWVZKpHQiQxaNb0a/8c
+         OyWseqfwap6LuYER9hzmzt9jzBnbaxrSbKqPyhUI5AQL2claa1A3VI8raU0lVq8ZHCgr
+         XuZLXSUvyAVF/X+IYGS5+z20yJvJSa6sCiCJF/y3KsAzZy0+PHItCR3+IXL90blAXO5B
+         /ra3TwycR2Nk1yWfxikiZ0O7IV7h4OH7kgdOIt/wcwaEu0OLj97uJAxYLfChMT9sfbxa
+         w1Bw==
+X-Gm-Message-State: AOAM530KdheUXm7rPvy60epJnIjjxWqhFJz6o7vFlagVYscbIYAvWrTx
+        qbl62VQnplhYD4yL///XePFPbHl7fpWF5IqZ0ZE=
+X-Google-Smtp-Source: ABdhPJwfhjPB+jeMEcc887Gg1iNHtrWt6npYussAD28jb9UDfIo8XUrJcs4DK8UKQPtVyMqBL+ASS7uym4zCva59C24=
+X-Received: by 2002:aca:4f52:: with SMTP id d79mr25847oib.141.1597050565914;
+ Mon, 10 Aug 2020 02:09:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <1596521448-4010-1-git-send-email-wanpengli@tencent.com> <20200804211914.GB31916@linux.intel.com>
+In-Reply-To: <20200804211914.GB31916@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 10 Aug 2020 17:09:15 +0800
+Message-ID: <CANRm+CzfLYKUkdWOsFdXL+M1ZFcn_pGPzKuOXAEabEySatcFkA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: LAPIC: Return 0 when getting the tscdeadline
+ timer if the lapic is hw disabled
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Wed, 5 Aug 2020 at 05:19, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, Aug 04, 2020 at 02:10:47PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Return 0 when getting the tscdeadline timer if the lapic is hw disabled
+> >
+> > Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/lapic.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index cfb8504..d89ab48 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -2182,7 +2182,7 @@ u64 kvm_get_lapic_tscdeadline_msr(struct kvm_vcpu *vcpu)
+> >  {
+> >       struct kvm_lapic *apic = vcpu->arch.apic;
+> >
+> > -     if (!lapic_in_kernel(vcpu) ||
+> > +     if (!kvm_apic_present(vcpu) ||
+> >               !apic_lvtt_tscdeadline(apic))
+>
+> Paolo, want want to fix up the indentation when applying?
+>
+>         if (!kvm_apic_present(vcpu) || !apic_lvtt_tscdeadline(apic)
 
-There are spelling mistakes in two comments and a csio_err error
-message. Fix these.
+Agreed, Paolo do you need I send another version or you can fix up
+when applying?
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/csiostor/csio_scsi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/csiostor/csio_scsi.c b/drivers/scsi/csiostor/csio_scsi.c
-index 00cf33573136..55e74da2f3cb 100644
---- a/drivers/scsi/csiostor/csio_scsi.c
-+++ b/drivers/scsi/csiostor/csio_scsi.c
-@@ -933,14 +933,14 @@ csio_scsis_aborting(struct csio_ioreq *req, enum csio_scsi_ev evt)
- 		 *    abort for that I/O by the FW crossed each other.
- 		 *    The FW returned FW_EINVAL. The original I/O would have
- 		 *    returned with FW_SUCCESS or any other SCSI error.
--		 * 3. The FW couldnt sent the abort out on the wire, as there
-+		 * 3. The FW couldn't sent the abort out on the wire, as there
- 		 *    was an I-T nexus loss (link down, remote device logged
- 		 *    out etc). FW sent back an appropriate IT nexus loss status
- 		 *    for the abort.
- 		 * 4. FW sent an abort, but abort timed out (remote device
- 		 *    didnt respond). FW replied back with
- 		 *    FW_SCSI_ABORT_TIMEDOUT.
--		 * 5. FW couldnt genuinely abort the request for some reason,
-+		 * 5. FW couldn't genuinely abort the request for some reason,
- 		 *    and sent us an error.
- 		 *
- 		 * The first 3 scenarios are treated as  succesful abort
-@@ -1859,7 +1859,7 @@ csio_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmnd)
- 	spin_unlock_irqrestore(&hw->lock, flags);
- 
- 	if (retval != 0) {
--		csio_err(hw, "ioreq: %p couldnt be started, status:%d\n",
-+		csio_err(hw, "ioreq: %p couldn't be started, status:%d\n",
- 			 ioreq, retval);
- 		CSIO_INC_STATS(scsim, n_busy_error);
- 		goto err_put_req;
--- 
-2.27.0
-
+    Wanpeng
