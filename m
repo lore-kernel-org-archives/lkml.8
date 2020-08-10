@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A689C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A13C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D82207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E68207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086940;
-	bh=dFDUeVvVdY8Fs9I9C6hZNkObUoIHi4TQ5HEz4oU+ZtI=;
+	s=default; t=1597086945;
+	bh=HC8oHq7fJG1RBCuzDFQfpZGuk2RXpAtpBuCpvgHUtvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/GvRa0qF6/+eeqadjKreun4EV6RgfNkygl5cM3DSSLM68Bj1j8fzALrXtmmXQbMj
-	 7fWZ0WSdSnKOXhpuQLcS4KpACjCGfs1x9lWQMrXNhGoukqGDNICt0a1K6VDlYOtkyT
-	 LwfNJq/3jGLVDgU/g2EcqliaR3+HlplTwNfkCYyY=
+	b=ZSPC/+cUuebYj0pXmFGbvEJEe8UFQOwKl8zDGakHxazy2LHaiVFcfv3tsahepMDXL
+	 7irAk934gYWWYQFWE9KvBZRAz/ARx/0P12HHq2ReJnsNPwLFIrJClUgyVIZUxE/nHe
+	 EfUb3ZkfQCCHQh/fv1V0AndkMP+CQAzbH6w47pYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgHJTPX (ORCPT
+        id S1730213AbgHJTPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47830 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729005AbgHJTPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:15:03 -0400
+        id S1730164AbgHJTPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:15:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FA6222B49;
-        Mon, 10 Aug 2020 19:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B7E122BEB;
+        Mon, 10 Aug 2020 19:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086902;
-        bh=dFDUeVvVdY8Fs9I9C6hZNkObUoIHi4TQ5HEz4oU+ZtI=;
+        s=default; t=1597086906;
+        bh=HC8oHq7fJG1RBCuzDFQfpZGuk2RXpAtpBuCpvgHUtvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1UPjAqscrKwh2pGgBImSwrnCYG9rtMuEmJ4RD4SfB8Iv+vr6/0VPYcte0rAYc8t6l
-         psdHMYsO6CLRNKrUc1HO13cC+swEdBaAG5N7vJ9EN7/nuH2rOm3/XD2Tka9fmIwjhW
-         1J1G68aKWhz1GyZBZaWrmVGs6mTp6QwWdTlVbr0g=
+        b=oiChpJ/+05LgzxQPGLsm1FgYJMUH3/D7fIGhGHzicl+Rg5AFG4IPSFEnFAF86O3tI
+         1jSkKcT1gCk9i+n8w/38W/aEFz8HzrUBtuo6eKXt4WiIBXfRFsLKALwJNHKMEjAriJ
+         Qz4t/zUSkI40cLndB0nj2/QdVztqRGqpGGuE49tg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sasi Kumar <sasi.kumar@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/16] bdc: Fix bug causing crash after multiple disconnects
-Date:   Mon, 10 Aug 2020 15:14:39 -0400
-Message-Id: <20200810191443.3795581-12-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Hannes Reinecke <hare@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 15/16] bcache: fix super block seq numbers comparision in register_cache_set()
+Date:   Mon, 10 Aug 2020 15:14:42 -0400
+Message-Id: <20200810191443.3795581-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191443.3795581-1-sashal@kernel.org>
 References: <20200810191443.3795581-1-sashal@kernel.org>
@@ -61,90 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sasi Kumar <sasi.kumar@broadcom.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit a95bdfd22076497288868c028619bc5995f5cc7f ]
+[ Upstream commit 117f636ea695270fe492d0c0c9dfadc7a662af47 ]
 
-Multiple connects/disconnects can cause a crash on the second
-disconnect. The driver had a problem where it would try to send
-endpoint commands after it was disconnected which is not allowed
-by the hardware. The fix is to only allow the endpoint commands
-when the endpoint is connected. This will also fix issues that
-showed up when using configfs to create gadgets.
+In register_cache_set(), c is pointer to struct cache_set, and ca is
+pointer to struct cache, if ca->sb.seq > c->sb.seq, it means this
+registering cache has up to date version and other members, the in-
+memory version and other members should be updated to the newer value.
 
-Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+But current implementation makes a cache set only has a single cache
+device, so the above assumption works well except for a special case.
+The execption is when a cache device new created and both ca->sb.seq and
+c->sb.seq are 0, because the super block is never flushed out yet. In
+the location for the following if() check,
+2156         if (ca->sb.seq > c->sb.seq) {
+2157                 c->sb.version           = ca->sb.version;
+2158                 memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
+2159                 c->sb.flags             = ca->sb.flags;
+2160                 c->sb.seq               = ca->sb.seq;
+2161                 pr_debug("set version = %llu\n", c->sb.version);
+2162         }
+c->sb.version is not initialized yet and valued 0. When ca->sb.seq is 0,
+the if() check will fail (because both values are 0), and the cache set
+version, set_uuid, flags and seq won't be updated.
+
+The above problem is hiden for current code, because the bucket size is
+compatible among different super block version. And the next time when
+running cache set again, ca->sb.seq will be larger than 0 and cache set
+super block version will be updated properly.
+
+But if the large bucket feature is enabled,  sb->bucket_size is the low
+16bits of the bucket size. For a power of 2 value, when the actual
+bucket size exceeds 16bit width, sb->bucket_size will always be 0. Then
+read_super_common() will fail because the if() check to
+is_power_of_2(sb->bucket_size) is false. This is how the long time
+hidden bug is triggered.
+
+This patch modifies the if() check to the following way,
+2156         if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
+Then cache set's version, set_uuid, flags and seq will always be updated
+corectly including for a new created cache device.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
- drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/md/bcache/super.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index e9bd8d4abca00..f09a74d79c9eb 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -286,6 +286,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 	 * in that case reinit is passed as 1
- 	 */
- 	if (reinit) {
-+		int i;
- 		/* Enable interrupts */
- 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
- 		temp |= BDC_GIE;
-@@ -295,6 +296,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 		/* Initialize SRR to 0 */
- 		memset(bdc->srr.sr_bds, 0,
- 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
-+		/* clear ep flags to avoid post disconnect stops/deconfigs */
-+		for (i = 1; i < bdc->num_eps; ++i)
-+			bdc->bdc_ep_array[i]->flags = 0;
- 	} else {
- 		/* One time initiaization only */
- 		/* Enable status report function pointers */
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index 3a65272fbed86..9f5f18891ba85 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -621,7 +621,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
- 	}
- 	bdc_dbg_bd_list(bdc, ep);
- 	/* only for ep0: config ep is called for ep0 from connect event */
--	ep->flags |= BDC_EP_ENABLED;
- 	if (ep->ep_num == 1)
- 		return ret;
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index df8f1e69077f6..23ffd4469dabb 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1778,7 +1778,14 @@ static const char *register_cache_set(struct cache *ca)
+ 	    sysfs_create_link(&c->kobj, &ca->kobj, buf))
+ 		goto err;
  
-@@ -767,10 +766,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
- 					__func__, ep->name, start_bdi, end_bdi);
- 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
- 						ep, (void *)ep->usb_ep.desc);
--	/* Stop the ep to see where the HW is ? */
--	ret = bdc_stop_ep(bdc, ep->ep_num);
--	/* if there is an issue with stopping ep, then no need to go further */
--	if (ret)
-+	/* if still connected, stop the ep to see where the HW is ? */
-+	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
-+		ret = bdc_stop_ep(bdc, ep->ep_num);
-+		/* if there is an issue, then no need to go further */
-+		if (ret)
-+			return 0;
-+	} else
- 		return 0;
- 
- 	/*
-@@ -1921,7 +1923,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
- 		__func__, ep->name, ep->flags);
- 
- 	if (!(ep->flags & BDC_EP_ENABLED)) {
--		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
-+		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
-+			dev_warn(bdc->dev, "%s is already disabled\n",
-+				 ep->name);
- 		return 0;
- 	}
- 	spin_lock_irqsave(&bdc->lock, flags);
+-	if (ca->sb.seq > c->sb.seq) {
++	/*
++	 * A special case is both ca->sb.seq and c->sb.seq are 0,
++	 * such condition happens on a new created cache device whose
++	 * super block is never flushed yet. In this case c->sb.version
++	 * and other members should be updated too, otherwise we will
++	 * have a mistaken super block version in cache set.
++	 */
++	if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
+ 		c->sb.version		= ca->sb.version;
+ 		memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
+ 		c->sb.flags             = ca->sb.flags;
 -- 
 2.25.1
 
