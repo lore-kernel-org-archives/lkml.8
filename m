@@ -2,265 +2,95 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D49DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2FCF20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DB820678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ND7pd+We"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SDrvFkZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHJOFh (ORCPT
+        id S1727000AbgHJOF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:05:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26355 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726888AbgHJOF2 (ORCPT
+        Mon, 10 Aug 2020 10:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726888AbgHJOF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:05:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597068326;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ye/STDc8dVw5OUpY6piPnmPc1y/hoA9IwVw3n1eaj/I=;
-        b=ND7pd+WeH//mBFyCYUZtTdc/IWAhBIV0EA1PyEEKdE7rrfNnK5wSNQOfQz0U8n900gOTxb
-        +aWJ+m9x75FQO4J8W9QOiOJyeCA/Tb18f3iO/azp5v8bPmV53++4spQPRMXwELn2UyOnJH
-        zRA3S2Mr0ECoBg2d6Lwg/LuYfKVkGL0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-195-U4D3LQpdOBm8KmeZQGpZgQ-1; Mon, 10 Aug 2020 10:05:22 -0400
-X-MC-Unique: U4D3LQpdOBm8KmeZQGpZgQ-1
-Received: by mail-wr1-f71.google.com with SMTP id w7so4250297wre.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:05:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ye/STDc8dVw5OUpY6piPnmPc1y/hoA9IwVw3n1eaj/I=;
-        b=Qj5FZgvQjhBZYZ4/lRjdxZGDFV7nuyEPnBibF3LHmAIoPRPaJQTk2Sz5RHyYc0ftM5
-         TyOONhhr5m1CWsby4N8tz3m/t0OoiczAxwMdnDz0vEWkIi99Ng3PkN0TuH0JHZda2uTU
-         O3kdMcjIsCcUi8xupLNhLaIPvjkLvzJNs51fI9qCWIOobnsDl+A44SmefRZiqb/VaOLW
-         hDw6W9CpwTUoziyIl6qYPSyheb1+w//sjnd6dXqCc5RhfXESWFo1p8w07TKipZjCkDpB
-         hq1yMN+6q0ZijEjh/HlSiEzjPZb5sv+6HNYDulG7YafxNfPS2DDZxHttycfE/vjAwNW5
-         Op+A==
-X-Gm-Message-State: AOAM532QCLxctvQVd/z1rLRyYClbm6iDqkFUuUsuyTV+20WXr+7ndIvF
-        1bIIMxycQ3ugfbo4PEsKZ6xhHnzvRbMctICcTb8Mx6A3pdCrwLW1g6NO6EOabwepRsRrKpY/ber
-        vUjH2K+6R9X31ITY/bl1DG4pB
-X-Received: by 2002:a1c:c1:: with SMTP id 184mr27136033wma.105.1597068321550;
-        Mon, 10 Aug 2020 07:05:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzorEFqs/XOV7ysqCmHgKLQs9ZocL0F0fNY630G3930foEbfx5F1jUlfhfk8b3zLOAFgTSQyg==
-X-Received: by 2002:a1c:c1:: with SMTP id 184mr27136011wma.105.1597068321319;
-        Mon, 10 Aug 2020 07:05:21 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-0-181.red.bezeqint.net. [79.180.0.181])
-        by smtp.gmail.com with ESMTPSA id r3sm21185627wro.1.2020.08.10.07.05.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 07:05:20 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 10:05:17 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kbuild test robot <lkp@intel.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 04/20] virtio: Implement get_shm_region for PCI
- transport
-Message-ID: <20200810100327-mutt-send-email-mst@kernel.org>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-5-vgoyal@redhat.com>
+        Mon, 10 Aug 2020 10:05:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE1DDC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZBc+/YOmjIeOWsaVl88aN/V8Z9J1FCPxp/62QmQAdJY=; b=SDrvFkZbH4Sie6NNE30e4trK6Q
+        qfPOYOmzAR4zUXiaxzxZy50j0k07m78fl8nNzTfDp1Z6nnCJTq9XyFgY49ujw5w20tubOrqNFArCD
+        C5B/WrckmaKiNoTLKy1zqN9G9lr3TDtpcT41u1pwGscBfKP+pBGsPxfkgTCTw+W9Nu4F0/zO3Fmpt
+        Trx6QeEwP8gzw/mz7lPOrzm34wF8gdUeOVqvbikVzJO4cz4WNOyWw+7OVmchqOET3/Q60TC9yMnRU
+        AFqxwnJm7hS3jGZNxroG9rajZVlyUh4cd87zSoPGRIMv+2lnpyQDKX6Nwg9/XqnBHCQ0LPUe/HkK6
+        WTyx66nA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k58QR-0002Oc-7j; Mon, 10 Aug 2020 14:05:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C30DA300DAE;
+        Mon, 10 Aug 2020 16:05:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 95AC5200D415D; Mon, 10 Aug 2020 16:05:15 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 16:05:15 +0200
+From:   peterz@infradead.org
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, vincent.guittot@linaro.org, mgorman@suse.de,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        patrick.bellasi@matbug.com, tglx@linutronix.de, rostedt@goodmis.org
+Subject: Re: [PATCH] sched/fair: Fix wrong negative conversion in
+ find_energy_efficient_cpu()
+Message-ID: <20200810140515.GY2674@hirez.programming.kicks-ass.net>
+References: <20200810083004.26420-1-lukasz.luba@arm.com>
+ <jhjy2mmhhq6.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807195526.426056-5-vgoyal@redhat.com>
+In-Reply-To: <jhjy2mmhhq6.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 03:55:10PM -0400, Vivek Goyal wrote:
-> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
+On Mon, Aug 10, 2020 at 12:18:25PM +0100, Valentin Schneider wrote:
 > 
-> On PCI the shm regions are found using capability entries;
-> find a region by searching for the capability.
+> On 10/08/20 09:30, Lukasz Luba wrote:
+> > In find_energy_efficient_cpu() 'cpu_cap' could be less that 'util'.
+> > It might be because of RT, DL (so higher sched class than CFS), irq or
+> > thermal pressure signal, which reduce the capacity value.
+> > In such situation the result of 'cpu_cap - util' might be negative but
+> > stored in the unsigned long. Then it might be compared with other unsigned
+> > long when uclamp_rq_util_with() reduced the 'util' such that is passes the
+> > fits_capacity() check.
+> >
+> > Prevent this situation and make the arithmetic more safe.
+> >
+> > Fixes: 1d42509e475cd ("sched/fair: Make EAS wakeup placement consider
+> > uclamp restrictions")
 > 
-> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Cc: kvm@vger.kernel.org
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
-
-> ---
->  drivers/virtio/virtio_pci_modern.c | 96 ++++++++++++++++++++++++++++++
->  include/uapi/linux/virtio_pci.h    | 11 +++-
->  2 files changed, 106 insertions(+), 1 deletion(-)
+> I was going to say that might even go as far back as:
 > 
-> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-> index db93cedd262f..3fc0cd848fe9 100644
-> --- a/drivers/virtio/virtio_pci_modern.c
-> +++ b/drivers/virtio/virtio_pci_modern.c
-> @@ -444,6 +444,100 @@ static void del_vq(struct virtio_pci_vq_info *info)
->  	vring_del_virtqueue(vq);
->  }
->  
-> +static int virtio_pci_find_shm_cap(struct pci_dev *dev, u8 required_id,
-> +				   u8 *bar, u64 *offset, u64 *len)
-> +{
-> +	int pos;
-> +
-> +	for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR); pos > 0;
-> +	     pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
-> +		u8 type, cap_len, id;
-> +		u32 tmp32;
-> +		u64 res_offset, res_length;
-> +
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +							 cfg_type), &type);
-> +		if (type != VIRTIO_PCI_CAP_SHARED_MEMORY_CFG)
-> +			continue;
-> +
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +							 cap_len), &cap_len);
-> +		if (cap_len != sizeof(struct virtio_pci_cap64)) {
-> +			printk(KERN_ERR "%s: shm cap with bad size offset: %d"
-> +			       "size: %d\n", __func__, pos, cap_len);
-> +			continue;
-> +		}
-> +
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +                                                         id), &id);
-> +		if (id != required_id)
-> +			continue;
-> +
-> +		/* Type, and ID match, looks good */
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +							 bar), bar);
-> +
-> +		/* Read the lower 32bit of length and offset */
-> +		pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap,
-> +							  offset), &tmp32);
-> +		res_offset = tmp32;
-> +		pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap,
-> +							  length), &tmp32);
-> +		res_length = tmp32;
-> +
-> +		/* and now the top half */
-> +		pci_read_config_dword(dev,
-> +				      pos + offsetof(struct virtio_pci_cap64,
-> +                                                     offset_hi), &tmp32);
-> +		res_offset |= ((u64)tmp32) << 32;
-> +		pci_read_config_dword(dev,
-> +				      pos + offsetof(struct virtio_pci_cap64,
-> +                                                     length_hi), &tmp32);
-> +		res_length |= ((u64)tmp32) << 32;
-> +
-> +		*offset = res_offset;
-> +		*len = res_length;
-> +
-> +		return pos;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static bool vp_get_shm_region(struct virtio_device *vdev,
-> +			      struct virtio_shm_region *region, u8 id)
-> +{
-> +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-> +	struct pci_dev *pci_dev = vp_dev->pci_dev;
-> +	u8 bar;
-> +	u64 offset, len;
-> +	phys_addr_t phys_addr;
-> +	size_t bar_len;
-> +
-> +	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
-> +		return false;
-> +	}
-> +
-> +	phys_addr = pci_resource_start(pci_dev, bar);
-> +	bar_len = pci_resource_len(pci_dev, bar);
-> +
-> +	if ((offset + len) < offset) {
-> +		dev_err(&pci_dev->dev, "%s: cap offset+len overflow detected\n",
-> +			__func__);
-> +		return false;
-> +	}
-> +
-> +	if (offset + len > bar_len) {
-> +		dev_err(&pci_dev->dev, "%s: bar shorter than cap offset+len\n",
-> +			__func__);
-> +		return false;
-> +	}
-
-Maybe move this to a common header so the checks can be reused by
-other transports? Can be a patch on top.
-
-> +
-> +	region->len = len;
-> +	region->addr = (u64) phys_addr + offset;
-> +
-> +	return true;
-> +}
-> +
->  static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
->  	.get		= NULL,
->  	.set		= NULL,
-> @@ -458,6 +552,7 @@ static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
->  	.bus_name	= vp_bus_name,
->  	.set_vq_affinity = vp_set_vq_affinity,
->  	.get_vq_affinity = vp_get_vq_affinity,
-> +	.get_shm_region  = vp_get_shm_region,
->  };
->  
->  static const struct virtio_config_ops virtio_pci_config_ops = {
-> @@ -474,6 +569,7 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
->  	.bus_name	= vp_bus_name,
->  	.set_vq_affinity = vp_set_vq_affinity,
->  	.get_vq_affinity = vp_get_vq_affinity,
-> +	.get_shm_region  = vp_get_shm_region,
->  };
->  
->  /**
-> diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
-> index 90007a1abcab..fe9f43680a1d 100644
-> --- a/include/uapi/linux/virtio_pci.h
-> +++ b/include/uapi/linux/virtio_pci.h
-> @@ -113,6 +113,8 @@
->  #define VIRTIO_PCI_CAP_DEVICE_CFG	4
->  /* PCI configuration access */
->  #define VIRTIO_PCI_CAP_PCI_CFG		5
-> +/* Additional shared memory capability */
-> +#define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
->  
->  /* This is the PCI capability header: */
->  struct virtio_pci_cap {
-> @@ -121,11 +123,18 @@ struct virtio_pci_cap {
->  	__u8 cap_len;		/* Generic PCI field: capability length */
->  	__u8 cfg_type;		/* Identifies the structure. */
->  	__u8 bar;		/* Where to find it. */
-> -	__u8 padding[3];	/* Pad to full dword. */
-> +	__u8 id;		/* Multiple capabilities of the same type */
-> +	__u8 padding[2];	/* Pad to full dword. */
->  	__le32 offset;		/* Offset within bar. */
->  	__le32 length;		/* Length of the structure, in bytes. */
->  };
->  
-> +struct virtio_pci_cap64 {
-> +       struct virtio_pci_cap cap;
-> +       __le32 offset_hi;             /* Most sig 32 bits of offset */
-> +       __le32 length_hi;             /* Most sig 32 bits of length */
-> +};
-> +
->  struct virtio_pci_notify_cap {
->  	struct virtio_pci_cap cap;
->  	__le32 notify_off_multiplier;	/* Multiplier for queue_notify_off. */
-> -- 
-> 2.25.4
+>   732cd75b8c92 ("sched/fair: Select an energy-efficient CPU on task wake-up")
 > 
+> but we had a capacity fitness check in the right place back then, which I
+> screwed over with that uclamp_rq_util_with() :/
+> 
+> LGTM, thanks for figuring that one out.
+> 
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 
+Thanks guys!
