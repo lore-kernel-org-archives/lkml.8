@@ -2,119 +2,79 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD64B20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:17:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsqQJx/s"
+	by mail.kernel.org (Postfix) with ESMTP id EE7202068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgHJCRu (ORCPT
+        id S1726401AbgHJCWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 22:17:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52743 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726335AbgHJCRu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 22:17:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597025868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R2MnT5kb+LpTU4V51q+u3lkSdfkwWI/8ULUd0tphg34=;
-        b=gsqQJx/s0+FYTig0nF6q4YeYaTSSsNzLsnFm57i7SDxK7IZoOkQ8DMOU1KysJFGREkQS2b
-        y39KHC/d/8FcGkbRg74VDAEEi+fzz6QGBVMiwFHD/BOtlYSI/ltcKgnB0FBtzb8kzGj2ww
-        jGOL4H7s7ZVkf8+3q1PjQeCgcDVgJyQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-ZRZezdKVMHCGu7w2amQERw-1; Sun, 09 Aug 2020 22:17:45 -0400
-X-MC-Unique: ZRZezdKVMHCGu7w2amQERw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1EF1800404;
-        Mon, 10 Aug 2020 02:17:43 +0000 (UTC)
-Received: from localhost (ovpn-12-116.pek2.redhat.com [10.72.12.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 438345F1E4;
-        Mon, 10 Aug 2020 02:17:40 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 10:17:37 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>, mhocko@kernel.org
-Cc:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
- to workaround the nasty free_huge_page
-Message-ID: <20200810021737.GV14854@MiWiFi-R3L-srv>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Sun, 9 Aug 2020 22:22:12 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:53310 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726335AbgHJCWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 22:22:12 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowADX3xtHrzBfDXBoAQ--.23141S2;
+        Mon, 10 Aug 2020 10:21:59 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] mballoc: Replace seq_printf with seq_puts
+Date:   Mon, 10 Aug 2020 02:21:58 +0000
+Message-Id: <20200810022158.9167-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowADX3xtHrzBfDXBoAQ--.23141S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrWry7KFy5Kw4fGr48GFyUWrg_yoWxXrcEka
+        47CF4kuryfJrn2kF1kJrs0yry0v3Z2yF4rJa9rJr43ZF1jga1rZ3s8JFs3Aw4xGr4jkr9r
+        Cw1rWFy8WFWS9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb4AFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
+        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK
+        6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb7DG5
+        UUUUU==
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAwgEA13qZSbaIgABsB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 at 05:12pm, Wei Yang wrote:
-> Let's always increase surplus_huge_pages and so that free_huge_page
-> could decrease it at free time.
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> ---
->  mm/hugetlb.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 1f2010c9dd8d..a0eb81e0e4c5 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1913,21 +1913,19 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
->  		return NULL;
->  
->  	spin_lock(&hugetlb_lock);
-> +
-> +	h->surplus_huge_pages++;
-> +	h->surplus_huge_pages_node[page_to_nid(page)]++;
-> +
->  	/*
->  	 * We could have raced with the pool size change.
->  	 * Double check that and simply deallocate the new page
-> -	 * if we would end up overcommiting the surpluses. Abuse
-> -	 * temporary page to workaround the nasty free_huge_page
-> -	 * codeflow
-> +	 * if we would end up overcommiting the surpluses.
->  	 */
-> -	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
-> -		SetPageHugeTemporary(page);
+seq_puts is a lot cheaper than seq_printf, so use that to print
+literal strings.
 
-Hmm, the temporary page way is taken intentionally in
-commit 9980d744a0428 ("mm, hugetlb: get rid of surplus page accounting tricks").
-From code, this is done inside hugetlb_lock holding, and the code flow
-is straightforward, should be safe. Adding Michal to CC.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ fs/ext4/mballoc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> +	if (h->surplus_huge_pages > h->nr_overcommit_huge_pages) {
->  		spin_unlock(&hugetlb_lock);
->  		put_page(page);
->  		return NULL;
-> -	} else {
-> -		h->surplus_huge_pages++;
-> -		h->surplus_huge_pages_node[page_to_nid(page)]++;
->  	}
->  
->  out_unlock:
-> -- 
-> 2.20.1 (Apple Git-117)
-> 
-> 
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index c0a331e2feb0..77288e549a95 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -2439,7 +2439,7 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
+ 	for (i = 0; i <= 13; i++)
+ 		seq_printf(seq, " %-5u", i <= blocksize_bits + 1 ?
+ 				sg.info.bb_counters[i] : 0);
+-	seq_printf(seq, " ]\n");
++	seq_puts(seq, " ]\n");
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
