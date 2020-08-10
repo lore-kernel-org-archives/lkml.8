@@ -2,53 +2,52 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8446AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A8D822BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0C6207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073737;
-	bh=eFV6/1DVxbuvKgaNF9KshFIO2aypYMCe3MCJB+UeSnk=;
+	s=default; t=1597073743;
+	bh=fcijXXph/Ib20zYb8kxmJy/ligbrXC1nxTA4a9ahIx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DELz9s4wLqk+kWxgyFXH1Z+YPsrYiU9MJxrul8vUEg7HSHdejo8awezq6iL+tsdMC
-	 7EyAHkse+xp5TOBTz/s33/E1RFd2N9J/TBJHROpShmzteAEDxUwTJk4hIww1u/8WXu
-	 Y/8PRsRd0KfrlCPV8M748lIbrDbgghOaQ3z9J15E=
+	b=c22Kz8NE1h8nVC2yAvA+Ggi+uDNmPImo2Kd4I03iLmOITtk6yFGna+Q5bXT5w1zjz
+	 A81Nrpns5UxayIzovHsZ9Kr8lW3wACM1CJE82yaqWyYGdzqpHLig94hIu9odyQTzyo
+	 dNdLFFKG6SotT3Mv09B4SSMbhghkhvXf1TxU+1hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgHJPff (ORCPT
+        id S1729168AbgHJPfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33944 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728106AbgHJP14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:56 -0400
+        id S1728297AbgHJP1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 153DC22CF7;
-        Mon, 10 Aug 2020 15:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2780F22B47;
+        Mon, 10 Aug 2020 15:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073275;
-        bh=eFV6/1DVxbuvKgaNF9KshFIO2aypYMCe3MCJB+UeSnk=;
+        s=default; t=1597073272;
+        bh=fcijXXph/Ib20zYb8kxmJy/ligbrXC1nxTA4a9ahIx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nxuv4+tVlj30SIrW9JNRWUYqwUDfZXN3PAkSGLGudHo7d+DmyFpL5jt2jaGSa2uo0
-         BppYIxFSZCA9N18YtaqjmyEKFtMiRWPr420mQoGFUAc2aGqBXcTE7Wqmb1tblf5qDL
-         0sO71FW7ulY03DEdmuNNRfFtM5yVNtDDeKAJe/l4=
+        b=JoFf7kwFrdieucOdGIqGGq6AO/W/MWD2JbBVhVwDeUp4kPe72fJh9ijG86rsv94vZ
+         ExSmdEpuAvYJcy1PFW8M24/fTLrkJAQhtGoqFvZv6FMc9XLXboxyOsHLQ5yOgzyqkK
+         6gJF12GamlCb1o9FZ5Kgch4xR++fVwkdfZVPW1DQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 5.4 47/67] xattr: break delegations in {set,remove}xattr
-Date:   Mon, 10 Aug 2020 17:21:34 +0200
-Message-Id: <20200810151811.758822254@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 46/67] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
+Date:   Mon, 10 Aug 2020 17:21:33 +0200
+Message-Id: <20200810151811.708790463@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -61,181 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank van der Linden <fllinden@amazon.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit 08b5d5014a27e717826999ad20e394a8811aae92 upstream.
+[ Upstream commit ddc9d357b991838c2d975e8d7e4e9db26f37a7ff ]
 
-set/removexattr on an exported filesystem should break NFS delegations.
-This is true in general, but also for the upcoming support for
-RFC 8726 (NFSv4 extended attribute support). Make sure that they do.
+When a Linux hv_sock app tries to connect to a Service GUID on which no
+host app is listening, a recent host (RS3+) sends a
+CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
+a warning:
 
-Additionally, they need to grow a _locked variant, since callers might
-call this with i_rwsem held (like the NFS server code).
+unknown msgtype=23
+WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
 
-Cc: stable@vger.kernel.org # v4.9+
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Actually Linux can safely ignore the message because the Linux app's
+connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
+and vsock_stream_connect(). We don't bother to make use of the message
+because: 1) it's only supported on recent hosts; 2) a non-trivial effort
+is required to use the message in Linux, but the benefit is small.
 
+So, let's not see the warning by silently ignoring the message.
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xattr.c            |   84 +++++++++++++++++++++++++++++++++++++++++++++-----
- include/linux/xattr.h |    2 +
- 2 files changed, 79 insertions(+), 7 deletions(-)
+ drivers/hv/channel_mgmt.c | 21 +++++++--------------
+ drivers/hv/vmbus_drv.c    |  4 ++++
+ include/linux/hyperv.h    |  2 ++
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -204,10 +204,22 @@ int __vfs_setxattr_noperm(struct dentry
- 	return error;
- }
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index c8296d5e74c32..501c43c5851dc 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -1354,6 +1354,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
+ 	{ CHANNELMSG_19,			0, NULL },
+ 	{ CHANNELMSG_20,			0, NULL },
+ 	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
++	{ CHANNELMSG_22,			0, NULL },
++	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
+ };
  
+ /*
+@@ -1365,25 +1367,16 @@ void vmbus_onmessage(void *context)
+ {
+ 	struct hv_message *msg = context;
+ 	struct vmbus_channel_message_header *hdr;
+-	int size;
+ 
+ 	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
+-	size = msg->header.payload_size;
+ 
+ 	trace_vmbus_on_message(hdr);
+ 
+-	if (hdr->msgtype >= CHANNELMSG_COUNT) {
+-		pr_err("Received invalid channel message type %d size %d\n",
+-			   hdr->msgtype, size);
+-		print_hex_dump_bytes("", DUMP_PREFIX_NONE,
+-				     (unsigned char *)msg->u.payload, size);
+-		return;
+-	}
 -
-+/**
-+ * __vfs_setxattr_locked: set an extended attribute while holding the inode
-+ * lock
-+ *
-+ *  @dentry - object to perform setxattr on
-+ *  @name - xattr name to set
-+ *  @value - value to set @name to
-+ *  @size - size of @value
-+ *  @flags - flags to pass into filesystem operations
-+ *  @delegated_inode - on return, will contain an inode pointer that
-+ *  a delegation was broken on, NULL if none.
-+ */
- int
--vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
--		size_t size, int flags)
-+__vfs_setxattr_locked(struct dentry *dentry, const char *name,
-+		const void *value, size_t size, int flags,
-+		struct inode **delegated_inode)
- {
- 	struct inode *inode = dentry->d_inode;
- 	int error;
-@@ -216,15 +228,40 @@ vfs_setxattr(struct dentry *dentry, cons
- 	if (error)
- 		return error;
- 
--	inode_lock(inode);
- 	error = security_inode_setxattr(dentry, name, value, size, flags);
- 	if (error)
- 		goto out;
- 
-+	error = try_break_deleg(inode, delegated_inode);
-+	if (error)
-+		goto out;
-+
- 	error = __vfs_setxattr_noperm(dentry, name, value, size, flags);
- 
- out:
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(__vfs_setxattr_locked);
-+
-+int
-+vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
-+		size_t size, int flags)
-+{
-+	struct inode *inode = dentry->d_inode;
-+	struct inode *delegated_inode = NULL;
-+	int error;
-+
-+retry_deleg:
-+	inode_lock(inode);
-+	error = __vfs_setxattr_locked(dentry, name, value, size, flags,
-+	    &delegated_inode);
- 	inode_unlock(inode);
-+
-+	if (delegated_inode) {
-+		error = break_deleg_wait(&delegated_inode);
-+		if (!error)
-+			goto retry_deleg;
-+	}
- 	return error;
+-	if (channel_message_table[hdr->msgtype].message_handler)
+-		channel_message_table[hdr->msgtype].message_handler(hdr);
+-	else
+-		pr_err("Unhandled channel message type %d\n", hdr->msgtype);
++	/*
++	 * vmbus_on_msg_dpc() makes sure the hdr->msgtype here can not go
++	 * out of bound and the message_handler pointer can not be NULL.
++	 */
++	channel_message_table[hdr->msgtype].message_handler(hdr);
  }
- EXPORT_SYMBOL_GPL(vfs_setxattr);
-@@ -378,8 +415,18 @@ __vfs_removexattr(struct dentry *dentry,
- }
- EXPORT_SYMBOL(__vfs_removexattr);
  
-+/**
-+ * __vfs_removexattr_locked: set an extended attribute while holding the inode
-+ * lock
-+ *
-+ *  @dentry - object to perform setxattr on
-+ *  @name - name of xattr to remove
-+ *  @delegated_inode - on return, will contain an inode pointer that
-+ *  a delegation was broken on, NULL if none.
-+ */
- int
--vfs_removexattr(struct dentry *dentry, const char *name)
-+__vfs_removexattr_locked(struct dentry *dentry, const char *name,
-+		struct inode **delegated_inode)
- {
- 	struct inode *inode = dentry->d_inode;
- 	int error;
-@@ -388,11 +435,14 @@ vfs_removexattr(struct dentry *dentry, c
- 	if (error)
- 		return error;
- 
--	inode_lock(inode);
- 	error = security_inode_removexattr(dentry, name);
- 	if (error)
- 		goto out;
- 
-+	error = try_break_deleg(inode, delegated_inode);
-+	if (error)
-+		goto out;
-+
- 	error = __vfs_removexattr(dentry, name);
- 
- 	if (!error) {
-@@ -401,12 +451,32 @@ vfs_removexattr(struct dentry *dentry, c
+ /*
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 160ff640485be..24c38e44ed3bc 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1073,6 +1073,10 @@ void vmbus_on_msg_dpc(unsigned long data)
  	}
  
- out:
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(__vfs_removexattr_locked);
+ 	entry = &channel_message_table[hdr->msgtype];
 +
-+int
-+vfs_removexattr(struct dentry *dentry, const char *name)
-+{
-+	struct inode *inode = dentry->d_inode;
-+	struct inode *delegated_inode = NULL;
-+	int error;
++	if (!entry->message_handler)
++		goto msg_handled;
 +
-+retry_deleg:
-+	inode_lock(inode);
-+	error = __vfs_removexattr_locked(dentry, name, &delegated_inode);
- 	inode_unlock(inode);
-+
-+	if (delegated_inode) {
-+		error = break_deleg_wait(&delegated_inode);
-+		if (!error)
-+			goto retry_deleg;
-+	}
-+
- 	return error;
- }
- EXPORT_SYMBOL_GPL(vfs_removexattr);
+ 	if (entry->handler_type	== VMHT_BLOCKING) {
+ 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
+ 		if (ctx == NULL)
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index b4a017093b697..67d9b5a374600 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -423,6 +423,8 @@ enum vmbus_channel_message_type {
+ 	CHANNELMSG_19				= 19,
+ 	CHANNELMSG_20				= 20,
+ 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
++	CHANNELMSG_22				= 22,
++	CHANNELMSG_TL_CONNECT_RESULT		= 23,
+ 	CHANNELMSG_COUNT
+ };
  
--
- /*
-  * Extended attribute SET operations
-  */
---- a/include/linux/xattr.h
-+++ b/include/linux/xattr.h
-@@ -51,8 +51,10 @@ ssize_t vfs_getxattr(struct dentry *, co
- ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
- int __vfs_setxattr(struct dentry *, struct inode *, const char *, const void *, size_t, int);
- int __vfs_setxattr_noperm(struct dentry *, const char *, const void *, size_t, int);
-+int __vfs_setxattr_locked(struct dentry *, const char *, const void *, size_t, int, struct inode **);
- int vfs_setxattr(struct dentry *, const char *, const void *, size_t, int);
- int __vfs_removexattr(struct dentry *, const char *);
-+int __vfs_removexattr_locked(struct dentry *, const char *, struct inode **);
- int vfs_removexattr(struct dentry *, const char *);
- 
- ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size);
+-- 
+2.25.1
+
 
 
