@@ -2,104 +2,110 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3975FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 138D52070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD772070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:37:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h/i6tISk"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RJeXxtPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgHJOfs (ORCPT
+        id S1726594AbgHJOh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:35:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33390 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726111AbgHJOfs (ORCPT
+        Mon, 10 Aug 2020 10:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgHJOh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:35:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597070146;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dXWSa0571ciFu2t/WYhoCRkUSyhVOHJkVHffG1Nnkws=;
-        b=h/i6tISk3Rrf1tQdM4Nl+DA8+WNUEJDPbTNN2pB5UD/LgvSzkpuXTLj6t8ZfANHx3jsq48
-        4e9IEYipCPo51GKruM6XHVxtAfsW5EkcRy9oYvY/VIbK80bMh9DziQaTQN7RuLVqWuWSXL
-        5jVKIHE55uZvnN+jij6nCdak0GuTuKA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-212-NBlR9CO7Nr-RoqYMou2UBg-1; Mon, 10 Aug 2020 10:35:44 -0400
-X-MC-Unique: NBlR9CO7Nr-RoqYMou2UBg-1
-Received: by mail-wm1-f69.google.com with SMTP id h7so2930341wmm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:35:44 -0700 (PDT)
+        Mon, 10 Aug 2020 10:37:58 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009A3C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:37:57 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so4959108plb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+RL9x5CZR2lB1YoakKVpI5m0mAByd17ewB2LnQj/+W4=;
+        b=RJeXxtPEvgxCKhLrn95wWFyBogkrqRdDdqYriDkEhObCC/1xePyKYbOFh0CMqlTc/W
+         5+4ImGhBRAvpBMpB5K+HgmpXiEtfG3lf57vW9e4JzgBZVUY6BjWpWELT0sOYetNSec5X
+         lVT2fwha1hU3Jerr8fz5jvyTgGxXhLaqIu4tgsSDMEemKHwGt/k6kVFMIcnX+hoD2ojq
+         ytifb9rdzJSxIdfkSVs0NyMN673oROLzEm1sjTzgaoMa3ozoTYyvYqo2Ld3fZtr7Rcc4
+         uNPIHgJiE9ETPD2BW+dqGk2Lsl2GSqON1yRlOym9aAEtrd94bMrOX+fTlew5yBYtHx1K
+         zI5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dXWSa0571ciFu2t/WYhoCRkUSyhVOHJkVHffG1Nnkws=;
-        b=cdlb+Z48KgypYlWu/ldAT+1Sn/W21P3G4eSzJRSTfEP2HtKxPsWYtTq1QaoZlqrcHS
-         2v09f2YiTxwBRe8MXURnIPFsfeu+rOyPLa4TYN6dpRx49fyOfsSCp/5btcqtzmzLW8Os
-         coRLIYoE5n9LqHMRhgmmw4YlC5hs/w0ic4bpSVcxlpfJnEipTY4ZpmRmEFgDuchbuOzE
-         UEVHf7WUQQb7qAoWvBTcvELQKLc4xl/mxSvrLh8SwaMYm1mmdvq5Rs/FzBGbvWKPkjop
-         n9UvvECzrpKaOL+lEEOBFbOhrjfKwwRYxGYkJS9L36Qf/IssdqzrtHkKIsnrDFXmO6cK
-         nYpQ==
-X-Gm-Message-State: AOAM53119Uqe87EzFuGu69FecMB1wg0xcWekgogybjh0+pjr3CDUjf6K
-        lqqBhr+JHQXS8Yf78aoj/rZzEUxElcanaHNOILYO8oe3gifKyekMLpO2oqy0rtK5yw5JLpy5r2p
-        W8Wi3gT1AXZX/po6qfhe8mYoK
-X-Received: by 2002:adf:ef4c:: with SMTP id c12mr23385139wrp.44.1597070143562;
-        Mon, 10 Aug 2020 07:35:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxsJrwNV1lKdihec0GG/tFTx2Ql3DBf0DtDHWJt9b3Ujf/23hQsf72YgGEndpIM647ySIAQDw==
-X-Received: by 2002:adf:ef4c:: with SMTP id c12mr23385131wrp.44.1597070143428;
-        Mon, 10 Aug 2020 07:35:43 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id k10sm20742786wrm.74.2020.08.10.07.35.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 07:35:42 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 10:35:39 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Eli Cohen <elic@nvidia.com>, Eli Cohen <eli@mellanox.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] vdpa/mlx5: Fix pointer math in mlx5_vdpa_get_config()
-Message-ID: <20200810103522-mutt-send-email-mst@kernel.org>
-References: <20200808093241.GB115053@mwanda>
- <BN8PR12MB3425E1FCC3E20A04182640D2AB470@BN8PR12MB3425.namprd12.prod.outlook.com>
- <20200810103147.GJ1793@kadam>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+RL9x5CZR2lB1YoakKVpI5m0mAByd17ewB2LnQj/+W4=;
+        b=NprIiEBMfi0+8TbSMyr3fVvo+KHIvKUWpGDXT/BV52lm79hw19vp+sKI6uR1KOpW3G
+         gVjzNOcTnAlPW+r/xDrijb6ym/tQXnIB87voww1Ar2sCqF6iMWkZxiBrnhQG9Vvygdr+
+         42VZv0YH/fBjIU4zlgQd6DkQUi6ejeJpeyiHFYj424uTlUbdhtyUwpaXdbqRvCBAMdJi
+         XdzpKfSt0DYAuzy4IAdayE6bERepIZUW1URiYbIJQjlebw6Ws87GWmrpCIZFLIs7f6Zy
+         w0PdsGiGqgCYM8FapUFWk+MMBwUNvCuu8z5pfe/I1hWx9hJy4uuBgtcQ+Vn1p3YWKT9d
+         0Uyg==
+X-Gm-Message-State: AOAM533jjqj8ONJlXZaxFwFr3be3rS5vBcC+6kYYJ3VqxjVzLh1ne1MU
+        QNzoDqhCJQ5w34F2fu1Sg9ZEXEBwfrs=
+X-Google-Smtp-Source: ABdhPJyzy5+5ztrzei0Mo5lCPh9sKcz+HnLn2T1nmy6cbDmjEtpPRbSc6LpqZkSvtvc/8rmCgleb1g==
+X-Received: by 2002:a17:90a:d70c:: with SMTP id y12mr1518391pju.31.1597070277385;
+        Mon, 10 Aug 2020 07:37:57 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id f6sm23601379pfa.23.2020.08.10.07.37.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 07:37:56 -0700 (PDT)
+Subject: Re: [PATCH] kernel: update callers of task_work_add() to use
+ TWA_RESUME
+To:     peterz@infradead.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+References: <10debfb3-25f2-20ed-d4f3-1d95ba4c2129@kernel.dk>
+ <20200810114407.GT2674@hirez.programming.kicks-ass.net>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <21d27dfe-91f8-ebc3-6390-a0345603ac28@kernel.dk>
+Date:   Mon, 10 Aug 2020 08:37:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810103147.GJ1793@kadam>
+In-Reply-To: <20200810114407.GT2674@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 01:31:47PM +0300, Dan Carpenter wrote:
-> On Sun, Aug 09, 2020 at 06:34:04AM +0000, Eli Cohen wrote:
-> > Acked-by: Eli Cohen <elic@nvidia.com>
-> > 
-> > BTW, vdpa_sim has the same bug.
-> > 
+On 8/10/20 5:44 AM, peterz@infradead.org wrote:
+> On Sat, Aug 08, 2020 at 03:43:50PM -0600, Jens Axboe wrote:
+>> Any pre-existing caller of this function uses 'true' to signal to use
+>> notifications or not, but we now also have signaled notifications.
+>> Update existing callers that specify 'true' for notify to use the
+>> updated TWA_RESUME instead.
+>>
+>> This was noted in the original commit as well:
+>>
+>> e91b48162332 ("task_work: teach task_work_add() to do signal_wake_up()")
+>>
+>> Cc: Oleg Nesterov <oleg@redhat.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>
 > 
-> I sent a patch for that on April 6.
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > 
-> [PATCH 2/2] vdpa: Fix pointer math bug in vdpasim_get_config()
-> 
-> Jason acked the patch but it wasn't applied.
-> 
-> regards,
-> dan carpenter
+> How do you want to route this?
 
-Oh sorry. I'll drop my patch and queue yours then.
+I don't really care, as I have no dependencies on it. Feel free to queue
+it up! It's just sitting at the top of my io_uring branch right now,
+but that's because I had to stuff it somewhere. Easy to pop off the top.
+
+-- 
+Jens Axboe
 
