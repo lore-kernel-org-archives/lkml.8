@@ -2,110 +2,154 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD772070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D813620791
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RJeXxtPE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnzTfUG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgHJOh6 (ORCPT
+        id S1726949AbgHJOlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
+        Mon, 10 Aug 2020 10:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgHJOh6 (ORCPT
+        with ESMTP id S1726392AbgHJOlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:37:58 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009A3C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:37:57 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh1so4959108plb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:37:57 -0700 (PDT)
+        Mon, 10 Aug 2020 10:41:22 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8658DC061756;
+        Mon, 10 Aug 2020 07:41:22 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id z17so7726926ill.6;
+        Mon, 10 Aug 2020 07:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+RL9x5CZR2lB1YoakKVpI5m0mAByd17ewB2LnQj/+W4=;
-        b=RJeXxtPEvgxCKhLrn95wWFyBogkrqRdDdqYriDkEhObCC/1xePyKYbOFh0CMqlTc/W
-         5+4ImGhBRAvpBMpB5K+HgmpXiEtfG3lf57vW9e4JzgBZVUY6BjWpWELT0sOYetNSec5X
-         lVT2fwha1hU3Jerr8fz5jvyTgGxXhLaqIu4tgsSDMEemKHwGt/k6kVFMIcnX+hoD2ojq
-         ytifb9rdzJSxIdfkSVs0NyMN673oROLzEm1sjTzgaoMa3ozoTYyvYqo2Ld3fZtr7Rcc4
-         uNPIHgJiE9ETPD2BW+dqGk2Lsl2GSqON1yRlOym9aAEtrd94bMrOX+fTlew5yBYtHx1K
-         zI5g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AidFlRL4Ug1HXYYI29mKf2liuKC4nCVYEFXiYCfw8vA=;
+        b=CnzTfUG1SpGkNdLlwHUtFMtEAs/lYxwUd5HQM1e687MC6Hx2DVg0XbIOvx3VGO/z74
+         /BRzNFMM9NnDz2jGQ2eASuxPpT/aB1AR3sUY0B97X9ZHGQols8ol6MIVMfMib/g48r13
+         +dOLOiywM+Fr6cEXRyNvtKTpvkt+vkdJGpS12tNiDQHg2E6/oVBCkQt5kLDzQO++FKwV
+         Zwa8lmALUMlCqBfNzCEQDtTttA1A9PzbVF4AwYgmbywQm+6czKeFZ5vEr8+0JbKwwxts
+         sbFCWoV2tT9H22iM4NLHNgkJvREVNYHhnlEWB8Dlv9Z67SOBGa1vmez+KhDjL99Dr6uA
+         yZxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+RL9x5CZR2lB1YoakKVpI5m0mAByd17ewB2LnQj/+W4=;
-        b=NprIiEBMfi0+8TbSMyr3fVvo+KHIvKUWpGDXT/BV52lm79hw19vp+sKI6uR1KOpW3G
-         gVjzNOcTnAlPW+r/xDrijb6ym/tQXnIB87voww1Ar2sCqF6iMWkZxiBrnhQG9Vvygdr+
-         42VZv0YH/fBjIU4zlgQd6DkQUi6ejeJpeyiHFYj424uTlUbdhtyUwpaXdbqRvCBAMdJi
-         XdzpKfSt0DYAuzy4IAdayE6bERepIZUW1URiYbIJQjlebw6Ws87GWmrpCIZFLIs7f6Zy
-         w0PdsGiGqgCYM8FapUFWk+MMBwUNvCuu8z5pfe/I1hWx9hJy4uuBgtcQ+Vn1p3YWKT9d
-         0Uyg==
-X-Gm-Message-State: AOAM533jjqj8ONJlXZaxFwFr3be3rS5vBcC+6kYYJ3VqxjVzLh1ne1MU
-        QNzoDqhCJQ5w34F2fu1Sg9ZEXEBwfrs=
-X-Google-Smtp-Source: ABdhPJyzy5+5ztrzei0Mo5lCPh9sKcz+HnLn2T1nmy6cbDmjEtpPRbSc6LpqZkSvtvc/8rmCgleb1g==
-X-Received: by 2002:a17:90a:d70c:: with SMTP id y12mr1518391pju.31.1597070277385;
-        Mon, 10 Aug 2020 07:37:57 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id f6sm23601379pfa.23.2020.08.10.07.37.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 07:37:56 -0700 (PDT)
-Subject: Re: [PATCH] kernel: update callers of task_work_add() to use
- TWA_RESUME
-To:     peterz@infradead.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-References: <10debfb3-25f2-20ed-d4f3-1d95ba4c2129@kernel.dk>
- <20200810114407.GT2674@hirez.programming.kicks-ass.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <21d27dfe-91f8-ebc3-6390-a0345603ac28@kernel.dk>
-Date:   Mon, 10 Aug 2020 08:37:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AidFlRL4Ug1HXYYI29mKf2liuKC4nCVYEFXiYCfw8vA=;
+        b=joOGrU3AHTTXbE887V1t4zygaZxJCDUMf4JRiY/8hlHNaSwcSWmbvKTA+2r4pOgUwA
+         kALmXK7OUx0Ovjj/q9EjcuIltsZKrBCye4JTgs+H9VvDcAF6H9O/Z1a4jwgfIYSGapYg
+         TMPoaZjI/x2kWDJCLqeXpp7Saf32n86hd3TdC7q5/cC3oVhBr8+uSMkQqFza25pIkMwK
+         To0CS7ZCRbZa+0DTiM23MZZ6pz6E3fyNJ0EXd/YWcNrul3w967Y4h675PSaFKGpnb+dL
+         cK9wQhzWSuitRJHdcjzwiR33r7fcLPzbG6HCEVL9hrAEZi2IMdBzVBhXX8mChIgX5C3J
+         KqYA==
+X-Gm-Message-State: AOAM533ZAd+EgrGc/5tKgWs3eI371X/d+IMmto1a3bRRBtF6hXBZYJKa
+        74MhQr7uEFB9IUmxKVEnZzpQnIsKe6rQzGwijJQ=
+X-Google-Smtp-Source: ABdhPJzo3pJ+3eWBSe8FMd4AtlSqVEx0Qp8bdmYA3soM8Urzw4pi6Kq6Bjl43tvikMG3Q/MAI+I2PSwzGbulSOR3JuA=
+X-Received: by 2002:a05:6e02:143:: with SMTP id j3mr16319712ilr.97.1597070481282;
+ Mon, 10 Aug 2020 07:41:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200810114407.GT2674@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UcbBv=QBK9ErqLKXoNLYxFz52L4fiiHy4h6zKdBs=YPOg@mail.gmail.com>
+ <241ca157-104f-4f0d-7d5b-de394443788d@linux.alibaba.com> <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
+ <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
+In-Reply-To: <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 10 Aug 2020 07:41:10 -0700
+Message-ID: <CAKgT0UdK-fy+yYGLFK=YgE+maa_0_uecq0_8S_0kM8BiVgRO7g@mail.gmail.com>
+Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in compaction
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/10/20 5:44 AM, peterz@infradead.org wrote:
-> On Sat, Aug 08, 2020 at 03:43:50PM -0600, Jens Axboe wrote:
->> Any pre-existing caller of this function uses 'true' to signal to use
->> notifications or not, but we now also have signaled notifications.
->> Update existing callers that specify 'true' for notify to use the
->> updated TWA_RESUME instead.
->>
->> This was noted in the original commit as well:
->>
->> e91b48162332 ("task_work: teach task_work_add() to do signal_wake_up()")
->>
->> Cc: Oleg Nesterov <oleg@redhat.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>
-> 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> How do you want to route this?
+On Mon, Aug 10, 2020 at 6:10 AM Alex Shi <alex.shi@linux.alibaba.com> wrote=
+:
+>
+>
+>
+> =E5=9C=A8 2020/8/7 =E4=B8=8B=E5=8D=8810:51, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> > I wonder if this entire section shouldn't be restructured. This is the
+> > only spot I can see where we are resetting the LRU flag instead of
+> > pulling the page from the LRU list with the lock held. Looking over
+> > the code it seems like something like that should be possible. I am
+> > not sure the LRU lock is really protecting us in either the
+> > PageCompound check nor the skip bits. It seems like holding a
+> > reference on the page should prevent it from switching between
+> > compound or not, and the skip bits are per pageblock with the LRU bits
+> > being per node/memcg which I would think implies that we could have
+> > multiple LRU locks that could apply to a single skip bit.
+>
+> Hi Alexander,
+>
+> I don't find problem yet on compound or skip bit usage. Would you clarify=
+ the
+> issue do you concerned?
+>
+> Thanks!
 
-I don't really care, as I have no dependencies on it. Feel free to queue
-it up! It's just sitting at the top of my io_uring branch right now,
-but that's because I had to stuff it somewhere. Easy to pop off the top.
+The point I was getting at is that the LRU lock is being used to
+protect these and with your changes I don't think that makes sense
+anymore.
 
--- 
-Jens Axboe
+The skip bits are per-pageblock bits. With your change the LRU lock is
+now per memcg first and then per node. As such I do not believe it
+really provides any sort of exclusive access to the skip bits. I still
+have to look into this more, but it seems like you need a lock per
+either section or zone that can be used to protect those bits and deal
+with this sooner rather than waiting until you have found an LRU page.
+The one part that is confusing though is that the definition of the
+skip bits seems to call out that they are a hint since they are not
+protected by a lock, but that is exactly what has been happening here.
 
+The point I was getting at with the PageCompound check is that instead
+of needing the LRU lock you should be able to look at PageCompound as
+soon as you call get_page_unless_zero() and preempt the need to set
+the LRU bit again. Instead of trying to rely on the LRU lock to
+guarantee that the page hasn't been merged you could just rely on the
+fact that you are holding a reference to it so it isn't going to
+switch between being compound or order 0 since it cannot be freed. It
+spoils the idea I originally had of combining the logic for
+get_page_unless_zero and TestClearPageLRU into a single function, but
+the advantage is you aren't clearing the LRU flag unless you are
+actually going to pull the page from the LRU list.
+
+My main worry is that this is the one spot where we appear to be
+clearing the LRU bit without ever actually pulling the page off of the
+LRU list, and I am thinking we would be better served by addressing
+the skip and PageCompound checks earlier rather than adding code to
+set the bit again if either of those cases are encountered. This way
+we don't pseudo-pin pages in the LRU if they are compound or supposed
+to be skipped.
+
+Thanks.
+
+- Alex
