@@ -2,123 +2,103 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 04:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078A0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 04:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F37A206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 04:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21E12073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 04:58:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bN00W7kq"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="w5ntOGon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgHJEkg (ORCPT
+        id S1725869AbgHJE6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 00:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
+        Mon, 10 Aug 2020 00:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgHJEkf (ORCPT
+        with ESMTP id S1725763AbgHJE6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 00:40:35 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F30AC061756;
-        Sun,  9 Aug 2020 21:40:35 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id x69so7290895qkb.1;
-        Sun, 09 Aug 2020 21:40:35 -0700 (PDT)
+        Mon, 10 Aug 2020 00:58:24 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E003C061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 21:58:23 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id e6so7853752oii.4
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 21:58:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=cPds9HzkVUDwwmYzqeRQutg+bwybNljwD4ACV/nwwSk=;
-        b=bN00W7kq8K9TmaWZXuTw6dNePzWjNRTgoZzQ18PkpamTZNcXUb3ZPIiiz6Dsv2w6rp
-         zc0aKugBlQz2R5LoDusvHgVjvMqEPblxR/zA0vSZcNSXKuMThprTLCpc88r6hY7rKSkY
-         S0loyiaVZW+HUk6dVlVaZ1PVP2CIfFF82ocFLmAT9THuLRnM6CFjcQOPcO7OmAMl5tLi
-         302obDo5GVGpFlduTodqOJzdQA4M3rEXzvpxBQH/TyP0Lrsd+T15SPFDSLH0MjV2foSy
-         BGfRQ4t42k4cfV6taDciFG+e3qkSofndTOXG0UVnE+8Koui+/GEC9lkzh7oBtiDuSevs
-         Juuw==
+        bh=IiUjz/E0yJS5Acwq7s0Wi9NqTJCu4UNiNtrhWhhnZJE=;
+        b=w5ntOGonI2saN+6mytrGYie4+y8Yh277EywUV9obx+xdwtiHqM78gvDYtNlxZiTVw4
+         u1DGtj7vQj5KukSTQElURStY5cldisYxpkYXUPAqXWSeC52K/645Wi1MOmCrWxWE2D/3
+         lasZed7h5p5T97AScHaZI8HDbxkSAKjbD+VfTZsLjM4tbTgRribKDsiYl9j28wGmyyEJ
+         uQH1gEET4hLt6WWwbJgk1oL20+bkPVa9UpPt6gPU8dQPL/ZWYaep+cGzrL7rNn9TfPmA
+         P2YYjNTPTrQBug7jliA8AZ6jquUPImMp19afRznu9GBMSUWkUYyOqBvRSMjQUxQ/mwoz
+         GyqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=cPds9HzkVUDwwmYzqeRQutg+bwybNljwD4ACV/nwwSk=;
-        b=OXJHR1q76N+uFTX0C7nUY8GMlmt5cW2xSyPCaemlHXvJqr4rbFlV61Jw6u5hiVjwKg
-         YZKWfIO130BlrUhe5qRiz2nZz4GnK1fpwlE17A5jMlKlJOPH799mMq0iVRwD9YhbKHkI
-         ipoXONzIoASJmvHmlqLKC3MJQn2+IHwEvksVRNw360pLL5ADfJHY1FXXbP/ylxXntY2b
-         Q+gYt1Cy6ddLYrUiPz3/JiPW3eKBjpqO1J0MDhhMfmZzJ25OZ/FzPpNm2DIj+pOy+ENg
-         rx5sD9BfSMeqb+J+sPLhRM8sKTbTbGF3LjuAHc2oNX70XRce53Slk7U0ujaqpGpKrn/O
-         8xrg==
-X-Gm-Message-State: AOAM533lFvzsN5Oh26QTnynQlHoXzR2HWdwtLzLArZcW4nUVsF669uYl
-        Z7rMRCt7b3D+j1Elbi/eeNCaKr7+
-X-Google-Smtp-Source: ABdhPJxY3zxs2Ant+BaqLzC7XHeQJrChvgFX+/TFQ4dqxUX2ecSyT+XxQ1aBuxhafSOyH0NdTQIkQA==
-X-Received: by 2002:a37:48c7:: with SMTP id v190mr23581106qka.153.1597034434113;
-        Sun, 09 Aug 2020 21:40:34 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id d203sm13169026qkc.10.2020.08.09.21.40.32
+        bh=IiUjz/E0yJS5Acwq7s0Wi9NqTJCu4UNiNtrhWhhnZJE=;
+        b=jvDsIQaYqCNwjNpMPFBKI8zlTl9fPaIr5mcLNdPHnuVdHsaQIGWQvH4wzwTUutQd43
+         3/oHrGN08nGybuF8VdlG/Hpabqlo1b7bEIQuMoJ3xCOleVoEQGzy3CP3crZ48h5W+lMk
+         A4zw0Qo4eUhdY8lScsGObnWs3OPf9db8CNLyEqvrRWaQ/Kn1MyspRy1vO2MtW7Y0ycy0
+         IeXFvFz+f9cXthmQSGbdzkN75Z4KSrtCb8r+fSUuSdXJJWMMcnU5Kg1nrD+g7SeFy2r5
+         n0oRL/ZMp0Nzxd2e94EmohutLmN74aQT/cculeFQSJiPqMtNZW60WG48xcag3f6OyGE3
+         pObQ==
+X-Gm-Message-State: AOAM531ERZB9otkOWVve+ZyOZBld2ukp+uMUBN4M5yXN79svAfBlDLQI
+        Bd2R7ARdxJYdN57SGVtGQ+swhg==
+X-Google-Smtp-Source: ABdhPJx1w9rZoh3/Tnwxe3wZZkLYlzxR8RFAig7w/rPU85ghmbBZ2QiW9BUTovV5HtIwrqb4eQyTHA==
+X-Received: by 2002:a54:4f1a:: with SMTP id e26mr21293472oiy.171.1597035500419;
+        Sun, 09 Aug 2020 21:58:20 -0700 (PDT)
+Received: from x1.attlocal.net ([2600:1702:da0:ff40:2318:61c2:fbc5:d01e])
+        by smtp.gmail.com with ESMTPSA id t21sm3416950ooc.43.2020.08.09.21.58.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 21:40:33 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] clk: rockchip: Fix initialization of mux_pll_src_4plls_p
-Date:   Sun,  9 Aug 2020 21:40:20 -0700
-Message-Id: <20200810044020.2063350-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Sun, 09 Aug 2020 21:58:19 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        bcousson@baylibre.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH] ARM: dts: am33xx: add ocp label
+Date:   Sun,  9 Aug 2020 23:58:03 -0500
+Message-Id: <20200810045802.1547989-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new warning in Clang points out that the initialization of
-mux_pll_src_4plls_p appears incorrect:
+Add label to the ocp node in the AM33xx SoC include so that it can be
+referenced in board-level files like am335x-pocketbeagle.dts
 
-../drivers/clk/rockchip/clk-rk3228.c:140:58: warning: suspicious
-concatenation of string literals in an array initialization; did you
-mean to separate the elements with a comma? [-Wstring-concatenation]
-PNAME(mux_pll_src_4plls_p)      = { "cpll", "gpll", "hdmiphy" "usb480m" };
-                                                              ^
-                                                             ,
-../drivers/clk/rockchip/clk-rk3228.c:140:48: note: place parentheses
-around the string literal to silence warning
-PNAME(mux_pll_src_4plls_p)      = { "cpll", "gpll", "hdmiphy" "usb480m" };
-                                                    ^
-1 warning generated.
-
-Given the name of the variable and the same variable name in rv1108, it
-seems that this should have been four distinct elements. Fix it up by
-adding the comma as suggested.
-
-Fixes: 307a2e9ac524 ("clk: rockchip: add clock controller for rk3228")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1123
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
 ---
- drivers/clk/rockchip/clk-rk3228.c | 2 +-
+
+ arch/arm/boot/dts/am33xx.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index d7243c09cc84..47d6482dda9d 100644
---- a/drivers/clk/rockchip/clk-rk3228.c
-+++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -137,7 +137,7 @@ PNAME(mux_usb480m_p)		= { "usb480m_phy", "xin24m" };
- PNAME(mux_hdmiphy_p)		= { "hdmiphy_phy", "xin24m" };
- PNAME(mux_aclk_cpu_src_p)	= { "cpll_aclk_cpu", "gpll_aclk_cpu", "hdmiphy_aclk_cpu" };
- 
--PNAME(mux_pll_src_4plls_p)	= { "cpll", "gpll", "hdmiphy" "usb480m" };
-+PNAME(mux_pll_src_4plls_p)	= { "cpll", "gpll", "hdmiphy", "usb480m" };
- PNAME(mux_pll_src_3plls_p)	= { "cpll", "gpll", "hdmiphy" };
- PNAME(mux_pll_src_2plls_p)	= { "cpll", "gpll" };
- PNAME(mux_sclk_hdmi_cec_p)	= { "cpll", "gpll", "xin24m" };
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 3b177c9c4412..02f0b886d177 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -172,7 +172,7 @@ mpu {
+ 	 * for the moment, just use a fake OCP bus entry to represent
+ 	 * the whole bus hierarchy.
+ 	 */
+-	ocp {
++	ocp: ocp {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
-2.28.0
+2.25.1
 
