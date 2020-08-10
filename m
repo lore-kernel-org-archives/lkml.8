@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F465C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A8E20772
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10A320772
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072769;
-	bh=XSqucGMa32wJj88uZBFYJ2AD4Hy2/Cjd6juWq2PmRHA=;
+	s=default; t=1597072776;
+	bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nwPuKQspp8QWmZD9B4II48KOWieF5koqbC1zFX0F3+POjgNeK05J6fVJ3rZ24aS9j
-	 gH0XbXBxbTcAXuikgOpqSk+61/SKrZ4mwDIbPEs+NOiFXN7jui3LGUvkh7wv7VjJ3M
-	 mnrgi55GicT0efkMV2rn9/QhNtksTahSxTpbtRnA=
+	b=isUP0nVdU+kiWn9U99F5eNRVFbdJ7yi7JJS5RvA28c6ogVM4FK/166YzkBlHLez0y
+	 uBagAuRHTzAjmSvNYPxIskSp9giXVemcudVxS+ovaxD4LZwdmugITDt2GRB/I3kpZH
+	 XEntdwtK9KYBsiT/6BlxUJ4UZ0zeunqmK3QDxo/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgHJPT1 (ORCPT
+        id S1727100AbgHJPTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:19:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49360 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgHJPT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:19:26 -0400
+        id S1726923AbgHJPTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:19:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B937207BB;
-        Mon, 10 Aug 2020 15:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D519820772;
+        Mon, 10 Aug 2020 15:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072765;
-        bh=XSqucGMa32wJj88uZBFYJ2AD4Hy2/Cjd6juWq2PmRHA=;
+        s=default; t=1597072771;
+        bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=175tJjZtT+gKtVID6pBj5pUcoOi+jpemEzEUD+0naK0/W9xVmpJO+OvW7IUbCSHEP
-         0h/M7AsHsBL2z2xx4KoorbzBCmT6kEyR1hn0BUlM/yPp5WJ5vaMzrItVBTbM8omYJC
-         gjwS4PIq1aWwHX4PRq8r74lenz6ouj6r2WLMgL1Q=
+        b=WW6uMb+OJ6RboRehNYnJoIzRHhcgrWZ2qegXVnXxkh0WuH9H63mqm8F0NZHG20xBl
+         j4LKR2fM+fOZD5YiRIF5ZW9gUeRSgSVC/WwprNKWjHKc7D4BozhfoLFXiHSO5PMbEH
+         QYzYGadu5utuJK9AS3xHO26L0DMtaimcfRVliTeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Connor McAdams <conmanx360@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 10/38] ALSA: hda/ca0132 - Fix AE-5 microphone selection commands.
-Date:   Mon, 10 Aug 2020 17:19:00 +0200
-Message-Id: <20200810151804.399701106@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 5.8 12/38] staging: android: ashmem: Fix lockdep warning for write operation
+Date:   Mon, 10 Aug 2020 17:19:02 +0200
+Message-Id: <20200810151804.498690435@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -59,51 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Connor McAdams <conmanx360@gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
 
-commit 7fe3530427e52dd53cd7366914864e29215180a4 upstream.
+commit 3e338d3c95c735dc3265a86016bb4c022ec7cadc upstream.
 
-The ca0113 command had the wrong group_id, 0x48 when it should've been
-0x30. The front microphone selection should now work.
+syzbot report [1] describes a deadlock when write operation against an
+ashmem fd executed at the time when ashmem is shrinking its cache results
+in the following lock sequence:
 
-Signed-off-by: Connor McAdams <conmanx360@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200803002928.8638-3-conmanx360@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(fs_reclaim);
+                                lock(&sb->s_type->i_mutex_key#13);
+                                lock(fs_reclaim);
+   lock(&sb->s_type->i_mutex_key#13);
+
+kswapd takes fs_reclaim and then inode_lock while generic_perform_write
+takes inode_lock and then fs_reclaim. However ashmem does not support
+writing into backing shmem with a write syscall. The only way to change
+its content is to mmap it and operate on mapped memory. Therefore the race
+that lockdep is warning about is not valid. Resolve this by introducing a
+separate lockdep class for the backing shmem inodes.
+
+[1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
+
+Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lore.kernel.org/r/20200730192632.3088194-1-surenb@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_ca0132.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/android/ashmem.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -4672,7 +4672,7 @@ static int ca0132_alt_select_in(struct h
- 			tmp = FLOAT_ONE;
- 			break;
- 		case QUIRK_AE5:
--			ca0113_mmio_command_set(codec, 0x48, 0x28, 0x00);
-+			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
- 			tmp = FLOAT_THREE;
- 			break;
- 		default:
-@@ -4718,7 +4718,7 @@ static int ca0132_alt_select_in(struct h
- 			r3di_gpio_mic_set(codec, R3DI_REAR_MIC);
- 			break;
- 		case QUIRK_AE5:
--			ca0113_mmio_command_set(codec, 0x48, 0x28, 0x00);
-+			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
- 			break;
- 		default:
- 			break;
-@@ -4757,7 +4757,7 @@ static int ca0132_alt_select_in(struct h
- 			tmp = FLOAT_ONE;
- 			break;
- 		case QUIRK_AE5:
--			ca0113_mmio_command_set(codec, 0x48, 0x28, 0x3f);
-+			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x3f);
- 			tmp = FLOAT_THREE;
- 			break;
- 		default:
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -95,6 +95,15 @@ static DEFINE_MUTEX(ashmem_mutex);
+ static struct kmem_cache *ashmem_area_cachep __read_mostly;
+ static struct kmem_cache *ashmem_range_cachep __read_mostly;
+ 
++/*
++ * A separate lockdep class for the backing shmem inodes to resolve the lockdep
++ * warning about the race between kswapd taking fs_reclaim before inode_lock
++ * and write syscall taking inode_lock and then fs_reclaim.
++ * Note that such race is impossible because ashmem does not support write
++ * syscalls operating on the backing shmem.
++ */
++static struct lock_class_key backing_shmem_inode_class;
++
+ static inline unsigned long range_size(struct ashmem_range *range)
+ {
+ 	return range->pgend - range->pgstart + 1;
+@@ -396,6 +405,7 @@ static int ashmem_mmap(struct file *file
+ 	if (!asma->file) {
+ 		char *name = ASHMEM_NAME_DEF;
+ 		struct file *vmfile;
++		struct inode *inode;
+ 
+ 		if (asma->name[ASHMEM_NAME_PREFIX_LEN] != '\0')
+ 			name = asma->name;
+@@ -407,6 +417,8 @@ static int ashmem_mmap(struct file *file
+ 			goto out;
+ 		}
+ 		vmfile->f_mode |= FMODE_LSEEK;
++		inode = file_inode(vmfile);
++		lockdep_set_class(&inode->i_rwsem, &backing_shmem_inode_class);
+ 		asma->file = vmfile;
+ 		/*
+ 		 * override mmap operation of the vmfile so that it can't be
 
 
