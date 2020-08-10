@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62177C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 325342075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F7B2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="p+IrB1wX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HjF/Rpl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgHJW2D (ORCPT
+        id S1727895AbgHJW2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:28:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:44387 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgHJW1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:27:42 -0400
+        Mon, 10 Aug 2020 18:28:09 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33822 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727806AbgHJW17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:27:59 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597098461; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597098478; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=1l56jKTnCbGbzDy9PC9bfDI6CvjcNk4zvHShg3Sn/ic=; b=p+IrB1wXtCjL/sNubI9ygRwYqyA1lPIr26q67v/90OTev5937yDyZnvS78YITOyXx2shOeqw
- fZt9b/J8Fb6bms4FVmhYFDx1hJhgJp8pTwcY58H8kGFRGOCb+pL8hI9qyzKsM6okQrFj6DKD
- j25sgBHW7tgwQgEDydaGETskbU8=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=/WjUrlTXh5D2SPZiwegkNsn6ZuyTBrGm+RToSc4ezM0=; b=HjF/Rpl/jKf+hi0M20WX/PifjR/sOGsLpOBtFq8r4jWDaYtIF5pKd1uU2k4RYSU0Nrwew4JR
+ Mviw8Kjk7EFxAK6fCTWhkKFtnUioZ6cd2UEQ9gOMBen0nZqYktmWMya9vGxzgFoWX9l8DBMC
+ vqact4n/wM/Mn9S7J968S/OtKig=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f31c9db2f4952907d4d7a69 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:39
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f31c9d5c85a1092b0fb06d3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:33
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E23E3C43453; Mon, 10 Aug 2020 22:27:36 +0000 (UTC)
+        id 4926DC433A0; Mon, 10 Aug 2020 22:27:30 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2429C433B2;
-        Mon, 10 Aug 2020 22:27:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2429C433B2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F94DC433B1;
+        Mon, 10 Aug 2020 22:27:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F94DC433B1
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -53,13 +54,23 @@ Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Brian Masney <masneyb@onstation.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Eric Anholt <eric@anholt.net>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v12 10/13] drm/msm: Add support for private address space instances
-Date:   Mon, 10 Aug 2020 16:26:54 -0600
-Message-Id: <20200810222657.1841322-11-jcrouse@codeaurora.org>
+Subject: [PATCH v12 07/13] drm/msm: Add a context pointer to the submitqueue
+Date:   Mon, 10 Aug 2020 16:26:51 -0600
+Message-Id: <20200810222657.1841322-8-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
 References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
@@ -70,167 +81,340 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for allocating private address space instances. Targets that
-support per-context pagetables should implement their own function to
-allocate private address spaces.
+Each submitqueue is attached to a context. Add a pointer to the
+context to the submitqueue at create time and refcount it so
+that it stays around through the life of the queue.
 
-The default will return a pointer to the global address space.
+GPU submissions can access the active context via the submitqueue
+instead of requiring it to be passed around from function to
+function.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/gpu/drm/msm/msm_drv.c     | 13 +++++++------
- drivers/gpu/drm/msm/msm_drv.h     |  5 +++++
- drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
- drivers/gpu/drm/msm/msm_gpu.c     | 22 ++++++++++++++++++++++
- drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
- 5 files changed, 48 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 12 +++++-------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  5 ++---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c |  5 ++---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +--
+ drivers/gpu/drm/msm/msm_drv.c           |  3 ++-
+ drivers/gpu/drm/msm/msm_drv.h           |  8 ++++++++
+ drivers/gpu/drm/msm/msm_gem.h           |  1 +
+ drivers/gpu/drm/msm/msm_gem_submit.c    |  8 ++++----
+ drivers/gpu/drm/msm/msm_gpu.c           |  9 ++++-----
+ drivers/gpu/drm/msm/msm_gpu.h           |  7 +++----
+ drivers/gpu/drm/msm/msm_submitqueue.c   |  8 +++++++-
+ 11 files changed, 39 insertions(+), 30 deletions(-)
 
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+index 9e63a190642c..eff2439ea57b 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+@@ -43,8 +43,7 @@ static void a5xx_flush(struct msm_gpu *gpu, struct msm_ringbuffer *ring)
+ 		gpu_write(gpu, REG_A5XX_CP_RB_WPTR, wptr);
+ }
+ 
+-static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-	struct msm_file_private *ctx)
++static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ {
+ 	struct msm_drm_private *priv = gpu->dev->dev_private;
+ 	struct msm_ringbuffer *ring = submit->ring;
+@@ -57,7 +56,7 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
+ 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
+ 			break;
+ 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
+-			if (priv->lastctx == ctx)
++			if (priv->lastctx == submit->queue->ctx)
+ 				break;
+ 			/* fall-thru */
+ 		case MSM_SUBMIT_CMD_BUF:
+@@ -103,8 +102,7 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
+ 	msm_gpu_retire(gpu);
+ }
+ 
+-static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-	struct msm_file_private *ctx)
++static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ {
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+ 	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
+@@ -114,7 +112,7 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+ 
+ 	if (IS_ENABLED(CONFIG_DRM_MSM_GPU_SUDO) && submit->in_rb) {
+ 		priv->lastctx = NULL;
+-		a5xx_submit_in_rb(gpu, submit, ctx);
++		a5xx_submit_in_rb(gpu, submit);
+ 		return;
+ 	}
+ 
+@@ -148,7 +146,7 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+ 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
+ 			break;
+ 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
+-			if (priv->lastctx == ctx)
++			if (priv->lastctx == submit->queue->ctx)
+ 				break;
+ 			/* fall-thru */
+ 		case MSM_SUBMIT_CMD_BUF:
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index c5a3e4d4c007..5eabb0109577 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -81,8 +81,7 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
+ 	OUT_RING(ring, upper_32_bits(iova));
+ }
+ 
+-static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-	struct msm_file_private *ctx)
++static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ {
+ 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
+ 	struct msm_drm_private *priv = gpu->dev->dev_private;
+@@ -115,7 +114,7 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+ 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
+ 			break;
+ 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
+-			if (priv->lastctx == ctx)
++			if (priv->lastctx == submit->queue->ctx)
+ 				break;
+ 			/* fall-thru */
+ 		case MSM_SUBMIT_CMD_BUF:
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index e23641a5ec84..b38a8126541a 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -457,8 +457,7 @@ void adreno_recover(struct msm_gpu *gpu)
+ 	}
+ }
+ 
+-void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-		struct msm_file_private *ctx)
++void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ {
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+ 	struct msm_drm_private *priv = gpu->dev->dev_private;
+@@ -472,7 +471,7 @@ void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+ 			break;
+ 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
+ 			/* ignore if there has not been a ctx switch: */
+-			if (priv->lastctx == ctx)
++			if (priv->lastctx == submit->queue->ctx)
+ 				break;
+ 			/* fall-thru */
+ 		case MSM_SUBMIT_CMD_BUF:
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index 99bb468f5f24..0ae8b373c428 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -267,8 +267,7 @@ struct drm_gem_object *adreno_fw_create_bo(struct msm_gpu *gpu,
+ 		const struct firmware *fw, u64 *iova);
+ int adreno_hw_init(struct msm_gpu *gpu);
+ void adreno_recover(struct msm_gpu *gpu);
+-void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-		struct msm_file_private *ctx);
++void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit);
+ void adreno_flush(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
+ bool adreno_idle(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
+ #if defined(CONFIG_DEBUG_FS) || defined(CONFIG_DEV_COREDUMP)
 diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 108b663c3ef2..f072306f1260 100644
+index 7d641c7e3514..108b663c3ef2 100644
 --- a/drivers/gpu/drm/msm/msm_drv.c
 +++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
- 	kref_init(&ctx->ref);
+@@ -594,6 +594,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+ 	if (!ctx)
+ 		return -ENOMEM;
+ 
++	kref_init(&ctx->ref);
  	msm_submitqueue_init(dev, ctx);
  
--	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
-+	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
- 	file->driver_priv = ctx;
- 
- 	return 0;
-@@ -780,18 +780,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
- }
- 
- static int msm_ioctl_gem_info_iova(struct drm_device *dev,
--		struct drm_gem_object *obj, uint64_t *iova)
-+		struct drm_file *file, struct drm_gem_object *obj,
-+		uint64_t *iova)
+ 	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
+@@ -615,7 +616,7 @@ static int msm_open(struct drm_device *dev, struct drm_file *file)
+ static void context_close(struct msm_file_private *ctx)
  {
--	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_file_private *ctx = file->driver_priv;
- 
--	if (!priv->gpu)
-+	if (!ctx->aspace)
- 		return -EINVAL;
- 
- 	/*
- 	 * Don't pin the memory here - just get an address so that userspace can
- 	 * be productive
- 	 */
--	return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
-+	return msm_gem_get_iova(obj, ctx->aspace, iova);
+ 	msm_submitqueue_close(ctx);
+-	kfree(ctx);
++	kref_put(&ctx->ref, msm_file_private_destroy);
  }
  
- static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
-@@ -830,7 +831,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
- 		args->value = msm_gem_mmap_offset(obj);
- 		break;
- 	case MSM_INFO_GET_IOVA:
--		ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
-+		ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
- 		break;
- 	case MSM_INFO_SET_NAME:
- 		/* length check should leave room for terminating null: */
+ static void msm_postclose(struct drm_device *dev, struct drm_file *file)
 diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index f69c6d62584d..51a5c9083e13 100644
+index af259b0573ea..f69c6d62584d 100644
 --- a/drivers/gpu/drm/msm/msm_drv.h
 +++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -249,6 +249,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
- void msm_gem_close_vma(struct msm_gem_address_space *aspace,
- 		struct msm_gem_vma *vma);
- 
-+
-+struct msm_gem_address_space *
-+msm_gem_address_space_get(struct msm_gem_address_space *aspace);
-+
- void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
- 
- struct msm_gem_address_space *
-@@ -434,6 +438,7 @@ static inline void msm_file_private_destroy(struct kref *kref)
- 	struct msm_file_private *ctx = container_of(kref,
- 		struct msm_file_private, ref);
- 
-+	msm_gem_address_space_put(ctx->aspace);
- 	kfree(ctx);
- }
- 
-diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-index 5f6a11211b64..29cc1305cf37 100644
---- a/drivers/gpu/drm/msm/msm_gem_vma.c
-+++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-@@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
- 		kref_put(&aspace->kref, msm_gem_address_space_destroy);
- }
- 
-+struct msm_gem_address_space *
-+msm_gem_address_space_get(struct msm_gem_address_space *aspace)
-+{
-+	if (!IS_ERR_OR_NULL(aspace))
-+		kref_get(&aspace->kref);
-+
-+	return aspace;
-+}
-+
- /* Actually unmap memory for the vma */
- void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
- 		struct msm_gem_vma *vma)
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index a1f3da6550e5..b070355369d8 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -823,6 +823,28 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
- 	return 0;
- }
- 
-+/* Return a new address space for a msm_drm_private instance */
-+struct msm_gem_address_space *
-+msm_gpu_create_private_address_space(struct msm_gpu *gpu)
-+{
-+	struct msm_gem_address_space *aspace = NULL;
-+
-+	if (!gpu)
-+		return NULL;
-+
-+	/*
-+	 * If the target doesn't support private address spaces then return
-+	 * the global one
-+	 */
-+	if (gpu->funcs->create_private_address_space)
-+		aspace = gpu->funcs->create_private_address_space(gpu);
-+
-+	if (IS_ERR_OR_NULL(aspace))
-+		aspace = msm_gem_address_space_get(gpu->aspace);
-+
-+	return aspace;
-+}
-+
- int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
- 		const char *name, struct msm_gpu_config *config)
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index d496d488222c..d298657b4730 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -64,6 +64,8 @@ struct msm_gpu_funcs {
- 	void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
- 	struct msm_gem_address_space *(*create_address_space)
- 		(struct msm_gpu *gpu, struct platform_device *pdev);
-+	struct msm_gem_address_space *(*create_private_address_space)
-+		(struct msm_gpu *gpu);
+@@ -57,6 +57,7 @@ struct msm_file_private {
+ 	struct list_head submitqueues;
+ 	int queueid;
+ 	struct msm_gem_address_space *aspace;
++	struct kref ref;
  };
  
- struct msm_gpu {
-@@ -286,6 +288,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
- 		const char *name, struct msm_gpu_config *config);
+ enum msm_mdp_plane_property {
+@@ -428,6 +429,13 @@ void msm_submitqueue_close(struct msm_file_private *ctx);
  
-+struct msm_gem_address_space *
-+msm_gpu_create_private_address_space(struct msm_gpu *gpu);
+ void msm_submitqueue_destroy(struct kref *kref);
+ 
++static inline void msm_file_private_destroy(struct kref *kref)
++{
++	struct msm_file_private *ctx = container_of(kref,
++		struct msm_file_private, ref);
 +
- void msm_gpu_cleanup(struct msm_gpu *gpu);
++	kfree(ctx);
++}
  
- struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
+ #define DBG(fmt, ...) DRM_DEBUG_DRIVER(fmt"\n", ##__VA_ARGS__)
+ #define VERB(fmt, ...) if (0) DRM_DEBUG_DRIVER(fmt"\n", ##__VA_ARGS__)
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index 972490b14ba5..9c573c4269cb 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -142,6 +142,7 @@ struct msm_gem_submit {
+ 	bool valid;         /* true if no cmdstream patching needed */
+ 	bool in_rb;         /* "sudo" mode, copy cmds into RB */
+ 	struct msm_ringbuffer *ring;
++	struct msm_file_private *ctx;
+ 	unsigned int nr_cmds;
+ 	unsigned int nr_bos;
+ 	u32 ident;	   /* A "identifier" for the submit for logging */
+diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
+index 8cb9aa15ff90..aa5c60a7132d 100644
+--- a/drivers/gpu/drm/msm/msm_gem_submit.c
++++ b/drivers/gpu/drm/msm/msm_gem_submit.c
+@@ -27,7 +27,7 @@
+ #define BO_PINNED   0x2000
+ 
+ static struct msm_gem_submit *submit_create(struct drm_device *dev,
+-		struct msm_gpu *gpu, struct msm_gem_address_space *aspace,
++		struct msm_gpu *gpu,
+ 		struct msm_gpu_submitqueue *queue, uint32_t nr_bos,
+ 		uint32_t nr_cmds)
+ {
+@@ -43,7 +43,7 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
+ 		return NULL;
+ 
+ 	submit->dev = dev;
+-	submit->aspace = aspace;
++	submit->aspace = queue->ctx->aspace;
+ 	submit->gpu = gpu;
+ 	submit->fence = NULL;
+ 	submit->cmd = (void *)&submit->bos[nr_bos];
+@@ -677,7 +677,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
+ 		}
+ 	}
+ 
+-	submit = submit_create(dev, gpu, ctx->aspace, queue, args->nr_bos,
++	submit = submit_create(dev, gpu, queue, args->nr_bos,
+ 		args->nr_cmds);
+ 	if (!submit) {
+ 		ret = -ENOMEM;
+@@ -785,7 +785,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
+ 		}
+ 	}
+ 
+-	msm_gpu_submit(gpu, submit, ctx);
++	msm_gpu_submit(gpu, submit);
+ 
+ 	args->fence = submit->fence->seqno;
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index d5645472b25d..a1f3da6550e5 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -520,7 +520,7 @@ static void recover_worker(struct work_struct *work)
+ 			struct msm_ringbuffer *ring = gpu->rb[i];
+ 
+ 			list_for_each_entry(submit, &ring->submits, node)
+-				gpu->funcs->submit(gpu, submit, NULL);
++				gpu->funcs->submit(gpu, submit);
+ 		}
+ 	}
+ 
+@@ -747,8 +747,7 @@ void msm_gpu_retire(struct msm_gpu *gpu)
+ }
+ 
+ /* add bo's to gpu's ring, and kick gpu: */
+-void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-		struct msm_file_private *ctx)
++void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ {
+ 	struct drm_device *dev = gpu->dev;
+ 	struct msm_drm_private *priv = dev->dev_private;
+@@ -788,8 +787,8 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+ 			msm_gem_move_to_active(&msm_obj->base, gpu, false, submit->fence);
+ 	}
+ 
+-	gpu->funcs->submit(gpu, submit, ctx);
+-	priv->lastctx = ctx;
++	gpu->funcs->submit(gpu, submit);
++	priv->lastctx = submit->queue->ctx;
+ 
+ 	hangcheck_timer_reset(gpu);
+ }
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 0db117a7339b..d496d488222c 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -44,8 +44,7 @@ struct msm_gpu_funcs {
+ 	int (*hw_init)(struct msm_gpu *gpu);
+ 	int (*pm_suspend)(struct msm_gpu *gpu);
+ 	int (*pm_resume)(struct msm_gpu *gpu);
+-	void (*submit)(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-			struct msm_file_private *ctx);
++	void (*submit)(struct msm_gpu *gpu, struct msm_gem_submit *submit);
+ 	void (*flush)(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
+ 	irqreturn_t (*irq)(struct msm_gpu *irq);
+ 	struct msm_ringbuffer *(*active_ring)(struct msm_gpu *gpu);
+@@ -181,6 +180,7 @@ struct msm_gpu_submitqueue {
+ 	u32 flags;
+ 	u32 prio;
+ 	int faults;
++	struct msm_file_private *ctx;
+ 	struct list_head node;
+ 	struct kref ref;
+ };
+@@ -280,8 +280,7 @@ int msm_gpu_perfcntr_sample(struct msm_gpu *gpu, uint32_t *activetime,
+ 		uint32_t *totaltime, uint32_t ncntrs, uint32_t *cntrs);
+ 
+ void msm_gpu_retire(struct msm_gpu *gpu);
+-void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+-		struct msm_file_private *ctx);
++void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit);
+ 
+ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
+index a1d94be7883a..10f557225a3e 100644
+--- a/drivers/gpu/drm/msm/msm_submitqueue.c
++++ b/drivers/gpu/drm/msm/msm_submitqueue.c
+@@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
+ 	 * No lock needed in close and there won't
+ 	 * be any more user ioctls coming our way
+ 	 */
+-	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
++	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
++		kref_put(&ctx->ref, msm_file_private_destroy);
+ 		msm_submitqueue_put(entry);
++	}
+ }
+ 
+ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
+@@ -81,6 +83,9 @@ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
+ 
+ 	write_lock(&ctx->queuelock);
+ 
++	kref_get(&ctx->ref);
++
++	queue->ctx = ctx;
+ 	queue->id = ctx->queueid++;
+ 
+ 	if (id)
+@@ -177,6 +182,7 @@ int msm_submitqueue_remove(struct msm_file_private *ctx, u32 id)
+ 			list_del(&entry->node);
+ 			write_unlock(&ctx->queuelock);
+ 
++			kref_put(&ctx->ref, msm_file_private_destroy);
+ 			msm_submitqueue_put(entry);
+ 			return 0;
+ 		}
 -- 
 2.25.1
 
