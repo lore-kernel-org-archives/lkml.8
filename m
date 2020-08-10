@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD1222080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA312080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087018;
-	bh=lq+XJEG3PTaPxXn1A2EbgfjJfyxd7zUhC0jjZeh9M1o=;
+	s=default; t=1597087023;
+	bh=xjlrN9MaIUTRcw82ulsWFjpjrcQYXFlikKVtEQSZaw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgcpdAeTf1ksxpO0wVvstq3AHr2THqvAtLHdJNSoebOgXxWHO2pEG4m5EFiVdxkuO
-	 V2AU7mNsIJhE2dcy6ISics8XD58vhG/XtBKkAOggcS6neDnuZHCEvKanIRydwq5/vH
-	 EKBy5qx06oOsxLAhh5juIbULkzIvB15m6nss5H2o=
+	b=MZYS1UJOeNgFkakF/Y8clybCIBth/46sla8/Tx2ahViv/BNucE4glWohk+jao0npy
+	 kxLBhrLgcw79ClOk39HBDlZs9OfIprOSnPJ+LdJIXegFzW46Wy53wIG240SHgESSeM
+	 sIs6CYmYwNzLm2SFW9/BTHuQaWtFGEgxZTs1b6m0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgHJTOd (ORCPT
+        id S1730249AbgHJTRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729998AbgHJTOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:23 -0400
+        id S1730030AbgHJTOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 463DF22BEB;
-        Mon, 10 Aug 2020 19:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CCF822BEB;
+        Mon, 10 Aug 2020 19:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086863;
-        bh=lq+XJEG3PTaPxXn1A2EbgfjJfyxd7zUhC0jjZeh9M1o=;
+        s=default; t=1597086870;
+        bh=xjlrN9MaIUTRcw82ulsWFjpjrcQYXFlikKVtEQSZaw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTqjS8gxuuQS23EWrqUF+DZxbF+XnCi7hGb9bwtFMx0VWQqSfXltbL9Csyw58rv5K
-         iopVNmg5X24OZgvyFtBfNGEc/6fY/GAcYlQDY210SdhVFEpkcfY2ST+EMUp+JP2lLE
-         jRly0CG0EBCYpbaKCkuGr1JPBTjdCSwr1OoiiWSA=
+        b=D9HgKQEutrAYeJKWp8FE2iYZt3Giyf28h8m6YrsNyiz54jiJL/+ukj7LtM1i2mULH
+         QfrZdm6K17BkC9HatV2AzPJm3AE3oaRXBQKOKXYXynaDJs6EWx+w1QvxGPqj2DFE89
+         dTTpvZmHXdQ8CKBPDa0/31SDhtXIMXJdCuDSVo7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/17] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
-Date:   Mon, 10 Aug 2020 15:14:04 -0400
-Message-Id: <20200810191418.3795394-3-sashal@kernel.org>
+Cc:     Michael Tretter <m.tretter@pengutronix.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 08/17] drm/debugfs: fix plain echo to connector "force" attribute
+Date:   Mon, 10 Aug 2020 15:14:09 -0400
+Message-Id: <20200810191418.3795394-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191418.3795394-1-sashal@kernel.org>
 References: <20200810191418.3795394-1-sashal@kernel.org>
@@ -58,60 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
+[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
 
-Very large I/Os can cause the following RCU CPU stall warning:
+Using plain echo to set the "force" connector attribute fails with
+-EINVAL, because echo appends a newline to the output.
 
-RIP: 0010:rb_prev+0x8/0x50
-Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
-89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
-RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
-RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
-RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
-RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
-R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
-R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
- __lookup_extent_mapping+0xa0/0x110
- try_release_extent_mapping+0xdc/0x220
- btrfs_releasepage+0x45/0x70
- shrink_page_list+0xa39/0xb30
- shrink_inactive_list+0x18f/0x3b0
- shrink_lruvec+0x38e/0x6b0
- shrink_node+0x14d/0x690
- do_try_to_free_pages+0xc6/0x3e0
- try_to_free_mem_cgroup_pages+0xe6/0x1e0
- reclaim_high.constprop.73+0x87/0xc0
- mem_cgroup_handle_over_high+0x66/0x150
- exit_to_usermode_loop+0x82/0xd0
- do_syscall_64+0xd4/0x100
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Replace strcmp with sysfs_streq to also accept strings that end with a
+newline.
 
-On a PREEMPT=n kernel, the try_release_extent_mapping() function's
-"while" loop might run for a very long time on a large I/O.  This commit
-therefore adds a cond_resched() to this loop, providing RCU any needed
-quiescent states.
+v2: use sysfs_streq instead of stripping trailing whitespace
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/drm_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 8c0ff985c1919..fa22bb29eee6f 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4340,6 +4340,8 @@ int try_release_extent_mapping(struct extent_map_tree *map,
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 1205790ed960c..5ffe4b664cfbf 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -287,13 +287,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
  
- 			/* once for us */
- 			free_extent_map(em);
-+
-+			cond_resched(); /* Allow large-extent preemption. */
- 		}
- 	}
- 	return try_release_extent_state(map, tree, page, mask);
+ 	buf[len] = '\0';
+ 
+-	if (!strcmp(buf, "on"))
++	if (sysfs_streq(buf, "on"))
+ 		connector->force = DRM_FORCE_ON;
+-	else if (!strcmp(buf, "digital"))
++	else if (sysfs_streq(buf, "digital"))
+ 		connector->force = DRM_FORCE_ON_DIGITAL;
+-	else if (!strcmp(buf, "off"))
++	else if (sysfs_streq(buf, "off"))
+ 		connector->force = DRM_FORCE_OFF;
+-	else if (!strcmp(buf, "unspecified"))
++	else if (sysfs_streq(buf, "unspecified"))
+ 		connector->force = DRM_FORCE_UNSPECIFIED;
+ 	else
+ 		return -EINVAL;
 -- 
 2.25.1
 
