@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13481C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B002080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09392080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087733;
-	bh=CKEwHfjYMaMRptnZa9Xtr3VDwhMRZ/6+GvzVOGRbGrk=;
+	s=default; t=1597087736;
+	bh=hbh2onNfrYZWgzJOpBJ8qUnoyWuTiPcRne0L8EkdyiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zd+NSOTVzy5DT5jKjVMu5BlEDuggZBO63OaLzLz0dFqrW7YRj9mHAC6FMYaVU4u4r
-	 IMmz9t+yOszNSph1lDiDxyjE5V70KPmXdERGoFMBMYmgwL8+9y7XwuHrt+2XQe4P5P
-	 8CEA/2aUMPwrj9lqHrUyXXljCQh03MRGcN41S1EM=
+	b=c22XSc6fl/GHv/MgCic7sQSKuvfPe+xwt+sYyuI+iFa+MdVLldLrhSzGyjbMrKpev
+	 qpk+xLBmj1MiRJvyjFYyfakzWLHt3sMtxBUuxUfyfgiTxDuwWRNTOAQa1jp7cAGhD4
+	 GqyJUfCacSGO34vuqPCVYpta8IyqTJ0q6CsJlKnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgHJT2w (ORCPT
+        id S1729683AbgHJT2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:28:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38730 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729030AbgHJTKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:55 -0400
+        id S1729105AbgHJTK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0E9622B47;
-        Mon, 10 Aug 2020 19:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C938221E2;
+        Mon, 10 Aug 2020 19:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086654;
-        bh=CKEwHfjYMaMRptnZa9Xtr3VDwhMRZ/6+GvzVOGRbGrk=;
+        s=default; t=1597086658;
+        bh=hbh2onNfrYZWgzJOpBJ8qUnoyWuTiPcRne0L8EkdyiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBrfp/hMhlVkKIXRaxOZI6Je0wtyE11ji5/+08TfDwOmpEcAkuQ9mOZLpZRlftvrY
-         VmIxt430r3zj1RGR108AA/cawxO7HFcb64t8dyPIrcxHheNfMyy3/khkb6yLfG1UMw
-         6MAmEwdU+k35AWfqhAMatiDmvTl82TId7ziXe4Ew=
+        b=h7CzJXkW6ItJsWxMI29pBB5SExDW6xE7uixl6nOYukiWJH1m2CNNrT7zoIL5j0cmx
+         +q11JSKc8vP+TUO3BfVpKqHMY7FY8vaYHi7qIb0FSM0lqKPs3W9vdm9/rbOIA0AijC
+         xQUWQd+8BCSm4IT1aYRY2zB9px3/6+XqLv5cmBXg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 19/60] memory: samsung: exynos5422-dmc: Do not ignore return code of regmap_read()
-Date:   Mon, 10 Aug 2020 15:09:47 -0400
-Message-Id: <20200810191028.3793884-19-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 22/60] mmc: sdhci-cadence: do not use hardware tuning for SD mode
+Date:   Mon, 10 Aug 2020 15:09:50 -0400
+Message-Id: <20200810191028.3793884-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -61,78 +59,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit c4f16e96d8fdd62ef12898fc0965c42093bed237 ]
+[ Upstream commit adc40a5179df30421a5537bfeb4545100ab97d5e ]
 
-Check for regmap_read() return code before using the read value in
-following write in exynos5_switch_timing_regs().  Pass reading error
-code to the callers.
+As commit ef6b75671b5f ("mmc: sdhci-cadence: send tune request twice to
+work around errata") stated, this IP has an errata. This commit applies
+the second workaround for the SD mode.
 
-This does not introduce proper error handling for such failed reads (and
-obviously regmap_write() error is still ignored) because the driver
-ignored this in all places.  Therefor it only fixes reported issue while
-matching current driver coding style:
+Due to the errata, it is not possible to use the hardware tuning provided
+by SDHCI_HOST_CONTROL2.
 
-       drivers/memory/samsung/exynos5422-dmc.c: In function 'exynos5_switch_timing_regs':
-    >> drivers/memory/samsung/exynos5422-dmc.c:216:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+Use the software-controlled tuning like the eMMC mode.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Set sdhci_host_ops::platform_execute_tuning instead of overriding
+mmc_host_ops::execute_tuning.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20200720061141.172944-1-yamada.masahiro@socionext.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/samsung/exynos5422-dmc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-cadence.c | 123 ++++++++++++++++---------------
+ 1 file changed, 62 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 22a43d6628336..3460ba55fd596 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -270,12 +270,14 @@ static int find_target_freq_idx(struct exynos5_dmc *dmc,
-  * This function switches between these banks according to the
-  * currently used clock source.
-  */
--static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
-+static int exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 6da6d4fb5edd7..07a4cb989a68a 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -194,57 +194,6 @@ static u32 sdhci_cdns_get_emmc_mode(struct sdhci_cdns_priv *priv)
+ 	return FIELD_GET(SDHCI_CDNS_HRS06_MODE, tmp);
+ }
+ 
+-static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
+-					 unsigned int timing)
+-{
+-	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+-	u32 mode;
+-
+-	switch (timing) {
+-	case MMC_TIMING_MMC_HS:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
+-		break;
+-	case MMC_TIMING_MMC_DDR52:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
+-		break;
+-	case MMC_TIMING_MMC_HS200:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
+-		break;
+-	case MMC_TIMING_MMC_HS400:
+-		if (priv->enhanced_strobe)
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
+-		else
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
+-		break;
+-	default:
+-		mode = SDHCI_CDNS_HRS06_MODE_SD;
+-		break;
+-	}
+-
+-	sdhci_cdns_set_emmc_mode(priv, mode);
+-
+-	/* For SD, fall back to the default handler */
+-	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
+-		sdhci_set_uhs_signaling(host, timing);
+-}
+-
+-static const struct sdhci_ops sdhci_cdns_ops = {
+-	.set_clock = sdhci_set_clock,
+-	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
+-	.set_bus_width = sdhci_set_bus_width,
+-	.reset = sdhci_reset,
+-	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-};
+-
+ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
  {
- 	unsigned int reg;
- 	int ret;
- 
- 	ret = regmap_read(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, &reg);
-+	if (ret)
-+		return ret;
- 
- 	if (set)
- 		reg |= EXYNOS5_TIMING_SET_SWI;
-@@ -283,6 +285,8 @@ static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
- 		reg &= ~EXYNOS5_TIMING_SET_SWI;
- 
- 	regmap_write(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, reg);
-+
-+	return 0;
+ 	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+@@ -278,23 +227,24 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ 	return 0;
  }
  
- /**
-@@ -516,7 +520,7 @@ exynos5_dmc_switch_to_bypass_configuration(struct exynos5_dmc *dmc,
+-static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
++/*
++ * In SD mode, software must not use the hardware tuning and instead perform
++ * an almost identical procedure to eMMC.
++ */
++static int sdhci_cdns_execute_tuning(struct sdhci_host *host, u32 opcode)
+ {
+-	struct sdhci_host *host = mmc_priv(mmc);
+ 	int cur_streak = 0;
+ 	int max_streak = 0;
+ 	int end_of_streak = 0;
+ 	int i;
+ 
  	/*
- 	 * Delays are long enough, so use them for the new coming clock.
+-	 * This handler only implements the eMMC tuning that is specific to
+-	 * this controller.  Fall back to the standard method for SD timing.
++	 * Do not execute tuning for UHS_SDR50 or UHS_DDR50.
++	 * The delay is set by probe, based on the DT properties.
  	 */
--	exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
-+	ret = exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
+-	if (host->timing != MMC_TIMING_MMC_HS200)
+-		return sdhci_execute_tuning(mmc, opcode);
+-
+-	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
+-		return -EINVAL;
++	if (host->timing != MMC_TIMING_MMC_HS200 &&
++	    host->timing != MMC_TIMING_UHS_SDR104)
++		return 0;
  
- 	return ret;
+ 	for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
+ 		if (sdhci_cdns_set_tune_val(host, i) ||
+@@ -317,6 +267,58 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
  }
-@@ -577,7 +581,9 @@ exynos5_dmc_change_freq_and_volt(struct exynos5_dmc *dmc,
  
- 	clk_set_rate(dmc->fout_bpll, target_rate);
- 
--	exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
-+	ret = exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
-+	if (ret)
-+		goto disable_clocks;
- 
- 	ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
- 	if (ret)
++static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
++					 unsigned int timing)
++{
++	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
++	u32 mode;
++
++	switch (timing) {
++	case MMC_TIMING_MMC_HS:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
++		break;
++	case MMC_TIMING_MMC_DDR52:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
++		break;
++	case MMC_TIMING_MMC_HS200:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
++		break;
++	case MMC_TIMING_MMC_HS400:
++		if (priv->enhanced_strobe)
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
++		else
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
++		break;
++	default:
++		mode = SDHCI_CDNS_HRS06_MODE_SD;
++		break;
++	}
++
++	sdhci_cdns_set_emmc_mode(priv, mode);
++
++	/* For SD, fall back to the default handler */
++	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
++		sdhci_set_uhs_signaling(host, timing);
++}
++
++static const struct sdhci_ops sdhci_cdns_ops = {
++	.set_clock = sdhci_set_clock,
++	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.reset = sdhci_reset,
++	.platform_execute_tuning = sdhci_cdns_execute_tuning,
++	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++};
++
+ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
+ 					     struct mmc_ios *ios)
+ {
+@@ -377,7 +379,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	priv->hrs_addr = host->ioaddr;
+ 	priv->enhanced_strobe = false;
+ 	host->ioaddr += SDHCI_CDNS_SRS_BASE;
+-	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
+ 	sdhci_enable_v4_mode(host);
 -- 
 2.25.1
 
