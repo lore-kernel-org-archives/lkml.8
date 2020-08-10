@@ -2,162 +2,143 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F52C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABD6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F109207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597078067;
+	bh=yJfIkkdCzrCMdbjH7ys/rBix9qN66sTAq5RdvL9Yb2c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=P+1oTdrG5f8nDYU0yE6mKo5nSX4sBzPzGbDDXe1e8gfNWRYExw7VMBRaDfU3Qi5VU
+	 49xBoGhJHKGmw43gYop66T8h9lKgOCaeNMFr1P40Zix4lIJPGwwy9lfzhT4K0H6hDf
+	 rGrbsDZG04CdMOw9nBP8HoEu9Os0ZeWennnE0BGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgHJQpz (ORCPT
+        id S1727930AbgHJQrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:45:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34470 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgHJQpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:45:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9E53EAC61;
-        Mon, 10 Aug 2020 16:46:13 +0000 (UTC)
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org
-From:   Claudio Fontana <cfontana@suse.de>
-Subject: in_commit_log: is the wrong token being matched for the MAINTAINERS
- need updating message?
-Message-ID: <540c6741-3f22-ec85-0a14-3165115430df@suse.de>
-Date:   Mon, 10 Aug 2020 18:45:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Aug 2020 12:47:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgHJQro (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 12:47:44 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A7ADC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:47:43 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 185so10326764ljj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FysGtb8inXqSIawN5ojOBaunBDDu9d2yxrSJc+Eh5Ik=;
+        b=C/BnDPNLO6j29yT981hNypIvExpmF7gUDXGhgnPGt3Bkot3nAwqB7apErwKMe/ijP0
+         xB+rnSLzE2Euv1HRTA66M+lDKN7cAazwWhR/3MA7Zbvlf/LSXOrSBDSbY6pN5rCsHt1i
+         QOil+ZLfX+hf6wzPRkMgEz9Irv6W18qws41mM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FysGtb8inXqSIawN5ojOBaunBDDu9d2yxrSJc+Eh5Ik=;
+        b=MSHRb+KxNfqRhIg5Vh/8XX7vDuU8v4THCu0khnJMWj/jzXoPQieHsencDNlSUyAhFO
+         rbvuKVNxbfzxjVof8ieUdv/8i9gMz7gvG4S76TwQyAZgrX4h6H1Uu/gKEDvlQ8gxUyln
+         wLTMeJd7dVgUzo/uFb/ha1BwG2TOfDdmFWD4L/QD7TiP0DQUI7DhPkE2O+u7qnBPSluf
+         fc087r5vitZkutulC98HT5LKiBRZ7/uBAM+AIxA8k3Yv7XgKDb0SwQevtEhdWyJ7wWZa
+         IWhIfxF1l9iD/cJBM9lIfDd1V4YTCSFBn65+BzD+bi4ym6TMkw7OaeXHohBmAh2wJymS
+         L1pA==
+X-Gm-Message-State: AOAM532fnKXRAr8F6VwKPbD7cGtOQcvqxFnmUjDl6Vi5zcfAkXotN3oA
+        D2wVrt/I1RnU5f39zR/BOA2ofT45khk=
+X-Google-Smtp-Source: ABdhPJxBSgWNuXE5DtLQ2aQMyBMTHwf4kYqIdpLy0TXFKFnXQS2DjcoTvJeGJxsLcx3cwod7Bm3FFQ==
+X-Received: by 2002:a2e:8087:: with SMTP id i7mr1004855ljg.98.1597078060063;
+        Mon, 10 Aug 2020 09:47:40 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id f14sm4806055ljp.138.2020.08.10.09.47.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 09:47:39 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id w14so10341320ljj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:47:38 -0700 (PDT)
+X-Received: by 2002:a2e:9a11:: with SMTP id o17mr975125lji.314.1597078058439;
+ Mon, 10 Aug 2020 09:47:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200810145701.129228-1-peterx@redhat.com>
+In-Reply-To: <20200810145701.129228-1-peterx@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 10 Aug 2020 09:47:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiSF+aKhDOewxQGCGUPyGnA=K7OtAczL5M7aisA5mgFzg@mail.gmail.com>
+Message-ID: <CAHk-=wiSF+aKhDOewxQGCGUPyGnA=K7OtAczL5M7aisA5mgFzg@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/gup: Allow real explicit breaking of COW
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Aug 10, 2020 at 7:57 AM Peter Xu <peterx@redhat.com> wrote:
+>
+> One solution is actually already mentioned in commit 17839856fd58, which is to
+> provide an explicit BREAK_COW scemantics for enforced COW.  Then we can still
+> use FAULT_FLAG_WRITE to identify whether this is a "real write request" or an
+> "enfornced COW (read) request".
 
-while working on a downstream version of the checkpatch.pl script used for qemu,
+I think the patch is fine, but during discussions we also discussed
+having the flag the other way around, in order to have the default be
+"break COW", and the use cases that explicitly know they can handle
+the ambiguity would have to say so explicitly with a "don't break COW"
+bit.
 
-I experienced a "bug" that I traced back to the kernel upstream version of checkpatch.pl, and hence the question:
+I don't think this matters in theory, but in practice I think it would
+be a good thing as documentation.
 
-what is the exact meaning of the variable in_commit_log, is it supposed to be including the git diff stats or not?
+Because FAULT_FLAG_BREAK_COW doesn't really tell you anything:
+breaking COW is "always safe".
 
-For example, lets take this sample useless patch as input:
+In contrast, a "FAULT_FLAG_DONT_COW" bit could be accompanied with a
+note like "I don't care which side I get - I'm not going to keep track
+of the page, I just want random data, and it's ok if I get it from
+another forked process".
 
--------- cut --------
-From 1873ba53039d8824e37452dc39af79b4b0327085 Mon Sep 17 00:00:00 2001
-From: Claudio Fontana <cfontana@suse.de>
-Date: Mon, 10 Aug 2020 15:36:47 +0200
-Subject: [PATCH] XXX test patch moving file
+In fact, maybe it shouldn't be called "DONT_COW", but more along the
+lines of those semantics of "READ_WRONG_SIDE_COW_OK", so that people
+who use the bit have to _think_ about it.
 
-Signed-off-by: Claudio Fontana <cfontana@suse.de>
----
- sound/Makefile              | 2 +-
- sound/{ => ac97}/ac97_bus.c | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename sound/{ => ac97}/ac97_bus.c (100%)
+I think comments in general should be there.
 
-diff --git a/sound/Makefile b/sound/Makefile
-index 797ecdcd35e2..d7a08163ea1a 100644
---- a/sound/Makefile
-+++ b/sound/Makefile
-@@ -9,7 +9,7 @@ obj-$(CONFIG_SND) += core/ i2c/ drivers/ isa/ pci/ ppc/ arm/ sh/ synth/ usb/ \
- obj-$(CONFIG_SND_AOA) += aoa/
- 
- # This one must be compilable even if sound is configured out
--obj-$(CONFIG_AC97_BUS) += ac97_bus.o
-+obj-$(CONFIG_AC97_BUS) += ac97/ac97_bus.o
- obj-$(CONFIG_AC97_BUS_NEW) += ac97/
- 
- ifeq ($(CONFIG_SND),y)
-diff --git a/sound/ac97_bus.c b/sound/ac97/ac97_bus.c
-similarity index 100%
-rename from sound/ac97_bus.c
-rename to sound/ac97/ac97_bus.c
--- 
-2.16.4
+Looking at your patch, for example, I go "Hmm" when I see this part:
 
--------- cut --------
+-       if (userfaultfd_pte_wp(vma, *vmf->pte)) {
++       if ((vmf->flags & FAULT_FLAG_WRITE) &&
++           userfaultfd_pte_wp(vma, *vmf->pte)) {
+                pte_unmap_unlock(vmf->pte, vmf->ptl);
+                return handle_userfault(vmf, VM_UFFD_WP);
+        }
 
-and using this simple patch to highlight the issue:
+and I go "ok, for reads with COW breaking, we'll just silently break
+the COW and not do VM_UFFD_WP?"
 
--------- cut --------
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 599b8c4933a7..e87d5d00a9cd 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2876,16 +2876,17 @@ sub process {
-                        }
-                }
- 
-+               print $line . "\n";
- # Check for added, moved or deleted files
-                if (!$reported_maintainer_file && !$in_commit_log &&
-                    ($line =~ /^(?:new|deleted) file mode\s*\d+\s*$/ ||
-                     $line =~ /^rename (?:from|to) [\w\/\.\-]+\s*$/ ||
-                     ($line =~ /\{\s*([\w\/\.\-]*)\s*\=\>\s*([\w\/\.\-]*)\s*\}/ &&
-                      (defined($1) || defined($2))))) {
-+                       print("1: $1 2: $2\n");
-                        $is_patch = 1;
-                        $reported_maintainer_file = 1;
--                       WARN("FILE_PATH_CHANGES",
--                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-+                       print("added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-                }
- 
- # Check for adding new DT bindings not in schema format
--------- cut --------
+An explanation of why that is the right thing to do would be good. And
+no, I don't mean "UFFD doesn't want a WP fault in this case". I mean
+literally why "we do want the silent COW, but UFFD doesn't care about
+it".
 
-We can see that in the sample patch input we are matching the line
+End result: I think the patch is fine, but the reason we had
+discussion about it and the reason it wasn't done initially was that
+you get all these kinds of subtle behavior differences, and I think
+they need clarifying.
 
- sound/{ => ac97}/ac97_bus.c | 0
-
-with the regex ($line =~ /\{\s*([\w\/\.\-]*)\s*\=\>\s*([\w\/\.\-]*)\s*\}/
-
-Is this actually wanted?
-
-I would expect that in this case we want instead to match the lines:
-
-rename from sound/ac97_bus.c
-rename to sound/ac97/ac97_bus.c
-
-It does not hurt in the kernel, but it does hurt in my downstream patch, where I try to make use of $realfile ,
-which is not set if I match too early in the patch. 
-
-Would it make sense to move this chunk earlier:
-
-
-# Check if it's the start of a commit log                                                                                                   
-# (not a header line and we haven't seen the patch filename)                                                                                
-                if ($in_header_lines && $realfile =~ /^$/ &&
-                    !($rawline =~ /^\s+(?:\S|$)/ ||
-                      $rawline =~ /^(?:commit\b|from\b|[\w-]+:)/i)) {
-                        $in_header_lines = 0;
-                        $in_commit_log = 1;
-                        $has_commit_log = 1;
-                }
-
-so that the check: 
-
-if (!$reported_maintainer_file && !$in_commit_log
-
-fails for the testcase shown (in_commit_log ends up as true), and the match will happen later, where realfile is set and available for use?
-
-Thanks!
-
-Claudio
-
-
--- 
-Claudio Fontana
-Engineering Manager Virtualization, SUSE Labs Core
-
-SUSE Software Solutions Italy Srl
+               Linus
