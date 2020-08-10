@@ -2,85 +2,107 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B83AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2CE20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABCF20734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgHJGkT (ORCPT
+        id S1725979AbgHJGoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 02:40:19 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:48692 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725763AbgHJGkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 02:40:18 -0400
-Received: from localhost.localdomain (unknown [210.32.144.186])
-        by mail-app3 (Coremail) with SMTP id cC_KCgBnS9y+6zBfmpxZAg--.64946S4;
-        Mon, 10 Aug 2020 14:40:01 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Eliot Blennerhassett <eblennerhassett@audioscience.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: pci/asihpi: Fix memory leak in snd_card_asihpi_capture_open()
-Date:   Mon, 10 Aug 2020 14:39:55 +0800
-Message-Id: <20200810063957.13692-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgBnS9y+6zBfmpxZAg--.64946S4
-X-Coremail-Antispam: 1UD129KBjvdXoWruryktF1xCr4Duw43Jw1rXrb_yoWfZwc_Gr
-        4xAr43WFWjvr9Fv34qyr4SqrW2v395CF4vgr9xtFsxWw45t3y29rWxXryfGF92k34vkw18
-        GanFqry7AFy3JjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l
-        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAF
-        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-        7VUjHUDJUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsFBlZdtPe8fwAKsL
+        Mon, 10 Aug 2020 02:44:00 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:43662 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbgHJGn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 02:43:59 -0400
+Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
+        by mail.ispras.ru (Postfix) with ESMTPS id 435F440A2060;
+        Mon, 10 Aug 2020 06:43:57 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 09:43:57 +0300 (MSK)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     Ignat Insarov <kindaro@gmail.com>
+cc:     linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: Non-deterministically boot into dark screen with `amdgpu`
+In-Reply-To: <CAB-2Q08KQmS0D06k1QEUpccybGqCY+HYaZkF=sY0t1EX8Y_u2Q@mail.gmail.com>
+Message-ID: <alpine.LNX.2.20.13.2008100928010.2454@monopod.intra.ispras.ru>
+References: <CAB-2Q08KQmS0D06k1QEUpccybGqCY+HYaZkF=sY0t1EX8Y_u2Q@mail.gmail.com>
+User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="168458499-1805300261-1597041837=:2454"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When snd_pcm_hw_constraint_pow2() fails, dpcm should be freed
-just like when hpi_instream_open()  fails.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Fixes: 719f82d3987aa ("ALSA: Add support of AudioScience ASI boards")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- sound/pci/asihpi/asihpi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--168458499-1805300261-1597041837=:2454
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/sound/pci/asihpi/asihpi.c b/sound/pci/asihpi/asihpi.c
-index 023c35a2a951..736eceacd3d0 100644
---- a/sound/pci/asihpi/asihpi.c
-+++ b/sound/pci/asihpi/asihpi.c
-@@ -1244,8 +1244,10 @@ static int snd_card_asihpi_capture_open(struct snd_pcm_substream *substream)
- 	if (card->can_dma)
- 		err = snd_pcm_hw_constraint_pow2(runtime, 0,
- 					SNDRV_PCM_HW_PARAM_BUFFER_BYTES);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree(dpcm);
- 		return err;
-+	}
- 
- 	snd_pcm_hw_constraint_step(runtime, 0, SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
- 		card->update_interval_frames);
--- 
-2.17.1
+Hi,
 
+you should Сс a specialized mailing list and a relevant maintainer,
+otherwise your email is likely to be ignored as LKML is an incredibly
+high-volume list. Adding amd-gfx and Alex Deucher.
+
+More thoughts below.
+
+On Sun, 9 Aug 2020, Ignat Insarov wrote:
+
+> Hello!
+> 
+> This is an issue report. I am not familiar with the Linux kernel
+> development procedure, so please direct me to a more appropriate or
+> specialized medium if this is not the right avenue.
+> 
+> My laptop (Ryzen 7 Pro CPU/GPU) boots into dark screen more often than
+> not. Screen blackness correlates with a line in the `systemd` journal
+> that says `RAM width Nbits DDR4`, where N is either 128 (resulting in
+> dark screen) or 64 (resulting in a healthy boot). The number seems to
+> be chosen at random with bias towards 128. This has been going on for
+> a while so here is some statistics:
+> 
+> * 356 boots proceed far enough to  attempt mode setting.
+> * 82 boots set RAM width to 64 bits and presumably succeed.
+> * 274 boots set RAM width to 128 bits and presumably fail.
+> 
+> The issue is prevented with the `nomodeset` kernel option.
+> 
+> I reported this previously (about a year ago) on the forum of my Linux
+> distribution.[1] The issue still persists as of  linux 5.8.0.
+> 
+> The details of my graphics controller, as well as some journal
+> excerpts, can be seen at [1]. One thing that has changed since then is
+> that on failure, there now appears a null pointer dereference error. I
+> am attaching the log of kernel messages from the most recent failed
+> boot — please request more information if needed.
+> 
+> I appreciate any directions and advice as to how I may go about fixing
+> this annoyance.
+> 
+> [1]: https://bbs.archlinux.org/viewtopic.php?id=248273
+
+
+On the forum you show that in the "success" case there's one less "BIOS
+signature incorrect" message. This implies that amdgpu_get_bios() in
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+gets the video BIOS from a different source. If that happens every time
+(one "signature incorrect" message for "success", two for "failure")
+that may be relevant to the problem you're experiencing.
+
+If you don't mind patching and rebuilding the kernel I suggest adding
+debug printks to the aforementioned function to see exactly which methods
+fail with wrong signature and which succeeds.
+
+Also might be worthwhile to check if there's a BIOS update for your laptop.
+
+Alexander
+--168458499-1805300261-1597041837=:2454--
