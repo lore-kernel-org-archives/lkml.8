@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF42C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 298102080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7302080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087417;
-	bh=K1hirN2sBpFZcADEX5DOg98QwrA5CvrnN4JSkIwDI64=;
+	s=default; t=1597087421;
+	bh=C7FuPpEvit4W3eOn4nPCY2We+IRa/QZOzXOY9OqqX4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqSrf3W/yS/3aBnoGXpOPCnOGN+OXi947Bt1cjgPCuZh31ImVyIMPshyfEUg8r0gz
-	 edDoPk+35csJVWYKvhDSYvADFudJSs59nzE2/PG1/Lb+RmaT9UeyNhX5wB1zEZ64Tv
-	 AoQKxy0HaiWK4/O41c1TpJGjabkmanAtlGMvKODc=
+	b=pqjlus+aF/YRsj8F0J92IOYgnpaZ9oY9475lVTT1wYKE22r4LliyZ2myapkZDGnRq
+	 3H9rnnkfgsxc8QZqfNOp1Wd1IMTbWDtwOqBclvDVaBOyOdZY701WFeqf4u10HjJpba
+	 b97FsjtWRBuAVLfMjpM3viHdyG8HRhzoJuPj3tME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgHJTXf (ORCPT
+        id S1728717AbgHJTMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:23:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42964 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729619AbgHJTMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:47 -0400
+        id S1729562AbgHJTMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15F1622B49;
-        Mon, 10 Aug 2020 19:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 381B222BED;
+        Mon, 10 Aug 2020 19:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086766;
-        bh=K1hirN2sBpFZcADEX5DOg98QwrA5CvrnN4JSkIwDI64=;
+        s=default; t=1597086753;
+        bh=C7FuPpEvit4W3eOn4nPCY2We+IRa/QZOzXOY9OqqX4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+COgtKJPZI4PMqcbgbCxripOKmXZgSVA/8yXv+V7BfKqxqjYsOadz4WGirNcdYAO
-         b7rpqO1SCFof43A+g1LxSPOyPYrgU3SxVQCbwzC86pTvB57P0oDzyzghYxOj+S/gaI
-         6uX3nZbzsqATGI9Aym1KvoLR1IsA+H+NmFVqk43M=
+        b=g83ghpaAwn68DeWOgfQfWeNZgSs3Pxdbf/XMzF//AeQkSCmeEE4k8WxcW8n0npplp
+         c6JN0FgYeM5G97V5IlKEuba6A9JO9NpXtK+ESZJfn/6Yh7w/PEd3X+BbYm8wj8AWh5
+         oB+R+ahGG1OP1c24UDgXDYVbitiq98J1ZrevnrmI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     shirley her <shirley.her@bayhubtech.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 37/45] mmc: sdhci-pci-o2micro: Bug fix for O2 host controller Seabird1
-Date:   Mon, 10 Aug 2020 15:11:45 -0400
-Message-Id: <20200810191153.3794446-37-sashal@kernel.org>
+Cc:     Evan Quan <evan.quan@amd.com>, kernel test robot <lkp@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 28/45] drm/amd/powerplay: fix compile error with ARCH=arc
+Date:   Mon, 10 Aug 2020 15:11:36 -0400
+Message-Id: <20200810191153.3794446-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -59,40 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: shirley her <shirley.her@bayhubtech.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit cdd2b769789ae1a030e1a26f6c37c5833cabcb34 ]
+[ Upstream commit 9822ba2ead1baa3de4860ad9472f652c4cc78c9c ]
 
-To fix support for the O2 host controller Seabird1, set the quirk
-SDHCI_QUIRK2_PRESET_VALUE_BROKEN and the capability bit MMC_CAP2_NO_SDIO.
-Moreover, assign the ->get_cd() callback.
+Fix the compile error below:
+drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c: In function 'smu_v11_0_init_microcode':
+>> arch/arc/include/asm/bug.h:22:2: error: implicit declaration of function 'pr_warn'; did you mean 'pci_warn'? [-Werror=implicit-function-declaration]
+      22 |  pr_warn("BUG: failure at %s:%d/%s()!\n", __FILE__, __LINE__, __func__); \
+         |  ^~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:176:3: note: in expansion of macro 'BUG'
+     176 |   BUG();
 
-Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
-Link: https://lore.kernel.org/r/20200721011733.8416-1-shirley.her@bayhubtech.com
-[Ulf: Updated the commit message]
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-pci-o2micro.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-index fa8105087d684..41a2394313dd0 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -561,6 +561,12 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
- 			slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
- 		}
+diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+index 0922d9cd858a0..c4d8c52c6b9ca 100644
+--- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
++++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+@@ -171,7 +171,8 @@ static int smu_v11_0_init_microcode(struct smu_context *smu)
+ 		chip_name = "navi12";
+ 		break;
+ 	default:
+-		BUG();
++		dev_err(adev->dev, "Unsupported ASIC type %d\n", adev->asic_type);
++		return -EINVAL;
+ 	}
  
-+		if (chip->pdev->device == PCI_DEVICE_ID_O2_SEABIRD1) {
-+			slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
-+			host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-+			host->quirks2 |= SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
-+		}
-+
- 		host->mmc_host_ops.execute_tuning = sdhci_o2_execute_tuning;
- 
- 		if (chip->pdev->device != PCI_DEVICE_ID_O2_FUJIN2)
+ 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_smc.bin", chip_name);
 -- 
 2.25.1
 
