@@ -2,74 +2,82 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B99C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D83C20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:45:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597103155;
-	bh=0rxBVqCiXgW++BolD15LIj72xU68nplEsQ5hkeWVWVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r2Uhh0y0nB/3XgrLQZ92wDqc8l3lvV+slE7WHVlfbaiYe5gv7W5XakEJ8+XKpJfg3
-	 zgrvpCH/VKHUqVWbxA7gTYGZA6LeX+yW7GlVuxxmbgxJeQre6I01MmtglHM4maPMz+
-	 bWVnjATflk4UN115tZUI6Yuhg9VZRIaGIehn3lj4=
+	by mail.kernel.org (Postfix) with ESMTP id AC80820825
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgHJXpx (ORCPT
+        id S1727903AbgHJXsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 19:48:40 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48551 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgHJXpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:45:53 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2C52206E9;
-        Mon, 10 Aug 2020 23:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597103153;
-        bh=0rxBVqCiXgW++BolD15LIj72xU68nplEsQ5hkeWVWVQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CTz1ud+HOuPoIC7aMP4WSRgEG5Zfd6eMQZF2bQX0t4JdLzfoYrlzTA7YSMpFkIjVx
-         aa7UhJId7cyPnxqhc82q8BuppGaIKbH/D/IX2/iR7XRBjeJsn3T+J49U0gMlktSTeU
-         tAJiI0iEe9zkaGuNogJUtdcvFga3DWOITLsFZB6I=
-Date:   Mon, 10 Aug 2020 16:45:51 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] coccinelle: api: add kzfree script
-Message-ID: <20200810234551.GA851736@gmail.com>
-References: <20200604140805.111613-1-efremov@linux.com>
- <20200717115709.543882-1-efremov@linux.com>
- <alpine.DEB.2.22.394.2007172239130.2837@hadrien>
+        id S1726978AbgHJXsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 19:48:39 -0400
+IronPort-SDR: z3lwRyZA7YRybpY3dY4GFZepudjTzrEA+LvZ4/8Ai+p4JHKbGra4k4xXPGW2+NJ6b1G4Ighi/a
+ KwanpFpEej8Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="217973005"
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="217973005"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 16:48:38 -0700
+IronPort-SDR: 8cgDxUS+J1VzRgt8O8sKhAzt0TsHWt7cPUUWJzbs+R17gBvfWk4vrdWtk7/qVtMmZ20AMoPCUc
+ sVpfB1qa4UMQ==
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="290520811"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 16:48:38 -0700
+Date:   Mon, 10 Aug 2020 16:48:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asapek@google.com, Borislav Petkov <bp@alien8.de>,
+        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
+        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
+        Christian Ludloff <ludloff@google.com>,
+        Neil Horman <nhorman@redhat.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200810234837.GH14724@linux.intel.com>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
+ <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2007172239130.2837@hadrien>
+In-Reply-To: <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:39:20PM +0200, Julia Lawall wrote:
-> 
-> 
-> On Fri, 17 Jul 2020, Denis Efremov wrote:
-> 
-> > Check for memset()/memzero_explicit() followed by kfree()/vfree()/kvfree().
-> >
-> > Signed-off-by: Denis Efremov <efremov@linux.com>
-> 
-> Applied.
+On Mon, Aug 10, 2020 at 04:08:46PM -0700, Andy Lutomirski wrote:
+> What am I missing?  I still don't really understand why we are
+> supporting this mechanism at all.  Just the asm code to invoke the
+> callback seems to be about half of the entire function.
 
-FYI, this new script is already outdated, since kzfree() has been renamed to
-kfree_sensitive().
-
-- Eric
+Because the Intel SDK (and other SDKs?) wants to use the host stack to pass
+parameters out of the enclave.
