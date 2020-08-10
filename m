@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F67BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91037C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEF5420774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD9F2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074132;
-	bh=86lS6JMTyHDZ4MsN9aNKQqb7YRtZnwskVhxQbpWN7oo=;
+	s=default; t=1597074134;
+	bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOixFkkIS+HlyKvBw7WB5xd0kao98KshQu91UKFPJrtfK3eVIHcfsWDjfC9sFBx6t
-	 f/AvHiC90BG1iUou1/HzomvKpE8Eq3FDKxeWNlPyPZjC/uMg0DEpVxY+9ZHJwyKFMa
-	 NYvMjP75X6Ob1lq7XAfOiKYDx4X5qd+/LTT9An4s=
+	b=QOveYMpidfFs44c5OaN0S5XpUIw0jlk00nWOpS6lSEvgo5sSTKQdOAAI8zjy3fo57
+	 YjY0fxvmx/ylHV0DSV/BK6gY8ES6tC1GGEgTet+pW1J2l4FvS2Fz6vHG07U0TGvfc2
+	 Cdk+zIU+P3lWhcxa3E2Th3otd6Kvc/wblPUVnBqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgHJPW0 (ORCPT
+        id S1728807AbgHJPmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:22:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53042 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgHJPWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:22:19 -0400
+        id S1725873AbgHJPW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:22:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9948020656;
-        Mon, 10 Aug 2020 15:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C07E72075F;
+        Mon, 10 Aug 2020 15:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072934;
-        bh=86lS6JMTyHDZ4MsN9aNKQqb7YRtZnwskVhxQbpWN7oo=;
+        s=default; t=1597072945;
+        bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oK7rPtAob7ppM6migHb6JluKVMHaJQ+6jgGCTb2yStEQHrOkLrMbGbSgB0ycooU2E
-         LrvpowMvmNx+PxDa8Mytt8QCwX0pAb6ozURkSwXYDVJwmiIPfS7rNVLMcnB5kr0OdA
-         uVob+j5dwQvCymzmLbehaZrzv39grglDNbVVOcr0=
+        b=kcOcI9ZyhMQsy2+ifnffLh3YGgH3G1QcUt1B+6tV9iLSpCv1gwrOGefnd8Uz8sYMj
+         TjFMGs/yUqHPGuvUgrBpcWJRmyRTTl8+eQLLKdngxLhLIj+SKRbr0cPkKuPzvpnTrM
+         mvZaR3EZQFUJoKihdNFpPE+rld/yurb0QfTuzSUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <Avri.Altman@wdc.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.7 01/79] scsi: ufs: Fix and simplify setup_xfer_req variant operation
-Date:   Mon, 10 Aug 2020 17:20:20 +0200
-Message-Id: <20200810151812.194906098@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com,
+        Rustam Kovhaev <rkovhaev@gmail.com>
+Subject: [PATCH 5.7 13/79] staging: rtl8712: handle firmware load failure
+Date:   Mon, 10 Aug 2020 17:20:32 +0200
+Message-Id: <20200810151812.778369620@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,55 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-commit 6edfdcfe285e499994b94a0f93e1f46ab2398162 upstream.
+commit b4383c971bc5263efe2b0915ba67ebf2bf3f1ee5 upstream.
 
-Add missing setup_xfer_req() call in ufshcd_issue_devman_upiu_cmd() in
-ufs-bsg path. Relocate existing setup_xfer_req() calls to a common place,
-i.e., ufshcd_send_command(), to simplify the driver.
+when firmware fails to load we should not call unregister_netdev()
+this patch fixes a race condition between rtl871x_load_fw_cb() and
+r871xu_dev_remove() and fixes the bug reported by syzbot
 
-Link: https://lore.kernel.org/r/20200706060707.32608-3-stanley.chu@mediatek.com
-Acked-by: Avri Altman <Avri.Altman@wdc.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=80899a8a8efe8968cde7
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200716151324.1036204-1-rkovhaev@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/staging/rtl8712/hal_init.c |    3 ++-
+ drivers/staging/rtl8712/usb_intf.c |   11 ++++++++---
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1908,8 +1908,11 @@ static void ufshcd_clk_scaling_update_bu
- static inline
- void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
+--- a/drivers/staging/rtl8712/hal_init.c
++++ b/drivers/staging/rtl8712/hal_init.c
+@@ -33,7 +33,6 @@ static void rtl871x_load_fw_cb(const str
  {
--	hba->lrb[task_tag].issue_time_stamp = ktime_get();
--	hba->lrb[task_tag].compl_time_stamp = ktime_set(0, 0);
-+	struct ufshcd_lrb *lrbp = &hba->lrb[task_tag];
-+
-+	lrbp->issue_time_stamp = ktime_get();
-+	lrbp->compl_time_stamp = ktime_set(0, 0);
-+	ufshcd_vops_setup_xfer_req(hba, task_tag, (lrbp->cmd ? true : false));
- 	ufshcd_add_command_trace(hba, task_tag, "send");
- 	ufshcd_clk_scaling_start_busy(hba);
- 	__set_bit(task_tag, &hba->outstanding_reqs);
-@@ -2519,7 +2522,6 @@ static int ufshcd_queuecommand(struct Sc
+ 	struct _adapter *adapter = context;
  
- 	/* issue command to the controller */
- 	spin_lock_irqsave(hba->host->host_lock, flags);
--	ufshcd_vops_setup_xfer_req(hba, tag, true);
- 	ufshcd_send_command(hba, tag);
- out_unlock:
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
-@@ -2706,7 +2708,6 @@ static int ufshcd_exec_dev_cmd(struct uf
- 	/* Make sure descriptors are ready before ringing the doorbell */
- 	wmb();
- 	spin_lock_irqsave(hba->host->host_lock, flags);
--	ufshcd_vops_setup_xfer_req(hba, tag, false);
- 	ufshcd_send_command(hba, tag);
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+-	complete(&adapter->rtl8712_fw_ready);
+ 	if (!firmware) {
+ 		struct usb_device *udev = adapter->dvobjpriv.pusbdev;
+ 		struct usb_interface *usb_intf = adapter->pusb_intf;
+@@ -41,11 +40,13 @@ static void rtl871x_load_fw_cb(const str
+ 		dev_err(&udev->dev, "r8712u: Firmware request failed\n");
+ 		usb_put_dev(udev);
+ 		usb_set_intfdata(usb_intf, NULL);
++		complete(&adapter->rtl8712_fw_ready);
+ 		return;
+ 	}
+ 	adapter->fw = firmware;
+ 	/* firmware available - start netdev */
+ 	register_netdev(adapter->pnetdev);
++	complete(&adapter->rtl8712_fw_ready);
+ }
  
+ static const char firmware_file[] = "rtlwifi/rtl8712u.bin";
+--- a/drivers/staging/rtl8712/usb_intf.c
++++ b/drivers/staging/rtl8712/usb_intf.c
+@@ -595,13 +595,17 @@ static void r871xu_dev_remove(struct usb
+ 	if (pnetdev) {
+ 		struct _adapter *padapter = netdev_priv(pnetdev);
+ 
+-		usb_set_intfdata(pusb_intf, NULL);
+-		release_firmware(padapter->fw);
+ 		/* never exit with a firmware callback pending */
+ 		wait_for_completion(&padapter->rtl8712_fw_ready);
++		pnetdev = usb_get_intfdata(pusb_intf);
++		usb_set_intfdata(pusb_intf, NULL);
++		if (!pnetdev)
++			goto firmware_load_fail;
++		release_firmware(padapter->fw);
+ 		if (drvpriv.drv_registered)
+ 			padapter->surprise_removed = true;
+-		unregister_netdev(pnetdev); /* will call netdev_close() */
++		if (pnetdev->reg_state != NETREG_UNINITIALIZED)
++			unregister_netdev(pnetdev); /* will call netdev_close() */
+ 		flush_scheduled_work();
+ 		udelay(1);
+ 		/* Stop driver mlme relation timer */
+@@ -614,6 +618,7 @@ static void r871xu_dev_remove(struct usb
+ 		 */
+ 		usb_put_dev(udev);
+ 	}
++firmware_load_fail:
+ 	/* If we didn't unplug usb dongle and remove/insert module, driver
+ 	 * fails on sitesurvey for the first time when device is up.
+ 	 * Reset usb port for sitesurvey fail issue.
 
 
