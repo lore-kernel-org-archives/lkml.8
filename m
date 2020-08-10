@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8533C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55EDC22B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751CC22CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073321;
-	bh=OI8L8JHWA4I07xOnOfrugVYN6Wsn1SSxQOR6XVPL8Yc=;
+	s=default; t=1597073327;
+	bh=yDP87lINzHFiLkOkm6RlyKNPAAeN6uTzlS7Nkl4gNvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WhXXLb5XzEOO+sdxpNZ68ZlGga4KQd/do9nCZhWPmvqGo9x/ObUriVTppcaLyY9tD
-	 cCsVJcd3RVvcBbW4DlQHcKVWnnXlsZkbtRM5kVqE3CWMrNMXebl24o7E8J4ToDO+i4
-	 c9rH0phtyATcBvjPMSvEEMPsQMncQx05alRW3LMU=
+	b=UbnoZvq9NSDKTK1rc65pAP6bxsnEn9xjwUAVJn+TLy8oGaEwC7neRXx7BFSsooafu
+	 gB7X9Y2+JCfuNBD0/aPw1jQvEHs8gw7i8VwUHHwrwZZfbWoRR77RDTFW57VS0CBpY7
+	 UwJE0Q5mjhiSNEy855ul1jAchMVKnMAzd2seHMlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgHJP2j (ORCPT
+        id S1728901AbgHJP2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:28:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:28:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728602AbgHJP2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:33 -0400
+        id S1728888AbgHJP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:28:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCFFD22BF3;
-        Mon, 10 Aug 2020 15:28:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CCA722CF7;
+        Mon, 10 Aug 2020 15:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073313;
-        bh=OI8L8JHWA4I07xOnOfrugVYN6Wsn1SSxQOR6XVPL8Yc=;
+        s=default; t=1597073322;
+        bh=yDP87lINzHFiLkOkm6RlyKNPAAeN6uTzlS7Nkl4gNvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+v4O5sszq64VkBUEbNHIzBR8BQ1gGwzNs0zijdlLdfzRyrK75Q9Zmbwa8oB1tO/Y
-         Dp9C9P1cCOLL0mCZp2k18+x6aGf6tW+ipHKklF7BcruYSM09yGqqKVP9SUkRIF9WHV
-         6pbR5OcBXFDNUEVN65jIvCYrU2vae52kcc2q58zc=
+        b=aIA3di7NEdtsnYewQdH0VKFI3A+rEyPd+oIzKg56gSSkp12ICg++3XzyVtMQ0NtAJ
+         q3AbjNSWPNbcRSQtBprqnokyEGeoQQ2rnYZcUFQ8OIgb4U28Z9yhhDege+Ll408bBf
+         WLvVx/Qr1qpdcoFReAoHcO9y4YqX1iSp4fz0emc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 5.4 30/67] leds: 88pm860x: fix use-after-free on unbind
-Date:   Mon, 10 Aug 2020 17:21:17 +0200
-Message-Id: <20200810151810.920575509@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 64/67] selftests/net: relax cpu affinity requirement in msg_zerocopy test
+Date:   Mon, 10 Aug 2020 17:21:51 +0200
+Message-Id: <20200810151812.655218208@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -59,63 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Willem de Bruijn <willemb@google.com>
 
-commit eca21c2d8655387823d695b26e6fe78cf3975c05 upstream.
+[ Upstream commit 16f6458f2478b55e2b628797bc81a4455045c74e ]
 
-Several MFD child drivers register their class devices directly under
-the parent device. This means you cannot blindly do devres conversions
-so that deregistration ends up being tied to the parent device,
-something which leads to use-after-free on driver unbind when the class
-device is released while still being registered.
+The msg_zerocopy test pins the sender and receiver threads to separate
+cores to reduce variance between runs.
 
-Fixes: 375446df95ee ("leds: 88pm860x: Use devm_led_classdev_register")
-Cc: stable <stable@vger.kernel.org>     # 4.6
-Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+But it hardcodes the cores and skips core 0, so it fails on machines
+with the selected cores offline, or simply fewer cores.
+
+The test mainly gives code coverage in automated runs. The throughput
+of zerocopy ('-z') and non-zerocopy runs is logged for manual
+inspection.
+
+Continue even when sched_setaffinity fails. Just log to warn anyone
+interpreting the data.
+
+Fixes: 07b65c5b31ce ("test: add msg_zerocopy test")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/leds/leds-88pm860x.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/msg_zerocopy.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/leds/leds-88pm860x.c
-+++ b/drivers/leds/leds-88pm860x.c
-@@ -203,21 +203,33 @@ static int pm860x_led_probe(struct platf
- 	data->cdev.brightness_set_blocking = pm860x_led_set;
- 	mutex_init(&data->lock);
+--- a/tools/testing/selftests/net/msg_zerocopy.c
++++ b/tools/testing/selftests/net/msg_zerocopy.c
+@@ -125,9 +125,8 @@ static int do_setcpu(int cpu)
+ 	CPU_ZERO(&mask);
+ 	CPU_SET(cpu, &mask);
+ 	if (sched_setaffinity(0, sizeof(mask), &mask))
+-		error(1, 0, "setaffinity %d", cpu);
+-
+-	if (cfg_verbose)
++		fprintf(stderr, "cpu: unable to pin, may increase variance.\n");
++	else if (cfg_verbose)
+ 		fprintf(stderr, "cpu: %u\n", cpu);
  
--	ret = devm_led_classdev_register(chip->dev, &data->cdev);
-+	ret = led_classdev_register(chip->dev, &data->cdev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to register LED: %d\n", ret);
- 		return ret;
- 	}
- 	pm860x_led_set(&data->cdev, 0);
-+
-+	platform_set_drvdata(pdev, data);
-+
  	return 0;
- }
- 
-+static int pm860x_led_remove(struct platform_device *pdev)
-+{
-+	struct pm860x_led *data = platform_get_drvdata(pdev);
-+
-+	led_classdev_unregister(&data->cdev);
-+
-+	return 0;
-+}
- 
- static struct platform_driver pm860x_led_driver = {
- 	.driver	= {
- 		.name	= "88pm860x-led",
- 	},
- 	.probe	= pm860x_led_probe,
-+	.remove	= pm860x_led_remove,
- };
- 
- module_platform_driver(pm860x_led_driver);
 
 
