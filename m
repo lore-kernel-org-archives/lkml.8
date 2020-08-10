@@ -2,51 +2,53 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A686E207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58926207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073570;
-	bh=fDdYFq/SQe2tJ7vYWkAx0BlXX8llaz1+AgIZh/1gISc=;
+	s=default; t=1597073573;
+	bh=O8uxpY19oMyTmj5VGnKGFEp+hLgqpN7HCtchkQbSam4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=peuwIS8b2lMX+dlA9Mxpae6ueIMGGm5ReCyD3hqpS5g+wMLKcyK0NwDBPyleasg38
-	 LlOki0Ejpx4sxuQ2lYpZ+B7ZJK05sUP/3PV6eZJZrSChdhjXFn8AF4S985Ywem4HYL
-	 2l2ypdf9lOH8QIjrrls7TR2k+Yya/Ys/wWuaCbf4=
+	b=cJaD1l4X6HsY8s7vwQChwmPSH/e0o/GXZINRie2jegcv+VwW8WZeaTU2ng9IJbOZL
+	 VqB6ab63V5iVhUkboDVCVKbVevm7x9WCYyQRzW5+6CBa5H6Df1RhQUK+/GdiqQwTKs
+	 UnVggpCj1zL6qoMETbGSdNNEcx8Oug+rq6q73z98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgHJPaV (ORCPT
+        id S1729109AbgHJPcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:30:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36852 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:32:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbgHJPaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:30:08 -0400
+        id S1728678AbgHJPaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:30:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515B422D02;
-        Mon, 10 Aug 2020 15:30:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B8522D74;
+        Mon, 10 Aug 2020 15:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073407;
-        bh=fDdYFq/SQe2tJ7vYWkAx0BlXX8llaz1+AgIZh/1gISc=;
+        s=default; t=1597073413;
+        bh=O8uxpY19oMyTmj5VGnKGFEp+hLgqpN7HCtchkQbSam4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zIe6me2XlaAiUAcFWPB5+gykGIT//42FfXXcGT86GLgoNVjRfrEhCWFbB/Cy4Do8w
-         Zh6VNOCdxni+ecHp6HkUgMNnkipWq0Y7QpDoRXee8KbjadIGsEfuLgYgnPIEEhWM/j
-         5D9sosqB9hfke3LWeJbXY2IRLmQXuQtWSb1EUzBA=
+        b=jiiBHXRXWpzBWbFQ7OJVPm5UgI6i58IiYUAVpp3hl01zHk8BjPbRV/mL+wSYnQb5Q
+         4ItqS639oOzZNMjqKhAD3OTM5c+hphFKszxk8zT3Y6FiVC5uabRHdM3ZoHl1Vx32YG
+         U7oKuV4W2jlIgcC6FpaCDPVm3gPt7NQtsiPjL0ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.19 09/48] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_evt()
-Date:   Mon, 10 Aug 2020 17:21:31 +0200
-Message-Id: <20200810151804.669737314@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 23/48] i2c: slave: add sanity check when unregistering
+Date:   Mon, 10 Aug 2020 17:21:45 +0200
+Message-Id: <20200810151805.359915557@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -59,31 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-commit 75bbd2ea50ba1c5d9da878a17e92eac02fe0fd3a upstream.
+[ Upstream commit 8808981baf96e1b3dea1f08461e4d958aa0dbde1 ]
 
-Check `num_rsp` before using it as for-loop counter.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Alain Volmat <alain.volmat@st.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/i2c-core-slave.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -2360,7 +2360,7 @@ static void hci_inquiry_result_evt(struc
+diff --git a/drivers/i2c/i2c-core-slave.c b/drivers/i2c/i2c-core-slave.c
+index 88959c8580ce0..f2e7e373ee478 100644
+--- a/drivers/i2c/i2c-core-slave.c
++++ b/drivers/i2c/i2c-core-slave.c
+@@ -62,6 +62,9 @@ int i2c_slave_unregister(struct i2c_client *client)
+ {
+ 	int ret;
  
- 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
- 
--	if (!num_rsp)
-+	if (!num_rsp || skb->len < num_rsp * sizeof(*info) + 1)
- 		return;
- 
- 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
++	if (IS_ERR_OR_NULL(client))
++		return -EINVAL;
++
+ 	if (!client->adapter->algo->unreg_slave) {
+ 		dev_err(&client->dev, "%s: not supported by adapter\n", __func__);
+ 		return -EOPNOTSUPP;
+-- 
+2.25.1
+
 
 
