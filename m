@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F01C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A206C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993BE22BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D612020772
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072819;
-	bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
+	s=default; t=1597072824;
+	bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnqW0hUYgGhpWlbXL0OELxHPleFkEhlNuVLwQXEF5NFYsZnvPYcLHyDt5AEGK2D9S
-	 Ya+RjXa5qZ3VM6ISEy5OxATTGISN1PKO5lZMr2jPNT3Dm4GncVO203xnlJjW//8nol
-	 6b2mRb0wnS8jXxWqxvRqO+eSdgT73JEtl9mCbB2o=
+	b=w7GGWgYEwKNsEbIdNue5nF8hluVTcd6HmA5oWcyxFX8QLzS9W7+liVmPq2WjHYqis
+	 WLQxj6uYsHBsS+otIgMixfCj+ofK7cQeFtxe5fWYJrH0i/4htk3LSyQMdzq5b0eqjh
+	 XuJ3yp7G4DFcnmrAUz3beEJQFOy1QQ6w5z1cWtiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgHJPUQ (ORCPT
+        id S1727971AbgHJPUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:20:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50472 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbgHJPUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:20:12 -0400
+        id S1727956AbgHJPUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:20:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC68320772;
-        Mon, 10 Aug 2020 15:20:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A4220772;
+        Mon, 10 Aug 2020 15:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072811;
-        bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
+        s=default; t=1597072817;
+        bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lTXwr4rZXbVdEy+bhfxId71wQhwYsWUA8sBQ/iBbTMOnL2YjkvL8C0v2SBbU2JTXK
-         86jux21ArsCsIRtM/VAtuwj+zLT8G7XxVek43fiuDDyXyCLQKmQjxah2lsBbZIhZJy
-         9pqYz5BoF3q8AhRJJnOb69DmFYtMo8HWZPXS1nyA=
+        b=ubfWQLs8+T+U9PbZm1nQz58vvGokOH0Dk08tC0KvU40SHdhOqXPkvIWGetPJpO8aC
+         EorS6q1wQGC8ZScaydoK+G/dcH0U4QY3oAxhVvLxl7sBvQ/hQzhO1oNgvGW9yGSN5T
+         dgok6CPO0pZhwkTpfTYCvL3cqXmV2LiAqOPp3GQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.8 18/38] omapfb: dss: Fix max fclk divider for omap36xx
-Date:   Mon, 10 Aug 2020 17:19:08 +0200
-Message-Id: <20200810151804.786453607@linuxfoundation.org>
+        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 5.8 28/38] leds: lm3533: fix use-after-free on unbind
+Date:   Mon, 10 Aug 2020 17:19:18 +0200
+Message-Id: <20200810151805.287213549@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -62,42 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 254503a2b186caa668a188dbbd7ab0d25149c0a5 upstream.
+commit d584221e683bbd173738603b83a315f27d27d043 upstream.
 
-The drm/omap driver was fixed to correct an issue where using a
-divider of 32 breaks the DSS despite the TRM stating 32 is a valid
-number.  Through experimentation, it appears that 31 works, and
-it is consistent with the value used by the drm/omap driver.
+Several MFD child drivers register their class devices directly under
+the parent device. This means you cannot blindly do devres conversions
+so that deregistration ends up being tied to the parent device,
+something which leads to use-after-free on driver unbind when the class
+device is released while still being registered.
 
-This patch fixes the divider for fbdev driver instead of the drm.
-
-Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-Cc: <stable@vger.kernel.org> #4.5+
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: Rob Clark <robdclark@gmail.com>
-[b.zolnierkie: mark patch as applicable to stable 4.5+ (was 4.9+)]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630182636.439015-1-aford173@gmail.com
+Fixes: 50154e29e5cc ("leds: lm3533: Use devm_led_classdev_register")
+Cc: stable <stable@vger.kernel.org>     # 4.6
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/omap2/omapfb/dss/dss.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/leds/leds-lm3533.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -833,7 +833,7 @@ static const struct dss_features omap34x
- };
+--- a/drivers/leds/leds-lm3533.c
++++ b/drivers/leds/leds-lm3533.c
+@@ -694,7 +694,7 @@ static int lm3533_led_probe(struct platf
  
- static const struct dss_features omap3630_dss_feats = {
--	.fck_div_max		=	32,
-+	.fck_div_max		=	31,
- 	.dss_fck_multiplier	=	1,
- 	.parent_clk_name	=	"dpll4_ck",
- 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
+ 	platform_set_drvdata(pdev, led);
+ 
+-	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
++	ret = led_classdev_register(pdev->dev.parent, &led->cdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register LED %d\n", pdev->id);
+ 		return ret;
+@@ -704,13 +704,18 @@ static int lm3533_led_probe(struct platf
+ 
+ 	ret = lm3533_led_setup(led, pdata);
+ 	if (ret)
+-		return ret;
++		goto err_deregister;
+ 
+ 	ret = lm3533_ctrlbank_enable(&led->cb);
+ 	if (ret)
+-		return ret;
++		goto err_deregister;
+ 
+ 	return 0;
++
++err_deregister:
++	led_classdev_unregister(&led->cdev);
++
++	return ret;
+ }
+ 
+ static int lm3533_led_remove(struct platform_device *pdev)
+@@ -720,6 +725,7 @@ static int lm3533_led_remove(struct plat
+ 	dev_dbg(&pdev->dev, "%s\n", __func__);
+ 
+ 	lm3533_ctrlbank_disable(&led->cb);
++	led_classdev_unregister(&led->cdev);
+ 
+ 	return 0;
+ }
 
 
