@@ -2,145 +2,330 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D7920734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dSRwc334"
+	by mail.kernel.org (Postfix) with ESMTP id B1E7D20734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597101301;
+	bh=P9CJfEyiOT7Igx/c3tpoCndruqP8PEyy267r4NIn7o8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZuOmK58Dw2fqHZjJ63D6dzKyPmWOXEWsVEcKGBLuiY9MToL8t7dp9qyRkPcxTqBq7
+	 EGXqs6Jt+b3hj+0h+B914xN/nAICcmb+Xr/zIQAljmQDhQq7AuTodeA2VlTGGmkBCd
+	 gZVGh2Cz7edceuKA+fA1FErHVh8a6YO0XbfFgwAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgHJXOA (ORCPT
+        id S1727062AbgHJXPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:14:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:6689 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726634AbgHJXN7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:13:59 -0400
-X-UUID: 59b525ba5ca44bc1bd10e0c9689471a1-20200811
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SP19FxLxyYLbW9Px5R4ailpBhC/9wbiM7jMfmUI6oe4=;
-        b=dSRwc334D7UaYaiuNgHSZFCXrOokc9vhN9jESQU/GBE3K7XvPPaAoR3RqqtuWYcmLWs1nwNIXElsHE6ENx9mGlVlSgbOsCLJRWttBGoezdCgQSniK7FnmNinpI+RjTmtA3f2lXzUNTGlCzee3IvYyjhnwW8czsBxwscYkDR3P9Q=;
-X-UUID: 59b525ba5ca44bc1bd10e0c9689471a1-20200811
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1591749017; Tue, 11 Aug 2020 07:13:55 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 11 Aug 2020 07:13:53 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 11 Aug 2020 07:13:53 +0800
-Message-ID: <1597101233.19734.0.camel@mtkswgap22>
-Subject: Re: [PATCH v1] scsi: ufs: no need to send one Abort Task TM in case
- the task in DB was cleared
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Bean Huo <huobean@gmail.com>
-CC:     Can Guo <cang@codeaurora.org>, <alim.akhtar@samsung.com>,
-        <avri.altman@wdc.com>, <asutoshd@codeaurora.org>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <beanhuo@micron.com>, <bvanassche@acm.org>,
-        <tomas.winkler@intel.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Tue, 11 Aug 2020 07:13:53 +0800
-In-Reply-To: <5c6f1ad9f703cc5721e081452e869a9ee6bc4ab6.camel@gmail.com>
-References: <20200804123534.29104-1-huobean@gmail.com>
-         <a68a1bdf74bdf8ada29808537290b35b@codeaurora.org>
-         <871fdbc1719d7a3c469bf857071aa2c6bd71ddaf.camel@gmail.com>
-         <5ad1dbd76a0d5d476641a01bfb8bd435@codeaurora.org>
-         <5c6f1ad9f703cc5721e081452e869a9ee6bc4ab6.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 10 Aug 2020 19:15:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726634AbgHJXPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 19:15:00 -0400
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF0052075D;
+        Mon, 10 Aug 2020 23:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597101298;
+        bh=P9CJfEyiOT7Igx/c3tpoCndruqP8PEyy267r4NIn7o8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dDaXUeULgPRAnVceedtxw6PH3WX2JZmKEILgfY2VgCf4Me1e2y8srWGk+Ms+IaEIH
+         X4arEx9tAdempJCXOmQrIj8WkbCDuHdUq0WmhJKoylCcO6HrtSQPVpYfjaegzHGagF
+         3VOQJ57mRGv9ZpNZTZFUR8y/JJSzKjma9dZ2JqKs=
+Received: by mail-ej1-f54.google.com with SMTP id d6so11101843ejr.5;
+        Mon, 10 Aug 2020 16:14:57 -0700 (PDT)
+X-Gm-Message-State: AOAM533fVcexwRUHphs58ou9Lb3lBlK4rkrl2ERwCuFrkbGvdR0uD4LF
+        ObvJtE439BJxk/aX6d5c8cDcnxvsrlMlwr/p5g==
+X-Google-Smtp-Source: ABdhPJzo2B7Z0tm/Ctdynuvck42y/X0/Q6r+ZRzwsVj9txXuzpfbBq1UP4nN4YN/T0sbcVSfh+ejSsqjJnlWJM1N72s=
+X-Received: by 2002:a17:906:f14f:: with SMTP id gw15mr23054505ejb.245.1597101296467;
+ Mon, 10 Aug 2020 16:14:56 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1596766948-29767-1-git-send-email-neal.liu@mediatek.com>
+ <1596766948-29767-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8dhV8Ns4w9SqSpA7BvRO1gLn=hgRWU-hCJjNM6ZJf+rw@mail.gmail.com>
+ <1597030994.7823.5.camel@mtkswgap22>
+In-Reply-To: <1597030994.7823.5.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 11 Aug 2020 07:14:43 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__dYy2yN5MHNJP5=_v48oVWPu2GRZW=EuKT=-U1Pfu7wQ@mail.gmail.com>
+Message-ID: <CAAOTY__dYy2yN5MHNJP5=_v48oVWPu2GRZW=EuKT=-U1Pfu7wQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] soc: mediatek: add mt6779 devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmVhbiwNCg0KT24gTW9uLCAyMDIwLTA4LTEwIGF0IDE3OjQxICswMjAwLCBCZWFuIEh1byB3
-cm90ZToNCj4gT24gVGh1LCAyMDIwLTA4LTA2IGF0IDE4OjA3ICswODAwLCBDYW4gR3VvIHdyb3Rl
-Og0KPiA+IEhpIEJlYW4sDQo+ID4gDQo+ID4gT24gMjAyMC0wOC0wNiAxNzo1MCwgQmVhbiBIdW8g
-d3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiBQbGVhc2UgY2hlY2sgU3RhbmxleSdzIHJlY2VudCBj
-aGFuZ2UgdG8gdWZzaGNkX2Fib3J0LCB5b3UgbWF5DQo+ID4gPiA+IHdhbnQgdG8gcmViYXNlIHlv
-dXIgY2hhbmdlIG9uIGhpcyBhbmQgZG8gZ290byBjbGVhbnVwIGhlcmUuDQo+ID4gPiA+IEBTdGFu
-bGV5IGNvcnJlY3QgbWUgaWYgSSBhbSB3cm9uZy4NCj4gPiA+ID4gDQo+ID4gPiA+IEJ1dCBldmVu
-IGlmIHlvdSBkbyBhIGdvdG8gY2xlYW51cCBoZXJlLCB3ZSBzdGlsbCBsb3N0IHRoZQ0KPiA+ID4g
-PiBjaGFuY2VzIHRvIGR1bXAgaG9zdCBpbmZvcy9yZWdzIGxpa2UgaXQgZG9lcyBpbiB0aGUgb2xk
-IGNvZGUuDQo+ID4gPiA+IElmIGEgY21kIHdhcyBjb21wbGV0ZWQgYnV0IHdpdGhvdXQgYSBub3Rp
-ZnlpbmcgaW50ciwgdGhpcyBpcw0KPiA+ID4gPiBraW5kIG9mIGEgcHJvYmxlbSB0aGF0IHdlL2hv
-c3Qgc2hvdWxkIGxvb2sgaW50bywgYmVjYXVzZSBpdCdzDQo+ID4gPiA+IHBhc3RlZCBhdCBsZWFz
-dCAzMCBzZWMgc2luY2UgdGhlIGNtZCB3YXMgc2VudCwgc28gdGhvc2UgZHVtcHMNCj4gPiA+ID4g
-YXJlIG5lY2Vzc2FyeSB0byBkZWJ1ZyB0aGUgcHJvYmxlbS4gSG93IGFib3V0IG1vdmluZyBibG93
-IHByaW50cw0KPiA+ID4gPiBpbiBmcm9udCBvZiB0aGlzIHBhcnQ/DQo+ID4gPiA+IA0KPiA+ID4g
-PiBUaGFua3MsDQo+ID4gPiA+IA0KPiA+ID4gPiBDYW4gR3VvLg0KPiA+ID4gPiANCj4gPiA+ID4g
-PiAgCX0NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiAgCS8qIFByaW50IFRyYW5zZmVyIFJlcXVlc3Qg
-b2YgYWJvcnRlZCB0YXNrICovDQo+ID4gPiANCj4gPiA+IEhpIENhbg0KPiA+ID4gDQo+ID4gPiBU
-aGFua3MsIGRvIHlvdSBtZWFuIHRoYXQgY2hhbmdlIHRvIGxpa2UgdGhpczoNCj4gPiA+IA0KPiA+
-ID4gDQo+ID4gPiBBdXRob3I6IEJlYW4gSHVvIDxiZWFuaHVvQG1pY3Jvbi5jb20+DQo+ID4gPiBE
-YXRlOiAgIFRodSBBdWcgNiAxMTozNDo0NSAyMDIwICswMjAwDQo+ID4gPiANCj4gPiA+ICAgICBz
-Y3NpOiB1ZnM6IG5vIG5lZWQgdG8gc2VuZCBvbmUgQWJvcnQgVGFzayBUTSBpbiBjYXNlIHRoZSB0
-YXNrDQo+ID4gPiBpbg0KPiA+ID4gICB3YXMgY2xlYXJlZA0KPiA+ID4gDQo+ID4gPiAgICAgSWYg
-dGhlIGJpdCBjb3JyZXNwb25kcyB0byBhIHRhc2sgaW4gdGhlIERvb3JiZWxsIHJlZ2lzdGVyIGhh
-cw0KPiA+ID4gYmVlbg0KPiA+ID4gICAgIGNsZWFyZWQsIG5vIG5lZWQgdG8gcG9sbCB0aGUgc3Rh
-dHVzIG9mIHRoZSB0YXNrIG9uIHRoZSBkZXZpY2UNCj4gPiA+IHNpZGUNCj4gPiA+ICAgICBhbmQg
-dG8gc2VuZCBhbiBBYm9ydCBUYXNrIFRNLg0KPiA+ID4gICAgIFRoaXMgcGF0Y2ggYWxzbyBkZWxl
-dGVzIGRpc3BlbnNhYmxlIGRldl9lcnIoKSBpbiBjYXNlIG9mIHRoZQ0KPiA+ID4gdGFzaw0KPiA+
-ID4gICAgIGFscmVhZHkgY29tcGxldGVkLg0KPiA+ID4gDQo+ID4gPiAgICAgU2lnbmVkLW9mZi1i
-eTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5j
-DQo+ID4gPiBpbmRleCAzMDc2MjIyODQyMzkuLmY3YzkxY2U5ZTI5NCAxMDA2NDQNCj4gPiA+IC0t
-LSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCj4gPiA+ICsrKyBiL2RyaXZlcnMvc2NzaS91
-ZnMvdWZzaGNkLmMNCj4gPiA+IEBAIC02NDI1LDIzICs2NDI1LDkgQEAgc3RhdGljIGludCB1ZnNo
-Y2RfYWJvcnQoc3RydWN0IHNjc2lfY21uZA0KPiA+ID4gKmNtZCkNCj4gPiA+ICAgICAgICAgICAg
-ICAgICByZXR1cm4gdWZzaGNkX2VoX2hvc3RfcmVzZXRfaGFuZGxlcihjbWQpOw0KPiA+ID4gDQo+
-ID4gPiAgICAgICAgIHVmc2hjZF9ob2xkKGhiYSwgZmFsc2UpOw0KPiA+ID4gLSAgICAgICByZWcg
-PSB1ZnNoY2RfcmVhZGwoaGJhLCBSRUdfVVRQX1RSQU5TRkVSX1JFUV9ET09SX0JFTEwpOw0KPiA+
-ID4gICAgICAgICAvKiBJZiBjb21tYW5kIGlzIGFscmVhZHkgYWJvcnRlZC9jb21wbGV0ZWQsIHJl
-dHVybiBTVUNDRVNTDQo+ID4gPiAqLw0KPiA+ID4gLSAgICAgICBpZiAoISh0ZXN0X2JpdCh0YWcs
-ICZoYmEtPm91dHN0YW5kaW5nX3JlcXMpKSkgew0KPiA+ID4gLSAgICAgICAgICAgICAgIGRldl9l
-cnIoaGJhLT5kZXYsDQo+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICAiJXM6IGNtZCBhdCB0
-YWcgJWQgYWxyZWFkeSBjb21wbGV0ZWQsDQo+ID4gPiBvdXRzdGFuZGluZz0weCVseCwgZG9vcmJl
-bGw9MHgleFxuIiwNCj4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIF9fZnVuY19fLCB0YWcs
-IGhiYS0+b3V0c3RhbmRpbmdfcmVxcywgcmVnKTsNCj4gPiA+ICsgICAgICAgaWYgKCEodGVzdF9i
-aXQodGFnLCAmaGJhLT5vdXRzdGFuZGluZ19yZXFzKSkpDQo+ID4gPiAgICAgICAgICAgICAgICAg
-Z290byBvdXQ7DQo+ID4gPiAtICAgICAgIH0NCj4gPiA+IC0NCj4gPiA+IC0gICAgICAgaWYgKCEo
-cmVnICYgKDEgPDwgdGFnKSkpIHsNCj4gPiA+IC0gICAgICAgICAgICAgICBkZXZfZXJyKGhiYS0+
-ZGV2LA0KPiA+ID4gLSAgICAgICAgICAgICAgICIlczogY21kIHdhcyBjb21wbGV0ZWQsIGJ1dCB3
-aXRob3V0IGEgbm90aWZ5aW5nDQo+ID4gPiBpbnRyLA0KPiA+ID4gdGFnID0gJWQiLA0KPiA+ID4g
-LSAgICAgICAgICAgICAgIF9fZnVuY19fLCB0YWcpOw0KPiA+ID4gLSAgICAgICB9DQo+ID4gPiAt
-DQo+ID4gPiAtICAgICAgIC8qIFByaW50IFRyYW5zZmVyIFJlcXVlc3Qgb2YgYWJvcnRlZCB0YXNr
-ICovDQo+ID4gPiAtICAgICAgIGRldl9lcnIoaGJhLT5kZXYsICIlczogRGV2aWNlIGFib3J0IHRh
-c2sgYXQgdGFnICVkXG4iLA0KPiA+ID4gX19mdW5jX18sIHRhZyk7DQo+ID4gPiANCj4gPiA+ICAg
-ICAgICAgLyoNCj4gPiA+ICAgICAgICAgICogUHJpbnQgZGV0YWlsZWQgaW5mbyBhYm91dCBhYm9y
-dGVkIHJlcXVlc3QuDQo+ID4gPiBAQCAtNjQ2Miw2ICs2NDQ4LDE3IEBAIHN0YXRpYyBpbnQgdWZz
-aGNkX2Fib3J0KHN0cnVjdCBzY3NpX2NtbmQNCj4gPiA+ICpjbWQpDQo+ID4gPiAgICAgICAgIH0N
-Cj4gPiA+ICAgICAgICAgaGJhLT5yZXFfYWJvcnRfY291bnQrKzsNCj4gPiA+IA0KPiA+ID4gKyAg
-ICAgICByZWcgPSB1ZnNoY2RfcmVhZGwoaGJhLCBSRUdfVVRQX1RSQU5TRkVSX1JFUV9ET09SX0JF
-TEwpOw0KPiA+ID4gKyAgICAgICBpZiAoIShyZWcgJiAoMSA8PCB0YWcpKSkgew0KPiA+ID4gKyAg
-ICAgICAgICAgICAgIGRldl9lcnIoaGJhLT5kZXYsDQo+ID4gPiArICAgICAgICAgICAgICAgIiVz
-OiBjbWQgd2FzIGNvbXBsZXRlZCwgYnV0IHdpdGhvdXQgYSBub3RpZnlpbmcNCj4gPiA+IGludHIs
-DQo+ID4gPiB0YWcgPSAlZCIsDQo+ID4gPiArICAgICAgICAgICAgICAgX19mdW5jX18sIHRhZyk7
-DQo+ID4gPiArICAgICAgICAgICAgICAgZ290byBjbGVhbnVwOw0KPiA+ID4gKyAgICAgICB9DQo+
-ID4gPiArDQo+ID4gPiArICAgICAgIC8qIFByaW50IFRyYW5zZmVyIFJlcXVlc3Qgb2YgYWJvcnRl
-ZCB0YXNrICovDQo+ID4gPiArICAgICAgIGRldl9lcnIoaGJhLT5kZXYsICIlczogRGV2aWNlIGFi
-b3J0IHRhc2sgYXQgdGFnICVkXG4iLA0KPiA+ID4gX19mdW5jX18sIHRhZyk7DQo+ID4gPiArDQo+
-ID4gDQo+ID4gVGhlIHJlc3QgbG9va3MgZ29vZCBidXQgbGV0IGJlbG93IHR3byBsaW5lcyBzdGF5
-IHdoZXJlIHRoZXkgd2VyZS4NCj4gPiANCj4gPiAgICAgICAgIC8qIFByaW50IFRyYW5zZmVyIFJl
-cXVlc3Qgb2YgYWJvcnRlZCB0YXNrICovDQo+ID4gICAgICAgICBkZXZfZXJyKGhiYS0+ZGV2LCAi
-JXM6IERldmljZSBhYm9ydCB0YXNrIGF0IHRhZyAlZFxuIiwNCj4gPiBfX2Z1bmNfXywgdGFnKTsN
-Cj4gPiANCj4gPiANCj4gPiBUaGFua3MsDQo+ID4gDQo+ID4gQ2FuIEd1by4NCj4gPiANCj4gSGkg
-Q2FuDQo+IEkgd2lsbCBjaGFuZ2UgaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4NCj4gDQo+IA0KPiBI
-aSBTdGFubHkNCj4gd291bGQgeW91IG1pbmQgSSB0YWtlIHlvdXIgcGF0Y2ggaW50byBteSBuZXh0
-IHZlcnNpb24gcGF0Y2hzZXQ/IFNpbmNlDQo+IHdlIGJvdGggd2lsbCBhZGQgYSBuZXcgc2FtZSBn
-b3RvIGxhYmVsLiBJIHdpbGwga2VlcCB5b3VyIHBhdGNoDQo+IGF1dGhvcnNoaXAuDQoNCg0KU3Vy
-ZSwgT0sgdG8gbWUgOiApDQoNClRoYW5rcywNCg0KU3RhbmxleSBDaHUNCg0K
+Hi, Neal:
 
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8810=E6=97=
+=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:43=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Fri, 2020-08-07 at 23:52 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=887=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8810:34=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > MediaTek bus fabric provides TrustZone security support and data
+> > > protection to prevent slaves from being accessed by unexpected
+> > > masters.
+> > > The security violation is logged and sent to the processor for
+> > > further analysis or countermeasures.
+> > >
+> > > Any occurrence of security violation would raise an interrupt, and
+> > > it will be handled by mtk-devapc driver. The violation
+> > > information is printed in order to find the murderer.
+> > >
+> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > ---
+> >
+> > [snip]
+> >
+> > > +
+> > > +#define PHY_DEVAPC_TIMEOUT     0x10000
+> > > +
+> > > +/*
+> > > + * devapc_sync_vio_dbg - do "shift" mechansim" to get full violation=
+ information.
+> > > + *                       shift mechanism is depends on devapc hardwa=
+re design.
+> > > + *                       Mediatek devapc set multiple slaves as a gr=
+oup.
+> > > + *                       When violation is triggered, violation info=
+ is kept
+> > > + *                       inside devapc hardware.
+> > > + *                       Driver should do shift mechansim to sync fu=
+ll violation
+> > > + *                       info to VIO_DBGs registers.
+> > > + *
+> > > + */
+> > > +static int devapc_sync_vio_dbg(struct mtk_devapc_context *ctx)
+> > > +{
+> > > +       void __iomem *pd_vio_shift_sta_reg;
+> > > +       void __iomem *pd_vio_shift_sel_reg;
+> > > +       void __iomem *pd_vio_shift_con_reg;
+> > > +       int min_shift_group;
+> > > +       int ret;
+> > > +       u32 val;
+> > > +
+> > > +       pd_vio_shift_sta_reg =3D ctx->infra_base +
+> > > +                              ctx->data->vio_shift_sta_offset;
+> > > +       pd_vio_shift_sel_reg =3D ctx->infra_base +
+> > > +                              ctx->data->vio_shift_sel_offset;
+> > > +       pd_vio_shift_con_reg =3D ctx->infra_base +
+> > > +                              ctx->data->vio_shift_con_offset;
+> > > +
+> > > +       /* Find the minimum shift group which has violation */
+> > > +       val =3D readl(pd_vio_shift_sta_reg);
+> > > +       if (!val)
+> > > +               return false;
+> > > +
+> > > +       min_shift_group =3D __ffs(val);
+> > > +
+> > > +       /* Assign the group to sync */
+> > > +       writel(0x1 << min_shift_group, pd_vio_shift_sel_reg);
+> > > +
+> > > +       /* Start syncing */
+> > > +       writel(0x1, pd_vio_shift_con_reg);
+> > > +
+> > > +       ret =3D readl_poll_timeout(pd_vio_shift_con_reg, val, val =3D=
+=3D 0x3, 0,
+> > > +                                PHY_DEVAPC_TIMEOUT);
+> > > +       if (ret) {
+> > > +               dev_err(ctx->dev, "%s: Shift violation info failed\n"=
+, __func__);
+> > > +               return false;
+> > > +       }
+> > > +
+> > > +       /* Stop syncing */
+> > > +       writel(0x0, pd_vio_shift_con_reg);
+> > > +       writel(0x0, pd_vio_shift_sel_reg);
+> >
+> > This is redundant because you set this register before start syncing.
+>
+> No, we don't set this reg before start syncing.
+>
+
+I'm talking about pd_vio_shift_sel_reg, and I find this before start syncin=
+g:
+
+       /* Assign the group to sync */
+       writel(0x1 << min_shift_group, pd_vio_shift_sel_reg);
+
+       /* Start syncing */
+       writel(0x1, pd_vio_shift_con_reg);
+
+> >
+> > > +       writel(0x1 << min_shift_group, pd_vio_shift_sta_reg);
+> >
+> > You read this register to find minimum shift group, but you write it
+> > back into this register, so this function would get the same minimum
+> > shift group in next time, isn't it?
+>
+> No. The operation means write clear. We won't get the same minimum shift
+> group after clear this bit.
+>
+
+Add comment for this because this is not trivial.
+
+> >
+> > > +
+> > > +       return true;
+> > > +}
+> > > +
+> > > +/*
+> > > + * devapc_extract_vio_dbg - extract full violation information after=
+ doing
+> > > + *                          shift mechanism.
+> > > + */
+> > > +static void devapc_extract_vio_dbg(struct mtk_devapc_context *ctx)
+> > > +{
+> > > +       struct mtk_devapc_vio_dbgs *vio_dbgs;
+> >
+> > struct mtk_devapc_vio_dbgs vio_dbgs;
+> >
+> > Use stack instead of allocating from heap.
+>
+> Why it cannot use heap if the memory is handled correctly?
+>
+
+You could use heap but allocating memory from heap would cost much
+time. In the worst case, it would trigger buddy system to break a page
+for slub. Using stack cost almost no time, but it has some limitation.
+Stack memory is small and it should be used for local variable, and
+vio_dbgs match this limitation, so stack is better than heap.
+
+> >
+> > > +       void __iomem *vio_dbg0_reg;
+> > > +       void __iomem *vio_dbg1_reg;
+> > > +
+> > > +       vio_dbgs =3D devm_kzalloc(ctx->dev, sizeof(struct mtk_devapc_=
+vio_dbgs),
+> > > +                               GFP_KERNEL);
+> > > +       if (!vio_dbgs)
+> > > +               return;
+> > > +
+> > > +       vio_dbg0_reg =3D ctx->infra_base + ctx->data->vio_dbg0_offset=
+;
+> > > +       vio_dbg1_reg =3D ctx->infra_base + ctx->data->vio_dbg1_offset=
+;
+> > > +
+> > > +       vio_dbgs->vio_dbg0 =3D readl(vio_dbg0_reg);
+> > > +       vio_dbgs->vio_dbg1 =3D readl(vio_dbg1_reg);
+> > > +
+> > > +       /* Print violation information */
+> > > +       if (vio_dbgs->dbg0_bits.vio_w)
+> > > +               dev_info(ctx->dev, "Write Violation\n");
+> > > +       else if (vio_dbgs->dbg0_bits.vio_r)
+> > > +               dev_info(ctx->dev, "Read Violation\n");
+> > > +
+> > > +       dev_info(ctx->dev, "Bus ID:0x%x, Dom ID:0x%x, Vio Addr:0x%x\n=
+",
+> > > +                vio_dbgs->dbg0_bits.mstid, vio_dbgs->dbg0_bits.dmnid=
+,
+> > > +                vio_dbgs->vio_dbg1);
+> > > +}
+> > > +
+> >
+> > [snip]
+> >
+> > > +
+> > > +static int mtk_devapc_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct device_node *node =3D pdev->dev.of_node;
+> > > +       struct mtk_devapc_context *ctx;
+> > > +       u32 devapc_irq;
+> > > +       int ret;
+> > > +
+> > > +       if (IS_ERR(node))
+> > > +               return -ENODEV;
+> > > +
+> > > +       ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> > > +       if (!ctx)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       ctx->data =3D of_device_get_match_data(&pdev->dev);
+> > > +       ctx->dev =3D &pdev->dev;
+> > > +
+> > > +       ctx->infra_base =3D of_iomap(node, 0);
+> > > +       if (!ctx->infra_base)
+> > > +               return -EINVAL;
+> > > +
+> > > +       devapc_irq =3D irq_of_parse_and_map(node, 0);
+> > > +       if (!devapc_irq)
+> > > +               return -EINVAL;
+> > > +
+> > > +       ctx->infra_clk =3D devm_clk_get(&pdev->dev, "devapc-infra-clo=
+ck");
+> > > +       if (IS_ERR(ctx->infra_clk))
+> > > +               return -EINVAL;
+> > > +
+> > > +       if (clk_prepare_enable(ctx->infra_clk))
+> > > +               return -EINVAL;
+> > > +
+> > > +       ret =3D devm_request_irq(&pdev->dev, devapc_irq,
+> > > +                              (irq_handler_t)devapc_violation_irq,
+> > > +                              IRQF_TRIGGER_NONE, "devapc", ctx);
+> > > +       if (ret) {
+> > > +               clk_disable_unprepare(ctx->infra_clk);
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       platform_set_drvdata(pdev, ctx);
+> > > +
+> > > +       start_devapc(ctx);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int mtk_devapc_remove(struct platform_device *pdev)
+> > > +{
+> > > +       struct mtk_devapc_context *ctx =3D platform_get_drvdata(pdev)=
+;
+> > > +
+> >
+> > stop_devapc(ctx);
+>
+> We don't have to do any further operations to stop devapc hw.
+>
+
+After this driver is removed, I think we should restore hardware to
+the status before probing. Before probe(), devapc hardware is stopped
+(pd_apc_con_reg is a default value and all vio irq is masked), so it
+should be the same status after remove(). This concept is the same as
+what you do for infra_clk.
+
+Regards,
+Chun-Kuang.
+
+> >
+> > Regards,
+> > Chun-Kuang.
+> >
+> > > +       if (ctx->infra_clk)
+> > > +               clk_disable_unprepare(ctx->infra_clk);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+>
