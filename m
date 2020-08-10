@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C272DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E0A22B4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2850522B4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087934;
-	bh=sP4va8tw/LWQq1aLYu/jsNtjodsiB3MIonkDEyyS1RI=;
+	s=default; t=1597087940;
+	bh=k296qi7HxlZgUoe/DmXhlF3VYg7LH0YX2UM5pcMqG7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ljh1hN7KEL9vhqGTe3Pe4SSMXKIEBnhm9iTIIa2/UbAZQ+LGDSYGjZ7S6GemVeHm4
-	 5e1XkmjnzA7zoktNK4LX9ZyVY0afx4kiZ0WmVZGe3DEfldAKpAavGYxA/coKrDaE92
-	 TR4sqXK1PptmVaVuIAMSVaqxS30iibAb3dt1DU3Y=
+	b=Wg/7sG7zxuiIX2l3KlAm2C3aa4IsNjAQ4p/qIuZhBqhFz2y7e0B8PWeNTIAdioyNN
+	 GzC4wDG/SrPEXMkhE3DRpWzuV7GlyEFKxTHpLREp7Fkqv0wZL6F1kMgPV4jmth58tf
+	 84saCSnT/7+sdATMNA6qRYOJNj55+nIyeylKxGms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgHJTJz (ORCPT
+        id S1729389AbgHJTcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728634AbgHJTJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:46 -0400
+        id S1728688AbgHJTJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E36D622BEA;
-        Mon, 10 Aug 2020 19:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5212224D;
+        Mon, 10 Aug 2020 19:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086586;
-        bh=sP4va8tw/LWQq1aLYu/jsNtjodsiB3MIonkDEyyS1RI=;
+        s=default; t=1597086594;
+        bh=k296qi7HxlZgUoe/DmXhlF3VYg7LH0YX2UM5pcMqG7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UlojHyICd57g9qHSLgu9y7jBwV3J/KohZCtxiMJQF7dZm2jogp/nnpjQBgyWs8+qR
-         KLDsUuATb5Qp31irmIRBTeMUQ6v+ME3RdyMjS37cMq+nnzh4uzCvhaeN/oHXepu36c
-         vQijQmlTdGGgszgnZ85u81WHS/WY2P4fRs8RmWQE=
+        b=u//yaQ+NFLErxMbEvqSPHO5g8y/x57VZ0xuhBxUZXHy/1fz6sr1hz9F1GLV6ZnOGL
+         j3S07WREztvSzkKCYUlgKxyHAk4zxnn2usDiV3FAIFuSJoYrVU3Q1LLRQmsSjmUUvt
+         drGXW7dkjiz3olOGNbyEgSXWJ595bEUUT6PIv77w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aric Cyr <aric.cyr@amd.com>, Wenjing Liu <Wenjing.Liu@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 34/64] drm/amd/display: Improve DisplayPort monitor interop
-Date:   Mon, 10 Aug 2020 15:08:29 -0400
-Message-Id: <20200810190859.3793319-34-sashal@kernel.org>
+Cc:     Wenbo Zhang <ethercflow@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 40/64] bpf: Fix fds_example SIGSEGV error
+Date:   Mon, 10 Aug 2020 15:08:35 -0400
+Message-Id: <20200810190859.3793319-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -62,113 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Wenbo Zhang <ethercflow@gmail.com>
 
-[ Upstream commit eec3303de3378cdfaa0bb86f43546dbbd88f94e2 ]
+[ Upstream commit eef8a42d6ce087d1c81c960ae0d14f955b742feb ]
 
-[Why]
-DC is very fast at link training and stream enablement
-which causes issues such as blackscreens for non-compliant
-monitors.
+The `BPF_LOG_BUF_SIZE`'s value is `UINT32_MAX >> 8`, so define an array
+with it on stack caused an overflow.
 
-[How]
-After debugging with scaler vendors we implement the
-minimum delays at the necessary locations to ensure
-the monitor does not hang.  Delays are generic due to
-lack of IEEE OUI information on the failing displays.
-
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Wenbo Zhang <ethercflow@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200710092035.28919-1-ethercflow@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c    |  4 +++-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 16 ++++++++++------
- .../amd/display/dc/dce110/dce110_hw_sequencer.c  | 11 ++++++++++-
- 3 files changed, 23 insertions(+), 8 deletions(-)
+ samples/bpf/fds_example.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index 48ab51533d5d6..841cc051b7d01 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -3298,9 +3298,11 @@ void core_link_disable_stream(struct pipe_ctx *pipe_ctx)
- 			write_i2c_redriver_setting(pipe_ctx, false);
- 		}
- 	}
--	dc->hwss.disable_stream(pipe_ctx);
+diff --git a/samples/bpf/fds_example.c b/samples/bpf/fds_example.c
+index d5992f7872328..59f45fef51109 100644
+--- a/samples/bpf/fds_example.c
++++ b/samples/bpf/fds_example.c
+@@ -30,6 +30,8 @@
+ #define BPF_M_MAP	1
+ #define BPF_M_PROG	2
  
- 	disable_link(pipe_ctx->stream->link, pipe_ctx->stream->signal);
++char bpf_log_buf[BPF_LOG_BUF_SIZE];
 +
-+	dc->hwss.disable_stream(pipe_ctx);
-+
- 	if (pipe_ctx->stream->timing.flags.DSC) {
- 		if (dc_is_dp_signal(pipe_ctx->stream->signal))
- 			dp_set_dsc_enable(pipe_ctx, false);
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 91cd884d6f257..6124af571bff6 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -1102,6 +1102,10 @@ static inline enum link_training_result perform_link_training_int(
- 	dpcd_pattern.v1_4.TRAINING_PATTERN_SET = DPCD_TRAINING_PATTERN_VIDEOIDLE;
- 	dpcd_set_training_pattern(link, dpcd_pattern);
- 
-+	/* delay 5ms after notifying sink of idle pattern before switching output */
-+	if (link->connector_signal != SIGNAL_TYPE_EDP)
-+		msleep(5);
-+
- 	/* 4. mainlink output idle pattern*/
- 	dp_set_hw_test_pattern(link, DP_TEST_PATTERN_VIDEO_MODE, NULL, 0);
- 
-@@ -1551,6 +1555,12 @@ bool perform_link_training_with_retries(
- 	struct dc_link *link = stream->link;
- 	enum dp_panel_mode panel_mode = dp_get_panel_mode(link);
- 
-+	/* We need to do this before the link training to ensure the idle pattern in SST
-+	 * mode will be sent right after the link training
-+	 */
-+	link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
-+							pipe_ctx->stream_res.stream_enc->id, true);
-+
- 	for (j = 0; j < attempts; ++j) {
- 
- 		dp_enable_link_phy(
-@@ -1567,12 +1577,6 @@ bool perform_link_training_with_retries(
- 
- 		dp_set_panel_mode(link, panel_mode);
- 
--		/* We need to do this before the link training to ensure the idle pattern in SST
--		 * mode will be sent right after the link training
--		 */
--		link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
--								pipe_ctx->stream_res.stream_enc->id, true);
--
- 		if (link->aux_access_disabled) {
- 			dc_link_dp_perform_link_training_skip_aux(link, link_setting);
- 			return true;
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-index b77e9dc160863..2af1d74d16ad8 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-@@ -1069,8 +1069,17 @@ void dce110_blank_stream(struct pipe_ctx *pipe_ctx)
- 		link->dc->hwss.set_abm_immediate_disable(pipe_ctx);
- 	}
- 
--	if (dc_is_dp_signal(pipe_ctx->stream->signal))
-+	if (dc_is_dp_signal(pipe_ctx->stream->signal)) {
- 		pipe_ctx->stream_res.stream_enc->funcs->dp_blank(pipe_ctx->stream_res.stream_enc);
-+
-+		/*
-+		 * After output is idle pattern some sinks need time to recognize the stream
-+		 * has changed or they enter protection state and hang.
-+		 */
-+		if (!dc_is_embedded_signal(pipe_ctx->stream->signal))
-+			msleep(60);
-+	}
-+
- }
- 
+ static void usage(void)
+ {
+ 	printf("Usage: fds_example [...]\n");
+@@ -57,7 +59,6 @@ static int bpf_prog_create(const char *object)
+ 		BPF_EXIT_INSN(),
+ 	};
+ 	size_t insns_cnt = sizeof(insns) / sizeof(struct bpf_insn);
+-	char bpf_log_buf[BPF_LOG_BUF_SIZE];
+ 	struct bpf_object *obj;
+ 	int prog_fd;
  
 -- 
 2.25.1
