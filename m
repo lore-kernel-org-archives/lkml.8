@@ -2,126 +2,203 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05576C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30DD120729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C7120709
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YJV8ewpx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ax7gqxfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgHJJS4 (ORCPT
+        id S1726654AbgHJJTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:18:56 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60678 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgHJJS4 (ORCPT
+        Mon, 10 Aug 2020 05:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgHJJTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:18:56 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07A9Cani045424;
-        Mon, 10 Aug 2020 09:17:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=6ZaDq5+3vPA17fiFYRQL93Cef6LMw2VJ5wtI2kQA9+M=;
- b=YJV8ewpxwdkZe+9c6oTM+v9AWMZ+zYdgj+VWr8QISVisYW+Fto+6snoc6hIdhebXSoXa
- vE4oQJ9YG3NS05aAvO71NfvmrI9iF7kIEPdbU446bC7wrC03txYYltM23tJqcwaG/sLU
- 1P/F/ES4bJxH6LOmFO+C61U0O5qyuvDDeGFvq6UgqsD2AApN/lXCO7epi4XD+xIXXOXU
- 4p5GwmChl2ZYIcXwqyWrQU6CFCtCw4WFCmQ6nJzyhWeeu5kb7heD0TNhTZP25YFdGBab
- j1ZX9gwmIqceijupB4KOEH4dTXqk5XYxba4jIyy6EbgNZCjwRFaamdaWF3dcUPjs+W45 3g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32sm0mdd2f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Aug 2020 09:17:44 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07A9DORU006393;
-        Mon, 10 Aug 2020 09:17:44 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 32t5tr844q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 09:17:44 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07A9HZen018697;
-        Mon, 10 Aug 2020 09:17:40 GMT
-Received: from localhost (/10.175.207.128)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Aug 2020 09:17:35 +0000
-Date:   Mon, 10 Aug 2020 11:17:30 +0200
-From:   Gregory Herrero <gregory.herrero@oracle.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] recordmcount: Fix build failure on non arm64
-Message-ID: <20200810091730.GA3099@ltoracle>
-References: <5ca1be21fa6ebf73203b45fd9aadd2bafb5e6b15.1597049145.git.christophe.leroy@csgroup.eu>
+        Mon, 10 Aug 2020 05:19:53 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682E5C061756;
+        Mon, 10 Aug 2020 02:19:53 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k13so4447983plk.13;
+        Mon, 10 Aug 2020 02:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LG+fIp5OZ25It71Wra3d8yfu2prbPEMG5KpZ0CWWGCc=;
+        b=Ax7gqxfGIMFUTMwsQKBmRknt4QVEZlySJYJG1TRzYusE6XvTmcOEpv8tKf3kBk00cX
+         ElKMU+sWP7NxGBs4dvW8mIRqLwbUtKRX8tsgz+Qt/3N0vKNZ2cqqW0W4fiReomKI9khn
+         RKk8brgclZZsgdpuvH9NCvFkSy90nsuhWs/maKtp9738zFm47LNjKZmdDuOjxnDi6m4c
+         5jNvE+Z45Iqj9ky3pLQpBzps3ZU5/6Yfg7MBZL1yshWFIXSjeUolc+B+NytARzbwpdhC
+         8wyxvA6qwoJXixTxoyeBMnT+MZ8r+4pvM8u1uo3KJH6hj/+oa8hNfZaQX56qIBx/wNZ/
+         xi0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LG+fIp5OZ25It71Wra3d8yfu2prbPEMG5KpZ0CWWGCc=;
+        b=erNu6tuQZPM6o7Bk8rW4KkuLe6yP/tFva4pCwmW0AL/oh2A4Odhd4o1M37GDpyxPj6
+         VFxzf2hJQEXpmTDB7QR9xBsWCv68vAiUPblMk3NrX3rYi7q/P7ffZHs1U4Es73Ah8Zxc
+         2s3fUghDsYRm3BNUO2+XuXqosCromFsvvfTPCPxOC1U7zM4RF/6Q63DoRbSI4KZTGwxd
+         4TdwemoqbATXgPeDP9HYQEdCNojq7ZMx0znJvJEyMFHCXCrkmC2nQeaYG/EoaiooOW0q
+         Ud+ewB9fok/T3zqXaVvx2vbr3bQop0dWVKXuMGRL/U9gRbNocM2WPWtSebLwMAVKwHUL
+         +QLQ==
+X-Gm-Message-State: AOAM5325Mdu60tOlNt1tJLT2nvUfZgz8bA1aITiX1EL2x60vfyFCHeP+
+        FosnMjclhkKvKFXrCbcbqZA=
+X-Google-Smtp-Source: ABdhPJx7x4fvEeZF1zvMGSiHBSqpbplJv6jIiVbs9RahcOYpDup1KSq1TWn/T1OM81CeqnCBgD6+oA==
+X-Received: by 2002:a17:90b:a45:: with SMTP id gw5mr25112629pjb.80.1597051192832;
+        Mon, 10 Aug 2020 02:19:52 -0700 (PDT)
+Received: from gmail.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id x12sm7776750pff.48.2020.08.10.02.19.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 02:19:52 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 14:48:19 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Jean Delvare <jdelvare@suse.com>
+Subject: Re: [PATCH v2 2/2] i2c: eg20t: use generic power management
+Message-ID: <20200810091819.GA6615@gmail.com>
+References: <20200805193616.384313-3-vaibhavgupta40@gmail.com>
+ <20200807202321.GA753887@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5ca1be21fa6ebf73203b45fd9aadd2bafb5e6b15.1597049145.git.christophe.leroy@csgroup.eu>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
- malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1011
- suspectscore=1 mlxlogscore=999 priorityscore=1501 adultscore=0
- impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100067
+In-Reply-To: <20200807202321.GA753887@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On Fri, Aug 07, 2020 at 03:23:21PM -0500, Bjorn Helgaas wrote:
+> [+cc Jean for i801 question below]
+> 
+> On Thu, Aug 06, 2020 at 01:06:16AM +0530, Vaibhav Gupta wrote:
+> > Drivers using legacy power management .suspen()/.resume() callbacks
+> > have to manage PCI states and device's PM states themselves. They also
+> > need to take care of standard configuration registers.
+> > 
+> > Switch to generic power management framework using a single
+> > "struct dev_pm_ops" variable to take the unnecessary load from the driver.
+> > This also avoids the need for the driver to directly call most of the PCI
+> > helper functions and device power state control functions, as through
+> > the generic framework PCI Core takes care of the necessary operations,
+> > and drivers are required to do only device-specific jobs.
+> > 
+> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> 
+> s/.suspen/.suspend/ above
+> 
+> These both look right to me.
+> 
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Looking at neighboring drivers, it looks like some already use generic
+> PM but have unnecessary PCI code, e.g., amd_mp2_pci_suspend().
+> Probably already on your list.
+Yes :)
+> 
+> Also, i801_suspend() looks suspicious because it writes SMBHSTCFG, but
+> I don't see anything corresponding in i801_resume().
+I will look into it.
 
-On Mon, Aug 10, 2020 at 08:48:22AM +0000, Christophe Leroy wrote:
-> Commit ea0eada45632 leads to the following build failure on powerpc:
+Thanks
+Vaibhav Gupta
 > 
->   HOSTCC  scripts/recordmcount
-> scripts/recordmcount.c: In function 'arm64_is_fake_mcount':
-> scripts/recordmcount.c:440: error: 'R_AARCH64_CALL26' undeclared (first use in this function)
-> scripts/recordmcount.c:440: error: (Each undeclared identifier is reported only once
-> scripts/recordmcount.c:440: error: for each function it appears in.)
-> make[2]: *** [scripts/recordmcount] Error 1
-> 
-> Make sure R_AARCH64_CALL26 is always defined.
-> 
-Oops, thanks for fixing this.
-
-Acked-by: Gregory Herrero <gregory.herrero@oracle.com>
-
-Greg
-
-> Fixes: ea0eada45632 ("recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.")
-> Cc: Gregory Herrero <gregory.herrero@oracle.com>
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  scripts/recordmcount.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-> index e59022b3f125..b9c2ee7ab43f 100644
-> --- a/scripts/recordmcount.c
-> +++ b/scripts/recordmcount.c
-> @@ -42,6 +42,8 @@
->  #define R_ARM_THM_CALL		10
->  #define R_ARM_CALL		28
->  
-> +#define R_AARCH64_CALL26	283
-> +
->  static int fd_map;	/* File descriptor for file being modified. */
->  static int mmap_failed; /* Boolean flag. */
->  static char gpfx;	/* prefix for global symbol name (sometimes '_') */
-> -- 
-> 2.25.0
-> 
+> > ---
+> >  drivers/i2c/busses/i2c-eg20t.c | 36 +++++++---------------------------
+> >  1 file changed, 7 insertions(+), 29 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+> > index eb41de22d461..843b31a0f752 100644
+> > --- a/drivers/i2c/busses/i2c-eg20t.c
+> > +++ b/drivers/i2c/busses/i2c-eg20t.c
+> > @@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
+> >  	kfree(adap_info);
+> >  }
+> >  
+> > -#ifdef CONFIG_PM
+> > -static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
+> > +static int __maybe_unused pch_i2c_suspend(struct device *dev)
+> >  {
+> > -	int ret;
+> >  	int i;
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> >  	struct adapter_info *adap_info = pci_get_drvdata(pdev);
+> >  	void __iomem *p = adap_info->pch_data[0].pch_base_address;
+> >  
+> > @@ -872,31 +871,13 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
+> >  		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
+> >  		ioread32(p + PCH_I2CESRSTA));
+> >  
+> > -	ret = pci_save_state(pdev);
+> > -
+> > -	if (ret) {
+> > -		pch_pci_err(pdev, "pci_save_state\n");
+> > -		return ret;
+> > -	}
+> > -
+> > -	pci_disable_device(pdev);
+> > -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> > -
+> >  	return 0;
+> >  }
+> >  
+> > -static int pch_i2c_resume(struct pci_dev *pdev)
+> > +static int __maybe_unused pch_i2c_resume(struct device *dev)
+> >  {
+> >  	int i;
+> > -	struct adapter_info *adap_info = pci_get_drvdata(pdev);
+> > -
+> > -	pci_set_power_state(pdev, PCI_D0);
+> > -	pci_restore_state(pdev);
+> > -
+> > -	if (pci_enable_device(pdev) < 0) {
+> > -		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
+> > -		return -EIO;
+> > -	}
+> > +	struct adapter_info *adap_info = dev_get_drvdata(dev);
+> >  
+> >  	for (i = 0; i < adap_info->ch_num; i++)
+> >  		pch_i2c_init(&adap_info->pch_data[i]);
+> > @@ -905,18 +886,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
+> >  
+> >  	return 0;
+> >  }
+> > -#else
+> > -#define pch_i2c_suspend NULL
+> > -#define pch_i2c_resume NULL
+> > -#endif
+> > +
+> > +static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
+> >  
+> >  static struct pci_driver pch_pcidriver = {
+> >  	.name = KBUILD_MODNAME,
+> >  	.id_table = pch_pcidev_id,
+> >  	.probe = pch_i2c_probe,
+> >  	.remove = pch_i2c_remove,
+> > -	.suspend = pch_i2c_suspend,
+> > -	.resume = pch_i2c_resume
+> > +	.driver.pm = &pch_i2c_pm_ops,
+> >  };
+> >  
+> >  module_pci_driver(pch_pcidriver);
+> > -- 
+> > 2.27.0
+> > 
