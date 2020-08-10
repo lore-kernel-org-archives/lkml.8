@@ -2,115 +2,132 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED04C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C491D2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DS0d7uCE"
+	by mail.kernel.org (Postfix) with ESMTP id 842AD2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHJA6F (ORCPT
+        id S1726472AbgHJA61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 20:58:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47103 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726335AbgHJA6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 20:58:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597021083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kCTZ+EBI9FQTeiqg16DaYSGV21VlDbKz4raMpmUYwf0=;
-        b=DS0d7uCE8gccNK1o87uzNlydCi9S/VbUN7DeTcK+CrhG8nRgAI0dFmFLB4J/ivEXWyuWre
-        lcIxM59INJtR1CtZSR69XqXhcNRpaF1WYFp0dQpJm+Rg2A7xMsyTI9CteoKOvxMyQP5GMP
-        MsuE3JCyToREwUU9s4rQV+IZDg6JVmA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-DAftb58wORqGISqKS68kzg-1; Sun, 09 Aug 2020 20:58:01 -0400
-X-MC-Unique: DAftb58wORqGISqKS68kzg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5620C1DE1;
-        Mon, 10 Aug 2020 00:58:00 +0000 (UTC)
-Received: from localhost (ovpn-12-116.pek2.redhat.com [10.72.12.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 56E9569318;
-        Mon, 10 Aug 2020 00:57:58 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 08:57:55 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/10] mm/hugetlb: make sure to get NULL when list is
- empty
-Message-ID: <20200810005755.GU14854@MiWiFi-R3L-srv>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-3-richard.weiyang@linux.alibaba.com>
- <20200807124951.GM14854@MiWiFi-R3L-srv>
- <20200807142800.GA14692@L-31X9LVDL-1304.local>
+        Sun, 9 Aug 2020 20:58:27 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:58486 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726335AbgHJA61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 20:58:27 -0400
+Received: from [10.130.0.75] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxmMWlmzBfhZcGAA--.2846S3;
+        Mon, 10 Aug 2020 08:58:14 +0800 (CST)
+Subject: Re: [PATCH] gpu/drm: Remove TTM_PL_FLAG_WC of VRAM to fix
+ writecombine issue for Loongson64
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <1596871502-3432-1-git-send-email-yangtiezhu@loongson.cn>
+ <20200808134147.GA5772@alpha.franken.de>
+ <b7b16df1-d661-d59a-005b-da594ce9fc95@flygoat.com>
+ <38857c24-25c4-cff3-569e-5bcb773bfae6@amd.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <fb68c6ee-d455-24a0-524e-9b8a5033becd@loongson.cn>
+Date:   Mon, 10 Aug 2020 08:58:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807142800.GA14692@L-31X9LVDL-1304.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <38857c24-25c4-cff3-569e-5bcb773bfae6@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9DxmMWlmzBfhZcGAA--.2846S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFyUur48Zw1DtrWrJw4DXFb_yoW8tF4kpF
+        ZxKa1SgF4DJr4jyFnFqwn3XrWjkws5trW7Krn5CrWDu3sxtrnYgFyxKFWqvFWDur1fX3Wj
+        vF47WFyrua4ruFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY
+        02Avz4vE14v_twCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+        xUcPfHUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/20 at 10:28pm, Wei Yang wrote:
-> On Fri, Aug 07, 2020 at 08:49:51PM +0800, Baoquan He wrote:
-> >On 08/07/20 at 05:12pm, Wei Yang wrote:
-> >> list_first_entry() may not return NULL even when the list is empty.
-> >> 
-> >> Let's make sure the behavior by using list_first_entry_or_null(),
-> >> otherwise it would corrupt the list.
-> >> 
-> >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> >> ---
-> >>  mm/hugetlb.c | 3 ++-
-> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> >> index 62ec74f6d03f..0a2f3851b828 100644
-> >> --- a/mm/hugetlb.c
-> >> +++ b/mm/hugetlb.c
-> >> @@ -237,7 +237,8 @@ get_file_region_entry_from_cache(struct resv_map *resv, long from, long to)
-> >>  	VM_BUG_ON(resv->region_cache_count <= 0);
-> >
-> >
-> >We have had above line, is it possible to be NULL from list_first_entry?
-> >
-> >>  
-> >>  	resv->region_cache_count--;
-> >> -	nrg = list_first_entry(&resv->region_cache, struct file_region, link);
-> >> +	nrg = list_first_entry_or_null(&resv->region_cache,
-> >> +			struct file_region, link);
-> >>  	VM_BUG_ON(!nrg);
-> 
-> Or we can remove this VM_BUG_ON()?
+On 08/09/2020 08:13 PM, Christian König wrote:
+> Am 08.08.20 um 15:50 schrieb Jiaxun Yang:
+>>
+>>
+>> 在 2020/8/8 下午9:41, Thomas Bogendoerfer 写道:
+>>> On Sat, Aug 08, 2020 at 03:25:02PM +0800, Tiezhu Yang wrote:
+>>>> Loongson processors have a writecombine issue that maybe failed to
+>>>> write back framebuffer used with ATI Radeon or AMD GPU at times,
+>>>> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
+>>>> mapping for MIPS"), there exists some errors such as blurred screen
+>>>> and lockup, and so on.
+>>>>
+>>>> Remove the flag TTM_PL_FLAG_WC of VRAM to fix writecombine issue for
+>>>> Loongson64 to work well with ATI Radeon or AMD GPU, and it has no any
+>>>> influence on the other platforms.
+>>> well it's not my call to take or reject this patch, but I already
+>>> indicated it might be better to disable writecombine on the CPU
+>>> detection side (or do you have other devices where writecombining
+>>> works ?). Something like below will disbale it for all loongson64 CPUs.
+>>> If you now find out where it works and where it doesn't, you can even
+>>> reduce it to the required minium of affected CPUs.
+>> Hi Tiezhu, Thomas,
+>>
+>> Yes, writecombine works well on LS7A's internal GPU....
+>> And even works well with some AMD GPUs (in my case, RX550).
+>
+> In this case the patch is a clear NAK since you haven't root caused 
+> the issue and are just working around it in a very questionable manner.
+>
+>>
+>> Tiezhu, is it possible to investigate the issue deeper in Loongson?
+>> Probably we just need to add some barrier to maintain the data 
+>> coherency,
+>> or disable writecombine for AMD GPU's command buffer and leave 
+>> texture/frame
+>> buffer wc accelerated.
+>
+> Have you moved any buffer to VRAM and forgot to add an HDP 
+> flush/invalidate?
+>
+> The acceleration is not much of a problem, but if WC doesn't work in 
+> general you need to disable it for the whole CPU and not for 
+> individual drivers.
 
-Yeah, it's fine to me.
+Hi Thomas, Jiaxun and Christian,
 
-> 
-> >>  	list_del(&nrg->link);
-> >>  
-> >> -- 
-> >> 2.20.1 (Apple Git-117)
-> >> 
-> >> 
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
-> 
+Thank you very much for your suggestions.
+
+Actually, this patch is a temporary solution to just make it work well,
+it is not a proper and final solution.
+
+I understand your opinions, it will take some time to find the root cause.
+
+Thanks,
+Tiezhu
+
+>
+> Regards,
+> Christian.
+>
+>>
+>> Thanks.
+>>
+>> - Jiaxun
 
