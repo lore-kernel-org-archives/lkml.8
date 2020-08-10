@@ -2,146 +2,78 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37761C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 136AD20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597057592;
-	bh=iCudXyjdYzGdwBeDT9k0njKXIiJW45q0BJa7WH0s4Dc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tFWXf3VnkjdH5fYkjoOwkzQadH0kE7U1IKigqYiNauNdau/n1vk8VhStNmwjgAqw7
-	 xLLcYopiBJ22fZrxG9KscuP6tWsls+LTLFQhufBQ3S/XTVpOwVVQSLBKRZ8IWhp0kk
-	 sxoxgQ05cs6oxUqK6Lky5u2Rorb3G///Kbm7UEj0=
+	by mail.kernel.org (Postfix) with ESMTP id C59D320729
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OqRn0qMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgHJLG3 (ORCPT
+        id S1726500AbgHJLHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgHJLGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 07:06:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 10 Aug 2020 07:07:15 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55734 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726146AbgHJLHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 07:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597057633;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oHCoGFv/slftUZpEERreHjBoBcennu4blqAk1fcTw/k=;
+        b=OqRn0qMiOPHW1hKC4xyZ5T7SSgP121SvvMMxLh8IjEMriwR7WVC5ah/IXGpaNFq2Dk6Y66
+        zhNk6HL4ijIcuVhSiPYFnmFq9Ml3Cyqib3qALbN4EtPbtcMsEBbDyyfeDe6Tka6XaWdA2a
+        cMENZlE9sbZGUYVSy4bMM/kE3zwKmXk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-LP0f2cGjM8KguZ-X50y43Q-1; Mon, 10 Aug 2020 07:07:11 -0400
+X-MC-Unique: LP0f2cGjM8KguZ-X50y43Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C15220729;
-        Mon, 10 Aug 2020 11:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597057565;
-        bh=iCudXyjdYzGdwBeDT9k0njKXIiJW45q0BJa7WH0s4Dc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z6eT13jgvH1KgFLo4PP1uO1yglBPMk1iFWkVhMmoCHpwDj4kJa4iMoRswlSbq2sWc
-         w1/S1CEcrlWQeDm71kCfbONmR0+vnJRdeekSbtJuk3aVYyX2PMBiLI6WDLVt36BaqQ
-         GKyQkCR0P03BgDtUGLKl+Qr1ish6QyANqXtgnqac=
-Date:   Mon, 10 Aug 2020 13:06:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>, balbi@kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KMSAN: kernel-infoleak in raw_ioctl
-Message-ID: <20200810110616.GA2415197@kroah.com>
-References: <000000000000ce85c405ac744ff6@google.com>
- <20200810074706.GD1529187@kroah.com>
- <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
- <20200810090833.GA2271719@kroah.com>
- <20200810091538.GA2273701@kroah.com>
- <20200810095754.GA2404978@kroah.com>
- <CACT4Y+badWwK8L3HjYrv2nu-W+WnUfj5Pi2JsLTUMU3o2tJL9g@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 865531DE0;
+        Mon, 10 Aug 2020 11:07:10 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.177])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 00A8710013C2;
+        Mon, 10 Aug 2020 11:06:57 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 10 Aug 2020 13:07:10 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 13:06:48 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] kernel: update callers of task_work_add() to use
+ TWA_RESUME
+Message-ID: <20200810110646.GB17018@redhat.com>
+References: <10debfb3-25f2-20ed-d4f3-1d95ba4c2129@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+badWwK8L3HjYrv2nu-W+WnUfj5Pi2JsLTUMU3o2tJL9g@mail.gmail.com>
+In-Reply-To: <10debfb3-25f2-20ed-d4f3-1d95ba4c2129@kernel.dk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 12:21:49PM +0200, Dmitry Vyukov wrote:
-> On Mon, Aug 10, 2020 at 11:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Aug 10, 2020 at 11:15:38AM +0200, Greg KH wrote:
-> > > On Mon, Aug 10, 2020 at 11:08:33AM +0200, Greg KH wrote:
-> > > > On Mon, Aug 10, 2020 at 11:00:07AM +0200, Dmitry Vyukov wrote:
-> > > > > On Mon, Aug 10, 2020 at 9:46 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > >
-> > > > > > On Sun, Aug 09, 2020 at 09:27:18AM -0700, syzbot wrote:
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > syzbot found the following issue on:
-> > > > > > >
-> > > > > > > HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-> > > > > > > git tree:       https://github.com/google/kmsan.git master
-> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=141eb8b2900000
-> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a7e220df5a81d1ab400e
-> > > > > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > > > > > userspace arch: i386
-> > > > > > >
-> > > > > > > Unfortunately, I don't have any reproducer for this issue yet.
-> > > > > >
-> > > > > > The irony of a kernel module written for syzbot testing, causing syzbot
-> > > > > > reports....
-> > > > >
-> > > > > The raw gadget and KCOV are also kernel code and subject to all the
-> > > > > same rules as any other kernel code from syzkaller point of view.
-> > > > >
-> > > > > But I think the root cause of this bug is the origin of the uninitialized-ness:
-> > > > >
-> > > > > Local variable ----buf.i@asix_get_phy_addr created at:
-> > > > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
-> > > > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
-> > > > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
-> > > > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
-> > > > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
-> > > > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
-> > > >
-> > > > read buffers sent to USB hardware are ment to be filled in by the
-> > > > hardware with the data received from it, we do not zero-out those
-> > > > buffers before passing the pointer there.
-> > > >
-> > > > Perhaps with testing frameworks like the raw usb controller, that might
-> > > > cause a number of false-positives to happen?
-> > >
-> > > Ah, wait, that buffer is coming from the stack, which isn't allowed in
-> > > the first place :(
-> > >
-> > > So that should be changed anyway to a dynamic allocation, I'll go write
-> > > up a patch...
-> >
-> > Nope, my fault, the data is not coming from the stack, so all is good.
-> 
-> My reading of the code is that asix_read_cmd returns the number of
-> bytes actually read, which may be less than requested.
-> This happens in __usbnet_read_cmd:
-> https://elixir.bootlin.com/linux/latest/source/drivers/net/usb/usbnet.c#L2002
-> So this code in asix_read_phy_addr will need produce an uninit value
-> for result if <2 bytes read:
-> 
->     u8 buf[2];
->     int ret = asix_read_cmd(dev, AX_CMD_READ_PHY_ID, 0, 0, 2, buf, 0);
->     if (ret < 0)
->         netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
->     ret = buf[offset];
->     return ret;
-> 
-> And it looks like all of 13 uses of asix_read_cmd in
-> drivers/net/usb/asix_common.c are subject to this bug as well.
+On 08/08, Jens Axboe wrote:
+>
+> Any pre-existing caller of this function uses 'true' to signal to use
+> notifications or not, but we now also have signaled notifications.
+> Update existing callers that specify 'true' for notify to use the
+> updated TWA_RESUME instead.
 
-Ah, yeah, and no one checks error values either, there's even a TODO
-statement in the driver about that :(
+Thanks,
 
-Good catch, I'll point some interns at this and see if they can fix it
-up, thanks!
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-greg k-h
