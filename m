@@ -2,123 +2,107 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10947C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71974C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3E302070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EC62078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LEEGvy6z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qZT9QL55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgHJOnp (ORCPT
+        id S1726937AbgHJOqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:43:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51202 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726111AbgHJOnp (ORCPT
+        Mon, 10 Aug 2020 10:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbgHJOqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:43:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597070623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=JcBLOi3neeT1lIyBo7PfatBN0vwuswVUL6Gsq5h2/Cs=;
-        b=LEEGvy6zhcsqoN2Adc8Src4DEHEO0UojZX+T87T06rPZSAHcggjYODVth23Q6U0UeQREsN
-        hIuNoyY2XGNcTD4gyAoqDzM2rOl/uye9qy/gpoIqUWT4BQNKygTd8qJb/x8mPypndagtmm
-        QUH6UyLoi3lZvwhE4clSt+McAwX4m4U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-ZtPwwEoJN0mE3uY2kLDSqg-1; Mon, 10 Aug 2020 10:43:41 -0400
-X-MC-Unique: ZtPwwEoJN0mE3uY2kLDSqg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E04A659;
-        Mon, 10 Aug 2020 14:43:40 +0000 (UTC)
-Received: from dba62.ml3.eng.bos.redhat.com (dba62.ml3.eng.bos.redhat.com [10.19.176.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8063079CF3;
-        Mon, 10 Aug 2020 14:43:40 +0000 (UTC)
-From:   David Arcari <darcari@redhat.com>
-To:     linux-pm@vger.kernel.org
-Cc:     David Arcari <darcari@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/power turbostat: fix output formatting for ACPI CST enumeration
-Date:   Mon, 10 Aug 2020 10:43:30 -0400
-Message-Id: <20200810144330.75613-1-darcari@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Mon, 10 Aug 2020 10:46:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E708C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=ST9uT/svvVM3VjFTpOnQ2kyruMHX89YknoXDFMfmz1Y=; b=qZT9QL55N+ijZXxNUmmIYQWYhb
+        Lc0Q5kjGV5uOUCjTc7bCMc1r5n1sVNI8Oi2b7MjyvSM5oW/LNxCYuWqFt24HpwQ+8Bv5r2myUh+iO
+        an1I6A9x+qWeG1wWg9BjpojyJfNsS1UIVoc7K23JNUruJVYaxe+ctqarlZIfbVzrAiUJdj4XUBLhW
+        VWk54u+046uij8MID3XcTjDwZlfUP5L7MiopALQcI5P55o3ZlKqAJ0gZ3Exfmk18auTFGFmvW8JY3
+        kSGXst3aYKKCvg/TPD5IMmcfZBIFb4EYwuakEVJp4vkgSs2rL3Ju523SMsIDCTJi3UP7WDUvRTdTj
+        IyEDzyEQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k593z-0004Lv-91; Mon, 10 Aug 2020 14:46:11 +0000
+Subject: Re: [PATCH v1 2/2] drm/bridge: add refactored it6505 driver
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Hermes Wu <Hermes.Wu@ite.com.tw>,
+        Kenneth Hung <Kenneth.Hung@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Yilun Lin <yllin@google.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+References: <1597054312-25538-1-git-send-email-allen.chen@ite.com.tw>
+ <1597054312-25538-3-git-send-email-allen.chen@ite.com.tw>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dab6261e-708b-b832-17cb-833023383156@infradead.org>
+Date:   Mon, 10 Aug 2020 07:46:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1597054312-25538-3-git-send-email-allen.chen@ite.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-turbostat formatting is broken with ACPI CST for enumeration.  The
-problem is that the CX_ACPI% is eight characters long which does not
-work with tab formatting.  One simple solution is to remove the underbar
-from the state name such that C1_ACPI will be displayed as C1ACPI.
+On 8/10/20 3:11 AM, allen wrote:
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 43271c2..a9f49c7 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -48,6 +48,13 @@ config DRM_DISPLAY_CONNECTOR
+>  	  on ARM-based platforms. Saying Y here when this driver is not needed
+>  	  will not cause any issue.
+>  
+> +config DRM_ITE_IT6505
+> +	tristate "ITE IT6505 DP bridge"
+> +	depends on OF
+> +	select DRM_KMS_HELPER
+> +	help
+> +	  ITE IT6505 DP bridge chip driver.
 
-Signed-off-by: David Arcari <darcari@redhat.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- tools/power/x86/turbostat/turbostat.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Maybe it's just me, but I would appreciate it if somewhere in the
+Kconfig entry here, it said DisplayPort instead of just DP.
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 33b370865d16..5f074879cc0a 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -3474,6 +3474,20 @@ int has_config_tdp(unsigned int family, unsigned int model)
- 	}
- }
- 
-+static void
-+remove_underbar(char *s)
-+{
-+	char *to = s;
-+
-+	while (*s) {
-+		if (*s != '_')
-+			*to++ = *s;
-+		s++;
-+	}
-+
-+	*to = 0;
-+}
-+
- static void
- dump_cstate_pstate_config_info(unsigned int family, unsigned int model)
- {
-@@ -3559,6 +3573,8 @@ dump_sysfs_cstate_config(void)
- 		*sp = '\0';
- 		fclose(input);
- 
-+		remove_underbar(name_buf);
-+
- 		sprintf(path, "/sys/devices/system/cpu/cpu%d/cpuidle/state%d/desc",
- 			base_cpu, state);
- 		input = fopen(path, "r");
-@@ -5597,6 +5613,8 @@ void probe_sysfs(void)
- 		*sp = '%';
- 		*(sp + 1) = '\0';
- 
-+		remove_underbar(name_buf);
-+
- 		fclose(input);
- 
- 		sprintf(path, "cpuidle/state%d/time", state);
-@@ -5624,6 +5642,8 @@ void probe_sysfs(void)
- 		*sp = '\0';
- 		fclose(input);
- 
-+		remove_underbar(name_buf);
-+
- 		sprintf(path, "cpuidle/state%d/usage", state);
- 
- 		if (is_deferred_skip(name_buf))
+> +
+>  config DRM_LVDS_CODEC
+>  	tristate "Transparent LVDS encoders and decoders support"
+>  	depends on OF
+
+thanks.
 -- 
-2.27.0
+~Randy
 
