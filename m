@@ -2,106 +2,113 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D93C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22047206B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E20020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597100942;
-	bh=KN3dKAif49xXoXcIYO2KHMhCVpVKygWXi9GX3lGZE0Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qWIaLmFzIhADgyglRWuu/2p4vCt/jkONJTd/mwhiFuWUVZDG9alYE2qTMgGTQjYLl
-	 FJIBmR4jb8zbAs1Ddnaa8xqPAdiyYBK70K9kv2cJwR0XiguJvWtphcKhwrbV24NLSD
-	 +GZzFeB8uNMO383JMy0glOv1ft91eICZMrABTQO8=
+	s=default; t=1597101041;
+	bh=jG4q3ELHTIt4bmHrO0R7MsKJX3YCWMR8nkFA0qP9v1Q=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HsjyyrCasw+YDk4/vR2JnTYYDktMNfXhzHsnF+reSQ+4sDT7LeirEi9Jl2FzpUl1w
+	 vxcIwYzvBfAAbhjjKzFDi8ajpDCPOgd1ZvBLJ4jplyJkwMi+TxAuTAMNSHF5gG8VDz
+	 g5YELSEyG2tFi5n13ZXngkkH50yeTNiASzV2yN48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgHJXJB (ORCPT
+        id S1727093AbgHJXKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:09:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgHJXJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:09:00 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E934D2083B
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597100940;
-        bh=KN3dKAif49xXoXcIYO2KHMhCVpVKygWXi9GX3lGZE0Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Yv2lQ6JaL4P4RZ6DPgVE31ayJe5xrgq8e/gkNH27Ne/wxDKwqPT7kq7bgthZb2324
-         lEw+IH7M/ObVNPZdmg3XuvXjJHghj2lvECJhX5M0PTcJY1RU2cHyGjEAvVfdVxynFu
-         o179kJE3HAZitPXghelbc7zm8zomnZc/oNMUqjL8=
-Received: by mail-wm1-f46.google.com with SMTP id c80so978787wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:08:59 -0700 (PDT)
-X-Gm-Message-State: AOAM531XMzrIWkVYiT+WL/BKp9sHXUFBb5wkAatXgoR+4S7bedWDl1J4
-        xOmk11bpBlBfSxsseGNS7hKmar2TQORR0VFEtcz/SA==
-X-Google-Smtp-Source: ABdhPJxmzhiiwwbrIFHZSor9k9o7ub7q4gaPWRP1byqx4GzUeDDloP6QcQE45NlFyBvtRlFrJIX4xrjlnh1EftzntZU=
-X-Received: by 2002:a1c:4c17:: with SMTP id z23mr1361940wmf.49.1597100938325;
- Mon, 10 Aug 2020 16:08:58 -0700 (PDT)
+        Mon, 10 Aug 2020 19:10:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgHJXKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 19:10:39 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB4CC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:10:38 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id t7so8681370otp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oDBSjRVdrxSdo/zb6G9D/Gc+1eHy/zbqd68BxSpTpsk=;
+        b=Mc1c4nKbTFsOT0G6P5jppbmdXZv2/qIOeB3bkzjdsWJJiRrRXCOrGoazMoSM+Zctbb
+         JqG2uvtFB+ACwNjBk1aCExZg1ItHW1dg5bJnL8lVOSt+Wr3u4jeeZQjoRrF5OTvSRp6F
+         F7zR+VErwGS0ufWssysHVnCffP+stlCF04Ik0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oDBSjRVdrxSdo/zb6G9D/Gc+1eHy/zbqd68BxSpTpsk=;
+        b=n+BGuuQg8kVDEulbKAAejyRvpnA3VRwv1FiKbrDIDAD8yEMdRh8FTdvOfU8x/WdwYY
+         6mafXkyDN5POX7MqDAWWe6Bl7zkRKiacSHzwyYz7+KfiS7Wbqd1PL05ZgAUkpwMH1acD
+         F1NyH6PzJ4hfOEbEPi/ljKFKYi6Crxp0Iy2fW2LEfxDpUbkaYodfRJuCFiZuTc/l85vE
+         cXrrBUH6C1QPTPnzwrr4u0+NN1UkhPS13M6tmcOQLxYKjpteak1eGCZnl+YRvraGxJYw
+         zEOggDBnrp26MWph1BU8s2v6MOq/bMiX5NVLJS87tI8Ye1AptRJY1RibSQsIHNvXruTq
+         00fQ==
+X-Gm-Message-State: AOAM5309c48ruMyQhof3VZaWbVcrxWcf2qEX8C6oTjuP/xl1JTpmznGZ
+        /S8tAvnoushzLTVKVioUfmNkQQ==
+X-Google-Smtp-Source: ABdhPJy4Rx2TybXq8PCQy6YRHxndxiSIIHUBHnhzDArah6ixxcRWeFKmLM4EwBMWZZ9G/3EBguOr+w==
+X-Received: by 2002:a9d:6d08:: with SMTP id o8mr2607774otp.257.1597101037850;
+        Mon, 10 Aug 2020 16:10:37 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id v3sm3707410oig.30.2020.08.10.16.10.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 16:10:37 -0700 (PDT)
+Subject: Re: [PATCH 5.4 00/67] 5.4.58-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <11a22932-4e07-77db-7cbe-70d9e0c18603@linuxfoundation.org>
+Date:   Mon, 10 Aug 2020 17:10:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com> <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
-In-Reply-To: <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 10 Aug 2020 16:08:46 -0700
-X-Gmail-Original-Message-ID: <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com>
-Message-ID: <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com>
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, Borislav Petkov <bp@alien8.de>,
-        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
-        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 7:55 AM Nathaniel McCallum <npmccallum@redhat.com> wrote:
->
-> In a past revision of this patch, I had requested a void *misc
-> parameter that could be passed through vdso_sgx_enter_enclave_t into
-> sgx_enclave_exit_handler_t. This request encountered some push back
-> and I dropped the issue. However, I'd like to revisit it or something
-> similar.
+On 8/10/20 9:20 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.58 release.
+> There are 67 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 12 Aug 2020 15:17:47 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.58-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Why do you need an exit handler at all?  IIRC way back when I
-suggested that we simply not support it at all.  If you want to
-call__vdso_sgx_enter_enclave() in a loop, call it in a loop.  If you
-want to wrap it intelligently in Rust, you don't want a callback
-anyway -- that forces you have an FFI (or non-Rust, anyway) frame on
-the stack, which interacts poorly with panic handling and prevents you
-from using await in your Rust callback handler.  If, on the other
-hand, you just call __vdso_sg_enter_enclave() in a loop, all these
-problems go away and, if you really want, you can pass in a callback
-in Rust and call the callback from Rust.
+Compiled and booted on my test system. No dmesg regressions.
 
-What am I missing?  I still don't really understand why we are
-supporting this mechanism at all.  Just the asm code to invoke the
-callback seems to be about half of the entire function.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
