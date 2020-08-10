@@ -2,149 +2,70 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F142CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04444C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8ACA22CF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087245;
-	bh=ARaebd6r23AHRp7i41bEOBhp4oRUZXhVKblrjOHtCy8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tmM8clX2atoJRAPprGU08bSjgEphL7jf7M6HpY6r2ECWi7xn3cl/jyKvBkpL0Yseb
-	 JrvsWb3Vw0WHHsgqJcPUZWiysl+aqgSGT2xV7iah79gmkc7SravEQcHD7E/NyLNBmc
-	 vIsmuqqTCa+7Y1CMuiXRvBH/nh4ppbq3DLjFsEOo=
+	by mail.kernel.org (Postfix) with ESMTP id CE3532080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="BS3dTf9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgHJTNn (ORCPT
+        id S1729913AbgHJTUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44740 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:20:49 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:52446 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbgHJTNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DA482224D;
-        Mon, 10 Aug 2020 19:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086816;
-        bh=ARaebd6r23AHRp7i41bEOBhp4oRUZXhVKblrjOHtCy8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IvLs79vSfPs9UZeeNoKk0EoUofo+kwkWAN5m14Z5X4XfvhyDQaSxBu+xaaS/DRcmf
-         2HqBVDNepmQYZl6b+vgCrbWFPav5yl24D0QPxnKmFmoSw/whJ9Tdn+Km5kyXTsjQSC
-         RQC6a0n890s8N1KkC/sGdOwI1VKoMuO/uNXfkhmw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sasi Kumar <sasi.kumar@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/31] bdc: Fix bug causing crash after multiple disconnects
-Date:   Mon, 10 Aug 2020 15:12:53 -0400
-Message-Id: <20200810191259.3794858-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
-References: <20200810191259.3794858-1-sashal@kernel.org>
+        id S1728155AbgHJTUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:20:44 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BQQm942yLz2d;
+        Mon, 10 Aug 2020 21:20:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1597087241; bh=YLrczSTpxaAEdZF2sFqyeYjJHh21BF1+BJLgLP42RYY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BS3dTf9k+eUTG+Iyz20i9CmwY9+CAkUNv3QtK9AxWqyBer4s4mNCsCQ/ygaziFRTl
+         uU/xgcRb+lQXj+1FEKGxfHGc4+PvM/SaSyF40+e7McxLdA/CYDOhYgVaZjztz60HXC
+         V217CJ2uqIJG0M1ij7rD6kY4wVhHm1Gp0Z1brqcV9B091WmjUCu2f+XG+eCf86dR6O
+         ELgwcOKcVFwFijr0OzEylckoMCj+UBZCqAw7iOkf2Sh/590c1udb2m7FJV+bXf3Mmi
+         gqE4LLBEJfNRGvZ6O2irmY0mgc/kOhKKtxGadLUtXk9cqEk+dHMk0RWgWU/OQe/am1
+         MFns/7F+AMSqg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.4 at mail
+Date:   Mon, 10 Aug 2020 21:20:39 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: fix pointer table overallocation
+Message-ID: <20200810192039.GA26750@qmqm.qmqm.pl>
+References: <407fbd06a02caf038a9ba3baa51c7d6d47cd6517.1597000795.git.mirq-linux@rere.qmqm.pl>
+ <5ef51b56-c533-46c8-621d-7907129594e9@gmail.com>
+ <20200810123747.GC6438@sirena.org.uk>
+ <20200810162556.GA3394@qmqm.qmqm.pl>
+ <20200810173337.GG6438@sirena.org.uk>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200810173337.GG6438@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sasi Kumar <sasi.kumar@broadcom.com>
+On Mon, Aug 10, 2020 at 06:33:37PM +0100, Mark Brown wrote:
+> On Mon, Aug 10, 2020 at 06:25:56PM +0200, Micha³ Miros³aw wrote:
+> > On Mon, Aug 10, 2020 at 01:37:47PM +0100, Mark Brown wrote:
+> > > Yeah, this is more a performance improvement than a fix.
+> > Should I resend without Cc: stable?
+> I've already queued it to be applied to -next with that removed and an
+> edited subject line.
 
-[ Upstream commit a95bdfd22076497288868c028619bc5995f5cc7f ]
-
-Multiple connects/disconnects can cause a crash on the second
-disconnect. The driver had a problem where it would try to send
-endpoint commands after it was disconnected which is not allowed
-by the hardware. The fix is to only allow the endpoint commands
-when the endpoint is connected. This will also fix issues that
-showed up when using configfs to create gadgets.
-
-Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
- drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 01b44e1596237..4c557f3154460 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -283,6 +283,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 	 * in that case reinit is passed as 1
- 	 */
- 	if (reinit) {
-+		int i;
- 		/* Enable interrupts */
- 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
- 		temp |= BDC_GIE;
-@@ -292,6 +293,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 		/* Initialize SRR to 0 */
- 		memset(bdc->srr.sr_bds, 0,
- 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
-+		/* clear ep flags to avoid post disconnect stops/deconfigs */
-+		for (i = 1; i < bdc->num_eps; ++i)
-+			bdc->bdc_ep_array[i]->flags = 0;
- 	} else {
- 		/* One time initiaization only */
- 		/* Enable status report function pointers */
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index d49c6dc1082dc..9ddc0b4e92c9c 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -615,7 +615,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
- 	}
- 	bdc_dbg_bd_list(bdc, ep);
- 	/* only for ep0: config ep is called for ep0 from connect event */
--	ep->flags |= BDC_EP_ENABLED;
- 	if (ep->ep_num == 1)
- 		return ret;
- 
-@@ -759,10 +758,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
- 					__func__, ep->name, start_bdi, end_bdi);
- 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
- 						ep, (void *)ep->usb_ep.desc);
--	/* Stop the ep to see where the HW is ? */
--	ret = bdc_stop_ep(bdc, ep->ep_num);
--	/* if there is an issue with stopping ep, then no need to go further */
--	if (ret)
-+	/* if still connected, stop the ep to see where the HW is ? */
-+	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
-+		ret = bdc_stop_ep(bdc, ep->ep_num);
-+		/* if there is an issue, then no need to go further */
-+		if (ret)
-+			return 0;
-+	} else
- 		return 0;
- 
- 	/*
-@@ -1911,7 +1913,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
- 		__func__, ep->name, ep->flags);
- 
- 	if (!(ep->flags & BDC_EP_ENABLED)) {
--		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
-+		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
-+			dev_warn(bdc->dev, "%s is already disabled\n",
-+				 ep->name);
- 		return 0;
- 	}
- 	spin_lock_irqsave(&bdc->lock, flags);
--- 
-2.25.1
-
+Ok, thanks!
