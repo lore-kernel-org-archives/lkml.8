@@ -2,87 +2,142 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA347C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9734A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1602206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LN5P6Urm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgHJDBd (ORCPT
+        id S1726401AbgHJDLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 23:01:33 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:44076 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgHJDBd (ORCPT
+        Sun, 9 Aug 2020 23:11:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53261 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726335AbgHJDLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 23:01:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 9CA182014566;
-        Mon, 10 Aug 2020 11:01:28 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8wlyyMNXwMCF; Mon, 10 Aug 2020 11:01:28 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 77BBE20156E6;
-        Mon, 10 Aug 2020 11:01:28 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [203.145.95.159])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 9CE4BC019F4;
-        Mon, 10 Aug 2020 11:01:27 +0800 (HKT)
-Subject: Re: [PATCH v5 3/3] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200420042612.27752-1-chris.ruehl@gtsys.com.hk>
- <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
- <20200430152414.GA19887@bogus>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <95f3873d-c101-7a64-8456-840378dd49f3@gtsys.com.hk>
-Date:   Mon, 10 Aug 2020 11:01:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sun, 9 Aug 2020 23:11:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597029064;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EVsTKZVAhLuAKibZpYFBoxm72PqIuSfiBe/k0pSgc0c=;
+        b=LN5P6UrmAc3bOZKbjNJtaBNFx/F4PEWoVnVDN2W8VRFsmPnuSclI9SakrX/yJajeozW2dV
+        ciurSh6IXkUuHS+vmQl0M0W+RWuTj6nuv7V1lL29w9voyHmT2pf3Lt/yWtcpjhrvkaNY+X
+        2qnNprekA5lsV/rW6eiLaOV0JHQnNRA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-e-SOMQe-OtaQmNQwNTvuiA-1; Sun, 09 Aug 2020 23:11:02 -0400
+X-MC-Unique: e-SOMQe-OtaQmNQwNTvuiA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A7F91005504;
+        Mon, 10 Aug 2020 03:11:01 +0000 (UTC)
+Received: from T590 (ovpn-13-99.pek2.redhat.com [10.72.13.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6F59D1001901;
+        Mon, 10 Aug 2020 03:10:54 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 11:10:49 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: Very slow qemu device access
+Message-ID: <20200810031049.GA2202641@T590>
+References: <20200807174416.GF17456@casper.infradead.org>
+ <20200809024005.GC2134904@T590>
+ <20200809142522.GI17456@casper.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200430152414.GA19887@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200809142522.GI17456@casper.infradead.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
+On Sun, Aug 09, 2020 at 03:25:22PM +0100, Matthew Wilcox wrote:
+> On Sun, Aug 09, 2020 at 10:40:05AM +0800, Ming Lei wrote:
+> > Hello Matthew,
+> > 
+> > On Fri, Aug 07, 2020 at 06:44:16PM +0100, Matthew Wilcox wrote:
+> > > 
+> > > Everything starts going very slowly after this commit:
+> > > 
+> > > commit 37f4a24c2469a10a4c16c641671bd766e276cf9f (refs/bisect/bad)
+> > > Author: Ming Lei <ming.lei@redhat.com>
+> > > Date:   Tue Jun 30 22:03:57 2020 +0800
+> > > 
+> > >     blk-mq: centralise related handling into blk_mq_get_driver_tag
+> > 
+> > Yeah, the above is one known bad commit, which is reverted in
+> > 4e2f62e566b5 ("Revert "blk-mq: put driver tag when this request is completed")
+> > 
+> > Finally the fixed patch of 'blk-mq: centralise related handling into blk_mq_get_driver_tag'
+> > is merged as 568f27006577 ("blk-mq: centralise related handling into blk_mq_get_driver_tag").
+> > 
+> > So please test either 4e2f62e566b5 or 568f27006577 and see if there is
+> > such issue.
+> 
+> 4e2f62e566b5 is good
+> 568f27006577 is bad
 
-On 30/4/2020 11:24 pm, Rob Herring wrote:
-> On Mon, Apr 20, 2020 at 12:26:08PM +0800, Chris Ruehl wrote:
->> Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->> v5:
->> correct require section
->> set maintainer of analog.com
->> v4..v2: no change
+Please try the following patch, and we shouldn't take flush request
+account into driver tag allocation, because it always shares the
+data request's tag:
 
-1/3 and 2/3 make it already to linux-next.
+From d508415eee08940ff9c78efe0eddddf594afdb94 Mon Sep 17 00:00:00 2001
+From: Ming Lei <ming.lei@redhat.com>
+Date: Mon, 10 Aug 2020 11:06:15 +0800
+Subject: [PATCH] block: don't double account of flush request's driver tag
 
-I will send 3/3 with the corrections you requested as a new
-stand alone patch and refer commit 6f1c9e0da9aae51177457731357ae8a2c8af27cd
-for reference.
+In case of none scheduler, we share data request's driver tag for
+flush request, so have to mark the flush request as INFLIGHT for
+avoiding double account of this driver tag.
 
-Regards
-Chris
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Fixes: 568f27006577 ("blk-mq: centralise related handling into blk_mq_get_driver_tag")
+Reported-by: Matthew Wilcox <willy@infradead.org>
+---
+ block/blk-flush.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-flush.c b/block/blk-flush.c
+index 6e1543c10493..53abb5c73d99 100644
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -308,9 +308,16 @@ static void blk_kick_flush(struct request_queue *q, struct blk_flush_queue *fq,
+ 	flush_rq->mq_ctx = first_rq->mq_ctx;
+ 	flush_rq->mq_hctx = first_rq->mq_hctx;
+ 
+-	if (!q->elevator)
++	if (!q->elevator) {
+ 		flush_rq->tag = first_rq->tag;
+-	else
++
++		/*
++		 * We borrow data request's driver tag, so have to mark
++		 * this flush request as INFLIGHT for avoiding double
++		 * account of this driver tag
++		 */
++		flush_rq->rq_flags |= RQF_MQ_INFLIGHT;
++	} else
+ 		flush_rq->internal_tag = first_rq->internal_tag;
+ 
+ 	flush_rq->cmd_flags = REQ_OP_FLUSH | REQ_PREFLUSH;
+-- 
+2.25.2
+
+ 
+
+thanks,
+Ming
+
