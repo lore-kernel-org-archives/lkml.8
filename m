@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C90C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E851C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F35222D06
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB4122D06
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073369;
-	bh=NKmo2FJbVFaNrNPyrXYIqpOWrHXNGdpkOmevazIuIkQ=;
+	s=default; t=1597073372;
+	bh=dFH48hGfWYx3KGZvcwBY4eyeETJ9b+C5bqC8OTrUd6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FHEN294uwoBqFkS4S64jGkLJdSnX5+hqKUzynN83gZIOwjI3xC0pyYAq+8v6t1LGe
-	 2qeIzE9N10zEDsPuJwstpAUi4BuKypli+eOgtoPjs8CdzSZwACjkjzu6gKFMbu7rr5
-	 qCjmzVru0J+ZId5gYu1s2Jp6Jhg367k4FeU4d3ks=
+	b=UKqfPqqesAZQxjKw6I1W12mjITl6u4WvaCRbjjryFWvvguy8+Hdmsn36mgRJwBTX0
+	 56pFxqFyP/UyFGDWR96o/OyDs3qDPyMXdfTmfmrn0uLY0d0pDFN3PGTSxadsv3qSin
+	 cCe6KZup69BM4CDQ1zJqkLNheCSml5DrKxoE8myY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgHJP32 (ORCPT
+        id S1727821AbgHJP3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:29:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbgHJP3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:14 -0400
+        id S1728949AbgHJP3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2870B22BF3;
-        Mon, 10 Aug 2020 15:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51EA622CF7;
+        Mon, 10 Aug 2020 15:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073353;
-        bh=NKmo2FJbVFaNrNPyrXYIqpOWrHXNGdpkOmevazIuIkQ=;
+        s=default; t=1597073360;
+        bh=dFH48hGfWYx3KGZvcwBY4eyeETJ9b+C5bqC8OTrUd6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjuFtQq1PTkh0ZffY2wg4aHf88n0Alz+Q7GdWzpv+98hR4WdkIKNrpnHo1zHAyKHw
-         WGRAQigx1pTARXKQJQ5gNbCrOw+EenJoU8xgY05fkbxPEQGLRdlUbTorj/mgmHxYi9
-         LuOLn355sDdWMFndLRnCruMmJbd9l0US1nSxpFuE=
+        b=IrQnFNujWsAcih+t4qIy/NlDwcqPYpF+od29EfOXLyP5yHHDQuANRD4SIVqbXnnmu
+         CJmz9aXyKJVn+aFfR9MkngLf4eySMb6btOCvQ2Udc8zvlnaRLGf7sFFBVsfplfYurs
+         KDQDNKpgKSDDDPTgPvTaV3KQLmV0j6xIrmz+8h1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 63/67] Revert "vxlan: fix tos value before xmit"
-Date:   Mon, 10 Aug 2020 17:21:50 +0200
-Message-Id: <20200810151812.615153351@linuxfoundation.org>
+        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.19 10/48] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_with_rssi_evt()
+Date:   Mon, 10 Aug 2020 17:21:32 +0200
+Message-Id: <20200810151804.717015492@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
-References: <20200810151809.438685785@linuxfoundation.org>
+In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
+References: <20200810151804.199494191@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,65 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit a0dced17ad9dc08b1b25e0065b54c97a318e6e8b ]
+commit 629b49c848ee71244203934347bd7730b0ddee8d upstream.
 
-This reverts commit 71130f29979c7c7956b040673e6b9d5643003176.
+Check `num_rsp` before using it as for-loop counter. Add `unlock` label.
 
-In commit 71130f29979c ("vxlan: fix tos value before xmit") we want to
-make sure the tos value are filtered by RT_TOS() based on RFC1349.
-
-       0     1     2     3     4     5     6     7
-    +-----+-----+-----+-----+-----+-----+-----+-----+
-    |   PRECEDENCE    |          TOS          | MBZ |
-    +-----+-----+-----+-----+-----+-----+-----+-----+
-
-But RFC1349 has been obsoleted by RFC2474. The new DSCP field defined like
-
-       0     1     2     3     4     5     6     7
-    +-----+-----+-----+-----+-----+-----+-----+-----+
-    |          DS FIELD, DSCP           | ECN FIELD |
-    +-----+-----+-----+-----+-----+-----+-----+-----+
-
-So with
-
-IPTOS_TOS_MASK          0x1E
-RT_TOS(tos)		((tos)&IPTOS_TOS_MASK)
-
-the first 3 bits DSCP info will get lost.
-
-To take all the DSCP info in xmit, we should revert the patch and just push
-all tos bits to ip_tunnel_ecn_encap(), which will handling ECN field later.
-
-Fixes: 71130f29979c ("vxlan: fix tos value before xmit")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Acked-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vxlan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2550,7 +2550,7 @@ static void vxlan_xmit_one(struct sk_buf
- 		ndst = &rt->dst;
- 		skb_tunnel_check_pmtu(skb, ndst, VXLAN_HEADROOM);
+---
+ net/bluetooth/hci_event.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -3948,6 +3948,9 @@ static void hci_inquiry_result_with_rssi
+ 		struct inquiry_info_with_rssi_and_pscan_mode *info;
+ 		info = (void *) (skb->data + 1);
  
--		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
-+		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
- 		ttl = ttl ? : ip4_dst_hoplimit(&rt->dst);
- 		err = vxlan_build_skb(skb, ndst, sizeof(struct iphdr),
- 				      vni, md, flags, udp_sum);
-@@ -2590,7 +2590,7 @@ static void vxlan_xmit_one(struct sk_buf
++		if (skb->len < num_rsp * sizeof(*info) + 1)
++			goto unlock;
++
+ 		for (; num_rsp; num_rsp--, info++) {
+ 			u32 flags;
  
- 		skb_tunnel_check_pmtu(skb, ndst, VXLAN6_HEADROOM);
+@@ -3969,6 +3972,9 @@ static void hci_inquiry_result_with_rssi
+ 	} else {
+ 		struct inquiry_info_with_rssi *info = (void *) (skb->data + 1);
  
--		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
-+		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
- 		ttl = ttl ? : ip6_dst_hoplimit(ndst);
- 		skb_scrub_packet(skb, xnet);
- 		err = vxlan_build_skb(skb, ndst, sizeof(struct ipv6hdr),
++		if (skb->len < num_rsp * sizeof(*info) + 1)
++			goto unlock;
++
+ 		for (; num_rsp; num_rsp--, info++) {
+ 			u32 flags;
+ 
+@@ -3989,6 +3995,7 @@ static void hci_inquiry_result_with_rssi
+ 		}
+ 	}
+ 
++unlock:
+ 	hci_dev_unlock(hdev);
+ }
+ 
 
 
