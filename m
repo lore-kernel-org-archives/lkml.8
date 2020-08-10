@@ -4,40 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B21C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A987206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B29E206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgHJGyR (ORCPT
+        id S1726063AbgHJG6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 02:54:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47632 "EHLO mx2.suse.de"
+        Mon, 10 Aug 2020 02:58:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48788 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgHJGyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 02:54:16 -0400
+        id S1725774AbgHJG6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 02:58:11 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 90DD3AC1D;
-        Mon, 10 Aug 2020 06:54:35 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 08:54:15 +0200
-Message-ID: <s5h7du76lew.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 20914ACA7;
+        Mon, 10 Aug 2020 06:58:30 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 08:58:09 +0200
+Message-ID: <s5h5z9r6l8e.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
 Cc:     kjlu@umn.edu, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Mark Hills <mark@xwax.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Takashi Iwai <tiwai@suse.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Giuliano Pochini <pochini@shiny.it>,
+        Eliot Blennerhassett <eblennerhassett@audioscience.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: echoaudio: Fix memory leak in snd_echo_resume()
-In-Reply-To: <20200810061500.9329-1-dinghao.liu@zju.edu.cn>
-References: <20200810061500.9329-1-dinghao.liu@zju.edu.cn>
+Subject: Re: [PATCH] ALSA: pci/asihpi: Fix memory leak in snd_card_asihpi_capture_open()
+In-Reply-To: <20200810063957.13692-1-dinghao.liu@zju.edu.cn>
+References: <20200810063957.13692-1-dinghao.liu@zju.edu.cn>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -48,42 +46,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 08:14:58 +0200,
+On Mon, 10 Aug 2020 08:39:55 +0200,
 Dinghao Liu wrote:
 > 
-> When restore_dsp_rettings() fails, chip should be freed
-> just like when init_hw() and request_irq() fails.
-> 
-> Fixes: 47b5d028fdce8 ("ALSA: Echoaudio - Add suspend support #2")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> When snd_pcm_hw_constraint_pow2() fails, dpcm should be freed
+> just like when hpi_instream_open()  fails.
 
-Actually it's rather wrong to call snd_echo_free() in the resume error
-path.  This may lead to an Oops at the next time the system goes to
-resume.  That said, we should drop snd_echo_free() calls in other
-error paths in snd_echo_resume() instead.
+It will be cleaned up via runtime->private_free call in the caller
+side (snd_pcm_open -> snd_pcm_release_substream ->
+snd_pcm_detach_substream), hence this would result in double-free.
 
 
 thanks,
 
 Takashi
 
-
-> ---
->  sound/pci/echoaudio/echoaudio.c | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-> index 6aeb99aa2414..2aa183fe5dc1 100644
-> --- a/sound/pci/echoaudio/echoaudio.c
-> +++ b/sound/pci/echoaudio/echoaudio.c
-> @@ -2226,6 +2226,7 @@ static int snd_echo_resume(struct device *dev)
->  	chip->pipe_alloc_mask = pipe_alloc_mask;
->  	if (err < 0) {
->  		kfree(commpage_bak);
-> +		snd_echo_free(chip);
+> Fixes: 719f82d3987aa ("ALSA: Add support of AudioScience ASI boards")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  sound/pci/asihpi/asihpi.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/pci/asihpi/asihpi.c b/sound/pci/asihpi/asihpi.c
+> index 023c35a2a951..736eceacd3d0 100644
+> --- a/sound/pci/asihpi/asihpi.c
+> +++ b/sound/pci/asihpi/asihpi.c
+> @@ -1244,8 +1244,10 @@ static int snd_card_asihpi_capture_open(struct snd_pcm_substream *substream)
+>  	if (card->can_dma)
+>  		err = snd_pcm_hw_constraint_pow2(runtime, 0,
+>  					SNDRV_PCM_HW_PARAM_BUFFER_BYTES);
+> -	if (err < 0)
+> +	if (err < 0) {
+> +		kfree(dpcm);
 >  		return err;
->  	}
+> +	}
 >  
+>  	snd_pcm_hw_constraint_step(runtime, 0, SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+>  		card->update_interval_frames);
 > -- 
 > 2.17.1
 > 
