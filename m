@@ -2,142 +2,87 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE38C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A21C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECF7207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhbLVoAm"
+	by mail.kernel.org (Postfix) with ESMTP id 82ED8207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgHJSVm (ORCPT
+        id S1728109AbgHJS1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbgHJSVl (ORCPT
+        Mon, 10 Aug 2020 14:27:17 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:54584 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbgHJS1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:21:41 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C53C061756;
-        Mon, 10 Aug 2020 11:21:41 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u20so6051339pfn.0;
-        Mon, 10 Aug 2020 11:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+JFD8DByOq2aanx0SZRhh+Vls72xH1YM2iTf6wGQD9M=;
-        b=OhbLVoAmgO0WtSwfbFIuvITgBG1A+Us1nAmbkAZn3bFQeE3X+l4rBRnyDfNAcPhS9G
-         X/caSXxnAEXwluvvK8fIO0LBn5uuVKLykPO5/CzgZeOeIHVk5kSyfZ3YCQPPbgRS2cPV
-         poQmNOEIEmD1ElgvvH1ThkKafEsPYVdLZSBn7QV0vumFefyCRldQNb/AZsaQmiSZi7pn
-         459o0a16rVd6HWW+OjqZ0xqOs8HEb2dBLOImDUfrZ6gqXhvCVMhhqZVfdGiqeBF1f8sl
-         e1dPLxwbXVgq4lkQIiab7Q36BFbHMtie6AwDT81jmITyz2/65UCkZg6oqyfP1sFDEk2H
-         bWkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+JFD8DByOq2aanx0SZRhh+Vls72xH1YM2iTf6wGQD9M=;
-        b=Qu6uK4y4UkqKAgAKgiC8LCZkzLgR5uQ7FNxGziFuasqO7LP8mqwTGtVvaoO9CVkWjS
-         4eZIkyTbWWMU6wWQVOL2VjVtl1c0ltzYq5tTnlPFCxR1j+GqNf9KbakCitJ0vMhz2wFi
-         Sy8TWyMeap4VhNlkyAEI3AIu4q1m0qJBDdnkV4CzPeek4s6j3hv2ROiNX4xJgvg4iqb4
-         IhGPzmm6LcOWeiw2CPQrwsHCnzZAh2ySWh4T8EqwUPoGos0m8xp2CS4sZO9uMnMi2yNT
-         VvMn7hqYwCl/uNcykcF1T7v3HMBCtVvRovVWSLeG/WwvyUPfiCz/AAfW9QV1uXUwnW0W
-         2yZg==
-X-Gm-Message-State: AOAM532cOmUlQQpvJktuusS6TAkweeZ5z4k51u5PqOdT/04gq4317aNz
-        wYwTtfuVmKlryJvKkES3mYEXYmjzUds=
-X-Google-Smtp-Source: ABdhPJwu+iKNRl9MVy9gLlxJdubMRx/+OdkJRXm4XqpZdr9WoC9uMx9DnGcenr2NxNJ6nOoQFzk8RA==
-X-Received: by 2002:a63:4b63:: with SMTP id k35mr23855342pgl.235.1597083700496;
-        Mon, 10 Aug 2020 11:21:40 -0700 (PDT)
-Received: from localhost.localdomain ([124.253.77.168])
-        by smtp.googlemail.com with ESMTPSA id 80sm23176615pfy.147.2020.08.10.11.21.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 11:21:38 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Driver-API: Documentation: Replace deprecated :c:func: Usage
-Date:   Mon, 10 Aug 2020 23:51:07 +0530
-Message-Id: <20200810182107.18577-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 10 Aug 2020 14:27:16 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 4F7CB20023;
+        Mon, 10 Aug 2020 20:27:13 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 20:27:12 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Hermes Wu <Hermes.Wu@ite.com.tw>,
+        Kenneth Hung <Kenneth.Hung@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] ite-it6505 change trigger conditions
+Message-ID: <20200810182712.GA408647@ravnborg.org>
+References: <1597053278-25421-1-git-send-email-allen.chen@ite.com.tw>
+ <1597053278-25421-2-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597053278-25421-2-git-send-email-allen.chen@ite.com.tw>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=d2tX9T8KrmGLFF5Hj1IA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace :c:func: with func() as the previous usage is deprecated.
+Hi Allen.
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- Documentation/driver-api/device-io.rst | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+On Mon, Aug 10, 2020 at 05:53:17PM +0800, allen wrote:
+> it6505 changes trigger conditions.
+> ---
+>  Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> index 2c50016..bf0e889 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> @@ -73,7 +73,7 @@ examples:
+>  
+>          dp-bridge@5c {
+>              compatible = "ite,it6505";
+> -            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
+> +            interrupts = <152 IRQ_TYPE_LEVEL_LOW 152 0>;
+>              reg = <0x5c>;
+>              pinctrl-names = "default";
+>              pinctrl-0 = <&it6505_pins>;
+I fail to see the need for this. The example shall describe the binding
+and is not necessarily a correct description of the HW.
+People should look in the dts file for the HW descriptions, not the
+binding examples. So I have dropped this patch.
 
-diff --git a/Documentation/driver-api/device-io.rst b/Documentation/driver-api/device-io.rst
-index 0e389378f71d..764963876d08 100644
---- a/Documentation/driver-api/device-io.rst
-+++ b/Documentation/driver-api/device-io.rst
-@@ -36,14 +36,14 @@ are starting with one. Physical addresses are of type unsigned long.
- 
- This address should not be used directly. Instead, to get an address
- suitable for passing to the accessor functions described below, you
--should call :c:func:`ioremap()`. An address suitable for accessing
-+should call ioremap(). An address suitable for accessing
- the device will be returned to you.
- 
- After you've finished using the device (say, in your module's exit
--routine), call :c:func:`iounmap()` in order to return the address
-+routine), call iounmap() in order to return the address
- space to the kernel. Most architectures allocate new address space each
--time you call :c:func:`ioremap()`, and they can run out unless you
--call :c:func:`iounmap()`.
-+time you call ioremap(), and they can run out unless you
-+call iounmap().
- 
- Accessing the device
- --------------------
-@@ -60,8 +60,8 @@ readb_relaxed(), readw_relaxed(), readl_relaxed(), readq_relaxed(),
- writeb(), writew(), writel() and writeq().
- 
- Some devices (such as framebuffers) would like to use larger transfers than
--8 bytes at a time. For these devices, the :c:func:`memcpy_toio()`,
--:c:func:`memcpy_fromio()` and :c:func:`memset_io()` functions are
-+8 bytes at a time. For these devices, the memcpy_toio(),
-+memcpy_fromio() and memset_io() functions are
- provided. Do not use memset or memcpy on IO addresses; they are not
- guaranteed to copy data in order.
- 
-@@ -135,15 +135,15 @@ Accessing Port Space
- 
- Accesses to this space are provided through a set of functions which
- allow 8-bit, 16-bit and 32-bit accesses; also known as byte, word and
--long. These functions are :c:func:`inb()`, :c:func:`inw()`,
--:c:func:`inl()`, :c:func:`outb()`, :c:func:`outw()` and
--:c:func:`outl()`.
-+long. These functions are inb(), inw(),
-+inl(), outb(), outw() and
-+outl().
- 
- Some variants are provided for these functions. Some devices require
- that accesses to their ports are slowed down. This functionality is
- provided by appending a ``_p`` to the end of the function.
--There are also equivalents to memcpy. The :c:func:`ins()` and
--:c:func:`outs()` functions copy bytes, words or longs to the given
-+There are also equivalents to memcpy. The ins() and
-+outs() functions copy bytes, words or longs to the given
- port.
- 
- Public Functions Provided
--- 
-2.27.0
+	Sam
 
+> -- 
+> 1.9.1
