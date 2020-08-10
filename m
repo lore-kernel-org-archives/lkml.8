@@ -2,174 +2,114 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35F702065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3F2206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:40:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Oqakvl6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgHJFZs (ORCPT
+        id S1726063AbgHJFkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 01:25:48 -0400
-Received: from mailout02.rmx.de ([62.245.148.41]:40642 "EHLO mailout02.rmx.de"
+        Mon, 10 Aug 2020 01:40:05 -0400
+Received: from mout.gmx.net ([212.227.15.19]:58783 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgHJFZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 01:25:47 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout02.rmx.de (Postfix) with ESMTPS id 4BQ4Dj3T1szNr0V;
-        Mon, 10 Aug 2020 07:25:41 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BQ4D83Gmnz2xhm;
-        Mon, 10 Aug 2020 07:25:12 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.33) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 10 Aug
- 2020 07:25:11 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Christian Eggers <ceggers@arri.de>
-Subject: [PATCH v2] iio: documentation: light: Add as73211 sysfs documentation
-Date:   Mon, 10 Aug 2020 07:24:47 +0200
-Message-ID: <20200810052447.12381-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200809123000.5131effd@archlinux>
-References: <20200809123000.5131effd@archlinux>
+        id S1725849AbgHJFkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 01:40:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597037977;
+        bh=pLncW+jsTSqwL2/XFxBd7F5/jdIdJnDnczpYfxUFrHM=;
+        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
+         CC:From;
+        b=Oqakvl6bHX3ulQwioK1Kp46rWFK8aLjIv6l1rN0OB87EXMDJkjcteccKZT3SiPToS
+         N0tqMRZWikFcsWAAeiv2UL4D7JfV3C0E7rsuzElz4K2LK998q7Osldf/hokJCvCzOQ
+         HeOnI5fHrnoDJaWcbgj9NSqyKLyBalP3Ei/IfCCU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from frank-s9 ([37.60.4.172]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFbW0-1jvfGw3I0E-00H73E; Mon, 10
+ Aug 2020 07:39:36 +0200
+Date:   Mon, 10 Aug 2020 07:39:32 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
+References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de> <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69> <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de> <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.33]
-X-RMX-ID: 20200810-072512-4BQ4D83Gmnz2xhm-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
+Reply-to: frank-w@public-files.de
+To:     linux-mediatek@lists.infradead.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+CC:     devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+From:   Frank Wunderlich <frank-w@public-files.de>
+Message-ID: <F446502F-E898-465C-9273-813CD032B40F@public-files.de>
+X-Provags-ID: V03:K1:5IVYYxOkmECFWiGF+n4+3P6wuzhQjm/Mwi6B6QcyROBdlqK+Xyv
+ qGLxbENEomX3fdARW2G1IrCKDsKVoGwag9vcdwl3A8L3DxlC6sYMe9XWdIrshdkxig+a2MS
+ N+7JBeLAvN88QJ8AkyL+qo9SRo2hFT28DWerRjlLrf4Edny8i86CVHt7HDWGvWCB8pTbCwX
+ q7CNSqs/0jSGwHCIcI39A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fCEvVk70z04=:UB7jVjv5E0mU8AovmEO0k8
+ d+s9k2krktemNdv0J5Vxs3lBepHgF+/xjc/KsDwoCNGaeBldlL+9mV/D1G7xL5lMnREUsGsz4
+ R2hUWrnxrrSYtm5UdvERUwk0DyqGXwxJjRatuUciccPaj9cFFCBx1kJJGC6wDnikOmWveVuOz
+ M45oEhoJUy3DikE1I3l1Fcbhdm3FehYksrYSDXk7ywo+nDlmHbwPrQWlGZtEmTj8WqapgxPK6
+ X+FA53QjGBN0jKCXvagIOCGMLI8ZGJozZicV/wZO0vDIhWuLEQMT9NyC4PHyypulnWvWrN8bt
+ 2bkpIZe2fLCFkyNvucMGJW/z0WLadrtx5UnARD4FmL0bjiS0sP/I5+kVxOok2k8KHkV3Oxa5/
+ a4ynD8hxd0T/FROjIRLFS1bXnTKh2OAA63mF+wAR3wNRWz3OMf065jM9RSdTQHPAsvT5ik2VH
+ +HuC3djEAtZn2QzzPnUXq7c1CnUfhSRuTbD/idI3yNvqfRak4HOu+zhfttLHm99u98NNQh3C4
+ isO0JCqfuh6eHTINuUlqlmARFwBa8vvNnLFT5urELaQu/oNqieVvuL65L4KkoQrBKxc7mkviN
+ 97+Gva3NqTEmHKDEgYesVu9YJErNf56TT/zGa6qx9sYL6Rqw699+sFUN0jqmuGLfDKUmARNzU
+ 1W7INJJaQK1/pp7W9kSiCwSdJTWhJaJx1nyslYTOUxtPpmksTp82OwrGOInqMx3r/1mWV1KHg
+ ah4SZ1cqyFoUbh4fz0ZshyYsLPLYt1kdAAaC9HgLF5t4oSxvItOl/RM9hc7qce1yuBl6zJXV/
+ UPw4vOq46ECBkOhMMsz+lnRwn9xa6b/vYcvC4/JIgvQbuKVvsiRxCp6OdhwI2bd98Vi5hzGqq
+ v0RVrY0O7MQV7fZGcCGVMFYVrgLbd4qCYtsGEPReeBCY1rVg05CToO2qO+dlFQiGhe3Ys/sf6
+ 7CuhjEAC0Atu1ygE9i1g2k85Nsp81rd5ssLJxNKbH/mNhnuSmRZzLgxwCsBl8kJ/VT2dmCkJM
+ oquIoZoZidpPx7CehiLzYIxFojqcKFDC8RtqQMUkgnb3hsdRhUSnk82swDL30aAkprnChVH7p
+ w2YiCSdoHcU3W26XZtVkQGXiPr6A4cDxt1QpeWRgIwqqJWPAFwZQKpBCbun4qMMxNe87u65kw
+ qVu/jnUN5/oANfjLWsmq5YaXlAwWI7oZjGYG6Bw6hy2ZvzJ5wt0gfhP/XjuWGedSf7B8am1QA
+ +Er7mpeqwUuIswYVxmhWoxQvhvHJrNnszZp3xTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver for the as73211 light sensor provides the following not yet
-documented sysfs entries:
-- in_intensity_(x|y|z)_raw
-- in_intensity_(x|y|z)_scale
-- in_intensity_sampling_frequency(_available)
-- in_intensity_hardwaregain(_available)
-- in_intensity_integration_time
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
-Jonathan Cameron:
-> If it is shared across 'ALL' channels then it will be just integration_time
-> If it is shared across all channels of a given type, it will be <type>_integration_time.
-changed.
 
-Best regards
-Christian Eggers
+Am 10=2E August 2020 02:06:27 MESZ schrieb Chun-Kuang Hu <chunkuang=2Ehu@k=
+ernel=2Eorg>:
 
- Documentation/ABI/testing/sysfs-bus-iio | 26 ++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+>Alphabetical order is better=2E
+In dts there is alphabetical order but not yet in dtsi=2E=2E=2Ei try to fi=
+x this=2E
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index d3e53a6d8331..388560149875 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -40,6 +40,7 @@ Description:
- 		buffered samples and events for device X.
- 
- What:		/sys/bus/iio/devices/iio:deviceX/sampling_frequency
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency
- What:		/sys/bus/iio/devices/iio:deviceX/buffer/sampling_frequency
- What:		/sys/bus/iio/devices/triggerX/sampling_frequency
- KernelVersion:	2.6.35
-@@ -55,6 +56,7 @@ Description:
- 		then it is to be found in the base device directory.
- 
- What:		/sys/bus/iio/devices/iio:deviceX/sampling_frequency_available
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency_available
- What:		/sys/bus/iio/devices/iio:deviceX/in_proximity_sampling_frequency_available
- What:		/sys/.../iio:deviceX/buffer/sampling_frequency_available
- What:		/sys/bus/iio/devices/triggerX/sampling_frequency_available
-@@ -374,6 +376,9 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_countY_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_angl_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_x_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_y_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_z_scale
- KernelVersion:	2.6.35
- Contact:	linux-iio@vger.kernel.org
- Description:
-@@ -484,6 +489,7 @@ Description:
- 		are listed in this attribute.
- 
- What		/sys/bus/iio/devices/iio:deviceX/out_voltageY_hardwaregain
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_hardwaregain
- What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_red_hardwaregain
- What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_green_hardwaregain
- What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_blue_hardwaregain
-@@ -494,6 +500,13 @@ Description:
- 		Hardware applied gain factor. If shared across all channels,
- 		<type>_hardwaregain is used.
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_hardwaregain_available
-+KernelVersion:	5.10
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Lists all available hardware applied gain factors. Shared across all
-+		channels.
-+
- What:		/sys/.../in_accel_filter_low_pass_3db_frequency
- What:		/sys/.../in_magn_filter_low_pass_3db_frequency
- What:		/sys/.../in_anglvel_filter_low_pass_3db_frequency
-@@ -1333,6 +1346,7 @@ Description:
- 		standardised CIE Erythemal Action Spectrum. UV index values range
- 		from 0 (low) to >=11 (extreme).
- 
-+What:		/sys/.../iio:deviceX/in_intensity_integration_time
- What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
- What:		/sys/.../iio:deviceX/in_intensity_green_integration_time
- What:		/sys/.../iio:deviceX/in_intensity_blue_integration_time
-@@ -1342,7 +1356,8 @@ KernelVersion:	3.12
- Contact:	linux-iio@vger.kernel.org
- Description:
- 		This attribute is used to get/set the integration time in
--		seconds.
-+		seconds. If shared across all channels of a given type,
-+		<type>_integration_time is used.
- 
- What:		/sys/.../iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_integration_time
- KernelVersion:	4.0
-@@ -1739,3 +1754,12 @@ KernelVersion:	5.5
- Contact:	linux-iio@vger.kernel.org
- Description:
- 		One of the following thermocouple types: B, E, J, K, N, R, S, T.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_x_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_y_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_z_raw
-+KernelVersion:	5.10
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Unscaled light intensity according to CIE 1931/DIN 5033 color space.
-+		Units after application of scale are nano nanowatts per square meter.
--- 
-Christian Eggers
-Embedded software developer
+>> Is the tmds Patch ok? (because review missing)
+>https://patchwork=2Ekernel=2Eorg/patch/11700679/
+>
+>That patch looks really like a hack patch=2E I would wait for a long
+>time to see whether any one has comment for this=2E Or you could have a
+>better explain for it=2E
+As i have documentation for mt7623 and there were no further comments on o=
+ld series (https://patchwork=2Ekernel=2Eorg/patch/10903303/) i guess i cann=
+ot fix this=2E I only know it is needed to get clear image on my 1280x1024 =
+display with this Patch
 
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+I adressed Ryder and Bibby directly maybe they can help here
 
+>I could apply other patches first=2E
+
+I guess i need to fix order in dtsi first=2E=2E=2Eafair any hdmi node crea=
+tes an serial device moved the others +1=2E So maybe nodes need to be added=
+ after uartx (or at least the one if i found out which)=2E
+regards Frank
