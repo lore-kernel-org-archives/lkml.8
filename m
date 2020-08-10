@@ -1,220 +1,46 @@
 Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=BAYES_50,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45071C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3241FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08FEE20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPfvvhRz"
+	by mail.kernel.org (Postfix) with ESMTP id 061A520716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgHKOA0 (ORCPT
+        id S1728756AbgHKOCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:00:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24011 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728668AbgHKOAX (ORCPT
+        Tue, 11 Aug 2020 10:02:14 -0400
+Received: from mindseye-marketing.net ([31.3.227.25]:37410 "EHLO
+        mindseye-marketing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbgHKOCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:00:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597154421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=P6YtH2/Jh7TinlxZts+K+ir2wkwOlY8OCnZ6CDUlQwA=;
-        b=bPfvvhRzryu7RuZMv+PqcZnUHA9ervRsfG8DrNMXe9ZmVJ8n0hfsvFWpvHJ5Qn+I58BlSo
-        RvuXfhA2sp6StRWlcHj6zXwZW60qGml3MbLl/VJHPVFMTt7FZbfsdCWxfOX2F6fKBUJYuO
-        JvyZweNKIGn1HVrRzOfhGF15bkplr/A=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-2TmvZT7ZMda4e3jgbaEnxQ-1; Tue, 11 Aug 2020 10:00:18 -0400
-X-MC-Unique: 2TmvZT7ZMda4e3jgbaEnxQ-1
-Received: by mail-wm1-f72.google.com with SMTP id u14so736200wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:00:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=P6YtH2/Jh7TinlxZts+K+ir2wkwOlY8OCnZ6CDUlQwA=;
-        b=VZOg8VyDsNuaaVnpQzFFmNJiwQ1HezXfOrAqdAdyXYk+dHZxP9QldrFXMntV8jRXMH
-         dDY3c5lv2BLy0fGMgQPhNxPOtauKxKqmy0o0WOzYCw5qglokpo6xQrNqz5moUVbyDQk/
-         NLCNo6BTdieBdwjfmzpwSrBLzyrlw4wS3L3yHfTdPqVicqG43ViPTqg5+uiN9o/ord1a
-         i98tPesl9kQxe6wzNq3TC3rn1BVbCr+8YpsgGA6icOZF/+GoVt416mUrc8Vrb+5eN7XF
-         FAI0hbIp5qpjbwgJ7Q18ympIlfO4+g9Fdb7sj5tnPnAzTmbMA5WYhweCPrqMntAjKBV/
-         2i7g==
-X-Gm-Message-State: AOAM532Fg30QKpUyazURhZI8h5DHAp3XAN8PxKhwDrNdhS+ePOihzfJ2
-        3nShyF9FQncUfAmPs2T180J6aHeuqJQeLS9Bcmf+hVdx6lDP/3NAr44H2AIEWOBqi+16ywPEjzO
-        LMsOiB/QNrvv5hGDlirFeBSSZ
-X-Received: by 2002:a5d:5086:: with SMTP id a6mr29414976wrt.304.1597154414565;
-        Tue, 11 Aug 2020 07:00:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwqO2qHTgVwuBQGD53fudeRY6iEmnwXD+kDn7EAgcSziwa8C1tq0azTtZCgq//cCqL55TTirg==
-X-Received: by 2002:a5d:5086:: with SMTP id a6mr29414943wrt.304.1597154414296;
-        Tue, 11 Aug 2020 07:00:14 -0700 (PDT)
-Received: from steredhat ([5.171.229.81])
-        by smtp.gmail.com with ESMTPSA id n24sm5388641wmi.36.2020.08.11.07.00.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 07:00:13 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 16:00:10 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     syzbot <syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Subject: Re: possible deadlock in __io_queue_deferred
-Message-ID: <20200811140010.gigc2amchytqmrkk@steredhat>
-References: <00000000000035fdf505ac87b7f9@google.com>
- <76cc7c43-2ebb-180d-c2c8-912972a3f258@kernel.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76cc7c43-2ebb-180d-c2c8-912972a3f258@kernel.dk>
+        Tue, 11 Aug 2020 10:02:13 -0400
+X-Greylist: delayed 29522 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Aug 2020 10:02:13 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mindseye-marketing.net (Postfix) with ESMTP id 9CAC4E6B4BA
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 03:43:47 +0100 (BST)
+X-Virus-Scanned: Debian amavisd-new at mindseye-marketing.net
+Received: from mindseye-marketing.net ([127.0.0.1])
+        by localhost (mindseye-marketing.net [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id zPyjDcFvQjff for <linux-kernel@vger.kernel.org>;
+        Tue, 11 Aug 2020 03:43:46 +0100 (BST)
+Received: from h31-3-227-174.host.redstation.co.uk (localhost [IPv6:::1])
+        by mindseye-marketing.net (Postfix) with SMTP id C55C6E684C3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:55:36 +0100 (BST)
+From:   prodawez@armyspy.com
+To:     linux-kernel@vger.kernel.org
+Reply-To: prodawez@armyspy.com
+Subject: Zdravstvujte Vas interesujut bazy dannyh kontaktov kompanij dlja prodazhi vashih tovarov i uslug?
+Message-Id: <20200810225537.C55C6E684C3@mindseye-marketing.net>
+Date:   Mon, 10 Aug 2020 23:55:36 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 09:55:17AM -0600, Jens Axboe wrote:
-> On 8/10/20 9:36 AM, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following issue on:
-> > 
-> > HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14d41e02900000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9d25235bf0162fbc
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=996f91b6ec3812c48042
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c9006900000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1191cb1a900000
-> > 
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com
-> 
-> Thanks, the below should fix this one.
-
-Yeah, it seems right to me, since only __io_queue_deferred() (invoked by
-io_commit_cqring()) can be called with 'completion_lock' held.
-
-Just out of curiosity, while exploring the code I noticed that we call
-io_commit_cqring() always with the 'completion_lock' held, except in the
-io_poll_* functions.
-
-That's because then there can't be any concurrency?
-
-Thanks,
-Stefano
-
-> 
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 443eecdfeda9..f9be665d1c5e 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -898,6 +898,7 @@ static void io_put_req(struct io_kiocb *req);
->  static void io_double_put_req(struct io_kiocb *req);
->  static void __io_double_put_req(struct io_kiocb *req);
->  static struct io_kiocb *io_prep_linked_timeout(struct io_kiocb *req);
-> +static void __io_queue_linked_timeout(struct io_kiocb *req);
->  static void io_queue_linked_timeout(struct io_kiocb *req);
->  static int __io_sqe_files_update(struct io_ring_ctx *ctx,
->  				 struct io_uring_files_update *ip,
-> @@ -1179,7 +1180,7 @@ static void io_prep_async_link(struct io_kiocb *req)
->  			io_prep_async_work(cur);
->  }
->  
-> -static void __io_queue_async_work(struct io_kiocb *req)
-> +static struct io_kiocb *__io_queue_async_work(struct io_kiocb *req)
->  {
->  	struct io_ring_ctx *ctx = req->ctx;
->  	struct io_kiocb *link = io_prep_linked_timeout(req);
-> @@ -1187,16 +1188,19 @@ static void __io_queue_async_work(struct io_kiocb *req)
->  	trace_io_uring_queue_async_work(ctx, io_wq_is_hashed(&req->work), req,
->  					&req->work, req->flags);
->  	io_wq_enqueue(ctx->io_wq, &req->work);
-> -
-> -	if (link)
-> -		io_queue_linked_timeout(link);
-> +	return link;
->  }
->  
->  static void io_queue_async_work(struct io_kiocb *req)
->  {
-> +	struct io_kiocb *link;
-> +
->  	/* init ->work of the whole link before punting */
->  	io_prep_async_link(req);
-> -	__io_queue_async_work(req);
-> +	link = __io_queue_async_work(req);
-> +
-> +	if (link)
-> +		io_queue_linked_timeout(link);
->  }
->  
->  static void io_kill_timeout(struct io_kiocb *req)
-> @@ -1229,12 +1233,19 @@ static void __io_queue_deferred(struct io_ring_ctx *ctx)
->  	do {
->  		struct io_defer_entry *de = list_first_entry(&ctx->defer_list,
->  						struct io_defer_entry, list);
-> +		struct io_kiocb *link;
->  
->  		if (req_need_defer(de->req, de->seq))
->  			break;
->  		list_del_init(&de->list);
->  		/* punt-init is done before queueing for defer */
-> -		__io_queue_async_work(de->req);
-> +		link = __io_queue_async_work(de->req);
-> +		if (link) {
-> +			__io_queue_linked_timeout(link);
-> +			/* drop submission reference */
-> +			link->flags |= REQ_F_COMP_LOCKED;
-> +			io_put_req(link);
-> +		}
->  		kfree(de);
->  	} while (!list_empty(&ctx->defer_list));
->  }
-> @@ -5945,15 +5956,12 @@ static enum hrtimer_restart io_link_timeout_fn(struct hrtimer *timer)
->  	return HRTIMER_NORESTART;
->  }
->  
-> -static void io_queue_linked_timeout(struct io_kiocb *req)
-> +static void __io_queue_linked_timeout(struct io_kiocb *req)
->  {
-> -	struct io_ring_ctx *ctx = req->ctx;
-> -
->  	/*
->  	 * If the list is now empty, then our linked request finished before
->  	 * we got a chance to setup the timer
->  	 */
-> -	spin_lock_irq(&ctx->completion_lock);
->  	if (!list_empty(&req->link_list)) {
->  		struct io_timeout_data *data = &req->io->timeout;
->  
-> @@ -5961,6 +5969,14 @@ static void io_queue_linked_timeout(struct io_kiocb *req)
->  		hrtimer_start(&data->timer, timespec64_to_ktime(data->ts),
->  				data->mode);
->  	}
-> +}
-> +
-> +static void io_queue_linked_timeout(struct io_kiocb *req)
-> +{
-> +	struct io_ring_ctx *ctx = req->ctx;
-> +
-> +	spin_lock_irq(&ctx->completion_lock);
-> +	__io_queue_linked_timeout(req);
->  	spin_unlock_irq(&ctx->completion_lock);
->  
->  	/* drop submission reference */
-> 
-> -- 
-> Jens Axboe
-> 
-
+Zdravstvujte Vas interesujut bazy dannyh kontaktov kompanij dlja prodazhi vashih tovarov i uslug?
