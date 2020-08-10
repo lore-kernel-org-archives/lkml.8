@@ -2,364 +2,174 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CB8206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:22:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="sFFNhOjT"
+	by mail.kernel.org (Postfix) with ESMTP id 35F702065C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 05:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbgHJFWU (ORCPT
+        id S1726010AbgHJFZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 01:22:20 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:40764 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgHJFWT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 01:22:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1597036937; x=1628572937;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=J5YEslmwcry31TaEZAtEx5f/FDeDUdr+PDU18wr4zhg=;
-  b=sFFNhOjT+3EwQEyEvJMFLytMsfwo6ZxAiVJ5x0MtL4PsCuVbOE0HUepS
-   2MldFA6EiGEY3DUNiIkXvyYfUj4nemhWOOWg7bbm6QhD6mDdfy5oHvyVS
-   QQFMXTt2p2ldYujs+UV5EY6EGtxEac1l90e4XJtydoMbVbG8Ml66h2spJ
-   o=;
-IronPort-SDR: 8pzXBZc5Y/4+h3F4T8J2K6sydDDSHq83WlIWIA2EcSSXcKOGso02rG09zgy98ICq9gu2ywi6cl
- iMxhYxyOnpYA==
-X-IronPort-AV: E=Sophos;i="5.75,456,1589241600"; 
-   d="scan'208";a="58522280"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 10 Aug 2020 05:22:15 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id 23079A1C54;
-        Mon, 10 Aug 2020 05:22:14 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 10 Aug 2020 05:22:13 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.27) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 10 Aug 2020 05:22:08 +0000
-Subject: Re: [PATCH v6 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Karen Noel <knoel@redhat.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>
-References: <20200805091017.86203-1-andraprs@amazon.com>
- <20200805091017.86203-8-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <a27b4997-12a5-46e7-de81-41ec2b550fc2@amazon.de>
-Date:   Mon, 10 Aug 2020 07:22:06 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Mon, 10 Aug 2020 01:25:48 -0400
+Received: from mailout02.rmx.de ([62.245.148.41]:40642 "EHLO mailout02.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbgHJFZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 01:25:47 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout02.rmx.de (Postfix) with ESMTPS id 4BQ4Dj3T1szNr0V;
+        Mon, 10 Aug 2020 07:25:41 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BQ4D83Gmnz2xhm;
+        Mon, 10 Aug 2020 07:25:12 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.33) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 10 Aug
+ 2020 07:25:11 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Christian Eggers <ceggers@arri.de>
+Subject: [PATCH v2] iio: documentation: light: Add as73211 sysfs documentation
+Date:   Mon, 10 Aug 2020 07:24:47 +0200
+Message-ID: <20200810052447.12381-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200809123000.5131effd@archlinux>
+References: <20200809123000.5131effd@archlinux>
 MIME-Version: 1.0
-In-Reply-To: <20200805091017.86203-8-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.27]
-X-ClientProxiedBy: EX13D31UWA001.ant.amazon.com (10.43.160.57) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.33]
+X-RMX-ID: 20200810-072512-4BQ4D83Gmnz2xhm-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The driver for the as73211 light sensor provides the following not yet
+documented sysfs entries:
+- in_intensity_(x|y|z)_raw
+- in_intensity_(x|y|z)_scale
+- in_intensity_sampling_frequency(_available)
+- in_intensity_hardwaregain(_available)
+- in_intensity_integration_time
 
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
+Jonathan Cameron:
+> If it is shared across 'ALL' channels then it will be just integration_time
+> If it is shared across all channels of a given type, it will be <type>_integration_time.
+changed.
 
-On 05.08.20 11:10, Andra Paraschiv wrote:
-> The Nitro Enclaves driver provides an ioctl interface to the user space
-> for enclave lifetime management e.g. enclave creation / termination and
-> setting enclave resources such as memory and CPU.
-> =
+Best regards
+Christian Eggers
 
-> This ioctl interface is mapped to a Nitro Enclaves misc device.
-> =
+ Documentation/ABI/testing/sysfs-bus-iio | 26 ++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> ---
-> Changelog
-> =
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index d3e53a6d8331..388560149875 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -40,6 +40,7 @@ Description:
+ 		buffered samples and events for device X.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/sampling_frequency
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency
+ What:		/sys/bus/iio/devices/iio:deviceX/buffer/sampling_frequency
+ What:		/sys/bus/iio/devices/triggerX/sampling_frequency
+ KernelVersion:	2.6.35
+@@ -55,6 +56,7 @@ Description:
+ 		then it is to be found in the base device directory.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/sampling_frequency_available
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency_available
+ What:		/sys/bus/iio/devices/iio:deviceX/in_proximity_sampling_frequency_available
+ What:		/sys/.../iio:deviceX/buffer/sampling_frequency_available
+ What:		/sys/bus/iio/devices/triggerX/sampling_frequency_available
+@@ -374,6 +376,9 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_angl_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_x_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_y_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_z_scale
+ KernelVersion:	2.6.35
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+@@ -484,6 +489,7 @@ Description:
+ 		are listed in this attribute.
+ 
+ What		/sys/bus/iio/devices/iio:deviceX/out_voltageY_hardwaregain
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_hardwaregain
+ What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_red_hardwaregain
+ What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_green_hardwaregain
+ What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_blue_hardwaregain
+@@ -494,6 +500,13 @@ Description:
+ 		Hardware applied gain factor. If shared across all channels,
+ 		<type>_hardwaregain is used.
+ 
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_hardwaregain_available
++KernelVersion:	5.10
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Lists all available hardware applied gain factors. Shared across all
++		channels.
++
+ What:		/sys/.../in_accel_filter_low_pass_3db_frequency
+ What:		/sys/.../in_magn_filter_low_pass_3db_frequency
+ What:		/sys/.../in_anglvel_filter_low_pass_3db_frequency
+@@ -1333,6 +1346,7 @@ Description:
+ 		standardised CIE Erythemal Action Spectrum. UV index values range
+ 		from 0 (low) to >=11 (extreme).
+ 
++What:		/sys/.../iio:deviceX/in_intensity_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_green_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_blue_integration_time
+@@ -1342,7 +1356,8 @@ KernelVersion:	3.12
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		This attribute is used to get/set the integration time in
+-		seconds.
++		seconds. If shared across all channels of a given type,
++		<type>_integration_time is used.
+ 
+ What:		/sys/.../iio:deviceX/in_velocity_sqrt(x^2+y^2+z^2)_integration_time
+ KernelVersion:	4.0
+@@ -1739,3 +1754,12 @@ KernelVersion:	5.5
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		One of the following thermocouple types: B, E, J, K, N, R, S, T.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_x_raw
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_y_raw
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_z_raw
++KernelVersion:	5.10
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Unscaled light intensity according to CIE 1931/DIN 5033 color space.
++		Units after application of scale are nano nanowatts per square meter.
+-- 
+Christian Eggers
+Embedded software developer
 
-> v5 -> v6
-> =
-
-> * Remove the ioctl to query API version.
-> * Update documentation to kernel-doc format.
-> =
-
-> v4 -> v5
-> =
-
-> * Update the size of the NE CPU pool string from 4096 to 512 chars.
-> =
-
-> v3 -> v4
-> =
-
-> * Use dev_err instead of custom NE log pattern.
-> * Remove the NE CPU pool init during kernel module loading, as the CPU
->    pool is now setup at runtime, via a sysfs file for the kernel
->    parameter.
-> * Add minimum enclave memory size definition.
-> =
-
-> v2 -> v3
-> =
-
-> * Remove the GPL additional wording as SPDX-License-Identifier is
->    already in place.
-> * Remove the WARN_ON calls.
-> * Remove linux/bug and linux/kvm_host includes that are not needed.
-> * Remove "ratelimited" from the logs that are not in the ioctl call
->    paths.
-> * Remove file ops that do nothing for now - open and release.
-> =
-
-> v1 -> v2
-> =
-
-> * Add log pattern for NE.
-> * Update goto labels to match their purpose.
-> * Update ne_cpu_pool data structure to include the global mutex.
-> * Update NE misc device mode to 0660.
-> * Check if the CPU siblings are included in the NE CPU pool, as full CPU
->    cores are given for the enclave(s).
-> ---
->   drivers/virt/nitro_enclaves/ne_misc_dev.c | 121 ++++++++++++++++++++++
->   drivers/virt/nitro_enclaves/ne_pci_dev.c  |  11 ++
->   2 files changed, 132 insertions(+)
->   create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.c
-> =
-
-> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nit=
-ro_enclaves/ne_misc_dev.c
-> new file mode 100644
-> index 000000000000..472850250220
-> --- /dev/null
-> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserve=
-d.
-> + */
-> +
-> +/**
-> + * DOC: Enclave lifetime management driver for Nitro Enclaves (NE).
-> + * Nitro is a hypervisor that has been developed by Amazon.
-> + */
-> +
-> +#include <linux/anon_inodes.h>
-> +#include <linux/capability.h>
-> +#include <linux/cpu.h>
-> +#include <linux/device.h>
-> +#include <linux/file.h>
-> +#include <linux/hugetlb.h>
-> +#include <linux/list.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/mm.h>
-> +#include <linux/mman.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/nitro_enclaves.h>
-> +#include <linux/pci.h>
-> +#include <linux/poll.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#include "ne_misc_dev.h"
-> +#include "ne_pci_dev.h"
-> +
-> +/**
-> + * NE_CPUS_SIZE - Size for max 128 CPUs, for now, in a cpu-list string, =
-comma
-> + *		  separated. The NE CPU pool includes CPUs from a single NUMA
-> + *		  node.
-> + */
-> +#define NE_CPUS_SIZE		(512)
-> +
-> +/**
-> + * NE_EIF_LOAD_OFFSET - The offset where to copy the Enclave Image Forma=
-t (EIF)
-> + *			image in enclave memory.
-> + */
-> +#define NE_EIF_LOAD_OFFSET	(8 * 1024UL * 1024UL)
-> +
-> +/**
-> + * NE_MIN_ENCLAVE_MEM_SIZE - The minimum memory size an enclave can be l=
-aunched
-> + *			     with.
-> + */
-> +#define NE_MIN_ENCLAVE_MEM_SIZE	(64 * 1024UL * 1024UL)
-> +
-> +/**
-> + * NE_MIN_MEM_REGION_SIZE - The minimum size of an enclave memory region.
-> + */
-> +#define NE_MIN_MEM_REGION_SIZE	(2 * 1024UL * 1024UL)
-> +
-> +/*
-> + * TODO: Update logic to create new sysfs entries instead of using
-> + * a kernel parameter e.g. if multiple sysfs files needed.
-> + */
-> +static const struct kernel_param_ops ne_cpu_pool_ops =3D {
-> +	.get	=3D param_get_string,
-> +};
-> +
-> +static char ne_cpus[NE_CPUS_SIZE];
-> +static struct kparam_string ne_cpus_arg =3D {
-> +	.maxlen	=3D sizeof(ne_cpus),
-> +	.string	=3D ne_cpus,
-> +};
-> +
-> +module_param_cb(ne_cpus, &ne_cpu_pool_ops, &ne_cpus_arg, 0644);
-> +/* https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.=
-html#cpu-lists */
-> +MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enclaves=
-");
-> +
-> +/**
-> + * struct ne_cpu_pool - CPU pool used for Nitro Enclaves.
-> + * @avail_cores:	Available CPU cores in the pool.
-> + * @avail_cores_size:	The size of the available cores array.
-> + * @mutex:		Mutex for the access to the NE CPU pool.
-> + * @numa_node:		NUMA node of the CPUs in the pool.
-> + */
-> +struct ne_cpu_pool {
-> +	cpumask_var_t	*avail_cores;
-> +	unsigned int	avail_cores_size;
-> +	struct mutex	mutex;
-> +	int		numa_node;
-> +};
-> +
-> +static struct ne_cpu_pool ne_cpu_pool;
-> +
-> +static const struct file_operations ne_fops =3D {
-> +	.owner		=3D THIS_MODULE,
-> +	.llseek		=3D noop_llseek,
-> +};
-> +
-> +struct miscdevice ne_misc_dev =3D {
-> +	.minor	=3D MISC_DYNAMIC_MINOR,
-> +	.name	=3D "nitro_enclaves",
-> +	.fops	=3D &ne_fops,
-> +	.mode	=3D 0660,
-> +};
-> +
-> +static int __init ne_init(void)
-> +{
-> +	mutex_init(&ne_cpu_pool.mutex);
-> +
-> +	return pci_register_driver(&ne_pci_driver);
-> +}
-> +
-> +static void __exit ne_exit(void)
-> +{
-> +	pci_unregister_driver(&ne_pci_driver);
-> +}
-> +
-> +/* TODO: Handle actions such as reboot, kexec. */
-> +
-> +module_init(ne_init);
-> +module_exit(ne_exit);
-> +
-> +MODULE_AUTHOR("Amazon.com, Inc. or its affiliates");
-> +MODULE_DESCRIPTION("Nitro Enclaves Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitr=
-o_enclaves/ne_pci_dev.c
-> index a898fae066d9..1e434bf44c9d 100644
-> --- a/drivers/virt/nitro_enclaves/ne_pci_dev.c
-> +++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
-> @@ -527,6 +527,13 @@ static int ne_pci_probe(struct pci_dev *pdev, const =
-struct pci_device_id *id)
->   		goto teardown_msix;
->   	}
->   =
-
-> +	rc =3D misc_register(&ne_misc_dev);
-
-If you set ne_misc_dev.parent to &pdev->dev, you can establish a full =
-
-device path connection between the device node and the underlying NE PCI =
-
-device. That means that in the ioctl path, you can also just access the =
-
-device rather than search for it.
-
-Alex
-
-> +	if (rc < 0) {
-> +		dev_err(&pdev->dev, "Error in misc dev register [rc=3D%d]\n", rc);
-> +
-> +		goto disable_ne_pci_dev;
-> +	}
-> +
->   	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
->   	init_waitqueue_head(&ne_pci_dev->cmd_reply_wait_q);
->   	INIT_LIST_HEAD(&ne_pci_dev->enclaves_list);
-> @@ -536,6 +543,8 @@ static int ne_pci_probe(struct pci_dev *pdev, const s=
-truct pci_device_id *id)
->   =
-
->   	return 0;
->   =
-
-> +disable_ne_pci_dev:
-> +	ne_pci_dev_disable(pdev);
->   teardown_msix:
->   	ne_teardown_msix(pdev);
->   iounmap_pci_bar:
-> @@ -561,6 +570,8 @@ static void ne_pci_remove(struct pci_dev *pdev)
->   {
->   	struct ne_pci_dev *ne_pci_dev =3D pci_get_drvdata(pdev);
->   =
-
-> +	misc_deregister(&ne_misc_dev);
-> +
->   	ne_pci_dev_disable(pdev);
->   =
-
->   	ne_teardown_msix(pdev);
-> =
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
 
