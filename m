@@ -2,314 +2,203 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69891C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C28C207DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597077313;
-	bh=6XZCNzTvPDPpAJipzV4KMM4oXZn8UErU3tUeLjJnPCk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GGC4c0hVZw2uvEd9L2QZYNyEpswuh0rCOHdlru3U1lur6SOAwhEwP1/QdruDhVH/7
-	 VJLAGtLxurZnqvWCYUQRRjo6cBnIXnK2//u98BTUO+NOAhSF83ePkKoXfAfzIZfI1j
-	 YV5/UPKdU1gavEMIRlpB7gAko3ici7UgvlTO+PHE=
+	by mail.kernel.org (Postfix) with ESMTP id 53DCA2076B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tEokO3hI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgHJQfM (ORCPT
+        id S1727803AbgHJQgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgHJQfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:35:11 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAAF52076B;
-        Mon, 10 Aug 2020 16:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597077310;
-        bh=6XZCNzTvPDPpAJipzV4KMM4oXZn8UErU3tUeLjJnPCk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zpYCuMyjNm7ScaxBAs25N/CLxoq1R0aZYc8lhma9LfjkEOo9r1Gyzj5PvFJTv8lPm
-         q1z+PvbVM5lydCLNJrwkyolBlLqz183vQ6vTcg9sgBJ/UoISGsXAQNwXgemNBVSjTq
-         BNpBRXVMrWpcxsk8oVaVLFw8Nq22ya/EA1Ubr5Vc=
-Date:   Mon, 10 Aug 2020 18:35:03 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 11/11] misc: hisi_hikey_usb: Driver to support
- usb functionality of Hikey960
-Message-ID: <20200810183503.3e8bae80@coco.lan>
-In-Reply-To: <20191016033340.1288-12-john.stultz@linaro.org>
-References: <20191016033340.1288-1-john.stultz@linaro.org>
-        <20191016033340.1288-12-john.stultz@linaro.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 10 Aug 2020 12:36:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17280 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725873AbgHJQgb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 12:36:31 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07AGWeGG019110;
+        Mon, 10 Aug 2020 12:36:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=kMrMRyqWQzI9XLcDnZA9dEhh6Lfjbkrw/za3vv1K64M=;
+ b=tEokO3hIFCI5G2/SkclQWDqPE79KYCiYicfsVRP2w4yIWoGz8r+tZmhAn+zFmzzI20HP
+ bps0Bwlxhp3fMhL0rhZQUUyQo/Uq4seAZGm9UyGjUvJIXK1IkQWB4hhXgfHj9WmhxECF
+ dNfW/AeSaK+JxaSpT7I6+qS+/+NweeicYdT4fimYSilpUo6XOa2i5nMGPGP9sEyzTUyO
+ Pd6vD+jt2nY7jwSPkqIa6w4FaNN05pe6Lu3ULRSg17NyYTiAuFPIH4v+x+R5URwLbwzm
+ cPlrzWNff+PVccW9V908RSH5iWpx5YN4+mWIpVTudzK0ORrrcpuBsRhAg2xUO4QZpEao mA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32src1ja2q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 12:36:07 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07AGYlH3024628;
+        Mon, 10 Aug 2020 12:36:07 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32src1ja1n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 12:36:07 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07AGZZ1H008254;
+        Mon, 10 Aug 2020 16:36:04 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 32skahaf97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 16:36:04 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07AGa2XL60031394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 16:36:02 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6000911C04A;
+        Mon, 10 Aug 2020 16:36:02 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA86511C058;
+        Mon, 10 Aug 2020 16:35:56 +0000 (GMT)
+Received: from sig-9-65-241-154.ibm.com (unknown [9.65.241.154])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Aug 2020 16:35:56 +0000 (GMT)
+Message-ID: <4664ab7dc3b324084df323bfa4670d5bfde76e66.camel@linux.ibm.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Chuck Lever <chucklever@gmail.com>,
+        James Morris <jmorris@namei.org>
+Cc:     Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Mon, 10 Aug 2020 12:35:56 -0400
+In-Reply-To: <1597073737.3966.12.camel@HansenPartnership.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+         <20200802143143.GB20261@amd>
+         <1596386606.4087.20.camel@HansenPartnership.com>
+         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+         <1596639689.3457.17.camel@HansenPartnership.com>
+         <alpine.LRH.2.21.2008050934060.28225@namei.org>
+         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+         <1597073737.3966.12.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_12:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 impostorscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 phishscore=0
+ spamscore=0 suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008100119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
-
-Em Wed, 16 Oct 2019 03:33:40 +0000
-John Stultz <john.stultz@linaro.org> escreveu:
-
-> From: Yu Chen <chenyu56@huawei.com>
+On Mon, 2020-08-10 at 08:35 -0700, James Bottomley wrote:
+> On Sun, 2020-08-09 at 13:16 -0400, Mimi Zohar wrote:
+> > On Sat, 2020-08-08 at 13:47 -0400, Chuck Lever wrote:
+> > > > On Aug 5, 2020, at 2:15 PM, Mimi Zohar <zohar@linux.ibm.com>
+> > > > wrote:
+> > 
+> > <snip>
+> > 
+> > > > If block layer integrity was enough, there wouldn't have been a
+> > > > need for fs-verity.   Even fs-verity is limited to read only
+> > > > filesystems, which makes validating file integrity so much
+> > > > easier.  From the beginning, we've said that fs-verity signatures
+> > > > should be included in the measurement list.  (I thought someone
+> > > > signed on to add that support to IMA, but have not yet seen
+> > > > anything.)
+> > > 
+> > > Mimi, when you and I discussed this during LSS NA 2019, I didn't
+> > > fully understand that you expected me to implement signed Merkle
+> > > trees for all filesystems. At the time, it sounded to me like you
+> > > wanted signed Merkle trees only for NFS files. Is that still the
+> > > case?
+> > 
+> > I definitely do not expect you to support signed Merkle trees for all
+> > filesystems.  My interested is from an IMA perspective of measuring
+> > and verifying the fs-verity Merkle tree root (and header info)
+> > signature. This is independent of which filesystems support it.
+> > 
+> > > The first priority (for me, anyway) therefore is getting the
+> > > ability to move IMA metadata between NFS clients and servers
+> > > shoveled into the NFS protocol, but that's been blocked for various
+> > > legal reasons.
+> > 
+> > Up to now, verifying remote filesystem file integrity has been out of
+> > scope for IMA.   With fs-verity file signatures I can at least grasp
+> > how remote file integrity could possibly work.  I don't understand
+> > how remote file integrity with existing IMA formats could be
+> > supported. You might want to consider writing a whitepaper, which
+> > could later be used as the basis for a patch set cover letter.
 > 
-> The HiKey960 has a fairly complex USB configuration due to it
-> needing to support a USB-C port for host/device mode and multiple
-> USB-A ports in host mode using a single USB controller.
+> I think, before this, we can help with the basics (and perhaps we
+> should sort them out before we start documenting what we'll do).
+
+I'm not opposed to doing that, but you're taking this discussion in a
+totally different direction.  The current discussion is about NFSv4
+supporting the existing IMA signatures, not only fs-verity signatures. 
+I'd like to understand how that is possible and for the community to
+weigh in on whether it makes sense.
+
+> The
+> first basic is that a merkle tree allows unit at a time verification.
+> First of all we should agree on the unit.  Since we always fault a page
+> at a time, I think our merkle tree unit should be a page not a block. 
+> Next, we should agree where the check gates for the per page accesses
+> should be ... definitely somewhere in readpage, I suspect and finally
+> we should agree how the merkle tree is presented at the gate.  I think
+> there are three ways:
 > 
-> See schematics here:
->   https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+>    1. Ahead of time transfer:  The merkle tree is transferred and verified
+>       at some time before the accesses begin, so we already have a
+>       verified copy and can compare against the lower leaf.
+>    2. Async transfer:  We provide an async mechanism to transfer the
+>       necessary components, so when presented with a unit, we check the
+>       log n components required to get to the root
+>    3. The protocol actually provides the capability of 2 (like the SCSI
+>       DIF/DIX), so to IMA all the pieces get presented instead of IMA
+>       having to manage the tree
 > 
-> This driver acts as a usb-role-switch intermediary, intercepting
-> the role switch notifications from the tcpm code, and passing
-> them on to the dwc3 core.
-> 
-> In doing so, it also controls the onboard hub and power gpios in
-> order to properly route the data lines between the USB-C port
-> and the onboard hub to the USB-A ports.
-> 
-> NOTE: It was noted that controlling the TYPEC_VBUS_POWER_OFF and
-> TYPEC_VBUS_POWER_ON values here is not reccomended. I'm looking
-> for a way to remove that bit from the logic here, but wanted to
-> still get feedback on this approach.
-
-Let me somewhat hijack this thread. I'm trying to add support here
-for the Hikey 970 driver. Maybe you might help me finding the remaing
-issues over there ;-)
-
-The Hikey 970 has lots of things in common with Hikey 960, but
-the USB hub uses a somewhat different approach (based on what I
-saw at the Linaro's 4.9 official Hikey kernel tree).
-
-Basically, with the enclosed patch applied, the USB hub needs these
-at the DT file:
-
-		hikey_usbhub: hikey_usbhub {
-			compatible = "hisilicon,kirin970_hikey_usbhub";
-
-			typec-vbus-gpios = <&gpio26 1 0>;
-			otg-switch-gpios = <&gpio4 2 0>;
-			hub_reset_en_gpio = <&gpio0 3 0>;
-			hub-vdd-supply = <&ldo17>;
-			usb-role-switch;
-...
-		}
-
-E.g. when compared with Hikey 960, the USB hub:
-
-- Hikey 970 uses a regulator instead of GPIO for powering on;
-- Hikey 970 has a reset pin controlled via GPIO.
-
-It should be simple to add support for it, as done by the
-enclosed patch. With this, the phy driver for Hikey 970 and a new
-small driver to properly set clocks and reset lines at dwg3[1],
-I can now see the hub on my Hikey970:
-
-	$ lsusb
-	Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-	Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-
-Still, I'm missing something to make it work, as, besides the hub,
-right now, it doesn't detect the keyboard/mouse, which are
-attached at the USB hub.
-
-Do you have any ideas?
-
--
-
-[1] Right now, this is needed:
-	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/usb/dwc3/dwc3-hisi.c
-
-    Placing dwc3 directly under soc at DT causes some weird NMI, with
-    either produce an OOPS or hangs the machine at boot time.
-
-Thanks,
-Mauro
-
-[PATCH] misc: hisi_hikey_usb: add support for Hikey 970
-
-The HiKey 970 board uses a voltage regulator and GPIO reset pin.
-
-Add support for them.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
-index 3a98a890757c..76eb38fc6169 100644
---- a/drivers/misc/hisi_hikey_usb.c
-+++ b/drivers/misc/hisi_hikey_usb.c
-@@ -14,8 +14,10 @@
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/usb/role.h>
+> There are also a load of minor things like how we get the head hash,
+> which must be presented and verified ahead of time for each of the
+> above 3.
  
-@@ -46,18 +48,27 @@ struct hisi_hikey_usb {
- 
- static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
- {
-+	if (!hisi_hikey_usb->hub_vbus)
-+		return;
-+
- 	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
- }
- 
- static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
- 			    int switch_to)
- {
-+	if (!hisi_hikey_usb->otg_switch)
-+		return;
-+
- 	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
- }
- 
- static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
- 				 int value)
- {
-+	if (!hisi_hikey_usb->typec_vbus)
-+		return;
-+
- 	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
- }
- 
-@@ -117,31 +128,89 @@ static int hub_usb_role_switch_set(struct usb_role_switch *sw, enum usb_role rol
- 	return 0;
- }
- 
-+static int hisi_hikey_usb_parse_kirin970(struct platform_device *pdev)
-+{
-+	struct regulator *regulator;
-+	int hub_reset_en_gpio;
-+	int ret;
-+
-+	regulator = devm_regulator_get_optional(&pdev->dev, "hub-vdd");
-+	if (IS_ERR(regulator)) {
-+		if (PTR_ERR(regulator) == -EPROBE_DEFER) {
-+			dev_info(&pdev->dev,
-+				"waiting for hub-vdd-supply to be probed\n");
-+			return PTR_ERR(regulator);
-+		} else {
-+			/* let it fall back to regulator dummy */
-+			regulator = devm_regulator_get(&pdev->dev, "hub-vdd");
-+			if (IS_ERR(regulator)) {
-+				dev_err(&pdev->dev,
-+					"get hub-vdd-supply failed with error %ld\n",
-+					PTR_ERR(regulator));
-+				return PTR_ERR(regulator);
-+			}
-+		}
-+	}
-+
-+	ret = regulator_set_voltage(regulator, 3300000, 3300000);
-+	if (ret)
-+		dev_err(&pdev->dev, "set hub-vdd-supply voltage failed\n");
-+
-+	hub_reset_en_gpio = of_get_named_gpio(pdev->dev.of_node,
-+					      "hub_reset_en_gpio", 0);
-+	if (!gpio_is_valid(hub_reset_en_gpio)) {
-+		dev_err(&pdev->dev, "Failed to get a valid reset gpio\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = devm_gpio_request(&pdev->dev, hub_reset_en_gpio,
-+				"hub_reset_en_gpio");
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to request the reset gpio\n");
-+		return ret;
-+	}
-+	ret = gpio_direction_output(hub_reset_en_gpio, 1);
-+	if (ret)
-+		dev_err(&pdev->dev,
-+			"Failed to set the direction of the reset gpio\n");
-+
-+	return ret;
-+}
-+
- static int hisi_hikey_usb_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct hisi_hikey_usb *hisi_hikey_usb;
- 	struct usb_role_switch_desc hub_role_switch = {NULL};
-+	int ret;
- 
- 	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
- 	if (!hisi_hikey_usb)
- 		return -ENOMEM;
- 
--	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
--						    GPIOD_OUT_LOW);
--	if (IS_ERR(hisi_hikey_usb->typec_vbus))
--		return PTR_ERR(hisi_hikey_usb->typec_vbus);
--
- 	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch",
- 						    GPIOD_OUT_HIGH);
- 	if (IS_ERR(hisi_hikey_usb->otg_switch))
- 		return PTR_ERR(hisi_hikey_usb->otg_switch);
- 
--	/* hub-vdd33-en is optional */
--	hisi_hikey_usb->hub_vbus = devm_gpiod_get_optional(dev, "hub-vdd33-en",
--							   GPIOD_OUT_HIGH);
--	if (IS_ERR(hisi_hikey_usb->hub_vbus))
--		return PTR_ERR(hisi_hikey_usb->hub_vbus);
-+	/* Parse Kirin 970-specific OF data */
-+	if (of_device_is_compatible(pdev->dev.of_node,
-+				    "hisilicon,kirin970_hikey_usbhub")) {
-+		ret = hisi_hikey_usb_parse_kirin970(pdev);
-+		if (ret)
-+			return ret;
-+	} else {
-+		hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
-+							    GPIOD_OUT_LOW);
-+		if (IS_ERR(hisi_hikey_usb->typec_vbus))
-+			return PTR_ERR(hisi_hikey_usb->typec_vbus);
-+
-+		/* hub-vdd33-en is optional */
-+		hisi_hikey_usb->hub_vbus = devm_gpiod_get_optional(dev, "hub-vdd33-en",
-+								GPIOD_OUT_HIGH);
-+		if (IS_ERR(hisi_hikey_usb->hub_vbus))
-+			return PTR_ERR(hisi_hikey_usb->hub_vbus);
-+	}
- 
- 	hisi_hikey_usb->dev_role_sw = usb_role_switch_get(dev);
- 	if (!hisi_hikey_usb->dev_role_sw)
-@@ -185,6 +254,7 @@ static int  hisi_hikey_usb_remove(struct platform_device *pdev)
- 
- static const struct of_device_id id_table_hisi_hikey_usb[] = {
- 	{.compatible = "hisilicon,gpio_hubv1"},
-+	{.compatible = "hisilicon,kirin970_hikey_usbhub"},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, id_table_hisi_hikey_usb);
+I was under the impression that IMA support for fs-verity signatures
+would be limited to including the fs-verity signature in the
+measurement list and verifying the fs-verity signature.   As fs-verity
+is limited to immutable files, this could be done on file open.  fs-
+verity would be responsible for enforcing the block/page data
+integrity.   From a local filesystem perspective, I think that is all
+that is necessary.
 
+In terms of remote file systems,  the main issue is transporting and
+storing the Merkle tree.  As fs-verity is limited to immutable files,
+this could still be done on file open.
+
+Mimi
 
