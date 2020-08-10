@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF26C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3D522BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C219B2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087233;
-	bh=4yLMnPaJzotJ8TahdzZXIXI6kUMopCupuwA2zHxLxVc=;
+	s=default; t=1597087241;
+	bh=eC13ChoGeRWb9N3IW/OrT7LtsHGrOf7bsYGIWtTxk54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gjf+7QJtijuxeoHTl3QMz5TWw85P/laDYGKH64bn4YghbMgSB3ajNTXwpQiqcesNy
-	 95/uZiZCVYqNrmRUzJw3UyOpDdugoUiZmlsMmL72Rfzw+12lX7nMizjVbfEUEIcgo3
-	 AuxT+3eXgJJFVNR1ZcbfAwj7IkRwzME/+i4vpbSM=
+	b=P5JfV/EQfJ1lk85F9OkUVJGeGlFlOKzD8ZyKF+zLWWohEwjX4kizsLjMHYPGWtAvi
+	 h+hf6fkB25swLKBPp0jUAMelh3AEJSOAUlUrNN0UQGGX9O2D9KrowqLF9oK796S5Ie
+	 fvNp9fO/NPKk4Cjndql7j8mCTcDkmA46WWVaEwAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgHJTUc (ORCPT
+        id S1729844AbgHJTNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45226 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729864AbgHJTNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:50 -0400
+        id S1729802AbgHJTNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D75A822B47;
-        Mon, 10 Aug 2020 19:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDC9222B47;
+        Mon, 10 Aug 2020 19:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086829;
-        bh=4yLMnPaJzotJ8TahdzZXIXI6kUMopCupuwA2zHxLxVc=;
+        s=default; t=1597086817;
+        bh=eC13ChoGeRWb9N3IW/OrT7LtsHGrOf7bsYGIWtTxk54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVV3y+IwRT73zwMt4R4ZeI6NE2+CAwS8vxgKm+6aRZXT9nHgiSn5uV81TasYqpl+c
-         OoQP3/Jepw4/nCdJ/hx6HN+fkqvxNByn+JLYzlwB4eyIX1hUX8cXxsPtOXLOq6KQC6
-         Bn/WhtLeeArrKZGDLzF8wXFovHIv/31UqvXYDD3M=
+        b=H2Fue4BhG3nyzeO4FBySsWbJd+t84DxmiwJpENKdhHpBA56wZhxpi8qR1bleWaTt1
+         0/ynI8aP2cgbYyr7d+amW/jFy9R8ETfZoLysRJWmgjJAyIsZGAhj1yEj47rg/erIyg
+         SulP/V4tNtOHmlg96JAJW28JltWbEzrXGdbP34f4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/22] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
-Date:   Mon, 10 Aug 2020 15:13:25 -0400
-Message-Id: <20200810191345.3795166-3-sashal@kernel.org>
+Cc:     Danesh Petigara <danesh.petigara@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/31] usb: bdc: Halt controller on suspend
+Date:   Mon, 10 Aug 2020 15:12:54 -0400
+Message-Id: <20200810191259.3794858-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
-References: <20200810191345.3795166-1-sashal@kernel.org>
+In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
+References: <20200810191259.3794858-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,60 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Danesh Petigara <danesh.petigara@broadcom.com>
 
-[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
+[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
 
-Very large I/Os can cause the following RCU CPU stall warning:
+GISB bus error kernel panics have been observed during S2 transition
+tests on the 7271t platform. The errors are a result of the BDC
+interrupt handler trying to access BDC register space after the
+system's suspend callbacks have completed.
 
-RIP: 0010:rb_prev+0x8/0x50
-Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
-89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
-RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
-RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
-RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
-RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
-R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
-R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
- __lookup_extent_mapping+0xa0/0x110
- try_release_extent_mapping+0xdc/0x220
- btrfs_releasepage+0x45/0x70
- shrink_page_list+0xa39/0xb30
- shrink_inactive_list+0x18f/0x3b0
- shrink_lruvec+0x38e/0x6b0
- shrink_node+0x14d/0x690
- do_try_to_free_pages+0xc6/0x3e0
- try_to_free_mem_cgroup_pages+0xe6/0x1e0
- reclaim_high.constprop.73+0x87/0xc0
- mem_cgroup_handle_over_high+0x66/0x150
- exit_to_usermode_loop+0x82/0xd0
- do_syscall_64+0xd4/0x100
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Adding a suspend hook to the BDC driver that halts the controller before
+S2 entry thus preventing unwanted access to the BDC register space during
+this transition.
 
-On a PREEMPT=n kernel, the try_release_extent_mapping() function's
-"while" loop might run for a very long time on a large I/O.  This commit
-therefore adds a cond_resched() to this loop, providing RCU any needed
-quiescent states.
-
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 6d2bfbb63d9ba..ef1fd6a09d8e5 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4323,6 +4323,8 @@ int try_release_extent_mapping(struct extent_map_tree *map,
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 4c557f3154460..e174b1b889da5 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -608,9 +608,14 @@ static int bdc_remove(struct platform_device *pdev)
+ static int bdc_suspend(struct device *dev)
+ {
+ 	struct bdc *bdc = dev_get_drvdata(dev);
++	int ret;
  
- 			/* once for us */
- 			free_extent_map(em);
+-	clk_disable_unprepare(bdc->clk);
+-	return 0;
++	/* Halt the controller */
++	ret = bdc_stop(bdc);
++	if (!ret)
++		clk_disable_unprepare(bdc->clk);
 +
-+			cond_resched(); /* Allow large-extent preemption. */
- 		}
- 	}
- 	return try_release_extent_state(map, tree, page, mask);
++	return ret;
+ }
+ 
+ static int bdc_resume(struct device *dev)
 -- 
 2.25.1
 
