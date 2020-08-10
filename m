@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3881C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECADC207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F621207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086876;
-	bh=DMfpQ+H8dZEgtsoidfttJ8FPsd91nK2KArIgGobJheI=;
+	s=default; t=1597086881;
+	bh=AtLG/bn2mZUKkfIPmi8HqODHX4L427TjEdH9nex621c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgOzafyxHi71Og+JvQRV8dEGJoBa0W7Grd8noGVhn3z1XF6xF3OQuay1Bwekg9Lm+
-	 7xG0maCnrKXlv822sNPgK60n3sFyq2bwAicRtLiabtd/cb+DNh+vfv8CNiNtMBA0Y7
-	 cnJ2Ns4YBSft+xMAUiC1D76Iqquechko6diRxJKM=
+	b=T5XfBl2HvJmt/u4g5HY2EhPYIhFvuVQLtxhnkAmzaX/MUtI0m9bzqRbbUgx9aNi+h
+	 yFMtb94Ucif7LNUGdLHIahFBKx7zaIBkQ7a69aUxtkqeuPzDMBfO6PKeYJVyBxZqgs
+	 5DAk1EyH0+YMeTlTE3t7V1jCPPXxnGH1lhL9r/gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbgHJTOf (ORCPT
+        id S1730066AbgHJTOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46524 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:14:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730007AbgHJTOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:25 -0400
+        id S1729014AbgHJTO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D70C207FF;
-        Mon, 10 Aug 2020 19:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B3AB22D2C;
+        Mon, 10 Aug 2020 19:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086864;
-        bh=DMfpQ+H8dZEgtsoidfttJ8FPsd91nK2KArIgGobJheI=;
+        s=default; t=1597086869;
+        bh=AtLG/bn2mZUKkfIPmi8HqODHX4L427TjEdH9nex621c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Idq5bmaVOIlJ54gcC2NYArPzfi4Ielk4HFC8rSvX4ZjS6TIzul7btV7ETE0Jvxnt2
-         HSmp0VJ5XsFc0kqVPPUM5OPbo0bcJJzS+NoS2QRLuQDxrKo0SkGKx09R0tOSuLE12A
-         1++/DcEFOqhFPK2BzWAoIvzn0MJdsA91OASfyVh0=
+        b=aRggtVtgngsKGD6ss0wdYetpyxfYcnsA0a9y+zi3IA8TPNYkos/ZaZ4WluT0f/rKJ
+         QlJaLpwSVum5cVbK28RMP96uSidzHLXW+ZXFMCQAWzILvaFVDlOvJgo58XozAXrRV5
+         Zf8bpO/+yUy9ThP/Y9eQZ2Of0KVjx7oiERzhKr+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 04/17] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
-Date:   Mon, 10 Aug 2020 15:14:05 -0400
-Message-Id: <20200810191418.3795394-4-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 07/17] drm/nouveau: fix multiple instances of reference count leaks
+Date:   Mon, 10 Aug 2020 15:14:08 -0400
+Message-Id: <20200810191418.3795394-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191418.3795394-1-sashal@kernel.org>
 References: <20200810191418.3795394-1-sashal@kernel.org>
@@ -62,70 +61,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
+[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
 
 On calling pm_runtime_get_sync() the reference count of the device
 is incremented. In case of failure, decrement the
-reference count before returning the error.
+ref count before returning the error.
 
-Acked-by: Evan Quan <evan.quan@amd.com>
 Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
- drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
- drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
+ drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index 432ad7d73cb9b..99e23800cadc7 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -639,8 +639,10 @@ radeon_crtc_set_config(struct drm_mode_set *set)
- 	dev = set->crtc->dev;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 42829a942e33c..4e12d3d59651b 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -823,8 +823,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
  
+ 	/* need to bring up power immediately if opening device */
  	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
 +		pm_runtime_put_autosuspend(dev->dev);
  		return ret;
 +	}
  
- 	ret = drm_crtc_helper_set_config(set);
- 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 30bd4a6a9d466..7648fd0d10751 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -496,8 +496,10 @@ long radeon_drm_ioctl(struct file *filp,
+ 	get_task_comm(tmpname, current);
+ 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
+@@ -912,8 +914,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
  	long ret;
- 	dev = file_priv->minor->dev;
+ 
  	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
 +		pm_runtime_put_autosuspend(dev->dev);
  		return ret;
 +	}
  
- 	ret = drm_ioctl(filp, cmd, arg);
- 	
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index 4388ddeec8d24..96d2a564d9a3c 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -634,8 +634,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 	file_priv->driver_priv = NULL;
+ 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
+ 	case DRM_NOUVEAU_NVIF:
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index 505dca48b9f80..be6672da33a65 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -42,8 +42,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
+ 	int ret;
  
- 	r = pm_runtime_get_sync(dev->dev);
--	if (r < 0)
-+	if (r < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return r;
+ 	ret = pm_runtime_get_sync(dev);
+-	if (WARN_ON(ret < 0 && ret != -EACCES))
++	if (WARN_ON(ret < 0 && ret != -EACCES)) {
++		pm_runtime_put_autosuspend(dev);
+ 		return;
 +	}
  
- 	/* new gpu have virtual address space support */
- 	if (rdev->family >= CHIP_CAYMAN) {
+ 	if (gem->import_attach)
+ 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
 -- 
 2.25.1
 
