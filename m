@@ -2,55 +2,52 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3888C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3D5422B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935BA207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086658;
-	bh=q/NpeTGIL9P65++ZZaokk5gfqZSi4i3hZ3Y91TAIveA=;
+	s=default; t=1597086665;
+	bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZkTB67L4SLwgjqFPLO0Wck8EG2K6ANqaNsXcQGxM20RM3hIxCNvrnriG6YS/0J0Q
-	 Su0E1CaOQOB8dZ6vCxa9JuRFAdrMivz/3YzF8a5ZNrreCJZzLg3TKUYCgXn8s3QC3i
-	 2jCdLcF2C3I2UfL+A9YzWzDgRsaelyINUOETkGc0=
+	b=gpXlstka4r/PJEmJ/8FyOanrbP5TDl9Vi2JPR4TXZmHAN5/vDrbmK7Tjqhgrub87R
+	 f8/jNaqQiKTNRTVMScedLc8I07JAjrSLKKy/K/omiTiJenHuMiAaxRFGyxVxAG4D6l
+	 YAtCWrPhs07qfnZ7xAhClCTDt+2Z19PWkGzcQCYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgHJTK5 (ORCPT
+        id S1729147AbgHJTLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38234 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729033AbgHJTKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:45 -0400
+        id S1728230AbgHJTKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F08E22B47;
-        Mon, 10 Aug 2020 19:10:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0253A207FF;
+        Mon, 10 Aug 2020 19:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086644;
-        bh=q/NpeTGIL9P65++ZZaokk5gfqZSi4i3hZ3Y91TAIveA=;
+        s=default; t=1597086650;
+        bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=paNg1M+ktpaUGekFr2mlQAxgxHta9LfziXwmZ88vKWRSH/KIKhisTQq1/VSewKRLS
-         EYW6W9FUFzLD2Hx0endrfQJTtJtBamYSbOEHnELfv5HCrBcTu221uUnDa3hbfalQu8
-         +2aPZFFs44JLzC/pHY1dq34I58NjlDpQ1297nJQc=
+        b=SZv2fHr4LqkyO49K/1D8bIvl8sdooHDKT/HdFinIRBIpg6tkPxKLNsv30ZSRNv4OJ
+         04VX8Dv0uEw4XwLh7LxZioZa5tacLG5PQ3YHEp04RJcolfjHpPmHr4LeVcKf2vdV8d
+         tXRpb+C2//XOevd/8UdGzPfEZaMRR2u43nrZHQLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Craig Topper <craig.topper@intel.com>,
-        Craig Topper <craig.topper@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "ClangBuiltLinux" <clang-built-linux@googlegroups.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 11/60] crypto: aesni - Fix build with LLVM_IAS=1
-Date:   Mon, 10 Aug 2020 15:09:39 -0400
-Message-Id: <20200810191028.3793884-11-sashal@kernel.org>
+Cc:     Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 16/60] drm/nouveau/kms/nv50-: Fix disabling dithering
+Date:   Mon, 10 Aug 2020 15:09:44 -0400
+Message-Id: <20200810191028.3793884-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -63,107 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sedat Dilek <sedat.dilek@gmail.com>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 3347c8a079d67af21760a78cc5f2abbcf06d9571 ]
+[ Upstream commit fb2420b701edbf96c2b6d557f0139902f455dc2b ]
 
-When building with LLVM_IAS=1 means using Clang's Integrated Assembly (IAS)
-from LLVM/Clang >= v10.0.1-rc1+ instead of GNU/as from GNU/binutils
-I see the following breakage in Debian/testing AMD64:
+While we expose the ability to turn off hardware dithering for nouveau,
+we actually make the mistake of turning it on anyway, due to
+dithering_depth containing a non-zero value if our dithering depth isn't
+also set to 6 bpc.
 
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
- arch/x86/crypto/aesni-intel_asm.S:1598:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_dec %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1599:2: note: while in macro instantiation
- GCM_ENC_DEC dec
- ^
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
-arch/x86/crypto/aesni-intel_asm.S:1686:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_enc %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1687:2: note: while in macro instantiation
- GCM_ENC_DEC enc
+So, fix it by never enabling dithering when it's disabled.
 
-Craig Topper suggested me in ClangBuiltLinux issue #1050:
-
-> I think the "too many positional arguments" is because the parser isn't able
-> to handle the trailing commas.
->
-> The "unknown use of instruction mnemonic" is because the macro was named
-> GHASH_4_ENCRYPT_4_PARALLEL_DEC but its being instantiated with
-> GHASH_4_ENCRYPT_4_PARALLEL_dec I guess gas ignores case on the
-> macro instantiation, but llvm doesn't.
-
-First, I removed the trailing comma in the PRECOMPUTE line.
-
-Second, I substituted:
-1. GHASH_4_ENCRYPT_4_PARALLEL_DEC -> GHASH_4_ENCRYPT_4_PARALLEL_dec
-2. GHASH_4_ENCRYPT_4_PARALLEL_ENC -> GHASH_4_ENCRYPT_4_PARALLEL_enc
-
-With these changes I was able to build with LLVM_IAS=1 and boot on bare metal.
-
-I confirmed that this works with Linux-kernel v5.7.5 final.
-
-NOTE: This patch is on top of Linux v5.7 final.
-
-Thanks to Craig and especially Nick for double-checking and his comments.
-
-Suggested-by: Craig Topper <craig.topper@intel.com>
-Suggested-by: Craig Topper <craig.topper@gmail.com>
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: "ClangBuiltLinux" <clang-built-linux@googlegroups.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1050
-Link: https://bugs.llvm.org/show_bug.cgi?id=24494
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+Acked-by: Dave Airlie <airlied@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200627194657.156514-6-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/crypto/aesni-intel_asm.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
-index cad6e1bfa7d5f..c216de2877426 100644
---- a/arch/x86/crypto/aesni-intel_asm.S
-+++ b/arch/x86/crypto/aesni-intel_asm.S
-@@ -266,7 +266,7 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
- 	PSHUFB_XMM %xmm2, %xmm0
- 	movdqu %xmm0, CurCount(%arg2) # ctx_data.current_counter = iv
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
+index 8f6455697ba72..ed6819519f6d8 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -84,18 +84,20 @@ nv50_head_atomic_check_dither(struct nv50_head_atom *armh,
+ {
+ 	u32 mode = 0x00;
  
--	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-+	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7
- 	movdqu HashKey(%arg2), %xmm13
+-	if (asyc->dither.mode == DITHERING_MODE_AUTO) {
+-		if (asyh->base.depth > asyh->or.bpc * 3)
+-			mode = DITHERING_MODE_DYNAMIC2X2;
+-	} else {
+-		mode = asyc->dither.mode;
+-	}
++	if (asyc->dither.mode) {
++		if (asyc->dither.mode == DITHERING_MODE_AUTO) {
++			if (asyh->base.depth > asyh->or.bpc * 3)
++				mode = DITHERING_MODE_DYNAMIC2X2;
++		} else {
++			mode = asyc->dither.mode;
++		}
  
- 	CALC_AAD_HASH %xmm13, \AAD, \AADLEN, %xmm0, %xmm1, %xmm2, %xmm3, \
-@@ -978,7 +978,7 @@ _initial_blocks_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_ENC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_enc TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+-	if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
+-		if (asyh->or.bpc >= 8)
+-			mode |= DITHERING_DEPTH_8BPC;
+-	} else {
+-		mode |= asyc->dither.depth;
++		if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
++			if (asyh->or.bpc >= 8)
++				mode |= DITHERING_DEPTH_8BPC;
++		} else {
++			mode |= asyc->dither.depth;
++		}
+ 	}
  
- 	movdqa	  \XMM1, \XMM5
-@@ -1186,7 +1186,7 @@ aes_loop_par_enc_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_DEC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_dec TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
- 
- 	movdqa	  \XMM1, \XMM5
+ 	asyh->dither.enable = mode;
 -- 
 2.25.1
 
