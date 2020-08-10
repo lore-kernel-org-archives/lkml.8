@@ -2,65 +2,72 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A490720748
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEE1206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHJN3r (ORCPT
+        id S1726729AbgHJNbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbgHJN3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:29:46 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53ADA20729;
-        Mon, 10 Aug 2020 13:29:45 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 09:29:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joe Korty <joe.korty@concurrent-rt.com>
-Cc:     Daniel Wagner <dwagner@suse.de>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Pavel Machek <pavel@denx.de>
-Subject: Re: [ANNOUNCE] v4.4.231-rt202
-Message-ID: <20200810092943.69739f41@oasis.local.home>
-In-Reply-To: <20200808140638.GA26582@zipoli.concurrent-rt.com>
-References: <159559806551.29587.13643956941367278015@beryllium>
-        <3732c1c4-36d4-2cdc-677a-cb58a9507df1@suse.de>
-        <20200727151033.7c37df2b@oasis.local.home>
-        <20200808140638.GA26582@zipoli.concurrent-rt.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Aug 2020 09:31:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60556 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbgHJNba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 09:31:30 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k57tQ-000489-AE; Mon, 10 Aug 2020 13:31:12 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Andrew Oakley <andrew@adoakley.name>,
+        Chris Boyle <chris@boyle.name>,
+        alsa-devel@alsa-project.org (moderated list:SOUND),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ALSA: usb-audio: Disable Lenovo P620 Rear line-in volume control
+Date:   Mon, 10 Aug 2020 21:31:06 +0800
+Message-Id: <20200810133108.31580-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Aug 2020 10:06:38 -0400
-Joe Korty <joe.korty@concurrent-rt.com> wrote:
+The USB device (0x17aa:0x1046) that support Lenovo P620 rear panel
+line-in claim to support volume control, but it doens't seem to have an
+AMP, so when line-in volume lowers below 80, nothing gets recorded
+anymore.
 
-> Ping?
+Disable the volume control to workaround the issue.
 
-Yes yes, we even discussed this in our last meeting. I'm just trying to
-get time to work on it, as the merge window is open and Plumber's is
-just around the corner, it's taking a bit longer than expected.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ sound/usb/mixer_maps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- Steve
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index c369c81e74c4..5b43e9e40e49 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -371,6 +371,7 @@ static const struct usbmix_name_map asus_rog_map[] = {
+ };
+ 
+ static const struct usbmix_name_map lenovo_p620_rear_map[] = {
++	{ 19, NULL, 2 }, /* FU, Volume */
+ 	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
+ 	{}
+ };
+-- 
+2.17.1
 
