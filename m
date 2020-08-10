@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58165C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 229DE22D08
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750A222D08
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073282;
-	bh=4JW7OyqRYkP5zzdgiz2Q8q8HeE53NdcNMwb63Oxftro=;
+	s=default; t=1597073284;
+	bh=nJ5uviGhYV6dHThWLKBvz/T7t58qjLG2DrnP1k+q9g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FL2zPHHRlRPbRfX7y3JIhvJJmr1sKuF/kU73PxlvlOc00l3TL8VDjvL7PsBjVCZCc
-	 uKn/6Oh4/4dTLISt1ZzkJStqXof5n7fxJFynqyCxeYgBXw4g/SUAupFRCv6FS1/nrR
-	 9qPe0pc3syAF0ATCvIg3SCG1D3iwxFq7fsjkCb1U=
+	b=fiVpU6/GwWO3wZ49eTlk9kUzflfmCCN20by+79EPWknS+eEelFEUut5xa/rnuoAJS
+	 B18NVzYzAv93GQbMRMGb0vdGSlmYZnxzo5WkdBwt26iaVhpVgBUulYTTZaY90D4mdn
+	 G2SQtqPzYiga3kbhwAUniiVe6eHyXqxSHuk1uAB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgHJP2A (ORCPT
+        id S1728822AbgHJP2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:28:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33826 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbgHJP1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:51 -0400
+        id S1728371AbgHJP1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC8A22D02;
-        Mon, 10 Aug 2020 15:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A83822BF3;
+        Mon, 10 Aug 2020 15:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073270;
-        bh=4JW7OyqRYkP5zzdgiz2Q8q8HeE53NdcNMwb63Oxftro=;
+        s=default; t=1597073267;
+        bh=nJ5uviGhYV6dHThWLKBvz/T7t58qjLG2DrnP1k+q9g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=woezmWnHxKULjFFWrnkkmBa9XGJWCbuUIX9a3V+QLQUEJc4VTJ3bjss7ZvB9GGFoL
-         zN/dc6TdA/rLKbpPeMdJHQSHkIqVJ1BhN1Oca0fz6TPTa0RhZJAE0tmXkjYMXCsliI
-         9RRAhtnpMqKLsIP6w0BxXEMgqI4XO6oOK2WGbQ3s=
+        b=HUSdd9iDh/of/hCker2+bPv/6DAAzLdOnw67NOcL1nzG5lcCk1El0Wyt2RxU1A+zJ
+         rgDKZ/e1ZsoihWL9QQIiYDbKXgVNb6Jdi/81e98zOqRAiKoMZ9rlLGXSDOmUa03/0B
+         OHeknup3+EQuASOLFLWzXEXXwdU3B0uyTgqnhA5k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Philippe Duplessis-Guindon <pduplessis@efficios.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Xin Xiong <xiongx18@fudan.edu.cn>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 45/67] tools lib traceevent: Fix memory leak in process_dynamic_array_len
-Date:   Mon, 10 Aug 2020 17:21:32 +0200
-Message-Id: <20200810151811.658615679@linuxfoundation.org>
+Subject: [PATCH 5.4 44/67] atm: fix atm_dev refcnt leaks in atmtcp_remove_persistent
+Date:   Mon, 10 Aug 2020 17:21:31 +0200
+Message-Id: <20200810151811.617375764@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -62,70 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Duplessis-Guindon <pduplessis@efficios.com>
+From: Xin Xiong <xiongx18@fudan.edu.cn>
 
-[ Upstream commit e24c6447ccb7b1a01f9bf0aec94939e6450c0b4d ]
+[ Upstream commit 51875dad43b44241b46a569493f1e4bfa0386d86 ]
 
-I compiled with AddressSanitizer and I had these memory leaks while I
-was using the tep_parse_format function:
+atmtcp_remove_persistent() invokes atm_dev_lookup(), which returns a
+reference of atm_dev with increased refcount or NULL if fails.
 
-    Direct leak of 28 byte(s) in 4 object(s) allocated from:
-        #0 0x7fb07db49ffe in __interceptor_realloc (/lib/x86_64-linux-gnu/libasan.so.5+0x10dffe)
-        #1 0x7fb07a724228 in extend_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:985
-        #2 0x7fb07a724c21 in __read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1140
-        #3 0x7fb07a724f78 in read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1206
-        #4 0x7fb07a725191 in __read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1291
-        #5 0x7fb07a7251df in read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1299
-        #6 0x7fb07a72e6c8 in process_dynamic_array_len /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:2849
-        #7 0x7fb07a7304b8 in process_function /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3161
-        #8 0x7fb07a730900 in process_arg_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3207
-        #9 0x7fb07a727c0b in process_arg /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1786
-        #10 0x7fb07a731080 in event_read_print_args /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3285
-        #11 0x7fb07a731722 in event_read_print /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3369
-        #12 0x7fb07a740054 in __tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6335
-        #13 0x7fb07a74047a in __parse_event /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6389
-        #14 0x7fb07a740536 in tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6431
-        #15 0x7fb07a785acf in parse_event ../../../src/fs-src/fs.c:251
-        #16 0x7fb07a785ccd in parse_systems ../../../src/fs-src/fs.c:284
-        #17 0x7fb07a786fb3 in read_metadata ../../../src/fs-src/fs.c:593
-        #18 0x7fb07a78760e in ftrace_fs_source_init ../../../src/fs-src/fs.c:727
-        #19 0x7fb07d90c19c in add_component_with_init_method_data ../../../../src/lib/graph/graph.c:1048
-        #20 0x7fb07d90c87b in add_source_component_with_initialize_method_data ../../../../src/lib/graph/graph.c:1127
-        #21 0x7fb07d90c92a in bt_graph_add_source_component ../../../../src/lib/graph/graph.c:1152
-        #22 0x55db11aa632e in cmd_run_ctx_create_components_from_config_components ../../../src/cli/babeltrace2.c:2252
-        #23 0x55db11aa6fda in cmd_run_ctx_create_components ../../../src/cli/babeltrace2.c:2347
-        #24 0x55db11aa780c in cmd_run ../../../src/cli/babeltrace2.c:2461
-        #25 0x55db11aa8a7d in main ../../../src/cli/babeltrace2.c:2673
-        #26 0x7fb07d5460b2 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
+The refcount leaks issues occur in two error handling paths. If
+dev_data->persist is zero or PRIV(dev)->vcc isn't NULL, the function
+returns 0 without decreasing the refcount kept by a local variable,
+resulting in refcount leaks.
 
-The token variable in the process_dynamic_array_len function is
-allocated in the read_expect_type function, but is not freed before
-calling the read_token function.
+Fix the issue by adding atm_dev_put() before returning 0 both when
+dev_data->persist is zero or PRIV(dev)->vcc isn't NULL.
 
-Free the token variable before calling read_token in order to plug the
-leak.
-
-Signed-off-by: Philippe Duplessis-Guindon <pduplessis@efficios.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/linux-trace-devel/20200730150236.5392-1-pduplessis@efficios.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/atm/atmtcp.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 798284f511f16..4559a15e66570 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2861,6 +2861,7 @@ process_dynamic_array_len(struct tep_event *event, struct tep_print_arg *arg,
- 	if (read_expected(TEP_EVENT_DELIM, ")") < 0)
- 		goto out_err;
- 
-+	free_token(token);
- 	type = read_token(&token);
- 	*tok = token;
- 
+diff --git a/drivers/atm/atmtcp.c b/drivers/atm/atmtcp.c
+index d9fd70280482c..7f814da3c2d06 100644
+--- a/drivers/atm/atmtcp.c
++++ b/drivers/atm/atmtcp.c
+@@ -433,9 +433,15 @@ static int atmtcp_remove_persistent(int itf)
+ 		return -EMEDIUMTYPE;
+ 	}
+ 	dev_data = PRIV(dev);
+-	if (!dev_data->persist) return 0;
++	if (!dev_data->persist) {
++		atm_dev_put(dev);
++		return 0;
++	}
+ 	dev_data->persist = 0;
+-	if (PRIV(dev)->vcc) return 0;
++	if (PRIV(dev)->vcc) {
++		atm_dev_put(dev);
++		return 0;
++	}
+ 	kfree(dev_data);
+ 	atm_dev_put(dev);
+ 	atm_dev_deregister(dev);
 -- 
 2.25.1
 
