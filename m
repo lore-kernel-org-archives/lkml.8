@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9696C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8795EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6C2722B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6603322B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087216;
-	bh=UvyLGOZAXxTrvvSw24b2SeCrhm6Zmcnzhh3c+8qLyNs=;
+	s=default; t=1597087218;
+	bh=WpV52KAFDM0xr311bUeYlAhrwM/hcvWw2VepPjQWodA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JCaH0MsA2o1XcUKLKJFVK4hMucnYMK39v4a3MAr/3ra2zxgNXzGCa7yl+29PXWoFs
-	 BfNJXEi7hkOBe4tLUV1rkKgIsUhi8PGszM6+Hf+yQpxA0tRZHCvxs/jYmWIOI03/Ct
-	 n+wTcg6A/4gE5c1WiSmrGpTQkzeCCPGZP3juxSIw=
+	b=rnHZ0Ln7O+eu5lI0B21uZS9Uq/EhgW1s92NXuSR4VhsDRpAQrJ7OML6fS+hpYRoll
+	 1ym4zpneymhCYFn2LfxdEU7/r9flLY1+WXIihbvXg3lYP/XDzcxgrLsQ/LfYhN66hv
+	 xKHnOuCjbwCnzZoPW2ZA700acDiq8gEYl4iymxKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbgHJTUP (ORCPT
+        id S1729912AbgHJTN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:20:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45670 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729917AbgHJTOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:00 -0400
+        id S1729858AbgHJTNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B008207FF;
-        Mon, 10 Aug 2020 19:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EFF02224D;
+        Mon, 10 Aug 2020 19:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086839;
-        bh=UvyLGOZAXxTrvvSw24b2SeCrhm6Zmcnzhh3c+8qLyNs=;
+        s=default; t=1597086828;
+        bh=WpV52KAFDM0xr311bUeYlAhrwM/hcvWw2VepPjQWodA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K9uYnChqkZa4jiS830cwaG3wFNI+i4vlEa4TvR5Fw4vSS/o/C2bwvhOZOE6EKK5sy
-         T1H/8BvMWvAnqPWq+eHtAdE8yFd3cklVc+87XvjYEHm5/cCDcF3yc9KYhmJYbDoG4g
-         xDYlLUFIlorClciYpb7z5o8AM3Hz/ztMKqspnNtE=
+        b=G8s9sivkTJypQYTZtJlZV2Wto+vc3VLNv6YHYaAS/knBXXRP4svKazj6iGegy7y83
+         w5e4kNna4OXDWs5evc4XbqcjuPWhaOOkZ9chuunEmO8IgaxCEtYf4INFQss9WQIYND
+         kjF6h7IoI1Va3uwWrn5m4dZSt7z6ATZSNIQdACfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 10/22] irqchip/irq-mtk-sysirq: Replace spinlock with raw_spinlock
-Date:   Mon, 10 Aug 2020 15:13:32 -0400
-Message-Id: <20200810191345.3795166-10-sashal@kernel.org>
+Cc:     Lihong Kou <koulihong@huawei.com>,
+        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/22] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
+Date:   Mon, 10 Aug 2020 15:13:24 -0400
+Message-Id: <20200810191345.3795166-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -60,95 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Lihong Kou <koulihong@huawei.com>
 
-[ Upstream commit 6eeb997ab5075e770a002c51351fa4ec2c6b5c39 ]
+[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
 
-This driver may take a regular spinlock when a raw spinlock
-(irq_desc->lock) is already taken which results in the following
-lockdep splat:
+In the case we set or free the global value listen_chan in
+different threads, we can encounter the UAF problems because
+the method is not protected by any lock, add one to avoid
+this bug.
 
-=============================
-[ BUG: Invalid wait context ]
-5.7.0-rc7 #1 Not tainted
------------------------------
-swapper/0/0 is trying to lock:
-ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
-other info that might help us debug this:
-context-{5:5}
-2 locks held by swapper/0/0:
- #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
- #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
-stack backtrace:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
-Hardware name: Pumpkin MT8516 (DT)
-Call trace:
- dump_backtrace+0x0/0x180
- show_stack+0x14/0x20
- dump_stack+0xd0/0x118
- __lock_acquire+0x8c8/0x2270
- lock_acquire+0xf8/0x470
- _raw_spin_lock_irqsave+0x50/0x78
- mtk_sysirq_set_type+0x48/0xc0
- __irq_set_trigger+0x58/0x170
- __setup_irq+0x420/0x8a0
- request_threaded_irq+0xd8/0x190
- timer_of_init+0x1e8/0x2c4
- mtk_gpt_init+0x5c/0x1dc
- timer_probe+0x74/0xf4
- time_init+0x14/0x44
- start_kernel+0x394/0x4f0
+BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
+net/bluetooth/l2cap_core.c:730
+Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
 
-Replace the spinlock_t with raw_spinlock_t to avoid this warning.
+CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+Workqueue: events do_enable_set
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
+ do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200615074445.3579-1-brgl@bgdev.pl
+Allocated by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
+ chan_create net/bluetooth/6lowpan.c:640 [inline]
+ bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
+ do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
+ do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888096950000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 0 bytes inside of
+ 2048-byte region [ffff888096950000, ffff888096950800)
+The buggy address belongs to the page:
+page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
+raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
+Signed-off-by: Lihong Kou <koulihong@huawei.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/bluetooth/6lowpan.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 90aaf190157f7..42455f31b0611 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -23,7 +23,7 @@
- #include <linux/spinlock.h>
+diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
+index 357475cceec61..9a75f9b00b512 100644
+--- a/net/bluetooth/6lowpan.c
++++ b/net/bluetooth/6lowpan.c
+@@ -57,6 +57,7 @@ static bool enable_6lowpan;
+ /* We are listening incoming connections via this channel
+  */
+ static struct l2cap_chan *listen_chan;
++static DEFINE_MUTEX(set_lock);
  
- struct mtk_sysirq_chip_data {
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	u32 nr_intpol_bases;
- 	void __iomem **intpol_bases;
- 	u32 *intpol_words;
-@@ -45,7 +45,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 	reg_index = chip_data->which_word[hwirq];
- 	offset = hwirq & 0x1f;
+ struct lowpan_peer {
+ 	struct list_head list;
+@@ -1082,12 +1083,14 @@ static void do_enable_set(struct work_struct *work)
  
--	spin_lock_irqsave(&chip_data->lock, flags);
-+	raw_spin_lock_irqsave(&chip_data->lock, flags);
- 	value = readl_relaxed(base + reg_index * 4);
- 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
- 		if (type == IRQ_TYPE_LEVEL_LOW)
-@@ -61,7 +61,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+ 	enable_6lowpan = set_enable->flag;
  
- 	data = data->parent_data;
- 	ret = data->chip->irq_set_type(data, type);
--	spin_unlock_irqrestore(&chip_data->lock, flags);
-+	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
- 	return ret;
- }
- 
-@@ -220,7 +220,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		ret = -ENOMEM;
- 		goto out_free_which_word;
++	mutex_lock(&set_lock);
+ 	if (listen_chan) {
+ 		l2cap_chan_close(listen_chan, 0);
+ 		l2cap_chan_put(listen_chan);
  	}
--	spin_lock_init(&chip_data->lock);
-+	raw_spin_lock_init(&chip_data->lock);
  
- 	return 0;
+ 	listen_chan = bt_6lowpan_listen();
++	mutex_unlock(&set_lock);
  
+ 	kfree(set_enable);
+ }
+@@ -1139,11 +1142,13 @@ static ssize_t lowpan_control_write(struct file *fp,
+ 		if (ret == -EINVAL)
+ 			return ret;
+ 
++		mutex_lock(&set_lock);
+ 		if (listen_chan) {
+ 			l2cap_chan_close(listen_chan, 0);
+ 			l2cap_chan_put(listen_chan);
+ 			listen_chan = NULL;
+ 		}
++		mutex_unlock(&set_lock);
+ 
+ 		if (conn) {
+ 			struct lowpan_peer *peer;
 -- 
 2.25.1
 
