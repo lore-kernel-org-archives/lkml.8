@@ -2,539 +2,762 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33618C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07891C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB5B20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597076193;
-	bh=plhHMhb/vm2/f/jCjI+HD198Jh7ryECadVDwMZiebRI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1GS0ZJhKdmZ7Ep8Gy/m4lA7SwHTNajdyw3u4mUURzgZk4Jc9qMb3UCrXcE6h7w3af
-	 TJVhrWsigQOLW16FGZQyc6P6tdGWtJockQZS2XJsb1Os/6LluIxfoIM9gSY6KJFhxy
-	 aiQhCEl99B7h/p+6h0h/9v5qL1DjfJlDJmiQGsaQ=
+	by mail.kernel.org (Postfix) with ESMTP id D4E5D20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgHJQQb (ORCPT
+        id S1727838AbgHJQTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:16:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45902 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 12:19:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:42177 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgHJQQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:16:31 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57FCE20829;
-        Mon, 10 Aug 2020 16:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597076190;
-        bh=plhHMhb/vm2/f/jCjI+HD198Jh7ryECadVDwMZiebRI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xxhyRGZEAW2zBystBykjgNjO5m8Ev0laNQ6KwEN79uFOLRjE3GCwPhUnWPUjvR00q
-         z1hwy6WlzeSZa09wcFof3SH2RWkX+jJas1pR3XsAt/kytw/yd1o60XXHVGj5+bCyGS
-         VKD4/g749TjFoEClxIThJrcy+SUcbGdIFSAhEcVY=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Ian Rogers <irogers@google.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        John Garry <john.garry@huawei.com>,
-        Julia Cartwright <julia@ni.com>,
-        Kajol Jain <kjain@linux.ibm.com>, Leo Yan <leo.yan@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Steve MacLean <Steve.MacLean@Microsoft.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Wei Li <liwei391@huawei.com>
-Subject: [GIT PULL] perf tools changes for v5.9
-Date:   Mon, 10 Aug 2020 13:16:18 -0300
-Message-Id: <20200810161618.5768-1-acme@kernel.org>
-X-Mailer: git-send-email 2.26.2
-c:      kernel test robot <rong.a.chen@intel.com>
+        id S1725894AbgHJQTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 12:19:15 -0400
+IronPort-SDR: gy843PfiNhCXaAaOupclnZo7w2QVhKiTwPn6+SC9CoBQqFCJ+R+dHKt8aypMdrpnxoV8gTorI4
+ rOhsaUeKlu5Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="215081002"
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="215081002"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 09:19:14 -0700
+IronPort-SDR: QyRBGjd+9jjf/jJn6SApcxtkXLdp85SLG50DH89lODJM4RmtSQd2aYmv6uHd9pU06hvhRM/PLF
+ 95K6KQicNUMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="469097505"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 09:19:11 -0700
+Date:   Tue, 11 Aug 2020 00:15:36 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH v4 4/4] fpga: dfl: add support for N3000 Nios private
+  feature
+Message-ID: <20200810161536.GC5813@yilunxu-OptiPlex-7050>
+References: <1597027273-25288-1-git-send-email-yilun.xu@intel.com>
+ <1597027273-25288-5-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819E95FA24F088EE44DD31B85440@DM6PR11MB3819.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB3819E95FA24F088EE44DD31B85440@DM6PR11MB3819.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-	Please consider pulling,
-
-Best regards,
-
-- Arnaldo
-
-The following changes since commit 47ec5303d73ea344e84f46660fff693c57641386:
-
-  Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next (2020-08-05 20:13:21 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-2020-08-10
-
-for you to fetch changes up to 1101c872c8c7869c78dc106ae820040f36807eda:
-
-  perf record: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set (2020-08-07 09:27:03 -0300)
-
-----------------------------------------------------------------
-perf tools changes for v5.9
-
-New features:
-
-- Introduce controlling how 'perf stat' and 'perf record' works via a
-  control file descriptor, allowing starting with events configured but
-  disabled until commands are received via the control file descriptor.
-  This allows, for instance for tools such as Intel VTune to make further
-  use of perf as its Linux platform driver.
-
-- Improve 'perf record' to to register in a perf.data file header the clockid
-  used to help later correlate things like syslog files and perf events
-  recorded.
-
-- Add basic syscall and find_next_bit benchmarks to 'perf bench'.
-
-- Allow using computed metrics in calculating other metrics. For instance:
-
-  {
-    .metric_expr    = "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
-    .metric_name    = "DCache_L2_All_Hits",
-  },
-  {
-    .metric_expr    = "max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss",
-    .metric_name    = "DCache_L2_All_Miss",
-  },
-  {
-     .metric_expr    = "dcache_l2_all_hits + dcache_l2_all_miss",
-     .metric_name    = "DCache_L2_All",
-  }
-
-- Add suport for 'd_ratio', '>' and '<' operators to the expression resolver used
-  in calculating metrics in 'perf stat'.
-
-Support for new kernel features:
-
-- Support TEXT_POKE and KSYMBOL_TYPE_OOL perf metadata events to cope with
-  things like ftrace, trampolines, i.e. changes in the kernel text that gets
-  in the way of properly decoding Intel PT hardware traces, for instance.
-
-Intel PT:
-
-- Add various knobs to reduce the volume of Intel PT traces by reducing the
-  level of details such as decoding just some types of packets (e.g., FUP/TIP,
-  PSB+), also filtering by time range.
-
-- Add new itrace options (log flags to the 'd' option, error flags to the 'e'
-  one, etc), controlling how Intel PT is transformed into perf events, document
-  some missing options (e.g., how to synthesize callchains).
-
-BPF:
-
-- Properly report BPF errors when parsing events.
-
-- Do not setup side-band events if LIBBPF is not linked, fixing a segfault.
-
-Libraries:
-
-- Improvements on the libtraceevent plugin mechanism.
-
-- Improve libtracevent support for KVM trace events SVM exit reasons.
-
-- Add a libtracevent plugins for decoding syscalls/sys_enter_futex and for tlb_flush.
-
-- Ensure sample_period is set libpfm4 events in 'perf test'.
-
-- Fixup libperf namespacing, to make sure what is in libperf has the perf_
-  namespace while what is now only in tools/perf/ doesn't use that prefix.
-
-Arch specific:
-
-- Improve the testing of vendor events and metrics in 'perf test'.
-
-- Allow no ARM CoreSight hardware tracer sink to be specified on command line.
-
-- Fix arm_spe_x recording when mixed with other perf events.
-
-- Add s390 idle functions 'psw_idle' and 'psw_idle_exit' to list of idle symbols.
-
-- List kernel supplied event aliases for arm64 in 'perf list'.
-
-- Add support for extended register capability in PowerPC 9 and 10.
-
-- Added nest IMC power9 metric events.
-
-Miscellaneous:
-
-- No need to setup sample_regs_intr/sample_regs_user for dummy events.
-
-- Update various copies of kernel headers, some causing perf to handle new
-  syscalls, MSRs, etc.
-
-- Improve usage of flex and yacc, enabling warnings and addressing the fallout.
-
-- Add missing '--output' option to 'perf kmem' so that it can pass it along to 'perf record'.
-
-- 'perf probe' fixes related to adding multiple probes on the same address for
-  the same event.
-
-- Make 'perf probe' warn if the target function is a GNU indirect function.
-
-- Remove //anon mmap events from 'perf inject jit' to fix supporting both using
-  ELF files for generated functions and the perf-PID.map approaches.
-
-Adrian Hunter (17):
-      perf tools: Add support for PERF_RECORD_TEXT_POKE
-      perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
-      perf intel-pt: Add support for text poke events
-      perf script: Add option --show-text-poke-events
-      perf script: Show text poke address symbol
-      perf intel-pt: Fix FUP packet state
-      perf intel-pt: Fix duplicate branch after CBR
-      perf tools: Improve aux_output not supported error
-      perf auxtrace: Add missing itrace options to help text
-      perf auxtrace: Add optional error flags to the itrace 'e' option
-      perf intel-pt: Use itrace error flags to suppress some errors
-      perf auxtrace: Add optional log flags to the itrace 'd' option
-      perf intel-pt: Use itrace debug log flags to suppress some messages
-      perf intel-pt: Time filter logged perf events
-      perf auxtrace: Add itrace 'q' option for quicker, less detailed decoding
-      perf intel-pt: Add support for decoding FUP/TIP only
-      perf intel-pt: Add support for decoding PSB+ only
-
-Alexey Budankov (16):
-      libperf: Avoid internal moving of fdarray fds
-      libperf: Add flags to fdarray fds objects
-      libperf: Avoid counting of nonfilterable fdarray fds
-      perf evlist: Introduce control file descriptors
-      perf evlist: Implement control command handling functions
-      perf stat: Factor out body of event handling loop for system wide
-      perf stat: Move target check to loop control statement
-      perf stat: Factor out body of event handling loop for fork case
-      perf stat: Factor out event handling loop into dispatch_events()
-      perf stat: extend -D,--delay option with -1 value
-      perf stat: Implement control commands handling
-      perf stat: Introduce --control fd:ctl-fd[,ack-fd] options
-      perf record: Extend -D,--delay option with -1 value
-      perf record: Implement control commands handling
-      perf record: Introduce --control fd:ctl-fd[,ack-fd] options
-      perf evsel: Extend message to mention CAP_SYS_PTRACE and perf security doc link
-
-Anju T Sudhakar (1):
-      perf tools powerpc: Add support for extended register capability
-
-Arnaldo Carvalho de Melo (17):
-      perf parse: Provide a way to pass a fake_pmu to parse_events()
-      perf pmu: Add a perf_pmu__fake object to use with __parse_events()
-      perf script: Fixup some evsel/evlist method names
-      perf evlist: Fix the class prefix for 'struct evlist' 'add' evsel methods
-      perf evlist: Fix the class prefix for 'struct evlist' strerror methods
-      perf evlist: Fix the class prefix for 'struct evlist' sample_type methods
-      perf evlist: Fix the class prefix for 'struct evlist' sample_id_all methods
-      perf evlist: Fix the class prefix for 'struct evlist' branch_type methods
-      perf expr: Add missing headers noticed when building with NO_LIBBPF=1
-      Merge remote-tracking branch 'torvalds/master' into perf/core
-      Merge remote-tracking branch 'torvalds/master' into perf/core
-      Mgerge remote-tracking branch 'torvalds/master' into perf/core
-      tools headers API: Update close_range affected files
-      tools headers UAPI: update linux/in.h copy
-      tools arch x86: Sync the msr-index.h copy with the kernel sources
-      tools arch x86: Sync asm/cpufeatures.h with the kernel sources
-      tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
-
-Athira Rajeev (1):
-      perf tools powerpc: Add support for extended regs in power10
-
-Davidlohr Bueso (1):
-      perf bench: Add basic syscall benchmark
-
-Ian Rogers (14):
-      perf expr: Add d_ratio operation
-      perf expr: Add < and > operators
-      perf parse-events: Use automatic variable for flex input
-      perf parse-events: Use automatic variable for yacc input
-      perf pmu: Add bison debug build flag
-      perf pmu: Add flex debug build flag
-      perf parse-events: Declare flex header file output
-      perf parse-events: Declare bison header file output
-      perf parse-events: Disable a subset of flex warnings
-      perf parse-events: Disable a subset of bison warnings
-      perf parse-events: Report BPF errors
-      perf kmem: Pass additional arguments to 'perf record'
-      perf test: Ensure sample_period is set libpfm4 events
-      perf bench: Add benchmark of find_next_bit
-
-Jan Kiszka (2):
-      tools lib traceevent: Add more SVM exit reasons
-      tools lib traceevent: Fix reporting of unknown SVM exit reasons
-
-Jason Yan (1):
-      perf annotate: Remove unneeded conversion to bool
-
-Jin Yao (2):
-      perf evsel: Don't set sample_regs_intr/sample_regs_user for dummy event
-      perf record: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
-
-Jiri Olsa (42):
-      perf tools: Add fake pmu support
-      perf tests: Factor check_parse_id function
-      perf tests: Add another metric parsing test
-      perf parse: Factor out parse_groups() function
-      perf tools: Add fake_pmu to parse_group() function
-      perf tools: Add map to parse_groups() function
-      perf tools: Add metricgroup__parse_groups_test function
-      perf tools: Factor out prepare_metric function
-      perf tools: Release metric_events rblist
-      perf tools: Add test_generic_metric function
-      perf tests: Add parse metric test for ipc metric
-      perf tests: Add parse metric test for frontend metric
-      perf metric: Rename expr__add_id() to expr__add_val()
-      perf metric: Add 'struct expr_id_data' to keep expr value
-      perf tools: Allow r0x<HEX> event syntax
-      perf tools: Fix term parsing for raw syntax
-      perf metric: Fix memory leak in expr__add_id function
-      perf metric: Add expr__add_id function
-      perf metric: Change expr__get_id to return struct expr_id_data
-      perf metric: Add expr__del_id function
-      perf metric: Add macros for iterating map events
-      perf metric: Add add_metric function
-      perf metric: Rename __metricgroup__add_metric to __add_metric
-      perf metric: Collect referenced metrics in struct metric_ref_node
-      perf metric: Collect referenced metrics in struct metric_expr
-      perf metric: Add referenced metrics to hash data
-      perf metric: Compute referenced metrics
-      perf metric: Add events for the current list
-      perf metric: Add cache_miss_cycles to metric parse test
-      perf metric: Add DCache_L2 to metric parse test
-      perf metric: Add recursion check when processing nested metrics
-      perf metric: Make compute_single function more precise
-      perf metric: Add metric group test
-      perf metric: Rename struct egroup to metric
-      perf metric: Rename group_list to metric_list
-      perf clockid: Move parse_clockid() to new clockid object
-      perf tools: Add clockid_name function
-      perf header: Store clock references for -k/--clockid option
-      perf tools: Move clockid_res_ns under clock struct
-      perf data: Add support to store time of day in CTF data conversion
-      perf script: Change the 'enum perf_output_field' enumerators to be 64 bits
-      perf script: Add 'tod' field to display time of day
-
-John Garry (2):
-      perf pmu: List kernel supplied event aliases for arm64
-      perf pmu: Improve CPU core PMU HW event list ordering
-
-Julia Cartwright (1):
-      tools lib traceevent: Add plugin for decoding syscalls/sys_enter_futex
-
-Kajol Jain (1):
-      perf vendor events power9: Added nest imc metric events
-
-Masami Hiramatsu (4):
-      perf probe: Avoid setting probes on the same address for the same event
-      perf probe: Fix wrong variable warning when the probe point is not found
-      perf probe: Fix memory leakage when the probe point is not found
-      perf probe: Warn if the target function is a GNU indirect function
-
-Mike Leach (1):
-      perf cs-etm: Allow no CoreSight sink to be specified on command line
-
-Numfor Mbiziwo-Tiapo (1):
-      perf annotate: Fix non-null terminated buffer returned by readlink()
-
-Steve MacLean (1):
-      perf inject jit: Remove //anon mmap events
-
-Steven Rostedt (Red Hat) (1):
-      tools lib traceevent: Add plugin for tlb_flush
-
-Steven Rostedt (VMware) (3):
-      tools lib traceevent: Add offset option for function plugin
-      tools lib traceevent: Add builtin handler for trace_marker_raw
-      tools lib traceevent: Change to SPDX License format
-
-Sven Schnelle (1):
-      perf symbols: Add s390 idle functions 'psw_idle' and 'psw_idle_exit' to list of idle symbols
-
-Thomas Hebb (1):
-      tools build feature: Use CC and CXX from parent
-
-Tzvetomir Stoyanov (VMware) (14):
-      tools lib traceevent: Add tep_load_plugins_hook() API
-      tools lib traceevent: Add interface for options to plugins
-      tools lib traceevent: Introduced new traceevent API, for adding new plugins directories.
-      tools lib traceevent: Add support for more printk format specifiers
-      tools lib traceevent: Optimize pretty_print() function
-      tools lib traceevent: Move kernel_stack event handler to "function" plugin.
-      libtraceevent: Document tep_load_plugins_hook()
-      libtraceevent: Handle strdup() error in parse_option_name()
-      libtraceevent: Fix typo in tep_plugin_add_option() description
-      libtraceevent: Improve error handling of tep_plugin_add_option() API
-      libtraceevent: Fixed broken indentation in parse_ip4_print_args()
-      libtraceevent: Fixed type in PRINT_FMT_STING
-      libtraceevent: Fixed description of tep_add_plugin_path() API
-      tools lib traceevent: Handle possible strdup() error in tep_add_plugin_path() API
-
-Wei Li (2):
-      perf tools: Fix record failure when mixed with ARM SPE event
-      perf tools: No need to cache the PMUs in ARM SPE auxtrace init routine
-
- tools/arch/powerpc/include/uapi/asm/perf_regs.h    |   20 +-
- tools/arch/x86/include/asm/cpufeatures.h           |    4 +
- tools/arch/x86/include/asm/msr-index.h             |   26 +-
- tools/build/Makefile.feature                       |    2 +-
- tools/build/feature/Makefile                       |    2 -
- tools/include/uapi/asm-generic/unistd.h            |    2 +
- tools/include/uapi/drm/i915_drm.h                  |    4 +-
- tools/include/uapi/linux/in.h                      |    1 +
- tools/include/uapi/linux/perf_event.h              |   26 +-
- tools/lib/api/fd/array.c                           |   23 +-
- tools/lib/api/fd/array.h                           |   16 +-
- tools/lib/perf/evlist.c                            |    6 +-
- tools/lib/perf/include/internal/evlist.h           |    2 +-
- tools/lib/perf/include/perf/event.h                |    9 +
- .../Documentation/libtraceevent-plugins.txt        |   25 +-
- tools/lib/traceevent/event-parse-local.h           |   22 +-
- tools/lib/traceevent/event-parse.c                 | 1004 +++++++++++++++-----
- tools/lib/traceevent/event-parse.h                 |   34 +-
- tools/lib/traceevent/event-plugin.c                |  285 +++++-
- tools/lib/traceevent/kbuffer.h                     |   17 +-
- tools/lib/traceevent/plugins/Build                 |    2 +
- tools/lib/traceevent/plugins/Makefile              |    2 +
- tools/lib/traceevent/plugins/plugin_function.c     |  123 ++-
- tools/lib/traceevent/plugins/plugin_futex.c        |  123 +++
- tools/lib/traceevent/plugins/plugin_hrtimer.c      |   17 +-
- tools/lib/traceevent/plugins/plugin_jbd2.c         |   17 +-
- tools/lib/traceevent/plugins/plugin_kmem.c         |   17 +-
- tools/lib/traceevent/plugins/plugin_kvm.c          |   42 +-
- tools/lib/traceevent/plugins/plugin_mac80211.c     |   17 +-
- tools/lib/traceevent/plugins/plugin_sched_switch.c |   17 +-
- tools/lib/traceevent/plugins/plugin_tlb.c          |   66 ++
- tools/perf/Documentation/itrace.txt                |   14 +
- tools/perf/Documentation/perf-bench.txt            |   11 +
- tools/perf/Documentation/perf-data.txt             |    3 +
- tools/perf/Documentation/perf-intel-pt.txt         |   63 +-
- tools/perf/Documentation/perf-list.txt             |    1 +
- tools/perf/Documentation/perf-record.txt           |   44 +-
- tools/perf/Documentation/perf-script.txt           |    4 +
- tools/perf/Documentation/perf-stat.txt             |   44 +-
- tools/perf/Documentation/perf.data-file-format.txt |   13 +
- tools/perf/arch/arm/util/auxtrace.c                |    9 +-
- tools/perf/arch/arm/util/cs-etm.c                  |    6 +-
- tools/perf/arch/powerpc/include/perf_regs.h        |    8 +-
- tools/perf/arch/powerpc/util/header.c              |    9 +-
- tools/perf/arch/powerpc/util/perf_regs.c           |   55 ++
- tools/perf/arch/powerpc/util/utils_header.h        |   15 +
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |    1 +
- tools/perf/arch/x86/util/intel-pt.c                |    4 +
- tools/perf/bench/Build                             |    2 +
- tools/perf/bench/bench.h                           |    2 +
- tools/perf/bench/find-bit-bench.c                  |  135 +++
- tools/perf/bench/syscall.c                         |   81 ++
- tools/perf/builtin-bench.c                         |    9 +
- tools/perf/builtin-c2c.c                           |    2 +-
- tools/perf/builtin-data.c                          |    1 +
- tools/perf/builtin-inject.c                        |    4 +-
- tools/perf/builtin-kmem.c                          |    3 +-
- tools/perf/builtin-kvm.c                           |    2 +-
- tools/perf/builtin-record.c                        |  265 +++---
- tools/perf/builtin-report.c                        |    9 +-
- tools/perf/builtin-script.c                        |  233 +++--
- tools/perf/builtin-stat.c                          |  200 +++-
- tools/perf/builtin-top.c                           |    2 +-
- tools/perf/builtin-trace.c                         |    9 +-
- .../arch/powerpc/power9/nest_metrics.json          |   35 +
- tools/perf/tests/Build                             |    1 +
- tools/perf/tests/attr/README                       |    1 +
- tools/perf/tests/attr/test-record-pfm-period       |    9 +
- tools/perf/tests/builtin-test.c                    |    4 +
- tools/perf/tests/code-reading.c                    |    2 +-
- tools/perf/tests/expr.c                            |   15 +-
- tools/perf/tests/fdarray.c                         |   22 +-
- tools/perf/tests/parse-events.c                    |   42 +-
- tools/perf/tests/parse-metric.c                    |  352 +++++++
- tools/perf/tests/perf-record.c                     |    4 +-
- tools/perf/tests/pmu-events.c                      |  133 ++-
- tools/perf/tests/tests.h                           |    1 +
- tools/perf/ui/browsers/annotate.c                  |    2 +-
- tools/perf/util/Build                              |   63 +-
- tools/perf/util/annotate.c                         |   15 +-
- tools/perf/util/auxtrace.c                         |   50 +
- tools/perf/util/auxtrace.h                         |   31 +-
- tools/perf/util/clockid.c                          |  119 +++
- tools/perf/util/clockid.h                          |   11 +
- tools/perf/util/data-convert-bt.c                  |   57 +-
- tools/perf/util/data-convert.h                     |    1 +
- tools/perf/util/dso.c                              |    3 +
- tools/perf/util/dso.h                              |    1 +
- tools/perf/util/env.h                              |   14 +-
- tools/perf/util/event.c                            |   60 +-
- tools/perf/util/event.h                            |    7 +-
- tools/perf/util/evlist.c                           |  183 +++-
- tools/perf/util/evlist.h                           |   59 +-
- tools/perf/util/evsel.c                            |   23 +-
- tools/perf/util/expr.c                             |  156 ++-
- tools/perf/util/expr.h                             |   34 +-
- tools/perf/util/expr.l                             |    3 +
- tools/perf/util/expr.y                             |   33 +-
- tools/perf/util/header.c                           |  121 ++-
- tools/perf/util/header.h                           |    1 +
- .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  214 ++++-
- .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |    1 +
- tools/perf/util/intel-pt.c                         |  122 ++-
- tools/perf/util/jitdump.c                          |   31 +-
- tools/perf/util/machine.c                          |   49 +
- tools/perf/util/machine.h                          |    3 +
- tools/perf/util/map.c                              |    5 +
- tools/perf/util/map.h                              |    3 +-
- tools/perf/util/metricgroup.c                      |  549 +++++++++--
- tools/perf/util/metricgroup.h                      |   16 +
- tools/perf/util/parse-events.c                     |   87 +-
- tools/perf/util/parse-events.h                     |   16 +-
- tools/perf/util/parse-events.l                     |   28 +-
- tools/perf/util/parse-events.y                     |   41 +-
- tools/perf/util/perf_api_probe.c                   |   10 +
- tools/perf/util/perf_api_probe.h                   |    1 +
- tools/perf/util/perf_event_attr_fprintf.c          |    1 +
- tools/perf/util/pmu.c                              |   11 +-
- tools/perf/util/pmu.h                              |    2 +
- tools/perf/util/probe-event.c                      |   18 +-
- tools/perf/util/probe-finder.c                     |    5 +-
- tools/perf/util/record.h                           |    5 +-
- tools/perf/util/session.c                          |   39 +-
- tools/perf/util/stat-shadow.c                      |   81 +-
- tools/perf/util/stat.h                             |    7 +-
- tools/perf/util/symbol.c                           |    3 +
- tools/perf/util/tool.h                             |    3 +-
- 127 files changed, 5164 insertions(+), 1091 deletions(-)
- create mode 100644 tools/lib/traceevent/plugins/plugin_futex.c
- create mode 100644 tools/lib/traceevent/plugins/plugin_tlb.c
- create mode 100644 tools/perf/arch/powerpc/util/utils_header.h
- create mode 100644 tools/perf/bench/find-bit-bench.c
- create mode 100644 tools/perf/bench/syscall.c
- create mode 100644 tools/perf/tests/attr/test-record-pfm-period
- create mode 100644 tools/perf/tests/parse-metric.c
- create mode 100644 tools/perf/util/clockid.c
- create mode 100644 tools/perf/util/clockid.h
+On Mon, Aug 10, 2020 at 03:00:08PM +0800, Wu, Hao wrote:
+> > Subject: [PATCH v4 4/4] fpga: dfl: add support for N3000 Nios private feature
+> >
+> > This patch adds support for the Nios handshake private feature on Intel
+> > N3000 FPGA Card.
+> >
+> > The terminology "Nios" stands for the NIOS II - 32 bit embedded soft
+> > processor designed for FPGAs. This private feature provides a handshake
+> > interface to FPGA Nois firmware, which receives retimer configuration
+> > command from host and executes via an internal SPI master. When Nios
+> > finishes the configuration, host takes over the ownership of the SPI
+> > master to control an Intel MAX10 BMC Chip on the SPI bus.
+> >
+> > For Nios firmware handshake part, this driver requests the retimer
+> > configuration for Nios with parameters from module param, and adds some
+> > sysfs nodes for user to query Nios state.
+> >
+> > For SPI part, this driver adds a spi-altera platform device as well as
+> > the MAX10 BMC spi slave info. A spi-altera driver will be matched to
+> > handle following the SPI work.
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > Reviewed-by: Tom Rix <trix@redhat.com>
+> > ---
+> > v3: Add the doc for this driver
+> >     Minor fixes for comments from Tom
+> > v4: Move the err log in regmap implementation, and delete
+> >      n3000_nios_writel/readl(), they have nothing to wrapper now.
+> >     Some minor fixes and comments improvement.
+> > ---
+> >  .../ABI/testing/sysfs-bus-dfl-devices-n3000-nios   |  18 +
+> >  Documentation/fpga/dfl-n3000-nios.rst              |  41 ++
+> >  Documentation/fpga/index.rst                       |   1 +
+> >  drivers/fpga/Kconfig                               |  12 +
+> >  drivers/fpga/Makefile                              |   2 +
+> >  drivers/fpga/dfl-n3000-nios.c                      | 475 +++++++++++++++++++++
+> >  6 files changed, 549 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-
+> > n3000-nios
+> >  create mode 100644 Documentation/fpga/dfl-n3000-nios.rst
+> >  create mode 100644 drivers/fpga/dfl-n3000-nios.c
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+> > b/Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+> > new file mode 100644
+> > index 0000000..4b2b9c5
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+> > @@ -0,0 +1,18 @@
+> > +What:/sys/bus/dfl/devices/dfl_dev.X/fec_mode
+> > +Date:July 2020
+> > +KernelVersion:5.10
+> > +Contact:Xu Yilun <yilun.xu@intel.com>
+> > +Description:Read-only. It returns the FEC mode of the ethernet retimer
+> > +configured by NIOS firmware. "rs" for RS FEC mode, "kr" for
+> > +KR FEC mode, "no" FOR NO FEC mode. The FEC mode could
+> > be set
+> > +by module parameters, but it could only be set once after the
+> > +board powers up.
+> > +Format: string
+> > +
+> > +What:/sys/bus/dfl/devices/dfl_dev.X/nios_fw_version
+> > +Date:July 2020
+> > +KernelVersion:5.10
+> > +Contact:Xu Yilun <yilun.xu@intel.com>
+> > +Description:Read-only. It returns the NIOS firmware version in FPGA. Its
+> > +format is "major.minor.patch".
+> > +Format: %x.%x.%x
+> > diff --git a/Documentation/fpga/dfl-n3000-nios.rst
+> > b/Documentation/fpga/dfl-n3000-nios.rst
+> > new file mode 100644
+> > index 0000000..ecc14e3
+> > --- /dev/null
+> > +++ b/Documentation/fpga/dfl-n3000-nios.rst
+> > @@ -0,0 +1,41 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=====================================
+> > +DFL N3000 Nios Private Feature Driver
+> > +=====================================
+> > +
+> > +The dfl N3000 Nios driver supports for the Nios handshake private feature
+> > on
+> > +Intel N3000 FPGA Card.
+> > +
+> > +The terminology "Nios" stands for the NIOS II - 32 bit embedded soft
+> > processor
+> > +designed for FPGAs. This private feature provides a handshake interface to
+> > FPGA
+> > +Nios firmware, which receives the ethernet retimer configuration command
+> > from
+> > +host and does the configuration via an internal SPI master. When Nios
+> > finishes
+> > +the configuration, host takes over the ownership of the SPI master to
+> > control
+> > +an Intel MAX10 BMC Chip on the SPI bus.
+> > +
+> > +So the driver does 2 major tasks on probe, uses the Nios firmware to
+> > configure
+> > +the ethernet retimer, and then creates a spi master platform device with
+> > the
+> > +MAX10 device info in spi_board_info.
+> > +
+> > +Module Parameters
+> > +=================
+> > +
+> > +The dfl N3000 Nios driver supports the following module parameters:
+> > +
+> > +* fec_mode: string
+> > +  Require the Nios firmware to set the FEC (Forward Error Correction) mode
+> > of
+> > +  the ethernet retimer on the PAC N3000 FPGA card. The possible values
+> > could
+> > +  be:
+> > +
+> > +  - "rs": Reed Solomon FEC (default)
+> > +  - "kr": Fire Code FEC
+> > +  - "no": No FEC
+> > +
+> > +  The configuration can only be set once after the board powers up, the
+> > +  firmware will not accept second configuration afterward. So the fec mode
+> > +  will not be changed if the module is reloaded with a different param value.
+> > +
+> > +  The configured value of the fec mode could be queried from sysfs node:
+> > +
+> > +  /sys/bus/dfl/devices/dfl_dev.X/fec_mode
+> > diff --git a/Documentation/fpga/index.rst b/Documentation/fpga/index.rst
+> > index f80f956..5fd3c37 100644
+> > --- a/Documentation/fpga/index.rst
+> > +++ b/Documentation/fpga/index.rst
+> > @@ -8,6 +8,7 @@ fpga
+> >      :maxdepth: 1
+> >
+> >      dfl
+> > +    dfl-n3000-nios
+> >
+> >  .. only::  subproject and html
+> >
+> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> > index 7cd5a29..f820142 100644
+> > --- a/drivers/fpga/Kconfig
+> > +++ b/drivers/fpga/Kconfig
+> > @@ -191,6 +191,18 @@ config FPGA_DFL_AFU
+> >    to the FPGA infrastructure via a Port. There may be more than one
+> >    Port/AFU per DFL based FPGA device.
+> >
+> > +config FPGA_DFL_N3000_NIOS
+> > +        tristate "FPGA DFL N3000 NIOS Driver"
+> > +        depends on FPGA_DFL
+> > +        select REGMAP
+> > +        help
+> > +  This is the driver for the nios handshake private feature on Intel
+> > +  N3000 FPGA Card. This private feature provides a handshake
+> > interface
+> > +  to FPGA NIOS firmware, which receives retimer configuration
+> > command
+> > +  from host and executes via an internal SPI master. When nios
+> > finished
+> > +  the configuration, host takes over the ownership of the SPI master
+> > to
+> > +  control an Intel MAX10 BMC Chip on the SPI bus.
+> > +
+> >  config FPGA_DFL_PCI
+> >  tristate "FPGA DFL PCIe Device Driver"
+> >  depends on PCI && FPGA_DFL
+> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> > index d8e21df..27f20f2 100644
+> > --- a/drivers/fpga/Makefile
+> > +++ b/drivers/fpga/Makefile
+> > @@ -44,5 +44,7 @@ dfl-fme-objs += dfl-fme-perf.o
+> >  dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
+> >  dfl-afu-objs += dfl-afu-error.o
+> >
+> > +obj-$(CONFIG_FPGA_DFL_N3000_NIOS)      += dfl-n3000-nios.o
+> > +
+> >  # Drivers for FPGAs which implement DFL
+> >  obj-$(CONFIG_FPGA_DFL_PCI)+= dfl-pci.o
+> > diff --git a/drivers/fpga/dfl-n3000-nios.c b/drivers/fpga/dfl-n3000-nios.c
+> > new file mode 100644
+> > index 0000000..b3093a2
+> > --- /dev/null
+> > +++ b/drivers/fpga/dfl-n3000-nios.c
+> > @@ -0,0 +1,475 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * DFL device driver for Nios private feature on Intel PAC N3000
+> > + *
+> > + * Copyright (C) 2019-2020 Intel Corporation, Inc.
+> > + *
+> > + * Authors:
+> > + *   Wu Hao <hao.wu@intel.com>
+> > + *   Xu Yilun <yilun.xu@intel.com>
+> > + */
+> > +#include <linux/bitfield.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/io.h>
+> > +#include <linux/io-64-nonatomic-lo-hi.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/stddef.h>
+> > +#include <linux/spi/altera.h>
+> > +#include <linux/spi/spi.h>
+> > +#include <linux/types.h>
+> > +
+> > +#include "dfl.h"
+> > +
+> > +static char *fec_mode = "rs";
+> > +module_param(fec_mode, charp, 0444);
+> > +MODULE_PARM_DESC(fec_mode, "FEC mode of the ethernet retimer on
+> > PAC N3000 FPGA card");
+> 
+> Intel PAC..
+
+Yes.
+
+> > +
+> > +/* N3000 Nios private feature registers */
+> > +#define NIOS_SPI_PARAM0x8
+> > +#define PARAM_SHIFT_MODE_MSKBIT_ULL(1)
+> > +#define PARAM_SHIFT_MODE_MSB0
+> > +#define PARAM_SHIFT_MODE_LSB1
+> > +#define PARAM_DATA_WIDTHGENMASK_ULL(7, 2)
+> > +#define PARAM_NUM_CSGENMASK_ULL(13, 8)
+> > +#define PARAM_CLK_POLBIT_ULL(14)
+> > +#define PARAM_CLK_PHASEBIT_ULL(15)
+> > +#define PARAM_PERIPHERAL_IDGENMASK_ULL(47, 32)
+> > +
+> > +#define NIOS_SPI_CTRL0x10
+> > +#define CTRL_WR_DATAGENMASK_ULL(31, 0)
+> > +#define CTRL_ADDRGENMASK_ULL(44, 32)
+> > +#define CTRL_CMD_MSKGENMASK_ULL(63, 62)
+> > +#define CTRL_CMD_NOP0
+> > +#define CTRL_CMD_RD1
+> > +#define CTRL_CMD_WR2
+> > +
+> > +#define NIOS_SPI_STAT0x18
+> > +#define STAT_RD_DATAGENMASK_ULL(31, 0)
+> > +#define STAT_RW_VALBIT_ULL(32)
+> > +
+> > +/* Nios handshake registers, indirect access */
+> > +#define NIOS_INIT0x1000
+> > +#define NIOS_INIT_DONEBIT(0)
+> > +#define NIOS_INIT_STARTBIT(1)
+> > +/* Mode for PKVL A, link 0, the same below */
+> > +#define REQ_FEC_MODE_A0_MSKGENMASK(9, 8)
+> > +#define REQ_FEC_MODE_A1_MSKGENMASK(11, 10)
+> > +#define REQ_FEC_MODE_A2_MSKGENMASK(13, 12)
+> > +#define REQ_FEC_MODE_A3_MSKGENMASK(15, 14)
+> > +#define REQ_FEC_MODE_B0_MSKGENMASK(17, 16)
+> > +#define REQ_FEC_MODE_B1_MSKGENMASK(19, 18)
+> > +#define REQ_FEC_MODE_B2_MSKGENMASK(21, 20)
+> > +#define REQ_FEC_MODE_B3_MSKGENMASK(23, 22)
+> > +#define REQ_FEC_MODE_NO0x0
+> > +#define REQ_FEC_MODE_KR0x1
+> > +#define REQ_FEC_MODE_RS0x2
+> > +
+> > +#define NIOS_FW_VERSION0x1004
+> > +#define NIOS_FW_VERSION_PATCHGENMASK(23, 20)
+> > +#define NIOS_FW_VERSION_MINORGENMASK(27, 24)
+> > +#define NIOS_FW_VERSION_MAJORGENMASK(31, 28)
+> > +
+> > +#define PKVL_A_MODE_STS0x1020
+> > +#define PKVL_B_MODE_STS0x1024
+> > +#define PKVL_MODE_STS_GROUP_MSKGENMASK(15, 8)
+> > +#define PKVL_MODE_STS_GROUP_OK0x0
+> > +#define PKVL_MODE_STS_ID_MSKGENMASK(7, 0)
+> > +
+> > +#define NS_REGBUS_WAIT_TIMEOUT10000/* loop count */
+> > +#define NIOS_INIT_TIMEOUT10000000/* usec */
+> > +#define NIOS_INIT_TIME_INTV100000/* usec */
+> > +
+> > +struct dfl_n3000_nios {
+> > +void __iomem *base;
+> > +struct regmap *regmap;
+> > +struct device *dev;
+> > +struct platform_device *altera_spi;
+> > +};
+> > +
+> > +static ssize_t nios_fw_version_show(struct device *dev,
+> > +    struct device_attribute *attr, char *buf)
+> > +{
+> > +struct dfl_n3000_nios *ns = dev_get_drvdata(dev);
+> > +unsigned int val;
+> > +int ret;
+> > +
+> > +ret = regmap_read(ns->regmap, NIOS_FW_VERSION, &val);
+> > +if (ret)
+> > +return ret;
+> > +
+> > +return sprintf(buf, "%x.%x.%x\n",
+> > +       (u8)FIELD_GET(NIOS_FW_VERSION_MAJOR, val),
+> > +       (u8)FIELD_GET(NIOS_FW_VERSION_MINOR, val),
+> > +       (u8)FIELD_GET(NIOS_FW_VERSION_PATCH, val));
+> > +}
+> > +static DEVICE_ATTR_RO(nios_fw_version);
+> > +
+> > +static ssize_t fec_mode_show(struct device *dev,
+> > +     struct device_attribute *attr, char *buf)
+> > +{
+> > +struct dfl_n3000_nios *ns = dev_get_drvdata(dev);
+> > +unsigned int val, mode;
+> > +int ret;
+> > +
+> > +ret = regmap_read(ns->regmap, NIOS_INIT, &val);
+> > +if (ret)
+> > +return ret;
+> > +
+> > +/*
+> > + * FEC mode should always be the same for all links, as we set them
+> > + * in this way.
+> > + */
+> > +mode = FIELD_GET(REQ_FEC_MODE_A0_MSK, val);
+> > +if (mode != FIELD_GET(REQ_FEC_MODE_A1_MSK, val) ||
+> > +    mode != FIELD_GET(REQ_FEC_MODE_A2_MSK, val) ||
+> > +    mode != FIELD_GET(REQ_FEC_MODE_A3_MSK, val) ||
+> > +    mode != FIELD_GET(REQ_FEC_MODE_B0_MSK, val) ||
+> > +    mode != FIELD_GET(REQ_FEC_MODE_B1_MSK, val) ||
+> > +    mode != FIELD_GET(REQ_FEC_MODE_B2_MSK, val) ||
+> > +    mode != FIELD_GET(REQ_FEC_MODE_B3_MSK, val))
+> > +return -EFAULT;
+> > +
+> > +switch (mode) {
+> > +case REQ_FEC_MODE_NO:
+> > +return sprintf(buf, "no\n");
+> > +case REQ_FEC_MODE_KR:
+> > +return sprintf(buf, "kr\n");
+> > +case REQ_FEC_MODE_RS:
+> > +return sprintf(buf, "rs\n");
+> > +}
+> > +
+> > +return -EFAULT;
+> > +}
+> > +static DEVICE_ATTR_RO(fec_mode);
+> > +
+> > +static struct attribute *n3000_nios_attrs[] = {
+> > +&dev_attr_nios_fw_version.attr,
+> > +&dev_attr_fec_mode.attr,
+> > +NULL,
+> > +};
+> > +ATTRIBUTE_GROUPS(n3000_nios);
+> > +
+> > +static bool init_error_detected(struct dfl_n3000_nios *ns)
+> > +{
+> > +unsigned int val;
+> > +
+> > +if (regmap_read(ns->regmap, PKVL_A_MODE_STS, &val))
+> > +return true;
+> > +
+> > +if (FIELD_GET(PKVL_MODE_STS_GROUP_MSK, val) ==
+> > PKVL_MODE_STS_GROUP_OK)
+> > +return true;
+> > +
+> > +if (regmap_read(ns->regmap, PKVL_B_MODE_STS, &val))
+> > +return true;
+> > +
+> > +if (FIELD_GET(PKVL_MODE_STS_GROUP_MSK, val) ==
+> > PKVL_MODE_STS_GROUP_OK)
+> > +return true;
+> > +
+> > +return false;
+> > +}
+> > +
+> > +static void dump_error_stat(struct dfl_n3000_nios *ns)
+> > +{
+> > +unsigned int val;
+> > +
+> > +if (regmap_read(ns->regmap, PKVL_A_MODE_STS, &val))
+> > +return;
+> > +
+> > +dev_info(ns->dev, "PKVL_A_MODE_STS %x\n", val);
+> > +
+> > +if (regmap_read(ns->regmap, PKVL_B_MODE_STS, &val))
+> > +return;
+> > +
+> > +dev_info(ns->dev, "PKVL_B_MODE_STS %x\n", val);
+> > +}
+> > +
+> > +static int n3000_nios_init_done_check(struct dfl_n3000_nios *ns)
+> > +{
+> > +struct device *dev = ns->dev;
+> > +unsigned int val, mode;
+> > +int ret;
+> > +
+> > +/*
+> > + * this SPI is shared by Nios core inside FPGA, Nios will use this SPI
+> > + * master to do some one time initialization after power up, and then
+> > + * release the control to OS. driver needs to poll on INIT_DONE to
+> > + * see when driver could take the control.
+> > + *
+> > + * Please note that after 3.x.x version, INIT_START is introduced, so
+> > + * driver needs to trigger START firstly and then check INIT_DONE.
+> > + */
+> > +
+> > +ret = regmap_read(ns->regmap, NIOS_FW_VERSION, &val);
+> > +if (ret)
+> > +return ret;
+> > +
+> > +/*
+> > + * If Nios version register is totally uninitialized(== 0x0), then the
+> > + * Nios firmware is missing. So host could take control of SPI master
+> > + * safely, but initialization work for Nios is not done. This is an
+> > + * issue of FPGA image. We didn't error out because we need SPI
+> > master
+> > + * to reprogram a new image.
+> > + */
+> > +if (val == 0) {
+> > +dev_warn(dev, "Nios version reg = 0x%x, skip INIT_DONE
+> > check, but PKVL may be uninitialized\n",
+> 
+> Seems no place introduced the PKVL or just use retimer to replace PKVL?
+
+Yes.
+
+> 
+> Thanks
+> Hao
+> 
+> > + val);
+> > +return 0;
+> > +}
+> > +
+> > +if (FIELD_GET(NIOS_FW_VERSION_MAJOR, val) >= 3) {
+> > +/* read NIOS_INIT to check if PKVL INIT done or not */
+> > +ret = regmap_read(ns->regmap, NIOS_INIT, &val);
+> > +if (ret)
+> > +return ret;
+> > +
+> > +/* check if PKVLs are initialized already */
+> > +if (val & NIOS_INIT_DONE || val & NIOS_INIT_START)
+> > +goto nios_init_done;
+> > +
+> > +/* configure FEC mode per module param */
+> > +val = NIOS_INIT_START;
+> > +
+> > +/* FEC mode will be ignored by hardware in 10G mode */
+> 
+> So always no fec mode from hardware? Or software should force it
+> in 10G mode? Or 10G mode, below code can be skipped?
+
+I'm not sure about the 10G mode behavior since HW ignores the config in
+this case. I'll check it.
+
+Thanks
+Yilun
+
+> 
+> > +if (!strcmp(fec_mode, "no"))
+> > +mode = REQ_FEC_MODE_NO;
+> > +else if (!strcmp(fec_mode, "kr"))
+> > +mode = REQ_FEC_MODE_KR;
+> > +else if (!strcmp(fec_mode, "rs"))
+> > +mode = REQ_FEC_MODE_RS;
+> > +else
+> > +return -EINVAL;
+> > +
+> > +/* set the same FEC mode for all links */
+> > +val |= FIELD_PREP(REQ_FEC_MODE_A0_MSK, mode) |
+> > +       FIELD_PREP(REQ_FEC_MODE_A1_MSK, mode) |
+> > +       FIELD_PREP(REQ_FEC_MODE_A2_MSK, mode) |
+> > +       FIELD_PREP(REQ_FEC_MODE_A3_MSK, mode) |
+> > +       FIELD_PREP(REQ_FEC_MODE_B0_MSK, mode) |
+> > +       FIELD_PREP(REQ_FEC_MODE_B1_MSK, mode) |
+> > +       FIELD_PREP(REQ_FEC_MODE_B2_MSK, mode) |
+> > +       FIELD_PREP(REQ_FEC_MODE_B3_MSK, mode);
+> > +
+> > +ret = regmap_write(ns->regmap, NIOS_INIT, val);
+> > +if (ret)
+> > +return ret;
+> > +}
+> > +
+> > +nios_init_done:
+> > +/* polls on NIOS_INIT_DONE */
+> > +ret = regmap_read_poll_timeout(ns->regmap, NIOS_INIT, val,
+> > +       val & NIOS_INIT_DONE,
+> > +       NIOS_INIT_TIME_INTV,
+> > +       NIOS_INIT_TIMEOUT);
+> > +if (ret) {
+> > +dev_err(dev, "NIOS_INIT_DONE %s\n",
+> > +(ret == -ETIMEDOUT) ? "timed out" : "check error");
+> > +goto dump_sts;
+> > +}
+> > +
+> > +/*
+> > + * after INIT_DONE is detected, it still needs to check if any ERR
+> > + * detected.
+> > + * We won't error out here even if error detected. Nios will release
+> > + * spi controller when INIT_DONE is set, so driver could continue to
+> > + * initialize spi controller device.
+> > + */
+> > +if (init_error_detected(ns)) {
+> > +dev_warn(dev, "NIOS_INIT_DONE OK, but err found during
+> > init\n");
+> > +goto dump_sts;
+> > +}
+> > +return 0;
+> > +
+> > +dump_sts:
+> > +dump_error_stat(ns);
+> > +
+> > +return ret;
+> > +}
+> > +
+> > +struct spi_board_info m10_n3000_info = {
+> > +.modalias = "m10-n3000",
+> > +.max_speed_hz = 12500000,
+> > +.bus_num = 0,
+> > +.chip_select = 0,
+> > +};
+> > +
+> > +static int create_altera_spi_controller(struct dfl_n3000_nios *ns)
+> > +{
+> > +struct altera_spi_platform_data pdata = { 0 };
+> > +struct platform_device_info pdevinfo = { 0 };
+> > +void __iomem *base = ns->base;
+> > +u64 v;
+> > +
+> > +v = readq(base + NIOS_SPI_PARAM);
+> > +
+> > +pdata.mode_bits = SPI_CS_HIGH;
+> > +if (FIELD_GET(PARAM_CLK_POL, v))
+> > +pdata.mode_bits |= SPI_CPOL;
+> > +if (FIELD_GET(PARAM_CLK_PHASE, v))
+> > +pdata.mode_bits |= SPI_CPHA;
+> > +
+> > +pdata.num_chipselect = FIELD_GET(PARAM_NUM_CS, v);
+> > +pdata.bits_per_word_mask =
+> > +SPI_BPW_RANGE_MASK(1, FIELD_GET(PARAM_DATA_WIDTH,
+> > v));
+> > +
+> > +pdata.num_devices = 1;
+> > +pdata.devices = &m10_n3000_info;
+> > +
+> > +dev_dbg(ns->dev, "%s cs %u bpm 0x%x mode 0x%x\n", __func__,
+> > +pdata.num_chipselect, pdata.bits_per_word_mask,
+> > +pdata.mode_bits);
+> > +
+> > +pdevinfo.name = "subdev_spi_altera";
+> > +pdevinfo.id = PLATFORM_DEVID_AUTO;
+> > +pdevinfo.parent = ns->dev;
+> > +pdevinfo.data = &pdata;
+> > +pdevinfo.size_data = sizeof(pdata);
+> > +
+> > +ns->altera_spi = platform_device_register_full(&pdevinfo);
+> > +return PTR_ERR_OR_ZERO(ns->altera_spi);
+> > +}
+> > +
+> > +static void destroy_altera_spi_controller(struct dfl_n3000_nios *ns)
+> > +{
+> > +platform_device_unregister(ns->altera_spi);
+> > +}
+> > +
+> > +/* ns is the abbreviation of nios_spi */
+> > +static int ns_poll_stat_timeout(void __iomem *base, u64 *v)
+> > +{
+> > +int loops = NS_REGBUS_WAIT_TIMEOUT;
+> > +
+> > +/*
+> > + * We don't use the time based timeout here for performance.
+> > + *
+> > + * The image reprograming engine is on max10 bmc chip, which is the
+> > spi
+> > + * device connected to altera spi controller. So the regbus read/write
+> > + * is on the critical path of PAC N3000 image reprograming. And
+> > usually
+> > + * the state changes in few loops, the time based timeout checking
+> > will
+> > + * add too much overhead on it.
+> > + *
+> > + * Anyway, 10000 times loop is large enough.
+> > + */
+> > +do {
+> > +*v = readq(base + NIOS_SPI_STAT);
+> > +if (*v & STAT_RW_VAL)
+> > +break;
+> > +cpu_relax();
+> > +} while (--loops);
+> > +
+> > +return loops ? 0 : -ETIMEDOUT;
+> > +}
+> > +
+> > +static int ns_reg_write(void *context, unsigned int reg, unsigned int val)
+> > +{
+> > +struct dfl_n3000_nios *ns = context;
+> > +u64 v = 0;
+> > +int ret;
+> > +
+> > +v |= FIELD_PREP(CTRL_CMD_MSK, CTRL_CMD_WR);
+> > +v |= FIELD_PREP(CTRL_ADDR, reg);
+> > +v |= FIELD_PREP(CTRL_WR_DATA, val);
+> > +writeq(v, ns->base + NIOS_SPI_CTRL);
+> > +
+> > +ret = ns_poll_stat_timeout(ns->base, &v);
+> > +if (ret)
+> > +dev_err(ns->dev, "fail to write reg 0x%x val 0x%x: %d\n",
+> > +reg, val, ret);
+> > +
+> > +return ret;
+> > +}
+> > +
+> > +static int ns_reg_read(void *context, unsigned int reg, unsigned int *val)
+> > +{
+> > +struct dfl_n3000_nios *ns = context;
+> > +u64 v = 0;
+> > +int ret;
+> > +
+> > +v |= FIELD_PREP(CTRL_CMD_MSK, CTRL_CMD_RD);
+> > +v |= FIELD_PREP(CTRL_ADDR, reg);
+> > +writeq(v, ns->base + NIOS_SPI_CTRL);
+> > +
+> > +ret = ns_poll_stat_timeout(ns->base, &v);
+> > +if (ret)
+> > +dev_err(ns->dev, "fail to read reg 0x%x: %d\n", reg, ret);
+> > +else
+> > +*val = FIELD_GET(STAT_RD_DATA, v);
+> > +
+> > +return ret;
+> > +}
+> > +
+> > +static const struct regmap_config ns_regbus_cfg = {
+> > +.reg_bits = 32,
+> > +.reg_stride = 4,
+> > +.val_bits = 32,
+> > +.fast_io = true,
+> > +
+> > +.reg_write = ns_reg_write,
+> > +.reg_read = ns_reg_read,
+> > +};
+> > +
+> > +static int dfl_n3000_nios_probe(struct dfl_device *dfl_dev)
+> > +{
+> > +struct device *dev = &dfl_dev->dev;
+> > +struct dfl_n3000_nios *ns;
+> > +int ret;
+> > +
+> > +ns = devm_kzalloc(dev, sizeof(*ns), GFP_KERNEL);
+> > +if (!ns)
+> > +return -ENOMEM;
+> > +
+> > +dev_set_drvdata(&dfl_dev->dev, ns);
+> > +
+> > +ns->dev = dev;
+> > +
+> > +ns->base = devm_ioremap_resource(&dfl_dev->dev, &dfl_dev-
+> > >mmio_res);
+> > +if (IS_ERR(ns->base))
+> > +return PTR_ERR(ns->base);
+> > +
+> > +ns->regmap = devm_regmap_init(dev, NULL, ns, &ns_regbus_cfg);
+> > +if (IS_ERR(ns->regmap))
+> > +return PTR_ERR(ns->regmap);
+> > +
+> > +ret = n3000_nios_init_done_check(ns);
+> > +if (ret)
+> > +return ret;
+> > +
+> > +ret = create_altera_spi_controller(ns);
+> > +if (ret)
+> > +dev_err(dev, "altera spi controller create failed: %d\n", ret);
+> > +
+> > +return ret;
+> > +}
+> > +
+> > +static void dfl_n3000_nios_remove(struct dfl_device *dfl_dev)
+> > +{
+> > +struct dfl_n3000_nios *ns = dev_get_drvdata(&dfl_dev->dev);
+> > +
+> > +destroy_altera_spi_controller(ns);
+> > +}
+> > +
+> > +#define FME_FEATURE_ID_N3000_NIOS0xd
+> > +
+> > +static const struct dfl_device_id dfl_n3000_nios_ids[] = {
+> > +{ FME_ID, FME_FEATURE_ID_N3000_NIOS },
+> > +{ }
+> > +};
+> > +
+> > +static struct dfl_driver dfl_n3000_nios_driver = {
+> > +.drv= {
+> > +.name       = "dfl-n3000-nios",
+> > +.dev_groups = n3000_nios_groups,
+> > +},
+> > +.id_table = dfl_n3000_nios_ids,
+> > +.probe   = dfl_n3000_nios_probe,
+> > +.remove  = dfl_n3000_nios_remove,
+> > +};
+> > +
+> > +module_dfl_driver(dfl_n3000_nios_driver);
+> > +
+> > +MODULE_DEVICE_TABLE(dfl, dfl_n3000_nios_ids);
+> > +MODULE_DESCRIPTION("DFL N3000 Nios private feature driver");
+> > +MODULE_AUTHOR("Intel Corporation");
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.7.4
