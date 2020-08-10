@@ -2,149 +2,257 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2599CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8032A2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECDC82073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="s6qdsFqZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCBRTKJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHJHZY (ORCPT
+        id S1726536AbgHJHZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:25:24 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:3818 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725869AbgHJHZX (ORCPT
+        Mon, 10 Aug 2020 03:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgHJHZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:25:23 -0400
-X-UUID: 941674fcae4649e68bed1d030d86ddc6-20200810
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=WMW/SN71MKFExQk+QjN4pv2EvhjdGtOmUqiO3skR3Gk=;
-        b=s6qdsFqZgfHTw8w12yMlaVZGaejwQaGKrRcgqLaJxDbPse0oFVE3uUgkgQ7Nt1a5bRtcaggQKMIR0ZSGPAqKwiX0/hLQZ/Gws6L57DVKMe2ySYprY7pSmQxmmgaNevoyzX5NUBSFg3U7N6spjtCJVLIycw0XymEtkEUl4pzOaTo=;
-X-UUID: 941674fcae4649e68bed1d030d86ddc6-20200810
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2068200356; Mon, 10 Aug 2020 15:25:19 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 10 Aug 2020 15:25:18 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 10 Aug 2020 15:25:15 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH 2/5] workqueue: kasan: record and print workqueue stack
-Date:   Mon, 10 Aug 2020 15:25:15 +0800
-Message-ID: <20200810072515.632-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 10 Aug 2020 03:25:29 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E54C061756;
+        Mon, 10 Aug 2020 00:25:29 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id q16so4659328ybk.6;
+        Mon, 10 Aug 2020 00:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y9XMh30ufnUqk9AdZOEkF5RT2AG6qRJ/wAGRKNthdQs=;
+        b=oCBRTKJ8e8v7sjNsv2dJ3eqL4nIJMZaDQV+Z0mvt525/tN235DcrjvbPeKQ3MIRMBr
+         7hUHCy0BYJmDIPlGoNyPs0mXeR0PTXmDKpMrgdQW6LeviN5mvllgu7NU6pdgJp+DtQjc
+         UlRObcyQi5wgN6dRwrfwqaNhtdmgjffkfGMf3YoyCEJ9/xrA/0RfYzfhl32UIGkpA9Z4
+         vDuO11KHEHoLpkLZtSgGuQJYnDz1VRjFX8BfaStIwszLCFmLbMZBoqltplVOedvVpCer
+         d3/SvSX7xGcfFHKjKaxpUlG40CxvorsZ70vo/S7OMDNtM3+IFyQwRyNE/sHonYEh5TB0
+         ZBuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y9XMh30ufnUqk9AdZOEkF5RT2AG6qRJ/wAGRKNthdQs=;
+        b=L0BYBKvatFZC22RPyRVhWw1PXNz6OVetdbpEhbJItFa4XMt717Ouk4Dklo7/mK09Au
+         nOAsrzP87TexHUXpQeQ2vKVCTtgnwH7TLfaTHbZTTrKjrg0CpGCufp2+xwXcxW496YLB
+         9urgdBUw9Md5ap5tlHSbr93ttIeMFSNnEfJA3lnsSV2oFWIaGk25uxUVM0NyFzmK4ZNE
+         1aWMf7RCdzGDNxV1eORoQnf96PGPXpDQCW9NhbWeyCxjwkFKtmkD0+DFecdpVkzB4QIx
+         xr20sF1A7SulS1Oml7hjxbi58bvLKH7rxQtjdqAfTZWG5nJmkqyCaS8PNjbBky7Kpbqj
+         8nyw==
+X-Gm-Message-State: AOAM532go8Vs6htktiz3o0XrO4CocVryturOFVyRzIZmCXNkNHYfzwPK
+        y8whW8QmLL+GsjRGaMtKumWPAwt8fE1sH/Mtbyg=
+X-Google-Smtp-Source: ABdhPJxubfKAhbBYWXOu5Hl2BLVZlOAz0iAte5nh1SSxYgW/qeVjBucdzbTC0tkBi8v/vR2viV8lpUfrSmj3LrZea7k=
+X-Received: by 2002:a25:c743:: with SMTP id w64mr35345933ybe.127.1597044328869;
+ Mon, 10 Aug 2020 00:25:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596454753-13612-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806144511.6ajoqyynowglnbpm@uno.localdomain>
+In-Reply-To: <20200806144511.6ajoqyynowglnbpm@uno.localdomain>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 10 Aug 2020 08:25:02 +0100
+Message-ID: <CA+V-a8utQjTb44wuAOS7+GVKMwvv+OpPTFZ5Ons9Tj=i0KCqzw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] media: i2c: ov772x: Add support for BT656 mode
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCByZWNvcmRzIHRoZSBsYXN0IHR3byBlbnF1ZXVlaW5nIHdvcmsgY2FsbCBzdGFj
-a3Mgb24gd29ya3F1ZXVlDQphbmQgcHJpbnRzIHVwIHRvIDIgd29ya3F1ZXVlIHN0YWNrcyBpbiBL
-QVNBTiByZXBvcnQuIEl0IGlzIHVzZWZ1bCBmb3INCnByb2dyYW1tZXJzIHRvIHNvbHZlIHVzZS1h
-ZnRlci1mcmVlIG9yIGRvdWJsZS1mcmVlIG1lbW9yeSB3cSBpc3N1ZS4NCg0KV2hlbiBxdWV1ZV93
-b3JrKCkgaXMgY2FsbGVkLCB0aGVuIHF1ZXVlIHRoZSB3b3JrIGludG8gYSB3b3JrcXVldWUsIHdl
-DQpzdG9yZSB0aGlzIGNhbGwgc3RhY2sgaW4gb3JkZXIgdG8gcHJpbnQgaXQgaW4gS0FTQU4gcmVw
-b3J0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5j
-b20+DQpDYzogQW5kcmV5IFJ5YWJpbmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCkNjOiBE
-bWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQpDYzogQWxleGFuZGVyIFBvdGFwZW5r
-byA8Z2xpZGVyQGdvb2dsZS5jb20+DQpDYzogVGVqdW4gSGVvIDx0akBrZXJuZWwub3JnPg0KQ2M6
-IExhaSBKaWFuZ3NoYW4gPGppYW5nc2hhbmxhaUBnbWFpbC5jb20+DQpDYzogQW5kcmV3IE1vcnRv
-biA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4NCi0tLQ0KIGluY2x1ZGUvbGludXgva2FzYW4u
-aCB8ICAyICsrDQoga2VybmVsL3dvcmtxdWV1ZS5jICAgIHwgIDMgKysrDQogbW0va2FzYW4vZ2Vu
-ZXJpYy5jICAgIHwgMjEgKysrKysrKysrKysrKysrKysrKysrDQogbW0va2FzYW4va2FzYW4uaCAg
-ICAgIHwgIDggKysrKystLS0NCiBtbS9rYXNhbi9yZXBvcnQuYyAgICAgfCAxMSArKysrKysrKysr
-Kw0KIDUgZmlsZXMgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0K
-ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgva2FzYW4uaCBiL2luY2x1ZGUvbGludXgva2FzYW4u
-aA0KaW5kZXggNDNhZTA0MGFlOWIyLi42ODdjYmYyZmFmODMgMTAwNjQ0DQotLS0gYS9pbmNsdWRl
-L2xpbnV4L2thc2FuLmgNCisrKyBiL2luY2x1ZGUvbGludXgva2FzYW4uaA0KQEAgLTE3NCw2ICsx
-NzQsNyBAQCB2b2lkIGthc2FuX2NhY2hlX3NocmluayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUp
-Ow0KIHZvaWQga2FzYW5fY2FjaGVfc2h1dGRvd24oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsN
-CiB2b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqcHRyKTsNCiB2b2lkIGthc2FuX3Jl
-Y29yZF90bXJfc3RhY2sodm9pZCAqcHRyKTsNCit2b2lkIGthc2FuX3JlY29yZF93cV9zdGFjayh2
-b2lkICpwdHIpOw0KIA0KICNlbHNlIC8qIENPTkZJR19LQVNBTl9HRU5FUklDICovDQogDQpAQCAt
-MTgxLDYgKzE4Miw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBrYXNhbl9jYWNoZV9zaHJpbmsoc3Ry
-dWN0IGttZW1fY2FjaGUgKmNhY2hlKSB7fQ0KIHN0YXRpYyBpbmxpbmUgdm9pZCBrYXNhbl9jYWNo
-ZV9zaHV0ZG93bihzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpIHt9DQogc3RhdGljIGlubGluZSB2
-b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqcHRyKSB7fQ0KIHN0YXRpYyBpbmxpbmUg
-dm9pZCBrYXNhbl9yZWNvcmRfdG1yX3N0YWNrKHZvaWQgKnB0cikge30NCitzdGF0aWMgaW5saW5l
-IHZvaWQga2FzYW5fcmVjb3JkX3dxX3N0YWNrKHZvaWQgKnB0cikge30NCiANCiAjZW5kaWYgLyog
-Q09ORklHX0tBU0FOX0dFTkVSSUMgKi8NCiANCmRpZmYgLS1naXQgYS9rZXJuZWwvd29ya3F1ZXVl
-LmMgYi9rZXJuZWwvd29ya3F1ZXVlLmMNCmluZGV4IGM0MWMzYzE3Yjg2YS4uMGU1OTYzZTA2NzMw
-IDEwMDY0NA0KLS0tIGEva2VybmVsL3dvcmtxdWV1ZS5jDQorKysgYi9rZXJuZWwvd29ya3F1ZXVl
-LmMNCkBAIC0xMzI0LDYgKzEzMjQsOSBAQCBzdGF0aWMgdm9pZCBpbnNlcnRfd29yayhzdHJ1Y3Qg
-cG9vbF93b3JrcXVldWUgKnB3cSwgc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrLA0KIHsNCiAJc3Ry
-dWN0IHdvcmtlcl9wb29sICpwb29sID0gcHdxLT5wb29sOw0KIA0KKwkvKiByZWNvcmQgdGhlIHdv
-cmsgaW4gb3JkZXIgdG8gcHJpbnQgaXQgaW4gS0FTQU4gcmVwb3J0cyAqLw0KKwlrYXNhbl9yZWNv
-cmRfd3Ffc3RhY2sod29yayk7DQorDQogCS8qIHdlIG93biBAd29yaywgc2V0IGRhdGEgYW5kIGxp
-bmsgKi8NCiAJc2V0X3dvcmtfcHdxKHdvcmssIHB3cSwgZXh0cmFfZmxhZ3MpOw0KIAlsaXN0X2Fk
-ZF90YWlsKCZ3b3JrLT5lbnRyeSwgaGVhZCk7DQpkaWZmIC0tZ2l0IGEvbW0va2FzYW4vZ2VuZXJp
-Yy5jIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQppbmRleCA2Mjc3OTJkMTE1NjkuLjU5MmRjNThmYmU0
-MiAxMDA2NDQNCi0tLSBhL21tL2thc2FuL2dlbmVyaWMuYw0KKysrIGIvbW0va2FzYW4vZ2VuZXJp
-Yy5jDQpAQCAtMzY3LDYgKzM2NywyNyBAQCB2b2lkIGthc2FuX3JlY29yZF90bXJfc3RhY2sodm9p
-ZCAqYWRkcikNCiAJYWxsb2NfaW5mby0+dG1yX3N0YWNrWzBdID0ga2FzYW5fc2F2ZV9zdGFjayhH
-RlBfTk9XQUlUKTsNCiB9DQogDQordm9pZCBrYXNhbl9yZWNvcmRfd3Ffc3RhY2sodm9pZCAqYWRk
-cikNCit7DQorCXN0cnVjdCBwYWdlICpwYWdlID0ga2FzYW5fYWRkcl90b19wYWdlKGFkZHIpOw0K
-KwlzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGU7DQorCXN0cnVjdCBrYXNhbl9hbGxvY19tZXRhICph
-bGxvY19pbmZvOw0KKwl2b2lkICpvYmplY3Q7DQorDQorCWlmICghKHBhZ2UgJiYgUGFnZVNsYWIo
-cGFnZSkpKQ0KKwkJcmV0dXJuOw0KKw0KKwljYWNoZSA9IHBhZ2UtPnNsYWJfY2FjaGU7DQorCW9i
-amVjdCA9IG5lYXJlc3Rfb2JqKGNhY2hlLCBwYWdlLCBhZGRyKTsNCisJYWxsb2NfaW5mbyA9IGdl
-dF9hbGxvY19pbmZvKGNhY2hlLCBvYmplY3QpOw0KKw0KKwkvKg0KKwkgKiByZWNvcmQgdGhlIGxh
-c3QgdHdvIHdvcmtxdWV1ZSBzdGFja3MuDQorCSAqLw0KKwlhbGxvY19pbmZvLT53cV9zdGFja1sx
-XSA9IGFsbG9jX2luZm8tPndxX3N0YWNrWzBdOw0KKwlhbGxvY19pbmZvLT53cV9zdGFja1swXSA9
-IGthc2FuX3NhdmVfc3RhY2soR0ZQX05PV0FJVCk7DQorfQ0KKw0KIHZvaWQga2FzYW5fc2V0X2Zy
-ZWVfaW5mbyhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQogCQkJCXZvaWQgKm9iamVjdCwgdTgg
-dGFnKQ0KIHsNCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9rYXNhbi5oIGIvbW0va2FzYW4va2FzYW4u
-aA0KaW5kZXggNDA1OWYzMjc3NjdjLi5hNGY3NmIxYmRlMGEgMTAwNjQ0DQotLS0gYS9tbS9rYXNh
-bi9rYXNhbi5oDQorKysgYi9tbS9rYXNhbi9rYXNhbi5oDQpAQCAtMTA4LDEyICsxMDgsMTQgQEAg
-c3RydWN0IGthc2FuX2FsbG9jX21ldGEgew0KIAlzdHJ1Y3Qga2FzYW5fdHJhY2sgYWxsb2NfdHJh
-Y2s7DQogI2lmZGVmIENPTkZJR19LQVNBTl9HRU5FUklDDQogCS8qDQotCSAqIGNhbGxfcmN1KCkg
-Y2FsbCBzdGFjayBhbmQgdGltZXIgcXVldWVpbmcgc3RhY2sgYXJlIHN0b3JlZA0KLQkgKiBpbnRv
-IHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhLg0KLQkgKiBUaGUgZnJlZSBzdGFjayBpcyBzdG9yZWQg
-aW50byBzdHJ1Y3Qga2FzYW5fZnJlZV9tZXRhLg0KKwkgKiBjYWxsX3JjdSgpIGNhbGwgc3RhY2ss
-IHRpbWVyIHF1ZXVlaW5nIHN0YWNrLCBhbmQgd29ya3F1ZXVlDQorCSAqIHF1ZXVlaW5nIHN0YWNr
-IGFyZSBzdG9yZWQgaW50byBrYXNhbl9hbGxvY19tZXRhLg0KKwkgKg0KKwkgKiBXaXRoIGdlbmVy
-aWMgS0FTQU4gdGhlIGZyZWUgc3RhY2sgaXMgc3RvcmVkIGludG8ga2FzYW5fZnJlZV9tZXRhLg0K
-IAkgKi8NCiAJZGVwb3Rfc3RhY2tfaGFuZGxlX3QgYXV4X3N0YWNrWzJdOw0KIAlkZXBvdF9zdGFj
-a19oYW5kbGVfdCB0bXJfc3RhY2tbMl07DQorCWRlcG90X3N0YWNrX2hhbmRsZV90IHdxX3N0YWNr
-WzJdOw0KICNlbHNlDQogCXN0cnVjdCBrYXNhbl90cmFjayBmcmVlX3RyYWNrW0tBU0FOX05SX0ZS
-RUVfU1RBQ0tTXTsNCiAjZW5kaWYNCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9yZXBvcnQuYyBiL21t
-L2thc2FuL3JlcG9ydC5jDQppbmRleCBmNjAyZjA5MGQ5MGIuLmU2YmM0NzBmY2QwYSAxMDA2NDQN
-Ci0tLSBhL21tL2thc2FuL3JlcG9ydC5jDQorKysgYi9tbS9rYXNhbi9yZXBvcnQuYw0KQEAgLTIw
-Myw2ICsyMDMsMTcgQEAgc3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0cnVjdCBrbWVtX2Nh
-Y2hlICpjYWNoZSwgdm9pZCAqb2JqZWN0LA0KIAkJCXByaW50X3N0YWNrKGFsbG9jX2luZm8tPnRt
-cl9zdGFja1sxXSk7DQogCQkJcHJfZXJyKCJcbiIpOw0KIAkJfQ0KKw0KKwkJaWYgKGFsbG9jX2lu
-Zm8tPndxX3N0YWNrWzBdKSB7DQorCQkJcHJfZXJyKCJMYXN0IHdvcmtxdWV1ZSBzdGFjazpcbiIp
-Ow0KKwkJCXByaW50X3N0YWNrKGFsbG9jX2luZm8tPndxX3N0YWNrWzBdKTsNCisJCQlwcl9lcnIo
-IlxuIik7DQorCQl9DQorCQlpZiAoYWxsb2NfaW5mby0+d3Ffc3RhY2tbMV0pIHsNCisJCQlwcl9l
-cnIoIlNlY29uZCB0byBsYXN0IHdvcmtxdWV1ZSBzdGFjazpcbiIpOw0KKwkJCXByaW50X3N0YWNr
-KGFsbG9jX2luZm8tPndxX3N0YWNrWzFdKTsNCisJCQlwcl9lcnIoIlxuIik7DQorCQl9DQogI2Vu
-ZGlmDQogCX0NCiANCi0tIA0KMi4xOC4wDQo=
+Hi Jacopo,
 
+Thank you for the review.
+
+On Thu, Aug 6, 2020 at 3:41 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> On Mon, Aug 03, 2020 at 12:39:12PM +0100, Lad Prabhakar wrote:
+> > Add support to read the bus-type and enable BT656 mode if needed.
+> >
+> > The driver defaults to parallel mode if bus-type is not specified in DT.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> >  drivers/media/i2c/ov772x.c | 40 ++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > index 2cc6a678069a..2de9248e3689 100644
+> > --- a/drivers/media/i2c/ov772x.c
+> > +++ b/drivers/media/i2c/ov772x.c
+> > @@ -31,6 +31,7 @@
+> >  #include <media/v4l2-ctrls.h>
+> >  #include <media/v4l2-device.h>
+> >  #include <media/v4l2-event.h>
+> > +#include <media/v4l2-fwnode.h>
+> >  #include <media/v4l2-image-sizes.h>
+> >  #include <media/v4l2-subdev.h>
+> >
+> > @@ -434,6 +435,7 @@ struct ov772x_priv {
+> >  #ifdef CONFIG_MEDIA_CONTROLLER
+> >       struct media_pad pad;
+> >  #endif
+> > +     struct v4l2_fwnode_endpoint ep;
+> >  };
+> >
+> >  /*
+> > @@ -574,6 +576,7 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+> >  {
+> >       struct i2c_client *client = v4l2_get_subdevdata(sd);
+> >       struct ov772x_priv *priv = to_ov772x(sd);
+> > +     unsigned int val;
+> >       int ret = 0;
+> >
+> >       mutex_lock(&priv->lock);
+> > @@ -581,6 +584,22 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+> >       if (priv->streaming == enable)
+> >               goto done;
+> >
+> > +     if (priv->ep.bus_type == V4L2_MBUS_BT656 && enable) {
+> > +             ret = regmap_read(priv->regmap, COM7, &val);
+> > +             if (ret)
+> > +                     goto done;
+> > +             val |= ITU656_ON_OFF;
+> > +             ret = regmap_write(priv->regmap, COM7, val);
+> > +     } else if (priv->ep.bus_type == V4L2_MBUS_BT656 && !enable) {
+>
+> is the !enable intentional ? (sorry I don't have access to the sensor
+> manual). If not, see below:
+>
+> > +             ret = regmap_read(priv->regmap, COM7, &val);
+> > +             if (ret)
+> > +                     goto done;
+> > +             val &= ~ITU656_ON_OFF;
+> > +             ret = regmap_write(priv->regmap, COM7, val);
+> > +     }
+> > +     if (ret)
+> > +             goto done;
+>
+> Could you write this as:
+>
+Agreed will do.
+
+> static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+> {
+>         struct i2c_client *client = v4l2_get_subdevdata(sd);
+>         struct ov772x_priv *priv = to_ov772x(sd);
+>         int ret = 0;
+>
+>         mutex_lock(&priv->lock);
+>
+>         if (priv->streaming == enable)
+>                 goto done;
+>
+>         if (enable) {
+>                 ret = regmap_read(priv->regmap, COM7, &val);
+>                 if (ret)
+>                         goto done;
+>
+>                 if (priv->ep.bus_type == V4L2_MBUS_BT656)
+>                         val |= ITU656_ON_OFF;
+>                 else /* if you accept my suggestion to consider othe
+>                         bus types as errors */
+>                         val &= ~ITU656_ON_OFF;
+>
+>                 ret = regmap_write(priv->regmap, COM7, val);
+>                 if (ret)
+>                         goto done;
+>
+>                 dev_dbg(&client->dev, "format %d, win %s\n",
+>                         priv->cfmt->code, priv->win->name);
+>         }
+>
+>         ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+>                                  enable ? 0 : SOFT_SLEEP_MODE);
+>         if (ret)
+>                 goto done;
+>         priv->streaming = enable;
+>
+> done:
+>         mutex_unlock(&priv->lock);
+>
+>         return ret;
+> }
+>
+>
+> >       ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+> >                                enable ? 0 : SOFT_SLEEP_MODE);
+> >       if (ret)
+> > @@ -1354,6 +1373,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+> >
+> >  static int ov772x_probe(struct i2c_client *client)
+> >  {
+> > +     struct fwnode_handle *endpoint;
+> >       struct ov772x_priv      *priv;
+> >       int                     ret;
+> >       static const struct regmap_config ov772x_regmap_config = {
+> > @@ -1415,6 +1435,26 @@ static int ov772x_probe(struct i2c_client *client)
+> >               goto error_clk_put;
+> >       }
+> >
+> > +     endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> > +                                               NULL);
+> > +     if (!endpoint) {
+> > +             dev_err(&client->dev, "endpoint node not found\n");
+> > +             ret = -EINVAL;
+> > +             goto error_clk_put;
+> > +     }
+> > +
+> > +     ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
+> > +     fwnode_handle_put(endpoint);
+> > +     if (ret) {
+> > +             dev_err(&client->dev, "Could not parse endpoint\n");
+> > +             goto error_clk_put;
+> > +     }
+> > +
+> > +     /* fallback to parallel mode */
+> > +     if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
+> > +         priv->ep.bus_type != V4L2_MBUS_BT656)
+> > +             priv->ep.bus_type = V4L2_MBUS_PARALLEL;
+>
+> shouldn't this be an error ? It's either the bus type has not been
+> specified on DT (which is fine, otherwise old DTB without that
+> properties will fail) and the bus identification routine implemented
+> in v4l2_fwnode_endpoint_parse() detected a bus type which is not
+> supported, hence the DT properties are wrong, and this should be an
+> error. If you plan to expand the parsing routine to support, say
+> bus-width and pclk polarity please break this out to a new function.
+>
+Agreed.
+
+Cheers,
+Prabhakar
+
+> Thanks
+>    j
+>
+> > +
+> >       ret = ov772x_video_probe(priv);
+> >       if (ret < 0)
+> >               goto error_gpio_put;
+> > --
+> > 2.17.1
+> >
