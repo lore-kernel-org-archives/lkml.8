@@ -2,137 +2,85 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF93C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE7F520773
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:14:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g/eCrb+l"
+	by mail.kernel.org (Postfix) with ESMTP id 20DA7206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgHJGOv (ORCPT
+        id S1726382AbgHJGP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 02:14:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46344 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725814AbgHJGOv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 02:14:51 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A672hM045033;
-        Mon, 10 Aug 2020 02:14:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=DC9ZVaWbhsVOdNKl7yCJVCGW/U1781tV4/G8ec3wax0=;
- b=g/eCrb+lh+U5FMPudB/mcYbJARjzqCDXIh/45hk0paXe4+/CnTWovHUJiy8MYo3bLJN/
- nniRtTYJ/RgjZS39rfWW0yKuu89ITZs2YJRozXxuf2PszMX9JXr6oIYsu2p+Vb4flKoB
- FCCs0oyDnVBcQQQgxcQ64WiEetzSl3f4J8b51koX+qaVkkxUT1W2KaxqsdP61UZcK/YU
- Ff3GnDz0f3EyVoH3ZIq2X/O/+YWGYWEhENUaaA8Bzuom7pbUdbhTwxIPZBC82lXtx65n
- zZHmc2NcqrrszzOIyfh7D0+fGMabSGXch33vcDP4HRhr3EEDiCiKR531DPzULu9VS1J9 6g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr4qt72p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 02:14:14 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07A6DZJn063941;
-        Mon, 10 Aug 2020 02:14:13 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr4qt72a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 02:14:13 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07A6AOBg028154;
-        Mon, 10 Aug 2020 06:14:11 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 32skp81wu6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 06:14:11 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07A6Cgn351642786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 06:12:42 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7530542047;
-        Mon, 10 Aug 2020 06:14:09 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93C0242049;
-        Mon, 10 Aug 2020 06:14:07 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon, 10 Aug 2020 06:14:07 +0000 (GMT)
-Date:   Mon, 10 Aug 2020 11:44:06 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Josh Don <joshdon@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched/fair: ignore cache hotness for SMT migration
-Message-ID: <20200810061406.GA15559@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200804105619.GE2657@hirez.programming.kicks-ass.net>
- <20200804193413.510651-1-joshdon@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200804193413.510651-1-joshdon@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-10_02:2020-08-06,2020-08-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0
- priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008100043
+        Mon, 10 Aug 2020 02:15:59 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:46408 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725808AbgHJGP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 02:15:59 -0400
+Received: from localhost.localdomain (unknown [210.32.144.186])
+        by mail-app2 (Coremail) with SMTP id by_KCgBXX7Pm5TBfGJavAQ--.21907S4;
+        Mon, 10 Aug 2020 14:15:05 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Mark Hills <mark@xwax.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Giuliano Pochini <pochini@shiny.it>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: echoaudio: Fix memory leak in snd_echo_resume()
+Date:   Mon, 10 Aug 2020 14:14:58 +0800
+Message-Id: <20200810061500.9329-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgBXX7Pm5TBfGJavAQ--.21907S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKr47XrW3Zw4fJrW8KF18Grg_yoW3Grg_Ww
+        48Xrn5Way5trykC34UZ3y8WryDJ3s8Cw15CwsxtF4xJasrG3Z2gr9xZr9xJr17CrWjkrs8
+        K34rXrWYy3s8GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r47MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjHUDJUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsFBlZdtPe8fwAIsJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Josh Don <joshdon@google.com> [2020-08-04 12:34:13]:
+When restore_dsp_rettings() fails, chip should be freed
+just like when init_hw() and request_irq() fails.
 
-> SMT siblings share caches, so cache hotness should be irrelevant for
-> cross-sibling migration.
-> 
-> Proposed-by: Venkatesh Pallipadi <venki@google.com>
-> Signed-off-by: Josh Don <joshdon@google.com>
-> ---
->  kernel/sched/fair.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1a68a0536add..abdb54e2339f 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7402,6 +7402,10 @@ static int task_hot(struct task_struct *p, struct lb_env *env)
->  	if (unlikely(task_has_idle_policy(p)))
->  		return 0;
->  
-> +	/* SMT siblings share cache */
-> +	if (env->sd->flags & SD_SHARE_CPUCAPACITY)
-> +		return 0;
-> +
+Fixes: 47b5d028fdce8 ("ALSA: Echoaudio - Add suspend support #2")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ sound/pci/echoaudio/echoaudio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-If this for retaining cache hotness, should we look at
-SD_SHARE_PKG_RESOURCES instead of SD_SHARE_CPUCAPACITY?
-
->  	/*
->  	 * Buddy candidates are cache hot:
->  	 */
-> -- 
-> 2.28.0.163.g6104cc2f0b6-goog
-> 
-
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index 6aeb99aa2414..2aa183fe5dc1 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -2226,6 +2226,7 @@ static int snd_echo_resume(struct device *dev)
+ 	chip->pipe_alloc_mask = pipe_alloc_mask;
+ 	if (err < 0) {
+ 		kfree(commpage_bak);
++		snd_echo_free(chip);
+ 		return err;
+ 	}
+ 
 -- 
-Thanks and Regards
-Srikar Dronamraju
+2.17.1
+
