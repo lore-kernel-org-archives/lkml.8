@@ -2,84 +2,112 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9EC7206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77813206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elE8gXGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgHJWHD (ORCPT
+        id S1726977AbgHJWJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:07:03 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:43923 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726594AbgHJWHC (ORCPT
+        Mon, 10 Aug 2020 18:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbgHJWJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:07:02 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 7B31E1AAC7F;
-        Tue, 11 Aug 2020 08:06:56 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k5FwV-0007mY-7u; Tue, 11 Aug 2020 08:06:55 +1000
-Date:   Tue, 11 Aug 2020 08:06:55 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Miklos Szeredi <mszeredi@redhat.com>,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        Peng Tao <tao.peng@linux.alibaba.com>
-Subject: Re: [PATCH v2 13/20] fuse, dax: Implement dax read/write operations
-Message-ID: <20200810220655.GC2079@dread.disaster.area>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-14-vgoyal@redhat.com>
+        Mon, 10 Aug 2020 18:09:05 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72359C06174A;
+        Mon, 10 Aug 2020 15:09:05 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n129so4275028qkd.6;
+        Mon, 10 Aug 2020 15:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ZbMbahrrNkhzXHol1Zr0zVJbIcJ6vrUXkY246I6Gww=;
+        b=elE8gXGFCgxGb+WPV22Nwena1f+CuNWdGDIMre+3IYPlJ/dgFxnsv/Nif8jf/9So9g
+         Jfq6u/NSq38DCrgFyDUCnVrtGGmwME440my9SPaB2eKBvqacSCkWOroSb302H/A+6/NC
+         aFFqf3hnQoBHQs4bfAIRRTwhGKzSgh+tqHkZiR1s4ZRMDUflziWLspPza1JmWtc5x5BH
+         hu4Tzumv1CTdCpFez/JNDr9TK5nh5chZTSr0bzMdsoAMlEO6Hm717BFu50YmP2Huc7uT
+         O71KhjXh8z3c2xG1Y5UMQPdQCh0Jh59+6yuOQHl1iV7kGHoV8J8a70s1YKxmLmGKTxYf
+         aS6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ZbMbahrrNkhzXHol1Zr0zVJbIcJ6vrUXkY246I6Gww=;
+        b=OcvAAcLl0mlJOdi1rKzwVqmE7GxWv8GsQ/Q+Qkx8NWsCOB7Y1Jh3JhQ39jHc4vok+H
+         2llg+c07Q8zbOrQX7HmAe1vVZbtY85+SVu3mUyMnfqTBHw4fZkCKd8CN6kyPMpIgu7oa
+         t5iAJOISHQEE+ibJM6guczLk7dKawTaQC81uCNZeBUWt0AeMwS8IrIdlRh7OFxqbx2jn
+         nu26/Zh7BWBEkNaSBsaQySKeO1mRW6q5gqATvH+AySZYBpEQx0QdxXHCH9RaQZ72TNhp
+         klepKpiq0neJDTheQ40o3RTziTQEjcz+j+LXxcCfD0dAdzBRIhdjUi09NVacssmiG7bL
+         WsJA==
+X-Gm-Message-State: AOAM533uIH4dDj6v3KkEgI7hVWLN70PsiybUjAZ2ANU+jTFJGcyH4Ld2
+        4J1lyvLxEUgffp3kf1HwlA==
+X-Google-Smtp-Source: ABdhPJwB2LGr4Sy6Pe9wMfFj8Jm3p4RuM27hgGOAJBeSaFB5Lh3TbuSGIbsqy+oIYf6RDWfJ0KnCgg==
+X-Received: by 2002:a37:bd46:: with SMTP id n67mr29206337qkf.190.1597097343411;
+        Mon, 10 Aug 2020 15:09:03 -0700 (PDT)
+Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id w12sm14192544qkj.116.2020.08.10.15.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 15:09:02 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH net] ipvs: Fix uninit-value in do_ip_vs_set_ctl()
+Date:   Mon, 10 Aug 2020 18:07:03 -0400
+Message-Id: <20200810220703.796718-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807195526.426056-14-vgoyal@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
-        a=KqUJ7u37zmrocqc7xm4A:9 a=iL2FK-9NOCaYj0ZJ:21 a=0foCJPwPtQ_ghwrP:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 03:55:19PM -0400, Vivek Goyal wrote:
-> This patch implements basic DAX support. mmap() is not implemented
-> yet and will come in later patches. This patch looks into implemeting
-> read/write.
+do_ip_vs_set_ctl() is referencing uninitialized stack value when `len` is
+zero. Fix it.
 
-....
+Reported-and-tested-by: syzbot+23b5f9e7caf61d9a3898@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?id=46ebfb92a8a812621a001ef04d90dfa459520fe2
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+ net/netfilter/ipvs/ip_vs_ctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static int iomap_begin_setup_new_mapping(struct inode *inode, loff_t pos,
-> +					 loff_t length, unsigned flags,
-> +					 struct iomap *iomap)
-
-please doin't use the iomap_* namespace even for static functions in
-filesystem code. This really doesn't have anything to do with iomap
-except that whatever fuse sets up is used to fill an iomap.
-i.e. fuse_setup_new_dax_mapping() would be far more appropriate
-name.
-
-> +static int iomap_begin_upgrade_mapping(struct inode *inode, loff_t pos,
-> +					 loff_t length, unsigned flags,
-> +					 struct iomap *iomap)
-
-ditto: fuse_upgrade_dax_mapping().
-
-Cheers,
-
-Dave.
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 412656c34f20..c050b6a42786 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -2418,7 +2418,7 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+ {
+ 	struct net *net = sock_net(sk);
+ 	int ret;
+-	unsigned char arg[MAX_SET_ARGLEN];
++	unsigned char arg[MAX_SET_ARGLEN] = {};
+ 	struct ip_vs_service_user *usvc_compat;
+ 	struct ip_vs_service_user_kern usvc;
+ 	struct ip_vs_service *svc;
 -- 
-Dave Chinner
-david@fromorbit.com
+2.25.1
+
