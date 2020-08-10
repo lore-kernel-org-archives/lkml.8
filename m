@@ -2,69 +2,66 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8072C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A9B2076B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA122078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgHJOZy (ORCPT
+        id S1727810AbgHJO0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:25:54 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:36041 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726436AbgHJOZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:25:48 -0400
-Received: (qmail 300682 invoked by uid 1000); 10 Aug 2020 10:25:47 -0400
-Date:   Mon, 10 Aug 2020 10:25:47 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: storage: isd200: fix spelling mistake "removeable"
- -> "removable"
-Message-ID: <20200810142547.GC299045@rowland.harvard.edu>
-References: <20200810083211.48282-1-colin.king@canonical.com>
+        Mon, 10 Aug 2020 10:26:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726392AbgHJO0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:26:41 -0400
+Received: from localhost.localdomain (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506F22070B;
+        Mon, 10 Aug 2020 14:26:39 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Gregory Herrero <gregory.herrero@oracle.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] recordmcount: Fix build failure on non arm64
+Date:   Mon, 10 Aug 2020 15:26:37 +0100
+Message-Id: <159706958035.25067.17604192727592443780.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <5ca1be21fa6ebf73203b45fd9aadd2bafb5e6b15.1597049145.git.christophe.leroy@csgroup.eu>
+References: <5ca1be21fa6ebf73203b45fd9aadd2bafb5e6b15.1597049145.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810083211.48282-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 09:32:11AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Mon, 10 Aug 2020 08:48:22 +0000 (UTC), Christophe Leroy wrote:
+> Commit ea0eada45632 leads to the following build failure on powerpc:
 > 
-> There is a spelling mistake in a usb_stor_dbg debug message. Fix it.
+>   HOSTCC  scripts/recordmcount
+> scripts/recordmcount.c: In function 'arm64_is_fake_mcount':
+> scripts/recordmcount.c:440: error: 'R_AARCH64_CALL26' undeclared (first use in this function)
+> scripts/recordmcount.c:440: error: (Each undeclared identifier is reported only once
+> scripts/recordmcount.c:440: error: for each function it appears in.)
+> make[2]: *** [scripts/recordmcount] Error 1
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/usb/storage/isd200.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/storage/isd200.c b/drivers/usb/storage/isd200.c
-> index 89f5e33a6e6d..3c76336e43bb 100644
-> --- a/drivers/usb/storage/isd200.c
-> +++ b/drivers/usb/storage/isd200.c
-> @@ -1383,7 +1383,7 @@ static int isd200_scsi_to_ata(struct scsi_cmnd *srb, struct us_data *us,
->  				ATA_CMD_MEDIA_LOCK : ATA_CMD_MEDIA_UNLOCK;
->  			isd200_srb_set_bufflen(srb, 0);
->  		} else {
-> -			usb_stor_dbg(us, "   Not removeable media, just report okay\n");
-> +			usb_stor_dbg(us, "   Not removable media, just report okay\n");
->  			srb->result = SAM_STAT_GOOD;
->  			sendToTransport = 0;
->  		}
-> -- 
+> [...]
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Applied to arm64 (for-next/core), thanks!
+
+[1/1] recordmcount: Fix build failure on non arm64
+      https://git.kernel.org/arm64/c/3df14264ad99
+
+-- 
+Catalin
+
