@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20012C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62177C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80CC2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325342075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aeIj/qT7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="p+IrB1wX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgHJW2A (ORCPT
+        id S1727876AbgHJW2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:28:00 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:49125 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727795AbgHJW1v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:27:51 -0400
+        Mon, 10 Aug 2020 18:28:03 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44387 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727104AbgHJW1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:27:42 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597098470; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597098461; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=luFjlnOjyWOq8Y2pNHotM6G2poKKOZibPxqXcVoTZhI=; b=aeIj/qT7ZwITy0qwHtnXPQOX65j+q+JQ3g/giFuGKl5KUiO/nlsC9otEsM6S3oaZWunii6H+
- xe9DGDKgSPiPfkGm0+VPjPuIjH5BHSK50guYEyqnN7gX6fOb51h5Uu8RmN8rl0af1pwIZPZX
- JTUnYSOTzN/O/4BEO2FKSNnq140=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ Sender; bh=1l56jKTnCbGbzDy9PC9bfDI6CvjcNk4zvHShg3Sn/ic=; b=p+IrB1wXtCjL/sNubI9ygRwYqyA1lPIr26q67v/90OTev5937yDyZnvS78YITOyXx2shOeqw
+ fZt9b/J8Fb6bms4FVmhYFDx1hJhgJp8pTwcY58H8kGFRGOCb+pL8hI9qyzKsM6okQrFj6DKD
+ j25sgBHW7tgwQgEDydaGETskbU8=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f31c9e63f2ce110209da999 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:50
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f31c9db2f4952907d4d7a69 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:39
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5B0A1C4344F; Mon, 10 Aug 2020 22:27:46 +0000 (UTC)
+        id E23E3C43453; Mon, 10 Aug 2020 22:27:36 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38B0EC4345B;
-        Mon, 10 Aug 2020 22:27:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38B0EC4345B
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2429C433B2;
+        Mon, 10 Aug 2020 22:27:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2429C433B2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -54,18 +53,13 @@ Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC v12 13/13] iommu/arm-smmu: Add a init_context_bank implementation hook
-Date:   Mon, 10 Aug 2020 16:26:57 -0600
-Message-Id: <20200810222657.1841322-14-jcrouse@codeaurora.org>
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v12 10/13] drm/msm: Add support for private address space instances
+Date:   Mon, 10 Aug 2020 16:26:54 -0600
+Message-Id: <20200810222657.1841322-11-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
 References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
@@ -76,145 +70,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new implementation hook to allow the implementation specific code
-to tweek the context bank configuration just before it gets written.
-The first user will be the Adreno GPU implementation to turn on
-SCTLR.HUPCF to ensure that a page fault doesn't terminating pending
-transactions. Doing so could hang the GPU if one of the terminated
-transactions is a CP read.
+Add support for allocating private address space instances. Targets that
+support per-context pagetables should implement their own function to
+allocate private address spaces.
+
+The default will return a pointer to the global address space.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 16 ++++++++++++++++
- drivers/iommu/arm/arm-smmu/arm-smmu.c      | 21 +++++++++++++--------
- drivers/iommu/arm/arm-smmu/arm-smmu.h      |  5 +++++
- 3 files changed, 34 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c     | 13 +++++++------
+ drivers/gpu/drm/msm/msm_drv.h     |  5 +++++
+ drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
+ drivers/gpu/drm/msm/msm_gpu.c     | 22 ++++++++++++++++++++++
+ drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
+ 5 files changed, 48 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 3be10145bf57..baa026ddca1c 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -34,6 +34,19 @@ static bool qcom_adreno_smmu_is_gpu_device(struct device *dev)
- 	return false;
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 108b663c3ef2..f072306f1260 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+ 	kref_init(&ctx->ref);
+ 	msm_submitqueue_init(dev, ctx);
+ 
+-	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
++	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
+ 	file->driver_priv = ctx;
+ 
+ 	return 0;
+@@ -780,18 +780,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
  }
  
-+#define QCOM_ADRENO_SMMU_GPU 1
+ static int msm_ioctl_gem_info_iova(struct drm_device *dev,
+-		struct drm_gem_object *obj, uint64_t *iova)
++		struct drm_file *file, struct drm_gem_object *obj,
++		uint64_t *iova)
+ {
+-	struct msm_drm_private *priv = dev->dev_private;
++	struct msm_file_private *ctx = file->driver_priv;
+ 
+-	if (!priv->gpu)
++	if (!ctx->aspace)
+ 		return -EINVAL;
+ 
+ 	/*
+ 	 * Don't pin the memory here - just get an address so that userspace can
+ 	 * be productive
+ 	 */
+-	return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
++	return msm_gem_get_iova(obj, ctx->aspace, iova);
+ }
+ 
+ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+@@ -830,7 +831,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+ 		args->value = msm_gem_mmap_offset(obj);
+ 		break;
+ 	case MSM_INFO_GET_IOVA:
+-		ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
++		ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
+ 		break;
+ 	case MSM_INFO_SET_NAME:
+ 		/* length check should leave room for terminating null: */
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index f69c6d62584d..51a5c9083e13 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -249,6 +249,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
+ void msm_gem_close_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma);
+ 
 +
-+static void qcom_adreno_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
-+		struct arm_smmu_cb *cb)
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace);
++
+ void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
+ 
+ struct msm_gem_address_space *
+@@ -434,6 +438,7 @@ static inline void msm_file_private_destroy(struct kref *kref)
+ 	struct msm_file_private *ctx = container_of(kref,
+ 		struct msm_file_private, ref);
+ 
++	msm_gem_address_space_put(ctx->aspace);
+ 	kfree(ctx);
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 5f6a11211b64..29cc1305cf37 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
+ 		kref_put(&aspace->kref, msm_gem_address_space_destroy);
+ }
+ 
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace)
 +{
-+	/*
-+	 * On the GPU device we want to process subsequent transactions after a
-+	 * fault to keep the GPU from hanging
-+	 */
-+	if (cb->cfg->priv == QCOM_ADRENO_SMMU_GPU)
-+		cb->sctlr |= ARM_SMMU_SCTLR_HUPCF;
++	if (!IS_ERR_OR_NULL(aspace))
++		kref_get(&aspace->kref);
++
++	return aspace;
 +}
 +
- /*
-  * Local implementation to configure TTBR0 with the specified pagetable config.
-  * The GPU driver will call this to enable TTBR0 when per-instance pagetables
-@@ -120,6 +133,7 @@ static int qcom_adreno_smmu_alloc_context_bank(struct arm_smmu_domain *smmu_doma
- 		count = 1;
- 	} else {
- 		start = 1;
-+		smmu_domain->cfg.priv = QCOM_ADRENO_SMMU_GPU;
- 	}
- 
- 	return __arm_smmu_alloc_bitmap(smmu->context_map, start, count);
-@@ -141,6 +155,7 @@ static int qcom_adreno_smmu_init_context(struct arm_smmu_domain *smmu_domain,
- 	    (smmu_domain->cfg.fmt == ARM_SMMU_CTX_FMT_AARCH64))
- 		pgtbl_cfg->quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
- 
-+
+ /* Actually unmap memory for the vma */
+ void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index a1f3da6550e5..b070355369d8 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -823,6 +823,28 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
  	return 0;
  }
  
-@@ -204,6 +219,7 @@ static const struct arm_smmu_impl qcom_adreno_smmu_impl = {
- 	.alloc_context_bank = qcom_adreno_smmu_alloc_context_bank,
- 	.domain_set_attr = qcom_adreno_smmu_domain_set_attr,
- 	.domain_get_attr = qcom_adreno_smmu_domain_get_attr,
-+	.init_context_bank = qcom_adreno_smmu_init_context_bank,
- };
- 
- static struct arm_smmu_device *qcom_smmu_create(struct arm_smmu_device *smmu,
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index e0a3e0da885b..6225649bbfef 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -532,6 +532,18 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
- 			cb->mair[1] = pgtbl_cfg->arm_lpae_s1_cfg.mair >> 32;
- 		}
- 	}
++/* Return a new address space for a msm_drm_private instance */
++struct msm_gem_address_space *
++msm_gpu_create_private_address_space(struct msm_gpu *gpu)
++{
++	struct msm_gem_address_space *aspace = NULL;
 +
-+	cb->sctlr = ARM_SMMU_SCTLR_CFIE | ARM_SMMU_SCTLR_CFRE | ARM_SMMU_SCTLR_AFE |
-+		ARM_SMMU_SCTLR_TRE | ARM_SMMU_SCTLR_M;
++	if (!gpu)
++		return NULL;
 +
-+	if (stage1)
-+		cb->sctlr |= ARM_SMMU_SCTLR_S1_ASIDPNE;
-+	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
-+		cb->sctlr |= ARM_SMMU_SCTLR_E;
++	/*
++	 * If the target doesn't support private address spaces then return
++	 * the global one
++	 */
++	if (gpu->funcs->create_private_address_space)
++		aspace = gpu->funcs->create_private_address_space(gpu);
 +
-+	/* Give the implementation a chance to adjust the configuration */
-+	if (smmu_domain->smmu->impl && smmu_domain->smmu->impl->init_context_bank)
-+		smmu_domain->smmu->impl->init_context_bank(smmu_domain, cb);
- }
- 
- void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
-@@ -610,14 +622,7 @@ void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
- 	}
- 
- 	/* SCTLR */
--	reg = ARM_SMMU_SCTLR_CFIE | ARM_SMMU_SCTLR_CFRE | ARM_SMMU_SCTLR_AFE |
--	      ARM_SMMU_SCTLR_TRE | ARM_SMMU_SCTLR_M;
--	if (stage1)
--		reg |= ARM_SMMU_SCTLR_S1_ASIDPNE;
--	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
--		reg |= ARM_SMMU_SCTLR_E;
--
--	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, reg);
-+	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, cb->sctlr);
- }
- 
- static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-index 870f0fd060a5..e84b8da8b93b 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-@@ -143,6 +143,7 @@ enum arm_smmu_cbar_type {
- 
- #define ARM_SMMU_CB_SCTLR		0x0
- #define ARM_SMMU_SCTLR_S1_ASIDPNE	BIT(12)
-+#define ARM_SMMU_SCTLR_HUPCF		BIT(8)
- #define ARM_SMMU_SCTLR_CFCFG		BIT(7)
- #define ARM_SMMU_SCTLR_CFIE		BIT(6)
- #define ARM_SMMU_SCTLR_CFRE		BIT(5)
-@@ -343,6 +344,7 @@ struct arm_smmu_cfg {
- 	};
- 	enum arm_smmu_cbar_type		cbar;
- 	enum arm_smmu_context_fmt	fmt;
-+	unsigned long			priv;
- };
- #define ARM_SMMU_INVALID_IRPTNDX	0xff
- 
-@@ -350,6 +352,7 @@ struct arm_smmu_cb {
- 	u64				ttbr[2];
- 	u32				tcr[2];
- 	u32				mair[2];
-+	u32				sctlr;
- 	struct arm_smmu_cfg		*cfg;
++	if (IS_ERR_OR_NULL(aspace))
++		aspace = msm_gem_address_space_get(gpu->aspace);
++
++	return aspace;
++}
++
+ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index d496d488222c..d298657b4730 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -64,6 +64,8 @@ struct msm_gpu_funcs {
+ 	void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
+ 	struct msm_gem_address_space *(*create_address_space)
+ 		(struct msm_gpu *gpu, struct platform_device *pdev);
++	struct msm_gem_address_space *(*create_private_address_space)
++		(struct msm_gpu *gpu);
  };
  
-@@ -439,6 +442,8 @@ struct arm_smmu_impl {
- 			enum iommu_attr attr, void *data);
- 	int (*domain_set_attr)(struct arm_smmu_domain *smmu_domain,
- 			enum iommu_attr attr, void *data);
-+	void (*init_context_bank)(struct arm_smmu_domain *smmu_domain,
-+			struct arm_smmu_cb *cb);
- };
+ struct msm_gpu {
+@@ -286,6 +288,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config);
  
- #define INVALID_SMENDX			-1
++struct msm_gem_address_space *
++msm_gpu_create_private_address_space(struct msm_gpu *gpu);
++
+ void msm_gpu_cleanup(struct msm_gpu *gpu);
+ 
+ struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
 -- 
 2.25.1
 
