@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C58C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE5520774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040E520774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boaPJgd9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czbuPi5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgHJS7l (ORCPT
+        id S1728360AbgHJS7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40320 "EHLO
+        Mon, 10 Aug 2020 14:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgHJS7k (ORCPT
+        with ESMTP id S1728071AbgHJS7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:59:40 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE529C061756;
-        Mon, 10 Aug 2020 11:59:40 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u20so6138249pfn.0;
-        Mon, 10 Aug 2020 11:59:40 -0700 (PDT)
+        Mon, 10 Aug 2020 14:59:48 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABB8C061756;
+        Mon, 10 Aug 2020 11:59:48 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y6so5524585plt.3;
+        Mon, 10 Aug 2020 11:59:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=alhqoEvoDzB6EgYbPZouIY7wwoSwqK7ATGTbSeQXdVM=;
-        b=boaPJgd9MUTMhnVe3c0WDxW7vqkOz7PWgP40Ngq9aEBR/wFbk5+SnGqmKkykQlWzuF
-         Brq7EEbO75RrpB/tncOFRjPF4quasLr6mJF7gtiX7ztYynOUkkJuaPBXzkE2Uvyx/3kB
-         VwyqDO3g5gjG1oB1bTUkRAUlpOfFlkB0Igv1fOqGPCY//rPv3P4mRVzsY9w6LI0B3dlI
-         Juc8CWOB/ZyI+Mwg21i0RoG2bHf/966tu5IYXcA6pMScmf4OE/1jKbOfeBC5vhSLYYIX
-         Tg1xkk+q16sJhRRuZEtgXAezUk4jqbvfynzUFsD6ZAxX5nV8HfsD4swaYAhuC4uINelV
-         SpPQ==
+        bh=ITe/X6Xdx2CY6PsGQ/PduP0lNpkYq6j7vCmUAE4nQQU=;
+        b=czbuPi5aq2XuD3n/veDuyK14hELrmZZeTQMlep+v0poheUKc/VGPDdaT3NGxicOZva
+         nV/ngVMDinb52OW5KIsARx9WODXexCfN5ctiykdzyh5PxaDvtI1Yk4AXTFZxAXVcZu9I
+         yjQ2mZTizSoPt4DuEpazlR61p+rT74RYezw6+TV8W+rjG93z8n5xeXTpFVm5FfoI3i3x
+         ciqh4/PSLKbyhVQAg4eBcl2Ex0LaGKhfCl6rwNr6i6QESouOOkjJ8onckjM78SCI9Gio
+         lCPj9c97zOEPE6mP0ldBLP+93GLitOE3juMoyVHuVs4cquYNurzkT5gPHX840vtNvLBq
+         dTdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=alhqoEvoDzB6EgYbPZouIY7wwoSwqK7ATGTbSeQXdVM=;
-        b=H+O+UTdoRmL/erRYfZ7tDVlbNIUVsEoAC57z9RDOo8utsxUWoq4ib73fsXMKjfWHM3
-         ZeX01A1I+eeJBkIXHx9hSD0BTwxCn0WmmPUpV8hcF11HittNMahaUTlPmyEglN3PAe3t
-         +t8fbU8p/A+PzBXDYw9v4dQL0n081gq8QOyo6FW3LgZ/+2CwVtuRw8wAh4EF9XdIzqhX
-         iDXkQ9qaIgOtfub4NgDar44T1ZpuCy6jTWKYMq4rgzGjBGRowb2qs578QVRCIv9cY7qe
-         szOANLNpGdR6Un4RLgAGW8pykEoz2I4S535CxQG0oJMMpHBMj69uI2pW4YSsTI3+2khe
-         9zAw==
-X-Gm-Message-State: AOAM533LIbaItU2myC/HW3rYIdhkG8C7y2A5RDZYgqBWaKE2Bi7Mevx1
-        r19OfpLvqUJQauX5FqTASxw=
-X-Google-Smtp-Source: ABdhPJxrqIoKPrZbePpOgvrfyXi1CIbTQvHAVqma3Orahl2Z3dnYJtew3QXDtnIE2TcI9cyuJs+Nqw==
-X-Received: by 2002:a63:e118:: with SMTP id z24mr22301979pgh.230.1597085980258;
-        Mon, 10 Aug 2020 11:59:40 -0700 (PDT)
+        bh=ITe/X6Xdx2CY6PsGQ/PduP0lNpkYq6j7vCmUAE4nQQU=;
+        b=ULvVAnuE8OXTDOYa6lWXj7P2dzAafWYlRcfYEGN0oABaYOPd/BPjKX1BMoUujiCMUX
+         xMenRbuA8Duv5iNMyuv4Nl9ZIXUo/5xyvtiYViy2TkfcpjnFr4eEIUK2fuuSFr2iVni2
+         hnc7ytnXv+HESr2FVRZYEK37vXoQYLDo7BFeyVJ8kndoFiRAui9wcIh3Fj+yB6dJSEou
+         Mue2LKnsfCKk3OsFZCUqIuElsyIjTRpewIZZGm9YNRk28Oy3zuS9j3O80uevwI0mZ545
+         GYyOYCrhioGyIb5p1Y2lR7/xKWZQuMwK9c3UMWtaoMWLWAYBX395dHGoKmSoZuuI5tjK
+         EJSQ==
+X-Gm-Message-State: AOAM533JaGDXfcOqqqJFpLQ+czYS5ekpuRs6soqPb54iCoX7AvsuHN2O
+        gR/AR+zxHEOyibNhS+WM5dE=
+X-Google-Smtp-Source: ABdhPJyGCzd/g3kP7yTryz4gYqh3FqhtFV+ScqA2qpYpbUkOAXoXjPpd6Ub0MyoApFlIKxoFeh63TQ==
+X-Received: by 2002:a17:90b:581:: with SMTP id t1mr670372pjz.215.1597085987631;
+        Mon, 10 Aug 2020 11:59:47 -0700 (PDT)
 Received: from varodek.localdomain ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id f27sm22683547pfk.217.2020.08.10.11.59.34
+        by smtp.gmail.com with ESMTPSA id f27sm22683547pfk.217.2020.08.10.11.59.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 11:59:39 -0700 (PDT)
+        Mon, 10 Aug 2020 11:59:47 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -77,9 +77,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2 03/12] fbdev: via-core: use generic power management
-Date:   Tue, 11 Aug 2020 00:27:14 +0530
-Message-Id: <20200810185723.15540-4-vaibhavgupta40@gmail.com>
+Subject: [PATCH v2 04/12] fbdev: aty: use generic power management
+Date:   Tue, 11 Aug 2020 00:27:15 +0530
+Message-Id: <20200810185723.15540-5-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200810185723.15540-1-vaibhavgupta40@gmail.com>
 References: <20200810165458.GA292825@ravnborg.org>
@@ -100,128 +100,139 @@ to handle them.
 Switch to the new generic framework by updating function signatures and
 define a "struct dev_pm_ops" variable to bind PM callbacks. Also, remove
 unnecessary calls to the PCI Helper functions along with the legacy
-.suspend & .resume bindings. Additionally, this helps us to remove the
-unnecessary call to via_suspend() in the event of Freeze and Hibernate, as
-the function does nothing in their case.
+.suspend & .resume bindings.
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/video/fbdev/via/via-core.c | 39 ++++++++++++------------------
- include/linux/via-core.h           |  2 --
- 2 files changed, 16 insertions(+), 25 deletions(-)
+ drivers/video/fbdev/aty/atyfb_base.c | 50 ++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/video/fbdev/via/via-core.c b/drivers/video/fbdev/via/via-core.c
-index 703ddee9a244..89d75079b730 100644
---- a/drivers/video/fbdev/via/via-core.c
-+++ b/drivers/video/fbdev/via/via-core.c
-@@ -558,9 +558,8 @@ static void via_teardown_subdevs(void)
+diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+index b0ac895e5ac9..a24d5bf6ade1 100644
+--- a/drivers/video/fbdev/aty/atyfb_base.c
++++ b/drivers/video/fbdev/aty/atyfb_base.c
+@@ -132,8 +132,8 @@
+ #define PRINTKI(fmt, args...)	printk(KERN_INFO "atyfb: " fmt, ## args)
+ #define PRINTKE(fmt, args...)	printk(KERN_ERR "atyfb: " fmt, ## args)
+ 
+-#if defined(CONFIG_PM) || defined(CONFIG_PMAC_BACKLIGHT) || \
+-defined (CONFIG_FB_ATY_GENERIC_LCD) || defined(CONFIG_FB_ATY_BACKLIGHT)
++#if defined(CONFIG_PMAC_BACKLIGHT) || defined(CONFIG_FB_ATY_GENERIC_LCD) || \
++defined(CONFIG_FB_ATY_BACKLIGHT)
+ static const u32 lt_lcd_regs[] = {
+ 	CNFG_PANEL_LG,
+ 	LCD_GEN_CNTL_LG,
+@@ -175,7 +175,7 @@ u32 aty_ld_lcd(int index, const struct atyfb_par *par)
+ 		return aty_ld_le32(LCD_DATA, par);
+ 	}
+ }
+-#endif /* defined(CONFIG_PM) || defined(CONFIG_PMAC_BACKLIGHT) || defined (CONFIG_FB_ATY_GENERIC_LCD) */
++#endif /* defined(CONFIG_PMAC_BACKLIGHT) || defined (CONFIG_FB_ATY_GENERIC_LCD) */
+ 
+ #ifdef CONFIG_FB_ATY_GENERIC_LCD
  /*
-  * Power management functions
-  */
--#ifdef CONFIG_PM
--static LIST_HEAD(viafb_pm_hooks);
--static DEFINE_MUTEX(viafb_pm_hooks_lock);
-+static __maybe_unused LIST_HEAD(viafb_pm_hooks);
-+static __maybe_unused DEFINE_MUTEX(viafb_pm_hooks_lock);
+@@ -1994,7 +1994,7 @@ static int atyfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
  
- void viafb_pm_register(struct viafb_pm_hooks *hooks)
- {
-@@ -580,12 +579,10 @@ void viafb_pm_unregister(struct viafb_pm_hooks *hooks)
+ 
+ 
+-#if defined(CONFIG_PM) && defined(CONFIG_PCI)
++#if defined(CONFIG_PCI)
+ 
+ #ifdef CONFIG_PPC_PMAC
+ /* Power management routines. Those are used for PowerBook sleep.
+@@ -2055,8 +2055,9 @@ static int aty_power_mgmt(int sleep, struct atyfb_par *par)
  }
- EXPORT_SYMBOL_GPL(viafb_pm_unregister);
+ #endif /* CONFIG_PPC_PMAC */
  
--static int via_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused via_suspend(struct device *dev)
+-static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
++static int atyfb_pci_suspend_late(struct device *dev, pm_message_t state)
  {
- 	struct viafb_pm_hooks *hooks;
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct fb_info *info = pci_get_drvdata(pdev);
+ 	struct atyfb_par *par = (struct atyfb_par *) info->par;
  
--	if (state.event != PM_EVENT_SUSPEND)
--		return 0;
- 	/*
- 	 * "I've occasionally hit a few drivers that caused suspend
- 	 * failures, and each and every time it was a driver bug, and
-@@ -600,24 +597,13 @@ static int via_suspend(struct pci_dev *pdev, pm_message_t state)
- 		hooks->suspend(hooks->private);
- 	mutex_unlock(&viafb_pm_hooks_lock);
- 
+@@ -2082,7 +2083,6 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	 * first save the config space content so the core can
+ 	 * restore it properly on resume.
+ 	 */
 -	pci_save_state(pdev);
--	pci_disable_device(pdev);
+ 
+ #ifdef CONFIG_PPC_PMAC
+ 	/* Set chip to "suspend" mode */
+@@ -2094,8 +2094,6 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		console_unlock();
+ 		return -EIO;
+ 	}
+-#else
 -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+ #endif
+ 
+ 	console_unlock();
+@@ -2105,6 +2103,21 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
  	return 0;
  }
  
--static int via_resume(struct pci_dev *pdev)
-+static int __maybe_unused via_resume(struct device *dev)
++static int __maybe_unused atyfb_pci_suspend(struct device *dev)
++{
++	return atyfb_pci_suspend_late(dev, PMSG_SUSPEND);
++}
++
++static int __maybe_unused atyfb_pci_hibernate(struct device *dev)
++{
++	return atyfb_pci_suspend_late(dev, PMSG_HIBERNATE);
++}
++
++static int __maybe_unused atyfb_pci_freeze(struct device *dev)
++{
++	return atyfb_pci_suspend_late(dev, PMSG_FREEZE);
++}
++
+ static void aty_resume_chip(struct fb_info *info)
  {
- 	struct viafb_pm_hooks *hooks;
+ 	struct atyfb_par *par = info->par;
+@@ -2119,8 +2132,9 @@ static void aty_resume_chip(struct fb_info *info)
+ 			aty_ld_le32(BUS_CNTL, par) | BUS_APER_REG_DIS, par);
+ }
  
--	/* Get the bus side powered up */
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--	if (pci_enable_device(pdev))
--		return 0;
--
--	pci_set_master(pdev);
--
- 	/* Now bring back any subdevs */
- 	mutex_lock(&viafb_pm_hooks_lock);
- 	list_for_each_entry(hooks, &viafb_pm_hooks, list)
-@@ -626,7 +612,6 @@ static int via_resume(struct pci_dev *pdev)
+-static int atyfb_pci_resume(struct pci_dev *pdev)
++static int __maybe_unused atyfb_pci_resume(struct device *dev)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct fb_info *info = pci_get_drvdata(pdev);
+ 	struct atyfb_par *par = (struct atyfb_par *) info->par;
  
+@@ -2162,7 +2176,18 @@ static int atyfb_pci_resume(struct pci_dev *pdev)
  	return 0;
  }
--#endif /* CONFIG_PM */
  
- static int via_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
-@@ -712,15 +697,23 @@ static const struct pci_device_id via_pci_table[] = {
- };
- MODULE_DEVICE_TABLE(pci, via_pci_table);
- 
-+static const struct dev_pm_ops via_pm_ops = {
+-#endif /*  defined(CONFIG_PM) && defined(CONFIG_PCI) */
++static const struct dev_pm_ops atyfb_pci_pm_ops = {
 +#ifdef CONFIG_PM_SLEEP
-+	.suspend	= via_suspend,
-+	.resume		= via_resume,
-+	.freeze		= NULL,
-+	.thaw		= via_resume,
-+	.poweroff	= NULL,
-+	.restore	= via_resume,
-+#endif
++	.suspend	= atyfb_pci_suspend,
++	.resume		= atyfb_pci_resume,
++	.freeze		= atyfb_pci_freeze,
++	.thaw		= atyfb_pci_resume,
++	.poweroff	= atyfb_pci_hibernate,
++	.restore	= atyfb_pci_resume,
++#endif /* CONFIG_PM_SLEEP */
 +};
 +
- static struct pci_driver via_driver = {
- 	.name		= "viafb",
- 	.id_table	= via_pci_table,
- 	.probe		= via_pci_probe,
- 	.remove		= via_pci_remove,
++#endif /*  defined(CONFIG_PCI) */
+ 
+ /* Backlight */
+ #ifdef CONFIG_FB_ATY_BACKLIGHT
+@@ -3801,10 +3826,7 @@ static struct pci_driver atyfb_driver = {
+ 	.id_table	= atyfb_pci_tbl,
+ 	.probe		= atyfb_pci_probe,
+ 	.remove		= atyfb_pci_remove,
 -#ifdef CONFIG_PM
--	.suspend	= via_suspend,
--	.resume		= via_resume,
--#endif
-+	.driver.pm	= &via_pm_ops,
+-	.suspend	= atyfb_pci_suspend,
+-	.resume		= atyfb_pci_resume,
+-#endif /* CONFIG_PM */
++	.driver.pm	= &atyfb_pci_pm_ops,
  };
  
- static int __init via_core_init(void)
-diff --git a/include/linux/via-core.h b/include/linux/via-core.h
-index 9e802deedb2d..8737599b9148 100644
---- a/include/linux/via-core.h
-+++ b/include/linux/via-core.h
-@@ -47,7 +47,6 @@ struct via_port_cfg {
- /*
-  * Allow subdevs to register suspend/resume hooks.
-  */
--#ifdef CONFIG_PM
- struct viafb_pm_hooks {
- 	struct list_head list;
- 	int (*suspend)(void *private);
-@@ -57,7 +56,6 @@ struct viafb_pm_hooks {
- 
- void viafb_pm_register(struct viafb_pm_hooks *hooks);
- void viafb_pm_unregister(struct viafb_pm_hooks *hooks);
--#endif /* CONFIG_PM */
- 
- /*
-  * This is the global viafb "device" containing stuff needed by
+ #endif /* CONFIG_PCI */
 -- 
 2.27.0
 
