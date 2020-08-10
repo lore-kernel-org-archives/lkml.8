@@ -2,149 +2,204 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9019DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B67022D72
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C158B22C9E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:55:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N5G4qk+V"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RvBExdkm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgHJPyU (ORCPT
+        id S1727863AbgHJPzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:54:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54984 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725862AbgHJPyT (ORCPT
+        Mon, 10 Aug 2020 11:55:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgHJPzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:54:19 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07AFWAIr038306;
-        Mon, 10 Aug 2020 11:54:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=kVOkYBFM3KYSJsS6ox2Mh1rrTKR+lZ3pN3xTSFRRNYc=;
- b=N5G4qk+VmKfVZcLO8mmGV7DlsVVmu/7JmXdIrkK8tGdj52N2cQ4Qb4dJVK0UmXRA6mW5
- P90ZkO8xSw1tDBI3XeLCpfiG9AXNfZR026lnF0YuDF2vM9NCl3riuWUhWHRD1ZZbbn9F
- lLiaI1146WQurZC0Urp8ekuNnMqYHSoOkkCj3i1qkmlNEF7z7veyR2Avj5zNWVvs3Gey
- /KJV8tcdnZvOmkorCaWIAaMclsgaGUnw5IiF93QQwjyrdIebluZNdr470YkqO2kmUdmj
- vstGPIUuZRq0DCw4C4Y61favoUQLczHiBEcWYBlc73/w3O9acIBLlnG5Nt8bjzDXNXfz ew== 
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32sravrxnu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 11:54:06 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07AFgloh024836;
-        Mon, 10 Aug 2020 15:54:04 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 32skp7sghq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 15:54:04 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07AFs2Zj30278122
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 15:54:02 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A3FDA4051;
-        Mon, 10 Aug 2020 15:54:02 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EEEB8A4040;
-        Mon, 10 Aug 2020 15:54:00 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.145.32.167])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 10 Aug 2020 15:54:00 +0000 (GMT)
-Date:   Mon, 10 Aug 2020 18:53:59 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, hpa@zytor.com,
-        Joerg Roedel <jroedel@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason@zx2c4.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>
-Subject: Re: [PATCH] x86/mm/64: Do not dereference non-present PGD entries
-Message-ID: <20200810155359.GV163101@linux.ibm.com>
-References: <20200807084013.7090-1-joro@8bytes.org>
- <165106f9-392f-9ca5-52c8-8d58c41c5f79@intel.com>
+        Mon, 10 Aug 2020 11:55:20 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBB8C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:55:20 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so5119171plb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=zhOM5a+db+03fu+9y+KxnwpweHHDcuys502DsmoxXhA=;
+        b=RvBExdkmAnkEgOU6Nk2vKZAwFQtYELi1S05QGaY2btfkBADpiYjpkJ7NP5nf0OsOa4
+         UQM/FJqfeF+8Wa8px8VUNM1HFR1xfquXIGgc1HGYIeCGWPzy35fia4JArsDV98K8vu7D
+         LvpzHFUSJ3Cr3ZdwkymRADgiY2ZI2BLDxjcMsR9UJ+Up6xwwNzh+c1qUWauE/l9KM6u6
+         LYAS2XW1wns6e7aSBI4M5yjsgixUuRivdxtxmhuxm6MqnbTcc5m0Mzm1a5QbabZgBcdV
+         vm5N9gAjWyyepf7xoba8s/OH/wop7ELxgVk/cVuJOgVVHkP7qbu0XeOPDd+pLnmo42xP
+         udRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zhOM5a+db+03fu+9y+KxnwpweHHDcuys502DsmoxXhA=;
+        b=m5bbbgnlNmkyE1YTDGF178R+DyAlSmr6MHz+hNMeSdpUwpzzJ2/l9Bw3cugH254tyZ
+         +IFObbbtVToxfIBDGIuxaz7g2FEBnXbxeCuuensAB2s2Nzxg/w7TSPHEr7xWaFhkCNON
+         768o0XwEQZCt1MIvuOJ1FvAdg//ghEyfUGtN/C/jAimsJ75gIwelLMPVPtnh80wOASMa
+         tjU8MHeNALGI3yJ2GHn8pZ+vdqj7d2eVkpdexGPqNw85s27bxS2nMBY/hegSlZ8QOmdT
+         1U4D8hzRIjEk1b1K1KYdfX8xtVbwJDHryYKjPMOotNmE68OrdZVWnTj9Xew3ZRtViHI/
+         QkeQ==
+X-Gm-Message-State: AOAM532NxX19NEfrww4NkkiL5/ANOrXjwjR3cZbyKiJ74X1yX6YrZheP
+        WMejAkXRFNsZrp4t84xBy8jayA==
+X-Google-Smtp-Source: ABdhPJzS8pMd0LP91YQq4K7gL3JBidwfv5SgjeMK+Al5ZyYEWz94BQMEK2mULY/PgMZVaibUFKaGZQ==
+X-Received: by 2002:a17:90a:4e42:: with SMTP id t2mr8373707pjl.121.1597074919593;
+        Mon, 10 Aug 2020 08:55:19 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id x22sm22145374pfn.41.2020.08.10.08.55.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 08:55:19 -0700 (PDT)
+Subject: Re: possible deadlock in __io_queue_deferred
+To:     syzbot <syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <00000000000035fdf505ac87b7f9@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <76cc7c43-2ebb-180d-c2c8-912972a3f258@kernel.dk>
+Date:   Mon, 10 Aug 2020 09:55:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <165106f9-392f-9ca5-52c8-8d58c41c5f79@intel.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-10_11:2020-08-06,2020-08-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 adultscore=0
- malwarescore=0 mlxscore=0 priorityscore=1501 impostorscore=0 spamscore=0
- bulkscore=0 phishscore=0 mlxlogscore=790 clxscore=1011 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100113
+In-Reply-To: <00000000000035fdf505ac87b7f9@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 07:27:33AM -0700, Dave Hansen wrote:
-> ... adding Kirill
+On 8/10/20 9:36 AM, syzbot wrote:
+> Hello,
 > 
-> On 8/7/20 1:40 AM, Joerg Roedel wrote:
-> > +		lvl = "p4d";
-> > +		p4d = p4d_alloc(&init_mm, pgd, addr);
-> > +		if (!p4d)
-> > +			goto failed;
-> >  
-> > +		/*
-> > +		 * With 5-level paging the P4D level is not folded. So the PGDs
-> > +		 * are now populated and there is no need to walk down to the
-> > +		 * PUD level.
-> > +		 */
-> >  		if (pgtable_l5_enabled())
-> >  			continue;
+> syzbot found the following issue on:
 > 
-> It's early and I'm a coffee or two short of awake, but I had to stare at
-> the comment for a but to make sense of it.
+> HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14d41e02900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9d25235bf0162fbc
+> dashboard link: https://syzkaller.appspot.com/bug?extid=996f91b6ec3812c48042
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c9006900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1191cb1a900000
 > 
-> It feels wrong, I think, because the 5-level code usually ends up doing
-> *more* allocations and in this case, it is _appearing_ to do fewer.
-> Would something like this make sense?
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com
 
-Unless I miss something, with 5 levels vmalloc mappings are shared at
-p4d level, so allocating a p4d page would be enough. With 4 levels,
-p4d_alloc() is a nop and pud is the first actually populated level below
-pgd.
+Thanks, the below should fix this one.
 
-> 		/*
-> 		 * The goal here is to allocate all possibly required
-> 		 * hardware page tables pointed to by the top hardware
-> 		 * level.
-> 		 *
-> 		 * On 4-level systems, the p4d layer is folded away and
-> 		 * the above code does no preallocation.  Below, go down
-> 		 * to the pud _software_ level to ensure the second
-> 		 * hardware level is allocated.
-> 		 */
-> 
-> 
-> > -		pud = pud_offset(p4d, addr);
-> > -		if (pud_none(*pud)) {
-> > -			/* Ends up here only with 4-level paging */
-> > -			pud = pud_alloc(&init_mm, p4d, addr);
-> > -			if (!pud) {
-> > -				lvl = "pud";
-> > -				goto failed;
-> > -			}
-> > -		}
-> > +		lvl = "pud";
-> > +		pud = pud_alloc(&init_mm, p4d, addr);
-> > +		if (!pud)
-> > +			goto failed;
-> >  	}
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 443eecdfeda9..f9be665d1c5e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -898,6 +898,7 @@ static void io_put_req(struct io_kiocb *req);
+ static void io_double_put_req(struct io_kiocb *req);
+ static void __io_double_put_req(struct io_kiocb *req);
+ static struct io_kiocb *io_prep_linked_timeout(struct io_kiocb *req);
++static void __io_queue_linked_timeout(struct io_kiocb *req);
+ static void io_queue_linked_timeout(struct io_kiocb *req);
+ static int __io_sqe_files_update(struct io_ring_ctx *ctx,
+ 				 struct io_uring_files_update *ip,
+@@ -1179,7 +1180,7 @@ static void io_prep_async_link(struct io_kiocb *req)
+ 			io_prep_async_work(cur);
+ }
+ 
+-static void __io_queue_async_work(struct io_kiocb *req)
++static struct io_kiocb *__io_queue_async_work(struct io_kiocb *req)
+ {
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct io_kiocb *link = io_prep_linked_timeout(req);
+@@ -1187,16 +1188,19 @@ static void __io_queue_async_work(struct io_kiocb *req)
+ 	trace_io_uring_queue_async_work(ctx, io_wq_is_hashed(&req->work), req,
+ 					&req->work, req->flags);
+ 	io_wq_enqueue(ctx->io_wq, &req->work);
+-
+-	if (link)
+-		io_queue_linked_timeout(link);
++	return link;
+ }
+ 
+ static void io_queue_async_work(struct io_kiocb *req)
+ {
++	struct io_kiocb *link;
++
+ 	/* init ->work of the whole link before punting */
+ 	io_prep_async_link(req);
+-	__io_queue_async_work(req);
++	link = __io_queue_async_work(req);
++
++	if (link)
++		io_queue_linked_timeout(link);
+ }
+ 
+ static void io_kill_timeout(struct io_kiocb *req)
+@@ -1229,12 +1233,19 @@ static void __io_queue_deferred(struct io_ring_ctx *ctx)
+ 	do {
+ 		struct io_defer_entry *de = list_first_entry(&ctx->defer_list,
+ 						struct io_defer_entry, list);
++		struct io_kiocb *link;
+ 
+ 		if (req_need_defer(de->req, de->seq))
+ 			break;
+ 		list_del_init(&de->list);
+ 		/* punt-init is done before queueing for defer */
+-		__io_queue_async_work(de->req);
++		link = __io_queue_async_work(de->req);
++		if (link) {
++			__io_queue_linked_timeout(link);
++			/* drop submission reference */
++			link->flags |= REQ_F_COMP_LOCKED;
++			io_put_req(link);
++		}
+ 		kfree(de);
+ 	} while (!list_empty(&ctx->defer_list));
+ }
+@@ -5945,15 +5956,12 @@ static enum hrtimer_restart io_link_timeout_fn(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
+ 
+-static void io_queue_linked_timeout(struct io_kiocb *req)
++static void __io_queue_linked_timeout(struct io_kiocb *req)
+ {
+-	struct io_ring_ctx *ctx = req->ctx;
+-
+ 	/*
+ 	 * If the list is now empty, then our linked request finished before
+ 	 * we got a chance to setup the timer
+ 	 */
+-	spin_lock_irq(&ctx->completion_lock);
+ 	if (!list_empty(&req->link_list)) {
+ 		struct io_timeout_data *data = &req->io->timeout;
+ 
+@@ -5961,6 +5969,14 @@ static void io_queue_linked_timeout(struct io_kiocb *req)
+ 		hrtimer_start(&data->timer, timespec64_to_ktime(data->ts),
+ 				data->mode);
+ 	}
++}
++
++static void io_queue_linked_timeout(struct io_kiocb *req)
++{
++	struct io_ring_ctx *ctx = req->ctx;
++
++	spin_lock_irq(&ctx->completion_lock);
++	__io_queue_linked_timeout(req);
+ 	spin_unlock_irq(&ctx->completion_lock);
+ 
+ 	/* drop submission reference */
 
 -- 
-Sincerely yours,
-Mike.
+Jens Axboe
+
