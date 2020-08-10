@@ -2,129 +2,157 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06407C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3F2C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D592F2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A00F2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="XucAWtFI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcDioUBh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHJA7f (ORCPT
+        id S1726566AbgHJA7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 20:59:35 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:2798 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgHJA7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 20:59:32 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BPyKZ1RKgz2d;
-        Mon, 10 Aug 2020 02:59:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1597021170; bh=1eeKBL0o88wtLrMTjQEu0rJjKv4EBeqN/ITuA7qHIqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XucAWtFIvIbVpKNWzILk6bE15GVYS1WF5mUTYf0LaRS4ZXaFKoPwVWn+XWAJbGGuM
-         c73uOdobi01CpQ4Z8EKHZfg0qssR8XTcY16oKHSB+lJSsmXGhrKd6zJdHc6zurbWPG
-         6pDOSQzg6F/XF1dBL11+mw0vheq03EnQQTDPuWsO9A5Yr+z2eq55wl+R1+2rhEY58v
-         mW54RAMm0ntzoPeGvNNrn5z6CGx1yShl9A+FDtxrNTiD9nPEYNasGtBdvD8xLuDexm
-         LaxmbJ/lZa/iqHWw96vJsR8lF1CmQbfqY6Zg8mfZlRzLOlOUAiRxMONlKPO70FwcpK
-         5uUUv07lykKAg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Mon, 10 Aug 2020 02:59:27 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: simplify locking
-Message-ID: <20200810005927.GA13107@qmqm.qmqm.pl>
-References: <b22fadc413fd7a1f4018c2c9dc261abf837731cb.1597007683.git.mirq-linux@rere.qmqm.pl>
- <40871bc7-2d6c-10d4-53b3-0aded21edf3b@gmail.com>
- <20200809223030.GB5522@qmqm.qmqm.pl>
- <8850c09f-4b24-7ab2-a0f7-e0d752f5a404@gmail.com>
+        Sun, 9 Aug 2020 20:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgHJA7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 20:59:51 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA2AC061756;
+        Sun,  9 Aug 2020 17:59:51 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f9so4085449pju.4;
+        Sun, 09 Aug 2020 17:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q0qJO4EPZit/EH6A7WT7wLcgl0yNkUMzQdIUs1Xd0rs=;
+        b=WcDioUBhF3OBNLdRFGPm4xL/wg35NsnX1T7B+N5mLgLGfMHPO6e+ws8jSymjP+fehv
+         Ymmj/A6435/LrpYObcEkppCnaGGFKHSFsc5Ok7yFInm1fFiQ1pRb5OADygG4gD/UQiyU
+         jRioeUsmQzBmnvSOQVGnA7APtjxLRx2pCwkaAoh0rKBI+KwCOGP94+uGAeBY4BZPHm8K
+         61uXgWQlXJ1btsyM3z4HvgYLxoXS0TwCFcZ1JQVvvSH/tfXVaDabCX6i5Iq26FN+Fl7f
+         q+swu2/13lE3Skkfm/pY2Jf9hphdNgNueVLvi4ZCbH+cGiPdJ9qxMi00TiTCAh4bi/ZG
+         hZHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q0qJO4EPZit/EH6A7WT7wLcgl0yNkUMzQdIUs1Xd0rs=;
+        b=LCZEr76RLHWB4JtMuoZrlTadoxuEVl13t0EVvp9pAtBOv93dT7GqiEtHzIN7MBcKxw
+         1y5chC1JNSIIewfbyZfmmu4yaRu9tK+UNSCNcaCKpW2Pc3uDJ+eIfq1gO/dxIrI0Esxf
+         MKLG9tx5eovoQzTEVzwAPbsPfFO9hiLsGRy+2rdQRPIw9hCRbnwN4LCzn0qKmAP0v78M
+         1cCQrU/TMcAYi8NlCyFhWTrbY0xkP26CLdOLlsKicAhWXjwGKOgVjY0+y7HoWRuLF1H+
+         DL4TLiC0svddgnsiqYcjGg+5SmwvvX1hTrZ3K8YJvtmDkcJwmEolAGWh6mAzvdvTZEtv
+         4z2A==
+X-Gm-Message-State: AOAM532tJHFLrFFJqmyp1GPCDFK2KHa5xJJRQauwyW0ZU7swN2iY0Das
+        BJ+tmKy/+JQ6BqvIzkNPqeQzZVVIU8vkhA==
+X-Google-Smtp-Source: ABdhPJwN4CR2mZ8LTgbsjjdYYXjpnUy33fewmZnUndv91/R9tDZ9Wg5yIe7kVXKqjfra6UNUTrSO0Q==
+X-Received: by 2002:a17:90b:252:: with SMTP id fz18mr24344482pjb.48.1597021190564;
+        Sun, 09 Aug 2020 17:59:50 -0700 (PDT)
+Received: from localhost.localdomain (c-24-16-167-223.hsd1.wa.comcast.net. [24.16.167.223])
+        by smtp.gmail.com with ESMTPSA id j5sm21504055pfg.80.2020.08.09.17.59.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2020 17:59:50 -0700 (PDT)
+From:   YourName <argoz1701@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mturquette@baylibre.com, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-clk@vger.kernel.org, argoz1701@gmail.com
+Subject: [PATCH 3/3] drivers/clk/clk-asm9260.c
+Date:   Sun,  9 Aug 2020 17:59:41 -0700
+Message-Id: <20200810005941.20581-1-argoz1701@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8850c09f-4b24-7ab2-a0f7-e0d752f5a404@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 03:21:47AM +0300, Dmitry Osipenko wrote:
-> 10.08.2020 01:30, Michał Mirosław пишет:
-> > On Mon, Aug 10, 2020 at 12:40:04AM +0300, Dmitry Osipenko wrote:
-> >> 10.08.2020 00:16, Michał Mirosław пишет:
-> >>> Simplify regulator locking by removing locking around locking. rdev->ref
-> >>> is now accessed only when the lock is taken. The code still smells fishy,
-> >>> but now its obvious why.
-> >>>
-> >>> Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
-> >>> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> >>> ---
-> >>>  drivers/regulator/core.c         | 37 ++++++--------------------------
-> >>>  include/linux/regulator/driver.h |  1 -
-> >>>  2 files changed, 6 insertions(+), 32 deletions(-)
-> >>>
-> >>> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> >>> index 9e18997777d3..b0662927487c 100644
-> >>> --- a/drivers/regulator/core.c
-> >>> +++ b/drivers/regulator/core.c
-> >>> @@ -45,7 +45,6 @@
-> >>>  	pr_debug("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
-> >>>  
-> >>>  static DEFINE_WW_CLASS(regulator_ww_class);
-> >>> -static DEFINE_MUTEX(regulator_nesting_mutex);
-> >>>  static DEFINE_MUTEX(regulator_list_mutex);
-> >>>  static LIST_HEAD(regulator_map_list);
-> >>>  static LIST_HEAD(regulator_ena_gpio_list);
-> >>> @@ -150,32 +149,13 @@ static bool regulator_ops_is_valid(struct regulator_dev *rdev, int ops)
-> >>>  static inline int regulator_lock_nested(struct regulator_dev *rdev,
-> >>>  					struct ww_acquire_ctx *ww_ctx)
-> >>>  {
-> >>> -	bool lock = false;
-> >>>  	int ret = 0;
-> >>>  
-> >>> -	mutex_lock(&regulator_nesting_mutex);
-> >>> +	if (ww_ctx || !mutex_trylock_recursive(&rdev->mutex.base))
-> >>
-> >> Have you seen comment to the mutex_trylock_recursive()?
-> >>
-> >> https://elixir.bootlin.com/linux/v5.8/source/include/linux/mutex.h#L205
-> >>
-> >>  * This function should not be used, _ever_. It is purely for hysterical GEM
-> >>  * raisins, and once those are gone this will be removed.
-> >>
-> >> I knew about this function and I don't think it's okay to use it, hence
-> >> this is why there is that "nesting_mutex" and "owner" checking.
-> >>
-> >> If you disagree, then perhaps you should make another patch to remove
-> >> the stale comment to trylock_recursive().
-> > 
-> > I think that reimplementing the function just to not use it is not the
-> > right solution. The whole locking protocol is problematic and this patch
-> > just uncovers one side of it.
-> 
-> It's not clear to me what is uncovered, the ref_cnt was always accessed
-> under lock. Could you please explain in a more details?
-> 
-> Would be awesome if you could improve the code, but then you should
-> un-deprecate the trylock_recursive() before making use of it. Maybe
-> nobody will mind and it all will be good in the end.
+From: Daniel <argoz1701@gmail.com>
 
-I'm not sure why the framework wants recursive locking? If only for the
-coupling case, then ww_mutex seems the right direction to replace it:
-while walking the graph it will detect entering the same node
-a second time. But this works only during the locking transaction (with
-ww_context != NULL). Allowing recursive regulator_lock() outside of it
-seems inviting trouble.
+---
+ drivers/ata/acard-ahci.c  |  6 +++---
+ drivers/bluetooth/bfusb.c |  5 ++---
+ drivers/clk/clk-asm9260.c | 12 ++++++------
+ 3 files changed, 11 insertions(+), 12 deletions(-)
 
-Best Regards,
-Michał Mirosław
+diff --git a/drivers/ata/acard-ahci.c b/drivers/ata/acard-ahci.c
+index 2a04e8abd397..3ffb21f3e88b 100644
+--- a/drivers/ata/acard-ahci.c
++++ b/drivers/ata/acard-ahci.c
+@@ -79,10 +79,10 @@ static struct ata_port_operations acard_ops = {
+ 
+ #define AHCI_HFLAGS(flags)	.private_data	= (void *)(flags)
+ 
+-static const struct ata_port_info acard_ahci_port_info[] = {
++static const struct ata_port_info acard_ahci_port_info[] ={
+ 	[board_acard_ahci] =
+-	{
+-		AHCI_HFLAGS	(AHCI_HFLAG_NO_NCQ),
++	
++        {       AHCI_HFLAGS	(AHCI_HFLAG_NO_NCQ),
+ 		.flags		= AHCI_FLAG_COMMON,
+ 		.pio_mask	= ATA_PIO4,
+ 		.udma_mask	= ATA_UDMA6,
+diff --git a/drivers/bluetooth/bfusb.c b/drivers/bluetooth/bfusb.c
+index 5a321b4076aa..dc6a62cb1941 100644
+--- a/drivers/bluetooth/bfusb.c
++++ b/drivers/bluetooth/bfusb.c
+@@ -355,15 +355,14 @@ static void bfusb_rx_complete(struct urb *urb)
+ 	while (count) {
+ 		hdr = buf[0] | (buf[1] << 8);
+ 
+-		if (hdr & 0x4000) {
++		if (hdr & 0x4000) 
+ 			len = 0;
+ 			count -= 2;
+ 			buf   += 2;
+-		} else {
++		 else {
+ 			len = (buf[2] == 0) ? 256 : buf[2];
+ 			count -= 3;
+ 			buf   += 3;
+-		}
+ 
+ 		if (count < len) {
+ 			bt_dev_err(data->hdev, "block extends over URB buffer ranges");
+diff --git a/drivers/clk/clk-asm9260.c b/drivers/clk/clk-asm9260.c
+index bacebd457e6f..4e608807a00a 100644
+--- a/drivers/clk/clk-asm9260.c
++++ b/drivers/clk/clk-asm9260.c
+@@ -92,8 +92,8 @@ static const struct asm9260_div_clk asm9260_div_clks[] __initconst = {
+ 	{ CLKID_SYS_CPU,	"cpu_div", "main_gate", HW_CPUCLKDIV },
+ 	{ CLKID_SYS_AHB,	"ahb_div", "cpu_div", HW_SYSAHBCLKDIV },
+ 
+-	/* i2s has two deviders: one for only external mclk and internal
+-	 * devider for all clks. */
++	//i2s has two deviders: one for only external mclk and internal
++	//devider for all clks.
+ 	{ CLKID_SYS_I2S0M,	"i2s0m_div", "i2s0_mclk",  HW_I2S0MCLKDIV },
+ 	{ CLKID_SYS_I2S1M,	"i2s1m_div", "i2s1_mclk",  HW_I2S1MCLKDIV },
+ 	{ CLKID_SYS_I2S0S,	"i2s0s_div", "i2s0_gate",  HW_I2S0SCLKDIV },
+@@ -232,10 +232,10 @@ static const struct asm9260_gate_data asm9260_ahb_gates[] __initconst = {
+ 		HW_AHBCLKCTRL1,	16 },
+ };
+ 
+-static const char __initdata *main_mux_p[] =   { NULL, NULL };
+-static const char __initdata *i2s0_mux_p[] =   { NULL, NULL, "i2s0m_div"};
+-static const char __initdata *i2s1_mux_p[] =   { NULL, NULL, "i2s1m_div"};
+-static const char __initdata *clkout_mux_p[] = { NULL, NULL, "rtc"};
++static const char __initconst *main_mux_p[] =   { NULL, NULL };
++static const char __initconst *i2s0_mux_p[] =   { NULL, NULL, "i2s0m_div"};
++static const char __initconst *i2s1_mux_p[] =   { NULL, NULL, "i2s1m_div"};
++static const char __initconst *clkout_mux_p[] = { NULL, NULL, "rtc"};
+ static u32 three_mux_table[] = {0, 1, 3};
+ 
+ static struct asm9260_mux_clock asm9260_mux_clks[] __initdata = {
+-- 
+2.25.1
+
