@@ -2,90 +2,109 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6739BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B06206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FC2206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgHJCie (ORCPT
+        id S1726396AbgHJCov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 22:38:34 -0400
-Received: from smtp23.cstnet.cn ([159.226.251.23]:35750 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726219AbgHJCie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 22:38:34 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-03 (Coremail) with SMTP id rQCowABHTxsfszBfrMpoAQ--.26273S2;
-        Mon, 10 Aug 2020 10:38:23 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     snelson@pensando.io, drivers@pensando.io, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] ionic_lif: Use devm_kcalloc() in ionic_qcq_alloc()
-Date:   Mon, 10 Aug 2020 02:38:07 +0000
-Message-Id: <20200810023807.9260-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: rQCowABHTxsfszBfrMpoAQ--.26273S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF1UKw4UGFWDCw17uryfJFb_yoW8Gw1xpa
-        1xJFy2vr1UXF4I9an7Xw4kZa45X3yxGrW3Grsru3s3uwnrJFW8XF48KFW8XFW0kFZ5CF10
-        vF1qy3W3ZFs5A3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK
-        6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbZ2-5
-        UUUUU==
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQUEA102ZfUVcgAAsX
+        Sun, 9 Aug 2020 22:44:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:50123 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbgHJCov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 22:44:51 -0400
+IronPort-SDR: hoQqZv8h8dqX5xUm+ZsCFYii6BbvOKgCEqwvLFCv9bThEPVqCam2XE0B95P0ZTd7S0PxW84RyE
+ FXHmYgr5fF9Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="133523424"
+X-IronPort-AV: E=Sophos;i="5.75,456,1589266800"; 
+   d="scan'208";a="133523424"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2020 19:44:50 -0700
+IronPort-SDR: Oy26DasJQD+oaegknq9Gv3D04qyEIcONcY5vOzu7XfKoSBICZy7w8222EjAsX3sTZxfkjdgV2g
+ vNF3kjhYlkKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,456,1589266800"; 
+   d="scan'208";a="334095052"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga007.jf.intel.com with ESMTP; 09 Aug 2020 19:44:48 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com
+Subject: [PATCH v4 0/4] Modularization of DFL private feature drivers
+Date:   Mon, 10 Aug 2020 10:41:09 +0800
+Message-Id: <1597027273-25288-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A multiplication for the size determination of a memory allocation
-indicated that an array data structure should be processed.
-Thus use the corresponding function "devm_kcalloc".
+This patchset makes it possible to develop independent driver modules
+for DFL private features. It also helps to leverage existing kernel
+drivers to enable some IP blocks in DFL.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/net/ethernet/pensando/ionic/ionic_lif.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Patch #1: An improvement of feature id definition. The feature id will be
+          used as the key field for dfl device/driver matching.
+Patch #2: Release the dfl mmio regions after enumeration, so that private
+          feature drivers could request mmio region in their own drivers.
+Patch #3: Introduce the dfl bus, then dfl devices could be supported by
+          independent dfl drivers.
+Patch #4: An example of the dfl driver for N3000 nios private feature.
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index 1944bf5264db..26988ad7ec97 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -412,7 +412,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
- 
- 	new->flags = flags;
- 
--	new->q.info = devm_kzalloc(dev, sizeof(*new->q.info) * num_descs,
-+	new->q.info = devm_kcalloc(dev, num_descs, sizeof(*new->q.info),
- 				   GFP_KERNEL);
- 	if (!new->q.info) {
- 		netdev_err(lif->netdev, "Cannot allocate queue info\n");
-@@ -462,7 +462,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
- 		new->intr.index = IONIC_INTR_INDEX_NOT_ASSIGNED;
- 	}
- 
--	new->cq.info = devm_kzalloc(dev, sizeof(*new->cq.info) * num_descs,
-+	new->cq.info = devm_kcalloc(dev, num_descs, sizeof(*new->cq.info),
- 				    GFP_KERNEL);
- 	if (!new->cq.info) {
- 		netdev_err(lif->netdev, "Cannot allocate completion queue info\n");
+
+Main changes from v1:
+- Add the new Patch #1, to improve the feature id definition.
+- Change the dfl bus uevent format.
+- Change the dfl device's sysfs name format.
+- refactor dfl_dev_add()
+- Add the Patch #4 as an example of the dfl driver.
+- A lot of minor fixes for comments from Hao and Tom.
+
+Main changes from v2:
+- Add the doc for dfl-n3000-nios driver.
+- Minor fixes for comments from Tom.
+
+Main changes from v3:
+- improve the dfl devices' uevent format, 4 bits for type & 12 bits for id
+- change dfl_device->type to u8
+- A dedicate field in struct dfl_feature for dfl device instance.
+- error out if dfl_device already exist on dfl_devs_init().
+- Move the err log in regmap implementation, and delete
+  n3000_nios_writel/readl(), they have nothing to wrapper now.
+- Minor fixes and comments improvement.
+
+Xu Yilun (4):
+  fpga: dfl: change data type of feature id to u16
+  fpga: dfl: map feature mmio resources in their own feature drivers
+  fpga: dfl: create a dfl bus type to support DFL devices
+  fpga: dfl: add support for N3000 Nios private feature
+
+ Documentation/ABI/testing/sysfs-bus-dfl            |  15 +
+ .../ABI/testing/sysfs-bus-dfl-devices-n3000-nios   |  18 +
+ Documentation/fpga/dfl-n3000-nios.rst              |  41 ++
+ Documentation/fpga/index.rst                       |   1 +
+ drivers/fpga/Kconfig                               |  12 +
+ drivers/fpga/Makefile                              |   2 +
+ drivers/fpga/dfl-fme-perf.c                        |   2 +-
+ drivers/fpga/dfl-n3000-nios.c                      | 475 +++++++++++++++++++++
+ drivers/fpga/dfl-pci.c                             |  24 +-
+ drivers/fpga/dfl.c                                 | 473 ++++++++++++++++----
+ drivers/fpga/dfl.h                                 | 102 ++++-
+ 11 files changed, 1062 insertions(+), 103 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+ create mode 100644 Documentation/fpga/dfl-n3000-nios.rst
+ create mode 100644 drivers/fpga/dfl-n3000-nios.c
+
 -- 
-2.17.1
+2.7.4
 
