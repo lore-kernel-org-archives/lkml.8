@@ -2,200 +2,112 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC0CC2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F9F52080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sm/LzB8H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/RWcC5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgHJSMk (ORCPT
+        id S1728133AbgHJSN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33134 "EHLO
+        Mon, 10 Aug 2020 14:13:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbgHJSMi (ORCPT
+        with ESMTP id S1727904AbgHJSN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:12:38 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEBD9C061756;
-        Mon, 10 Aug 2020 11:12:38 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p37so1200851pgl.3;
-        Mon, 10 Aug 2020 11:12:38 -0700 (PDT)
+        Mon, 10 Aug 2020 14:13:58 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E58CC061756;
+        Mon, 10 Aug 2020 11:13:58 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id r4so5438561pls.2;
+        Mon, 10 Aug 2020 11:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=+1K7lPkl9sTdF9hLdLNfPdB56zzb78jCkAfPaMwndHs=;
-        b=Sm/LzB8HAt3VwQj4DiJxBmeCCDGDcjV2aFcuWZ/kJJZ/IjgLGlOwBqOL5597ra7JCA
-         +pE3qGvx0dx/9iWGM/KjucK1JRxc+D3Xf4RJGswAUcjsdDdG/dv+RCMUJIe762UZtXL2
-         OTYnsY+pXnvNDN61dq1sIAt3iqB83oNBbpkF5C+bJj6a8U9CcawmQ6qzhKUso7lKZlBH
-         lDDDqGL5tj1fE5I3y9o3xg0+TVe56WmAW2fIYx2bONbhyLxESh+IpjR7sYqXZbqCwMmo
-         VUFQ4SNmaHtLwrYlPZlW2HPAdkRyri79Xpub5jsXU6t/7OMzYYzEaEfCZ++eYWGiSb6x
-         5O4Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QWRjJz03fN2iX6SwFzIlTiyYOq7QYK9vU0Yu9DQQqFg=;
+        b=B/RWcC5SUXP+AjseWeNvooqu2enNHgumz6rl6RK/sm6OxOMjpNAPqfgwbC2Uj/pCM2
+         B6EI2DkyqlZY48bqmKCkvj6P7Z9gQxtGM0E9oS6mp1ZMfizCc2/VtqecTG+YJXQFBVpr
+         P8UBvN1bTyo8RHgkypE4UW6SCVoQoDGJKKz0f4s1xKCbDOdfWY82/1eve6yzJaG0lQCi
+         tH0oCJooIUESQKV/+DL6Er88LPwYDlQp8hK2EQT1rIK7gyPas2uDRMsBkDJnECgkBGSR
+         5w1CZVYDTeJ8C+0oZS3iY29eCS5MnHmyz2pTcgNMJN1zErCg/R35id1oJ1Mt8s15lwKN
+         jSJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=+1K7lPkl9sTdF9hLdLNfPdB56zzb78jCkAfPaMwndHs=;
-        b=HyauaqExlVcuVYginIkUHzuSEOic29NCp1nVmov9kRmd4Ir12Ue2IU9R07Iq1wkZnP
-         yXb2D1y/GgzEljU9vFXzmmg1UR47b8jBBaOv6fWWUltB0QiCE1Qkiu0PIAn1LULks8EX
-         vbklRXjKZWmrt1xKTGEch9h6nxW2ttqv/f1tt4vd2ft6d3Kz7HIPWKO7bTeWeJcwwpA5
-         kZHDgEfDUxauFb8F5FvCo55heJUiRmGTd+jKyFkjGBvggF5VS1flhsVr/o8yBp+JNouG
-         2JGm1H+Hn9gOqex/FEFZ4rfErqmtuSp0Mc64AGbgaQQoZzf2v/bSvHBRHv0i73OEAXUs
-         vJfg==
-X-Gm-Message-State: AOAM53015yELJWHx8GUHNwbkHRq+DBFO+MsY+2v/tX+ScriU8w3MxZKg
-        YrBLwENYjz0lxaSOUaFknXQ=
-X-Google-Smtp-Source: ABdhPJyi0A0Gf1gxQozPeG3qqp/rzzafdu85x+YeQyF+NtCy17IENlAAxUTtnnFpFBuGjTRNOxccLg==
-X-Received: by 2002:a63:6c8:: with SMTP id 191mr21586967pgg.117.1597083158155;
-        Mon, 10 Aug 2020 11:12:38 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id 198sm22723988pfz.120.2020.08.10.11.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 11:12:37 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 11:12:35 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.9-rc0
-Message-ID: <20200810181235.GA929203@dtor-ws>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QWRjJz03fN2iX6SwFzIlTiyYOq7QYK9vU0Yu9DQQqFg=;
+        b=oBAQNoKCnzSSrm/Jtq2rK1bYJLSx+1zkIrlPI3f+mmyti6DSCSjZU+bKlQaG7KCRb1
+         jKnBQsOwhaCRo0rP2dAeOAhROdAQRsx3vaKzkxF97VDqLrYCMiJqrTvPQnUvgHCSg3CT
+         O0O463bKoc+ZL7IxygSdTAuDRtXdFvcpPE9TatgMWA6HABUp6sneaPKjQ+rcUCCDTXBT
+         3DJejbpa6XjqHWsWSlO+AAreR4BNLK0G+T+YhNvKEU/G02cAE0gepgE+JxFxv6yKH4+X
+         amTnCXIfbd8cQjABtc6lfQQVn/WNN1hIXxOrHeoYJ5k7CwjijVcHlmTdk1mf7vipyQgE
+         IZaw==
+X-Gm-Message-State: AOAM533xJyYoMIFR+u6p1Qvbdce68Ew56MhLvyN7FEaTgixupU2AtMqJ
+        wCJynStqfUDs0IDjmB+ChT+JADZJIYd4fUBhJkI=
+X-Google-Smtp-Source: ABdhPJxbl9r/s3RbDzcSSFfduZED7AMMCG8o6kF6ali+og7C3Xr9BVeqjDvPq1jNbLi7nO/qd5k95hpfX+ZnfkTAqZI=
+X-Received: by 2002:a17:902:9892:: with SMTP id s18mr9546077plp.322.1597083237768;
+ Mon, 10 Aug 2020 11:13:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20200808175251.582781-1-xie.he.0141@gmail.com>
+ <CA+FuTSfxWhq0pxEGPtOMjFUB7-4Vax6XMGsLL++28LwSOU5b3g@mail.gmail.com>
+ <CAJht_EM9q9u34LMAeYsYe5voZ54s3Z7OzxtvSomcF9a9wRvuCQ@mail.gmail.com> <CA+FuTSdBNn218kuswND5OE4vZ4mxz3_hTDkcRmZn2Z9-gaYQZg@mail.gmail.com>
+In-Reply-To: <CA+FuTSdBNn218kuswND5OE4vZ4mxz3_hTDkcRmZn2Z9-gaYQZg@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 10 Aug 2020 11:13:46 -0700
+Message-ID: <CAJht_EPGD1RmnU6-ZJYocXCY-qcPxXeEuurQ6GJod=WGO69-jg@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/lapbether: Added needed_tailroom
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Aug 10, 2020 at 12:32 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> What happens when a tunnel device passes a packet to these devices?
+> That will also not have allocated the extra tailroom. Does that cause
+> a bug?
 
-Please pull from:
+I looked at the code in net/ipv4/ip_tunnel.c. It indeed appeared to me
+that it didn't take needed_tailroom into consideration. However it
+does take needed_headroom into consideration through the macro
+LL_RESERVED_SPACE. I think it would be better for it to take
+needed_tailroom into consideration, too.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+However, looking at the comment of needed_tailroom in
+include/linux/netdevice.h, it says "Extra tailroom the hardware may
+need, but not in all cases can this be guaranteed". So if we take this
+comment as the spec, we can consider this to be not a bug. The reason
+the author of this comment said so, might be that he wanted to add
+needed_tailroom to solve some problems, but he was not able to change
+all code to take needed_tailroom into consideration, so he wrote in
+the comment saying that it was not necessary to always guarantee
+needed_tailroom.
 
-to receive updates for the input subsystem. You will get:
+If we take this comment as the spec, to prevent bugs, any driver that
+sets needed_tailroom must always check (and re-allocate if necessary)
+before using the tailroom.
 
-- an update to Elan touchpad controller driver supporting newer ICs with
-  enhanced precision reports and a new firmware update process
-- an update to EXC3000 touch controller supporting additional parts
-- assorted driver fixups.
+However, I still think it would be better to always take into
+consideration needed_tailroom (and needed_headroom, too), so that
+eventually we can remove the words of "but not in all cases can this
+be guaranteed" from the comment. That would make the code more logical
+and consistent.
 
-Changelog:
----------
-
-Colin Ian King (4):
-      Input: elantech - remove redundant assignments to variable error
-      Input: ims-pcu - return error code rather than -ENOMEM
-      Input: alps - remove redundant assignment to variable ret
-      Input: sentelic - fix error return when fsp_reg_write fails
-
-Dmitry Torokhov (1):
-      Input: elan_i2c - do not constantly re-query pattern ID
-
-Gustavo A. R. Silva (1):
-      Input: Use fallthrough pseudo-keyword
-
-Jingle Wu (9):
-      Input: elan_i2c - handle firmware not implementing "get pattern" command
-      Input: elan_i2c - make fetching IC type of older controllers more robust
-      Input: elan_i2c - handle devices with patterns above 1
-      Input: elan_i2c - fix detecting IAP version on older controllers
-      Input: elan_i2c - add support for different firmware page sizes
-      Input: elan_i2c - handle firmware updated on newer ICs
-      Input: elan_i2c - add firmware update info for ICs 0x11, 0x13, 0x14
-      Input: elan_i2c - add support for high resolution reports
-      Input: elan_i2c - add ic type 0x15
-
-Michał Mirosław (1):
-      Input: mt - cleanup open-coded __set_bit()
-
-Nick Dyer (1):
-      Input: atmel_mxt_ts - only read messages in mxt_acquire_irq() when necessary
-
-Pavel Machek (1):
-      Input: uinput - fix typo in function name documentation
-
-Randy Dunlap (1):
-      Input: synaptics-rmi4 - drop a duplicated word
-
-Sebastian Reichel (5):
-      Input: exc3000 - switch to i2c's probe_new API
-      dt-bindings: touchscreen: Convert EETI EXC3000 touchscreen to json-schema
-      Input: exc3000 - add EXC80H60 and EXC80H84 support
-      Input: exc3000 - add reset gpio support
-      Input: exc3000 - add support to query model and fw_version
-
-Xiongfeng Wang (2):
-      Input: psmouse - add a newline when printing 'proto' by sysfs
-      Input: ati_remote2 - add missing newlines when printing module parameters
-
-Xu Wang (1):
-      Input: cm109 - remove needless check before usb_free_coherent()
-
-Diffstat:
---------
-
- .../ABI/testing/sysfs-driver-input-exc3000         |  15 ++
- .../bindings/input/touchscreen/eeti,exc3000.yaml   |  58 +++++
- .../bindings/input/touchscreen/exc3000.txt         |  26 ---
- Documentation/input/uinput.rst                     |   6 +-
- drivers/input/input-mt.c                           |   2 +-
- drivers/input/joystick/db9.c                       |  10 +-
- drivers/input/joystick/gamecon.c                   |  10 +-
- drivers/input/joystick/sidewinder.c                |  15 +-
- drivers/input/joystick/spaceball.c                 |   8 +-
- drivers/input/keyboard/adp5589-keys.c              |   2 +-
- drivers/input/keyboard/atkbd.c                     |   2 +-
- drivers/input/keyboard/gpio_keys.c                 |   1 -
- drivers/input/misc/ati_remote2.c                   |   4 +-
- drivers/input/misc/cm109.c                         |   8 +-
- drivers/input/misc/ims-pcu.c                       |   2 +-
- drivers/input/misc/iqs269a.c                       |  21 +-
- drivers/input/misc/pwm-vibra.c                     |   2 +-
- drivers/input/misc/xen-kbdfront.c                  |   4 +-
- drivers/input/mouse/alps.c                         |   2 +-
- drivers/input/mouse/appletouch.c                   |   2 +-
- drivers/input/mouse/cyapa_gen3.c                   |   4 +-
- drivers/input/mouse/cyapa_gen5.c                   |   2 +-
- drivers/input/mouse/cyapa_gen6.c                   |   2 +-
- drivers/input/mouse/elan_i2c.h                     |  20 +-
- drivers/input/mouse/elan_i2c_core.c                | 195 ++++++++++------
- drivers/input/mouse/elan_i2c_i2c.c                 | 165 ++++++++++----
- drivers/input/mouse/elan_i2c_smbus.c               |  35 ++-
- drivers/input/mouse/elantech.c                     |  12 +-
- drivers/input/mouse/hgpk.c                         |   4 +-
- drivers/input/mouse/navpoint.c                     |   2 +-
- drivers/input/mouse/psmouse-base.c                 |   2 +-
- drivers/input/mouse/sentelic.c                     |   4 +-
- drivers/input/mouse/sermouse.c                     |   4 +-
- drivers/input/serio/i8042.c                        |   2 +-
- drivers/input/serio/libps2.c                       |   2 +-
- drivers/input/sparse-keymap.c                      |   2 +-
- drivers/input/tablet/gtco.c                        |   6 +-
- drivers/input/tablet/pegasus_notetaker.c           |   2 +-
- drivers/input/touchscreen/atmel_mxt_ts.c           |  56 ++++-
- drivers/input/touchscreen/edt-ft5x06.c             |   3 +-
- drivers/input/touchscreen/elants_i2c.c             |   2 +-
- drivers/input/touchscreen/elo.c                    |   2 +-
- drivers/input/touchscreen/exc3000.c                | 248 +++++++++++++++++++--
- drivers/input/touchscreen/iqs5xx.c                 |   2 +-
- drivers/input/touchscreen/max11801_ts.c            |   1 -
- drivers/input/touchscreen/stmfts.c                 |   2 +-
- include/linux/rmi.h                                |   2 +-
- 47 files changed, 718 insertions(+), 265 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-input-exc3000
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-
-Thanks.
-
-
--- 
-Dmitry
+Thank you for raising this important question about needed_tailroom!
