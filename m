@@ -2,54 +2,52 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A21C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE1822B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D788E22D08
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073393;
-	bh=nVybSTm6sL9M4bV5bm6tORYXEDhYC+smj9cDIJK+l7Q=;
+	s=default; t=1597073397;
+	bh=TU8KcSxgf0mh/aZ/qfkuGB8IhN9MgKoxul2BZV7PuG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ay7QxXJ4VoJDP1RFrOxAiYZOneV1qbyfK4zF8sa43GY09aXQz4jcr3dGqeF8Bfa0F
-	 q47ins5+FTByFlT8LSEwKhiwKKXVzIYMUosy3Z/gIqn0bedVD8dnWEOHCQXo9YImC8
-	 YL6CqkCRonI6GNPLJU16KH+ZO50erPObeH0WKQuk=
+	b=n/ah3J545Ojn3U2o60qgRA1eDfJcH+cIDD5L61bGFJcrd/kaArFJDE8aeQZ66xyYB
+	 9TVCX2jY7sxnHjd/21rsJBMcEp3SsYcmTRKPUeo+886lXVshmAYAX2wmhyxzUvb2Nc
+	 dtPlR6Y4wbHcFi5707+QJTYIKddOHqIknRaW167M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbgHJP3w (ORCPT
+        id S1729028AbgHJP34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:29:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36270 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbgHJP3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:43 -0400
+        id S1729021AbgHJP3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD36C22D06;
-        Mon, 10 Aug 2020 15:29:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C95322D07;
+        Mon, 10 Aug 2020 15:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073383;
-        bh=nVybSTm6sL9M4bV5bm6tORYXEDhYC+smj9cDIJK+l7Q=;
+        s=default; t=1597073392;
+        bh=TU8KcSxgf0mh/aZ/qfkuGB8IhN9MgKoxul2BZV7PuG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UIbiGxeaBSpQRftZB0LYV5188nBHUkuqJRBs8iSesK9fM52l7f3Fm3fHfd4YqgdkZ
-         0B0xkktNF2BFkyRRJEijwdDb7/x9500bKUj8v+U7ldTqgsTqj+NnXtRSsgwYLhIHLl
-         SUQ4PiM62imlua+k4L4LznEx7Y0JIJviAgyV28aA=
+        b=U/0YWbgI9Tshv7X9qRmzvzWCPalehGsgWiT4BMamrA2STMtBc6C/BITKTxgs78mMU
+         V2Cy6hcGSMMuH1EOOJy+jVjolkW8xxmxW9i9x6SW7hReSiTdRBCPXL07ge+q8i+Iay
+         uZ2WogZR/M6miQOc3a7D85kQ4WorhEM4xX0/s/1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/48] net/9p: validate fds in p9_fd_open
-Date:   Mon, 10 Aug 2020 17:21:41 +0200
-Message-Id: <20200810151805.162250250@linuxfoundation.org>
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Forest Crossman <cyrozap@gmail.com>
+Subject: [PATCH 4.19 03/48] usb: xhci: define IDs for various ASMedia host controllers
+Date:   Mon, 10 Aug 2020 17:21:25 +0200
+Message-Id: <20200810151804.380935938@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -62,70 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Forest Crossman <cyrozap@gmail.com>
 
-[ Upstream commit a39c46067c845a8a2d7144836e9468b7f072343e ]
+commit 1841cb255da41e87bed9573915891d056f80e2e7 upstream.
 
-p9_fd_open just fgets file descriptors passed in from userspace, but
-doesn't verify that they are valid for read or writing.  This gets
-cought down in the VFS when actually attempting a read or write, but
-a new warning added in linux-next upsets syzcaller.
+Not all ASMedia host controllers have a device ID that matches its part
+number. #define some of these IDs to make it clearer at a glance which
+chips require what quirks.
 
-Fix this by just verifying the fds early on.
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Link: https://lore.kernel.org/r/20200728042408.180529-2-cyrozap@gmail.com
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: http://lkml.kernel.org/r/20200710085722.435850-1-hch@lst.de
-Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[Dominique: amend goto as per Doug Nazar's review]
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_fd.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/usb/host/xhci-pci.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index d28c2cc9618fa..b6dcb40fa8a7d 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -831,20 +831,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
- 		return -ENOMEM;
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -47,7 +47,9 @@
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_2			0x43bb
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
++#define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
+ #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
++#define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
  
- 	ts->rd = fget(rfd);
-+	if (!ts->rd)
-+		goto out_free_ts;
-+	if (!(ts->rd->f_mode & FMODE_READ))
-+		goto out_put_rd;
- 	ts->wr = fget(wfd);
--	if (!ts->rd || !ts->wr) {
--		if (ts->rd)
--			fput(ts->rd);
--		if (ts->wr)
--			fput(ts->wr);
--		kfree(ts);
--		return -EIO;
--	}
-+	if (!ts->wr)
-+		goto out_put_rd;
-+	if (!(ts->wr->f_mode & FMODE_WRITE))
-+		goto out_put_wr;
+ static const char hcd_name[] = "xhci_hcd";
  
- 	client->trans = ts;
- 	client->status = Connected;
+@@ -226,13 +228,13 @@ static void xhci_pci_quirks(struct devic
+ 		xhci->quirks |= XHCI_BROKEN_STREAMS;
  
- 	return 0;
-+
-+out_put_wr:
-+	fput(ts->wr);
-+out_put_rd:
-+	fput(ts->rd);
-+out_free_ts:
-+	kfree(ts);
-+	return -EIO;
- }
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x1042)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042_XHCI)
+ 		xhci->quirks |= XHCI_BROKEN_STREAMS;
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x1142)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
+ 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x2142)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
+ 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
  
- static int p9_socket_open(struct p9_client *client, struct socket *csocket)
--- 
-2.25.1
-
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
 
 
