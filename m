@@ -2,88 +2,101 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5382FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477A720729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7BB20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgHJIvC (ORCPT
+        id S1726457AbgHJIx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:51:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52438 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgHJIvB (ORCPT
+        Mon, 10 Aug 2020 04:53:29 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36791 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgHJIx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:51:01 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k53WD-0000zR-Q8; Mon, 10 Aug 2020 08:50:57 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     QLogic-Storage-Upstream@qlogic.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: bnx2fc: fix spelling mistake "couldnt" -> "couldn't"
-Date:   Mon, 10 Aug 2020 09:50:57 +0100
-Message-Id: <20200810085057.49039-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 10 Aug 2020 04:53:28 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x24so6711887otp.3;
+        Mon, 10 Aug 2020 01:53:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xmzp7fk+vIO5KhMWu8O9IbD4bDIyRfJdP7iP0tIOvno=;
+        b=mOGdM88vJfUe0IjTNtwfTexNlHHBK7uHOmlybBGz/g4R6k9oPggbECbVtj36holqsR
+         k7QT3oL0xY024giKb/YQz19mQwhXMijoQ3jCCiQriglgjCMnq+A01BCHpFFV6TBrpOM5
+         YRQgmMjrTYZW1FFfUHDs42CoQeDXilaYx224qLxDWVpv1DOzxtbUB5r3kacDHqczXZ5F
+         7oz5GoV0wVaqT4/AWscfe5H191gRSDBawxGDhGcamMlOUBwqjVrxqITyC2m1fSInP5Q3
+         MR96+3GP7yrI+8brGHXae4KWNTutrLX0DAA39eHpsiTdzMXSSDhjnb5EFLaMQTiThzMx
+         2Xcw==
+X-Gm-Message-State: AOAM530BcwnSm6BBTRwh6JMSFf1uC8LvedlajFTy+OeRn7HwWCCWwMQ0
+        4sJILOivXhjQ0LYCA2ktr0Z40YJWrvtX9CBaE/c=
+X-Google-Smtp-Source: ABdhPJzSt76d0ygTKVbbokZXs04MvcLY5RinH8EKwMctMbjh/IruKDAr8twMrh9yrF5whd8fFKWBPfGLT5IiuTy66Aw=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr3284otn.250.1597049607701;
+ Mon, 10 Aug 2020 01:53:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <e67a94e8-c9ed-dc9e-cab8-453a09441bcb@gmail.com> <CA+V-a8snp3EUFRuMHLxVhnc=zPq-LaQL8du7LgGcswi+6NthLQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8snp3EUFRuMHLxVhnc=zPq-LaQL8du7LgGcswi+6NthLQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 10 Aug 2020 10:53:16 +0200
+Message-ID: <CAMuHMdVEqc1JVeZrLdDfRo1EwyzaVq-ORStO39NyTqwwkh8YLQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] ARM: dts: r8a7742: Add DU support
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Aug 7, 2020 at 10:22 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Fri, Aug 7, 2020 at 8:48 PM Sergei Shtylyov
+> <sergei.shtylyov@gmail.com> wrote:
+> > On 8/7/20 8:49 PM, Lad Prabhakar wrote:
+> > > Add du node to r8a7742 SoC DT. Boards that want to enable the DU
+> >
+> >   Both "du" and "DU" on a single line? :-)
+> >
+> Argh my bad.
 
-There are spelling mistakes in various printk messages. Fix these.
+No worries, I can replace the former one by "Display Unit (DU)" while
+applying.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/bnx2fc/bnx2fc_io.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> > > need to specify the output topology.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
-index 1aba5897ccb0..1a0dc18d6915 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_io.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
-@@ -864,7 +864,7 @@ int bnx2fc_initiate_abts(struct bnx2fc_cmd *io_req)
- 
- 	abts_io_req = bnx2fc_elstm_alloc(tgt, BNX2FC_ABTS);
- 	if (!abts_io_req) {
--		printk(KERN_ERR PFX "abts: couldnt allocate cmd\n");
-+		printk(KERN_ERR PFX "abts: couldn't allocate cmd\n");
- 		rc = FAILED;
- 		goto abts_err;
- 	}
-@@ -957,7 +957,7 @@ int bnx2fc_initiate_seq_cleanup(struct bnx2fc_cmd *orig_io_req, u32 offset,
- 
- 	seq_clnp_req = bnx2fc_elstm_alloc(tgt, BNX2FC_SEQ_CLEANUP);
- 	if (!seq_clnp_req) {
--		printk(KERN_ERR PFX "cleanup: couldnt allocate cmd\n");
-+		printk(KERN_ERR PFX "cleanup: couldn't allocate cmd\n");
- 		rc = -ENOMEM;
- 		kfree(cb_arg);
- 		goto cleanup_err;
-@@ -1015,7 +1015,7 @@ int bnx2fc_initiate_cleanup(struct bnx2fc_cmd *io_req)
- 
- 	cleanup_io_req = bnx2fc_elstm_alloc(tgt, BNX2FC_CLEANUP);
- 	if (!cleanup_io_req) {
--		printk(KERN_ERR PFX "cleanup: couldnt allocate cmd\n");
-+		printk(KERN_ERR PFX "cleanup: couldn't allocate cmd\n");
- 		rc = -1;
- 		goto cleanup_err;
- 	}
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10, with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
