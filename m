@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4728C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEEFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85CE320734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5F3206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgHJNma (ORCPT
+        id S1727022AbgHJNmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:42:30 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:2086 "EHLO
+        Mon, 10 Aug 2020 09:42:23 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:7942 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726985AbgHJNmG (ORCPT
+        by vger.kernel.org with ESMTP id S1727003AbgHJNmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:42:06 -0400
+        Mon, 10 Aug 2020 09:42:10 -0400
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ADeNO8004985;
-        Mon, 10 Aug 2020 09:42:04 -0400
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ADdwKs004706;
+        Mon, 10 Aug 2020 09:41:57 -0400
 Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32snw56v3f-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 32snw56v37-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 09:42:03 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07ADg2ss061555
+        Mon, 10 Aug 2020 09:41:57 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07ADftFk061532
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 10 Aug 2020 09:42:02 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 10 Aug
- 2020 09:42:01 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 10 Aug 2020 09:42:01 -0400
+        Mon, 10 Aug 2020 09:41:55 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 10 Aug 2020 06:41:54 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 10 Aug 2020 06:41:53 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07ADfY3o030109;
-        Mon, 10 Aug 2020 09:41:58 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07ADfY3k030109;
+        Mon, 10 Aug 2020 09:41:50 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-clk@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <mturquette@baylibre.com>, <sboyd@kernel.org>, <mdf@kernel.org>,
-        <ardeleanalex@gmail.com>,
-        Mircea Caprioru <mircea.caprioru@analog.com>,
+        <ardeleanalex@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 5/6] include: fpga: adi-axi-common.h: add definitions for supported FPGAs
-Date:   Mon, 10 Aug 2020 16:42:51 +0300
-Message-ID: <20200810134252.68614-13-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 1/6] clk: axi-clkgen: Add support for fractional dividers
+Date:   Mon, 10 Aug 2020 16:42:47 +0300
+Message-ID: <20200810134252.68614-9-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200810134252.68614-1-alexandru.ardelean@analog.com>
 References: <20200810134252.68614-1-alexandru.ardelean@analog.com>
@@ -62,7 +61,7 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-10_09:2020-08-06,2020-08-10 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
  clxscore=1015 impostorscore=0 mlxscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=867 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 spamscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008100102
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,145 +69,300 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mircea Caprioru <mircea.caprioru@analog.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-All (newer) FPGA IP cores supported by Analog Devices, store information in
-the synthesized designs. This information describes various parameters,
-including the family of boards on which this is deployed, speed-grade, and
-so on.
+The axi-clkgen has (optional) fractional dividers on the output clock
+divider and feedback clock divider path. Utilizing the fractional dividers
+allows for a better resolution of the output clock, being able to
+synthesize more frequencies.
 
-Currently, some of these definitions are deployed mostly on Xilinx boards,
-but they have been considered also for FPGA boards from other vendors.
+Rework the driver support to support the fractional register fields, both
+for setting a new rate as well as reading back the current rate from the
+hardware.
 
-The register definitions are described at this link:
-  https://wiki.analog.com/resources/fpga/docs/hdl/regmap
-(the 'Base (common to all cores)' section).
+For setting the rate if no perfect divider settings were found in
+non-fractional mode try again in fractional mode and see if better settings
+can be found. This appears to be the recommended mode of operation.
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- include/linux/fpga/adi-axi-common.h | 103 ++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+ drivers/clk/clk-axi-clkgen.c | 180 +++++++++++++++++++++++++----------
+ 1 file changed, 129 insertions(+), 51 deletions(-)
 
-diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-index 141ac3f251e6..5c7d212a5d4a 100644
---- a/include/linux/fpga/adi-axi-common.h
-+++ b/include/linux/fpga/adi-axi-common.h
-@@ -13,6 +13,9 @@
+diff --git a/drivers/clk/clk-axi-clkgen.c b/drivers/clk/clk-axi-clkgen.c
+index 96f351785b41..1df03cc6d089 100644
+--- a/drivers/clk/clk-axi-clkgen.c
++++ b/drivers/clk/clk-axi-clkgen.c
+@@ -27,8 +27,10 @@
  
- #define ADI_AXI_REG_VERSION			0x0000
+ #define AXI_CLKGEN_V2_DRP_STATUS_BUSY	BIT(16)
  
-+#define ADI_AXI_REG_FPGA_INFO			0x001C
-+#define ADI_AXI_REG_FPGA_VOLTAGE		0x0140
-+
- #define ADI_AXI_PCORE_VER(major, minor, patch)	\
- 	(((major) << 16) | ((minor) << 8) | (patch))
++#define MMCM_REG_CLKOUT5_2	0x07
+ #define MMCM_REG_CLKOUT0_1	0x08
+ #define MMCM_REG_CLKOUT0_2	0x09
++#define MMCM_REG_CLKOUT6_2	0x13
+ #define MMCM_REG_CLK_FB1	0x14
+ #define MMCM_REG_CLK_FB2	0x15
+ #define MMCM_REG_CLK_DIV	0x16
+@@ -40,6 +42,7 @@
  
-@@ -20,4 +23,104 @@
- #define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
- #define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
+ #define MMCM_CLKOUT_NOCOUNT	BIT(6)
  
-+#define ADI_AXI_INFO_FPGA_VOLTAGE(val)		((val) & 0xffff)
++#define MMCM_CLK_DIV_DIVIDE	BIT(11)
+ #define MMCM_CLK_DIV_NOCOUNT	BIT(12)
+ 
+ struct axi_clkgen {
+@@ -107,6 +110,8 @@ static void axi_clkgen_calc_params(unsigned long fin, unsigned long fout,
+ 	unsigned long d, d_min, d_max, _d_min, _d_max;
+ 	unsigned long m, m_min, m_max;
+ 	unsigned long f, dout, best_f, fvco;
++	unsigned long fract_shift = 0;
++	unsigned long fvco_min_fract, fvco_max_fract;
+ 
+ 	fin /= 1000;
+ 	fout /= 1000;
+@@ -119,42 +124,89 @@ static void axi_clkgen_calc_params(unsigned long fin, unsigned long fout,
+ 	d_min = max_t(unsigned long, DIV_ROUND_UP(fin, fpfd_max), 1);
+ 	d_max = min_t(unsigned long, fin / fpfd_min, 80);
+ 
+-	m_min = max_t(unsigned long, DIV_ROUND_UP(fvco_min, fin) * d_min, 1);
+-	m_max = min_t(unsigned long, fvco_max * d_max / fin, 64);
++again:
++	fvco_min_fract = fvco_min << fract_shift;
++	fvco_max_fract = fvco_max << fract_shift;
 +
-+#define ADI_AXI_INFO_FPGA_TECH(info)		(((info) >> 24) & 0xff)
-+#define ADI_AXI_INFO_FPGA_FAMILY(info)		(((info) >> 16) & 0xff)
-+#define ADI_AXI_INFO_FPGA_SPEED_GRADE(info)	(((info) >> 8) & 0xff)
-+#define ADI_AXI_INFO_FPGA_DEV_PACKAGE(info)	((info) & 0xff)
++	m_min = max_t(unsigned long, DIV_ROUND_UP(fvco_min_fract, fin) * d_min, 1);
++	m_max = min_t(unsigned long, fvco_max_fract * d_max / fin, 64 << fract_shift);
+ 
+ 	for (m = m_min; m <= m_max; m++) {
+-		_d_min = max(d_min, DIV_ROUND_UP(fin * m, fvco_max));
+-		_d_max = min(d_max, fin * m / fvco_min);
++		_d_min = max(d_min, DIV_ROUND_UP(fin * m, fvco_max_fract));
++		_d_max = min(d_max, fin * m / fvco_min_fract);
+ 
+ 		for (d = _d_min; d <= _d_max; d++) {
+ 			fvco = fin * m / d;
+ 
+ 			dout = DIV_ROUND_CLOSEST(fvco, fout);
+-			dout = clamp_t(unsigned long, dout, 1, 128);
++			dout = clamp_t(unsigned long, dout, 1, 128 << fract_shift);
+ 			f = fvco / dout;
+ 			if (abs(f - fout) < abs(best_f - fout)) {
+ 				best_f = f;
+ 				*best_d = d;
+-				*best_m = m;
+-				*best_dout = dout;
++				*best_m = m << (3 - fract_shift);
++				*best_dout = dout << (3 - fract_shift);
+ 				if (best_f == fout)
+ 					return;
+ 			}
+ 		}
+ 	}
 +
-+/**
-+ * FPGA Technology definitions
-+ */
-+#define ADI_AXI_FPGA_TECH_XILINX_UNKNOWN 		0
-+#define ADI_AXI_FPGA_TECH_XILINS_SERIES7		1
-+#define ADI_AXI_FPGA_TECH_XILINX_ULTRASCALE		2
-+#define ADI_AXI_FPGA_TECH_XILINX_ULTRASCALE_PLUS	3
++	/* Lets see if we find a better setting in fractional mode */
++	if (fract_shift == 0) {
++		fract_shift = 3;
++		goto again;
++	}
+ }
+ 
+-static void axi_clkgen_calc_clk_params(unsigned int divider, unsigned int *low,
+-	unsigned int *high, unsigned int *edge, unsigned int *nocount)
++struct axi_clkgen_div_params {
++	unsigned int low;
++	unsigned int high;
++	unsigned int edge;
++	unsigned int nocount;
++	unsigned int frac_en;
++	unsigned int frac;
++	unsigned int frac_wf_f;
++	unsigned int frac_wf_r;
++	unsigned int frac_phase;
++};
 +
-+#define ADI_AXI_FPGA_TECH_INTEL_UNKNOWN			100
-+#define ADI_AXI_FPGA_TECH_INTEL_CYCLONE_5		101
-+#define ADI_AXI_FPGA_TECH_INTEL_CYCLONE_10		102
-+#define ADI_AXI_FPGA_TECH_INTEL_ARRIA_10		103
-+#define ADI_AXI_FPGA_TECH_INTEL_STRATIX_10		104
++static void axi_clkgen_calc_clk_params(unsigned int divider,
++	unsigned int frac_divider, struct axi_clkgen_div_params *params)
+ {
+-	if (divider == 1)
+-		*nocount = 1;
+-	else
+-		*nocount = 0;
+ 
+-	*high = divider / 2;
+-	*edge = divider % 2;
+-	*low = divider - *high;
++	memset(params, 0x0, sizeof(*params));
 +
-+/**
-+ * FPGA Family definitions
-+ */
-+#define ADI_AXI_FPGA_FAMILY_UNKNOWN			0
++	if (divider == 1) {
++		params->nocount = 1;
++		return;
++	}
 +
-+#define ADI_AXI_FPGA_FAMILY_XILINX_ARTIX		1
-+#define ADI_AXI_FPGA_FAMILY_XILINX_KINTEX		2
-+#define ADI_AXI_FPGA_FAMILY_XILINX_VIRTEX		3
-+#define ADI_AXI_FPGA_FAMILY_XILINX_ZYNQ			4
++	if (frac_divider == 0) {
++		params->high = divider / 2;
++		params->edge = divider % 2;
++		params->low = divider - params->high;
++	} else {
++		params->frac_en = 1;
++		params->frac = frac_divider;
 +
-+#define ADI_AXI_FPGA_FAMILY_INTEL_SX			1
-+#define ADI_AXI_FPGA_FAMILY_INTEL_GX			2
-+#define ADI_AXI_FPGA_FAMILY_INTEL_GT			3
-+#define ADI_AXI_FPGA_FAMILY_INTEL_GZ			4
++		params->high = divider / 2;
++		params->edge = divider % 2;
++		params->low = params->high;
 +
-+/**
-+ * FPGA Speed-grade definitions
-+ */
-+#define ADI_AXI_FPGA_SPEED_GRADE_UNKNOWN		0
++		if (params->edge == 0) {
++			params->high--;
++			params->frac_wf_r = 1;
++		}
 +
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1		10
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1L		11
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1H		12
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1HV		13
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1LV		14
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2		20
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2L		21
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2LV		22
-+#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_3		30
++		if (params->edge == 0 || frac_divider == 1)
++			params->low--;
++		if (((params->edge == 0) ^ (frac_divider == 1)) ||
++			(divider == 2 && frac_divider == 1))
++			params->frac_wf_f = 1;
 +
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_1		1
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_2		2
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_3		3
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_4		4
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_5		5
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_6		6
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_7		7
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_8		8
-+#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_9		9
++		params->frac_phase = params->edge * 4 + frac_divider / 2;
++	}
+ }
+ 
+ static void axi_clkgen_write(struct axi_clkgen *axi_clkgen,
+@@ -246,15 +298,28 @@ static struct axi_clkgen *clk_hw_to_axi_clkgen(struct clk_hw *clk_hw)
+ 	return container_of(clk_hw, struct axi_clkgen, clk_hw);
+ }
+ 
++static void axi_clkgen_set_div(struct axi_clkgen *axi_clkgen,
++	unsigned int reg1, unsigned int reg2, unsigned int reg3,
++	struct axi_clkgen_div_params *params)
++{
++	axi_clkgen_mmcm_write(axi_clkgen, reg1,
++		(params->high << 6) | params->low, 0xefff);
++	axi_clkgen_mmcm_write(axi_clkgen, reg2,
++		(params->frac << 12) | (params->frac_en << 11) |
++		(params->frac_wf_r << 10) | (params->edge << 7) |
++		(params->nocount << 6), 0x7fff);
++	if (reg3 != 0) {
++		axi_clkgen_mmcm_write(axi_clkgen, reg3,
++			(params->frac_phase << 11) | (params->frac_wf_f << 10), 0x3c00);
++	}
++}
 +
-+/**
-+ * FPGA Device Package definitions
-+ */
-+#define ADI_AXI_FPGA_DEV_PACKAGE_UNKNOWN		0
+ static int axi_clkgen_set_rate(struct clk_hw *clk_hw,
+ 	unsigned long rate, unsigned long parent_rate)
+ {
+ 	struct axi_clkgen *axi_clkgen = clk_hw_to_axi_clkgen(clk_hw);
+ 	unsigned int d, m, dout;
+-	unsigned int nocount;
+-	unsigned int high;
+-	unsigned int edge;
+-	unsigned int low;
++	struct axi_clkgen_div_params params;
+ 	uint32_t filter;
+ 	uint32_t lock;
+ 
+@@ -269,21 +334,18 @@ static int axi_clkgen_set_rate(struct clk_hw *clk_hw,
+ 	filter = axi_clkgen_lookup_filter(m - 1);
+ 	lock = axi_clkgen_lookup_lock(m - 1);
+ 
+-	axi_clkgen_calc_clk_params(dout, &low, &high, &edge, &nocount);
+-	axi_clkgen_mmcm_write(axi_clkgen, MMCM_REG_CLKOUT0_1,
+-		(high << 6) | low, 0xefff);
+-	axi_clkgen_mmcm_write(axi_clkgen, MMCM_REG_CLKOUT0_2,
+-		(edge << 7) | (nocount << 6), 0x03ff);
++	axi_clkgen_calc_clk_params(dout >> 3, dout & 0x7, &params);
++	axi_clkgen_set_div(axi_clkgen,  MMCM_REG_CLKOUT0_1, MMCM_REG_CLKOUT0_2,
++		MMCM_REG_CLKOUT5_2, &params);
+ 
+-	axi_clkgen_calc_clk_params(d, &low, &high, &edge, &nocount);
++	axi_clkgen_calc_clk_params(d, 0, &params);
+ 	axi_clkgen_mmcm_write(axi_clkgen, MMCM_REG_CLK_DIV,
+-		(edge << 13) | (nocount << 12) | (high << 6) | low, 0x3fff);
++		(params.edge << 13) | (params.nocount << 12) |
++		(params.high << 6) | params.low, 0x3fff);
+ 
+-	axi_clkgen_calc_clk_params(m, &low, &high, &edge, &nocount);
+-	axi_clkgen_mmcm_write(axi_clkgen, MMCM_REG_CLK_FB1,
+-		(high << 6) | low, 0xefff);
+-	axi_clkgen_mmcm_write(axi_clkgen, MMCM_REG_CLK_FB2,
+-		(edge << 7) | (nocount << 6), 0x03ff);
++	axi_clkgen_calc_clk_params(m >> 3, m & 0x7, &params);
++	axi_clkgen_set_div(axi_clkgen,  MMCM_REG_CLK_FB1, MMCM_REG_CLK_FB2,
++		MMCM_REG_CLKOUT6_2, &params);
+ 
+ 	axi_clkgen_mmcm_write(axi_clkgen, MMCM_REG_LOCK1, lock & 0x3ff, 0x3ff);
+ 	axi_clkgen_mmcm_write(axi_clkgen, MMCM_REG_LOCK2,
+@@ -313,35 +375,51 @@ static long axi_clkgen_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	return min_t(unsigned long long, tmp, LONG_MAX);
+ }
+ 
++static unsigned int axi_clkgen_get_div(struct axi_clkgen *axi_clkgen,
++	unsigned int reg1, unsigned int reg2)
++{
++	unsigned int val1, val2;
++	unsigned int div;
 +
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RF		1
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FL		2
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FF		3
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FB		4
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_HC		5
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FH		6
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CS		7
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CP		8
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FT		9
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FG		10
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_SB		11
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RB		12
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RS		13
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CL		14
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_SF		15
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_BA		16
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FA		17
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FS		18
-+#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FI		19
++	axi_clkgen_mmcm_read(axi_clkgen, reg2, &val2);
++	if (val2 & MMCM_CLKOUT_NOCOUNT)
++		return 8;
 +
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_BGA		1
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PGA		2
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_FBGA		3
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_HBGA		4
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PDIP		5
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_EQFP		6
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PLCC		7
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PQFP		8
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_RQFP		9
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_TQFP		10
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_UBGA		11
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_UFBGA		12
-+#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_MBGA		13
++	axi_clkgen_mmcm_read(axi_clkgen, reg1, &val1);
 +
- #endif /* ADI_AXI_COMMON_H_ */
++	div = (val1 & 0x3f) + ((val1 >> 6) & 0x3f);
++	div <<= 3;
++
++	if (val2 & MMCM_CLK_DIV_DIVIDE) {
++		if ((val2 & BIT(7)) && (val2 & 0x7000) != 0x1000)
++			div += 8;
++		else
++			div += 16;
++
++		div += (val2 >> 12) & 0x7;
++	}
++
++	return div;
++}
++
+ static unsigned long axi_clkgen_recalc_rate(struct clk_hw *clk_hw,
+ 	unsigned long parent_rate)
+ {
+ 	struct axi_clkgen *axi_clkgen = clk_hw_to_axi_clkgen(clk_hw);
+ 	unsigned int d, m, dout;
+-	unsigned int reg;
+ 	unsigned long long tmp;
++	unsigned int val;
+ 
+-	axi_clkgen_mmcm_read(axi_clkgen, MMCM_REG_CLKOUT0_2, &reg);
+-	if (reg & MMCM_CLKOUT_NOCOUNT) {
+-		dout = 1;
+-	} else {
+-		axi_clkgen_mmcm_read(axi_clkgen, MMCM_REG_CLKOUT0_1, &reg);
+-		dout = (reg & 0x3f) + ((reg >> 6) & 0x3f);
+-	}
++	dout = axi_clkgen_get_div(axi_clkgen, MMCM_REG_CLKOUT0_1,
++		MMCM_REG_CLKOUT0_2);
++	m = axi_clkgen_get_div(axi_clkgen, MMCM_REG_CLK_FB1,
++		MMCM_REG_CLK_FB2);
+ 
+-	axi_clkgen_mmcm_read(axi_clkgen, MMCM_REG_CLK_DIV, &reg);
+-	if (reg & MMCM_CLK_DIV_NOCOUNT)
++	axi_clkgen_mmcm_read(axi_clkgen, MMCM_REG_CLK_DIV, &val);
++	if (val & MMCM_CLK_DIV_NOCOUNT)
+ 		d = 1;
+ 	else
+-		d = (reg & 0x3f) + ((reg >> 6) & 0x3f);
+-
+-	axi_clkgen_mmcm_read(axi_clkgen, MMCM_REG_CLK_FB2, &reg);
+-	if (reg & MMCM_CLKOUT_NOCOUNT) {
+-		m = 1;
+-	} else {
+-		axi_clkgen_mmcm_read(axi_clkgen, MMCM_REG_CLK_FB1, &reg);
+-		m = (reg & 0x3f) + ((reg >> 6) & 0x3f);
+-	}
++		d = (val & 0x3f) + ((val >> 6) & 0x3f);
+ 
+ 	if (d == 0 || dout == 0)
+ 		return 0;
 -- 
 2.17.1
 
