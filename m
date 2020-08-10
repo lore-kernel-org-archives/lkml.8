@@ -2,207 +2,85 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D435C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6457820678
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B832065C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgHJHot (ORCPT
+        id S1726571AbgHJHp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:44:49 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:43021 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725894AbgHJHoq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:44:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U5HBimS_1597045472;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5HBimS_1597045472)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 10 Aug 2020 15:44:33 +0800
-Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200731151655.GB491801@cmpxchg.org>
- <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
- <20200803081815.GD5174@dhcp22.suse.cz>
- <bd61e672-b997-c4cd-2047-fca9dc11cc4c@linux.alibaba.com>
- <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
- <5622ef68-5e70-d1a9-d1be-b45411b6be5c@linux.alibaba.com>
- <4740bac1-72f6-a640-ab6a-a8801e68c27a@linux.alibaba.com>
- <20200808214306.GA1409287@carbon.dhcp.thefacebook.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <e0529759-f9a8-a038-e49d-185d6c9ed845@linux.alibaba.com>
-Date:   Mon, 10 Aug 2020 15:44:05 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Mon, 10 Aug 2020 03:45:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:53784 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgHJHp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 03:45:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 821B01FB;
+        Mon, 10 Aug 2020 00:45:26 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1C453F7BB;
+        Mon, 10 Aug 2020 00:45:24 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:45:17 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>, Gavin Shan <gshan@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Sumit Gupta <sumitg@nvidia.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] fix arm64 build with lack of __cpu_logical_map exported
+Message-ID: <20200810074517.GA28091@bogus>
+References: <20200808124242.GA352821@kroah.com>
+ <20200808150443.GA492@DESKTOP-O1885NU.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200808214306.GA1409287@carbon.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200808150443.GA492@DESKTOP-O1885NU.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Catalin,
 
-
-在 2020/8/9 上午5:43, Roman Gushchin 写道:
->>>  mm/memcontrol.c | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>
->>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->>> index cb07a48d53aa..65f2b42d25af 100644
->>> --- a/mm/memcontrol.c
->>> +++ b/mm/memcontrol.c
->>> @@ -7163,6 +7163,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
->>>  	VM_BUG_ON_PAGE(PageLRU(page), page);
->>>  	VM_BUG_ON_PAGE(page_count(page), page);
->>>  
->>> +	if (mem_cgroup_disabled())
->>> +		return;
->>> +
->>>  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
->>>  		return;
->>>  
->>> @@ -7228,6 +7231,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
->>>  	struct mem_cgroup *memcg;
->>>  	unsigned short oldid;
->>>  
->>> +	if (mem_cgroup_disabled())
->>> +		return 0;
->>> +
->>>  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
->>>  		return 0;
->>>  
->>>
+On Sat, Aug 08, 2020 at 04:05:00PM +0100, Catalin Marinas wrote:
+> Hi Greg,
 > 
-> Hi Alex,
+> On Sat, Aug 08, 2020 at 02:42:42PM +0200, Greg Kroah-Hartman wrote:
+> > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> > index 87e81d29e6fb..b421a4756793 100644
+> > --- a/arch/arm64/kernel/setup.c
+> > +++ b/arch/arm64/kernel/setup.c
+> > @@ -275,6 +275,7 @@ static int __init reserve_memblock_reserved_regions(void)
+> >  arch_initcall(reserve_memblock_reserved_regions);
+> >  
+> >  u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+> > +EXPORT_SYMBOL_GPL(__cpu_logical_map);
 > 
-> this patch looks good to me. Please, feel free to add
-> Reviewed-by: Roman Gushchin <guro@fb.com>
-
-Thanks a lot!
+> This was still under discussion, Sudeep preferring an alternative in the
+> driver:
 > 
-> What's the second patch?
+> http://lkml.kernel.org/r/20200727172744.GD8003@bogus
+> http://lkml.kernel.org/r/20200724131059.GB6521@bogus
+> 
+> Sumit came with a new diff inline that fixes the driver instead of
+> exporting the __cpu_logical_map.
+> 
+> https://lore.kernel.org/linux-arm-kernel/e3a4bc21-c334-4d48-90b5-aab8d187939e@nvidia.com/
+> 
+> Sumit, Sudeep, is the above diff sufficient and can it go upstream?
 > 
 
-It's the patch, 
-https://www.spinics.net/lists/linux-mm/msg222228.html
-or
+Yes I prefer the above in above thread. I will reply on that thread. Sorry
+for missing, been a week.
 
-From 2ca3e87fd3878ab729551682ad083a70f15bb3fc Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Sat, 1 Aug 2020 10:43:55 +0800
-Subject: [PATCH v3] mm/memcg: warning on !memcg after readahead page charged
-
-Since readahead page is charged on memcg too, in theory we don't have to
-check this exception now. Before safely remove them all, add a warning
-for the unexpected !memcg.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/mmdebug.h | 13 +++++++++++++
- mm/memcontrol.c         | 15 ++++++++-------
- 2 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
-index 2ad72d2c8cc5..4ed52879ce55 100644
---- a/include/linux/mmdebug.h
-+++ b/include/linux/mmdebug.h
-@@ -37,6 +37,18 @@
- 			BUG();						\
- 		}							\
- 	} while (0)
-+#define VM_WARN_ON_ONCE_PAGE(cond, page)	({			\
-+	static bool __section(.data.once) __warned;			\
-+	int __ret_warn_once = !!(cond);					\
-+									\
-+	if (unlikely(__ret_warn_once && !__warned)) {			\
-+		dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
-+		__warned = true;					\
-+		WARN_ON(1);						\
-+	}								\
-+	unlikely(__ret_warn_once);					\
-+})
-+
- #define VM_WARN_ON(cond) (void)WARN_ON(cond)
- #define VM_WARN_ON_ONCE(cond) (void)WARN_ON_ONCE(cond)
- #define VM_WARN_ONCE(cond, format...) (void)WARN_ONCE(cond, format)
-@@ -48,6 +60,7 @@
- #define VM_BUG_ON_MM(cond, mm) VM_BUG_ON(cond)
- #define VM_WARN_ON(cond) BUILD_BUG_ON_INVALID(cond)
- #define VM_WARN_ON_ONCE(cond) BUILD_BUG_ON_INVALID(cond)
-+#define VM_WARN_ON_ONCE_PAGE(cond, page)  BUILD_BUG_ON_INVALID(cond)
- #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
- #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
- #endif
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 130093bdf74b..299382fc55a9 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1322,10 +1322,8 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
- 	}
- 
- 	memcg = page->mem_cgroup;
--	/*
--	 * Swapcache readahead pages are added to the LRU - and
--	 * possibly migrated - before they are charged.
--	 */
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, page);
- 	if (!memcg)
- 		memcg = root_mem_cgroup;
- 
-@@ -6906,8 +6904,9 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
- 	if (newpage->mem_cgroup)
- 		return;
- 
--	/* Swapcache readahead pages can get replaced before being charged */
- 	memcg = oldpage->mem_cgroup;
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, oldpage);
- 	if (!memcg)
- 		return;
- 
-@@ -7104,7 +7103,8 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 
- 	memcg = page->mem_cgroup;
- 
--	/* Readahead page, never charged */
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, page);
- 	if (!memcg)
- 		return;
- 
-@@ -7168,7 +7168,8 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
- 
- 	memcg = page->mem_cgroup;
- 
--	/* Readahead page, never charged */
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, page);
- 	if (!memcg)
- 		return 0;
- 
 -- 
-1.8.3.1
-
+Regards,
+Sudeep
