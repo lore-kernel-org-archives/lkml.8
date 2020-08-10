@@ -2,368 +2,164 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87141C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9115C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEBE20885
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C035D20885
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jZ1WNwl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgHJRiu (ORCPT
+        id S1728049AbgHJRjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:38:50 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:50752 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727853AbgHJRiu (ORCPT
+        Mon, 10 Aug 2020 13:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbgHJRjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:38:50 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id BCDDA20023;
-        Mon, 10 Aug 2020 19:38:44 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 19:38:43 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vinay Simha B N <simhavcs@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
-Message-ID: <20200810173843.GB292825@ravnborg.org>
-References: <1594388491-15129-1-git-send-email-simhavcs@gmail.com>
- <CAGWqDJ74bveHPKXqdPhwbZjb=cXPPQLTEng4oi+dkZa-1fRz_Q@mail.gmail.com>
+        Mon, 10 Aug 2020 13:39:33 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC9CC061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:39:33 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 77so9129507qkm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:39:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=odtbjLOyfHsipZbsXpYCdAhx77Tu3DM5hEyhcqjQE8Q=;
+        b=jZ1WNwl50OjaPAZEG0DC+3AM6MPFVxZfSNNpfZLUBAnXqHCSMLVyM3mA6DQK3/simx
+         I1xHJpmrN3EqyRapLOr6VeMJ6WEMqMCncQhx67RrODWuwhf3t7fGup0nuLO1nkozGGOh
+         6zQoZzaDq0t9b//lPHDb4ZQ7hxXg9msIxfq0I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=odtbjLOyfHsipZbsXpYCdAhx77Tu3DM5hEyhcqjQE8Q=;
+        b=O4R3XEexvZ1sorUXVvpvdpo6Ak/mAN7A9xWm170Jq4l+QWElUFDWcOIxKiYknKxMR1
+         vc7FanDaaTahlcQPR+P9qBbG5IDLXb09PqfbJwTPoR49dSfooYqn1ip+CJ+fyKaWLvkB
+         BgjpV6+7k77YIPGBzLjB1g2szCZAj8YWxTNKroRbwip8O1Uvi8sRAtLlQr5xUhPVTsOX
+         BktjaAsWrM/n++ugZbuhrIe/bqFC7plATW4xh/owsP7r44h2lcjtG32DcSr7P2UFzh+U
+         d7HcnjHl+zxVRKSffPps9zXqTImg2VLqH7G35gsB7vntcMAuqqs7zO56v7oloqamZMrO
+         4s3Q==
+X-Gm-Message-State: AOAM533psq/nCTSBtRTU+2bd7G9DRYMgX7sH79ctW+Hb5AWefdHtMyts
+        NwB2GcsQWrDkwOqEVHN5+dWmig==
+X-Google-Smtp-Source: ABdhPJxrGroOudNMfCH9xLr6CUl1e3ELqJa69irLSH2bf2vvLg02LYHUUhMC3RxjjyKekDNuNt2B3g==
+X-Received: by 2002:a05:620a:11b4:: with SMTP id c20mr26595434qkk.233.1597081172546;
+        Mon, 10 Aug 2020 10:39:32 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id l29sm4693457qtu.88.2020.08.10.10.39.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 10:39:31 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 13:39:31 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        peterz@infradead.org, Randy Dunlap <rdunlap@infradead.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        tglx@linutronix.de, vineethrp@gmail.com
+Subject: Re: [PATCH v4 1/5] rcu/tree: Add a warning if CPU being onlined did
+ not report QS already
+Message-ID: <20200810173931.GB2253395@google.com>
+References: <20200807170722.2897328-1-joel@joelfernandes.org>
+ <20200807170722.2897328-2-joel@joelfernandes.org>
+ <20200810154654.GJ4295@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGWqDJ74bveHPKXqdPhwbZjb=cXPPQLTEng4oi+dkZa-1fRz_Q@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=VwQbUJbxAAAA:8
-        a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8 a=njpYwi7_WxjI1lOXyc8A:9
-        a=0t7fiu_16AWWzKjv:21 a=kFrMhexQLHq2BP0q:21 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200810154654.GJ4295@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinay.
-
-On Wed, Jul 29, 2020 at 06:01:21PM +0530, Vinay Simha B N wrote:
-> Hi All,
-> 
-> Please Review the patch
-> 
-> On Fri, Jul 10, 2020 at 7:11 PM Vinay Simha BN <simhavcs@gmail.com> wrote:
-> 
-> > - license modified to (GPL-2.0-only OR BSD-2-Clause)
-> > - single-link and dual-link lvds description and
-> >   examples are added
-> > - proper indentation
-> > - VESA/JEIDA formats picked from panel-lvds dts
-> > - dsi data-lanes property removed, it will be picked
-> >   from dsi0 ports
-> > - dual-link lvds port added and implemented
-> > - converted from .txt to .yaml
-> >
-> > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-
-The binding is already reviewed by Rob and me - as you have recorded
-above. It will be applied when the driver is ready.
-
-	Sam
-
+On Mon, Aug 10, 2020 at 08:46:54AM -0700, Paul E. McKenney wrote:
+> On Fri, Aug 07, 2020 at 01:07:18PM -0400, Joel Fernandes (Google) wrote:
+> > Currently, rcu_cpu_starting() checks to see if the RCU core expects a
+> > quiescent state from the incoming CPU.  However, the current interaction
+> > between RCU quiescent-state reporting and CPU-hotplug operations should
+> > mean that the incoming CPU never needs to report a quiescent state.
+> > First, the outgoing CPU reports a quiescent state if needed.  Second,
+> > the race where the CPU is leaving just as RCU is initializing a new
+> > grace period is handled by an explicit check for this condition.  Third,
+> > the CPU's leaf rcu_node structure's ->lock serializes these checks.
+> > 
+> > This means that if rcu_cpu_starting() ever feels the need to report
+> > a quiescent state, then there is a bug somewhere in the CPU hotplug
+> > code or the RCU grace-period handling code.  This commit therefore
+> > adds a WARN_ON_ONCE() to bring that bug to everyone's attention.
+> > 
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
+> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > > ---
-> > v1:
-> >  Initial version wast .txt file
-> >
-> > v2:
-> >  From txt to yaml file format
-> >
-> > v3:
-> > * Andrzej Hajda review comments incorporated
-> >   dual port lvds implemented
-> >
-> > * Laurent Pinchart review comments incorporated
-> >   dsi lanes property removed and it is dynamically
-> >   picked from the dsi ports
-> >   VESA/JEIDA format picked from panel-lvds dts
-> >
-> > v4:
-> > * Sam Ravnborg review comments incorporated
-> >   }' is indented properly in examples data-lanes
-> >   description for single-link and dual-link lvds
-> >
-> > v5:
-> > * Sam Ravnborg review comments incorporated
-> >   license modified to (GPL-2.0-only OR BSD-2-Clause)
-> >   changelog added
-> >
-> > v6:
-> > * No changes, revision version mentioned to inline with
-> >   driver file
-> >
-> > v7:
-> > * change log added
-> >   Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> >
-> > v8:
-> > * Reviewed-by: Rob Herring <robh@kernel.org>
-> > * change log modified in reverse chronological order
-> > ---
-> >  .../bindings/display/bridge/toshiba,tc358775.yaml  | 215
-> > +++++++++++++++++++++
-> >  1 file changed, 215 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-> > b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-> > new file mode 100644
-> > index 0000000..31f085d
-> > --- /dev/null
-> > +++
-> > b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-> > @@ -0,0 +1,215 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >  kernel/rcu/tree.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 65e1b5e92319..a49fa3b60faa 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -3996,7 +3996,14 @@ void rcu_cpu_starting(unsigned int cpu)
+> >  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+> >  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+> >  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+> > -	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
 > > +
-> > +title: Toshiba TC358775 DSI to LVDS bridge bindings
-> > +
-> > +maintainers:
-> > + - Vinay Simha BN <simhavcs@gmail.com>
-> > +
-> > +description: |
-> > + This binding supports DSI to LVDS bridge TC358775
-> > +
-> > + MIPI DSI-RX Data 4-lane, CLK 1-lane with data rates up to 800 Mbps/lane.
-> > + Video frame size:
-> > + Up to 1600x1200 24-bit/pixel resolution for single-link LVDS display
-> > panel
-> > + limited by 135 MHz LVDS speed
-> > + Up to WUXGA (1920x1200 24-bit pixels) resolution for dual-link LVDS
-> > display
-> > + panel, limited by 270 MHz LVDS speed.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: toshiba,tc358775
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: i2c address of the bridge, 0x0f
-> > +
-> > +  vdd-supply:
-> > +    maxItems: 1
-> > +    description:  1.2V LVDS Power Supply
-> > +
-> > +  vddio-supply:
-> > +    maxItems: 1
-> > +    description: 1.8V IO Power Supply
-> > +
-> > +  stby-gpios:
-> > +    maxItems: 1
-> > +    description: Standby pin, Low active
-> > +
-> > +  reset-gpios:
-> > +    maxItems: 1
-> > +    description: Hardware reset, Low active
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description:
-> > +      A node containing input and output port nodes with endpoint
-> > definitions
-> > +      as documented in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +    properties:
-> > +      "#address-cells":
-> > +        const: 1
-> > +
-> > +      "#size-cells":
-> > +        const: 0
-> > +
-> > +      port@0:
-> > +        type: object
-> > +        description: |
-> > +          DSI Input. The remote endpoint phandle should be a
-> > +          reference to a valid mipi_dsi_host device node.
-> > +
-> > +      port@1:
-> > +        type: object
-> > +        description: |
-> > +          Video port for LVDS output (panel or connector).
-> > +
-> > +      port@2:
-> > +        type: object
-> > +        description: |
-> > +          Video port for Dual link LVDS output (panel or connector).
-> > +
-> > +    required:
-> > +      - port@0
-> > +      - port@1
-> > +
-> > +required:
-> > + - compatible
-> > + - reg
-> > + - vdd-supply
-> > + - vddio-supply
-> > + - stby-gpios
-> > + - reset-gpios
-> > + - ports
-> > +
-> > +examples:
-> > + - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    /* For single-link LVDS display panel */
-> > +
-> > +    i2c@78b8000 {
-> > +        /* On High speed expansion */
-> > +        label = "HS-I2C2";
-> > +        reg = <0x078b8000 0x500>;
-> > +        clock-frequency = <400000>; /* fastmode operation */
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        tc_bridge: bridge@f {
-> > +            compatible = "toshiba,tc358775";
-> > +            reg = <0x0f>;
-> > +
-> > +            vdd-supply = <&pm8916_l2>;
-> > +            vddio-supply = <&pm8916_l6>;
-> > +
-> > +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-> > +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-> > +
-> > +            ports {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                port@0 {
-> > +                    reg = <0>;
-> > +                    d2l_in_test: endpoint {
-> > +                        remote-endpoint = <&dsi0_out>;
-> > +                    };
-> > +                };
-> > +
-> > +                port@1 {
-> > +                    reg = <1>;
-> > +                    lvds_out: endpoint {
-> > +                        remote-endpoint = <&panel_in>;
-> > +                    };
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +    dsi@1a98000 {
-> > +        reg = <0x1a98000 0x25c>;
-> > +        reg-names = "dsi_ctrl";
-> > +
-> > +        ports {
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> > +            port@1 {
-> > +                reg = <1>;
-> > +                dsi0_out: endpoint {
-> > +                    remote-endpoint = <&d2l_in_test>;
-> > +                    data-lanes = <0 1 2 3>;
-> > +                };
-> > +             };
-> > +         };
-> > +     };
-> > +
-> > + - |
-> > +    /* For dual-link LVDS display panel */
-> > +
-> > +    i2c@78b8000 {
-> > +        /* On High speed expansion */
-> > +        label = "HS-I2C2";
-> > +        reg = <0x078b8000 0x500>;
-> > +        clock-frequency = <400000>; /* fastmode operation */
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        tc_bridge_dual: bridge@f {
-> > +            compatible = "toshiba,tc358775";
-> > +            reg = <0x0f>;
-> > +
-> > +            vdd-supply = <&pm8916_l2>;
-> > +            vddio-supply = <&pm8916_l6>;
-> > +
-> > +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-> > +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-> > +
-> > +            ports {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                port@0 {
-> > +                    reg = <0>;
-> > +                    d2l_in_dual: endpoint {
-> > +                        remote-endpoint = <&dsi0_out_dual>;
-> > +                    };
-> > +                };
-> > +
-> > +                port@1 {
-> > +                    reg = <1>;
-> > +                    lvds0_out: endpoint {
-> > +                        remote-endpoint = <&panel_in0>;
-> > +                    };
-> > +                };
-> > +
-> > +                port@2 {
-> > +                    reg = <2>;
-> > +                    lvds1_out: endpoint {
-> > +                        remote-endpoint = <&panel_in1>;
-> > +                    };
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +    dsi@1a98000 {
-> > +        reg = <0x1a98000 0x25c>;
-> > +        reg-names = "dsi_ctrl";
-> > +
-> > +        ports {
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> > +            port@1 {
-> > +                reg = <1>;
-> > +                dsi0_out_dual: endpoint {
-> > +                    remote-endpoint = <&d2l_in_dual>;
-> > +                    data-lanes = <0 1 2 3>;
-> > +                };
-> > +             };
-> > +         };
-> > +     };
-> > +...
-> > --
-> > 2.1.2
-> >
-> >
+> > +	/*
+> > +	 * XXX: The following rcu_report_qs_rnp() is redundant. If the below
+> > +	 * warning does not fire, consider replacing it with the "else" block,
+> > +	 * by June 2021 or so (while keeping the warning). Refer to RCU's
+> > +	 * Requirements documentation for the rationale.
 > 
-> -- 
-> regards,
-> vinaysimha
+> Let's suppose that this change is made, and further that in a year or
+> two the "if" statement below is replaced with its "else" block.
+> 
+> Now let's suppose that (some years after that) a hard-to-trigger bug
+> makes its way into RCU's CPU-hotplug code that would have resulted in
+> the WARN_ON_ONCE() triggering, but that this bug turns out to be not so
+> hard to trigger in certain large production environments.
+> 
+> Let's suppose further that you have moved on to where you are responsible
+> for one of these large production environments.  How would this
+> hypothetical RCU/CPU-hotplug bug manifest?
 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+It could manifest as an RCU stall (after the warning triggers) since RCU
+would wait forever.
 
+Were you thinking it is not worth doing this? I thought we wanted to remove
+the reundant rcu_report_qs_rnp here to solidify everyone's understanding of
+the code and fail early if there's something misunderstood (since such
+misunderstanding could mean there are other hidden bugs somewhere). The
+counter-argument to that being, making the code robust is more important for
+the large production failure scenario where failures are costly.
+
+thanks,
+
+ - Joel
+
+
+> 							Thanx, Paul
+> 
+> > +	 */
+> > +	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
+> >  		rcu_disable_urgency_upon_qs(rdp);
+> >  		/* Report QS -after- changing ->qsmaskinitnext! */
+> >  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+> > -- 
+> > 2.28.0.236.gb10cc79966-goog
+> > 
