@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A865FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4009AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8C722B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0753622BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087917;
-	bh=IHXnv5gZCelNCtUHzOcPZ5aYEKPQvdmbdCnL6d6/pbQ=;
+	s=default; t=1597087923;
+	bh=HM15DRQruEOLK3MMp93V+owjUYiahA5zhe7I8I3MwYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQvFm6/1jMkZq9ONckJz3D+augo/ueoyDEbPuhbCjYf/sg1TBZhNFh95j1t4uRwRO
-	 A4ZPnvXTY1l4UITvW8SQT1T1mqVktBZ/+rHp0yOxeiBUNM9j5o0SLeHbS3sj5wfum1
-	 FQeqpQ6EE29R/dL93nYsk3zeNuJYYCoJ2k3lgSS4=
+	b=mOqKJ19LZX+i9RrCav33GpSnKD5lEVMlNavRHcn+4BQOTn3OwhfumHv34g0NXv89D
+	 /XjL0Nglhh/tG6w0UO3kMrk0B9q+0yJlodUo3SUK8FHdPubi+D6I9z9W8TV0CzjzJ9
+	 cr4HUBmF1PRM8wt6m8ellJ34+wfbCqOA/FaJGJfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgHJTb4 (ORCPT
+        id S1728767AbgHJTKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37034 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgHJTKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:02 -0400
+        id S1728477AbgHJTJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B7B20885;
-        Mon, 10 Aug 2020 19:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09BE422D06;
+        Mon, 10 Aug 2020 19:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086601;
-        bh=IHXnv5gZCelNCtUHzOcPZ5aYEKPQvdmbdCnL6d6/pbQ=;
+        s=default; t=1597086589;
+        bh=HM15DRQruEOLK3MMp93V+owjUYiahA5zhe7I8I3MwYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=To5PiDSoqwUPplyUfvXLqsLxSgD2cnbls0noEai4mIWBz7PEAOVGdCk0acv1ox5to
-         JdrRMMVfV1JEe8Knlzx2lb1+NWFQDkW5zTjvw56OBRiACkQ8+Mk7cRlj662wco30a3
-         FcDEcN+kVEsu5OrImbEaQq1BXvVc1VEfgYSmV5FI=
+        b=X28Wl+Fdo6RlQPDoOBJzK8E8l1GmhVEIldI3W+BYWXbi3UafY7T2PfB6Cdch7y/Qx
+         pHyiiEGp5zw05cYEADmTflC9D+4gAU45kbqdeOJ9aScdvLJcZoPXZYk6pGmi8JOlKO
+         hdZDwSDvnfR/KkRW+rgNKE046LVWulaQy8l7xG6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Armas Spann <zappel@retarded.farm>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 45/64] platform/x86: asus-nb-wmi: add support for ASUS ROG Zephyrus G14 and G15
-Date:   Mon, 10 Aug 2020 15:08:40 -0400
-Message-Id: <20200810190859.3793319-45-sashal@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Sasha Levin <sashal@kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 37/64] drm/amdgpu/display: properly guard the calls to swSMU functions
+Date:   Mon, 10 Aug 2020 15:08:32 -0400
+Message-Id: <20200810190859.3793319-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -61,124 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Armas Spann <zappel@retarded.farm>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 13bceda68fb9ef388ad40d355ab8d03ee64d14c2 ]
+[ Upstream commit 4072327a2622af8688b88f5cd0a472136d3bf33d ]
 
-Add device support for the new ASUS ROG Zephyrus G14 (GA401I) and
-G15 (GA502I) series.
+It's only applicable on newer asics.  We could end up here when
+using DC on older asics like SI or KV.
 
-This is accomplished by two new quirk entries (one per each series),
-as well as all current available G401I/G502I DMI_PRODUCT_NAMEs to match
-the corresponding devices.
-
-Signed-off-by: Armas Spann <zappel@retarded.farm>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1170
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 82 ++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 8c4d00482ef06..6c42f73c1dfd3 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -110,6 +110,16 @@ static struct quirk_entry quirk_asus_forceals = {
- 	.wmi_force_als_set = true,
- };
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
+index 7cee8070cb113..5c6a6ae48d396 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
+@@ -106,7 +106,7 @@ bool dm_pp_apply_display_requirements(
+ 			adev->powerplay.pp_funcs->display_configuration_change(
+ 				adev->powerplay.pp_handle,
+ 				&adev->pm.pm_display_cfg);
+-		else
++		else if (adev->smu.ppt_funcs)
+ 			smu_display_configuration_change(smu,
+ 							 &adev->pm.pm_display_cfg);
  
-+static struct quirk_entry quirk_asus_ga401i = {
-+	.wmi_backlight_power = true,
-+	.wmi_backlight_set_devstate = true,
-+};
-+
-+static struct quirk_entry quirk_asus_ga502i = {
-+	.wmi_backlight_power = true,
-+	.wmi_backlight_set_devstate = true,
-+};
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	pr_info("Identified laptop model '%s'\n", dmi->ident);
-@@ -411,6 +421,78 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_forceals,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IH",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401II",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IU",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IV",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IVC",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+		{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA502II",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
-+		},
-+		.driver_data = &quirk_asus_ga502i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA502IU",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
-+		},
-+		.driver_data = &quirk_asus_ga502i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA502IV",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
-+		},
-+		.driver_data = &quirk_asus_ga502i,
-+	},
- 	{},
- };
- 
+@@ -592,7 +592,7 @@ void pp_rv_set_wm_ranges(struct pp_smu *pp,
+ 	if (pp_funcs && pp_funcs->set_watermarks_for_clocks_ranges)
+ 		pp_funcs->set_watermarks_for_clocks_ranges(pp_handle,
+ 							   &wm_with_clock_ranges);
+-	else
++	else if (adev->smu.ppt_funcs)
+ 		smu_set_watermarks_for_clock_ranges(&adev->smu,
+ 				&wm_with_clock_ranges);
+ }
 -- 
 2.25.1
 
