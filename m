@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8954DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2D422B49
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6808622B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086630;
-	bh=w2i6sfdM3RBvqRfsaE8X5skoAf93suubT65n4mRzRRw=;
+	s=default; t=1597086631;
+	bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KkH3TEQQe94QaDCLLkUH5FwQdesvntFGxKCP6XTP+EQ9pqYsgo4W2pLWc6qlY7pgh
-	 U2/i2APaBDlBVWml9p6cI97Xq4vjgs6QHZT674df6wQ4VrTm6wbJOSkJPWlenhg+xX
-	 L0Gz15K+wvybDqEaWi95eUKlQRfKK3KAgGMUFM0k=
+	b=hU0tXT3N5RRW0Jq3LhrJMdc3PF8XW3foWeWhqmR/3Y33eS4iiZQFILpbsuMsrWIEW
+	 TwIfcNL2/FQyqz/J7j4J/Jnfs2vMYmjYgGcn375n5oXo8ILJuRRto+S5Myj2UBXRjD
+	 w7Tvd+Czc0xAT291UHoTjCtwF9IMWSjGuYo0ybGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgHJTK3 (ORCPT
+        id S1728977AbgHJTKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgHJTKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:20 -0400
+        id S1728895AbgHJTK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA4120885;
-        Mon, 10 Aug 2020 19:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C7F2224D;
+        Mon, 10 Aug 2020 19:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086620;
-        bh=w2i6sfdM3RBvqRfsaE8X5skoAf93suubT65n4mRzRRw=;
+        s=default; t=1597086625;
+        bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qsJXyvaB68taQkd+Nk/G0hKgdIj0iBf0NZf8EROgVkl1doYqnZ+J8Mljnp6N9TTXe
-         oW7qOYSGuNdg3TcHJbrMiUP+VgOKHWPFmpCcAgd2CyL2IDFRizbpSfuJQCEQt/WPUq
-         fKyEb/LYm02beeJaOHj1hUNA34+GReHR5gIA38uY=
+        b=2TPOITXTNJaUhXrVs2LaaU/NlwHdsIB/XYpMETbz47cme8+Z+xCRIg4vsiPhfDVRI
+         67lCfD2jP+onaRAbL94v58qOyWBLTFvoIgjstZHYL7cK6B9OAQWgXmF5+ebhbmib1e
+         Yip2pMQ3KjyOxsMDnakm/NCwtTrEWULbUlO5O2Uo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 59/64] btrfs: qgroup: free per-trans reserved space when a subvolume gets dropped
-Date:   Mon, 10 Aug 2020 15:08:54 -0400
-Message-Id: <20200810190859.3793319-59-sashal@kernel.org>
+Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 63/64] crypto: caam - silence .setkey in case of bad key length
+Date:   Mon, 10 Aug 2020 15:08:58 -0400
+Message-Id: <20200810190859.3793319-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,79 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-[ Upstream commit a3cf0e4342b6af9e6b34a4b913c630fbd03a82ea ]
+[ Upstream commit da6a66853a381864f4b040832cf11f0dbba0a097 ]
 
-[BUG]
-Sometime fsstress could lead to qgroup warning for case like
-generic/013:
+In case of bad key length, driver emits "key size mismatch" messages,
+but only for xts(aes) algorithms.
 
-  BTRFS warning (device dm-3): qgroup 0/259 has unreleased space, type 1 rsv 81920
-  ------------[ cut here ]------------
-  WARNING: CPU: 9 PID: 24535 at fs/btrfs/disk-io.c:4142 close_ctree+0x1dc/0x323 [btrfs]
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:close_ctree+0x1dc/0x323 [btrfs]
-  Call Trace:
-   btrfs_put_super+0x15/0x17 [btrfs]
-   generic_shutdown_super+0x72/0x110
-   kill_anon_super+0x18/0x30
-   btrfs_kill_super+0x17/0x30 [btrfs]
-   deactivate_locked_super+0x3b/0xa0
-   deactivate_super+0x40/0x50
-   cleanup_mnt+0x135/0x190
-   __cleanup_mnt+0x12/0x20
-   task_work_run+0x64/0xb0
-   __prepare_exit_to_usermode+0x1bc/0x1c0
-   __syscall_return_slowpath+0x47/0x230
-   do_syscall_64+0x64/0xb0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  ---[ end trace 6c341cdf9b6cc3c1 ]---
-  BTRFS error (device dm-3): qgroup reserved space leaked
+Reduce verbosity by making them visible only when debugging.
+This way crypto fuzz testing log cleans up a bit.
 
-While that subvolume 259 is no longer in that filesystem.
-
-[CAUSE]
-Normally per-trans qgroup reserved space is freed when a transaction is
-committed, in commit_fs_roots().
-
-However for completely dropped subvolume, that subvolume is completely
-gone, thus is no longer in the fs_roots_radix, and its per-trans
-reserved qgroup will never be freed.
-
-Since the subvolume is already gone, leaked per-trans space won't cause
-any trouble for end users.
-
-[FIX]
-Just call btrfs_qgroup_free_meta_all_pertrans() before a subvolume is
-completely dropped.
-
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/crypto/caam/caamalg.c     | 2 +-
+ drivers/crypto/caam/caamalg_qi.c  | 2 +-
+ drivers/crypto/caam/caamalg_qi2.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index c0bc35f932bf7..96223813b6186 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -5466,6 +5466,14 @@ int btrfs_drop_snapshot(struct btrfs_root *root, int update_ref, int for_reloc)
- 		}
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index b2f9882bc010f..bf90a4fcabd1f 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -838,7 +838,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	u32 *desc;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(jrdev, "key size mismatch\n");
++		dev_dbg(jrdev, "key size mismatch\n");
+ 		return -EINVAL;
  	}
  
-+	/*
-+	 * This subvolume is going to be completely dropped, and won't be
-+	 * recorded as dirty roots, thus pertrans meta rsv will not be freed at
-+	 * commit transaction time.  So free it here manually.
-+	 */
-+	btrfs_qgroup_convert_reserved_meta(root, INT_MAX);
-+	btrfs_qgroup_free_meta_all_pertrans(root);
-+
- 	if (test_bit(BTRFS_ROOT_IN_RADIX, &root->state))
- 		btrfs_add_dropped_root(trans, root);
- 	else
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index 27e36bdf6163b..315d53499ce85 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -728,7 +728,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	int ret = 0;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(jrdev, "key size mismatch\n");
++		dev_dbg(jrdev, "key size mismatch\n");
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 28669cbecf77c..e1b6bc6ef091b 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -1058,7 +1058,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
+ 	u32 *desc;
+ 
+ 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
+-		dev_err(dev, "key size mismatch\n");
++		dev_dbg(dev, "key size mismatch\n");
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.25.1
 
