@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9569C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9515D22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087225;
-	bh=ViljuQSUBMMS87DdQO2cmP6a8sHOqnJUa5dXv1gAFO4=;
+	s=default; t=1597087229;
+	bh=o4l7/CzR2RC+FJbDc3/jPbOByK3INs3SyymKtf/GbjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0jMOfJqNZQgVF6jFl6RtYJ3mjjKCfIlum2LaW2tYk/A9s/eBx7xHJMbCiQ/+oTlV5
-	 lGvUWJJZjJEj07hJq/t1guRKACodkPe3sNIH27GQHBfbDB1WH6T8FyJhQjmWSwMEb3
-	 GFz7Ict5M+gsJa+rf46HtYJGDYSd4+agcHjtBJV0=
+	b=ZZfX7/e3juIABKxxiNSnjh+IuomVnkIKkgKMzXWRazFP32kiwf4HhTeL45Zm8vsLB
+	 BYkk0vywU9YXwODMSqAYizYYtMEt2quC5estO9EbAmo/WzMTZTlfqiiJSVbz9CJfhQ
+	 +8963mTVcNO0ibTTXrJ9biVwc/mMpuXX2Wd7ZFBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgHJTUX (ORCPT
+        id S1730304AbgHJTU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:20:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729887AbgHJTNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:54 -0400
+        id S1729881AbgHJTNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47FBE207FF;
-        Mon, 10 Aug 2020 19:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1199722B49;
+        Mon, 10 Aug 2020 19:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086834;
-        bh=ViljuQSUBMMS87DdQO2cmP6a8sHOqnJUa5dXv1gAFO4=;
+        s=default; t=1597086831;
+        bh=o4l7/CzR2RC+FJbDc3/jPbOByK3INs3SyymKtf/GbjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RSmaxlwhkFOGAPb59ayY/RJ2KS9nlfxhLFCfU4yPSouDymXZBJVO/OFFRXcmSGaKV
-         wgmkBiVChT6bQyYklWZktuxKci1Lo0a7rO96NvhRkAJw1EmjzH0gDuXzV2CHYqrQVE
-         f6fTAGxJqoCEHgiK8yeNAoTH2MFKtQA13dfKkMlM=
+        b=vy8Hp9BmoTbH1vL6rDbWppFgeod3Hk0azk7fT6N5UaYqKXP+QyKyjvaJ7hlmScoqL
+         IPzabJOBbC4LmiKkxdPkJUOX4eQaAj1FBwZf5umZ8OIhuh308pfShrC6+dyGs8othd
+         3VWMytucaQ2686MpgqjWurGJslUsUwInaaD0I0Ok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhao Heming <heming.zhao@suse.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/22] md-cluster: fix wild pointer of unlock_all_bitmaps()
-Date:   Mon, 10 Aug 2020 15:13:28 -0400
-Message-Id: <20200810191345.3795166-6-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 04/22] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
+Date:   Mon, 10 Aug 2020 15:13:26 -0400
+Message-Id: <20200810191345.3795166-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -59,70 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhao Heming <heming.zhao@suse.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 60f80d6f2d07a6d8aee485a1d1252327eeee0c81 ]
+[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
 
-reproduction steps:
-```
-node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
-/dev/sdb
-node2 # mdadm -A /dev/md0 /dev/sda /dev/sdb
-node1 # mdadm -G /dev/md0 -b none
-mdadm: failed to remove clustered bitmap.
-node1 # mdadm -S --scan
-^C  <==== mdadm hung & kernel crash
-```
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-kernel stack:
-```
-[  335.230657] general protection fault: 0000 [#1] SMP NOPTI
-[...]
-[  335.230848] Call Trace:
-[  335.230873]  ? unlock_all_bitmaps+0x5/0x70 [md_cluster]
-[  335.230886]  unlock_all_bitmaps+0x3d/0x70 [md_cluster]
-[  335.230899]  leave+0x10f/0x190 [md_cluster]
-[  335.230932]  ? md_super_wait+0x93/0xa0 [md_mod]
-[  335.230947]  ? leave+0x5/0x190 [md_cluster]
-[  335.230973]  md_cluster_stop+0x1a/0x30 [md_mod]
-[  335.230999]  md_bitmap_free+0x142/0x150 [md_mod]
-[  335.231013]  ? _cond_resched+0x15/0x40
-[  335.231025]  ? mutex_lock+0xe/0x30
-[  335.231056]  __md_stop+0x1c/0xa0 [md_mod]
-[  335.231083]  do_md_stop+0x160/0x580 [md_mod]
-[  335.231119]  ? 0xffffffffc05fb078
-[  335.231148]  md_ioctl+0xa04/0x1930 [md_mod]
-[  335.231165]  ? filename_lookup+0xf2/0x190
-[  335.231179]  blkdev_ioctl+0x93c/0xa10
-[  335.231205]  ? _cond_resched+0x15/0x40
-[  335.231214]  ? __check_object_size+0xd4/0x1a0
-[  335.231224]  block_ioctl+0x39/0x40
-[  335.231243]  do_vfs_ioctl+0xa0/0x680
-[  335.231253]  ksys_ioctl+0x70/0x80
-[  335.231261]  __x64_sys_ioctl+0x16/0x20
-[  335.231271]  do_syscall_64+0x65/0x1f0
-[  335.231278]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-```
-
-Signed-off-by: Zhao Heming <heming.zhao@suse.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Acked-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-cluster.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
+ drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
+ drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 10057ac85476e..035d5ec8e677f 100644
---- a/drivers/md/md-cluster.c
-+++ b/drivers/md/md-cluster.c
-@@ -1423,6 +1423,7 @@ static void unlock_all_bitmaps(struct mddev *mddev)
- 			}
- 		}
- 		kfree(cinfo->other_bitmap_lockres);
-+		cinfo->other_bitmap_lockres = NULL;
- 	}
- }
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index d86110cdf0852..b2334349799d1 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -627,8 +627,10 @@ radeon_crtc_set_config(struct drm_mode_set *set,
+ 	dev = set->crtc->dev;
  
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	ret = drm_crtc_helper_set_config(set, ctx);
+ 
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index f6908e2f9e55a..41e8abd099784 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -496,8 +496,10 @@ long radeon_drm_ioctl(struct file *filp,
+ 	long ret;
+ 	dev = file_priv->minor->dev;
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	ret = drm_ioctl(filp, cmd, arg);
+ 	
+diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
+index dfee8f7d94ae5..2e28cf8118404 100644
+--- a/drivers/gpu/drm/radeon/radeon_kms.c
++++ b/drivers/gpu/drm/radeon/radeon_kms.c
+@@ -659,8 +659,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
+ 	file_priv->driver_priv = NULL;
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return r;
++	}
+ 
+ 	/* new gpu have virtual address space support */
+ 	if (rdev->family >= CHIP_CAYMAN) {
 -- 
 2.25.1
 
