@@ -2,117 +2,84 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5966C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96279206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:54:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="vv3C+gcD"
+	by mail.kernel.org (Postfix) with ESMTP id 1C57D2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHJDyW (ORCPT
+        id S1726574AbgHJDyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 23:54:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgHJDyW (ORCPT
+        Sun, 9 Aug 2020 23:54:32 -0400
+Received: from smtprelay0087.hostedemail.com ([216.40.44.87]:46542 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgHJDy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 23:54:22 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F17C061786
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 20:54:22 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mt12so4092119pjb.4
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 20:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=84bq2eVZP/J9K+NjLEUCnEVIr+p4XUgWluN/PDileB4=;
-        b=vv3C+gcDGVxjL/s4FaN5isodWCPVa8ltSCmng0R1vzhJYMgFGPNIc8ZUDDKJEN51GB
-         diSghQx1h5aFjxCPXWTdyoZuFkWsdNSjUfubK2eHswpfoJ6Z5DnWLYmfQrPWMCsBRFUZ
-         4zVrKAUc05rLzbLxp8b9Aop/f7UHEPebEtqgK5HGQHnvr1kLKAJdFdblVeYnpPKnEr5n
-         IKJr8nhLBglgjuVbKNFTDy2Ehe3ES2iWTTpNSPNZp5NqLQdEsx8W6bjLMG4ZX+ndAYxF
-         7gCfW+10eQtsSUhWVgzR/Y1iJyvu7/nhibTpBpFIBZO3KCy4ex4ZWStSyMNsOMxfjH4j
-         nL1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=84bq2eVZP/J9K+NjLEUCnEVIr+p4XUgWluN/PDileB4=;
-        b=fa7V2Dt7IxR500hD4Zqs0iZ2VQpzc3BAmnhPygFMWASqPrSi7uW3RY6+8xfAJz6T+e
-         OsOlwRS05KkDn7IlR1hmwdYXqSWDNZXbav8m6Yg3LX150OOeq13h00l7VBW2HCR2PoG1
-         /vnxRMPrTCpOMEXhNClG93+0uy+mTECRJSGLaqvs4XZ9Cb0gLOUpDlqdd8TmHh+dpr90
-         1cyUoyCE4gw5RRJ9VtEA9Z0ikKIocbjdXJ7QUQXHEPFkHJ6cAHwCRKbs9pyw4fAwRMyz
-         eyG8ab24y8bpl6rYCqCCzZyuTO23K3RrwNQpyy9w+dOL57sUmFl/cOzf6xfrtsVF00a8
-         M2fA==
-X-Gm-Message-State: AOAM5321bKuNYCiY0OQ38y/T0r3oCharToZ+N2k00cfEt9n0cyvfokas
-        JwS2TvyUz0oePEPnGU9cVosOmnUKbGs=
-X-Google-Smtp-Source: ABdhPJwkIR0u5UepQG55u7CmLUqGO482EeNRPSOsTEmnouAeI0ONH5yHYPcwX3LcSsSBiBcbGjk+/w==
-X-Received: by 2002:a17:90a:e986:: with SMTP id v6mr26536533pjy.88.1597031661180;
-        Sun, 09 Aug 2020 20:54:21 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id mp3sm55496383pjb.0.2020.08.09.20.54.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Aug 2020 20:54:20 -0700 (PDT)
+        Sun, 9 Aug 2020 23:54:28 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3E759182CED2A;
+        Mon, 10 Aug 2020 03:54:27 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: alley78_2c011d126fd7
+X-Filterd-Recvd-Size: 2562
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 10 Aug 2020 03:54:25 +0000 (UTC)
+Message-ID: <8cc2925b53845876475ccc4f098fbc88471d77bb.camel@perches.com>
 Subject: Re: [PATCH] ionic_lif: Use devm_kcalloc() in ionic_qcq_alloc()
-To:     Xu Wang <vulab@iscas.ac.cn>, drivers@pensando.io,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org
+From:   Joe Perches <joe@perches.com>
+To:     Shannon Nelson <snelson@pensando.io>, Xu Wang <vulab@iscas.ac.cn>,
+        drivers@pensando.io, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org
+Date:   Sun, 09 Aug 2020 20:54:24 -0700
+In-Reply-To: <2623670b-09f0-2ab4-d618-e478d98c186a@pensando.io>
 References: <20200810023807.9260-1-vulab@iscas.ac.cn>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <c897238f-c0c9-a2b2-d3ae-c04012e976de@pensando.io>
-Date:   Sun, 9 Aug 2020 20:54:19 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+         <4265227298e8d0a943ca4468a4f32222317df197.camel@perches.com>
+         <2623670b-09f0-2ab4-d618-e478d98c186a@pensando.io>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <20200810023807.9260-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/9/20 7:38 PM, Xu Wang wrote:
-> A multiplication for the size determination of a memory allocation
-> indicated that an array data structure should be processed.
-> Thus use the corresponding function "devm_kcalloc".
->
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+On Sun, 2020-08-09 at 20:50 -0700, Shannon Nelson wrote:
+> On 8/9/20 8:20 PM, Joe Perches wrote:
+> > On Mon, 2020-08-10 at 02:38 +0000, Xu Wang wrote:
+> > > A multiplication for the size determination of a memory allocation
+> > > indicated that an array data structure should be processed.
+> > > Thus use the corresponding function "devm_kcalloc".
+> > []
+> > > diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> > []
+> > > @@ -412,7 +412,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
+> > >   
+> > >   	new->flags = flags;
+> > >   
+> > > -	new->q.info = devm_kzalloc(dev, sizeof(*new->q.info) * num_descs,
+> > > +	new->q.info = devm_kcalloc(dev, num_descs, sizeof(*new->q.info),
+> > >   				   GFP_KERNEL);
+> > >   	if (!new->q.info) {
+> > >   		netdev_err(lif->netdev, "Cannot allocate queue info\n");
+> > You could also remove these unnecessary allocation error messages.
+> > There is an existing dump_stack() on allocation failure.
+> > 
+> Yes, the dump_stack() tells you which function had the allocation 
+> failure, but since there are multiple allocation operations in this same 
+> function, I find these helpful in knowing quickly which one of the 
+> allocations failed, without having to track down the symbols and source 
+> for whatever distro's kernel this might have happened in.
 
-Acked-by: Shannon Nelson <snelson@pensando.io>
+If you do chose the message, might as well add __GFP_NOWARN
+to the allocation to avoid the dump_stack().
 
-> ---
->   drivers/net/ethernet/pensando/ionic/ionic_lif.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> index 1944bf5264db..26988ad7ec97 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> @@ -412,7 +412,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
->   
->   	new->flags = flags;
->   
-> -	new->q.info = devm_kzalloc(dev, sizeof(*new->q.info) * num_descs,
-> +	new->q.info = devm_kcalloc(dev, num_descs, sizeof(*new->q.info),
->   				   GFP_KERNEL);
->   	if (!new->q.info) {
->   		netdev_err(lif->netdev, "Cannot allocate queue info\n");
-> @@ -462,7 +462,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
->   		new->intr.index = IONIC_INTR_INDEX_NOT_ASSIGNED;
->   	}
->   
-> -	new->cq.info = devm_kzalloc(dev, sizeof(*new->cq.info) * num_descs,
-> +	new->cq.info = devm_kcalloc(dev, num_descs, sizeof(*new->cq.info),
->   				    GFP_KERNEL);
->   	if (!new->cq.info) {
->   		netdev_err(lif->netdev, "Cannot allocate completion queue info\n");
+But honestly, if any allocation fails, you're OOM anyway.
 
