@@ -2,81 +2,66 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2981122BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:55:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QSdc2PgK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C6eP+wFy"
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0F20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgHJTzX (ORCPT
+        id S1728348AbgHJUCE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:55:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53132 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgHJTzX (ORCPT
+        Mon, 10 Aug 2020 16:02:04 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:47813 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgHJUCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:55:23 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597089321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5lOcjKXTHefZnEQA7ggbOF1BPRNwtfZ0tlgkz2hBjXY=;
-        b=QSdc2PgKCB35vUVmt9BKR3SO4O2pMKcYQqhkPsdRKgFaW7J7AEOmjxy3BIwBdPa24L8aAi
-        hUI3+/SP0iGlR8k8F7YIxfS7aCBwEk4zAxQVG7fw5rhyGOeUi3aOoFPtt1bwR8A4aqs397
-        LTiOhxNghZv/FSV1vVBBgc/j7IrStYeHtCr2Je/iLSNGDm0NtONqWi0ryCSB5fKhz33003
-        YlDqO4YCXF6F923/y1vjFKgw6GDOua1i7Xunz2TiH3wMBcLAz/HN9gMzH0oC2zKq6gC+6Q
-        AY8vBAKHAdiYAgnqfppC4dASPFRbQVA1Kc9m5y2xQuVXyVEJgJ0RkhGgV82v9Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597089321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5lOcjKXTHefZnEQA7ggbOF1BPRNwtfZ0tlgkz2hBjXY=;
-        b=C6eP+wFynMmaCF2lReixwl/osKyftYw17ccyc0kUk2UXQ6D8IRH8P30kkaxH6N/vlVWdiQ
-        rUe9Vp+636uL8JAQ==
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 08/24] seqlock: lockdep assert non-preemptibility on seqcount_t write
-In-Reply-To: <20200810085954.GA1591892@kroah.com>
-References: <20200519214547.352050-1-a.darwish@linutronix.de> <20200720155530.1173732-1-a.darwish@linutronix.de> <20200720155530.1173732-9-a.darwish@linutronix.de> <20200808232122.GA176509@roeck-us.net> <20200809184251.GA94072@lx-t490> <20200810085954.GA1591892@kroah.com>
-Date:   Mon, 10 Aug 2020 21:55:20 +0200
-Message-ID: <87v9hqxolz.fsf@nanos>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 10 Aug 2020 16:02:03 -0400
+Received: from marcel-macpro.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 20EF2CED43;
+        Mon, 10 Aug 2020 22:12:03 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 3/3] drivers/clk/clk-asm9260.c
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <bdab839e-1aba-5b0f-e5de-52ddebc8b9ed@gmail.com>
+Date:   Mon, 10 Aug 2020 22:01:58 +0200
+Cc:     YourName <argoz1701@gmail.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        mturquette@baylibre.com, linux-ide@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>, linux-clk@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <B73FCD9B-842F-440C-8BF1-16C9F415A341@holtmann.org>
+References: <20200810005941.20581-1-argoz1701@gmail.com>
+ <bdab839e-1aba-5b0f-e5de-52ddebc8b9ed@gmail.com>
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> writes:
-> On Sun, Aug 09, 2020 at 08:42:51PM +0200, Ahmed S. Darwish wrote:
->> On Sat, Aug 08, 2020 at 04:21:22PM -0700, Guenter Roeck wrote:
->> > Reverting it fixes the problem. Is this being addressed ?
->> >
->> 
->> @Peter, I think let's revert this one for now?
->
-> Please do, it's blowing up my local builds as well :(
+Hi,
 
-Peter and Ingo sorted the header mess last week and I just sent a pull
-request to Linus.
+>> From: Daniel <argoz1701@gmail.com>
+> 
+>  Full name needed here.
+> 
+>> ---
+>> drivers/ata/acard-ahci.c  |  6 +++---
+>> drivers/bluetooth/bfusb.c |  5 ++---
+>> drivers/clk/clk-asm9260.c | 12 ++++++------
+>> 3 files changed, 11 insertions(+), 12 deletions(-)
 
-Thanks,
+please don’t intermix patches for different subsystems. And have a proper commit message explaining what is changed.
 
-        tglx
+Regards
+
+Marcel
+
