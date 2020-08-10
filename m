@@ -2,128 +2,135 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50938C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C78CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311D62078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE1720866
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597074417;
+	bh=j8jGR2gpWSiHYnlpQ+t1j++8nxUJKE0a7/TRK6Ps85U=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ww4ZxAoQe6cXbh67N30L25h0HFmqgC3/xc8/8wVziknuJxwyPw+kcVUfM5iO2OgZZ
+	 ThkQ4rGEcWGqiSTajlkaJK+pjp1sWKZLojqddIRt4yJpUa/GJeagcWSCzsirJwQXpk
+	 iq9H0gZilLwM1dhFzjvf8WOblgtN9HE0vOSEqYas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgHJPq0 (ORCPT
+        id S1727902AbgHJPqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:46:26 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:52229 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgHJPq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:46:26 -0400
-Received: by mail-il1-f198.google.com with SMTP id z14so8053798ilk.19
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:46:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SHAexMyW7z201Yxw9hnQ8uPlGiip1/BeDLnLE7U9rJo=;
-        b=SBVQtbJj9QmSh1pteLTmGCopbEIGuUwI3BbWrmsEZC7bBeMj84Zt7DZoqIJwj7M6Sw
-         6SA4LK2FMwjOmuwyhcu5w1OHsVy4k/oiX6v3OYwbgP26yOMsJeyEi+p1Ecj7QxuCF9zq
-         k4C24sqmyNB3w8CN+bvmglkqjJoKoW5dOTM5fHa6bSIo+XS3NGzE+XYPqBtaDb28Zu67
-         Ywzf0ZGb5Tt22czDXd+1vDKKqkVBSXToSy0bl3EYmd3UhORI1eqMcwIjmzqYUuEfT1jR
-         4xnr3G0h+XPrOHMrJXz0ZjUWXOlPHeWTi1I3SBFViKY8fdOza3OVG/JK5peKFZGuTBJd
-         4Ctg==
-X-Gm-Message-State: AOAM530zAUKS7xIKotL+wrtNMgupafHtPCPSrDUlUWNmVMCO1GHDFIy8
-        0DiktpdyIC8OIUc1zxBm7fd1B/4ZgeepLZsBOBTPmyp4TMbt
-X-Google-Smtp-Source: ABdhPJwp+HLP3iQxO3liiiRpmTkJSrG5YWUlMOGePiAkgtJDyFSg+uttF8UMfBG3ecCN/S84Pv15S0aZzzwuNWMJOAckDOjPiSjG
+        Mon, 10 Aug 2020 11:46:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgHJPqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:46:55 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9E0B2078E;
+        Mon, 10 Aug 2020 15:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597074414;
+        bh=j8jGR2gpWSiHYnlpQ+t1j++8nxUJKE0a7/TRK6Ps85U=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0X+l8s+tl0tCoIQqESJhcYWbW5WNuyg+PexmYrKIBVWBqLtkYyILa2ZQwcRwRL0Vx
+         2nhRQy8UWf02p9p0IgW4FX76ZjJVqj27oGSNVkkfYEwwfIYEG4bZRXMIR6PyVYIpQP
+         V//VbuJ/POjIz51hrVuZCU2cQc6AckeSy0GRv80I=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 795BA35228C7; Mon, 10 Aug 2020 08:46:54 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:46:54 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        peterz@infradead.org, Randy Dunlap <rdunlap@infradead.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        tglx@linutronix.de, vineethrp@gmail.com
+Subject: Re: [PATCH v4 1/5] rcu/tree: Add a warning if CPU being onlined did
+ not report QS already
+Message-ID: <20200810154654.GJ4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200807170722.2897328-1-joel@joelfernandes.org>
+ <20200807170722.2897328-2-joel@joelfernandes.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d9d1:: with SMTP id n17mr17253665ilq.182.1597074385031;
- Mon, 10 Aug 2020 08:46:25 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:46:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000066583105ac87dbf4@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in loop_rw_iter
-From:   syzbot <syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807170722.2897328-2-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Aug 07, 2020 at 01:07:18PM -0400, Joel Fernandes (Google) wrote:
+> Currently, rcu_cpu_starting() checks to see if the RCU core expects a
+> quiescent state from the incoming CPU.  However, the current interaction
+> between RCU quiescent-state reporting and CPU-hotplug operations should
+> mean that the incoming CPU never needs to report a quiescent state.
+> First, the outgoing CPU reports a quiescent state if needed.  Second,
+> the race where the CPU is leaving just as RCU is initializing a new
+> grace period is handled by an explicit check for this condition.  Third,
+> the CPU's leaf rcu_node structure's ->lock serializes these checks.
+> 
+> This means that if rcu_cpu_starting() ever feels the need to report
+> a quiescent state, then there is a bug somewhere in the CPU hotplug
+> code or the RCU grace-period handling code.  This commit therefore
+> adds a WARN_ON_ONCE() to bring that bug to everyone's attention.
+> 
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  kernel/rcu/tree.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 65e1b5e92319..a49fa3b60faa 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3996,7 +3996,14 @@ void rcu_cpu_starting(unsigned int cpu)
+>  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+>  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+>  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+> -	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
+> +
+> +	/*
+> +	 * XXX: The following rcu_report_qs_rnp() is redundant. If the below
+> +	 * warning does not fire, consider replacing it with the "else" block,
+> +	 * by June 2021 or so (while keeping the warning). Refer to RCU's
+> +	 * Requirements documentation for the rationale.
 
-syzbot found the following issue on:
+Let's suppose that this change is made, and further that in a year or
+two the "if" statement below is replaced with its "else" block.
 
-HEAD commit:    9420f1ce Merge tag 'pinctrl-v5.9-1' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13662f62900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=72cf85e4237850c8
-dashboard link: https://syzkaller.appspot.com/bug?extid=1abbd16e49910f6bbe45
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15929006900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e196aa900000
+Now let's suppose that (some years after that) a hard-to-trigger bug
+makes its way into RCU's CPU-hotplug code that would have resulted in
+the WARN_ON_ONCE() triggering, but that this bug turns out to be not so
+hard to trigger in certain large production environments.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com
+Let's suppose further that you have moved on to where you are responsible
+for one of these large production environments.  How would this
+hypothetical RCU/CPU-hotplug bug manifest?
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD a652e067 P4D a652e067 PUD a652f067 PMD 0 
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 7461 Comm: io_wqe_worker-0 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc9000804f910 EFLAGS: 00010246
-RAX: 1ffffffff10b0b9b RBX: dffffc0000000000 RCX: ffff88808962e1c8
-RDX: 000000000000003c RSI: 0000000020000740 RDI: ffff88809fb2dcc0
-RBP: 0000000020000740 R08: ffffc9000804fa28 R09: ffff8880a7639c0f
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffc9000804fa28
-R13: ffffffff88585cc0 R14: 000000000000003c R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 000000008e2a7000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- loop_rw_iter.part.0+0x26e/0x450 fs/io_uring.c:2850
- loop_rw_iter fs/io_uring.c:2829 [inline]
- io_write+0x6a2/0x7a0 fs/io_uring.c:3190
- io_issue_sqe+0x1b0/0x60d0 fs/io_uring.c:5530
- io_wq_submit_work+0x183/0x3d0 fs/io_uring.c:5775
- io_worker_handle_work+0xa45/0x13f0 fs/io-wq.c:527
- io_wqe_worker+0xbf0/0x10e0 fs/io-wq.c:569
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Modules linked in:
-CR2: 0000000000000000
----[ end trace 97e511c5a98da2fe ]---
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc9000804f910 EFLAGS: 00010246
-RAX: 1ffffffff10b0b9b RBX: dffffc0000000000 RCX: ffff88808962e1c8
-RDX: 000000000000003c RSI: 0000000020000740 RDI: ffff88809fb2dcc0
-RBP: 0000000020000740 R08: ffffc9000804fa28 R09: ffff8880a7639c0f
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffc9000804fa28
-R13: ffffffff88585cc0 R14: 000000000000003c R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f84c3b15028 CR3: 000000008e2a7000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+							Thanx, Paul
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> +	 */
+> +	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
+>  		rcu_disable_urgency_upon_qs(rdp);
+>  		/* Report QS -after- changing ->qsmaskinitnext! */
+>  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+> -- 
+> 2.28.0.236.gb10cc79966-goog
+> 
