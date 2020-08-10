@@ -2,158 +2,85 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F836C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4021B20734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:54:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GSl+Ae5C"
+	by mail.kernel.org (Postfix) with ESMTP id A17502078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgHJNyq (ORCPT
+        id S1726935AbgHJN4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:54:46 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39396 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726584AbgHJNyq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:54:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597067684;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=11abmRXCh4a2zJ5GLAvm1E8WzRC1Uo5rJiAJN/2ETwU=;
-        b=GSl+Ae5CNYOrIrYYrlIPayqVQ+3piDfJkd8h9rKC/hDvF0ATPHk9yUFYT56kLqgysZwEVy
-        JDnaBswjbYY28/1g7CZByKCYG0R/sFOGsiuo1elHdbFUTsEq+T8xwfl7chgjYHug4aG4m8
-        U9zyUppcTVFBUKosloHao8md/3jQAQM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-qn1pY0SdNde9MBKPXrvQSw-1; Mon, 10 Aug 2020 09:54:42 -0400
-X-MC-Unique: qn1pY0SdNde9MBKPXrvQSw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CE0E19057A0;
-        Mon, 10 Aug 2020 13:54:41 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.10.115.251])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 172036F128;
-        Mon, 10 Aug 2020 13:54:32 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 6512A22036A; Mon, 10 Aug 2020 09:54:32 -0400 (EDT)
-Date:   Mon, 10 Aug 2020 09:54:32 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 03/20] virtio: Add get_shm_region method
-Message-ID: <20200810135432.GA459233@redhat.com>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-4-vgoyal@redhat.com>
- <20200810094548-mutt-send-email-mst@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810094548-mutt-send-email-mst@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Mon, 10 Aug 2020 09:56:18 -0400
+Received: from mga07.intel.com ([134.134.136.100]:57142 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726584AbgHJN4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 09:56:17 -0400
+IronPort-SDR: XvilRj2iXmnNwIUST0GTon9Kl1/icsf3a2vLMdwiJY6PqJZpERprDsccyhXiJnfVf2E6jjU1uK
+ CDRDzQ3JMS6Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="217872756"
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="217872756"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 06:56:17 -0700
+IronPort-SDR: 1ehKgvCEhhWCVQg3p77Ejt+HJGi+3UlrMZjk/x1oa1PrZDOAiCiSTuW8hU3roy/hanBsgE81UW
+ ZPAVfhzGMVZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="469052846"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 06:56:14 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>
+Subject: [PATCH 1/2] scsi: ufs: Fix interrupt error message for shared interrupts
+Date:   Mon, 10 Aug 2020 16:55:47 +0300
+Message-Id: <20200810135548.28213-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 09:47:15AM -0400, Michael S. Tsirkin wrote:
-> On Fri, Aug 07, 2020 at 03:55:09PM -0400, Vivek Goyal wrote:
-> > From: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> > 
-> > Virtio defines 'shared memory regions' that provide a continuously
-> > shared region between the host and guest.
-> > 
-> > Provide a method to find a particular region on a device.
-> > 
-> > Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> > Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-> > Cc: kvm@vger.kernel.org
-> > Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> 
-> I'm not sure why doesn't b4 pick up reset of this
-> patchset. where can I find it?
+The interrupt might be shared, in which case it is not an error for the
+interrupt handler to be called when the interrupt status is zero, so
+remove the message print and register dump.
 
-What is b4? I think I might not have copied to right list. I cced
-kvm, but probably I should sent it to virtualization@lists.linux-foundation.org
-instead?
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 9333d77573485 ("scsi: ufs: Fix irq return code")
+---
+ drivers/scsi/ufs/ufshcd.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-> 
-> 
-> IIUC all this is 5.10 material, right?
-
-I think so. It probably is too late for 5.9.
-
-Thanks
-Vivek
-
-> 
-> 
-> > ---
-> >  include/linux/virtio_config.h | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> > index bb4cc4910750..c859f000a751 100644
-> > --- a/include/linux/virtio_config.h
-> > +++ b/include/linux/virtio_config.h
-> > @@ -10,6 +10,11 @@
-> >  
-> >  struct irq_affinity;
-> >  
-> > +struct virtio_shm_region {
-> > +       u64 addr;
-> > +       u64 len;
-> > +};
-> > +
-> >  /**
-> >   * virtio_config_ops - operations for configuring a virtio device
-> >   * Note: Do not assume that a transport implements all of the operations
-> > @@ -65,6 +70,7 @@ struct irq_affinity;
-> >   *      the caller can then copy.
-> >   * @set_vq_affinity: set the affinity for a virtqueue (optional).
-> >   * @get_vq_affinity: get the affinity for a virtqueue (optional).
-> > + * @get_shm_region: get a shared memory region based on the index.
-> >   */
-> >  typedef void vq_callback_t(struct virtqueue *);
-> >  struct virtio_config_ops {
-> > @@ -88,6 +94,8 @@ struct virtio_config_ops {
-> >  			       const struct cpumask *cpu_mask);
-> >  	const struct cpumask *(*get_vq_affinity)(struct virtio_device *vdev,
-> >  			int index);
-> > +	bool (*get_shm_region)(struct virtio_device *vdev,
-> > +			       struct virtio_shm_region *region, u8 id);
-> >  };
-> >  
-> >  /* If driver didn't advertise the feature, it will never appear. */
-> > @@ -250,6 +258,15 @@ int virtqueue_set_affinity(struct virtqueue *vq, const struct cpumask *cpu_mask)
-> >  	return 0;
-> >  }
-> >  
-> > +static inline
-> > +bool virtio_get_shm_region(struct virtio_device *vdev,
-> > +                         struct virtio_shm_region *region, u8 id)
-> > +{
-> > +	if (!vdev->config->get_shm_region)
-> > +		return false;
-> > +	return vdev->config->get_shm_region(vdev, region, id);
-> > +}
-> > +
-> >  static inline bool virtio_is_little_endian(struct virtio_device *vdev)
-> >  {
-> >  	return virtio_has_feature(vdev, VIRTIO_F_VERSION_1) ||
-> > -- 
-> > 2.25.4
-> 
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index cdcf56679b41..d7522dba4dcf 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5994,12 +5994,6 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+ 	} while (intr_status && --retries);
+ 
+-	if (retval == IRQ_NONE) {
+-		dev_err(hba->dev, "%s: Unhandled interrupt 0x%08x\n",
+-					__func__, intr_status);
+-		ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
+-	}
+-
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
+ }
+-- 
+2.17.1
 
