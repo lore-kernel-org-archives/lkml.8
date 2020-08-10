@@ -2,152 +2,117 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4170C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BA2206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F4C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597102121;
+	bh=z0r+lCZYPiccixe3QpsKbupOQvldS1z/zwKsOkfGnbY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Fg6GT5DJ9JsAes+I82H3IV7jXgvNbkiu5T7UljKRo7W89g51olMb4wEyj96+ZWCF7
+	 Qc2vFLqb2vmUlJsSgVDqx3YzvDgwPXP1g6lQarLtZBVefrvZoW8rB6F8jvG5n/J2r4
+	 k6bckdf9mQEBibgyqovw/XvNhO2uRPfIoQYF0bPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgHJX1U (ORCPT
+        id S1727918AbgHJX2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:27:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbgHJX1S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:27:18 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A92C06174A;
-        Mon, 10 Aug 2020 16:27:18 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 2E52A2948A6
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     luto@kernel.org, tglx@linutronix.de
-Cc:     keescook@chromium.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        willy@infradead.org, linux-kselftest@vger.kernel.org,
-        shuah@kernel.org, Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel@collabora.com
-Subject: [PATCH v5 9/9] doc: Document Syscall User Dispatch
-Date:   Mon, 10 Aug 2020 19:26:36 -0400
-Message-Id: <20200810232636.1415588-10-krisman@collabora.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810232636.1415588-1-krisman@collabora.com>
-References: <20200810232636.1415588-1-krisman@collabora.com>
+        Mon, 10 Aug 2020 19:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgHJX2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 19:28:40 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4117220748;
+        Mon, 10 Aug 2020 23:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597102119;
+        bh=z0r+lCZYPiccixe3QpsKbupOQvldS1z/zwKsOkfGnbY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tMtC168Bnm85aHCmeS+xFlUQehFiZbUw8MhBWzmR+rX9oXkBTJ9+6sjcAGUs/ol6B
+         VuYqe1fumGkUlr+mxa3T/EuBk1y2t1nTxpQvBKSzP90oJ3cNI5r3pdhOO61Z0m5ri8
+         b1WJ4rR5P8XSyYq0Q+bD2m2pLDXcvF8KQ7/6ZfEM=
+Received: by mail-ed1-f50.google.com with SMTP id bs17so7681185edb.1;
+        Mon, 10 Aug 2020 16:28:39 -0700 (PDT)
+X-Gm-Message-State: AOAM530/Es6M6rZ2sGTxSIK+AELd0zZIKYLiMzuJOHuHbSAxEJKUbWQi
+        siz6uxEYpAKaSwfb0r9gJomCSuMNRDyK8saF2A==
+X-Google-Smtp-Source: ABdhPJxj39TNRd8PZmBPNLHQXvrBc9ZMP5IPGhmxFpa1bdCoTDN9dM+s7gqXWNb3Zrxm/Il68M8rnUnavB35d/xb8W8=
+X-Received: by 2002:a50:d80b:: with SMTP id o11mr1986679edj.148.1597102117741;
+ Mon, 10 Aug 2020 16:28:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
+ <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+ <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <cefc273c226c93c605f4dc76afa9eb5aacceaf26.camel@infradead.org>
+In-Reply-To: <cefc273c226c93c605f4dc76afa9eb5aacceaf26.camel@infradead.org>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 11 Aug 2020 07:28:25 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__4Qs93EMjrpK_jW4NsxyZf7w3RHa7vDSRecea_JwAxKw@mail.gmail.com>
+Message-ID: <CAAOTY__4Qs93EMjrpK_jW4NsxyZf7w3RHa7vDSRecea_JwAxKw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explain the interface, provide some background and security notes.
+Hi, David:
 
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
----
- .../admin-guide/syscall-user-dispatch.rst     | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/admin-guide/syscall-user-dispatch.rst
+David Woodhouse <dwmw2@infradead.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8810=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:48=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On Sun, 2020-08-09 at 08:16 +0800, Chun-Kuang Hu wrote:
+> > I would like to put all device in mt7623.dtsi with some device's
+> > status is "disabled" and change its status in platform dtsi.
+> > I would like to see all device in mt7623.dtsi because of its name. If
+> > you move some device to platform dtsi, we would trace all platform
+> > dtsi to find out how many device in mt7623. One day a new platform
+> > enable different devices, you would reorganize all these platform
+> > dtsi?
+>
+> No, this isn't "platform dtsi", surely? This is mt7623a and mt7623n
+> dtsi for the two different SoCs, and platforms then just include
+> mt7623a.dtsi or mt7623n.dtsi as appropriate for the SoC they are using.
+>
+> If you really want *all* the nodes for both MT7623A and MT7623N chips
+> in a single mt7623.dtsi but disabled, could we still have mt7623a.dtsi
+> and mt7623n.dtsi for the chips, enabling the nodes that are only-for-A
+> or only-for-N, so that each platform doesn't have to do that for
+> itself?
+>
+> Although putting those nodes that exist only in one chip or the other
+> directly into the mt7623[an].dtsi still seems to make more sense to
+> me.
 
-diff --git a/Documentation/admin-guide/syscall-user-dispatch.rst b/Documentation/admin-guide/syscall-user-dispatch.rst
-new file mode 100644
-index 000000000000..96616660fded
---- /dev/null
-+++ b/Documentation/admin-guide/syscall-user-dispatch.rst
-@@ -0,0 +1,87 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+Syscall User Dispatch
-+=====================
-+
-+Background
-+----------
-+
-+Compatibility layers like Wine need a way to efficiently emulate system
-+calls of only a part of their process - the part that has the
-+incompatible code - while being able to execute native syscalls without
-+a high performance penalty on the native part of the process.  Seccomp
-+falls short on this task, since it has limited support to efficiently
-+filter syscalls based on memory regions, and it doesn't support removing
-+filters.  Therefore a new mechanism is necessary.
-+
-+Syscall User Dispatch brings the filtering of the syscall dispatcher
-+address back to userspace.  The application is in control of a flip
-+switch, indicating the current personality of the process.  A
-+multiple-personality application can then flip the switch without
-+invoking the kernel, when crossing the compatibility layer API
-+boundaries, to enable/disable the syscall redirection and execute
-+syscalls directly (disabled) or send them to be emulated in userspace
-+through a SIGSYS.
-+
-+The goal of this design is to provide very quick compatibility layer
-+boundary crosses, which is achieved by not executing a syscall to change
-+personality every time the compatibility layer executes.  Instead, a
-+userspace memory region exposed to the kernel indicates the current
-+personality, and the application simply modifies that variable to
-+configure the mechanism.
-+
-+There is a relatively high cost associated with handling signals on most
-+architectures, like x86, but at least for Wine, syscalls issued by
-+native Windows code are currently not known to be a performance problem,
-+since they are quite rare, at least for modern gaming applications.
-+
-+Since this mechanism is designed to capture syscalls issued by
-+non-native applications, it must function on syscalls whose invocation
-+ABI is completely unexpected to Linux.  Syscall User Dispatch, therefore
-+doesn't rely on any of the syscall ABI to make the filtering.  It uses
-+only the syscall dispatcher address and the userspace key.
-+
-+Interface
-+---------
-+
-+A process can setup this mechanism on supported kernels
-+CONFIG_SYSCALL_USER_DISPATCH) by executing the following prctl:
-+
-+   prctl(PR_SET_SYSCALL_USER_DISPATCH, <op>, <start_addr>, <end_addr>, [selector])
-+
-+<op> is either PR_SYS_DISPATCH_ON or PR_SYS_DISPATCH_OFF, to enable and
-+disable the mechanism globally for that thread.  When
-+PR_SYS_DISPATCH_OFF is used, the other fields must be zero.
-+
-+<start_addr> and <end_addr> delimit a closed memory region interval from
-+which syscalls are always executed directly, regardless of the userspace
-+selector.  This provides a fast path for the C library, which includes
-+the most common syscall dispatchers in the native code applications, and
-+also provides a way for the signal handler to return without triggering
-+a nested SIGSYS on (rt_)sigreturn.  Users of this interface should make
-+sure that at least the signal trampoline code is included in this
-+region. In addition, for syscalls that implement the trampoline code on
-+the vDSO, that trampoline is never intercepted.
-+
-+[selector] is a pointer to a char-sized region in the process memory
-+region, that provides a quick way to enable disable syscall redirection
-+thread-wide, without the need to invoke the kernel directly.  selector
-+can be set to PR_SYS_DISPATCH_ON or PR_SYS_DISPATCH_OFF.  Any other
-+value should terminate the program with a SIGSYS.
-+
-+Security Notes
-+--------------
-+
-+Syscall User Dispatch provides functionality for compatibility layers to
-+quickly capture system calls issued by a non-native part of the
-+application, while not impacting the Linux native regions of the
-+process.  It is not a mechanism for sandboxing system calls, and it
-+should not be seen as a security mechanism, since it is trivial for a
-+malicious application to subvert the mechanism by jumping to an allowed
-+dispatcher region prior to executing the syscall, or to discover the
-+address and modify the selector value.  If the use case requires any
-+kind of security sandboxing, Seccomp should be used instead.
-+
-+Any fork or exec of the existing process resets the mechanism to
-+PR_SYS_DISPATCH_OFF.
--- 
-2.28.0
+Sorry I does not notice that mt7623a and mt7623n are different SoC.
+Because they are different SoC, I think the first step is to upstream
+mt7623a.dtsi and mt7623n.dtsi independently. That means in each dtsi,
+it include all devices of its SoC. After both dtsi is upsteamed, we
+could find out what is the common part, then we create a common dtsi
+these two SoC, for example mt7623a_mt7623n_common.dtsi. (Maybe there
+is a SoC's name is exactly 'mt7623', so I prefer mt7623.dtsi is
+reserved for that SoC, and mt7623_common.dtsi is not preferred because
+I don't know there are how many mt7623 family SoC and
+mt7623_common.dtsi should be use for all mt7623 family)
 
+Regards,
+Chun-Kuang.
