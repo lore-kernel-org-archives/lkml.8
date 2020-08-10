@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58165C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D7B22BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229DE22D08
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073277;
-	bh=un7zhe35iB5O7wWshqcS9w6y1MdzU0o5XKOhS/qQX6Y=;
+	s=default; t=1597073282;
+	bh=4JW7OyqRYkP5zzdgiz2Q8q8HeE53NdcNMwb63Oxftro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZP0xBMqEishHSQ3ofEg1Hr8zWbhy+IAPKYk4JIPsJwuTwFrDdl1eEVKLaHP2VkUc
-	 i+sWJ6K4QEuMZ6BDTM+9P8DEm1Ltgy8d8fy/dBe0aTa6ktQN+Z0U5sJlrTpcKggzFG
-	 yGIUykqrAE9e9Y/SSbAo0vVMaPOyKnNWuaQ19fdM=
+	b=FL2zPHHRlRPbRfX7y3JIhvJJmr1sKuF/kU73PxlvlOc00l3TL8VDjvL7PsBjVCZCc
+	 uKn/6Oh4/4dTLISt1ZzkJStqXof5n7fxJFynqyCxeYgBXw4g/SUAupFRCv6FS1/nrR
+	 9qPe0pc3syAF0ATCvIg3SCG1D3iwxFq7fsjkCb1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgHJP14 (ORCPT
+        id S1728815AbgHJP2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33724 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbgHJP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:45 -0400
+        id S1728187AbgHJP1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B1A22B47;
-        Mon, 10 Aug 2020 15:27:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CC8A22D02;
+        Mon, 10 Aug 2020 15:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073264;
-        bh=un7zhe35iB5O7wWshqcS9w6y1MdzU0o5XKOhS/qQX6Y=;
+        s=default; t=1597073270;
+        bh=4JW7OyqRYkP5zzdgiz2Q8q8HeE53NdcNMwb63Oxftro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmgVaz30MT3YyxTNjqcOsUxg8/Y0A/ylChxFxcLrFDrD9Gqfy7RcbcZgoM09Gf7Xb
-         MhaDPskKpYwh59OatdJ58ZOVE8bFwWDjU/elKVmOKS5XTpAbcXNTNCsAvmEyfHA2FW
-         go/3a8zZFHvILGw0lBi8zL0J2v2QzQN/PsCRCmjM=
+        b=woezmWnHxKULjFFWrnkkmBa9XGJWCbuUIX9a3V+QLQUEJc4VTJ3bjss7ZvB9GGFoL
+         zN/dc6TdA/rLKbpPeMdJHQSHkIqVJ1BhN1Oca0fz6TPTa0RhZJAE0tmXkjYMXCsliI
+         9RRAhtnpMqKLsIP6w0BxXEMgqI4XO6oOK2WGbQ3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        stable@vger.kernel.org,
+        Philippe Duplessis-Guindon <pduplessis@efficios.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 43/67] igb: reinit_locked() should be called with rtnl_lock
-Date:   Mon, 10 Aug 2020 17:21:30 +0200
-Message-Id: <20200810151811.567105484@linuxfoundation.org>
+Subject: [PATCH 5.4 45/67] tools lib traceevent: Fix memory leak in process_dynamic_array_len
+Date:   Mon, 10 Aug 2020 17:21:32 +0200
+Message-Id: <20200810151811.658615679@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -61,90 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Ruggeri <fruggeri@arista.com>
+From: Philippe Duplessis-Guindon <pduplessis@efficios.com>
 
-[ Upstream commit 024a8168b749db7a4aa40a5fbdfa04bf7e77c1c0 ]
+[ Upstream commit e24c6447ccb7b1a01f9bf0aec94939e6450c0b4d ]
 
-We observed two panics involving races with igb_reset_task.
-The first panic is caused by this race condition:
+I compiled with AddressSanitizer and I had these memory leaks while I
+was using the tep_parse_format function:
 
-	kworker			reboot -f
+    Direct leak of 28 byte(s) in 4 object(s) allocated from:
+        #0 0x7fb07db49ffe in __interceptor_realloc (/lib/x86_64-linux-gnu/libasan.so.5+0x10dffe)
+        #1 0x7fb07a724228 in extend_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:985
+        #2 0x7fb07a724c21 in __read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1140
+        #3 0x7fb07a724f78 in read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1206
+        #4 0x7fb07a725191 in __read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1291
+        #5 0x7fb07a7251df in read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1299
+        #6 0x7fb07a72e6c8 in process_dynamic_array_len /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:2849
+        #7 0x7fb07a7304b8 in process_function /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3161
+        #8 0x7fb07a730900 in process_arg_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3207
+        #9 0x7fb07a727c0b in process_arg /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1786
+        #10 0x7fb07a731080 in event_read_print_args /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3285
+        #11 0x7fb07a731722 in event_read_print /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3369
+        #12 0x7fb07a740054 in __tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6335
+        #13 0x7fb07a74047a in __parse_event /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6389
+        #14 0x7fb07a740536 in tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6431
+        #15 0x7fb07a785acf in parse_event ../../../src/fs-src/fs.c:251
+        #16 0x7fb07a785ccd in parse_systems ../../../src/fs-src/fs.c:284
+        #17 0x7fb07a786fb3 in read_metadata ../../../src/fs-src/fs.c:593
+        #18 0x7fb07a78760e in ftrace_fs_source_init ../../../src/fs-src/fs.c:727
+        #19 0x7fb07d90c19c in add_component_with_init_method_data ../../../../src/lib/graph/graph.c:1048
+        #20 0x7fb07d90c87b in add_source_component_with_initialize_method_data ../../../../src/lib/graph/graph.c:1127
+        #21 0x7fb07d90c92a in bt_graph_add_source_component ../../../../src/lib/graph/graph.c:1152
+        #22 0x55db11aa632e in cmd_run_ctx_create_components_from_config_components ../../../src/cli/babeltrace2.c:2252
+        #23 0x55db11aa6fda in cmd_run_ctx_create_components ../../../src/cli/babeltrace2.c:2347
+        #24 0x55db11aa780c in cmd_run ../../../src/cli/babeltrace2.c:2461
+        #25 0x55db11aa8a7d in main ../../../src/cli/babeltrace2.c:2673
+        #26 0x7fb07d5460b2 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
 
-	igb_reset_task
-	igb_reinit_locked
-	igb_down
-	napi_synchronize
-				__igb_shutdown
-				igb_clear_interrupt_scheme
-				igb_free_q_vectors
-				igb_free_q_vector
-				adapter->q_vector[v_idx] = NULL;
-	napi_disable
-	Panics trying to access
-	adapter->q_vector[v_idx].napi_state
+The token variable in the process_dynamic_array_len function is
+allocated in the read_expect_type function, but is not freed before
+calling the read_token function.
 
-The second panic (a divide error) is caused by this race:
+Free the token variable before calling read_token in order to plug the
+leak.
 
-kworker		reboot -f	tx packet
-
-igb_reset_task
-		__igb_shutdown
-		rtnl_lock()
-		...
-		igb_clear_interrupt_scheme
-		igb_free_q_vectors
-		adapter->num_tx_queues = 0
-		...
-		rtnl_unlock()
-rtnl_lock()
-igb_reinit_locked
-igb_down
-igb_up
-netif_tx_start_all_queues
-				dev_hard_start_xmit
-				igb_xmit_frame
-				igb_tx_queue_mapping
-				Panics on
-				r_idx % adapter->num_tx_queues
-
-This commit applies to igb_reset_task the same changes that
-were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
-adds support for DCB to the kernel and ixgbe driver"),
-commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
-rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
-reset subtask").
-
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: Philippe Duplessis-Guindon <pduplessis@efficios.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/linux-trace-devel/20200730150236.5392-1-pduplessis@efficios.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/lib/traceevent/event-parse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index ed7e667d7eb29..3e41b20ed8eb5 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -6194,9 +6194,18 @@ static void igb_reset_task(struct work_struct *work)
- 	struct igb_adapter *adapter;
- 	adapter = container_of(work, struct igb_adapter, reset_task);
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 798284f511f16..4559a15e66570 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2861,6 +2861,7 @@ process_dynamic_array_len(struct tep_event *event, struct tep_print_arg *arg,
+ 	if (read_expected(TEP_EVENT_DELIM, ")") < 0)
+ 		goto out_err;
  
-+	rtnl_lock();
-+	/* If we're already down or resetting, just bail */
-+	if (test_bit(__IGB_DOWN, &adapter->state) ||
-+	    test_bit(__IGB_RESETTING, &adapter->state)) {
-+		rtnl_unlock();
-+		return;
-+	}
-+
- 	igb_dump(adapter);
- 	netdev_err(adapter->netdev, "Reset adapter\n");
- 	igb_reinit_locked(adapter);
-+	rtnl_unlock();
- }
++	free_token(token);
+ 	type = read_token(&token);
+ 	*tok = token;
  
- /**
 -- 
 2.25.1
 
