@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93924C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666D720774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC5920774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073486;
-	bh=Ka0X3R84+wL9sJ0uP64uoi5nGecyy9yu9g4zvt3PM+o=;
+	s=default; t=1597073497;
+	bh=VCAkQ5r2rnuDI6uNYWHrI0r6F4ZcZ/JGkAfuIZiijZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GPb2ofJHAMqUgZC41Js+TsftIar5UDzCL81NjBApDVo0llDZpNWKw5se4lOeGKUDo
-	 O37/yY07BUc0jSAFowRb0TzS8XQdroFhWHi3aYsg13vOO24dwotVpNtI84gc5mzNeu
-	 aqp7CDGj2Gd2uQCQdbzKuZJyV2vjjoww3GkDCBis=
+	b=K9ApGoOqJf5od/bhR8fF0VJCC34hKVPFV4fxuSDPDMiP6Kaj7E8pHTLVWFlO2Y5hW
+	 4tx88+U+9Que+jRAjJHxGBk1/WgXmYRIi+dyINAkguZ0SAWf9lVr4MoM3F7JCOSLRN
+	 T7rEP//RHP53lMdnG3BGHjzt9uItLcq823C9flbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgHJPbX (ORCPT
+        id S1728192AbgHJPbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38720 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbgHJPbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:31:20 -0400
+        id S1729197AbgHJPbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:31:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3546020791;
-        Mon, 10 Aug 2020 15:31:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9134520774;
+        Mon, 10 Aug 2020 15:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073479;
-        bh=Ka0X3R84+wL9sJ0uP64uoi5nGecyy9yu9g4zvt3PM+o=;
+        s=default; t=1597073483;
+        bh=VCAkQ5r2rnuDI6uNYWHrI0r6F4ZcZ/JGkAfuIZiijZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBLvDmHB0TFvbbfwXCOyM4FQmjlxrFy4Imx8PcH2zPXK1bo0cwbi0Qn2eBAj+VDbm
-         WTGlZOWQZkmqW+icMT1PHElg6NXDOg4e4CkURVacteuDsojrCQMUBL6kMJKr/GqobQ
-         NQMc8wMnXNVFVOegY4nfzT4fIAnLY4+RlL5hOTH0=
+        b=iK2j0qNlDGg/JchMEYdoWNJ4XgJYvF6yxgypekTTCxmlFwskmSychgWkjDj4gnim9
+         dT7mz7vmxaOxsImu0ZKc+VeYQtxyr1U6XEUvKry3A/qBon9hj1oE2+skDG4dVah3WM
+         0OXe6wJsQhPve+kV2LMAvtjVoHjeNs6wvYA/PdH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Philippe Duplessis-Guindon <pduplessis@efficios.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/48] tools lib traceevent: Fix memory leak in process_dynamic_array_len
-Date:   Mon, 10 Aug 2020 17:21:51 +0200
-Message-Id: <20200810151805.639628728@linuxfoundation.org>
+Subject: [PATCH 4.19 30/48] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
+Date:   Mon, 10 Aug 2020 17:21:52 +0200
+Message-Id: <20200810151805.690165060@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -62,69 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Duplessis-Guindon <pduplessis@efficios.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit e24c6447ccb7b1a01f9bf0aec94939e6450c0b4d ]
+[ Upstream commit ddc9d357b991838c2d975e8d7e4e9db26f37a7ff ]
 
-I compiled with AddressSanitizer and I had these memory leaks while I
-was using the tep_parse_format function:
+When a Linux hv_sock app tries to connect to a Service GUID on which no
+host app is listening, a recent host (RS3+) sends a
+CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
+a warning:
 
-    Direct leak of 28 byte(s) in 4 object(s) allocated from:
-        #0 0x7fb07db49ffe in __interceptor_realloc (/lib/x86_64-linux-gnu/libasan.so.5+0x10dffe)
-        #1 0x7fb07a724228 in extend_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:985
-        #2 0x7fb07a724c21 in __read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1140
-        #3 0x7fb07a724f78 in read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1206
-        #4 0x7fb07a725191 in __read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1291
-        #5 0x7fb07a7251df in read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1299
-        #6 0x7fb07a72e6c8 in process_dynamic_array_len /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:2849
-        #7 0x7fb07a7304b8 in process_function /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3161
-        #8 0x7fb07a730900 in process_arg_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3207
-        #9 0x7fb07a727c0b in process_arg /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1786
-        #10 0x7fb07a731080 in event_read_print_args /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3285
-        #11 0x7fb07a731722 in event_read_print /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3369
-        #12 0x7fb07a740054 in __tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6335
-        #13 0x7fb07a74047a in __parse_event /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6389
-        #14 0x7fb07a740536 in tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6431
-        #15 0x7fb07a785acf in parse_event ../../../src/fs-src/fs.c:251
-        #16 0x7fb07a785ccd in parse_systems ../../../src/fs-src/fs.c:284
-        #17 0x7fb07a786fb3 in read_metadata ../../../src/fs-src/fs.c:593
-        #18 0x7fb07a78760e in ftrace_fs_source_init ../../../src/fs-src/fs.c:727
-        #19 0x7fb07d90c19c in add_component_with_init_method_data ../../../../src/lib/graph/graph.c:1048
-        #20 0x7fb07d90c87b in add_source_component_with_initialize_method_data ../../../../src/lib/graph/graph.c:1127
-        #21 0x7fb07d90c92a in bt_graph_add_source_component ../../../../src/lib/graph/graph.c:1152
-        #22 0x55db11aa632e in cmd_run_ctx_create_components_from_config_components ../../../src/cli/babeltrace2.c:2252
-        #23 0x55db11aa6fda in cmd_run_ctx_create_components ../../../src/cli/babeltrace2.c:2347
-        #24 0x55db11aa780c in cmd_run ../../../src/cli/babeltrace2.c:2461
-        #25 0x55db11aa8a7d in main ../../../src/cli/babeltrace2.c:2673
-        #26 0x7fb07d5460b2 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
+unknown msgtype=23
+WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
 
-The token variable in the process_dynamic_array_len function is
-allocated in the read_expect_type function, but is not freed before
-calling the read_token function.
+Actually Linux can safely ignore the message because the Linux app's
+connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
+and vsock_stream_connect(). We don't bother to make use of the message
+because: 1) it's only supported on recent hosts; 2) a non-trivial effort
+is required to use the message in Linux, but the benefit is small.
 
-Free the token variable before calling read_token in order to plug the
-leak.
+So, let's not see the warning by silently ignoring the message.
 
-Signed-off-by: Philippe Duplessis-Guindon <pduplessis@efficios.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/linux-trace-devel/20200730150236.5392-1-pduplessis@efficios.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hv/channel_mgmt.c | 21 +++++++--------------
+ drivers/hv/vmbus_drv.c    |  4 ++++
+ include/linux/hyperv.h    |  2 ++
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 382e476629fb1..c0fcc8af2a3ef 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2766,6 +2766,7 @@ process_dynamic_array_len(struct event_format *event, struct print_arg *arg,
- 	if (read_expected(EVENT_DELIM, ")") < 0)
- 		goto out_err;
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 3bf1f9ef8ea25..c83361a8e2033 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -1249,6 +1249,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
+ 	{ CHANNELMSG_19,			0, NULL },
+ 	{ CHANNELMSG_20,			0, NULL },
+ 	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
++	{ CHANNELMSG_22,			0, NULL },
++	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
+ };
  
-+	free_token(token);
- 	type = read_token(&token);
- 	*tok = token;
+ /*
+@@ -1260,25 +1262,16 @@ void vmbus_onmessage(void *context)
+ {
+ 	struct hv_message *msg = context;
+ 	struct vmbus_channel_message_header *hdr;
+-	int size;
+ 
+ 	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
+-	size = msg->header.payload_size;
+ 
+ 	trace_vmbus_on_message(hdr);
+ 
+-	if (hdr->msgtype >= CHANNELMSG_COUNT) {
+-		pr_err("Received invalid channel message type %d size %d\n",
+-			   hdr->msgtype, size);
+-		print_hex_dump_bytes("", DUMP_PREFIX_NONE,
+-				     (unsigned char *)msg->u.payload, size);
+-		return;
+-	}
+-
+-	if (channel_message_table[hdr->msgtype].message_handler)
+-		channel_message_table[hdr->msgtype].message_handler(hdr);
+-	else
+-		pr_err("Unhandled channel message type %d\n", hdr->msgtype);
++	/*
++	 * vmbus_on_msg_dpc() makes sure the hdr->msgtype here can not go
++	 * out of bound and the message_handler pointer can not be NULL.
++	 */
++	channel_message_table[hdr->msgtype].message_handler(hdr);
+ }
+ 
+ /*
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index fb22b72fd535a..0699c60188895 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -939,6 +939,10 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 	}
+ 
+ 	entry = &channel_message_table[hdr->msgtype];
++
++	if (!entry->message_handler)
++		goto msg_handled;
++
+ 	if (entry->handler_type	== VMHT_BLOCKING) {
+ 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
+ 		if (ctx == NULL)
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index c43e694fef7dd..35461d49d3aee 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -428,6 +428,8 @@ enum vmbus_channel_message_type {
+ 	CHANNELMSG_19				= 19,
+ 	CHANNELMSG_20				= 20,
+ 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
++	CHANNELMSG_22				= 22,
++	CHANNELMSG_TL_CONNECT_RESULT		= 23,
+ 	CHANNELMSG_COUNT
+ };
  
 -- 
 2.25.1
