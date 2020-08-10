@@ -2,96 +2,130 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA333C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39CB20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6B5206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEg6Ckvq"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZGbuyRmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgHJM5V (ORCPT
+        id S1726804AbgHJM5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgHJM5T (ORCPT
+        Mon, 10 Aug 2020 08:57:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47430 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726446AbgHJM5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Aug 2020 08:57:19 -0400
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900C1C061756;
-        Mon, 10 Aug 2020 05:57:19 -0700 (PDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id x7so4115059qvi.5;
-        Mon, 10 Aug 2020 05:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding:content-disposition;
-        bh=z0/SpRfjDNng3wVgPxNyjoPNbqlrro1JtfarPU8kMbw=;
-        b=MEg6Ckvq7UUSIYMLL9FSaLPM5ma12TFGVZiZhIC1HGFmzIDqvA6zGzfUaSny4LoVWn
-         4kwLa4g3yVXVfFh2vTSOdyconH6HnNas+2X9V7plGrfJDukcO03nLsHTN+Nq4ge+/QlD
-         PvkEPvkDMnHfw/VZWH68OJz5GOqVWS2BQdXAcxjhKCUUqcBBArTsn/ikg7+flY+kKePg
-         6VOCx8vm19wq1yd6N8O0J/m655zdmHWKrwUvXuiN24f2a5gD1ypZ4OYr3LiDDJ8Dp8v8
-         +Fqla/3SSABnWANpenXdhBebQ6xKdsFE+dTHGCZroXHXePabhMnRTvI55Zlq1/n0s3pw
-         ne1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding
-         :content-disposition;
-        bh=z0/SpRfjDNng3wVgPxNyjoPNbqlrro1JtfarPU8kMbw=;
-        b=eglFi51wrg5BF/oCUOMKcDIIYh8LGHzsIfcwjZwqLfAxKeD7f0l/qNLFIIP7cATSjZ
-         r3DMi7KBQWiLD9+m5qBmRzQU3RTQ1RDDmSYGTgHvcVkXvAFnWngF9zknfT7kE0Ipzta+
-         eltr1vL7ggpVvz8mWMihIKMpKCqvra2eZONzkJAkdRCQ0vaBT6SOmKtwgE6nmJpR0zTE
-         44damzoIzFfC3Df14cDMqqmmB8c4Zf7x2m/Wx2MQ76AYX7uSYtPMftSUaTwGt+4qx03S
-         C/etQXchrCpaAaUOHzF/gWnykCXc8SMcbsBVmJZso4a9mojFuvhdCrOCnLQ990xR3SJ5
-         CtAA==
-X-Gm-Message-State: AOAM533IpOsRVyVUYfw1uWa1OnjHvAbW9/6OAACREa9/+WigcPNhHwDt
-        b1eby224x1Nhre4aD7unTtU=
-X-Google-Smtp-Source: ABdhPJxiWodk10CgYN0+zlPTnmXouw73+vXBS1cEc3wXKs0NGkqpGwx2Wi9RFAmQ4VnAhp3JuCxAag==
-X-Received: by 2002:a05:6214:184b:: with SMTP id d11mr21437937qvy.21.1597064238210;
-        Mon, 10 Aug 2020 05:57:18 -0700 (PDT)
-Received: from dwls-dell ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id c22sm14349262qke.2.2020.08.10.05.57.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Aug 2020 05:57:17 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 09:57:11 -0300
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "=?utf-8?Q?skhan=40linuxfoundation.org?=" <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "=?utf-8?Q?linux-media=40vger.kernel.org?=" 
-        <linux-media@vger.kernel.org>,
-        "=?utf-8?Q?linux-kernel=40vger.kernel.org?=" 
-        <linux-kernel@vger.kernel.org>
-Message-ID: <AC5CA7E6-F72F-4131-A27B-2A2B505F2F5C@getmailspring.com>
-In-Reply-To: <20200808204007.GI6186@pendragon.ideasonboard.com>
-References: <20200808204007.GI6186@pendragon.ideasonboard.com>
-Subject: Re: [PATCH 03/20] media: usb: uvc_ctrl.c: add temp variable for
- list iteration
-X-Mailer: Mailspring
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ACXNxO155708;
+        Mon, 10 Aug 2020 08:57:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : subject : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=VMwEKzoZEaQk2ASQ7NtMoW86yLosO08DxQSBN107Xss=;
+ b=ZGbuyRmOuMWjJPT05GuFnKXT0pmVVT2tUXC1cfojw0WGcmcOFOZQhIZ0bcIyRNCnAVsU
+ T1uLKsU+/y5U5xSLamq9dpX4U4B9B+Elz4+dC9gSFQmQBHSzhULp6lD7cqxg5NzaIO2M
+ yswVtfbVC1A3cnjdLWHbZHerOkQFwhn+DyfhmoR+QztKXyR1eziav/9qSLCFh45lhEWl
+ NS5yq8u75fLiRAOg4zKDuUYTI1KMCH18muEsOx9in9BamhEDgPMdXxP+S8N6CZAC3nwa
+ mU6Vp3fqFGaukjbKeO255U7rHmvYpXkGxEHEcKJ60qBc1dVF1P25fCayay9+oJ23zEof 4A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sraqtqpw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 08:57:09 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07ACXMIG155697;
+        Mon, 10 Aug 2020 08:57:08 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sraqtqne-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 08:57:08 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07ACuN4O006919;
+        Mon, 10 Aug 2020 12:57:05 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 32skp81cyv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 12:57:05 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07ACv3Vb63504762
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 12:57:03 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 42E7211C04C;
+        Mon, 10 Aug 2020 12:57:03 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 781CD11C058;
+        Mon, 10 Aug 2020 12:57:02 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.85.68.156])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 10 Aug 2020 12:57:02 +0000 (GMT)
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: Re: [PATCH] tools/objtool: Fix unnecessary jumps
+To:     Youling Tang <tangyouling@loongson.cn>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <1597032374-7936-1-git-send-email-tangyouling@loongson.cn>
+Message-ID: <bbe25938-479d-7a84-b1ee-941ad8088a1c@linux.vnet.ibm.com>
+Date:   Mon, 10 Aug 2020 18:27:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1597032374-7936-1-git-send-email-tangyouling@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_07:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
+ suspectscore=8 priorityscore=1501 impostorscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=775
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008100093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent!
+On 10/08/20 9:36 am, Youling Tang wrote:
+> There is no need to jump to the "out" tag when "ret < 0", just return
+> directly to "ret".
+> 
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> ---
+>  tools/objtool/check.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index e034a8f..94b166d 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
 
-> I'f you're OK with these changes there's no need to resubmit, I can
-> update when applying. Please let me know how you'd like to proceed.
+[snip]
 
-That's OK with me!
+> 
+>  	if (file.elf->changed) {
+>  		ret = elf_write(file.elf);
+>  		if (ret < 0)
+> -			goto out;
+> +			return ret;
+>  	}
+> 
+>  out:
 
+the out label code is no more required with this change, so remove
+it and return 0 for warnings for now.  Previously cleanup() function
+was called under the out label for both fatal errors (ret < 0) and
+warnings.  Now that cleanup() function is removed, the out label is
+no longer required.
 
-Thanks for reviewing.
-
-- Daniel
+-- 
+Kamalesh
