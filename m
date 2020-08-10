@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19121C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5257DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE6C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233C72080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087475;
-	bh=oQk6zhJygBxUGkiPvt9y14xunwmcZ95J2ZuNbpEIpEk=;
+	s=default; t=1597087479;
+	bh=slit+5tZxoGPIjOWZ4Ys7ijQ5PuZFpyv9tER/QkkOas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LU4BXxAWoBxxPT1c9APxBaezS2evCUT/P0Z6eKQfsbz/S0hyyqJdBDfY5I0DOTi8e
-	 3Yzb9EYDZ7uKEz260L5zeY2dabWN7nEbtaOSI6PrOEV0qiPjj0NTSfsiZb0YTLeEsF
-	 LxZeqv8Bd2YmU5LuDK2xLmrkBg+9aXpjvnyaFV8k=
+	b=ZhkkrVK6lQCefmpkFcfdwxqYaHSKwY6PbTXQ4vIYZPehSM9xH7HBxBJdiljw8bMn9
+	 dy90j2nkCWKUQdzcyfXBJKnSBcRPEHcZBFsx8dX22/CR2GNGccyidS07I+dQutSFTL
+	 zhTcd0S4i5ETMiTTuZKwCuMJ4a/dDOBlgekj0I5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgHJTYd (ORCPT
+        id S1728190AbgHJTMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:24:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42094 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbgHJTM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:26 -0400
+        id S1728307AbgHJTMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55ECD21775;
-        Mon, 10 Aug 2020 19:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB49B22C9E;
+        Mon, 10 Aug 2020 19:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086746;
-        bh=oQk6zhJygBxUGkiPvt9y14xunwmcZ95J2ZuNbpEIpEk=;
+        s=default; t=1597086736;
+        bh=slit+5tZxoGPIjOWZ4Ys7ijQ5PuZFpyv9tER/QkkOas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGc32KRV84ucX6xjHzO2B2z5x6HD/VJjZvtP59DKyDKmGs6MspAnMQC6tkeH8dLmr
-         2UvuA9S7ILCfzpvG2qr0IgSCGeST27CIACA+23bf2/19YUh6lZtctY6+uFgSKTINRm
-         Skrz7ZeF6Nzd3Cy9vS0rNMLsVA1FsYPrQxDmoKIw=
+        b=OkBkOqf7rz/u2/BReCxzbOg0T5gj9zHdbsW5Hk+3J+ysJPVqiT5Dv4nrjMFyw/FQN
+         tQ4Z/uo77wuopN9AF8hDnuW49nW5w5iGaErQlnp/asaxOAH36Sx24N67WpnIqvdL+E
+         TitTVKYidpajJzHgQXDGGfhVOGHimV4qrHfCifps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Tretter <m.tretter@pengutronix.de>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
+Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 23/45] drm/debugfs: fix plain echo to connector "force" attribute
-Date:   Mon, 10 Aug 2020 15:11:31 -0400
-Message-Id: <20200810191153.3794446-23-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 16/45] drm/nouveau: fix reference count leak in nouveau_debugfs_strap_peek
+Date:   Mon, 10 Aug 2020 15:11:24 -0400
+Message-Id: <20200810191153.3794446-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -61,49 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
+[ Upstream commit 8f29432417b11039ef960ab18987c7d61b2b5396 ]
 
-Using plain echo to set the "force" connector attribute fails with
--EINVAL, because echo appends a newline to the output.
+nouveau_debugfs_strap_peek() calls pm_runtime_get_sync() that
+increments the reference count. In case of failure, decrement the
+ref count before returning the error.
 
-Replace strcmp with sysfs_streq to also accept strings that end with a
-newline.
-
-v2: use sysfs_streq instead of stripping trailing whitespace
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_debugfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_debugfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index eab0f2687cd6e..00debd02c3220 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -337,13 +337,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
+diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+index 7dfbbbc1beea6..5c314f135dd10 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
++++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+@@ -54,8 +54,10 @@ nouveau_debugfs_strap_peek(struct seq_file *m, void *data)
+ 	int ret;
  
- 	buf[len] = '\0';
+ 	ret = pm_runtime_get_sync(drm->dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(drm->dev->dev);
+ 		return ret;
++	}
  
--	if (!strcmp(buf, "on"))
-+	if (sysfs_streq(buf, "on"))
- 		connector->force = DRM_FORCE_ON;
--	else if (!strcmp(buf, "digital"))
-+	else if (sysfs_streq(buf, "digital"))
- 		connector->force = DRM_FORCE_ON_DIGITAL;
--	else if (!strcmp(buf, "off"))
-+	else if (sysfs_streq(buf, "off"))
- 		connector->force = DRM_FORCE_OFF;
--	else if (!strcmp(buf, "unspecified"))
-+	else if (sysfs_streq(buf, "unspecified"))
- 		connector->force = DRM_FORCE_UNSPECIFIED;
- 	else
- 		return -EINVAL;
+ 	seq_printf(m, "0x%08x\n",
+ 		   nvif_rd32(&drm->client.device.object, 0x101000));
 -- 
 2.25.1
 
