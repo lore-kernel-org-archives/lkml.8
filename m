@@ -2,126 +2,141 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B86C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F23C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E64DA206B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:08:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4odPv7P"
+	by mail.kernel.org (Postfix) with ESMTP id 1B53120866
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgHJRI3 (ORCPT
+        id S1728077AbgHJRJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:08:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgHJRI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:08:28 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D070C061756;
-        Mon, 10 Aug 2020 10:08:28 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id g19so9691239ioh.8;
-        Mon, 10 Aug 2020 10:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EV/Inn1yIq80k4xTWqNtB11Yxfxj2hvMoKBR9JcOwIo=;
-        b=D4odPv7PmDBTv8Fr4bfErHYxqALMVwFsfFMmqsp82assrut3e69ZNXKmR+KDkxZRWG
-         YHKA9IhaMldTiRLhsg500chNRM/ou501nJfjU3npvH1nZRX3900zmodkNGZi3mN8tIoC
-         HG16jK4Jnd2ViNjtQv+rUQGWNzryHDcq8vAjZlzkA/BsTBqYxrVOPg6fwdiMCiUvEEre
-         Oe23p+rdRhbdZd1C1OouJkp9juFnW93XUHKeSWiIVWd3wShY2JzsDi5U6LMui2hesChO
-         FdLfAuwk/X5i0ZDdCJEU6MnAh5Emt7tb8nDx2Ia3X5f0BIpeXi+UQ5A/NvmrXqPKBFmF
-         /5Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EV/Inn1yIq80k4xTWqNtB11Yxfxj2hvMoKBR9JcOwIo=;
-        b=RjV6xbUPCA8Y0sOFoSobXIzpE2fpS1s5OuqNvyER7BmLjUj6EB+Hqr5CXCCrU2BXWl
-         KH3Wb6yb0XxHZuLE69mcgPB726SRP6AS1Jgwl9SuVUShONp9aGhSBzw1j07NPcd7gBsw
-         4gHirGSOWwHpGaRcGuSWIswQnUEGu3z49Dl/kVv1PDpsYTyjaGS8IsQ7ROJHEqw7jxMZ
-         pFA8ZnZkP000424P+64GQ15dUEn5oXhOpg82wx0tI/qGnFmX+NfVjhjrre7jB7XBD2Uv
-         9Xov+7d9y5NU4FCb4hrzhPaxxIRgGKap0m2I5xxHEYTX6c1GkvRVdQYAttfaRNb1ajI7
-         XVcg==
-X-Gm-Message-State: AOAM531YmzisXUL1fufAltKF67um1nMpv7wg0sGMqckP084dZD10v+RQ
-        f7+j/vKKAkBtMSUUl6icy7gPNqQXECSaLU2Cv70=
-X-Google-Smtp-Source: ABdhPJzz4KKqCWD8DewPuuMqNyLgFicLPDFscAPkzIrLXWdzhAtY0bnr7EccVxuIqigNWXrcGkoPoLjwlE3xYY1EmEg=
-X-Received: by 2002:a05:6638:2604:: with SMTP id m4mr21271201jat.76.1597079306859;
- Mon, 10 Aug 2020 10:08:26 -0700 (PDT)
+        Mon, 10 Aug 2020 13:09:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8667 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726720AbgHJRJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 13:09:23 -0400
+IronPort-SDR: PvpUiRzV0oek/zZzDMAl9MAty/tX1LyOs1iSCpTqBV41zmnFPMr6yM0gIi1fkWTIKQinbBAPpu
+ qWFnJM3e6AaQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="133630811"
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="133630811"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 10:09:21 -0700
+IronPort-SDR: iZut7GBHlDeMafCg7UvFI04A5jv8ZrPZPJUM6AMxaU1Mr5anJx9COND9DWsou8bk3tJfGbFJei
+ 2MOCfEDLIQMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="469112050"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.12.231]) ([10.212.12.231])
+  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 10:09:21 -0700
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Moshe Shemesh <moshe@mellanox.com>
+Cc:     Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+References: <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+ <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+ <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
+ <20200803141442.GB2290@nanopsycho>
+ <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200804100418.GA2210@nanopsycho>
+ <20200804133946.7246514e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200805110258.GA2169@nanopsycho>
+ <20200806112530.0588b3ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <8b06ade2-dfbe-8894-0d6a-afe9c2f41b4e@mellanox.com>
+ <20200810095305.0b9661ec@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <4c25811f-e571-e39d-f25c-59b821264b3f@intel.com>
+Date:   Mon, 10 Aug 2020 10:09:20 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.0
 MIME-Version: 1.0
-References: <1596875797-22710-1-git-send-email-linmiaohe@huawei.com>
-In-Reply-To: <1596875797-22710-1-git-send-email-linmiaohe@huawei.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Mon, 10 Aug 2020 12:08:15 -0500
-Message-ID: <CAH2r5mstN6P_kU_Riobdv5NJPL-pF6=oZoAh6k9qj1+nz9Z8Cw@mail.gmail.com>
-Subject: Re: [PATCH] cifs: Convert to use the fallthrough macro
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200810095305.0b9661ec@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
-
-(but note that most places in fs directory other than cifs and btrfs
-have not been updated), and I noticed another 8 places in fs/cifs that
-you didn't change in your patch (ie change from the older way of
-indicating fallthrough   /* Fallthrough */ as a comment to the newer
-fallthrough macro.
-
-On Sat, Aug 8, 2020 at 3:34 AM linmiaohe <linmiaohe@huawei.com> wrote:
->
-> From: Miaohe Lin <linmiaohe@huawei.com>
->
-> Convert the uses of fallthrough comments to fallthrough macro.
->
-> Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  fs/cifs/smb2pdu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-> index 24c2ac360591..667d70aa335f 100644
-> --- a/fs/cifs/smb2pdu.c
-> +++ b/fs/cifs/smb2pdu.c
-> @@ -3913,7 +3913,7 @@ smb2_readv_callback(struct mid_q_entry *mid)
->         case MID_RESPONSE_MALFORMED:
->                 credits.value = le16_to_cpu(shdr->CreditRequest);
->                 credits.instance = server->reconnect_instance;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 rdata->result = -EIO;
->         }
-> @@ -4146,7 +4146,7 @@ smb2_writev_callback(struct mid_q_entry *mid)
->         case MID_RESPONSE_MALFORMED:
->                 credits.value = le16_to_cpu(rsp->sync_hdr.CreditRequest);
->                 credits.instance = server->reconnect_instance;
-> -               /* fall through */
-> +               fallthrough;
->         default:
->                 wdata->result = -EIO;
->                 break;
-> --
-> 2.19.1
->
 
 
--- 
-Thanks,
+On 8/10/2020 9:53 AM, Jakub Kicinski wrote:
+> On Sun, 9 Aug 2020 16:21:29 +0300 Moshe Shemesh wrote:
+>> Okay, so devlink reload default for mlx5 will include also fw-activate 
+>> to align with mlxsw default.
+>>
+>> Meaning drivers that supports fw-activate will add it to the default.
+> 
+> No per-driver default.
+> 
+> Maybe the difference between mlxsw and mlx5 can be simply explained by
+> the fact that mlxsw loads firmware from /lib/firmware on every probe
+> (more or less).
+> 
+> It's only natural for a driver which loads FW from disk to load it on
+> driver reload.
+> 
 
-Steve
+This seems reasonable to me as long as the drivers document this
+behavior in their devlink/<driver>.rst. We shouldn't change existing
+behavior. One could argue that this difference in behavior amounts to a
+"driver default"... but I agree that we shouldn't enshrine that in the
+interface.
+
+
+>> The flow of devlink reload default on mlx5 will be:
+>>
+>> If there is FW image pending and live patch is suitable to apply, do 
+>> live patch and driver re-initialization.
+>>
+>> If there is FW image pending but live patch doesn't fit do fw-reset and 
+>> driver-initialization.
+>>
+>> If no FW image pending just do driver-initialization.
+> 
+> This sounds too complicated. Don't try to guess what the user wants.
+> >> I still think I should on top of that add the level option to be
+>> selected by the user if he prefers a specific action, so the uAPI would be:
+>>
+>> devlink dev reload [ netns { PID | NAME | ID } ] [ level { fw-live-patch 
+>> | driver-reinit |fw-activate } ]
+> 
+> I'm all for the level/action.
+> 
+
+Yep, same here.
+
+>> But I am still missing something: fw-activate implies that it will 
+>> activate a new FW image stored on flash, pending activation. What if the 
+>> user wants to reset and reload the FW if no new FW pending ? Should we 
+>> add --force option to fw-activate level ?
+> 
+> Since reload does not check today if anything changed - i.e. if reload
+> is actually needed, neither should fw-activate, IMO. I'd expect the
+> "--force behavior" to be the default.
+> 
+
+Yep. What about if there is HW/FW that can't initiate the fw-activate
+reset unless there is a pending update? I think ice firmware might
+respond to the "please reset/activate" command with a specific status
+code indicating that no update was pending.
+
+I think the simplest solution is to just interpret this as a success.
+Alternatively we could report a specific error to inform user that no
+activation took place?
