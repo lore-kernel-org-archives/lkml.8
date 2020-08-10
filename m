@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FDAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17594C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A55EB22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E6322CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073340;
-	bh=XwGvhSoj3D63taX6wl6XnChPzp2QKG2HGHuDlB+YTno=;
+	s=default; t=1597073351;
+	bh=H3HKqpd3odOpb8fgpYafotF4FlN0h5GwSYjdXkHyT6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=peiDcVLXmT/j5H9dbvjvlJEAyhqAtL3kgcYViRrMQWvCKT9uLIXj+HsfKKGAD+0cn
-	 fa+ZyBxt9cvvrraYHkyT1VaOz82ejU54O7330GrnEK+tF375ZSLoTtb+GlgVXeF1ju
-	 FG0wN8CEk896qJUs792xkseFKsw9aWLhPq3UEFBc=
+	b=BRaFppUhFcnqbAFWaO4lUw4D9vnVB/5EmYNAxcdF3fm2xxV3MYIaw7QUPX0wV1Dry
+	 wzwCglF4qRfRuJ8buF/kQGfZEgG/F2o5ANMd9hZHDHU0en6WQz9Fnu/v6TV9Sx5zTM
+	 oQflDPABsL1eVg1qdTzeHzpWXMFzXrk4T9uq0vjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHJP26 (ORCPT
+        id S1728175AbgHJP3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgHJP2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:48 -0400
+        id S1728913AbgHJP2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:28:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC9DD22BF3;
-        Mon, 10 Aug 2020 15:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2B6422B47;
+        Mon, 10 Aug 2020 15:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073327;
-        bh=XwGvhSoj3D63taX6wl6XnChPzp2QKG2HGHuDlB+YTno=;
+        s=default; t=1597073333;
+        bh=H3HKqpd3odOpb8fgpYafotF4FlN0h5GwSYjdXkHyT6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N0yBAOK7O7Gtm0GpHce73i85szRet3RJZFtjxi2RxlB1JDNCigybg3cAmpXWQJmXL
-         wMh9kmqo2rI7m7CpHQ2T1qSK2Pzonu1yOZ/WycsEH57xOGOZbRU6sWUo/Q/sAK4WkK
-         9O9NglKQXdO3sRWj21t9Gilyd/siOiDxkdYre0xc=
+        b=dfePzitmYniMe8N3U7uu+zeU/K4qRrlESaHXbMHudFh+9gLPDt1KfjiHvi0fiM0bj
+         uu9bqEMP8JUNNQcjFM8M+69119dj5QY3ZFhttAIxYhdKdzJ4OjL7s49wVfRi1bHcYK
+         Rag7uTnNqtj/goytOCczmQDAivgszvVLVYA5UtXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bruno Meneguele <bmeneg@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.4 66/67] ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime
-Date:   Mon, 10 Aug 2020 17:21:53 +0200
-Message-Id: <20200810151812.752660880@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 56/67] net: lan78xx: replace bogus endpoint lookup
+Date:   Mon, 10 Aug 2020 17:21:43 +0200
+Message-Id: <20200810151812.264070554@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -59,83 +59,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruno Meneguele <bmeneg@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 311aa6aafea446c2f954cc19d66425bfed8c4b0b upstream.
+[ Upstream commit ea060b352654a8de1e070140d25fe1b7e4d50310 ]
 
-The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appraise="
-modes - log, fix, enforce - at run time, but not when IMA architecture
-specific policies are enabled.  This prevents properly labeling the
-filesystem on systems where secure boot is supported, but not enabled on the
-platform.  Only when secure boot is actually enabled should these IMA
-appraise modes be disabled.
+Drop the bogus endpoint-lookup helper which could end up accepting
+interfaces based on endpoints belonging to unrelated altsettings.
 
-This patch removes the compile time dependency and makes it a runtime
-decision, based on the secure boot state of that platform.
+Note that the returned bulk pipes and interrupt endpoint descriptor
+were never actually used. Instead the bulk-endpoint numbers are
+hardcoded to 1 and 2 (matching the specification), while the interrupt-
+endpoint descriptor was assumed to be the third descriptor created by
+USB core.
 
-Test results as follows:
+Try to bring some order to this by dropping the bogus lookup helper and
+adding the missing endpoint sanity checks while keeping the interrupt-
+descriptor assumption for now.
 
--> x86-64 with secure boot enabled
-
-[    0.015637] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
-[    0.015668] ima: Secure boot enabled: ignoring ima_appraise=fix boot parameter option
-
--> powerpc with secure boot disabled
-
-[    0.000000] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
-[    0.000000] Secure boot mode disabled
-
--> Running the system without secure boot and with both options set:
-
-CONFIG_IMA_APPRAISE_BOOTPARAM=y
-CONFIG_IMA_ARCH_POLICY=y
-
-Audit prompts "missing-hash" but still allow execution and, consequently,
-filesystem labeling:
-
-type=INTEGRITY_DATA msg=audit(07/09/2020 12:30:27.778:1691) : pid=4976
-uid=root auid=root ses=2
-subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=appraise_data
-cause=missing-hash comm=bash name=/usr/bin/evmctl dev="dm-0" ino=493150
-res=no
-
-Cc: stable@vger.kernel.org
-Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
-Cc: stable@vger.kernel.org # 5.0
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- security/integrity/ima/Kconfig        |    2 +-
- security/integrity/ima/ima_appraise.c |    6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/usb/lan78xx.c |  117 +++++++++++-----------------------------------
+ 1 file changed, 30 insertions(+), 87 deletions(-)
 
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -227,7 +227,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -377,10 +377,6 @@ struct lan78xx_net {
+ 	struct tasklet_struct	bh;
+ 	struct delayed_work	wq;
  
- config IMA_APPRAISE_BOOTPARAM
- 	bool "ima_appraise boot parameter"
--	depends on IMA_APPRAISE && !IMA_ARCH_POLICY
-+	depends on IMA_APPRAISE
- 	default y
- 	help
- 	  This option enables the different "ima_appraise=" modes
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -18,6 +18,12 @@
- static int __init default_appraise_setup(char *str)
+-	struct usb_host_endpoint *ep_blkin;
+-	struct usb_host_endpoint *ep_blkout;
+-	struct usb_host_endpoint *ep_intr;
+-
+ 	int			msg_enable;
+ 
+ 	struct urb		*urb_intr;
+@@ -2868,78 +2864,12 @@ lan78xx_start_xmit(struct sk_buff *skb,
+ 	return NETDEV_TX_OK;
+ }
+ 
+-static int
+-lan78xx_get_endpoints(struct lan78xx_net *dev, struct usb_interface *intf)
+-{
+-	int tmp;
+-	struct usb_host_interface *alt = NULL;
+-	struct usb_host_endpoint *in = NULL, *out = NULL;
+-	struct usb_host_endpoint *status = NULL;
+-
+-	for (tmp = 0; tmp < intf->num_altsetting; tmp++) {
+-		unsigned ep;
+-
+-		in = NULL;
+-		out = NULL;
+-		status = NULL;
+-		alt = intf->altsetting + tmp;
+-
+-		for (ep = 0; ep < alt->desc.bNumEndpoints; ep++) {
+-			struct usb_host_endpoint *e;
+-			int intr = 0;
+-
+-			e = alt->endpoint + ep;
+-			switch (e->desc.bmAttributes) {
+-			case USB_ENDPOINT_XFER_INT:
+-				if (!usb_endpoint_dir_in(&e->desc))
+-					continue;
+-				intr = 1;
+-				/* FALLTHROUGH */
+-			case USB_ENDPOINT_XFER_BULK:
+-				break;
+-			default:
+-				continue;
+-			}
+-			if (usb_endpoint_dir_in(&e->desc)) {
+-				if (!intr && !in)
+-					in = e;
+-				else if (intr && !status)
+-					status = e;
+-			} else {
+-				if (!out)
+-					out = e;
+-			}
+-		}
+-		if (in && out)
+-			break;
+-	}
+-	if (!alt || !in || !out)
+-		return -EINVAL;
+-
+-	dev->pipe_in = usb_rcvbulkpipe(dev->udev,
+-				       in->desc.bEndpointAddress &
+-				       USB_ENDPOINT_NUMBER_MASK);
+-	dev->pipe_out = usb_sndbulkpipe(dev->udev,
+-					out->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	dev->ep_intr = status;
+-
+-	return 0;
+-}
+-
+ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
  {
- #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-+	if (arch_ima_get_secureboot()) {
-+		pr_info("Secure boot enabled: ignoring ima_appraise=%s boot parameter option",
-+			str);
-+		return 1;
+ 	struct lan78xx_priv *pdata = NULL;
+ 	int ret;
+ 	int i;
+ 
+-	ret = lan78xx_get_endpoints(dev, intf);
+-	if (ret) {
+-		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
+-			    ret);
+-		return ret;
+-	}
+-
+ 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
+ 
+ 	pdata = (struct lan78xx_priv *)(dev->data[0]);
+@@ -3708,6 +3638,7 @@ static void lan78xx_stat_monitor(struct
+ static int lan78xx_probe(struct usb_interface *intf,
+ 			 const struct usb_device_id *id)
+ {
++	struct usb_host_endpoint *ep_blkin, *ep_blkout, *ep_intr;
+ 	struct lan78xx_net *dev;
+ 	struct net_device *netdev;
+ 	struct usb_device *udev;
+@@ -3756,6 +3687,34 @@ static int lan78xx_probe(struct usb_inte
+ 
+ 	mutex_init(&dev->stats.access_lock);
+ 
++	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
++		ret = -ENODEV;
++		goto out2;
 +	}
 +
- 	if (strncmp(str, "off", 3) == 0)
- 		ima_appraise = 0;
- 	else if (strncmp(str, "log", 3) == 0)
++	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
++	ep_blkin = usb_pipe_endpoint(udev, dev->pipe_in);
++	if (!ep_blkin || !usb_endpoint_is_bulk_in(&ep_blkin->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
++	ep_blkout = usb_pipe_endpoint(udev, dev->pipe_out);
++	if (!ep_blkout || !usb_endpoint_is_bulk_out(&ep_blkout->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	ep_intr = &intf->cur_altsetting->endpoint[2];
++	if (!usb_endpoint_is_int_in(&ep_intr->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	dev->pipe_intr = usb_rcvintpipe(dev->udev,
++					usb_endpoint_num(&ep_intr->desc));
++
+ 	ret = lan78xx_bind(dev, intf);
+ 	if (ret < 0)
+ 		goto out2;
+@@ -3767,23 +3726,7 @@ static int lan78xx_probe(struct usb_inte
+ 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
+ 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+ 
+-	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
+-		ret = -ENODEV;
+-		goto out3;
+-	}
+-
+-	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+-	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
+-	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
+-
+-	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
+-	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
+-
+-	dev->pipe_intr = usb_rcvintpipe(dev->udev,
+-					dev->ep_intr->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	period = dev->ep_intr->desc.bInterval;
+-
++	period = ep_intr->desc.bInterval;
+ 	maxp = usb_maxpacket(dev->udev, dev->pipe_intr, 0);
+ 	buf = kmalloc(maxp, GFP_KERNEL);
+ 	if (buf) {
 
 
