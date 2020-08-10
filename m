@@ -2,150 +2,128 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63FC02073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855292073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pED1iKL0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SaVuQHoA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgHJII4 (ORCPT
+        id S1726355AbgHJILz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgHJIIz (ORCPT
+        Mon, 10 Aug 2020 04:11:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55062 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725846AbgHJILx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:08:55 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C61C061756;
-        Mon, 10 Aug 2020 01:08:55 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f193so4740799pfa.12;
-        Mon, 10 Aug 2020 01:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y5RQ0WwBDdVj5r5k2hkM3cpnmzSwMY7YNRulx0YXxtM=;
-        b=pED1iKL08KoHo6CLSIwODFFD6nysIPi+SYm1lyNFMiIALEXsi6pwVNxrKvUlDeMgFb
-         jMq3Uxl4WG6k56azcWn/RX1GUnSmfUg8l/VjE1a/jzn1fQU+/cVbCSec69sE0EXlgA7W
-         HXXR+yiy+3B1X9WIIQ5i8nSA6sgeU+l3nmvgTkOQ9C87AGn8IiimPT9+o6G1H7PPODHV
-         Qs+lnStTZtjSqBGkXQpX7W5RnSEU4dfaxIy7bVy6f643DxND5jkRnA3vgeRw9pScNuHl
-         wffhymtJffCRzYqO5i9bTuypzQEszgaync5Gxoge4sOL7D9xcPGvR/jWeRsPQcdVqQqH
-         KJNQ==
+        Mon, 10 Aug 2020 04:11:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597047111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zC1toKyx2VR+U9KzPo/PLlhMRukBuugOL6OoEK15XWo=;
+        b=SaVuQHoAemjvkwGob5LvIq1/GupOG5FcC/6gvtmNVKMNVv/j0+hATlwvSiVNrROZxSBe8q
+        4llgTJEm3EtUMWIhYLyKcRusKIUf54UsiH1C7tDBRbgu4Tg2C9+Js96DVlcbV5GaktlOdt
+        fUgYQ2Vdu0a2hpxvOK+sN2f3z+blDoY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-31-jTM6G5w4P8K9I8VWdc_UzQ-1; Mon, 10 Aug 2020 04:11:49 -0400
+X-MC-Unique: jTM6G5w4P8K9I8VWdc_UzQ-1
+Received: by mail-wr1-f72.google.com with SMTP id f14so3879181wrm.22
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 01:11:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y5RQ0WwBDdVj5r5k2hkM3cpnmzSwMY7YNRulx0YXxtM=;
-        b=qaMiB7mUBoDQYd1XlAOP0iKQWVaQzVH1VnpFgW4kxHCO/tGuk9OUoyVit/66mmXurl
-         4zZiZRrjRshEYvRdzdEQYXNsLybUdjjifwYJZQ1gBT9GPbdH620jbejDaxRDShqin7Cq
-         jrGp/DlelZRmUGDCfunDcBfeYdb06G/mKKKrOWpNfrodKyCdRx8dmlbfXxTSnw5v0KeK
-         txsIC6j3ckV2GODlN5a/oPUt2w+BhGkQJrFr1jRlhOWhbgniIvU+9rueHQgnYDEkBJDG
-         j3LyG4EcAuCK1lZlkBc2vup3D1nDviVgWZN3RRAlb+nI4RBf12KntggqnTuPMn0sxaNB
-         lK/A==
-X-Gm-Message-State: AOAM533/CkNq6NAtNthhtTQGjG6HB1Y57nSvGw/ugQCBQ/M1twqvsRNq
-        we3bxPWUeuyqQBLXJENk3XYDU7FKunu3c8D29xw=
-X-Google-Smtp-Source: ABdhPJw7VelfDGME9GV6apg9YyInQ/tDzBB0irEirwAiYjqB7XtHiMJyuygV1lwD4I03Rq94+h8YDRfzrtJcQQyNHMg=
-X-Received: by 2002:a62:158e:: with SMTP id 136mr24887514pfv.36.1597046935089;
- Mon, 10 Aug 2020 01:08:55 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zC1toKyx2VR+U9KzPo/PLlhMRukBuugOL6OoEK15XWo=;
+        b=F18A74U33j0FRUEoZJptlTlp5bCuRxksRGm+ia5zASqCsQvUi9Qmf7jOujqk7tjnat
+         DYB37j7eyZYhwKEVoZ4HnygJrKu9RUQ8DimCpU5qjNDYhzN+D2w49cgyCuzy3rlAUImn
+         w5mTD77lyMEuCT3cWwtepEBPEhL0EMCpV7cNuDBAN/n/LJK2KUkz5MehIJ7NixwmAnKj
+         t5C5f1H5tnerDNepL82v1iqRDSc+HoHpT2O+B0LZ5akml3Z2uaW0sxMcnp5kePQCIzDO
+         OzvQRq8MI4/hfZ1L1x4EFzq3og47HG6U8vdGStAmU9oxc4f1Jx5gAmpBS+4yo2488/A/
+         cNzA==
+X-Gm-Message-State: AOAM530NcLD5aAkqkNi59YdRzz1kVMJ6+fTVa7NR1QIvRDeDQn/RT5L4
+        yUe8ZueDRCLFCRkvEOhaHEBxkMwM8EeCQU9FMlb5j9yf0C6lfg/kviS4Fy1or3UZ42XGztcfwp9
+        F/5iGzXVbAyFRSI49JuvNsmQV
+X-Received: by 2002:a5d:5704:: with SMTP id a4mr22915222wrv.318.1597047108705;
+        Mon, 10 Aug 2020 01:11:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx06vKPGNJTLrqXR4QKmwbxkXMvNDUzd/1ArhhCxhYjuqxYkRBJZpNV0anpK/U2bP0kmVxWYw==
+X-Received: by 2002:a5d:5704:: with SMTP id a4mr22915196wrv.318.1597047108466;
+        Mon, 10 Aug 2020 01:11:48 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:5d6c:f50:4462:5103? ([2001:b07:6468:f312:5d6c:f50:4462:5103])
+        by smtp.gmail.com with ESMTPSA id f131sm20877690wme.40.2020.08.10.01.11.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 01:11:47 -0700 (PDT)
+Subject: Re: [PATCH RESEND for-5.9] MIPS: KVM: Convert a fallthrough comment
+ to fallthrough
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, kvm@vger.kernel.org
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200810011749.3211128-1-jiaxun.yang@flygoat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <a479bd7f-a71b-441d-4e82-6bcc163bab71@redhat.com>
+Date:   Mon, 10 Aug 2020 10:11:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200809175551.6794-1-trix@redhat.com>
-In-Reply-To: <20200809175551.6794-1-trix@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 10 Aug 2020 11:08:39 +0300
-Message-ID: <CAHp75Vcomp1mDUm5houAm2j2b2HtxAP8Z78Vfcdmgm_g+bbt7w@mail.gmail.com>
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: check st_lsm6dsx_shub_read_output return
-To:     trix@redhat.com
-Cc:     Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200810011749.3211128-1-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 9, 2020 at 8:56 PM <trix@redhat.com> wrote:
->
-> From: Tom Rix <trix@redhat.com>
->
-> clang static analysis reports this represenative problem
->
-> st_lsm6dsx_shub.c:540:8: warning: Assigned value is garbage or undefined
->         *val = (s16)le16_to_cpu(*((__le16 *)data));
->              ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> data is set with
->
->         err = st_lsm6dsx_shub_read(sensor, ch->address, data, len);
->         if (err < 0)
->                 return err;
->
-> The problem with st_lsm6dsx_shub_read() is this statement
->
->         err = st_lsm6dsx_shub_read_output(hw, data,
->                                           len & ST_LS6DSX_READ_OP_MASK);
->
-> The err value is never checked.
-> So check err.
->
-
-
-> Fixes: c91c1c844ebd ("iio: imu: st_lsm6dsx: add i2c embedded controller support")
->
-> Signed-off-by: Tom Rix <trix@redhat.com>
-
-You see, the commit message can be divided to three sections
-
-1. Title / very short description
-2. Detailed description
-3. Tag block
-
-Each of them has some specific rules:
-1. One quite short line prefixed by subsystem / driver in the
-specified format (usually gathered by reading git log against the
-module in question)
-2. Should explain why this change is done
-3. Should be one tag -- one line, no blank lines in between.
-
-Hope, you will use this in the future.
-
-After addressing that (perhaps Jonathan will do it for you)
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
+On 10/08/20 03:17, Jiaxun Yang wrote:
+> There is a fallthrough comment being forgotten,
+> GCC complains about it:
+> 
+> arch/mips/kvm/emulate.c: In function kvm_mips_emulate_load:
+> arch/mips/kvm/emulate.c:1936:21: error: this statement may fall through
+>  1936 |   vcpu->mmio_needed = 1; /* unsigned */
+>       |   ~~~~~~~~~~~~~~~~~~^~~
+> arch/mips/kvm/emulate.c:1939:2: note: here
+>  1939 |  case lw_op:
+> 
+> Just fix it.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Reviewed-by: Huacai Chen <chenhc@lemote.com>
 > ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-> index ed83471dc7dd..8c8d8870ca07 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-> @@ -313,6 +313,8 @@ st_lsm6dsx_shub_read(struct st_lsm6dsx_sensor *sensor, u8 addr,
->
->         err = st_lsm6dsx_shub_read_output(hw, data,
->                                           len & ST_LS6DSX_READ_OP_MASK);
-> +       if (err < 0)
-> +               return err;
->
->         st_lsm6dsx_shub_master_enable(sensor, false);
->
-> --
-> 2.18.1
->
+> This is blocking KVM MIPS from build, so it needs to get into 5.9.
+> ---
+>  arch/mips/kvm/emulate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/kvm/emulate.c b/arch/mips/kvm/emulate.c
+> index 703782355318..d70c4f8e14e2 100644
+> --- a/arch/mips/kvm/emulate.c
+> +++ b/arch/mips/kvm/emulate.c
+> @@ -1935,7 +1935,7 @@ enum emulation_result kvm_mips_emulate_load(union mips_instruction inst,
+>  
+>  	case lwu_op:
+>  		vcpu->mmio_needed = 1;	/* unsigned */
+> -		/* fall through */
+> +		fallthrough;
+>  #endif
+>  	case lw_op:
+>  		run->mmio.len = 4;
+> 
 
+Queued, thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Paolo
+
