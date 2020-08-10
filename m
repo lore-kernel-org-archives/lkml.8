@@ -2,293 +2,113 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F40C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE87C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5DDD2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD9E20791
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:56:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="aS3EzGrG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcjsJ2Mn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHJOzq (ORCPT
+        id S1727120AbgHJO4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:55:46 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:33718 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgHJOzp (ORCPT
+        Mon, 10 Aug 2020 10:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgHJO4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:55:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=Flki9ZmhD8jhqFE7sfCcRniGVoQVUfkY8H7vzbJhAsY=;
-        b=aS3EzGrGweIhRxYekOTRO02e2GVcX4Gd01gi2Fa7MjXARAtF07+tabzCE6bMRpCbxTWI
-        dAc7Gc8gELQLLLU8L9RXn8rfZlDfqdgSrFQkWWSlNhOHy3S/yVfQbaVK5tizvNY8owpHap
-        fBZf/1x0p0oSqXYbNxB++F3YXaRxTFt8Q=
-Received: by filterdrecv-p3las1-559bd7b968-hw9rl with SMTP id filterdrecv-p3las1-559bd7b968-hw9rl-18-5F315FEE-7A
-        2020-08-10 14:55:42.902288735 +0000 UTC m=+1024772.303150014
-Received: from [10.13.72.117] (unknown)
-        by ismtpd0007p1lon1.sendgrid.net (SG) with ESMTP
-        id rvGlufCHRDqtccj3XFwwxg
-        Mon, 10 Aug 2020 14:55:42.283 +0000 (UTC)
-Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight
- parameters
-References: <20200806151310.98624-1-ezequiel@collabora.com>
- <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
- <CAAEAJfAGW6M1YPQhPqdvpYugWk+RRTNOQbKfSWrnw_A8M2k=EA@mail.gmail.com>
- <2380739.qXQpHEDp1t@jernej-laptop>
- <8cf55169fa1dd55b5bdf746b321419f8c7988821.camel@collabora.com>
-From:   Jonas Karlman <jonas@kwiboo.se>
-Message-ID: <fcd4a18e-1442-4333-ec87-c53dba9890c5@kwiboo.se>
-Date:   Mon, 10 Aug 2020 14:55:43 +0000 (UTC)
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 10 Aug 2020 10:56:11 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4E2C061756;
+        Mon, 10 Aug 2020 07:56:11 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k13so4990704plk.13;
+        Mon, 10 Aug 2020 07:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ewxZsA2sOKsYvtVwAS6LdLqeVgx5AXOVS7mYEisKyOo=;
+        b=TcjsJ2MnNMsEBg3Tm7czoe3hzZLz8q9xyHzKW1xxJOG/99Gje2jsohx2Eos6AFSsfj
+         MkKEgG9f1yciUHnN2cs3WkibpmTTRGdR1qL8RQTytz1CdkycyBAUwlobys0gkeKu7RgJ
+         UD3ywrx1HmYJKAwUhXyIfHb34s8li2nqXGMIfy4mC2XLoaoUImo1RoH1IbqqYlFKRW4A
+         nOXGkfXooupWbLdROt3IhtANCH7Z20KV7CEs0QmkJSH6psEuDvZPcXm4KMNEKqMX2nJc
+         oYvi/MtOlrhb1Sv86YpYOToFsBxCYeMwzolzRNN/2+LN6DHlNlaNBegYrwPitL3tJ3U9
+         R8tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ewxZsA2sOKsYvtVwAS6LdLqeVgx5AXOVS7mYEisKyOo=;
+        b=jADACSWHR2WJR4IYYBHLJKvS2N7PB5zF/oKFr72p7xtSlsUCJN5ARVFG3bHJaNAu7/
+         gh6bgT1ffOZZdTuegph9wZIz4j2zKxs0h+SJXnuM2tUWuvhrXzpEWgL0iQkX9lkLKkT9
+         PnY2Ug7/hhWfQBo+r2h6k8vHcmo28AquKWwv7DQk/aCKr0J6wkoFGtk6PO7e1fq7OZ47
+         mMKwrkpBIyD2VlVrX2kHfzHmvUjWeHCKrPwV+iyBRtLYlMo4QLyTydmeka6zMCh3v3Q5
+         t5Fa1QWeWcSdyHhMWWwza7A87pO5PrcBKlAehM3ll9IGct3JsVOjvkEVdj/Q7cQR7z39
+         KOpg==
+X-Gm-Message-State: AOAM532BEJoa21gcPoA163EHvcaBVrQe8iZMP7QkJQG8Y0wyduS8c5F7
+        nmw+ytuQRGQ5hH35dh0GoXE=
+X-Google-Smtp-Source: ABdhPJy5OpDtINvGIeTTw1imy9XHYqjGHJ6nYPjRzqXk66t/mQSKFM1YgwrIVwUIP1hUjlrNdIYyoQ==
+X-Received: by 2002:a17:90a:8589:: with SMTP id m9mr28316923pjn.109.1597071371386;
+        Mon, 10 Aug 2020 07:56:11 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id 3sm19857146pjo.40.2020.08.10.07.56.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 07:56:10 -0700 (PDT)
+Subject: Re: [PATCH] bpf: Add bpf_skb_get_sock_comm() helper
+To:     Jiang Yu <jyu.jiang@vivo.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        zhanglin <zhang.lin16@zte.com.cn>,
+        Kees Cook <keescook@chromium.org>,
+        Andrey Ignatov <rdna@fb.com>,
+        Quentin Monnet <quentin@isovalent.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+References: <20200810131014.12057-1-jyu.jiang@vivo.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <315a12d8-abd9-f9d3-a1b2-bcec8598a984@gmail.com>
+Date:   Mon, 10 Aug 2020 07:56:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <8cf55169fa1dd55b5bdf746b321419f8c7988821.camel@collabora.com>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h07XBYinXmPfEdId9?=
- =?us-ascii?Q?qYnLwPG02TWSU6kr5J9+JbuNQkgtj3h1O64NWxO?=
- =?us-ascii?Q?rdfBkrks8giIaRw5JM0d4NsB92XEUs8eSi2YyiU?=
- =?us-ascii?Q?n4ekA4ONTHNUMDKIamMNcnZq7DMBtup7gtMd5fB?=
- =?us-ascii?Q?KYZRha8WPPlgTSNRyT9F5Upj5ZjMhaCl9i5X6ZF?=
- =?us-ascii?Q?qdmlLjgq3P2P1aCZDGHgw=3D=3D?=
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Jernej =?iso-8859-2?q?=A9krabec?= <jernej.skrabec@siol.net>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+In-Reply-To: <20200810131014.12057-1-jyu.jiang@vivo.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: sv
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-10 14:57, Ezequiel Garcia wrote:
-> On Sun, 2020-08-09 at 23:11 +0200, Jernej Škrabec wrote:
->> Dne nedelja, 09. avgust 2020 ob 15:55:50 CEST je Ezequiel Garcia napisal(a):
->>> On Sat, 8 Aug 2020 at 18:01, Jonas Karlman <jonas@kwiboo.se> wrote:
->>>> On 2020-08-06 17:12, Ezequiel Garcia wrote:
->>>>> The prediction weight parameters are only required under
->>>>> certain conditions, which depend on slice header parameters.
->>>>>
->>>>> As specified in section 7.3.3 Slice header syntax, the prediction
->>>>> weight table is present if:
->>>>>
->>>>> ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
->>>>> (weighted_bipred_idc == 1 && slice_type == B))
->>>>
->>>> Maybe a macro can be added to help check this contition?
->>>>
->>>> Something like this maybe:
->>>>
->>>> #define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
->>>>
->>>>         ((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
->>>>         
->>>>          ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
->>>>          
->>>>            (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
->>>>          
->>>>          ((pps)->weighted_bipred_idc == 1 && \
->>>>          
->>>>           (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
->>>
->>> Yeah, that could make sense.
->>>
->>> Note that the biggest value in having the prediction weight table
->>> separated is to allow  applications to skip setting this largish control,
->>> reducing the amount of data that needs to be passed from userspace
->>> -- especially when not needed :-)
->>>
->>>>> Given its size, it makes sense to move this table to its control,
->>>>> so applications can avoid passing it if the slice doesn't specify it.
->>>>>
->>>>> Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
->>>>> With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
->>>>> is 772 bytes.
->>>>>
->>>>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
->>>>> ---
->>>>> v2: Fix missing Cedrus changes and mssing control declaration,
->>>>>
->>>>>     as noted by Hans and Jernej.
->>>>>
->>>>> ---
->>>>>
->>>>>  .../media/v4l/ext-ctrls-codec.rst             | 19 ++++++++++++-------
->>>>>  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
->>>>>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
->>>>>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
->>>>>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
->>>>>  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
->>>>>  include/media/h264-ctrls.h                    |  5 +++--
->>>>>  include/media/v4l2-ctrls.h                    |  2 ++
->>>>>  8 files changed, 37 insertions(+), 13 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>>>> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
->>>>> d1438b1e259f..c36ce5a95fc5 100644
->>>>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>>>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>>>> @@ -1879,18 +1879,23 @@ enum
->>>>> v4l2_mpeg_video_h264_hierarchical_coding_type -> > 
->>>>>        - 0x00000008
->>>>>        -
->>>>>
->>>>> -``Prediction Weight Table``
->>>>> +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
->>>>> +    Prediction weight table defined according to :ref:`h264`,
->>>>> +    section 7.4.3.2 "Prediction Weight Table Semantics".
->>>>> +    The prediction weight table must be passed by applications
->>>>> +    under the conditions explained in section 7.3.3 "Slice header
->>>>> +    syntax".
->>>>>
->>>>> -    The bitstream parameters are defined according to :ref:`h264`,
->>>>> -    section 7.4.3.2 "Prediction Weight Table Semantics". For further
->>>>> -    documentation, refer to the above specification, unless there is
->>>>> -    an explicit comment stating otherwise.
->>>>> +    .. note::
->>>>> +
->>>>> +       This compound control is not yet part of the public kernel API
->>>>> and
->>>>> +       it is expected to change.
->>>>>
->>>>> -.. c:type:: v4l2_h264_pred_weight_table
->>>>> +.. c:type:: v4l2_ctrl_h264_pred_weights
->>>>>
->>>>>  .. cssclass:: longtable
->>>>>
->>>>> -.. flat-table:: struct v4l2_h264_pred_weight_table
->>>>> +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
->>>>>
->>>>>      :header-rows:  0
->>>>>      :stub-columns: 0
->>>>>      :widths:       1 1 2
->>>>>
->>>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>> b/drivers/media/v4l2-core/v4l2-ctrls.c index 3f3fbcd60cc6..76c8dc8fb31c
->>>>> 100644
->>>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>> @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->>>>>
->>>>>       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:            return
->>>>>       "H264 Decode Parameters"; case
->>>>>       V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:              return "H264
->>>>>       Decode Mode"; case V4L2_CID_MPEG_VIDEO_H264_START_CODE:          
->>>>>           return "H264 Start Code";> > 
->>>>> +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:             return
->>>>> "H264 Prediction Weight Table";> > 
->>>>>       case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:                   return
->>>>>       "MPEG2 Level"; case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:           
->>>>>            return "MPEG2 Profile"; case
->>>>>       V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return "MPEG4
->>>>>       I-Frame QP Value";> > 
->>>>> @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char **name,
->>>>> enum v4l2_ctrl_type *type,> > 
->>>>>       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
->>>>>               *type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
->>>>>               break;
->>>>>
->>>>> +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
->>>>> +             *type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
->>>>> +             break;
->>>>>
->>>>>       case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
->>>>>               *type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
->>>>>               break;
->>>>>
->>>>> @@ -1790,6 +1794,7 @@ static int std_validate_compound(const struct
->>>>> v4l2_ctrl *ctrl, u32 idx,> > 
->>>>>       case V4L2_CTRL_TYPE_H264_SPS:
->>>>>       case V4L2_CTRL_TYPE_H264_PPS:
->>>>>
->>>>>       case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
->>>>> +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
->>>>>       case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
->>>>>       
->>>>>       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
->>>>>               break;
->>>>>
->>>>> @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct
->>>>> v4l2_ctrl_handler *hdl,> > 
->>>>>       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
->>>>>               elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
->>>>>               break;
->>>>>
->>>>> +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
->>>>> +             elem_size = sizeof(struct v4l2_ctrl_h264_pred_weights);
->>>>> +             break;
->>>>>
->>>>>       case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
->>>>>               elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
->>>>>               break;
->>>>>
->>>>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
->>>>> b/drivers/staging/media/sunxi/cedrus/cedrus.c index
->>>>> bc27f9430eeb..027cdd1be5a0 100644
->>>>> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
->>>>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
->>>>> @@ -78,6 +78,13 @@ static const struct cedrus_control cedrus_controls[]
->>>>> = {
->>>>>
->>>>>               .codec          = CEDRUS_CODEC_H264,
->>>>>               .required       = true,
->>>>>       
->>>>>       },
->>>>>
->>>>> +     {
->>>>> +             .cfg = {
->>>>> +                     .id     = V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
->>>>> +             },
->>>>> +             .codec          = CEDRUS_CODEC_H264,
->>>>> +             .required       = true,
->>>>
->>>> This should probably be false if this control is to be optional as implied
->>>> by the commit message.
->>>
->>> Well, the control is optional if the driver implements it as optional,
->>> which Cedrus isn't currently doing :-)
->>
->> Why do you think so? Prediction weights are filled only when they are 
->> needed:https://elixir.bootlin.com/linux/latest/source/drivers/staging/media/
->> sunxi/cedrus/cedrus_h264.c#L370
->>
+
+
+On 8/10/20 6:09 AM, Jiang Yu wrote:
+> skb distinguished by uid can only recorded to user who consume them.
+> in many case, skb should been recorded more specific to process who
+> consume them. E.g, the unexpected large data traffic of illegal process
+> in metered network.
 > 
-> Right, but that should be changed to be really optional.
-> How does the driver reject/fail the request if the table is NULL?
+> this helper is used in tracing task comm of the sock to which a skb
+> belongs.
 > 
-> In any case, I don't think it's necessarily something we need
-> to tackle now.
+> Signed-off-by: Jiang Yu <jyu.jiang@vivo.com>
 
-I do not fully follow, the commit message state following:
+fd can be passed from one process to another.
 
-  Note that the biggest value in having the prediction weight table
-  separated is to allow applications to skip setting this largish control
 
-Yet the driver still require this new control to be included in the request
-thanks to the .required = true statement. (if i understand the code correctly)
-
-So applications still need to set this largish control?
-
-Best regards,
-Jonas
-
-> 
-> Thanks,
-> Ezequiel
-> 
