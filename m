@@ -2,123 +2,184 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D03C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4E622CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853B222BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYKmQbrK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YMpVmq+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgHJToz (ORCPT
+        id S1728397AbgHJTq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:44:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgHJToy (ORCPT
+        Mon, 10 Aug 2020 15:46:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26076 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728275AbgHJTq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:44:54 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D53EEC061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 12:44:54 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so6237119pfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 12:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ycRnnbR2xZeCpTpBLfZzGVZNgr0ToOaSohq7rnXna0I=;
-        b=JYKmQbrKCDsHxauoJypFkiLT0h6Jgug1DSYi+poxXXWFufbUXTk6KJ2Kt+2XK1GNe8
-         S4rDGZ25MXBHYIILZASSvlBGv/CXEPBhfEdq8xNvoJhyrVjWKTpyPyDPysR44olyfslV
-         mGw6KuM3u/OUbmJTlOzvIJpWwWPnrvYIUHHFwen7otkcfX3uda6M2XmnnjQVAKBwKZ26
-         hAz1MIYlsn7XkSI143g67BMmFe1dwr5CYuEf/dZbSG87/0vpxXe+x8aURE3Fu7ZqWC4F
-         kC+umJq3FudKz6uQnMsap2KZcBh6Rnqqu0HebEBEfgQPUczCqToaclrgdDy3kGDcXB9x
-         zlAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ycRnnbR2xZeCpTpBLfZzGVZNgr0ToOaSohq7rnXna0I=;
-        b=f7vXauZK0xDRTh9x7PxXAJ0B+hMF2AtD30IM226/tpdw/Ukdm1nrPGUA6Iov4oQ1lf
-         l8ySE/R9vOstLrh8xT5YWnHlaKW2fjFYLitG0dM9St+ffxzVO2BSpn5RrjfJntdeiT7C
-         yV/qgTS8TuWU/e7aj0DAvyqXkDqjrgCJ83iRnALFutrxq1HaQ0UKW7j8cwUUqn3MLh4V
-         BrqbOU7Kl332Qu8Ls5wRWk5my0vLr4dtXzNcY0hpVwgvV4RLQkkVPyc6ubzVzhqt/9EE
-         kGuTBRG+ESuWhwpzSUO7IdUwlnVrn9NLJ3RNiYD5FcUslDQeJL3Gyf5gIJAY7ZOP8AYy
-         AWlg==
-X-Gm-Message-State: AOAM530wMdNICuHhkZ3eYK5zwBskQgV9negFQS39jw8TsGeHY4PqIdxc
-        vzVW/X3nyeXQ7mWcorJHtLBTDQ==
-X-Google-Smtp-Source: ABdhPJy6hXHCDwsIGBTEOxp8Qe62ivXMZvSl8Sag+97i4QZwzsrGlgdtaP+BQ9p0b1bhpL9o9Q5Etw==
-X-Received: by 2002:aa7:9ad3:: with SMTP id x19mr2587166pfp.158.1597088693871;
-        Mon, 10 Aug 2020 12:44:53 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id j10sm13106401pff.171.2020.08.10.12.44.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 12:44:53 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 12:44:52 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Abel Wu <wuyun.wu@huawei.com>
-cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        liu.xiang6@zte.com.cn,
-        "open list:SLAB ALLOCATOR" <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/slub: remove useless kmem_cache_debug
-In-Reply-To: <20200810080758.940-1-wuyun.wu@huawei.com>
-Message-ID: <alpine.DEB.2.23.453.2008101244090.2938695@chino.kir.corp.google.com>
-References: <20200810080758.940-1-wuyun.wu@huawei.com>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+        Mon, 10 Aug 2020 15:46:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597088814;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oRzQMCTvJ3d/F0CLCTpkBaK+ztkIxK4SeNJuOlZ33WI=;
+        b=YMpVmq+CqU6ZcFLCyTG4cnR/kYRlVG0+lax8JF9zCGKjay52C505XgARW/PjevF1AysAzf
+        keZx4JkXzL5DsE/+vH8/46pQEfZ7xGypqYJ/aBqHtKwoFG6uKsaSabzfQOlEOFph53asnC
+        AJBK0CAuIPC7p+16TMQUA/PK/w9pEw8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-bTE2M3asMpSHOHqjSXL1hQ-1; Mon, 10 Aug 2020 15:46:49 -0400
+X-MC-Unique: bTE2M3asMpSHOHqjSXL1hQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E8B591005510;
+        Mon, 10 Aug 2020 19:46:48 +0000 (UTC)
+Received: from [10.10.120.16] (ovpn-120-16.rdu2.redhat.com [10.10.120.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D09BF19C4F;
+        Mon, 10 Aug 2020 19:46:47 +0000 (UTC)
+Subject: refactoring livepatch documentation was Re: [PATCH 1/2]
+ docs/livepatch: Add new compiler considerations doc
+To:     Petr Mladek <pmladek@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200721161407.26806-1-joe.lawrence@redhat.com>
+ <20200721161407.26806-2-joe.lawrence@redhat.com>
+ <20200721230442.5v6ah7bpjx4puqva@treble>
+ <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
+ <20200722205139.hwbej2atk2ejq27n@treble> <20200806120336.GP24529@alley>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <3842fe65-332e-9f90-fe75-7cd80b34b75e@redhat.com>
+Date:   Mon, 10 Aug 2020 15:46:46 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200806120336.GP24529@alley>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020, wuyun.wu@huawei.com wrote:
+On 8/6/20 8:03 AM, Petr Mladek wrote:
+> On Wed 2020-07-22 15:51:39, Josh Poimboeuf wrote:
+>> On Wed, Jul 22, 2020 at 01:03:03PM -0400, Joe Lawrence wrote:
+>>> On 7/21/20 7:04 PM, Josh Poimboeuf wrote:
+>>>> On Tue, Jul 21, 2020 at 12:14:06PM -0400, Joe Lawrence wrote:
+>>>>> Compiler optimizations can have serious implications on livepatching.
+>>>>> Create a document that outlines common optimization patterns and safe
+>>>>> ways to livepatch them.
+>>>>>
+>>>>> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+>>>>
+>>>> There's a lot of good info here, but I wonder if it should be
+>>>> reorganized a bit and instead called "how to create a livepatch module",
+>>>> because that's really the point of it all.
+>>>>
+>>>
+>>> That would be nice.  Would you consider a stand-alone compiler-optimizations
+>>> doc an incremental step towards that end?  Note that the other files
+>>> (callbacks, shadow-vars, system-state) in their current form might be as
+>>> confusing to the newbie.
+>>
+>> It's an incremental step towards _something_.  Whether that's a cohesive
+>> patch creation guide, or just a growing hodgepodge of random documents,
+>> it may be too early to say :-)
+> 
+> Yes, it would be nice to have a cohesive documentation. But scattered
+> pieces are better than nothing.
+> 
+>>>> I'm thinking a newcomer reading this might be lost.  It's not
+>>>> necessarily clear that there are currently two completely different
+>>>> approaches to creating a livepatch module, each with their own quirks
+>>>> and benefits/drawbacks.  There is one mention of a "source-based
+>>>> livepatch author" but no explanation of what that means.
+>>>>
+>>>
+>>> Yes, the initial draft was light on source-based patching since I only
+>>> really tinker with it for samples/kselftests.  The doc was the result of an
+>>> experienced livepatch developer and Sunday afternoon w/the compiler. I'm
+>>> sure it reads as such. :)
+>>
+>> Are experienced livepatch developers the intended audience?  If so I
+>> question what value this document has in its current form.  Presumably
+>> experienced livepatch developers would already know this stuff.
+> 
+> IMHO, this document is useful even for newbies. They might at
+> least get a clue about these catches. It is better than nothing.
+> 
+> I do not want to discourage Joe from creating even better
+> documentation. But if he does not have interest or time
+> to work on it, I am happy even for this piece.
+> 
 
-> From: Abel Wu <wuyun.wu@huawei.com>
-> 
-> The commit below is incomplete, as it didn't handle the add_full() part.
-> commit a4d3f8916c65 ("slub: remove useless kmem_cache_debug() before remove_full()")
-> 
-> Signed-off-by: Abel Wu <wuyun.wu@huawei.com>
-> ---
->  mm/slub.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index fe81773..0b021b7 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -2182,7 +2182,8 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
->  		}
->  	} else {
->  		m = M_FULL;
-> -		if (kmem_cache_debug(s) && !lock) {
-> +#ifdef CONFIG_SLUB_DEBUG
-> +		if (!lock) {
->  			lock = 1;
->  			/*
->  			 * This also ensures that the scanning of full
-> @@ -2191,6 +2192,7 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
->  			 */
->  			spin_lock(&n->list_lock);
->  		}
-> +#endif
->  	}
-> 
->  	if (l != m) {
+Hi Petr, Josh,
 
-This should be functionally safe, I'm wonder if it would make sense to 
-only check for SLAB_STORE_USER here instead of kmem_cache_debug(), 
-however, since that should be the only context in which we need the 
-list_lock for add_full()?  It seems more explicit.
+The compiler optimization pitfall document can wait for refactored 
+livepatch documentation if that puts it into better context, 
+particularly for newbies.  I don't mind either way.  FWIW, I don't 
+profess to be an authoritative source its content -- we've dealt some of 
+these issues in kpatch, so it was interesting to see how they affect 
+livepatches that don't rely on binary comparison.
+
+
+Toward the larger goal, I've changed the thread subject to talk about 
+how we may rearrange and supplement our current documentation.  This is 
+a first pass at a possible refactoring...
+
+
+1. Provide a better index page to connect the other files/docs, like
+https://www.kernel.org/doc/html/latest/core-api/index.html but obviously 
+not that extensive.  Right now we have only a Table of Contents tree 
+without any commentary.
+
+2. Rearrange and refactor sections:
+
+livepatch.rst
+   Keep just about everything
+   Add a history section to explain ksplice, kgraft, kpatch for the
+     uninitiated?
+   Add a section on source based vs. binary diff livepatch creation,
+     this may be worth its own top-level section
+
+Livepatch API
+   Basic API
+   Callbacks
+   Shadow variables
+   Cumulative patches
+   System state
+
+KLP Relocations
+   Right now this is a bit academic AFAIK kpatch is the only tool
+   currently making use of them.  So maybe this document becomes a
+   more general purpose doc explaining how to reference unexported
+   symbols?  (ie, how does kgraft currently do it, particularly
+   w/kallsyms going unexported?)
+
+   Eventually this could contain klp-convert howto if it ever gets
+   merged.
+
+Compiler considerations
+   TBD
+
+I suppose this doesn't create a "Livepatching creation for dummies" 
+guide, but my feeling is that there are so many potential (hidden) 
+pitfalls that such guide would be dangerous.
+
+If someone were to ask me today how to start building a livepatch, I 
+would probably point them at the samples to demonstrate the basic 
+concept and API, but then implore them to read through the documentation 
+to understand how quickly complicated it can become.
+
+-- Joe
+
