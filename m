@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4348AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2151822BEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D272080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087099;
-	bh=F42HExEd9J2JUtD6rRXQCBAOZWp5jdvHA403Tsg9tX4=;
+	s=default; t=1597087102;
+	bh=JCjjjWbCYvT0bGRkX2Iilrpaa0f75hvq0QdyHN79ywc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G2FYNdBUEqD44OIBVAEOURqjcjpkhEjE0/lBxzyAO8SJcxJcjlzx6t+5mRLOCgeoX
-	 NgCRvGsofpdDW7zxFLH/BNvpjLm5d0aberrXNCXthYM/uvppPV5fEldh3bRDL7UJ2M
-	 8FG7ubTKguRTbw9SI5r8fzFJH6fHXOs5okHK1sDI=
+	b=WGDTDXt+Bd1Gp415TynVkiG341aYtg63TgjRp8rsgpDPCx+oz0BSIC/0+KUZstVwq
+	 NzPbmZI5nNEf35zvaq6qkrEvakX9j/O0NjrQbPmb+6wDi5BJQDBcmRgfco8IP0TzSK
+	 /JqXGspEqbm2M8kQug2bFHtpE9qEEON7UG5Y8aBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbgHJTOF (ORCPT
+        id S1730286AbgHJTST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:14:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45594 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729903AbgHJTN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:57 -0400
+        id S1729938AbgHJTOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085DA22BEB;
-        Mon, 10 Aug 2020 19:13:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D958222BED;
+        Mon, 10 Aug 2020 19:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086836;
-        bh=F42HExEd9J2JUtD6rRXQCBAOZWp5jdvHA403Tsg9tX4=;
+        s=default; t=1597086844;
+        bh=JCjjjWbCYvT0bGRkX2Iilrpaa0f75hvq0QdyHN79ywc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDxsw9/6i/gKohLdTKBKWOep72Hbg/yUJanQYgJ2i9U8W92aCzu4oGTLBPFxIBpom
-         z0TN6/92au64YYe0IFOBV2nVORLPyHDrKVniO9tEhHNYHyXodv/BENqao2Wi4RDcIZ
-         U9ta6En1Rdf6ktNuK4/TKIh+qi0xg5kU7KGtnHtc=
+        b=TFWGXj26XeUzSsaeHnS3oDOZ82mnoN2JXJQ8rU46PB73Fg519H0Lf7PiEghzZX2iA
+         e5WmTJDV57Vun1GoasVEjkcb7RwtD8rp6d1KRMuh4KGQYolItUIfltzcPRMsPbgebi
+         wCVsOac3zY/PFjQp904IQh5RoqW91/SDFwB9otIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
+Cc:     Wright Feng <wright.feng@cypress.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 08/22] drm/nouveau: fix multiple instances of reference count leaks
-Date:   Mon, 10 Aug 2020 15:13:30 -0400
-Message-Id: <20200810191345.3795166-8-sashal@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/22] brcmfmac: set state of hanger slot to FREE when flushing PSQ
+Date:   Mon, 10 Aug 2020 15:13:35 -0400
+Message-Id: <20200810191345.3795166-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -59,66 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Wright Feng <wright.feng@cypress.com>
 
-[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
+[ Upstream commit fcdd7a875def793c38d7369633af3eba6c7cf089 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-ref count before returning the error.
+When USB or SDIO device got abnormal bus disconnection, host driver
+tried to clean up the skbs in PSQ and TXQ (The skb's pointer in hanger
+slot linked to PSQ and TSQ), so we should set the state of skb hanger slot
+to BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb.
+In brcmf_fws_bus_txq_cleanup it already sets
+BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb, therefore we add the
+same thing in brcmf_fws_psq_flush to avoid following warning message.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+   [ 1580.012880] ------------   [ cut here ]------------
+   [ 1580.017550] WARNING: CPU: 3 PID: 3065 at
+drivers/net/wireless/broadcom/brcm80211/brcmutil/utils.c:49
+brcmu_pkt_buf_free_skb+0x21/0x30 [brcmutil]
+   [ 1580.184017] Call Trace:
+   [ 1580.186514]  brcmf_fws_cleanup+0x14e/0x190 [brcmfmac]
+   [ 1580.191594]  brcmf_fws_del_interface+0x70/0x90 [brcmfmac]
+   [ 1580.197029]  brcmf_proto_bcdc_del_if+0xe/0x10 [brcmfmac]
+   [ 1580.202418]  brcmf_remove_interface+0x69/0x190 [brcmfmac]
+   [ 1580.207888]  brcmf_detach+0x90/0xe0 [brcmfmac]
+   [ 1580.212385]  brcmf_usb_disconnect+0x76/0xb0 [brcmfmac]
+   [ 1580.217557]  usb_unbind_interface+0x72/0x260
+   [ 1580.221857]  device_release_driver_internal+0x141/0x200
+   [ 1580.227152]  device_release_driver+0x12/0x20
+   [ 1580.231460]  bus_remove_device+0xfd/0x170
+   [ 1580.235504]  device_del+0x1d9/0x300
+   [ 1580.239041]  usb_disable_device+0x9e/0x270
+   [ 1580.243160]  usb_disconnect+0x94/0x270
+   [ 1580.246980]  hub_event+0x76d/0x13b0
+   [ 1580.250499]  process_one_work+0x144/0x360
+   [ 1580.254564]  worker_thread+0x4d/0x3c0
+   [ 1580.258247]  kthread+0x109/0x140
+   [ 1580.261515]  ? rescuer_thread+0x340/0x340
+   [ 1580.265543]  ? kthread_park+0x60/0x60
+   [ 1580.269237]  ? SyS_exit_group+0x14/0x20
+   [ 1580.273118]  ret_from_fork+0x25/0x30
+   [ 1580.300446] ------------   [ cut here ]------------
+
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200624091608.25154-2-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
- drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index d00524a5d7f08..fb6b1d0f7fef3 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -840,8 +840,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
- 
- 	/* need to bring up power immediately if opening device */
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	get_task_comm(tmpname, current);
- 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
-@@ -930,8 +932,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	long ret;
- 
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
- 	case DRM_NOUVEAU_NVIF:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
-index 60ffb70bb9089..c6149b5be073e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_gem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
-@@ -42,8 +42,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (WARN_ON(ret < 0 && ret != -EACCES))
-+	if (WARN_ON(ret < 0 && ret != -EACCES)) {
-+		pm_runtime_put_autosuspend(dev);
- 		return;
-+	}
- 
- 	if (gem->import_attach)
- 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+index 2370060ef980a..0807331284895 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+@@ -653,6 +653,7 @@ static inline int brcmf_fws_hanger_poppkt(struct brcmf_fws_hanger *h,
+ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
+ 				int ifidx)
+ {
++	struct brcmf_fws_hanger_item *hi;
+ 	bool (*matchfn)(struct sk_buff *, void *) = NULL;
+ 	struct sk_buff *skb;
+ 	int prec;
+@@ -664,6 +665,9 @@ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
+ 		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
+ 		while (skb) {
+ 			hslot = brcmf_skb_htod_tag_get_field(skb, HSLOT);
++			hi = &fws->hanger.items[hslot];
++			WARN_ON(skb != hi->pkt);
++			hi->state = BRCMF_FWS_HANGER_ITEM_STATE_FREE;
+ 			brcmf_fws_hanger_poppkt(&fws->hanger, hslot, &skb,
+ 						true);
+ 			brcmu_pkt_buf_free_skb(skb);
 -- 
 2.25.1
 
