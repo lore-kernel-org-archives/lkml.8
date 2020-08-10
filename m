@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F278C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4192070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47872070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgHJOZ3 (ORCPT
+        id S1727019AbgHJOYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:25:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:56256 "EHLO mga03.intel.com"
+        Mon, 10 Aug 2020 10:24:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:28442 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbgHJOYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:24:52 -0400
-IronPort-SDR: rpYu62zuQPYzHm/5gR14LAIr0MV/9pwXFr2Mh5BSz9FhLHo5PwjvVW9+UTbenJm/XjlUUhSfBV
- mKX3Lxiid+8Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="153507716"
+        id S1726910AbgHJOYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:24:48 -0400
+IronPort-SDR: sB39yN+BVDu2PoWjFb+GvvuwE1xCzGOF9zhlrYpHtajDLw82dcwzNdyBRKMi1WHilBONsBlZaQ
+ ft10DzkhgKjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="150973817"
 X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="153507716"
+   d="scan'208";a="150973817"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:52 -0700
-IronPort-SDR: x/YOt9P9ugGVaDpvEZRLNPB2ntcRgY0meK8NTZAuwGdrYvtVS4HqkLkhqM2g8H7C6Mj5gQV0mg
- oo0Vf7yEldAw==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:46 -0700
+IronPort-SDR: 6faF++bStC7CbW7JmF76TSaiiQB8K0ag+qY7CtjTExBsoF8Z8QYg8tL18A5c35oN0yfmKcaQeX
+ o5OJad2qHQyQ==
 X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="324454005"
+   d="scan'208";a="308086172"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:48 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:43 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id BF0CE20BAE;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id ACC8F209D1;
         Mon, 10 Aug 2020 17:24:41 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1k58mC-0003F3-Ad; Mon, 10 Aug 2020 17:27:48 +0300
+        id 1k58mC-0003Ex-88; Mon, 10 Aug 2020 17:27:48 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa@the-dreams.de>,
@@ -54,9 +54,9 @@ Cc:     Wolfram Sang <wsa@the-dreams.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
         "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: [PATCH v5 5/6] at24: Support probing while off
-Date:   Mon, 10 Aug 2020 17:27:46 +0300
-Message-Id: <20200810142747.12400-6-sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 3/6] ov5670: Support probe whilst the device is in a low power state
+Date:   Mon, 10 Aug 2020 17:27:44 +0300
+Message-Id: <20200810142747.12400-4-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
 References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
@@ -67,98 +67,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In certain use cases (where the chip is part of a camera module, and the
-camera module is wired together with a camera privacy LED), powering on
-the device during probe is undesirable. Add support for the at24 to
-execute probe while being powered off. For this to happen, a hint in form
-of a device property is required from the firmware.
+Tell ACPI device PM code that the driver supports the device being in a
+low power state when the driver's probe function is entered.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/misc/eeprom/at24.c | 40 ++++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 15 deletions(-)
+ drivers/media/i2c/ov5670.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 2591c21b2b5d8..e597a8861e817 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -561,6 +561,7 @@ static int at24_probe(struct i2c_client *client)
- 	bool i2c_fn_i2c, i2c_fn_block;
- 	unsigned int i, num_addresses;
- 	struct at24_data *at24;
+diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
+index f26252e35e08d..1f75b888d2a18 100644
+--- a/drivers/media/i2c/ov5670.c
++++ b/drivers/media/i2c/ov5670.c
+@@ -2456,6 +2456,7 @@ static int ov5670_probe(struct i2c_client *client)
+ 	struct ov5670 *ov5670;
+ 	const char *err_msg;
+ 	u32 input_clk = 0;
 +	bool low_power;
- 	struct regmap *regmap;
- 	bool writable;
- 	u8 test_byte;
-@@ -698,25 +699,30 @@ static int at24_probe(struct i2c_client *client)
+ 	int ret;
  
- 	i2c_set_clientdata(client, at24);
+ 	device_property_read_u32(&client->dev, "clock-frequency", &input_clk);
+@@ -2472,11 +2473,14 @@ static int ov5670_probe(struct i2c_client *client)
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
  
--	err = regulator_enable(at24->vcc_reg);
--	if (err) {
--		dev_err(dev, "Failed to enable vcc regulator\n");
--		return err;
--	}
+-	/* Check module identity */
+-	ret = ov5670_identify_module(ov5670);
+-	if (ret) {
+-		err_msg = "ov5670_identify_module() error";
+-		goto error_print;
 +	low_power = acpi_dev_state_low_power(&client->dev);
 +	if (!low_power) {
-+		err = regulator_enable(at24->vcc_reg);
-+		if (err) {
-+			dev_err(dev, "Failed to enable vcc regulator\n");
-+			return err;
-+		}
- 
--	/* enable runtime pm */
--	pm_runtime_set_active(dev);
-+		pm_runtime_set_active(dev);
-+	}
- 	pm_runtime_enable(dev);
- 
- 	/*
--	 * Perform a one-byte test read to verify that the
--	 * chip is functional.
-+	 * Perform a one-byte test read to verify that the chip is functional,
-+	 * unless powering on the device is to be avoided during probe (i.e.
-+	 * it's powered off right now).
- 	 */
--	err = at24_read(at24, 0, &test_byte, 1);
--	if (err) {
--		pm_runtime_disable(dev);
--		regulator_disable(at24->vcc_reg);
--		return -ENODEV;
-+	if (!low_power) {
-+		err = at24_read(at24, 0, &test_byte, 1);
-+		if (err) {
-+			pm_runtime_disable(dev);
-+			regulator_disable(at24->vcc_reg);
-+			return -ENODEV;
++		/* Check module identity */
++		ret = ov5670_identify_module(ov5670);
++		if (ret) {
++			err_msg = "ov5670_identify_module() error";
++			goto error_print;
 +		}
  	}
  
- 	pm_runtime_idle(dev);
-@@ -734,11 +740,14 @@ static int at24_probe(struct i2c_client *client)
- static int at24_remove(struct i2c_client *client)
- {
- 	struct at24_data *at24 = i2c_get_clientdata(client);
-+	bool low_power;
+ 	mutex_init(&ov5670->mutex);
+@@ -2513,10 +2517,10 @@ static int ov5670_probe(struct i2c_client *client)
+ 	ov5670->streaming = false;
  
- 	pm_runtime_disable(&client->dev);
- 	if (!pm_runtime_status_suspended(&client->dev))
- 		regulator_disable(at24->vcc_reg);
--	pm_runtime_set_suspended(&client->dev);
-+	low_power = acpi_dev_state_low_power(&client->dev);
+ 	/*
+-	 * Device is already turned on by i2c-core with ACPI domain PM.
+-	 * Enable runtime PM and turn off the device.
++	 * Don't set the device's state to active if it's in a low power state.
+ 	 */
+-	pm_runtime_set_active(&client->dev);
 +	if (!low_power)
-+		pm_runtime_set_suspended(&client->dev);
++		pm_runtime_set_active(&client->dev);
+ 	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
  
- 	return 0;
- }
-@@ -775,6 +784,7 @@ static struct i2c_driver at24_driver = {
- 	.probe_new = at24_probe,
- 	.remove = at24_remove,
- 	.id_table = at24_ids,
+@@ -2558,7 +2562,7 @@ static const struct dev_pm_ops ov5670_pm_ops = {
+ 
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id ov5670_acpi_ids[] = {
+-	{"INT3479"},
++	{ "INT3479" },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -2573,6 +2577,7 @@ static struct i2c_driver ov5670_i2c_driver = {
+ 	},
+ 	.probe_new = ov5670_probe,
+ 	.remove = ov5670_remove,
 +	.flags = I2C_DRV_FL_ALLOW_LOW_POWER_PROBE,
  };
  
- static int __init at24_init(void)
+ module_i2c_driver(ov5670_i2c_driver);
 -- 
 2.20.1
 
