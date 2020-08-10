@@ -2,158 +2,102 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AC9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE287C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740E920678
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dpho1qU1"
+	by mail.kernel.org (Postfix) with ESMTP id 9297B20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgHJOHw (ORCPT
+        id S1727095AbgHJOIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:07:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgHJOHv (ORCPT
+        Mon, 10 Aug 2020 10:08:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33172 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgHJOIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:07:51 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E652C061787
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:07:51 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d22so5405988pfn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OLUN7yzaJjWoVmWHoIQUorknRQRx0+Y1VLFiuVxKXZE=;
-        b=Dpho1qU1RLdNfqLhCLelmgInMzDJHQBp0jLpVj5SckMaZQyrKgl+jmndVd0rZbhwLY
-         h/FuIr1dSHqOgfFng4dubYhhakXkFBf8jJ1eBTA4RE43Q3JEXTr7quDhKbLxfdf3ZDUf
-         nhdaDHNcADUXGW1JtmRTJlt4izjMKmb4/yHpiUw3ByRYZ5HTDtaX/xFiPkGYJpefPsdy
-         yt2sWcg9XXgY/XD1ykXA+1Pl0tF4Cr/Gu0CAcDTxrm0xFJ9Wpo1YbTAdtlDig4RbWxzq
-         /vb0XVYvRSBZyKzccjNjyAK3c/HELNdT2LoteL8eVL2VyZk6PWT6RV6C+kBYDW68D3zO
-         n8Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OLUN7yzaJjWoVmWHoIQUorknRQRx0+Y1VLFiuVxKXZE=;
-        b=dbTqkYvDFm5fKyZSMtbU/EMQuuLM1pzzb9LzIHCbBtT5m2v9/jjxdnWifRjzgc/rBT
-         ntNJlZlI79lzN5UJ9HDxImuF7nkXceKBBwCmV/pUj6YRxIoypgMAQmNRIXvUrvoOyf+N
-         uGoO5UTDCYzJZZFPOo7YO64maKXWZaY/p1ZLxFGlll/on1az7vIJFLpC6caOMN5e9L05
-         WMzBRubP5qQR+yGblWMOVAv/CvHqGCHkaJ1/l20fezAKwUx5E9UkQldPrJpxCXEK5agM
-         uXsSU7qSteq90MEECyFArkYvE+0G4wUbicR9GhsGROGdrT5K89FCgyHhxz1CS4uiPuQO
-         H3Pg==
-X-Gm-Message-State: AOAM5313mwDFmWTDrD0wmK3oUncCrH4piXTar+EONuAB8z6QsvhL+/CI
-        5TvK/BDb37XgooqMMnqk2Gvh84rUX+WyHClV7AxMlQ==
-X-Google-Smtp-Source: ABdhPJwa8ANYWls5D1ZzUqXv+dm6c9jFr+cX/1Wf9Qz2AgHllUAJnGydKsSmlskVi+7e9tHG6bISyosgU3GWhWtHhVM=
-X-Received: by 2002:a65:4bc7:: with SMTP id p7mr21992591pgr.440.1597068470553;
- Mon, 10 Aug 2020 07:07:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000ce85c405ac744ff6@google.com> <20200810074706.GD1529187@kroah.com>
- <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
- <20200810090833.GA2271719@kroah.com> <20200810091538.GA2273701@kroah.com>
- <20200810095754.GA2404978@kroah.com> <CACT4Y+badWwK8L3HjYrv2nu-W+WnUfj5Pi2JsLTUMU3o2tJL9g@mail.gmail.com>
-In-Reply-To: <CACT4Y+badWwK8L3HjYrv2nu-W+WnUfj5Pi2JsLTUMU3o2tJL9g@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 10 Aug 2020 16:07:39 +0200
-Message-ID: <CAAeHK+wjkbuGenK+wwMPvU=jJ7JRQ14HsQhU3sWrsUQ2QK6RYQ@mail.gmail.com>
-Subject: Re: KMSAN: kernel-infoleak in raw_ioctl
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        syzbot <syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 10 Aug 2020 10:08:00 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k58Sz-0006s4-Sh; Mon, 10 Aug 2020 14:07:58 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     mathias.nyman@intel.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org (open list:USB XHCI DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] xhci: Do warm-reset when both CAS and XDEV_RESUME are set
+Date:   Mon, 10 Aug 2020 22:07:53 +0800
+Message-Id: <20200810140753.6639-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 12:22 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Aug 10, 2020 at 11:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Aug 10, 2020 at 11:15:38AM +0200, Greg KH wrote:
-> > > On Mon, Aug 10, 2020 at 11:08:33AM +0200, Greg KH wrote:
-> > > > On Mon, Aug 10, 2020 at 11:00:07AM +0200, Dmitry Vyukov wrote:
-> > > > > On Mon, Aug 10, 2020 at 9:46 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > >
-> > > > > > On Sun, Aug 09, 2020 at 09:27:18AM -0700, syzbot wrote:
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > syzbot found the following issue on:
-> > > > > > >
-> > > > > > > HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-> > > > > > > git tree:       https://github.com/google/kmsan.git master
-> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=141eb8b2900000
-> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a7e220df5a81d1ab400e
-> > > > > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > > > > > userspace arch: i386
-> > > > > > >
-> > > > > > > Unfortunately, I don't have any reproducer for this issue yet.
-> > > > > >
-> > > > > > The irony of a kernel module written for syzbot testing, causing syzbot
-> > > > > > reports....
-> > > > >
-> > > > > The raw gadget and KCOV are also kernel code and subject to all the
-> > > > > same rules as any other kernel code from syzkaller point of view.
-> > > > >
-> > > > > But I think the root cause of this bug is the origin of the uninitialized-ness:
-> > > > >
-> > > > > Local variable ----buf.i@asix_get_phy_addr created at:
-> > > > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
-> > > > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
-> > > > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
-> > > > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
-> > > > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
-> > > > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
-> > > >
-> > > > read buffers sent to USB hardware are ment to be filled in by the
-> > > > hardware with the data received from it, we do not zero-out those
-> > > > buffers before passing the pointer there.
-> > > >
-> > > > Perhaps with testing frameworks like the raw usb controller, that might
-> > > > cause a number of false-positives to happen?
-> > >
-> > > Ah, wait, that buffer is coming from the stack, which isn't allowed in
-> > > the first place :(
-> > >
-> > > So that should be changed anyway to a dynamic allocation, I'll go write
-> > > up a patch...
-> >
-> > Nope, my fault, the data is not coming from the stack, so all is good.
->
-> My reading of the code is that asix_read_cmd returns the number of
-> bytes actually read, which may be less than requested.
-> This happens in __usbnet_read_cmd:
-> https://elixir.bootlin.com/linux/latest/source/drivers/net/usb/usbnet.c#L2002
-> So this code in asix_read_phy_addr will need produce an uninit value
-> for result if <2 bytes read:
->
->     u8 buf[2];
->     int ret = asix_read_cmd(dev, AX_CMD_READ_PHY_ID, 0, 0, 2, buf, 0);
->     if (ret < 0)
->         netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
->     ret = buf[offset];
->     return ret;
->
-> And it looks like all of 13 uses of asix_read_cmd in
-> drivers/net/usb/asix_common.c are subject to this bug as well.
+Sometimes re-plugging a USB device during system sleep renders the device
+useless:
+[  173.418345] xhci_hcd 0000:00:14.0: Get port status 2-4 read: 0x14203e2, return 0x10262
+...
+[  176.496485] usb 2-4: Waited 2000ms for CONNECT
+[  176.496781] usb usb2-port4: status 0000.0262 after resume, -19
+[  176.497103] usb 2-4: can't resume, status -19
+[  176.497438] usb usb2-port4: logical disconnect
 
-Yeah, such issues are unfortunately currently getting attributed to
-raw-gadget. I wonder if we can improve crash parsing code to cover
-this kind of cases... We would need to skip the first few
-raw-gadget/USB-related stack traces, and only take one of the "Uninit
-was stored to memory at" ones.
+Because PLS equals to XDEV_RESUME, xHCI driver reports U3 to usbcore,
+despite of CAS bit is flagged.
+
+So proritize CAS over XDEV_RESUME to let usbcore handle warm-reset for
+the port.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/usb/host/xhci-hub.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index c3554e37e09f..4e14e164cb68 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -740,15 +740,6 @@ static void xhci_hub_report_usb3_link_state(struct xhci_hcd *xhci,
+ {
+ 	u32 pls = status_reg & PORT_PLS_MASK;
+ 
+-	/* resume state is a xHCI internal state.
+-	 * Do not report it to usb core, instead, pretend to be U3,
+-	 * thus usb core knows it's not ready for transfer
+-	 */
+-	if (pls == XDEV_RESUME) {
+-		*status |= USB_SS_PORT_LS_U3;
+-		return;
+-	}
+-
+ 	/* When the CAS bit is set then warm reset
+ 	 * should be performed on port
+ 	 */
+@@ -770,6 +761,16 @@ static void xhci_hub_report_usb3_link_state(struct xhci_hcd *xhci,
+ 		 */
+ 		pls |= USB_PORT_STAT_CONNECTION;
+ 	} else {
++		/*
++		 * Resume state is an xHCI internal state.  Do not report it to
++		 * usb core, instead, pretend to be U3, thus usb core knows
++		 * it's not ready for transfer.
++		 */
++		if (pls == XDEV_RESUME) {
++			*status |= USB_SS_PORT_LS_U3;
++			return;
++		}
++
+ 		/*
+ 		 * If CAS bit isn't set but the Port is already at
+ 		 * Compliance Mode, fake a connection so the USB core
+-- 
+2.17.1
+
