@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF61C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A08422D07
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E43722D06
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073384;
-	bh=p4V3sOMcIcLg6bOq8lNuDQ3c0vE6GzxHlypxaeyenpk=;
+	s=default; t=1597073390;
+	bh=KaxY1NvNPtD69tQs/t0IdTuYAOTR+KNMEfLbGZkbrm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4RGOACno3LT7aKUis76px5Ws1q+4mQXV8G8XEHfNTU+9kgNPlSMLKer8swrOYLxU
-	 M1J0zXUn50+Z95n/KgieMtzmb65uvydry3CevyqC0nPHe3sEIShIaKVLd54O58Y7Yx
-	 +TLdWqcLv3qTqIEMU3UB1Kh5m/Hj1+NtWyVNePAA=
+	b=MI+TEcXHOQUV7V0VcTsMyWX9t7dNKneC0lF6pq6732oeYC3iZxV16aQRuKt+ov+f/
+	 a8RLLFzj6KAVRl8Yu8W1Yj6LCH/Pn5vPauxgDmSM1BFt8ALnC2w71SobAUU548YIjY
+	 ABirnLV1u8LF4T7D6esLcaO4744jFbwi0pOgZVKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgHJP3n (ORCPT
+        id S1727829AbgHJP3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728959AbgHJP3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:31 -0400
+        id S1728758AbgHJP3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12D022D07;
-        Mon, 10 Aug 2020 15:29:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033CB22D07;
+        Mon, 10 Aug 2020 15:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073370;
-        bh=p4V3sOMcIcLg6bOq8lNuDQ3c0vE6GzxHlypxaeyenpk=;
+        s=default; t=1597073378;
+        bh=KaxY1NvNPtD69tQs/t0IdTuYAOTR+KNMEfLbGZkbrm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JeCvXyjWstIb+Ig3fWKBHEVYfLL9qsUrg1q91AUOpTElFVN6DIebanmjtsUdaXYqh
-         a9UsGUuxPKD/XM4ulbrZGOiBE7Oxpco5uUIr8wj4zG+hHwE3MgSYtlVvOi7OEQ4b2t
-         pISwb/VIALlizBgPHqbHX6GoSXNCryDEulZ54UTE=
+        b=CSq5639sLdo59uqbNcR97Jfvvbqu46yZc5Wxif3U8wHs6GUxL8u5xDSD9ELbvfORm
+         vPWKk4RjdBQlCPzGm+CX9sjQt+xeFUJRApC3iHjDWbsnvW5NRepxJm9nYkop7Kt66A
+         ItQs/jW0a+fXAiqvZuaPHtFl58c/DNzUJp5CfpMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        stable <stable@kernel.org>
-Subject: [PATCH 4.19 14/48] mtd: properly check all write ioctls for permissions
-Date:   Mon, 10 Aug 2020 17:21:36 +0200
-Message-Id: <20200810151804.911709325@linuxfoundation.org>
+        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 4.19 17/48] leds: lm3533: fix use-after-free on unbind
+Date:   Mon, 10 Aug 2020 17:21:39 +0200
+Message-Id: <20200810151805.062885325@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -61,120 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit f7e6b19bc76471ba03725fe58e0c218a3d6266c3 upstream.
+commit d584221e683bbd173738603b83a315f27d27d043 upstream.
 
-When doing a "write" ioctl call, properly check that we have permissions
-to do so before copying anything from userspace or anything else so we
-can "fail fast".  This includes also covering the MEMWRITE ioctl which
-previously missed checking for this.
+Several MFD child drivers register their class devices directly under
+the parent device. This means you cannot blindly do devres conversions
+so that deregistration ends up being tied to the parent device,
+something which leads to use-after-free on driver unbind when the class
+device is released while still being registered.
 
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: stable <stable@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[rw: Fixed locking issue]
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 50154e29e5cc ("leds: lm3533: Use devm_led_classdev_register")
+Cc: stable <stable@vger.kernel.org>     # 4.6
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/mtdchar.c |   56 +++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 47 insertions(+), 9 deletions(-)
+ drivers/leds/leds-lm3533.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/mtd/mtdchar.c
-+++ b/drivers/mtd/mtdchar.c
-@@ -368,9 +368,6 @@ static int mtdchar_writeoob(struct file
- 	uint32_t retlen;
- 	int ret = 0;
+--- a/drivers/leds/leds-lm3533.c
++++ b/drivers/leds/leds-lm3533.c
+@@ -698,7 +698,7 @@ static int lm3533_led_probe(struct platf
  
--	if (!(file->f_mode & FMODE_WRITE))
--		return -EPERM;
--
- 	if (length > 4096)
- 		return -EINVAL;
+ 	platform_set_drvdata(pdev, led);
  
-@@ -655,6 +652,48 @@ static int mtdchar_ioctl(struct file *fi
+-	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
++	ret = led_classdev_register(pdev->dev.parent, &led->cdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register LED %d\n", pdev->id);
+ 		return ret;
+@@ -708,13 +708,18 @@ static int lm3533_led_probe(struct platf
  
- 	pr_debug("MTD_ioctl\n");
+ 	ret = lm3533_led_setup(led, pdata);
+ 	if (ret)
+-		return ret;
++		goto err_deregister;
  
-+	/*
-+	 * Check the file mode to require "dangerous" commands to have write
-+	 * permissions.
-+	 */
-+	switch (cmd) {
-+	/* "safe" commands */
-+	case MEMGETREGIONCOUNT:
-+	case MEMGETREGIONINFO:
-+	case MEMGETINFO:
-+	case MEMREADOOB:
-+	case MEMREADOOB64:
-+	case MEMLOCK:
-+	case MEMUNLOCK:
-+	case MEMISLOCKED:
-+	case MEMGETOOBSEL:
-+	case MEMGETBADBLOCK:
-+	case MEMSETBADBLOCK:
-+	case OTPSELECT:
-+	case OTPGETREGIONCOUNT:
-+	case OTPGETREGIONINFO:
-+	case OTPLOCK:
-+	case ECCGETLAYOUT:
-+	case ECCGETSTATS:
-+	case MTDFILEMODE:
-+	case BLKPG:
-+	case BLKRRPART:
-+		break;
+ 	ret = lm3533_ctrlbank_enable(&led->cb);
+ 	if (ret)
+-		return ret;
++		goto err_deregister;
+ 
+ 	return 0;
 +
-+	/* "dangerous" commands */
-+	case MEMERASE:
-+	case MEMERASE64:
-+	case MEMWRITEOOB:
-+	case MEMWRITEOOB64:
-+	case MEMWRITE:
-+		if (!(file->f_mode & FMODE_WRITE))
-+			return -EPERM;
-+		break;
++err_deregister:
++	led_classdev_unregister(&led->cdev);
 +
-+	default:
-+		return -ENOTTY;
-+	}
-+
- 	switch (cmd) {
- 	case MEMGETREGIONCOUNT:
- 		if (copy_to_user(argp, &(mtd->numeraseregions), sizeof(int)))
-@@ -702,9 +741,6 @@ static int mtdchar_ioctl(struct file *fi
- 	{
- 		struct erase_info *erase;
++	return ret;
+ }
  
--		if(!(file->f_mode & FMODE_WRITE))
--			return -EPERM;
--
- 		erase=kzalloc(sizeof(struct erase_info),GFP_KERNEL);
- 		if (!erase)
- 			ret = -ENOMEM;
-@@ -997,9 +1033,6 @@ static int mtdchar_ioctl(struct file *fi
- 		ret = 0;
- 		break;
- 	}
--
--	default:
--		ret = -ENOTTY;
- 	}
+ static int lm3533_led_remove(struct platform_device *pdev)
+@@ -724,6 +729,7 @@ static int lm3533_led_remove(struct plat
+ 	dev_dbg(&pdev->dev, "%s\n", __func__);
  
- 	return ret;
-@@ -1043,6 +1076,11 @@ static long mtdchar_compat_ioctl(struct
- 		struct mtd_oob_buf32 buf;
- 		struct mtd_oob_buf32 __user *buf_user = argp;
+ 	lm3533_ctrlbank_disable(&led->cb);
++	led_classdev_unregister(&led->cdev);
  
-+		if (!(file->f_mode & FMODE_WRITE)) {
-+			ret = -EPERM;
-+			break;
-+		}
-+
- 		if (copy_from_user(&buf, argp, sizeof(buf)))
- 			ret = -EFAULT;
- 		else
+ 	return 0;
+ }
 
 
