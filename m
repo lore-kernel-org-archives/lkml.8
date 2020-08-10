@@ -2,156 +2,237 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA933C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A52C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 955632076B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DD020678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NkPi1fVH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PT8BHvAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgHJOHD (ORCPT
+        id S1727065AbgHJOHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:07:03 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24302 "EHLO
+        Mon, 10 Aug 2020 10:07:25 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25445 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726845AbgHJOHB (ORCPT
+        by vger.kernel.org with ESMTP id S1726998AbgHJOHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:07:01 -0400
+        Mon, 10 Aug 2020 10:07:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597068419;
+        s=mimecast20190719; t=1597068442;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Pi3lxN8psIrNXa8THCHtbbaT+Fbe/njlOIIu353jdbM=;
-        b=NkPi1fVHW2dCUL7TC5T17ri3k3IZZYHUZ/BSa2LL/c2O/kCfa099ALAiLwxadgVCNIftI4
-        aHIDi9uTktBxu1lJu52hZLVSYsbMfKVwA2dbrwwOIMqur/GIttYPUOrVLJjRij6NGUE7S0
-        RIYlUsFbfufBUtv+FIdad4UvuOX+zyk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-55-DTJFGF_2MLmtVoPg12w9cw-1; Mon, 10 Aug 2020 10:06:57 -0400
-X-MC-Unique: DTJFGF_2MLmtVoPg12w9cw-1
-Received: by mail-wm1-f70.google.com with SMTP id s4so2831450wmh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:06:57 -0700 (PDT)
+        bh=9cNBeZMSVeP3DVGga0IkO789cQ/tXxxwecdgwFI3/0c=;
+        b=PT8BHvAlY3N+VUpvFOPkGghVSA0rzJ7MLmUJDPCJLjjGzfATwyRxQ2ZXORdy1MeVPkRKup
+        vjBDsWwluljadhpyZsJoduWu57gUsYjJULDnLf4tFBFnV43rSEX9swj3LQQ6oflX0i7yMs
+        1vj7T8QYLSyWKyfDEdCVEQltyXos9S0=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-gDwIzR9oN-yCc2riN39fBg-1; Mon, 10 Aug 2020 10:07:18 -0400
+X-MC-Unique: gDwIzR9oN-yCc2riN39fBg-1
+Received: by mail-qv1-f70.google.com with SMTP id c4so7309534qvq.15
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:07:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Pi3lxN8psIrNXa8THCHtbbaT+Fbe/njlOIIu353jdbM=;
-        b=qRL1415Wz0OmRci5wyDxAjpTMXZcI8cW6wvHQxUOYsdmGFfSPpvUS3HQiFIFxzWfV7
-         ZPYvEwRsPLn0yDjPo8yJrVd5StE6fgsjgzcHHoMRL2mUP1Cm0iZxTkvdXHKsYqiSUfAg
-         MSRZQpDtaI3mtOFP6gm/hyhgIUNcxIQS3RB7lzSafJCa9nGqR51cMkx71OXkJiSu8yC0
-         Jif6uXRvd6K3MxoLfUD2MJqyYBBYkkq4sgwtm8itzuzawcCPmOgwTg3xZ36qNL+hqkbP
-         1OtbJS/u0NTkJHNahmQFaFFsAXhOBsCa7SqhZlJBfcU1UU4M7wa54mFRAkyXQn0fJ921
-         FSUA==
-X-Gm-Message-State: AOAM533OceCgWOwCTpsQTtvq8gC2LgG3HC8jbJL5rit89LqVrl4NjgxC
-        ElgE40li505XiX1PpfdlDLkBzQNKJLbDMUQ4brcQu4y9w3WuRPdsrWUYP49f21byF3vjHkeQGxO
-        bORhJ2+eJH720oFgv+MWEq6Ft
-X-Received: by 2002:a1c:2646:: with SMTP id m67mr26930170wmm.137.1597068416437;
-        Mon, 10 Aug 2020 07:06:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwDOtF9sq0/VeMXAciszixSC7chLA9+Y/luG4FnM99tjGeJ9Oystkk1lZT0wf1NuDad9Z5hsg==
-X-Received: by 2002:a1c:2646:: with SMTP id m67mr26930081wmm.137.1597068415258;
-        Mon, 10 Aug 2020 07:06:55 -0700 (PDT)
-Received: from redhat.com (bzq-109-67-41-16.red.bezeqint.net. [109.67.41.16])
-        by smtp.gmail.com with ESMTPSA id x6sm19927572wmx.28.2020.08.10.07.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 07:06:54 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 10:06:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 03/20] virtio: Add get_shm_region method
-Message-ID: <20200810100529-mutt-send-email-mst@kernel.org>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-4-vgoyal@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=9cNBeZMSVeP3DVGga0IkO789cQ/tXxxwecdgwFI3/0c=;
+        b=HqxNeQMMo5Wkzonq7+877TEXLMyf7WqABehB9lp/1u+dNGbfa6d49x+JFQ9UJf84a1
+         N/Pc2xmBmwD4H/7NA4JxdPAIpF/ow5l4nnEdYK2FIeGorOeEPTEjsfMOypF3OgSGmwPa
+         o4CNiH0AQgciD10tHMR1OUoJVUIjLTAJVuSmuG9dEn8JZwEXaqyl9hCE/Fs1wXi6kQJ4
+         uZC3gu6n5+diq8eoTzgcEYloy7qgtjzAq1WX1mQSfi+C1HJ2EUkJ028c7y07VQHxuRDu
+         3ADbyl7vxuC6JdXcI1yvtcf1wsY/BnMb7u1vC54yV4aNshM6KxYkPXzb6C2vodGX1WsU
+         b21w==
+X-Gm-Message-State: AOAM532fZtJ1ZFtV376s3y5DjRlB7FgE98QbgaDlXFrFOOgTQHzQPumb
+        5LK7NkDBikPnonISHDGA7X2aZoeMnuPwPi7sq+PycBIslbzTtBkATRkowZJe+ukSjKDiqLUd8gU
+        T46sVR0Qi0mFBJ8vEGYi+yvfS
+X-Received: by 2002:a37:a655:: with SMTP id p82mr25881929qke.92.1597068437839;
+        Mon, 10 Aug 2020 07:07:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyAhtpzC6B/AHUomREfdW5p+0revbNMjcYgvVSCxlQ/BOs8KbalMx56oktoq4uHLJOpSG1XQQ==
+X-Received: by 2002:a37:a655:: with SMTP id p82mr25881912qke.92.1597068437536;
+        Mon, 10 Aug 2020 07:07:17 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x57sm15834702qtc.61.2020.08.10.07.07.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 07:07:16 -0700 (PDT)
+Subject: Re: [PATCH v2 5/6] include: fpga: adi-axi-common.h: add definitions
+ for supported FPGAs
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, mdf@kernel.org,
+        ardeleanalex@gmail.com,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+References: <20200810134252.68614-1-alexandru.ardelean@analog.com>
+ <20200810134252.68614-6-alexandru.ardelean@analog.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <0f9aa0ed-11a2-cf49-6c5d-ff36ba8ff9eb@redhat.com>
+Date:   Mon, 10 Aug 2020 07:07:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807195526.426056-4-vgoyal@redhat.com>
+In-Reply-To: <20200810134252.68614-6-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 03:55:09PM -0400, Vivek Goyal wrote:
-> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> 
-> Virtio defines 'shared memory regions' that provide a continuously
-> shared region between the host and guest.
-> 
-> Provide a method to find a particular region on a device.
-> 
-> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
 
-I don't think I can merge it through my tree for 5.9 at this stage,
-but if there's a tree where this can be merged for 5.9,
-feel free.
+On 8/10/20 6:42 AM, Alexandru Ardelean wrote:
+> From: Mircea Caprioru <mircea.caprioru@analog.com>
+>
+> All (newer) FPGA IP cores supported by Analog Devices, store information in
+> the synthesized designs. This information describes various parameters,
+> including the family of boards on which this is deployed, speed-grade, and
+> so on.
+>
+> Currently, some of these definitions are deployed mostly on Xilinx boards,
+> but they have been considered also for FPGA boards from other vendors.
+>
+> The register definitions are described at this link:
+>   https://wiki.analog.com/resources/fpga/docs/hdl/regmap
+> (the 'Base (common to all cores)' section).
+>
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Thanks for changes.
+
+Reviewed-by: Tom Rix <trix@redhat.com>
 
 > ---
->  include/linux/virtio_config.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> index bb4cc4910750..c859f000a751 100644
-> --- a/include/linux/virtio_config.h
-> +++ b/include/linux/virtio_config.h
-> @@ -10,6 +10,11 @@
+>  include/linux/fpga/adi-axi-common.h | 103 ++++++++++++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+>
+> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
+> index 141ac3f251e6..5c7d212a5d4a 100644
+> --- a/include/linux/fpga/adi-axi-common.h
+> +++ b/include/linux/fpga/adi-axi-common.h
+> @@ -13,6 +13,9 @@
 >  
->  struct irq_affinity;
+>  #define ADI_AXI_REG_VERSION			0x0000
 >  
-> +struct virtio_shm_region {
-> +       u64 addr;
-> +       u64 len;
-> +};
+> +#define ADI_AXI_REG_FPGA_INFO			0x001C
+> +#define ADI_AXI_REG_FPGA_VOLTAGE		0x0140
 > +
->  /**
->   * virtio_config_ops - operations for configuring a virtio device
->   * Note: Do not assume that a transport implements all of the operations
-> @@ -65,6 +70,7 @@ struct irq_affinity;
->   *      the caller can then copy.
->   * @set_vq_affinity: set the affinity for a virtqueue (optional).
->   * @get_vq_affinity: get the affinity for a virtqueue (optional).
-> + * @get_shm_region: get a shared memory region based on the index.
->   */
->  typedef void vq_callback_t(struct virtqueue *);
->  struct virtio_config_ops {
-> @@ -88,6 +94,8 @@ struct virtio_config_ops {
->  			       const struct cpumask *cpu_mask);
->  	const struct cpumask *(*get_vq_affinity)(struct virtio_device *vdev,
->  			int index);
-> +	bool (*get_shm_region)(struct virtio_device *vdev,
-> +			       struct virtio_shm_region *region, u8 id);
->  };
+>  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
+>  	(((major) << 16) | ((minor) << 8) | (patch))
 >  
->  /* If driver didn't advertise the feature, it will never appear. */
-> @@ -250,6 +258,15 @@ int virtqueue_set_affinity(struct virtqueue *vq, const struct cpumask *cpu_mask)
->  	return 0;
->  }
+> @@ -20,4 +23,104 @@
+>  #define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
+>  #define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
 >  
-> +static inline
-> +bool virtio_get_shm_region(struct virtio_device *vdev,
-> +                         struct virtio_shm_region *region, u8 id)
-> +{
-> +	if (!vdev->config->get_shm_region)
-> +		return false;
-> +	return vdev->config->get_shm_region(vdev, region, id);
-> +}
+> +#define ADI_AXI_INFO_FPGA_VOLTAGE(val)		((val) & 0xffff)
 > +
->  static inline bool virtio_is_little_endian(struct virtio_device *vdev)
->  {
->  	return virtio_has_feature(vdev, VIRTIO_F_VERSION_1) ||
-> -- 
-> 2.25.4
-> 
+> +#define ADI_AXI_INFO_FPGA_TECH(info)		(((info) >> 24) & 0xff)
+> +#define ADI_AXI_INFO_FPGA_FAMILY(info)		(((info) >> 16) & 0xff)
+> +#define ADI_AXI_INFO_FPGA_SPEED_GRADE(info)	(((info) >> 8) & 0xff)
+> +#define ADI_AXI_INFO_FPGA_DEV_PACKAGE(info)	((info) & 0xff)
+> +
+> +/**
+> + * FPGA Technology definitions
+> + */
+> +#define ADI_AXI_FPGA_TECH_XILINX_UNKNOWN 		0
+> +#define ADI_AXI_FPGA_TECH_XILINS_SERIES7		1
+> +#define ADI_AXI_FPGA_TECH_XILINX_ULTRASCALE		2
+> +#define ADI_AXI_FPGA_TECH_XILINX_ULTRASCALE_PLUS	3
+> +
+> +#define ADI_AXI_FPGA_TECH_INTEL_UNKNOWN			100
+> +#define ADI_AXI_FPGA_TECH_INTEL_CYCLONE_5		101
+> +#define ADI_AXI_FPGA_TECH_INTEL_CYCLONE_10		102
+> +#define ADI_AXI_FPGA_TECH_INTEL_ARRIA_10		103
+> +#define ADI_AXI_FPGA_TECH_INTEL_STRATIX_10		104
+> +
+> +/**
+> + * FPGA Family definitions
+> + */
+> +#define ADI_AXI_FPGA_FAMILY_UNKNOWN			0
+> +
+> +#define ADI_AXI_FPGA_FAMILY_XILINX_ARTIX		1
+> +#define ADI_AXI_FPGA_FAMILY_XILINX_KINTEX		2
+> +#define ADI_AXI_FPGA_FAMILY_XILINX_VIRTEX		3
+> +#define ADI_AXI_FPGA_FAMILY_XILINX_ZYNQ			4
+> +
+> +#define ADI_AXI_FPGA_FAMILY_INTEL_SX			1
+> +#define ADI_AXI_FPGA_FAMILY_INTEL_GX			2
+> +#define ADI_AXI_FPGA_FAMILY_INTEL_GT			3
+> +#define ADI_AXI_FPGA_FAMILY_INTEL_GZ			4
+> +
+> +/**
+> + * FPGA Speed-grade definitions
+> + */
+> +#define ADI_AXI_FPGA_SPEED_GRADE_UNKNOWN		0
+> +
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1		10
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1L		11
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1H		12
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1HV		13
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1LV		14
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2		20
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2L		21
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2LV		22
+> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_3		30
+> +
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_1		1
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_2		2
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_3		3
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_4		4
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_5		5
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_6		6
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_7		7
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_8		8
+> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_9		9
+> +
+> +/**
+> + * FPGA Device Package definitions
+> + */
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_UNKNOWN		0
+> +
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RF		1
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FL		2
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FF		3
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FB		4
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_HC		5
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FH		6
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CS		7
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CP		8
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FT		9
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FG		10
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_SB		11
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RB		12
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RS		13
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CL		14
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_SF		15
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_BA		16
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FA		17
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FS		18
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FI		19
+> +
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_BGA		1
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PGA		2
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_FBGA		3
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_HBGA		4
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PDIP		5
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_EQFP		6
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PLCC		7
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PQFP		8
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_RQFP		9
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_TQFP		10
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_UBGA		11
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_UFBGA		12
+> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_MBGA		13
+> +
+>  #endif /* ADI_AXI_COMMON_H_ */
 
